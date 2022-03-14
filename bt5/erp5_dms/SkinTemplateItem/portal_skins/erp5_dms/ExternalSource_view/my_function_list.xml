@@ -11,8 +11,8 @@
             <value>
               <list>
                 <string>hash_script_id</string>
-                <string>view_separator</string>
                 <string>items</string>
+                <string>view_separator</string>
               </list>
             </value>
         </item>
@@ -90,6 +90,12 @@
                 <item>
                     <key> <string>hash_script_id</string> </key>
                     <value> <string>Document_hashFunctionItemList</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

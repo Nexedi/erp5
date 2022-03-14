@@ -31,7 +31,6 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.test.testOrder import TestOrderMixin
@@ -756,7 +755,7 @@ class TestPackingListMixin(TestOrderMixin):
       delivery_value = simulation_movement.getDeliveryValue()
       if delivery_value not in delivery_value_list:
         delivery_value_list.append(delivery_value_list)
-#      new_packing_list = delivery_value.getParent()
+#      new_packing_list = delivery_value.getParentValue()
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
     self.assertEqual(len(delivery_value_list),len(resource_list))
 
@@ -784,7 +783,7 @@ class TestPackingListMixin(TestOrderMixin):
       delivery_value = simulation_movement.getDeliveryValue()
       if delivery_value not in delivery_value_list:
         delivery_value_list.append(delivery_value_list)
-#      new_packing_list = delivery_value.getParent()
+#      new_packing_list = delivery_value.getParentValue()
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
     self.assertEqual(len(delivery_value_list),len(resource_list))
 
@@ -2270,10 +2269,8 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
       solver_process_type_info.getTypeAllowedContentTypeList() +
       [solver_id]
     )
-    (default_chain, chain_dict) = getChainByType(self.portal)
-    chain_dict['chain_%s' % solver_id] = 'solver_workflow'
-    self.portal.portal_workflow.manage_changeWorkflows(default_chain,
-                                                       props=chain_dict)
+    type_object = self.portal.portal_types.getTypeInfo(solver_id)
+    type_object.setTypeWorkflowList(['solver_workflow'])
     self.portal.portal_caches.clearAllCache()
     self.added_target_solver_list.append(solver_id)
 

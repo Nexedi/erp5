@@ -114,7 +114,7 @@ else:
 
       # portal_type should be the same for all columns
       if portal_type != mapping[spreadsheet_name][0]:
-        raise AttributeError, "Portal type is not the same for all columns"
+        raise AttributeError("Portal type is not the same for all columns")
 
   # If no mapping is given
   if not mapping:
@@ -165,7 +165,7 @@ else:
                          active_process=active_process_path)
  
         if getattr(context, import_file_line_script, None) is None:
-          raise AttributeError, 'specified script "%s" does not exists' % import_file_line_script
+          raise AttributeError('specified script "%s" does not exists' % import_file_line_script)
 
         getattr(active_object, import_file_line_script)(context.getRelativeUrl(),
                 portal_type,

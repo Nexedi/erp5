@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions
 class ContributionRegistryTool(BaseTool):
 
   id = 'portal_contribution_registry'
-  title = 'Contribution Registry Tool'
+  title = 'Contribution Predicates'
   meta_type = 'ERP5 Contribution Registry Tool'
   portal_type = 'Contribution Registry Tool'
   allowed_types = ('ERP5 Contribution Predicate',)

@@ -1,0 +1,21 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4" tal:content="template/title"></td></tr>
+</thead>
+<tbody tal:define="init_method string:Zuite_createBusinessProcessForTradeZuite;">
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/business_process_module/test_trade_ui_test_business_process?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+</tbody></table>
+</body>
+</html>

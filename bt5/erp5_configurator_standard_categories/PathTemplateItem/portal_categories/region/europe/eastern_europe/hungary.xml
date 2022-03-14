@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>HUN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>HU</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>hungary</string> </value>
         </item>

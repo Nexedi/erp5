@@ -26,7 +26,7 @@ import os
 from .itools.i18n import AcceptLanguageType
 
 # Import from Zope
-import Globals
+# import Globals
 from ZPublisher import Publish
 from ZPublisher.HTTPRequest import HTTPRequest
 from zope.globalrequest import clearRequest, setRequest
@@ -74,8 +74,9 @@ if patch is False:
     Publish.publish = get_new_publish(Publish.publish)
     patch = True
 
-    # Add to Globals for backwards compatibility
-    Globals.get_request = get_request
+    # Add to Globals for backwards compatibility 
+    # XXX-AUREL do we really care ?
+    # Globals.get_request = get_request
 
 
 

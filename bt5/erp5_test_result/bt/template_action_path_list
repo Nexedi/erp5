@@ -24,7 +24,6 @@ Test Result Module | view_test_perf_report
 Test Result Module | view_test_result_diff
 Test Result Node | view
 Test Result | jump_previous_test_result
-Test Result | jump_test_suite
 Test Result | jump_to_test_suite
 Test Result | jump_viewvc_revision
 Test Result | view

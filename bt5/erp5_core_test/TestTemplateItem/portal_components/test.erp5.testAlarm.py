@@ -276,6 +276,16 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
 
+  def test_week_and_month_impossible_combination(self):
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(DateTime(2000, 1, 1))
+    # week 41 can not be in January
+    alarm.setPeriodicityWeekList((41, ))
+    alarm.setPeriodicityMonthList((1, ))
+    self.tic()
+    # next alarm date never advance
+    self.checkDate(alarm, DateTime(2000, 1, 1), DateTime(2000, 1, 1), DateTime(2000, 1, 1),)
+
   def test_12_Every5Minutes(self):
     alarm = self.newAlarm(enabled=True)
     now = DateTime()
@@ -338,7 +348,7 @@ class TestAlarm(ERP5TypeTestCase):
       finally:
         self.portal.portal_activities.manageClearActivities(keep=0)
     else:
-      raise Exception, 'Tic did not raise though activity was supposed to fail'
+      raise Exception('Tic did not raise though activity was supposed to fail')
     # Make the sense method succeed and leave a trace
     self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
     alarm.activeSense()

@@ -35,6 +35,7 @@ from Products.ERP5Type.Base import _aq_reset
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Workflow import addWorkflowByType
 
+
 class TestInteractionWorkflow(ERP5TypeTestCase):
   portal_type = 'Organisation'
 
@@ -78,11 +79,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     return addWorkflowByType(wf_tool, "interaction_workflow", wf_id)
 
   def createInteractionWorkflow(self):
-    id = 'test_workflow'
-    wf_type = "interaction_workflow"
-    if getattr(self.getWorkflowTool(), id, None) is None:
-      self._createInteractionWorkflowWithId(id)
-    wf = self.getWorkflowTool()[id]
+    if getattr(self.getWorkflowTool(), 'test_workflow', None) is None:
+      self._createInteractionWorkflowWithId('test_workflow')
+    wf = self.getWorkflowTool()['test_workflow']
     self.wf = wf
     if getattr(wf.scripts, 'afterEdit', None) is None:
       wf.scripts.manage_addProduct['PythonScripts']\
@@ -91,14 +90,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     if getattr(wf.interactions, 'edit_interaction', None) is None:
       wf.interactions.addInteraction(id='edit_interaction')
     self.interaction = wf.interactions['edit_interaction']
-    self.getWorkflowTool().setChainForPortalTypes(
-                  [self.portal_type],'test_workflow, validation_workflow')
+    type_object = self.portal.portal_types.getTypeInfo(self.portal_type)
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def createInteractionWorkflowWithTwoInteractions(self):
-    id = 'test_workflow'
-    wf_type = "interaction_workflow (Web-configurable interaction workflow)"
-    wf = self._createInteractionWorkflowWithId(id)
+    wf = self._createInteractionWorkflowWithId('test_workflow')
     self.wf = wf
     wf.scripts.manage_addProduct['PythonScripts']\
                   .manage_addPythonScript(id='afterEditA')
@@ -110,8 +107,8 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.scriptB = wf.scripts['afterEditB']
     wf.interactions.addInteraction(id='editB')
     self.interactionB = wf.interactions['editB']
-    self.getWorkflowTool().setChainForPortalTypes(
-                  [self.portal_type],'test_workflow, validation_workflow')
+    type_object = self.portal.portal_types.getTypeInfo(self.portal_type)
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def test_no_interactions(self):
@@ -679,8 +676,8 @@ context.setTitle('Bar')
 
   def test_portal_type_filter(self):
     self.createInteractionWorkflow()
-    self.getWorkflowTool().setChainForPortalTypes(
-                  ['Bank Account'],'test_workflow, validation_workflow')
+    type_object = self.portal.portal_types.getTypeInfo('Bank Account')
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     self.interaction.setProperties(
             'default',
             # only for bank accounts
@@ -704,8 +701,8 @@ context.setTitle('Bar')
 
   def test_portal_type_group_filter(self):
     self.createInteractionWorkflow()
-    self.getWorkflowTool().setChainForPortalTypes(
-                  ['Bank Account'],'test_workflow, validation_workflow')
+    type_object = self.portal.portal_types.getTypeInfo('Bank Account')
+    type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     self.interaction.setProperties(
             'default',
             # only for payment nodes portal type group (ie. bank account)

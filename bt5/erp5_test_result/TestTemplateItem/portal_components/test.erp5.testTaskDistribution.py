@@ -1,4 +1,4 @@
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
@@ -739,6 +739,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.tool.reportTaskFailure(test_result_path, {}, "UnitTestNode 1")
     self.assertEqual("failed", test_result.getSimulationState())
     checkNodeState("failed", "failed")
+    self.assertEqual("FAIL", test_result.getStringIndex())
 
   def test_07b_reportTaskFailureWithRunningTest(self):
     """
@@ -1260,6 +1261,24 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Check if slave test node have got empty list
     for suite in config_nodes.values():
       self.assertEquals(suite, [])
+
+  def test_16A_startTestSuiteERP5ScalabilityDistributorWithRunningTestResult(self):
+    # Subscribe nodes
+    self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
+    # Create test suite
+    test_suite = self._createTestSuite(quantity=1,priority=1, reference_correction=0,
+                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")[0]
+    self.tic()
+    self._callOptimizeAlarm()
+    test_result = self.test_result_module.newContent(
+      portal_type = 'Test Result',
+      title = test_suite.getTitle()
+    )
+    test_result.start()
+    self.tic()
+    configuration = self.scalability_distributor.startTestSuite(title="COMP1-Scalability-Node1")
+    self.assertNotEquals(configuration, [])
+
 
   def test_17_isMasterTestnodeERP5ScalabilityDistributor(self):
     """

@@ -759,7 +759,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       if existing_document is not None:
         document = existing_document
         if not _checkPermission(Permissions.ModifyPortalContent, existing_document):
-          raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId()
+          raise Unauthorized("[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % existing_document.getId())
         else:
           update_kw = {}
           for k in self.propertyIds():

@@ -154,6 +154,28 @@ for node_id, node_title, site_url in ((source_node_id, source_node_title, source
     site=site_url
   )
 
+# Create supplies
+# for all type of supply, source_node_id has 2 related supplies and destination_node_id has 1
+for supply_portal_type in ('Purchase Supply', 'Sale Supply', 'Internal Supply', ):
+  module = portal.getDefaultModule(supply_portal_type)
+  module.newContent(
+      portal_type=supply_portal_type,
+      id='erp5_pdm_ui_test_supply_1',
+      source_value=portal.organisation_module[source_node_id],
+      destination_value=portal.organisation_module[destination_node_id],
+  )
+  module.newContent(
+      portal_type=supply_portal_type,
+      id='erp5_pdm_ui_test_supply_2',
+      source_section_value=portal.organisation_module[source_node_id],
+  )
+  # an unrelated supply that should not be displayed
+  module.newContent(
+      portal_type=supply_portal_type,
+      id='erp5_pdm_ui_test_supply_3',
+  )
+
+
 # Reset selections
 stool = context.getPortalObject().portal_selections
 stool.setSelectionFor('resource_current_inventory', None)

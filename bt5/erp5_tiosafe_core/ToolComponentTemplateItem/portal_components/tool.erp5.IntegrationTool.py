@@ -8,7 +8,7 @@ class IntegrationTool(BaseTool):
   """
 
   id = 'portal_integrations'
-  title = 'Integration Tool'
+  title = 'Integrations'
   meta_type = 'ERP5 Integration Tool'
   portal_type = 'Integration Tool'
   allowed_type = ()

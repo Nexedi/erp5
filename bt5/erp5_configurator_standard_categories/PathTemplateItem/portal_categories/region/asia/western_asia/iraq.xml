@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>IRQ</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>IQ</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>iraq</string> </value>
         </item>

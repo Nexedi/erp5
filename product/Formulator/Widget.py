@@ -1027,7 +1027,7 @@ class MultiItemsWidget(ItemsWidget):
       if item_value in value:
         rendered_item = self.render_selected_item(
             escape(ustr(item_text)),
-            escape(ustr(item_value)),
+            item_value,
             key,
             css_class,
             extra_item)
@@ -1037,7 +1037,7 @@ class MultiItemsWidget(ItemsWidget):
       else:
         rendered_item = self.render_item(
             escape(ustr(item_text)),
-            escape(ustr(item_value)),
+            item_value,
             key,
             css_class,
             extra_item)

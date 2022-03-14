@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "get-request-schema.json",
+  "title": "Get: Get Object Data",
+  "description": "Schema used for jIO Get Method Data. This method is used to retrieve the data of an existing object.",
+  "properties": {
+    "id": {
+      "title": "ID",
+      "type": "string",
+      "description": "Unique Id of the object. This ID is defined by KD Portal. It is not editable."
+    }
+  },
+  "required": ["id"]
+}

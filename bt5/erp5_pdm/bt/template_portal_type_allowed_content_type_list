@@ -1,3 +1,4 @@
+Component Individual Variation | Embedded File
 Component Module | Component
 Component | Component Individual Variation
 Component | Embedded File
@@ -38,6 +39,7 @@ Sale Supply Line | Sale Supply Cell
 Sale Supply Module | Sale Supply
 Sale Supply | Sale Supply Line
 Sale Supply | Supply Line
+Service Individual Variation | Embedded File
 Service Module | Service
 Service | Internal Supply Line
 Service | Measure

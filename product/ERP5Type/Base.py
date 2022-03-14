@@ -57,8 +57,6 @@ from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCach
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
-
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import interfaces
@@ -67,11 +65,13 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
 from Products.ERP5Type.Utils import INFINITE_SET
+from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBuiltInDictMixIn
+from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from .Accessor import WorkflowState
@@ -83,7 +83,6 @@ from .CopySupport import CopyContainer, CopyError,\
 from .Errors import DeferredCatalogError, UnsupportedWorkflowMethod
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
-from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
@@ -224,22 +223,27 @@ class WorkflowMethod(Method):
     for wf_id, transition_list in candidate_transition_item_list:
       candidate_workflow = wf[wf_id]
       valid_list = []
+      state = candidate_workflow._getWorkflowStateOf(instance, id_only=0)
       for transition_id in transition_list:
-        if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
+        # cannot pass state parameter to an interaction workflow's
+        # isWorkflowMethodSupported method
+        is_supported_kw = {} if state is None else {'state': state}
+
+        is_workflow_method_supported = candidate_workflow.isWorkflowMethodSupported(instance, transition_id, **is_supported_kw)
+        if is_workflow_method_supported:
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
             # a run-once transition, prevent it from running again in
             # the same transaction
             transactional_variable[once_transition_key] = 1
-        elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
+        elif candidate_workflow.__class__.__name__ in ['DCWorkflowDefinition', 'Workflow']:
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           # XXX Keep the log for projects that needs to comment out
           #     the previous line.
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
-              % (wf_id, transition_id, instance,
-                 candidate_workflow._getWorkflowStateOf(instance, id_only=1)))
+              % (wf_id, transition_id, instance, state))
       if valid_list:
         valid_transition_item_list.append((wf_id, valid_list))
 
@@ -506,6 +510,8 @@ from Products.ERP5Type.Accessor import WorkflowHistory as WorkflowHistoryAccesso
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
+  from Products.ERP5Type.Core.WorkflowTransition import TRIGGER_WORKFLOW_METHOD
+
   # aq_inner is required to prevent extra name lookups from happening
   # infinitely. For instance, if a workflow is missing, and the acquisition
   # wrapper contains an object with _aq_dynamic defined, the workflow id
@@ -514,15 +520,16 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   portal_workflow = aq_inner(portal_workflow)
   portal_type = ptype_klass.__name__
 
-  dc_workflow_dict = {}
+  workflow_dict = {}
   interaction_workflow_dict = {}
-  for wf in portal_workflow.getWorkflowsFor(portal_type):
-    wf_id = wf.id
+  for wf in portal_workflow.getWorkflowValueListFor(portal_type):
+    wf_id = wf.getId()
     wf_type = wf.__class__.__name__
-    if wf_type == "DCWorkflowDefinition":
+    wf_transition_reference_list = wf.getTransitionReferenceList()
+    if wf_type in ['DCWorkflowDefinition', 'Workflow']:
       # Create state var accessor
       # and generate methods that support the translation of workflow states
-      state_var = wf.variables.getStateVar()
+      state_var = wf.getStateVariable()
       for method_id, getter in (
           ('get%s' % UpperCase(state_var), WorkflowState.Getter),
           ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
@@ -538,11 +545,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
-      storage = dc_workflow_dict
-      transitions = wf.transitions
+      storage = workflow_dict
 
-      for transition in transitions.objectValues():
-        transition_id = transition.getId()
+      for transition_id in wf_transition_reference_list:
         list_method_id = 'get%sTransitionDateList' % UpperCase(transition_id)
         if not hasattr(ptype_klass, list_method_id):
           method = WorkflowHistoryAccessor.ListGetter(list_method_id, wf_id, transition_id, 'time')
@@ -555,23 +560,24 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           ptype_klass.registerAccessor(method,
                                        Permissions.AccessContentsInformation)
 
-    elif wf_type == "InteractionWorkflowDefinition":
+    elif wf_type in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
       storage = interaction_workflow_dict
-      transitions = wf.interactions
     else:
       continue
 
     # extract Trigger transitions from workflow definitions for later
-    transition_id_set = set(transitions.objectIds())
+    transition_id_set = set(wf_transition_reference_list)
+
     trigger_dict = {}
     for tr_id in transition_id_set:
-      tdef = transitions[tr_id]
-      if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+      tdef = wf.getTransitionValueByReference(tr_id)
+      if tdef.getTriggerType() == TRIGGER_WORKFLOW_METHOD:
         trigger_dict[tr_id] = tdef
 
     storage[wf_id] = (transition_id_set, trigger_dict)
 
-  for wf_id, v in dc_workflow_dict.iteritems():
+  # Generate Workflow method
+  for wf_id, v in workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       method_id = convertToMixedCase(tr_id)
@@ -615,18 +621,20 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
       # Check portal type filter
-      if (tdef.portal_type_filter is not None and \
-          portal_type not in tdef.portal_type_filter):
+      portal_type_filter_list = tdef.getPortalTypeFilterList()
+      if (portal_type_filter_list and
+          portal_type not in tdef.getPortalTypeFilterList()):
         continue
 
       # Check portal type group filter
-      if tdef.portal_type_group_filter is not None:
+      portal_type_group_filter_list = tdef.getPortalTypeGroupFilterList()
+      if portal_type_group_filter_list:
         getPortalGroupedTypeSet = portal_workflow.getPortalObject()._getPortalGroupedTypeSet
         if not any(portal_type in getPortalGroupedTypeSet(portal_type_group) for
-                   portal_type_group in tdef.portal_type_group_filter):
+                   portal_type_group in tdef.getPortalTypeGroupFilterList()):
           continue
 
-      for imethod_id in tdef.method_id:
+      for imethod_id in tdef.getTriggerMethodIdList():
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
           # XXX What happens if exception ?
@@ -636,7 +644,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           interaction_queue.append((wf_id,
                                     tr_id,
                                     transition_id_set,
-                                    tdef.once_per_transaction,
+                                    tdef.getTriggerOncePerTransaction(),
                                     method_id_matcher))
 
           # XXX - class stuff is missing here
@@ -655,7 +663,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
               ptype_klass.security.declareProtected(
                   Permissions.AccessContentsInformation, method_id)
             ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id,
-                                               tdef.once_per_transaction)
+                                               tdef.getTriggerOncePerTransaction())
             continue
 
           # Wrap method
@@ -678,7 +686,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
             transition_id = method.getTransitionId()
             if transition_id in transition_id_set:
               method.registerTransitionAlways(portal_type, wf_id, transition_id)
-          if tdef.once_per_transaction:
+          if tdef.getTriggerOncePerTransaction():
             method.registerTransitionOncePerTransaction(portal_type, wf_id, tr_id)
           else:
             method.registerTransitionAlways(portal_type, wf_id, tr_id)
@@ -1643,6 +1651,29 @@ class Base(
     """
     return self
 
+  security.declarePrivate('activeInteractionScript')
+  def activeInteractionScript(
+    self,
+    interaction_workflow_path,
+    script_name,
+    status,
+    tdef_id,
+  ):
+    """
+    Call interaction script on current document.
+    This is defined on the document involved in the interaction so that
+    CopySupport.unindexObject can find the activities involving this method
+    and flush them.
+    """
+    self.getPortalObject().unrestrictedTraverse(
+      interaction_workflow_path,
+    ).callInterationScript(
+      script_name=script_name,
+      ob=self,
+      status=status,
+      tdef_id=tdef_id,
+    )
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDocumentInstance')
   def getDocumentInstance(self):
@@ -1801,11 +1832,12 @@ class Base(
     return self.aq_inner.aq_parent.getPortalObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
+  @deprecated
   def getWorkflowIds(self):
     """
       Returns the list of workflows
     """
-    return self.portal_workflow.getWorkflowIds()
+    return self.portal_workflow.objectIds()
 
   # Object Database Management
   security.declareProtected( Permissions.ManagePortal, 'upgrade' )
@@ -2799,9 +2831,9 @@ class Base(
                             'isDeleted')
   def isDeleted(self):
     """Test if the context is in 'deleted' state"""
-    for wf in self.getPortalObject().portal_workflow.getWorkflowsFor(self):
+    for wf in self.getPortalObject().portal_workflow.getWorkflowValueListFor(self):
       state = wf._getWorkflowStateOf(self)
-      if state is not None and state.getId() == 'deleted':
+      if state is not None and state.getReference() == 'deleted':
         return True
     return False
 
@@ -2841,8 +2873,8 @@ class Base(
       Returns a list of tuples {id:workflow_id, state:workflow_state}
     """
     result = []
-    for wf in self.portal_workflow.getWorkflowsFor(self):
-      result += [(wf.id, wf._getWorkflowStateOf(self, id_only=1))]
+    for wf in self.portal_workflow.getWorkflowValueListFor(self.getPortalType()):
+      result += [(wf.getId(), wf._getWorkflowStateOf(self, id_only=1))]
     return result
 
   security.declarePublic('getWorkflowInfo')
@@ -3227,9 +3259,8 @@ class Base(
             if history and 'time' in history[0])
         except ValueError:
           pass
-    if getattr(aq_base(self), 'CreationDate', None) is not None:
-      return asDate(self.CreationDate())
-    return None # JPS-XXX - try to find a way to return a creation date instead of None
+    if getattr(aq_base(self), 'creation_date', None):
+      return self.creation_date.toZone(DateTime().timezone())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
   def getModificationDate(self):
@@ -3258,7 +3289,13 @@ class Base(
         # Return a copy of history time, to prevent modification
         return DateTime(max_date)
     if self._p_serial:
-      return DateTime(TimeStamp(self._p_serial).timeTime())
+      return DateTime(self._p_mtime)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'modified')
+  def modified(self):
+    warnings.warn('modified is a deprecated alias to getModificationDate.',
+                  DeprecationWarning)
+    return self.getModificationDate()
 
   # Layout management
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
@@ -3489,12 +3526,14 @@ class Base(
     # Use meta transition to jump from one state to another
     # without existing transitions.
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow
     worflow_variable_list = []
-    for workflow in workflow_tool.getWorkflowsFor(self):
-      if not isinstance(workflow, InteractionWorkflowDefinition):
-        worflow_variable_list.append(self.getProperty(workflow.state_var))
+    for workflow in workflow_tool.getWorkflowValueListFor(self):
+      if not isinstance(workflow, InteractionWorkflowDefinition) and \
+          not isinstance(workflow, InteractionWorkflow):
+        worflow_variable_list.append(self.getProperty(workflow.getStateVariable()))
 
     # then restart ingestion with new portal_type
     # XXX Contribution Tool accept only document which are containing
@@ -3609,51 +3648,16 @@ def removeIContentishInterface(cls):
 
 removeIContentishInterface(Base)
 
-class TempBase(Base):
-  """A  version of Base that does not persist in ZODB.
+class TempBase(TemporaryDocumentMixin, Base):
+  """A version of Base that does not persist in ZODB.
 
   This class only has the Base methods, so most of the times it is
   preferable to use a temporary portal type instead.
   """
-  isIndexable = ConstantGetter('isIndexable', value=False)
-  isTempDocument = ConstantGetter('isTempDocument', value=True)
-
   # Declarative security
   security = ClassSecurityInfo()
-
-  def reindexObject(self, *args, **kw):
-    pass
-
-  def recursiveReindexObject(self, *args, **kw):
-    pass
-
-  def activate(self, *args, **kw):
-    return self
-
-  def setUid(self, value):
-    self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
-
-  def setTitle(self, value):
-    """
-    Required so that getProperty('title') will work on tempBase objects
-    The dynamic acquisition work very well for a lot of properties, but
-    not for title. For example, if we do setProperty('organisation_url'), then
-    even if organisation_url is not in a propertySheet, the method getOrganisationUrl
-    will be generated. But this does not work for title, because I(seb)'m almost sure
-    there is somewhere a method '_setTitle' or 'setTitle' with no method getTitle on Base.
-    That why setProperty('title') and getProperty('title') does not work.
-    """
-    self.title = value
-
-  def getTitle(self):
-    """
-      Returns the title of this document
-    """
-    return getattr(aq_base(self), 'title', None)
-
   security.declarePublic('setProperty')
   security.declarePublic('getProperty')
-
   security.declarePublic('edit')
 
 # Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8

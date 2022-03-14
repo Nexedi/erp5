@@ -1,7 +1,7 @@
-/*globals window, RSVP, rJS, jIO, loopEventListener, URL, document */
+/*globals window, RSVP, rJS, jIO, URL, document */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 
-(function (window, RSVP, rJS, jIO, URL) {
+(function (window, RSVP, rJS, jIO, URL, loopEventListener) {
   "use strict";
 
   var origin_url = (window.location.origin + window.location.pathname)
@@ -26,7 +26,8 @@
       },
       "Notebook": {
         "url": "officejs_notebook/",
-        "cache": "gadget_officejs_notebook.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Illustration Editor": {
         "url": "officejs_svg_editor/",
@@ -85,7 +86,8 @@
       },
       "Monitoring App": {
         "url": "officejs_monitoring/",
-        "cache" : "gadget_officejs_monitoring.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "App Store": {
         "url": "officejs_appstore/",
@@ -225,4 +227,4 @@
         });
     });
 
-}(window, RSVP, rJS, jIO, URL));
+}(window, RSVP, rJS, jIO, URL, rJS.loopEventListener));

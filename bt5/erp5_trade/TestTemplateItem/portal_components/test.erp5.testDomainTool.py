@@ -65,7 +65,7 @@ class TestDomainTool(TestPredicateMixIn):
         portal_type=['!=%s' % x for x
           in domain_tool.getPortalRuleTypeList()
           + ('Base Domain', 'Contribution Predicate',
-             'Solver Type', 'Trade Model Path')
+             'Solver Type', 'Trade Model Path', 'Worklist')
           + domain_tool.getPortalDivergenceTesterTypeList()
           + domain_tool.getPortalBusinessProcessTypeList()
           + domain_tool.getPortalBusinessLinkTypeList()

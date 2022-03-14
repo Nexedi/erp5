@@ -92,6 +92,15 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-
   margin-bottom: 8px;
 }
 
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-title a {
+  color: #267B87;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 33px;
+  margin-bottom: 8px;
+  margin-left: 14px;
+}
+
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box span.margined  {
   margin-right: 5px;
 }

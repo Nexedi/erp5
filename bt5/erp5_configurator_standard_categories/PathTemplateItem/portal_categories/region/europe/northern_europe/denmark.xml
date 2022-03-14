@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>DNK</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>DK</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>denmark</string> </value>
         </item>

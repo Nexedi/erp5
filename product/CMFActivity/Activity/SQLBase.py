@@ -27,7 +27,12 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-import sys, six
+from collections import defaultdict
+from contextlib import contextmanager
+from itertools import product
+import operator
+import sys
+import six
 import transaction
 from random import getrandbits
 import MySQLdb
@@ -50,6 +55,7 @@ MAX_VALIDATED_LIMIT = 1000
 # Read this many messages to validate.
 READ_MESSAGE_LIMIT = 1000
 INVOKE_ERROR_STATE = -2
+DEPENDENCY_IGNORED_ERROR_STATE = -10
 # Activity uids are stored as 64 bits unsigned integers.
 # No need to depend on a database that supports unsigned integers.
 # Numbers are far big enough without using the MSb. Assuming a busy activity
@@ -63,6 +69,12 @@ UID_SAFE_BITSIZE = 63
 # enough while yielding one order of magnitude collision probability
 # improvement.
 UID_ALLOCATION_TRY_COUNT = 10
+# Limit the number of UNION-joined subqueries per query when looking for
+# blocking activities. Used to take a slice from a list.
+# XXX: 5000 is known to work on a case on "after_tag" dependency, which fails
+# at 5400 with:
+#   ProgrammingError: (1064, "memory exhausted near [...]")
+_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT = -5000
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -70,23 +82,46 @@ def sort_message_key(message):
 
 _DequeueMessageException = Exception()
 
+_ITEMGETTER0 = operator.itemgetter(0)
+_IDENTITY = lambda x: x
+
 def render_datetime(x):
   return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
 
+if six.PY2:
+  _SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
+else:
+  _SQLTEST_NO_QUOTE_TYPE_SET = int, float
+_SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
+
+@contextmanager
+def SQLLock(db, lock_name, timeout):
+  """
+  Attemp to acquire a named SQL lock. The outcome of this acquisition is
+  returned to the context statement and MUST be checked:
+  1: lock acquired
+  0: timeout
+  """
+  lock_name = db.string_literal(lock_name)
+  query = db.query
+  (_, ((acquired, ), )) = query('SELECT GET_LOCK(%s, %f)' % (lock_name, timeout))
+  if acquired is None:
+    raise ValueError('Error acquiring lock')
+  try:
+    yield acquired
+  finally:
+    if acquired:
+      query('SELECT RELEASE_LOCK(%s)' % (lock_name, ))
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
   sqltest_dict = {}
-  if six.PY2:
-    no_quote_type = int, float, long
-  else:
-    no_quote_type = int, float
   def _(name, column=None, op="="):
     if column is None:
       column = name
     column_op = "%s %s " % (column, op)
     def render(value, render_string):
-      if isinstance(value, no_quote_type):
+      if isinstance(value, _SQLTEST_NO_QUOTE_TYPE_SET):
         return column_op + str(value)
       if isinstance(value, DateTime):
         value = render_datetime(value)
@@ -97,7 +132,7 @@ def sqltest_dict():
         return column + " IS NULL"
       for x in value:
         return "%s IN (%s)" % (column, ', '.join(map(
-          str if isinstance(x, no_quote_type) else
+          str if isinstance(x, _SQLTEST_NO_QUOTE_TYPE_SET) else
           render_datetime if isinstance(x, DateTime) else
           render_string, value)))
       return "0"
@@ -117,8 +152,8 @@ def sqltest_dict():
     # list of values, rendered condition will match the immediate next row in
     # that sort order.
     priority, date, uid = value
-    assert isinstance(priority, no_quote_type)
-    assert isinstance(uid, no_quote_type)
+    assert isinstance(priority, _SQLTEST_NO_QUOTE_TYPE_SET)
+    assert isinstance(uid, _SQLTEST_NO_QUOTE_TYPE_SET)
     return (
         '(priority>%(priority)s OR (priority=%(priority)s AND '
           '(date>%(date)s OR (date=%(date)s AND uid>%(uid)s))'
@@ -132,6 +167,68 @@ def sqltest_dict():
   sqltest_dict['above_priority_date_uid'] = renderAbovePriorityDateUid
   return sqltest_dict
 sqltest_dict = sqltest_dict()
+
+def _validate_after_path_and_method_id(value, render_string):
+  path, method_id = value
+  return (
+    sqltest_dict['method_id'](method_id, render_string) +
+    ' AND ' +
+    sqltest_dict['path'](path, render_string)
+  )
+
+def _validate_after_tag_and_method_id(value, render_string):
+  tag, method_id = value
+  return (
+    sqltest_dict['method_id'](method_id, render_string) +
+    ' AND ' +
+    sqltest_dict['tag'](tag, render_string)
+  )
+
+# Definition of activity dependencies
+# key: dependency name (as passed to ActiveObject.activate() & friends)
+# value:
+# - tuple of column names. If there is more than one, they must be in the
+#   same order as the dependency value items expected by the next item
+# - callable rendering given values into an SQL condition
+#   (value, render_string) -> str
+# - minimal applicable processing_node value (excluded)
+_DEPENDENCY_TESTER_DICT = {
+  'after_method_id': (
+    ('method_id', ),
+    sqltest_dict['method_id'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
+  ),
+  'after_path': (
+    ('path', ),
+    sqltest_dict['path'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
+  ),
+  'after_message_uid': (
+    ('uid', ),
+    sqltest_dict['uid'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
+  ),
+  'after_path_and_method_id': (
+    ('path', 'method_id'),
+    _validate_after_path_and_method_id,
+    DEPENDENCY_IGNORED_ERROR_STATE,
+  ),
+  'after_tag': (
+    ('tag', ),
+    sqltest_dict['tag'],
+    DEPENDENCY_IGNORED_ERROR_STATE,
+  ),
+  'after_tag_and_method_id': (
+    ('tag', 'method_id'),
+    _validate_after_tag_and_method_id,
+    DEPENDENCY_IGNORED_ERROR_STATE,
+  ),
+  'serialization_tag': (
+    ('serialization_tag', ),
+    sqltest_dict['serialization_tag'],
+    -1,
+  ),
+}
 
 def getNow(db):
   """
@@ -167,10 +264,10 @@ CREATE TABLE %s (
   KEY `node_group_priority_date` (`processing_node`, `group_method_id`, `priority`, `date`),
   KEY `node2_group_priority_date` (`processing_node`, `node`, `group_method_id`, `priority`, `date`),
   KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
-  KEY (`path`),
+  KEY (`path`, `processing_node`),
   KEY (`active_process_uid`),
-  KEY (`method_id`),
-  KEY (`tag`)
+  KEY (`method_id`, `processing_node`),
+  KEY (`tag`, `processing_node`)
 ) ENGINE=InnoDB""" % self.sql_table
 
   def initialize(self, activity_tool, clear):
@@ -200,6 +297,13 @@ CREATE TABLE %s (
     " message) VALUES\n(%s)")
   _insert_separator = "),\n("
 
+  def _hasDependency(self, message):
+    get = message.activity_kw.get
+    return any(
+      get(x) is not None
+      for x in _DEPENDENCY_TESTER_DICT
+    )
+
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
@@ -227,11 +331,10 @@ CREATE TABLE %s (
     values_list = []
     max_payload = self._insert_max_payload
     sep_len = len(self._insert_separator)
+    hasDependency = self._hasDependency
     for m in message_list:
       if m.is_registered:
         active_process_uid = m.active_process_uid
-        order_validation_text = m.order_validation_text = \
-          self.getOrderValidationText(m)
         date = m.activity_kw.get('at_date')
         row = ','.join((
           '@uid+%s' % i,
@@ -239,7 +342,7 @@ CREATE TABLE %s (
           'NULL' if active_process_uid is None else str(active_process_uid),
           "UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
-          '0' if order_validation_text == 'none' else '-1',
+          '-1' if hasDependency(m) else '0',
           str(m.activity_kw.get('priority', 1)),
           str(m.activity_kw.get('node', 0)),
           quote(m.getGroupId()),
@@ -286,17 +389,17 @@ CREATE TABLE %s (
       for line in result]
 
   def countMessageSQL(self, quote, **kw):
-    return "SELECT count(*) FROM %s WHERE processing_node > -10 AND %s" % (
-      self.sql_table, " AND ".join(
+    return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
+      self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
         sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v
         ) or "1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
     where = [sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v]
     if only_valid:
-      where.append('processing_node > -2')
+      where.append('processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
-      where.append('processing_node < -1')
+      where.append('processing_node <= %d' % INVOKE_ERROR_STATE)
     return "SELECT 1 FROM %s WHERE %s LIMIT 1" % (
       self.sql_table, " AND ".join(where) or "1")
 
@@ -333,58 +436,199 @@ CREATE TABLE %s (
         # a lock error into a conflict error.
         LOG('SQLBase', INFO, 'Got a lock error, retrying...')
 
-  # Validation private methods
-  def getValidationSQL(self, quote, activate_kw, same_queue):
-    validate_list = []
-    for k, v in activate_kw.iteritems():
-      if v is not None:
-        try:
-          method = getattr(self, '_validate_' + k, None)
-          if method:
-            validate_list.append(' AND '.join(method(v, quote)))
-        except Exception:
-          LOG('CMFActivity', WARNING, 'invalid %s value: %r' % (k, v),
-              error=True)
-          # Prevent validation by depending on anything, at least itself.
-          validate_list = '1',
-          same_queue = False
-          break
-    if validate_list:
-      return ("SELECT '%s' as activity, uid, date, processing_node,"
-              " priority, group_method_id, message FROM %s"
-              " WHERE processing_node > -10 AND (%s) LIMIT %s" % (
-                type(self).__name__, self.sql_table,
-                ' OR '.join(validate_list),
-                READ_MESSAGE_LIMIT if same_queue else 1))
-
-  def _validate_after_method_id(self, *args):
-    return sqltest_dict['method_id'](*args),
-
-  def _validate_after_path(self, *args):
-    return sqltest_dict['path'](*args),
-
-  def _validate_after_message_uid(self, *args):
-    return sqltest_dict['uid'](*args),
-
-  def _validate_after_path_and_method_id(self, value, quote):
-    path, method_id = value
-    return (sqltest_dict['method_id'](method_id, quote),
-            sqltest_dict['path'](path, quote))
-
-  def _validate_after_tag(self, *args):
-    return sqltest_dict['tag'](*args),
-
-  def _validate_after_tag_and_method_id(self, value, quote):
-    tag, method_id = value
-    return (sqltest_dict['method_id'](method_id, quote),
-            sqltest_dict['tag'](tag, quote))
-
-  def _validate_serialization_tag(self, *args):
-    return 'processing_node > -1', sqltest_dict['serialization_tag'](*args)
-
   def _log(self, severity, summary):
     LOG(self.__class__.__name__, severity, summary,
         error=severity > INFO)
+
+  def _getExecutableMessageSet(self, activity_tool, db, message_list):
+    """
+    Return, from given message list, the set of messages which have all their
+    dependencies satisfied.
+    """
+    # Principle of operation:
+    # For each dependency type used in given message list, find all messages
+    # matching any of the dependency values used in given message list.
+    # This provides the SQL database with structurally simple queries that it
+    # should be able to optimise easily.
+    # Further refinements:
+    # - Any blocked message is ignored in further dendency type lookups (we
+    #   already know it is blocked, no point in checking further).
+    # - Test the most popular dependency types first, with the expectation
+    #   that these will find most of the blockers, reducing the set of
+    #   activities left to test and (with the refinement above) reducing the
+    #   probability of having to run further queries (if there are other
+    #   dependency types to test)
+    dependency_tester_dict = _DEPENDENCY_TESTER_DICT
+    # dependency_name (str): Something like 'serialization_tag', etc
+    # dependency_value (any): dependency_name-dependent structure and meaning.
+    # dependency_dict: define the dependencies to check, and which messages are
+    # blocked by each found blocker.
+    #   [dependency_name][dependency_value] -> message set
+    dependency_dict = defaultdict(lambda: defaultdict(set))
+    # message_dependency_dict: define which message has which dependencies, to
+    # efficiently remove a message from dependency_dict once it is found to be
+    # blocked.
+    #   [message][dependency_name] -> dependency_value
+    message_dependency_dict = defaultdict(dict)
+    for message in message_list:
+      for (
+        dependency_name,
+        dependency_value,
+      ) in message.activity_kw.iteritems():
+        try:
+          column_list, _, _ = dependency_tester_dict[dependency_name]
+        except KeyError:
+          continue
+        # There are 2 types of dependencies:
+        # - monovalued (most), which accepts a single value and a vector of
+        #   values.
+        # - n-valued (after_path_and_method_id and after_tag_and_method_id)
+        #   which accept a n-vector, each item being a single value or a vector
+        #   of values.
+        # Convert every form into its vector equivalent form, ignoring
+        # conditions which cannot match any activity, and (for n-valued)
+        # enumerate all possible combinations for later reverse-lookup.
+        column_count = len(column_list)
+        if column_count == 1:
+          if dependency_value is None:
+            continue
+          dependency_value_list = [
+            x
+            for x in (
+              (dependency_value, )
+              if isinstance(
+                dependency_value,
+                _SQLTEST_NON_SEQUENCE_TYPE_SET,
+              ) else
+              dependency_value
+            )
+            # None values cannot match any activity, ignore them.
+            if x is not None
+          ]
+        else:
+          try:
+            if (
+              len(dependency_value) != column_count or
+              None in dependency_value
+            ):
+              # Malformed or impossible to match dependency, ignore.
+              continue
+          except TypeError:
+            # Malformed dependency, ignore.
+            continue
+          # Note: it any resulting item ends up empty (ex: it only contained
+          # None), product will return an empty list.
+          dependency_value_list = list(product(*(
+            (
+              (dependency_column_value, )
+              if isinstance(
+                dependency_column_value,
+                _SQLTEST_NON_SEQUENCE_TYPE_SET,
+              ) else
+              (x for x in dependency_column_value if x is not None)
+            )
+            for dependency_column_value in dependency_value
+          )))
+        if not dependency_value_list:
+          continue
+        message_dependency_dict[message][dependency_name] = dependency_value_list
+        dependency_value_dict = dependency_dict[dependency_name]
+        for dependency_value in dependency_value_list:
+          dependency_value_dict[dependency_value].add(message)
+    # Messages are supposed valid until blockage is found.
+    result = set(message_list)
+    # Messages for which a blockage is found, so removal of this message from
+    # further dependency processing is delayed to the next iteration, to avoid
+    # doing such work if there is no such further iteration.
+    new_blocked_message_set = set()
+    quote = db.string_literal
+    table_name_list = activity_tool.getSQLTableNameSet()
+    for (
+      dependency_name,
+      dependency_value_dict,
+    ) in sorted(
+      dependency_dict.iteritems(),
+      # Test first the condition with the most values.
+      # XXX: after_path=('foo', 'bar') counts as 2 points for after_path
+      # despite being a single activity. Is there a fairer (while cheap) way ?
+      key=lambda dependency_dict_item: sum(
+        len(message_set)
+        for message_set in dependency_dict_item[1].itervalues()
+      ),
+      reverse=True,
+    ):
+      # Previous iteration found blocked messages.
+      # Find which activities, and remove their values from dependency_dict
+      # so these activities are not tested in further queries (we already
+      # know they are blocked).
+      while new_blocked_message_set:
+        blocked_message = new_blocked_message_set.pop()
+        for (
+          message_dependency_name,
+          message_dependency_value_list,
+        ) in message_dependency_dict[blocked_message].iteritems():
+          message_dependency_value_dict = dependency_dict[message_dependency_name]
+          if not message_dependency_value_dict:
+            # This dependency was already dropped or evaluated, nothing to
+            # cleanup here.
+            continue
+          for message_dependency_value in message_dependency_value_list:
+            message_set = message_dependency_value_dict[message_dependency_value]
+            message_set.remove(blocked_message)
+            if not message_set:
+              # No more message wait for this value for this dependency, drop
+              # the entry.
+              del message_dependency_value_dict[message_dependency_value]
+          # Note: no point in editing dependency_dict if
+          # message_dependency_value_dict is empty, the outer loop is working
+          # on a copy.
+      if not dependency_value_dict:
+        # No more non-blocked message for this dependency, skip it.
+        continue
+      column_list, to_sql, min_processing_node = dependency_tester_dict[
+        dependency_name
+      ]
+      row2key = (
+        _ITEMGETTER0
+        if len(column_list) == 1 else
+        _IDENTITY
+      )
+      base_sql_suffix = ' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
+        min_processing_node,
+      )
+      sql_suffix_list = [
+        base_sql_suffix % to_sql(dependency_value, quote)
+        for dependency_value in dependency_value_dict
+      ]
+      base_sql_prefix = '(SELECT %s FROM ' % (
+        ','.join(column_list),
+      )
+      subquery_list = [
+        base_sql_prefix + table_name + sql_suffix
+        for table_name in table_name_list
+        for sql_suffix in sql_suffix_list
+      ]
+      while subquery_list:
+        # Join queries with a UNION, to reduce per-query latency.
+        # Also, limit the number of subqueries per query, as their number can
+        # largely exceed the number of activities being considered multiplied
+        # by the number of activty tables: it is also proportional to the
+        # number of distinct values being looked for in the current column.
+        for row in db.query(
+          ' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
+          max_rows=0,
+        )[1]:
+          # Each row is a value which blocks some activities.
+          dependent_message_set = dependency_value_dict[row2key(row)]
+          # queue blocked messages for processing in the beginning of next
+          # outermost iteration.
+          new_blocked_message_set |= dependent_message_set
+          # ...but update result immediately, in case there is no next
+          # outermost iteration.
+          result -= dependent_message_set
+        del subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]
+      dependency_value_dict.clear()
+    return result
 
   def distribute(self, activity_tool, node_count):
     db = activity_tool.getSQLConnection()
@@ -400,20 +644,14 @@ CREATE TABLE %s (
       if not result:
         return
       transaction.commit()
-
-      validation_text_dict = {'none': 1}
-      message_dict = {}
-      for line in result:
-        message = Message.load(line.message, uid=line.uid, line=line)
-        if not hasattr(message, 'order_validation_text'): # BBB
-          message.order_validation_text = self.getOrderValidationText(message)
-        self.getExecutableMessageList(activity_tool, message, message_dict,
-                                      validation_text_dict, now_date=now_date)
+      message_list = [Message.load(line.message, uid=line.uid, line=line)
+                      for line in result]
+      message_set = self._getExecutableMessageSet(activity_tool, db, message_list)
       transaction.commit()
-      if message_dict:
+      if message_set:
         distributable_uid_set = set()
         serialization_tag_dict = {}
-        for message in message_dict.itervalues():
+        for message in message_set:
           serialization_tag = message.activity_kw.get('serialization_tag')
           if serialization_tag is None:
             distributable_uid_set.add(message.uid)
@@ -436,6 +674,7 @@ CREATE TABLE %s (
           validated_count += distributable_count
           if validated_count >= MAX_VALIDATED_LIMIT:
             return
+      line = result[-1]
       where_kw['above_priority_date_uid'] = (line.priority, line.date, line.uid)
 
   def getReservedMessageList(self, db, date, processing_node, limit,
@@ -454,39 +693,59 @@ CREATE TABLE %s (
             ' AND group_method_id=' + quote(group_method_id)
             if group_method_id else '' , limit)
 
-    # Get reservable messages.
-    # During normal operation, sorting by date (as last criteria) is fairer
-    # for users and reduce the probability to do the same work several times
-    # (think of an object that is modified several times in a short period of
-    # time).
-    if node_set is None:
-      result = Results(query(
-        "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
-        " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
-    else:
-      # We'd like to write
-      #   ORDER BY priority, IF(node, IF(node={node}, -1, 1), 0), date
-      # but this makes indices inefficient.
-      subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
-        " WHERE {} AND processing_node=0 AND %s%s"
-        " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
-      node = 'node=%s' % processing_node
-      result = Results(query(
-        # "ALL" on all but one, to incur deduplication cost only once.
-        # "UNION ALL" between the two naturally distinct sets.
-        "SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
-        " ORDER BY effective_priority, date LIMIT %s"% (
-            subquery(-1, node),
-            subquery('', 'node=0'),
-            subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
-            ' UNION ALL ' + subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set))) if node_set else '',
-            limit), 0))
-    if result:
-      # Reserve messages.
-      uid_list = [x.uid for x in result]
-      self.assignMessageList(db, processing_node, uid_list)
-      self._log(TRACE, 'Reserved messages: %r' % uid_list)
-      return result
+    # Note: Not all write accesses to our table are protected by this lock.
+    # This lock is not here for data consistency reasons, but to avoid wasting
+    # time on SQL deadlocks caused by the varied lock ordering chosen by the
+    # database. These queries specifically seem to be extremely prone to such
+    # deadlocks, so prevent them from attempting to run in parallel on a given
+    # activity table.
+    # If more accesses are found to cause a significant waste of time because
+    # of deadlocks, then they should acquire such lock as well. But
+    # preemptively applying such lock everywhere without checking the amount
+    # of waste is unlikely to produce a net gain.
+    # XXX: timeout may benefit from being tweaked, but one second seem like a
+    # reasonable starting point.
+    # XXX: locking could probably be skipped altogether on clusters with few
+    # enough processing nodes, as there should be little deadlocks and the
+    # tradeoff becomes unfavorable to explicit locks. What threshold to
+    # choose ?
+    with SQLLock(db, self.sql_table, timeout=1) as acquired:
+      if not acquired:
+        # This table is busy, check for work to do elsewhere
+        return ()
+      # Get reservable messages.
+      # During normal operation, sorting by date (as last criteria) is fairer
+      # for users and reduce the probability to do the same work several times
+      # (think of an object that is modified several times in a short period of
+      # time).
+      if node_set is None:
+        result = Results(query(
+          "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
+          " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
+      else:
+        # We'd like to write
+        #   ORDER BY priority, IF(node, IF(node={node}, -1, 1), 0), date
+        # but this makes indices inefficient.
+        subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
+          " WHERE {} AND processing_node=0 AND %s%s"
+          " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
+        node = 'node=%s' % processing_node
+        result = Results(query(
+          # "ALL" on all but one, to incur deduplication cost only once.
+          # "UNION ALL" between the two naturally distinct sets.
+          "SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
+          " ORDER BY effective_priority, date LIMIT %s"% (
+              subquery(-1, node),
+              subquery('', 'node=0'),
+              subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
+              ' UNION ALL ' + subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set))) if node_set else '',
+              limit), 0))
+      if result:
+        # Reserve messages.
+        uid_list = [x.uid for x in result]
+        self.assignMessageList(db, processing_node, uid_list)
+        self._log(TRACE, 'Reserved messages: %r' % uid_list)
+        return result
     return ()
 
   def assignMessageList(self, db, state, uid_list):
@@ -553,6 +812,9 @@ CREATE TABLE %s (
                                                1, node_set=node_family_id_list)
           if not result:
             break
+          # So reserved documents are properly released even if load raises.
+          for line in result:
+            uid_to_duplicate_uid_list_dict[line.uid] = []
         load = self.getProcessableMessageLoader(db, processing_node)
         m, uid, uid_list = load(result[0])
         message_list = [m]
@@ -818,6 +1080,7 @@ CREATE TABLE %s (
     """
       object_path is a tuple
     """
+    db = activity_tool.getSQLConnection()
     path = '/'.join(object_path)
     if invoke:
       invoked = set()
@@ -831,7 +1094,7 @@ CREATE TABLE %s (
           pass
         line = getattr(message, 'line', None)
         if (line and line.processing_node != -1 or
-            not activity_tool.getDependentMessageList(message)):
+            self._getExecutableMessageSet(activity_tool, db, [message])):
           # Try to invoke the message - what happens if invoke calls flushActivity ??
           with ActivityRuntimeEnvironment(message):
             activity_tool.invoke(message)
@@ -848,7 +1111,6 @@ CREATE TABLE %s (
           invoke(m)
         activity_tool.unregisterMessage(self, m)
     uid_list = []
-    db = activity_tool.getSQLConnection()
     for line in self._getMessageList(db, path=path,
         **({'method_id': method_id} if method_id else {})):
       if only_safe and line.processing_node > -2:

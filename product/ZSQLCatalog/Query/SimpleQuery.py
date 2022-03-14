@@ -29,7 +29,6 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-from future.utils import raise_
 from .Query import Query
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
@@ -40,7 +39,7 @@ NULL_SEARCH_TEXT_OPERATOR_DICT = {
   '=': 'is',
   '!=': 'is not',
 }
-for value in list(NULL_SEARCH_TEXT_OPERATOR_DICT.values()):
+for value in NULL_SEARCH_TEXT_OPERATOR_DICT.values():
   NULL_SEARCH_TEXT_OPERATOR_DICT[value] = value
 
 class SimpleQuery(Query):
@@ -68,7 +67,7 @@ class SimpleQuery(Query):
     """
     self.search_key = search_key
     if len(kw) != 1:
-      raise_(ValueError, 'SimpleQuery can support one and one only column. Got %r.' % (kw, ))
+      raise ValueError('SimpleQuery can support one and one only column. Got %r.' % kw)
     self.column, value = kw.popitem()
     # Usability improvement code (those changes should not be needed when
     # this Query is instanciated by a SearchKey, as operator should be correct
@@ -99,7 +98,7 @@ class SimpleQuery(Query):
         raise ValueError('Unexpected comparison_operator %r for None value.'
           % (comparison_operator, ))
     elif comparison_operator == 'is':
-      raise_(ValueError, 'Non-None value (%r) with "is" comparison_operator. Not sure what to do.' % (value, ))
+      raise ValueError('Non-None value (%r) with "is" comparison_operator. Not sure what to do.' % (value, ))
     self.value = value
     self.comparison_operator = comparison_operator
     self.group = group

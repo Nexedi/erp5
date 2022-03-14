@@ -33,6 +33,15 @@ else:
     transformation_uid_list.append(uid)
 
   module = portal.getDefaultModule('Transformation')
+  message = translateString(
+      # first, try to get a full translated message with portal types
+      "Documents related to %s." % context.getPortalType(),
+        # if not found, fallback to generic translation
+      default=translateString('Documents related to ${that_portal_type} : ${that_title}.',
+        mapping={"that_portal_type": context.getTranslatedPortalType(),
+                  "that_title": context.getTitleOrId() }),)
   return module.Base_redirect('view',
                               keep_items=dict(reset=1,
+                                              portal_status_message=message,
+                                              ignore_hide_rows=1,
                                               uid=transformation_uid_list))

@@ -20,11 +20,7 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/?page=preference</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Active</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Search from the panel -->
 <tr>
@@ -69,14 +65,10 @@
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[text()='Preferences']</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[text()='My Account']</td>
  <td></td>
 </tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Active</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- Check the the global search link restore the search state -->
 <tr>

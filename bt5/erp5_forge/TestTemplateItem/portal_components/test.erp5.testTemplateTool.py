@@ -34,6 +34,7 @@ import random
 import tempfile
 from xml.dom.minidom import getDOMImplementation
 from App.config import getConfiguration
+from Products.CMFCore.ActionsTool import ActionsTool
 
 from Products.ERP5.Document.BusinessTemplate import \
     BusinessTemplateMissingDependency
@@ -51,7 +52,6 @@ class TestTemplateTool(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_mroonga_catalog',
             'erp5_base',
-            'erp5_csv_style',
             'erp5_crm',
             'erp5_forge')
 
@@ -71,7 +71,7 @@ class TestTemplateTool(ERP5TypeTestCase):
   def beforeTearDown(self):
     self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
-           'erp5_workflow', 'erp5_configurator',
+           'erp5_configurator',
            'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard"]
     for bt_name in mark_replaced_bt_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
@@ -140,7 +140,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertEqual(len(test_web.getRevision()), 28)
 
-  def test_updateBusinessTemplateFromUrl_simple(self):
+  def test_00_updateBusinessTemplateFromUrl_simple(self):
     """
      Test updateBusinessTemplateFromUrl method
 
@@ -148,13 +148,43 @@ class TestTemplateTool(ERP5TypeTestCase):
      the new bt5 is not installed, only imported.
     """
     self._svn_setup_ssl()
+    # we make this class a global so that it can be pickled
+    global PropertiesTool  # pylint:disable=global-variable-not-assigned
+    class PropertiesTool(ActionsTool):  # pylint:disable=redefined-outer-name
+      id = 'portal_properties'
+    cls = PropertiesTool
+
+    # Assign a fake properties tool to the portal
+    tool = PropertiesTool()
+    self.portal._setObject(tool.id, tool, set_owner=False, suppress_events=True)
+    del tool
+    self.commit()
+
     template_tool = self.portal.portal_templates
+
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
+    template_tool.updateBusinessTemplateFromUrl(url)
     old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     # fake different revision
     old_bt.setRevision('')
-    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
-    template_tool.updateBusinessTemplateFromUrl(url)
-    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+
+    # Break the properties tool
+    self.assertIs(self.portal.portal_properties.__class__, cls)
+    self.commit()
+    self.portal._p_jar.cacheMinimize()
+    del PropertiesTool
+    self.assertIsNot(self.portal.portal_properties.__class__, cls)
+
+    # Remove portal.portal_properties
+    from Products.ERP5Type.dynamic.portal_type_class import \
+      _bootstrapped, synchronizeDynamicModules
+    _bootstrapped.remove(self.portal.id)
+    synchronizeDynamicModules(self.portal, force=True)
+
+    # The bt from this repo
+    url = self._getBTPathAndIdList(('erp5_csv_style',))[0][0]
+
+    new_bt = template_tool.updateBusinessTemplateFromUrl(url)
     self.assertNotEquals(old_bt, new_bt)
     self.assertEqual('erp5_csv_style', new_bt.getTitle())
 
@@ -621,8 +651,7 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_installBusinessTemplatesFromRepository_install_dependency(self):
     """Test if dependencies are automatically installed properly
     """
-    # erp5_configurator_{ung,standard} depends on erp5_configurator which in
-    # turn depends on erp5_workflow
+    # erp5_configurator_{ung,standard} depends on erp5_configurator
     bt5_name_list = ['erp5_configurator_standard']
     template_tool = self.portal.portal_templates
     repository, = [
@@ -637,8 +666,6 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertEqual(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertEqual(bt, None)
-    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
     self.assertEqual(bt, None)
 
     self.assertRaises(BusinessTemplateMissingDependency,
@@ -665,23 +692,19 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
     self.assertNotEquals(bt, None)
-    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
-    self.assertNotEquals(bt, None)
     self.abort()
 
     # Same as above but also check that dependencies are properly resolved if
     # one of the dependency is explicitly added to the list of bt5 to be
     # installed
     template_tool.installBusinessTemplateListFromRepository(
-      bt5_name_list + ['erp5_workflow'],
+      bt5_name_list + ['erp5_configurator'],
       install_dependency=True)
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertNotEquals(bt, None)
-    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
     self.assertNotEquals(bt, None)
     self.abort()
 
@@ -726,10 +749,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
     first_group = range(0, 5)
-    second_group =  range(5, 11)
-    third_group = range(11, 12)
-    fourth_group = range(12, 14)
-    fifth_group = range(14, 15)
+    second_group =  range(5, 12)
+    third_group = range(12, 14)
+    fourth_group = range(14, 15)
 
     expected_position_dict = {
       'erp5_property_sheets': first_group,
@@ -743,10 +765,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       'erp5_ingestion_mysql_innodb_catalog': second_group,
       'erp5_base': second_group,
       'erp5_knowledge_pad': second_group,
-      'erp5_ingestion': third_group,
-      'erp5_web': fourth_group,
-      'erp5_crm': fourth_group,
-      'erp5_credential': fifth_group}
+      'erp5_ingestion': second_group,
+      'erp5_web': third_group,
+      'erp5_crm': third_group,
+      'erp5_credential': fourth_group}
 
     for bt in ordered_list:
       self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],

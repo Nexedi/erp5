@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# coding: utf-8
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
@@ -32,6 +32,7 @@ import httplib
 import urlparse
 import base64
 import urllib
+import lxml.html
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -64,7 +65,7 @@ if 1: # BBB
                                                   *args, **kw)
 
   def setGlobalTranslationService(translation_service):
-    global global_translation_service
+    global global_translation_service   # pylint:disable=global-statement
     global_translation_service = translation_service
     zope.component.provideUtility(DummyTranslationDomainFallback,
                                   provides=IFallbackTranslationDomainFactory)
@@ -576,10 +577,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       if i.getId() not in ('portal_uidhandler',) and
          0 != i.getUid() != i.getProperty('uid')])
 
-  def test_site_manager_and_translation_migration(self):
-    from zope.site.hooks import getSite, setSite
+  def test_04_site_manager_and_translation_migration(self):
+    from zope.site.hooks import setSite
     from zope.component import queryUtility
-    from zope.i18n.interfaces import ITranslationDomain
     # check translation is working normaly
     erp5_ui_catalog = self.portal.Localizer.erp5_ui
     self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
@@ -594,25 +594,27 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(queryUtility(ITranslationDomain, 'ui'), None)
     # now let's simulate a site just migrated from Zope 2.8 that's being
     # accessed for the first time:
-    old_site = getSite()
-    try:
+    from Products.ERP5 import ERP5Site
+    if 1: # BBB
       setSite()
       # Sites from Zope2.8 don't have a site_manager yet.
       del self.portal._components
+      self.assertIsNotNone(ERP5Site._missing_tools_registered)
+      ERP5Site._missing_tools_registered = None
+      self.commit()
       # check that we can't get any translation utility
       self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
       # Now simulate first access. Default behaviour from
       # ObjectManager is to raise a ComponentLookupError here:
+
       setSite(self.portal)
+      self.commit()
+      self.assertIsNotNone(ERP5Site._missing_tools_registered)
       # This should have automatically reconstructed the i18n utility
       # registrations:
       self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
                        erp5_ui_catalog)
       self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
-    finally:
-      # clean everything up, we don't want to mess the test environment
-      self.abort()
-      setSite(old_site)
 
   def test_BasicAuthenticateDesactivated(self):
     """Make sure Unauthorized error does not lead to Basic auth popup in browser"""
@@ -644,6 +646,31 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = connection.getresponse()
     self.assertEqual(response.status, 401)
     self.assertEqual(response.getheader('WWW-Authenticate'), None)
+
+  def test_non_ascii_site_title(self):
+    self.portal.setTitle('文字化け')
+    self.assertEqual(
+        lxml.html.fromstring(self.portal.view()).find('.//div[@id="breadcrumb"]/a').text,
+        u'文字化け')
+    self.assertEqual(
+        lxml.html.fromstring(
+            self.portal.person_module.view()
+        ).find('.//div[@id="breadcrumb"]/a').text,
+        u'文字化け')
+    self.assertEqual(
+        lxml.html.fromstring(
+            self.portal.person_module.newContent(portal_type='Person').view()
+        ).find('.//div[@id="breadcrumb"]/a').text,
+        u'文字化け')
+
+  def test_standard_error_message_non_ascii(self):
+    # regression test for error message when portal title is not ASCII
+    self.portal.setTitle('文字化け')
+    self.assertIn(
+        u'文字化け',
+        self.portal.standard_error_message(
+            error_type="MyErrorType",
+            error_message="my error message."))
 
   def test_standardErrorMessageShouldNotRaiseUnauthorizeOnUnauthorizeDocument(self):
     """

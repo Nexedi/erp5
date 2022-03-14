@@ -2,13 +2,11 @@
 <dtml-var manage_tabs>
 
 <p class="form-help">
-  <dtml-gettext>
-    Locale folders are useful to store special multilingual objects like
-    images and specific logic. If used the <tt>Localizer</tt> object will
-    transparently add the right locale folder to the url. If you want to
-    use locale folders check the checkbox, otherwise uncheck it, then click
-    the <tt>Change</tt> button.
-  </dtml-gettext>
+  Locale folders are useful to store special multilingual objects like
+  images and specific logic. If used the <tt>Localizer</tt> object will
+  transparently add the right locale folder to the url. If you want to
+  use locale folders check the checkbox, otherwise uncheck it, then click
+  the <tt>Change</tt> button.
 </p>
 
 

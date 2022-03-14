@@ -126,6 +126,30 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     aggregated_amount = aggregated_amount_list[0]
     self.assertEqual(aggregated_amount.quantity, 2)
 
+  def test_getAggregatedAmountListKeepOrder(self):
+    """
+    Make sure that getAggregatedAmountList return amounts in the same order as on the transformation
+    """
+    transformation = self.createTransformation()
+    first_transformed_resource = self.createTransformedResource(transformation)
+    first_component = self.createComponent()
+    first_transformed_resource.edit(
+        resource_value=first_component,
+        int_index=1,
+        quantity=1)
+    second_transformed_resource = self.createTransformedResource(transformation)
+    second_component = self.createComponent()
+    second_transformed_resource.edit(
+        resource_value=second_component,
+        int_index=2,
+        quantity=2)
+
+    aggregated_amount_list = transformation.getAggregatedAmountList()
+    self.assertEqual(
+        [(a.getQuantity(), a.getResourceValue()) for a in aggregated_amount_list],
+        [(1, first_component), (2, second_component)]
+    )
+
   def test_01_getAggregatedAmountListWithVariatedProperty(self):
     """
     Make sure that getAggregatedAmountList is still working properly if we

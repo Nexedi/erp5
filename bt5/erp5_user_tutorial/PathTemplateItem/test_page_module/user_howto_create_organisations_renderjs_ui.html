@@ -1,0 +1,406 @@
+<section class="master">
+<h1>How to Add Organisations</h1>
+<img alt="Photo of the building of Z Company" src="http://img.erp5.cn/user-Howto.Add.Organisations.Front.Page.Building.Zcompany?format=png" title="Add organisation: Z Company" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>How to create an organisation</li>
+	<li>How to validate the organisation</li>
+	<li>How to check the creation</li>
+</ul>
+
+<details open="open">
+<p>Now you know how to create the related organisation of a person when he/she is created. But we can also use the organisation creation function which is independent from the person creation function, but which is quite similar to the person creation process, to create and manage organisations in ERP5.</p>
+
+<p>As we have seen from the previous tutorial, in ERP5, the creation of organisation is the premise to the creation of person. Organisations are really important because people are linked to them. For example, when you sell a product or a service to a person, you indirectly sell it to his/her organisation. The organisation creation function is also very practical because of the attributes you are going to define the different organisations with: sometimes you might be looking for specific types of organisations, for instance, press agencies when you have an announcement to make. Now this is really easy with ERP5, just search for the organisations you defined as press agencies. You can also go deeper into details: you might be looking for American press agencies if the product you want to communicate about is exclusively targeting the US market, then search in ERP5 for your American press agencies...</p>
+
+<p>Now, let&#39;s see how you can create and define an organisation with the help of ERP5.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpOrganisationTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot; /&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Organisations&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt;&lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot; /&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;Z Company&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//a[contains(text(), &quot;Z Company&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="illustration">
+<h1>Example</h1>
+<img alt="Add organisation in ERP5 example: Z Company" src="http://img.erp5.cn/user-Howto.Add.Organisations.Example.Zcompany?format=png" title="Add organisation in ERP5 example: Z Company" />
+<details open="open">
+<p>This tutorial continues with the example of the organisation &quot;Z Company&quot;, which is our client.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Click on the &ldquo;New&rdquo; tab</h1>
+<img alt="Add organisation: Click on the 'New' tab" src="user-Howto.Add.Organisations.ERP5.Modules.List.Svg?format=png" title="Add organisation: Click on the 'New' tab" />
+<details open="open">
+<p>From the ERP5 home page you have reached after login, click on &ldquo;New&rdquo;on the sidebar, you will see the base area on the left. The base area gathers the person, organisation and currency creation functions. To create a new organisation, you would just click on the link called &quot;Organisations&quot;. But since we already created the Z Company when adding the Person John Doe in the tutorial &quot;How to create Persons&quot;, we will go to the &quot;Modules&quot; on the sidebar&nbsp;instead to find our existing client &quot;Z Company&quot; and fill the details.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//p[@id=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@name=&quot;editable&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Click on the &quot;Browse&quot; tab</h1>
+<img alt="Check organisation creation: Browse the 'Organisations' database" src="user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Svg?format=png" title="Check organisation creation: Browse the 'Organisations' database" />
+<details open="open">
+<p>Click on the &quot;Modules&quot; on the sidebar and then on &quot;Organisations&quot; to find our client Z Company.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Click on &quot;Z Company&quot;</h1>
+<img alt="Check organisation creation (3): Check the organisation's line" src="user-Howto.Add.Organisations.Check.Creation.2.Organisationline.Screenshot.Svg?format=png" title="Check organisation creation (3): Check the organisation's line" />
+<details open="open">
+<p>You will find our client Z Company in the Organisation Module. Click on the line to open the organisation.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the &ldquo;view&rdquo; tab and save</h1>
+<img alt="Add organisations: Fill the 'View' page and save" src="user-Howto.Add.Organisations.View.Save.Svg?format=png" title="Add organisations: Fill the 'View' page and save" />
+<details open="open">
+<p>You will now be led to the details page of the Z Company page which has existed. As you can see, there are many fields to fill, which allow you to be really precise about the different organisations stored in ERP5. You just have to enter its detail information and then save it.</p>
+
+<p>Summary: we had created a person named John Doh, who is the marketing manager of Z Company, one of VIFIB clients. If you remember well, the organisation Z Company had been created directly through the person creation module (cf. &ldquo;How to add people&rdquo; tutorial) by &quot;Add Organisation&quot;, but had not been taken care of. Now we are going to enter some details in &quot;view&quot; tab about the organisation Z Company: Z Company Ltd is an international electricity supplier, which has been using the services of VIFIB for quite a long time as a client. Here is the address of the Company: 12 Zorro Street, 93210 Beverly Hills.</p>
+
+<p>After you have filled the &ldquo;view&rdquo; tab, save the data by clicking on &quot;<strong>Save</strong>&quot;.</p>
+
+<p>But please note that the organisations can also be created through the organisation creation module from the New tab in ERP5 home page sidebar, as you have seen in the previous tutorial &ldquo;How to add people&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1; z-index: 0;">
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_title&quot;]</td>
+			<td>Z Company</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_corporate_name&quot;]</td>
+			<td>Z Company</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;subfield_field_my_role_list_default:list&quot;]</td>
+			<td>Client</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_function&quot;]</td>
+			<td>Sales</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//textarea[@name=&quot;field_my_default_address_street_address&quot;]</td>
+			<td>12 Zorro Street</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_default_address_city&quot;]</td>
+			<td>Beverly Hills</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_default_address_zip_code&quot;]</td>
+			<td>90210</td>
+		</tr>
+		<tr>
+			<td>select</td>
+			<td>//select[@name=&quot;field_my_default_address_region&quot;]</td>
+			<td>Brazil</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_my_default_email_coordinate_text&quot;]</td>
+			<td>info@zcompany.com</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>//input[@name=&quot;field_default_telephone_my_default_telephone_coordinate_text&quot;]</td>
+			<td>+55(0)22 2222 2222</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/save&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Fill the &quot;Details&quot; tab</h1>
+<img alt="Add organisations: Fill the 'Details' tab" src="user-Howto.Add.Organisations.Details.Tab.Svg?format=png" title="Add organisations: Fill the 'Details' tab" />
+<details open="open">
+<p>In &quot;Details&quot; tab, you can fill in the details and save the changes.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Details&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>About the other tabs</h1>
+<img alt="Add organisations: Other tabs in the 'Details' page" src="user-Howto.Add.Organisations.Details.Page.Other.Tabs.Screenshot.Svg?format=png" title="Add organisations: Other tabs in the 'Details' page" />
+<details open="open">
+<p>Similar to creating people, there are some tabs that will automatically be updated by ERP5, such as &ldquo;Transactions&rdquo;, &ldquo;Financial informations&rdquo; and &ldquo;Documents&rdquo;. The application will update those tabs whenever necessary, for example, to trace a transaction that occurred between VIFIB and the client Z Company.</p>
+
+<p>When you have entered all information of the created company and saved it, it is time to validate the organisation, which works exactly the same way as person&#39;s validation.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Validate an Organisation (1)</h1>
+<img alt="Validate new organisation (1): Click on the 'Action' tab" src="user-Howto.Add.Organisations.Validate.1.Action.Screenshot.Svg?format=png" title="Validate new organisation (1): Click on the 'Action' tab" />
+<details open="open">
+<p>Click on the &ldquo;Actions&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Validate an Organisation (2)</h1>
+
+<p><img alt="Validate new organisation (2): Click on 'Validate'" src="user-Howto.Add.Organisations.Validate.2.Validate.Screenshot.Svg?format=png" title="Validate new organisation (2): Click on 'Validate'" /></p>
+
+<details open="open">
+<p>Click on the&ldquo;Validate&rdquo;.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Validate&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Validate an Organisation (3)</h1>
+<img alt="Validate new organisation (3): Check the update status" src="user-Howto.Add.Organisations.Validate.3.Update.Status.Screenshot.Svg?format=png" title="Validate new organisation (3): Check the update status" type="image/svg+xml" />
+<details open="open">
+<p>Check the update status.</p>
+
+<p>When everything has been done correctly (i.e. you have entered the data, saved and validated the organisation you created), it is time to check that Z Company appears in the organisation list of ERP5. Once again, this works the same way as for creating a person.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;View&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>verifyText</td>
+			<td>//p[@id=&quot;field_my_translated_validation_state_title&quot;]</td>
+			<td>Validated</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Check the Creation (1)</h1>
+
+<p><img alt="Check organisation creation (1): Click on the 'Modules' tab" src="user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Svg?format=png" title="Check organisation creation: Browse the 'Organisations' database" /></p>
+
+<details open="open">
+<p>To check the new organisation, you will have to navigate to the list of existing organisations.</p>
+
+<p>Click on the &ldquo;Modules&rdquo;on the sidebar&nbsp;and click on &ldquo;organisations&rdquo;, this will lead you to the organisations&#39; list.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Modules&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>How to Check the Creation (2)</h1>
+</section>
+
+<section class="screenshot"><img alt="Check organisation creation (2): Check the organisation's line" src="user-Howto.Add.Organisations.Check.Creation.3.Organisationline.Screenshot.Svg?format=png" title="Check organisation creation (3): Check the organisation's line" />
+<details open="open">
+<p>The final step is to check that Z Company is on the list. We can see that the creation was successful because Z Company has been added to the list. If you want to see or modify the details of any organisation, just click on its line to open its dedicated page.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;tal:block tal:define=&quot;click_configuration python: {&#39;text&#39;: &#39;Organisations&#39;}&quot;&gt; &lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link&quot;&gt; &lt;/tal:block&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;Z Company&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>
+
+<section class="screenshot">
+<h1>Use &quot;Modules&quot; tab</h1>
+
+<p><img alt="Check organisation creation: Browse the 'Organisations' database" src="user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Svg?format=png" title="Check organisation creation: Browse the 'Organisations' database" /></p>
+
+<details open="open">
+<p>You can use the &quot;Modules&quot; tab in the home page sidebar to check the &ldquo;Currencies&rdquo;, &ldquo;Organisations&rdquo; and&ldquo;Persons&rdquo;stored in your ERP5 database. Just click on the related name&nbsp;under&nbsp;the &ldquo;Base&rdquo;module.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_tearDownOrganisationTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>

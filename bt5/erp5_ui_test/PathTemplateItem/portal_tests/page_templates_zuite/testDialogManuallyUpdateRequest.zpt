@@ -1,0 +1,96 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dialog Manually Update Request</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test updating some request variables</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/1/Foo_viewManuallyUpdatedRequestDialog">/erp5/foo_module/1/Foo_viewManuallyUpdatedRequestDialog</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_string</td>
+  <td>Default string from TALES</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_integer</td>
+  <td>-999</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_textarea</td>
+  <td>Default text from TALES</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_listfield</td>
+  <td>Default list from TALES</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_string</td>
+  <td>Default string from TALES+</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_integer</td>
+  <td>-998</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_textarea</td>
+  <td>Default text from TALES!</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_listfield</td>
+  <td>Default list from TALES$</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_string</td>
+  <td>Default string from TALES++</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_integer</td>
+  <td>-997</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_textarea</td>
+  <td>Default text from TALES!!</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_custom_listfield</td>
+  <td>Default list from TALES$$</td>
+</tr>
+
+</body>
+</html>

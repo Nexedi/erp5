@@ -37,9 +37,9 @@ class TestRenderJSAccountingReport(ERP5TypeFunctionalTestCase):
 
   def afterSetUp(self):
     # change ownership of the preference
-    self.portal.portal_preferences.accounting_zuite_preference.changeOwnership(
-      getSecurityManager().getUser(),
-      True,
+    self.setSubtreeOwner(
+      document_value=self.portal.portal_preferences.accounting_zuite_preference,
+      user=getSecurityManager().getUser(),
     )
     super(TestRenderJSAccountingReport, self).afterSetUp()
 

@@ -10,12 +10,10 @@
 
 
 <p class="form-help">
-  <dtml-gettext>
-    A message catalog stores messages and its translations to different
-    languages. It provides the <tt>gettext</tt> method to get the right
-    translation for a given message. Message catalogs are useful to
-    translate the application interfaces (labels, buttons, etc..).
-  </dtml-gettext>
+  A message catalog stores messages and its translations to different
+  languages. It provides the <tt>gettext</tt> method to get the right
+  translation for a given message. Message catalogs are useful to
+  translate the application interfaces (labels, buttons, etc..).
 </p>
 
 

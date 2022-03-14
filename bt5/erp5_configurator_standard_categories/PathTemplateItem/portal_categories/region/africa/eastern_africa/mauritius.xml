@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MUS</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MU</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>mauritius</string> </value>
         </item>

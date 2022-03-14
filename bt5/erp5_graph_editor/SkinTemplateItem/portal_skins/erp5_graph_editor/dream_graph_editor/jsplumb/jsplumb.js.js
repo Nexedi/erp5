@@ -17,12 +17,12 @@
  * along with DREAM.  If not, see <http://www.gnu.org/licenses/>.
  * ==========================================================================*/
 /*global console, window, Node, RSVP, rJS, $, jsPlumb, Handlebars,
-     loopEventListener, promiseEventListener, DOMParser, Springy */
+     promiseEventListener, DOMParser, Springy */
 /*jslint vars: true unparam: true nomen: true todo: true */
 (function (RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy) {
     "use strict";
     /* TODO:
-    * less dependancies ( promise event listener ? )
+    * less dependencies ( promise event listener ? )
     * no more handlebars
     * id should not always be modifiable
     * drop zoom level
@@ -31,9 +31,30 @@
     */
     var gadget_klass = rJS(window);
     var domParser = new DOMParser();
-    var node_template_source = gadget_klass.__template_element.getElementById("node-template").innerHTML;
-    var node_template = Handlebars.compile(node_template_source);
-    var popup_edit_template = gadget_klass.__template_element.getElementById("popup-edit-template").innerHTML;
+    var node_template = Handlebars.compile(
+        '  <div class="window {{class}}"'
+        + '    id="{{element_id}}"'
+        + '    title="{{title}}">'
+        + '    {{name}}'
+        + '    <div class="ep"></div>'
+        + '</div>'
+    );
+    var popup_edit_template = (
+        '  <div id="edit-popup" data-position-to="origin">'
+        + '    <div data-role="header" data-theme="a">'
+        + '        <h1 class="node_class">Edit properties</h1>'
+        + '        <!-- XXX add this for jquery mobile version.'
+        + '        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>'
+        + '        -->'
+        + '    </div>'
+        + '    <br/>'
+        + '    <form class="ui-content">'
+        + '        <fieldset></fieldset>'
+        + '        <input type="button" value="Delete" class="graph_editor_delete_button">'
+        + '        <input type="submit" value="Validate" class="graph_editor_validate_button">'
+        + '    </form>'
+        + '</div>'
+    );
 
     function layoutGraph(graph_data) {
         // Promise returning the graph once springy calculated the layout.
@@ -204,8 +225,8 @@
 
     function updateConnectionData(gadget, connection, remove) {
         if (connection.ignoreEvent) {
-            // this hack is for edge edition. Maybe there I missed one thing and
-            // there is a better way.
+            // this hack is for edge edition and when the graph is re-rendered.
+            // Maybe there I missed one thing and there is a better way.
             return;
         }
         if (remove) {
@@ -484,7 +505,11 @@
         var schema;
         var fieldset_element;
         var delete_promise;
-        schema = expandSchema(gadget.props.data.class_definition[edge_data._class], gadget.props.data);
+        var class_definition = gadget.props.data.class_definition[edge_data._class];
+        if (class_definition === undefined) {
+            return;
+        }
+        schema = expandSchema(class_definition, gadget.props.data);
         // We do not edit source & destination on edge this way.
         delete schema.properties.source;
         delete schema.properties.destination;
@@ -523,7 +548,7 @@
             // connectionDetached event will remove the edge from data
             gadget.props.jsplumb_instance.detach(connection);
         });
-        return gadget.declareGadget("../fieldset/index.html", {
+        return gadget.declareGadget("dream_graph_editor/fieldset/index.html", {
             element: fieldset_element,
             scope: "fieldset"
         }).push(function (fieldset_gadget) {
@@ -602,7 +627,7 @@
         }).push(function () {
             return removeElement(gadget, node_id);
         });
-        return gadget.declareGadget("../fieldset/index.html", {
+        return gadget.declareGadget("dream_graph_editor/fieldset/index.html", {
             element: fieldset_element,
             scope: "fieldset"
         }).push(function (fieldset_gadget) {
@@ -790,6 +815,20 @@
            }
          });
         */
+
+            // reset previous graph, if any.
+            if ($(".window", this.props.element).length) {
+                $.each(
+                    // disable the "delete" event, otherwise after render load the
+                    // graph, loopJsplumbBind events will process the connection deleted
+                    // events 
+                    this.props.jsplumb_instance.getAllConnections(),
+                    function (i, connection) {
+                        connection.ignoreEvent = true;
+                    });
+                this.props.jsplumb_instance.reset();
+                $(".window", this.props.element).remove();
+            }
             if (data) {
                 this.props.data = JSON.parse(data);
 
@@ -867,4 +906,4 @@
             ]);
         });
 
-}(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy));
+}(RSVP, rJS, $, jsPlumb, Handlebars, rJS.loopEventListener, promiseEventListener, DOMParser, Springy));

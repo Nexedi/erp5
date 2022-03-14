@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, Handlebars, RSVP, Node, loopEventListener */
+/*global window, document, rJS, Handlebars, RSVP, Node */
 (function (window, document, rJS, Handlebars, RSVP, Node, loopEventListener) {
   "use strict";
 
@@ -144,7 +144,7 @@
             return RSVP.all([
               context.getUrlFor({command: 'display', options: {page: "ojsm_status_list"}}),
               context.getUrlFor({command: 'display', options: {page: "ojsm_software_instance_list"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojsm_hosting_subscription_list"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojsm_instance_tree_list"}}),
               context.getUrlFor({command: 'display', options: {page: "settings_configurator"}}),
               context.getUrlFor({command: 'display', options: {page: "ojsm_import_export"}}),
               context.getUrlFor({command: 'display', options: {page: "ojsm_synchronize", reset: 1}})
@@ -319,4 +319,4 @@
       }
     }, true, false);
 
-}(window, document, rJS, Handlebars, RSVP, Node, loopEventListener));
+}(window, document, rJS, Handlebars, RSVP, Node, rJS.loopEventListener));

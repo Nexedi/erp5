@@ -1,7 +1,6 @@
-/*global window, rJS, RSVP, URI, location,
-    loopEventListener, btoa */
+/*global window, rJS, RSVP, URI, location, btoa */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, loopEventListener) {
   "use strict";
 
   function setjIODAVConfiguration(gadget, options) {
@@ -227,4 +226,4 @@
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, rJS.loopEventListener));

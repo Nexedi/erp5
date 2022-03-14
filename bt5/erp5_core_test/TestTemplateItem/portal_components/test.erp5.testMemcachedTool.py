@@ -74,11 +74,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
     self.tic()
 
   def afterSetUp(self):
-    self.login()
-
-  def login(self):
     uf = self.portal.acl_users
-    uf._doAddUser('vincent', '', ['Manager'], [])
+    uf._doAddUser('vincent', self.newPassword(), ['Manager'], [])
     user = uf.getUserById('vincent').__of__(uf)
     newSecurityManager(None, user)
 
@@ -104,6 +101,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     memcached_tool = self.portal.portal_memcached
     try:
       import memcache
+      del memcache
     except ImportError:
       # MemcachedTool should be disabled
       self.assertRaises(RuntimeError, memcached_tool.getMemcachedDict)

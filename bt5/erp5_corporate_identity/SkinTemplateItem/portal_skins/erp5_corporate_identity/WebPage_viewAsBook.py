@@ -69,6 +69,8 @@ book_relative_url = book.getRelativeUrl()
 book_prefix = pref.getPreferredCorporateIdentityTemplateBookDocumentPrefix() or "Book."
 book_rendering_fix = book.WebPage_getPdfOutputRenderingFix() or blank
 book_content = book.getTextContent()
+if not book_content:
+  return
 book_aggregate_list = []
 book_revision = book.getRevision()
 book_modification_date = book.getModificationDate()
@@ -84,6 +86,11 @@ book_title = html_quote(override_document_title) if override_document_title else
 # unicode
 if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
+
+# backcompat
+book_history_section_list = re.findall('<section.+?>.+?</section>', book_content, re.S)
+for book_history_section in book_history_section_list:
+  book_content = book_content.replace(book_history_section, '')
 
 # override for tests
 if override_batch_mode:
@@ -149,19 +156,19 @@ if book_include_reference_table:
   image_link_list = book.WebPage_createImageOverview(book_content)
   for referenced_document in book_link_list.get("reference_list", []):
     book_reference_list.append(referenced_document.get("item"))
-    book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"),1)
+    book_content = book_content.replace(referenced_document.get("input"), referenced_document.get("output"))
   for applicable_document in book_link_list.get("applicable_list", []):
     book_applicable_document_list.append(applicable_document.get("item"))
-    book_content = book_content.replace(applicable_document.get("input"), applicable_document.get("output"),1)
+    book_content = book_content.replace(applicable_document.get("input"), applicable_document.get("output"))
   for abbreviation in book_link_list.get("abbreviation_list", []):
     book_abbreviation_list.append(abbreviation.get("item"))
-    book_content = book_content.replace(abbreviation.get("input"), abbreviation.get("output"),1)
+    book_content = book_content.replace(abbreviation.get("input"), abbreviation.get("output"))
   for figure in image_link_list.get("figure_list", []):
     book_image_list.append(figure.get("item"))
     book_content = book_content.replace(figure.get("input"), figure.get("output"), 1)
   for table in table_link_list.get("table_list", []):
     book_table_list.append(table.get("item"))
-    book_content = book_content.replace(table.get("input"), table.get("output"), 1)
+    book_content = book_content.replace(table.get("input"), table.get("output"))
 
   # in order for the reference tables to be in the table of content, they must
   # be added beforehand to content
@@ -225,6 +232,7 @@ for image in re.findall('(<img.*?/>)', book_content):
 if book_format == "html" or book_format == "mhtml":
   context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")
   book_output = book.WebPage_createBook(
+    book_history_section_list = book_history_section_list,
     book_theme=book_theme.get("theme"),
     book_title=book_title,
     book_language=book_language,
@@ -285,6 +293,7 @@ elif book_format == "pdf":
   )
 
   book_history = book.WebPage_createBookTableOfHistory(
+    book_history_section_list = book_history_section_list,
     book_theme=book_theme.get("theme"),
     book_title=book_title,
     book_language=book_language,

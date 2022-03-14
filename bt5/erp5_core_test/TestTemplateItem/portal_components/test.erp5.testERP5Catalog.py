@@ -38,7 +38,7 @@ from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from DateTime import DateTime
-from _mysql_exceptions import ProgrammingError
+from MySQLdb import ProgrammingError
 from OFS.ObjectManager import ObjectManager
 from Products.CMFActivity import ActivityTool
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -165,7 +165,7 @@ class IndexableDocument(ObjectManager):
     if name.startswith('is') or \
        name.startswith('provides'):
       return lambda: 0
-    raise AttributeError, name
+    raise AttributeError(name)
 
   def getProperty(self, prop, default=None):
     return getattr(aq_base(self), prop, default)
@@ -605,28 +605,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql = """select creation_date, modification_date
              from catalog where uid = %s""" % organisation.getUid()
     result = sql_connection.manage_test(sql)
-    self.assertEqual(creation_date,
-                      result[0]['creation_date'].ISO())
-    self.assertEqual(modification_date,
-                      result[0]['modification_date'].ISO())
-    self.assertEqual(creation_date,
-                      result[0]['modification_date'].ISO())
-
+    self.assertEqual(creation_date, result[0]['creation_date'].ISO())
+    self.assertEqual(modification_date, result[0]['modification_date'].ISO())
     import time; time.sleep(3)
     organisation.edit(title='edited')
     self.tic()
     result = sql_connection.manage_test(sql)
     self.assertEqual(creation_date, result[0]['creation_date'].ISO())
     modification_date = organisation.getModificationDate().toZone('UTC').ISO()
-    self.assertNotEquals(modification_date,
-                         organisation.getCreationDate())
+    self.assertNotEqual(modification_date, organisation.getCreationDate())
     # This test was first written with a now variable initialized with
     # DateTime(). But since we are never sure of the time required in
     # order to execute some line of code
-    self.assertEqual(modification_date,
-                      result[0]['modification_date'].ISO())
-    self.assertTrue(organisation.getModificationDate()>now)
-    self.assertTrue(result[0]['creation_date']<result[0]['modification_date'])
+    self.assertEqual(modification_date, result[0]['modification_date'].ISO())
+    self.assertGreater(organisation.getModificationDate(), now)
+    self.assertLess(result[0]['creation_date'], result[0]['modification_date'])
 
   def test_19_SearchFolderWithNonAsciiCharacter(self):
     person_module = self.getPersonModule()
@@ -2155,7 +2148,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
         result = query('SELECT * FROM roles_and_users WHERE allowedRolesAndUsers LIKE "%s:%%" AND uid = %i' % (line['allowedRolesAndUsers'], uid) )
         self.assertNotEqual(len(result), 0, 'No line found for allowedRolesAndUsers=%r and uid=%i' % (line['allowedRolesAndUsers'], uid))
       else:
-        raise Exception, 'Malformed allowedRolesAndUsers value: %r' % (line['allowedRolesAndUsers'], )
+        raise Exception('Malformed allowedRolesAndUsers value: %(allowedRolesAndUsers)r' % line)
 
     # Check that object that 'bar' can view because of 'Author' role can *not*
     # be found when searching for his other 'Whatever' role.

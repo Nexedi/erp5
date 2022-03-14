@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KOR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KR</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>republic_of_korea</string> </value>
         </item>

@@ -1,6 +1,7 @@
 """
   Create a zuite or return an existing one after remove his contents.
 """
+from zExceptions import BadRequest
 assert context.getPortalType() == "Test Tool", "bad context"
 if REQUEST:
   raise RuntimeError("You can not call this script from the URL")
@@ -16,6 +17,8 @@ zuite = getattr(context.portal_tests, zuite_id)
 if zuite.getMetaType() != "ERP5 Test Tool":
   raise ValueError("Zuite is not a ERP5 Test Tool")
 
-zuite.manage_delObjects(zuite.objectIds())
-
+try:
+  zuite.manage_delObjects(zuite.objectIds())
+except BadRequest:
+  pass
 return zuite

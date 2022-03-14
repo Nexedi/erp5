@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>JPN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>JP</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>japan</string> </value>
         </item>

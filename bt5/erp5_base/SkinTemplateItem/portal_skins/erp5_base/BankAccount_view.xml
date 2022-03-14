@@ -46,6 +46,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>iban</string>
                 <string>bank_country_code</string>
                 <string>bank_code</string>
                 <string>branch</string>

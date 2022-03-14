@@ -2,7 +2,7 @@ cell_range = []
 # Those value are define on property sheet of portal type
 resource = context.getDefaultResourceValue()
 if resource is None: # When we have a supply line in the resource
-  resource = context.getParent()
+  resource = context.getParentValue()
 
 base_category_list = resource.getVariationBaseCategoryList()
 

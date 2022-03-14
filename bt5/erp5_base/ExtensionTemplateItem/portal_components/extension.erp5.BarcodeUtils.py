@@ -29,7 +29,7 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
     fp.seek(0)
     output = fp.read()
   else:
-    raise NotImplementedError, 'barcode_type=%s is not supported' % barcode_type
+    raise NotImplementedError('barcode_type=%s is not supported' % barcode_type)
   if REQUEST is not None:
     REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
   return output

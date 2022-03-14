@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>VAT</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>VA</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>holy_see</string> </value>
         </item>

@@ -1,10 +1,22 @@
 portal = context.getPortalObject()
 
+if select_mode is None:
+  # To show an empty listbox the first time the dialog is open
+  container.REQUEST.set('PaymentTransactionGroup_statGroupablePaymentTransactionLineList.total_quantity', None)
+  return []
+elif select_mode == 'stopped_or_delivered':
+  simulation_state = ('delivered', 'stopped')
+else:
+  assert select_mode == 'planned_or_confirmed', "Unknown select_mode, %r" % select_mode
+  simulation_state = ('planned', 'confirmed')
+
 search_kw = dict(
   parent_portal_type='Payment Transaction',
   limit=None,
-  simulation_state=('delivered', 'stopped'),
-  section_uid=context.getSourceSectionUid(),
+  simulation_state=simulation_state,
+  section_uid=context.getSourceSection()
+     and portal.Base_getSectionUidListForSectionCategory(
+       context.getSourceSectionValue().getGroup(base=True)),
   payment_uid=context.getSourcePaymentUid(),
   resource_uid=context.getPriceCurrencyUid(),
   node_category='account_type/asset/cash/bank',
@@ -17,13 +29,16 @@ search_kw = dict(
 if context.getPaymentMode():
   search_kw['payment_transaction_line_payment_mode_uid'] = context.getPaymentModeUid()
 
-if limit:
-  search_kw['limit'] = limit
+if select_limit:
+  search_kw['limit'] = select_limit
 
 if start_date_range_max:
   search_kw['at_date'] = start_date_range_max.latestTime()
 if start_date_range_min:
   search_kw['from_date'] = start_date_range_min
+
+if Movement_getMirrorSectionTitle:
+  search_kw['stock_mirror_section_title'] = Movement_getMirrorSectionTitle
 
 if sign in ('outgoing', 'out'):
   search_kw['omit_asset_increase'] = True

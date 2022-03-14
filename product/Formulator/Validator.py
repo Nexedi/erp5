@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from future.utils import raise_
 import re
 from . import PatternChecker
 from .DummyField import fields
@@ -99,9 +98,9 @@ class StringBaseValidator(Validator):
       value = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
       if value is None:
         if field.get_value('required'):
-          raise_(Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), ))
+          raise Exception('Required field %r has not been transmitted. Check that all required fields are in visible groups.' % field.id)
         else:
-          raise_(KeyError, 'Field %s is not present in request object.' % (repr(field.id), ))
+          raise KeyError('Field %r is not present in request object.' % field.id)
       if isinstance(value, str):
         if field.has_value('whitespace_preserve'):
           if not field.get_value('whitespace_preserve'):
@@ -539,7 +538,7 @@ class MultiSelectionValidator(Validator):
 
     def validate(self, field, key, REQUEST):
       if REQUEST.get('default_%s' % (key, )) is None:
-        raise_(KeyError, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key))
+        raise KeyError('Field %r is not present in request object (marker field default_%s not found).' % (field.id, key))
       values = REQUEST.get(key, [])
       # NOTE: a hack to deal with single item selections
       if not isinstance(values, list):
@@ -582,10 +581,10 @@ class MultiSelectionValidator(Validator):
           int_value = int(value)
         except ValueError:
           int_value = None
-        if int_value is not None and int_value in value_dict:
+        if int_value is not None and value_dict.has_key(int_value):
           result.append(int_value)
           continue
-        if value in value_dict:
+        if value_dict.has_key(value):
           result.append(value)
           continue
         self.raise_error('unknown_selection', field)

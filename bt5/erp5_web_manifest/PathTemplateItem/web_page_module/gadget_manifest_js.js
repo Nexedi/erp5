@@ -1,4 +1,4 @@
-/*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, loopEventListener, URI, location */
+/*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, URI, location */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener, location) {
   "use strict";
@@ -579,4 +579,4 @@
       return listenHashChange(this);
     });
 
-}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener, location));
+}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, rJS.loopEventListener, location));

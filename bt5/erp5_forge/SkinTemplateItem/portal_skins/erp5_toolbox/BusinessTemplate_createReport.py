@@ -83,7 +83,7 @@ type_information.addAction(
     "string:${object_url}/%s" % dialog_form_name,
     '',
     'View',
-    'object_report',
+    'object_jio_report',
     priority=max_priority+1,)
 
 type_information.addAction(
@@ -92,7 +92,7 @@ type_information.addAction(
     "string:${object_url}/%s?your_portal_skin=ODS&your_format=" % dialog_form_name,
     "python: getattr(portal.portal_skins, 'erp5_ods_style', None) is not None",
     'View',
-    'object_exchange',
+    'object_jio_exchange',
     priority=max_priority+1,)
 
 

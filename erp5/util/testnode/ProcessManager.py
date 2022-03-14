@@ -136,8 +136,6 @@ def killCommand(pid):
 
 class ProcessManager(object):
 
-  stdin = open(os.devnull)
-
   def __init__(self, max_timeout=MAX_TIMEOUT):
     self.process_pid_set = set()
     signal.signal(signal.SIGTERM, self.sigterm_handler)
@@ -176,23 +174,28 @@ class ProcessManager(object):
     logger.info('subprocess_kw : %r', subprocess_kw)
     logger.info('$ %s', command)
     sys.stdout.flush()
-    p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, env=env, close_fds=True,
-                         **subprocess_kw)
-    self.process_pid_set.add(p.pid)
-    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p,))
-    self.timer_set.add(timer)
-    timer.start()
-    stdout, stderr = subprocess_capture(p, log_prefix, get_output=get_output, output_replacers=output_replacers)
-    timer.cancel()
-    self.timer_set.discard(timer)
-    result = dict(status_code=p.returncode, command=command,
-                  stdout=stdout, stderr=stderr)
-    self.process_pid_set.discard(p.pid)
-    if self.under_cancellation:
-      raise CancellationError("Test Result was cancelled")
-    if raise_error_if_fail and p.returncode:
-      raise SubprocessError(result)
+
+    with open(os.devnull) as stdin:
+      p = subprocess.Popen(args, stdin=stdin, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE, env=env, close_fds=True,
+                          **subprocess_kw)
+      self.process_pid_set.add(p.pid)
+      timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p,))
+      self.timer_set.add(timer)
+      timer.start()
+      stdout, stderr = subprocess_capture(p, log_prefix, get_output=get_output, output_replacers=output_replacers)
+      timer.cancel()
+      self.timer_set.discard(timer)
+      result = dict(status_code=p.returncode, command=command,
+                    stdout=stdout, stderr=stderr)
+      self.process_pid_set.discard(p.pid)
+      p.stdout.close()
+      p.stderr.close()
+
+      if self.under_cancellation:
+        raise CancellationError("Test Result was cancelled")
+      if raise_error_if_fail and p.returncode:
+        raise SubprocessError(result)
     return result
 
   def getSupportedParameterList(self, program_path):

@@ -6,6 +6,7 @@ person = context.getDestinationDecisionValue(portal_type="Person")
 # Person Mapping
 person_mapping = (
     # (credential, person)
+    ('social_title', 'social_title'),
     ('first_name', 'first_name'),
     ('last_name', 'last_name'),
     ('gender', 'gender'),

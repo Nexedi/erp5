@@ -75,4 +75,4 @@ class TestTimeout(ERP5TypeTestCase):
     with Deadline(1.0):
       time.sleep(2)
       with self.assertRaises(TimeoutReachedError):
-        [x.getObject() for x in self.portal.portal_templates.searchFolder()]
+        _ = [x.getObject() for x in self.portal.portal_templates.searchFolder()]

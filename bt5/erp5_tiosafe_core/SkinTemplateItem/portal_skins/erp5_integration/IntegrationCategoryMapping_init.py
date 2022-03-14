@@ -1,1 +1,1 @@
-raise "yo", context
+raise ValueError(context)

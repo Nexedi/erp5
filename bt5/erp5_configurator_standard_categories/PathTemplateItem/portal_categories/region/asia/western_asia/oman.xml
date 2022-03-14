@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>OMN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>OM</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>oman</string> </value>
         </item>

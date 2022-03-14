@@ -36,7 +36,12 @@ except ImportError:
   warnings.warn("Please install xmltodict, it is needed by json_representable mixin",
                  DeprecationWarning)
 from zope.interface import implementer
-from OFS import XMLExportImport
+import zope.interface
+try:
+  from OFS import XMLExportImport
+except ImportError:
+  # XXX make Zope patch work in software
+  pass
 from io import BytesIO as StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.interfaces.json_representable import IJSONRepresentable

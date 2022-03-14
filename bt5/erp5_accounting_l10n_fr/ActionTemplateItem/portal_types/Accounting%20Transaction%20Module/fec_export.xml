@@ -33,13 +33,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_exchange</string>
+                <string>action_type/object_jio_exchange</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_exchange</string> </value>
+            <value> <string>object_jio_exchange</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>

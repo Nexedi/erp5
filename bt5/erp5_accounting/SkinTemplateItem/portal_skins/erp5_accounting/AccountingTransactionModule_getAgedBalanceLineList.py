@@ -115,13 +115,14 @@ for brain in portal.portal_simulation.getMovementHistoryList(
   if line_dict is not None:
     by_mirror_section_list_dict[brain.mirror_section_uid].append(line_dict)
     line_list.append(line_dict)
-for row in portal_catalog(
-  select_list=['title'],
-  uid=by_mirror_section_list_dict.keys(),
-):
-  title = row.title
-  for line in by_mirror_section_list_dict[row.uid]:
-    line['mirror_section_title'] = title
+if by_mirror_section_list_dict:
+  for row in portal_catalog(
+    select_list=['title'],
+    uid=by_mirror_section_list_dict.keys(),
+  ):
+    title = row.title
+    for line in by_mirror_section_list_dict[row.uid]:
+      line['mirror_section_title'] = title
 return [
   Object(
     uid='new_',

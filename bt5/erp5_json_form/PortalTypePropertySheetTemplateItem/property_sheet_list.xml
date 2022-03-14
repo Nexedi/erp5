@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="JSON Form">
+  <item>JSONForm</item>
+  <item>JSONTypeConstraint</item>
+ </portal_type>
+</property_sheet_list>

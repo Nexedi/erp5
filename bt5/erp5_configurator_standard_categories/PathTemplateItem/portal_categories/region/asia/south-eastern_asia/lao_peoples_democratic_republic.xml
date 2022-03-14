@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>LAO</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>LA</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>lao_peoples_democratic_republic</string> </value>
         </item>

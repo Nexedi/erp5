@@ -26,8 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from future.utils import raise_
 import hashlib
+import re
 
 from copy import deepcopy
 
@@ -39,6 +39,8 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
+from Products.ERP5Type import CodingStyle
+from Products.ERP5Type.ObjectMessage import ObjectMessage
 
 from urllib import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
@@ -211,10 +213,7 @@ class TALESValue(StaticValue):
     if kw.get('cell') is None:
       request = kw.get('REQUEST')
       if request is not None:
-        if getattr(request, 'cell', None) is not None:
-          kw['cell'] = request.cell
-        else:
-          kw['cell'] = request
+        kw['cell'] = getattr(request, 'cell', None)
         if 'cell_index' not in kw and\
             getattr(request, 'cell_index', None) is not None:
           kw['cell_index'] = request.cell_index
@@ -1182,13 +1181,14 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                                         new_tales[i]):
                                 del new_tales[i]
 
-            delegated_list = []
-            for i in (new_values.keys()+new_tales.keys()):
-                if not i in delegated_list:
-                    delegated_list.append(i)
+            # make sure every TALES is also in values, this is required for has_value
+            for key in new_tales:
+                if key not in new_values:
+                    new_values[key] = proxy_field.get_recursive_orig_value(key, include=0)
+
             proxy_field.values.update(new_values)
             proxy_field.tales.update(new_tales)
-            proxy_field.delegated_list = delegated_list
+            proxy_field.delegated_list = list(sorted(new_values.keys()))
 
             # move back to the original group and position.
             set_group_and_position(group, position, field_id)
@@ -1314,15 +1314,100 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       return str((self.pt, self.name, self.action, self.update_action,
                   self.encoding, self.stored_encoding, self.enctype))
 
+    def _checkConsistency(self, fixit=0, filter=None, **kw):
+      message_list = CodingStyle.checkConsistency(self, fixit=fixit, source_code=self.asXML())
+      object_relative_url = '/'.join(self.getPhysicalPath())[len(self.getPortalObject().getPath()):]
+
+      def addMessage(rule_reference, message):
+        """Adds a message to the list of problems.
+        * rule_reference: reference of the web page on erp5.com defining the rule
+        * message: the message
+        """
+        message_list.append(
+           ObjectMessage(
+             object_relative_url=object_relative_url,
+             message="{rule_reference}: {message}".format(
+                rule_reference=rule_reference,
+                message=message)))
+
+      if self.pt:
+        prefix, method = self.getId().split('_', 1)
+        del prefix
+        if self.pt in ('form_view', 'form_list', 'form_dialog', 'report_view'):
+          if self.getId() not in CodingStyle.ignored_skin_id_set:
+            # For ignored_skin_id_set, we only ignore naming of the form itself.
+            if not method.startswith('view'):
+              addMessage(
+                  'erp5-Guideline.Form.Name.Uses.Lowercase.View.After.Portal.Type',
+                  # note: ${portal_type} is *not* a translation substitution
+                  'Form name must follow ${portal_type}_view.* naming')
+            if self.pt == 'form_dialog' and not method.endswith('Dialog'):
+              addMessage(
+                  'erp5-Guideline.Form.Report.Dialog.Is.Postfixed.With.Dialog',
+                  'Dialog form name must follow ${portal_type}_view.*Dialog naming')
+            if self.pt == 'report_view' and not method.endswith('Report'):
+              addMessage(
+                  'erp5-Guideline.Report.Name.Uses.Portal.Type.Followed.By.View.Report.Name.And.Report',
+                  'Report form name must follow ${portal_type}_view.*Report naming')
+
+          is_field_library = self.getId().endswith('FieldLibrary')
+          if self.pt == 'form_view' and not is_field_library:
+
+            translated_workflow_state_title_field_re = re.compile('my_translated_.*state_title$')
+            def isTranslatedWorkflowStateTitleField(f):
+              return translated_workflow_state_title_field_re.match(f.getId()) is not None
+
+            not_translated_workflow_state_field_re = re.compile('my_(?!translated_).*state(_title|)$')
+            def isNonTranslatedWorkflowStateField(f):
+              return not_translated_workflow_state_field_re.match(f.getId()) and f.getId() not in (
+                  # exception for some properties containing "state" in their names
+                  'my_initial_implementation_state',
+                  'my_hot_reindexing_state',
+                  'my_message_different_state',
+              ) and (self.getId(), f.getId()) not in (
+                    # Field used in API
+                    ('Ticket_viewAsHateoas', 'my_simulation_state_title'),
+                    # Preference unrelated to workflow states.
+                    ('SystemPreference_viewSlapOS', 'my_preferred_shacache_website_expected_state'),
+                )
+
+            for group_name in self.get_groups():
+              field_list = self.get_fields_in_group(group_name)
+              for index, field in enumerate(field_list):
+                if isTranslatedWorkflowStateTitleField(field):
+                  is_in_right_group = 'right' in group_name
+                  # workflow states fields must be the last ones, so we check
+                  # that this field or all the one below match the
+                  # my_translated_${state_variable}_title regex
+                  all_bottom_fields_are_workflow_state_fields = {True} == {
+                      isTranslatedWorkflowStateTitleField(f) is not None for f in field_list[index:]}
+                  if not (all_bottom_fields_are_workflow_state_fields and is_in_right_group):
+                    addMessage(
+                        'erp5-Guideline.Place.Simulation.And.Validation.Fields.In.Bottom.Of.Right.Group',
+                        'Workflow state fields must be at the bottom right')
+                if isNonTranslatedWorkflowStateField(field):
+                  addMessage(
+                      'erp5-Guideline.Use.Correct.Names.For.Simulation.And.Validation.Titles',
+                      'Workflow state fields should be named my_translated_${state_variable}_title')
+
+      # check fields, if they implement _checkConsistency
+      for field in self.objectValues():
+        if hasattr(aq_base(field), 'checkConsistency'):
+          message_list.extend(field.checkConsistency(fixit=fixit))
+
+      return message_list
+
+
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
     if field.meta_type=='ProxyField':
         try:
             return field.getRecursiveTemplateField().meta_type, True
         except AttributeError:
-            raise_(AttributeError, 'The proxy target of %s.%s field does not '\
-                  'exists. Please check the field setting.' % \
-                  (field.aq_parent.id, field.getId()))
+            raise AttributeError(
+                'The proxy target of %s.%s field does not exist.'
+                ' Please check the field settings.'
+                % (field.aq_parent.id, field.getId()))
     else:
         return field.meta_type, False
 

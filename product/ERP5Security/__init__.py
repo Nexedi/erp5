@@ -63,27 +63,37 @@ def _setUserNameForAccessLog(username, REQUEST):
   """
   # Set the authorization header in the medusa http request
   # so that the username can be logged to the Z2.log
+  # Put the full-arm latex glove on now...
   try:
-    # Put the full-arm latex glove on now...
-    medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
-  except AttributeError:
-    pass
+    # Is this WSGI ?
+    REQUEST._orig_env['wsgi.input']
+  except KeyError:
+    # Not WSGI, maybe Medusa
+    try:
+      medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
+    except AttributeError:
+      pass
+    else:
+      medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
   else:
-    medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
+    REQUEST._orig_env['REMOTE_USER'] = username
 
 
 def initialize(context):
-  from . import ERP5UserManager
-  from . import ERP5LoginUserManager
-  from . import ERP5GroupManager
-  from . import ERP5RoleManager
-  from . import ERP5UserFactory
-  from . import ERP5KeyAuthPlugin
-  from . import ERP5ExternalAuthenticationPlugin
-  from . import ERP5BearerExtractionPlugin
-  from . import ERP5ExternalOauth2ExtractionPlugin
-  from . import ERP5AccessTokenExtractionPlugin
-  from . import ERP5DumbHTTPExtractionPlugin
+  from . import (
+    ERP5UserManager,
+    ERP5LoginUserManager,
+    ERP5GroupManager,
+    ERP5RoleManager,
+    ERP5UserFactory,
+    ERP5KeyAuthPlugin,
+    ERP5ExternalAuthenticationPlugin,
+    ERP5BearerExtractionPlugin,
+    ERP5ExternalOauth2ExtractionPlugin,
+    ERP5AccessTokenExtractionPlugin,
+    ERP5DumbHTTPExtractionPlugin,
+    ERP5ExternalOpenIdConnectExtractionPlugin,
+  )
 
   registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
   registerMultiPlugin(ERP5LoginUserManager.ERP5LoginUserManager.meta_type)
@@ -97,6 +107,7 @@ def initialize(context):
   registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
   registerMultiPlugin(ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin.meta_type)
   registerMultiPlugin(ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin.meta_type)
+  registerMultiPlugin(ERP5ExternalOpenIdConnectExtractionPlugin.ERP5OpenIdConnectExtractionPlugin.meta_type)
 
 
   context.registerClass( ERP5UserManager.ERP5UserManager
@@ -203,6 +214,15 @@ def initialize(context):
                        , constructors=(
                           ERP5DumbHTTPExtractionPlugin.manage_addERP5DumbHTTPExtractionPluginForm,
                           ERP5DumbHTTPExtractionPlugin.addERP5DumbHTTPExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
+
+  context.registerClass( ERP5ExternalOpenIdConnectExtractionPlugin.ERP5OpenIdConnectExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5ExternalOpenIdConnectExtractionPlugin.manage_addERP5OpenIdConnectExtractionPluginForm,
+                          ERP5ExternalOpenIdConnectExtractionPlugin.addERP5OpenIdConnectExtractionPlugin, )
                        , visibility=None
                        , icon='www/portal.gif'
                        )

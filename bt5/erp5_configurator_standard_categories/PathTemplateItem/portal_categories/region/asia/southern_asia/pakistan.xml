@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>PAK</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PK</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>pakistan</string> </value>
         </item>

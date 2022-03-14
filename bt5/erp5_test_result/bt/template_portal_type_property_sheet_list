@@ -9,6 +9,7 @@ Gitlab REST Connector | Reference
 Gitlab REST Connector | Url
 Scalability Test Suite | Arrow
 Scalability Test Suite | ScalabilityTestSuite
+Scalability Test Suite | SortIndex
 Scalability Test Suite | TestSuite
 SlapOS Agent Distributor | ScalabilityDistributor
 SlapOS Agent Test Suite | Arrow

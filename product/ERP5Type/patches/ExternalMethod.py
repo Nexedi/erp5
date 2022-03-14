@@ -24,7 +24,7 @@ class _(PatchClass(ExternalMethod)):
     reloadIfChanged = getFuncDefaults = getFuncCode = filepath = None
 
     @property
-    def func_defaults(self):
+    def __defaults__(self):
         """Return a tuple of default values.
         The first value is for the "second" parameter (self is ommited)
 
@@ -33,10 +33,12 @@ class _(PatchClass(ExternalMethod)):
           will have func_defaults = ('', )
         """
         return self._getFunction()[1]
+    func_defaults = __defaults__
 
     @property
-    def func_code(self):
+    def __code__(self):
         return self._getFunction()[2]
+    func_code = __code__
 
     @property
     def func_args(self):
@@ -57,7 +59,7 @@ class _(PatchClass(ExternalMethod)):
         if component_module is None:
             # Fall back on filesystem
             if not reload:
-                from Globals import DevelopmentMode
+                from Products.ERP5Type.Globals import DevelopmentMode
                 if DevelopmentMode:
                     try:
                         last_read, path = self._v_fs
@@ -65,10 +67,11 @@ class _(PatchClass(ExternalMethod)):
                         last_read = None
                         path = getPath('Extensions', self._module,
                                        suffixes=('', 'py', 'pyc'))
-                    ts = os.stat(path)[stat.ST_MTIME]
-                    if last_read != ts:
-                        self._v_fs = ts, path
-                        reload = True
+                    if path:
+                        ts = os.stat(path)[stat.ST_MTIME]
+                        if last_read != ts:
+                            self._v_fs = ts, path
+                            reload = True
             f = getObject(self._module, self._function, reload)
         else:
             f = getattr(component_module, self._function)

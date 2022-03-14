@@ -15,6 +15,7 @@ Business Template | create_report
 Business Template | create_skin_folder
 Business Template | create_working_copy
 Business Template | git_commit
+Business Template | git_commit_action
 Business Template | manage_field_library
 Business Template | rename_proxy_field
 Business Template | svn_cleanup_locks
@@ -23,6 +24,7 @@ Business Template | update_vcs_bt
 Business Template | update_vcs_bt_norevert
 Business Template | view_svn_repos_info
 Category Tool | generate_translation_file
+External Method | repository_history_view
 Glossary Module | create_term_for_translation
 Glossary Module | export_po_file
 Glossary Module | find_duplicate_terms

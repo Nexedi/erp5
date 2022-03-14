@@ -36,6 +36,7 @@ else:
       raise NotImplementedError('Can only search in module, not %s' % portal_type)
     redirect_context = portal.getDefaultModule(portal_type)
     query_params['title'] = context.getTitle()
+    query_params['reset'] = True
 
 query_params['portal_status_message'] = message
 

@@ -97,9 +97,9 @@ for task_line in result_list:
   source_uid = task_line.node_uid
   if source_uid is None:
     # This should not happens, so display an error message
-    raise ValueError, context.Base_translateString(\
+    raise ValueError(context.Base_translateString(
         "This task should have a source : ${task_relative_url}",
-        mapping = {'task_relative_url': task_line.getRelativeUrl()})
+        mapping = {'task_relative_url': task_line.getRelativeUrl()}))
   source_dict = source_uid_dict.get(source_uid, None)
   if source_dict is None:
     source_value = task_line.getSourceValue()

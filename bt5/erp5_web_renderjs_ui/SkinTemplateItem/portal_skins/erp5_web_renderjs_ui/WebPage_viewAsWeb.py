@@ -33,7 +33,10 @@ if (portal_type == "Web Script"):
     web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
       'modification_date': modification_date_string,
       # Make JSLint happy for the service worker code
-      'required_url_list': json.dumps(web_section.WebSection_getPrecacheManifest())
+      'required_url_list': json.dumps(
+        getattr(web_section, web_section.getLayoutProperty("configuration_precache_manifest_script",
+                                                           default="WebSection_getPrecacheManifest"))()
+      )
     })
 
 elif (portal_type == "Web Style"):

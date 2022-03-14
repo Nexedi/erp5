@@ -39,6 +39,7 @@ class DeliveryTool(BuilderTool):
   id = 'portal_deliveries'
   meta_type = 'ERP5 Delivery Tool'
   portal_type = 'Delivery Tool'
+  title = 'Delivery Builders'
   allowed_types = ('ERP5 Delivery Buider',)
 
 InitializeClass(DeliveryTool)

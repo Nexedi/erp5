@@ -664,6 +664,37 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual('FR', france.getCodification())
     self.assertEqual(1, france.getIntIndex())
 
+  def test_CategoryTool_importCategoryFileDeletionSupportForCategoriesInUse(self):
+    region = self.portal.portal_categories.region
+    region.newContent(id='dummy_region')
+    self.portal.person_module.newContent(
+        portal_type='Person',
+        region_value=region.dummy_region
+    )
+    self.tic()
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.sxc'),
+        existing_category_list='delete')
+    self.tic()
+    self.assertEqual(3, len(region))
+    # dummy region is in used so it was not deleted
+    self.assertTrue('dummy_region' in region.objectIds())
+
+  def test_CategoryTool_importCategoryFileForcedDeletionSupportForCategoriesInUse(self):
+    region = self.portal.portal_categories.region
+    region.newContent(id='dummy_region')
+    self.portal.person_module.newContent(
+        portal_type='Person',
+        region_value=region.dummy_region
+    )
+    self.tic()
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category.sxc'),
+        existing_category_list='force_delete')
+    self.tic()
+    self.assertEqual(2, len(region))
+    self.assertFalse('dummy_region' in region.objectIds())
+
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region

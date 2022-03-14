@@ -243,6 +243,10 @@
                           <string>PRODUCTION</string>
                           <string>PRODUCTION</string>
                         </tuple>
+                        <tuple>
+                          <string>UNITTEST</string>
+                          <string>UNITTEST</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

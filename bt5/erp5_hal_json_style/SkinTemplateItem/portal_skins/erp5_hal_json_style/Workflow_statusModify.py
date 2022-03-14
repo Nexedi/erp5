@@ -1,6 +1,6 @@
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.Formulator.Errors import FormValidationError
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 from erp5.component.module.Log import WARNING
 

@@ -1,6 +1,8 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
-(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray,
+         mergeGlobalActionWithRawActionList, domsugar*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+           mergeGlobalActionWithRawActionList, domsugar) {
   "use strict";
 
   function appendDt(fragment, dt_title, dt_icon,
@@ -11,23 +13,24 @@
 //   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
 // </dd>
 // {{/each}}
-    var dt_element = document.createElement('dt'),
-      dd_element,
-      a_element,
+    //////////////////////
+    var element_list = [
+      domsugar('dt', {
+        text: dt_title,
+        'class': 'ui-btn-icon-left ui-icon-' + dt_icon
+      })
+    ],
       i;
-    dt_element.textContent = dt_title;
-    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
-    fragment.appendChild(dt_element);
     for (i = 0; i < action_list.length; i += 1) {
-      dd_element = document.createElement('dd');
-      dd_element.setAttribute('class', 'document-listview');
-      a_element = document.createElement('a');
-      a_element.setAttribute('class', action_list[i].class_name);
-      a_element.href = href_list[index + i];
-      a_element.textContent = action_list[i].title;
-      dd_element.appendChild(a_element);
-      fragment.appendChild(dd_element);
+      element_list.push(domsugar('dd', {'class': 'document-listview'}, [
+        domsugar('a', {
+          href: href_list[index + i],
+          text: action_list[i].title,
+          'class': action_list[i].class_name || null
+        })
+      ]));
     }
+    fragment.appendChild(domsugar(null, element_list));
   }
 
   rJS(window)
@@ -39,6 +42,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
@@ -62,13 +66,15 @@
         view = options.view,
         jump_view = options.jump_view,
         visible = options.visible,
+        extra_menu_list = options.extra_menu_list,
         display_workflow_list,
         context = this,
         workflow_list,
+        group_mapping,
         view_list,
         action_list,
-        jump_list,
-        i;
+        clone_list,
+        jump_list;
 
       if (visible === undefined) {
         visible = context.state.visible;
@@ -81,38 +87,35 @@
       }
 
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
-        workflow_list = ensureArray(erp5_document._links.action_workflow);
-        view_list = ensureArray(erp5_document._links.action_object_view);
-        action_list = ensureArray(erp5_document._links.action_object_jio_action)
-          .concat(ensureArray(erp5_document._links.action_object_jio_button))
-          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
-        jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
+        group_mapping = mergeGlobalActionWithRawActionList(jio_key,
+          view, jump_view,
+          erp5_document._links, [
+            "action_workflow",
+            "action_object_view", [
+              "action_object_jio_action",
+              "action_object_jio_button",
+              "action_object_jio_fast_input"
+            ],
+            "action_object_clone_action",
+            "action_object_jio_jump"
+          ], {
+            "action_object_jio_action": "display_dialog_with_history",
+            "action_object_clone_action": "display_dialog_with_history"
+          }, {
+            "action_object_clone_action": true
+          });
 
-        if (view === 'view') {
-          for (i = 0; i < view_list.length; i += 1) {
-            view_list[i].class_name = view_list[i].name === view ? 'active' : '';
-          }
-        } else {
-          for (i = 0; i < workflow_list.length; i += 1) {
-            workflow_list[i].class_name = workflow_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < view_list.length; i += 1) {
-            view_list[i].class_name = view_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < action_list.length; i += 1) {
-            action_list[i].class_name = action_list[i].href === view ? 'active' : '';
-          }
-          for (i = 0; i < jump_list.length; i += 1) {
-            jump_list[i].class_name = ((jump_list[i].href === jump_view) || (jump_list[i].href === view)) ? 'active' : '';
-          }
-        }
-        // Prevent has much as possible to modify the DOM panel
-        // stateChange prefer to compare strings
-        workflow_list = JSON.stringify(workflow_list);
-        view_list = JSON.stringify(view_list);
-        action_list = JSON.stringify(action_list);
-        jump_list = JSON.stringify(jump_list);
+        workflow_list = JSON.stringify(group_mapping.action_workflow);
+        view_list = JSON.stringify(group_mapping.action_object_view);
+        action_list = JSON.stringify(group_mapping.action_object_jio_action);
+        clone_list = JSON.stringify(group_mapping.action_object_clone_action);
+        jump_list = JSON.stringify(group_mapping.action_object_jio_jump);
       }
+
+      if (extra_menu_list !== undefined) {
+        extra_menu_list = JSON.stringify(extra_menu_list);
+      }
+
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
@@ -121,20 +124,26 @@
             workflow_list: workflow_list,
             view_list: view_list,
             action_list: action_list,
+            clone_list: clone_list,
             jump_list: jump_list,
             global: true,
             jio_key: jio_key,
             view: view,
             jump_view: jump_view,
-            editable: asBoolean(options.editable) || asBoolean(editable) || false
+            editable: asBoolean(options.editable) || asBoolean(editable) || false,
+            extra_menu_list: extra_menu_list
           });
         });
     })
-
     .onStateChange(function onStateChange(modification_dict) {
-      var context = this,
+      var i,
         gadget = this,
         workflow_list,
+        view_list,
+        action_list,
+        clone_list,
+        jump_list,
+        dl_fragment,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -152,7 +161,7 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return context.getDeclaredGadget('erp5_searchfield');
+            return gadget.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
             return search_gadget.render({
@@ -166,35 +175,32 @@
         queue
           // Update the global links
           .push(function () {
-            return RSVP.all([
-              context.getUrlForList([
+            return RSVP.hash({
+              url_list: gadget.getUrlForList([
                 {command: 'display'},
                 {command: 'display', options: {page: "front"}},
                 {command: 'display', options: {page: "worklist"}},
                 {command: 'display', options: {page: "history"}},
                 {command: 'display_stored_state', options: {page: "search"}},
-                {command: 'display', options: {page: "preference"}},
+                {command: 'display', options: {page: "my_account"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
-              context.getTranslationList([
+              translation_list: gadget.getTranslationList([
                 'Editable',
                 'Home',
                 'Modules',
                 'Worklists',
                 'History',
                 'Search',
-                'Preferences',
+                'My Account',
                 'Logout'
               ]),
-              context.getDeclaredGadget("erp5_checkbox")
-            ]);
+              checkbox_gadget: gadget.getDeclaredGadget("erp5_checkbox")
+            });
           })
-          .push(function (result_list) {
+          .push(function (result_dict) {
             var editable_value = [],
-              i,
-              ul_fragment = document.createDocumentFragment(),
-              a_element,
-              li_element,
+              element_list = [],
               icon_and_key_list = [
                 'home', null,
                 'puzzle-piece', 'm',
@@ -202,39 +208,34 @@
                 'history', 'h',
                 'search', 's',
                 'sliders', null,
+                // 'sliders', null,
                 'power-off', 'o'
-              ],
-              ul_element = context.element.querySelector("ul");
+              ];
 
-            for (i = 0; i < result_list[0].length; i += 1) {
+            for (i = 0; i < result_dict.url_list.length; i += 1) {
               // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
-              a_element = document.createElement('a');
-              li_element = document.createElement('li');
-              a_element.href = result_list[0][i];
-              a_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i]);
-              if (icon_and_key_list[2 * i + 1] !== null) {
-                a_element.setAttribute('accesskey', icon_and_key_list[2 * i + 1]);
-              }
-              a_element.textContent = result_list[1][i + 1];
-              li_element.appendChild(a_element);
-              ul_fragment.appendChild(li_element);
+              element_list.push(domsugar('li', [
+                domsugar('a', {
+                  href: result_dict.url_list[i],
+                  'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
+                  accesskey: icon_and_key_list[2 * i + 1],
+                  text: result_dict.translation_list[i + 1]
+                })
+              ]));
             }
 
-            while (ul_element.firstChild) {
-              ul_element.removeChild(ul_element.firstChild);
-            }
-            ul_element.appendChild(ul_fragment);
-
+            domsugar(gadget.element.querySelector("ul"),
+                     [domsugar(null, element_list)]);
             // Update the checkbox field value
-            if (context.state.editable) {
+            if (gadget.state.editable) {
               editable_value = ['editable'];
             }
-            return result_list[2].render({field_json: {
+            return result_dict.checkbox_gadget.render({field_json: {
               editable: true,
               name: 'editable',
               key: 'editable',
               hidden: false,
-              items: [[result_list[1][0], 'editable']],
+              items: [[result_dict.translation_list[0], 'editable']],
               'default': editable_value
             }});
           });
@@ -246,94 +247,81 @@
           modification_dict.hasOwnProperty("jump_view") ||
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("action_list") ||
+          modification_dict.hasOwnProperty("clone_list") ||
           modification_dict.hasOwnProperty("jump_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
-          modification_dict.hasOwnProperty("view_list"))) {
-        if (this.state.view_list === undefined) {
-          gadget.element.querySelector("dl").textContent = '';
-        } else {
+          modification_dict.hasOwnProperty("view_list") ||
+          modification_dict.hasOwnProperty("extra_menu_list"))) {
+
+        dl_fragment = document.createDocumentFragment();
+        gadget.element.querySelector("dl").textContent = '';
+        if (this.state.view_list !== undefined) {
           queue
             .push(function () {
-              var i = 0,
-                parameter_list = [],
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+              var parameter_list = [];
+
+              view_list = JSON.parse(gadget.state.view_list);
+              action_list = JSON.parse(gadget.state.action_list);
+              clone_list = JSON.parse(gadget.state.clone_list);
+              jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
-              for (i = 0; i < view_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: view_list[i].href
-                  }
-                });
-              }
-              for (i = 0; i < workflow_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: workflow_list[i].href
-                  }
-                });
-              }
-              for (i = 0; i < action_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: action_list[i].href
-                  }
-                });
-              }
-              for (i = 0; i < jump_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'display_dialog_with_history',
-                  options: {
-                    jio_key: gadget.state.jio_key,
-                    view: jump_list[i].href
-                  }
-                });
-              }
-              return RSVP.all([
-                gadget.getUrlForList(parameter_list),
-                gadget.getTranslationList(['Views', 'Workflows', 'Actions',
-                                           'Jumps'])
-              ]);
+              parameter_list = view_list.concat(workflow_list).concat(
+                action_list
+              ).concat(clone_list).concat(jump_list).map(function (options) {
+                return options.url_kw;
+              });
+              return RSVP.hash({
+                url_list: gadget.getUrlForList(parameter_list),
+                translation_dict: gadget.getTranslationDict([
+                  'Views', 'Workflows', 'Actions', 'Jumps'
+                ])
+              });
             })
-            .push(function (result_list) {
-              var dl_element,
-                dl_fragment = document.createDocumentFragment(),
-                view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
-
-              appendDt(dl_fragment, result_list[1][0], 'eye',
-                       view_list, result_list[0], 0);
+            .push(function (result_dict) {
+              appendDt(dl_fragment, result_dict.translation_dict.Views, 'eye',
+                       view_list, result_dict.url_list, 0);
               if (gadget.state.display_workflow_list) {
                 // show Workflows only on document
-                appendDt(dl_fragment, result_list[1][1], 'random',
-                  workflow_list, result_list[0], view_list.length);
+                appendDt(dl_fragment, result_dict.translation_dict.Workflows, 'random',
+                  workflow_list, result_dict.url_list, view_list.length);
               }
-              appendDt(dl_fragment, result_list[1][2], 'cogs',
-                       action_list, result_list[0],
+              appendDt(dl_fragment, result_dict.translation_dict.Actions, 'cogs',
+                       action_list.concat(clone_list), result_dict.url_list,
                        view_list.length + workflow_list.length);
-              appendDt(dl_fragment, result_list[1][3], 'plane',
-                       jump_list, result_list[0],
+              appendDt(dl_fragment, result_dict.translation_dict.Jumps, 'plane',
+                       jump_list, result_dict.url_list,
                        view_list.length + workflow_list.length +
-                       action_list.length);
-
-              dl_element = gadget.element.querySelector("dl");
-              while (dl_element.firstChild) {
-                dl_element.removeChild(dl_element.firstChild);
+                       action_list.length + clone_list.length);
+            });
+        }
+        if (gadget.state.hasOwnProperty("extra_menu_list") &&
+            gadget.state.extra_menu_list) {
+          queue
+            .push(function () {
+              return gadget.getTranslationList(['Global']);
+            })
+            .push(function (translation_list) {
+              var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
+                href_list = [];
+              for (i = 0; i < extra_menu_list.length; i += 1) {
+                href_list.push(extra_menu_list[i].href);
+                extra_menu_list[i] = {
+                  "class_name": extra_menu_list[i].active ? "active" : "",
+                  "title": extra_menu_list[i].title
+                };
               }
-              dl_element.appendChild(dl_fragment);
+              appendDt(dl_fragment, translation_list[0], 'globe',
+                       extra_menu_list, href_list, 0);
             });
         }
       }
-
+      queue
+        .push(function () {
+          if (dl_fragment) {
+            domsugar(gadget.element.querySelector("dl"), [dl_fragment]);
+          }
+        });
       return queue;
     })
 
@@ -346,6 +334,19 @@
         return this.toggle();
       }
     }, false, false)
+
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when focus
+      // is triggered. This is usefull to display error text.
+      // But, in the case of panel, we don't need to handle anything.
+      return;
+    })
+    .allowPublicAcquisition("notifyBlur", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when blur
+      // is triggered now. This is usefull to display error text.
+      // But, in the case of panel, we don't need to handle anything.
+      return;
+    })
 
     .allowPublicAcquisition('notifyChange', function notifyChange(
       argument_list,
@@ -412,4 +413,5 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+  mergeGlobalActionWithRawActionList, domsugar));

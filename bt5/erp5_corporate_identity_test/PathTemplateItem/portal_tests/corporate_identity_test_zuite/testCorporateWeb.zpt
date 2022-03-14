@@ -1,0 +1,93 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test for WEB Corporate</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="3">Test for WEB Corporate</th></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/template_test_web_site/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the navigation</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='ci-web-header-bar-navigation']//a[@href='${base_url}/web_site_module/template_test_web_site']/img[@src='images/favourite.png?format=png' and @alt=' Home']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the header</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='ci-web-header-bar-logo']//span[text()='Template Test Web Site']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the content</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='main-container Web-Page-content']//h1[text()='Test Home Page']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check the footer</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@id='wrapper_site_footer']//a[text()='Nexedi SA']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check embedded list</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul/li[1]/a[text()='Template Test Web Howto 1' and @href='Template.Test.Web.Howto1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul/li[1]/a[text()='Template Test Web FAQ 1' and @href='Template.Test.Web.FAQ1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul/li[2]/a[text()='Template Test Web FAQ 2' and @href='Template.Test.Web.FAQ2']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/template_test_web_site/login_form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//ul/li[2]/a[text()='Template Test Web FAQ 2' and @href='Template.Test.Web.FAQ2']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class='ci-web-header-bar-logo']//span[text()='Template Test Web Site']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

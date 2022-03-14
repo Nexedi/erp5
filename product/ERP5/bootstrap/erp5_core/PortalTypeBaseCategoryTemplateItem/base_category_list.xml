@@ -8,4 +8,7 @@
  <portal_type id="Trash Bin">
   <item>causality</item>
  </portal_type>
+ <portal_type id="Workflow Transition Variable">
+  <item>causality</item>
+ </portal_type>
 </base_category_list>

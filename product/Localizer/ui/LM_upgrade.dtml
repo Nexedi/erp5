@@ -4,9 +4,7 @@
 
 <dtml-if need_upgrade>
   <p class="form-help">
-    <dtml-gettext>
       This object must be upgraded.
-    </dtml-gettext>
   </p>
 
   <blockquote>
@@ -17,9 +15,7 @@
 
 <dtml-else>
   <p class="form-help">
-    <dtml-gettext>
-      This object is up-to-date.
-    </dtml-gettext>
+    This object is up-to-date.
   </p>
 </dtml-if>
 

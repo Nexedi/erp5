@@ -21,7 +21,7 @@ class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
   """A brain that supports accessing computed attributes using __getitem__
   protocol.
   """
-  def __init__(self):
+  def __init__(self, *args, **kw):
     # __getitem__ returns the computed attribute directly, but if we access
     # brain['node_title'] we expect to have the attribute after computation,
     # not the ComputedAttribute attribue instance. Defining a __getitem__
@@ -41,7 +41,10 @@ class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
   # ComputedAttribute compatibility for __getitem__
   # pylint: disable=E0102
   def __getitem__(self, name):
-    item = self.__super__getitem__(name)
+    try:
+      item = self.__super__getitem__(name)
+    except KeyError:
+      item = self.__getattribute__(name)
     if isinstance(item, ComputedAttribute):
       return item.__of__(self)
     return item

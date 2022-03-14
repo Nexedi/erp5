@@ -23,8 +23,6 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
       background-color:#FFFFFF;
       border: 1px solid #000000;
       padding: 0.5em;
-      vertical-align: middle;
-      text-align: center;
       // color:#000000;
 
       &.drag {
@@ -43,22 +41,28 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
         z-index: 1;
         border-radius: 0.325em;
       }
+      & > h1 {
+        text-align: center;
+        padding-top: 2.5em;
+      }
 
       // Spacing between every section
       margin-right: 2em;
       margin-bottom: 2em;
 
-      display: flex;
-      flex-direction: column;
       button {
         padding: 3pt;
+        float: right;
+        &:first-of-type {
+          float: left;
+        }
+
         border: 1px solid rgba(0, 0, 0, 0.14);
         border-radius: 0.325em;
         background-color: #FFFFFF;
 
         width: 2em;
-        heigth: 2em;
-        min-height: 2em;
+        height: 2em;
         overflow: hidden;
         text-indent: -9999px;
         white-space: nowrap;

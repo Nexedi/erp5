@@ -31,7 +31,10 @@ other Tests are in erp5_core_test:testERP5Type) which is deprecated in favor
 of Portal Type as Classes and ZODB Components
 """
 
+import pickle
 import unittest
+import warnings
+from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -56,11 +59,12 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.login()
       # all those tests does strange things with Person type, so we won't
       # filter content types to add inside Person.
-      self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+      person_type_object = self.getTypesTool().getTypeInfo('Person')
+      person_type_object.filter_content_types = 0
       self.commit()
 
       # save workflow chain for Person type
-      self.person_chain = self.getWorkflowTool().getChainFor('Person')
+      self.person_workflow_list = person_type_object.getTypeWorkflowList()
 
     def beforeTearDown(self):
       self.abort()
@@ -71,13 +75,13 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
                       self.getCategoryTool().region ]:
         module.manage_delObjects(list(module.objectIds()))
 
+      person_type_object = self.getTypesTool().getTypeInfo('Person')
       # set Person.acquire_local_roles back.
       if getattr(self, 'person_acquire_local_roles', None) is not None:
-        self.getTypesTool().getTypeInfo('Person').setTypeAcquireLocalRole(self.person_acquire_local_roles)
+        person_type_object.acquire_local_roles = self.person_acquire_local_roles
 
       # restore workflows for other tests
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], self.person_chain)
+      person_type_object.setTypeWorkflowList(self.person_workflow_list)
 
       super(TestERP5Type, self).beforeTearDown()
 
@@ -105,50 +109,51 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
         self.commit()
         self.assertFalse(hasattr(doc, 'getDestination'))
 
-    def test_aq_reset_on_workflow_chain_change(self):
+    def test_aq_reset_on_type_workflow_list_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
       self.assertFalse(hasattr(doc, 'getCausalityState'))
       # chain the portal type with a workflow that has 'causality_state' as
       # state variable name, this should regenerate the getCausalityState
       # accessor. This test might have to be updated whenever
       # delivery_causality_workflow changes.
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], ('delivery_causality_workflow'))
+      person_type_object = self.getTypesTool().getTypeInfo('Person')
+      person_type_object.setTypeWorkflowList(['delivery_causality_workflow'])
 
       self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
 
     def test_aq_reset_on_workflow_method_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], ('delivery_causality_workflow'))
+      person_type_object = self.portal.portal_types._getOb('Person')
+      person_type_object.setTypeWorkflowList(person_type_object.getTypeWorkflowList() + ['delivery_causality_workflow'])
 
       self.commit()
       self.assertTrue(hasattr(doc, 'diverge'))
 
       wf = self.portal.portal_workflow.delivery_causality_workflow
-      wf.transitions.addTransition('dummy_workflow_method')
       from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-      wf.transitions.dummy_workflow_method.setProperties(
-          title='', new_state_id='', trigger_type=TRIGGER_WORKFLOW_METHOD)
-
+      dummy_transition = wf.newContent(portal_type='Workflow Transition',
+                                       reference='dummy_workflow_method',
+                                       trigger_type=TRIGGER_WORKFLOW_METHOD)
       self.commit()
       self.assertTrue(hasattr(doc, 'dummyWorkflowMethod'))
 
-      wf.transitions.deleteTransitions(['dummy_workflow_method'])
-
+      wf.deleteContent(dummy_transition.getId())
       self.commit()
       self.assertFalse(hasattr(doc, 'dummyWorkflowMethod'))
 
     def test_aq_reset_on_workflow_state_variable_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], ('delivery_causality_workflow'))
+      person_type_object = self.portal.portal_types._getOb('Person')
+      person_type_object.setTypeWorkflowList(person_type_object.getTypeWorkflowList() + ['delivery_causality_workflow'])
 
       self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
-      wf = self.portal.portal_workflow.delivery_causality_workflow
-      wf.variables.setStateVar('dummy_state')
+      wf = self.portal.portal_workflow._getOb('delivery_causality_workflow')
+      if wf.getPortalType() == 'Workflow':
+        wf._edit(state_variable='dummy_state')
+      else:
+        wf.setStateVariable('dummy_state')
 
       self.commit()
       self.assertTrue(hasattr(doc, 'getDummyState'))
@@ -231,7 +236,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
           'newTemp*(self, ID) will be removed, use self.newContent(temp_object=True, id=ID, portal_type=...)',
           DeprecationWarning, 2)
 
-    def test_03_NewTempObject(self):
+    def test_newTempBase(self):
       # Products.ERP5Type.Document.newTempBase is another (not recommended) way
       # of creating temp objects
       import Products.ERP5Type.Document
@@ -240,6 +245,44 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(o.getPortalType(), 'Base Object')
       self.assertTrue(o.isTempObject())
       self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
+
+    def _test_temp_object_persistent(self, temp_object):
+      # Temp objects can not be stored in ZODB
+      self.assertTrue(temp_object.isTempObject())
+
+      # they can be pickled
+      self.assertTrue(pickle.dumps(aq_base(temp_object)))
+      # they can be unpickled
+      import ZODB.broken
+      self.assertNotIsInstance(
+          pickle.loads(pickle.dumps(aq_base(temp_object))),
+          ZODB.broken.Broken,
+      )
+
+      # but they can not be saved in ZODB accidentally
+      self.portal.person_module.oops = temp_object
+      self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
+      self.abort()
+
+    def test_temp_object_persistent(self):
+      temp_object = self.portal.person_module.newContent(portal_type='Person', temp_object=True)
+      self._test_temp_object_persistent(temp_object)
+
+    def test_newTempBase_persistent(self):
+      import Products.ERP5Type.Document
+      temp_object = Products.ERP5Type.Document.newTempBase(self.portal, 'id')
+      self._test_temp_object_persistent(temp_object)
+
+    def test_warnings_redirected_to_event_log(self):
+      self._catch_log_errors()
+      self.addCleanup(self._ignore_log_errors)
+      warnings.warn('user warning')
+      self.assertEqual(self.logged[-1].name, 'UserWarning')
+      self.assertIn('Products/ERP5Type/tests/testERP5Type.py', self.logged[-1].message)
+      self.assertIn('user warning', self.logged[-1].message)
+      warnings.warn('user warning', DeprecationWarning)
+      self.assertEqual(self.logged[-1].name, 'DeprecationWarning')
+
 
 def test_suite():
   suite = unittest.TestSuite()

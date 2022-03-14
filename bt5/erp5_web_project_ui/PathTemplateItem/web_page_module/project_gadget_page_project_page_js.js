@@ -20,7 +20,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
       oSerializer = new XMLSerializer(),
-      doc = parser.parseFromString(html, "text/html"),
+      doc = parser.parseFromString(html || '', "text/html"),
       link_list = doc.querySelectorAll("a");
     doc.querySelector("head").appendChild(domsugar('link', {
       href: "gadget_erp5_page_project.css",
@@ -266,7 +266,7 @@ SimpleQuery, ComplexQuery, Query, domsugar*/
           web_page_info = result_list[2];
           if (web_page_info) {
             editor = result_list[1];
-            editor.render({"editor": "fck_editor", "editable": false, "maximize": true,
+            editor.render({"editor": "fck_editor", "editable": false,
                            "value": web_page_info.content});
           }
           url_parameter_list = [

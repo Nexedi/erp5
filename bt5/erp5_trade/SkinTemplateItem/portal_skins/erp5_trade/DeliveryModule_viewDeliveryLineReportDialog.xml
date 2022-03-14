@@ -105,6 +105,7 @@
                     <value>
                       <list>
                         <string>your_portal_type</string>
+                        <string>your_use</string>
                       </list>
                     </value>
                 </item>

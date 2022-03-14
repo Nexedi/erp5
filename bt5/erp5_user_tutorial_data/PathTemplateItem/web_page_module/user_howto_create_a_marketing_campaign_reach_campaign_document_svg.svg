@@ -1,0 +1,30 @@
+<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata16">image/svg+xml</metadata>
+ <defs>
+  <linearGradient id="linearGradient4614">
+   <stop offset="0" id="stop4612" stop-color="#d40000"/>
+  </linearGradient>
+  <linearGradient xlink:href="#linearGradient4614" id="linearGradient4626" x1="0" y1="0.5" x2="1" y2="0.5"/>
+  <linearGradient id="linearGradient4615">
+   <stop offset="0" id="stop4613" stop-color="#255691ff"/>
+  </linearGradient>
+  <linearGradient xlink:href="#linearGradient4615" id="linearGradient4627" x1="0" y1="0.5" x2="1" y2="0.5"/>
+  <linearGradient id="linearGradient4616">
+   <stop offset="0" id="stop4614" stop-color="#FFFF00"/>
+  </linearGradient>
+  <linearGradient xlink:href="#linearGradient4616" id="linearGradient4628" x1="0" y1="0.5" x2="1" y2="0.5"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="965" width="1377" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="g18">
+   <image x="-1" y="-1" id="image20" xlink:href="https://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Reach.Campaign.Document.New?format=png" height="969" width="1391"/>
+   <rect id="rect4049" width="230.73921" height="116.78534" x="5.51999" y="285.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4626)" fill-rule="evenodd" fill="none"/>
+   <rect id="rect4050" width="1130.73921" height="600.78534" x="238.51999" y="40.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4627)" fill-rule="evenodd" fill="none"/>
+   <rect id="rect4051" width="1130.73921" height="130.78534" x="238.51999" y="645.07357" stroke-miterlimit="4" stroke-width="5" stroke="url(#linearGradient4628)" fill-rule="evenodd" fill="none"/>
+  </g>
+ </g>
+</svg>

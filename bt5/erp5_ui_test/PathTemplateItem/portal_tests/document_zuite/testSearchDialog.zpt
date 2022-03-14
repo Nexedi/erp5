@@ -41,7 +41,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>selectAndWait</td>
+  <td>assertSelected</td>
   <td>select_dialog</td>
   <td>generic_search</td>
 </tr>

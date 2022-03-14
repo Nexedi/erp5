@@ -35,7 +35,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from erp5.component.mixin.ERP5UserMixin import ERP5UserMixin
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
@@ -60,7 +60,7 @@ class UserExistsError(
     super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
 
 
-class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMixin):
+class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMixin):
   """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,

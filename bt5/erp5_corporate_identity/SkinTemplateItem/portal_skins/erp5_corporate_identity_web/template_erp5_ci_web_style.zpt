@@ -20,6 +20,7 @@
                            logo_url                   python: web_site.getLayoutProperty('layout_logo_reference') or None;
                            js_list                    python: context.WebSite_getJavaScriptRelativeUrlList(scope='global');
                            css_list                   python: web_site.WebSite_getCssRelativeUrlList(scope='global');
+                           form                       nocall: form | nothing;
                            request                    python: context.REQUEST;">
       <!DOCTYPE html>
         <html tal:attributes="class python: 'ci-%s' % (theme)" prefix="og: http://ogp.me/ns#">

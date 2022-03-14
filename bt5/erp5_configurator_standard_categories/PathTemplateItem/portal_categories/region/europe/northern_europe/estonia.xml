@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>EST</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>EE</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>estonia</string> </value>
         </item>

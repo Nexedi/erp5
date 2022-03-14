@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -36,6 +35,7 @@ from Products.Formulator.Errors import ValidationError
 from Products.Formulator import MethodField
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.ObjectMessage import ObjectMessage
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -64,7 +64,7 @@ _USE_ORIGINAL_GET_VALUE_MARKER = []
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
   """
-  func_code = None
+  __code__ = func_code = None
 
   def __init__(self, method_id, default=''):
     self._method_id = method_id
@@ -78,7 +78,7 @@ class WidgetDelegatedMethod(Method):
       try:
         return proxied_method(field, *args, **kw)
       finally:
-        self.__code__ = getattr(proxied_method, 'func_code', None)
+        self.__code__ = self.func_code = getattr(proxied_method, '__code__', None)
     return self._default
 
 
@@ -140,7 +140,7 @@ class ProxyValidator(Validator.Validator):
     proxy_field = field.getRecursiveTemplateField()
     try:
       result = proxy_field.validator.validate(field, key, REQUEST)
-    except ValidationError as error:
+    except ValidationError, error:
       error.field_id = field.id
       raise error
     return result
@@ -190,13 +190,13 @@ class ProxyField(ZMIField):
         for field in template_field.form.get_fields_in_group(group):
           field_id = field.id
           checkbox_key = "surcharge_%s" % field_id
-          if checkbox_key not in REQUEST:
+          if not REQUEST.has_key(checkbox_key):
             surcharge_list.append(field_id)
 
       try:
         # validate the form and get results
         result = template_field.form.validate(REQUEST)
-      except ValidationError as err:
+      except ValidationError, err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -214,7 +214,7 @@ class ProxyField(ZMIField):
     try:
       # validate the form and get results
       result = self.form.validate(REQUEST)
-    except ValidationError as err:
+    except ValidationError, err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -264,7 +264,7 @@ class ProxyField(ZMIField):
       # XXX Remove old values
       values.pop(key, None)
       # store keys for which we want to notify change
-      if key not in values or values[key] != value:
+      if not values.has_key(key) or values[key] != value:
         changed.append(key)
 
     proxied_field = self.getTemplateField()
@@ -299,14 +299,14 @@ class ProxyField(ZMIField):
         for field in template_field.tales_form.get_fields_in_group(group):
           field_id = field.id
           checkbox_key = "surcharge_%s" % field_id
-          if checkbox_key not in REQUEST:
+          if not REQUEST.has_key(checkbox_key):
             surcharge_list.append(field_id)
 
 
       try:
         # validate the form and get results
         result = template_field.tales_form.validate(REQUEST)
-      except ValidationError as err:
+      except ValidationError, err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -320,7 +320,7 @@ class ProxyField(ZMIField):
     try:
       # validate the form and get results
       result = self.tales_form.validate(REQUEST)
-    except ValidationError as err:
+    except ValidationError, err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -359,7 +359,7 @@ class ProxyField(ZMIField):
     self.delegated_list = sorted(surcharge_list)
     # Put a default value on not delegated parameter
     for key in result.keys():
-      if key not in self.values:
+      if not self.values.has_key(key):
         self.values[key] = self.get_recursive_orig_value(key, include=0)
 
   security.declareProtected('Change Formulator Fields', 'manage_messages')
@@ -371,7 +371,7 @@ class ProxyField(ZMIField):
     unicode_mode = self.get_unicode_mode()
     for message_key in self.get_error_names():
       checkbox_key = "surcharge_%s" % message_key
-      if checkbox_key not in REQUEST:
+      if not REQUEST.has_key(checkbox_key):
         surcharge_list.append(message_key)
         message = REQUEST[message_key]
         if unicode_mode:
@@ -535,7 +535,7 @@ class ProxyField(ZMIField):
     if include and \
       ((id in self.widget.property_names) or \
        ((not self.is_delegated(id)) and \
-       (id in self.values))):
+       (self.values.has_key(id)))):
       return self.get_orig_value(id)
     else:
       proxied_field = self.getTemplateField()
@@ -648,7 +648,7 @@ class ProxyField(ZMIField):
       if proxied_field.__class__ == ProxyField:
         field = proxied_field
       elif proxied_field is None:
-        raise_(ValueError, "Can't find the template field of %s" % self.id)
+        raise ValueError("Can't find the template field of %s" % self.id)
       else:
         tales = proxied_field.get_tales(id)
         if tales:
@@ -791,6 +791,30 @@ class ProxyField(ZMIField):
         return cache.__of__(parent)
     raise KeyError
 
+  security.declareProtected('Change Formulator Fields', 'checkConsistency')
+  def checkConsistency(self, fixit=False):
+    """Check the proxy field internal data structures are consistent
+    """
+    object_relative_url = '/'.join(self.getPhysicalPath())[len(self.getPortalObject().getPath()):]
+    difference = set(self.tales).difference(self.values)
+    if difference:
+      if fixit:
+        for key in difference:
+          if key in self.delegated_list:
+            self.values[key] = self.get_recursive_orig_value(key, include=0)
+          else:
+            self.tales.pop(key)
+        # XXX since we are modifying the field, let's take this opportunity
+        # to sort delegated_list if it was not sorted.
+        self.delegated_list = sorted(self.delegated_list)
+        self._p_changed = True
+
+      return [
+        ObjectMessage(
+             object_relative_url=object_relative_url,
+             message="Internal proxy field data structures are inconsistent. "
+                     "Differences: {}".format(difference))]
+    return []
 
 #
 # get_value exception dict

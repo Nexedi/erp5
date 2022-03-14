@@ -4,6 +4,7 @@ Manufacturing Execution Line | option_view
 Manufacturing Execution Line | quantity_view
 Manufacturing Execution Line | view
 Manufacturing Execution Line | view_price
+Manufacturing Execution Module | delivery_line_report
 Manufacturing Execution Module | view
 Manufacturing Execution | packing_list_print
 Manufacturing Execution | view
@@ -13,6 +14,7 @@ Manufacturing Order Line | jump_to_transformation
 Manufacturing Order Line | price_view
 Manufacturing Order Line | quantity_view
 Manufacturing Order Line | view
+Manufacturing Order Module | delivery_line_report
 Manufacturing Order Module | manufacturing_order_module_view_gantt
 Manufacturing Order Module | view
 Manufacturing Order | jump_to_related_internal_packing_list
@@ -29,6 +31,7 @@ Production Order Line | jump_to_transformation
 Production Order Line | price_view
 Production Order Line | quantity_view
 Production Order Line | view
+Production Order Module | delivery_line_report
 Production Order Module | production_order_module_planning
 Production Order Module | view
 Production Order | jump_to_related_manufacturing_execution
@@ -46,6 +49,7 @@ Production Packing List Line | option_view
 Production Packing List Line | quantity_view
 Production Packing List Line | view
 Production Packing List Line | view_price
+Production Packing List Module | delivery_line_report
 Production Packing List Module | view
 Production Packing List | packing_list_print
 Production Packing List | view

@@ -2,6 +2,9 @@
  <portal_type id="Component">
   <item>DefaultImage</item>
  </portal_type>
+ <portal_type id="Component Individual Variation">
+  <item>DefaultImage</item>
+ </portal_type>
  <portal_type id="Measure Cell">
   <item>Amount</item>
  </portal_type>
@@ -11,6 +14,9 @@
  <portal_type id="Product Individual Variation">
   <item>DefaultImage</item>
   <item>Reference</item>
+ </portal_type>
+ <portal_type id="Service Individual Variation">
+  <item>DefaultImage</item>
  </portal_type>
  <portal_type id="Supply Cell">
   <item>Reference</item>

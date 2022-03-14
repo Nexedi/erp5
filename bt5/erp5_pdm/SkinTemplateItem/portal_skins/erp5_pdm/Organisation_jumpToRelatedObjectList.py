@@ -2,14 +2,12 @@
 Jump from Organisation to its related objects (but only if used as
 source* or destination* categories) of the same portal type and
 displayed using the module view
-
-XXX: move this code to erp5_core if needed elsewhere?
 """
 portal = context.getPortalObject()
 
 # XXX: Seems there is no other better way to get the Arrow
 #      destination/section categories...
-base_category_list = []
+base_category_uid_list = []
 for arrow_property in portal.portal_property_sheets.Arrow.contentValues():
   if arrow_property.getPortalType() != 'Category Property':
     continue
@@ -17,12 +15,15 @@ for arrow_property in portal.portal_property_sheets.Arrow.contentValues():
   arrow_property_title = arrow_property.getTitle()
   if (arrow_property_title.startswith('source') or
       arrow_property_title.startswith('destination')):
-    base_category_list.append(arrow_property_title)
+    base_category_uid_list.append(portal.portal_categories[arrow_property_title].getUid())
 
-related_object_list = context.getRelatedValueList(
-  checked_permission='View',
-  base_category_list=base_category_list,
-  portal_type=portal_type)
+related_object_list = context.getPortalObject().portal_catalog(
+    portal_type=portal_type,
+    **{
+        'category.category_uid': context.getUid(),
+        'category.base_category_uid': base_category_uid_list,
+    }
+)
 
 if not related_object_list:
   return context.Base_redirect(form_id, keep_items=dict(
@@ -45,7 +46,15 @@ elif len(related_object_list) == 1:
                  "that_title": context.getTitleOrId()}))))
 
 else:
+  message = portal.Base_translateString(
+  # first, try to get a full translated message with portal types
+  "Documents related to %s." % context.getPortalType(),
+  # if not found, fallback to generic translation
+  default=portal.Base_translateString('Documents related to ${that_portal_type} : ${that_title}.',
+        mapping={"that_portal_type": context.getTranslatedPortalType(),
+                 "that_title": context.getTitleOrId() }),)
   # XXX: Use POST rather than GET because of GET URL length limitation?
   return portal.getDefaultModule(portal_type).Base_redirect(
     keep_items={'reset': 1,
-                'uid': [obj.getUid() for obj in related_object_list]})
+                'portal_status_message': message,
+                'uid': [obj.uid for obj in related_object_list]})

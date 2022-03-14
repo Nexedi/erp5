@@ -1,4 +1,4 @@
-/*global window, rJS, jIO, Handlebars, navigator, MediaRecorder, Blob, loopEventListener*/
+/*global window, rJS, jIO, Handlebars, navigator, MediaRecorder, Blob*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS) {
   "use strict";

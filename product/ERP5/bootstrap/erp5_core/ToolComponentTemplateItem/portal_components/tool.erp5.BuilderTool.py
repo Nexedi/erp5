@@ -61,6 +61,8 @@ class BuilderTool(BaseTool):
   """
 
   security = ClassSecurityInfo()
+  title = 'Builders'
+  meta_type = 'ERP5 Builder Tool'
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBuilderValueList')

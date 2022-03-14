@@ -70,7 +70,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   instance_list = []
   httpd = None
   httpd_is_alive = False
-  root_title = "TEST Hosting Subscription"
+  root_title = "TEST Instance Tree"
 
   def start_httpd_server(self, root_folder):
     self.httpd = SocketServer.TCPServer(('localhost', 5378), CustomHTTPRequestHandler)
@@ -143,7 +143,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
       result_dict = {
         "status": status,
         "change-time": now_time,
-        "hosting_subscription": self.root_title,
+        "instance_tree": self.root_title,
         "title": title,
         "start-date": start_date,
         "instance": instance['title'],

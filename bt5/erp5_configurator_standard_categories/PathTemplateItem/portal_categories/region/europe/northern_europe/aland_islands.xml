@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ALA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AX</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>aland_islands</string> </value>
         </item>

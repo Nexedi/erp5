@@ -81,8 +81,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_start_date</string>
-                        <string>listbox_stop_date</string>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_delivery_stop_date</string>
                       </list>
                     </value>
                 </item>

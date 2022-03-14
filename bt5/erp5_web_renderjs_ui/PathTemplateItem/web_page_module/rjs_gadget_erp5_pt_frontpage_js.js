@@ -38,7 +38,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -52,7 +52,7 @@
       // First, get the list of modules
       return gadget.jio_allDocs({
         select_list: select_list,
-        query: '(parent_uid:"0" AND meta_type:"ERP5 Folder" AND id:"%_module")',
+        query: 'module_id:%',
         limit: 1000
       })
         .push(function (result_list) {
@@ -92,23 +92,23 @@
           }
           // Add global url calculation
           url_dict_list.push({command: 'display'});
-          // Add change language url calculation
-          url_dict_list.push({command: 'display', options: {page: 'language'}});
           return RSVP.all([
             document_list,
-            gadget.translate('Others'),
+            gadget.getTranslationList(['Others', 'Tools']),
             gadget.getUrlForList(url_dict_list)
           ]);
         })
         .push(function (result_list) {
           var document_list = result_list[0],
-            translated_other_title = result_list[1],
+            translated_other_title = result_list[1][0],
+            translated_tool_title = result_list[1][1],
             url_list = result_list[2],
             len = document_list.length,
             i,
             card_list = [],
             module_list = [],
             other_module_list = [],
+            tool_list = [],
             current_business_application_title = '';
 
           function pushNewCard() {
@@ -128,15 +128,21 @@
           for (i = 0; i < len; i += 1) {
             // Inject the module url into the document
             document_list[i].link = url_list[i];
-            // Create card if needed
-            if (document_list[i].business_application_translated_title !==
-                current_business_application_title) {
-              pushNewCard();
-              module_list = [];
-              current_business_application_title =
-                document_list[i].business_application_translated_title;
+            // Tools do not have any business application
+            // Workaround this limitation
+            if (document_list[i].id.indexOf('portal_') === 0) {
+              tool_list.push(document_list[i]);
+            } else {
+              // Create card if needed
+              if (document_list[i].business_application_translated_title !==
+                  current_business_application_title) {
+                pushNewCard();
+                module_list = [];
+                current_business_application_title =
+                  document_list[i].business_application_translated_title;
+              }
+              module_list.push(document_list[i]);
             }
-            module_list.push(document_list[i]);
           }
           pushNewCard();
           if (other_module_list.length) {
@@ -145,14 +151,19 @@
               module_list: other_module_list
             });
           }
+          if (tool_list.length) {
+            card_list.push({
+              business_application_translated_title: translated_tool_title,
+              module_list: tool_list
+            });
+          }
 
           generateCardList(gadget.element.querySelector('ul'), card_list);
 
           return gadget.updateHeader({
             page_title: 'Modules',
             page_icon: 'puzzle-piece',
-            front_url: url_list[i],
-            language_url: url_list[i + 1]
+            front_url: url_list[i]
           });
         });
     });

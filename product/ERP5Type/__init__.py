@@ -35,9 +35,11 @@ from App.config import getConfiguration
 from .patches import python, globalrequest
 import six
 if six.PY2:
-  import pylint
+  from .patches import pylint
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
+
+WITH_LEGACY_WORKFLOW = True # BBB
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
@@ -94,7 +96,7 @@ import Products.ERP5Type.Workflow
 def initialize( context ):
   # Import Product Components
   from .Tool import (CacheTool, MemcachedTool,
-                    TypesTool, PropertySheetTool,
+                    TypesTool, PropertySheetTool, WorkflowTool,
                     ComponentTool)
   from . import Document
   from .Base import Base
@@ -111,6 +113,7 @@ def initialize( context ):
                    MemcachedTool.MemcachedTool,
                    TypesTool.TypesTool,
                    PropertySheetTool.PropertySheetTool,
+                   WorkflowTool.WorkflowTool,
                    ComponentTool.ComponentTool
                   )
   # Do initialization step
@@ -194,3 +197,18 @@ import zExceptions
 ModuleSecurityInfo('zExceptions').declarePublic(*filter(
   lambda x: Exception in getattr(getattr(zExceptions, x), '__mro__', ()),
   dir(zExceptions)))
+
+# BBB : allow load of fomer Products.CMFDefault.MembershipTool
+# that has been replaced by Products.CMFCore.MembershipTool
+try:
+  from Products.CMFDefault.MembershipTool import MembershipTool
+except ImportError:
+  import sys, imp
+  m = 'Products.CMFDefault'
+  sys.modules[m] = imp.new_module(m)
+  m += ".MembershipTool"
+  sys.modules[m] = m = imp.new_module(m)
+  from Products.CMFCore.MembershipTool import MembershipTool
+  m.MembershipTool = MembershipTool
+  del m
+

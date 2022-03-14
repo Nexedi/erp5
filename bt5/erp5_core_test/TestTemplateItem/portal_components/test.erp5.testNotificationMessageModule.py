@@ -39,12 +39,9 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base',)
 
-  def createUser(self, name, role_list):
-    self.portal.acl_users._doAddUser(name, self.newPassword(), role_list, [])
-
   def afterSetUp(self):
-    self.createUser('erp5user', ['Auditor', 'Author'])
-    self.createUser('manager', ['Manager'])
+    self.portal.acl_users._doAddUser('erp5user', self.newPassword(), ['Auditor', 'Author'], [])
+    self.portal.acl_users._doAddUser('manager', self.newPassword(), ['Manager'], [])
     self.portal.email_from_address = 'site@example.invalid'
     self.loginByUserName('erp5user')
 
@@ -130,7 +127,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')
 
-    mime, text = doc.convert('txt',
+    _, text = doc.convert('txt',
                              substitution_method_parameter_dict=dict(a='b'))
     self.assertEqual('substitution text: b', text.rstrip())
 
@@ -148,7 +145,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')
 
-    mime, text = doc.convert('txt')
+    _, text = doc.convert('txt')
     self.assertEqual('substitution text: b', text.rstrip())
 
   def test_safe_substitution_content(self):
@@ -167,7 +164,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')
 
-    mime, text = doc.convert('txt')
+    _, text = doc.convert('txt')
     self.assertEqual('substitution text: ${b}', text.rstrip())
     self.assertEqual('${b}', doc.asSubjectText())
 

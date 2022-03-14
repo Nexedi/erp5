@@ -37,8 +37,6 @@ File | local_permission
 File | related_document
 File | version_view
 File | view_editor
-Image Module | list_ui
-Image Module | sort_on
 Image Module | view
 Image | export
 Image | file_upload
@@ -53,7 +51,6 @@ Image | related_document
 Image | version_view
 PDF | download
 PDF | file_upload
-PDF | html_view
 PDF | jump_to_all_related
 PDF | jump_to_predecessor
 PDF | jump_to_similar

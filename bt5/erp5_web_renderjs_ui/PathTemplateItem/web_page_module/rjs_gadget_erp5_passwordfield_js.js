@@ -16,7 +16,7 @@
           required: field_json.required,
           id: field_json.key,
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           type: 'password',
           hidden: field_json.hidden,
           // Force calling subfield render

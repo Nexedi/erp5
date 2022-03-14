@@ -115,7 +115,7 @@
                         <string>my_int_index</string>
                         <string>last_check</string>
                         <string>test_node_list</string>
-                        <string>my_validation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

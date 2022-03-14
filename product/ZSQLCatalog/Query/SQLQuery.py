@@ -29,7 +29,6 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-from future.utils import raise_
 from .Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.query import IQuery
@@ -47,7 +46,7 @@ class SQLQuery(Query):
         Raw SQL text.
     """
     if not isinstance(payload, basestring):
-      raise_(TypeError, 'Payload must be a string, got a %r: %r' % (type(payload), payload))
+      raise TypeError('Payload must be a string, got a %r: %r' % (type(payload), payload))
     assert len(payload)
     self.payload = '(' + payload + ')'
 

@@ -249,6 +249,10 @@
                           <string>Default Sales Price</string>
                           <string>default_sale_price</string>
                         </tuple>
+                        <tuple>
+                          <string>Asset Price</string>
+                          <string>asset_price</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

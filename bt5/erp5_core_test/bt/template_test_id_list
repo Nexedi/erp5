@@ -1,4 +1,5 @@
 test.erp5.testAccessTab
+test.erp5.testSequence
 test.erp5.testActivityTool
 test.erp5.testAlarm
 test.erp5.testArrow
@@ -21,6 +22,7 @@ test.erp5.testERP5Coordinate
 test.erp5.testERP5Core
 test.erp5.testERP5Type
 test.erp5.testERP5TypeInterfaces
+test.erp5.testERP5Workflow
 test.erp5.testFieldValueCache
 test.erp5.testFields
 test.erp5.testFolder
@@ -52,6 +54,7 @@ test.erp5.testTransactionalVariable
 test.erp5.testTrashTool
 test.erp5.testVanillaERP5Catalog
 test.erp5.testVideoField
+test.erp5.testWendelinCore
 test.erp5.testWorkflowHistoryList
 test.erp5.testWorklist
 test.erp5.testXForwardedFor

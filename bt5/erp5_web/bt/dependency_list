@@ -1,5 +1,5 @@
 erp5_core (>= 5.4.3)
 erp5_xhtml_style
-erp5_base
+erp5_crm
 erp5_jquery
 erp5_knowledge_pad

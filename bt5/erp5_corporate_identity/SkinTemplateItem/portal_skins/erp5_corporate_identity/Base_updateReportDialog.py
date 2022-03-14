@@ -39,7 +39,7 @@ Update a book report dialog with parameters manually entered
 
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
-  return context.Base_redirect(
+  return context.Base_renderForm(
     dialog_id,
     keep_items = dict(
       portal_status_message=translateString('Preview updated.'),

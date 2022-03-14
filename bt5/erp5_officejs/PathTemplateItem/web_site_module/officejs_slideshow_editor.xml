@@ -497,9 +497,7 @@
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_officejs_slideshow.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -746,7 +744,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.28933.8790.47291</string> </value>
+                      <value> <string>992.44282.29486.58026</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -764,7 +762,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1595511939.13</float>
+                              <float>1623767748.12</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

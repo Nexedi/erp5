@@ -1,0 +1,83 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Contract header.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_theme                        python: options.get('contract_theme');
+                       contract_title                        python: options.get('contract_title');
+                       contract_header                       python: options.get('contract_header');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_logo_url                     python: options.get('contract_logo_url');
+                       contract_logo_title                   python: options.get('contract_logo_title');
+                       contract_short_title                  python: options.get('contract_short_title');
+                       contract_reference                    python: options.get('contract_reference');
+                       contract_revision                     python: options.get('contract_revision');
+                       contract_version                      python: options.get('contract_version');
+                       contract_short_date                   python: options.get('contract_short_date');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: contract_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url contract_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+      function setImageSize(pic) {
+        if (pic.naturalWidth / pic.naturalHeight <= 1) {
+          pic.style.width = "auto";
+          pic.style.maxWidth = "28mm";
+          pic.style.maxHeight = "28mm"
+          pic.style.height = "auto";
+        }
+      }
+    </script>
+    </head>
+    <body class="ci-contract" onload="setPlaceholdersWithUrlParameters()">
+      <tal:block metal:use-macro="context/WebPage_createContractHeader/macros/contract_header" />
+    </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="contract_header">
+    <tal:block tal:condition="python: contract_header">
+      <tal:block tal:content="structure python: contract_header"></tal:block>
+    </tal:block>
+    <tal:block tal:condition="python: not contract_header">
+      <table class="ci-contract-header">
+        <tbody>
+          <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+             <td>
+              <div class="ci-contract-header-image-wkhtmltopdf-image-wrapper">
+                <img class="hack" onload="setImageSize(event.srcElement)" tal:attributes="src python: contract_logo_url; alt python: contract_logo_title"/>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </tal:block>
+  </tal:block>
+</tal:block>

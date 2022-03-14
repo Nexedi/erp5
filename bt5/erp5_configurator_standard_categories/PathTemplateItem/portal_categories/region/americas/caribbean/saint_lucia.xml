@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>LCA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>LC</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>saint_lucia</string> </value>
         </item>

@@ -5,7 +5,4 @@ the bug can still increase the modification date this way.
 """
 from Products.ERP5Type.Message import translateString
 
-context.getPortalObject().portal_workflow.doActionFor(
-  context,
-  'edit_action',
-  comment=translateString("New comment"))
+context.Base_addEditWorkflowComment(comment=translateString("New comment"))

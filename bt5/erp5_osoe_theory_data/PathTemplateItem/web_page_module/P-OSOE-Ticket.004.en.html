@@ -1,232 +1,230 @@
-<section class="screenshot"> 
-    <h1>Session 2: CRM Tickets and Events - Tickets</h1> <img alt="Ticket workflow" type="image/png" src="user-Tickets.Ticket.Workflow?format=png" title="Ticket workflow" /> <footer>
-          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.
-        </footer>  
-      <details open="open">
-        <p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) 
-           project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and 
-           the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
-           to undergraduate students or professionals.
-        </p>
-        <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute 
-           the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training,
-           consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any 
-           reuse or distribution, you must make clear to others the license terms of this work. Any of these
-           conditions can be waived if you get permission from the copyright holder through a commercial license 
-           or an educational license. For more information, contact info@nexedi.com
-        </p>
-      </details>
-      </section><section> 
-    <h1>Agenda</h1> 
-    <ul> 
-      <li>What is a Ticket ?</li> 
-      <li>What is a Ticket made of ?</li> 
-      <li>The standard workflow of a Ticket</li> 
-      <li>The workflow of a Campaign</li> 
-      <li>The workflow of a Sale opportunity</li> 
-      <li>The workflow of a Support Request</li> 
-      <li>The workflow of a Meeting</li> 
-    </ul> 
-    <details open="open"> 
-      <p>From the presentation of Events, we have seen how the Event is used to trace every interaction between our employees and the outside world. 
-      It is really easy with events to keep track of a simple or complex interactions.</p>
-      <p>But what about parallel interactions? What if you organise a conference and you want to keep track of every interaction you have while you 
-      prepare the conference? This is not possible with only the Events. The same problem happens when you want to keep track of every discussion
-      which occurs when you send a press release: in the same time you will start maybe one hundred or more discussions. This is why every CRM system 
-      uses what we call &quot;Tickets&quot;.</p>
-      <p>
-        In this presentation, we are going to explain the Tickets in ERP5, by knowing the definition of a ticket and how it is made of, as well as its workflow, 
-        you will be able to manage every discussion in your CRM. Afterwards, we will explain individually the workflow of Campaign, Sale opportunity, Support Request and Meeting.
-      </p>
-    </details>  
-    </section><section class="screenshot"> 
-    <h1>Example: Beta Developer Program</h1> <img title="Tickets example: Beta Developer Program" alt="Tickets example: Beta Developer Program" type="image/png" src="user-Tickets.Example.Beta.Developer.Program?format=png" /> <details open="open"> 
-      <p>
-            From the presentation of Events, we have had a general idea of how to use the CRM feature &quot;Event&quot; to manage company's interactions with external contacts. Following the VIFIB example, in the detail page of the <strong>Event</strong>
-            (the left side screen shot) which is a reply email from one contact who got the original mail message from our VIFIB manager, it shows the Event &quot;
-            <strong>Follow Up&quot;</strong>
-            a
-            <strong>Ticket</strong>
-            the &quot;Beta Developer Program&quot; (the right side screen shot).
-            <br /> <strong>Description:</strong>
-            The Ticket records a marketing campaign to hire software developers.
-            <br />
-            VIFIB director Mr Smets plans to launch a marketing campaign aims to increasing the product awareness of SlapOS the new operation system of VIFIB by hiring software developers. The main interactions of this campaign is to send mail messages to contacts (customers) of VIFIB, and these emails would be the
-            <strong>Related Events</strong>
-            of this
-            <strong>Campaign Ticket</strong>
-            . So they would be listed in the detail page of this Ticket.
-            <br /> <strong>Title:</strong>
-            Beta Developer Program
-            <br /> <strong>Ticket Type:</strong>
-            Campaign
-            <br /> <strong>Operations Manager:</strong>
-            XU Jingjing
-            <br /> <strong>Quantity:</strong>
-            10 Days
-            <br /> <strong>Begin Date:</strong>
-            12/01/2011
-            <br /> <strong>End Date:</strong>
-            02/01/2012
-          </p>
-      <p>This is a typical Ticket for ERP5 CRM. Now we will explain in detail what is a Ticket and then introduce the four different kinds of Tickets.</p> </details> </section><section class="illustration"> 
-    <h1>What is a Ticket?</h1> <img title="Interactions, events and tickets" alt="Interactions, events and tickets" src="user-Tickets.What.Is.A.Ticket?format=png" type="image/png" /> <details open="open"> 
-      <p>
-            Tickets are records in the system which gather all events and documents related to the same subject.<br />
-            For example, it allows you to put all the interactions related to the same marketing campaign in a same record.
-          </p>
-      <p>
-            By doing so, you will have the possibility to do better reporting of the actual situation of the company,
-            which will allow you to allocate roles of every employee and organise the work of each one.
-          </p>
-      <p>In our example &quot;VIFIB Beta Developer Program&quot;, the operation manager XU Jingjing will take care of all the Events of the Ticket, including coordinating the interactions between the VIFIB manager Cédric and his contacts, organizing the communication and cooperation between different persons inside and outside VIFIB who are related to this marketing campaign, and so on.</p> </details> </section><section class="screenshot"> 
-    <h1>What is a Ticket made of?</h1> <img title="Details in the Ticket page" src="user-Tickets.What.Is.A.Ticket.Made.Of?format=png" alt="Details in the Ticket page" type="image/png" /> <details open="open"> 
-      <p>Now that we have seen what is a ticket and why it is useful, we will see what is the ticket made of.</p>
-      <p>
-            A ticket is <strong>representing a movement of resource</strong>
-            , for example, the time spend on the ticket-
-            <strong>the Begin Date and End Date</strong>
-            . Therefore the Ticket looks like an order.
-            <strong>The resource is the type of ticket</strong>
-            such as a sale opportunity, a campaign, a support request or a meeting. In the case of a sale opportunity, we move it from our company to the company of our
-            client, this is why we have the fields
-            <strong>&quot;Billing Supplier&quot;</strong>
-            and
-            <strong>&quot;Client&quot;</strong>
-            .
-            <br />
-            A Ticket is the record of its related Events and Documents. In the detail page of the ticket, you can find
-            <strong>a list of the related Events and Documents</strong>
-            which follow the Ticket.
-            <br />
-            We can also evaluate the
-            <strong>&quot;cost&quot;</strong>
-            or the &quot;
-            <strong>quantity</strong>
-            &quot; of the ticket . These fields will help us to do reporting. In the case of sale opportunities, if we evaluate each of the tickets, it will allow us to create a report of the expected sale in the next six months; We will also be able to compare the global amount of sale opportunities in a given period with what we have entered as sale order. In the case of a meeting, we might evaluate the cost of the ticket in time, for example, how long does it take us to prepare it.
-          </p> </details> </section><section class="illustration"> 
-    <h1>The standard workflow of a Ticket</h1> <img title="Ticket workflow" alt="Ticket workflow" type="image/png" src="user-Tickets.Ticket.Workflow?format=png" /> <details open="open"> 
-      <p>
-            The standard workflow of a ticket is very simple: the operators edit and prepare the Ticket, then request the approval of the campaign's supervisor. If everything is OK, the supervisor will open the submitted campaign. Then the related interactions will be recorded as Events under this Campaign. When the campaign is finished, the operators will close it.<br />
-            Note that even a closed Ticket can be opened again.
-          </p>
-      <p>Now that the concept of a ticket is well understood, we will go in deep to the four specific tickets and their workflows in ERP5, which are Campaigns, Sale opportunities, Support requests and Meetings.</p> </details> </section><section class="screenshot"> 
-    <h1>Campaign: Beta Developer Program</h1> <img title="Campaign example: Beta Developer Program" alt="Campaign example: Beta Developer Program" type="image/png" src="user-Tickets.Campaign.Example.Beta.Developer.Program?format=png" /> 
-      <details open="open">
-        <p>
-          The first type of ticket we will discuss is a campaign. A campaign ticket is used to prepare a list of contact actions to be executed in the future and then track their execution. 
-          Each contact action is defined as an event, assigned to staff. The list of events and their state track the progress of the campaign. 
-          A campaign can be used to organise a programme for Beta developers of a software, to request proposals to different suppliers, to announce
-          a new product to press, etc.
-        </p>
-        <p>
-          We already had the example of the Beta developer program. We will follow this example.
-        </p>
-      </details>
-    </section><section class="illustration"> 
-    <h1>Campaign types</h1> <img title="Campaigns: Press release and Newsletter" alt="Campaigns: Press release and Newsletter" type="image/png" src="user-Tickets.Campaign.Press.Release.And.Newsletter?format=png" /> 
-    <details open="open"> 
-      <p> <strong>1. Press Release:</strong> </p>
-      <p>
-            Press Release is a Campaign starts from sending <strong>many different Events</strong>
-            to recipients (the left side illustration).
-          </p>
-      <p>
-            In the case of a product release campaign of SlapOS, we will <strong>prepare many different Events</strong>
-            in terms of contents (since we want to send personalised emails for each journalist) and methods such as phone calls and visits besides emails (since some journalists are more important than others).
-            <br />
-            Once the Campaign is ready, we will
-            <strong>open it and send the Events</strong>
-            (send mails, give phone calls or pay visits) to the VIFIB's contacts of journalists.
-            <br />
-            We will then
-            <strong>receive reactions</strong>
-            from the journalists either by mail messages, phone calls, or visits,etc. So in the same time we will have many single interactions with many different journalists.
-          </p>
-      <p>
-            Thanks to the function of Ticket,  every interactions between journalists and VIFIB will <strong>be tracked in the Ticket-the product release Campaign</strong> </p>
-      <p>
-            At the end of the Ticket, once we finished all interactions, we will be able to learn from the closed Ticket that how many replies did we get, how many interactions have ended with a &quot;Sale opportunity&quot;, etc. These informations would be very useful for the
-            <strong>evaluation</strong>
-            of this campaign and the market prospects. These kinds of informations are very important if you want to be more efficient next time.
-          </p>
-    </details>
-    <details open="open">
-      <p> <strong>2. Newsletter:</strong> </p>
-      <p>
-            Newsletter is another kind of Campaign. The only difference with Press Release is that Newsletter starts from
-            <strong>a single Event</strong>
-            with many recipients (the right side illustration), so everyone will receive the same Event.
-            <br />
-            In our example &quot;VIFIB Beta Developer Program&quot; as presented above, follow the Ticket - the marketing Campaign, we will
-            <strong>prepare an Event - a same outgoing email</strong>
-            sending the recruitment message to different  VIFIB contacts.
-          </p>
-      <p> <strong>3. Other types :</strong>
-            Prospect, Partner Acquisition, Public Relations, etc.
-          </p>
-      <p> <strong>Please note that, as the other features of ERP5, the Campaign types can be modified by ERP5 configuration.</strong> </p> </details> </section><section class="illustration"> 
-    <h1>The workflow of a Campaign</h1> <img title="Campaign workflow" alt="Campaign workflow" type="image/png" src="user-Tickets.Campaign.Workflow?format=png" /> <details open="open"> 
-      <p>
-            The workflow of a Campaign is the standard work-flow of a Ticket. It assumes that there are two hierarchical levels: one person (normally the operator of the campaign) <strong>drafts</strong>
-            the campaign, and then
-            <strong>submits</strong>
-            the campaign to the supervisor, while the state of the campaign changes from
-            <u>&quot;Draft&quot;</u> to <u>&quot;Approval Requested&quot; or &quot;Submitted&quot;</u>. Then the other person (the supervisor) <strong>approves and opens</strong>
-            it. The state is marked as
-            <u>&quot;Open&quot;</u> during the process of the campaign, when multiple interactions happen and be recorded under the campaign. After the campaign is finished, they will <strong>close</strong>
-            it, changing the state to
-            <u>&quot;Closed&quot;</u>.
-          </p>
-      <p>
-            In our example &quot;VIFIB Beta Developer Program&quot; which is exactly a campaign, the <strong>operations manager</strong>
-            XU Jingjing
-            <u>drafted</u> and prepared the campaign to hire software developers, then she submitted it to the <strong>supervisor</strong>
-            VIFIB director Mr Smets to
-            <u>approve</u> it. When everything is sure, Mr Smets <u>opens</u> the Campaign, then the community manager Cédric, who is in charge of sending the Mail Message Event &quot;SlapOS Resilient Cloud Beta Developer Program&quot;, starts his interactions with his contacts, while all the Events (eg, emails) would be recorded under the Campaign &quot;Beta Developer Program&quot;. After the marketing campaign is finished when VIFIB find enough qualified developers, the managers will <u>close</u> the campaign. Then all the Events recorded under the Campaign can be easily accessed when needed.
-          </p> </details> </section><section class="screenshot"> 
-    <h1>The worklist of a Campaign</h1> <img title="Campaign worklist" alt="Campaign worklist" type="image/png" src="user-Tickets.Campaign.Worklist?format=png" /> <details open="open"> 
-      <p>The screenshot above displays a few campaigns in different states as well as a worklist where the number of campaigns in each state is shown. The same as the Event, the worklist gives us efficient access to the campaigns of different states and facilitates the operation and management of company's campaigns.</p> </details> </section><section class="screenshot"> 
-    <h1>Sale Opportunity: VIFIB Offer PC Internet</h1> <img title="Sale Opportunity example: VIFIB Offer PC Internet" alt="Sale Opportunity example: VIFIB Offer PC Internet" type="image/png" src="user-Tickets.Sale.Opportunity.Example.VIFIB.Offer.PC.Internet?format=png" /> <details open="open"> 
-      <p>As you can see in the screen shot of the detail page of ticket Sale Opportunity &quot;VIFIB Offer PC Internet&quot;, in the case of a VIFIB offer in november 2011, we sent the promotion of PC through a newsletter to our customers. Some of them are interested in buying our products and services by replying to us saying &quot;Hello, I want more info about your products, I am interested in them.&quot; etc. From then on, we need to create a dedicate Ticket which will be a &quot;Sale Opportunity&quot;.</p> </details> </section><section class="illustration"> 
-    <h1>The role of Sale Opportunity</h1> <img title="Role of Sale Opportunity" alt="Role of Sale Opportunity" type="image/png" src="user-Tickets.Sale.Opportunity.Role?format=png" /> <details open="open"> 
-      <p>A sale opportunity starts from customers' replies which express their interests in our product and service. But normally few sale opportunities will come to a result very fast. First, only few clients will maybe take decisions fast. Second, there will be many actors involved in the decision to go with in the same sale opportunity: you might negotiate with the product supplier and the bank while keep in contact with your customers.</p>
-      <p>In one word, the decision from a sale opportunity can be made very quickly but sometimes it can take more than a year. So we need to use the Ticket &quot;Sale Opportunity&quot; to keep track of your commercial effort-your interactions with all the contacts involved, so to organise and to qualify our sale opportunities.</p> </details> </section><section class="illustration"> 
-    <h1>The workflow of a Sale Opportunity</h1> <img title="Sale Opportunity workflow" alt="Sale Opportunity workflow" src="user-Tickets.Sale.Opportunity.Workflow?format=png" type="image/png" /> <details open="open"> 
-      <p>
-            The Sale Opportunity work-flow is more complex than the basic ticket workflow, it ends by a Sale or a Rejection. <br />
-            In the case &quot;VIFIB Offer PC Internet&quot;, after the operations manager sent the offer to the customers, she got replies. She then
-            <strong>created</strong>
-            the ticket Sale Opportunity to manage the following interactions between VIFIB, the customers, the PC supplier and the bank. She will
-            <strong>submitted</strong>
-            the Sale opportunity to the supervisor. If Mr Smets the supervisor verifies and approves the Sale opportunity, the operations manager and sales staff will
-            <strong>contact the prospect</strong>
-            and negotiate with the PC supplier. When sales condition is set, VIFIB will give the final
-            <strong>offer</strong>
-            . Finally, if the customer accept the offer, the VIFIB products will be
-            <strong>sold</strong>
-            ; If not, then sale opportunity is
-            <strong>rejected</strong> </p> </details> </section><section class="screenshot"> 
-    <h1>Worklist of a Sale Opportunity</h1> <img title="Sale Opportinuty worklist" alt="Sale Opportinuty worklist" src="user-Tickets.Sale.Opportunity.Worklist?format=png" type="image/png" /> <details open="open"> 
-      <p>This example displays a few sale opportunities in different states as well as a work-list where the number of sale opportunities in each state is shown. They offer quick access to the tickets, facilitating the company's operation management.</p> </details> </section><section class="illustration"> 
-    <h1>The role of Support Request</h1> <img title="Role of Support Request" alt="Role of Support Request" type="image/png" src="user-Tickets.Support.Request.Role?format=png" /> <details open="open"> 
-      <p>
-            The third kind of ticket is the Support requests. Supports requests are used for customer help and support. For example, if you sell products through the Internet, some customers might return their products since they are broken or have defaults.<br />
-            When a customer calls you to let you know the product is defected, you should open a support request: Then if the customer send picture of the product, Warranty scan etc., you can attach all documents in the tickets; Once you have received the product from the customer, you might ask the manufacturer if he will replace or fix it, so you can manage all the interactions between your customer, you and your supplier in the Tickets.
-          </p> </details> </section><section class="illustration"> 
-    <h1>The workflow of a Support Request</h1> <img title="Support Request workflow" alt="Support Request workflow" type="image/png" src="user-Tickets.Support.Request.Workflow?format=png" /> <details open="open"> 
-      <p>
-            Here's the support request workflow.<br />
-            Just like a standard ticket workflow, it is assuming that there are two hierarchical levels: one person prepare and submit the support request, then the other approves, opens it and closes it.
-          </p> </details> </section><section class="screenshot"> 
-    <h1>Worklist of a Support Request</h1> <img title="Support Request worklist" alt="Support Request worklist" src="user-Tickets.Support.Request.Worklist?format=png" type="image/png" /> <details open="open"> 
-      <p>This example displays a few support requests in different states as well as a worklist where the number of support requests in each state is shown. The same as the other tickets, they offer quick access to the tickets, facilitating the company's operation management.</p> </details> </section><section class="illustration"> 
-    <h1>The role of Meeting</h1> <img title="Role of Meeting" alt="Role of Meeting" type="image/png" src="user-Tickets.Meeting.Role?format=png" /> <details open="open"> 
-      <p>
-            The last kind of tickets in ERP5 CRM is the Meeting ticket. <br />
-            Meeting should not be compared to the Event “visit”. A meeting is for instance a conference. If you prepare a conference you will first contact every speaker you want to ask whether they are interested in or not. You will also have discussion with the place holder and the clients you will invite to the conference. Before the presentation, you will need to call every single one of your speaker to confirm if they are arrived in their hotel rooms, if they are ready for the presentation, etc. Once the meeting is over, you will thank all your speakers for their efforts, etc.
-          </p> </details> </section><section class="illustration"> 
-    <h1>The workflow of a Meeting</h1> <img title="Meeting workflow" alt="Meeting workflow" type="image/png" src="user-Tickets.Meeting.Workflow?format=png" /> <details open="open"> 
-      <p>The workflow for the meeting is a standard ticket workflow.</p> </details> </section><section class="screenshot"> 
-    <h1>Worklist of a Meeting</h1> <img title="Meeting worklist" alt="Meeting worklist" src="user-Tickets.Meeting.Worklist?format=png" type="image/png" /> <details open="open"> 
-      <p>This is how the meetings are displayed in ERP5. Just like for the other tickets, you can check how many meetings are in Draft, Submitted, or Open states.</p> </details> </section>
+<section class="screenshot">
+<h1>Session 2: CRM Tickets and Events - Tickets</h1>
+<img alt="Ticket workflow" src="user-Tickets.Ticket.Workflow?format=png" title="Ticket workflow" type="image/png" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+</section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>What is a Ticket ?</li>
+	<li>What is a Ticket made of ?</li>
+	<li>The standard workflow of a Ticket</li>
+	<li>The workflow of a Campaign</li>
+	<li>The workflow of a Sale opportunity</li>
+	<li>The workflow of a Support Request</li>
+	<li>The workflow of a Meeting</li>
+</ul>
+
+<details open="open">
+<p>From the presentation of Events, we have seen how the Event is used to trace every interaction between our employees and the outside world. It is really easy with events to keep track of a simple or complex interactions.</p>
+
+<p>But what about parallel interactions? What if you organise a conference and you want to keep track of every interaction you have while you prepare the conference? This is not possible with only the Events. The same problem happens when you want to keep track of every discussion which occurs when you send a press release: in the same time you will start maybe one hundred or more discussions. This is why every CRM system uses what we call &quot;Tickets&quot;.</p>
+
+<p>In this presentation, we are going to explain the Tickets in ERP5, by knowing the definition of a ticket and how it is made of, as well as its workflow, you will be able to manage every discussion in your CRM. Afterwards, we will explain individually the workflow of Campaign, Sale opportunity, Support Request and Meeting.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Example: Beta Developer Program</h1>
+<img alt="Tickets example: Beta Developer Program" src="user-Tickets.Example.Beta.Developer.Program.New?format=png" title="Tickets example: Beta Developer Program" type="image/png" />
+<details open="open">
+<p>From the presentation of Events, we have had a general idea of how to use the CRM feature &quot;Event&quot; to manage company&#39;s interactions with external contacts. Following the VIFIB example, in the detail page of the <strong>Event</strong> (the left side screen shot) which is a reply email from one contact who got the original mail message from our VIFIB manager, it shows the Event &quot; <strong>Follow Up&quot;</strong> a <strong>Ticket</strong> the &quot;Beta Developer Program&quot; (the right side screen shot).<br />
+<strong>Description:</strong> The Ticket records a marketing campaign to hire software developers.<br />
+VIFIB director Mr Smets plans to launch a marketing campaign aims to increasing the product awareness of SlapOS the new operation system of VIFIB by hiring software developers. The main interactions of this campaign is to send mail messages to contacts (customers) of VIFIB, and these emails would be the <strong>Related Events</strong> of this <strong>Campaign Ticket</strong> . So they would be listed in the detail page of this Ticket.<br />
+<strong>Title:</strong> Beta Developer Program<br />
+<strong>Ticket Type:</strong> Campaign<br />
+<strong>Operations Manager:</strong> XU Jingjing<br />
+<strong>Quantity:</strong> 10 Days<br />
+<strong>Begin Date:</strong> 12/01/2011<br />
+<strong>End Date:</strong> 02/01/2012</p>
+
+<p>This is a typical Ticket for ERP5 CRM. Now we will explain in detail what is a Ticket and then introduce the four different kinds of Tickets.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>What is a Ticket?</h1>
+<img alt="Interactions, events and tickets" src="user-Tickets.What.Is.A.Ticket?format=png" title="Interactions, events and tickets" type="image/png" />
+<details open="open">
+<p>Tickets are records in the system which gather all events and documents related to the same subject.<br />
+For example, it allows you to put all the interactions related to the same marketing campaign in a same record.</p>
+
+<p>By doing so, you will have the possibility to do better reporting of the actual situation of the company, which will allow you to allocate roles of every employee and organise the work of each one.</p>
+
+<p>In our example &quot;VIFIB Beta Developer Program&quot;, the operation manager XU Jingjing will take care of all the Events of the Ticket, including coordinating the interactions between the VIFIB manager C&eacute;dric and his contacts, organizing the communication and cooperation between different persons inside and outside VIFIB who are related to this marketing campaign, and so on.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>What is a Ticket made of?</h1>
+<img alt="Details in the Ticket page" src="user-Tickets.What.Is.A.Ticket.Made.Of.New?format=png" title="Details in the Ticket page" type="image/png" />
+<details open="open">
+<p>Now that we have seen what is a ticket and why it is useful, we will see what is the ticket made of.</p>
+
+<p>A ticket is <strong>representing a movement of resource</strong> , for example, the time spend on the ticket- <strong>the Begin Date and End Date</strong> . Therefore the Ticket looks like an order. <strong>The resource is the type of ticket</strong> such as a sale opportunity, a campaign, a support request or a meeting. In the case of a sale opportunity, we move it from our company to the company of our client, this is why we have the fields <strong>&quot;Billing Supplier&quot;</strong> and <strong>&quot;Client&quot;</strong> .<br />
+A Ticket is the record of its related Events and Documents. In the detail page of the ticket, you can find <strong>a list of the related Events and Documents</strong> which follow the Ticket.<br />
+We can also evaluate the <strong>&quot;cost&quot;</strong> or the &quot; <strong>quantity</strong> &quot; of the ticket . These fields will help us to do reporting. In the case of sale opportunities, if we evaluate each of the tickets, it will allow us to create a report of the expected sale in the next six months; We will also be able to compare the global amount of sale opportunities in a given period with what we have entered as sale order. In the case of a meeting, we might evaluate the cost of the ticket in time, for example, how long does it take us to prepare it.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The standard workflow of a Ticket</h1>
+<img alt="Ticket workflow" src="user-Tickets.Ticket.Workflow?format=png" title="Ticket workflow" type="image/png" />
+<details open="open">
+<p>The standard workflow of a ticket is very simple: the operators edit and prepare the Ticket, then request the approval of the campaign&#39;s supervisor. If everything is OK, the supervisor will open the submitted campaign. Then the related interactions will be recorded as Events under this Campaign. When the campaign is finished, the operators will close it.<br />
+Note that even a closed Ticket can be opened again.</p>
+
+<p>Now that the concept of a ticket is well understood, we will go in deep to the four specific tickets and their workflows in ERP5, which are Campaigns, Sale opportunities, Support requests and Meetings.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Campaign: Beta Developer Program</h1>
+<img alt="Campaign example: Beta Developer Program" src="user-Tickets.What.Is.A.Ticket.Made.Of.Beta.Developer.Program.View.Screenshot.New?format=png" title="Campaign example: Beta Developer Program" type="image/png" />
+<details open="open">
+<p>The first type of ticket we will discuss is a campaign. A campaign ticket is used to prepare a list of contact actions to be executed in the future and then track their execution. Each contact action is defined as an event, assigned to staff. The list of events and their state track the progress of the campaign. A campaign can be used to organise a programme for Beta developers of a software, to request proposals to different suppliers, to announce a new product to press, etc.</p>
+
+<p>We already had the example of the Beta developer program. We will follow this example.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Campaign types</h1>
+<img alt="Campaigns: Press release and Newsletter" src="user-Tickets.Campaign.Press.Release.And.Newsletter?format=png" title="Campaigns: Press release and Newsletter" type="image/png" />
+<details open="open">
+<p><strong>1. Press Release:</strong></p>
+
+<p>Press Release is a Campaign starts from sending <strong>many different Events</strong> to recipients (the left side illustration).</p>
+
+<p>In the case of a product release campaign of SlapOS, we will <strong>prepare many different Events</strong> in terms of contents (since we want to send personalised emails for each journalist) and methods such as phone calls and visits besides emails (since some journalists are more important than others).<br />
+Once the Campaign is ready, we will <strong>open it and send the Events</strong> (send mails, give phone calls or pay visits) to the VIFIB&#39;s contacts of journalists.<br />
+We will then <strong>receive reactions</strong> from the journalists either by mail messages, phone calls, or visits,etc. So in the same time we will have many single interactions with many different journalists.</p>
+
+<p>Thanks to the function of Ticket, every interactions between journalists and VIFIB will <strong>be tracked in the Ticket-the product release Campaign</strong></p>
+
+<p>At the end of the Ticket, once we finished all interactions, we will be able to learn from the closed Ticket that how many replies did we get, how many interactions have ended with a &quot;Sale opportunity&quot;, etc. These informations would be very useful for the <strong>evaluation</strong> of this campaign and the market prospects. These kinds of informations are very important if you want to be more efficient next time.</p>
+</details>
+
+<details open="open">
+<p><strong>2. Newsletter:</strong></p>
+
+<p>Newsletter is another kind of Campaign. The only difference with Press Release is that Newsletter starts from <strong>a single Event</strong> with many recipients (the right side illustration), so everyone will receive the same Event.<br />
+In our example &quot;VIFIB Beta Developer Program&quot; as presented above, follow the Ticket - the marketing Campaign, we will <strong>prepare an Event - a same outgoing email</strong> sending the recruitment message to different VIFIB contacts.</p>
+
+<p><strong>3. Other types :</strong> Prospect, Partner Acquisition, Public Relations, etc.</p>
+
+<p><strong>Please note that, as the other features of ERP5, the Campaign types can be modified by ERP5 configuration.</strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The workflow of a Campaign</h1>
+<img alt="Campaign workflow" src="user-Tickets.Campaign.Workflow?format=png" title="Campaign workflow" type="image/png" />
+<details open="open">
+<p>The workflow of a Campaign is the standard work-flow of a Ticket. It assumes that there are two hierarchical levels: one person (normally the operator of the campaign) <strong>drafts</strong> the campaign, and then <strong>submits</strong> the campaign to the supervisor, while the state of the campaign changes from <u>&quot;Draft&quot;</u> to <u>&quot;Approval Requested&quot; or &quot;Submitted&quot;</u>. Then the other person (the supervisor) <strong>approves and opens</strong> it. The state is marked as <u>&quot;Open&quot;</u> during the process of the campaign, when multiple interactions happen and be recorded under the campaign. After the campaign is finished, they will <strong>close</strong> it, changing the state to <u>&quot;Closed&quot;</u>.</p>
+
+<p>In our example &quot;VIFIB Beta Developer Program&quot; which is exactly a campaign, the <strong>operations manager</strong> XU Jingjing <u>drafted</u> and prepared the campaign to hire software developers, then she submitted it to the <strong>supervisor</strong> VIFIB director Mr Smets to <u>approve</u> it. When everything is sure, Mr Smets <u>opens</u> the Campaign, then the community manager C&eacute;dric, who is in charge of sending the Mail Message Event &quot;SlapOS Resilient Cloud Beta Developer Program&quot;, starts his interactions with his contacts, while all the Events (eg, emails) would be recorded under the Campaign &quot;Beta Developer Program&quot;. After the marketing campaign is finished when VIFIB find enough qualified developers, the managers will <u>close</u> the campaign. Then all the Events recorded under the Campaign can be easily accessed when needed.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>The worklist of a Campaign</h1>
+<img alt="Campaign worklist" src="user-Tickets.Campaign.Worklist.New?format=png" title="Campaign worklist" type="image/png" />
+<details open="open">
+<p>The screenshot above displays a few campaigns in different states as well as a worklist where the number of campaigns in each state is shown. The same as the Event, the worklist gives us efficient access to the campaigns of different states and facilitates the operation and management of company&#39;s campaigns.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Sale Opportunity: VIFIB Offer PC Internet</h1>
+<img alt="Sale Opportunity example: VIFIB Offer PC Internet" src="user-Tickets.Sale.Opportunity.Example.VIFIB.Offer.PC.Internet.New?format=png" title="Sale Opportunity example: VIFIB Offer PC Internet" type="image/png" />
+<details open="open">
+<p>As you can see in the screen shot of the detail page of ticket Sale Opportunity &quot;VIFIB Offer PC Internet&quot;, in the case of a VIFIB offer in November 2020, we sent the promotion of PC through a newsletter to our customers. Some of them are interested in buying our products and services by replying to us saying &quot;Hello, I want more info about your products, I am interested in them.&quot; etc. From then on, we need to create a dedicate Ticket which will be a &quot;Sale Opportunity&quot;.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The role of Sale Opportunity</h1>
+<img alt="Role of Sale Opportunity" src="user-Tickets.Sale.Opportunity.Role?format=png" title="Role of Sale Opportunity" type="image/png" />
+<details open="open">
+<p>A sale opportunity starts from customers&#39; replies which express their interests in our product and service. But normally few sale opportunities will come to a result very fast. First, only few clients will maybe take decisions fast. Second, there will be many actors involved in the decision to go with in the same sale opportunity: you might negotiate with the product supplier and the bank while keep in contact with your customers.</p>
+
+<p>In one word, the decision from a sale opportunity can be made very quickly but sometimes it can take more than a year. So we need to use the Ticket &quot;Sale Opportunity&quot; to keep track of your commercial effort-your interactions with all the contacts involved, so to organise and to qualify our sale opportunities.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The workflow of a Sale Opportunity</h1>
+<img alt="Sale Opportunity workflow" src="user-Tickets.Sale.Opportunity.Workflow?format=png" title="Sale Opportunity workflow" type="image/png" />
+<details open="open">
+<p>The Sale Opportunity work-flow is more complex than the basic ticket workflow, it ends by a Sale or a Rejection.<br />
+In the case &quot;VIFIB Offer PC Internet&quot;, after the operations manager sent the offer to the customers, she got replies. She then <strong>created</strong> the ticket Sale Opportunity to manage the following interactions between VIFIB, the customers, the PC supplier and the bank. She will <strong>submitted</strong> the Sale opportunity to the supervisor. If Mr Smets the supervisor verifies and approves the Sale opportunity, the operations manager and sales staff will <strong>contact the prospect</strong> and negotiate with the PC supplier. When sales condition is set, VIFIB will give the final <strong>offer</strong> . Finally, if the customer accept the offer, the VIFIB products will be <strong>sold</strong> ; If not, then sale opportunity is <strong>rejected</strong></p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Worklist of a Sale Opportunity</h1>
+<img alt="Sale Opportinuty worklist" src="user-Tickets.Sale.Opportunity.Worklist.New?format=png" title="Sale Opportinuty worklist" type="image/png" />
+<details open="open">
+<p>This example displays a few sale opportunities in different states as well as a work-list where the number of sale opportunities in each state is shown. They offer quick access to the tickets, facilitating the company&#39;s operation management.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The role of Support Request</h1>
+<img alt="Role of Support Request" src="user-Tickets.Support.Request.Role?format=png" title="Role of Support Request" type="image/png" />
+<details open="open">
+<p>The third kind of ticket is the Support requests. Supports requests are used for customer help and support. For example, if you sell products through the Internet, some customers might return their products since they are broken or have defaults.<br />
+When a customer calls you to let you know the product is defected, you should open a support request: Then if the customer send picture of the product, Warranty scan etc., you can attach all documents in the tickets; Once you have received the product from the customer, you might ask the manufacturer if he will replace or fix it, so you can manage all the interactions between your customer, you and your supplier in the Tickets.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The workflow of a Support Request</h1>
+<img alt="Support Request workflow" src="user-Tickets.Support.Request.Workflow?format=png" title="Support Request workflow" type="image/png" />
+<details open="open">
+<p>Here&#39;s the support request workflow.<br />
+Just like a standard ticket workflow, it is assuming that there are two hierarchical levels: one person prepare and submit the support request, then the other approves, opens it and closes it.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Worklist of a Support Request</h1>
+<img alt="Support Request worklist" src="user-Tickets.Support.Request.Worklist.New?format=png" title="Support Request worklist" type="image/png" />
+<details open="open">
+<p>This example displays a few support requests in different states as well as a worklist where the number of support requests in each state is shown. The same as the other tickets, they offer quick access to the tickets, facilitating the company&#39;s operation management.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The role of Meeting</h1>
+<img alt="Role of Meeting" src="user-Tickets.Meeting.Role?format=png" title="Role of Meeting" type="image/png" />
+<details open="open">
+<p>The last kind of tickets in ERP5 CRM is the Meeting ticket.<br />
+Meeting should not be compared to the Event &ldquo;visit&rdquo;. A meeting is for instance a conference. If you prepare a conference you will first contact every speaker you want to ask whether they are interested in or not. You will also have discussion with the place holder and the clients you will invite to the conference. Before the presentation, you will need to call every single one of your speaker to confirm if they are arrived in their hotel rooms, if they are ready for the presentation, etc. Once the meeting is over, you will thank all your speakers for their efforts, etc.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>The workflow of a Meeting</h1>
+<img alt="Meeting workflow" src="user-Tickets.Meeting.Workflow?format=png" title="Meeting workflow" type="image/png" />
+<details open="open">
+<p>The workflow for the meeting is a standard ticket workflow.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Worklist of a Meeting</h1>
+<img alt="Meeting worklist" src="user-Tickets.Meeting.Worklist.New?format=png" title="Meeting worklist" type="image/png" />
+<details open="open">
+<p>This is how the meetings are displayed in ERP5. Just like for the other tickets, you can check how many meetings are in Draft, Submitted, or Open states.</p>
+</details>
+</section>

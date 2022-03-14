@@ -38,17 +38,20 @@ from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
   PropertyConstantGetter
 
+
 class TemporaryDocumentMixin(object):
   """
   Setters and attributes that are attached to temporary documents.
   """
-  isIndexable = 0
+  isIndexable = PropertyConstantGetter('isIndexable', value=False)
   isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
   __roles__ = None
 
   def __getstate__(self):
-    # disallow persistent storage
-    raise PicklingError("Temporary objects can't be pickled")
+    if getattr(self, '_p_jar', None) is not None:
+      # disallow persistent storage
+      raise PicklingError("Temporary objects can't be pickled")
+    return super(TemporaryDocumentMixin, self).__getstate__()
 
   def reindexObject(self, *args, **kw):
     pass
@@ -85,7 +88,9 @@ class TemporaryDocumentMixin(object):
     self.title = value
 
   def getTitle(self):
-    return getattr(self,'title',None)
+    """Returns the title of this document
+    """
+    return getattr(aq_base(self), 'title', None)
 
   def edit(self, *args, **kw):
     if getattr(self, "_original", None) is None:

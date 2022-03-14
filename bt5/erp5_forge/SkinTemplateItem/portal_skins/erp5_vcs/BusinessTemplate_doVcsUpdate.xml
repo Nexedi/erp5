@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', keep=False</string> </value>
+            <value> <string>commit_json=None, keep=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KAZ</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KZ</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>kazakhstan</string> </value>
         </item>

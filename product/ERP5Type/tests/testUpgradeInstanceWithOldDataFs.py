@@ -37,7 +37,6 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_mroonga_catalog',
             'erp5_base',
-            'erp5_workflow',
             'erp5_simulation',
             'erp5_accounting',
             'erp5_configurator',
@@ -73,7 +72,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
   def testUpgrade(self):
     if not self.portal.portal_templates.getRepositoryList():
       self.setupAutomaticBusinessTemplateRepository(
-        searchable_business_template_list=["erp5_core", "erp5_base"])
+        searchable_business_template_list=["erp5_core", "erp5_base", "erp5_notebook"])
 
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     createZODBPythonScript(
@@ -133,7 +132,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
 
     alarm.Alarm_solve()
 
-    self.tic()
+    self.tic(delay=2400)
 
     self.assertEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 

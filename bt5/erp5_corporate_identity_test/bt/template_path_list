@@ -8,8 +8,8 @@ person_module/template_test*/default**
 portal_categories/function/company
 portal_categories/function/company/executive
 portal_categories/group/template*
-portal_tests/template_test_zuite
-portal_tests/template_test_zuite/*
+portal_tests/corporate_identity_test_zuite
+portal_tests/corporate_identity_test_zuite/*
 product_module/template_test_product
 sale_opportunity_module/template_test_*
 support_request_module/template_test_*

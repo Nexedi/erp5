@@ -1,0 +1,35 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test for Code View On Slideshow</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="3">Test for Code View On Slideshow</th></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_page_module/template_test_slideshow_highlight_code_html/WebPage_exportAsSlideshow#/1/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[text()="App Configuration Router"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyImageMatchSnapshot</td>
+  <td>//pre</td>
+  <td>20</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

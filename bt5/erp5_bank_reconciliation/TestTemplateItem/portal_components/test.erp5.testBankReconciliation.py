@@ -32,7 +32,7 @@ import unittest
 
 from DateTime import DateTime
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from erp5.component.test.testAccounting import AccountingTestCase

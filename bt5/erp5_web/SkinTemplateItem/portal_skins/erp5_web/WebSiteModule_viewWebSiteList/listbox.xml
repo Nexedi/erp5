@@ -83,6 +83,10 @@
                           <string>Visible</string>
                         </tuple>
                         <tuple>
+                          <string>skin_selection_name</string>
+                          <string>Skin Selection</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>

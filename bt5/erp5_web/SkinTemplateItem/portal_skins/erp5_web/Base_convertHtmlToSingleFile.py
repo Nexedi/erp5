@@ -252,8 +252,10 @@ else:
   root_url = base_url_root_object.absolute_url()
   base_url = base_url_object.absolute_url()
 
-assert base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl())
-base_path = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
+if base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl()):
+  base_path = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
+else:
+  base_path = base_url_object.getRelativeUrl()
 if not base_path.startswith("/"):
   base_path = "/" + base_path
 

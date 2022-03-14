@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob */
+/*global window, rJS, RSVP, document, jIO, URI, URL, Blob */
 /*jslint nomen: true, indent: 2 */
 (function (window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob) {
   "use strict";
@@ -28,6 +28,8 @@
     COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE = "cancel_dialog_with_history",
     // Display an action on the jio document + the history
     COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION = "display_erp5_action_with_history",
+    // Display a dialog on the jio document + the history
+    COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_DIALOG = "display_erp5_dialog_with_history",
     // Store the jio key for the person document of the user
     COMMAND_LOGIN = "login",
     // Display a raw string URL
@@ -70,6 +72,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_DIALOG] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ERP5_ACTION] = null;
@@ -394,10 +397,10 @@
     );
   }
 
-  function execDisplayERP5ActionCommand(gadget, previous_options, next_options, keep_history) {
+  function execDisplayERP5ActionCommand(gadget, previous_options, next_options, command) {
     return gadget.jio_getAttachment(next_options.jio_key, 'links')
       .push(function (document_view) {
-        var queue, action, action_data, action_url, i, j, new_options;
+        var action, action_data, i, j, new_options;
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
           if (document_view._links.hasOwnProperty(action)) {
@@ -407,14 +410,22 @@
             for (j = 0;  j < document_view._links[action].length; j = j + 1) {
               action_data = document_view._links[action][j];
               if (action_data.name === next_options.page) {
-                new_options = {
-                  jio_key: next_options.jio_key,
-                  view: action_data.href
-                };
-                if (keep_history) {
+                // copy (or reuse) to propagate other parameters like editable
+                new_options = next_options;
+                // XXX page options is conflicting with usual usage
+                delete new_options.page;
+                new_options.view = action_data.href;
+                copyStickyParameterDict(previous_options, new_options);
+                if (command === 0) {
+                  return execDisplayCommand(gadget, new_options);
+                }
+                if (command === 1) {
                   return execPushHistoryCommand(gadget, previous_options, new_options);
                 }
-                return execDisplayCommand(gadget, new_options);
+                if (command === 2) {
+                  return execKeepHistoryAndDisplayCommand(gadget, previous_options, new_options, true);
+                }
+                throw new Error('execDisplayERP5ActionCommand. Not supported command ' + command);
               }
             }
           }
@@ -545,6 +556,8 @@
     var next_options;
     if (previous_options.hasOwnProperty('cancel')) {
       next_options = JSON.parse(previous_options.cancel);
+      // cancel may be outdated
+      gadget.props.is_cancelled = true;
     } else {
       next_options = {jio_key: previous_options.jio_key};
     }
@@ -648,6 +661,12 @@
       });
   }
 
+  function redirectToHomePage(gadget, previous_options) {
+    var options = {};
+    copyStickyParameterDict(previous_options, options);
+    return gadget.redirect({command: 'display', options: options});
+  }
+
   function redirectToParent(gadget, jio_key, previous_options) {
     return gadget.jio_getAttachment(jio_key, "links")
       .push(function (erp5_document) {
@@ -666,9 +685,7 @@
       }, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
             (error.status_code === 404)) {
-          var options = {};
-          copyStickyParameterDict(previous_options, options);
-          return gadget.redirect({command: 'display', options: options});
+          return redirectToHomePage(gadget, previous_options);
         }
         throw error;
       });
@@ -682,9 +699,10 @@
       queue =  new RSVP.Queue(),
       previous_id;
     if (history === undefined) {
-      if (jio_key !== undefined) {
-        return redirectToParent(gadget, jio_key, previous_options);
+      if (jio_key === undefined) {
+        return redirectToHomePage(gadget, previous_options);
       }
+      return redirectToParent(gadget, jio_key, previous_options);
     }
     // XXX XXX XXX
     if (previous_options.back_field) {
@@ -903,7 +921,10 @@
       return execKeepHistoryAndCancelDialogCommand(gadget, previous_options);
     }
     if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION) {
-      return execDisplayERP5ActionCommand(gadget, previous_options, next_options, true);
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options, 1);
+    }
+    if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_DIALOG) {
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options, 2);
     }
     if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {
       return execDisplayStoredStateCommand(gadget, next_options, drop_options);
@@ -915,7 +936,7 @@
       return execChangeCommand(previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_DISPLAY_ERP5_ACTION) {
-      return execDisplayERP5ActionCommand(gadget, previous_options, next_options);
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options, 0);
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);
@@ -1036,59 +1057,76 @@
 
 
   rJS(window)
-    .ready(function createProps(gadget) {
+    .ready(function routerReady(gadget) {
       gadget.props = {
         options: {}
       };
-    })
-
-    .ready(function createJioSelection(gadget) {
-      return gadget.getDeclaredGadget("jio_selection")
-        .push(function (jio_gadget) {
-          gadget.props.jio_gadget = jio_gadget;
-          return jio_gadget.createJio({
-            type: "sha",
-            sub_storage: {
-              type: "indexeddb",
-              database: "selection"
-            }
-          });
-        });
-    })
-
-    .ready(function createJioNavigationHistory(gadget) {
-      return gadget.getDeclaredGadget("jio_navigation_history")
-        .push(function (jio_gadget) {
-          gadget.props.jio_navigation_gadget = jio_gadget;
-          return jio_gadget.createJio({
-            type: "query",
-            sub_storage: {
-              type: "indexeddb",
-              database: "navigation_history"
-            }
-          });
-        });
-    })
-
-    .ready(function createJioDocumentState(gadget) {
-      return gadget.getDeclaredGadget("jio_document_state")
-        .push(function (jio_gadget) {
-          gadget.props.jio_state_gadget = jio_gadget;
-          return jio_gadget.createJio({
-            type: "indexeddb",
-            database: "document_state"
-          });
-        });
-    })
-    .ready(function createJioForContent(g) {
-      return g.getDeclaredGadget("jio_form_content")
-        .push(function (jio_form_content) {
-          g.props.jio_form_content = jio_form_content;
-          return jio_form_content.createJio({
-            type: "local",
-            sessiononly: true
-          });
-        });
+      return RSVP.all([
+        (function createJioSelection() {
+          return gadget.getDeclaredGadget("jio_selection")
+            .push(function (jio_gadget) {
+              gadget.props.jio_gadget = jio_gadget;
+              return jio_gadget.createJio({
+                type: "sha",
+                sub_storage: {
+                  type: "fallback",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "selection"
+                  },
+                  fallback_storage: {
+                    type: "memory"
+                  }
+                }
+              });
+            });
+        }()),
+        (function createJioNavigationHistory() {
+          return gadget.getDeclaredGadget("jio_navigation_history")
+            .push(function (jio_gadget) {
+              gadget.props.jio_navigation_gadget = jio_gadget;
+              return jio_gadget.createJio({
+                type: "query",
+                sub_storage: {
+                  type: "fallback",
+                  sub_storage: {
+                    type: "indexeddb",
+                    database: "navigation_history"
+                  },
+                  fallback_storage: {
+                    type: "memory"
+                  }
+                }
+              });
+            });
+        }()),
+        (function createJioDocumentState() {
+          return gadget.getDeclaredGadget("jio_document_state")
+            .push(function (jio_gadget) {
+              gadget.props.jio_state_gadget = jio_gadget;
+              return jio_gadget.createJio({
+                type: "fallback",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "document_state"
+                },
+                fallback_storage: {
+                  type: "memory"
+                }
+              });
+            });
+        }()),
+        (function createJioForContent() {
+          return gadget.getDeclaredGadget("jio_form_content")
+            .push(function (jio_form_content) {
+              gadget.props.jio_form_content = jio_form_content;
+              return jio_form_content.createJio({
+                type: "local",
+                sessiononly: true
+              });
+            });
+        }())
+      ]);
     })
 
     .declareMethod('getCommandUrlForList', function getCommandUrlForList(
@@ -1100,6 +1138,17 @@
         result_list.push(getCommandUrlForMethod(this, options_list[i]));
       }
       return result_list;
+    })
+    .declareMethod('getCommandUrlForDict', function getCommandUrlForDict(
+      options_dict
+    ) {
+      var key;
+      for (key in options_dict) {
+        if (options_dict.hasOwnProperty(key)) {
+          options_dict[key] = getCommandUrlForMethod(this, options_dict[key]);
+        }
+      }
+      return options_dict;
     })
     .declareMethod('getCommandUrlFor', function getCommandUrlFor(options) {
       return getCommandUrlForMethod(this, options);
@@ -1134,16 +1183,17 @@
         }
         result = routeMethodLess(gadget, command_options.args);
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return result;
-        })
+      return new RSVP.Queue(result)
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
             gadget.props.modified = false;
+            if (gadget.props.is_cancelled) {
+              route_result.options.is_cancelled = true;
+            }
             return gadget.renderApplication(route_result, gadget.props.keep_message)
               .push(function (result) {
                 gadget.props.keep_message = false;
+                gadget.props.is_cancelled = false;
                 return result;
               });
           }
@@ -1207,4 +1257,4 @@
         false
       );
     });
-}(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob));
+}(window, rJS, RSVP, rJS.loopEventListener, document, jIO, URI, URL, Blob));

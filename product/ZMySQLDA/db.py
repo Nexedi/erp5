@@ -84,18 +84,12 @@
 ##############################################################################
 
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
-from future.utils import raise_
 __version__='$Revision: 1.20 $'[11:-2]
 import six
 import os
 import re
-if six.PY2:
-  import _mysql
-  from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
-else:
-  from MySQLdb import _mysql
-  from MySQLdb._exceptions import OperationalError, NotSupportedError, ProgrammingError
 import MySQLdb
+from MySQLdb import OperationalError, NotSupportedError, ProgrammingError, _mysql
 import warnings
 from contextlib import contextmanager
 if six.PY2:
@@ -107,9 +101,8 @@ MySQLdb_version_required = (0,9,2)
 
 _v = getattr(_mysql, 'version_info', (0,0,0))
 if _v < MySQLdb_version_required:
-    raise_(NotSupportedError, \
-        "ZMySQLDA requires at least MySQLdb %s, %s found" % \
-        (MySQLdb_version_required, _v))
+    raise NotSupportedError("ZMySQLDA requires at least MySQLdb %s, %s found"
+        % (MySQLdb_version_required, _v))
 
 from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT

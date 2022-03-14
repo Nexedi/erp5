@@ -1,0 +1,315 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Disable Xhtml Style</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Disable Xhtml Style</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/ERP5Site_createPersonWhoHasPermissionToAccess</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>done</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/portal_preferences/default_system_preference</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id='field_my_translated_preference_state_title' and text()='Globally Enabled']</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="default_system_preference"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'XHTML'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_preferred_html_style_disabled']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>check</td>
+  <td>//input[@name='field_my_preferred_html_style_disabled']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='field_my_preferred_html_style_allowed_user_id_list']</td>
+  <td>user_logout_test</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='__ac_name']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_name']</td>
+  <td>user_logout_test</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_password']</td>
+  <td>user_logout_test</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Welcome to ERP5</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/portal_preferences/default_system_preference</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id='field_my_translated_preference_state_title' and text()='Globally Enabled']</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="default_system_preference"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'XHTML'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='field_my_preferred_html_style_allowed_user_id_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='field_my_preferred_html_style_allowed_user_id_list']</td>
+  <td>dummy</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='__ac_name']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_name']</td>
+  <td>user_logout_test</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_password']</td>
+  <td>user_logout_test</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>xhtml_style is disabled. Please use ERP5JS</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/portal_preferences/default_system_preference</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id='field_my_translated_preference_state_title' and text()='Globally Enabled']</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="default_system_preference"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'XHTML'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='field_my_preferred_html_style_allowed_user_id_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='field_my_preferred_html_style_allowed_user_id_list']</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Logout'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Login']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>xhtml_style is disabled. Please use ERP5JS</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

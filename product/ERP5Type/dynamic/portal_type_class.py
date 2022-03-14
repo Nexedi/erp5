@@ -165,6 +165,14 @@ def generatePortalTypeClass(site, portal_type_name):
       is_partially_generated = True
       return is_partially_generated, ((klass,), [], [], attribute_dict)
 
+  # Ugly but done only once on Workflows (not data) so no migration code:
+  # Configurator Workflow implementation (workflow_module) used to have a
+  # 'Variable' Portal Type. Because the name was too generic this has been
+  # renamed to 'Workflow Variable' in ERP5 Workflow (portal_workflow)
+  from .. import WITH_LEGACY_WORKFLOW
+  if WITH_LEGACY_WORKFLOW and portal_type_name == 'Variable':
+    portal_type_name = 'Workflow Variable'
+
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
   portal_type = getattr(site.portal_types, portal_type_name, None)
@@ -213,6 +221,16 @@ def generatePortalTypeClass(site, portal_type_name):
     mixin_list = []
     interface_list = []
     acquire_local_role = True
+
+  # Ugly but done only once on Workflows (not data) so no migration code:
+  # Configurator Workflow implementation (workflow_module) used to have a
+  # dedicated Portal Type for Transition Variable but this is now the same as
+  # any other Workflow Variable.
+  if WITH_LEGACY_WORKFLOW:
+    if portal_type_name == 'Transition Variable':
+      type_class = 'WorkflowVariable'
+    elif portal_type_name in ('State', 'Transition'):
+      type_class = 'Workflow' + portal_type_name
 
   if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type ' + \
@@ -365,9 +383,8 @@ def loadTempPortalTypeClass(portal_type_name):
   """
   import erp5.portal_type
   klass = getattr(erp5.portal_type, portal_type_name)
+  return type(portal_type_name, (TemporaryDocumentMixin, klass), {})
 
-  return type("Temporary " + portal_type_name,
-              (TemporaryDocumentMixin, klass), {})
 
 last_sync = -1
 _bootstrapped = set()
@@ -430,9 +447,11 @@ def synchronizeDynamicModules(context, force=False):
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
       from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+      from Products.ERP5.Tool.CategoryTool import CategoryTool
+      from Products.ERP5Type.Tool.WorkflowTool import WorkflowTool
       from Products.ERP5Catalog.Tool.ERP5CatalogTool import ERP5CatalogTool
       try:
-        for tool_class in TypesTool, PropertySheetTool, ComponentTool, ERP5CatalogTool:
+        for tool_class in TypesTool, PropertySheetTool, ComponentTool, ERP5CatalogTool, CategoryTool, WorkflowTool:
           # if the instance has no property sheet tool, or incomplete
           # property sheets, we need to import some data to bootstrap
           # (only likely to happen on the first run ever)
@@ -468,6 +487,15 @@ def synchronizeDynamicModules(context, force=False):
         except AttributeError:
           pass # no Activity Tool yet
 
+        for tool_id in ("portal_properties", "portal_uidannotation",
+                        "portal_uidgenerator", "portal_uidhandler"):
+          if portal.hasObject(tool_id):
+            portal._delObject(tool_id, suppress_events=True)
+            migrate = True
+            if tool_id == 'portal_properties':
+              portal.portal_skins.erp5_xhtml_style.breadcrumbs.write(
+                'return []')
+
         if migrate:
           portal.migrateToPortalTypeClass()
           portal.portal_skins.changeSkin(None)
@@ -478,6 +506,7 @@ def synchronizeDynamicModules(context, force=False):
               ' business templates')
         else:
           _bootstrapped.add(portal.id)
+
       except:
         # Required because the exception may be silently dropped by the caller.
         transaction.doom()

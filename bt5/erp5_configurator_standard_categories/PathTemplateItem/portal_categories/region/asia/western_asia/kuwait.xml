@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KWT</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KW</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>kuwait</string> </value>
         </item>

@@ -156,7 +156,7 @@
               action_doc = action_document_list[action_key];
               if (app_actions.includes(action_doc.reference)) {
                 action_settings = {
-                  page: undefined,
+                  page: "handle_action",
                   jio_key: jio_key,
                   title: action_doc.title,
                   action: action_doc.reference,
@@ -165,11 +165,12 @@
                   parent_portal_type: portal_type
                 };
                 if (view_categorie_list.includes(action_settings.action_type)) {
-                  action_settings.page = "ojs_local_controller";
+                  if (app_view === action_settings.action) {
+                    action_settings.page = "ojs_local_controller";
+                  }
                   action_info_dict.view_list[action_settings.action] =
                     action_settings;
                 } else {
-                  action_settings.page = "handle_action";
                   action_info_dict.action_list[action_settings.action] =
                     action_settings;
                 }

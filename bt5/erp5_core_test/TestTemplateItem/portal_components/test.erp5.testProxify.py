@@ -115,7 +115,7 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.get_value('items'), [('Male', 'Male'), ('Female', 'Female')])
 
     field_value_cache.clear()
-
+    self.assertFalse(field.checkConsistency())
 
   def test_multi_level_proxify(self):
     self.address_view.proxifyField({'my_region':'Base_view.my_list_field'})
@@ -134,6 +134,7 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.is_delegated('items'), False)
     self.assertEqual(field.get_tales('items')._text,
                      'here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
+    self.assertTrue(field.has_value('items'))
     self.assertEqual(field.is_delegated('enabled'), True)
     self.assertEqual(field.get_value('enabled'), 1)
     self.assertEqual(field.is_delegated('description'), True)
@@ -145,6 +146,7 @@ class TestProxify(ERP5TypeTestCase):
     template_field = self.address_view.my_region
     template_field.values['title'] = 'Region'
     self.assertEqual(field.get_value('title'), 'Region')
+    self.assertFalse(field.checkConsistency())
 
   def test_force_delegate(self):
     self.person_view.proxifyField({'my_name':'Base_view.my_string_field'},
@@ -158,6 +160,7 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.is_delegated('size'), True)
     self.assertEqual(field.is_delegated('enabled'), True)
     self.assertEqual(field.is_delegated('description'), True)
+    self.assertFalse(field.checkConsistency())
 
   def test_keep_empty_value(self):
     #Non editable fields
@@ -182,6 +185,7 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.get_value('title'), 'Description')
     self.assertEqual(field.is_delegated('editable'), True)
     self.assertEqual(field.get_value('editable'), 0)
+    self.assertFalse(field.checkConsistency())
 
   def test_unproxify(self):
     #Proxify First
@@ -206,3 +210,4 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.meta_type, 'RelationStringField')
     self.assertEqual(field.get_value('title'), 'Organisation')
     self.assertEqual(field.get_value('proxy_listbox_ids'), [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')])
+    self.assertFalse(field.checkConsistency())

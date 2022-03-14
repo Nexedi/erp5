@@ -417,7 +417,7 @@
                 </item>
                 <item>
                     <key> <string>color_script</string> </key>
-                    <value> <string>TaskMovement_getSimulationStateColorText</string> </value>
+                    <value> <string>Movement_getSimulationStateColorText</string> </value>
                 </item>
                 <item>
                     <key> <string>constraint_method</string> </key>

@@ -51,6 +51,7 @@ class PropertySheetTool(BaseTool):
   id = 'portal_property_sheets'
   meta_type = 'ERP5 Property Sheet Tool'
   portal_type = 'Property Sheet Tool'
+  title = 'Property Sheets'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -66,7 +67,7 @@ class PropertySheetTool(BaseTool):
     'template_tool_component_id_property')
 
   def _isBootstrapRequired(self):
-    if 'BaseType' not in self:
+    if 'InteractionWorkflowInteraction' not in self:
       return True
 
     bt_has_key = self.BusinessTemplate.has_key
@@ -86,6 +87,18 @@ class PropertySheetTool(BaseTool):
       'SimpleItem',
       'Version',
       'Comment',
+      # for workflows
+      'Guard',
+      'WorkflowVariable',
+      'InteractionWorkflowInteraction',
+      'ActionInformation/action_name_property',
+      'WorkflowState',
+      'WorkflowTransition',
+      'Predicate',
+      'Workflow',
+      'Workflow/manager_bypass_property',
+      'Workflow/state_variable_property',
+      'Workflow/workflow_managed_permission_property',
       # the following ones are required to upgrade an existing site
       'Reference',
       'BaseCategory',

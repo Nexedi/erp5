@@ -1,9 +1,3 @@
 business_configuration_module/default_consulting_standard_configuration
 business_configuration_module/default_officejs_sdk_configuration
 business_configuration_module/default_standard_configuration
-workflow_module/erp5_consulting_workflow
-workflow_module/erp5_consulting_workflow/**
-workflow_module/erp5_standard_workflow
-workflow_module/erp5_standard_workflow/**
-workflow_module/officejs_sdk_workflow
-workflow_module/officejs_sdk_workflow/**

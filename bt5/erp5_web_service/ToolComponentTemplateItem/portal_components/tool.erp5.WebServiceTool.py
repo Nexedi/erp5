@@ -53,6 +53,7 @@ handler_module_dict = {
   'soap_wsdl': 'SOAPWSDLConnection',
   'sftp' : "SFTPConnection",
   'sql' : "SQLConnection",
+  'document' : "DocumentConnection",
 }
 for handler_id, module_id in handler_module_dict.iteritems():
   # Ignore non-functionnal plugins.
@@ -77,7 +78,7 @@ class WebServiceTool(BaseTool):
   """
 
   id = 'portal_web_services'
-  title = 'Web Service Tool'
+  title = 'Web Services'
   meta_type = 'ERP5 Web Service Tool'
   portal_type = 'Web Service Tool'
   allowed_content_types = ()

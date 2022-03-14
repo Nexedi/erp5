@@ -3,7 +3,7 @@
 (function (window, rJS, RSVP, document) {
   'use strict';
 
-  function appendCheckboxField(gadget, item, checked) {
+  function appendCheckboxField(gadget, item, checked, error_text) {
     var input_gadget,
       label_gadget;
     if (!gadget.state.editable) {
@@ -13,7 +13,8 @@
             label_gadget = result;
             return result.render({
               tag: 'p',
-              text_content: item[0]
+              text_content: item[0],
+              error_text: error_text
             });
           })
           .push(function () {
@@ -35,6 +36,7 @@
           value: item[1],
           checked: checked,
           editable: true,
+          error_text: error_text,
           hidden: gadget.state.hidden
         };
 
@@ -47,19 +49,24 @@
         label.appendChild(input_gadget.element);
         label.appendChild(text_node);
         div.appendChild(label);
+        if (error_text && !label.classList.contains("is-invalid")) {
+          label.classList.add("is-invalid");
+        } else if (!error_text && label.classList.contains("is-invalid")) {
+          label.classList.remove("is-invalid");
+        }
         gadget.element.appendChild(div);
       });
   }
 
   rJS(window)
-
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
           editable: field_json.editable,
           name: field_json.key,
           item_list: field_json.items,
-          value_list: field_json.value || field_json.default,
+          value_list: field_json.value || field_json["default"],
+          error_text: field_json.error_text,
           hidden: field_json.hidden,
           // Force calling subfield render
           // as user may have modified the input value
@@ -94,11 +101,13 @@
             return appendCheckboxField.apply(this, argument_list);
           });
       }
-
       queue = new RSVP.Queue();
 
       for (i = 0; i < item_list.length; i += 1) {
-        enQueue(gadget, item_list[i], value_dict.hasOwnProperty(item_list[i][1]));
+        enQueue(gadget,
+                item_list[i],
+                value_dict.hasOwnProperty(item_list[i][1]),
+                this.state.error_text);
       }
 
       return queue;
@@ -149,13 +158,6 @@
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
-      var name = this.state.name;
-      if (this.state.editable && this.state.required) {
-        return this.getContent()
-          .push(function (result) {
-            return result[name].length !== 0;
-          });
-      }
       return true;
     });
 

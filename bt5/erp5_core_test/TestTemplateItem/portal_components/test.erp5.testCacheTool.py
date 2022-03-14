@@ -65,7 +65,7 @@ class TestCacheTool(ERP5TypeTestCase):
     self.createCachedMethod()
     self.commit()
 
-  def login(self):
+  def login(self): # pylint:disable=arguments-differ
     uf = self.portal.acl_users
     uf._doAddUser('admin', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])

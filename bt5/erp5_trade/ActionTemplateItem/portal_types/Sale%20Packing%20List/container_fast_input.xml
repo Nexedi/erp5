@@ -71,7 +71,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SalePackingList_fastInputForm</string> </value>
+            <value> <string>string:${object_url}/SalePackingList_viewContainerFastInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

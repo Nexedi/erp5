@@ -23,7 +23,7 @@ for i in kw.keys():
     wf_item.setProperties(term.getTitle(), description=term.getDescription(), manager_bypass=wf_item.manager_bypass)
   elif wf_item.meta_type == "Workflow State":
     wf_item.setProperties(term.getTitle(), description=term.getDescription(),
-        transitions=wf_item.transitions, type_list=wf_item.type_list)
+        transitions=wf_item.getDestinationReferenceList(), type_list=wf_item.type_list)
   else: # wf_item.meta_type == "Workflow Transition"
     guard = getattr(wf_item, 'guard', None)
     if not is_action:

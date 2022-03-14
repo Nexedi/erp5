@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP, jIO, AudioContext,
-  URL, MediaSource, loopEventListener, document,
+  URL, MediaSource, document,
   promiseEventListener, ArrayBuffer */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, AudioContext, URL, MediaSource, loopEventListener) {
@@ -254,4 +254,4 @@
           }
         });
     });
-}(window, rJS, RSVP, AudioContext, URL, MediaSource, loopEventListener));
+}(window, rJS, RSVP, AudioContext, URL, MediaSource, rJS.loopEventListener));

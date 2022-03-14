@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CAF</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CF</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>central_african_republic</string> </value>
         </item>

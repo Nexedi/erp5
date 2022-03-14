@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>KNA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>KN</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>saint_kitts_and_nevis</string> </value>
         </item>

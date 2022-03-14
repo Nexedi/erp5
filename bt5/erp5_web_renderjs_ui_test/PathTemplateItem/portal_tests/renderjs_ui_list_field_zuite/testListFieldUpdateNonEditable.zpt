@@ -39,11 +39,8 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name='field_my_local_title']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr>
   <td>select</td>
   <td>//select[@name='field_my_local_title']</td>

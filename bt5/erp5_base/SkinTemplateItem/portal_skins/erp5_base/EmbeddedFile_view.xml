@@ -99,15 +99,16 @@
                         <string>my_title</string>
                         <string>image_view</string>
                         <string>my_file</string>
-                        <string>my_filename</string>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right (Publication Information)</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_filename</string>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

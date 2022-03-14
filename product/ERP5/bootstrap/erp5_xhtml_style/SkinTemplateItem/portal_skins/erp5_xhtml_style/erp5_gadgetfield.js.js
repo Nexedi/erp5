@@ -83,7 +83,12 @@
                             function () {
         return;
       })
-
+    .allowPublicAcquisition('notifyFocus', function () {
+      return;
+    })
+    .allowPublicAcquisition('notifyBlur', function () {
+      return;
+    })
     .allowPublicAcquisition('notifySubmit', function () {
       return this.element.querySelector('form').querySelector('[type="submit"]').click();
     })

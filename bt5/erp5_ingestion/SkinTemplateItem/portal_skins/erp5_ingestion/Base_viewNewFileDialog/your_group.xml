@@ -116,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getProperty(\'group\') or context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue() is not None and here.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue().getGroup() or \'\'</string> </value>
+            <value> <string>python: context.getTypeBasedMethod(\'getPreferredAttachedDocumentGroup\')()</string> </value>
         </item>
       </dictionary>
     </pickle>

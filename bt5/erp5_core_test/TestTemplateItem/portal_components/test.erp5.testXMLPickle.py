@@ -78,7 +78,7 @@ class TestXMLPickle(unittest.TestCase):
     reconstructed_obj = pickle.loads(reconstructed_pickled_data)
 
     self.assert_(reconstructed_obj.__class__ is DummyClass)
-    self.assert_(type(getattr(reconstructed_obj, 'data', None)) is list)
+    self.assert_(type(getattr(reconstructed_obj, 'data', None)) is list)  # pylint:disable=unidiomatic-typecheck
     self.assertEqual(reconstructed_obj.data[0], 1)
     self.assert_(reconstructed_obj.data[1] is reconstructed_obj)
     self.assert_(reconstructed_obj.data[2] is reconstructed_obj.data)

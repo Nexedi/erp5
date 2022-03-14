@@ -12,7 +12,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from Acquisition import aq_base
 
 from zExceptions import MethodNotAllowed
@@ -34,7 +33,7 @@ def MKCOL(self, REQUEST, RESPONSE):
     parent = self.__parent__
 
     if hasattr(aq_base(parent), name):
-        raise_(MethodNotAllowed, 'The name %s is in use.' % name)
+        raise MethodNotAllowed('The name %s is in use.' % name)
     if not isDavCollection(parent):
         raise Forbidden('Cannot create collection at this location.')
 

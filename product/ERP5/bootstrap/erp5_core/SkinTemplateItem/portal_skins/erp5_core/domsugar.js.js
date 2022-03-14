@@ -130,6 +130,16 @@
         }
       }
     }
+    if ((el.tagName === 'A') &&
+        (props.target === '_blank')) {
+      // Fix security hole with `noopener`
+      if (!el.relList.contains('noopener')) {
+        el.relList.add('noopener');
+      }
+      if (!el.relList.contains('noreferrer')) {
+        el.relList.add('noreferrer');
+      }
+    }
     if (children) {
       appendChildren(el, children);
     }

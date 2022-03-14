@@ -39,6 +39,9 @@ def getPriceFromDefaultSupplyLine(brain, supply_line_id):
     return None
   return brain.inventory * base_price
 
+if inventory_valuation_method == 'asset_price':
+  return context.total_price
+
 if inventory_valuation_method:
   supply_line_id_mapping = {
       'default_purchase_price': 'default_psl',

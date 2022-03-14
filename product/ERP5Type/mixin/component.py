@@ -218,7 +218,14 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     except (AttributeError, KeyError, IndexError):
       return 'draft'
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getContentType')
+  def getContentType(self, default=None):
+    """Returns the content type.
+    """
+    return "text/x-python"
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
     """
     Check the consistency of the Component upon validate or when being

@@ -73,6 +73,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPurchaseTradeCondition
       stepCheckSaleSimulationScenario
       stepCheckPurchaseSimulationScenario
+      stepCheckSaleInvoiceAccountFallback
+      stepCheckPurchaseInvoiceAccountFallback
+      stepCheckConsistencyAlarm
       '''
 
   SECURITY_CONFIGURATION_SEQUENCE = """
@@ -200,6 +203,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
       Check if after the configuration the Person objects are validated.
       The Assignments must be opened and valid.
+      Employee number is defined
     """
     business_configuration = sequence.get("business_configuration")
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
@@ -215,6 +219,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         self.assertNotEquals(None, assignment.getStopDate())
         self.assertEqual(assignment.getGroup(), "my_group")
         assignment.Base_checkConsistency()
+      current_career = person.getDefaultCareerValue()
+      employee_number = current_career.getReference()
+      self.assertNotEqual(employee_number, None)
+      self.assertEqual(len(current_career.checkConsistency()), 0)
+      current_career.edit(reference='')
+      self.assertEqual(len(current_career.checkConsistency()), 1)
+      current_career.edit(reference=employee_number)
+
 
   def stepCheckPersonInformationList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1043,7 +1055,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         individual_variation_base_category='variation',
         base_contribution='base_amount/taxable',
         default_sale_supply_line_base_price=10,
-        default_sale_supply_line_source_account=sales_account.getRelativeUrl(),
+        default_sale_supply_line_source_account_value=sales_account,
     )
     portal.portal_workflow.doActionFor(resource, 'validate_action')
     self.tic()
@@ -1051,7 +1063,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         portal_type='Service',
         title="VAT",
         use_value=self.portal.portal_categories.use.trade.tax,
-        default_sale_supply_line_source_account=vat_account.getRelativeUrl(),
+        default_sale_supply_line_source_account_value=vat_account,
     )
     portal.portal_workflow.doActionFor(vat_service, 'validate_action')
 
@@ -1212,10 +1224,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(sale_invoice.getDivergenceList(), [])
 
     self.assertEqual(
-        [
+        sorted([
             (m.getQuantity(), m.getPrice(), m.getResourceValue())
             for m in sale_invoice.getMovementList()
-        ], [
+        ]), [
             (7, 10, resource),
             (70, 0.03, vat_service),
         ])
@@ -1254,6 +1266,187 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(sale_invoice.getCausalityState(), 'solved')
     self.portal.portal_workflow.doActionFor(sale_invoice, 'stop_action')
     self.tic()
+
+  def stepCheckSaleInvoiceAccountFallback(self, sequence=None, sequence_list=None, **kw):
+    """
+      Non-regression test checking that sales invoice accounting fallback to accounts
+      defined on businessprocess when no account is set on resources supply lines.
+
+      Similar to stepCheckSaleSimulationScenario, but instead of using accounts defined
+      in the resource supply lines, we don't define accounts there and default accounts
+      are selected.
+    """
+    portal = self.portal
+    business_configuration = sequence.get('business_configuration')
+
+    self.login()
+    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
+    self.assertNotEquals(len(organisation_list), 0)
+    organisation = organisation_list[0]
+    self.assertEqual('validated', organisation.getValidationState())
+
+    configuration_sale_trade_condition = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                     'Sale Trade Condition')[0]
+    self.assertIsNotNone(configuration_sale_trade_condition.getSpecialiseValue())
+
+    sales_manager_id, = self._getUserIdList([self.sales_manager_reference])
+    self._loginAsUser(sales_manager_id)
+
+    destination_decision = portal.portal_catalog.getResultValue(
+                                       portal_type='Person',
+                                       reference=self.sales_manager_reference)
+    destination_administration = portal.portal_catalog.getResultValue(
+                                     portal_type='Person',
+                                     reference=self.purchase_manager_reference)
+    resource = portal.product_module.newContent(
+        portal_type='Product',
+        quantity_unit='unit/piece',
+        individual_variation_base_category='variation',
+        base_contribution='base_amount/taxable',
+        default_sale_supply_line_base_price=10,
+    )
+    portal.portal_workflow.doActionFor(resource, 'validate_action')
+    self.tic()
+    vat_service = portal.service_module.newContent(
+        portal_type='Service',
+        title="VAT",
+        use_value=self.portal.portal_categories.use.trade.tax,
+    )
+    portal.portal_workflow.doActionFor(vat_service, 'validate_action')
+
+    # make a trade condition for VAT
+    sale_trade_condition = portal.sale_trade_condition_module.newContent(
+        portal_type='Sale Trade Condition',
+        specialise_value=configuration_sale_trade_condition,
+    )
+    sale_trade_condition.newContent(
+        portal_type='Trade Model Line',
+        base_application_value=self.portal.portal_categories.base_amount.taxable,
+        price=0.03,
+        resource_value=vat_service,
+        trade_phase_value=self.portal.portal_categories.trade_phase.trade.tax,
+        use_value=self.portal.portal_categories.use.trade.tax
+    )
+    portal.portal_workflow.doActionFor(sale_trade_condition, 'validate_action')
+
+    client = portal.organisation_module.newContent(
+        portal_type='Organisation')
+    portal.portal_workflow.doActionFor(client, 'validate_action')
+    self.tic()
+
+    start_date = stop_date = DateTime("2008/01/02")
+    order = portal.sale_order_module.newContent(
+        portal_type='Sale Order',
+        specialise=(sale_trade_condition.getRelativeUrl(),),
+        destination_value=client,
+        destination_section_value=client,
+        source_value=organisation,
+        source_section_value=organisation,
+        destination_decision=destination_decision.getRelativeUrl(),
+        destination_administration=destination_administration.getRelativeUrl(),
+        start_date=start_date,
+        stop_date=stop_date)
+    self.tic()
+
+    # Set the rest through the trade condition.
+    order.SaleOrder_applySaleTradeCondition()
+    self.tic()
+
+    order.newContent(portal_type='Sale Order Line',
+                     resource=resource.getRelativeUrl(),
+                     quantity=10)
+    self.tic()
+    self.assertEqual(order.getTotalPrice(), 100)
+
+    self.assertEqual(order.getSimulationState(), 'draft')
+    self.portal.portal_workflow.doActionFor(order, 'plan_action')
+    self.tic()
+    self.assertEqual(order.getSimulationState(), 'planned')
+
+    self.portal.portal_workflow.doActionFor(order, 'order_action')
+    self.tic()
+    self.assertEqual(order.getSimulationState(), 'ordered')
+
+    self.portal.portal_workflow.doActionFor(order, 'confirm_action')
+    self.tic()
+    self.assertEqual(order.getSimulationState(), 'confirmed')
+
+    causality_list = order.getCausalityRelatedValueList(portal_type='Applied Rule')
+    self.assertEqual(len(causality_list), 1)
+    applied_rule = causality_list[0]
+    self.assertEqual(applied_rule.getPortalType(), 'Applied Rule')
+    rule = applied_rule.getSpecialiseValue()
+    self.assertNotEquals(rule, None)
+    self.assertEqual(rule.getReference(), 'default_order_rule')
+    self.assertEqual(applied_rule.objectCount(), 1)
+
+    simulation_movement = applied_rule.objectValues()[0]
+    self.assertEqual(simulation_movement.getPortalType(),
+                                                      'Simulation Movement')
+    self.assertEqual(simulation_movement.getQuantity(), 10)
+    self.assertEqual(simulation_movement.getResourceValue(), resource)
+
+    self.assertNotEquals(simulation_movement.getCausality(), None)
+    self.assertEqual(simulation_movement.getDestinationDecisionValue(),
+                                                       destination_decision)
+    self.assertEqual(simulation_movement.getDestinationAdministrationValue(),
+                                                 destination_administration)
+
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+    self.tic()
+    sale_packing_list, = order.getCausalityRelatedValueList(portal_type='Sale Packing List')
+
+    self.assertEqual(sale_packing_list.getSimulationState(), 'confirmed')
+    self.assertEqual(sale_packing_list.getCausalityState(), 'solved')
+    self.assertEqual(sale_packing_list.getDivergenceList(), [])
+
+    self.portal.portal_workflow.doActionFor(sale_packing_list, 'start_action')
+    self.commit()
+    self.portal.portal_workflow.doActionFor(sale_packing_list, 'stop_action')
+    self.tic()
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    self.tic()
+    sale_invoice, = sale_packing_list.getCausalityRelatedValueList(
+        portal_type='Sale Invoice Transaction')
+    self.assertEqual(sale_invoice.getSimulationState(), 'confirmed')
+    self.assertEqual(sale_invoice.getCausalityState(), 'solved')
+    self.assertEqual(sale_invoice.getDivergenceList(), [])
+
+    self.assertEqual(
+        sorted([
+            (m.getQuantity(), m.getPrice(), m.getResourceValue())
+            for m in sale_invoice.getMovementList()
+        ]), [
+            (10, 10, resource),
+            (100, .03, vat_service),
+        ])
+
+    self.assertEqual(start_date, sale_invoice.getStartDate())
+    self.assertEqual(stop_date, sale_invoice.getStopDate())
+    self.assertEqual(client, sale_invoice.getDestinationSectionValue())
+    self.assertEqual(client, sale_invoice.getDestinationValue())
+
+    self.portal.portal_workflow.doActionFor(sale_invoice, 'start_action')
+    self.tic()
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    self.tic()
+    self.assertEqual(
+        sorted(
+            [
+                (
+                    m.getSourceDebit(),
+                    m.getSourceCredit(),
+                    m.getSourceValue(portal_type='Account'),
+                    m.getDestinationValue(portal_type='Account'),
+                ) for m in sale_invoice.getMovementList(
+                    portal_type='Sale Invoice Transaction Line')
+            ]), [
+                (0, 3, self.portal.account_module.coll_vat, None),
+                (0, 100, self.portal.account_module.sales, None),
+                (103, 0, self.portal.account_module.receivable, None),
+            ])
+
 
   def stepCheckPurchaseSimulationScenario(self, sequence):
     """
@@ -1300,7 +1493,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         individual_variation_base_category='variation',
         base_contribution='base_amount/taxable',
         default_purchase_supply_line_base_price=10,
-        default_purchase_supply_line_destination_account=expense_account.getRelativeUrl(),
+        default_purchase_supply_line_destination_account_value=expense_account,
     )
     portal.portal_workflow.doActionFor(resource, 'validate_action')
     self.tic()
@@ -1308,7 +1501,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
         portal_type='Service',
         title="VAT",
         use_value=self.portal.portal_categories.use.trade.tax,
-        default_purchase_supply_line_destination_account=vat_account.getRelativeUrl(),
+        default_purchase_supply_line_destination_account_value=vat_account,
     )
     portal.portal_workflow.doActionFor(vat_service, 'validate_action')
 
@@ -1471,10 +1664,10 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(purchase_invoice.getDivergenceList(), [])
 
     self.assertEqual(
-        [
+        sorted([
             (m.getQuantity(), m.getPrice(), m.getResourceValue())
             for m in purchase_invoice.getMovementList()
-        ], [
+        ]), [
             (7, 10, resource),
             (70, 0.03, vat_service),
         ])
@@ -1514,13 +1707,229 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.portal.portal_workflow.doActionFor(purchase_invoice, 'stop_action')
     self.tic()
 
+  def stepCheckPurchaseInvoiceAccountFallback(self, sequence=None, sequence_list=None, **kw):
+    """
+      Non-regression test checking that purchase invoice accounting fallback to accounts
+      defined on businessprocess when no account is set on resources supply lines.
+
+      Similar to stepCheckPurchaseSimulationScenario, but instead of using accounts defined
+      in the resource supply lines, we don't define accounts there and default accounts
+      are selected.
+    """
+    portal = self.portal
+    business_configuration = sequence.get('business_configuration')
+
+    self.login()
+    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
+    self.assertNotEquals(len(organisation_list), 0)
+    organisation = organisation_list[0]
+    self.assertEqual('validated', organisation.getValidationState())
+
+    configuration_purchase_trade_condition = \
+                self.getBusinessConfigurationObjectList(business_configuration,
+                                                     'Purchase Trade Condition')[0]
+    self.assertIsNotNone(configuration_purchase_trade_condition.getSpecialiseValue())
+
+    purchase_manager_id, = self._getUserIdList([self.purchase_manager_reference])
+    self._loginAsUser(purchase_manager_id)
+
+    destination_decision = portal.portal_catalog.getResultValue(
+                                       portal_type='Person',
+                                       reference=self.sales_manager_reference)
+    destination_administration = portal.portal_catalog.getResultValue(
+                                     portal_type='Person',
+                                     reference=self.purchase_manager_reference)
+
+    resource = portal.product_module.newContent(
+        portal_type='Product',
+        quantity_unit='unit/piece',
+        individual_variation_base_category='variation',
+        base_contribution='base_amount/taxable',
+        default_purchase_supply_line_base_price=10,
+    )
+    portal.portal_workflow.doActionFor(resource, 'validate_action')
+    self.tic()
+    vat_service = portal.service_module.newContent(
+        portal_type='Service',
+        title="VAT",
+        use_value=self.portal.portal_categories.use.trade.tax,
+    )
+    portal.portal_workflow.doActionFor(vat_service, 'validate_action')
+
+    # make a trade condition for VAT
+    purchase_trade_condition = portal.purchase_trade_condition_module.newContent(
+        portal_type='Purchase Trade Condition',
+        specialise_value=configuration_purchase_trade_condition,
+    )
+    purchase_trade_condition.newContent(
+        portal_type='Trade Model Line',
+        base_application_value=self.portal.portal_categories.base_amount.taxable,
+        price=0.03,
+        resource_value=vat_service,
+        trade_phase_value=self.portal.portal_categories.trade_phase.trade.tax,
+        use_value=self.portal.portal_categories.use.trade.tax
+    )
+    portal.portal_workflow.doActionFor(purchase_trade_condition, 'validate_action')
+
+    supplier = portal.organisation_module.newContent(
+        portal_type='Organisation')
+    portal.portal_workflow.doActionFor(supplier, 'validate_action')
+    another_supplier = portal.organisation_module.newContent(
+        portal_type='Organisation')
+    portal.portal_workflow.doActionFor(another_supplier, 'validate_action')
+    self.tic()
+
+    start_date = stop_date = DateTime("2008/01/02")
+    order = portal.purchase_order_module.newContent(
+        portal_type='Purchase Order',
+        specialise=(purchase_trade_condition.getRelativeUrl(),),
+        destination_value=organisation,
+        destination_section_value=organisation,
+        source_value=supplier,
+        source_section_value=supplier,
+        destination_decision=destination_decision.getRelativeUrl(),
+        destination_administration=destination_administration.getRelativeUrl(),
+        start_date=start_date,
+        stop_date=stop_date)
+    self.tic()
+
+    # Set the rest through the trade condition.
+    order.PurchaseOrder_applyPurchaseTradeCondition()
+    self.tic()
+
+    order.newContent(portal_type='Purchase Order Line',
+                     resource=resource.getRelativeUrl(),
+                     quantity=10)
+    self.tic()
+    self.assertEqual(order.getTotalPrice(), 100)
+
+    self.assertEqual(order.getSimulationState(), 'draft')
+    self.portal.portal_workflow.doActionFor(order, 'plan_action')
+    self.tic()
+    self.assertEqual(order.getSimulationState(), 'planned')
+
+    self.portal.portal_workflow.doActionFor(order, 'order_action')
+    self.tic()
+    self.assertEqual(order.getSimulationState(), 'ordered')
+
+    self.portal.portal_workflow.doActionFor(order, 'confirm_action')
+    self.tic()
+    self.assertEqual(order.getSimulationState(), 'confirmed')
+
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+    self.tic()
+    purchase_packing_list, = order.getCausalityRelatedValueList(portal_type='Purchase Packing List')
+
+    self.assertEqual(purchase_packing_list.getSimulationState(), 'confirmed')
+    self.assertEqual(purchase_packing_list.getCausalityState(), 'solved')
+    self.assertEqual(purchase_packing_list.getDivergenceList(), [])
+
+    self.portal.portal_workflow.doActionFor(
+        purchase_packing_list, 'start_action')
+    self.commit()
+    self.portal.portal_workflow.doActionFor(
+        purchase_packing_list, 'stop_action')
+    self.tic()
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    self.tic()
+    purchase_invoice, = purchase_packing_list.getCausalityRelatedValueList(
+        portal_type='Purchase Invoice Transaction')
+    self.assertEqual(purchase_invoice.getSimulationState(), 'confirmed')
+    self.assertEqual(purchase_invoice.getCausalityState(), 'solved')
+    self.assertEqual(purchase_invoice.getDivergenceList(), [])
+
+    self.assertEqual(
+        sorted([
+            (m.getQuantity(), m.getPrice(), m.getResourceValue())
+            for m in purchase_invoice.getMovementList()
+        ]), [
+            (10, 10, resource),
+            (100, 0.03, vat_service),
+        ])
+
+    self.assertEqual(start_date, purchase_invoice.getStartDate())
+    self.assertEqual(stop_date, purchase_invoice.getStopDate())
+    self.assertEqual(supplier, purchase_invoice.getSourceSectionValue())
+    self.assertEqual(supplier, purchase_invoice.getSourceValue())
+
+    self.portal.portal_workflow.doActionFor(purchase_invoice, 'start_action')
+    self.tic()
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    self.tic()
+    self.assertEqual(
+        sorted(
+            [
+                (
+                    m.getDestinationDebit(),
+                    m.getDestinationCredit(),
+                    m.getDestinationValue(portal_type='Account'),
+                    m.getSourceValue(portal_type='Account'),
+                ) for m in purchase_invoice.getMovementList(
+                    portal_type='Purchase Invoice Transaction Line')
+            ]), [
+                (0, 103, self.portal.account_module.payable, None),
+                (3, 0, self.portal.account_module.refundable_vat, None),
+                (100, 0, self.portal.account_module.purchase, None),
+            ])
+
+  def stepCheckConsistencyAlarm(self, sequence):
+    """Use erp5_administration's check_consistency alarm to verify that
+    in all modules and tools that there are no inconsistent documents after the
+    configuration.
+    """
+    self.login()
+    # clone the check consistency alarm and enable it for all modules
+    alarm = self.portal.portal_alarms.check_consistency.Base_createCloneDocument(batch_mode=True)
+    alarm.setProperty(
+        'module_list',
+        [m[1] for m in alarm.Alarm_viewConsistencyCheckConfiguration.my_module_list.get_value('items')])
+    alarm.activeSense()
+    self.tic()
+
+    constraint_message_list = sum([
+        r.constraint_message_list for r in alarm.getLastActiveProcess().getResultList()], [])
+    # We ignore some constains here:
+    #  - web sites: because web sites and web sections have some upgrader constraints that we
+    #   don't run as part as configurator. TODO: probably we should integrate more configurator
+    #   and upgrader, so that we run these constraints
+    constraint_message_list = [
+        c for c in constraint_message_list
+        if c.constraint_relative_url not in (
+            'portal_property_sheets/WebSectionUpgradeConstraint/default_page_modification_date_constraint',
+            'portal_property_sheets/WebSiteRenderJSUpgradeConstraint/translation_signature_constraint',
+        ) ]
+    #  - configurator items: because most configurator item do not implement checkConsistency
+    #   fully, they only support applying the configuration, but not comparing the current
+    #   state with the expected state.
+    #   Fixing the configurator items is a TODO, then we'll be able to enable the check here.
+    constraint_message_list = [
+        c for c in constraint_message_list
+        if c.class_name not in set((
+            'Account Configurator Item',
+            'Accounting Period Configurator Item',
+            'Business Process Configurator Item',
+            'Catalog Keyword Key Configurator Item',
+            'Category Configurator Item',
+            'Categories Spreadsheet Configurator Item',
+            'Customer BT5 Configurator Item',
+            'Organisation Configurator Item',
+            'Person Configurator Item',
+            'Portal Type Roles Spreadsheet Configurator Item',
+            'Purchase Trade Condition Configurator Item',
+            'Rule Configurator Item',
+            'Sale Trade Condition Configurator Item',
+            'Security Category Mapping Configurator Item'))]
+
+    self.maxDiff = None
+    self.assertEqual(constraint_message_list, [])
+
 
 class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
   """
     Test Live Consulting Configuration Workflow
   """
 
-  CONFIGURATION_WORKFLOW = 'workflow_module/erp5_consulting_workflow'
+  CONFIGURATION_WORKFLOW = 'portal_workflow/erp5_consulting_configuration_workflow'
 
   DEFAULT_SEQUENCE_LIST = """
       stepSet%(country)sCase
@@ -1823,7 +2232,7 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
   """
     Test Live Standard Configuration Workflow.
   """
-  CONFIGURATION_WORKFLOW = 'workflow_module/erp5_standard_workflow'
+  CONFIGURATION_WORKFLOW = 'portal_workflow/erp5_standard_configuration_workflow'
 
   DEFAULT_SEQUENCE_LIST = """
       stepSet%(country)sCase

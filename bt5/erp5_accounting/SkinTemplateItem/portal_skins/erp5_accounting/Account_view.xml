@@ -70,14 +70,6 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_credit_account</string>
-                        <string>my_gap_list</string>
-                        <string>my_account_type</string>
-                        <string>my_financial_section</string>
-                        <string>my_destination_title_list</string>
-                        <string>my_translated_validation_state_title</string>
                         <string>my_description</string>
                       </list>
                     </value>
@@ -85,13 +77,23 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_gap_list</string>
+                        <string>my_account_type</string>
+                        <string>my_financial_section</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_credit_account</string>
+                        <string>my_destination_title_list</string>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

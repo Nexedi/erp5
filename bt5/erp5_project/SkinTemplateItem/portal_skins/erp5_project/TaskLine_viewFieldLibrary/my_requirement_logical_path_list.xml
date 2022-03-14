@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>base_category</string>
-                <string>portal_type</string>
                 <string>allow_creation</string>
+                <string>base_category</string>
                 <string>catalog_index</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -63,12 +63,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <none/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 import zope.interface
 from AccessControl import allow_class
 from erp5.component.interface.IAmountList import IAmountList
@@ -76,7 +76,7 @@ class GeneratedAmountList(list):
     """
     # XXX: Do we handle rounding correctly ?
     #      What to do if only total price is rounded ??
-    aggregate_dict = {}
+    aggregate_dict = OrderedDict()
     result_list = self.__class__()
     for amount in self:
       key = (amount.getPrice(), amount.getEfficiency(),

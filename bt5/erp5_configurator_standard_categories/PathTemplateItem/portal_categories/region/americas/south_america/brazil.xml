@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BRA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BR</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>brazil</string> </value>
         </item>

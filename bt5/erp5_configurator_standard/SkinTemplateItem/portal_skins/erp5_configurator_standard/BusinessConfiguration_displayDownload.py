@@ -29,3 +29,7 @@ configuration_save.addConfigurationItem("Portal Type Configurator Item",
 configuration_save.addConfigurationItem("Portal Type Configurator Item",
                                         target_portal_type='Currency',
                                         add_propertysheet_list=('CurrencyConstraint',))
+
+configuration_save.addConfigurationItem("Portal Type Configurator Item",
+                                        target_portal_type='Career',
+                                        add_propertysheet_list=('CareerConstraint',))

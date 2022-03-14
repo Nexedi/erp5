@@ -40,10 +40,10 @@ class WebSectionTraversalHook(Persistent):
   """Traversal hook to change the skin selection for this websection.
   """
   def __call__(self, container, request):
-    if not request.get('ignore_layout', None):
+    portal_skin = request.get('portal_skin', None)
+    if (not request.get('ignore_layout', None) and portal_skin is None) or \
+       (container.getPortalType() not in WEB_SECTION_PORTAL_TYPE_TUPLE and portal_skin):
       # If a skin selection is defined in this web section, change the skin now.
       skin_selection_name = container.getSkinSelectionName()
-      if skin_selection_name and \
-         ((request.get('portal_skin', None) is None) or \
-          container.getPortalType() not in WEB_SECTION_PORTAL_TYPE_TUPLE):
-        container.getPortalObject().changeSkin(skin_selection_name)
+      if skin_selection_name:
+       container.getPortalObject().changeSkin(skin_selection_name)

@@ -1,70 +1,10 @@
 /*global window, rJS, RSVP, jIO, Handlebars, document, FormData */
 /*jslint nomen: true, maxlen:150, indent:2*/
-(function (rJS, jIO, RSVP, window, Handlebars) {
+(function (rJS, jIO, RSVP, window, Handlebars, loopEventListener) {
   "use strict";
   var gk = rJS(window),
     run_source = gk.__template_element.getElementById('run').innerHTML,
     run_template = Handlebars.compile(run_source);
-
-  function loopEventListener(target, type, useCapture, callback,
-                                       prevent_default) {
-    //////////////////////////
-    // Infinite event listener (promise is never resolved)
-    // eventListener is removed when promise is cancelled/rejected
-    //////////////////////////
-    var handle_event_callback,
-      callback_promise;
-
-    if (prevent_default === undefined) {
-      prevent_default = true;
-    }
-
-    function cancelResolver() {
-      if ((callback_promise !== undefined) &&
-          (typeof callback_promise.cancel === "function")) {
-        callback_promise.cancel();
-      }
-    }
-
-    function canceller() {
-      if (handle_event_callback !== undefined) {
-        target.removeEventListener(type, handle_event_callback, useCapture);
-      }
-      cancelResolver();
-    }
-    function itsANonResolvableTrap(resolve, reject) {
-      var result;
-      handle_event_callback = function (evt) {
-        if (prevent_default) {
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-
-        cancelResolver();
-
-        try {
-          result = callback(evt);
-        } catch (e) {
-          result = RSVP.reject(e);
-        }
-
-        callback_promise = result;
-        new RSVP.Queue()
-          .push(function () {
-            return result;
-          })
-          .push(undefined, function (error) {
-            if (!(error instanceof RSVP.CancellationError)) {
-              canceller();
-              reject(error);
-            }
-          });
-      };
-
-      target.addEventListener(type, handle_event_callback, useCapture);
-    }
-    return new RSVP.Promise(itsANonResolvableTrap, canceller);
-  }
 
   function getLog(gadget) {
     return jIO.util.ajax(
@@ -178,4 +118,4 @@
           );
         });
     });
-}(rJS, jIO, RSVP, window, Handlebars));
+}(rJS, jIO, RSVP, window, Handlebars, rJS.loopEventListener));

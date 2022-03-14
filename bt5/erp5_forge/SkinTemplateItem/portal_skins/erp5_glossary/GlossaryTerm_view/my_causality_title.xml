@@ -10,14 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>base_category</string>
-                <string>portal_type</string>
                 <string>allow_creation</string>
+                <string>base_category</string>
                 <string>catalog_index</string>
                 <string>columns</string>
-                <string>enabled</string>
                 <string>editable</string>
+                <string>enabled</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -101,10 +101,6 @@
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>

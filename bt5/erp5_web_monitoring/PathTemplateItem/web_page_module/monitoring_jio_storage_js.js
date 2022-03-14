@@ -158,7 +158,7 @@
           var remove_id_list = [],
             remove_signature_id_list = [];
 
-          // remove related hosting subscription
+          // remove related instance tree
           remove_id_list.push(generateHash(id));
           // removed saved opml content
           remove_signature_id_list.push({
@@ -402,7 +402,7 @@
       });
   }
 
-  function updateHostingSubscriptionState(hosting, element) {
+  function updateInstanceTreeState(hosting, element) {
     var status = element.status.toUpperCase();
 
     if (hosting.instance_amount === 0) {
@@ -436,16 +436,16 @@
       opml_result_list,
       current_signature_dict = {},
       fetch_remote_opml = false,
-      hosting_subscription,
+      instance_tree,
       id;
 
     id = generateHash(opml_url);
     opml_storage = createStorage(context, opml_spec, id);
 
-    // Hosting Subscription is build from OPML and it has status
-    hosting_subscription = {
+    // Instance Tree is build from OPML and it has status
+    instance_tree = {
       title: opml_title || "",
-      portal_type: "Hosting Subscription",
+      portal_type: "Instance Tree",
       opml_url: opml_url,
       status: "WARNING",
       instance_amount: 0,
@@ -508,7 +508,7 @@
 
         if (opml_result_list.data.total_rows > 0) {
           if (opml_result_list.data.rows[0].doc.title) {
-            hosting_subscription.title = opml_result_list.data.rows[0]
+            instance_tree.title = opml_result_list.data.rows[0]
               .doc.title;
           }
           if (fetch_remote_opml) {
@@ -612,8 +612,8 @@
             item_signature_dict = {};
 
           if (element.type === 'global') {
-            updateHostingSubscriptionState(hosting_subscription, element);
-            hosting_subscription.instance_amount += 1;
+            updateInstanceTreeState(instance_tree, element);
+            instance_tree.instance_amount += 1;
             if (element.aggregate_reference === undefined) {
               // XXX - document need to be updated to keep compatibility
               element = fixGlobalInstanceDocument(element);
@@ -728,7 +728,7 @@
         }
         opml_document_list.push({
           id: id,
-          doc: hosting_subscription
+          doc: instance_tree
         });
         return [opml_document_list, delete_key_list, attachment_document_list];
       });

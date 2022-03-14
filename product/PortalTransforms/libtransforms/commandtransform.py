@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from future.utils import raise_
 import os
 import sys
 import tempfile
@@ -162,7 +161,7 @@ class subprocesstransform:
                             stderr=PIPE, close_fds=True)
             data_out, data_err = process.communicate(input=data)
             if process.returncode:
-              raise_(OSError, data_err)
+              raise OSError(data_err) # XXX
             cache.setData(data_out)
             return cache
 

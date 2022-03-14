@@ -47,7 +47,7 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, Message, getCurrentNode, getServerAddress)
-from _mysql_exceptions import OperationalError
+from MySQLdb import OperationalError
 from Products.ZMySQLDA.db import DB
 import gc
 import random
@@ -66,7 +66,9 @@ def for_each_activity(wrapped):
     for activity in ActivityTool.activity_dict:
       wrapped(self, activity)
       self.abort()
-      self.assertFalse(getMessageList())
+      self.assertFalse([
+        x.__dict__ for x in getMessageList()
+      ])
   return wraps(wrapped)(wrapper)
 
 def registerFailingTransactionManager(*args, **kw):
@@ -314,6 +316,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEqual(organisation.getTitle(),self.title1)
     self.assertEqual(organisation.getDescription(),self.title1)
+    self.tic()
 
   @for_each_activity
   def testTryTwoMethodsAndFlushThem(self, activity):
@@ -427,6 +430,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     result = active_process.getResultList()[0]
     self.assertEqual(result.method_id , 'getTitle')
     self.assertEqual(result.result , self.title1)
+    # Execute any further activity which may have been spawned by activity
+    # execution (ex: fulltext indeation of the active process).
+    self.tic()
 
   def TryActiveProcessWithResultDict(self, activity):
     """
@@ -456,6 +462,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     result = result_dict[3]
     self.assertEqual(result_dict[3].method_id, 'getTitle')
     self.assertEqual(result.result , self.title1)
+    # Execute any further activity which may have been spawned by activity
+    # execution (ex: fulltext indeation of the active process).
+    self.tic()
 
   @for_each_activity
   def testTryMethodAfterMethod(self, activity):
@@ -928,38 +937,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool.flush(p, invoke=0)
     self.commit()
 
-  def test_82_AbortTransactionSynchronously(self):
-    """
-      This test checks if transaction.abort() synchronizes connections. It
-      didn't do so back in Zope 2.7
-    """
-    # Make a new persistent object, and commit it so that an oid gets
-    # assigned.
-    module = self.getOrganisationModule()
-    organisation = module.newContent(portal_type = 'Organisation')
-    organisation_id = organisation.getId()
-    self.tic()
-    organisation = module[organisation_id]
-
-    # Now fake a read conflict.
-    from ZODB.POSException import ReadConflictError
-    tid = organisation._p_serial
-    oid = organisation._p_oid
-    conn = organisation._p_jar
-    try:
-      conn.db().invalidate({oid: tid})
-    except TypeError:
-      conn.db().invalidate(tid, {oid: tid})
-    conn._cache.invalidate(oid)
-
-    # Access to invalidated object in non-MVCC connections should raise a
-    # conflict error
-    organisation = module[organisation_id]
-    self.assertRaises(ReadConflictError, getattr, organisation, 'uid')
-
-    self.abort()
-    organisation.uid
-
   @for_each_activity
   def testCallWithGroupIdParamater(self, activity):
     dedup = activity != 'SQLQueue'
@@ -1121,6 +1098,25 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       del Organisation.putMarkerValue
       del Organisation.checkMarkerValue
 
+  def test_globalrequest(self):
+    """zope.globalrequest.getRequest (also known as Products.Global.get_request)
+    should be same as app.REQUEST, also when executing activities.
+    """
+    from zope.globalrequest import getRequest
+    get_request_before = getRequest()
+    def checkRequest(active_self):
+      self.assertIs(getRequest(), active_self.REQUEST)
+
+    obj = self.portal.organisation_module.newContent(portal_type='Organisation')
+    Organisation.checkRequest = checkRequest
+    try:
+      obj.activate(activity='SQLQueue').checkRequest()
+      obj.activate(activity='SQLDict').checkRequest()
+      self.tic()
+    finally:
+      del Organisation.checkRequest
+    self.assertIs(getRequest(), get_request_before)
+
   @for_each_activity
   def testTryUserNotificationOnActivityFailure(self, activity):
     message_list = self.portal.MailHost._message_list
@@ -1208,7 +1204,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.flushAllActivities(silent=1, loop_size=100)
         message, = activity_tool.getMessageList(
           activity=activity, method_id='failingMethod')
-        self.assertEqual(message.processing_node, -2)
+        self.assertEqual(message.processing_node, INVOKE_ERROR_STATE)
         self.assertTrue(message.retry)
         activity_tool.manageDelete(message.uid, activity)
         self.commit()
@@ -1352,18 +1348,70 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         foo.activate(serialization_tag='a', group_method_id='x').getTitle()
         foo.activate(serialization_tag='a').getId()
     """
+    def getMessageList():
+      return [
+        (x.activity_kw['serialization_tag'], x.processing_node)
+        for x in activity_tool.getMessageList()
+      ]
+    def activate(serialization_tag='a'):
+      organisation.activate(
+        serialization_tag=serialization_tag,
+        group_method_id='portal_catalog/catalogObjectList',
+      ).getTitle()
     organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
     activity_tool = self.getActivityTool()
-    organisation.activate(serialization_tag='a').getId()
+    activate('a')
     self.commit()
-    organisation.activate(serialization_tag='a',
-              group_method_id='portal_catalog/catalogObjectList').getTitle()
+    activate('a')
     self.commit()
-    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    # Both activities are queued
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', -1),
+        ('a', -1),
+      ],
+    )
     activity_tool.distribute()
-    # After distribute, there is no deletion because it is different method
-    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    # Both activities are validated at the same time.
+    # Note: this specific test implmeentation relies on the absence of
+    # validation-time deduplication which is not strictly related to
+    # serialization_tag behaviour.
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', 0),
+        ('a', 0),
+      ],
+    )
+    activate('a')
+    self.commit()
+    activate('b')
+    self.commit()
+    # 3rd & 4th activities queued
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', 0),
+        ('a', 0),
+        ('a', -1),
+        ('b', -1),
+      ],
+    )
+    activity_tool.distribute()
+    # 3rd activity does not get validated, 4th is validated
+    self.assertItemsEqual(
+      getMessageList(),
+      [
+        ('a', 0),
+        ('a', 0),
+        ('a', -1),
+        ('b', 0),
+      ],
+    )
+    # 1st, 2nd and 4th are executed, then 3rd gets validated an executed,
+    # and the queue ends empty.
     self.tic()
 
   def test_104_interQueuePriorities(self):
@@ -1492,7 +1540,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # on REQUEST information when the method was activated.
     request = self.portal.REQUEST
 
-    request.setServerURL('http', 'test.erp5.org', '9080')
+    request.setServerURL('http', 'test.erp5.org', 9080)
     request.other['PARENTS'] = [self.portal.organisation_module]
     request.setVirtualRoot('virtual_root')
 
@@ -1511,7 +1559,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
       # REQUEST, such as TimerServer.
-      request.setServerURL('https', 'anotherhost.erp5.org', '443')
+      request.setServerURL('https', 'anotherhost.erp5.org', 443)
       request.other['PARENTS'] = [self.app]
       request.setVirtualRoot('')
       # obviously, the object url is different
@@ -2300,10 +2348,24 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     obj = activity_tool.newActiveProcess()
     obj.reindexObject(activate_kw={'tag': 'foo', 'after_tag': 'bar'})
     self.commit()
+    # Check that both messages were inserted.
+    # Also serves as a sanity check on indexation activities group_method_id.
+    indexation_group_metdod_id = 'portal_catalog/catalogObjectList'
+    self.assertEqual(
+      len([
+        x
+        for x in activity_tool.getMessageList(path=obj.getPath())
+        if x.activity_kw.get('group_method_id') == indexation_group_metdod_id
+      ]),
+      2,
+    )
     invoked = []
-    def invokeGroup(self, *args):
-      invoked.append(len(args[1]))
-      return ActivityTool_invokeGroup(self, *args)
+    def invokeGroup(self, method_id, message_list, *args):
+      # Ignore any other activity which may be spawned from these catalog
+      # indexations (ex: fulltext indexations).
+      if method_id == indexation_group_metdod_id:
+        invoked.append(len(message_list))
+      return ActivityTool_invokeGroup(self, method_id, message_list, *args)
     ActivityTool_invokeGroup = activity_tool.__class__.invokeGroup
     try:
       activity_tool.__class__.invokeGroup = invokeGroup

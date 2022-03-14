@@ -49,6 +49,7 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 
 from ZTUtils import make_query
 import json
+import urllib
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
@@ -337,8 +338,21 @@ url_template_dict = {
 }
 
 default_document_uri_template = url_template_dict["jio_get_template"]
-Base_translateString = context.getPortalObject().Base_translateString
+portal = context.getPortalObject()
+portal_absolute_url = portal.absolute_url()
+preference_tool = portal.portal_preferences
+Base_translateString = portal.Base_translateString
 
+def translateWorklistActionName(worklist_action_name):
+  """Translate a worklist action name, that may contain the document count.
+
+  Instead of translating "Draft to Validate (123)", we translate "Draft to Validate".
+  """
+  return Base_translateString(re.sub(r' \(\d+\)$', '', worklist_action_name))
+
+
+preferred_html_style_developer_mode = preference_tool.getPreferredHtmlStyleDevelopperMode()
+preferred_html_style_translator_mode = preference_tool.getPreferredHtmlStyleTranslatorMode()
 
 def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
@@ -414,7 +428,9 @@ def getFieldDefault(form, field, key, value=MARKER):
   return value
 
 
-def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
+def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
+                key=None, key_prefix=None, selection_params=None,
+                request_field=True, form_relative_url=None):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -445,6 +461,26 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
   }
+
+  if preferred_html_style_developer_mode:
+    result["edit_field_href"] = '%s/%s/manage_main' % (form_relative_url, field.id)
+
+  if preferred_html_style_translator_mode:
+    erp5_ui = portal.Localizer.erp5_ui
+    selected_language = erp5_ui.get_selected_language()
+    result["translate_title_href"] = '%s/manage_messages?%s' % (
+      '/'.join(erp5_ui.getPhysicalPath()[2:]),
+      urllib.urlencode({"regex": "^%s$" % field.title(),
+                        "lang": selected_language})
+    )
+
+    field_description = field.Field_getDescription()
+    if field_description:
+      result["translate_description_href"] = '%s/manage_messages?%s' % (
+        '/'.join(erp5_ui.getPhysicalPath()[2:]),
+        urllib.urlencode({"regex": "^%s$" % field_description,
+                          "lang": selected_language})
+      )
 
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
@@ -498,6 +534,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         for subdict in result['subfield_list']:
           if subdict['title'] == '&nbsp;':
             subdict['title'] = ''
+          if subdict['title']:
+            subdict['title'] = Base_translateString(subdict['title'])
           subdict['items'] = subdict['item_list']
           del subdict['item_list']
           subdict['key'] = field.generate_subfield_key(
@@ -512,7 +550,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
   if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
                    "LinesField", "ImageField", "FileField", "IntegerField",
-                   "PasswordField", "EditorField", "HyperLinkField"):
+                   "PasswordField", "EditorField", "HyperLinkField", "LinkField"):
     if meta_type == "FloatField":
       result.update({
         "precision": field.get_value("precision"),
@@ -657,26 +695,25 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     the original REQUEST with sent POST values from the parent form. We can save those
     values into our query method and reconstruct them meanwhile calling asynchronous jio.allDocs.
     """
-    _translate = Base_translateString
 
     # column definition in ListBox own value 'columns' is superseded by dynamic
     # column definition from Selection for specific Report ListBoxes; the same for editable_columns
-    column_list = [(name, _translate(title)) for name, title in (selection_params.get('selection_columns', [])
+    column_list = [(name, title) for name, title in (selection_params.get('selection_columns', [])
                                                                  or field.get_value("columns"))]
-    editable_column_list = [(name, _translate(title)) for name, title in (selection_params.get('editable_columns', [])
+    editable_column_list = [(name, title) for name, title in (selection_params.get('editable_columns', [])
                                                                           or field.get_value("editable_columns"))]
-    all_column_list = [(name, _translate(title)) for name, title in field.get_value("all_columns")]
+    all_column_list = [(name, title) for name, title in field.get_value("all_columns")]
     catalog_column_list = [(name, title)
                            for name, title in OrderedDict(column_list + all_column_list).items()
                            if sql_catalog.isValidColumn(name)]
 
     # try to get specified searchable columns and fail back to all searchable columns
-    search_column_list = [(name, _translate(title))
+    search_column_list = [(name, title)
                           for name, title in (field.get_value("search_columns") or catalog_column_list)
                           if sql_catalog.isValidColumn(name)]
 
     # try to get specified sortable columns and fail back to searchable fields
-    sort_column_list = [(name, _translate(title))
+    sort_column_list = [(name, title)
                         for name, title in (selection_params.get('selection_sort_order', [])
                                             or field.get_value("sort_columns") or search_column_list)
                         if sql_catalog.isValidColumn(name)]
@@ -737,7 +774,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
         "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
-        "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
+        "form_relative_url": "%s/%s" % (form_relative_url, field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable(list_method_query_dict))),
@@ -786,13 +823,16 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 #         line["_relative_url"] = document.getRelativeUrl()
 #       line_list.append(line)
 
+    def translateColumnListTitle(column_list):
+      return [(name, Base_translateString(title)) for (name, title) in column_list]
+
     result.update({
-      "column_list": column_list,
-      "all_column_list": all_column_list,
-      "search_column_list": search_column_list,
+      "column_list": translateColumnListTitle(column_list),
+      "all_column_list": translateColumnListTitle(all_column_list),
+      "search_column_list": translateColumnListTitle(search_column_list),
       "sort" :field.get_value('sort'),
-      "sort_column_list": sort_column_list,
-      "editable_column_list": editable_column_list,
+      "sort_column_list": translateColumnListTitle(sort_column_list),
+      "editable_column_list": translateColumnListTitle(editable_column_list),
       "show_anchor": field.get_value("anchor"),
       "show_select": field.get_value("select"),
       "portal_type": portal_type_list,
@@ -873,7 +913,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       for editable_attribute, _ in field.get_value('editable_attributes')]
     result.update({
       'data': field.render(key=key, value=value, REQUEST=REQUEST, render_format='list'),
-      'template_field_dict': {template_field: renderField(traversed_document, getattr(form, template_field), form)
+      'template_field_dict': {template_field: renderField(traversed_document,
+                                                          getattr(form, template_field),
+                                                          form,
+                                                          form_relative_url=form_relative_url)
         for template_field in template_field_names
         if template_field in form},
     })
@@ -1040,9 +1083,12 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, request_field=not use_relation_form_page_template)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix,
+                                              selection_params=selection_params,
+                                              request_field=not use_relation_form_page_template,
+                                              form_relative_url=form_relative_url)
         if field_errors.has_key(field.id):
-          response_dict[field.id]["error_text"] = field_errors[field.id].error_text
+          response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
         # Do not crash if field configuration is wrong.
         log("Field {} rendering failed because of {!s}".format(field.id, error), level=800)
@@ -1207,6 +1253,19 @@ def renderFormDefinition(form, response_dict):
   response_dict["update_action"] = form.update_action
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
+  if preferred_html_style_developer_mode:
+    form_relative_url = getFormRelativeUrl(form)
+    response_dict["edit_form_href"] = '%s/manage_main' % form_relative_url
+    if form.action:
+      response_dict["edit_form_action_href"] = '%s/%s/manage_main' % (
+        site_root.getId(),
+        form.action)
+    if form.update_action:
+      response_dict["edit_form_update_href"] = '%s/%s/manage_main' % (
+        site_root.getId(),
+        form.update_action)
+
+
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
   if isinstance(level, (str, unicode)):
@@ -1291,7 +1350,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # Always inform about portal
       "portal": {
         "href": default_document_uri_template % {
-          "root_url": portal.absolute_url(),
+          "root_url": portal_absolute_url,
           # XXX the portal has an empty getRelativeUrl. Make it still compatible
           # with restrictedTraverse
           "relative_url": portal.getId(),
@@ -1311,6 +1370,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'message': str(portal_status_message),
       'status': statusLevelToString(portal_status_level)
     }
+
+  if (mode == 'form') or (mode == 'traverse'):
+    # extra_param_json should be base64 encoded JSON at this point
+    # only for mode == 'form' it is already a dictionary
+    if not extra_param_json:
+      extra_param_json = {}
+
+    if isinstance(extra_param_json, str):
+      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
+
+    # Use extra param as request param
+    for k, v in byteify(extra_param_json.items()):
+      REQUEST.set(k, v)
+      REQUEST.form[k] = v
 
   if (mode == 'root') or (mode == 'traverse'):
     ##
@@ -1336,19 +1409,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       "title": result_dict['title']
     }
 
-    # extra_param_json should be base64 encoded JSON at this point
-    # only for mode == 'form' it is already a dictionary
-    if not extra_param_json:
-      extra_param_json = {}
-
-    if isinstance(extra_param_json, str):
-      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
-
-    # Use extra param as request param
-    for k, v in byteify(extra_param_json.items()):
-      REQUEST.set(k, v)
-      REQUEST.form[k] = v
-
     # Add a link to the portal type if possible
     if not is_portal:
       # traversed_document should always have its Portal Type in ERP5 Portal Types
@@ -1370,13 +1430,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       container = traversed_document.getParentValue()
       if container != portal:
         # Jio does not support fetching the root document for now
+        if container.getRelativeUrl():
+          container_name = ensureUTF8(container.getTranslatedTitle())
+        else:
+          # for example in portal_skin
+          container_name = ensureUTF8(container.getTitle())
         result_dict['_links']['parent'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
             "relative_url": container.getRelativeUrl(),
             "script_id": script.id
           },
-          "name": Base_translateString(container.getTitle()),
+          "name": container_name
         }
 
     # Find current action URL and extract embedded view
@@ -1402,7 +1467,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         view_context = traversed_document
       else:
         view_context = traversed_document.restrictedTraverse(current_action['other_context'])
-      view_instance = getattr(view_context, current_action['view_id'])
+
+      view_instance = getattr(view_context, current_action['view_id'], None)
+      if view_instance is None:
+        response.setStatus(404)
+        return ""
       if (view_instance is not None):
         embedded_dict = {
           '_links': {
@@ -1460,7 +1529,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           '_view': embedded_dict
         }
 
-    # Extract & modify action URLs
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
@@ -1469,7 +1537,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title']),
+          'title': Base_translateString(
+              translateWorklistActionName(view_action['title'])
+              if 'worklist_id' in view_action
+              else view_action['title']),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
@@ -1477,7 +1548,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                               "object_list_action", "object_jio_jump")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
-            "_jio" in erp5_action_key):
+            "_jio" in erp5_action_key) and not erp5_action_key.endswith("_raw"):
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
@@ -1802,7 +1873,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         else:
           catalog_kw['group_by_list'] = [str(group_by)]
         # Include select, as user may want to count
-        catalog_kw["select_list"] = select_list
+        # For now, consider only functions, for example, count(column_name) or COUNT(column name) or count(*)
+        catalog_kw["select_list"] = [x for x in select_list if ((x in catalog_kw['group_by_list']) or re.match(r"^\D+\(.*\)$", x))]
 
       if limit:
         catalog_kw["limit"] = limit
@@ -2017,7 +2089,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           elif isinstance(default_field_value, datetime.date):
             default_field_value = formatdate(time.mktime(default_field_value.timetuple()))
 
-          contents_item[select] = default_field_value
+          contents_item[select] = ensureUTF8(default_field_value)
 
         else:
           # If the contents_item has field rendering in it, better is to add an
@@ -2271,7 +2343,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'href': url_template_dict["jio_search_template"] % {
           "query": make_query({"query": query})
         },
-        'name': Base_translateString(re.sub(r' \(\d+\)$', '', action['name'])),
+        'name': translateWorklistActionName(action['name']),
         'count': action['count']
       }
 
@@ -2339,7 +2411,6 @@ if mode == 'url_generator':
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
-response.setHeader('Content-Type', mime_type)
 hateoas = calculateHateoas(relative_url=relative_url,
                            REQUEST=REQUEST, response=response, view=view, mode=mode,
                            query=query, select_list=select_list, limit=limit, form=form,
@@ -2350,4 +2421,5 @@ hateoas = calculateHateoas(relative_url=relative_url,
 if hateoas == "":
   return hateoas
 else:
+  response.setHeader('Content-Type', mime_type)
   return json.dumps(hateoas, indent=2)

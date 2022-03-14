@@ -38,6 +38,11 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
+  <td>waitForTextPresent</td>
+  <td>0 Slides</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertTextPresent</td>
   <td>0 Slides</td>
   <td></td>
@@ -69,7 +74,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 <tr>
@@ -88,7 +93,7 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 
@@ -109,7 +114,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 
@@ -139,7 +144,7 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 
@@ -179,7 +184,7 @@
 </tr>
 <tr>
   <td>waitForElementNotPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 
@@ -193,7 +198,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 
@@ -367,7 +372,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>title_html</td>
+  <td>type</td>
   <td></td>
 </tr>
 <tr>

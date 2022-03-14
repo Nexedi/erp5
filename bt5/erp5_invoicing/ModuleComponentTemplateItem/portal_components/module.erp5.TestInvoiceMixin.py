@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Acquisition import aq_parent
@@ -158,8 +158,8 @@ class TestInvoiceMixin(TestPackingListMixin):
         business_process_id, 'Business Process',
         specialise=self.__class__.business_process)
       kw = dict(portal_type='Trade Model Path',
-                trade_phase='default/accounting',
-                trade_date='trade_phase/default/invoicing',
+                trade_phase='trade/accounting',
+                trade_date='trade_phase/trade/invoicing',
                 membership_criterion_base_category_list=('destination_region',
                                                          'product_line'),
                 membership_criterion_category=(

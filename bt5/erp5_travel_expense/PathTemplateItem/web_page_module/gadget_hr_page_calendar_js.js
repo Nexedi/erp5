@@ -57,4 +57,4 @@
         });
       });
     });
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS, RSVP, rJS.loopEventListener));

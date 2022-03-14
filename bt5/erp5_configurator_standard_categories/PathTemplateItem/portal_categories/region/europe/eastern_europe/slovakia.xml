@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SVK</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>SK</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>slovakia</string> </value>
         </item>

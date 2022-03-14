@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GGY</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>guernsey</string> </value>
         </item>

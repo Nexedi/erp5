@@ -26,7 +26,6 @@
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,
 # USA.
 ##############################################################################
-from future.utils import raise_
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet, Permissions
@@ -265,7 +264,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
       return ODTStrategy()
     if guess_extension(content_type) == '.odg':
       return ODGStrategy()
-    raise_(ValueError, 'Template type: %s is not supported' % content_type)
+    raise ValueError('Template type: %s is not supported' % content_type)
 
   def _oooConvertByFormat(self, printout, content_type, extra_context,
                           REQUEST, format, batch_mode):
@@ -340,7 +339,7 @@ class ODFStrategy(Implicit):
     if here is None:
       raise ValueError('Can not create a ODF Document without a parent acquisition context')
     form = extra_context['form']
-    if 'printout_template' not in extra_context or \
+    if not extra_context.has_key('printout_template') or \
         extra_context['printout_template'] is None:
       raise ValueError('Can not create a ODF Document without a printout template')
 

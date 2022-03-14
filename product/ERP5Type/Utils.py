@@ -29,10 +29,9 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from future.utils import raise_
 from future import standard_library
 standard_library.install_aliases()
-
+import six
 import os
 import re
 import string
@@ -225,8 +224,7 @@ warnings.simplefilter("default")
 
 def _showwarning(message, category, filename, lineno, file=None, line=None):
   if file is None:
-    LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
-        WARNING, '')
+    LOG(category.__name__, WARNING, "%s:%u %s" % (filename, lineno, message))
   else:
     file.write(warnings.formatwarning(message, category, filename, lineno, line))
 warnings.showwarning = _showwarning
@@ -258,8 +256,8 @@ def convertToUpperCase(key):
   try:
     return _cached_convertToUpperCase[key]
   except KeyError:
-    if not isinstance(key, str):
-      raise_(TypeError, '%s is not a string' % (key,))
+    if not isinstance(key, six.string_types):
+      raise TypeError('%r is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
 
@@ -283,8 +281,8 @@ def convertToMixedCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  if not isinstance(key, str):
-    raise_(TypeError, '%s is not a string' % (key,))
+  if not isinstance(key, six.string_types):
+    raise TypeError('%r is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
     parts[1] = convertToUpperCase(parts[1])
@@ -388,17 +386,14 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
 
-import six
-if six.PY2:
-  from rfc822 import AddressList
-
 def Email_parseAddressHeader(text):
   """
   Given a text taken from a From/To/CC/... email header,
   return a list of tuples (name, address) extracted from
   this header
   """
-  return AddressList(text).addresslist
+  from email.utils import getaddresses
+  return getaddresses([text])
 
 def fill_args_from_request(*optional_args):
   """Method decorator to fill missing args from given request
@@ -534,6 +529,9 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
       except ImportError:
         pass
       try:
+        # Note that we don't run pylint as a subprocess, but directly from
+        # ERP5 process, so that pylint can access the code from ERP5Type
+        # dynamic modules from ZODB. 
         Run(args, reporter=TextReporter(output_file), exit=False)
       finally:
         from astroid.builder import MANAGER
@@ -693,7 +691,7 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise_(IOError, 'the file %s is already present' % path)
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
@@ -858,7 +856,7 @@ def writeLocalExtension(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise_(IOError, 'the file %s is already present' % path)
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
 
@@ -872,7 +870,7 @@ def writeLocalTest(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise_(IOError, 'the file %s is already present' % path)
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
 
@@ -886,7 +884,7 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise_(IOError, 'the file %s is already present' % path)
+      raise IOError('the file %s is already present' % path)
   with open(path, 'w') as f:
     f.write(text)
   # load the file, so that an error is raised if file is invalid
@@ -945,7 +943,7 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
-      raise_(IOError, 'the file %s is already present' % path)
+      raise IOError('the file %s is already present' % path)
   # check there is no syntax error (that's the most we can do at this time)
   compile(text, path, 'exec')
   with open(path, 'w') as f:
@@ -1757,7 +1755,7 @@ def guessEncodingFromText(data, content_type='text/html'):
     else:
       message = 'No suitable encoding detector found.'\
                 ' You must install python-magic'
-    raise_(NotImplementedError, message)
+    raise NotImplementedError(message)
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe

@@ -28,4 +28,4 @@ elif scope_type=='until_the_end_of_month':
     return DateTime(year, month, day)
   return getEndOfMonth(start_date)
 
-raise ValueError, 'Unknown scope type: %s' % scope_type
+raise ValueError('Unknown scope type: %s' % scope_type)

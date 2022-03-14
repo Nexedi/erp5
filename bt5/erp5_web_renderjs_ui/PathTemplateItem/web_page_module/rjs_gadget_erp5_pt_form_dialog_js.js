@@ -45,7 +45,13 @@
       .push(function (is_valid) {
         if (!is_valid) {
           enableButton();
-          return;
+          return gadget.translate("Please fill all required fields to submit")
+            .push(function (message) {
+              return gadget.notifyChange({
+                "message": message,
+                "status": "error"
+              });
+            });
         }
         return getContent.apply(gadget)
           .push(function (content_dict) {
@@ -154,6 +160,8 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("submitContent", "submitContent")
     .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
                             submitDialogWithCustomDialogMethod)

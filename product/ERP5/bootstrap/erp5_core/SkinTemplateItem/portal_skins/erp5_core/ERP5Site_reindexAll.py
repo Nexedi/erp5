@@ -85,7 +85,6 @@ print reindex(
         'portal_classes',
         'portal_preferences',
         'portal_simulation',
-        'portal_uidhandler',
       ) and
       'inventory' not in x.id
   ],

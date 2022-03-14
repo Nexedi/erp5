@@ -16,6 +16,7 @@ import json
 import re
 import urllib
 
+import mock
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
 from Acquisition import aq_base
 from Products.ERP5Form.Selection import Selection, DomainSelection
@@ -81,9 +82,9 @@ def createIndexedDocument(quantity=1):
   def decorator(func):
     def wrapped(self, *args, **kwargs):
       wipeFolder(self.portal.foo_module)
-      if quantity <= 1:
+      if quantity == 1:
         kwargs.update(document=self._makeDocument())
-      else:
+      elif quantity > 1:
         kwargs.update(document_list=[self._makeDocument() for _ in range(quantity)])
       self.portal.portal_caches.clearAllCache()
       self.tic()
@@ -707,6 +708,19 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
                                                                                      self.portal.absolute_url(),
                                                                                      document.getRelativeUrl()))
     self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['method'], 'POST')
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_non_existing_action(self):
+    document = self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="not_existing_action")
+    self.assertEquals(fake_request.RESPONSE.status, 404)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), None)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1412,6 +1426,62 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:%s" % relative_url)
     # No count if not in the listbox context currently
     self.assertEqual(result_dict['_embedded'].get('count', None), None)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_select_list_avoid_accessor(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query="id:=hateoas AND uid:=%s" % self.portal.web_site_module.hateoas.getUid(),
+      select_list=["count(validation_state)",
+                   "getTranslatedValidationStateTitle",],
+      group_by="validation_state"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_select_list'],
+      ["count(validation_state)", "getTranslatedValidationStateTitle"])
+
+    self.assertEqual(result_dict['_embedded']['contents'][0]["getTranslatedValidationStateTitle"], "Published")
+    self.assertEqual(result_dict['_embedded']['contents'][0]["count(validation_state)"], 1)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_select_list_keep_group_by(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query="id:=hateoas AND uid:=%s" % self.portal.web_site_module.hateoas.getUid(),
+      select_list=["count(*)",
+                   "indexation_timestamp"],
+      group_by="indexation_timestamp"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_select_list'],
+      ["count(*)", "indexation_timestamp"])
+
+    self.assertNotEqual(result_dict['_embedded']['contents'][0]["indexation_timestamp"], None)
+    self.assertEqual(result_dict['_embedded']['contents'][0]["count(*)"], 1)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -2332,6 +2402,31 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], selection_name)
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['checked_uid_list'], [9876, 1234])
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @createIndexedDocument(quantity=1)
+  @changeSkin('Hal')
+  def test_getHateoas_property_corrupted_encoding(self, document):
+    # this sequence of bytes does not encode to UTF-8
+    document.setTitle('\xe9\xcf\xf3\xaf')
+    # self.tic()
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      query='uid:"%s"' % document.getUid(),
+      select_list=['title'],
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['contents'][0]["title"], u'\ufffd\ufffd\ufffd')
+
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   """Test HAL_JSON operations on cataloged Persons and other allowed content types of Person Module."""
@@ -2840,6 +2935,33 @@ return msg"
             'return "application/hal+json"')
   @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
   code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasWorklist_portal_workflow_worklist_translation(self, document):
+    # Non regression test that traversing portal_workflow does not translate
+    # worklists with the actual count of document
+    fake_request = do_fake_request("GET")
+
+    default_gettext = self.portal.Localizer.erp5_ui.gettext
+    def gettext(message, **kw):
+      return default_gettext(message, **kw)
+
+    with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext) as gettext_mock:
+      self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+        REQUEST=fake_request,
+        mode='traverse',
+        relative_url='portal_workflow'
+      )
+    self.assertEqual(
+        [x[1][0] for x in gettext_mock.mock_calls if x[1][0].startswith('Draft To Validate')],
+        ['Draft To Validate'])
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
   @changeSkin('Hal')
   def test_getHateoasForm_no_view(self):
     fake_request = do_fake_request("GET")
@@ -2850,6 +2972,95 @@ return msg"
     )
     result_dict = json.loads(result)
     self.assertEqual(result_dict['title'], 'Foo_zhongwen')
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasForm_not_adding_parent_title_translation(self, document):
+    document_title = document.getTitle() + "_not_translate_parent_message_catalog"
+    document.setTitle(document_title)
+    message_catalog = self.portal.Localizer.erp5_ui
+    self.assertFalse(message_catalog.message_exists(document_title))
+    foo_line = document.newContent(portal_type='Foo Line')
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request, mode="traverse",
+      relative_url=foo_line.getRelativeUrl(), view="view")
+
+    result_dict = json.loads(result)
+    # The document title includes 'ö' at the last in this test class, so calling decode("UTF-8")
+    self.assertEqual(result_dict['_links']['parent'],
+      {"href": "urn:jio:get:%s" % document.getRelativeUrl(), "name": document.getTitle().decode("UTF-8")})
+
+    # make sure traversing the child document does not adding the parent title translation
+    self.assertFalse(message_catalog.message_exists(document_title))
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasForm_listbox_nested_message_catalog(self, document):
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      # modify these two for test
+      field_search_columns = 'id|ID\ntitle|Title_test_nested_message_catalog\nquantity|Quantity\nstart_date|Date',
+      # if sort_columns is empty search_columns are used for the fallback
+      field_sort_columns = '',
+    )
+    self.portal.Base_addUITestTranslation(message='Title_test_nested_message_catalog',
+                                          translation='biaoti_test_nested_message_catalog', language='wo')
+    message_catalog = self.portal.Localizer.erp5_ui
+    # Check the 'wo' message is not in the 'en' message_catalog before running the test
+    self.assertFalse(message_catalog.message_exists('biaoti_test_nested_message_catalog'))
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request, mode="traverse",
+      relative_url=document.getRelativeUrl(), view="view")
+
+    result_dict = json.loads(result)
+
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['column_list'],
+                     [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'Quantity'], ['start_date', 'Date'], ['catalog.uid', 'Uid']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'],
+                     [['id', 'ID'], ['title', 'biaoti'], ['quantity', 'quantity'], ['start_date', 'Date']])
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['search_column_list'],
+                     [['id', 'ID'], ['title', 'biaoti_test_nested_message_catalog'], ['quantity', 'Quantity'], ['start_date', 'Date']])
+    # If sort_column is empty, search_column_list is used as the fall-back
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'],
+                     [['id', 'ID'], ['title', 'biaoti_test_nested_message_catalog'], ['quantity', 'Quantity'], ['start_date', 'Date']])
+
+    # check traversing listbox does not adding the 'wo' message as a 'en' message
+    self.assertFalse(message_catalog.message_exists('biaoti_test_nested_message_catalog'))
+
+    # reset to default
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
+    )
 
 
 class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):

@@ -28,13 +28,12 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from zLOG import LOG
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
-from zope.interface import implementer
+from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
 
 single_operator_dict = {
@@ -74,8 +73,11 @@ operator_value_deprocessor_dict = {
   'like': deprocessLikeValue
 }
 
-@implementer(ISearchKey)
+numeric_type_set = (long, float) # get mapped to int, so do not mention it
+
 class SearchKey(object):
+
+  implements(ISearchKey)
 
   # Comparison operator to use when parsing a string value and no operator is
   # found.
@@ -241,21 +243,21 @@ class SearchKey(object):
             comparison_operator = single_operator_dict[value_range]
           elif value_range in dual_operator_dict:
             if not isinstance(actual_value, (tuple, list)):
-              raise_(TypeError, 'Operator %r requires value to be a '\
-                               'tuple/list. (%r)' % (value_range,
-                               search_value))
+              raise TypeError(
+                'Operator %r requires value to be a tuple/list. (%r)'
+                % (value_range, search_value))
             if len(actual_value) != 2:
-              raise_(TypeError, 'Operator %r requires value to have a length '\
-                               'of 2. len(%r) = %i (%r)' % (value_range,
-                               actual_value, len(actual_value), search_value))
+              raise TypeError(
+                'Operator %r requires value to have a length of 2. len(%r) = %s (%r)'
+                % (value_range, actual_value, len(actual_value), search_value))
             comparison_operator = dual_operator_dict[value_range]
             logical_operator = 'and'
           else:
-            raise_(ValueError, 'Unknown "range" value in %r' % (search_value, ))
+            raise ValueError('Unknown "range" value in %r' % search_value)
         if value_operator is not None:
           if not isinstance(value_operator, basestring):
-            raise_(TypeError, 'Operator must be of a string type. Got a %r' % \
-                             (type(value_operator), ))
+            raise TypeError('Operator must be of a string type. Got a %r'
+                            % type(value_operator))
           value_operator = value_operator.lower()
           if not isinstance(actual_value, (tuple, list)):
             raise TypeError('When specifying an operator, query must be a list.')

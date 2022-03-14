@@ -32,7 +32,6 @@ TODO: test variation
       test selection_report
 """
 
-from future.utils import raise_
 import os
 import random
 import unittest
@@ -44,6 +43,7 @@ from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
+from zExceptions import BadRequest
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -130,8 +130,14 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                     'inventory_module',
                     self.folder.getId() ]:
       folder = self.portal[module]
-      folder.manage_delObjects(list(folder.objectIds()))
-    self.portal.portal_skins.custom.manage_delObjects(list(self.portal.portal_skins.custom.objectIds()))
+      try:
+        folder.manage_delObjects(list(folder.objectIds()))
+      except BadRequest:
+        pass
+    try:
+      self.portal.portal_skins.custom.manage_delObjects(list(self.portal.portal_skins.custom.objectIds()))
+    except BadRequest:
+      pass
 
     self.tic()
 
@@ -2995,11 +3001,11 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       # Leads to rasing exception instead of calling self.assert[...] method.
       if not success:
         if ordered_check:
-          raise_(AssertionError, 'Line %r\ndo not match\n %r' % \
+          raise AssertionError('Line %r\ndo not match\n %r' %
                                 (inventory_list[inventory_position],
                                  criterion_dict))
         else:
-          raise_(AssertionError, 'No line in %r\n match\n %r' % \
+          raise AssertionError('No line in %r\n match\n %r' %
                                 (inventory_list, criterion_dict))
     # Check all expected lines have been found.
     self.assertFalse(inventory_list)

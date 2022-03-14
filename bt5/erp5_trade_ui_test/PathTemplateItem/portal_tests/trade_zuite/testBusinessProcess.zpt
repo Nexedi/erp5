@@ -1,0 +1,31 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4" tal:content="template/title"></td></tr>
+</thead>
+
+<tbody tal:define="init_method string:Zuite_createBusinessProcessForTradeZuite;">
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<!-- }}} -->
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/business_process_module/test_trade_ui_test_business_process/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -13,7 +13,7 @@
 ##############################################################################
 
 from ZODB import DemoStorage as _DemoStorage
-from ZODB.ConflictResolution import ConflictResolvingStorage, ResolvedSerial
+from ZODB.ConflictResolution import ConflictResolvingStorage
 from ZODB.POSException import ConflictError
 
 class DemoStorage(_DemoStorage.DemoStorage, ConflictResolvingStorage):
@@ -33,4 +33,5 @@ class DemoStorage(_DemoStorage.DemoStorage, ConflictResolvingStorage):
 
 if not issubclass(_DemoStorage.DemoStorage, ConflictResolvingStorage):
     # BBB: ZODB < 4.3
+    from ZODB.ConflictResolution import ResolvedSerial
     _DemoStorage.DemoStorage = DemoStorage

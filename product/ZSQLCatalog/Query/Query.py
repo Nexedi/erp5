@@ -28,31 +28,30 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from zope.interface import implementer
+from zope.interface import implements
 
-@implementer(IQuery)
 class Query(object):
   """
     This is the base class of all kind of queries. Its only purpose is to be
     able to distinguish any kind of value from a query.
   """
 
+  implements(IQuery)
   __allow_access_to_unprotected_subobjects__ = 1
 
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
     """
       To enable SQL rendering, overload this method in a subclass.
     """
-    raise_(TypeError, 'A %s cannot be rendered as an SQL expression.' % (self.__class__.__name__, ))
+    raise TypeError('A %s cannot be rendered as an SQL expression.' % self.__class__.__name__)
 
   def _asSearchTextExpression(self, sql_catalog, column=None):
     """
       To enable Search Text rendering, overload this method in a subclass.
     """
-    raise_(TypeError, 'A %s cannot be rendered as a SearchText expression.' % (self.__class__.__name__, ))
+    raise TypeError('A %s cannot be rendered as a SearchText expression.' % self.__class__.__name__)
 
   def asSearchTextExpression(self, sql_catalog, column=None):
     return self._asSearchTextExpression(sql_catalog, column=column)[1]
@@ -61,7 +60,7 @@ class Query(object):
     """
       This method must always be overloaded by subclasses.
     """
-    raise_(NotImplementedError, '%s is incompletely implemented.' % (self.__class__.__name__, ))
+    raise NotImplementedError('%s is incompletely implemented.' % self.__class__.__name__)
 
 verifyClass(IQuery, Query)
 

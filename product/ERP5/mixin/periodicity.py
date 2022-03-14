@@ -203,7 +203,14 @@ class PeriodicityMixin:
     previous_date = next_start_date
     next_start_date = max(self._getNextMinute(next_start_date, timezone),
             current_date)
-    while 1:
+
+    # We'll try every date to check if they validate the periodicity
+    # constraints, but there might not be any valid date (for example,
+    # repeat every 2nd week in August can never be validated). Because
+    # gregorian calendar repeat every 28 years, if we did not get a match
+    # in the next 28 years we stop looping.
+    max_date = next_start_date + (28 * 366)
+    while next_start_date < max_date:
       if not self._validateMonth(next_start_date):
         next_start_date = self._getNextMonth(next_start_date, timezone)
       elif not (self._validateDay(next_start_date) and
@@ -227,7 +234,11 @@ class PeriodicityMixin:
     """
     returns something like ['Sunday','Monday',...]
     """
-    return DateTime._days
+    try:
+      from DateTime.DateTime import _DAYS
+      return _DAYS
+    except ImportError: # BBB DateTime 2.12
+      return DateTime._days
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
   def getWeekDayItemList(self):

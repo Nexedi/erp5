@@ -44,11 +44,6 @@
           <td>FeatureRequire</td>
           <td></td>
         </tr>
-        <tr>
-          <td>select</td>
-          <td>field_your_resource</td>
-          <td>FeatureRequire</td>
-        </tr>
         <tal:block tal:define="text_content string:Post test">
           <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
         </tal:block>
@@ -56,6 +51,21 @@
           <td>setFile</td>
           <td>field_your_file</td>
           <td>portal_skins/erp5_officejs_support_request_test/test_support_request_text.pdf test_support_request_text.pdf</td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="field_your_resource"]/option[text()="FeatureRequire"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//select[@id="field_your_resource"]/option[text()="FeatureRequire"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>field_your_resource</td>
+          <td>FeatureRequire</td>
         </tr>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
         <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -65,6 +75,11 @@
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
         <tr>
           <td>waitForElementPresent</td>
+          <td>//input[@data-i18n="[value]Post Comment"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
           <td>//input[@data-i18n="[value]Post Comment"]</td>
           <td></td>
         </tr>
@@ -95,7 +110,7 @@
         </tr>
         <tr>
           <td>waitForTextPresent</td>
-          <td>Support Type</td>
+          <td>Support Request Type</td>
           <td></td>
         </tr>
         <tr>
@@ -128,7 +143,9 @@
                                                  'test_support_request_spreadsheet.xlsx',
                                                  'test_support_request_docx.docx',
                                                  'test_support_request_txt.txt',
-                                                 'test_support_request_png.png']">
+                                                 'test_support_request_png.png',
+                                                 'test_support_request_bin.bin',
+                                                 ]">
           <tr>
             <td>setFile</td>
             <td>attachment</td>
@@ -144,6 +161,11 @@
           </tr>
           <tr>
             <td>waitForElementPresent</td>
+            <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Comment added']</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertElementPresent</td>
             <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and text()='Comment added']</td>
             <td></td>
           </tr>
@@ -168,7 +190,17 @@
             <td></td>
           </tr>
           <tr>
+            <td>assertTextPresent</td>
+            <td tal:content="string:Post test ${filename}"></td>
+            <td></td>
+          </tr>
+          <tr>
             <td>waitForElementPresent</td>
+            <td>attachment</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>assertElementPresent</td>
             <td>attachment</td>
             <td></td>
           </tr>
@@ -198,7 +230,9 @@
                                                  'test_support_request_spreadsheet.xlsx',
                                                  'test_support_request_docx.docx',
                                                  'test_support_request_txt.txt',
-                                                 'test_support_request_png.png']">
+                                                 'test_support_request_png.png',
+                                                 'test_support_request_bin.bin',
+                                                 ]">
           <tr>
             <td>waitForElementPresent</td>
             <td tal:content="string: //a[contains(text(), '${filename}')]"></td>
@@ -220,6 +254,11 @@
             <td>undefined</td>
             <td></td>
           </tr>
+          <tr>
+            <td>assertTextNotPresent</td>
+            <td>Error</td>
+            <td></td>
+          </tr>
           <tr tal:define="title python: filename.split('.')[0]">
             <td>click</td>
             <td tal:content="python: '//div[@class=\'ui-header\']/h1/a[contains(text(), \'{}\')]'.format(title)"></td>
@@ -230,7 +269,79 @@
             <td>//p[contains(text(), '${current_reference}')]</td>
             <td></td>
           </tr>
+          <tr>
+            <td>assertElementPresent</td>
+            <td>//p[contains(text(), '${current_reference}')]</td>
+            <td></td>
+          </tr>
         </tal:block>
+
+        <!-- Attached documents can also be found from "Documents" action -->
+        <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+        <tal:block tal:define="click_configuration python: {'text': 'Documents'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'Documents related to Support Request : test.'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <!-- dismiss this notification, because we'll have another one later. -->
+        <tr>
+          <td>click</td>
+          <td>//div[@data-gadget-scope='notification' and @class='visible']//button</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_no_notification" />
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>test_support_request_text</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>test_support_request_text</td>
+          <td></td>
+        </tr>
+
+        <!-- on "desktop", this is always visible from the main view -->
+        <!-- fake a large enough screen -->
+        <tr>
+          <td>getEval</td>
+          <td>
+            window.matchMedia = function () {return {matches:true}};
+            event = document.createEvent("Event");
+            event.initEvent('resize', true, true);
+            window.dispatchEvent(event);
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-gadget-scope="panel"]//a[@data-i18n="Documents"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//div[@data-gadget-scope="panel"]//a[@data-i18n="Documents"]</td>
+          <td></td>
+        </tr>
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'Documents related to Support Request : test.'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <tr>
+          <td>waitForTextPresent</td>
+          <td>test_support_request_text</td>
+          <td></td>
+        </tr>
+
       </tbody>
     </table>
   </body>

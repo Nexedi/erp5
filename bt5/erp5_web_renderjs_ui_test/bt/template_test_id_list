@@ -3,6 +3,7 @@ test.erp5.testFunctionalRJSCore
 test.erp5.testFunctionalRJSCheckBoxField
 test.erp5.testFunctionalRJSFloatField
 test.erp5.testFunctionalRJSLinesField
+test.erp5.testFunctionalRJSDeveloperMode
 test.erp5.testFunctionalRJSListField
 test.erp5.testFunctionalRJSMultiCheckBoxField
 test.erp5.testFunctionalRJSMultiListField
@@ -27,3 +28,4 @@ test.erp5.testRJSPortalType
 test.erp5.testRJSUpgrader
 test.erp5.testFunctionalRJSServiceWorker
 test.erp5.testFunctionalRJSParallelListField
+test.erp5.testFunctionalDisableXHtml

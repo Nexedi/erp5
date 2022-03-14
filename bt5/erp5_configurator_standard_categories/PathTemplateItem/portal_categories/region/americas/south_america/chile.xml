@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CHL</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CL</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>chile</string> </value>
         </item>

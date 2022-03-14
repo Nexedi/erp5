@@ -29,6 +29,7 @@
         type: options.type || 'text',
         title: options.title,
         focus: options.focus,
+        error_text: options.error_text || "",
         step: options.step,
         hidden: options.hidden,
         trim: options.trim || false,
@@ -44,79 +45,111 @@
       var textarea = this.element.querySelector('input'),
         tmp; // general use short-scope variable
 
-      if (this.state.type === 'checkbox') {
-        textarea.checked = this.state.checked;
-      } else {
-        textarea.setAttribute('value', this.state.value);
-        textarea.value = this.state.value;
-      }
-      if (this.state.type === 'radio') {
-        textarea.checked = this.state.checked;
-      }
-      textarea.id = this.state.id || this.state.name;
-      textarea.setAttribute('name', this.state.name);
+      if (modification_dict.hasOwnProperty('value') ||
+          modification_dict.hasOwnProperty('checked') ||
+          modification_dict.hasOwnProperty('editable') ||
+          modification_dict.hasOwnProperty('required') ||
+          modification_dict.hasOwnProperty('id') ||
+          modification_dict.hasOwnProperty('name') ||
+          modification_dict.hasOwnProperty('type') ||
+          modification_dict.hasOwnProperty('title') ||
+          modification_dict.hasOwnProperty('focus') ||
+          modification_dict.hasOwnProperty('step') ||
+          modification_dict.hasOwnProperty('trim') ||
+          modification_dict.hasOwnProperty('multiple') ||
+          modification_dict.hasOwnProperty('accept') ||
+          modification_dict.hasOwnProperty('capture') ||
+          modification_dict.hasOwnProperty('append') ||
+          modification_dict.hasOwnProperty('prepend')
+          ) {
 
-      textarea.setAttribute('type', this.state.type);
-      if (this.state.title) {
-        textarea.setAttribute('title', this.state.title);
-      }
-      if (this.state.step) {
-        textarea.setAttribute('step', this.state.step);
-      }
-      if (this.state.capture) {
-        textarea.setAttribute('capture', this.state.capture);
-      }
-      if (this.state.accept) {
-        textarea.setAttribute('accept', this.state.accept);
+        if (this.state.type === 'checkbox') {
+          textarea.checked = this.state.checked;
+        } else {
+          textarea.setAttribute('value', this.state.value);
+          textarea.value = this.state.value;
+        }
+
+        if (this.state.type === 'radio') {
+          textarea.checked = this.state.checked;
+        }
+        textarea.id = this.state.id || this.state.name;
+        textarea.setAttribute('name', this.state.name);
+
+        textarea.setAttribute('type', this.state.type);
+        if (this.state.title) {
+          textarea.setAttribute('title', this.state.title);
+        }
+        if (this.state.step) {
+          textarea.setAttribute('step', this.state.step);
+        }
+        if (this.state.capture) {
+          textarea.setAttribute('capture', this.state.capture);
+        }
+        if (this.state.accept) {
+          textarea.setAttribute('accept', this.state.accept);
+        }
+
+        if (this.state.multiple) {
+          textarea.multiple = true;
+        }
+
+        if (this.state.required) {
+          textarea.required = true;
+        } else {
+          textarea.required = false;
+        }
+
+        if (this.state.editable) {
+          textarea.readonly = true;
+        } else {
+          textarea.readonly = false;
+        }
+
+        if (this.state.focus === true) {
+          textarea.autofocus = true;
+          textarea.focus();
+        }
+
+        if (this.state.focus === false) {
+          textarea.autofocus = false;
+          textarea.blur();
+        }
+
+        if (modification_dict.append) {
+          this.element.classList.add('ui-input-has-appendinx');
+          tmp = document.createElement('i');
+          tmp.appendChild(document.createTextNode(modification_dict.append));
+          this.element.appendChild(tmp);
+          tmp = undefined;
+        }
+
+        if (modification_dict.prepend) {
+          this.element.classList.add('ui-input-has-prependinx');
+          tmp = document.createElement('i');
+          tmp.appendChild(document.createTextNode(modification_dict.append));
+          this.element.insertBefore(tmp, textarea);
+          tmp = undefined;
+        }
       }
 
-      if (this.state.multiple) {
-        textarea.multiple = true;
+      if (modification_dict.hasOwnProperty('error_text') ||
+          modification_dict.hasOwnProperty('hidden')) {
+        if (this.state.hidden && !this.state.error_text) {
+          textarea.hidden = true;
+        } else {
+          textarea.hidden = false;
+        }
+
+        if (this.state.error_text &&
+            !textarea.classList.contains("is-invalid")) {
+          textarea.classList.add("is-invalid");
+        } else if (!this.state.error_text &&
+                   textarea.classList.contains("is-invalid")) {
+          textarea.classList.remove("is-invalid");
+        }
       }
 
-      if (this.state.required) {
-        textarea.required = true;
-      } else {
-        textarea.required = false;
-      }
-
-      if (this.state.editable) {
-        textarea.readonly = true;
-      } else {
-        textarea.readonly = false;
-      }
-
-      if (this.state.hidden) {
-        textarea.hidden = true;
-      } else {
-        textarea.hidden = false;
-      }
-
-      if (this.state.focus === true) {
-        textarea.autofocus = true;
-        textarea.focus();
-      }
-
-      if (this.state.focus === false) {
-        textarea.autofocus = false;
-        textarea.blur();
-      }
-
-      if (modification_dict.append) {
-        this.element.classList.add('ui-input-has-appendinx');
-        tmp = document.createElement('i');
-        tmp.appendChild(document.createTextNode(modification_dict.append));
-        this.element.appendChild(tmp);
-        tmp = undefined;
-      }
-
-      if (modification_dict.prepend) {
-        this.element.classList.add('ui-input-has-prependinx');
-        tmp = document.createElement('i');
-        tmp.appendChild(document.createTextNode(modification_dict.append));
-        this.element.insertBefore(tmp, textarea);
-        tmp = undefined;
-      }
     })
 
     .declareService(function focus() {
@@ -176,15 +209,24 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('input').checkValidity(),
+      var input = this.element.querySelector('input'),
+        result = input.checkValidity(),
         gadget = this;
+
+      if (gadget.state.type === "radio") {
+        result = result && !gadget.state.error_text;
+      }
+
       if (result) {
-        return this.notifyValid()
+        return gadget.notifyValid()
           .push(function () {
             var date,
               value;
-            if (!result) {
-              return result;
+            if ((gadget.state.type === 'checkbox') && gadget.state.error_text) {
+              return gadget.notifyInvalid(gadget.state.error_text)
+                .push(function () {
+                  return result;
+                });
             }
             if ((gadget.state.type === 'date') ||
                 (gadget.state.type === 'datetime-local')) {
@@ -194,7 +236,10 @@
                 if (isNaN(date)) {
                   return gadget.translate("Invalid DateTime")
                     .push(function (error_message) {
-                      return gadget.notifyInvalid(error_message);
+                      return RSVP.all([
+                        gadget.deferErrorText(error_message),
+                        gadget.notifyInvalid(error_message)
+                      ]);
                     })
                     .push(function () {
                       return false;
@@ -205,8 +250,21 @@
             return result;
           });
       }
+      if (gadget.state.error_text) {
+        return gadget.notifyInvalid(gadget.state.error_text)
+          .push(function () {
+            return result;
+          });
+      }
+
       return result;
     }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      return this.changeState({
+        error_text: error_text
+      });
+    })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .onEvent('change', function change() {
@@ -215,6 +273,7 @@
         this.notifyChange("change")
       ]);
     }, false, false)
+
     .onEvent('input', function input() {
       return RSVP.all([
         this.checkValidity(),
@@ -222,10 +281,23 @@
       ]);
     }, false, false)
 
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
+
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false);
 
 }(window, document, rJS, RSVP, jIO, getFirstNonEmpty));

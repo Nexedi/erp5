@@ -16,7 +16,7 @@ login = getSecurityManager().getUser().getLoginValue()
 if login is not None:
   validation_message_list = login.analyzePassword(editor)
   if validation_message_list:
-    message = u' '.join([str(x) for x in validation_message_list])
+    message = ' '.join([str(x) for x in validation_message_list])
     raise ValidationError('external_validator_failed', context, error_text=message)
 
 return 1

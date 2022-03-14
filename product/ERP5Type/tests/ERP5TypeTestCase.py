@@ -56,7 +56,7 @@ from zope.site.hooks import setSite
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
@@ -217,6 +217,10 @@ DateTime._parse_args = _parse_args
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
+    def __init__(self, *args, **kw):
+      super(ERP5TypeTestCaseMixin, self).__init__(*args, **kw)
+      self.sequence_string_registry = {}
+
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
@@ -765,7 +769,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         '''Publishes the object at 'path' returning a response object.'''
 
         from ZPublisher.Response import Response
-        from ZPublisher.Publish import publish_module_standard
+        try:
+          from ZServer.ZPublisher.Publish import publish_module_standard
+        except ImportError: # BBB Zope2
+          from ZPublisher.Publish import publish_module_standard
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
@@ -839,6 +846,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
             PAS._extractUserIds = orig_extractUserIds
           # Restore security manager
           setSecurityManager(sm)
+          # Restore site removed by closing of request
+          setSite(self.portal)
+
+
 
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
@@ -859,6 +870,114 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         start = time.time()
         setup_once()
         ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
+    def _getCleanupDict(self):
+      """
+        You must override this. Return the documents that should be
+        stored while saving/restoring a StoredSequence as a dict,
+        the keys being the module containing them, and the values
+        the list of ids of documents
+      """
+      return {}
+
+    def registerSequenceString(self, sequence_title, sequence_string):
+      self.sequence_string_registry[sequence_title] = sequence_string
+
+    def getSequenceString(self, sequence_title):
+      return self.sequence_string_registry[sequence_title]
+
+    def stepStoreSequence(self, sequence):
+      sequence_title = "sequence_title"
+      document_dict = self._getCleanupDict()
+      if sequence_title in self.portal.portal_trash:
+        self.portal.portal_trash.manage_delObjects(ids=[sequence_title])
+      trashbin_value = self.portal.portal_trash.newContent(
+        portal_type="Trash Bin",
+        id=sequence_title,
+        title=sequence_title,
+        serialized_sequence=sequence.serializeSequenceDict(),
+        document_dict=document_dict,
+      )
+      for module_id, object_id_list in document_dict.iteritems():
+        for object_id in object_id_list:
+          self.portal.portal_trash.backupObject(
+            trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
+          )
+
+    def stepRestoreSequence(self, sequence):
+      sequence_title = "sequence_title"
+      trashbin_value = self.portal.portal_trash[sequence_title]
+      document_dict = trashbin_value.getProperty('document_dict')
+      for module_id, object_id_list in document_dict.iteritems():
+        for object_id in object_id_list:
+          self.portal.portal_trash.restoreObject(
+            trashbin_value, [module_id], object_id, pass_if_exist=True
+          )
+      sequence.deserializeSequenceDict(
+        trashbin_value.getProperty("serialized_sequence"),
+      )
+      self.tic()
+
+    def setDocumentOwner(self, document_value, user):
+      """
+      Change both ownership and Owner local role on given document to given
+      user.
+      """
+      try:
+        _, old_owner_user_id = document_value.getOwnerTuple()
+      except ValueError:
+        pass
+      else:
+        old_owner_local_role_set = list(document_value.get_local_roles_for_userid(
+          old_owner_user_id,
+        ))
+        try:
+          old_owner_local_role_set.remove('Owner')
+        except ValueError:
+          pass
+        else:
+          if old_owner_local_role_set:
+            document_value.manage_setLocalRoles(
+              old_owner_user_id,
+              tuple(old_owner_local_role_set),
+            )
+          else:
+            document_value.manage_delLocalRoles(old_owner_user_id)
+      document_value.changeOwnership(user)
+      user_id = user.getId()
+      document_value.manage_setLocalRoles(
+        user_id,
+        document_value.get_local_roles_for_userid(user_id) + ('Owner', ),
+      )
+      document_value.reindexObject()
+
+    def immediateRecursiveCall(self, document_value, callback):
+      """
+      Call given callback on document and all its subdocuments.
+
+      Obviously not scalable to large document trees (and hence is only in
+      tests and not in the regular ERP5 document API).
+      """
+      stack = [document_value]
+      while stack:
+        document_value = stack.pop()
+        callback(document_value)
+        stack.extend(getattr(document_value, 'objectValues', lambda: ())())
+        stack.extend(getattr(document_value, 'opaqueValues', lambda: ())())
+
+    def setSubtreeOwner(self, document_value, user):
+      """
+      Change owner of document_value and all its subdocuments to user.
+      See also setDocumentOwner.
+      """
+      setDocumentOwner = self.setDocumentOwner
+      self.immediateRecursiveCall(
+        document_value=document_value,
+        callback=lambda document_value: setDocumentOwner(
+          document_value=document_value,
+          user=user,
+        ),
+      )
 
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     __original_ZMySQLDA_connect = None
@@ -931,8 +1050,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
-        template_list[:0] = (erp5_catalog_storage, 'erp5_property_sheets',
-                             'erp5_core', 'erp5_xhtml_style')
+        app = self._app()
+        try:
+          template_list[:0] = app._getOb(
+            self.getPortalName(),
+          ).getCoreBusinessTemplateList()
+        finally:
+          self.abort()
+          ZopeTestCase.close(app)
+          del app
 
       # keep a mapping type info name -> property sheet list, to remove them in
       # tear down.
@@ -1277,7 +1403,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         try:
           portal_activities = self.portal.portal_activities
           message_list = portal_activities.getMessageList()
-        except Exception: # AttributeError, TransactionFailedError ...
+        except StandardError: # AttributeError, TransactionFailedError ...
           pass
         else:
           for m in message_list:
@@ -1442,7 +1568,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error as e:
+      except socket.error, e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
@@ -1505,8 +1631,8 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   # Python Scripts are exported without those 2 attributes:
-  PythonScript.__code__ = lazy_func_prop('func_code', None)
-  PythonScript.__defaults__ = lazy_func_prop('func_defaults', None)
+  PythonScript.__code__ = PythonScript.func_code = lazy_func_prop('func_code', None)
+  PythonScript.__defaults__ = PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
 
   def _compile(self):
     if immediate_compilation:
@@ -1517,7 +1643,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.__code__ # trigger compilation if needed
+    self.func_code # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent
@@ -1535,7 +1661,7 @@ def optimize():
   if not 'portal_types' in full_indexing_set:
     from Products.ERP5Type.Core.ActionInformation import ActionInformation
     from Products.ERP5Type.Core.RoleInformation import RoleInformation
-    ActionInformation.isIndexable = RoleInformation.isIndexable = \
+    RoleInformation.isIndexable = \
       ConstantGetter('isIndexable', value=False)
   if not 'portal_property_sheets' in full_indexing_set:
     from Products.ERP5Type.Core.StandardProperty import StandardProperty
@@ -1567,10 +1693,10 @@ def fortify():
     rng = random.Random(seed)
     from Products.CMFActivity.ActivityTool import Message
     Message__init__ = Message.__init__
-    def __init__(self, url, oid, active_process, active_process_uid,
+    def __init__(self, url, document_uid, active_process, active_process_uid,
                  activity_kw, *args, **kw):
       activity_kw['priority'] = rng.randint(-128, 127)
-      Message__init__(self, url, oid, active_process, active_process_uid,
+      Message__init__(self, url, document_uid, active_process, active_process_uid,
                       activity_kw, *args, **kw)
     Message.__init__ = __init__
 

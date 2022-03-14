@@ -87,11 +87,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>ce5bc5604fe043792a69d1ee44bd2196</string> </value>
+            <value> <string>837b2f9266997816bbfe93e0151e4f27</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/x-ms-bmp</string> </value>
+            <value> <string>image/png</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -103,7 +103,9 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>1.bmp</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>height</string> </key>

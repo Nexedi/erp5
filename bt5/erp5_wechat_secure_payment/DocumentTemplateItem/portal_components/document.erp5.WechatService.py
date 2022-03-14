@@ -118,16 +118,22 @@ class WechatService(XMLObject):
 
   def callWechatApi(self, URL, wechat_dict):
     portal = self.getPortalObject()
-    base_url = portal.absolute_url()
     wechat_url = self.getLinkUrlString()
     if self.getWechatMode() == "SANDBOX":
       key = self.getSandboxKey()
+    elif self.getWechatMode() == "UNITTEST":
+      return {"result_code": 'SUCCESS', "code_url": 'weixin://wxpay/bizpayurl?pr=AAAAA'}
     else:
       key = self.getServiceApiKey()
     nonce_str = self.generateRandomStr()
 
-    result = urlparse(base_url)
-    spbill_create_ip = socket.gethostbyname(result.netloc)
+    wechat_spbill_create_ip = self.getWechatSpbillCreateIp()
+    if not wechat_spbill_create_ip:
+      base_url = portal.absolute_url()
+      result = urlparse(base_url)
+      spbill_create_ip = socket.gethostbyname(result.netloc)
+    else:
+      spbill_create_ip = socket.gethostbyname(wechat_spbill_create_ip)
 
     # Construct parameter for calling the Wechat payment URL
     wechat_dict['appid'] = self.getServiceAppid()

@@ -83,4 +83,4 @@ class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       self.install(solver, business_configuration)
 
-    return ['Solvers should be created',]
+    return [self._createConstraintMessage('Solvers should be created')]

@@ -41,6 +41,7 @@ class SecurePaymentTool(BaseTool):
   id = 'portal_secure_payments'
   meta_type = 'ERP5 Secure Payment Tool'
   portal_type = 'Secure Payment Tool'
+  title = 'Secure Payments'
 
   def find(self, service_reference="default"):
     """Search a payment service by reference"""
@@ -49,7 +50,7 @@ class SecurePaymentTool(BaseTool):
       if len(result) > 0:
         return result[0].getObject().__of__(self)
 
-    raise ValueError, "Impossible to find a payment service with '%s' reference" % service_reference
+    raise ValueError("Impossible to find a payment service with '%s' reference" % service_reference)
 
   def _loginAsSuperUser(self):
     user = getSecurityManager().getUser()

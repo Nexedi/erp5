@@ -80,6 +80,13 @@ class TestERP5Credential(ERP5TypeTestCase):
       system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
       system_preference.enable()
+    # clear modules if necessary
+    module_list = (self.portal.getDefaultModule('Credential Request'),
+        self.portal.getDefaultModule('Credential Update'),
+        self.portal.getDefaultModule('Credential Recovery'),
+        self.portal.getDefaultModule('Person'))
+    for module in module_list:
+      module.manage_delObjects(list(module.objectIds()))
 
   @reindex
   def enableAlarm(self):
@@ -140,14 +147,6 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.login()
-    self.abort()
-    # clear modules if necessary
-    module_list = (self.portal.getDefaultModule('Credential Request'),
-        self.portal.getDefaultModule('Credential Update'),
-        self.portal.getDefaultModule('Credential Recovery'),
-        self.portal.getDefaultModule('Person'))
-    for module in module_list:
-      module.manage_delObjects(list(module.objectIds()))
     self.resetCredentialSystemPreference()
     self.tic()
     self.logout()
@@ -570,6 +569,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     """
     default_email_text = "bart@duff.com"
     person_list = []
+    username_list = []
     for reference in ['userX', 'bart', 'homer']:
       portal = self.getPortalObject()
       # create a person with 'secret' as password
@@ -582,16 +582,19 @@ class TestERP5Credential(ERP5TypeTestCase):
       assignment = person.newContent(portal_type='Assignment',
                         function='member')
       assignment.open()
+      username = person.getReference() + '-login'
       # create a login
       login = person.newContent(
         portal_type='ERP5 Login',
-        reference=person.getReference() + '-login',
+        reference=username,
         password='secret',
       )
       login.validate()
       person_list.append(person)
+      username_list.append(username)
 
     sequence.edit(person_list=person_list,
+                  username_list=username_list,
                   default_email_text=default_email_text)
 
   def stepCreateCredentialRecovery(self, sequence=None, sequence_list=None,
@@ -739,28 +742,21 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepCheckEmailIsSentForUsername(self, sequence=None, sequence_list=None, **kw):
     '''
-      Check an email containing the usernames list as been sent
+      Check an email containing the usernames as been sent
     '''
-    person_list = sequence.get('person_list')
-    email_text = sequence.get('default_email_text')
-    # after accept, only one email is send containing the reset link
+    # after accept, only one email is send containing the user names
     previous_message = self.portal.MailHost._previous_message
     last_message = self.portal.MailHost._last_message
     if len(previous_message):
       self.assertNotEqual(previous_message[2], last_message[2])
     decoded_message = self.decode_email(last_message[2])
     body_message = decoded_message['body']
-
-    for person in person_list:
-      match_obj = None
-      reference = person.getReference()
-      match_obj = re.search(reference, body_message)
-      # check the reset password link is in the mail
-      self.assertNotEquals(match_obj, None)
+    for username in sequence['username_list']:
+      self.assertIn(username, body_message)
 
     # check the mail is sent to the requester :
     send_to = decoded_message['headers']['to']
-    self.assertEqual(email_text, send_to)
+    self.assertEqual(send_to, sequence['default_email_text'])
 
   def stepCheckPasswordChange(self, sequence=None, sequence_list=None, **kw):
     """
@@ -779,12 +775,15 @@ class TestERP5Credential(ERP5TypeTestCase):
     for line in body_message.splitlines():
       match_obj = re.search(rawstr, line)
       if match_obj is not None:
-        url = line[line.find('http:'):]
+        url = line[line.find('http'):]
     url = url.strip()
     self.assertNotEquals(url, None)
     self.publish(url)
     parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
-    self.assertTrue('reset_key' in parameters)
+    self.assertTrue(
+      'reset_key' in parameters,
+      'reset_key not found in mail message : %s' % body_message
+    )
     key = parameters['reset_key'][0]
     # before changing, check that the user exists with 'secret' password
     self._assertUserExists('barney-login', 'secret')
@@ -1181,13 +1180,15 @@ class TestERP5Credential(ERP5TypeTestCase):
     reference = self._testMethodName
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
-        default_email_text='some@one.com',)
+        default_email_text='some@one.com',
+        password="secret")
     self.login()
     self.assertTrue('Credential%20Request%20Created.' in response)
     self.commit()
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
-        default_email_text='some@one.com',)
+        default_email_text='some@one.com',
+        password="secret")
     self.login()
     # Now is time to assert that even if no reindexation was done yet, another
     # request will already refuse to create new credential request.
@@ -1235,6 +1236,37 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_ERP5Site_newCredentialUpdate_change_password(self):
+    reference = self._testMethodName
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+        reference=reference,
+        role='internal',
+    )
+    assignment = person.newContent(portal_type='Assignment', function='manager')
+    assignment.open()
+    # create a login
+    username = person.getReference() + '-login'
+    login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=username,
+        password='secret',
+    )
+    login.validate()
+    old_password = login.getPassword()
+    self.tic()
+
+    self.login(person.getUserId())
+    self.portal.ERP5Site_viewNewPersonCredentialUpdateDialog()
+    ret = self.portal.ERP5Site_newPersonCredentialUpdate(password='new_password')
+    self.assertEqual(
+      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      ['Password changed.'],
+    )
+    self.tic()
+    self.assertNotEqual(login.getPassword(), old_password)
+    self._assertUserExists(username, 'new_password')
 
   def test_no_reset_assignment_ERP5Site_newCredentialUpdate(self):
     """Checks that assignments are left intact after credential update"""
@@ -1404,7 +1436,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     # Execute alarm, it will fail because this person has no email
     with self.assertRaisesRegexp(
         RuntimeError,
-        "User .* does not have an email address, please contact site administrator directly"):
+        "An email has been sent to you"):
       self.tic()
 
     # run alarm again, this does not cause another activity failure.

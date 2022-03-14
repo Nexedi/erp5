@@ -46,7 +46,7 @@ from Products.PluggableAuthService.interfaces.plugins \
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 from Products import ERP5Security
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 
 AUTO_LOGIN = object()
 
@@ -60,7 +60,12 @@ class UserManagementTestCase(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_administration',)
+    return (
+      'erp5_full_text_mroonga_catalog',
+      'erp5_core_proxy_field_legacy',
+      'erp5_base',
+      'erp5_administration',
+    )
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -274,13 +279,13 @@ class TestUserManagement(UserManagementTestCase):
     self._assertUserExists(login, password)
     self._assertUserDoesNotExists('case_test_User', password)
 
-  def test_PersonLoginIsNotStripped(self):
-    """Make sure 'foo ', ' foo' and ' foo ' do not match user 'foo'. """
+  def test_PersonLoginIsStripped(self):
+    """Make sure 'foo ', ' foo' and ' foo ' match user 'foo'. """
     _, login, password = self._makePerson()
     self._assertUserExists(login, password)
-    self._assertUserDoesNotExists(login + ' ', password)
-    self._assertUserDoesNotExists(' ' + login, password)
-    self._assertUserDoesNotExists(' ' + login + ' ', password)
+    self._assertUserExists(login + ' ', password)
+    self._assertUserExists(' ' + login, password)
+    self._assertUserExists(' ' + login + ' ', password)
 
   def test_PersonLoginCannotBeComposed(self):
     """Make sure ZSQLCatalog keywords cannot be used at login time"""
@@ -327,14 +332,59 @@ class TestUserManagement(UserManagementTestCase):
     _, _, password = self._makePerson(login=login)
     self._assertUserExists(login, password)
 
-  def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self):
+  def test_PersonWithLoginWithNonePasswordAreNotUsers(self):
+    """Tests a person with a login but None as a password is not a valid user."""
+    # check password set to None at creation
+    _, login, _ = self._makePerson(password=None)
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
+
+    # check password set to None after being set
+    user_data, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    erp5_login = self.portal.restrictedTraverse(user_data['login_list'][0]['path'])
+    erp5_login.setPassword('secret')
+    self.tic()
+    self._assertUserExists(login, 'secret')
+    erp5_login.setPassword(None)
+    self.tic()
+    self._assertUserDoesNotExists(login, 'secret')
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
+
+  def test_PersonWithLoginWithEmptyStringPasswordAreNotUsers(self):
     """Tests a person with a login but no password is not a valid user."""
-    password = None
-    _, login, _ = self._makePerson(password=password)
-    self._assertUserDoesNotExists(login, password)
-    password = ''
-    _, login, self._makePerson(password=password)
-    self._assertUserDoesNotExists(login, password)
+    _, login, _ = self._makePerson(password='')
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
+
+    # check password set to '' after being set
+    user_data, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    erp5_login = self.portal.restrictedTraverse(user_data['login_list'][0]['path'])
+    erp5_login.setPassword('secret')
+    self.tic()
+    self._assertUserExists(login, 'secret')
+    erp5_login.setPassword('')
+    self.tic()
+    self._assertUserDoesNotExists(login, 'secret')
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
+
+  def test_PersonWithLoginWithoutPasswordAreNotUsers(self):
+    """Tests a person with a login but no password set is not a valid user."""
+    # similar to _makePerson, but not passing password= to newContent
+    login = 'login_%s' % self._login_generator()
+    new_person = self.portal.person_module.newContent(portal_type='Person')
+    new_person.newContent(portal_type='Assignment').open()
+    new_person.newContent(
+        portal_type='ERP5 Login',
+        reference=login,
+    ).validate()
+    self.tic()
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
 
   def test_PersonWithEmptyLoginAreNotUsers(self):
     """Tests a person with empty login & password is not a valid user."""
@@ -491,6 +541,18 @@ class DuplicatePrevention(UserManagementTestCase):
     self.assertRaises(ValidationFailed, login2_value.validate)
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
 
+  def test_duplicateLoginReference_stripped(self):
+    _, login1, _ = self._makePerson()
+    _, login2, _ = self._makePerson()
+    pas_user2, = self.portal.acl_users.searchUsers(login=login2, exact_match=True)
+    pas_login2, = pas_user2['login_list']
+    login2_value = self.portal.restrictedTraverse(pas_login2['path'])
+    login2_value.invalidate()
+    login2_value.setReference(login1 + ' ')
+    self.commit()
+    self.assertRaises(ValidationFailed, login2_value.validate)
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
+
   def _duplicateLoginReference(self, commit):
     _, login1, _ = self._makePerson(tic=False)
     user_id2, login2, _ = self._makePerson(tic=False)
@@ -536,6 +598,7 @@ class DuplicatePrevention(UserManagementTestCase):
         'user id P%i already exists' % (latest_user_id + 1),
         self.portal.person_module.newContent,
         portal_type='Person')
+    self.abort()
 
     # This error is not permanent, the id is skipped and next generation should succeed
     self.assertEqual(
@@ -744,6 +807,53 @@ class TestPASAPI(UserManagementTestCase):
     verifyClass(IAuthenticationPlugin, ERP5UserManager)
     verifyClass(IUserEnumerationPlugin, ERP5UserManager)
 
+  def test_LoginUserManagerInterfaces(self):
+    """Tests login user manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, IUserEnumerationPlugin
+    from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
+    verifyClass(IAuthenticationPlugin, ERP5LoginUserManager)
+    verifyClass(IUserEnumerationPlugin, ERP5LoginUserManager)
+
+  def test_ERP5AccessTokenExtractionPluginInterfaces(self):
+    """Tests access token extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5AccessTokenExtractionPlugin import\
+                ERP5AccessTokenExtractionPlugin
+    verifyClass(IAuthenticationPlugin, ERP5AccessTokenExtractionPlugin)
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5AccessTokenExtractionPlugin)
+
+  def test_ERP5BearerExtractionPluginInterfaces(self):
+    """Tests bearer extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5BearerExtractionPlugin import\
+                ERP5BearerExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5BearerExtractionPlugin)
+
+  def test_ERP5OpenIdConnectExtractionPluginInterfaces(self):
+    """Tests openid connect extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5ExternalOpenIdConnectExtractionPlugin import\
+                ERP5OpenIdConnectExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5OpenIdConnectExtractionPlugin)
+
+  def test_ERP5DumbHTTPExtractionPluginInterfaces(self):
+    """Tests dumb HTTP extraction plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                ILoginPasswordHostExtractionPlugin
+    from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import\
+                ERP5DumbHTTPExtractionPlugin
+    verifyClass(ILoginPasswordHostExtractionPlugin, ERP5DumbHTTPExtractionPlugin)
+
+  def test_RoleManagerInterfaces(self):
+    """Tests role manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
+    from Products.ERP5Security.ERP5RoleManager import ERP5RoleManager
+    verifyClass(IRolesPlugin, ERP5RoleManager)
+
   def test_UserFolder(self):
     """Tests user folder has correct meta type."""
     self.assertTrue(isinstance(self.getUserFolder(),
@@ -869,16 +979,30 @@ class TestMigration(UserManagementTestCase):
         self.portal.person_module.newContent,
         portal_type='Person',
         reference='old_user_id')
+    self.abort()
 
     self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.commit()
+    # Sanity check
+    self.assertTrue(
+      self.portal.portal_activities.countMessage(
+        method_id='ERP5Site_disableERP5UserManager',
+      ),
+    )
     def stop_condition(message_list):
-      if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+      # Once ERP5Site_disableERP5UserManager has been executed, the unicity
+      # constraint on Person.reference disappears (and re-appears on
+      # Person.user_id and ERP5User.reference, but this is not what is being
+      # tested here). So only check this constraint for as long as that
+      # activity is present.
+      if any(m.method_id == 'ERP5Site_disableERP5UserManager' for m in message_list):
         self.assertRaisesRegexp(
           ValidationFailed,
           'user id old_user_id already exists',
           self.portal.person_module.newContent,
           portal_type='Person',
           reference='old_user_id')
+        self.abort()
       return False
     self.tic(stop_condition=stop_condition)
     self.portal.person_module.newContent(portal_type='Person', reference='old_user_id')
@@ -888,6 +1012,7 @@ class TestMigration(UserManagementTestCase):
         self.portal.person_module.newContent,
         portal_type='Person',
         user_id='old_user_id')
+    self.abort()
 
   def test_DuplicateUserIdFromInitUserIdPreventionDuringMigration(self):
     self._enableERP5UsersPlugin()
@@ -905,15 +1030,17 @@ class TestMigration(UserManagementTestCase):
             'user id P1234 already exists',
             self.portal.person_module.newContent,
             portal_type='Person',)
+      self.abort()
   
       self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
       def stop_condition(message_list):
-        if [m for m in message_list if m.method_id != 'immediateReindexObject']:
+        if any(m.method_id != 'immediateReindexObject' for m in message_list):
           self.assertRaisesRegexp(
             ValidationFailed,
             'user id P1234 already exists',
             self.portal.person_module.newContent,
             portal_type='Person',)
+          self.abort()
         return False
       self.tic(stop_condition=stop_condition)
 
@@ -922,6 +1049,7 @@ class TestMigration(UserManagementTestCase):
           'user id P1234 already exists',
           self.portal.person_module.newContent,
           portal_type='Person',)
+      self.abort()
 
   def test_NonMigratedPersonCanBecomeUserLater(self):
     self._enableERP5UsersPlugin()

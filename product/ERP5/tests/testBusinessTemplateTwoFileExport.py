@@ -1082,6 +1082,8 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                          "output_encoding": "iso-8859-15"}
     skin_folder._setObject(page_template_id, ZopePageTemplate(
       page_template_id, page_template_text, page_template_kw["content_type"]))
+    skin_folder._getOb(page_template_id).manage_changeProperties(
+      output_encoding=page_template_kw["output_encoding"])
 
     self.template.edit(template_skin_id_list=[skin_folder_id+'/'+page_template_id,])
 

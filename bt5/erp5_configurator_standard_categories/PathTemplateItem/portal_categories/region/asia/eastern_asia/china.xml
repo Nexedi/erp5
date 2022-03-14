@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CHN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CN</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>china</string> </value>
         </item>

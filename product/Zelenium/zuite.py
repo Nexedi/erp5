@@ -5,7 +5,6 @@ Zuite instances are collections of Zelenium test cases.
 $Id$
 """
 from __future__ import absolute_import
-from future.utils import raise_
 import glob
 import logging
 import os
@@ -203,7 +202,7 @@ class Zuite( OrderedFolder ):
         if value is not _MARKER:
             return value
 
-        raise_(KeyError, key)
+        raise KeyError(key)
 
 
     security.declareProtected( View, 'listTestCases' )
@@ -377,9 +376,9 @@ class Zuite( OrderedFolder ):
                               , reg( 'SERVER_SOFTWARE', 'unknown' )
                               )
 
-        result._updateProperty( 'product_info'
-                              , self._listProductInfo()
-                              )
+        #result._updateProperty( 'product_info'
+        #                      , self._listProductInfo()
+        #                      )
 
         result._setObject( 'suite.html'
                          , File( 'suite.html'
@@ -680,7 +679,7 @@ class ZuiteResults( Folder ):
         if default is not _MARKER:
             return default
 
-        raise_(KeyError, key)
+        raise KeyError(key)
 
 InitializeClass( ZuiteResults )
 
@@ -714,13 +713,14 @@ class _FilesystemProxy( Folder ):
             return self.__class__( key, self._fsobjs[ 'subdirs' ][ key ]
                                  ).__of__( self.aq_parent )
 
-        if key in _SUPPORT_FILES.keys():
-            return _SUPPORT_FILES[ key ].__of__( self )
-
-        if default is not _MARKER:
+        try:
+            file = _SUPPORT_FILES[key]
+        except KeyError:
+            if default is _MARKER:
+                raise
             return default
 
-        raise_(KeyError, key)
+        return file.__of__(self)
 
     security.declareProtected( View, 'listTestCases' )
     def listTestCases( self, prefix=() ):

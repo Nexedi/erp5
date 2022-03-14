@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, loopEventListener) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -254,4 +254,4 @@
       return RSVP.all(loop_list);
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, rJS.loopEventListener));

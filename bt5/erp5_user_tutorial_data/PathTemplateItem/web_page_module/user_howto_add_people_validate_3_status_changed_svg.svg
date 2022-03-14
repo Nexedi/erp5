@@ -1,0 +1,22 @@
+<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata4660">image/svg+xml</metadata>
+ <defs>
+  <linearGradient id="linearGradient5231">
+   <stop stop-color="#d40000" id="stop5229" offset="0"/>
+  </linearGradient>
+  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient5233" xlink:href="#linearGradient5231"/>
+  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient5233-9" xlink:href="#linearGradient5231"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="965" width="1377" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="g4662">
+   <image width="1391" height="969" xlink:href="https://www.erp5.com/user-Howto.Add.People.Validate.3.Status.Changed.New?format=png" id="image3430"/>
+   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient5233)" stroke-width="5" stroke-miterlimit="4" y="438.34268" x="945" height="28.64909" width="126.15157" id="rect4666"/>
+   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient5233-9)" stroke-width="5" stroke-miterlimit="4" y="902.81299" x="1120.3335" height="52.21587" width="238.47122" id="rect4666-5"/>
+  </g>
+ </g>
+</svg>

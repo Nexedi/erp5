@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>localizer_language, skin_name, report_section, report_section_idx, request_other</string> </value>
+            <value> <string>localizer_language, skin_name, report_section, report_section_idx, report_request</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

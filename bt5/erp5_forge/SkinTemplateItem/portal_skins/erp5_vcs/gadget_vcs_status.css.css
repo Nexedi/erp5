@@ -1,0 +1,51 @@
+div[data-gadget-url$="gadget_vcs_status.html"] {
+  background-color: #FFFFFF;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li li {
+  padding-left: 1em;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li input.showhide {
+  display: none;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li input.showhide:checked ~ label.show {
+  display: none;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li input.showhide:checked ~ ul {
+  display: none;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li input.showhide:not(:checked) ~ label.hide {
+  display: none;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li label {
+  display: inline-block;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li label.showhide {
+  width: 1em;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li label input {
+  margin: 0 3pt;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li label.added {
+  color: #22CC22;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li label.modified {
+  color: #FF6600;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] li label.removed {
+  color: red;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] button {
+  color: #212529;
+  padding: 3pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  display: inline-block;
+  margin-right: 6pt;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] button:disabled,
+div[data-gadget-url$="gadget_vcs_status.html"] button[disabled] {
+  color: #999999;
+}
+div[data-gadget-url$="gadget_vcs_status.html"] button:before {
+  padding-right: 0.2em;
+}

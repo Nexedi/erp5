@@ -52,6 +52,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from DateTime import DateTime
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -101,7 +102,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
       self.assertTrue('portal_type' in kw, "You need to specify the portal_type"
           " you want to use to create that new property")
 
-      suffix = ps.newContent(temp_object=1, **kw).getIdAsReferenceSuffix()
+      suffix = ps.newContent(temp_object=1, **kw).getIdAsReferenceAffix()
       property_id_as_reference = property_id + suffix
       property_ = getattr(ps, property_id_as_reference, None)
       if property_ is not None:
@@ -129,11 +130,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.login()
     # all those tests does strange things with Person type, so we won't
     # filter content types to add inside Person.
-    self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+    person_type_object = self.getTypesTool().getTypeInfo('Person')
+    person_type_object.filter_content_types = 0
     self.commit()
 
     # save workflow chain for Person type
-    self.person_chain = self.getWorkflowTool().getChainFor('Person')
+    self.person_workflow_list = person_type_object.getTypeWorkflowList()
 
   def beforeTearDown(self):
     self.abort()
@@ -144,13 +146,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                     self.getCategoryTool().region ]:
       module.manage_delObjects(list(module.objectIds()))
 
+    person_type_object = self.getTypesTool().getTypeInfo('Person')
     # set Person.acquire_local_roles back.
     if getattr(self, 'person_acquire_local_roles', None) is not None:
-      self.getTypesTool().getTypeInfo('Person').setTypeAcquireLocalRole(self.person_acquire_local_roles)
+      person_type_object.setTypeAcquireLocalRole(self.person_acquire_local_roles)
 
     # restore workflows for other tests
-    self.getWorkflowTool().setChainForPortalTypes(
-      ['Person'], self.person_chain)
+    person_type_object.setTypeWorkflowList(self.person_workflow_list)
 
     super(TestERP5Type, self).beforeTearDown()
 
@@ -439,13 +441,30 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     checkRelationUnset(self)
 
     # Test _setRegion doesn't reindex the object.
+    def getTitleFromCatalog():
+      row, = self.portal.portal_catalog(
+        select_list=['title'],
+        uid=person_object.getUid(),
+      )
+      return row.title
+    modified_title = getTitleFromCatalog() + '_not_reindexed'
+    catalog_connection = self.getSQLConnection()()
+    catalog_connection.query(
+      'UPDATE catalog SET title=%s WHERE uid=%i' % (
+        catalog_connection.string_literal(modified_title),
+        person_object.getUid(),
+      ),
+    )
+    self.commit()
+    # sanity check
+    self.assertEqual(getTitleFromCatalog(), modified_title)
+
     person_object._setRegion(category_id)
-    self.commit()
-    self.assertFalse(person_object.hasActivity())
-    person_object.setRegion(None)
-    self.commit()
-    self.assertTrue(person_object.hasActivity())
     self.tic()
+    self.assertEqual(getTitleFromCatalog(), modified_title)
+    person_object.setRegion(None)
+    self.tic()
+    self.assertNotEqual(getTitleFromCatalog(), modified_title)
 
     # category tool, base categories, properties
     # are likely to be handled specifically for accessor generation,
@@ -987,24 +1006,23 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person = self.getPersonModule().newContent(id='1', portal_type='Person')
     wf = self.getWorkflowTool().validation_workflow
     # those are assumptions for this test.
-    self.assertTrue(wf.getId() in
-                      self.getWorkflowTool().getChainFor('Person'))
-    self.assertEqual('validation_state', wf.variables.getStateVar())
-    initial_state = wf.states[wf.initial_state]
-    other_state = wf.states['validated']
+    self.assertTrue(wf in self.getWorkflowTool().getWorkflowValueListFor('Person'))
+    self.assertEqual('validation_state', wf.getStateVariable())
+    initial_state = wf.getSourceValue()
+    other_state = wf.getStateValueByReference('validated')
 
     self.assertTrue(hasattr(person, 'getValidationState'))
     self.assertTrue(hasattr(person, 'getValidationStateTitle'))
     self.assertTrue(hasattr(person, 'getTranslatedValidationStateTitle'))
 
-    self.assertEqual(initial_state.getId(), person.getValidationState())
+    self.assertEqual(initial_state.getReference(), person.getValidationState())
     self.assertEqual(initial_state.title,
                       person.getValidationStateTitle())
     self.assertEqual(initial_state.title,
                       person.getTranslatedValidationStateTitle())
     self.assertTrue([initial_state.title], message_catalog._translated)
 
-    self.assertEqual(initial_state.getId(),
+    self.assertEqual(initial_state.getReference(),
                       person.getProperty('validation_state'))
     self.assertEqual(initial_state.title,
                       person.getProperty('validation_state_title'))
@@ -1014,7 +1032,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     self.assertTrue([initial_state.title], message_catalog._translated)
 
     # default parameter is accepted by getProperty for compatibility
-    self.assertEqual(initial_state.getId(),
+    self.assertEqual(initial_state.getReference(),
                       person.getProperty('validation_state', 'default'))
     self.assertEqual(initial_state.title,
                       person.getProperty('validation_state_title', 'default'))
@@ -1026,12 +1044,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # pass a transition and check accessors again.
     person.validate()
-    self.assertEqual(other_state.getId(), person.getValidationState())
+    self.assertEqual(other_state.getReference(), person.getValidationState())
     self.assertEqual(other_state.title,
                       person.getValidationStateTitle())
     self.assertEqual(other_state.title,
                       person.getTranslatedValidationStateTitle())
-    self.assertEqual(other_state.getId(),
+    self.assertEqual(other_state.getReference(),
                       person.getProperty('validation_state'))
     self.assertEqual(other_state.title,
                       person.getProperty('validation_state_title'))
@@ -2478,8 +2496,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     portal = self.getPortalObject()
     folder = self.getOrganisationModule()
     obj = folder.newContent(portal_type='Organisation')
-    self.assertNotEquals(obj.getCreationDate(), portal.CreationDate())
-    self.assertNotEquals(obj.getCreationDate(), folder.getCreationDate())
+    self.assertIsInstance(portal.creation_date, DateTime)
+    self.assertLess(portal.creation_date, obj.getCreationDate())
+    self.assertIsNone(folder.getCreationDate())
 
   def test_copyWithoutModificationRight(self):
     """

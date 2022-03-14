@@ -1,16 +1,15 @@
+# pylint:disable=redefined-builtin
 """
    Generate the html code from the listbox after adding the current chapter to the listbox
 """
 
-from Products.ERP5Type.Document import newTempBase
 # Add the last chapter to the listbox
 context.TestPageModule_createChapter(chapter_title, slide_type, image_url, image_caption,
                                      file, text_content, slide_content, tested, **kw)
 
-translateString = context.Base_translateString
 portal_status_message = ""
 
-session = context.ERP5RunMyDocs_acquireSession()
+session = context.ERP5Site_acquireRunMyDocsSession()
 test_page = context.restrictedTraverse(session['test_page_path'])
 listbox = session['listbox']
 title = session['title']
@@ -68,7 +67,7 @@ for chapter in listbox[1:]:
   <test>"""
     if first:
       text_content +="""
-    <span metal:use-macro="container/ERP5RunMyDocs_initTest/macros/init_test_environment" style="display:none;"> init</span>"""
+    <span metal:use-macro="container/ERP5Site_initRunMyDocsTest/macros/init_test_environment" style="display:none;"> init</span>"""
       first = False
 
     text_content +="""

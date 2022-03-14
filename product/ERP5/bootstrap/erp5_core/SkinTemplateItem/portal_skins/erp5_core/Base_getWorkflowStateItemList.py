@@ -11,10 +11,11 @@ state_dict = {}
 item_list = []
 for workflow_id in workflow_id_list:
   workflow = getToolByName(context, 'portal_workflow')[workflow_id]
-  for state in workflow.states.objectValues():
-    if state.title and state.id!='deleted':
-      if not state_dict.has_key(state.id):
+  for state in workflow.getStateValueList():
+    state_reference = state.getReference()
+    if state.getTitle() and state_reference != 'deleted':
+      if not state_dict.has_key(state_reference):
         # we hide states without titles
-        item_list.append((state.title, state.id))
-        state_dict[state.id] = None
+        item_list.append((state.getTitle(), state_reference))
+        state_dict[state_reference] = None
 return item_list

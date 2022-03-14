@@ -36,5 +36,6 @@ class InterfaceTool(BaseTool):
   id = 'portal_interfaces'
   meta_type = 'ERP5 Interface Tool'
   portal_type = 'Interface Tool'
+  title = 'Interfaces'
 
 InitializeClass(InterfaceTool)

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>HKG</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>HK</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>hong_kong</string> </value>
         </item>

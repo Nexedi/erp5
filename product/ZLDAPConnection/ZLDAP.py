@@ -8,7 +8,6 @@
 """
 from __future__ import absolute_import
 
-from future.utils import raise_
 __version__ = "$Revision: 1.11 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
@@ -138,7 +137,7 @@ class ZLDAPConnection(
     def tpc_begin(self,*ignored):
         #make sure we're open!
         if not self.__ping():      #we're not open
-            raise ConnectionError
+            raise ConnectionError('LDAP Connection is not open for commiting')
         self._v_okobjects=[]
 
     def commit(self, o, *ignored):
@@ -211,7 +210,7 @@ class ZLDAPConnection(
     ### getting entries and attributes
 
     def hasEntry(self, dn):
-        if dn in getattr(self, '_v_add',{}):
+        if getattr(self, '_v_add',{}).has_key(dn):
             #object is marked for adding
             return 1
         elif dn in getattr(self,'_v_delete',()):
@@ -228,10 +227,10 @@ class ZLDAPConnection(
 
     def getRawEntry(self, dn):
         " return raw entry from LDAP module "
-        if dn in getattr(self, '_v_add',{}):
+        if getattr(self, '_v_add',{}).has_key(dn):
             return (dn, self._v_add[dn]._data)
         elif dn in getattr(self,'_v_delete',()):
-            raise_(ldap.NO_SUCH_OBJECT, "Entry '%s' has been deleted" % dn)
+            raise ldap.NO_SUCH_OBJECT("Entry '%s' has been deleted" % dn)
 
         try:
             e=self._connection().search_s(
@@ -239,14 +238,14 @@ class ZLDAPConnection(
                 )
             if e: return e[0]
         except:
-            raise_(ldap.NO_SUCH_OBJECT, "Cannot retrieve entry '%s'" % dn)
+            raise ldap.NO_SUCH_OBJECT("Cannot retrieve entry '%s'" % dn)
 
 
     def getEntry(self, dn, o=None):
         " return **unwrapped** Entry object, unless o is specified "
         Entry = self._EntryFactory()
 
-        if dn in getattr(self, '_v_add',{}):
+        if getattr(self, '_v_add',{}).has_key(dn):
             e=self._v_add[dn]
         else:
             e=self.getRawEntry(dn)
@@ -329,7 +328,7 @@ class ZLDAPConnection(
     ### adding entries
     def _registerAdd(self, o):
         a=getattr(self, '_v_add',{})
-        if o.dn not in a:
+        if not a.has_key(o.dn):
             a[o.dn]=o
         self._v_add=a
 
@@ -337,7 +336,7 @@ class ZLDAPConnection(
         a=getattr(self, '_v_add',{})
         if o and o in a.values():
             del a[o.dn]
-        elif dn and dn in a:
+        elif dn and a.has_key(dn):
             del a[dn]
         self._v_add=a
 

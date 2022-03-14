@@ -75,7 +75,7 @@ class Step:
     self._required = required
     self._max_replay = max_replay
 
-  def play(self, context, sequence=None, quiet=0):
+  def play(self, context, sequence=None, quiet=True):
     method_name = 'step' + self._method_name
     method = getattr(context,method_name)
     # We can in same cases replay many times the same step,
@@ -119,7 +119,7 @@ class Sequence:
         line_list.append('      %s' % step._method_name)
     return '\n'.join(line_list)
 
-  def play(self, context, sequence=None, sequence_number=0, quiet=0):
+  def play(self, context, sequence=None, sequence_number=0, quiet=True):
     if not quiet:
       if self._played_index == 0:
         ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
@@ -149,7 +149,7 @@ class Sequence:
   def setdefault(self, key, default=None):
     return self._dict.setdefault(key, default)
 
-  def __call__(self, sequence_string, sequence_number=0, quiet=0):
+  def __call__(self, sequence_string, sequence_number=0, quiet=True):
     """
     add some steps and directly runs them, this allows to easily write
     such code when sequence are unable to handle too complex cases :
@@ -174,6 +174,115 @@ class Sequence:
         if step.startswith('step'):
           step = step[4:]
         self.addStep(step)
+
+
+class StoredSequence(Sequence):
+  """A StoredSequence is a Sequence that can store an ERP5's state into
+  a Trash Bin and restore it before before being played. If the state is
+  not stored yet, then it will create it then store it.
+  This capability is interesting when multiple tests share a same initial
+  state, as the state needs to be generated only once and can be reused
+  for all of them.
+  """
+
+  def __init__(self, context, id):
+    Sequence.__init__(self, context)
+    self._id = id
+
+  def serialiseSequenceDict(self):
+    def _serialise(key, value):
+      result_dict = {'key': key}
+      if (
+          isinstance(value, str) or
+          isinstance(value, int) or
+          isinstance(value, float) or
+          isinstance(value, dict) or
+          value is None
+        ):
+        result_dict['type'] = "raw"
+        result_dict['value'] = value
+      elif isinstance(value, list):
+        result_dict['type'] = "list"
+        result_dict['value'] = [_serialise(key, x) for x in value]
+      else:
+        result_dict['type'] = "erp5_object"
+        result_dict['value'] = value.getRelativeUrl()
+      return result_dict
+
+    result_list = []
+    for key, value in self._dict.iteritems():
+      result_list.append(_serialise(key, value))
+    return result_list
+
+  def deserialiseSequenceDict(self, data):
+    portal = self._context.getPortalObject()
+    def _deserialise(serialised_dict):
+      if serialised_dict["type"] == "raw":
+        return serialised_dict["value"]
+      elif serialised_dict["type"] == "list":
+        return [_deserialise(x) for x in serialised_dict["value"]]
+      elif serialised_dict["type"] == "erp5_object":
+        return portal.restrictedTraverse(serialised_dict['value'])
+      else:
+        raise TypeError("Unknown serialised type %s", serialised_dict["type"])
+
+    for serialised_dict in data:
+      self._dict[serialised_dict['key']] = _deserialise(serialised_dict)
+
+  def _getTrashBinId(self, context):
+    if not context:
+      context = self.context
+    return "%s_%s" % (context.__class__.__name__, self._id)
+
+  def store(self, context):
+    context.login()
+    document_dict = context._getCleanupDict()
+    trashbin_id = self._getTrashBinId(context)
+    if trashbin_id in context.portal.portal_trash:
+      context.portal.portal_trash.manage_delObjects(ids=[self._id])
+    trashbin_value = context.portal.portal_trash.newContent(
+      portal_type="Trash Bin",
+      id=trashbin_id,
+      title=trashbin_id,
+      serialised_sequence=self.serialiseSequenceDict(),
+      document_dict=document_dict,
+    )
+    for module_id, object_id_list in document_dict.iteritems():
+      for object_id in object_id_list:
+        context.portal.portal_trash.backupObject(
+          trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
+        )
+    context.tic()
+    context.logout()
+
+  def restore(self, context):
+    context.login()
+    trashbin_value = context.portal.portal_trash[self._getTrashBinId(context)]
+    document_dict = trashbin_value.getProperty('document_dict')
+    for module_id, object_id_list in document_dict.iteritems():
+      for object_id in object_id_list:
+        context.portal.portal_trash.restoreObject(
+          trashbin_value, [module_id], object_id, pass_if_exist=True
+        )
+    self.deserialiseSequenceDict(
+      trashbin_value.getProperty("serialised_sequence"),
+    )
+    context.tic()
+    context.logout()
+
+  def play(self, context, **kw):
+    portal = self._context.getPortal()
+    if getattr(portal.portal_trash, self._getTrashBinId(context), None) is None:
+      ZopeTestCase._print('\nRunning and saving stored sequence \"%s\" ...' % self._id)
+      sequence = Sequence()
+      sequence.setSequenceString(context.getSequenceString(self._id))
+      sequence.play(context)
+      self._dict = sequence._dict.copy()
+      self.store(context)
+    else:
+      ZopeTestCase._print('\nRestoring stored sequence \"%s\" ...' % self._id)
+      self.restore(context)
+    Sequence.play(self, context, **kw)
 
 class SequenceList:
 
@@ -202,7 +311,7 @@ class SequenceList:
     self.addSequence(sequence)
     return sequence
 
-  def play(self, context, quiet=0):
+  def play(self, context, quiet=True):
     i = 1
     for sequence in self._sequence_list:
       sequence._played_index = 0

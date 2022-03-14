@@ -64,6 +64,8 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
     self.portal.person_module.manage_delObjects(
         [self.user.getId()])
     self.assertEqual(self.portal.ERP5Site_cleanupSupportRequestUITestDataSet(), 'Done.')
+    self.portal.portal_sessions.manage_delObjects(
+      ['support_request_module/erp5_officejs_support_request_ui_test_support_reuqest_001.latest_comment'])
     self.tic()
 
   def createUserAndLogin(self):
@@ -102,7 +104,7 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
       p for p in self.portal.getPortalDocumentTypeList() \
       if p not in ("Sound", "Video", "Web Page", 'Video', 'Web Illustration',
                    'Web Manifest', 'Web Page', 'Web Script', 'Web Style',
-                   'Web Table')]
+                   'Web Table', 'Notebook')]
     # Should not happens but we never know
     assert portal_type_list, portal_type_list
 
@@ -594,8 +596,8 @@ class TestSupportRequestRSSSNonVisibleAttachment(SupportRequestRSSTestCase, Defa
 class TestIngestPostAsWebMessage(SupportRequestTestCase):
   """Tests ingesting HTML Post into web messages.
   """
-  def test_Post_ingestMailMessageForSupportRequest_as_other_user(self):
-    """Post_ingestMailMessageForSupportRequest should be able to ingest an HTML
+  def test_Post_ingestWebMessageForSupportRequest_as_other_user(self):
+    """Post_ingestWebMessageForSupportRequest should be able to ingest an HTML
     Post created by another user, so that we can run int in an alarm for example.
     """
     support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
@@ -610,7 +612,7 @@ class TestIngestPostAsWebMessage(SupportRequestTestCase):
 
     manager_user_id = 'ERP5TypeTestCase'
     self.login(manager_user_id)
-    post.Post_ingestMailMessageForSupportRequest(
+    post.Post_ingestWebMessageForSupportRequest(
       web_site_relative_url=self.getWebSite().getRelativeUrl())
 
     self.tic()

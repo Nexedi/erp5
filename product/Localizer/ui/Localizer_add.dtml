@@ -9,11 +9,9 @@
 
 
 <p class="form-help">
-  <dtml-gettext>
-    A Localizer object lets you customize the language negotiation policy.
-    It lets you use cookies, the path or any other criteria to select the
-    user preferred language.
-  </dtml-gettext>
+  A Localizer object lets you customize the language negotiation policy.
+  It lets you use cookies, the path or any other criteria to select the
+  user preferred language.
 </p>
 
 

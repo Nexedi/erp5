@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global document, window, rJS, Handlebars, RSVP, loopEventListener, Node */
+/*global document, window, rJS, Handlebars, RSVP, Node */
 (function (document, window, rJS, Handlebars, RSVP, loopEventListener, Node) {
   "use strict";
 
@@ -132,7 +132,7 @@
       }
     }, true, false);
 
-}(document, window, rJS, Handlebars, RSVP, loopEventListener, Node));
+}(document, window, rJS, Handlebars, RSVP, rJS.loopEventListener, Node));
 
 
 

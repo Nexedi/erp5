@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>NOR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>NO</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>norway</string> </value>
         </item>

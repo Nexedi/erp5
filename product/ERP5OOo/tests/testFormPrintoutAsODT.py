@@ -84,23 +84,22 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo_getODTStyleSheet', file=foo_file, title='',
-                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+                    content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo2_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo2_getODTStyleSheet', file=foo2_file, title='',
-                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+                    content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo3_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo3_getODTStyleSheet', file=foo3_file, title='',
-                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+                    content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo4_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo4_getODTStyleSheet', file=foo4_file, title='',
-                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+                    content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo5_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo5_getODTStyleSheet', file=foo5_file, title='',
-                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+                    content_type = 'application/vnd.oasis.opendocument.text')
     if custom._getOb('Foo_getVariableODTStyleSheet', None) is None:
       addStyleSheet(id='Foo_getVariableODTStyleSheet',
                     file=variable_file_object, title='',
-                    precondition='',
                     content_type='application/vnd.oasis.opendocument.text')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
 
@@ -200,7 +199,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
-    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
+    # Zope4 add charset=utf-8
+    self.assertTrue('text/html' in request.RESPONSE.getHeader('content-type'))
     self._validate(odf_document)
 
     # 5. Normal case: utf-8 string

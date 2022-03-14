@@ -177,4 +177,4 @@
     })
 
 
-}(window, document, RSVP, rJS, Handlebars, promiseEventListener, loopEventListener, jQuery));
+}(window, document, RSVP, rJS, Handlebars, promiseEventListener, rJS.loopEventListener, jQuery));

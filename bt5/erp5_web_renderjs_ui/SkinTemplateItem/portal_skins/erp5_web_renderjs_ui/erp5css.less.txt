@@ -434,12 +434,15 @@ input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio])
     border: @focus-border;
     box-shadow: @focus-box-shadow;
   }
-  &:invalid {
+  &:invalid, &.is-invalid {
     border: @invalid-border;
     &:focus {
       box-shadow: @invalid-box-shadow;
     }
   }
+}
+label.is-invalid {
+  color: @txtorange;
 }
 
 // Force safari to render search input as text
@@ -1190,12 +1193,12 @@ div[data-gadget-scope='header'] .ui-header {
     animation: fadein @transition-timing;
   }
 
-  // Dialog page template main submit button 
+  // Dialog page template main submit button
   input[type='submit'] {
     .renderPageSubmitButton(@coloraccent);
     text-shadow: @foreground-text-shadow;
   }
-  // Dialog page template update button 
+  // Dialog page template update button
   button[name='action_update'] {
     .renderPageSubmitButton(@grey);
   }
@@ -1237,7 +1240,9 @@ div[data-gadget-scope='header'] .ui-header {
   .field_container > div > div > div.ui-field-contain {
     padding: @half-margin-size 0;
 
-    div {
+    & > div {
+      // Do not expand every div, as some gadget fields
+      // may use div element which should have a more contrained size
       width: 100%;
     }
   }
@@ -1292,7 +1297,7 @@ div[data-gadget-scope='header'] .ui-header {
       border-bottom-style: none;
       box-shadow: 0 1px 3px rgba(0,0,0,.15);
       background-color: @colorbackground;
-  
+
       &:not(.ui-li-has-count) {
         a {
           &:after {
@@ -1358,9 +1363,8 @@ div[data-gadget-scope='header'] .ui-header {
 
   //Label
   .ui-field-contain {
-    & > label {
+    & > label:not(.is-invalid) {
       color: @colorlabel;
-
     }
   }
   //Label styling in required and "invisible" field
@@ -1373,6 +1377,10 @@ div[data-gadget-scope='header'] .ui-header {
   .invisible > .ui-field-contain > label {
     // used to hide the label of a formbox
     display: none;
+  }
+  .page {
+    // backward-compatibility: force non transparency on such field
+    background-color: @colorbackground;
   }
 
 
@@ -1499,6 +1507,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   div {
     position: relative;
+    width: 100%;
   }
   ul {
     position: absolute;
@@ -1861,6 +1870,9 @@ div[data-gadget-scope='erp5_searchfield'] {
   tbody {
     tr {
       td {
+        div {
+          width: 100%
+        }
         // In select mode, hide the listbox line checkbox.
         // Instead, display an icon before the first label
         // (it is only to make the checkbox rendering nicer)
@@ -1893,6 +1905,19 @@ div[data-gadget-scope='erp5_searchfield'] {
     }
   }
 
+}
+
+/**********************************************
+* Radio field
+**********************************************/
+div[data-gadget-url$="gadget_erp5_field_radio.html"] {
+  label {
+    // Ensure the label width do not use 100%
+    // in case of display block
+    // as user may by mistake change the value
+    // when clicking on a blanck area
+    display: inline;
+  }
 }
 
 /**********************************************
@@ -2075,8 +2100,7 @@ div[data-gadget-scope='maximize'] button {
 /**********************************************
 * Front page
 **********************************************/
-div[data-gadget-url$="gadget_erp5_page_front.html"] {
-  > ul {
+ul.ui-list-grid {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -2108,8 +2132,22 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] {
       li {
         padding: @half-margin-size @margin-size;
       }
+      button {
+        .link(@colorlink);
+      }
     }
-  }
+}
+
+/**********************************************
+* Developer mode actions
+**********************************************/
+.edit-form, .edit-form-action, .edit-field, .translate-title, .translate-description {
+  margin-left: @half-margin-size;
+  color: @colorlabel;
+}
+
+.translate-description {
+  border: @border;
 }
 
 /**********************************************

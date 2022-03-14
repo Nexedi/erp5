@@ -141,6 +141,16 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assertEqual(person,
       portal.portal_catalog.getResultValue(translated_title='Yusuke'))
 
+    # The key also behave like "title" key, ie. we can use % for partial matches
+    self.assertEqual(person,
+      portal.portal_catalog.getResultValue(translated_title='Yusu%'))
+    self.assertEqual(person,
+      portal.portal_catalog.getResultValue(translated_title='%岡'))
+    self.assertEqual(person,
+      portal.portal_catalog.getResultValue(translated_title='%村%'))
+    self.assertEqual(person,
+      portal.portal_catalog.getResultValue(translated_title='Yus% OR %oka'))
+
     # Deleting translation should update content_translation table.
     person.setNobReadTranslatedFirstName('')
     person.setNobReadTranslatedLastName('')

@@ -9,4 +9,4 @@ except ValueError:
 
 business_template = p.portal_catalog.getObject(uid)
 return p.REQUEST.RESPONSE.redirect(
-  business_template.absolute_url_path() + '/BusinessTemplate_viewVcsLog?added=.')
+  business_template.absolute_url_path() + '/BusinessTemplate_viewVcsLogDialog?added=.')

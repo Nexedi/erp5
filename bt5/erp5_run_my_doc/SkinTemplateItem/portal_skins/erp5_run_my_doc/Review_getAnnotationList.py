@@ -2,7 +2,7 @@
   Fetches Commentaries to display them in a listbox
 """
 from Products.ERP5Type.Document import newTempBase
-annotation_list = context.getAnnotation().split('\n');
+annotation_list = context.getAnnotation().split('\n')
 
 element_list = []
 relative_url =  context.getRelativeUrl()
@@ -27,6 +27,7 @@ if len(annotation_list) > 0 and annotation_list[0] != "":
     counter += 1
 
 for sorted_element in sort_on:
+  # pylint:disable=cell-var-from-loop
   element_list = sorted(element_list, key = lambda x: x.getProperty(sorted_element[0]), reverse = sorted_element[1] == 'descending')
 
 return element_list

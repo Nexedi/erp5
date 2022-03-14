@@ -6,7 +6,7 @@
 
 #Don't allow to call from url
 if REQUEST:
-  raise ValueError, "You can not call this script from the url"
+  raise ValueError("You can not call this script from the url")
 
 portal = context.getPortalObject()
 portal_preferences = context.portal_preferences
@@ -27,7 +27,7 @@ if user_id and login.hasPassword():
 reference = context.getReference()
 if not login.hasReference():
   if not reference:
-    raise ValueError, "Impossible to create an account without login"
+    raise ValueError("Impossible to create an account without login")
   login.setReference(reference)
   if not user_id:
     person.setUserId(reference)

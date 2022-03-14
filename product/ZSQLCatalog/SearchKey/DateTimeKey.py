@@ -29,17 +29,16 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-from future.utils import raise_
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
 from DateTime.DateTime import DateTime, DateTimeError
 try:
-  from DateTime.DateTime import _TZINFO
+  from DateTime.DateTime import _TZINFO as _cache
 except ImportError:
   # BBB version < zope4
-  from DateTime.DateTime import _cache as _TZINFO
+  from DateTime.DateTime import _cache
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
@@ -96,7 +95,7 @@ def castDate(value, change_timezone=True):
       else:
         raise
   else:
-    raise_(TypeError, 'Unknown date type: %r' % (value))
+    raise TypeError('Unknown date type: %r' % (value,))
   if change_timezone:
     return value.toZone('UTC')
   else:
@@ -147,7 +146,7 @@ def getPeriodBoundaries(value):
   elif isinstance(value, DateTime):
     raise TypeError('Impossible to guess a precision from a DateTime type.')
   else:
-    raise_(TypeError, 'Unknown date type: %r' % (value))
+    raise TypeError('Unknown date type: %r' % (value,))
   delta = delta_list[delimiter_count]
   if callable(delta):
     delta = delta(first_date)

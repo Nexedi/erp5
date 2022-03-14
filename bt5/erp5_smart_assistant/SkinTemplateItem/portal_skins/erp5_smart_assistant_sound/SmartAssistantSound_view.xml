@@ -75,14 +75,15 @@
                         <string>my_title</string>
                         <string>your_modification_date</string>
                         <string>your_player</string>
-                        <string>my_validation_state</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

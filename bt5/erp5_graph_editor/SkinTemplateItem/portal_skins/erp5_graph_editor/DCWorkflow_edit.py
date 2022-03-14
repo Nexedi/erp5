@@ -3,7 +3,6 @@ from Products.Formulator.Errors import FormValidationError
 request = container.REQUEST
 
 form = getattr(context, form_id)
-edit_order = form.edit_order
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix='my_')
@@ -16,7 +15,7 @@ except FormValidationError, validation_errors:
     result['field_errors'][key] = value.error_text
   return form()
 
-(kw, encapsulated_editor_list), action = context.Base_edit(form_id, silent_mode=1)
+(kw, encapsulated_editor_list), _ = context.Base_edit(form_id, silent_mode=1)
 assert not encapsulated_editor_list
 
 context.setProperties(

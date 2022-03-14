@@ -231,11 +231,8 @@ class CategoryTool(BaseTool):
 
       try:
         relative_url = str(relative_url)
-        if base_category is not None:
+        if base_category is not None and not relative_url.startswith(base_category + '/'):
           relative_url = '%s/%s' % (base_category, relative_url)
-        relative_url = \
-        self._removeDuplicateBaseCategoryIdInCategoryPath(base_category,
-                                                                 relative_url)
         value = self.unrestrictedTraverse(relative_url)
       except (TypeError, KeyError, NotFound):
         value = None
@@ -977,8 +974,6 @@ class CategoryTool(BaseTool):
         # Next we look at references
         #LOG("Get Acquired BC", 0, base_category_value.getAcquisitionBaseCategoryList())
         acquisition_base_category_list = base_category_value.getAcquisitionBaseCategoryList()
-        alt_base_category_list = base_category_value.getFallbackBaseCategoryList()
-        all_acquisition_base_category_list = acquisition_base_category_list + alt_base_category_list
         acquisition_pt = base_category_value.getAcquisitionPortalTypeList()
         for my_base_category in acquisition_base_category_list:
           # We implement here special keywords

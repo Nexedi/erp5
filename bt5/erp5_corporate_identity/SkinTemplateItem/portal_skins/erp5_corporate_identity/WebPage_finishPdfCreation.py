@@ -17,7 +17,9 @@ Save, download or return generated PDF Document
 # doc_pdf_file                        pdf content to store
 # doc_aggregate_list                  not applicable (only used for events)
 
-if doc_save:
+from io import BytesIO
+
+if doc_save or get_doc_after_save:
   dms_module = getattr(context, 'document_module', None)
   if dms_module is not None:
     document = dms_module.newContent(
@@ -31,7 +33,7 @@ if doc_save:
     )
     document.edit(
       source_reference=''.join([doc_reference, '.pdf']),
-      file=doc_pdf_file
+      file=BytesIO(doc_pdf_file)
     )
     document.setContentType("application/pdf")
 
@@ -51,9 +53,12 @@ if doc_save:
         'portal_type': document.getTranslatedPortalType()
       }
     )
-
     # XXX redirect = true?
-    return document.Base_redirect(
+    if context.getWebSiteValue():
+      context.getPortalObject().portal_skins.changeSkin('HalRestricted')
+    if get_doc_after_save:
+      return document
+    return document.Base_redirect(form_id='view',
       keep_items=dict(portal_status_message=message)
     )
   #XXX else:

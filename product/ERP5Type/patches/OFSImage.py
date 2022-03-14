@@ -84,14 +84,13 @@ def getImageInfo_with_svg_fix(data):
     return content_type, width, height
 
 OFS.Image.getImageInfo = getImageInfo_with_svg_fix
-import six
-if six.PY2:
-  PUT_orig = OFS.Image.File.PUT
 
-  def PUT(self, REQUEST, RESPONSE):
-    """Handle HTTP PUT requests"""
-    if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-      raise Forbidden('REQUEST_METHOD should be PUT.')
-    return PUT_orig(self, REQUEST, RESPONSE)
+PUT_orig = OFS.Image.File.PUT
 
-  OFS.Image.File.PUT = PUT
+def PUT(self, REQUEST, RESPONSE):
+  """Handle HTTP PUT requests"""
+  if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+    raise Forbidden('REQUEST_METHOD should be PUT.')
+  return PUT_orig(self, REQUEST, RESPONSE)
+
+OFS.Image.File.PUT = PUT

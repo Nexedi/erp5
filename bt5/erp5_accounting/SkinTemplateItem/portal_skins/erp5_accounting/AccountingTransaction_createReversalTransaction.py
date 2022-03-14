@@ -90,7 +90,7 @@ for line in line_list:
                 'source_function', 'destination_function',
                 'source_funding', 'destination_funding',
                 'source_payment_request', 'destination_payment_request',
-                'resource', 'product_line' ]:
+                'resource', 'product_line', 'string_index' ]:
     if line.getProperty(prop) != context.getProperty(prop):
       new_line.setProperty(prop, line.getProperty(prop))
 

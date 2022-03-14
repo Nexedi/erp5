@@ -51,6 +51,7 @@ doc = context
 doc_prefix = pref.getPreferredCorporateIdentityTemplateReportDocumentPrefix() or "Report."
 doc_download = None #XXX not yet implemented
 doc_save = int(kw.get('document_save') or 0)
+get_doc_after_save = int(kw.get('get_doc_after_save') or 0)
 doc_display_header = int(kw.get('display_header') or 0)
 doc_display_comment = int(kw.get('display_comment') or 0)
 doc_display_detail = int(kw.get('display_detail') or 0)
@@ -279,6 +280,7 @@ if doc_format == "pdf":
   return doc.WebPage_finishPdfCreation(
     doc_download=doc_download,
     doc_save=doc_save,
+    get_doc_after_save = get_doc_after_save,
     doc_version=override_document_version or doc_version or "001",
     doc_title=doc_title,
     doc_aggregate_list=doc_aggregate_list,

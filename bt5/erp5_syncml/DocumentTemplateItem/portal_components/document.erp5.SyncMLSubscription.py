@@ -402,11 +402,11 @@ class SyncMLSubscription(XMLObject):
       try:
         user = user_folder.getUserById(user_id).__of__(user_folder) # __of__ might got AttributeError
       except AttributeError:
-        raise ValueError("User %s cannot be found in user folder, \
-              synchronization cannot work with this kind of user" % (user_id,))
+        raise ValueError("User %s cannot be found in user folder,"
+              " synchronization cannot work with this kind of user" % user_id)
       if user is None:
-        raise ValueError("User %s cannot be found in user folder, \
-              synchronization cannot work with this kind of user" % (user_id,))
+        raise ValueError("User %s cannot be found in user folder,"
+              " synchronization cannot work with this kind of user" % user_id)
       else:
         newSecurityManager(None, user)
     else:
@@ -1036,11 +1036,11 @@ class SyncMLSubscription(XMLObject):
           else:
             result_list = query_method(**kw)
       else:
-        raise KeyError, 'This Subscriber %s provide no list method:%r'\
-          % (self.getPath(), list_method_id)
+        raise KeyError('This Subscriber %s provide no list method:%r'
+          % (self.getPath(), list_method_id))
     else:
-      raise KeyError, 'This Subscriber %s provide no list method with id:%r'\
-        % (self.getPath(), list_method_id)
+      raise KeyError('This Subscriber %s provide no list method with id:%r'
+        % (self.getPath(), list_method_id))
     return result_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'generateNewSessionId')
@@ -1107,7 +1107,7 @@ class SyncMLSubscription(XMLObject):
         if id == document.getId():
           return signature
     else: # XXX-Aurel : maybe none is expected # pylint: disable=useless-else-on-loop
-      raise KeyError, id
+      raise KeyError(id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSignatureFromGid')

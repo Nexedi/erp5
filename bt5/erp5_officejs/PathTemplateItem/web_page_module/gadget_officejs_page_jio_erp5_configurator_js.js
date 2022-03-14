@@ -211,7 +211,7 @@
         .push(function (global_setting_gadget) {
           return global_setting_gadget.getSetting(
             "erp5_url",
-            "https://nexedijs.erp5.net"
+            "https://erp5js.nexedi.net"
           );
         })
         .push(function (erp5_url) {

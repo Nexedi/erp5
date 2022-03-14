@@ -20,7 +20,17 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
+  <td>//button[@class="search_button ui-btn-icon-notext ui-icon-search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
   <td>//button[@class="search_button ui-btn-icon-notext ui-icon-search"]</td>
   <td></td>
 </tr>

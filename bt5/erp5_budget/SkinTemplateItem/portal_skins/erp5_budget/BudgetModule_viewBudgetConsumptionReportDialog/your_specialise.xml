@@ -114,7 +114,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in context.portal_catalog(portal_type=\'Budget Model\')]</string> </value>
+            <value> <string>python: [(x.getTranslatedTitle(), x.getRelativeUrl()) for x in context.portal_catalog(portal_type=\'Budget Model\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

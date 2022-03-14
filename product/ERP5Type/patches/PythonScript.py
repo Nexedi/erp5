@@ -165,11 +165,6 @@ class _(PatchClass(PythonScript)):
   p_.PythonScript_ProxyRole_icon = \
     ImageFile('pyscript_proxyrole.gif', globals())
 
-  # Patch for displaying textearea in full window instead of
-  # remembering a quantity of lines to display in a cookie
-  manage = manage_editDocument = manage_main = ZPythonScriptHTML_editForm = \
-  manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
-  manage_editForm._setName('manage_editForm')
 
   # Guards
 
@@ -186,6 +181,17 @@ class _(PatchClass(PythonScript)):
   _orig_bindAndExec = PythonScript._bindAndExec
   def _bindAndExec(self, args, kw, caller_namespace):
     return self(*args, **kw) # caller_namespace not used by PythonScript
+
+  ## WITH_LEGACY_WORKFLOW
+  def getReference(self):
+    return self.id
+  # Following methods are necessary for Workflow showAsXML() function
+  def getBody(self):
+    return self._body
+  def getParams(self):
+    return self._params
+  def getProxyRole(self):
+    return self._proxy_roles
 
 addGuard(PythonScript, 'Change Python Scripts')
 

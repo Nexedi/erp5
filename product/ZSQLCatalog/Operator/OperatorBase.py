@@ -28,14 +28,12 @@
 #
 ##############################################################################
 
-from future.utils import raise_
-import six
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 from zope.interface.verify import verifyClass
-from zope.interface import implementer
+from zope.interface import implements
 
 def valueFloatRenderer(value):
   if isinstance(value, basestring):
@@ -54,15 +52,14 @@ def valueNoneRenderer(value):
 
 value_renderer = {
   int: str,
+  long: str,
   float: valueFloatRenderer,
   DateTime: valueDateTimeRenderer,
   None.__class__: valueNoneRenderer,
   bool: int,
   str: escapeString,
+  unicode: escapeString,
 }
-if six.PY2:
-  value_renderer[long] = str
-  value_renderer[unicode] = escapeString
 
 value_search_text_renderer = {
   DateTime: str,
@@ -101,8 +98,9 @@ column_renderer = {
   'float': columnFloatRenderer
 }
 
-@implementer(IOperator)
 class OperatorBase(object):
+
+  implements(IOperator)
 
   def __init__(self, operator, operator_search_text=None):
     self.operator = operator
@@ -118,7 +116,7 @@ class OperatorBase(object):
 
   def _render(self, column, value,
               value_renderer_get={k.__name__: v
-                for k, v in value_renderer.items()}.get):
+                for k, v in value_renderer.iteritems()}.get):
     """
       Render given column and value for use in SQL.
       Value is rendered to convert it to SQL-friendly value.
@@ -153,8 +151,8 @@ class OperatorBase(object):
                                           valueDefaultSearchTextRenderer)(value)
 
   def asSQLExpression(self, column, value_list, only_group_columns):
-    raise_(NotImplementedError, 'This method must be overloaded by a subclass ' \
-      'to be able to get an SQL representation of this operator.')
+    raise NotImplementedError('This method must be overloaded by a subclass'
+      ' to be able to get an SQL representation of this operator.')
 
   def __repr__(self):
     return '<%s(%r) at %s>' % (self.__class__.__name__, self.getOperator(), id(self))

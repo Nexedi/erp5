@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>domain_generator_method_id</string> </key>
-            <value> <string>Orgnaisation_generatePlanningDomain</string> </value>
+            <value> <string>Organisation_generatePlanningDomain</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -75,7 +75,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>TestPageModule_viewChapterCreationWizard</string> </value>
+                    <value> <string>TestPageModule_viewChapterCreationWizardDialog</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

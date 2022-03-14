@@ -27,7 +27,6 @@ from __future__ import print_function
 #
 ##############################################################################
 
-from future.utils import raise_
 from DateTime import DateTime as DateTimeKlass
 import math
 from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS,\
@@ -36,10 +35,16 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+original_DateTime__eq__ = DateTimeKlass.__eq__
+DateTimeKlass.__eq__ = DateTimeKlass.equalTo
+
 original_DateTime__setstate__ = DateTimeKlass.__setstate__
 
 def DateTime__setstate__(self, state):
-  self.__dict__.clear()
+  try: # BBB DateTime 2.12.8
+    self.__dict__.clear()
+  except AttributeError:
+    pass
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
@@ -61,19 +66,38 @@ def DateTime__getstate__(self):
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
 
+try:
+  DateTimeKlass._month_len
+except AttributeError:
+  # BBB
+  from DateTime.DateTime import _MONTH_LEN
+  DateTimeKlass._month_len = _MONTH_LEN
+
 def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   # Parse date-time components from a string
   month=year=tz=tm=None
-  spaces        =self.space_chars
-  intpat        =self.int_pattern
-  fltpat        =self.flt_pattern
-  wordpat       =self.name_pattern
-  delimiters    =self.delimiters
-  MonthNumbers  =self._monthmap
-  DayOfWeekNames=self._daymap
-  ValidZones    =self._tzinfo._zidx
+  try: # BBB DateTime 2.12
+    spaces        =self.space_chars
+    intpat        =self.int_pattern
+    fltpat        =self.flt_pattern
+    wordpat       =self.name_pattern
+    delimiters    =self.delimiters
+    MonthNumbers  =self._monthmap
+    DayOfWeekNames=self._daymap
+    ValidZones    =self._tzinfo._zidx
+    _MONTH_LEN = self._month_len
+  except AttributeError:
+    from DateTime.DateTime import (SPACE_CHARS as spaces,
+                                   INT_PATTERN as intpat,
+                                   FLT_PATTERN as fltpat,
+                                   NAME_PATTERN as wordpat,
+                                   DELIMITERS as delimiters,
+                                   _MONTHMAP as MonthNumbers,
+                                   _DAYMAP as DayOfWeekNames,
+                                   _TZINFO,
+                                   _MONTH_LEN)
+    ValidZones = _TZINFO._zidx
   TimeModifiers =['am','pm']
-
   # Find timezone first, since it should always be the last
   # element, and may contain a slash, confusing the parser.
   st= st.strip()
@@ -131,19 +155,19 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       # Check for month name:
       if s in MonthNumbers:
         v=MonthNumbers[s]
-        if month is None: month=v
-        else:raise_(SyntaxError, st)
-        continue
+        if month is None:
+          month = v
+          continue
       # Check for time modifier:
-      if s in TimeModifiers:
-        if tm is None: tm=s
-        else:raise_(SyntaxError, st)
-        continue
+      elif s in TimeModifiers:
+        if tm is None:
+          tm = s
+          continue
       # Check for and skip day of week:
-      if s in DayOfWeekNames:
+      elif DayOfWeekNames.has_key(s):
         continue
 
-    raise_(SyntaxError, st)
+    raise SyntaxError(st)
 
   day=None
   if ints[-1] > 60 and d not in ['.',':','/'] and len(ints) > 2:
@@ -208,33 +232,32 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   year = _correctYear(year)
   #handle dates before year 1000
   #if year < 1000: raise SyntaxError, st
-
   leap = year%4==0 and (year%100!=0 or year%400==0)
   try:
-    if not day or day > self._month_len[leap][month]:
-      raise_(DateError, st)
+    if not day or day > _MONTH_LEN[leap][month]:
+      raise DateError(st)
   except IndexError:
-    raise_(DateError, st)
+    raise DateError(st)
   tod=0
   if ints:
     i=ints[0]
     # Modify hour to reflect am/pm
     if tm and (tm=='pm') and i<12:  i=i+12
     if tm and (tm=='am') and i==12: i=0
-    if i > 24:raise_(TimeError, st)
+    if i > 24: raise TimeError(st)
     tod = tod + int(i) * 3600
     del ints[0]
     if ints:
       i=ints[0]
-      if i > 60:raise_(TimeError, st)
+      if i > 60: raise TimeError(st)
       tod = tod + int(i) * 60
       del ints[0]
       if ints:
         i=ints[0]
-        if i > 60:raise_(TimeError, st)
+        if i > 60: raise TimeError(st)
         tod = tod + i
         del ints[0]
-        if ints:raise_(SyntaxError,st)
+        if ints: raise SyntaxError(st)
 
 
   tod_int = int(math.floor(tod))

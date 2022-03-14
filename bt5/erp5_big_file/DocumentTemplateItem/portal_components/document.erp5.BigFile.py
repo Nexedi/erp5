@@ -116,7 +116,7 @@ class BigFile(File):
       file = StringIO(file)
 
     if isinstance(file, FileUpload) and not file:
-      raise ValueError, 'File not specified'
+      raise ValueError('File not specified')
 
     seek=file.seek
     read=file.read

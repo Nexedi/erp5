@@ -1,6 +1,6 @@
 """Set connected user as shopping cart customer"""
 if REQUEST is not None:
-  raise RuntimeError, "You can not call this script from the URL"
+  raise RuntimeError("You can not call this script from the URL")
 
 shopping_cart = context.SaleOrder_getShoppingCart()
 

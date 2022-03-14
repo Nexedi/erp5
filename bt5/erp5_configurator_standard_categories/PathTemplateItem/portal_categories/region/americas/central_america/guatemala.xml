@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GTM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GT</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>guatemala</string> </value>
         </item>

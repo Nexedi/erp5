@@ -57,28 +57,28 @@ if len_line_list!=0:
       line_id = your_mapping['listbox_key']
       request.form["field_listbox_destination_reference_new_%s"%line_id] = your_destination_reference
       request.form["field_listbox_destination_reference_text_new_%s"%line_id] = your_destination_reference_text
-      if line.getParent().getPortalType() in ["Integration Category Mapping", "Integration Base Category Mapping"]:        
-        uid = "_".join(line.getParent().getRelativeUrl().split("/")[2:])
+      if line.getParentValue().getPortalType() in ["Integration Category Mapping", "Integration Base Category Mapping"]:        
+        uid = "_".join(line.getParentValue().getRelativeUrl().split("/")[2:])
         parent_mapping = mapping_dict[uid]
         parent_destination_reference = parent_mapping["destination_reference"]
         parent_destination_reference_text = parent_mapping["destination_reference_text"]
         if parent_destination_reference_text != "":
-          reset_uid_list = reset_uid_list + getMappingChildUid(line.getParent()).split('-')
-          for uid in getMappingChildUid(line.getParent()).split('-'):
+          reset_uid_list = reset_uid_list + getMappingChildUid(line.getParentValue()).split('-')
+          for uid in getMappingChildUid(line.getParentValue()).split('-'):
             request.form["field_listbox_destination_reference_new_%s"%uid] = ""
             kw["field_listbox_destination_reference_new_%s"%uid] = ""
-          parent_uid = "_".join(line.getParent().getRelativeUrl().split("/")[2:])              
+          parent_uid = "_".join(line.getParentValue().getRelativeUrl().split("/")[2:])              
           request.form["field_listbox_destination_reference_new_%s" % parent_uid] = ""
           kw["field_listbox_destination_reference_new_%s" % parent_uid] = ""
         else:
           if parent_destination_reference == "":
-            reset_uid_list = reset_uid_list + getMappingChildUid(line.getParent()).split('-')
-            for uid in getMappingChildUid(line.getParent()).split('-'):
+            reset_uid_list = reset_uid_list + getMappingChildUid(line.getParentValue()).split('-')
+            for uid in getMappingChildUid(line.getParentValue()).split('-'):
               request.form["field_listbox_destination_reference_new_%s"%uid] = ""
               kw["field_listbox_destination_reference_new_%s"%uid] = ""
-          #elif parent_destination_reference != line.getParent().getDestinationReference() \
-              #and line.getParent().getDestinationReference() not in [None, ""]:
-          elif line.getParent().getDestinationReference() not in [None, ""]:
+          #elif parent_destination_reference != line.getParentValue().getDestinationReference() \
+              #and line.getParentValue().getDestinationReference() not in [None, ""]:
+          elif line.getParentValue().getDestinationReference() not in [None, ""]:
             line_uid = "_".join(line.getRelativeUrl().split("/")[2:])              
             destination_reference = request.form["field_listbox_destination_reference_new_%s"%line_uid]
             if destination_reference != "" and not destination_reference.startswith(parent_destination_reference):
@@ -89,8 +89,8 @@ if len_line_list!=0:
               for uid in getMappingChildUid(line).split('-'):
                 request.form["field_listbox_destination_reference_new_%s"%uid] = ""
                 kw["field_listbox_destination_reference_new_%s"%uid] = ""    
-          #elif parent_destination_reference == line.getParent().getDestinationReference() \
-              #and line.getParent().getDestinationReference() not in [None, ""]:
+          #elif parent_destination_reference == line.getParentValue().getDestinationReference() \
+              #and line.getParentValue().getDestinationReference() not in [None, ""]:
             #line_uid = "_".join(line.getRelativeUrl().split("/")[2:])              
             #destination_reference = request.form["field_listbox_destination_reference_new_%s"%line_uid]
             #if destination_reference != "" and not destination_reference.startswith(parent_destination_reference):

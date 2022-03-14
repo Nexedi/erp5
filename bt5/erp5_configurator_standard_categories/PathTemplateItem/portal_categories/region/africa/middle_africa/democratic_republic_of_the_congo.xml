@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>COD</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CD</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>democratic_republic_of_the_congo</string> </value>
         </item>

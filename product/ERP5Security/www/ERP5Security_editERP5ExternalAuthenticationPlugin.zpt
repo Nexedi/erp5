@@ -7,7 +7,9 @@
 
 <form action="manage_editERP5ExternalAuthenticationPlugin" method="POST">
 
-<table tal:define="user_id_key request/user_id_key|context/user_id_key|string:;">
+<table tal:define="user_id_key request/user_id_key|context/user_id_key|string:;
+                   login_portal_type_list_ request/login_portal_type_list|context/login_portal_type_list|string:;
+                   login_portal_type_list python: '\n'.join(login_portal_type_list_)">
 
 <tr>
    <td>HTTP request header key where the user_id is stored</td>
@@ -16,6 +18,14 @@
             tal:attributes="value user_id_key;" />
    </td>
 </tr>
+  <tr>
+    <td>List of Login Portal Types (One per Line)</td>
+    <td>
+    <textarea name="login_portal_type_list:lines" rows="6" cols="35"
+       tal:content="login_portal_type_list">
+    </textarea>
+    </td>
+  </tr>
 <tr>
    <td colspan="2"> 
     <input type="submit" value="save"/>

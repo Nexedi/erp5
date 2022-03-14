@@ -125,7 +125,7 @@ class NumericCaptchaProvider(object):
     calculus_text = " ".join(terms)
     result = eval(calculus_text)
 
-    return (calculus_text, result)
+    return (calculus_text, str(result))
 
   def getHTML(self, field, captcha_key):
     # Make the text harder to parse for a computer

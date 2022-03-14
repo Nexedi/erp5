@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 import errno, logging, os, socket, time
+import itertools
 from threading import Thread
 from UserDict import IterableUserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase
+try:
+  from Testing.makerequest import _Z2HOST # XXX only on Zope4
+  from Testing import makerequest as utils
+except: # BBB Zope 2.12
+  from Testing.ZopeTestCase import utils
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -147,7 +153,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
-    utils = ZopeTestCase.utils
     if utils._Z2HOST is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
@@ -239,7 +244,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   @classmethod
   def unregisterNode(cls):
-    if ZopeTestCase.utils._Z2HOST is not None:
+    if utils._Z2HOST is not None:
       self = cls('unregisterNode')
       self.app = self._app()
       self._registerNode(distributing=0, processing=0)
@@ -268,8 +273,21 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     transaction.commit()
     self.abort()
 
-  def tic(self, verbose=0, stop_condition=lambda message_list: False):
-    """Execute pending activities"""
+  def tic(self, verbose=0, stop_condition=lambda message_list: False, delay=30*60):
+    """Execute pending activities.
+
+    This method executes activities until all messages are executed successfully,
+    or at least execution of one message was marked as failed, in this case a
+    RuntimeError exception will be raised.
+
+    `stop_condition` can be a function that will be called between each iteration
+    with the list of pending messages and return True to stop execution, or False
+    to continue.
+
+    If the total time spent processing activities exceeded `delay` seconds (default
+    30 minutes), then the processing is interrupted and `tic` raise a RuntimeError
+    exception.
+    """
     transaction.commit()
     # Some tests like testDeferredStyle require that we use self.getPortal()
     # instead of self.portal in order to setup current skin.
@@ -278,12 +296,14 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
       if verbose:
         ZopeTestCase._print('Executing pending activities ...')
         old_message_count = 0
-        start = time.time()
-      count = 1000
+      start = time.time()
+      deadline = start + delay # This prevents an infinite loop.
       getMessageList = portal_activities.getMessageList
       message_list = getMessageList()
       message_count = len(message_list)
-      while message_count and not stop_condition(message_list):
+      for call_count in itertools.count():
+        if not message_count or stop_condition(message_list):
+          break
         if verbose and old_message_count != message_count:
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
@@ -293,9 +313,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
-        # This prevents an infinite loop.
-        count -= 1
-        if not count or message_count and all(x.processing_node == -2
+        if time.time() >= deadline or message_count and any(x.processing_node == -2
                                               for x in message_list):
           # We're about to raise RuntimeError, but maybe we've reached
           # the stop condition, so check just once more:
@@ -308,7 +326,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages
-        if count % 10 == 0:
+        if call_count % 10 == 0:
           portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
       if verbose:
         ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))

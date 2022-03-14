@@ -1,14 +1,15 @@
 /*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
+
   "use strict";
 
   rJS(window)
+
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -118,7 +119,7 @@
                   "type": "GadgetField",
                   "url": "gadget_editor.html",
                   "sandbox": "public",
-                  "renderjs_extra": '{"editor": "notebook_editor", "maximize": true}'
+                  "renderjs_extra": '{"editor": "jsmd_editor", "maximize": true}'
                 }
               }},
               "_links": {

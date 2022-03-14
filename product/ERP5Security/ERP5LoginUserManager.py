@@ -127,10 +127,10 @@ class ERP5LoginUserManager(BasePlugin):
     is_authentication_policy_enabled = self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled()
     if check_password:
       password = credentials.get('password')
-      if not password or not pw_validate(
-        login_value.getPassword(),
-        password,
-      ):
+      login_password = login_value.getPassword()
+      if (not password
+          or login_password is None
+          or not pw_validate(login_password, password)):
         if is_authentication_policy_enabled:
           login_value.notifyLoginFailure()
         return
@@ -232,6 +232,10 @@ class ERP5LoginUserManager(BasePlugin):
           special_user_name_set.add(user_login)
         else:
           login_list.append(user_login)
+          # Ignore leading or trailing space in login name
+          user_login_stripped = user_login.strip()
+          if user_login_stripped != user_login:
+            login_list.append(user_login_stripped)
       login_dict = {}
       if exact_match:
         requested = set(login_list).__contains__
@@ -302,6 +306,17 @@ class ERP5LoginUserManager(BasePlugin):
         ]
       })
     return tuple(result)
+
+  security.declarePrivate('updateUser')
+  def updateUser(self, user_id, login_name):
+    # Operation not supported here
+    return False
+
+  security.declarePrivate('updateEveryLoginName')
+  def updateEveryLoginName(self, quit_on_first_error=True):
+    # Operation not supported here
+    raise NotImplementedError()
+
 
 classImplements(ERP5LoginUserManager, IAuthenticationPlugin, IUserEnumerationPlugin)
 InitializeClass(ERP5LoginUserManager)

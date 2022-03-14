@@ -59,7 +59,7 @@
             latitude: gadget.geoLocation.coords.latitude,
             source_title: gadget.author,
             simulation_state: 'draft',
-            creation_date:new Date().toISOString().slice(0, 10)
+            modification_date:new Date().toISOString().slice(0, 10).replace(/-/g, "/")
           });
         });
     });

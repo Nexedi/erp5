@@ -227,7 +227,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>dream_graph_editor/jsplumb/index.html</string> </value>
+                    <value> <string>gadget_graph_editor.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -235,7 +235,7 @@
                 </item>
                 <item>
                     <key> <string>js_sandbox</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>iframe</string> </value>
                 </item>
                 <item>
                     <key> <string>renderjs_extra</string> </key>
@@ -253,11 +253,11 @@
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>my_core_mode_text_content_validator</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_form_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

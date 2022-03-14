@@ -33,7 +33,7 @@ from App.special_dtml import HTMLFile
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.PythonScripts.PythonScript import \
   PythonScript as ZopePythonScript
-from Products.ERP5.mixin.expression import ExpressionMixin
+from Products.ERP5Type.mixin.expression import ExpressionMixin
 
 # Only needed until skin tool is migrated
 manage_addPythonScriptFormThroughZMI = \
@@ -64,7 +64,7 @@ class PythonScriptThroughZMI(XMLObject):
     def __init__(self, *args, **kw):
       assert False
 
-class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin):
+class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin('expression')):
     """ Script python for ERP5
     """
 
@@ -77,9 +77,10 @@ class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     #View content list, Force /view, Standart option in python scripts
-    manage_options = ( XMLObject.manage_options[0],
+    manage_options = ( ZopePythonScript.manage_options[0],
                        {'icon':'', 'label':'View','action':'view'}) \
-                       + ZopePythonScript.manage_options
+                       + ( XMLObject.manage_options[0], ) \
+                       + ZopePythonScript.manage_options[1:]
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

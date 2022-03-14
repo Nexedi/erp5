@@ -1,4 +1,5 @@
 context.getVcsTool().clean()
 
-context.REQUEST.set('portal_status_message', 'Working copy cleaned successfully.')
-return context.view()
+return context.Base_redirect('view', keep_items={
+  'portal_status_message': 'Working copy cleaned successfully.'
+})

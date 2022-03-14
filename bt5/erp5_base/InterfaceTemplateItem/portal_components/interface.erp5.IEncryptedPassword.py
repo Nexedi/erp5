@@ -39,12 +39,31 @@ class IEncryptedPassword(Interface):
 
   def checkPassword(value):
     """
-    Check the password, usefull when changing password
+    Check the password `value` match the current password, usefull when changing password.
     """
 
   def checkPasswordValueAcceptable(value):
     """
-    Check if the password value is acceptable - i.e. follows site rules.
+    Check if the password `value` is acceptable in regard to password policy.
+    """
+
+  def checkUserCanChangePassword():
+    """
+    Check if the current logged in user have permission to change password, on this
+    IEncryptedPassword.
+
+    Raise Products.CMFCore.exceptions.AccessControl_Unauthorized in case they don't
+    have the permission.
+
+    This method is deprecated and is not used by IEncryptedPassword internally.
+    """
+
+  def setPassword(value):
+    """
+    Set the password to `value` (a string holding the password in clear text).
+
+    Passing an empty value (such as None or empty string) will erase previously defined
+    password, which usually prevent login with this password.
     """
 
   def setEncodedPassword(value, format='default'): # pylint: disable=redefined-builtin
@@ -52,24 +71,13 @@ class IEncryptedPassword(Interface):
     Set an already encoded password.
     """
 
-  def _forceSetPassword(value):
+  def edit(self, **kw):
     """
-    Because both _setPassword and setPassword are considered as
-    public method (they are callable from user directly or through edit method)
-    _forceSetPassword is needed to reset password without security check by
-    Password Tool. This method is not callable through edit method as it not
-    begins with _set*
-    """
+    Edit the password and other properties of the documents through user interface.
 
-  def checkUserCanChangePassword():
-    """
-    check user have permission to change his password. Raise in case he cannot.
-    """
-
-  def setPassword(value) :
-    """
-    Set the password, only if the password is not empty and if
-    checkUserCanChangePassword don't raise any error
+    This method is responsible for supporting the case where a IEncryptedPassword is
+    edited with a my_password field that is empty by default and not resetting the password
+    when edited with password=None.
     """
 
   def getPassword(*args, **kw):
@@ -83,7 +91,7 @@ class IEncryptedPassword(Interface):
       Default: None
     format (string)
       String defining the format in which the password is expected.
-      If passowrd is not available in that format, KeyError will be
+      If password is not available in that format, KeyError will be
       raised.
       Default: 'default'
     """

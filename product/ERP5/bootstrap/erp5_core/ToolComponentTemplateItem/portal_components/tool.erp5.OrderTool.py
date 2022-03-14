@@ -38,6 +38,7 @@ class OrderTool(BuilderTool):
   id = 'portal_orders'
   meta_type = 'ERP5 Order Tool'
   portal_type = 'Order Tool'
+  title = 'Order Builders'
   allowed_types = ('ERP5 Order Buider',)
 
 InitializeClass(OrderTool)

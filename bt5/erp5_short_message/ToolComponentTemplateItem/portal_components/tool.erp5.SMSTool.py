@@ -42,6 +42,7 @@ class SMSTool(BaseTool):
   id = 'portal_sms'
   meta_type = 'ERP5 SMS Tool'
   portal_type = 'SMS Tool'
+  title = "Short Message Services"
 
   # Declarative Security
   security = ClassSecurityInfo()

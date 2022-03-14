@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GBR</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GB</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>united_kingdom</string> </value>
         </item>

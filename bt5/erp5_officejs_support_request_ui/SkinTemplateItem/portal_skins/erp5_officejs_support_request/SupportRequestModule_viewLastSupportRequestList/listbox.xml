@@ -119,26 +119,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
               </dictionary>
             </value>
@@ -168,8 +154,8 @@
                           <string>Location</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
+                          <string>resource__translated__title</string>
+                          <string>Support Request Type</string>
                         </tuple>
                         <tuple>
                           <string>source_trade_title</string>
@@ -243,8 +229,8 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
+                          <string>resource__translated__title</string>
+                          <string>Support Request Type</string>
                         </tuple>
                         <tuple>
                           <string>destination_decision_title</string>
@@ -332,7 +318,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -349,84 +335,7 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_language</string>
-                          <string>Requester Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_decision_title</string>
-                          <string>Supervisor</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Operations Manager</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>causality_translated_portal_type</string>
-                          <string>Channel</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_trade_title</string>
-                          <string>Operator</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Unit Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>price_currency_title</string>
-                          <string>Currency</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -456,19 +365,6 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_translateString("Recent Updates")</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>

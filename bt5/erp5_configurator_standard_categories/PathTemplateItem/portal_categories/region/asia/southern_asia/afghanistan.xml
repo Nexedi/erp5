@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>AFG</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>AF</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>afghanistan</string> </value>
         </item>

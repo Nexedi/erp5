@@ -48,7 +48,7 @@ CMFCore_CatalogTool = CMFCore_CatalogToolModule.CatalogTool
 class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
 
     id = 'portal_catalog'
-    title = 'Catalog Tool'
+    title = 'Catalogs'
     meta_type = 'Catalog Tool'
     portal_type = 'Catalog Tool'
     allowed_types = ('Catalog',)

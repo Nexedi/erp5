@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CPV</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CV</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>cape_verde</string> </value>
         </item>

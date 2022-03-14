@@ -110,8 +110,6 @@
                         <string>my_title</string>
                         <string>my_version</string>
                         <string>my_short_revision</string>
-                        <string>my_translated_building_state_title</string>
-                        <string>my_translated_installation_state_title</string>
                         <string>my_description</string>
                         <string>my_comment</string>
                         <string>my_maintainer_list</string>
@@ -129,6 +127,8 @@
                         <string>my_provision_list</string>
                         <string>my_copyright_list</string>
                         <string>my_license</string>
+                        <string>my_translated_building_state_title</string>
+                        <string>my_translated_installation_state_title</string>
                       </list>
                     </value>
                 </item>

@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, echarts, loopEventListener */
+/*global window, rJS, RSVP, echarts */
 /*jslint nomen: true, indent: 2, unparam: true */
 (function (window, rJS, RSVP, echarts, loopEventListener) {
   "use strict";
@@ -292,4 +292,4 @@
         gadget.changeState({clickHandlerReady: true})
       ]);
     });
-}(window, rJS, RSVP, echarts, loopEventListener));
+}(window, rJS, RSVP, echarts, rJS.loopEventListener));

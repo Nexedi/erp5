@@ -235,7 +235,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Modules to Check</string> </value>
+                    <value> <string>Modules and Tools to Check</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -263,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: sorted([(module.getTranslatedTitle(), module.getId()) for module in context.getPortalObject().objectValues(spec=\'ERP5 Folder\')])</string> </value>
+            <value> <string>python: sorted([(brain.getObject().getTranslatedTitle(), brain.id) for brain in context.getPortalObject().portal_catalog(select_dict={\'id\': None}, parent_uid=0, id=[\'%_module\', \'portal_%s\'])])</string> </value>
         </item>
       </dictionary>
     </pickle>

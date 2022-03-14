@@ -1,4 +1,4 @@
-request_other = {}
+new_request = {}
 
 for k, v in request.other.items() + request.form.items():
   if k not in ('TraversalRequestNameStack', 'AUTHENTICATED_USER', 'URL',
@@ -11,6 +11,6 @@ for k, v in request.other.items() + request.form.items():
     # Remove FileUpload parameters
     elif getattr(v, 'headers', ''):
       continue
-    request_other[k] = v
+    new_request[k] = v
 
-return request_other
+return new_request

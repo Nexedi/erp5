@@ -1,0 +1,45 @@
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="=_862f70c5d3ae68efda7d386a6a83a8a5"
+Date: Thu, 15 Apr 2021 10:49:41 +0200
+From: test@nexedi.com
+To: test@nexedi.com
+Subject: test roundcube
+Message-ID: <c4c34fcc792479e9bdeea46560650b93@nexedi.com>
+
+--=_862f70c5d3ae68efda7d386a6a83a8a5
+Content-Type: multipart/alternative;
+ boundary="=_06ce16e9fb6dfa7ad799171afb2d6cda"
+
+--=_06ce16e9fb6dfa7ad799171afb2d6cda
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+
+test roundcube
+--=_06ce16e9fb6dfa7ad799171afb2d6cda
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=UTF-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
+=3DUTF-8" /></head><body style=3D'font-size: 10pt; font-family: Verdana,Gen=
+eva,sans-serif'>
+<p>test roundcube</p>
+
+</body></html>
+
+--=_06ce16e9fb6dfa7ad799171afb2d6cda--
+
+--=_862f70c5d3ae68efda7d386a6a83a8a5
+Content-Transfer-Encoding: base64
+Content-Type: image/png;
+ name=white.png
+Content-Disposition: attachment;
+ filename=white.png;
+ size=262
+
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQAAAAA3iMLMAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAd2KE6QAAAAHdElN
+RQflBA8MHjIyMgE8AAAADklEQVQI12P4/5+BFAQA/U4f4XOLpqwAAAAldEVYdGRhdGU6Y3JlYXRl
+ADIwMjEtMDQtMTVUMTA6MzA6NTArMDI6MDDpJ1gdAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIxLTA0
+LTE1VDEwOjMwOjUwKzAyOjAwmHrgoQAAAABJRU5ErkJggg==
+--=_862f70c5d3ae68efda7d386a6a83a8a5--

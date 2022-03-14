@@ -28,7 +28,7 @@
 ##############################################################################
 
 from __future__ import print_function
-from future.utils import raise_
+import cgi
 import unittest
 import os
 import requests
@@ -36,9 +36,10 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
 from subprocess import Popen, PIPE
+from AccessControl import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import addUserToDeveloperRole
+from Products.ERP5Type.tests.utils import addUserToDeveloperRole, findContentChain
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 # You can invoke same tests in your favourite collection of business templates
@@ -81,6 +82,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'require.min.js',
         'rsvp.js',
         'wz_dragdrop.js',
+        'gadget_vcs_status.js',  # XXX because jsl is buggy
         )
   JSL_IGNORE_SKIN_LIST = (
         'erp5_code_mirror',
@@ -244,8 +246,9 @@ class TestXHTMLMixin(ERP5TypeTestCase):
       try:
         stdout, stderr = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                                close_fds=True).communicate(body)
-      except OSError as e:
-        raise_(OSError, '%r\n%r' % (os.environ, e))
+      except OSError, e:
+        e.strerror += '\n%r' % os.environ
+        raise
       if stdout:
         error_list.append((check_path, stdout))
     if error_list:
@@ -669,66 +672,25 @@ def makeTestMethod(validator, portal_type, view_name, bt_name):
                content.newContent(portal_type=portal_type_list[0]),
                portal_type_list[1:])
 
-
-  def findContentChain(portal, target_portal_type):
-    # type: (erp5.portal_type.ERP5Site,str) -> Tuple[erp5.portal_type.Folder, Tuple[str, ...]]
-    """Returns the module and the chain of portal types to create a document of target_portal_type.
-
-    This tries all allowed content types up to three levels and if not found, use portal_trash,
-    which allows anything.
-    """
-    # These types have a special `newContent` which does not really follow the interface, we
-    # cannot not use them as container.
-    invalid_container_type_set = {
-        'Session Tool',
-        'Contribution Tool',
-    }
-    # first look modules and their content to find a real container chain.
-    for module in portal.contentValues():
-      module_type = module.getTypeInfo()
-      if module_type is not None:
-        if module_type.getId() == target_portal_type:
-          return module, ()
-        if module_type.isTypeFilterContentType() \
-              and module_type.getId() not in invalid_container_type_set:
-          for allowed_type in module.allowedContentTypes():
-            # Actions on portal_actions are global actions which can be rendered on any context.
-            # We don't test them on all portal types, only on the first type "top level document"
-            if target_portal_type in ('portal_actions', allowed_type.getId()):
-              return module, (allowed_type.getId(),)
-            for sub_allowed_type in allowed_type.getTypeAllowedContentTypeList():
-              if target_portal_type == sub_allowed_type:
-                return module, (allowed_type.getId(), target_portal_type)
-              if sub_allowed_type in portal.portal_types:
-                for sub_sub_allowed_type in portal.portal_types[
-                    sub_allowed_type].getTypeAllowedContentTypeList():
-                  if target_portal_type == sub_sub_allowed_type:
-                    return module, (
-                        allowed_type.getId(),
-                        sub_allowed_type,
-                        target_portal_type,
-                    )
-    # we did not find a valid chain of containers, so we'll fallback to creating
-    # in portal_trash, which allow anything.
-    # We still make one attempt at finding a valid container.
-    for ti in portal.portal_types.contentValues():
-      if ti.getId() not in invalid_container_type_set\
-          and target_portal_type in ti.getTypeAllowedContentTypeList():
-        return portal.portal_trash, (ti.getId(), target_portal_type,)
-    # no suitable container found, use directly portal_trash.
-    ZopeTestCase._print(
-        'Could not find container for %s. Using portal_trash as a container\n'
-        % target_portal_type)
-    return portal.portal_trash, (target_portal_type,)
-
   def testMethod(self):
     module, portal_type_list = findContentChain(
         self.portal,
         portal_type)
     document = createSubContent(module, portal_type_list)
-    view = getattr(document, view_name)
+
+    response = self.publish(
+        '%s/%s' % (document.getPath(), view_name),
+        user=str(getSecurityManager().getUser()),
+        handle_errors=False,
+    )
+    charset = 'iso8859-15'
+    content_type = response.getHeader('content-type')
+    if content_type:
+      _, params = cgi.parse_header(content_type)
+      charset = params.get('charset', charset)
+
     self.assert_(*validate_xhtml( validator=validator,
-                                  source=view(),
+                                  source=response.getBody().decode(charset),
                                   view_name=view_name,
                                   bt_name=bt_name))
   return testMethod
@@ -794,6 +756,19 @@ if validator_to_use == 'tidy':
 elif validator_to_use == 'nu':
   validator = NuValidator(show_warnings)
 
+
+expected_failure_list = (
+    # this view needs VCS preference set (this test suite does not support
+    # setting preferences, but this might be a way to fix this).
+    'test_erp5_forge_Business_Template_BusinessTemplate_viewVcsStatus',
+    # this view only works when solver decision has a relation to a solver.
+    # One way to fix this would be to allow a custom "init script" to be called
+    # on a portal type.
+    'test_erp5_simulation_Solver_Decision_SolverDecision_viewConfiguration',
+    # this view redirects to an external URL
+    'test_erp5_web_Static_Web_Site_WebSite_view',
+)
+
 def test_suite():
   # add the tests
   if validator is not None:
@@ -801,15 +776,7 @@ def test_suite():
     # on getBusinessTemplateList call
     addTestMethodDynamically(TestXHTML, validator,
       ('erp5_core',) + TestXHTML.getBusinessTemplateList(),
-      expected_failure_list=(
-          # this view needs VCS preference set (this test suite does not support
-          # setting preferences, but this might be a way to fix this).
-          'test_erp5_forge_Business_Template_BusinessTemplate_viewVcsStatus',
-          # this view only works when solver decision has a relation to a solver.
-          # One way to fix this would be to allow a custom "init script" to be called
-          # on a portal type.
-          'test_erp5_simulation_Solver_Decision_SolverDecision_viewConfiguration',
-      ))
+      expected_failure_list=expected_failure_list)
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
   return suite

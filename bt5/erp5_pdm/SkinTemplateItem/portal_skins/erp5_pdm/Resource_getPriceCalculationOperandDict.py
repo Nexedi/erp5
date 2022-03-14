@@ -29,7 +29,7 @@ if result["slice_base_price"]:
     slice_min, slice_max = slice_range
     if slice_max is None:
       slice_max = quantity + 1
-    if slice_min is None:
+    if slice_min == 0:
       slice_min = 1
     priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
     total_price += priced_quantity * slice_price

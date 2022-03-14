@@ -3,7 +3,6 @@ from hashlib import md5
 
 def getRssDataAsDict(context, url, username=None, password=None):
   result = {}
-  translate = context.Base_translateString
   # no url, no feed to read
   if url in ('', None, 'None',):
     # no URL
@@ -49,9 +48,10 @@ def getRssDataAsDict(context, url, username=None, password=None):
   for entry in d.entries:
     entry_dict = {}
     entry_dict['title'] = entry['title']
+    entry_dict['author'] = entry.get('author', '')
     entry_dict['link'] = entry['link']
     entry_dict['other_links'] = [x['href'] for x in entry['links']]
-    entry_dict['md5'] = md5(entry['link']).hexdigest()
+    entry_dict['md5'] = md5((entry.get('guid') or entry.get('id') or entry['link']).encode()).hexdigest()
     entry_dict['content'] = entry.get('summary', '')
     entry_dict['date'] = entry.get('updated', None)
     entry_dict['img'] = [x['href'] for x in entry.get('enclosures', [])]

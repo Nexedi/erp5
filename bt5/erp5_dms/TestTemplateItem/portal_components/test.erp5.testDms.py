@@ -49,10 +49,8 @@ import unittest
 import time
 import StringIO
 from subprocess import Popen, PIPE
-from cgi import FieldStorage
 from unittest import expectedFailure
 
-import ZPublisher.HTTPRequest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -73,6 +71,7 @@ from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from ZTUtils import make_query
+import PyPDF2
 
 QUIET = 0
 
@@ -572,6 +571,14 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([],
       sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
+  def test_catalog_search_by_size(self):
+    doc = self.portal.document_module.newContent(
+      portal_type='Spreadsheet',
+      file=makeFileUpload('import_data_list.ods'))
+    self.tic()
+    self.assertEqual(
+      [x.getObject() for x in self.portal.portal_catalog(size=doc.getSize())], [doc])
+
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
@@ -672,10 +679,9 @@ class TestDocument(TestDocumentMixin):
     for document_type in portal.getPortalDocumentTypeList():
       module = portal.getDefaultModule(document_type)
       obj = module.newContent(portal_type=document_type)
-      self.assertNotEquals(obj.getCreationDate(),
-                           module.getCreationDate())
-      self.assertNotEquals(obj.getCreationDate(),
-                           portal.CreationDate())
+      self.assertIsInstance(portal.creation_date, DateTime)
+      self.assertLess(portal.creation_date, obj.getCreationDate())
+      self.assertIsNone(module.getCreationDate())
 
   def test_06_ProcessingStateOfAClonedDocument(self):
     """
@@ -1244,16 +1250,51 @@ class TestDocument(TestDocumentMixin):
     self.assert_('I use reference to look up TEST' in
                  document.SearchableText())
 
-  def test_PDFToImage(self):
+  def test_PDFToPng(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
-    _, image_data = document.convert(format='png',
+    mime, image_data = document.convert(format='png',
                                      frame=0,
                                      display='thumbnail')
+    self.assertEqual(mime, 'image/png')
     # it's a valid PNG
-    self.assertEqual('PNG', image_data[1:4])
+    self.assertEqual(image_data[1:4], 'PNG')
+
+  def test_PDFToJpg(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    mime, image_data = document.convert(format='jpg',
+                                     frame=0,
+                                     display='thumbnail')
+    self.assertEqual(mime, 'image/jpeg')
+    self.assertEqual(image_data[6:10], 'JFIF')
+
+  def test_PDFToGif(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    mime, image_data = document.convert(format='gif',
+                                     frame=0,
+                                     display='thumbnail')
+    self.assertEqual(mime, 'image/gif')
+    self.assertEqual(image_data[0:4], 'GIF8')
+
+  def test_PDFToTiff(self):
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEqual('PDF', document.getPortalType())
+
+    mime, image_data = document.convert(format='tiff',
+                                     frame=0,
+                                     display='thumbnail')
+    self.assertEqual(mime, 'image/tiff')
+    self.assertIn(image_data[0:2], ('II', 'MM'))
+
 
   def test_PDF_content_information(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1480,78 +1521,6 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
 
-  def test_Base_contribute(self):
-    """
-      Test contributing a file and attaching it to context.
-    """
-    person = self.portal.person_module.newContent(portal_type='Person')
-    contributed_document = person.Base_contribute(
-                                     portal_type=None,
-                                     title=None,
-                                     reference=None,
-                                     short_title=None,
-                                     language=None,
-                                     version=None,
-                                     description=None,
-                                     attach_document_to_context=True,
-                                     file=makeFileUpload('TEST-en-002.odt'))
-    self.assertEqual('Text', contributed_document.getPortalType())
-    self.tic()
-    document_list = person.getFollowUpRelatedValueList()
-    self.assertEqual(1, len(document_list))
-    document = document_list[0]
-    self.assertEqual('converted', document.getExternalProcessingState())
-    self.assertEqual('Text', document.getPortalType())
-    self.assertEqual('title', document.getTitle())
-    self.assertEqual(contributed_document, document)
-
-  def test_Base_contribute_empty(self):
-    """
-      Test contributing an empty file and attaching it to context.
-    """
-    person = self.portal.person_module.newContent(portal_type='Person')
-    empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=StringIO.StringIO(),
-                            environ=dict(REQUEST_METHOD='PUT'),
-                            headers={"content-disposition":
-                              "attachment; filename=empty;"}))
-
-    contributed_document = person.Base_contribute(
-                                    portal_type=None,
-                                    title=None,
-                                    reference=None,
-                                    short_title=None,
-                                    language=None,
-                                    version=None,
-                                    description=None,
-                                    attach_document_to_context=True,
-                                    file=empty_file_upload)
-    self.tic()
-    document_list = person.getFollowUpRelatedValueList()
-    self.assertEqual(1, len(document_list))
-    document = document_list[0]
-    self.assertEqual('File', document.getPortalType())
-    self.assertEqual(contributed_document, document)
-
-  def test_Base_contribute_forced_type(self):
-    """Test contributing while forcing the portal type.
-    """
-    person = self.portal.person_module.newContent(portal_type='Person')
-    contributed_document = person.Base_contribute(
-                                     portal_type='PDF',
-                                     file=makeFileUpload('TEST-en-002.odt'))
-    self.assertEqual('PDF', contributed_document.getPortalType())
-
-  def test_Base_contribute_input_parameter_dict(self):
-    """Test contributing while entering input parameters.
-    """
-    person = self.portal.person_module.newContent(portal_type='Person')
-    contributed_document = person.Base_contribute(
-                                     title='user supplied title',
-                                     file=makeFileUpload('TEST-en-002.pdf'))
-    self.tic()
-    self.assertEqual('user supplied title', contributed_document.getTitle())
-
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
     then to plain text.
@@ -1658,9 +1627,9 @@ class TestDocument(TestDocumentMixin):
 
     # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='contributor1')
-    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Author',])
     person2 =  self.createUser(reference='contributor2')
-    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
+    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Author',])
     self.tic()
 
     # login as first one
@@ -1674,6 +1643,7 @@ class TestDocument(TestDocumentMixin):
 
     # login as second one
     super(TestDocument, self).loginByUserName('contributor2')
+    doc.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     doc.edit(title='Test2')
     self.tic()
     self.login()
@@ -2012,13 +1982,34 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
   def test_PDFDocument_asTextConversion(self):
     """Test a PDF document with embedded images
-    To force usage of Ocropus portal_transform chain
+    To force usage of ghostscript with embedded tesseract OCR device
     """
-    portal_type = 'PDF'
-    module = self.portal.getDefaultModule(portal_type)
-    upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
-    document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEqual('ERP5 is a free software.', document.asText())
+    document = self.portal.document_module.newContent(
+        portal_type='PDF',
+        file=makeFileUpload('TEST.Embedded.Image.pdf'))
+    self.assertEqual(document.asText(), 'ERP5 is a free software.')
+
+  def test_broken_pdf_asText(self):
+    class StringIOWithFilename(StringIO.StringIO):
+      filename = 'broken.pdf'
+    document = self.portal.document_module.newContent(
+        portal_type='PDF',
+        file=StringIOWithFilename('broken'))
+    self.assertEqual(document.asText(), '')
+    self.tic() # no activity failure
+
+  def test_password_protected_pdf_asText(self):
+    pdf_reader = PyPDF2.PdfFileReader(makeFileUpload('TEST.Embedded.Image.pdf'))
+    pdf_writer = PyPDF2.PdfFileWriter()
+    pdf_writer.addPage(pdf_reader.getPage(0))
+    pdf_writer.encrypt('secret')
+    encrypted_pdf_stream = StringIO.StringIO()
+    pdf_writer.write(encrypted_pdf_stream)
+    document = self.portal.document_module.newContent(
+        portal_type='PDF',
+        file=encrypted_pdf_stream)
+    self.assertEqual(document.asText(), '')
+    self.tic() # no activity failure
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
@@ -2470,7 +2461,11 @@ return 1
     document.reject()
     document.share()
     logged_in_user = self.portal.portal_membership.getAuthenticatedMember().getId()
-    event_list = document.Base_getWorkflowEventInfoList()
+    # on the new document, during initialization, some workflow set the event's
+    # action to None, but they are not interesting in this test, just filter
+    # them
+    event_list = [event for event in document.Base_getWorkflowEventInfoList()
+                  if event.action is not None]
     event_list.reverse()
     # all actions by logged in user
     for event in event_list:
@@ -2535,9 +2530,9 @@ return 1
     self.tic()
     # full text indexation
     full_text_result = portal.erp5_sql_connection.manage_test('select * from full_text where uid="%s"' %document.getUid())
-    self.assertTrue('subject2' in full_text_result[0]['searchabletext'])
-    self.assertTrue('subject1' in full_text_result[0]['searchabletext'])
-    self.assertTrue(document.getReference() in full_text_result[0]['searchabletext'])
+    self.assertTrue('subject2' in full_text_result[0]['SearchableText'])
+    self.assertTrue('subject1' in full_text_result[0]['SearchableText'])
+    self.assertTrue(document.getReference() in full_text_result[0]['SearchableText'])
 
     # subject indexation
     for subject_list in (['subject1',], ['subject2',],
@@ -2823,6 +2818,44 @@ return 1
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
 
+  def test_Base_getRelatedDocumentList(self):
+    """
+      Checks Base_getRelatedDocumentList works correctly with both
+      related (follow_up) Documents and with sub-object Embedded Files
+    """
+    uploaded_file = makeFileUpload('TEST-001-en.dummy')
+    document_value = self.portal.Base_contribute(
+      file=uploaded_file,
+      synchronous_metadata_discovery=True,
+      portal_type='File'
+    )
+    person_value = self.portal.person_module.newContent(portal_type='Person')
+    getRelatedDocumentList = person_value.Base_getRelatedDocumentList
+    self.tic()
+    # No related document
+    self.assertEqual(len(getRelatedDocumentList()), 0)
+    document_value.setFollowUpValue(person_value)
+    self.tic()
+    # Only related follow_up File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [document_value]
+    )
+    sub_document_value = person_value.newContent(portal_type='Embedded File')
+    self.tic()
+    # Related follow_up File and Embedded File
+    self.assertEqual(
+      sorted([brain.getObject() for brain in getRelatedDocumentList()], key=lambda doc: doc.getPath()),
+      sorted([sub_document_value, document_value], key=lambda doc: doc.getPath())
+    )
+    document_value.setFollowUpValue(None)
+    self.tic()
+    # Only related Embedded File
+    self.assertEqual(
+      [brain.getObject() for brain in getRelatedDocumentList()],
+      [sub_document_value]
+    )
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
@@ -2865,7 +2898,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                                                reference='Foo_001',
                                                title='Foo_OO1')
     f = makeFileUpload('Foo_001.odt')
-    text_document.edit(file=f.read())
+    text_document.edit(file=f)
     f.close()
     self.tic()
 
@@ -2959,12 +2992,13 @@ class TestDocumentPerformance(TestDocumentMixin):
       "Conversion took %s seconds and it is not less them 100.0 seconds" % \
         req_time)
 
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
   suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  # Run erp5_base's TestImage with dms installed (because dms has specific interactions)
+  from erp5.component.test.testERP5Base import TestImage
+  suite.addTest(unittest.makeSuite(TestImage))
   return suite
-
-
-# vim: syntax=python shiftwidth=2

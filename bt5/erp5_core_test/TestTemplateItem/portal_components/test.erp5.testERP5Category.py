@@ -28,7 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
+
 
 class TestERP5Category(ERP5TypeTestCase):
 
@@ -64,7 +64,6 @@ class TestERP5Category(ERP5TypeTestCase):
     return self.getSalePackingListModule()['1']
 
   def afterSetUp(self):
-    self.login()
     # This add the base category size
     portal_categories = self.getCategoryTool()
     person_module = self.getPersonModule()
@@ -154,12 +153,6 @@ class TestERP5Category(ERP5TypeTestCase):
       organisation_module.manage_delObjects('new_id')
 
     self.commitAndTic()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def commitAndTic(self):
     """Just to save one line.

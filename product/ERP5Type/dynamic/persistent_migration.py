@@ -41,7 +41,7 @@ from OFS.Folder import Folder as OFS_Folder
 from persistent import Persistent, wref
 from ZODB.serialize import ObjectWriter, ObjectReader
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import Base, WorkflowMethod
+from Products.ERP5Type.Base import Base, TempBase, WorkflowMethod
 
 log = logging.getLogger('ERP5Type')
 log.trace = lambda *args, **kw: log.log(5, *args, **kw)
@@ -102,7 +102,11 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
           self.lazy = LazyBTree()
       self.oid_dict = {}
       self.oid_set = set()
-      p, serial = self._conn._storage.load(oid, '')
+      try:
+        p, serial = self._conn._storage.load(oid, '')
+      except TypeError:
+        # MVCCAdapter of ZODB5
+        p, serial = self._conn._storage.load(oid)
       unpickler = self._get_unpickler(p)
       def find_global(*args):
         self.do_migrate = args != (klass.__module__, klass.__name__) and \
@@ -164,6 +168,8 @@ if 1:
     klass = self.__class__
 
     if klass.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
+      return Base__setstate__(self, value)
+    if klass is TempBase:
       return Base__setstate__(self, value)
     try:
       portal_type = value.get('portal_type') or klass.portal_type

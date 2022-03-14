@@ -111,6 +111,8 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAvailableBudgetDict')
+  @transactional_cached(key_method=lambda self, *args, **kw:
+    (self.getRelativeUrl(), tuple(kw.items())))
   def getAvailableBudgetDict(self, **kw):
     """Returns all the engagements in a dict where the keys are the cells, and
     the value is the engaged budget.

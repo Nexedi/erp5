@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, document, rJS, RSVP*/
+/*global window, document, rJS, RSVP, domsugar*/
 
 /** Form is one of a complicated gadget!
  *
@@ -8,7 +8,7 @@
  *               changed in FormBox gadget which renders form as a subgadget
 **/
 
-(function (window, document, rJS, RSVP) {
+(function (window, document, rJS, RSVP, domsugar) {
   "use strict";
 
   /**
@@ -71,7 +71,7 @@
         } else {
           // XXX Investigate why removing this break everything
           // There is not reason to always create a DOM element
-          field_element = document.createElement("div");
+          field_element = domsugar("div");
         }
         return label_gadget.render(suboptions);
       })
@@ -82,12 +82,10 @@
 
 
   function addGroup(group, rendered_document, form_definition, form_gadget, modification_dict) {
-    // XXX: > Romain: fieldset will be needed later for menus
-    var fieldset_element = document.createElement("div"),
-      group_name = group[0],
-      field_list = group[1];
-
-    fieldset_element.setAttribute("class", group_name);
+    var group_name = group[0],
+      field_list = group[1],
+      // XXX: > Romain: fieldset will be needed later for menus
+      fieldset_element = domsugar("div", {"class": group_name});
 
     return new RSVP.Queue()
       .push(function () {
@@ -110,6 +108,14 @@
         });
         return fieldset_element;
       });
+  }
+
+  function addDeveloperAction(class_name, title_href, title) {
+    return domsugar("a", {
+      "class": class_name,
+      href: title_href,
+      title: title
+    });
   }
 
 
@@ -170,6 +176,17 @@
         }
       }
 
+      if (options.form_definition.hasOwnProperty("edit_form_href")) {
+        hash += "edit_form";
+      }
+
+      if (options.form_definition.hasOwnProperty("edit_form_action_href")) {
+        hash += "edit_form_action";
+      }
+      if (options.form_definition.hasOwnProperty("edit_form_update_href")) {
+        hash += "edit_form_update_action";
+      }
+
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
@@ -198,7 +215,7 @@
         if (modification_dict.title) {
           if (tmp === null) {
             // create new title element for existing title
-            tmp = document.createElement("h3");
+            tmp = domsugar("h3");
             this.element.insertBefore(tmp, this.element.firstChild);
           }
           tmp.textContent = modification_dict.title;
@@ -216,11 +233,15 @@
           }));
         })
         .push(function (result_list) {
+          var dom_element = form_gadget.element.querySelector(".field_container"),
+            dev_element_list,
+            parent_element,
+            field_href,
+            developer_action_mapping,
+            j;
+
           if (modification_dict.hasOwnProperty('hash')) {
-            var dom_element = form_gadget.element
-              .querySelector(".field_container"),
-              j,
-              parent_element = document.createDocumentFragment();
+            parent_element = document.createDocumentFragment();
             // Add all fieldset into the fragment
             for (j = 0; j < result_list.length; j += 1) {
               parent_element.appendChild(result_list[j]);
@@ -229,6 +250,38 @@
               dom_element.removeChild(dom_element.firstChild);
             }
             dom_element.appendChild(parent_element);
+            dev_element_list = form_gadget.element.querySelectorAll(
+              ":scope > .edit-form, :scope > .edit-form-action"
+            );
+
+            for (j = 0; j < dev_element_list.length; j += 1) {
+              form_gadget.element.removeChild(dev_element_list[j]);
+            }
+            developer_action_mapping = {
+              "edit_form_href": [
+                "edit-form ui-icon-edit ui-btn-icon-left",
+                "Edit this form"
+              ],
+              "edit_form_action_href": [
+                "edit-form-action ui-icon-external-link ui-btn-icon-left",
+                "Edit this form's action"
+              ],
+              "edit_form_update_href": [
+                "edit-form-action ui-icon-external-link-square ui-btn-icon-left",
+                "Edit this form's update action"
+              ]
+            };
+            for (j in developer_action_mapping) {
+              if (developer_action_mapping.hasOwnProperty(j) &&
+                    form_definition.hasOwnProperty(j)) {
+                field_href = addDeveloperAction(
+                  developer_action_mapping[j][0],
+                  form_definition[j],
+                  developer_action_mapping[j][1]
+                );
+                form_gadget.element.insertBefore(field_href, dom_element);
+              }
+            }
           }
         });
     })
@@ -308,4 +361,4 @@
 
     }, {mutex: 'changestate'});
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS, RSVP, domsugar));

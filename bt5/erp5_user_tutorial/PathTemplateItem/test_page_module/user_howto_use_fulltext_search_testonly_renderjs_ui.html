@@ -1,0 +1,107 @@
+<section class="master">
+<h1>Selenium Test How To Use Full Text Search</h1>
+
+<h2>Former testHowToFullTextSearch to be merged with ??? Document</h2>
+
+<details open="open">
+<p>(rafael) I&#39;m not sure there is an related tutorial related to this test. Perhaps a short how to could be written.</p>
+</details>
+<test>
+<table class="test" style="display: none;">
+	<tbody>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>openAndWait</td>
+			<td>${base_url}/Zuite_setUpFullTextSearchTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Init Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td>
+		</tr>
+		<!-- Search with empty string -->
+		<tr>
+			<td>click</td>
+			<td>//button[contains(@class, &quot;search_button&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;tal:block metal:use-macro=&quot;here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded&quot;&gt; &lt;/tal:block&gt;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//input[@id=&quot;search&quot;]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<!-- Search persons by full name -->
+		<tr>
+			<td>type</td>
+			<td>//input[@id=&quot;search&quot;]</td>
+			<td>ZUITE_TEST_FULL_TEXT_PERSON_TITLE_001</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@id=&quot;search&quot;]/../following-sibling::button</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE_TEST_FULL_TEXT_PERSON_TITLE_001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;Person&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<!-- Search Organisation -->
+		<tr>
+			<td>type</td>
+			<td>//input[@id=&quot;search&quot;]</td>
+			<td>ZUITE_TEST_FULL_TEXT_ORGANISATION_TITLE_001</td>
+		</tr>
+		<tr>
+			<td>click</td>
+			<td>//input[@id=&quot;search&quot;]/../following-sibling::button</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;ZUITE_TEST_FULL_TEXT_ORGANISATION_TITLE_001&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>waitForElementPresent</td>
+			<td>//a[contains(text(), &quot;Organisation&quot;)]</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr style="opacity: 1;">
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_manager&quot;&gt;Login As Manager&lt;/span&gt;</td>
+		</tr>
+		<tr>
+			<td>open</td>
+			<td>${base_url}/Zuite_tearDownFullTextSearchTest</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>verifyTextPresent</td>
+			<td>Clean Ok</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td>
+		</tr>
+	</tbody>
+</table>
+</test></section>

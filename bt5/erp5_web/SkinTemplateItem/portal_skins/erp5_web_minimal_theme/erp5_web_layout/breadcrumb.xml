@@ -10,12 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>css_class</string>
-                <string>height</string>
-                <string>width</string>
-                <string>whitespace_preserve</string>
                 <string>default</string>
+                <string>height</string>
+                <string>title</string>
+                <string>whitespace_preserve</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -85,6 +85,10 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hiddenLabel</string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>POL</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PL</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>poland</string> </value>
         </item>

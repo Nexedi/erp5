@@ -676,6 +676,17 @@ def test_suite():
   import AccessControl.tests.testOwned
   suite.addTest(AccessControl.tests.testOwned.test_suite())
   import AccessControl.tests.testPasswordDigest
+  # Disable crypt scheme, we don't want to use CRYPT and it fails on debian 11.
+  # This is also disabled in github.com/zopefoundation/AuthEncoding commit
+  # fbbdcf3 (Allow the CRYPT test to fail as it is the case on GHA., 2021-04-08)
+  import AccessControl.AuthEncoding
+  def setUp(self):
+    self._original_AuthEncoding_schemes = AccessControl.AuthEncoding._schemes[::]
+    AccessControl.AuthEncoding._schemes = [s for s in AccessControl.AuthEncoding._schemes if s[0] != 'CRYPT']
+  AccessControl.tests.testPasswordDigest.PasswordDigestTests.setUp = setUp
+  def tearDown(self):
+    AccessControl.AuthEncoding._schemes = self._original_AuthEncoding_schemes
+  AccessControl.tests.testPasswordDigest.PasswordDigestTests.tearDown = tearDown
   suite.addTest(AccessControl.tests.testPasswordDigest.test_suite())
   import AccessControl.tests.testPermissionMapping
   suite.addTest(AccessControl.tests.testPermissionMapping.test_suite())

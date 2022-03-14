@@ -10,10 +10,10 @@
 # - Check skin names.
 # - Check script names (from skin folders and workflows).
 import re
-ABBREVIATION_WORD_SET = ((
-  "BBAN", "BIC", "BOM", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
-  "EAN", "ERP5", "FAX", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN", "ID",
-  "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",
+ABBREVIATION_WORD_SET = set((
+  "BBAN", "BIC", "BOM", "CA", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",
+  "EAN", "ERP5", "FAX", "FTP", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN",
+  "ID", "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",
   "RAM", "RSS", "SMS", "SOAP", "SQL", "SVN", "TALES", "TCP", "TSV", "UBM",
   "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "XML", "ZODB",
 ))
@@ -75,8 +75,14 @@ def checkField(folder, form, field):
   template_field = getFieldFromProxyField(field)
   if path.endswith("FieldLibrary"):
     if not(template_field is field):
-      if not(1 in [field.id.startswith(x) for x in ('my_view_mode_',
-                           'my_core_mode_', 'my_report_mode_', 'my_list_mode_', 'my_dialog_mode_')]):
+      field_id = field.id
+      try:
+        prefix, field_id = field_id.split('_', 1)
+      except ValueError:
+        prefix = ''
+      if prefix not in ('my', 'your') and not any([field_id.startswith(x) for x in (
+        'view_mode_', 'core_mode_', 'report_mode_', 'list_mode_', 'dialog_mode_',
+      )]):
         error_message += "%s: %s : Bad ID for a Field Library Field" % (path, field.id)
   if template_field is None:
     if field.get_value('enabled'):
@@ -180,26 +186,21 @@ for folder in context.portal_skins.objectValues(spec=('Folder',)):
           message_list.append(message)
 
 
-# Test worflow related stuff
-for wf in context.portal_workflow.objectValues():
-
-  # Test workflow states
-  wf_states = wf.states
-  message = ''
-  if wf_states not in (None, (), [], ''):
-    for state in wf_states.objectValues() :
-      message += checkTitle('/'.join(['portal_workflow', wf.id, 'states', state.id]), 'title', state.title)
-    if message:
-      message_list.append(message)
-
-#   # Test workflow states
-#   wf_scripts = wf.scripts
-#   message = ''
-#   if wf_scripts not in (None, (), [], ''):
-#     for script in wf_scripts.objectValues():
-#       message += checkTitle('/'.join(['portal_workflow', wf.id, 'scripts', script.id]), 'id', script.id)
-#     if message:
-#       message_list.append(message)
+# XXX: Test worflow related stuff
+#for wf in context.portal_workflow.objectValues():
+#  # Test workflow states
+#  message = ''
+#  for state in wf.getStateValueList():
+#    message += checkTitle(state.getRelativeUrl(), 'title', state.getTitle())
+#  if message:
+#    message_list.append(message)
+#
+#  # Test workflow states
+#  message = ''
+#  for script in wf.getScriptValueList():
+#    message += checkTitle(script.getRelativeUrl(), 'title', script.getTitle())
+#  if message:
+#    message_list.append(message)
 
 
 # Test portal types

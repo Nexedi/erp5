@@ -76,4 +76,4 @@ class AccountingPeriodConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
     # no need to 'install' in the business template, because it's contain as
     # subobject of an organisation we already added.
-    return ['Accounting Period %s should be created' % self.getTitle()]
+    return [self._createConstraintMessage('Accounting Period %s should be created' % self.getTitle())]

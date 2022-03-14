@@ -11,7 +11,4 @@ context.setAggregateSet(
   portal_type='Bank Reconciliation')
 
 # for traceability
-portal.portal_workflow.doActionFor(
-  context.getParentValue(),
-  "edit_action",
-  comment=message)
+context.getParentValue().Base_addEditWorkflowComment(comment=message)

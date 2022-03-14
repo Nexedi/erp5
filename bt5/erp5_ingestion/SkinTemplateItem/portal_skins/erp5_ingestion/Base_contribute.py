@@ -25,6 +25,7 @@ if user_login is None:
 document_kw = {'user_login': user_login,
                'group': group,
                'publication_section': publication_section,
+               'publication_state': publication_state,
               }
 
 if use_context_for_container:
@@ -69,6 +70,7 @@ else:
   # contribute file
   document_kw.update({'file': file})
   document = portal_contributions.newContent(**document_kw)
+
 
 is_existing_document_updated = False
 if synchronous_metadata_discovery:

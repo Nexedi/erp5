@@ -26,17 +26,17 @@
 #
 ##############################################################################
 
-from future.utils import raise_
-from zope.interface import implementer
+import zope.interface
 
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type import interfaces
 
-@implementer(interfaces.IObjectMessage)
 class ObjectMessage:
   """
   Object Message is used for notifications to user.
   """
+
+  zope.interface.implements( interfaces.IObjectMessage, )
 
   def __init__(self, object_relative_url='', message='', mapping={}, **kw):
 
@@ -77,13 +77,13 @@ class ObjectMessage:
     Wrap the message with the object
     """
     if name.startswith('__') :
-      raise_(AttributeError, name)
+      raise AttributeError(name)
     else:
       obj = self.getObject()
       if obj is not None:
         return getattr(obj, name)
       else:
-        raise_(AttributeError, name)
+        raise AttributeError(name)
 
   def getObject(self):
     """

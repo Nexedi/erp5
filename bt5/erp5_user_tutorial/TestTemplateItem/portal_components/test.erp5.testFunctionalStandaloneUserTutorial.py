@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import random
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
@@ -35,6 +36,49 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
 class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "user_tutorial_zuite"
+  configuration_info = {
+    "Configure Organisation": {
+      'field_your_title': 'SpaceZ',
+      'field_your_default_email_text': 'john@spacez.com',
+      'field_your_default_telephone_text': '0123456789',
+      'field_your_default_address_street_address': 'Rue de JeanBart',
+      'field_your_default_address_zip_code': '59000',
+      'field_your_default_address_city': 'Lille',
+      'field_your_default_address_region': 'europe/western_europe/france',
+    },
+    "Configure user accounts number": {
+      'field_your_company_employees_number': "1",
+    },
+    "Configure user accounts": {
+      'field_your_first_name': "John",
+      'field_your_last_name': "Doe",
+      'field_your_reference': "user",
+      'field_your_password': "1234",
+      'field_your_password_confirm': "1234",
+      'field_your_default_email_text': "abc@nexedi.com",
+      'field_your_function': "project/developer" ,
+    },
+    "Configure accounting": {
+      'field_your_period_title': "2021",
+      'subfield_field_your_period_start_date_year': "2021",
+      'subfield_field_your_period_start_date_month': "01",
+      'subfield_field_your_period_start_date_day': "01",
+      'subfield_field_your_period_stop_date_year': "2021",
+      'subfield_field_your_period_stop_date_month': "12",
+      'subfield_field_your_period_stop_date_day': "31",
+      'field_your_accounting_plan': "fr",
+    },
+    "Configure ERP5 Preferences": {
+      'field_your_lang': "erp5_l10n_fr",
+      'field_your_price_currency': "EUR;0.01;Euro",
+      'field_your_preferred_date_order': "dmy",
+      'default_field_your_lang': "1",
+    }
+  }
+
+  def clearCache(self):
+    self.portal.portal_caches.clearAllCache()
+    self.portal.portal_workflow.refreshWorklistCache()
 
   def afterSetUp(self):
     url_list = []
@@ -44,31 +88,66 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     self.remote_code_url_list = url_list
     ERP5TypeFunctionalTestCase.afterSetUp(self)
 
+   # Execute the business configuration if not installed
+    business_configuration = self.getBusinessConfiguration()
+    if (business_configuration.getSimulationState() != 'installed'):
+      self.portal.portal_caches.erp5_site_global_id = '%s' % random.random()
+      self.portal.portal_caches._p_changed = 1
+      self.commit()
+      self.portal.portal_caches.updateCache()
+
+      self.bootstrapSite()
+      self.commit()
+
+
+  def bootstrapSite(self):
+    self.logMessage('OSOE Development bootstrapSite')
+
+    self.clearCache()
+    self.tic()
+    self.setUpConfiguratorOnce()
+    self.tic()
+
+  def setUpConfiguratorOnce(self):
+    self.commit()
+    self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+       repository_list=self.portal.portal_templates.getRepositoryList())
+    self.commit()
+    self.launchConfigurator()
+
+  def launchConfigurator(self):
+    self.logMessage('OSOE Access Page launchConfigurator')
+    self.login()
+    # Create new Configuration
+    business_configuration  = self.getBusinessConfiguration()
+    response_dict = {}
+    previous_title = None
+    while response_dict.get("command", "next") != "install":
+      title = response_dict.get("next", "")
+      if title == previous_title:
+        # transition = business_configuration.getNextTransition()
+        # form = getattr(business_configuration, transition.getTransitionFormId())
+        # raise NotImplementedError(form(), response_dict)
+        break
+      previous_title = title
+      kw = self.configuration_info.get(title, {})
+      response_dict = self.portal.portal_configurator._next(
+                            business_configuration, kw)
+
+    self.tic()
+    self.portal.portal_configurator.startInstallation(
+                 business_configuration,REQUEST=self.portal.REQUEST)
+
+  def getBusinessConfiguration(self):
+    return self.portal.business_configuration_module[\
+                          "default_standard_configuration"]
+
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
     """
-    return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
-            'erp5_base', 'erp5_ui_test_core',
-            'erp5_dhtml_style',
-            'erp5_jquery', 'erp5_jquery_ui',
-            'erp5_knowledge_pad', 'erp5_pdm',
-            'erp5_simulation', 'erp5_trade', 'erp5_ooo_import',
-            'erp5_accounting', 'erp5_invoicing',
-            'erp5_simplified_invoicing', 'erp5_project',
-            'erp5_simulation',
-            'erp5_configurator_standard_solver',
-            'erp5_configurator_standard_trade_template',
-            'erp5_configurator_standard_accounting_template',
-            'erp5_configurator_standard_invoicing_template',
-            'erp5_simulation_test',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms', 'erp5_credential',
-            'erp5_rss_style', 'erp5_discussion',
-            'erp5_l10n_fr', 'erp5_crm', 'erp5_forge',
-            'erp5_run_my_doc',
-            'erp5_user_tutorial_ui_test',
-            'erp5_user_tutorial',
+    return ('erp5_full_text_mroonga_catalog',
+            'erp5_configurator',
            )
 
 def test_suite():

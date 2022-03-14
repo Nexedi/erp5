@@ -160,11 +160,11 @@ class TioSafeBaseConduit(ERP5Conduit):
       else:
         related_object_list = [x.getObject() for x in sync_object.Base_getRelatedObjectList()]
       if len(related_object_list) != 1:
-        raise ValueError, "Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list)
+        raise ValueError("Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list))
       integration_site = related_object_list[0].getParentValue()
       if integration_site.getPortalType() != "Integration Site":
-        raise ValueError, "Did not get an Integration Site object instead %s : %s" %(integration_site.getPortalType(),
-                                                                                     integration_site.getPath())
+        raise ValueError("Did not get an Integration Site object instead %s : %s" %(integration_site.getPortalType(),
+                                                                                     integration_site.getPath()))
       self.integration_site = integration_site
     return self.integration_site
 
@@ -187,7 +187,7 @@ class TioSafeBaseConduit(ERP5Conduit):
       elif synchronization_type == "subscription":
         result_list.append(module.getDestinationSectionValue())
       else:
-        raise ValueError, 'Unknown type %s' %(synchronization_type,)
+        raise ValueError('Unknown type %s' %(synchronization_type,))
 
     return result_list
 

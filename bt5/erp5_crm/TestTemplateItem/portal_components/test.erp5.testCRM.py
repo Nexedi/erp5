@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import urlparse
 import os
 import textwrap
 from unittest import expectedFailure
@@ -509,14 +510,12 @@ class TestCRM(BaseTestCRM):
     portal = self.portal
     notification_message_reference = 'campaign-Event.Path'
     service = portal.service_module.newContent(portal_type='Service')
-    resource = portal.notification_message_module.newContent(
-        reference=notification_message_reference,
+    notification_message = portal.notification_message_module.newContent(
         content_type="text/html",
         portal_type="Notification Message",
         specialise_value=service,
         text_content_substitution_mapping_method_id=mapping_method_id,
         text_content="Hello ${destination_title}")
-    resource.validate()
     sender = portal.person_module.newContent(portal_type="Person",
         reference='sender', first_name='Sender')
     first_user = portal.person_module.newContent(portal_type="Person",
@@ -537,13 +536,54 @@ class TestCRM(BaseTestCRM):
     organisation_domain.setCriterionPropertyList(['portal_type'])
     organisation_domain.setCriterion('portal_type', identity=['Organisation'])
 
-    campaign = self.portal.campaign_module.newContent(portal_type="Campaign",
-        default_event_path_event_portal_type="Mail Message",
-        default_event_path_destination="portal_domains/%s" % person_domain.getRelativeUrl(),
-        default_event_path_source=sender.getRelativeUrl(),
-        default_event_path_resource=resource.getRelativeUrl())
+    campaign = self.portal.campaign_module.newContent(
+        portal_type="Campaign",
+        default_event_path_event_portal_type="Mail Message",)
+
+    # This action checks everything is properly defined
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Recipients must be defined"])
+    campaign.setDefaultEventPathDestination(
+        "portal_domains/%s" % person_domain.getRelativeUrl())
+
+    campaign.setDefaultEventPathEventPortalType(None)
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Event Type must be defined"])
+    campaign.setDefaultEventPathEventPortalType('Mail Message')
+
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Sender must be defined"])
+    campaign.setDefaultEventPathSource(sender.getRelativeUrl())
+
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Notification Message must be defined"])
+    campaign.setDefaultEventPathResource(notification_message.getRelativeUrl())
+
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Notification Message must be validated"])
+    notification_message.setReference(notification_message_reference)
+
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Notification Message must be validated"])
+    notification_message.validate()
     self.tic()
-    campaign.Ticket_createEventFromDefaultEventPath()
+
+    ret = campaign.Ticket_createEventFromDefaultEventPath()
+    self.assertEqual(
+        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        ["Events are being created in background"])
     self.tic()
     event_list = [event for event in campaign.getFollowUpRelatedValueList()
       if event.getPortalType() != 'Mail Message']
@@ -562,7 +602,7 @@ class TestCRM(BaseTestCRM):
         default_event_path_event_portal_type="Visit",
         default_event_path_destination='portal_domains/%s' % organisation_domain.getRelativeUrl(),
         default_event_path_source=sender.getRelativeUrl(),
-        default_event_path_resource=resource.getRelativeUrl())
+        default_event_path_resource=notification_message.getRelativeUrl())
     self.tic()
     campaign.Ticket_createEventFromDefaultEventPath()
     self.tic()
@@ -978,8 +1018,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     part.set_payload(html_message)
     encoders.encode_base64(part)
 
-    part.add_header('Content-Disposition', 'attachment',
-                    filename=html_filename)
+    part.add_header('Content-Disposition', 'attachment')
     part.add_header('Content-ID', '<%s>' % \
                     ''.join(['%s' % ord(i) for i in html_filename]))
     message.attach(part)
@@ -990,6 +1029,15 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertTrue(bool(event.getAttachmentData(1)))
     self.assertTrue(bool(event.getAttachmentData(2)))
 
+  def test_getMessageTextPart(self):
+    portal_type = 'Mail Message'
+    event = self.portal.getDefaultModule(portal_type).newContent(portal_type=portal_type)
+    for filename in ('gmail.eml', 'outlook.eml', 'roundcube.eml'):
+      file_path = '%s/test_data/%s' % (
+        os.path.dirname(Products.ERP5.tests.__file__),
+        filename)
+      event.setData(open(file_path).read())
+      self.assertTrue(event.getTextContent().startswith('<'))
 
 
 

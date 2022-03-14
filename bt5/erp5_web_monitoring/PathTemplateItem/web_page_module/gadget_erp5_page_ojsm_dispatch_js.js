@@ -48,8 +48,8 @@
           // take the first one
           gadget.state.portal_type = result.data.rows[0].value.portal_type;
         }
-        if (gadget.state.portal_type === "Hosting Subscription") {
-          redirect_options.page = "ojsm_hosting_subscription_list";
+        if (gadget.state.portal_type === "Instance Tree") {
+          redirect_options.page = "ojsm_instance_tree_list";
         } else if (gadget.state.portal_type === "Software Instance") {
           redirect_options.page = "ojsm_software_instance_list";
         } else if (gadget.state.portal_type === "promise") {

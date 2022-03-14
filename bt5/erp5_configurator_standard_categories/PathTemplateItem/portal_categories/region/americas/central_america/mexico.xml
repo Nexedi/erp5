@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MEX</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MX</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>mexico</string> </value>
         </item>

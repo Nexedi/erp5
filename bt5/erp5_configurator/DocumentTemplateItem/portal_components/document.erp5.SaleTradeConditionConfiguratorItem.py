@@ -90,5 +90,5 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       self.install(trade_condition, business_configuration)
 
-    return ['Sale Trade Condition with reference %s should be created' % \
-        self.getReference(),]
+    return [self._createConstraintMessage('Sale Trade Condition with reference %s should be created' % \
+        self.getReference(),)]

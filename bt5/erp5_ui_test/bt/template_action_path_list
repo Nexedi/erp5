@@ -13,14 +13,12 @@ Foo Line | view
 Foo Line | view_contentlist
 Foo Line | view_dynamic_matrixbox
 Foo Line | view_matrixbox
+Foo Line | view_matrixbox_tales
 Foo Module | do_nothing_action_jio
 Foo Module | do_nothing_report_jio
 Foo Module | empty_mass_action
 Foo Module | list
-Foo Module | list_ui
 Foo Module | other_context_action
-Foo Module | search
-Foo Module | sort_on
 Foo Module | view
 Foo | do_nothing_action_jio
 Foo | do_nothing_report_jio
@@ -35,11 +33,17 @@ Foo | python_action_jio
 Foo | python_error_action_jio
 Foo | python_failing_action_jio
 Foo | select_bar
+Foo | update_request_content
 Foo | view
 Foo | view_action_title
 Foo | view_crash_on_save
+Foo | view_developer_mode_action
 Foo | view_dialog_with_only_update
+Foo | view_dialog_with_validation_error
+Foo | view_draft
 Foo | view_duration_field
+Foo | view_editor_field
+Foo | view_float_field
 Foo | view_formbox
 Foo | view_formbox_dialog
 Foo | view_formbox_fooline
@@ -55,3 +59,4 @@ Foo | view_printout_form
 Foo | view_proxy_field
 Foo | view_relation_field
 Foo | view_url_parameter_dialog
+Foo | view_with_validation_error_field

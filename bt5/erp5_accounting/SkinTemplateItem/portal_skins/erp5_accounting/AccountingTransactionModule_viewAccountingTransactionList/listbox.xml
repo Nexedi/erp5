@@ -208,7 +208,7 @@
                         </tuple>
                         <tuple>
                           <string>specialise_trade_condition_title</string>
-                          <string>Sale Trade Condition</string>
+                          <string>Trade Condition</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
@@ -460,7 +460,7 @@
                         </tuple>
                         <tuple>
                           <string>specialise_trade_condition_title</string>
-                          <string>Sale Trade Condition</string>
+                          <string>Trade Condition</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>

@@ -26,14 +26,13 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from Products.ERP5.Document.IdGenerator import IdGenerator
-from _mysql_exceptions import ProgrammingError
+from MySQLdb import ProgrammingError
 from MySQLdb.constants.ER import NO_SUCH_TABLE
 from zLOG import LOG, INFO
 from BTrees.OOBTree import OOBTree
@@ -70,7 +69,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
     # Check the arguments
     if id_group in (None, 'None'):
-      raise_(ValueError, '%s is not a valid group Id.' % (repr(id_group), ))
+      raise ValueError('%r is not a valid group Id.' % id_group)
     if default is None:
       default = 0
 

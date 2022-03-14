@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
@@ -56,7 +55,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
      persistent.
     """
     if id_group in (None, 'None'):
-      raise_(ValueError, '%s is not a valid group Id.' % (repr(id_group), ))
+      raise ValueError('%r is not a valid group Id.' % id_group)
     if default is None:
       default = 0
     last_id_dict = getattr(self, 'last_id_dict', None)
@@ -107,7 +106,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       for id_group, last_id in portal_ids.dict_ids.items():
         if not isinstance(id_group, str):
           id_group = repr(id_group)
-        if id_group in self.last_id_dict and \
+        if self.last_id_dict.has_key(id_group) and \
            self.last_id_dict[id_group] > last_id:
           continue
         self.last_id_dict[id_group] = last_id

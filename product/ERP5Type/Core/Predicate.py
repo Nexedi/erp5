@@ -246,13 +246,18 @@ class Predicate(XMLObject):
         self.getMembershipCriterionCategoryList,
       ),
     ):
-      append(
-        getCategoryParameterDict(
-          filterCategoryList(getBaseCategorySet(), getCategoryList()),
-          strict_membership=strict_membership,
-          onMissing=lambda category: False,
-        ),
+      filtered_category_list = filterCategoryList(
+        getBaseCategorySet(),
+        getCategoryList(),
       )
+      if filtered_category_list:
+        append(
+          getCategoryParameterDict(
+            filtered_category_list,
+            strict_membership=strict_membership,
+            onMissing=lambda category: False,
+          ),
+        )
 
     # Value criterion
     for criterion in self.getCriterionList():

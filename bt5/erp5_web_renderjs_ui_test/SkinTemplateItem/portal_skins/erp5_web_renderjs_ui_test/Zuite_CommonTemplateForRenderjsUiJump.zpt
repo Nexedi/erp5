@@ -55,7 +55,16 @@
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
     </tal:block>
     <!-- One loader for the form jump dialog submission -->
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_jump.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[@data-gadget-scope='header']//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
     <!-- Another loader for loading the final page -->
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 

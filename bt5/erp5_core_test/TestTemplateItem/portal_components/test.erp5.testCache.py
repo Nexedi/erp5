@@ -65,8 +65,7 @@ class TestRamCache(ERP5TypeTestCase):
     test_scopes.sort()
 
     ## remove DistributedRamCache since it's a flat storage
-    filtered_cache_plugins = filter(
-        lambda x: not isinstance(x, DistributedRamCache), self.cache_plugins)
+    filtered_cache_plugins = [x for x in self.cache_plugins if not isinstance(x, DistributedRamCache)]
 
     for cache_plugin in filtered_cache_plugins:
       if not self.quiet:

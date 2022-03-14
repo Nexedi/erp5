@@ -26,7 +26,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from future.utils import raise_
 import time
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
@@ -39,6 +38,7 @@ class _MemcacheTool(BaseTool):
   id = "portal_memcached"
   meta_type = "ERP5 Memcached Tool"
   portal_type = "Memcached Tool"
+  title = "Memcached Plugins"
   manage_options = (
     {
       'label': 'Configure',
@@ -247,7 +247,7 @@ if memcache is not None:
 
     def _prefixKey(self, key):
       if not isinstance(key, basestring):
-        raise_(TypeError, 'Key %s is not a string. Only strings are supported as key in SharedDict' % (repr(key), ))
+        raise TypeError('Key %r is not a string. Only strings are supported as key in SharedDict' % (key,))
       return '%s_%s' % (self.prefix, key)
 
     def __getitem__(self, key):
@@ -318,7 +318,7 @@ else:
         if this function is called and memcachedtool is disabled, fail loudly
         with a meaningfull message.
       """
-      raise_(RuntimeError, 'MemcachedTool is disabled. You should ask the'\
+      raise RuntimeError('MemcachedTool is disabled. You should ask the'
         ' server administrator to enable it by installing python-memcached.')
 
     memcached_tool_configure = failingMethod

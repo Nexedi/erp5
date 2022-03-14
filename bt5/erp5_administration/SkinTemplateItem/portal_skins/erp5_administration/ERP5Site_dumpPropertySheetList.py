@@ -1,5 +1,11 @@
+if ignore_property_sheet_list is None:
+  ignore_property_sheet_list = []
+
 for ps in sorted(context.getPortalObject().portal_property_sheets.contentValues(), key=lambda x:x.getId()):
   for pd in sorted(ps.contentValues(), key=lambda x:x.getId()):
+    ps_id = ps.getId()
+    if ps_id in ignore_property_sheet_list:
+      continue
     print ps.getId()
     info_list = ['id', 'portal_type', 'reference']
     std_prop_list = ['elementary_type', 'property_default', 'storage_id', 'multivaluated', 'range', 'preference', 'read_permission', 'write_permission', 'translatable', 'translation_domain']

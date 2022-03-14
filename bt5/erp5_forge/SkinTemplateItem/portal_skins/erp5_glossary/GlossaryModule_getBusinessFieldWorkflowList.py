@@ -25,12 +25,12 @@ def get_obj_and_reference_list(business_field):
     wf = getattr(portal_workflow, wf_id)
     if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?
       result.append((wf, wf_id, 'workflow'))
-      for state_id, state in wf.states.items():
-        result.append((state, state_id, 'state'))
-      for trans_id, trans in wf.transitions.items():
-        result.append((trans, trans_id, 'transition'))
-        if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION
-          result.append((trans, "%s_actbox_name" % trans_id, 'action'))
+      for state in wf.getStateValueList():
+        result.append((state, state.getReference(), 'state'))
+      for transition in wf.getTransitionValueList():
+        result.append((transition, transition.getReference(), 'transition'))
+        if transition.getTriggerType() == 1 and transition.getActionName(): # 1 == TRIGGER_USER_ACTION
+          result.append((transition, "%s_actbox_name" % transition.getReference(), 'action'))
   return result
 
 business_field_list = [i for i in business_field_list if i]
@@ -77,7 +77,7 @@ for business_field in business_field_list:
     line.edit(wf_item_path=wf_item_path,
               wf_item_type=type_,
               wf_item_title=wf_item_title,
-              wf_item_edit_url = "%s/manage_properties" % wf_item.absolute_url(),
+              wf_item_edit_url = "%s/manage_main" % wf_item.absolute_url(),
               wf_item_description = wf_item_description,
               reference=reference,
               term_list=term_list

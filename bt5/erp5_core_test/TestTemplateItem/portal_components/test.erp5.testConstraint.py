@@ -49,7 +49,7 @@ class TestConstraint(PropertySheetTestCase):
     """
     return ('erp5_base',)
 
-  def login(self):
+  def login(self):  # pylint:disable=arguments-differ
     uf = self.portal.acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
     user = uf.getUserById('rc').__of__(uf)
@@ -114,26 +114,24 @@ class TestConstraint(PropertySheetTestCase):
       Create a object which will be tested.
     """
     module = self.portal.getDefaultModule(self.object_portal_type)
-    object = module.newContent(portal_type=self.object_portal_type)
-    group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
+    document = module.newContent(portal_type=self.object_portal_type)
+    group1 = document.portal_categories.restrictedTraverse('group/testGroup1')
     if sequence:
       sequence.edit(
-          object=object,
+          document=document,
           group=group1,
       )
-    return object
+    return document
 
   def stepSetObjectGroup(self, sequence=None,
                          sequence_list=None, **kw):
     """
       Set a group to object
     """
-    object = sequence.get('object')
-#     group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
-#     object.edit(group_value=group1)
-    object.edit(group='testGroup1')
+    document = sequence.get('document')
+    document.edit(group='testGroup1')
     self.assertNotEqual(
-          object.getGroup(portal_type=()),
+          document.getGroup(portal_type=()),
           None )
 
   def stepSetObjectGroupOrganisation(self, sequence=None,
@@ -141,11 +139,11 @@ class TestConstraint(PropertySheetTestCase):
     """
       Set a group to object, forcing portal_type color to Organisation
     """
-    object = sequence.get('object')
-    object.setGroup(object.getRelativeUrl(),
+    document = sequence.get('document')
+    document.setGroup(document.getRelativeUrl(),
                     portal_type='Organisation')
     self.assertNotEqual(
-          object.getGroup(portal_type='Organisation'),
+          document.getGroup(portal_type='Organisation'),
           None )
 
   def stepSetObjectGroupList(self, sequence=None,
@@ -153,68 +151,65 @@ class TestConstraint(PropertySheetTestCase):
     """
       Set a group to object
     """
-    object = sequence.get('object')
-#     group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
-#     group2 = object.portal_categories.restrictedTraverse('group/testGroup2')
-#     object.edit(group_value_list=[group1, group2])
-    object.edit(group_list=['testGroup1', 'testGroup2'])
+    document = sequence.get('document')
+    document.edit(group_list=['testGroup1', 'testGroup2'])
 
   def stepSetObjectTitle(self, sequence=None,
                          sequence_list=None, **kw):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    document = sequence.get('document')
     object_title = self.object_title
-    object.setTitle(object_title)
+    document.setTitle(object_title)
 
   def stepSetObjectNoneTitle(self, sequence=None,
                              sequence_list=None, **kw):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    document = sequence.get('document')
     # Do not call edit, as we want to explicitely modify the property
     # (and edit modify only if value is different)
-    object.setTitle(None)
+    document.setTitle(None)
 
   def stepSetObjectEmptyTitle(self, sequence=None,
                               sequence_list=None, **kw):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    document = sequence.get('document')
     # Do not call edit, as we want to explicitely modify the property
     # (and edit modify only if value is different)
-    object.setTitle('')
+    document.setTitle('')
 
   def stepSetObjectIntTitle(self, sequence=None,
                             sequence_list=None, **kw):
     """
       Set a different title value
     """
-    object = sequence.get('object')
-    object.edit(title=12345)
+    document = sequence.get('document')
+    document.edit(title=12345)
 
   def stepSetObjectBadTypedProperty(self, sequence=None,
                             sequence_list=None, **kw):
     """
       Set a property with a bad type
     """
-    object = sequence.get('object')
+    document = sequence.get('document')
     property_name = 'ean13code'
-    # make sure the property is defined on the object
-    self.assertTrue(not object.hasProperty(property_name))
-    self.assertTrue(object.getPropertyType(property_name) != 'int')
-    object.setProperty(property_name, 12)
+    # make sure the property is defined on the document
+    self.assertTrue(not document.hasProperty(property_name))
+    self.assertTrue(document.getPropertyType(property_name) != 'int')
+    document.setProperty(property_name, 12)
 
   def stepSetObjectIntLocalProperty(self, sequence=None,
                             sequence_list=None, **kw):
     """
-      Set a local property on the object, with an int type.
+      Set a local property on the document, with an int type.
     """
-    object = sequence.get('object')
-    object.edit(local_prop = 12345)
+    document = sequence.get('document')
+    document.edit(local_prop = 12345)
 
   def _createGenericConstraint(self, sequence=None, klass_name='Constraint',
                                **kw):
@@ -225,9 +220,7 @@ class TestConstraint(PropertySheetTestCase):
     module = Constraint
     file_path = "%s.%s" % (module.__name__, klass_name)
     __import__(file_path)
-    file = getattr(module, klass_name)
-    klass = file
-#     klass = getattr(file, klass_name)
+    klass = getattr(module, klass_name)
     constraint = klass(**kw)
     if sequence is not None:
       sequence.edit(constraint=constraint,)
@@ -238,10 +231,10 @@ class TestConstraint(PropertySheetTestCase):
     """
       Call checkConsistency of a Constraint.
     """
-    object = sequence.get('object')
+    document = sequence.get('document')
     constraint = sequence.get('constraint')
     # Check
-    error_list = constraint.checkConsistency(object)
+    error_list = constraint.checkConsistency(document)
     sequence.edit(
         error_list=error_list
     )
@@ -251,10 +244,10 @@ class TestConstraint(PropertySheetTestCase):
     """
       Call checkConsistency of a Constraint, fixing the errors.
     """
-    object = sequence.get('object')
+    document = sequence.get('document')
     constraint = sequence.get('constraint')
     # Check
-    error_list = constraint.checkConsistency(object, fixit=1)
+    error_list = constraint.checkConsistency(document, fixit=1)
     sequence.edit(
         error_list=error_list
     )
@@ -264,10 +257,10 @@ class TestConstraint(PropertySheetTestCase):
     """
     Call checkConsistency of a Constraint.
     """
-    object = sequence.get('group')
+    document = sequence.get('group')
     constraint = sequence.get('constraint')
     # Check
-    error_list = constraint.checkConsistency(object)
+    error_list = constraint.checkConsistency(document)
     sequence.edit(
         error_list=error_list
     )
@@ -1327,8 +1320,8 @@ class TestConstraint(PropertySheetTestCase):
     """
       Create a Content Object inside one Object
     """
-    object = sequence.get('object')
-    content_object = object.newContent(portal_type=self.object_content_portal_type)
+    document = sequence.get('document')
+    content_object = document.newContent(portal_type=self.object_content_portal_type)
     sequence.edit(
         content_object = content_object,
     )
@@ -1373,20 +1366,20 @@ class TestConstraint(PropertySheetTestCase):
     """
       Set valid Title to Object
     """
-    object = sequence.get('object')
-    object.setTitle(self.object_title)
+    document = sequence.get('document')
+    document.setTitle(self.object_title)
     sequence.edit(
-        object = object,
+        document = document,
     )
 
   def stepSetObjectTitle1(self, sequence=None, sequence_list=None, **kw):
     """
       Set empty (or invalid string) to Object
     """
-    object = sequence.get('object')
-    object.setTitle(' ')
+    document = sequence.get('document')
+    document.setTitle(' ')
     sequence.edit(
-        object = object,
+        document = document,
     )
 
   def test_StringAttributeMatchConstraint(self):
@@ -1527,13 +1520,13 @@ class TestConstraint(PropertySheetTestCase):
   def stepValidateObject(self, sequence=None, sequence_list=None, **kw):
     """
     """
-    document = sequence.get('object')
+    document = sequence.get('document')
     document.validate()
 
   def stepInvalidateObject(self, sequence=None, sequence_list=None, **kw):
     """
     """
-    document = sequence.get('object')
+    document = sequence.get('document')
     document.invalidate()
 
   def stepCreateAttributeUnicityConstraint(self, sequence=None,

@@ -11,8 +11,8 @@
             <value>
               <list>
                 <string>image_format</string>
-                <string>title</string>
                 <string>image_resolution</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -96,6 +96,10 @@
                 <item>
                     <key> <string>image_format</string> </key>
                     <value> <string>png</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_resolution</string> </key>
+                    <value> <int>75</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

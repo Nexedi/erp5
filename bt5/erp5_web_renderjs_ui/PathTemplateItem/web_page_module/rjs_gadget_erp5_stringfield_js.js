@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, document, rJS */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, document, rJS) {
   "use strict";
 
   rJS(window)
@@ -16,7 +16,8 @@
           required: field_json.required,
           id: field_json.key,
           name: field_json.key,
-          title: field_json.title,
+          error_text: field_json.error_text,
+          title: field_json.description,
           hidden: field_json.hidden,
           trim: true,
           // Force calling subfield render
@@ -72,4 +73,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS));
+}(window, document, rJS));

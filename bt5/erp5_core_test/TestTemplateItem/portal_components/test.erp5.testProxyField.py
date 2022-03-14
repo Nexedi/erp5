@@ -32,6 +32,7 @@ from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
 from lxml import etree
 from unittest import expectedFailure
+from zExceptions import BadRequest
 
 class TestProxyField(ERP5TypeTestCase):
   """
@@ -53,7 +54,10 @@ class TestProxyField(ERP5TypeTestCase):
     """Remove objects created in tests."""
     # Remove forms
     custom_folder = self.getSkinsTool().custom
-    custom_folder.manage_delObjects(custom_folder.objectIds())
+    try:
+      custom_folder.manage_delObjects(custom_folder.objectIds())
+    except BadRequest:
+      pass
 
     # Remove skin folders
     if 'erp5_geek' in self.getSkinsTool().objectIds():

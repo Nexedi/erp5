@@ -31,11 +31,11 @@ import subprocess
 import time
 import xml_marshaller
 import argparse
+from six.moves import range
 from slapos import client
+from slapos.util import rmtree
 from . import logger
 from .Utils import createFolder
-
-from six.moves import range
 
 MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
@@ -53,7 +53,8 @@ class SlapOSControler(object):
       createFolder(shared)
       self.shared_part_list = self.shared_part_list + [shared]
 
-    self.instance_root = os.path.join(working_directory, 'inst')
+    self.old_instance_root = os.path.join(working_directory, 'inst')
+    self.instance_root = os.path.join(working_directory, 'i')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.instance_config = {}
@@ -111,7 +112,7 @@ class SlapOSControler(object):
   def request(self, reference, software_url, software_type=None,
             software_configuration=None, computer_guid=None, state='started'):
     """
-    configuration_file_path (slapos acount)
+    configuration_file_path (slapos account)
     reference : instance title
     software_url : software path/url
     software_type : scalability
@@ -123,14 +124,14 @@ class SlapOSControler(object):
 
     """
     logger.debug('SlapOSControler : request-->SlapOSMaster')
-    current_intance_config = {'software_type':software_type,
-                              'software_configuration':software_configuration,
-                              'computer_guid':computer_guid,
-                              'software_url':software_url,
-                              'requested_state':state,
-                              'partition':None
-                              }
-    self.instance_config[reference] = current_intance_config
+    self.instance_config[reference] = {
+        'software_type':software_type,
+        'software_configuration':software_configuration,
+        'computer_guid':computer_guid,
+        'software_url':software_url,
+        'requested_state':state,
+        'partition':None
+    }
 
     filter_kw = None
     if computer_guid != None:
@@ -277,6 +278,8 @@ class SlapOSControler(object):
       self._resetSoftware()
     else:
       createFolder(self.software_root)
+    if os.path.exists(self.old_instance_root): # BBB
+      rmtree(self.old_instance_root)
     instance_root = self.instance_root
     # Delete any existing partition in order to not get its data (ex.
     # MySQL DB content) from previous runs. To support changes of partition
@@ -287,7 +290,7 @@ class SlapOSControler(object):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
-      partition_reference = '%s-%s' %(config['partition_reference'], i)
+      partition_reference = '%s%s' %(config['partition_reference'], i)
       partition_path = os.path.join(instance_root, partition_reference)
       if not(os.path.exists(partition_path)):
         os.mkdir(partition_path)
@@ -316,7 +319,7 @@ class SlapOSControler(object):
     logger.debug("SlapOSControler.runSoftwareRelease")
     # Set some flags to maximize CPU utilization
     # We usually have several testnode instances running on the same server, so
-    # each testnode process should try to use the maximum amout of resources,
+    # each testnode process should try to use the maximum amount of resources,
     # yet leaving some resources for other instances on the machine.
     # A typical scenario is we have all testnode re-compiling softwares at the
     # same time because of change in repository that would cause all test nodes
@@ -359,7 +362,7 @@ class SlapOSControler(object):
         raise ValueError("Unable to registerOpenOrder")
 
     # try to run for all partitions as one partition may in theory request another one 
-    # this not always is required but curently no way to know how "tree" of partitions
+    # this not always is required but currently no way to know how "tree" of partitions
     # may "expand"
     for _ in range(max_quantity):
       status_dict = self.spawn(config['slapos_binary'], 'node', 'instance', 

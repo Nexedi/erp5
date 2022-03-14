@@ -108,7 +108,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Thu, 08 Jun 2018 00:00:00 +0000\n
+# generated on Wed, 30 Jun 2021 00:00:00 +0000\n
 \n
 CACHE:\n
 font-awesome/font-awesome.css\n
@@ -182,6 +182,8 @@ gadget_jabberclient_dialog.html\n
 gadget_jabberclient_dialog.js\n
 gadget_jabberclient.css\n
 favicon.ico\n
+appjabbericon.svg\n
+gadget_officejs_jabber.json\n
 gadget_jabberclient_notification_warning.ico\n
 gadget_jabberclient_notification_ok.ico\n
 connection/\n
@@ -318,7 +320,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>P1</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -332,7 +334,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>968.5587.40056.36198</string> </value>
+                      <value> <string>992.63046.39919.61201</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -350,7 +352,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1528722022.78</float>
+                              <float>1625057476.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

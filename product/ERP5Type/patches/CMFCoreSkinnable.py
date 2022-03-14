@@ -12,11 +12,10 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
 
-from _thread import get_ident
+from thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
 
@@ -70,7 +69,7 @@ def skinResolve(self, selection, name):
   try:
     portal_skins = aq_base(self.portal_skins)
   except AttributeError:
-    raise_(AttributeError, name)
+    raise AttributeError(name)
   try:
     portal_callables = aq_base(self.portal_callables)
   except AttributeError:
@@ -142,11 +141,9 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=No
     Patched not to call getSkin.
   '''
   if skinname is None:
-    sfn = self.getSkinsFolderName()
-    if sfn is not None:
-      sf = getattr(self, sfn, None)
-      if sf is not None:
-        skinname = sf.getDefaultSkin()
+    sf = getattr(self, "portal_skins", None)
+    if sf is not None:
+      skinname = sf.getDefaultSkin()
   tid = get_ident()
   SKINDATA[tid] = (
     None,

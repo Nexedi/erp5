@@ -86,6 +86,10 @@
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1234.5</string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>

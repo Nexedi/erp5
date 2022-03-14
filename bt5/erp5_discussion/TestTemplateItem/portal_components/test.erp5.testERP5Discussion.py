@@ -229,6 +229,47 @@ class TestERP5Discussion(ERP5TypeTestCase):
     s = "a test by ivan !@#$%^&*()[]\\é"
     self.assertEqual('a-test-by-ivan', self.portal.Base_generateReferenceFromString(s))
 
+  def test_AttachmentIngestion(self):
+    """
+    Test the attachment of a CSV file, from both newDiscussionPost and newDiscussionThread
+    use cases.
+    CSV wasn't chosen randomly, as it may be subjected to a portal type migration through
+    discover metadata, which used to cause a bug.
+    """
+    discussion_thread_id_set = set(self.portal.discussion_thread_module.objectIds())
+
+    web_site_value = self.portal.web_site_module.newContent(portal_type='Web Site')
+    web_section_value = web_site_value.newContent(portal_type='Web Section')
+    file_ = makeFileUpload('simple.csv')
+    web_section_value.WebSection_createNewDiscussionThread(
+      "Thread Title",
+      "Post Content",
+      file=file_
+    )
+    self.tic()
+    thread_value, = [
+      x for x in self.portal.discussion_thread_module.objectValues()
+      if x.getId() not in discussion_thread_id_set
+    ]
+
+    post_value, = thread_value.objectValues(portal_type='Discussion Post')
+    tested_post_value_set = {post_value,}
+    attachment_list = post_value.DiscussionPost_getAttachmentList()
+    self.assertEqual(1, len(attachment_list))
+
+    thread_value.DiscussionThread_createNewDiscussionPost(
+      title="Post Title",
+      text_content="Post Content",
+      file=file_,
+    )
+    self.tic()
+    post_value, = [
+      x for x in thread_value.objectValues()
+      if x not in tested_post_value_set
+    ]
+    attachment_list = post_value.DiscussionPost_getAttachmentList()
+    self.assertEqual(1, len(attachment_list))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Discussion))

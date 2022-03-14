@@ -2,22 +2,6 @@ from Products.PythonScripts.standard import Object
 line_list = []
 portal = context.getPortalObject()
 
-# XXX use a larger limit
-saved_selection_params = context.getPortalObject().portal_selections.getSelectionParamsFor(module_selection_name)
-selection_params = saved_selection_params.copy()
-selection_params['limit'] = 10000
-context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, selection_params)
-
-try:
-  checked_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(module_selection_name)
-  if checked_uid_list:
-    getObject = portal.portal_catalog.getObject
-    delivery_list = [getObject(uid) for uid in checked_uid_list]
-  else:
-    delivery_list = portal.portal_selections.callSelectionFor(module_selection_name, context=context)
-finally:
-  context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, saved_selection_params)
-
 account_title_cache = {}
 def getAccountTitle(relative_url):
   try:
@@ -31,10 +15,16 @@ def getAccountTitle(relative_url):
     account_title_cache[relative_url] = title
     return title
 
+isDisplayed = lambda movement: True
+if use_list:
+  def isDisplayed(movement): # pylint:disable=function-redefined
+    return any(movement.isMemberOf(use) for use in use_list)
 
-for delivery in delivery_list:
+for delivery in portal.portal_catalog(uid=uid_list or -1):
   delivery = delivery.getObject()
   for movement in delivery.getMovementList(portal_type=portal_type):
+    if not isDisplayed(movement):
+      continue
     line_list.append(Object(
         int_index=movement.getIntIndex(),
         title=movement.getTitle(),

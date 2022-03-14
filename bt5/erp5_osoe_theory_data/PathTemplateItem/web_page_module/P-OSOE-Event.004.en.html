@@ -1,270 +1,200 @@
-<section class="illustration"> 
-    <h1>Session 2: CRM Tickets and Events - Events</h1> <img src="user-Events.Event.Workflow?format=png" type="image/png" alt="Event workflow" title="Event workflow" /> <footer>
-          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.
-        </footer>  
-      <details open="open">
-        <p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) 
-           project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and 
-           the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
-           to undergraduate students or professionals.
-        </p>
-        <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute 
-           the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, 
-           consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any 
-           reuse or distribution, you must make clear to others the license terms of this work. Any of these
-           conditions can be waived if you get permission from the copyright holder through a commercial license 
-           or an educational license. For more information, contact info@nexedi.com
-        </p>
-      </details>
-      </section><section> 
-    <h1>Agenda</h1> 
-    <ul> 
-      <li>CRM</li> 
-      <li>Event types</li> 
-      <li>Event natures</li> 
-      <li>One sender / multiple receivers</li> 
-      <li>Keeping track of interactions</li> 
-      <li>The outgoing Event workflow</li> 
-      <li>The incoming Event workflow</li> 
-      <li>How to use worklists</li> 
-    </ul> 
-      <details open="open"> 
-      <p>Now we are going to present how a CRM is used to manage the communication within and outside your organsations.</p> 
-      <p> <strong>Note: in this session &quot;CRM Tickets and Events&quot;, we will still use the examples of VIFIB to explain the concepts of &quot;Event&quot; 
-      and &quot;Ticket&quot; which are used to manage the interactions of a company with its contacts. So when you are practicing, please replace VIFIB with the 
-      company you created when you configured your ERP5 instance.</strong> </p> 
-      </details>
-    </section><section class="illustration"> 
-    <h1>CRM</h1> <img src="user-Events.CRM.System.In.ERP5?format=png" type="image/png" alt="CRM system: Person communication" title="Person communication" /> <details open="open"> 
-      <p>Due to the number of persons with whom we interact, and the growing number of communication tools of which only few leave a trace (eg, emails), and the difficulty of organising the trace of communication in a central system (eg, Emails are stored in personal mailboxes, Fax in a specific place etc.), the complexity of keeping trace of the communication within and outside of the organisation makes it difficult to learn from our experience and to share all the informations we have about one contact of our organisation. This gave birth to the CRM systems.</p> 
-      <p>CRM stands for Customer Relationship Management. These systems have been created to keep track of every interaction that you have with your customers. Today, many CRM concepts can be applied to other fields. Based on the notion of &quot;Event&quot; and &quot;Ticket&quot;, they can also be used to track other forms of relations, such as your relations with suppliers, staff, media, etc. (eg, the Supplier Relation Management-SRM). So a CRM includes concepts of Events, Campaigns, Meetings, Sale Opportunities and Support Requests, is used for managing all the communication between our organisations and all the contacts.</p> 
-      <p>We will begin with the feature &quot;Event&quot; to explain the process of Customer Relationship Management.</p> </details> </section><section class="illustration"> 
-    <h1>Example: Event &quot;SlapOS ongoing!&quot;</h1> <img src="user-Events.Example.SlapOS.Resilient.Cloud.Beta.Developer.Program?format=png" type="image/png" alt="Events example: SlapOS Beta Developer Program" title="Events example: SlapOS Beta Developer Program" /> <details open="open"> 
-      <p>
-            Let's first see a VIFIB Event as an example, and then we will explain in detail how the process of Event works.<br />
-            In a marketing campaign &quot;Beta Developer Program&quot; which aims to increasing the awareness of SlapOS ( a new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers, Cédric, the community manager of VIFIB sent an email to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they replied to the VIFIB manager by email, which are well stored in the CRM system for future reference.
-            <br />
-            The
-            <strong>Event Title</strong>
-            is &quot;SlapOS ongoing!&quot;, the
-            <strong>Sender</strong>
-            is Cédric de Saint Martin (SlapOS Community Manager from VIFIB), the
-            <strong>Recipients</strong>
-            are Cédric's 14 contacts including software developers, company managers, college professors, etc. The
-            <strong>Event Contents</strong>
-            are shown in the picture above.
-          </p> </details> </section><section class="illustration"> 
-    <h1>Event types</h1> <img src="user-Events.Event.Types?format=png" type="image/png" alt="Event types" title="Event types" /> <details open="open"> 
-      <p>A CRM system uses what we call &quot;Events&quot;. Events are computerised records of every interaction which happens between two or more persons.</p> 
-      <p>In our example, each email sent from one person to another is one Event.</p> 
-      <p>
-            Each kind of interaction has its own record within the CRM system. We commonly distinguish these kinds of events: When you meet with a client, you can use &quot;<strong>Visit</strong>
-            &quot;; When you want to add information about the interaction you have with the client, you can use &quot;
-            <strong>Note</strong>
-            &quot;; When you have a phone call with someone, you can use &quot;
-            <strong>Phone Call</strong>
-            &quot; to write a summary of your conversation during the call; Most CRM systems allow you to directly send emails from the central system to any email address using &quot;
-            <strong>Mail message</strong>
-            &quot;, moreover you can also ingest the mails you receive; When you receive many letters or faxes, you can scan them and add them to &quot;
-            <strong>Letter</strong>
-            &quot; and &quot;
-            <strong>Fax</strong>
-            &quot;; &quot;
-            <strong>Web Message</strong>
-            &quot; is isually used when someone outside the company is posting a message on a public web site (like erp5.com); There are also &quot;
-            <strong>Short Message</strong>
-            &quot;, &quot;
-            <strong>Site Message</strong>
-            &quot;, eg, site message is usually used for to send a message to all users of the ERP system etc.
-            <br />
-            Depends on your business you might have more kinds of interactions.
-          </p> 
-      <p>
-            In our example of communicating by emails, the <strong>Event Type</strong>
-            is Mail Messages.
-          </p> </details> </section><section class="illustration"> 
-    <h1>Event nature</h1> <img src="user-Events.Event.Nature?format=png" type="image/png" alt="Event nature" title="Event nature" /> <details open="open"> 
-      <p>
-            Besides different types, the interactions also have different natures.<br />
-            The nature of an event is classified by its objective: complaint, announcement, advertisement, information, inquiry, spam, etc. We need to classify the events by their natures: an email sent to complain doesn't have the same meaning with an email sent to advertise.
-            <br />
-            Depends on your business field, the user of the CRM system will choose to classify the events with their own categories.
-          </p> 
-      <p>
-            In our example of the mail message sent by VIFIB manager, the <strong>Event Type</strong>
-            can be considered as an Information.
-          </p> </details> </section><section class="illustration"> 
-    <h1>One sender/ multiple receivers</h1> <img src="user-Events.One.Sender.Multiple.Receivers?format=png" type="image/png" alt="Events: one sender multiple receivers" title="Events: one sender multiple receivers" /> <details open="open"> 
-      <p>
-            An Event, which is representing a movement of resource (information, inquiry, etc.), is going from someone to one or more recipients. In a CRM, we distinguish the Events not only by their contents, but also by their senders.<br />
-            The Event always has only one sender, but can have an infinite number of receivers. The same message sent by two persons to one same receiver will be represented as two different Events, while the same message sent from one person to many others will be represented as a single Event.
-          </p> 
-      <p>In our example, the email sent by the VIFIB manager to his contacts is one single Event because of the same sender, while all those replies are different Events, even though the contents might be the same.</p> </details> </section><section class="illustration"> 
-    <h1>Incoming event and outgoing event</h1> <img src="user-Events.Incoming.and.Outgoing.Event?format=png" type="image/png" alt="Incoming and outgoing event" title="Incoming and outgoing event" /> <details open="open"> 
-      <p>
-            Since events all have a sender and a recipient, we can tell in which way the event is going. <br />
-            We will distinguish incoming events from outgoing events:
-            <strong>Incoming events</strong>
-            are events which have been initiated by persons outside the organisation;
-            <strong>Outgoing events</strong>
-            go from your organisation to external persons.
-            <br />
-            This distinction is really important since you won't handle the same way the preparation of outgoing events and how you take care of incoming events.
-          </p> 
-      <p>In our example, the Mail Message sent by VIFIB manager is an outgoing Event, while the replies from his contacts are incoming Events.</p> </details> </section><section class="illustration"> 
-    <h1>Keeping track of interactions: Event origin</h1> <img src="user-Events.Keep.Tracks.Of.Interactions.Event.Origin?format=png" type="image/png" alt="Keep track of interactions by 'Event Origin'" title="Keep track of interactions by 'Event Origin'" /> <details open="open"> 
-      <p>
-            By linking related Events together using <strong>&quot;Event Origin&quot;</strong>
-            and
-            <strong>&quot;Follow Up&quot;</strong>
-            , you can easily keep track of interactions between your organisation and the external contacts.
-          </p> 
-      <p> <strong>Firstly, by using &quot;Event Origin&quot;, even complex interaction can also be shown clearly</strong> </p> 
-      <p>
-            A <strong>single interaction</strong>
-            happens between only two persons, but it can have various event types (as shown in the left side), according to the needs of the sender and receiver.
-          </p> 
-      <p>
-            However, for <strong>complex interactions</strong>
-            (as shown in the right side), we can have many interlocutors within it, done by different persons inside and outside our organisation, using various communication tools. In this case, if we list the events related to one person, we will only have a partial view of the conversation.
-          </p> 
-      <p>As we can see in both tables with records of detail discussions happened between VIFIB staff and its customers in subject of a new product offer, the event N°1 is the reason why the customer replied and created the event N°2. So we can say that the event N°1 is the origin of the event N°2.</p> 
-      <p>
-            So using <strong>&quot;Event Origin&quot;</strong>
-            can correctly and precisely represent the relation between events.
-          </p> </details> </section><section class="screenshot"> 
-    <h1>Follow up a Ticket</h1> <img src="user-Events.Keep.Tracks.Of.Interactions.Follow.Up.Ticket?format=png" type="image/png" alt="Keep track of interactions by 'Follow Up' a ticket" title="Keep tracks of interactions by 'Follow Up' a ticket" /> <details open="open"> 
-      <p> <strong>Secondly,</strong>
-            an Event can also
-            <strong>&quot;Follow Up&quot;</strong>
-            a Ticket, which is a record in the CRM all Events and documents related to the same subject. We will introduce it in the next tutorial.
-          </p> 
-      <p>
-            Back to our example, as you can see in the above screenshot, in the detail page of a Event which is a reply email from one contact who got the original mail message from our VIFIB manager, it shows the <strong>Event Origin</strong>
-            ( &quot;SlapOS Ongoing!&quot;) and the Ticket which this Event
-            <strong>Follow Up</strong>
-            ( &quot;Beta Developer Program&quot;). So these two features help us present complex interactions in a clear way.
-            <br /> </p> </details> </section><section class="illustration"> 
-    <h1>Outgoing Event workflow</h1> <img src="user-Events.Event.Workflow?format=png" type="image/png" alt="Outgoing Event workflow" title="Outgoing Event workflow" /> 
-    <details open="open"> 
-      <p>The upper part of this illustration shows the workflow of Outgoing Events.</p> 
-      <p>Depending on the assignment you have, you will be able to perform one or many actions on outgoing events.</p> 
-      <p>
-            The standard process has four steps:<br />
-            Firstly, you
-            <strong>create by drafting</strong>
-            a new Event from the outgoing message's sender's Person File (state
-            <strong>&quot;draft&quot;</strong>
-            );
-            <br />
-            Secondly, you
-            <strong>plan</strong>
-            the Event (same meaning as &quot;request for review&quot; ) (state
-            <strong>&quot;planned</strong>
-            &quot;
-            );
-            <br />
-            Thirdly, the manager
-            <strong>confirms</strong>
-            the Event ( the manager or the person who is responsible for supervising the operation of this Event ) (state
-            <strong>&quot;confirmed&quot;</strong>
-            );
-            <br />
-            Finally, you
-            <strong>send</strong>
-            the Event (state
-            &quot;
-            <strong>sent</strong>
-            &quot;
-            ).
-            <br />
-            If the Event has already been edited and only needs to be sent, you can
-            <strong>send directly</strong>
-            after you create the outgoing Event at the state of draft or planned. You can also
-            <strong>delete</strong>
-            or
-            <strong>cancel</strong>
-            the Event during the process.
-          </p> 
-      <p>Under the direction of such a workflow, you can manage from a three-person organisation to a big call-center.</p> 
-    </details>
-    <details open="open">
-      <p>
-            In our example, the <strong>Sender</strong>
-            Cédric de Saint Martin (community manager) created the Event as an
-            <strong>outgoing</strong>
-            mail message from his Person File. After drafting the mail, he set the state as &quot;planned&quot;, so the VIFIB director Mr Smets who is responsible for the operation of all the Events can find in his worklist &quot;My Favourites&quot; that he has a &quot;planned&quot; Event to review and approve. When the manager
-            <strong></strong>
-            is OK with everything, he will confirm the Event. When Cédric see the Event's state changed from &quot;draft&quot; to &quot;confirmed&quot;, he knows that the mail is approved and ready to be sent. After he sends the email to the
-            <strong>Receivers</strong>
-            - his contacts, the Event &quot;SlapOS Ongoing!&quot; would be stated as &quot;sent&quot;, and the Outgoing Event Process is finished.
-          </p> 
-    </details> </section><section class="screenshot"> 
-    <h1>Worklists</h1> <img src="user-Events.Worklist.Outgoing?format=png" type="image/png" alt="Outgoing events worklist" title="Outgoing events worklist" /> <details open="open"> 
-      <p>The concept of workflow helps people to understand the entire process of handling Events. But it is abstract. In order to apply the workflow practically and efficiently, we will use the worklists.</p> 
-      <p>
-            Worklist ( see the Tab <strong>&quot;My Favourites&quot;</strong>
-            as shown in the screenshot) is a list showing the states of all your Events. The complete worklist of outgoing Events is a list of the standard process: from draft, planned, confirmed to sent Events (as you can see the highlighted part in the list above). The worklist is updated each time when you do a change to your Events. Thanks to this worklist , everyone can access to Events in different states easily, and then they will know what they are supposed to do every day, if they are the assignees or recipients shown in the Events' lists.
-            <br />
-            We can take the example of a Call-Center. Everyday, the Call-Center manager will review &quot;Planned&quot; Events and &quot;Confirm&quot; them. The operators will watch the &quot;Confirmed&quot; Events which have to be sent. And once they have emptied the list of Confirmed Events, they finish their tasks.
-          </p> 
-      <p>In our example, everyday, the VIFIB director Smets who is responsible for the operation of Events has to check &quot;My Favourites&quot; list to see how many &quot;Planned&quot; Events are waiting to be reviewed and confirmed. Among them, he will see the email created by VIFIB community manager Cédric, review it and set it as &quot;Confirmed&quot;. When Cédric checks &quot;My Favourites&quot; list and finds the email has been moved to the &quot;Confirmed&quot; list, he will send it, then the email will go into the &quot;Sent&quot; list.</p> 
-      <p>So the Worklist makes the process precisely and clearly stated, and facilitates the work of everyone.</p> </details> </section><section class="illustration"> 
-    <h1>Incoming Event workflow</h1> <img src="user-Events.Event.Workflow?format=png" type="image/png" alt="Incoming Event workflow" title="Incoming Event workflow" /> 
-    <details open="open"> 
-      <p>
-            Incoming Events have a different workflow as shown in the second part of this illustration: they can either be created <strong>manually</strong>
-            (e.g, you can
-            <strong>input</strong>
-            an email which is a support request or a reply from a customer to the company as a new incoming Event), or
-            <strong>automatically</strong>
-            (e.g, between 2 departments who use the same ERP system, an Event can be exchanged by using the Action
-            <strong>&quot;Declare as Received&quot;</strong>
-            . If an Event is initially outgoing for department A - the sender, it becomes incoming Event for department B - the recipient, once A has sent the Event and B declared it as received).
-          </p> 
-      <p>
-            The standard process has three steps:<br />
-            Firstly, you
-            <strong>create by drafting</strong>
-            the new Event from the incoming message's sender's Person File (state
-            &quot;
-            <strong>draft&quot;</strong>
-            );
-            <br />
-            Secondly, you
-            <strong>declare the Event as received</strong>
-            ; you can also
-            <strong>define another recipient</strong>
-            instead of you (the original recipient), if it is another team member who is responsible to handle the Event
-            (state
-            <strong>&quot;received&quot;</strong>
-            );
-            <br />
-            Thirdly, the recipient
-            <strong>create Follow Up Ticket</strong>
-            to record all the future interactions related to this Event, then the Event will be delivered automatically; you can also
-            <strong>deliver</strong>
-            the Event directly after you receive it (state
-            &quot;
-            <strong>delivered&quot;</strong>
-            ).
-            <br />
-            If the Event is &quot;Declare as Received&quot; from an outgoing Event which has already been sent by another department of your company, they will be also stated as
-            <strong>&quot;received&quot;</strong>
-            , so the process begins from the action
-            <strong>&quot;create Follow Up Ticket&quot;/ &quot;Deliver the Event</strong>
-            &quot;.
-          </p> 
-      <p>
-            The Final state &quot;delivered&quot; of incoming Event indicates to all the team members that this incoming Event has been acknowledged by the recipient to handle it. &nbsp; <br /> </p> 
-      </details>
-      <details open="open">
-      <p>
-            In our example, after sending the email, VIFIB manager Cédric sent got a reply from one contact. So a new incoming Event will be created. Then the &quot;received&quot; Event can be processed in two ways: either be replied by Cédric the <strong>Recipient</strong>
-            directly, or be assigned to another person in the Support Team to handle the Event, just by changing the
-            <strong>Recipient</strong>
-            and creating a Follow Up Ticket.
-          </p> </details> </section><section class="screenshot"> 
-    <h1>Worklists</h1> <img src="user-Events.Worklist.Incoming?format=png" type="image/png" alt="Incoming events worklist" title="Incoming events worklist" /> <details open="open"> 
-      <p>The same as outgoing Events, the worklists will simplify the work and give a good overview of what everyone has to do.</p> 
-      <p>In our example, after sending the email to his contacts, VIFIB manager Cédric has to check the worklist to see if there is any &quot;Received Events to Deliver&quot; which might be the replies from the customers. So he can easily access to them and deal with them more efficiently.</p> </details> </section>
+<section class="illustration">
+<h1>Session 2: CRM Tickets and Events - Events</h1>
+<img alt="Event workflow" src="user-Events.Event.Workflow?format=png" title="Event workflow" type="image/png" />
+<footer>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</footer>
+
+<details open="open">
+<p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice to undergraduate students or professionals.</p>
+
+<p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any reuse or distribution, you must make clear to others the license terms of this work. Any of these conditions can be waived if you get permission from the copyright holder through a commercial license or an educational license. For more information, contact info@nexedi.com</p>
+</details>
+</section>
+
+<section>
+<h1>Agenda</h1>
+
+<ul>
+	<li>CRM</li>
+	<li>Event types</li>
+	<li>Event natures</li>
+	<li>One sender / multiple receivers</li>
+	<li>Keeping track of interactions</li>
+	<li>The outgoing Event workflow</li>
+	<li>The incoming Event workflow</li>
+	<li>How to use worklists</li>
+</ul>
+
+<details open="open">
+<p>Now we are going to present how a CRM is used to manage the communication within and outside your organsations.</p>
+
+<p><strong>Note: in this session &quot;CRM Tickets and Events&quot;, we will still use the examples of VIFIB to explain the concepts of &quot;Event&quot; and &quot;Ticket&quot; which are used to manage the interactions of a company with its contacts. So when you are practicing, please replace VIFIB with the company you created when you configured your ERP5 instance.</strong></p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>CRM</h1>
+<img alt="CRM system: Person communication" src="user-Events.CRM.System.In.ERP5?format=png" title="Person communication" type="image/png" />
+<details open="open">
+<p>Due to the number of persons with whom we interact, and the growing number of communication tools of which only few leave a trace (eg, emails), and the difficulty of organising the trace of communication in a central system (eg, Emails are stored in personal mailboxes, Fax in a specific place etc.), the complexity of keeping trace of the communication within and outside of the organisation makes it difficult to learn from our experience and to share all the informations we have about one contact of our organisation. This gave birth to the CRM systems.</p>
+
+<p>CRM stands for Customer Relationship Management. These systems have been created to keep track of every interaction that you have with your customers. Today, many CRM concepts can be applied to other fields. Based on the notion of &quot;Event&quot; and &quot;Ticket&quot;, they can also be used to track other forms of relations, such as your relations with suppliers, staff, media, etc. (eg, the Supplier Relation Management-SRM). So a CRM includes concepts of Events, Campaigns, Meetings, Sale Opportunities and Support Requests, is used for managing all the communication between our organisations and all the contacts.</p>
+
+<p>We will begin with the feature &quot;Event&quot; to explain the process of Customer Relationship Management.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Example: Event &quot;SlapOS ongoing!&quot;</h1>
+<img alt="Events example: SlapOS Beta Developer Program" src="user-Events.Example.SlapOS.Resilient.Cloud.Beta.Developer.Program?format=png" title="Events example: SlapOS Beta Developer Program" type="image/png" />
+<details open="open">
+<p>Let&#39;s first see a VIFIB Event as an example, and then we will explain in detail how the process of Event works.<br />
+In a marketing campaign &quot;Beta Developer Program&quot; which aims to increasing the awareness of SlapOS ( a new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers, C&eacute;dric, the community manager of VIFIB sent an email to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they replied to the VIFIB manager by email, which are well stored in the CRM system for future reference.<br />
+The <strong>Event Title</strong> is &quot;SlapOS ongoing!&quot;, the <strong>Sender</strong> is C&eacute;dric de Saint Martin (SlapOS Community Manager from VIFIB), the <strong>Recipients</strong> are C&eacute;dric&#39;s 14 contacts including software developers, company managers, college professors, etc. The <strong>Event Contents</strong> are shown in the picture above.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Event types</h1>
+<img alt="Event types" src="user-Events.Event.Types?format=png" title="Event types" type="image/png" />
+<details open="open">
+<p>A CRM system uses what we call &quot;Events&quot;. Events are computerised records of every interaction which happens between two or more persons.</p>
+
+<p>In our example, each email sent from one person to another is one Event.</p>
+
+<p>Each kind of interaction has its own record within the CRM system. We commonly distinguish these kinds of events: When you meet with a client, you can use &quot;<strong>Visit</strong> &quot;; When you want to add information about the interaction you have with the client, you can use &quot; <strong>Note</strong> &quot;; When you have a phone call with someone, you can use &quot; <strong>Phone Call</strong> &quot; to write a summary of your conversation during the call; Most CRM systems allow you to directly send emails from the central system to any email address using &quot; <strong>Mail message</strong> &quot;, moreover you can also ingest the mails you receive; When you receive many letters or faxes, you can scan them and add them to &quot; <strong>Letter</strong> &quot; and &quot; <strong>Fax</strong> &quot;; &quot; <strong>Web Message</strong> &quot; is isually used when someone outside the company is posting a message on a public web site (like erp5.com); There are also &quot; <strong>Short Message</strong> &quot;, &quot; <strong>Site Message</strong> &quot;, eg, site message is usually used for to send a message to all users of the ERP system etc.<br />
+Depends on your business you might have more kinds of interactions.</p>
+
+<p>In our example of communicating by emails, the <strong>Event Type</strong> is Mail Messages.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Event nature</h1>
+<img alt="Event nature" src="user-Events.Event.Nature?format=png" title="Event nature" type="image/png" />
+<details open="open">
+<p>Besides different types, the interactions also have different natures.<br />
+The nature of an event is classified by its objective: complaint, announcement, advertisement, information, inquiry, spam, etc. We need to classify the events by their natures: an email sent to complain doesn&#39;t have the same meaning with an email sent to advertise.<br />
+Depends on your business field, the user of the CRM system will choose to classify the events with their own categories.</p>
+
+<p>In our example of the mail message sent by VIFIB manager, the <strong>Event Type</strong> can be considered as an Information.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>One sender/ multiple receivers</h1>
+<img alt="Events: one sender multiple receivers" src="user-Events.One.Sender.Multiple.Receivers?format=png" title="Events: one sender multiple receivers" type="image/png" />
+<details open="open">
+<p>An Event, which is representing a movement of resource (information, inquiry, etc.), is going from someone to one or more recipients. In a CRM, we distinguish the Events not only by their contents, but also by their senders.<br />
+The Event always has only one sender, but can have an infinite number of receivers. The same message sent by two persons to one same receiver will be represented as two different Events, while the same message sent from one person to many others will be represented as a single Event.</p>
+
+<p>In our example, the email sent by the VIFIB manager to his contacts is one single Event because of the same sender, while all those replies are different Events, even though the contents might be the same.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Incoming event and outgoing event</h1>
+<img alt="Incoming and outgoing event" src="user-Events.Incoming.and.Outgoing.Event?format=png" title="Incoming and outgoing event" type="image/png" />
+<details open="open">
+<p>Since events all have a sender and a recipient, we can tell in which way the event is going.<br />
+We will distinguish incoming events from outgoing events: <strong>Incoming events</strong> are events which have been initiated by persons outside the organisation; <strong>Outgoing events</strong> go from your organisation to external persons.<br />
+This distinction is really important since you won&#39;t handle the same way the preparation of outgoing events and how you take care of incoming events.</p>
+
+<p>In our example, the Mail Message sent by VIFIB manager is an outgoing Event, while the replies from his contacts are incoming Events.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Keeping track of interactions: Event origin</h1>
+<img alt="Keep track of interactions by 'Event Origin'" src="user-Events.Keep.Tracks.Of.Interactions.Event.Origin.New?format=png" title="Keep track of interactions by 'Event Origin'" type="image/png" />
+<details open="open">
+<p>By linking related Events together using <strong>&quot;Event Origin&quot;</strong> and <strong>&quot;Follow Up&quot;</strong> , you can easily keep track of interactions between your organisation and the external contacts.</p>
+
+<p><strong>Firstly, by using &quot;Event Origin&quot;, even complex interaction can also be shown clearly</strong></p>
+
+<p>A <strong>single interaction</strong> happens between only two persons, but it can have various event types (as shown in the left side), according to the needs of the sender and receiver.</p>
+
+<p>However, for <strong>complex interactions</strong> (as shown in the right side), we can have many interlocutors within it, done by different persons inside and outside our organisation, using various communication tools. In this case, if we list the events related to one person, we will only have a partial view of the conversation.</p>
+
+<p>As we can see in both tables with records of detail discussions happened between VIFIB staff and its customers in subject of a new product offer, the event N&deg;1 is the reason why the customer replied and created the event N&deg;2. So we can say that the event N&deg;1 is the origin of the event N&deg;2.</p>
+
+<p>So using <strong>&quot;Event Origin&quot;</strong> can correctly and precisely represent the relation between events.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Follow up a Ticket</h1>
+<img alt="Keep track of interactions by 'Follow Up' a ticket" src="user-Events.Keep.Tracks.Of.Interactions.Follow.Up.Ticket.RenderJS.UI?format=png" title="Keep tracks of interactions by 'Follow Up' a ticket" type="image/png" />
+<details>
+<p><strong>Secondly,</strong> an Event can also <strong>&quot;Follow Up&quot;</strong> a Ticket, which is a record in the CRM all Events and documents related to the same subject. We will introduce it in the next tutorial.</p>
+
+<p>Back to our example, as you can see in the above screenshot, in the detail page of a Event which is a reply email from one contact who got the original mail message from our VIFIB manager, it shows the <strong>Event Origin</strong> ( &quot;SlapOS Ongoing!&quot;) and the Ticket which this Event <strong>Follow Up</strong> ( &quot;Beta Developer Program&quot;). So these two features help us present complex interactions in a clear way.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Outgoing Event workflow</h1>
+<img alt="Outgoing Event workflow" src="user-Events.Event.Workflow?format=png" title="Outgoing Event workflow" type="image/png" />
+<details open="open">
+<p>The upper part of this illustration shows the workflow of Outgoing Events.</p>
+
+<p>Depending on the assignment you have, you will be able to perform one or many actions on outgoing events.</p>
+
+<p>The standard process has four steps:<br />
+Firstly, you <strong>create by drafting</strong> a new Event from the outgoing message&#39;s sender&#39;s Person File (state <strong>&quot;draft&quot;</strong> );<br />
+Secondly, you <strong>plan</strong> the Event (same meaning as &quot;request for review&quot; ) (state <strong>&quot;planned</strong> &quot; );<br />
+Thirdly, the manager <strong>confirms</strong> the Event ( the manager or the person who is responsible for supervising the operation of this Event ) (state <strong>&quot;confirmed&quot;</strong> );<br />
+Finally, you <strong>send</strong> the Event (state &quot; <strong>sent</strong> &quot; ).<br />
+If the Event has already been edited and only needs to be sent, you can <strong>send directly</strong> after you create the outgoing Event at the state of draft or planned. You can also <strong>delete</strong> or <strong>cancel</strong> the Event during the process.</p>
+
+<p>Under the direction of such a workflow, you can manage from a three-person organisation to a big call-center.</p>
+</details>
+
+<details open="open">
+<p>In our example, the <strong>Sender</strong> C&eacute;dric de Saint Martin (community manager) created the Event as an <strong>outgoing</strong> mail message from his Person File. After drafting the mail, he set the state as &quot;planned&quot;, so the VIFIB director Mr Smets who is responsible for the operation of all the Events can find in his &quot;Worklist&quot; that he has a &quot;planned&quot; Event to review and approve. When the manager is OK with everything, he will confirm the Event. When C&eacute;dric see the Event&#39;s state changed from &quot;draft&quot; to &quot;confirmed&quot;, he knows that the mail is approved and ready to be sent. After he sends the email to the <strong>Receivers</strong> - his contacts, the Event &quot;SlapOS Ongoing!&quot; would be stated as &quot;sent&quot;, and the Outgoing Event Process is finished.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Worklists</h1>
+<img alt="Outgoing events worklist" src="user-Events.Worklist.Outgoing.New?format=png" title="Outgoing events worklist" type="image/png" />
+<details open="open">
+<p>The concept of workflow helps people to understand the entire process of handling Events. But it is abstract. In order to apply the workflow practically and efficiently, we will use the worklists.</p>
+
+<p>Worklist ( click on the Tab <strong>&quot;Worklists&quot;</strong>&nbsp;on the sidebar, then you will see the page as shown in the screenshot) is a list showing the states of all your Events. The complete worklist of outgoing Events is a list of the standard process: from draft, planned, confirmed to sent Events (as you can see the highlighted part in the list above). The worklist is updated each time when you do a change to your Events. Thanks to this worklist , everyone can access to Events in different states easily, and then they will know what they are supposed to do every day, if they are the assignees or recipients shown in the Events&#39; lists.<br />
+We can take the example of a Call-Center. Everyday, the Call-Center manager will review &quot;Planned&quot; Events and &quot;Confirm&quot; them. The operators will watch the &quot;Confirmed&quot; Events which have to be sent. And once they have emptied the list of Confirmed Events, they finish their tasks.</p>
+
+<p>In our example, everyday, the VIFIB director Smets who is responsible for the operation of Events has to check his &quot;Worklists&quot; to see how many &quot;Planned&quot; Events are waiting to be reviewed and confirmed. Among them, he will see the email created by VIFIB community manager C&eacute;dric, review it and set it as &quot;Confirmed&quot;. When C&eacute;dric checks his &quot;Worklists&quot; and finds the email has been moved to the &quot;Confirmed&quot; list, he will send it, then the email will go into the &quot;Sent&quot; list.</p>
+
+<p>So the Worklist makes the process precisely and clearly stated, and facilitates the work of everyone.</p>
+</details>
+</section>
+
+<section class="illustration">
+<h1>Incoming Event workflow</h1>
+<img alt="Incoming Event workflow" src="user-Events.Event.Workflow?format=png" title="Incoming Event workflow" type="image/png" />
+<details open="open">
+<p>Incoming Events have a different workflow as shown in the second part of this illustration: they can either be created <strong>manually</strong> (e.g, you can <strong>input</strong> an email which is a support request or a reply from a customer to the company as a new incoming Event), or <strong>automatically</strong> (e.g, between 2 departments who use the same ERP system, an Event can be exchanged by using the Action <strong>&quot;Declare as Received&quot;</strong> . If an Event is initially outgoing for department A - the sender, it becomes incoming Event for department B - the recipient, once A has sent the Event and B declared it as received).</p>
+
+<p>The standard process has three steps:<br />
+Firstly, you <strong>create by drafting</strong> the new Event from the incoming message&#39;s sender&#39;s Person File (state &quot; <strong>draft&quot;</strong> );<br />
+Secondly, you <strong>declare the Event as received</strong> ; you can also <strong>define another recipient</strong> instead of you (the original recipient), if it is another team member who is responsible to handle the Event (state <strong>&quot;received&quot;</strong> );<br />
+Thirdly, the recipient <strong>create Follow Up Ticket</strong> to record all the future interactions related to this Event, then the Event will be delivered automatically; you can also <strong>deliver</strong> the Event directly after you receive it (state &quot; <strong>delivered&quot;</strong> ).<br />
+If the Event is &quot;Declare as Received&quot; from an outgoing Event which has already been sent by another department of your company, they will be also stated as <strong>&quot;received&quot;</strong> , so the process begins from the action <strong>&quot;create Follow Up Ticket&quot;/ &quot;Deliver the Event</strong> &quot;.</p>
+
+<p>The Final state &quot;delivered&quot; of incoming Event indicates to all the team members that this incoming Event has been acknowledged by the recipient to handle it. &nbsp;</p>
+</details>
+
+<details open="open">
+<p>In our example, after sending the email, VIFIB manager C&eacute;dric sent got a reply from one contact. So a new incoming Event will be created. Then the &quot;received&quot; Event can be processed in two ways: either be replied by C&eacute;dric the <strong>Recipient</strong> directly, or be assigned to another person in the Support Team to handle the Event, just by changing the <strong>Recipient</strong> and creating a Follow Up Ticket.</p>
+</details>
+</section>
+
+<section class="screenshot">
+<h1>Worklists</h1>
+<img alt="Incoming events worklist" src="user-Events.Worklist.Incoming.New?format=png" title="Incoming events worklist" type="image/png" />
+<details open="open">
+<p>The same as outgoing Events, the worklists will simplify the work and give a good overview of what everyone has to do.</p>
+
+<p>In our example, after sending the email to his contacts, VIFIB manager C&eacute;dric has to check the worklist to see if there is any &quot;Received Events to Deliver&quot; which might be the replies from the customers. So he can easily access to them and deal with them more efficiently.</p>
+</details>
+</section>

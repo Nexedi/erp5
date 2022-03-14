@@ -29,4 +29,5 @@ Standard BT5 Configurator Item | view
 System Preference Configurator Item | view
 Workflow | configurator_settings
 Workflow | launch_configuration
+Workflow Transition | configurator_settings
 portal_actions | use_configurator

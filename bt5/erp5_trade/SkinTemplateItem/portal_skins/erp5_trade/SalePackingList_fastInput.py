@@ -108,7 +108,7 @@ url_params = make_query(selection_name=selection_name,
                         portal_status_message='%s container(s) created.' %\
                                                                 container_count)
 
-redirect_url = '%s/SalePackingList_fastInputForm?%s' %\
+redirect_url = '%s/SalePackingList_viewContainerFastInputDialog?%s' %\
                             (context.absolute_url(), url_params)
 
 context.REQUEST[ 'RESPONSE' ].redirect(redirect_url)

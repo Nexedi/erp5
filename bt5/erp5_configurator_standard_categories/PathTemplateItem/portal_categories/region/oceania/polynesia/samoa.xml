@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>WSM</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>WS</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>samoa</string> </value>
         </item>

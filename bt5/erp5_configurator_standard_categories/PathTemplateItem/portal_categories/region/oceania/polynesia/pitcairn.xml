@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>PCN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>PN</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>pitcairn</string> </value>
         </item>

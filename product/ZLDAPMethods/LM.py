@@ -3,7 +3,6 @@
 
 
 from __future__ import absolute_import
-from future.utils import raise_
 __version__ = "$Revision: 1.10 $"[11:-2]
 
 try:
@@ -61,7 +60,7 @@ class ERP5LDIFRecordList(LDIFRecordList):
           if dn!=None:
             raise ValueError('Two lines starting with dn: in one record.')
           if not is_dn(attr_value):
-            raise_(ValueError, 'No valid string-representation of distinguished name %s.' % (repr(attr_value)))
+            raise ValueError('No valid string-representation of distinguished name %r.' % (attr_value,))
           dn = attr_value
         elif attr_type=='version' and dn is None:
           version = 1
@@ -71,8 +70,8 @@ class ERP5LDIFRecordList(LDIFRecordList):
             raise ValueError('Read changetype: before getting valid dn: line.')
           if changetype!=None:
             raise ValueError('Two lines starting with changetype: in one record.')
-          if attr_value not in valid_changetype_dict:
-            raise_(ValueError, 'changetype value %s is invalid.' % (repr(attr_value)))
+          if not valid_changetype_dict.has_key(attr_value):
+            raise ValueError('changetype value %r is invalid.' % (attr_value,))
           changetype = attr_value
           attr_type, attr_value = self._parseAttrTypeandValue()
           modify_list = []
@@ -91,9 +90,9 @@ class ERP5LDIFRecordList(LDIFRecordList):
           #don't add new entry for the same dn
           break
         elif attr_value not in (None, '') and \
-             string.lower(attr_type) not in self._ignored_attr_types:
+             not self._ignored_attr_types.has_key(string.lower(attr_type)):
           # Add the attribute to the entry if not ignored attribute
-          if attr_type in entry:
+          if entry.has_key(attr_type):
             entry[attr_type].append(attr_value)
           else:
             entry[attr_type]=[attr_value]
@@ -143,7 +142,7 @@ def LDAPConnectionIDs(self):
                     and o._isAnLDAPConnection() and hasattr(o,'id')):
                     id=o.id
                     if type(id) is not StringType: id=id()
-                    if id not in ids:
+                    if not ids.has_key(id):
                         if hasattr(o,'title_and_id'): o=o.title_and_id()
                         else: o=id
                         ids[id]=id
@@ -296,7 +295,7 @@ class LDAPMethod(Aqueduct.BaseQuery,
                 '<hr><strong>Filter used:</strong><br>\n<pre>\n%s\n</pre>\n<hr>\n'
                 '</body></html>' % (r, src)
                 )
-            report=report(*(self,REQUEST), **{self.id:res})
+            report=apply(report,(self,REQUEST),{self.id:res})
 
             if tb is not None:
                 self.raise_standardErrorMessage(
@@ -353,12 +352,12 @@ class LDAPMethod(Aqueduct.BaseQuery,
         f.cook()
         if getSecurityManager is None:
             # working in a pre-Zope 2.2 instance
-            f = f(*(p,argdata))       #apply the template
+            f = apply(f, (p,argdata))       #apply the template
         else:
             # Working with the new security manager (Zope 2.2.x ++)
             security = getSecurityManager()
             security.addContext(self)
-            try:     f = f(*(p,), **argdata)  # apply the template
+            try:     f = apply(f, (p,), argdata)  # apply the template
             finally: security.removeContext(self)
 
         f = str(f)                      #ensure it's a string
@@ -486,12 +485,12 @@ class LDIFMethod(LDAPMethod):
     ldif.cook()
     if getSecurityManager is None:
       # working in a pre-Zope 2.2 instance
-      ldif = ldif(*(p, argdata))       #apply the template
+      ldif = apply(ldif, (p, argdata))       #apply the template
     else:
       # Working with the new security manager (Zope 2.2.x ++)
       security = getSecurityManager()
       security.addContext(self)
-      try:     ldif = ldif(*(p,), **argdata)  # apply the template
+      try:     ldif = apply(ldif, (p,), argdata)  # apply the template
       finally: security.removeContext(self)
 
     ldif = str(ldif)                      #ensure it's a string

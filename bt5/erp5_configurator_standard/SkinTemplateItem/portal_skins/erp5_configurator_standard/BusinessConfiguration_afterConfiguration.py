@@ -90,6 +90,12 @@ for business_application_category_id, module_ids in module_business_application_
     if module is not None:
       module.edit(business_application = business_application_category_id)
 
+# activate all available languages to allow user can select them in the ERP5JS UI
+osoe_runner_website = getattr(portal.web_site_module, "osoe_runner", None)
+if osoe_runner_website is not None:
+  available_language_list = list(portal.Localizer.get_supported_languages())
+  osoe_runner_website.edit(available_language_set = available_language_list)
+
 print "Indexing translations"
 portal.ERP5Site_updateTranslationTable()
 

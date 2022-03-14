@@ -8,6 +8,7 @@
     "monaco": {"url": "monaco-editor.gadget.html"},
     "onlyoffice": {"url": "onlyoffice.gadget.html"},
     "fck_editor": {"url": "ckeditor.gadget.html"},
+    "html_viewer": {"url": "gadget_html_viewer.html"},
     "svg_editor" : {"url": "method-draw/method-draw.gadget.html"},
     "minipaint": {"url": "minipaint.gadget.html"},
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
@@ -20,7 +21,7 @@
 
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
-    return new RSVP.Promise(function (resolve, reject, notify) {
+    return new RSVP.Promise(function (resolve, reject) {
       fr.addEventListener("load", resolve);
       fr.addEventListener("error", reject);
       fr.readAsDataURL(blob);
@@ -56,35 +57,52 @@
           maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
+          //run value is used to make jsmd viewer available in editable mode
+          //this is temporary until the viewer becomes editable
+          run: options.run || false,
           key: options.key,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
+
+      if ((!state_dict.editable) &&
+          ((state_dict.editor === 'fck_editor') ||
+           (state_dict.content_type === 'text/html'))) {
+        state_dict.editor = 'html_viewer';
+        state_dict.maximize = undefined;
+      }
+
+      if (!editor_dict.hasOwnProperty(state_dict.editor)) {
+        // Do not show the maximize button when not embedding a subgadget
+        state_dict.maximize = undefined;
+      }
       return this.changeState(state_dict);
     })
 
     .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
-        url,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
+        code,
         queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
-          (modification_dict.hasOwnProperty('editor')) || 
+          (modification_dict.hasOwnProperty('editor')) ||
           (gadget.state.editor === 'notebook_editor')) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
-        if (modification_dict.hasOwnProperty('maximize') || 
-          (gadget.state.editor === 'notebook_editor')) {
+        if (modification_dict.hasOwnProperty('maximize') ||
+            (gadget.state.editor === 'notebook_editor')) {
           // for fck_editor fields, we want to be able to maximize also in non editable
           if ((gadget.state.maximize && gadget.state.editable) ||
               (gadget.state.maximize && gadget.state.editor === 'jsmd_editor') ||
-              (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {
+              (gadget.state.maximize &&
+               (gadget.state.editor === 'fck_editor') &&
+               gadget.state.editable)) {
             element.appendChild(div_max);
             queue
               .push(function () {
@@ -109,24 +127,35 @@
 
         if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
           queue
             .push(function () {
-              var url = editor_dict[gadget.state.editor].url;
-              if (gadget.state.editable && (gadget.state.editor === 'jsmd_editor')) {
-                url = editor_dict.codemirror.url;
+              var gadget_url = editor_dict[gadget.state.editor].url;
+              if (gadget.state.editor === 'jsmd_editor' &&
+                  !gadget.state.run &&
+                  gadget.state.editable) {
+                gadget_url = editor_dict.codemirror.url;
               }
               return gadget.declareGadget(
-                url,
+                gadget_url,
                 {
                   scope: 'editor',
                   sandbox: 'iframe',
                   element: div
                 }
               );
+            });
+        } else if (!gadget.state.editable &&
+                   ((gadget.state.editor === 'fck_editor') ||
+                    (gadget.state.editor === 'html_viewer'))) {
+          queue
+            .push(function () {
+              return gadget.declareGadget(editor_dict.html_viewer.url, {
+                scope: 'editor',
+                element: div
+              });
             });
         } else if (gadget.state.editable &&
             (gadget.state.editor === 'text_area')) {
@@ -141,7 +170,8 @@
 
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor === 'html_viewer') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
@@ -176,7 +206,10 @@
             element.querySelector('img').src = evt.target.result;
           });
       } else {
-        element.querySelector('pre').textContent = gadget.state.value;
+        code = document.createElement('code');
+        code.textContent = gadget.state.value;
+        element.querySelector('pre').textContent = '';
+        element.querySelector('pre').appendChild(code);
       }
       return queue;
     })
@@ -202,7 +235,8 @@
             return result;
           });
           */
-      } else if (this.state.editable &&
+      }
+      if (this.state.editable &&
           (this.state.editor === 'text_area')) {
         result = {};
         result[this.state.key] = this.element.querySelector('textarea').value;

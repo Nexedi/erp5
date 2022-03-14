@@ -64,7 +64,7 @@ post.activate(
 # XXX This API is not agreed. Also, we need to consider the possibility
 # of ingesting posts through alarm, which is required when we want to ingest
 # post without owners (from anoymous users).
-).Post_ingestMailMessageForSupportRequest(
+).Post_ingestWebMessageForSupportRequest(
     web_site_relative_url=web_site_relative_url)
 
 # to be able to display the just posted data in SupportRequest_getCommentPostListAsJson,

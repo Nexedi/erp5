@@ -36,7 +36,7 @@ def Base_runPythonScript(self, code):
   code = '\n'.join(code_line_list)
   script.write(code)
   if script._code is None:
-    raise ValueError, repr(script.errors)
+    raise ValueError(repr(script.errors))
 
   return script()
 

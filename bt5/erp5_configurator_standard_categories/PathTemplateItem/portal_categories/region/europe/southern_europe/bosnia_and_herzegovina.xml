@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>BIH</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>BA</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>bosnia_and_herzegovina</string> </value>
         </item>

@@ -2,17 +2,17 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Item View Tracking List</title>
+<title tal:content="template/title"></title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">TTest Item View Tracking List/td></tr>
+<tr><td rowspan="1" colspan="3" tal:content="template/title"></td></tr>
 </thead><tbody>
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/init" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/prepare_data" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/view_item_tracking_list" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplateForItemRenderjsUi/macros/init" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplateForItemRenderjsUi/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_viewCommonTemplateForItemRenderjsUi/macros/view_item_tracking_list" />
 
 </tbody></table>
 </body>

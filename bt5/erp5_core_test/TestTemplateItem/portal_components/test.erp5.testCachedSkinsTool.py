@@ -57,7 +57,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     # Use None as skinname to keep using the default one.
     self.getSkinnableObject().changeSkin(skinname=None)
 
-  def login(self):
+  def login(self): # pylint:disable=arguments-differ
     uf = self.portal.acl_users
     uf._doAddUser('vincent', '', ['Manager'], [])
     user = uf.getUserById('vincent').__of__(uf)

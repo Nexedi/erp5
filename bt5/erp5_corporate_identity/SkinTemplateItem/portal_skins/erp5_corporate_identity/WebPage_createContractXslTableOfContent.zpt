@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:outline="http://wkhtmltopdf.org/outline"
+    xmlns="http://www.w3.org/1999/xhtml">
+  <xsl:output method="html" encoding="utf-8" indent="yes" doctype-system="about:legacy-compat"/>
+
+  <xsl:template match="outline:outline">
+    <xsl:param name="count" select="0" />
+    <html>
+      <head>
+        <title>Table of Contents</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style>
+          /* punt at fixing overlaps */
+          html, body {
+            overflow-x: initial !important;
+          }
+          /* font */
+          .ci-contract-table-of-content ol,
+          .ci-contract-table-of-content li,
+          .ci-contract-table-of-content a,
+          .ci-contract-table-of-content span {
+            font-family: "Roboto", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+          }
+          .ci-contract-faux-h1 {
+            font-family: "Roboto", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+          }
+          /* size */
+          .ci-contract-table-of-content ol {
+            font-size: 20px;
+          }
+          .ci-contract-table-of-content ol ol {
+            font-size: 18px;
+          }
+          .ci-contract-faux-h1 {
+            font-size: 36px;
+          }
+          /* indent */
+           /* h1 */
+          .ci-contract-table-of-content ol {
+            text-indent: 0;
+          }
+          /* h2 */
+          .ci-contract-table-of-content ol ol {
+            text-indent: 3em;
+          }
+          /* h3 */
+          .ci-contract-table-of-content ol ol ol {
+            text-indent: 6em;
+          }
+          /* h4 */
+          .ci-contract-table-of-content ol ol ol ol {
+            text-indent: 9em;
+          }
+          /* h5 */
+          .ci-contract-table-of-content ol ol ol ol ol {
+            text-indent: 12em;
+          }
+          /* h6 */
+          .ci-contract-table-of-content ol ol ol ol ol ol {
+            text-indent: 15em;
+          }
+
+          /* spacing, what misery */
+          .ci-contract-helper {
+            margin: 0;
+            padding: 0;
+          }
+          .ci-contract-table-of-content-lead-item:not(:first-child) {
+            padding-top: 10mm;
+          }
+
+          /* dotted lines */
+          .ci-contract-table-of-content ol li div {
+            position: relative;
+            overflow: hidden;
+          }
+          .ci-contract-table-of-content ol li div:after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            width: 100%;
+            border-bottom: 1px dotted #000;
+            z-index: 500;
+          }
+
+          /* line-height */
+          .ci-contract-table-of-content ol li div {
+            height: 28px;
+            line-height: 24px;
+          }
+          .ci-contract-table-of-content ol ol li div {
+            height: 24px;
+            line-height: 20px;
+          }
+
+          /* numbering x.x.x.x */
+          .ci-contract-table-of-content ol li {
+            counter-increment: item;
+          }
+          .ci-contract-table-of-content ol li div:before {
+            content: counters(item, ".") ". ";
+            padding-right: 0.5em;
+          }
+          .ci-contract-table-of-content li ol li div:before {
+            content: counters(item, ".") " ";
+          }
+
+          /* general styling */
+          .ci-contract-table-of-content {
+            display: block;
+            width: 100%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding-right: 10px;
+          }
+          .ci-contract-table-of-content ol {
+            counter-reset: item;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: block;
+            width: inherit;
+          }
+          .ci-contract-table-of-content li ol li {
+            margin: 0;
+          }
+          /* page numbers */
+          .ci-contract-table-of-content span {
+            float: right;
+            position: relative;
+          }
+          /* hail mary coverup */
+          .ci-contract-table-of-content span:before {
+            content: "";
+            height: 4px;
+            width: 22px;
+            position: absolute;
+            background-color: #fff;
+            bottom: -4px;
+            right: -1px;
+            z-index: 1000;
+          }
+
+          .ci-contract-table-of-content a {
+            text-decoration:none;
+            color: black;
+          }
+          .ci-contract-faux-h1 {
+            text-align: left;
+            font-weight: normal;
+            margin-top: 24mm;
+            margin-bottom: 12%;
+          }
+        </style>
+      </head> 
+      <body class="ci-contract-toc">
+        <p class="ci-contract-faux-h1" tal:content="python: options.get('contract_toc_title') or ''">Table of Contents</p>
+        <div class="ci-contract-table-of-content">
+          <p class="ci-contract-helper"></p>
+          <ol>
+            <xsl:apply-templates select="outline:item/outline:item">
+              <xsl:with-param name="count" select="$count" />
+            </xsl:apply-templates>
+          </ol>
+        </div>
+      </body>
+    </html>
+  </xsl:template>
+  <xsl:template match="outline:item">
+    <xsl:param name="count" />
+      <xsl:choose>
+        <xsl:when test="number($count)=0">
+          <li class="ci-contract-table-of-content-lead-item">
+            <xsl:if test="@title!=''">
+              <div>
+                <a>
+                  <xsl:if test="@link">
+                    <xsl:attribute name="href"><xsl:value-of select="@link"/></xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="@backLink">
+                    <xsl:attribute name="name"><xsl:value-of select="@backLink"/></xsl:attribute>
+                  </xsl:if>
+                  <xsl:value-of select="@title" />
+                </a>
+                <span><xsl:value-of select="@page" /> </span>
+              </div>
+            </xsl:if>
+            <ol>
+              <xsl:comment>added to prevent self-closing tags in QtXmlPatterns</xsl:comment>
+              <xsl:apply-templates select="outline:item"></xsl:apply-templates>
+            </ol>
+          </li>
+        </xsl:when>
+        <xsl:otherwise>
+          <li>
+            <xsl:if test="@title!=''">
+              <div>
+                <a>
+                  <xsl:if test="@link">
+                    <xsl:attribute name="href"><xsl:value-of select="@link"/></xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="@backLink">
+                    <xsl:attribute name="name"><xsl:value-of select="@backLink"/></xsl:attribute>
+                  </xsl:if>
+                  <xsl:value-of select="@title" />
+                </a>
+                <span><xsl:value-of select="@page" /> </span>
+              </div>
+            </xsl:if>
+            <ol>
+              <xsl:comment>added to prevent self-closing tags in QtXmlPatterns</xsl:comment>
+              <xsl:apply-templates select="outline:item"></xsl:apply-templates>
+            </ol>
+          </li>
+        </xsl:otherwise>
+      </xsl:choose>
+  </xsl:template>
+</xsl:stylesheet>

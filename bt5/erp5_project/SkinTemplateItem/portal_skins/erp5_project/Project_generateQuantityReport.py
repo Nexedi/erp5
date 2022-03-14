@@ -87,4 +87,4 @@ listbox.append(total_dict)
 
 context.Base_updateDialogForm(listbox=listbox)
 
-return context.Project_viewQuantityReport(listbox=listbox)
+return context.Project_viewQuantityReportDialog(listbox=listbox)

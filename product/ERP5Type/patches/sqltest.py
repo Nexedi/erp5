@@ -10,11 +10,9 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-from future.utils import raise_
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
-from builtins import range
 
 list_type_list = list, tuple, set, frozenset, dict
 
@@ -33,7 +31,7 @@ if 1: # For easy diff with original
         except (KeyError, NameError):
             if 'optional' in args and args['optional']:
                 return ''
-            raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
+            raise ValueError('Missing input variable, <em>%s</em>' % name)
 
         # PATCH: use isinstance instead of type comparison, to allow
         # subclassing.
@@ -46,21 +44,21 @@ if 1: # For easy diff with original
 
         vs=[]
         for v in v:
-            if not v and type(v) is StringType and t != 'string': continue
+            if not v and isinstance(v, str) and t != 'string': continue
             if t=='int':
                 try:
-                    if type(v) is StringType:
+                    if isinstance(v, str):
                         if v[-1:]=='L':
                             v=v[:-1]
-                        atoi(v)
+                        int(v)
                     else: v=str(int(v))
                 except ValueError:
                     raise ValueError(
                         'Invalid integer value for <em>%s</em>' % name)
             elif t=='float':
-                if not v and type(v) is StringType: continue
+                if not v and isinstance(v, str): continue
                 try:
-                    if type(v) is StringType: atof(v)
+                    if isinstance(v, str): float(v)
                     else: v=str(float(v))
                 except ValueError:
                     raise ValueError(
@@ -85,9 +83,8 @@ if 1: # For easy diff with original
             if 'optional' in args and args['optional']:
                 return ''
             else:
-                err = 'Invalid empty string value for <em>%s</em>' % name
-                raise_(ValueError, err)
-
+                raise ValueError(
+                    'Invalid empty string value for <em>%s</em>' % name)
 
         if not vs:
             if self.optional: return ''
@@ -95,7 +92,7 @@ if 1: # For easy diff with original
                 'No input was provided for <em>%s</em>' % name)
 
         if len(vs) > 1:
-            vs=join(map(str,vs),', ')
+            vs = ', '.join(map(str, vs))
             if self.op == '<>':
                 ## Do the equivalent of 'not-equal' for a list,
                 ## "a not in (b,c)"
@@ -106,4 +103,12 @@ if 1: # For easy diff with original
         return "%s %s %s" % (self.column, self.op, vs[0])
     SQLTest.render = SQLTest.__call__ = render
 
-sqltest.valid_type = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in range(7))).__contains__
+from builtins import range
+new_valid_types = (('int', 'float', 'string', 'nb', 'datetime') + tuple('datetime(%s)' % x for x in range(7)))
+
+try:
+  # BBB
+  from Shared.DC.ZRDB.sqltest import valid_type
+  sqltest.valid_type = new_valid_types.__contains__
+except ImportError:
+  sqltest.valid_types = new_valid_types

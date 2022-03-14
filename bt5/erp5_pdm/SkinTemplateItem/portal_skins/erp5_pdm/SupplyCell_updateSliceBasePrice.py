@@ -7,7 +7,7 @@ if not quantity_criterion_list:
 quantity_criterion, = quantity_criterion_list
 supply_line_value = context.getParentValue()
 if supply_line_value.isBasePricePerSlice():
-  quantity_step_list = [None] + supply_line_value.getQuantityStepList(base_id='path') + [None]
+  quantity_step_list = [0] + supply_line_value.getQuantityStepList(base_id='path') + [None]
   try:
     index = quantity_step_list.index(quantity_criterion.min)
   except ValueError:

@@ -46,7 +46,7 @@
     </tr>
     <tr>
       <td>assertTextPresent</td>
-      <td>Sale Order Created.</td>
+      <td>Data Created.</td>
       <td></td>
     </tr>
 
@@ -58,11 +58,6 @@
     <tr>
       <td>assertTextPresent</td>
       <td>Done.</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>open</td>
-      <td>${base_url}/sale_order_module/erp5_trade_ui_test_sale_order_1</td>
       <td></td>
     </tr>
   </tal:block>

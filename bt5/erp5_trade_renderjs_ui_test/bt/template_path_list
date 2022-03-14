@@ -18,5 +18,7 @@ portal_rules/erp5_trade_renderjs_ui_test_order_root_rule
 portal_rules/erp5_trade_renderjs_ui_test_order_root_rule/**
 portal_tests/renderjs_ui_trade_action_zuite
 portal_tests/renderjs_ui_trade_action_zuite/**
+portal_tests/renderjs_ui_trade_zuite
+portal_tests/renderjs_ui_trade_zuite/**
 product_module/erp5_trade_renderjs_ui_test_product
 product_module/erp5_trade_renderjs_ui_test_product/**

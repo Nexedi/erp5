@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
   <type>Payment Transaction Group</type>
-  <workflow>edit_workflow, payment_transaction_group_validation_workflow</workflow>
+  <workflow>edit_workflow, payment_transaction_group_delivering_interaction_workflow, payment_transaction_group_validation_workflow</workflow>
  </chain>
 </workflow_chain>

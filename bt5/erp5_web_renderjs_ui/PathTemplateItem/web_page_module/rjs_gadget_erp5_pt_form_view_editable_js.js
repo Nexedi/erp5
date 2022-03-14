@@ -9,6 +9,7 @@
     .declareAcquiredMethod("submitContent", "submitContent")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
@@ -157,7 +158,17 @@
         })
         .push(function (is_valid) {
           if (!is_valid) {
-            return null;
+            return gadget.translate("Please fill all required fields to submit")
+              .push(function (message) {
+                return gadget.notifyChange({
+                  "modified": true,
+                  "message": message,
+                  "status": "error"
+                });
+              })
+              .push(function () {
+                return null;
+              });
           }
           return gadget.getContent();
         })

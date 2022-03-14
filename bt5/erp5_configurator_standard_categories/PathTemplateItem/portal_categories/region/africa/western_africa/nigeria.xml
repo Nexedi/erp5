@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>NGA</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>NG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>nigeria</string> </value>
         </item>

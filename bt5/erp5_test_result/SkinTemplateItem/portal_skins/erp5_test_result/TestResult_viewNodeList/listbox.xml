@@ -351,10 +351,6 @@
                           <string>log_viewer</string>
                           <string>Log Viewer</string>
                         </tuple>
-                        <tuple>
-                          <string>debug_shell</string>
-                          <string>Debug Shell</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

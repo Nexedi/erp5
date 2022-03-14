@@ -91,15 +91,6 @@ function toggleSelect() {
    "skey == 'get_size' or rkey == 'get_size'"
    ><strong>Size</strong><dtml-else>Size</dtml-if></a></div>
   </td>
-  <td width="19%" align="left"><div class="list-item"><a 
-   href="./manage_main?skey=bobobase_modification_time<dtml-if 
-   "skey == 'bobobase_modification_time' and not rkey"
-   >&amprkey=bobobase_modification_time</dtml-if>"
-   onMouseOver="window.status='Sort objects by modification time'; return true"
-   onMouseOut="window.status=''; return true"><dtml-if 
-   "skey == 'bobobase_modification_time' or rkey == 'bobobase_modification_time'"
-   ><strong>Last Modified</strong><dtml-else>Last Modified</dtml-if></a></div>
-  </td>
   <td width="10%" align="left"><div class="list-item"><a 
    href="./manage_main?skey=position"
    onMouseOver="window.status='Sort objects by position'; return true"
@@ -187,12 +178,6 @@ function toggleSelect() {
   <dtml-except>
   &nbsp;
   </dtml-try>
-  </div>
-  </td>
-
-  <td>
-  <div class="list-item">
-  <dtml-var bobobase_modification_time fmt="%Y-%m-%d %H:%M">
   </div>
   </td>
   </dtml-with>

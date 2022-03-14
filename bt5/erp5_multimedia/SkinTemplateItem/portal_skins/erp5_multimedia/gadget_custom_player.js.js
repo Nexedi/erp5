@@ -1,8 +1,7 @@
-/*global window, rJS, RSVP, jIO, MediaSource,
-  loopEventListener
+/*global window, rJS, RSVP, jIO, MediaSource
 */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, loopEventListener) {
   "use strict";
 
   rJS(window)
@@ -172,4 +171,4 @@
         true
       );
     });
-}(window, rJS));
+}(window, rJS, rJS.loopEventListener));

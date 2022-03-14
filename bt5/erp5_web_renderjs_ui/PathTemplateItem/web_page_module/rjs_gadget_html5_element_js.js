@@ -11,6 +11,7 @@
       id: undefined,
       name: undefined,
       src: undefined,
+      href: undefined,
       alt: undefined,
       append: '',
       prepend: ''
@@ -23,8 +24,10 @@
           id: options.id,
           tag: options.tag || 'div',
           src: options.src,
+          href: options.href,
           alt: options.alt,
           name: options.name,
+          title: options.title,
           append: getFirstNonEmpty(options.append, ""),
           prepend: getFirstNonEmpty(options.prepend, "")
         };
@@ -60,8 +63,14 @@
       if (this.state.src) {
         new_element.setAttribute('src', this.state.src);
       }
+      if (this.state.href) {
+        new_element.setAttribute('href', this.state.href);
+      }
       if (this.state.alt) {
         new_element.setAttribute('alt', this.state.alt);
+      }
+      if (this.state.title) {
+        new_element.setAttribute('title', this.state.title);
       }
       if (modification_dict.hasOwnProperty("data")) {
         data = JSON.parse(modification_dict.data);
@@ -96,6 +105,17 @@
       }
       return data;
     })
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
+
     .declareMethod("checkValidity", function checkValidity() {
       return true;
     });

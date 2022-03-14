@@ -51,12 +51,12 @@
 <tr>
   <td>verifyText</td>
   <td>//select[@id="dialog_selector"]/option[1]</td>
-  <td>Search</td>
+  <td>Search2</td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//select[@id="dialog_selector"]/option[2]</td>
-  <td>Search2</td>
+  <td>Search</td>
 </tr>
 </body>
 </html>

@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from functools import partial
 import unittest
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
@@ -104,7 +103,7 @@ class ReferenceQuery:
         value = MatchList([value])
       self.value = value
     elif len(kw) > 1:
-      raise_(ValueError, 'kw must not have more than one item: %r' % (kw, ))
+      raise ValueError('kw must not have more than one item: %r' % kw)
 
   def __eq__(self, other):
     if isinstance(other, SimpleQuery):
@@ -134,7 +133,7 @@ class ReferenceQuery:
     elif isinstance(other, Query):
       return self == other.wrapped_query
     else:
-      raise_(TypeError, 'Compared value is not a (known) Query instance: (%s) %r' % (other.__class__.__name__, other))
+      raise TypeError('Compared value is not a (known) Query instance: (%s) %r' % (other.__class__.__name__, other))
 
   def __repr__(self):
     if self.args:

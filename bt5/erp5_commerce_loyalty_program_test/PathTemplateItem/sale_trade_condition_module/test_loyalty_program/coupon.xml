@@ -23,7 +23,7 @@
             <value>
               <tuple>
                 <string>resource/service_module/test_loyalty_coupon</string>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_phase/trade/invoicing</string>
                 <string>base_application/base_amount/loyalty_program/coupon</string>
               </tuple>
             </value>

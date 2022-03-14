@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -222,7 +221,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
       solver_portal_type = portal_type
       solver = configurable
     else:
-      raise_(NotImplementedError, '%s is not supported for configurable argument' % portal_type)
+      raise NotImplementedError('%s is not supported for configurable argument' % portal_type)
 
     method = getattr(solver, method_id)
     return method()

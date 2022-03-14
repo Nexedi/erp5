@@ -80,13 +80,14 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                          'erp5_configurator_standard_invoicing_template',
                          'erp5_ods_style',
                          'erp5_odt_style',
-                         'erp5_ooo_import')
+                         'erp5_ooo_import',
+                         'erp5_osoe_web_renderjs_ui',
+)
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
         'erp5_full_text_mroonga_catalog',
         'erp5_base',
-        'erp5_workflow',
         'erp5_configurator',
         'erp5_configurator_standard',)
 
@@ -624,7 +625,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def stepViewAccount(self, sequence=None, sequence_list=None, **kw):
     account = self.portal.account_module.newContent(
-                                      portal_type='Account')
+        portal_type='Account',
+        account_type='expense',
+    )
     # in draft state,
     self.assertEqual('draft', account.getValidationState())
     # everybody can see
@@ -686,7 +689,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepCopyPasteAccount(self, sequence=None, sequence_list=None, **kw):
     # tests copy / pasting accounts from account module
     account = self.portal.account_module.newContent(
-                                      portal_type='Account')
+        portal_type='Account',
+        account_type='expense',
+    )
     # in draft state,
     self.assertEqual('draft', account.getValidationState())
 

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ECU</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>EC</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ecuador</string> </value>
         </item>

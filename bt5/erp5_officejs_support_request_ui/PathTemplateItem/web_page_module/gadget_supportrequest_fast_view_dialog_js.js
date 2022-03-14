@@ -41,31 +41,37 @@
         })
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;
+        }).push(function () {
+          gadget.updateResourceListField();
         });
     })
     .declareMethod('triggerSubmit', function () {
       return this.form.triggerSubmit();
     })
+    .declareJob('updateResourceListField', function () {
+      var gadget = this,
+        selectedProject = document.getElementById('field_your_project').value;
+      return gadget.jio_getAttachment(
+        'support_request_module',
+        gadget.hateoas_url + 'support_request_module'
+          + "/SupportRequest_getSupportTypeList"
+          + "?project_id=" + selectedProject + "&json_flag=True"
+      ).push(function (sp_list) {
+        var i, j,
+          sp_select = document.getElementById('field_your_resource');
+        for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
+          sp_select.remove(i);
+        }
+
+        for (j = 0; j < sp_list.length; j += 1) {
+          sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
+        }
+      });
+    })
     .onEvent('change', function (evt) {
+      var gadget = this;
       if (evt.target.id === "field_your_project") {
-        var gadget = this;
-
-        return gadget.jio_getAttachment(
-          'support_request_module',
-          gadget.hateoas_url + 'support_request_module'
-            + "/SupportRequest_getSupportTypeList"
-            + "?project_id=" + evt.target.value + "&json_flag=True"
-        ).push(function (sp_list) {
-          var i, j,
-            sp_select = document.getElementById('field_your_resource');
-          for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
-            sp_select.remove(i);
-          }
-
-          for (j = 0; j < sp_list.length; j += 1) {
-            sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
-          }
-        });
+        gadget.updateResourceListField();
       }
     }, false, false);
 }(window, rJS));

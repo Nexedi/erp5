@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SGP</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>SG</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>singapore</string> </value>
         </item>

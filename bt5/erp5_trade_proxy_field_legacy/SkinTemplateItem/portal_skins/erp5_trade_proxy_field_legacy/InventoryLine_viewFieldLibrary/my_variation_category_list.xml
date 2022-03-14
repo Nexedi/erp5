@@ -11,9 +11,9 @@
             <value>
               <list>
                 <string>hash_script_id</string>
-                <string>title</string>
-                <string>size</string>
                 <string>items</string>
+                <string>size</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -91,6 +91,12 @@
                 <item>
                     <key> <string>hash_script_id</string> </key>
                     <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>

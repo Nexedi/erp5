@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/ 
+* http://meyerweb.com/eric/tools/css/reset/
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -329,13 +329,22 @@ select:focus {
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid,
 textarea:invalid,
-select:invalid {
+select:invalid,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid,
+textarea.is-invalid,
+select.is-invalid {
   border: 1px solid #FF6600;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid:focus,
 textarea:invalid:focus,
-select:invalid:focus {
+select:invalid:focus,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid:focus,
+textarea.is-invalid:focus,
+select.is-invalid:focus {
   box-shadow: 0 0 12pt #FF6600;
+}
+label.is-invalid {
+  color: #FF6600;
 }
 input[type="search"] {
   -webkit-appearance: textfield;
@@ -1077,7 +1086,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .field_container > div > div > div.ui-field-contain {
   padding: 3pt 0;
 }
-.gadget-content .field_container > div > div > div.ui-field-contain div {
+.gadget-content .field_container > div > div > div.ui-field-contain > div {
   width: 100%;
 }
 .gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain {
@@ -1174,7 +1183,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
-.gadget-content .ui-field-contain > label {
+.gadget-content .ui-field-contain > label:not(.is-invalid) {
   color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {
@@ -1183,6 +1192,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content .invisible > .ui-field-contain > label {
   display: none;
+}
+.gadget-content .page {
+  background-color: #FFFFFF;
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
   .gadget-content .ui-field-contain {
@@ -1281,6 +1293,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .relation-input div {
   position: relative;
+  width: 100%;
 }
 .relation-input ul {
   position: absolute;
@@ -1595,6 +1608,9 @@ div.invisible_header .document_table .ui-table-header {
 div.invisible_footer .document_table nav {
   display: none;
 }
+.document_table tbody tr td div {
+  width: 100%;
+}
 .document_table tbody tr td:first-child input.hide_element[type="checkbox"] {
   display: none;
 }
@@ -1612,6 +1628,12 @@ div.invisible_footer .document_table nav {
 }
 .document_table tbody tr td label {
   cursor: pointer;
+}
+/**********************************************
+* Radio field
+**********************************************/
+div[data-gadget-url$="gadget_erp5_field_radio.html"] label {
+  display: inline;
 }
 /**********************************************
 * Notification
@@ -1811,12 +1833,12 @@ div[data-gadget-scope='maximize'] button:active {
 /**********************************************
 * Front page
 **********************************************/
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul {
+ul.ui-list-grid {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
 }
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
+ul.ui-list-grid > li {
   flex-shrink: 1;
   vertical-align: top;
   padding: 3pt;
@@ -1826,26 +1848,54 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
   background-color: #FFFFFF;
 }
 @media not screen and (min-width: 45em) {
-  div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
+  ul.ui-list-grid > li {
     flex-basis: 100%;
     margin-bottom: 6pt;
   }
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
-  div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
+  ul.ui-list-grid > li {
     margin-right: 24pt;
     margin-bottom: 24pt;
     flex-basis: 20em;
   }
 }
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li h2 {
+ul.ui-list-grid > li h2 {
   font-weight: 700;
   background: #085078;
   color: #FFFFFF;
   padding: 6pt;
 }
-div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li li {
+ul.ui-list-grid > li li {
   padding: 3pt 6pt;
+}
+ul.ui-list-grid > li button {
+  color: #2FA2E4;
+  text-decoration: none;
+}
+ul.ui-list-grid > li button[href=""] {
+  color: #1F1F1F;
+}
+ul.ui-list-grid > li button:hover {
+  text-decoration: underline;
+}
+ul.ui-list-grid > li button:focus {
+  outline-offset: -2px;
+  outline: 2px solid #3388cc;
+}
+/**********************************************
+* Developer mode actions
+**********************************************/
+.edit-form,
+.edit-form-action,
+.edit-field,
+.translate-title,
+.translate-description {
+  margin-left: 3pt;
+  color: hsl(0, 0%, 42%);
+}
+.translate-description {
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 /**********************************************
 * Icons

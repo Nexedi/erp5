@@ -1,16 +1,17 @@
 /*globals window, document, RSVP, rJS,
           URI, location, XMLHttpRequest, console, navigator, Event,
-          URL*/
+          URL, domsugar*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS,
            XMLHttpRequest, location, console, navigator, Event,
-           URL) {
+           URL, domsugar) {
   "use strict";
 
   var MAIN_SCOPE = "m",
     default_state_json_string = JSON.stringify({
       panel_visible: false,
       service_worker_claimed: false,
+      app_reload_requested: false,
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
       ).textContent,
@@ -244,29 +245,27 @@
 
   function triggerMaximize(gadget, maximize) {
     if (gadget.props.deferred_minimize !== undefined) {
-      gadget.props.deferred_minimize.cancel();
+      gadget.props.deferred_minimize.cancel("triggerMaximize called");
       gadget.props.deferred_minimize = undefined;
     }
     hideDesktopPanel(gadget, maximize);
     if (maximize) {
-      return route(gadget, 'header', 'setButtonTitle', [{
+      gadget.deferSetButtonTitle({
         icon: "compress",
         action: "maximize"
-      }])
-        .push(function () {
-          gadget.props.deferred_minimize = new RSVP.Promise(
-            function () {return; },
-            function () {
-              // Wait for cancellation
-              // return triggerMaximize(gadget, false);
-              hideDesktopPanel(gadget, false);
-              return route(gadget, 'header', 'setButtonTitle', [{}]);
-            }
-          );
-          return gadget.props.deferred_minimize;
-        });
+      });
+      gadget.props.deferred_minimize = new RSVP.Promise(
+        function () {return; },
+        function () {
+          // Wait for cancellation
+          // return triggerMaximize(gadget, false);
+          hideDesktopPanel(gadget, false);
+          gadget.deferSetButtonTitle({});
+        }
+      );
+      return gadget.props.deferred_minimize;
     }
-    return route(gadget, 'header', 'setButtonTitle', [{}]);
+    gadget.deferSetButtonTitle({});
   }
 
   //////////////////////////////////////////
@@ -338,6 +337,9 @@
   }
 
   rJS(window)
+    .declareJob('deferSetButtonTitle', function (options) {
+      return route(this, 'header', 'setButtonTitle', [options]);
+    })
 
     // Add mutex protected defered gadget loader.
     // Multiple mutex are needed, to not prevent concurrent loading on
@@ -386,8 +388,14 @@
         .push(function (result) {
           setting_gadget = result;
           return setting_gadget.createJio({
-            type: "indexeddb",
-            database: "setting"
+            type: "fallback",
+            sub_storage: {
+              type: "indexeddb",
+              database: "setting"
+            },
+            fallback_storage: {
+              type: "memory"
+            }
           });
         })
         .push(function () {
@@ -547,8 +555,6 @@
           if (main.render !== undefined) {
             return main.render(JSON.parse(gadget.props.m_options_string));
           }
-        }, function () {
-          return;
         });
     })
 
@@ -560,15 +566,26 @@
         return route(this, 'translation_gadget', 'getTranslationList',
                      argument_list);
       })
-    .allowPublicAcquisition("getSelectedLanguage", function getSelectedLanguage() {
-      return route(this, 'translation_gadget', 'getSelectedLanguage');
-    })
+    .allowPublicAcquisition("getTranslationDict",
+                            function getTranslationDict(argument_list) {
+        return route(this, 'translation_gadget', 'getTranslationDict',
+                     argument_list);
+      })
+    .allowPublicAcquisition("getSelectedLanguage",
+                            function getSelectedLanguage() {
+        return route(this, 'translation_gadget', 'getSelectedLanguage');
+      })
 
     .allowPublicAcquisition("redirect", function redirect(param_list) {
       return route(this, 'router', 'redirect', param_list);
     })
-    .allowPublicAcquisition('reload', function reload() {
-      return location.reload();
+    .allowPublicAcquisition('reload', function reload(param_list) {
+      if (param_list[0] === true) {
+        // reload in async mode
+        this.state.app_reload_requested = true;
+      } else {
+        return location.reload();
+      }
     })
     .allowPublicAcquisition("getUrlParameter", function getUrlParameter(
       param_list
@@ -582,6 +599,11 @@
       param_list
     ) {
       return route(this, 'router', 'getCommandUrlForList', param_list);
+    })
+    .allowPublicAcquisition("getUrlForDict", function getUrlForDict(
+      param_list
+    ) {
+      return route(this, 'router', 'getCommandUrlForDict', param_list);
     })
 
     .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
@@ -616,9 +638,9 @@
     })
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
-                            function acquireRefreshHeaderAndPanel() {
-      return refreshHeaderAndPanel(this, true);
-    })
+      function acquireRefreshHeaderAndPanel() {
+        return refreshHeaderAndPanel(this, true);
+      })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
       return hideDesktopPanel(this, param_list[0]);
@@ -691,7 +713,8 @@
     .allowPublicAcquisition("renderApplication", function renderApplication(
       param_list
     ) {
-      if (this.state.service_worker_claimed &&
+      if ((this.state.service_worker_claimed ||
+           this.state.app_reload_requested) &&
           (this.state.notification_options === undefined)) {
         // As a new service worker claimed the client,
         // reload the page to ensure it uses the lastest gadget versions
@@ -723,50 +746,43 @@
           })
           .push(function () {
             var element = gadget.props.content_element,
-              container = document.createElement("section"),
-              paragraph,
-              iframe,
-              link;
+              container;
 
-            paragraph = document.createElement("p");
-            paragraph.textContent =
-              'Please report this unhandled error to the support team, ' +
-              'and go back to the ';
-            link = document.createElement("a");
-            link.href = '#';
-            link.textContent = 'homepage';
-            paragraph.appendChild(link);
-            container.appendChild(paragraph);
-
-            container.appendChild(document.createElement("br"));
-
-            paragraph = document.createElement("p");
-            paragraph.textContent = 'Location: ';
-            link = document.createElement("a");
-            link.href = link.textContent = window.location.toString();
-            paragraph.appendChild(link);
-            container.appendChild(paragraph);
-
-            paragraph = document.createElement("p");
-            paragraph.textContent = 'User-agent: ' + navigator.userAgent;
-            container.appendChild(paragraph);
-
-            paragraph = document.createElement("p");
-            paragraph.textContent =
-              'Date: ' + new Date(Date.now()).toISOString();
-            container.appendChild(paragraph);
-
-            paragraph = document.createElement("p");
-            paragraph.textContent = 'Online: ' + navigator.onLine;
-            container.appendChild(paragraph);
-
-            container.appendChild(document.createElement("br"));
-
-            link = document.createElement("code");
-            link.textContent = gadget.state.error_text;
-            paragraph = document.createElement("pre");
-            paragraph.appendChild(link);
-            container.appendChild(paragraph);
+            container = domsugar("section", [
+              domsugar("p", {
+                "text": 'Please report this unhandled error to the support ' +
+                  'team, and go back to the '
+              }, [
+                domsugar("a", {
+                  "href": "#",
+                  "text": "homepage"
+                })
+              ]),
+              domsugar("br"),
+              domsugar("p", {
+                "text": 'Location: '
+              }, [
+                domsugar("a", {
+                  "href": window.location.toString(),
+                  "text": window.location.toString()
+                })
+              ]),
+              domsugar("p", {
+                "text": 'User-agent: ' + navigator.userAgent
+              }),
+              domsugar("p", {
+                "text": 'Date: ' + new Date(Date.now()).toISOString()
+              }),
+              domsugar("p", {
+                "text": 'Online: ' + navigator.onLine
+              }),
+              domsugar("br"),
+              domsugar("pre", [
+                domsugar("code", {
+                  "text": gadget.state.error_text
+                })
+              ])
+            ]);
 
             // Remove the content
             while (element.firstChild) {
@@ -776,9 +792,11 @@
 
             // make an iframe to display error page from XMLHttpRequest.
             if (gadget.state.request_error_text) {
-              iframe = document.createElement('iframe');
-              container.appendChild(iframe);
-              iframe.srcdoc = gadget.state.request_error_text;
+              container.appendChild(
+                domsugar('iframe', {
+                  "srcdoc": gadget.state.request_error_text
+                })
+              );
             }
 
             // reset gadget state
@@ -1007,4 +1025,4 @@
 
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator, Event, URL));
+  XMLHttpRequest, location, console, navigator, Event, URL, domsugar));

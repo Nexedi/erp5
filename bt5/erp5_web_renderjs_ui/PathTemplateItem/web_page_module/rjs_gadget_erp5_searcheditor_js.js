@@ -7,11 +7,13 @@
   var NUMERIC = [
       ["Equal to", "="], ["Greater than", ">"],
       ["Less than", "<"], ["Less than or Equal to", "<="],
-      ["Greater than or Equal to", ">="]
+      ["Greater than or Equal to", ">="],
+      ["Not equal to", "!="]
     ],
     OTHER = [
       ["Equal to", "exact_match"],
       ["Equal to (at least one)", "at_least_one_exact_match"],
+      ["Not equal to", "!="],
       ["Contains", "keyword"]
     ],
     DOMAIN = [
@@ -29,7 +31,8 @@
   function isNumericComparison(value) {
     return value.indexOf('date') !== -1 ||
       value.indexOf('quantity') !== -1 ||
-      value.indexOf('price') !== -1;
+      value.indexOf('price') !== -1 ||
+      value.indexOf('float_index') !== -1;
   }
   function getComparisonOptionList(value) {
     if (value.indexOf(PREFIX_COLUMN) === 0) {
@@ -700,7 +703,8 @@
         'Less than or Equal to',
         'Greater than or Equal to',
         'Searchable Text',
-        'Search Expression'
+        'Search Expression',
+        'Not equal to'
       ])
         .push(function (translation_list) {
           var duplicated_query_key_dict = {},
@@ -713,6 +717,7 @@
                     {
                       'Contains': translation_list[7],
                       'Equal to': translation_list[8],
+                      'Not equal to': translation_list[16],
                       'Equal to (at least one)': translation_list[9],
                       'Greater than': translation_list[10],
                       'Less than': translation_list[11],
@@ -818,7 +823,7 @@
           if (query.operator === 'keyword') {
             query.value = '%' + query.value + '%';
             query.operator = '';
-          } else if (["", ">", "<", "<=", ">="].indexOf(query.operator) === -1) {
+          } else if (["", ">", "<", "<=", ">=", "!="].indexOf(query.operator) === -1) {
             query.operator = '';
           }
 

@@ -94,10 +94,12 @@ discussion_thread.publish()
 
 # handle attachments
 if getattr(file, 'filename', '') != '':
-  document_kw = {'batch_mode': True,
-                 'redirect_to_document': False,
-                 'file': file}
-  document = context.Base_contribute(**document_kw)
+  document = context.Base_contribute(
+    batch_mode=True,
+    redirect_to_document=False,
+    synchronous_metadata_discovery=True,
+    file=file,
+  )
 
   # set relation between post and document
   discussion_post.setSuccessorValueList([document])
@@ -119,7 +121,7 @@ if send_notification_text not in ('', None):
     notification_reference = 'forum-new-thread'
     notification_message = context.NotificationTool_getDocumentValue(notification_reference, 'en')
     if notification_message is None:
-      raise ValueError, 'Unable to found Notification Message with reference "%s".' % notification_reference
+      raise ValueError('Unable to found Notification Message with reference "%s".' % notification_reference)
 
     notification_mapping_dict = {'subject': discussion_thread.getTitle(),
                                  'url': discussion_thread.absolute_url(),

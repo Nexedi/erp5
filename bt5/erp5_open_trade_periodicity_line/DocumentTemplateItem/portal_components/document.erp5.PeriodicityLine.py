@@ -54,7 +54,7 @@ class PeriodicityLineMixin(PeriodicityMixin):
     if scope_type:
       method = self._getTypeBasedMethod('calculateScopeTypeStopDate')
       if method is None:
-        raise RuntimeError, 'Type based method calculateScopeTypeStopDate does not exist.'
+        raise RuntimeError('Type based method calculateScopeTypeStopDate does not exist.')
       else:
         return method(scope_type, start_date)
     elif time_scale:
@@ -62,7 +62,7 @@ class PeriodicityLineMixin(PeriodicityMixin):
         day = length_number
         return start_date+day
       else:
-        raise RuntimeError, 'Unknown time scale: %s' % time_scale
+        raise RuntimeError('Unknown time scale: %s' % time_scale)
     else:
       return None
 

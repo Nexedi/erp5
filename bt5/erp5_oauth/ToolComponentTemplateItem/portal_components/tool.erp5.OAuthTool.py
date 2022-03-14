@@ -33,7 +33,7 @@ class OAuthTool(BaseTool):
   """
     OAuthTool is used to allow API authentification
   """
-  title = 'OAuth Tool'
+  title = 'OAuths'
   id = 'portal_oauth'
   meta_type = 'ERP5 OAuth Tool'
   portal_type = 'OAuth Tool'

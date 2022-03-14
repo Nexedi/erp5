@@ -1,0 +1,48 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Contract cover.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="contract_theme                        python: options.get('contract_theme');
+                       contract_title                        python: options.get('contract_title');
+                       contract_language                     python: options.get('contract_language');
+                       contract_theme_css_font_list          python: options.get('contract_theme_css_font_list');
+                       contract_theme_css_url                python: options.get('contract_theme_css_url');
+                       contract_template_css_url             python: options.get('contract_template_css_url');
+                       contract_short_title                  python: options.get('contract_short_title');
+                       contract_description                  python: options.get('contract_description');
+                       contract_source_person_title          python: options.get('contract_source_person_title');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', contract_theme, ' ci-', contract_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: contract_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url contract_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href contract_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href contract_template_css_url" />
+    </head>
+    <body class="ci-contract">
+      <tal:block metal:use-macro="context/WebPage_createContractCover/macros/contract_cover" />
+    </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="contract_cover">
+    <div class="ci-contract-cover ci-document-cover ci-document-print">
+      <p class="ci-contract-cover-faux-h1" tal:content="python: contract_title"></p>
+      <p class="ci-contract-cover-faux-h2" tal:content="python: contract_short_title"></p>
+      <p class="ci-contract-cover-description" tal:content="python: contract_description"></p>
+      <p class="ci-contract-cover-author-list">
+        <tal:block tal:repeat="author contract_source_person_title">
+          <span tal:content="author"></span><tal:block tal:condition="not: repeat/author/end">,</tal:block>
+        </tal:block>
+      </p>
+    </div>
+  </tal:block>
+</tal:block>

@@ -1,4 +1,3 @@
-from future.utils import raise_
 import re
 import os
 import sys
@@ -164,7 +163,7 @@ class StrippingParser( SGMLParser ):
 
     def handle_entityref(self, name):
 
-        if name in self.entitydefs:
+        if self.entitydefs.has_key(name):
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
@@ -176,17 +175,17 @@ class StrippingParser( SGMLParser ):
 
         """ Delete all tags except for legal ones.
         """
-        if tag in VALID_TAGS:
+        if VALID_TAGS.has_key(tag):
 
             self.result = self.result + '<' + tag
 
             for k, v in attrs:
 
                 if k.lower().startswith( 'on' ):
-                    raise_(IllegalHTML, 'Javascipt event "%s" not allowed.' % k)
+                    raise IllegalHTML('Javascipt event "%s" not allowed.' % k)
 
                 if v.lower().startswith( 'javascript:' ):
-                    raise_(IllegalHTML, 'Javascipt URI "%s" not allowed.' % v)
+                    raise IllegalHTML('Javascipt URI "%s" not allowed.' % v)
 
                 self.result = '%s %s="%s"' % (self.result, k, v)
 
@@ -197,7 +196,7 @@ class StrippingParser( SGMLParser ):
                 self.result = self.result + ' />'
 
         elif NASTY_TAGS.get( tag ):
-            raise_(IllegalHTML, 'Dynamic tag "%s" not allowed.' % tag)
+            raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
 
         else:
             pass    # omit tag

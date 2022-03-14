@@ -1,0 +1,20 @@
+<svg width="1375" height="963" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata3462">image/svg+xml</metadata>
+ <defs>
+  <linearGradient id="linearGradient4033">
+   <stop stop-color="#d40000" id="stop4031" offset="0"/>
+  </linearGradient>
+  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient4035" xlink:href="#linearGradient4033"/>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="965" width="1377" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="g3464">
+   <image x="0" y="0" width="1391" height="969" xlink:href="https://www.erp5.com/user-Howto.Add.People.Create.The.Related.Organisation.New?format=" id="image3430"/>
+   <rect fill="none" fill-rule="evenodd" stroke="url(#linearGradient4035)" stroke-width="5" stroke-miterlimit="4" y="172.31631" x="252.04778" height="105.60626" width="571.35419" id="rect3468"/>
+  </g>
+ </g>
+</svg>

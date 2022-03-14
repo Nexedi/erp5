@@ -1,4 +1,4 @@
-/*global window, document, rJS, console, RSVP, domsugar*/
+/*global window, document, rJS, console, RSVP, domsugar, URL*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 (function () {
   "use strict";
@@ -30,6 +30,16 @@
       'Image URL',
       'Image Caption'
     ];
+
+  function fixupERP5UrlCompatibility(jio_key, url) {
+    if (!jio_key) {
+      return url;
+    }
+    return new URL(
+      url,
+      new URL(jio_key + '/', window.location.href).href
+    ).href;
+  }
 
   ///////////////////////////////////////////////////
   // translation
@@ -102,7 +112,7 @@
     // No idea what it is for now
 
     // Get the comment
-    details = slide.querySelector(':scope > details');
+    details = slide.querySelector(':scope > details:last-of-type');
     if (details !== null) {
       result.comment_html = details.innerHTML;
       slide.removeChild(details);
@@ -169,8 +179,9 @@
     }
     slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' +
                       img +
-                      '<details>' + slide_dict.comment_html + '</details>' +
-                      slide_dict.slide_html;
+                      slide_dict.slide_html +
+                      '<details open="true">' +
+                      slide_dict.comment_html + '</details>';
 
     return slideListAsHTML(slide_list);
   }
@@ -278,10 +289,11 @@
           ["bottom", [["your_slide_content"]]]
         ]
       }
-    };
-    // Show chapter_title and slide_type inputs only during slide editing
-    if (title_html !== null && type !== null) {
+    },
+      extra_group_list = [];
 
+    // Show chapter_title and slide_type inputs only during slide editing
+    if (title_html !== null) {
       ck_editor_json.erp5_document._embedded._view.your_chapter_title = {
         "title": translation_dict["Chapter Title"],
         "type": "StringField",
@@ -290,7 +302,10 @@
         "key": "title_html",
         "value": title_html
       };
+      extra_group_list.push(["your_chapter_title"]);
+    }
 
+    if (type !== null) {
       ck_editor_json.erp5_document._embedded._view.your_slide_type = {
         "title": translation_dict["Type of Slide"],
         "type": "ListField",
@@ -305,6 +320,7 @@
                       ],
         value: type
       };
+      extra_group_list.push(["your_slide_type"]);
 
       if (image_url !== null) {
         ck_editor_json.erp5_document._embedded._view.your_image_url = {
@@ -324,25 +340,15 @@
           "key": "image_caption",
           "value": image_caption
         };
-
-        ck_editor_json.form_definition.group_list = [
-          ["left", [
-            ["your_chapter_title"],
-            ["your_slide_type"],
-            ["your_image_url"],
-            ["your_image_caption"]
-          ]]
-        ].concat(ck_editor_json.form_definition.group_list);
-      } else {
-        ck_editor_json.form_definition.group_list = [
-          ["left", [
-            ["your_chapter_title"],
-            ["your_slide_type"]
-          ]]
-        ].concat(ck_editor_json.form_definition.group_list);
+        extra_group_list.push(["your_image_url"], ["your_image_caption"]);
       }
     }
 
+    if (extra_group_list.length !== 0) {
+      ck_editor_json.form_definition.group_list = [
+        ["left", extra_group_list]
+      ].concat(ck_editor_json.form_definition.group_list);
+    }
     return ck_editor_json;
   }
 
@@ -384,7 +390,7 @@
         translation_dict,
         "comment_html",
         slide_dict.comment_html,
-        null,
+        slide_dict.title_html,
         null,
         null,
         null
@@ -439,7 +445,9 @@
       section_list = getSlideElementList(gadget.state.value),
       draggable_element_list = [],
       i,
-      content;
+      content,
+      edit_element,
+      delete_element;
 
     // Clone listbox header structure to reuse the css
     header_element = domsugar('div', {'class': 'document_table'}, [
@@ -450,22 +458,35 @@
     ]);
 
     for (i = 0; i < section_list.length; i += 1) {
+      edit_element = domsugar('button', {
+        type: 'button',
+        text: translation_dict.Edit,
+        'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
+        'data-slide-index': i
+      });
+      delete_element = domsugar('button', {
+        type: 'button',
+        text: translation_dict.Delete,
+        'class': 'delete-slide ui-icon-trash-o ui-btn-icon-left',
+        'data-slide-index': i
+      });
       // If slide type is sreenshot/illustration, show image instead of title
       if (getSlideDictFromSlideElement(section_list[i]).image_url) {
         content = [
-          domsugar('button', {type: 'button', text: translation_dict.Edit,
-                   'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
-                   'data-slide-index': i}),
+          edit_element,
+          delete_element,
           domsugar('img', {
-            src: getSlideDictFromSlideElement(section_list[i]).image_url,
+            src: fixupERP5UrlCompatibility(
+              gadget.state.jio_key,
+              getSlideDictFromSlideElement(section_list[i]).image_url
+            ),
             draggable: false
           })
         ];
       } else {
         content = [
-          domsugar('button', {type: 'button', text: translation_dict.Edit,
-                   'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
-                   'data-slide-index': i}),
+          edit_element,
+          delete_element,
           domsugar('h1', {
             html: getSlideDictFromSlideElement(section_list[i]).title_html
           })
@@ -590,6 +611,7 @@
 
     .declareMethod('render', function (options) {
       return this.changeState({
+        jio_key: options.jio_key,
         key: options.key,
         value: options.value || "",
         editable: options.editable === undefined ? true : options.editable
@@ -742,6 +764,23 @@
               ),
               slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE
             });
+          });
+      }
+
+      if (evt.target.className.indexOf("delete-slide") !== -1) {
+        return queue
+          .push(function () {
+            var slide_list = getSlideElementList(gadget.state.value);
+            slide_list.splice(parseInt(
+              evt.target.getAttribute('data-slide-index'),
+              10
+            ), 1);
+            return RSVP.all([
+              gadget.changeState({
+                value: slideListAsHTML(slide_list)
+              }),
+              gadget.notifyChange()
+            ]);
           });
       }
 

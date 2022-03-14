@@ -363,9 +363,7 @@
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_officejs_jabber.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -608,7 +606,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>968.4134.56436.18022</string> </value>
+                      <value> <string>992.50077.60742.52258</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -626,7 +624,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1528452522.1</float>
+                              <float>1623848718.16</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

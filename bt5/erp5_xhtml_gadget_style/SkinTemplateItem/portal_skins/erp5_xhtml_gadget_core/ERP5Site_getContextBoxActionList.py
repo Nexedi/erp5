@@ -51,12 +51,12 @@ if preferred_html_style_developper_mode:
 
 # add links for workflows
 if portal.portal_workflow.Base_getSourceVisibility():
-  workflow_list = portal.portal_workflow.getWorkflowsFor(context)
+  workflow_list = portal.portal_workflow.getWorkflowValueListFor(context)
   if workflow_list:
     result['workflow_list'] = [{"title": "-- %s --" %translate("Workflows"),
                                 "url": ""}]
     result['workflow_list'].extend([{"title": x.title,
-                                    "url": "%s/manage_properties" %x.absolute_url()} for x in workflow_list])
+                                    "url": "%s/manage_main" %x.absolute_url()} for x in workflow_list])
 # allowed types to add
 visible_allowed_content_type_list = context.getVisibleAllowedContentTypeList()
 result['visible_allowed_content_type_list'] = [{"title": "Add %s" %x,

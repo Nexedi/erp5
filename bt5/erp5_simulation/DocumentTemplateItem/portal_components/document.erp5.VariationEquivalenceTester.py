@@ -79,7 +79,7 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
                  sorted(prevision_value.items())
       else:
         # should not happen
-        raise AttributeError, 'prevision and decision values of this divergence tester should be list, tuple or dict.'
+        raise AttributeError('prevision and decision values of this divergence tester should be list, tuple or dict.')
       if not result:
         try:
           # XXX We should use "getTranslatedTestedPropertyTitleList", but it seems to

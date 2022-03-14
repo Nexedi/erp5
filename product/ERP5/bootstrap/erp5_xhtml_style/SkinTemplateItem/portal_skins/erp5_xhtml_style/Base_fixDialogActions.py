@@ -3,16 +3,24 @@ actions that does not provide one.
 """
 from Products.PythonScripts.standard import url_quote
 
-if dialog_category == 'object_jump':
-  return sorted(actions.get('object_jump', []) + actions.get('object_jio_jump', []), key=lambda x: x["priority"])
-if dialog_category == 'object_report':
-  return sorted(actions.get('object_report', []) + actions.get('object_jio_report', []), key=lambda x: x["priority"])
-elif dialog_category == 'object_exchange':
-  return sorted(actions.get('object_exchange', []) + actions.get('object_jio_exchange', []), key=lambda x: x["priority"])
-elif dialog_category == 'object_action':
-  return sorted(actions.get('object_action', []) + actions.get('object_jio_action', []), key=lambda x: x["priority"])
-elif dialog_category == 'object_fast_input':
-  return sorted(actions.get('object_fast_input', []) + actions.get('object_jio_fast_input', []), key=lambda x: x["priority"])
+action_mapping_dict = {
+  "object_jump": ["object_jump", "object_jio_jump"],
+  "object_report": ["object_report", "object_jio_report"],
+  "object_exchange": ["object_exchange", "object_jio_exchange"],
+  "object_action": ["object_action", "object_jio_action"],
+  "object_fast_input": ["object_fast_input", "object_jio_fast_input"],
+  "object_button": ["object_button", "object_jio_button"]
+}
+
+def getActionList(dialog_category):
+  action_list = []
+  for key in action_mapping_dict[dialog_category]:
+    action_list += actions.get(key, []) + actions.get("{}_raw".format(key), [])
+  return sorted(action_list, key=lambda x: x["priority"])
+
+if dialog_category in action_mapping_dict:
+  return getActionList(dialog_category)
+
 if dialog_category != 'object_print':
   return actions.get(dialog_category, [])
 

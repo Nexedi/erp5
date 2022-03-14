@@ -30,6 +30,8 @@
 # TODO: Some tests from this file can be merged into Formulator
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import hashlib
+import mock
 import unittest
 
 # Initialize ERP5Form Product to load monkey patches
@@ -39,6 +41,7 @@ from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\
 DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
 MultiListField, IntegerField
+from Products.ERP5Form.CaptchaField import CaptchaField
 from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
 
@@ -47,6 +50,7 @@ from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import ProxyField
 from DateTime import DateTime
+import lxml.html
 
 from Products.Formulator.Widget import NSMAP
 ODG_XML_WRAPPING_XPATH = 'draw:text-box/text:p/text:span'
@@ -531,6 +535,8 @@ class TestListField(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.field = ListField('test_field')
+    self.field.values['items'] = [('My first Line', '1'), ('My Second Line', '2')]
+    self.field.values['default'] = '2'
     self.widget = self.field.widget
     self.createCategories()
     self.tic()
@@ -550,9 +556,6 @@ class TestListField(ERP5TypeTestCase):
                                       int_index=2)
 
   def test_render_odt(self):
-    items = [('My first Line', '1'), ('My Second Line', '2')]
-    self.field.values['items'] = items
-    self.field.values['default'] = '2'
     element = self.field.render_odt(as_string=False)
     self.assertEqual('{%(text)s}p' % NSMAP, element.tag)
     self.assertEqual('My Second Line', element.text)
@@ -562,6 +565,44 @@ class TestListField(ERP5TypeTestCase):
     element = self.field.render_odt(as_string=False)
     self.assertEqual('??? (3)', element.text)
 
+  def test_render(self):
+    select, input_element, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    # listfields render an input to confirm that the field was posted
+    # in the form's action script
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+
+    self.assertEqual(select.tag, 'select')
+    first, second = select
+    self.assertEqual(first.tag, 'option')
+    self.assertEqual(first.text_content(), 'My first Line')
+    self.assertEqual(first.attrib['value'], '1')
+
+    self.assertEqual(second.tag, 'option')
+    self.assertEqual(second.text_content(), 'My Second Line')
+    self.assertEqual(second.attrib['value'], '2',)
+    self.assertTrue(second.attrib['selected'])
+
+  def test_render_escape_html(self):
+    self.field.values['default'] = ''
+    self.field.values['items'] = [
+        ('<script>alert("text content")</script>', '<script>alert("value")</script>'),]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+    # selected
+    self.field.values['default'] = self.field.values['items'][0][1]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+
+  def test_render_disabled(self):
+    self.field.values['default'] = ''
+    # None items are rendered as disabled
+    self.field.values['items'] = [('Disabled', None)]
+    (disabled, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertTrue(disabled.attrib['disabled'])
+    self.assertFalse(disabled.attrib.get('value'))
 
   def test_listField_value_order(self):
     '''This test check the list field value order
@@ -603,6 +644,46 @@ class TestMultiListField(ERP5TypeTestCase):
     self.field.values['items'] = [('A', 'a',), ('B', 'b')]
     self.field.values['default'] = ['a', 'b']
 
+  def test_render(self):
+    select, input_element, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    # listfields render an input to confirm that the field was posted
+    # in the form's action script
+    self.assertEqual(input_element.name, 'default_field_test_field:int')
+    self.assertEqual(input_element.type, 'hidden')
+
+    self.assertEqual(select.tag, 'select')
+    first, second = select
+    self.assertEqual(first.tag, 'option')
+    self.assertEqual(first.text_content(), 'A')
+    self.assertEqual(first.attrib['value'], 'a')
+    self.assertTrue(second.attrib['selected'])
+
+    self.assertEqual(second.tag, 'option')
+    self.assertEqual(second.text_content(), 'B')
+    self.assertEqual(second.attrib['value'], 'b',)
+    self.assertTrue(second.attrib['selected'])
+
+  def test_render_escape_html(self):
+    self.field.values['default'] = []
+    self.field.values['items'] = [
+        ('<script>alert("text content")</script>', '<script>alert("value")</script>')]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+    # selected
+    self.field.values['default'] = [self.field.values['items'][0][1]]
+    (script, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertEqual(script.attrib['value'], '<script>alert("value")</script>')
+    self.assertEqual(script.text_content(), '<script>alert("text content")</script>')
+
+  def test_render_disabled(self):
+    # None items are rendered as disabled
+    self.field.values['default'] = []
+    self.field.values['items'] = [('Disabled', None)]
+    (disabled, ), _, = lxml.html.fragments_fromstring(self.field.render())  # pylint:disable=unbalanced-tuple-unpacking
+    self.assertTrue(disabled.attrib['disabled'])
+    self.assertFalse(disabled.attrib.get('value'))
+
   def test_render_view(self):
     self.assertEqual('A<br />\nB', self.field.render_view(value=['a', 'b']))
 
@@ -638,9 +719,6 @@ class TestProxyField(ERP5TypeTestCase):
     self.container = Folder('container').__of__(self.portal)
     self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_viewProxyFieldLibrary', 'Proxys')
     self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_view', 'View')
-    from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
-    _setUpDefaultTraversable()
-
 
   def addField(self, form, id_, title, field_type):
     form.manage_addField(id_, title, field_type)
@@ -914,6 +992,92 @@ class TestProxyField(ERP5TypeTestCase):
     self.assertFalse(field.is_message_delegated(test_error))
     self.assertEqual(field.get_error_message(test_error), test_message2)
 
+  def _test_has_value(self, setValueOnLibraryField, setValueOnField):
+    """Tests has_value method
+
+    We use this:
+
+       Base_viewGeek/my_title [field]
+                 |            overriding "css_class"
+                 v
+       Base_viewGeekFieldLibrary/my_title [library_field]
+                 |                        overriding "description"
+                 v
+       Base_viewGeekFieldLibrary/my_base_title [library_base_field]
+
+    and check that has_value is correct for both field (a proxy field using
+    another proxy field as target) and library_field (a proxy field using
+    a traditional field as target).
+
+    This will be tested for both cases where the values are set as "normal values"
+    or as TALES, the setup of values is done by setValueOnLibraryField and
+    setValueField functions.
+    """
+    self.addField(
+        self.container.Base_viewProxyFieldLibrary,
+        'my_title_base',
+        'library base field',
+        'StringField'
+    )
+    library_field = self.addField(
+        self.container.Base_viewProxyFieldLibrary,
+        'my_title',
+        '',
+        'ProxyField'
+    )
+    library_field.manage_edit_xmlrpc(dict(
+        form_id='Base_viewProxyFieldLibrary', field_id='my_title_base',))
+    field = self.addField(
+        self.container.Base_view,
+        'my_title',
+        '',
+        'ProxyField'
+    )
+    field.manage_edit_xmlrpc(dict(
+      form_id='Base_viewProxyFieldLibrary', field_id='my_title'))
+
+    setValueOnLibraryField(library_field)
+    setValueOnField(field)
+
+    # sanity check
+    self.assertEqual(field.get_value('title'), 'library base field')
+    self.assertEqual(field.get_value('description'), 'library proxy field')
+    self.assertEqual(field.get_value('css_class'), 'form proxy field')
+
+    # proxy fields have values from proxyied fields
+    self.assertTrue(field.has_value('title'))
+    self.assertTrue(field.has_value('description'))
+    self.assertTrue(field.has_value('css_class'))
+    self.assertTrue(library_field.has_value('title'))
+    self.assertTrue(library_field.has_value('description'))
+    self.assertTrue(library_field.has_value('css_class'))
+
+    # proxy fields have their "own" values
+    self.assertTrue(field.has_value('form_id'))
+    self.assertTrue(field.has_value('field_id'))
+
+    self.assertFalse(field.has_value('not_exists'))
+    self.assertFalse(library_field.has_value('not_exists'))
+
+  def test_has_value(self):
+    def setValueOnLibraryField(library_field):
+      library_field.manage_edit_surcharged_xmlrpc({'description': 'library proxy field'})
+    def setValueOnField(field):
+      field.manage_edit_surcharged_xmlrpc({'css_class': 'form proxy field'})
+    return self._test_has_value(setValueOnLibraryField, setValueOnField)
+
+  def test_has_value_TALES(self):
+    def setValueOnLibraryField(library_field):
+      library_field._surcharged_tales(
+          {'description': TALESMethod('string:library proxy field')},
+          ['description'])
+    def setValueOnField(field):
+      field._surcharged_tales(
+          {'css_class': TALESMethod('string:form proxy field')},
+          ['css_class'])
+    return self._test_has_value(setValueOnLibraryField, setValueOnField)
+
+
 class TestFieldValueCache(ERP5TypeTestCase):
   """Tests field value caching system
   """
@@ -1001,6 +1165,110 @@ class TestFieldValueCache(ERP5TypeTestCase):
     self.assertEqual(True, cache_size == self._getCacheSize('ProxyField.get_value'))
 
 
+class TestCaptchaField(ERP5TypeTestCase):
+  """Test Captcha field
+  """
+
+  def afterSetUp(self):
+    self.field = CaptchaField('test_field').__of__(self.portal)
+    self.widget = self.field.widget
+    self.validator = self.field.validator
+
+  def beforeTearDown(self):
+    self.portal.portal_sessions.manage_delObjects(
+        [
+          hashlib.md5(b'1 + 1').hexdigest(),
+          hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest(),
+        ]
+    )
+    if 'Base_viewTestCaptcha' in self.portal.portal_skins.custom.objectIds():
+      self.portal.portal_skins.custom.manage_delObjects(['Base_viewTestCaptcha'])
+    self.tic()
+
+
+  def test_numeric_good_captcha(self):
+    self.field.values['captcha_type'] = 'numeric'
+    with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
+          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=lambda seq: seq[0]):
+      field_html = self.field.render(REQUEST=self.portal.REQUEST)
+    self.assertIn('1 plus 1', field_html)
+    self.assertIn(hashlib.md5(b'1 + 1').hexdigest(), field_html)
+
+    self.assertEqual(
+        self.validator.validate(
+            self.field, 'field_test', {
+                'field_test': '2',
+                '__captcha_field_test__': hashlib.md5(b'1 + 1').hexdigest()
+            }),
+        '2',
+    )
+
+  def test_numeric_bad_captcha(self):
+    self.field.values['captcha_type'] = 'numeric'
+    with mock.patch('Products.ERP5Form.CaptchaField.random.randint', return_value=1), \
+          mock.patch('Products.ERP5Form.CaptchaField.random.choice', side_effect=lambda seq: seq[0]):
+      self.field.render(REQUEST=self.portal.REQUEST)
+    self.assertRaises(
+        ValidationError, self.validator.validate, self.field, 'field_test', {
+            'field_test': '3',
+            '__captcha_field_test__': hashlib.md5(b'1 + 1').hexdigest()
+        })
+    # once a reply was entered, the correct reply no longer work
+    self.assertRaises(
+        ValidationError, self.validator.validate, self.field, 'field_test', {
+            'field_test': '2',
+            '__captcha_field_test__': hashlib.md5(b'1 + 1').hexdigest()
+        })
+
+  def test_text_good_captcha(self):
+    self.field.values['captcha_type'] = 'text'
+    self.field.values['captcha_dot_net_client'] = 'demo'
+    self.field.values['captcha_dot_net_secret'] = 'secret'
+    self.field.values['captcha_dot_net_use_ssl'] = True
+
+    with mock.patch('Products.ERP5Form.CaptchasDotNet.random.choice',
+                    side_effect=lambda seq: seq[0]):
+      field_html = self.field.render(REQUEST=self.portal.REQUEST)
+    self.assertIn(
+        'src="https://image.captchas.net/?client=demo&amp;random=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&amp;alphabet=abcdefghkmnopqrstuvwxyz"',
+        field_html)
+    self.assertIn(
+        hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest(),
+        field_html)
+
+    self.assertEqual(
+        self.validator.validate(
+            self.field, 'field_test', {
+                'field_test': 'cbktzg',
+                '__captcha_field_test__': hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest()
+            }),
+        'cbktzg',
+    )
+
+  def test_text_bad_captcha(self):
+    self.field.values['captcha_type'] = 'text'
+    self.field.values['captcha_dot_net_client'] = 'demo'
+    self.field.values['captcha_dot_net_secret'] = 'secret'
+    self.field.values['captcha_dot_net_use_ssl'] = True
+
+    with mock.patch('Products.ERP5Form.CaptchasDotNet.random.choice',
+                    side_effect=lambda seq: seq[0]):
+      self.field.render(REQUEST=self.portal.REQUEST)
+
+    self.assertRaises(
+        ValidationError, self.validator.validate, self.field, 'field_test', {
+            'field_test': 'wrong',
+            '__captcha_field_test__': hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest()
+        })
+
+    # once a reply was entered, the correct reply no longer work
+    self.assertRaises(
+        ValidationError, self.validator.validate, self.field, 'field_test', {
+            'field_test': 'cbktzg',
+            '__captcha_field_test__': hashlib.md5(b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa').hexdigest()
+        })
+
+
 def makeDummyOid():
   import time, random
   return '%s%s' % (time.time(), random.random())
@@ -1020,4 +1288,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestMultiListField))
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
+  suite.addTest(unittest.makeSuite(TestCaptchaField))
   return suite

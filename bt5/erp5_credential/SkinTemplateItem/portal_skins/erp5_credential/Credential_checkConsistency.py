@@ -8,4 +8,4 @@ Assignee -- allow to check credential informations"""
 for portal_type in destination_decision_type:
   destination = context.getDestinationDecisionValue(portal_type=portal_type)
   if destination is None:
-    raise ValueError, '%s request must  be in relation with a %s' % (context.getPortalType(),portal_type)
+    raise ValueError('%s request must  be in relation with a %s' % (context.getPortalType(),portal_type))

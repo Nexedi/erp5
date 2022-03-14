@@ -7,9 +7,10 @@ category_list = [
     ] if c
 ]
 
-account = movement.getSourceAccount() or context.getSource()
+account = movement.getSourceAccount()
 if not account:
-  # try to find from predicates
+  # try to find from predicates, with fallback on the account
+  # defined on the trade model path
   resource = movement.getResourceValue()
   if resource is not None:
     account = next(
@@ -19,7 +20,7 @@ if not account:
                 context=movement,
                 portal_type='Sale Supply Line',
             )
-            if predicate.getSourceAccount()), None)
+            if predicate.getSourceAccount()), context.getSource())
 if account:
   category_list.append('source/%s' % account)
 

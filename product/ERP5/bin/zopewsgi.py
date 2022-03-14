@@ -15,8 +15,12 @@ import ZConfig
 import Zope2
 from Zope2.Startup.run import make_wsgi_app
 
-from Products.ERP5Type.patches.WSGIPublisher import publish_module
-
+try:
+  from ZPublisher.WSGIPublisher import _MODULES
+  from ZPublisher.WSGIPublisher import publish_module
+except ImportError:
+  # BBB Zope2
+  from Products.ERP5Type.patches.WSGIPublisher import publish_module
 
 # this class licensed under the MIT license (stolen from pyramid_translogger)
 class TransLogger(object):
@@ -72,7 +76,7 @@ class TransLogger(object):
             'HTTP_USER_AGENT': environ.get('HTTP_USER_AGENT', '-'),
             }
         message = self.format % d
-        self.logger.warn(message)
+        self.logger.info(message)
 
 
 def app_wrapper(large_file_threshold=10<<20, webdav_ports=()):
@@ -155,27 +159,68 @@ def createServer(application, logger, **kw):
 
 def runwsgi():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--event-log-file', help='Event log file')
+    parser.add_argument('--access-log-file', help='Access log file')
     parser.add_argument('-w', '--webdav', action='store_true')
     parser.add_argument('address', help='<ip>:<port>')
     parser.add_argument('zope_conf', help='path to zope.conf')
+    parser.add_argument('--timerserver-interval', help='Interval for timerserver', type=float)
     args = parser.parse_args()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
-    schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
+    if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
+      schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
+    else: # BBB
+      schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
+
+    # Configure logging previously handled by ZConfig/ZServer
+    logging.captureWarnings(True)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.INFO)
+
+    event_log_handler = logging.FileHandler(args.event_log_file)
+    event_log_handler.setFormatter(logging.Formatter(
+      "------\n%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+      "%Y-%m-%d %H:%M:%S"))
+    root_logger.addHandler(event_log_handler)
+
+    access_log_handler = logging.FileHandler(args.access_log_file)
+    access_log_handler.setLevel(logging.INFO)
+    access_log_logger = logging.getLogger('access')
+    access_log_logger.propagate = False
+    access_log_logger.addHandler(access_log_handler)
+
+    if conf.debug_mode:
+      console_handler = logging.StreamHandler(sys.stderr)
+      console_handler.setFormatter(logging.Formatter(
+        "%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
+        "%Y-%m-%d %H:%M:%S"))
+      console_handler.setLevel(logging.NOTSET)
+      root_logger.addHandler(console_handler)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
     from Signals.SignalHandler import SignalHandler
     SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
 
+    if args.timerserver_interval:
+      import Products.TimerService
+      Products.TimerService.timerserver.TimerServer.TimerServer(
+          module='Zope2',
+          interval=args.timerserver_interval,
+      )
+
     ip, port = splitport(args.address)
     port = int(port)
     createServer(
         app_wrapper(
-          large_file_threshold=conf.large_file_threshold,
+          large_file_threshold=getattr(conf, 'large_file_threshold', None),
           webdav_ports=[port] if args.webdav else ()),
-        listen=args.address,
-        logger=logging.getLogger("access"),
-        threads=conf.zserver_threads,
+          listen=args.address,
+          logger=access_log_logger,
+          threads=getattr(conf, 'zserver_threads', 4),
+        asyncore_use_poll=True,
+        # Prevent waitress from adding its own Via and Server response headers.
+        ident=None,
     ).run()

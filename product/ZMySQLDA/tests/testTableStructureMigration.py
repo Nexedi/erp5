@@ -28,7 +28,7 @@
 
 from textwrap import dedent
 
-from _mysql_exceptions import OperationalError
+from MySQLdb import OperationalError
 from Shared.DC.ZRDB.DA import DA
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 

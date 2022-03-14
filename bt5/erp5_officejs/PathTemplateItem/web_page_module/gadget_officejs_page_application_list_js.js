@@ -1,7 +1,6 @@
-/*global window, document, rJS, RSVP,
-    loopEventListener*/
+/*global window, document, rJS, RSVP*/
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, document, RSVP) {
+(function (window, rJS, document, RSVP, loopEventListener) {
   "use strict";
 
   function addLine(gadget, app_name, edited_app_dict) {
@@ -54,4 +53,4 @@
         });
     })
 
-}(window, rJS, document, RSVP));
+}(window, rJS, document, RSVP, rJS.loopEventListener));

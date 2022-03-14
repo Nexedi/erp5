@@ -1,10 +1,11 @@
 """Export the current selection in task report module in iCalendar format.
 """
+from zExceptions import Unauthorized
 # XXX bypass CookieCrumbler
 if context.REQUEST.AUTHENTICATED_USER.getUserName() == 'Anonymous User': 
   if context.REQUEST.get('disable_cookie_login__', 0) \
           or context.REQUEST.get('no_infinite_loop', 0)  :
-    raise 'Unauthorized', context
+    raise Unauthorized(context)
   return context.REQUEST.RESPONSE.redirect(script.id + "?disable_cookie_login__=1&no_infinite_loop=1")
 
 def formatDate(date):

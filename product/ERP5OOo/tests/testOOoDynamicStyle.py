@@ -76,10 +76,10 @@ class TestOooDynamicStyle(ERP5TypeTestCase):
     addStyleSheet = self.getPortal().manage_addProduct['OFSP'].manage_addFile
     if getattr(self.getPortal(), 'Test_getODTStyleSheet_en', None) is None:
       addStyleSheet(id='Test_getODTStyleSheet_en', file=en_file, title='',
-        precondition='', content_type=self.content_type_writer)
+        content_type=self.content_type_writer)
     if getattr(self.getPortal(), 'Test_getODTStyleSheet_ja', None) is None:
       addStyleSheet(id='Test_getODTStyleSheet_ja', file=ja_file, title='',
-        precondition='', content_type=self.content_type_writer)
+        content_type=self.content_type_writer)
     if getattr(self.getPortal(), 'Base_getODTStyleSheetByLanguage', None) is None:
       script_body = """
 current_language = context.Localizer.get_selected_language()

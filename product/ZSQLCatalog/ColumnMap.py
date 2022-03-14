@@ -28,13 +28,12 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
-from future.utils import raise_
 import re
 import itertools
 from zLOG import LOG, WARNING, INFO
 from .interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
-from zope.interface import implementer
+from zope.interface import implements
 from Products.ZSQLCatalog.interfaces.column_map import IColumnMap
 from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
                                                   TableAlias,
@@ -53,8 +52,9 @@ MAPPING_TRACE = False
 
 re_sql_as = re.compile("\s+AS\s[^)]+$", re.IGNORECASE | re.MULTILINE)
 
-@implementer(IColumnMap)
 class ColumnMap(object):
+
+  implements(IColumnMap)
 
   def __init__(self,
                catalog_table_name=None,
@@ -195,7 +195,9 @@ class ColumnMap(object):
       if alias is not None:
         self.resolveTable(table_name, alias, group=group)
     elif alias is not None and alias != existing_value:
-      raise_(ValueError, 'Table %r for group %r is aliased as %r, can\'t alias it now as %r' % (table_name, group, existing_value, alias))
+      raise ValueError(
+        "Table %r for group %r is aliased as %r, can't alias it now as %r"
+        % (table_name, group, existing_value, alias))
 
   def _mapColumns(self, column_table_map, table_usage_dict, column_name_set, group, vote_result_dict):
     mapping_dict = {}
@@ -287,8 +289,8 @@ class ColumnMap(object):
                 ' is not explicitely used.' % (common_column_set, table_name))
 
     # Detect incomplete mappings
-    if len(column_name_set):
-      raise_(ValueError, 'Could not map those columns: %r' % (column_name_set, ))
+    if column_name_set:
+      raise ValueError('Could not map those columns: %r' % column_name_set)
 
     # Do the actual mapping
     for column_name, table_name in mapping_dict.iteritems():
@@ -507,7 +509,7 @@ class ColumnMap(object):
       if column == 'uid':
         LOG('ColumnMap', WARNING, 'Attempt to remap uid from %r to %r ignored.' % (previous_value, table_name))
       else:
-        raise_(ValueError, 'Cannot remap a column to another table. column_map[%r] = %r, new = %r' % (column_map_key, column_map.get(column_map_key), table_name))
+        raise ValueError('Cannot remap a column to another table. column_map[%r] = %r, new = %r' % (column_map_key, previous_value, table_name))
 
   def resolveTable(self, table_name, alias, group=DEFAULT_GROUP_ID):
     table_alias_key = (group, table_name)

@@ -1194,6 +1194,9 @@ msgstr "Produits"
 msgid "Income Tax"
 msgstr "Impôt Sur Le Revenu"
 
+msgid "Incoming"
+msgstr "Entrant"
+
 msgid "India"
 msgstr "Inde"
 
@@ -1892,6 +1895,9 @@ msgstr "Fabrication d'autres matériels de transport"
 
 msgid "Others Liabilities"
 msgstr "Autres dettes"
+
+msgid "Outgoing"
+msgstr "Sortant"
 
 msgid "Overtime"
 msgstr "Heures supplémentaires"

@@ -74,7 +74,6 @@
                       <list>
                         <string>my_title</string>
                         <string>your_modification_date</string>
-                        <string>my_validation_state</string>
                         <string>my_image</string>
                       </list>
                     </value>
@@ -82,7 +81,9 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

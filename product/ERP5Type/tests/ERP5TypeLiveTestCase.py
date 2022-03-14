@@ -39,7 +39,7 @@ from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCas
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
-  ERP5TypeTestCaseMixin, ERP5TypeTestCase
+  ERP5TypeTestCaseMixin, ERP5TypeTestCase, ERP5ReportTestCase
 from glob import glob
 import transaction
 
@@ -68,6 +68,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       defined.
     """
     portal = None
+    _added_property_sheets = {}
 
     def getPortalName(self):
       """ Return the default ERP5 site id.
@@ -225,9 +226,9 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
 
     def loadTestsFromTestCase(self, testCaseClass):
         testModule = sys.modules[testCaseClass.__module__]
-        # Do not reload ERP5TypeTestCase and SecurityTestCase because we patch 
+        # Do not reload ERP5TypeTestCase, SecurityTestCase or ERP5ReportTestCase because we patch
         # it nor ZODB Test Component as it is reset upon modification anyway
-        if (testCaseClass not in (ERP5TypeTestCase, SecurityTestCase) and
+        if (testCaseClass not in (ERP5TypeTestCase, SecurityTestCase, ERP5ReportTestCase) and
             not isinstance(getattr(testModule, '__loader__', None),
                            ComponentDynamicPackage)):
           testModule = reload(testModule)

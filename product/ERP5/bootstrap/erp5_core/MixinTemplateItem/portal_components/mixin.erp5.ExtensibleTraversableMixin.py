@@ -52,6 +52,6 @@ class ExtensibleTraversableMixin:
     try:
       request.RESPONSE.notFoundError("%s\n%s" % (name, method))
     except AttributeError:
-      raise KeyError, name
+      raise KeyError(name)
 
 ExtensibleTraversableMixIn = ExtensibleTraversableMixin # Backward compatibility

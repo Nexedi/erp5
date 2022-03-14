@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MRT</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MR</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>mauritania</string> </value>
         </item>

@@ -138,9 +138,9 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     bt = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_core',
                                                                   strict=True)
     for path, obj in bt._path_item._objects.iteritems():
-        path, obj_id = path.rsplit('/', 1)
-        if path == 'portal_ids':
-            id_tool._setObject(obj_id, obj._getCopy(bt))
+      path, obj_id = path.rsplit('/', 1)
+      if path == 'portal_ids':
+        id_tool._setObject(obj_id, obj._getCopy(bt))
     self.tic()
     id_list = id_tool.generateNewLengthIdList(id_group='foo')
     # it is known that with current upgrade there is a hole
@@ -173,7 +173,7 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
 
   def _setUpLastMaxIdDict(self, id_generator_reference):
     def countup(id_generator, id_group, until):
-      for i in xrange(until + 1):
+      for _ in xrange(until + 1):
         self.id_tool.generateNewId(id_generator=id_generator_reference,
                                    id_group=id_group)
 
@@ -251,14 +251,14 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     self._setUpLastMaxIdDict(id_generator_reference)
 
     # test migration: PersistentMapping to OOBTree
-    self.assertTrue(isinstance(last_id_dict, PersistentMapping))
+    self.assertIsInstance(last_id_dict, PersistentMapping)
     self._assertIdGeneratorLastMaxIdDict(id_generator)
     id_generator.rebuildGeneratorIdDict() # migrate the dict
     self._assertIdGeneratorLastMaxIdDict(id_generator)
 
     # test migration: OOBTree to OOBTree. this changes nothing, just to be sure
     last_id_dict = self._getLastIdDict(id_generator)
-    self.assertTrue(isinstance(last_id_dict, OOBTree))
+    self.assertIsInstance(last_id_dict, OOBTree)
     self._assertIdGeneratorLastMaxIdDict(id_generator)
     id_generator.rebuildGeneratorIdDict() # migrate the dict
     self._assertIdGeneratorLastMaxIdDict(id_generator)
@@ -268,8 +268,8 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
       'SQL Non Continuous Increasing Id Generator':
       self._setLastIdDict(id_generator, OOBTree()) # set empty one
       last_id_dict = self._getLastIdDict(id_generator)
-      assert(len(last_id_dict), 0) # 0 because it is empty
-      self.assertTrue(isinstance(last_id_dict, OOBTree))
+      self.assertEqual(len(last_id_dict), 0) # 0 because it is empty
+      self.assertIsInstance(last_id_dict, OOBTree)
       # migrate the dict totally from sql table in this case
       id_generator.rebuildGeneratorIdDict()
       self._assertIdGeneratorLastMaxIdDict(id_generator)

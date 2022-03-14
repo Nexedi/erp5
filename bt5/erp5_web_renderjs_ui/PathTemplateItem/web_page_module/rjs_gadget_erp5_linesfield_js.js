@@ -20,7 +20,7 @@
           "editable": options.field_json.editable,
           "required": options.field_json.required,
           "hidden": options.field_json.hidden,
-          "title": options.field_json.title,
+          "title": options.field_json.description,
           "key": options.field_json.key,
           // Force calling subfield render
           // as user may have modified the input value

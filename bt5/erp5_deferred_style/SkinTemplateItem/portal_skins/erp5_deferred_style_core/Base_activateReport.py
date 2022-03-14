@@ -25,7 +25,7 @@ skin_name = request['deferred_portal_skin']
 
 # save request parameters (after calling the report_method which may tweak the
 # request).
-request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
+report_request = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 localizer_language = portal.Localizer.get_selected_language()
 
@@ -37,7 +37,7 @@ context.activate(
     priority=priority,
 ).Base_computeReportSection(
     form=form.getId(), 
-    request_other=request_other, 
+    report_request=report_request,
     user_name=user.getId(),
     tag=tag,
     skin_name=skin_name, 

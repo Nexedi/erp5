@@ -1,4 +1,4 @@
-/*global window, document, rJS */
+/*global window, document, rJS, domsugar, HTMLLabelElement*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS) {
+(function (window, document, rJS, domsugar, HTMLLabelElement) {
   "use strict";
 
   var SCOPE = 'field';
@@ -32,6 +32,8 @@
       field_url = 'gadget_erp5_field_string.html';
     } else if (field_type === 'HyperLinkField') {
       field_url = 'gadget_erp5_field_hyperlink.html';
+    } else if (field_type === 'LinkField') {
+      field_url = 'gadget_erp5_field_link.html';
     } else if (field_type === 'LinesField') {
       field_url = 'gadget_erp5_field_lines.html';
     } else if (field_type === 'PasswordField') {
@@ -74,14 +76,36 @@
     return field_url;
   }
 
+  function addDeveloperAction(class_name, title_href, title, root_element) {
+    var div,
+      field_href = domsugar("a", {
+        "class": class_name,
+        href: title_href,
+        title: title
+      });
+    if (root_element.constructor === HTMLLabelElement) {
+      root_element.appendChild(field_href);
+      return;
+    }
+    div = root_element.querySelector("div");
+    if (div) {
+      root_element.insertBefore(field_href, div);
+    }
+  }
+
   rJS(window)
     .setState({
       label_text: '',
       error_text: '',
       label: true,  // the label element is already present in the HTML template
       css_class: '',
+      display_error_text: false,
       first_call: false
     })
+    //////////////////////////////////////////////
+    // acquired method
+    //////////////////////////////////////////////
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     .declareMethod('render', function render(options) {
       var state_dict = {
@@ -95,16 +119,21 @@
         hidden: options.field_json.hidden,
         css_class: options.field_json.css_class
       };
+
       // RenderJS would overwrite default value with empty variables :-(
       // So we have to mitigate this behaviour
       if (state_dict.label === undefined) {
         state_dict.label = true;
       }
       return this.changeState(state_dict);
+
     })
 
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
+        options = modification_dict.options || {},
+        field_json = options.field_json,
+        field_gadget,
         span,
         css_class,
         i,
@@ -117,8 +146,7 @@
           label_element: gadget.element.querySelector('label')
         };
       }
-
-      if (gadget.state.hidden && !modification_dict.error_text) {
+      if (gadget.state.hidden && !gadget.state.error_text) {
         this.element.hidden = true;
       } else {
         this.element.hidden = false;
@@ -136,26 +164,6 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty('error_text')) {
-        // first remove old errors
-        span = this.props.container_element.lastElementChild;
-        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
-          span = null;
-        }
-        // display new error if present
-        if (this.state.error_text) {
-          if (span === null) {
-            span = document.createElement('span');
-            span.textContent = this.state.error_text;
-            this.props.container_element.appendChild(span);
-          } else {
-            span.textContent = this.state.error_text;
-          }
-        } else if (span !== null) {
-          this.props.container_element.removeChild(span);
-        }
-      }
-
       // Remove/add label_element from DOM
       if (modification_dict.hasOwnProperty('label')) {
         if (this.state.label === true) {
@@ -165,14 +173,41 @@
         }
       }
 
+      if (this.state.error_text && this.props.label_element &&
+          !this.props.label_element.classList.contains("is-invalid")) {
+        this.props.label_element.classList.add("is-invalid");
+      } else if (!this.state.error_text &&
+                 this.props.label_element.classList.contains("is-invalid")) {
+        this.props.label_element.classList.remove("is-invalid");
+      }
+
+      if (modification_dict.hasOwnProperty('display_error_text') || modification_dict.hasOwnProperty('error_text')) {
+        // first remove old errors
+        span = this.props.container_element.lastElementChild;
+        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+          span = null;
+        }
+        // display new error if present
+        if (this.state.error_text && this.state.display_error_text) {
+          if (span === null) {
+            span = document.createElement('span');
+            span.textContent = this.state.error_text;
+            this.props.container_element.appendChild(span);
+          } else {
+            span.textContent = this.state.error_text;
+          }
+        } else {
+          if (span !== null) {
+            this.props.container_element.removeChild(span);
+          }
+        }
+      }
       if (modification_dict.hasOwnProperty('options')) {
         if (this.state.field_url) {
           if (modification_dict.hasOwnProperty('field_url')) {
-            //if (!modification_dict.hasOwnProperty('first_call')) {
             gadget.props.container_element.removeChild(
               gadget.props.container_element.querySelector('div')
             );
-            //}
             new_div = document.createElement('div');
             span = gadget.props.container_element.lastElementChild;
             if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
@@ -193,12 +228,83 @@
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
           }
+
+          queue
+            .push(function (declared_gadget) {
+              field_gadget = declared_gadget;
+            });
+          if (field_json && gadget.state.options.development_link !== false) {
+            queue
+              .push(function () {
+                return gadget.getTranslationList([
+                  "Edit this field",
+                  "Translate this field title",
+                  "Translate this field description"
+                ]);
+              })
+              .push(function (translation_list) {
+                var root_element,
+                  field;
+
+                if (gadget.state.label === true) {
+                  root_element = gadget.props.label_element;
+                } else {
+                  root_element = gadget.element;
+                }
+
+                if (field_json.hasOwnProperty('edit_field_href') &&
+                    !root_element.querySelector(".edit-field")) {
+                  addDeveloperAction(
+                    "edit-field ui-icon-edit ui-btn-icon-left",
+                    field_json.edit_field_href,
+                    translation_list[0],
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('edit_field_href')) {
+                  field = root_element.querySelector(".edit-field");
+                  if (field) {
+                    root_element.removeChild(field);
+                  }
+                }
+
+                if (field_json.hasOwnProperty('translate_title_href') &&
+                    !root_element.querySelector(".translate-title")) {
+                  addDeveloperAction(
+                    "translate-title ui-icon-language ui-btn-icon-left",
+                    field_json.translate_title_href,
+                    translation_list[1],
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('translate_title_href')) {
+                  field = root_element.querySelector(".translate-title");
+                  if (field) {
+                    root_element.removeChild(field);
+                  }
+                }
+
+                if (field_json.hasOwnProperty('translate_description_href') &&
+                    !root_element.querySelector(".translate-description")) {
+                  addDeveloperAction(
+                    "translate-description ui-icon-language ui-btn-icon-left",
+                    field_json.translate_description_href,
+                    translation_list[2],
+                    root_element
+                  );
+                } else if (!field_json.hasOwnProperty('translate_description_href')) {
+                  field = root_element.querySelector(".translate-description");
+                  if (field) {
+                    root_element.removeChild(field);
+                  }
+                }
+              });
+          }
           return queue
-            .push(function (field_gadget) {
+            .push(function () {
               return field_gadget.render(gadget.state.options);
             });
         }
       }
+
     })
 
     .declareMethod("checkValidity", function checkValidity() {
@@ -231,6 +337,14 @@
         });
     }, {mutex: 'changestate'})
 
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      return this.changeState({display_error_text: true});
+    })
+
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      return this.changeState({display_error_text: false});
+    })
+
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
       // Label doesn't know when a subgadget calls notifyInvalid
       // Prevent mutex dead lock by defering the changeState call
@@ -247,4 +361,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS));
+}(window, document, rJS, domsugar, HTMLLabelElement));

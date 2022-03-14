@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TestPage_viewExportTestReport</string> </value>
+            <value> <string>string:${object_url}/TestPage_viewExportTestReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

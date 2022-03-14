@@ -66,7 +66,7 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
     error_list = []
     person_list = self.acl_users.searchUsers(id=self.Person_getUserId(), exact_match=True)
     if not person_list:
-      error_list.append("Person %s should be created" % self.Person_getUserId())
+      error_list.append(self._createConstraintMessage("Person %s should be created" % self.Person_getUserId()))
       if fixit:
         person_module = self.getPortalObject().person_module
         person = person_module.newContent(portal_type="Person")
@@ -111,6 +111,8 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
         person.validate(comment=translateString("Validated by Configurator"))
         assignment.open(comment=translateString("Open by Configuration"))
         login.validate(comment=translateString("Validated by Configurator"))
+        current_career = person.getDefaultCareerValue()
+        current_career.Career_setEmployeeNumber(batch=1)
 
         ## add to customer template
         business_configuration = self.getBusinessConfigurationValue()

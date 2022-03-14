@@ -11,8 +11,7 @@ bt_list = [
   x.getObject()
   for x in portal.portal_catalog(
     portal_type="Business Template",
-    installation_state="installed",
-  )
+    )
   if x.getInstallationState() == "installed" and x.getTitle() not in black_list and x.getId() not in black_list
 ]
 

@@ -30,12 +30,15 @@
 
 """
 
+from StringIO import StringIO
+import lxml
+
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Form.PreferenceTool import Priority
@@ -267,9 +270,22 @@ class TestAccounts(AccountingTestCase):
   def test_AccountValidation(self):
     # Accounts need an account_type category to be valid
     account = self.portal.account_module.newContent(portal_type='Account')
-    self.assertEqual(1, len(account.checkConsistency()))
+    self.assertEqual(
+        [str(m.getMessage()) for m in account.checkConsistency()],
+        ['Account Type must be set'])
     account.setAccountType('equity')
-    self.assertEqual(0, len(account.checkConsistency()))
+    self.assertEqual([str(m.getMessage()) for m in account.checkConsistency()], [])
+
+    # non regression: this constraint is also properly verified during workflow
+    account.setAccountType(None)
+    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+      self.portal.portal_workflow.doActionFor(account, 'validate_action')
+    account.setAccountType('equity')
+    self.portal.portal_workflow.doActionFor(account, 'validate_action')
+    self.portal.portal_workflow.doActionFor(account, 'invalidate_action')
+    account.setAccountType(None)
+    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+      self.portal.portal_workflow.doActionFor(account, 'validate_action')
 
   def test_AccountWorkflow(self):
     account = self.portal.account_module.newContent(portal_type='Account')
@@ -3372,25 +3388,6 @@ class TestTransactions(AccountingTestCase):
     accounting_transaction.stop()
     self.assertEqual('code-2001-1', accounting_transaction.getSourceReference())
 
-  def test_generate_sub_accounting_periods(self):
-    accounting_period_2007 = self.section.newContent(
-                                portal_type='Accounting Period',
-                                start_date=DateTime('2007/01/01'),
-                                stop_date=DateTime('2007/12/31'),)
-    accounting_period_2007.start()
-
-    accounting_period_2007.AccountingPeriod_createSecondaryPeriod(
-          frequency='monthly', open_periods=1)
-    sub_period_list = sorted(accounting_period_2007.contentValues(),
-                              key=lambda x:x.getStartDate())
-    self.assertEqual(12, len(sub_period_list))
-    first_period = sub_period_list[0]
-    self.assertEqual(DateTime(2007, 1, 1), first_period.getStartDate())
-    self.assertEqual(DateTime(2007, 1, 31), first_period.getStopDate())
-    self.assertEqual('2007-01', first_period.getShortTitle())
-    self.assertEqual('January', first_period.getTitle())
-
-
   def test_SearchableText(self):
     accounting_transaction = self._makeOne(title='A new Transaction',
                                 description="A description",
@@ -4417,6 +4414,93 @@ class TestTransactions(AccountingTestCase):
     self.assertIn(
       ('getSourceSectionTitle', 'Third Party'),
       at.AccountingTransaction_getListBoxColumnList(source=False))
+
+  def test_AccountingTransaction_getListBoxColumnList_item_column(self):
+    item1 = self.portal.item_module.newContent(title='Item 1')
+    item2 = self.portal.item_module.newContent(title='Item 2')
+    aggregate_column_item = ('aggregate_title_list', 'Items')
+
+    for view_id, at in (
+        (
+            'view',
+            self._makeOne(
+                portal_type='Accounting Transaction',
+                source_section_value=self.section,
+                destination_section_value=self.organisation_module.client_1,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+        (
+            'SaleInvoiceTransaction_viewAccounting',
+            self._makeOne(
+                portal_type='Sale Invoice Transaction',
+                source_section_value=self.section,
+                destination_section_value=self.organisation_module.client_1,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+        (
+            'view',
+            self._makeOne(
+                portal_type='Payment Transaction',
+                source_section_value=self.section,
+                destination_section_value=self.organisation_module.client_1,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+        (
+            'PurchaseInvoiceTransaction_viewAccounting',
+            self._makeOne(
+                portal_type='Purchase Invoice Transaction',
+                destination_section_value=self.section,
+                source_section_value=self.organisation_module.supplier,
+                lines=(dict(id='line_with_aggregate',
+                            source_value=self.account_module.goods_purchase,
+                            source_debit=500),
+                       dict(source_value=self.account_module.receivable,
+                            source_credit=500))),
+        ),
+    ):
+      self.assertNotIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=True),
+      )
+      self.assertNotIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=False),
+      )
+
+      at.line_with_aggregate.setAggregateValueList((item1, item2))
+      html = getattr(at, view_id)()
+      tree = lxml.etree.parse(StringIO(html), lxml.etree.HTMLParser())
+      self.assertIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=True),
+      )
+      self.assertIn(
+          aggregate_column_item,
+          at.AccountingTransaction_getListBoxColumnList(source=False),
+      )
+      self.assertEqual(
+          tree.xpath(
+              '//table[contains(@class, "listbox-table")]/thead/tr/th/text()'),
+          [u'\xa0', 'ID', 'Account', 'Items', 'Debit', 'Credit'],
+      )
+      self.assertEqual(
+          tree.xpath(
+              '//table[contains(@class, "listbox-table")]/tbody/tr[1]/td[4]/a/div/text()'
+          ),
+          ['Item 1', 'Item 2'],
+      )
 
   def test_AccountingTransaction_getSourcePaymentItemList(self):
     # AccountingTransaction_getSourcePaymentItemList allows to select bank accounts
@@ -6123,3 +6207,213 @@ class TestAccountingAlarms(AccountingTestCase):
             '{} has wrong grouping (4.0)'.format(payment.grouped_line.getRelativeUrl()),]),
         sorted([x.getProperty('detail') for x in alarm.getLastActiveProcess().getResultList()]))
     self.assertTrue(alarm.sense())
+
+
+class TestAccountingPeriod(AccountingTestCase):
+
+  def test_generate_sub_accounting_periods(self):
+    accounting_period_2007 = self.section.newContent(
+                                portal_type='Accounting Period',
+                                start_date=DateTime('2007/01/01'),
+                                stop_date=DateTime('2007/12/31'),)
+    accounting_period_2007.start()
+
+    accounting_period_2007.AccountingPeriod_createSecondaryPeriod(
+          frequency='monthly', open_periods=1)
+    sub_period_list = sorted(accounting_period_2007.contentValues(),
+                              key=lambda x:x.getStartDate())
+    self.assertEqual(12, len(sub_period_list))
+    first_period = sub_period_list[0]
+    self.assertEqual(DateTime(2007, 1, 1), first_period.getStartDate())
+    self.assertEqual(DateTime(2007, 1, 31), first_period.getStopDate())
+    self.assertEqual('2007-01', first_period.getShortTitle())
+    self.assertEqual('January', first_period.getTitle())
+
+  def test_accounting_period_workflow_constraint(self):
+    first_accounting_period = self.section.newContent(
+        portal_type='Accounting Period',
+        start_date=DateTime('2021/01/01'),
+        stop_date=DateTime('2020/12/31'),)
+    with self.assertRaisesRegexp(ValidationFailed,
+        'Start date is after stop date'):
+      self.portal.portal_workflow.doActionFor(first_accounting_period, 'start_action')
+
+    # make first accounting period valid, for the full 2021 year
+    first_accounting_period.setStopDate(DateTime('2021/12/31'))
+    self.portal.portal_workflow.doActionFor(first_accounting_period, 'start_action')
+    self.tic()
+
+    # check dates don't overlap
+    second_accounting_period = self.section.newContent(
+        portal_type='Accounting Period',
+        start_date=DateTime('2021/01/01'),
+        stop_date=DateTime('2022/12/31'),)
+    with self.assertRaisesRegexp(ValidationFailed,
+        '2021/01/01 00:00:00 .* is already in an open accounting period.'):
+      self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
+
+    # check there are no "holes" between dates
+    second_accounting_period.setStartDate('2022/01/02')
+    with self.assertRaisesRegexp(ValidationFailed,
+        'Last opened period ends on 2021/12/31.*, this period starts on 2022/01/02.*. Accounting Periods must be consecutive.'):
+      self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
+
+    # edge case, when the end date of previous period is a DST swich, this should not block
+    first_accounting_period.setStopDate(DateTime('2021/10/31 00:00:00 Europe/Paris'))
+    second_accounting_period.setStartDate(DateTime('2021/11/01 00:00:00 Europe/Paris'))
+    self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
+
+    # reset first period to 2021 and second period 2022
+    first_accounting_period.setStopDate(DateTime('2021/12/31'))
+    second_accounting_period.setStartDate(DateTime('2022/01/01'))
+    second_accounting_period.setStopDate(DateTime('2022/12/31'))
+
+    # check also with more than 2 periods
+    third_accounting_period = self.section.newContent(
+        portal_type='Accounting Period',
+        start_date=DateTime('2023/01/01'),
+        stop_date=DateTime('2023/12/31'),)
+    self.portal.portal_workflow.doActionFor(third_accounting_period, 'start_action')
+
+
+class TestInvoice_getPaymentTransactionDueDate(AccountingTestCase):
+  """Test Invoice_getPaymentTransactionDueDate.
+  """
+
+  def test_due_date_calculation(self):
+    """Test the rule to calculate the due date from payment condition properties.
+    """
+    sale_trade_condition = self.portal.sale_trade_condition_module.newContent(
+        portal_type='Sale Trade Condition',
+    )
+    invoice = self._makeOne(
+        portal_type='Sale Invoice Transaction',
+        stop_date=DateTime(1970, 1, 1)
+    )
+
+    self.assertEqual(invoice.Invoice_getPaymentDueDate(), None)
+    invoice.setSpecialiseValue(sale_trade_condition)
+    self.assertEqual(invoice.Invoice_getPaymentDueDate(), None)
+    sale_trade_condition.setPaymentConditionTradeDate('invoice')
+
+
+    for invoice_date, payment_term, payment_end_of_month, payment_additional_term, expected_date in (
+        (DateTime('2001/01/01'), 10, False, 0, DateTime('2001/01/11')),
+        (DateTime('2001/01/01'), 10, True, 0, DateTime('2001/01/31')),
+        (DateTime('2001/01/01'), 10, True, 10, DateTime('2001/02/10')),
+        (DateTime('2001/01/31'), 10, False, 0, DateTime('2001/02/10')),
+        (DateTime('2001/01/31'), 10, True, 0, DateTime('2001/02/28')),
+        (DateTime('2001/01/31'), 10, True, 15, DateTime('2001/03/15')),
+        # leap year
+        (DateTime('2004/01/31'), 10, True, 0, DateTime('2004/02/29')),
+        # this keeps hours/minutes and timezones
+        (DateTime('2001/01/01 01:02:03 GMT+2'), 10, False, 0, DateTime('2001/01/11 01:02:03 GMT+2')),
+        # and works well across daylight time switchs
+        (DateTime('2001/03/31 00:00:00 Europe/Paris'), 10, False, 0, DateTime('2001/04/10 00:00:00 Europe/Paris')),
+        (DateTime('2001/03/31 00:00:00 Europe/Paris'), 0, False, 10, DateTime('2001/04/10 00:00:00 Europe/Paris')),
+        (DateTime('2001/10/27 00:00:00 Europe/Paris'), 10, False, 0, DateTime('2001/11/06 00:00:00 Europe/Paris')),
+        (DateTime('2001/10/27 00:00:00 Europe/Paris'), 0, False, 10, DateTime('2001/11/06 00:00:00 Europe/Paris')),
+    ):
+      invoice.setStartDate(invoice_date)
+      sale_trade_condition.setPaymentConditionPaymentTerm(payment_term)
+      sale_trade_condition.setPaymentConditionPaymentEndOfMonth(payment_end_of_month)
+      sale_trade_condition.setPaymentConditionPaymentAdditionalTerm(payment_additional_term)
+      self.assertEqual(
+          invoice.Invoice_getPaymentDueDate(),
+          expected_date,
+          "{actual} != {expected_date} for case invoice_date:{invoice_date}, "
+          "payment_term:{payment_term}, payment_end_of_month:{payment_end_of_month}, "
+          "payment_additional_term:{payment_additional_term}".format(
+              actual=invoice.Invoice_getPaymentDueDate(),
+              **locals()
+          )
+      )
+
+  def test_sale_invoice_packing_list_or_order(self):
+    """Test how the date is selected from invoice, packing list or order, for sales case
+    """
+    sale_trade_condition = self.portal.sale_trade_condition_module.newContent(
+        portal_type='Sale Trade Condition',
+        payment_condition_payment_term=10,
+    )
+    order = self.portal.sale_order_module.newContent(
+        portal_type='Sale Order',
+        start_date=DateTime(2001, 1, 1),
+        stop_date=DateTime(1970, 1, 1),
+    )
+    delivery = self.portal.sale_packing_list_module.newContent(
+        portal_type='Sale Packing List',
+        start_date=DateTime(1970, 1, 1),
+        stop_date=DateTime(2002, 1, 1),
+        causality_value=order,
+    )
+    invoice = self._makeOne(
+        portal_type='Sale Invoice Transaction',
+        start_date=DateTime(2003, 1, 1),
+        stop_date=DateTime(1970, 1, 1),
+        specialise_value=sale_trade_condition,
+    )
+    trade_date = self.portal.portal_categories.trade_date
+    sale_trade_condition.setPaymentConditionTradeDate(trade_date.invoice.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2003, 1, 11))
+
+    sale_trade_condition.setPaymentConditionTradeDate(trade_date.packing_list.getRelativeUrl())
+    # no related delivery
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        None)
+    invoice.setCausalityValue(delivery)
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2002, 1, 11))
+
+    sale_trade_condition.setPaymentConditionTradeDate(trade_date.order.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2001, 1, 11))
+
+  def test_purchase_invoice_packing_list_or_order(self):
+    """Test how the date is selected from invoice, packing list or order, for purchase case
+    """
+    purchase_trade_condition = self.portal.purchase_trade_condition_module.newContent(
+        portal_type='Purchase Trade Condition',
+        payment_condition_payment_term=10,
+    )
+    order = self.portal.purchase_order_module.newContent(
+        portal_type='Purchase Order',
+        start_date=DateTime(2001, 1, 1),
+        stop_date=DateTime(1970, 1, 1),
+    )
+    delivery = self.portal.purchase_packing_list_module.newContent(
+        portal_type='Purchase Packing List',
+        start_date=DateTime(1970, 1, 1),
+        stop_date=DateTime(2002, 1, 1),
+        causality_value=order,
+    )
+    invoice = self._makeOne(
+        portal_type='Purchase Invoice Transaction',
+        start_date=DateTime(2003, 1, 1),
+        specialise_value=purchase_trade_condition,
+    )
+    trade_date = self.portal.portal_categories.trade_date
+    purchase_trade_condition.setPaymentConditionTradeDate(trade_date.invoice.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2003, 1, 11))
+
+    purchase_trade_condition.setPaymentConditionTradeDate(trade_date.packing_list.getRelativeUrl())
+    # no related delivery
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        None)
+    invoice.setCausalityValue(delivery)
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2002, 1, 11))
+
+    purchase_trade_condition.setPaymentConditionTradeDate(trade_date.order.getRelativeUrl())
+    self.assertEqual(
+        invoice.Invoice_getPaymentDueDate(),
+        DateTime(2001, 1, 11))

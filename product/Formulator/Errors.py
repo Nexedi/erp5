@@ -5,6 +5,7 @@
 # from Products.Formulator.Errors import ValidationError, FormValidationError
 
 from Products.PythonScripts.Utility import allow_class
+from AccessControl import ClassSecurityInfo
 
 class FormValidationError(Exception):
 
@@ -17,6 +18,8 @@ allow_class(FormValidationError)
 
 class ValidationError(Exception):
 
+    security = ClassSecurityInfo()
+
     def __init__(self, error_key, field, error_text=None):
         Exception.__init__(self, error_key)
         self.error_key = error_key
@@ -24,8 +27,18 @@ class ValidationError(Exception):
         self.field = field
         if error_text is not None:
           self.error_text = error_text
+          self.is_message_to_translate = False
         else:
           self.error_text = field.get_error_message(error_key)
+          self.is_message_to_translate = True
+
+    security.declarePublic('getMessage')
+    def getMessage(self, translation_service=None):
+      if not self.is_message_to_translate:
+        return self.error_text
+      if translation_service is None:
+        return self.error_text
+      return translation_service(self.error_text)
 
 allow_class(ValidationError)
 

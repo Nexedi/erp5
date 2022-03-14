@@ -110,7 +110,7 @@
         for (i = 0; i < relative_url_list.length; i += 1) {
           url = relative_url_list[i];
           if (url.includes('?')) {
-            throw new Error("It is not allow to cache urls with parameters." +
+            throw new Error("It is not allowed to cache urls with parameters." +
                             " url: " + url);
           }
           storage._relative_url_list.push(

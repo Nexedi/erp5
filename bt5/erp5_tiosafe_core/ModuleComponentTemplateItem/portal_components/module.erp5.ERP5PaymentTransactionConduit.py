@@ -127,7 +127,7 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
         sub_object.setPriceCurrencyValue(link_object)
         bank_account_object = integration_site.getDefaultSourcePaymentValue()
         sub_object.setDefaultSourcePaymentValue(bank_account_object)
-        sub_object.setSourceSectionValue(bank_account_object.getParent())
+        sub_object.setSourceSectionValue(bank_account_object.getParentValue())
 
         # Mapping between tag and element
         node_dict = {
@@ -151,7 +151,7 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
             if tag in node_dict:
               node_dict[tag](document=sub_object, xml=node, **kw)
             else:
-              raise ValueError, "This is an unknown sub-element %s on %s" %(tag, sub_object.getPath())
+              raise ValueError("This is an unknown sub-element %s on %s" %(tag, sub_object.getPath()))
           elif tag in ['start_date', 'stop_date']:
             if not node.text:
               node.text = None

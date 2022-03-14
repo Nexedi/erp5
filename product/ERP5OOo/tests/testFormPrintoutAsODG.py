@@ -69,7 +69,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODGStyleSheet', None) is None:
       addStyleSheet(id='Foo_getODGStyleSheet', file=foo_file, title='',
-                    precondition='',
                     content_type='application/vnd.oasis.opendocument.graphics')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
 
@@ -202,7 +201,8 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
     # when just call FormPrintout, it does not change content-type
-    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
+    # Zope4 add charset=utf-8
+    self.assertTrue('text/html' in request.RESPONSE.getHeader('content-type'))
     self._validate(odf_document)
 
     # 5. Normal case: utf-8 string

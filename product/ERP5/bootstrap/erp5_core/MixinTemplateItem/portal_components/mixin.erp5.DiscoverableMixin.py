@@ -137,6 +137,8 @@ class DiscoverableMixin(CachedConvertableMixin):
                  currently logged in, then we'll get him from session
     input_parameter_dict - arguments provided to Create this content by user.
     """
+    if input_parameter_dict is None:
+      input_parameter_dict = {}
     # Preference is made of a sequence of 'user_login', 'content', 'filename', 'input'
     method = self._getTypeBasedMethod('getPreferredDocumentMetadataDiscoveryOrderList')
     order_list = list(method())
@@ -147,7 +149,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       result = None
       if order_id not in VALID_ORDER_KEY_LIST:
         # Prevent security attack or bad preferences
-        raise AttributeError, "%s is not in valid order key list" % order_id
+        raise AttributeError("%s is not in valid order key list" % order_id)
       method_id = 'getPropertyDictFrom%s' % convertToUpperCase(order_id)
       method = getattr(self, method_id)
       if order_id in ('filename', 'file_name',):
@@ -166,10 +168,8 @@ class DiscoverableMixin(CachedConvertableMixin):
           if value not in (None, ''):
             kw[key]=value
     # Prepare the content edit parameters
-    portal_type = None
-    if input_parameter_dict is not None:
-      # User decision take precedence, never try to change this value
-      portal_type = input_parameter_dict.get('portal_type')
+    # User decision take precedence, never try to change this value
+    portal_type = input_parameter_dict.get('portal_type')
     if not portal_type:
       # Read discovered portal_type
       portal_type = kw.pop('portal_type', None)
@@ -187,6 +187,19 @@ class DiscoverableMixin(CachedConvertableMixin):
       portal_type = registry.findPortalTypeName(context=self)
       if portal_type != self.getPortalType():
         return self.migratePortalType(portal_type)
+
+    def maybeChangeState(document):
+      publication_state = input_parameter_dict.get('publication_state')
+      if publication_state and document.getValidationState() == 'draft':
+        if publication_state == "shared":
+          document.share()
+        elif publication_state == "released":
+          document.release()
+        elif publication_state == "published":
+          document.publish()
+
+
+    maybeChangeState(self)
     # Finish ingestion by calling method
     self.finishIngestion() # XXX - is this really the right place ?
     self.reindexObject() # XXX - is this really the right place ?
@@ -194,6 +207,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     # to metadata discovery - refer to the documentation of mergeRevision method
     merged_doc = self.mergeRevision() # XXX - is this really the right place ?
     merged_doc.reindexObject() # XXX - is this really the right place ?
+    maybeChangeState(merged_doc)
     return merged_doc # XXX - is this really the right place ?
 
   security.declareProtected(Permissions.ModifyPortalContent, 'finishIngestion')

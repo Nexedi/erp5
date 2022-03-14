@@ -677,7 +677,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
 
       # set correctly the id by following naming conventions
       if zodb_property_name == 'id':
-        value += cls.getIdAsReferenceSuffix()
+        value += cls.getIdAsReferenceAffix()
 
       zodb_property_dict[zodb_property_name] = value
 

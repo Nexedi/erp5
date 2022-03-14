@@ -10,9 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>css_class</string>
+                <string>editable</string>
+                <string>renderjs_extra</string>
                 <string>title</string>
-                <string>height</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -51,11 +52,29 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -66,8 +85,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>page</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_raw_text_content</string> </value>
+                    <value> <string>my_view_mode_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -76,6 +103,12 @@
                 <item>
                     <key> <string>height</string> </key>
                     <value> <int>2</int> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -87,6 +120,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'jio_key\', context.getRelativeUrl()), (\'editor\', context.Base_getEditorFieldPreferredTextEditor(content_type=\'text/plain\')), (\'portal_type\', context.getPortalType()), (\'maximize\', \'listbox\' not in field.id), (\'content_type\', context.getProperty(\'content_type\'))]</string> </value>
         </item>
       </dictionary>
     </pickle>

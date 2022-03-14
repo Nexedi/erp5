@@ -20,6 +20,9 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 import six
+
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+
 # Load all monkey patches
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
@@ -32,10 +35,14 @@ from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
-from Products.ERP5Type.patches import DCWorkflow
-from Products.ERP5Type.patches import Worklists
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches import DCWorkflow
+  from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import WorkflowTool
+from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import XMLExportImport
 from Products.ERP5Type.patches import ppml
 from Products.ERP5Type.patches import Expression
@@ -44,7 +51,8 @@ from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
-from Products.ERP5Type.patches import States
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches import States
 from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
@@ -55,7 +63,6 @@ if six.PY2:
   from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
-from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
@@ -94,10 +101,8 @@ from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
-from Products.ERP5Type.patches import DTMLMethod
-from Products.ERP5Type.patches import DTMLDocument
 from Products.ERP5Type.patches import CMFCoreUtils
-from Products.ERP5Type.patches import ZopePageTemplate
+from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
@@ -109,5 +114,6 @@ from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
-from Products.ERP5Type.patches.DCWorkflow import ValidationFailed, ERP5TransitionDefinition
+from Products.ERP5Type.Core.Workflow import ValidationFailed
+from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base

@@ -1,0 +1,12 @@
+{
+      "short_name": "Web Bookmark",
+      "name": "OfficeJS Web Bookmark Manager",
+      "description": "Web Based Bookmark Manager",
+      "icons": [{
+        "src": "bookmark_manager_logo.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

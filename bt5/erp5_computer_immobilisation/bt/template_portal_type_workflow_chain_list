@@ -1,3 +1,7 @@
+Compute Node | edit_workflow
+Compute Node | validation_workflow
+Compute Partition | edit_workflow
+Compute Partition | validation_workflow
 Computer Model | edit_workflow
 Computer Model | validation_workflow
 Computer Network | edit_workflow

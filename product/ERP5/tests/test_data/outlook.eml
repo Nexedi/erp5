@@ -1,0 +1,55 @@
+From: Test <test@outlook.com>
+To: Test <test@nexedi.com>
+Subject: test outlook
+Date: Thu, 15 Apr 2021 08:33:31 +0000
+Message-ID:
+ <PA4PR06MB7264A7A59948017041BDACC6EB4D9@PA4PR06MB7264.eurprd06.prod.outlook.com>
+Content-Type: multipart/mixed;
+	boundary="_004_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_"
+MIME-Version: 1.0
+
+--_004_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_
+Content-Type: multipart/alternative;
+	boundary="_000_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_"
+
+--_000_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+test outlook
+
+--_000_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
+: 12pt; color: rgb(0, 0, 0);">
+test outlook</div>
+</body>
+</html>
+
+--_000_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_--
+
+--_004_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_
+Content-Type: image/png; name="white.png"
+Content-Description: white.png
+Content-Disposition: attachment; filename="white.png"; size=262;
+	creation-date="Thu, 15 Apr 2021 08:33:28 GMT";
+	modification-date="Thu, 15 Apr 2021 08:33:31 GMT"
+Content-Transfer-Encoding: base64
+
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQAAAAA3iMLMAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAd2KE6QAAAAHdElN
+RQflBA8MHjIyMgE8AAAADklEQVQI12P4/5+BFAQA/U4f4XOLpqwAAAAldEVYdGRhdGU6Y3JlYXRl
+ADIwMjEtMDQtMTVUMTA6MzA6NTArMDI6MDDpJ1gdAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIxLTA0
+LTE1VDEwOjMwOjUwKzAyOjAwmHrgoQAAAABJRU5ErkJggg==
+
+--_004_PA4PR06MB7264A7A59948017041BDACC6EB4D9PA4PR06MB7264eurp_--

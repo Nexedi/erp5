@@ -1,4 +1,3 @@
-from future.utils import raise_
 from Products.CMFCore.CachingPolicyManager import CachingPolicy, \
     CachingPolicyManager, createCPContext
 from App.special_dtml import DTMLFile
@@ -311,7 +310,7 @@ def _updatePolicy( self
         Update a policy in our registry.
     """
     if policy_id not in self._policy_ids:
-        raise_(KeyError, "Policy %s does not exist!" % policy_id)
+        raise KeyError("Policy %s does not exist!" % policy_id)
 
     self._policies[ policy_id ] = CachingPolicy( policy_id
                                                , predicate
@@ -450,7 +449,7 @@ def _addPolicy( self
         raise ValueError("Policy ID is required!")
 
     if policy_id in self._policy_ids:
-        raise_(KeyError, "Policy %s already exists!" % policy_id)
+        raise KeyError("Policy %s already exists!" % policy_id)
 
     self._policies[ policy_id ] = CachingPolicy( policy_id
                                                , predicate

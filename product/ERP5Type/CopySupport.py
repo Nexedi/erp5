@@ -12,7 +12,6 @@
 #
 ##############################################################################
 
-from future.utils import raise_
 from functools import partial
 from OFS import Moniker
 from zExceptions import BadRequest
@@ -162,8 +161,8 @@ class CopyContainer:
         pass # There is no activity tool
       else:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise_(ActivityPendingError, 'Sorry, pending activities prevent ' \
-                         +  'changing id at this current stage')
+          raise ActivityPendingError(
+            'Sorry, pending activities prevent changing id at this current stage')
 
       # Search for categories that have to be updated in sub objects.
       self._recursiveSetActivityAfterTag(ob)
@@ -282,7 +281,8 @@ class CopyContainer:
     # Add info about copy to edit workflow
     REQUEST = get_request()
     pw = portal.portal_workflow
-    if 'edit_workflow' in pw.getChainFor(self)\
+    edit_workflow = getattr(portal.portal_workflow, 'edit_workflow', None)
+    if edit_workflow is not None and edit_workflow in pw.getWorkflowValueListFor(self)\
         and (REQUEST is None or
             not REQUEST.get('is_business_template_installation', 0)):
       if REQUEST is not None and REQUEST.get('__cp', None):
@@ -590,7 +590,7 @@ class CopyContainer:
     cp = None
     if cb_copy_data is not None:
       cp = cb_copy_data
-    elif REQUEST is not None and '__cp' in REQUEST:
+    elif REQUEST is not None and REQUEST.has_key('__cp'):
       cp = REQUEST['__cp']
     if cp is None:
       raise CopyError("No Data")

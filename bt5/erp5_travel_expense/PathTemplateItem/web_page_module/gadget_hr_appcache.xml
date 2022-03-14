@@ -143,7 +143,7 @@ gadget_officejs_header.js\n
 gadget_officejs_page_add_document.js\n
 gadget_officejs_page_sync.js\n
 gadget_officejs_router.js\n
-gadget_hr_translation.js\n
+gadget_translation.js\n
 gadget_hr_translation_data.js\n
 gadget_officejs_widget_listbox.js\n
 erp5_launcher.js\n
@@ -388,7 +388,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>973.40447.29564.60893</string> </value>
+                      <value> <string>994.59727.35817.57412</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -406,7 +406,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1549964903.16</float>
+                              <float>1632142052.66</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

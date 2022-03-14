@@ -105,9 +105,9 @@ def getSocialOrganisationValue():
       business_path_list = business_process.getTradeModelPathValueList(trade_phase=\
           'payroll/invoicing/social_security', context=context)
       if len(business_path_list) > 1:
-        raise NotImplementedError, 'For now, it can not support more '\
-              'than one business_path with same trade_phase. '\
-              '%s have same trade_phase' % repr(business_path_list)
+        raise NotImplementedError('For now, it can not support more'
+              ' than one business_path with same trade_phase.'
+              ' %r have same trade_phase' % business_path_list)
       if len(business_path_list) == 1:
         business_path = business_path_list[0]
         return business_path.getSourceSectionValue()

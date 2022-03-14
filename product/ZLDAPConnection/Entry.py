@@ -3,7 +3,6 @@ LDAP Entry Objects
 """
 
 
-from future.utils import raise_
 __version__ = "$Revision: 1.13 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
@@ -101,20 +100,20 @@ class GenericEntry(Acquisition.Implicit):
         if conn.hasEntry(key):
             return conn.getEntry(key, self)
         else:
-            raise_(IndexError, key)
+            raise IndexError(key)
 
     def __getattr__(self, attr):
         if attr in self._data:
             return AttrWrap(self._data[attr])
         else:
-            raise_(AttributeError, attr)
+            raise AttributeError(attr)
 
     #### Direct access for setting/getting/unsetting attributes
     def get(self, attr):
         if attr in self._data:
             return self._data[attr]
         else:
-            raise_(AttributeError, attr)
+            raise AttributeError(attr)
 
     def set(self, key, value):
         """ Sets individual items """
@@ -235,7 +234,7 @@ class GenericEntry(Acquisition.Implicit):
         # and verify that it doesn't already exist
         dn = "%s,%s" % (string.strip(rdn), self.dn)
         if conn.hasEntry(dn):           # Check the LDAP server directly
-            raise_(KeyError, "DN '%s' already exists" % dn)
+            raise KeyError("DN '%s' already exists" % dn)
 
         # Now split out the first attr based on the RDN (ie 'cn=bob') and
         # turn it into one of our attributes (ie attr[cn] = 'bob')
@@ -397,7 +396,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         #create the new full DN for new subentry and check its existance
         dn='%s,%s' % (string.strip(rdn), self.dn)
         if c.hasEntry(dn):
-            raise_(KeyError, "DN '%s' already exists" % dn)
+            raise KeyError("DN '%s' already exists" % dn)
 
         # now split out the first attr based on the rdn (ie 'cn=bob', turns
         # into attr['cn'] = 'bob'

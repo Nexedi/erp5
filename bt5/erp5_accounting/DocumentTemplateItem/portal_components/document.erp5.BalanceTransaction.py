@@ -44,24 +44,24 @@ class InventoryKey(UserDict):
     self.data.update(kw)
 
   def clear(self):
-    raise TypeError, 'InventoryKey are immutable'
+    raise TypeError('InventoryKey are immutable')
 
   def pop(self, keys, *args):
-    raise TypeError, 'InventoryKey are immutable'
+    raise TypeError('InventoryKey are immutable')
 
   def update(self, dict=None, **kwargs): # pylint: disable=redefined-builtin
-    raise TypeError, 'InventoryKey are immutable'
+    raise TypeError('InventoryKey are immutable')
 
   def __delitem__(self, key):
-    raise TypeError, 'InventoryKey are immutable'
+    raise TypeError('InventoryKey are immutable')
 
   def __setitem__(self, key, item):
-    raise TypeError, 'InventoryKey are immutable'
+    raise TypeError('InventoryKey are immutable')
 
   def setdefault(self, key, failobj=None):
     if key in self.data:
       return self.data[key]
-    raise TypeError, 'InventoryKey are immutable'
+    raise TypeError('InventoryKey are immutable')
 
   def __hash__(self):
     return hash(tuple(self.items()))
@@ -162,7 +162,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     for movement in self._getGroupByNodeMovementList():
       node_uid = movement.getDestinationUid()
       if not node_uid:
-        raise ValueError, "No destination uid for %s" % movement
+        raise ValueError("No destination uid for %s" % movement)
       resource_uid = movement.getResourceUid()
 
       stock_list = current_stock.setdefault(
@@ -188,7 +188,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     for movement in self._getGroupByMirrorSectionMovementList():
       node_uid = movement.getDestinationUid()
       if not node_uid:
-        raise ValueError, "No destination uid for %s" % movement
+        raise ValueError("No destination uid for %s" % movement)
       mirror_section_uid = movement.getSourceSectionUid()
       resource_uid = movement.getResourceUid()
 
@@ -219,7 +219,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     for movement in self._getGroupByPaymentMovementList():
       node_uid = movement.getDestinationUid()
       if not node_uid:
-        raise ValueError, "No destination uid for %s" % movement
+        raise ValueError("No destination uid for %s" % movement)
       payment_uid = movement.getDestinationPaymentUid()
       resource_uid = movement.getResourceUid()
 
@@ -258,7 +258,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     for movement in self._getGroupByNodeMovementList():
       node_uid = movement.getDestinationUid()
       if not node_uid:
-        raise ValueError, "No destination uid for %s" % movement
+        raise ValueError("No destination uid for %s" % movement)
       section_uid = movement.getDestinationSectionUid()
 
       stock_list = new_stock.setdefault(
@@ -280,7 +280,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     for movement in self._getGroupByMirrorSectionMovementList():
       node_uid = movement.getDestinationUid()
       if not node_uid:
-        raise ValueError, "No destination uid for %s" % movement
+        raise ValueError("No destination uid for %s" % movement)
       section_uid = movement.getDestinationSectionUid()
       mirror_section_uid = movement.getSourceSectionUid()
 
@@ -305,7 +305,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     for movement in self._getGroupByPaymentMovementList():
       node_uid = movement.getDestinationUid()
       if not node_uid:
-        raise ValueError, "No destination uid for %s" % movement
+        raise ValueError("No destination uid for %s" % movement)
       section_uid = movement.getDestinationSectionUid()
       payment_uid = movement.getDestinationPaymentUid()
 

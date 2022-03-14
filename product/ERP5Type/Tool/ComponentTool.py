@@ -59,6 +59,7 @@ class ComponentTool(BaseTool):
   id = "portal_components"
   meta_type = "ERP5 Component Tool"
   portal_type = "Component Tool"
+  title = "Components"
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -225,12 +226,6 @@ class Test(ERP5TypeTestCase):
   """
   A Sample Test Class
   """
-
-  def getBusinessTemplateList(self):
-    """
-    Tuple of Business Templates we need to install
-    """
-    return ('erp5_base',)
 
   def afterSetUp(self):
     """

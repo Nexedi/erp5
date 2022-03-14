@@ -2247,7 +2247,7 @@ hoge()
 
 # Attributes added through Products.XXX.patches: Must not raise error nor
 # warnings when being used.
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 class FooBar(ValidationFailed):
   def __init__(self, *args, **kw):
     super(FooBar, self).__init__(*args, **kw)

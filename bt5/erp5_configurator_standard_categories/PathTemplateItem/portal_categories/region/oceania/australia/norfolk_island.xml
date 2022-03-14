@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>NFK</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>NF</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>norfolk_island</string> </value>
         </item>

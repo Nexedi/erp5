@@ -187,9 +187,8 @@ It contains the same columns
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>Deleted.</td>
+  <td>One or more documents could not be deleted.</td>
   <td></td>
-  <td>We used to report error on user deleting deleted document ... but user does not care, does she?</td>
 </tr>
 <tr>
   <td>clickAndWait</td>

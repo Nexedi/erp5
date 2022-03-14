@@ -47,16 +47,26 @@ if not img_src.lower().startswith("http"):
 #END user ignoring guidelines
   if img_src[0] == '/':
     img_src = img_src[1:]
-  img_obj = context.restrictedTraverse(img_src.split("?")[0], None)
+
+  real_img_src = img_src.split("?")[0]
+  img_obj = context.restrictedTraverse(real_img_src, None)
 
   # flag broken link until further notice
   if img_obj is None:
-    return '<p style="color:red">The following image could not be found in erp5 OR is not following guidelines for links (eg no ./ prefix): <span style="font-weight:bold">%s</span></p>' % (img_src.split("?")[0])
+    return '<p style="color:red">The following image could not be found in erp5 OR is not following guidelines for links (eg no ./ prefix): <span style="font-weight:bold">%s</span></p>' % (real_img_src)
+
+  # img_src = "image_module/3/getData"
+  try:
+    img_type = img_obj.getContentType()
+  except AttributeError:
+    real_img_src = '/'.join(real_img_src.split('/')[:-1])
+    # img_obj is surely not None
+    img_obj = context.restrictedTraverse(real_img_src, None)
+    img_type = img_obj.getContentType()
+
   # ensure alt attributes are set
   if img_string.find('alt=') == -1:
     img_string.replace ("src=", 'alt="%s" src=' % img_caption or img_obj.getTitle())
-
-  img_type = img_obj.getContentType()
 
   # force svg display as svg or png
   if img_type == "image/svg+xml":

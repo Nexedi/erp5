@@ -82,6 +82,10 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>

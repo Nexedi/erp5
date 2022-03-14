@@ -17,8 +17,9 @@
           editable: field_json.editable,
           required: field_json.required,
           id: field_json.key,
+          error_text: options.field_json.error_text || "",
           name: field_json.key,
-          title: field_json.title,
+          title: field_json.description,
           hidden: field_json.hidden,
           // Force calling subfield render
           // as user may have modified the input value

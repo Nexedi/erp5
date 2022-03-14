@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ISL</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>IS</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>iceland</string> </value>
         </item>

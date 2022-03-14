@@ -95,6 +95,7 @@
                         <string>my_destination_title</string>
                         <string>my_default_leave_request_period_quantity</string>
                         <string>my_default_leave_request_period_resource</string>
+                        <string>my_resource_title</string>
                       </list>
                     </value>
                 </item>

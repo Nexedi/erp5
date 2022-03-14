@@ -10,16 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>sort</string>
+                <string>columns</string>
                 <string>domain_root_list</string>
-                <string>title</string>
+                <string>editable_columns</string>
+                <string>enabled</string>
                 <string>portal_types</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>sort_columns</string>
-                <string>columns</string>
-                <string>enabled</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -158,6 +158,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

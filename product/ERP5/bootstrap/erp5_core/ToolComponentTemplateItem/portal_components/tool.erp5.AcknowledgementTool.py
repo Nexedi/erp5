@@ -55,6 +55,7 @@ class AcknowledgementTool(BaseTool):
   id = 'portal_acknowledgements'
   meta_type = 'ERP5 Acknowledgement Tool'
   portal_type = 'Acknowledgement Tool'
+  title = 'Acknowledgements'
   allowed_types = ('ERP5 Acknowledgement',)
   # Declarative Security
   security = ClassSecurityInfo()

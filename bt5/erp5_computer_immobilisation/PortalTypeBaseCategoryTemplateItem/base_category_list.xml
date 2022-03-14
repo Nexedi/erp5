@@ -1,4 +1,14 @@
 <base_category_list>
+ <portal_type id="Compute Node">
+  <item>specialise</item>
+  <item>subordination</item>
+ </portal_type>
+ <portal_type id="Compute Node Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Compute Partition">
+  <item>subordination</item>
+ </portal_type>
  <portal_type id="Computer">
   <item>specialise</item>
   <item>subordination</item>

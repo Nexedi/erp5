@@ -10,6 +10,8 @@ interface.erp5.IAmountPrice
 interface.erp5.IArrowBase
 interface.erp5.IAssetMovement
 interface.erp5.IBaseConvertable
+interface.erp5.IBuildableBusinessLinkProcess
+interface.erp5.IBusinessLinkProcess
 interface.erp5.IBusinessProcess
 interface.erp5.ICachedConvertable
 interface.erp5.IConvertable
@@ -46,9 +48,13 @@ interface.erp5.ISendable
 interface.erp5.ISimilarityProvider
 interface.erp5.ISimulatedDeliveryBuilder
 interface.erp5.ISimulationMovement
+interface.erp5.ISimulationMovementProcess
 interface.erp5.ITextConvertable
 interface.erp5.ITextConvertableLegacy
 interface.erp5.ITextDocument
+interface.erp5.ITradeModelPathProcess
+interface.erp5.ITradePhaseProcess
+interface.erp5.ITradeStateProcess
 interface.erp5.ITranslatable
 interface.erp5.IUploadable
 interface.erp5.IUrl

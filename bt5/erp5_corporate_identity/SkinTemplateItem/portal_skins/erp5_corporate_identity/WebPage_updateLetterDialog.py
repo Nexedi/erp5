@@ -28,26 +28,23 @@ Update the letter dialog with parameters manually entered
 # override_date             to use instead of current date
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
-  return context.Base_redirect(
-    dialog_id,
-    keep_items = dict(
-      portal_status_message=translateString('Preview updated.'),
-      cancel_url=cancel_url,
-      portal_skin=portal_skin,
-      override_source_organisation_title=override_source_organisation_title,
-      override_source_person_title=override_source_person_title,
-      override_destination_organisation_title=override_destination_organisation_title,
-      override_destination_person_title=override_destination_person_title,
-      override_date=override_date,
-      format=format,
-      display_head=display_head,
-      display_svg=display_svg,
-      document_download=document_download,
-      document_save=document_save,
-      destination_position_in_letter = destination_position_in_letter,
-      display_sender_company_above_recipient=display_sender_company_above_recipient,
-      destination_position_padding_left = destination_position_padding_left,
-      letter_header_margin_to_top = letter_header_margin_to_top,
-      **kw
-    )
-  )
+  request = container.REQUEST
+  request.form['portal_status_message'] = translateString('Preview updated.')
+  request.form['cancel_url'] = cancel_url
+  request.form['portal_skin'] = portal_skin
+  request.form['format'] = format
+  request.form['display_svg'] = display_svg
+  request.form['document_save'] = document_save
+  request.form['document_download'] = document_download
+  request.form['override_source_organisation_title'] = override_source_organisation_title
+  request.form['override_source_person_title'] = override_source_person_title
+  request.form['override_destination_organisation_title'] = override_destination_organisation_title
+  request.form['override_destination_person_title'] = override_destination_person_title
+  request.form['override_date'] = override_date
+  request.form['display_head'] = display_head
+  request.form['destination_position_in_letter'] = destination_position_in_letter
+  request.form['display_sender_company_above_recipient'] = display_sender_company_above_recipient
+  request.form['destination_position_padding_left'] = destination_position_padding_left
+  request.form['letter_header_margin_to_top'] = letter_header_margin_to_top
+
+  return context.Base_renderForm(dialog_id)

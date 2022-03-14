@@ -28,7 +28,6 @@
 ##############################################################################
 
 from __future__ import absolute_import
-from future.utils import raise_
 import string
 from contextlib import contextmanager
 from time import time
@@ -244,8 +243,8 @@ class CachingMethod:
     cache_factory is the id of the cache_factory to use.
     """
     if not callable(callable_object):
-      raise_(CachedMethodError, "callable_object %s is not callable" % str(
-                                                                callable_object))
+      raise CachedMethodError("callable_object %r is not callable"
+                              % (callable_object,))
     if not id:
       raise CachedMethodError("id must be specified")
     self.id = id
@@ -325,7 +324,7 @@ def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
        stacklevel=2)
   cache_storage = CachingMethod.factories
   for cf_key in cache_factory_list:
-    if cf_key in cache_storage:
+    if cache_storage.has_key(cf_key):
       for cp in cache_storage[cf_key].getCachePluginList():
         cp.clearCache()
 

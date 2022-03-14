@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>CAN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>CA</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>canada</string> </value>
         </item>

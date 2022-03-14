@@ -13,10 +13,10 @@
       </tr>
       <tr>
         <td style="vertical-align:middle;text-align:right;">
-          <a href="./test_page_module/TestPageModule_viewCreationWizard"><span style="background-repeat: no-repeat; display: block; height: 22px; width: 22px;background-image:url('launch_icon.png');"></span></a>
+          <a href="./test_page_module/TestPageModule_viewCreationWizardDialog"><span style="background-repeat: no-repeat; display: block; height: 22px; width: 22px;background-image:url('launch_icon.png');"></span></a>
         </td>
         <td style="vertical-align:middle;text-align:left;">
-          <a href="./test_page_module/TestPageModule_viewCreationWizard">I would like to create a new Test Page.</a>
+          <a href="./test_page_module/TestPageModule_viewCreationWizardDialog">I would like to create a new Test Page.</a>
         </td>
       </tr>
     </tbody>

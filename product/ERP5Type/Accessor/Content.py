@@ -47,10 +47,10 @@ class ValueGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, portal_type=None, storage_id=None, default=None):
       self._id = id
@@ -97,10 +97,10 @@ class ValueListGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, portal_type=None, storage_id=None, default=None):
       self._id = id
@@ -134,10 +134,10 @@ class Getter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, portal_type=None, storage_id=None, default=None):
       self._id = id
@@ -180,10 +180,10 @@ class ListGetter(Base.Getter):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, portal_type=None, storage_id=None):
       self._id = id
@@ -216,10 +216,10 @@ class Tester(Method):
 
     # Generic Definition of Method Object
     # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
+    __code__ = func_code = func_code()
+    __code__.co_varnames = ('self',)
+    __code__.co_argcount = 1
+    __defaults__ = func_defaults = ()
 
     def __init__(self, id, key, property_type, storage_id=None):
       self._id = id

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>VCT</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>VC</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>saint_vincent_and_the_grenadines</string> </value>
         </item>

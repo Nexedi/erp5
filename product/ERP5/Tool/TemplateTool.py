@@ -27,16 +27,7 @@
 #
 ##############################################################################
 
-from future.utils import raise_
-from future import standard_library
-standard_library.install_aliases()
-import six
-if six.PY2:
-    from webdav.client import Resource
-else:
-    # No ZServer
-    class Resource:
-        pass
+from webdav.client import Resource
 
 from App.config import getConfiguration
 import os
@@ -56,21 +47,20 @@ from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
-from io import BytesIO as StringIO
-from urllib.request import pathname2url, urlopen, urlretrieve
-from urllib.parse import splittype
+from cStringIO import StringIO
+from urllib import pathname2url, urlopen, splittype, urlretrieve
+import urllib2
 import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
 import struct
-import pickle
+import cPickle
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
 import time
-from pickle import loads, dumps
 
 WIN = os.name == 'nt'
 
@@ -107,9 +97,9 @@ class TemplateTool (BaseTool):
         - save
     """
     id = 'portal_templates'
-    title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
+    title = 'Business Templates'
     allowed_types = ('ERP5 Business Template', )
 
     # This stores information on repositories.
@@ -643,7 +633,7 @@ class TemplateTool (BaseTool):
                                        % (self.absolute_url(), psm))
               return
             else:
-              raise_(RuntimeError, 'Invalid repository: %s' % repository)
+              raise RuntimeError('Invalid repository: %s' % repository)
           try:
             property_dict_list = []
             root = doc.documentElement
@@ -713,7 +703,7 @@ class TemplateTool (BaseTool):
         Decode the uid of a business template from a repository.
         Return a repository and an id.
       """
-      return loads(b64decode(uid))
+      return cPickle.loads(b64decode(uid))
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -721,7 +711,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(dumps((repository, id)))
+      return b64encode(cPickle.dumps((repository, id)))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
@@ -751,7 +741,7 @@ class TemplateTool (BaseTool):
         if diff_version == 0:
           return True;
         return False;
-      raise_(UnsupportedComparingOperator, 'Unsupported comparing operator: %s'%(operator,))
+      raise UnsupportedComparingOperator('Unsupported comparing operator: %s'%(operator,))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'IsOneProviderInstalled')
@@ -783,7 +773,7 @@ class TemplateTool (BaseTool):
         for property_dict in property_dict_list:
           provision_list = property_dict.get('provision_list', [])
           if title in provision_list:
-            raise_(BusinessTemplateIsMeta, 'Business Template %s is provided by another one'%(title,))
+            raise BusinessTemplateIsMeta('Business Template %s is provided by another one'%(title,))
           if title == property_dict['title']:
             if (version_restriction is None) or (self.compareVersionStrings(property_dict['version'], version_restriction)):
               if (result is None) or (self.compareVersions(property_dict['version'], result[2]) > 0):
@@ -791,7 +781,7 @@ class TemplateTool (BaseTool):
       if result is not None:
         return (result[0], result[1])
       else:
-        raise_(BusinessTemplateUnknownError, 'Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or ''))
+        raise BusinessTemplateUnknownError('Business Template %s (%s) could not be found in the repositories'%(title, version_restriction or ''))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getProviderList')
@@ -849,7 +839,7 @@ class TemplateTool (BaseTool):
                     try:
                       bt_dep = self.getLastestBTOnRepos(dependency, version_restriction)
                     except BusinessTemplateUnknownError:
-                      raise_(BusinessTemplateMissingDependency, 'While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or ''))
+                      raise BusinessTemplateMissingDependency('While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or ''))
                     except BusinessTemplateIsMeta:
                       provider_list = self.getProviderList(dependency)
                       for provider in provider_list:
@@ -864,7 +854,7 @@ class TemplateTool (BaseTool):
                         result_list.append(sub_dep)
                     result_list.append(bt_dep)
                 return result_list
-        raise_(BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0]))
+        raise BusinessTemplateUnknownError('The Business Template %s could not be found on repository %s'%(bt[1], bt[0]))
       return []
 
     security.declareProtected(Permissions.ManagePortal,
@@ -954,8 +944,7 @@ class TemplateTool (BaseTool):
             undependent_list.append(dependency_id)
 
       if len(sorted_bt_list) != len(bt_list):
-        raise_(NotImplementedError, \
-          "Circular dependencies on %s" % reverse_dependency_dict.keys())
+        raise NotImplementedError("Circular dependencies on %s" % list(reverse_dependency_dict))
       else:
         return sorted_bt_list
 
@@ -1203,12 +1192,11 @@ class TemplateTool (BaseTool):
                         candidate.uid))
                   break
             else:
-              raise_(BusinessTemplateMissingDependency,\
-                "Unable to resolve dependencies for %s, options are %s" \
+              raise BusinessTemplateMissingDependency("Unable to resolve dependencies for %s, options are %s"
                     % (dep_id, provider_list))
 
       if len(template_title_list) > 0:
-         raise_(BusinessTemplateUnknownError, 'The Business Template %s could not be found on repositories %s' % \
+         raise BusinessTemplateUnknownError('The Business Template %s could not be found on repositories %s' %
              (list(template_title_list), self.getRepositoryList()))
       return self.sortBusinessTemplateList(list(bt5_set))
 
@@ -1236,8 +1224,7 @@ class TemplateTool (BaseTool):
                                  if not checkAvailability(i[1].replace(".bt5", ""))]
 
       if not install_dependency and len(missing_dependency_list) > 0:
-        raise_(BusinessTemplateMissingDependency,\
-            "Impossible to install, please install the following dependencies before: %s" \
+        raise BusinessTemplateMissingDependency("Impossible to install, please install the following dependencies before: %s"
             % [x[1] for x in missing_dependency_list])
 
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
@@ -1393,14 +1380,14 @@ class TemplateTool (BaseTool):
           LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
               % url)
         try:
-          urlopen(url)
+          urllib2.urlopen(url)
           return url
         except (urllib2.HTTPError, OSError):
           # XXX Try again with ".bt5" in case the folder format be used
           # Instead tgz one.
           url = "%s.bt5" % url
           try:
-            urlopen(url)
+            urllib2.urlopen(url)
             return url
           except (urllib2.HTTPError, OSError):
             pass
@@ -1413,7 +1400,7 @@ class TemplateTool (BaseTool):
     def upgradeSite(self, bt5_list, deprecated_after_script_dict=None,
                     deprecated_reinstall_set=None, dry_run=False,
                     delete_orphaned=False,
-                    keep_bt5_id_set=[],
+                    keep_bt5_id_set=(),
                     update_catalog=False):
       """
       Upgrade many business templates at a time. bt5_list should
@@ -1448,9 +1435,17 @@ class TemplateTool (BaseTool):
         LOG('upgradeSite', 0, message)
       dependency_list = [x[1] for x in \
         self.resolveBusinessTemplateListDependency(bt5_list)]
+      keep_bt5_id_set = set(keep_bt5_id_set)
+      # XXX: Removed bt5: used to contain Configurator Workflow implementation
+      # (workflow_module) which has since been migrated to portal_workflow and
+      # erp5_core.  This must not be uninstalled as it would remove Workflow
+      # Portal Type and erp5_core upgrade then fails on _reindexObjectVariables():
+      #   Base_reindexObjectSecurity: getTypeInfo().getTypeAllowedContentTypeList()
+      #   => AttributeError: 'NoneType'
+      #
+      # Tested by testUpgradeInstanceWithOldDataFs
+      keep_bt5_id_set.add('erp5_workflow')
       if delete_orphaned:
-        if keep_bt5_id_set is None:
-          keep_bt5_id_set = set()
         to_remove_bt5_list = [x for x in self.getInstalledBusinessTemplateList()
                               if x.title not in dependency_list]
         sorted_to_remove_bt5_id_list = self.sortDownloadedBusinessTemplateList(

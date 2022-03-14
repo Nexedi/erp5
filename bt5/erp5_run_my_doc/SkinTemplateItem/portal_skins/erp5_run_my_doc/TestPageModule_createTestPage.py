@@ -15,7 +15,7 @@ portal_status_message = translateString("%s created. You can now add your first 
 page = context.newContent(portal_type=portal_type,
                           title = title)
 
-session = context.ERP5RunMyDocs_acquireSession()
+session = context.ERP5Site_acquireRunMyDocsSession()
 session['title'] = title
 session['author'] = author
 session['author_mail'] = author_mail
@@ -32,5 +32,5 @@ session['listbox'] = [newTempBase(context.getPortalObject(), '',
                    tested = False
                  )]
 
-return context.Base_redirect('TestPageModule_viewChapterCreationWizard', 
+return context.Base_redirect('TestPageModule_viewChapterCreationWizardDialog', 
                              keep_items = dict(portal_status_message=portal_status_message))

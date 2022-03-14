@@ -58,7 +58,6 @@
 ############################################################################
 #__version__='$Revision: 1.14.10.2 $'[11:-2]
 
-from future.utils import raise_
 from DocumentTemplate.DT_Util import ParseError, parse_params, name_param
 from string import find, split, join, atoi, atof
 StringType=type('')
@@ -96,7 +95,7 @@ class LDIFVar:
                 return
             if type(expr) is not type(''):
                 raise
-            raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
+            raise ValueError('Missing input variable, <em>%s</em>' % name)
 
         if v is None:
             return ''
@@ -177,13 +176,13 @@ class LDIFLine:
                 return default
             if type(expr) is not type(''):
                 raise
-            raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
+            raise ValueError('Missing input variable, <em>%s</em>' % name)
 
         if v is None:
             if 'optional' in args and args['optional']:
                 return default
             else:
-                raise_(ValueError, 'Missing input variable, <em>%s</em>' % name)
+                raise ValueError('Missing input variable, <em>%s</em>' % name)
         if a in ['',None]:
             return default
 

@@ -61,7 +61,7 @@ class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,
                     )
   def _checkConsistency(self, fixit=False, **kw):
     script_id = 'ERP5Type_getSecurityCategoryMapping'
-    error_list = ['%s should be created' % script_id,]
+    error_list = [self._createConstraintMessage('%s should be created' % script_id,)]
     if fixit:
       script_content = """return (
   ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),

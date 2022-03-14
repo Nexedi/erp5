@@ -11,10 +11,8 @@ image_id = ''.join(c for c in ('_'.join(image_id.split(' '))) if c.isalnum() or 
 found = True
 while found:
   image_path = path + '/' + image_id
-  try:
-    image = context.restrictedTraverse(image_path)
-  except:
-    image = None
+  image = context.restrictedTraverse(image_path, None)
+  if image is None:
     found = False
     break
   # If there's already an image with the same url
@@ -22,7 +20,7 @@ while found:
     # Check if the end is a number and increment in that case
     try:
       end_number = int(image_id.split('_')[-1])
-    except:
+    except IndexError:
       end_number = -1
     if end_number > 0:
       image_id = image_id.split('_')[0:-1]

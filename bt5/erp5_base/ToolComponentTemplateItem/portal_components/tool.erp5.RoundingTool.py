@@ -44,7 +44,7 @@ ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
 class RoundingTool(BaseTool):
   """Rounding Tool"""
   id = 'portal_roundings'
-  title = 'Rounding Tool'
+  title = 'Roundings'
   meta_type = 'ERP5 Rounding Tool'
   portal_type = 'Rounding Tool'
 

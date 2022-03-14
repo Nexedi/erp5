@@ -1,0 +1,37 @@
+<svg width="1008" height="744.09448" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata4625">image/svg+xml</metadata>
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="1010" height="746.09448" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image y="-0.91712" x="-0.64241" id="image3070" xlink:href="https://www.erp5.com/user-Event.Worklist.Screenshot.New?format=png" height="286" width="1010"/>
+   <path d="m379.19668,421.04726l-15.06325,-44.96269l-10.75944,8.56433l-68.8605,-100.63081l-8.60755,8.56433l68.8605,100.63081l-10.75945,8.56429l45.18969,19.26974z" id="path5250" fill="#ff0000"/>
+   <rect id="rect2989" width="430.34021" height="382.38165" x="450.69254" y="334.46174" rx="106.79012" ry="0.91099" stroke-miterlimit="4" stroke-width="4.96962" fill="#b4cd3b"/>
+   <text xml:space="preserve" x="478.42252" y="411.05509" id="text3773" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="19.08094px">
+    <tspan id="tspan3775" x="478.42252" y="411.05509">--Events Workflow--</tspan>
+    <tspan x="478.42252" y="434.90626" id="tspan3783">· Draft Events to Process (3)</tspan>
+    <tspan x="478.42252" y="458.75746" id="tspan3777">· Planned Events to Comfirm (5)</tspan>
+    <tspan x="478.42252" y="482.60862" id="tspan3779">· Comfirmed Events to Generate (8)</tspan>
+    <tspan x="478.42252" y="506.45982" id="tspan3781">· Received Events to Deliver (3)</tspan>
+    <tspan x="478.42252" y="530.31098" id="tspan3785">--Document Publication Workflow--</tspan>
+    <tspan x="478.42252" y="554.16218" id="tspan3787">· Documents to Submit (67)</tspan>
+    <tspan x="478.42252" y="578.01338" id="tspan3789">: Documents to Review (21)</tspan>
+    <tspan x="478.42252" y="601.86451" id="tspan3791">--Inventory Workflow--</tspan>
+    <tspan x="478.42252" y="625.71571" id="tspan3793">· Inventories to Validate (2)</tspan>
+    <tspan x="478.42252" y="649.5669" id="tspan3795">--Orders Workflow--</tspan>
+    <tspan x="478.42252" y="673.4181" id="tspan3797">· Purchase Orders to plan (5)</tspan>
+    <tspan x="478.42252" y="697.26924" id="tspan3799">· Sales Orders to plan (172)</tspan>
+   </text>
+   <path d="m479.99489,440.44385l283.46895,-1.12021" id="path3503-5" stroke-miterlimit="4" stroke-width="5" stroke="#d41d19" fill="none"/>
+   <rect id="rect2991" width="430.34021" height="45.24363" x="450.69257" y="334.46186" rx="106.79012" ry="0.91099" stroke-miterlimit="4" stroke-width="4.96962" fill="#04446a"/>
+   <text xml:space="preserve" x="460.15009" y="366.92057" id="text3769" font-family="Sans" fill="#ffffff" font-weight="normal" font-style="normal" font-size="27.77955px">
+    <tspan id="tspan3771" x="460.15009" y="366.92057">ERP5 Worklists</tspan>
+   </text>
+   <path d="m481.77031,514.36081l317.91493,-1.1202" id="path3503-5-4" stroke-miterlimit="4" stroke-width="5" stroke="#d41d19" fill="none"/>
+  </g>
+ </g>
+</svg>

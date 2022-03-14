@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>LBN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>LB</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>lebanon</string> </value>
         </item>

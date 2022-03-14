@@ -1,0 +1,35 @@
+MIME-Version: 1.0
+From: Test <test@gmail.com>
+Date: Thu, 15 Apr 2021 10:32:20 +0200
+Message-ID: <CALqEfxfJAfJd5qHTKo0=bAp75PBPBuDLzqtLNvTVhvOYhRt_DA@mail.gmail.com>
+Subject: test gmail
+To: Test <test@nexedi.com>
+Content-Type: multipart/mixed; boundary="0000000000005ee8f605bffeb4d1"
+
+--0000000000005ee8f605bffeb4d1
+Content-Type: multipart/alternative; boundary="0000000000005ee8f305bffeb4cf"
+
+--0000000000005ee8f305bffeb4cf
+Content-Type: text/plain; charset="UTF-8"
+
+test gmail
+
+--0000000000005ee8f305bffeb4cf
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">test gmail</div>
+
+--0000000000005ee8f305bffeb4cf--
+--0000000000005ee8f605bffeb4d1
+Content-Type: image/png; name="white.png"
+Content-Disposition: attachment; filename="white.png"
+Content-Transfer-Encoding: base64
+Content-ID: <f_knimjntc1>
+X-Attachment-Id: f_knimjntc1
+
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQAAAAA3iMLMAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAd2KE6QAAAAHdElN
+RQflBA8MHjIyMgE8AAAADklEQVQI12P4/5+BFAQA/U4f4XOLpqwAAAAldEVYdGRhdGU6Y3JlYXRl
+ADIwMjEtMDQtMTVUMTA6MzA6NTArMDI6MDDpJ1gdAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIxLTA0
+LTE1VDEwOjMwOjUwKzAyOjAwmHrgoQAAAABJRU5ErkJggg==
+--0000000000005ee8f605bffeb4d1--

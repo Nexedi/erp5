@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SAU</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>SA</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>saudi_arabia</string> </value>
         </item>

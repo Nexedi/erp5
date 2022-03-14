@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>GLP</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>GP</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>guadeloupe</string> </value>
         </item>

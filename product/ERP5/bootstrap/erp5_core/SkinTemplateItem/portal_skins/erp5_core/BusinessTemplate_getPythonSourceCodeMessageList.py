@@ -61,14 +61,22 @@ def checkPythonScript(script_instance, script_path):
       Message(
         location="{script_path}:{row}:{column}".format(**annotation),
         message=annotation['text'],
-        edit_url="{script_path}/manage_main?line={row}".format(**annotation),))
+        edit_url="{script_path}/manage_workspace?line={row}".format(**annotation),))
 
 def checkComponent(component_instance):
   """Check a component, adding messages to global `line_list`
   """
+  component_relative_url = component_instance.getRelativeUrl()
+  for consistency_message in component_instance.checkConsistency():
+    line_list.append(
+      Message(
+        location=component_relative_url,
+        message=consistency_message.getMessage().translate(),
+        edit_url=component_relative_url,
+        jio_key=component_relative_url,),)
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
         {'code': unicode(component_instance.getTextContent(), 'utf8')}))['annotations']:
-    annotation['component_path'] = component_instance.getRelativeUrl()
+    annotation['component_path'] = component_relative_url
     line_list.append(
       Message(
         location="{component_path}:{row}:{column}".format(**annotation),
@@ -85,9 +93,11 @@ for workflow_id in context.getTemplateWorkflowIdList():
 
 for script_container in script_container_list:
   for script_path, script_instance in portal.ZopeFind(
-      script_container,
-      obj_metatypes=['Script (Python)'],
-      search_sub=1):
+      script_container, obj_metatypes=[
+          'Script (Python)',
+          'ERP5 Python Script',
+          'ERP5 Workflow Script',
+      ], search_sub=1):
     checkPythonScript(script_instance, "%s/%s" % (
       portal.portal_url.getRelativeUrl(script_container), script_path))
 

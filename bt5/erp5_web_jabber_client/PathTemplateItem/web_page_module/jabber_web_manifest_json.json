@@ -1,0 +1,12 @@
+{
+      "short_name": "Jabber client",
+      "name": "OfficeJS Jabber client",
+      "description": "A simple web based jabber client",
+      "icons": [{
+        "src": "appjabbericon.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

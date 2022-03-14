@@ -1,0 +1,174 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS HR</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_hr/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='ERP5']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='ERP5']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'ui-state-disabled')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[contains(@class, 'ui-state-disabled')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=erp5_url</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>name=erp5_url</td>
+  <td>${base_url}/web_site_module/</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Connect']</td>
+  <td></td>
+ </tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Send & Receive']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@href='#page=travel_request_record_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=travel_request_record_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@href='#page=add_travel_request_record']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=add_travel_request_record']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='comment']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='comment']</td>
+  <td>Test</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//input[@name='sync_flag']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Send & Receive']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Send & Receive']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//button[@data-i18n='Send & Receive']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Send & Receive']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@href='#page=travel_request_record_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=travel_request_record_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Waiting for approval</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

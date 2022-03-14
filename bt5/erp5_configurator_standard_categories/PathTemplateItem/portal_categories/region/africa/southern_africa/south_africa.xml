@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>ZAF</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ZA</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>south_africa</string> </value>
         </item>

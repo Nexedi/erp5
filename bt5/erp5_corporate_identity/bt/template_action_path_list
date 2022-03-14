@@ -1,5 +1,6 @@
 Preference | corporate_identity_style_preferences
 Web Page | export_book
+Web Page | export_contract
 Web Page | export_leaflet
 Web Page | export_letter
 Web Page | export_release

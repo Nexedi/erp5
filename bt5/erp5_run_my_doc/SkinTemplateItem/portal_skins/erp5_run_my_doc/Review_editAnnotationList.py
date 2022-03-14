@@ -1,8 +1,8 @@
-annotation_list = context.getAnnotation().split('\n');
+annotation_list = context.getAnnotation().split('\n')
 user_name = context.getPortalObject().portal_membership.getAuthenticatedMember().getId()
 for uid in listbox_uid:
   i = int(uid)
-  old_comment, locator, context_url, author, color = annotation_list[i][1:-1].split("},{");
+  old_comment, locator, context_url, author, color = annotation_list[i][1:-1].split("},{")
   new_comment = context.REQUEST['field_listbox_title_' + uid]
   #print('Old title: ' + old_comment + ' -> ' + new_comment)
   if old_comment != new_comment:

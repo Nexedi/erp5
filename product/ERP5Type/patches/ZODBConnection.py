@@ -11,36 +11,29 @@
 #
 ##############################################################################
 
-# override ZODB.Connection.newTransaction() to do a synchronous call before
-# flushing all invalidations, this will serve as a "network barrier" that
-# will force Connection to wait for all invalidations sent from other parallel
-# transactions so that, for instance, activity processing can see a recent
-# enough state of the ZODB.
-
 import time
 from Products.ERP5Type.Timeout import TimeoutReachedError, getDeadline
 from ZODB.Connection import Connection
 
 FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING = False
 
-if 1: # keep indentation. Also good for quick disabling.
+if 1: # for quick disabling.
 
-    def ping(self):
-        # Use a synchronous call to make sure we have received all invalidation
-        # methods that could be stuck in the wire so MVCC behaves correctly.
-        # XXX Use a proper ping method exported by ClientStorage instead of
-        # this hack
-        ping = getattr(getattr(self._storage, '_server', None),
-                       'getAuthProtocol',
-                       lambda: None)
-        ping()
+    if hasattr(Connection, '_storage_sync'): # ZODB<5
+        # BBB: For ZEO<5, use a synchronous call to make sure we have received
+        #      all invalidation methods that could be stuck in the wire so MVCC
+        #      behaves correctly. This can be seen as a "network barrier",
+        #      so that, for instance, activity processing can see a recent
+        #      enough state of the ZODB.
+        #      ZEO5 has an option and NEO does it by default.
 
-    def newTransaction(self, *ignored):
-        self.ping()
-        self._storage_sync()
+        def newTransaction(self, *ignored):
+            zeo = getattr(self._storage, '_server', None)
+            if zeo is not None:
+                zeo.getAuthProtocol()
+            self._storage_sync()
 
-    Connection.ping = ping
-    Connection.newTransaction = newTransaction
+        Connection.newTransaction = newTransaction
 
     if FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING:
 

@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>MWI</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MW</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>malawi</string> </value>
         </item>

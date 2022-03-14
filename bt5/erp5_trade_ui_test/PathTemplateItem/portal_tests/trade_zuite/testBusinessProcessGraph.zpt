@@ -1,0 +1,72 @@
+<html>
+<head><title tal:content="template/title"></title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4" tal:content="template/title"></td></tr>
+</thead>
+
+<tbody tal:define="init_method string:Zuite_createBusinessProcessForTradeZuite;">
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/init" />
+<!-- }}} -->
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/business_process_module/test_trade_ui_test_business_process/BusinessProcess_viewGraphEditor</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-editable="field_my_jsplumb_graph"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-editable="field_my_jsplumb_graph"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, "erp5-business_process")][5]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-editable="field_my_jsplumb_graph"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-editable="field_my_jsplumb_graph"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, "erp5-business_process")][5]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

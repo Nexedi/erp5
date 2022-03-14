@@ -30,4 +30,10 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctiona
 class TestSupportRequestUI(ERP5TypeFunctionalTestCase):
   run_only = "officejs_support_request_ui_zuite"
 
+  def afterSetUp(self):
+    super(TestSupportRequestUI, self).afterSetUp()
+    # fix consistency to update translation
+    self.portal.web_site_module.erp5_officejs_support_request_ui.fixConsistency()
+    self.tic()
+
 del ERP5TypeFunctionalTestCase

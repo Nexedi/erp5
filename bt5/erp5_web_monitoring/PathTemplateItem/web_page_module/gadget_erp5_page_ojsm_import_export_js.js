@@ -327,15 +327,15 @@
   }
 
   function getInstanceOPMLListFromMaster(gadget, limit) {
-    var hosting_subscription_list = [],
+    var instance_tree_list = [],
       opml_list = [],
       uid_dict = {};
     if (limit === undefined) {
       limit = 300;
     }
     return gadget.state.erp5_gadget.allDocs({
-      query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
-      select_list: ['title', 'default_predecessor_uid', 'uid', 'slap_state'],
+      query: '(portal_type:"Instance Tree") AND (validation_state:"validated")',
+      select_list: ['title', 'default_successor_uid', 'uid', 'slap_state'],
       limit: [0, limit],
       sort_on: [
         ["creation_date", "descending"]
@@ -346,7 +346,7 @@
           uid_search_list = [];
         for (i = 0; i < result.data.total_rows; i += 1) {
           if (result.data.rows[i].value.slap_state !== "destroy_requested") {
-            hosting_subscription_list.push({
+            instance_tree_list.push({
               title: result.data.rows[i].value.title,
               relative_url: result.data.rows[i].id,
               active: (result.data.rows[i].value.slap_state ===
@@ -355,15 +355,15 @@
                        "start_requested") ? "Started" : "Stopped"
             });
             uid_search_list.push(result.data.rows[i].value.uid);
-            if (result.data.rows[i].value.default_predecessor_uid) {
-              uid_dict[result.data.rows[i].value.default_predecessor_uid] = i;
+            if (result.data.rows[i].value.default_successor_uid) {
+              uid_dict[result.data.rows[i].value.default_successor_uid] = i;
             }
           }
         }
         return gadget.state.erp5_gadget.allDocs({
           query: '(portal_type:"Software Instance") AND ' +
-            '(predecessor_related_uid:("' + uid_search_list.join('","') + '"))',
-          select_list: ['uid', 'predecessor_related_uid', 'connection_xml'],
+            '(successor_related_uid:("' + uid_search_list.join('","') + '"))',
+          select_list: ['uid', 'successor_related_uid', 'connection_xml'],
           limit: [0, limit]
         });
       })
@@ -381,9 +381,9 @@
             }
             opml_list.push({
               portal_type: "opml",
-              title: hosting_subscription_list[uid_dict[tmp_uid]]
+              title: instance_tree_list[uid_dict[tmp_uid]]
                 .title,
-              relative_url: hosting_subscription_list[uid_dict[tmp_uid]]
+              relative_url: instance_tree_list[uid_dict[tmp_uid]]
                 .relative_url,
               url: tmp_parameter.opml_url || String(tmp_uid) + " NO MONITOR",
               has_monitor: tmp_parameter.opml_url !== undefined,
@@ -392,8 +392,8 @@
               basic_login: btoa(tmp_parameter.username + ':' +
                                 tmp_parameter.password),
               active: tmp_parameter.opml_url !== undefined &&
-                hosting_subscription_list[uid_dict[tmp_uid]].active,
-              state: hosting_subscription_list[uid_dict[tmp_uid]].state
+                instance_tree_list[uid_dict[tmp_uid]].active,
+              state: instance_tree_list[uid_dict[tmp_uid]].state
             });
           }
         }
@@ -463,7 +463,7 @@
             return getMonitorSetting(gadget);
           })
           .push(function (configuration_dict) {
-            return gadget.changeState({
+            return gadget.deferChangeState({
               options: options,
               is_exporter: is_exporter,
               config: JSON.stringify(configuration_dict),
@@ -473,7 +473,7 @@
           });
       }
 
-      return gadget.changeState({
+      return gadget.deferChangeState({
         options: options,
         is_exporter: is_exporter,
         config: "",
@@ -481,6 +481,12 @@
         sync: options.auto_sync,
         storage_url: options.url
       });
+    })
+    .declareJob('deferChangeState', function deferStateChange(state) {
+      // onStateChange does too many things (notification, ajax, redirect)
+      // which leads to infinite rendering loop currently
+      // Break this by decoupling all those things from render
+      return this.changeState(state);
     })
     .onStateChange(function () {
       var gadget = this;

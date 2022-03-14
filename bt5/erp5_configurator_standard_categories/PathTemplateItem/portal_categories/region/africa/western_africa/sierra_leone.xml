@@ -54,6 +54,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SLE</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>SL</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>sierra_leone</string> </value>
         </item>

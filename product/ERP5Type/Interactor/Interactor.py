@@ -44,7 +44,6 @@ from MethodObject import Method
   can be defined on "instances" or can be
   made generic.
 """
-import six
 
 class InteractorMethodCall:
   """
@@ -72,8 +71,8 @@ class InteractorMethod(Method):
     self.after_action_list = []
     self.before_action_list = []
     self.method = method
-    self.__code__ = method.__code__
-    self.__defaults__ = method.__defaults__
+    self.__code__ = self.func_code = method.func_code
+    self.__defaults__ = self.func_defaults = method.func_defaults
     self.__name__ = method.__name__
 
   def registerBeforeAction(self, action, args, kw):
@@ -105,12 +104,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      if six.PY2:
-        im_class = self.method.im_class
-      else:
-        raise NotImplementedError
-        # Futurize version is not working due to unbound method
-        im_class = self.method.__self__.__class__
+      im_class = self.method.im_class
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -122,12 +116,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      if six.PY2:
-        im_class = self.method.im_class
-      else:
-        raise NotImplementedError
-        # Futurize version is not working due to unbound method
-        im_class = self.method.__self__.__class__
+      im_class = self.method.im_class
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)

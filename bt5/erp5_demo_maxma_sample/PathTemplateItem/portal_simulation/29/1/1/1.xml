@@ -29,7 +29,7 @@
             <value>
               <tuple>
                 <string>quantity_unit/unit/piece</string>
-                <string>trade_phase/default/invoicing</string>
+                <string>trade_phase/trade/invoicing</string>
                 <string>delivery_mode/air</string>
                 <string>source_administration/organisation_module/11</string>
                 <string>destination_account/account_module/purchase</string>

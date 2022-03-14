@@ -1,0 +1,129 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test and Update Test Files for LEAFLET Template</title>
+</head>
+<body>
+
+
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+  <tr><td rowspan="1" colspan="3">Test Leaflet Template UI</td></tr>
+</thead>
+<tbody>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+  <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#/web_page_module</td>
+      <td></td>
+    </tr>
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+    <tal:block tal:define="search_query python: 'reference: Template.Test.Leaflet AND version: 001'">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+    </tal:block>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[contains(text(), 'Template.Test.Leaflet')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[contains(text(), 'Template.Test.Leaflet')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Workflows</td>
+      <td></td>
+    </tr>
+    <!-- Save once to set modification date for live tests -->
+    <tal:block tal:define="exchange_configuration python: {'action_title': 'Export as Leaflet'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_selected_exchange_dialog" />
+    </tal:block>
+
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Export Leaflet</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>selectFrame</td>
+      <td>//div[@class="bottom"]//iframe</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>@</td>
+      <td></td>
+    </tr>
+
+     <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>type</td>
+      <td>name=field_override_source_organisation_title</td>
+      <td>Test Association</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_source_person_title</td>
+      <td>Test Recipient</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>name=field_override_leaflet_header_title</td>
+      <td>Couscous</td>
+    </tr>
+    <tr>
+      <td>uncheck</td>
+      <td>name=field_display_side</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>selectFrame</td>
+      <td>//div[@class="bottom"]//iframe</td>
+      <td></td>
+    </tr>
+     <tr>
+      <td>waitForElementPresent</td>
+      <td>//p[@class='ci-leaflet-source-header' and contains(text(), 'Test Association:Couscous')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
+      <td>//div[@id='legalese']</td>
+      <td></td>
+    </tr>
+   <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
+    </tr>
+  <tr>
+    <td>type</td>
+    <td>//select[@name='field_format']</td>
+    <td>pdf</td>
+  </tr>
+
+   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+   <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data received.'}">
+     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+   </tal:block>
+</tbody>
+</table>
+</body>
+</html>

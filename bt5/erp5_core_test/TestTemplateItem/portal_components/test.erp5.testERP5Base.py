@@ -28,7 +28,6 @@
 
 from collections import defaultdict
 import os
-import unittest
 
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -62,6 +61,8 @@ class TestERP5Base(ERP5TypeTestCase):
     self.portal_catalog    = self.getCatalogTool()
     self.portal_preferences = self.getPreferenceTool()
     self.createCategories()
+    self._addPropertySheet('Career', 'CareerConstraint')
+    self.commit()
 
   def beforeTearDown(self):
     self.abort()
@@ -73,21 +74,6 @@ class TestERP5Base(ERP5TypeTestCase):
   ##################################
   ##  Usefull methods
   ##################################
-
-  def makeImageFileUpload(self, filename):
-    import Products.ERP5.tests
-    return FileUpload(
-            os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-            'test_data', 'images', filename))
-
-  def login(self):
-    """Create a new manager user and login.
-    """
-    user_name = 'kevin'
-    user_folder = self.getPortal().acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
 
   def login_as_auditor(self):
     """Create a new member user with Auditor role, and login
@@ -898,51 +884,53 @@ class TestERP5Base(ERP5TypeTestCase):
       self.portal.portal_workflow.doActionFor(bank_account, 'validate_action')
       self.assertEqual('validated', bank_account.getValidationState())
 
-  def test_CreateImage(self):
-    # We can add Images inside Persons and Organisation
-    for entity in (self.getPersonModule().newContent(portal_type='Person'),
-        self.getOrganisationModule().newContent(portal_type='Organisation')):
-      image = entity.newContent(portal_type='Embedded File')
-      self.assertEqual([], image.checkConsistency())
-      image.view() # viewing the image does not cause error
+  def test_bank_account_reference_default_id(self):
+    bank_account = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    ).newContent(
+        portal_type='Bank Account',
+        id='bank_account_id',
+    )
+    self.assertEqual(bank_account.getReference(), 'bank_account_id')
 
-  def test_ConvertImage(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    self.assertEqual('image/png', image.getContentType())
-    self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
+  def test_bank_account_reference_from_bank_code(self):
+    bank_account = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    ).newContent(
+        portal_type='Bank Account',
+    )
+    bank_account.setBankCode('bank-code')
+    bank_account.setBranch('branch-code')
+    bank_account.setBankAccountNumber('account-number')
+    bank_account.setBankAccountKey('account-key')
+    self.assertEqual(
+        bank_account.getReference(),
+        'bank-code branch-code account-number account-key',
+    )
 
-    def convert(**kw):
-      image_type, image_data = image.convert('jpg', display='thumbnail', **kw)
-      self.assertEqual('image/jpeg', image_type)
-      thumbnail = self.portal.newContent(temp_object=True, portal_type='Image',
-        id='thumbnail', data=image_data)
-      self.assertEqual(image_type, thumbnail.getContentType())
-      self.assertEqual((128, 100), (thumbnail.getWidth(),
-                                    thumbnail.getHeight()))
-      return thumbnail.getSize()
-    self.assertTrue(convert() < convert(quality=100))
+    bank_account.setBankCountryCode('bank-country-code')
+    self.assertEqual(
+        bank_account.getReference(),
+        'bank-country-code bank-code branch-code account-number account-key',
+    )
 
-  def test_ConvertImagePdata(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
-    from OFS.Image import Pdata
-    self.assertTrue(isinstance(image.data, Pdata))
+  def test_bank_account_reference_from_iban(self):
+    bank_account = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+    ).newContent(
+        portal_type='Bank Account',
+    )
+    bank_account.setIban('iban')
+    bank_account.setBicCode('bic-code')
+    self.assertEqual(bank_account.getReference(), 'iban')
 
-    image_type, image_data = image.convert('jpg', display='thumbnail')
-    self.assertEqual('image/jpeg', image_type)
-    # magic
-    self.assertEqual('\xff', image_data[0])
-    self.assertEqual('\xd8', image_data[1])
-
-  def test_ImageSize(self):
-    image = self.portal.newContent(portal_type='Image', id='test_image')
-    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
-    self.assertEqual(320, image.getWidth())
-    self.assertEqual(250, image.getHeight())
-    image.edit(file=self.makeImageFileUpload('erp5_logo_small.png'))
-    self.assertEqual(160, image.getWidth())
-    self.assertEqual(125, image.getHeight())
+    # other codes are ignored if there's an iban
+    bank_account.setBankCode('bank-code')
+    bank_account.setBranch('branch-code')
+    bank_account.setBankAccountNumber('account-number')
+    bank_account.setBankAccountKey('account-key')
+    bank_account.setBankCountryCode('bank-country-code')
+    self.assertEqual(bank_account.getReference(), 'iban')
 
   def test_Person_getCareerStartDate(self):
     # Person_getCareerStartDate scripts returns the date when an employee
@@ -992,6 +980,40 @@ class TestERP5Base(ERP5TypeTestCase):
     # if year is not passed, the script returns the age in a translated string.
     age_as_text = person.Person_getAge(at_date=DateTime(2002, 2, 4))
     self.assertEqual(age_as_text, "1 years old")
+
+  def test_career_constraint(self):
+    organisation = self.getOrganisationModule().newContent(portal_type='Organisation')
+    person = self.getPersonModule().newContent(
+      portal_type='Person',
+      default_career_subordination_value = organisation)
+    self.tic()
+    current_career = person.getDefaultCareerValue()
+    message_list = current_career.checkConsistency()
+    self.assertEqual(len(message_list), 0)
+    self.portal_preferences.default_site_preference.setPreferredSectionCategory('group/nexedi')
+    if self.portal_preferences.default_site_preference.getPreferenceState() == "disabled":
+      self.portal_preferences.default_site_preference.enable()
+    organisation.setGroup('nexedi')
+    self.tic()
+    message_list = current_career.checkConsistency()
+    self.assertEqual(len(message_list), 1)
+    self.assertEqual(str(message_list[0].getMessage()), 'Employee Number is not defined')
+    self.tic()
+    current_career.Career_setEmployeeNumber(batch=1)
+    message_list = current_career.checkConsistency()
+    self.assertEqual(len(message_list), 0)
+    current_career.start()
+    self.tic()
+    new_career = person.newContent(portal_type='Career', subordination_value = organisation)
+    new_career.Career_setEmployeeNumber(batch=1, employee_number=current_career.getReference())
+    self.tic()
+    message_list = new_career.checkConsistency()
+    self.assertEqual(len(message_list), 1)
+    self.assertEqual(str(message_list[0].getMessage()), 'There already is a started career with the same employee number')
+    new_career.Career_setEmployeeNumber(batch=1, force=1)
+    self.tic()
+    message_list = new_career.checkConsistency()
+    self.assertEqual(len(message_list), 0)
 
   def test_AssignmentWorkflow(self):
     person = self.getPersonModule().newContent(portal_type='Person',)
@@ -1164,6 +1186,18 @@ class TestERP5Base(ERP5TypeTestCase):
     # workflow is affected
     self.assertTrue(comment in [q['comment'] for q in workflow_history ])
 
+  def test_Base_addEditWorkflowComment(self):
+    # rather than using low level doActionFor, an helper script Base_addEditWorkflowComment
+    # is available. This scrit also has a proxy role, so that we can programatically
+    # add comment to workflow history, which can be good for traceability of autamated
+    # actions.
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.logout()
+    person.Base_addEditWorkflowComment(comment=comment)
+    workflow_history = self.getWorkflowHistory(person, 'edit_workflow')
+    self.assertIn(('Anonymous User', comment), [(q['actor'], q['comment']) for q in workflow_history ])
+
   def test_comment_validation_workflow(self):
     comment = 'some comment'
     person = self.portal.person_module.newContent(portal_type='Person')
@@ -1181,10 +1215,12 @@ class TestERP5Base(ERP5TypeTestCase):
                                    site='distibution/tokyo')
     self.assertNotEquals(None, assignment.getGroupValue())
     assignment.open()
-    self.portal.portal_workflow.doActionFor(person, 'create_user_action',
-                  reference='user_login',
-                  password='pass',
-                  password_confirm='pass')
+    login = person.newContent(
+      portal_type="ERP5 Login",
+      reference="user_login",
+      password="pass",
+    )
+    login.validate()
     self.tic()
 
     # a user is created
@@ -1821,7 +1857,7 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
 
   """
   def afterSetUp(self):
-    super(ERP5TypeTestCase, self).afterSetUp()
+    super(Base_getDialogSectionCategoryItemListTest, self).afterSetUp()
     self.user_id = self.id()
     self.portal.acl_users.zodb_roles.doAssignRoleToPrincipal(self.user_id, 'Auditor')
     self.person = self.portal.person_module.newContent(
@@ -1880,8 +1916,19 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
 
   def test_only_valid_assignments_are_considered(self):
     self.person.newContent(portal_type='Assignment', group='main_group/sub_group').open()
-    self.person.newContent(portal_type='Assignment', group='main_group', stop_date=DateTime(1970, 1, 1)).open()
+    # XXX If set on 1970.1.1, the stop_date is None with new DateTime
+    self.person.newContent(portal_type='Assignment', group='main_group', stop_date=DateTime(1970, 1, 2)).open()
     self.person.newContent(portal_type='Assignment', group='main_group') # left as draft
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+        ])
+
+  def test_assignments_with_start_date_only_are_considered(self):
+    self.person.newContent(portal_type='Assignment', group='main_group/sub_group', start_date=DateTime(1970, 1, 1)).open()
     self.tic()
     self.login(self.user_id)
     self.assertEqual(
@@ -1920,3 +1967,110 @@ class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
             ],
             ['Another Top Level Group', 'group/main_group_2'],
         ])
+
+
+class TestImage(ERP5TypeTestCase):
+  """Tests for images support.
+  """
+  def makeImageFileUpload(self, filename):
+    import Products.ERP5.tests
+    return FileUpload(
+            os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
+            'test_data', 'images', filename))
+
+  def test_CreateImage(self):
+    # We can add Images inside Persons and Organisation
+    for entity in (self.getPersonModule().newContent(portal_type='Person'),
+        self.getOrganisationModule().newContent(portal_type='Organisation')):
+      image = entity.newContent(portal_type='Embedded File')
+      self.assertEqual([], image.checkConsistency())
+      image.view() # viewing the image does not cause error
+
+  def test_ConvertImage(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.png'))
+    self.assertEqual('image/png', image.getContentType())
+    self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
+
+    def convert(**kw):
+      image_type, image_data = image.convert('jpg', display='thumbnail', **kw)
+      self.assertEqual('image/jpeg', image_type)
+      thumbnail = self.portal.newContent(temp_object=True, portal_type='Image',
+        id='thumbnail', data=image_data)
+      self.assertEqual(image_type, thumbnail.getContentType())
+      self.assertEqual((128, 100), (thumbnail.getWidth(),
+                                    thumbnail.getHeight()))
+      return thumbnail.getSize()
+    self.assertTrue(convert() < convert(quality=100))
+
+  def test_ConvertImagePdata(self):
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=self.makeImageFileUpload('erp5_logo.bmp'))
+    from OFS.Image import Pdata
+    self.assertTrue(isinstance(image.data, Pdata))
+
+    image_type, image_data = image.convert('jpg', display='thumbnail')
+    self.assertEqual('image/jpeg', image_type)
+    # magic
+    self.assertEqual('\xff', image_data[0])
+    self.assertEqual('\xd8', image_data[1])
+
+  def test_ImageSize(self):
+    for filename, size in (
+        ('erp5_logo.png', (320, 250)),
+        ('erp5_logo_small.png', (160, 125)),
+        ('erp5_logo.jpg', (320, 250)),
+        ('erp5_logo.bmp', (320, 250)),
+        ('erp5_logo.gif', (320, 250)),
+        ('erp5_logo.tif', (320, 250)),
+        ('empty.png', (0, 0)),
+        ('broken.png', (-1, -1)),
+        ('../broken_html.html', (-1, -1)),
+      ):
+      image = self.portal.newContent(portal_type='Image', id=self.id())
+      image.edit(file=self.makeImageFileUpload(filename))
+      self.assertEqual(
+          (image.getWidth(), image.getHeight()),
+          size,
+          (filename, (image.getWidth(), image.getHeight()), size))
+      self.portal.manage_delObjects([self.id()])
+
+  def test_ImageContentTypeFromData(self):
+    for filename, content_type in (
+        ('erp5_logo.png', 'image/png'),
+        ('erp5_logo_small.png', 'image/png'),
+        ('erp5_logo.jpg', 'image/jpeg'),
+        ('erp5_logo.bmp', 'image/x-ms-bmp'),
+        ('erp5_logo.gif', 'image/gif'),
+        ('erp5_logo.tif', 'image/tiff'),
+        ('broken.png', 'application/unknown'),
+        ('empty.png', 'application/unknown'),
+        ('../broken_html.html', 'application/unknown'),
+      ):
+      image = self.portal.newContent(portal_type='Image', id=self.id())
+      image.edit(data=self.makeImageFileUpload(filename).read())
+      self.assertEqual(
+          image.getContentType(),
+          content_type,
+          (filename, image.getContentType(), content_type))
+      self.portal.manage_delObjects([self.id()])
+
+  def test_ImageContentTypeFromFile(self):
+    # with file= argument the filename also play a role in the type detection
+    for filename, content_type in (
+        ('erp5_logo.png', 'image/png'),
+        ('erp5_logo_small.png', 'image/png'),
+        ('erp5_logo.jpg', 'image/jpeg'),
+        ('erp5_logo.bmp', 'image/x-ms-bmp'),
+        ('erp5_logo.gif', 'image/gif'),
+        ('erp5_logo.tif', 'image/tiff'),
+        ('broken.png', 'image/png'),
+        ('empty.png', 'application/unknown'),
+      ):
+      image = self.portal.newContent(portal_type='Image', id=self.id())
+      image.edit(file=self.makeImageFileUpload(filename))
+      self.assertEqual(
+          image.getContentType(),
+          content_type,
+          (filename, image.getContentType(), content_type))
+      self.portal.manage_delObjects([self.id()])

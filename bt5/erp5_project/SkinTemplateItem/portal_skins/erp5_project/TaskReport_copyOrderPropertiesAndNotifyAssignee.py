@@ -1,5 +1,5 @@
 if related_simulation_movement_path_list is None:
-  raise RuntimeError, 'related_simulation_movement_path_list is missing. Update ERP5 Product.'
+  raise RuntimeError('related_simulation_movement_path_list is missing. Update ERP5 Product.')
 
 if REQUEST is not None:
   from zExceptions import Unauthorized

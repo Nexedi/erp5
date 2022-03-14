@@ -39,7 +39,7 @@ OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
 ## Pylint transforms and plugin to generate AST for ZODB Components
 from astroid.builder import AstroidBuilder
 from astroid.exceptions import AstroidBuildingException
-from astroid import MANAGER
+from astroid import MANAGER, node_classes
 
 try:
   from astroid.builder import _guess_encoding
@@ -97,6 +97,32 @@ def string_build(self, data, modname='', path=None):
     module.file_bytes = data
     return self._post_build(module, encoding)
 AstroidBuilder.string_build = string_build
+
+# patch node_classes.const_factory not to fail on LazyModules that e.g.
+# pygolang installs for pytest and ipython into sys.modules dict:
+#
+#   https://lab.nexedi.com/nexedi/pygolang/blob/pygolang-0.1-0-g7b72d41/golang/_patch/__init__.py
+#   https://lab.nexedi.com/nexedi/pygolang/blob/pygolang-0.1-0-g7b72d41/golang/_patch/pytest_py2.py#L48-51
+#   https://lab.nexedi.com/nexedi/pygolang/blob/pygolang-0.1-0-g7b72d41/golang/_patch/ipython_py2.py#L45-48
+#
+# if we don't patch and the module is not available, upon checking sys->sys.modules
+# const_factory will fail with ImportError when accessing value.__class__.
+node_classes_const_factory = node_classes.const_factory
+def const_factory(value):
+    typ = type(value)
+    typename = ('%s.%s' % (typ.__module__, typ.__name__))
+    if typename == 'peak.util.imports.LazyModule':
+        # lazy module installed by Importing
+        # see if we can load it, and return empty placehoder if the module is not available
+        try:
+            value.__class__
+        except ImportError:
+            node = node_classes.EmptyNode()
+            node.object = None # not value
+            return node
+        # ok the module is available and is now loaded - continue via normal const_factory path
+    return node_classes_const_factory(value)
+node_classes.const_factory = const_factory
 
 from astroid import nodes
 def erp5_package_transform(node):
@@ -291,7 +317,10 @@ register_module_extender(MANAGER, 'AccessControl.PermissionRole',
 ## Package dynamically extending the namespace of their modules with C
 ## extension symbols
 # astroid/brain/ added dynamically to sys.path by astroid __init__
-from py2gi import _gi_build_stub as build_stub
+try:
+    from brain_gi import _gi_build_stub as build_stub
+except ImportError: # BBB: old version of astroid
+    from py2gi import _gi_build_stub as build_stub
 def _register_module_extender_from_live_module(module_name, module):
     def transform():
         return AstroidBuilder(MANAGER).string_build(build_stub(module))
@@ -322,32 +351,50 @@ import lxml
 import os
 for filename in os.listdir(os.path.dirname(lxml.__file__)):
     if filename.endswith('.so'):
-        module_name = 'lxml.' + filename[:-3]
+        module_name = 'lxml.' + filename.split('.', 1)[0]
         _register_module_extender_from_live_module(
             module_name,
             __import__(module_name, fromlist=[module_name], level=0))
+
+# Wendelin is special namespace package which pylint fails to recognize, and so
+# complains about things like `from wendelin.bigarray.array_zodb import ZBigArray`
+# with `No name 'bigarray' in module 'wendelin' (no-name-in-module)`.
+#
+# -> Teach pylint to properly understand wendelin package nature.
+try:
+    import wendelin
+except ImportError:
+    pass
+else:
+    def wendelin_transform(node):
+        m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
+        m.package = True
+        return m
+    MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
 
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
 # in Zope2) as Shared (rather than Shared.DC) is considered...
 from astroid import modutils
-modutils__module_file = modutils._module_file
-def _module_file(modpath, path=None):
-    if modutils.pkg_resources is not None:
-        i = len(modpath) - 1
-        while i > 0:
-            package = '.'.join(modpath[0:i])
-            if (package in modutils.pkg_resources._namespace_packages and
-                    package in sys.modules):
-                modpath = modpath[i:]
-                path = sys.modules[package].__path__
-                break
-
-            i -= 1
-
-    return modutils__module_file(modpath, path)
-modutils._module_file = _module_file
+try: # BBB
+    modutils__module_file = modutils._module_file
+except AttributeError:
+    pass # recent astroid, anything to do ?
+else:
+    def _module_file(modpath, path=None):
+        if modutils.pkg_resources is not None:
+            i = len(modpath) - 1
+            while i > 0:
+                package = '.'.join(modpath[0:i])
+                if (package in modutils.pkg_resources._namespace_packages and
+                        package in sys.modules):
+                    modpath = modpath[i:]
+                    path = sys.modules[package].__path__
+                    break
+                i -= 1
+        return modutils__module_file(modpath, path)
+    modutils._module_file = _module_file
 
 if sys.modules['isort'] is None:
     del sys.modules['isort']

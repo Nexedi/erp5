@@ -14,10 +14,16 @@ if "Sale" in context.getPortalType():
   report_type = "sale"
   line_portal_type = "Sale Order Line"
   doc_portal_type = "Sale Order"
+  if "Packing List" in context.getPortalType():
+    line_portal_type = "Sale Packing List Line"
+    doc_portal_type = "Sale Packing List"
 elif "Purchase" in context.getPortalType():
   report_type = "purchase"
   line_portal_type = "Purchase Order Line"
   doc_portal_type = "Purchase Order"
+  if "Packing List" in context.getPortalType():
+    line_portal_type = "Purchase Packing List Line"
+    doc_portal_type = "Purchase Packing List"
 elif request.get('order_report_document_portal_type'):
   doc_portal_type = request.get('order_report_document_portal_type')
   if doc_portal_type == 'Purchase Invoice Transaction':
@@ -61,7 +67,7 @@ interval_list = interval_list_dict[aggregation_level]
 interval_column_list = []
 if group_by == "client":
   interval_column_list.extend([("Amount %s" %x,"Amount %s" %x) for x in interval_list])
-  selection_columns = [('client', "Client")]
+  selection_columns = [('client', "Third Party")]
   total_column_list = [('total amount', 'Total Amount'),]
   stat_columns = [('client', "client")]
   total_stat_list = [('total amount', 'total amount'),]
@@ -70,7 +76,7 @@ else:
     selection_columns = [('product', "Product")]
     stat_columns = [('product', "product")]
   else:
-    selection_columns = [('client', "Client"), ('product', "Product")]
+    selection_columns = [('client', "Third Party"), ('product', "Product")]
     stat_columns = [('client', "client"), ('product', "product")]
   for x in interval_list:
     interval_column_list.extend([("Amount %s" %x,"Amount %s" %x), ("Quantity %s" %x,"Quantity %s" %x),

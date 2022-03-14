@@ -116,7 +116,7 @@
                         <string>my_test_suite_max</string>
                         <string>last_check</string>
                         <string>my_aggregate_title_list</string>
-                        <string>my_validation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

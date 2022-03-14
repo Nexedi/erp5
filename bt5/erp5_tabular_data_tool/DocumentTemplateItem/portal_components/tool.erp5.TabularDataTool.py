@@ -21,7 +21,7 @@ class TabularDataTool(BaseTool):
   - using vectorizing function to optimise time consuming reports
   """
   id = 'portal_tabular'
-  title = 'Tabular Data Tool'
+  title = 'Tabular Data'
   meta_type = 'ERP5 Tabular Data Tool'
   portal_type = 'Tabular Data Tool'
   allowed_types = ()
