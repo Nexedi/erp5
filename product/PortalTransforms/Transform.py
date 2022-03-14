@@ -2,7 +2,7 @@
 from zLOG import ERROR
 from UserDict import UserDict
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.class_init import default__class_init__ as InitializeClass
@@ -54,12 +54,11 @@ VALIDATORS = {
     'dict' : PersistentMapping,
     }
 
+@implementer(ITransform)
 class Transform(SimpleItem):
     """A transform is an external method with
     additional configuration information
     """
-
-    implements(ITransform)
 
     meta_type = 'Transform'
     meta_types = all_meta_types = ()

@@ -42,11 +42,11 @@ from BTrees.Length import Length
 
 _marker = object()
 
+@zope.interface.implementer(interfaces.IIdTool)
 class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
   """
-  zope.interface.implements(interfaces.IIdTool)
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'

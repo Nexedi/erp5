@@ -33,7 +33,7 @@ import itertools
 from zLOG import LOG, WARNING, INFO
 from .interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ZSQLCatalog.interfaces.column_map import IColumnMap
 from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
                                                   TableAlias,
@@ -52,9 +52,8 @@ MAPPING_TRACE = False
 
 re_sql_as = re.compile("\s+AS\s[^)]+$", re.IGNORECASE | re.MULTILINE)
 
+@implementer(IColumnMap)
 class ColumnMap(object):
-
-  implements(IColumnMap)
 
   def __init__(self,
                catalog_table_name=None,

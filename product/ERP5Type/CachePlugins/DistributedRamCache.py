@@ -49,12 +49,10 @@ connection_pool = local()
 
 _MARKER = []
 
+@zope.interface.implementer(
+        interfaces.ICachePlugin)
 class DistributedRamCache(BaseCache):
   """ Memcached based cache plugin. """
-
-  zope.interface.implements(
-        interfaces.ICachePlugin
-    )
 
   def __init__(self, uid, params={}):
     self._servers = params.get('server', '')

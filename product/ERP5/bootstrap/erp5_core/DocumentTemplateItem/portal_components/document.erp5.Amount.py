@@ -42,6 +42,7 @@ from zLOG import LOG, ERROR
 from warnings import warn
 
 
+@zope.interface.implementer(IAmount)
 class Amount(Base, VariatedMixin):
   """
     A mix-in class which provides some utilities
@@ -57,9 +58,6 @@ class Amount(Base, VariatedMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IAmount)
 
   property_sheets = ( PropertySheet.SimpleItem
                     , PropertySheet.Amount

@@ -35,6 +35,7 @@ from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup Rules. """
 
@@ -47,9 +48,6 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

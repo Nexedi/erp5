@@ -39,14 +39,13 @@ from Products.ERP5Type.interfaces.component import IComponent
 
 from Products.CMFCore import utils
 
+@zope.interface.implementer(IComponent)
 class ToolComponent(DocumentComponent):
   """
   ZODB Component for Tools, used to be found on Products.XXX.Tool on FS
   """
   meta_type = 'ERP5 Tool Component'
   portal_type = 'Tool Component'
-
-  zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

@@ -1,11 +1,10 @@
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
+@implementer(itransform)
 class PptxToPpty:
   """Transforms pptx to ppty by using Cloudooo"""
-
-  implements(itransform)
 
   __name__ = 'pptx_to_ppty'
   inputs   = ('application/vnd.openxmlformats-officedocument.presentationml.presentation',)

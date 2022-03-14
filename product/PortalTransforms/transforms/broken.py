@@ -1,10 +1,10 @@
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.utils import log
 WARNING=100
 
+@implementer(ITransform)
 class BrokenTransform:
-    implements(ITransform)
 
     __name__ = "broken transform"
     inputs  = ("BROKEN",)

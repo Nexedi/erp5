@@ -6,10 +6,10 @@ from Products.PortalTransforms.libtransforms.commandtransform \
 import os
 import subprocess
 import tempfile
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer(ITransform)
 class tiff_to_text(commandtransform):
-    implements(ITransform)
     __name__  = "tiff_to_text"
 
     inputs   = ('image/tiff',)
