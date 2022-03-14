@@ -1,4 +1,4 @@
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Persistence import Persistent
@@ -18,10 +18,9 @@ from Products.PortalTransforms.interfaces import ITransform
 
 from UserList import UserList
 
+@implementer(IChain, ITransform)
 class chain(UserList):
     """A chain of transforms used to transform data"""
-
-    implements(IChain, ITransform)
 
     def __init__(self, name='',*args):
         UserList.__init__(self, *args)

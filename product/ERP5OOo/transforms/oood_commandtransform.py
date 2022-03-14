@@ -3,7 +3,7 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.interfaces import idatastream
 from erp5.component.document.Document import ConversionError
 from Acquisition import aq_base
-from zope.interface import implements
+from zope.interface import implementer
 from OFS.Image import Image as OFSImage
 from zLOG import LOG
 
@@ -35,9 +35,9 @@ def includeMetaContentType(html_node):
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
+@implementer(idatastream)
 class OOoDocumentDataStream:
   """Handle OOoDocument in Portal Transforms"""
-  implements(idatastream)
 
   def setData(self, value):
     """set the main"""

@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
 EXTRACT_BODY  = 1
 EXTRACT_STYLE = 0
@@ -31,8 +31,8 @@ else:
 
 import os.path
 
+@implementer(ITransform)
 class word_to_html:
-    implements(ITransform)
 
     __name__ = "word_to_html"
     inputs   = ('application/msword',)

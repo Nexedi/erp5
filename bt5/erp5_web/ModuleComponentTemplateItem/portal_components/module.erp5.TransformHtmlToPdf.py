@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from erp5.component.module.TransformLib import DocumentConversionServerTransform
+@implementer(ITransform)
 class TransformHtmlToPdf(DocumentConversionServerTransform):
   """
   Transforms HTML to PDF through document conversion server
   """
-  implements(ITransform)
 
   __name__ = 'html_to_pdf'
   inputs = ('text/html',)

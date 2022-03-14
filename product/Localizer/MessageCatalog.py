@@ -45,7 +45,7 @@ from ZPublisher import HTTPRequest
 from zope.component import getSiteManager
 from zope.i18n import interpolate
 from zope.i18n.interfaces import ITranslationDomain
-from zope.interface import implements
+from zope.interface import implementer
 from zLOG import LOG, INFO
 from zExceptions import Forbidden
 
@@ -154,12 +154,12 @@ def manage_addMessageCatalog(self, id, title, languages, sourcelang=None,
 
 
 
+@implementer(IMessageCatalog)
 class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     """Stores messages and their translations...
     """
 
     meta_type = 'MessageCatalog'
-    implements(IMessageCatalog)
 
 
     security = ClassSecurityInfo()

@@ -6,7 +6,7 @@ from cgi import escape
 import codecs
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import IllegalHTML
 from Products.PortalTransforms.utils import safeToInt
@@ -375,6 +375,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
         result = result.decode(parser.original_charset).encode(default_encoding)
     return result
 
+@implementer(ITransform)
 class SafeHTML:
     """Simple transform which uses CMFDefault functions to
     clean potentially bad tags.
@@ -391,8 +392,6 @@ class SafeHTML:
         -> Database Management -> main || other_used_database
         -> Flush Cache.
     """
-
-    implements(ITransform)
 
     __name__ = "safe_html"
     inputs   = ('text/html',)

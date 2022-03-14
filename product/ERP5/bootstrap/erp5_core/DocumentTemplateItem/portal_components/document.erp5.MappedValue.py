@@ -36,6 +36,7 @@ from erp5.component.interface.IMappedValue import IMappedValue
 TRANSFORMATION_FIX = True
 _MARKER = object()
 
+@zope.interface.implementer(IMappedValue,)
 class MappedValue(Predicate):
   """
     A MappedValue allows to associate a value to a predicate
@@ -55,9 +56,6 @@ class MappedValue(Predicate):
                       , PropertySheet.Predicate
                       , PropertySheet.MappedValue
                     )
-  # Declarative interfaces
-  zope.interface.implements(IMappedValue,
-                           )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMappedValueBaseCategoryList')

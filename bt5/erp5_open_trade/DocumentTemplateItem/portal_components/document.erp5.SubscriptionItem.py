@@ -39,6 +39,7 @@ from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.Base import Base
 from erp5.component.interface.IMovementGenerator import IMovementGenerator
 
+@zope.interface.implementer(IMovementGenerator,)
 class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
                        SimulableMixin, PeriodicityMixin):
   """
@@ -66,10 +67,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
                     , PropertySheet.Reference
                     , PropertySheet.Periodicity
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IMovementGenerator,
-                           )
 
   def _createRootAppliedRule(self):
     # only try to expand if we are not in draft state

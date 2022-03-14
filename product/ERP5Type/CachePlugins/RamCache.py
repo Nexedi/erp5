@@ -49,12 +49,10 @@ def calcPythonObjectMemorySize(i):
     return 0
 
 _MARKER = []
+@zope.interface.implementer(
+        interfaces.ICachePlugin)
 class RamCache(BaseCache):
   """ RAM based cache plugin."""
-
-  zope.interface.implements(
-        interfaces.ICachePlugin
-    )
 
   cache_expire_check_interval = 300
 

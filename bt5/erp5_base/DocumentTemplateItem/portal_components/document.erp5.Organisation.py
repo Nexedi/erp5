@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Node import Node
 
+@zope.interface.implementer(interfaces.INode)
 class Organisation(Node):
   """
       An Organisation object holds the information about
@@ -51,8 +52,6 @@ class Organisation(Node):
   meta_type = 'ERP5 Organisation'
   portal_type = 'Organisation'
   add_permission = Permissions.AddPortalContent
-
-  zope.interface.implements(interfaces.INode)
 
   # Declarative security
   security = ClassSecurityInfo()

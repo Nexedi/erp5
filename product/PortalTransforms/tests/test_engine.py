@@ -1,7 +1,7 @@
 
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
@@ -14,8 +14,8 @@ class BaseTransform:
         return getattr(self, '__name__', self.__class__.__name__)
 
 
+@implementer(ITransform)
 class HtmlToText(BaseTransform):
-    implements(ITransform)
     inputs = ('text/html',)
     output = 'text/plain'
 
@@ -31,8 +31,8 @@ class HtmlToText(BaseTransform):
 class HtmlToTextWithEncoding(HtmlToText):
     output_encoding = 'ascii'
 
+@implementer(ITransform)
 class FooToBar(BaseTransform):
-    implements(ITransform)
     inputs = ('text/*',)
     output = 'text/plain'
 
@@ -45,8 +45,8 @@ class FooToBar(BaseTransform):
         data.setData(orig)
         return data
 
+@implementer(ITransform)
 class DummyHtmlFilter1(BaseTransform):
-    implements(ITransform)
     __name__ = 'dummy_html_filter1'
     inputs = ('text/html',)
     output = 'text/html'
@@ -55,8 +55,8 @@ class DummyHtmlFilter1(BaseTransform):
         data.setData("<span class='dummy'>%s</span>" % orig)
         return data
 
+@implementer(ITransform)
 class DummyHtmlFilter2(BaseTransform):
-    implements(ITransform)
     __name__ = 'dummy_html_filter2'
     inputs = ('text/html',)
     output = 'text/html'
@@ -74,31 +74,32 @@ class QuxToVHost(DummyHtmlFilter1):
         return data
 
 
+@implementer(ITransform)
 class TransformNoIO(BaseTransform):
-    implements(ITransform)
+    pass
 
 class BadTransformMissingImplements(BaseTransform):
     #__implements__ = None
     inputs = ('text/*',)
     output = 'text/plain'
 
+@implementer(ITransform)
 class BadTransformBadMIMEType1(BaseTransform):
-    implements(ITransform)
     inputs = ('truc/muche',)
     output = 'text/plain'
 
+@implementer(ITransform)
 class BadTransformBadMIMEType2(BaseTransform):
-    implements(ITransform)
     inputs = ('text/plain',)
     output = 'truc/muche'
 
+@implementer(ITransform)
 class BadTransformNoInput(BaseTransform):
-    implements(ITransform)
     inputs = ()
     output = 'text/plain'
 
+@implementer(ITransform)
 class BadTransformWildcardOutput(BaseTransform):
-    implements(ITransform)
     inputs = ('text/plain',)
     output = 'text/*'
 

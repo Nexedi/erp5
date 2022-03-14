@@ -50,13 +50,12 @@ from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TR
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
+@zope.interface.implementer(interfaces.ILocalRoleAssignor)
 class LocalRoleAssignorMixIn(object):
     """Mixin class used by type informations to compute and update local roles
     """
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    zope.interface.implements(interfaces.ILocalRoleAssignor)
 
     security.declarePrivate('updateLocalRolesOnDocument')
     @UnrestrictedMethod
@@ -195,6 +194,7 @@ class LocalRoleAssignorMixIn(object):
 
 InitializeClass(LocalRoleAssignorMixIn)
 
+@zope.interface.implementer(interfaces.IActionContainer)
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
                           LocalRoleAssignorMixIn,
@@ -221,8 +221,6 @@ class ERP5TypeInformation(XMLObject,
 
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    zope.interface.implements(interfaces.IActionContainer)
 
     # Declarative properties
     property_sheets = ( PropertySheet.BaseType, )

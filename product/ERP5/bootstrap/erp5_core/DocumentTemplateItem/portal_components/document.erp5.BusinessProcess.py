@@ -43,6 +43,8 @@ import zope.interface
 
 _marker = object()
 
+@zope.interface.implementer(IBusinessProcess,
+                            IArrowBase)
 class BusinessProcess(Path, XMLObject):
   """The BusinessProcess class is a container class which is used
   to describe business processes in the area of trade, payroll
@@ -116,10 +118,6 @@ class BusinessProcess(Path, XMLObject):
                     , PropertySheet.Arrow
                     , PropertySheet.BusinessProcess
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IBusinessProcess,
-                            IArrowBase)
 
   # Cache used by composition mixin (as a composed document always inherit
   # from BusinessProcess. The cache avoids memory leak, and has been moved

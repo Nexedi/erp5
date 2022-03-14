@@ -36,7 +36,7 @@ from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ZSQLCatalog.TableDefinition import TableAlias, InnerJoin, LeftJoin
 
 from logging import getLogger
@@ -57,14 +57,13 @@ RELATED_KEY_ALIASED_MESSAGE = "\
 Support for explicit joins of aliased related keys is not yet implemented. \
 Offending related key: %r, for column %r, table_alias_list: %r"
 
+@implementer(IRelatedKey)
 class RelatedKey(SearchKey):
   """
     This SearchKey handles searches on virtual columns of RelatedKey type.
     It generates joins required by the virtual column to reach the actual
     column to compare, plus a regular query on that column if needed.
   """
-
-  implements(IRelatedKey)
 
   related_key_definition = None
 
