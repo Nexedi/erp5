@@ -38,6 +38,7 @@ from erp5.component.document.Movement import Movement
 from erp5.component.interface.IMovement import IMovement
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
+@zope.interface.implementer(interfaces.INode, IMovement)
 class Project(Node, Movement, XMLMatrix):
   """
   Project is a class which describes a typical project in consulting firm.
@@ -54,8 +55,6 @@ class Project(Node, Movement, XMLMatrix):
   # XXX to index start_date and stop_date in delivery table:
   isDelivery = ConstantGetter('isDelivery', value=True)
   isAccountable = ConstantGetter('isAccountable', value=False)
-
-  zope.interface.implements(interfaces.INode, IMovement)
 
   # Declarative security
   security = ClassSecurityInfo()

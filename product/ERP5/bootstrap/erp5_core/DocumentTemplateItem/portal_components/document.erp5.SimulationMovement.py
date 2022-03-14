@@ -61,6 +61,8 @@ parent_to_movement_simulation_state = {
   'invoiced'         : 'planned',
 }
 
+@zope.interface.implementer(IExpandable,
+                            interfaces.IPropertyRecordable)
 class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   """
       Simulation movements belong to a simulation workflow which includes
@@ -117,10 +119,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Reference
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IExpandable,
-                            interfaces.IPropertyRecordable)
 
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """

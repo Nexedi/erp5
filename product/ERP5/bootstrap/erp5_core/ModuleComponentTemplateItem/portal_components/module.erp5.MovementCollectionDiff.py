@@ -30,6 +30,7 @@ import zope.interface
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from erp5.component.interface.IMovementCollectionDiff import IMovementCollectionDiff
 
+@zope.interface.implementer(IMovementCollectionDiff,)
 class MovementCollectionDiff(object):
   """
   Documents which implement IMovementCollectionDiff
@@ -38,8 +39,6 @@ class MovementCollectionDiff(object):
   They are usually generated and used by
   IMovementCollectionUpdater.
   """
-  # Declarative interfaces
-  zope.interface.implements(IMovementCollectionDiff,)
 
   def __init__(self):
     self._deletable_movement_list = []

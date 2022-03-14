@@ -219,6 +219,16 @@ from erp5.component.interface.ICrawlable import ICrawlable
 from erp5.component.interface.IDocument import IDocument
 from erp5.component.interface.IDiscoverable import IDiscoverable
 from erp5.component.interface.IUrl import IUrl
+@zope.interface.implementer(IConvertable,
+                            ITextConvertable,
+                            IHtmlConvertable,
+                            ICachedConvertable,
+                            IVersionable,
+                            IDownloadable,
+                            ICrawlable,
+                            IDocument,
+                            IDiscoverable,
+                            IUrl,)
 class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
                CachedConvertableMixin, CrawlableMixin, TextConvertableMixin,
                DownloadableMixin, DocumentMixin, DiscoverableMixin):
@@ -390,18 +400,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   add_permission = Permissions.AddPortalContent
   isDocument = ConstantGetter('isDocument', value=True)
   __dav_collection__=0
-
-  zope.interface.implements(IConvertable,
-                            ITextConvertable,
-                            IHtmlConvertable,
-                            ICachedConvertable,
-                            IVersionable,
-                            IDownloadable,
-                            ICrawlable,
-                            IDocument,
-                            IDiscoverable,
-                            IUrl,
-                           )
 
   # Regular expressions
   # XXX those regex are weak, fast but not reliable.

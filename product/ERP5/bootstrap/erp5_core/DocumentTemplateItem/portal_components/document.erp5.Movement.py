@@ -60,6 +60,9 @@ def getExchangeRate(currency_value, section_currency, date):
       price_currency=section_currency
     ))
 
+@zope.interface.implementer(IAmountGenerator,
+                            interfaces.IVariated,
+                            IMovement)
 class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   """
     The Movement class allows to implement ERP5 universal accounting model.
@@ -202,11 +205,6 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IAmountGenerator,
-                            interfaces.IVariated,
-                            IMovement)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

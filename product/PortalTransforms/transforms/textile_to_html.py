@@ -6,7 +6,7 @@ author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 import os
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
@@ -24,8 +24,8 @@ else:
     HAS_TEXTILE = True
 
 
+@implementer(ITransform)
 class textile:
-    implements(ITransform)
 
     __name__ = "textile_to_html"
     inputs  = ("text/x-web-textile",)

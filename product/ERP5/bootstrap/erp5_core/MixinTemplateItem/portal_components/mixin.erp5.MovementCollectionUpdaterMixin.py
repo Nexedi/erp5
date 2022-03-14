@@ -35,6 +35,7 @@ from erp5.component.module.MovementCollectionDiff import (
 from erp5.component.mixin.RuleMixin import _compare
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
+@zope.interface.implementer(IMovementCollectionUpdater,)
 class MovementCollectionUpdaterMixin:
   """Movement Collection Updater.
 
@@ -48,9 +49,6 @@ class MovementCollectionUpdaterMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IMovementCollectionUpdater,)
 
   # Implementation of IMovementCollectionUpdater
   security.declareProtected(Permissions.AccessContentsInformation,

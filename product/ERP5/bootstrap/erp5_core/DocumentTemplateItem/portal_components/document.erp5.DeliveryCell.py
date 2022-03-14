@@ -39,6 +39,7 @@ from erp5.component.document.MappedValue import MappedValue
 from erp5.component.document.ImmobilisationMovement import ImmobilisationMovement
 from erp5.component.interface.IDivergenceController import IDivergenceController
 
+@zope.interface.implementer(IDivergenceController,)
 class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
   """
   A DeliveryCell allows to define specific quantities
@@ -64,9 +65,6 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
                     , PropertySheet.MappedValue
                     , PropertySheet.ItemAggregation
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IDivergenceController,)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isPredicate')
   def isPredicate(self):

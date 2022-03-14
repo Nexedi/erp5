@@ -5,14 +5,14 @@ A simple identity transform
 __revision__ = '$Id: identity.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer(ITransform)
 class IdentityTransform:
     """ Identity transform
 
     return content unchanged.
     """
-    implements(ITransform)
 
     __name__ = "rest_to_text"
 

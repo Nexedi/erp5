@@ -36,6 +36,9 @@ from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
+@zope.interface.implementer(IRule,
+                            IDivergenceController,
+                            IMovementCollectionUpdater,)
 class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   """
   Payment Rule generates payment simulation movement from invoice
@@ -48,11 +51,6 @@ class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IRule,
-                            IDivergenceController,
-                            IMovementCollectionUpdater,)
 
   # Default Properties
   property_sheets = (

@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from erp5.component.interface.ISolver import ISolver
 
+@zope.interface.implementer(ISolver,)
 class SolverMixin(object):
   """
   Provides generic methods and helper methods to implement ISolver.
@@ -41,9 +42,6 @@ class SolverMixin(object):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(ISolver,)
 
   workflow_list = ()
   def _solve(self, activate_kw=None):

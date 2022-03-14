@@ -1,12 +1,11 @@
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
+@implementer(itransform)
 class OdpToHtml:
   """Transforms odp to html by using Cloudooo"""
-
-  implements(itransform)
 
   __name__ = 'odp_to_html'
   inputs   = ('application/vnd.oasis.opendocument.presentation',)

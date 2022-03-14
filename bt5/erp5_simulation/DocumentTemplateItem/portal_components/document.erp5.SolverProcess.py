@@ -37,6 +37,8 @@ from erp5.component.interface.IMovement import IMovement
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(ISolver,
+                            IConfigurable,)
 class SolverProcess(XMLObject, ActiveProcess):
   """
     Solver Process class represents the decision of the user
@@ -73,11 +75,6 @@ class SolverProcess(XMLObject, ActiveProcess):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(ISolver,
-                            IConfigurable,
-                           )
 
   # Implementation
   security.declareProtected(Permissions.ModifyPortalContent, 'buildTargetSolverList')

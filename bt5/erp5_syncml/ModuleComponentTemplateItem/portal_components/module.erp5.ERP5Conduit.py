@@ -46,7 +46,7 @@ parser = etree.XMLParser(remove_blank_text=True)
 from xml_marshaller.xml_marshaller import load_tree as unmarshaller
 from xupdate_processor import xuproc
 from base64 import standard_b64decode
-from zope.interface import implements
+from zope.interface import implementer
 from copy import deepcopy
 
 import logging
@@ -91,6 +91,7 @@ WORKFLOW_ACTION_NOT_ADDABLE = 0
 WORKFLOW_ACTION_ADDABLE = 1
 WORKFLOW_ACTION_INSERTABLE = 2
 
+@implementer( IConduit,)
 class ERP5Conduit(XMLSyncUtilsMixin):
   """
     A conduit is a piece of code in charge of
@@ -127,9 +128,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     we may have CONFLICT_NOT_SYNCHRONIZED AND CONFLICT_SYNCHRONIZED
     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   """
-
-  # Declarative interfaces
-  implements( IConduit, )
 
   # Declarative security
   security = ClassSecurityInfo()

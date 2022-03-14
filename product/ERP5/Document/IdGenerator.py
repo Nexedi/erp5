@@ -34,11 +34,11 @@ from Products.ERP5Type.Base import Base
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG, INFO
 
+@zope.interface.implementer(interfaces.IIdGenerator)
 class IdGenerator(Base):
   """
     Generator of Ids
   """
-  zope.interface.implements(interfaces.IIdGenerator)
   # CMF Type Definition
   meta_type = 'ERP5 Id Generator'
   portal_type = 'Id Generator'

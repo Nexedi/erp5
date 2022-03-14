@@ -31,7 +31,7 @@
 
 from Products.ERP5Type.interfaces import IConstraint
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5Type.Core.Predicate import Predicate
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -39,6 +39,7 @@ from Products.ERP5Type.Utils import UpperCase, createExpressionContext
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
+@implementer( IConstraint,)
 class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   """
   Mixin Constraint implementation (only relevant for ZODB Property
@@ -58,7 +59,6 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   _message_id_tuple = ()
 
   __allow_access_to_unprotected_subobjects__ = 1
-  implements( IConstraint, )
 
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.Reference,

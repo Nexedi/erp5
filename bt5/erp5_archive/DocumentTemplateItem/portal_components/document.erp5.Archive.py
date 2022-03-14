@@ -31,8 +31,9 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions, interfaces
 from Products.ERP5Type.Core.Predicate import Predicate
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer( interfaces.IPredicate,)
 class Archive(Predicate):
   """
   A Catalog Archive object
@@ -46,9 +47,6 @@ class Archive(Predicate):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  implements( interfaces.IPredicate, )
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.AcceptSolver import AcceptSolver
 from erp5.component.interface.ISolver import ISolver
 
+@zope.interface.implementer(ISolver,)
 class TradeModelSolver(AcceptSolver):
   """Solve Divergences on Invoice Lines, and dependant trade model lines.
 
@@ -54,9 +55,6 @@ class TradeModelSolver(AcceptSolver):
                     , PropertySheet.DublinCore
                     , PropertySheet.TargetSolver
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(ISolver,)
 
   def _solve(self, activate_kw=None):
     """

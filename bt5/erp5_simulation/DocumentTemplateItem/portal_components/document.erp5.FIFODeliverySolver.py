@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.interface.IDeliverySolver import IDeliverySolver
 
+@zope.interface.implementer(IDeliverySolver,)
 class FIFODeliverySolver(XMLObject):
   """
   The FIFO solver reduces delivered quantity by reducing the quantity of
@@ -53,9 +54,6 @@ class FIFODeliverySolver(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.DeliverySolver
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IDeliverySolver,)
 
   # IDeliverySolver Implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')

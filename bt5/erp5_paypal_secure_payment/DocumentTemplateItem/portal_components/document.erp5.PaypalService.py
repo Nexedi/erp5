@@ -35,13 +35,13 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.interface.IPaymentService import IPaymentService
 
+@zope.interface.implementer(IPaymentService)
 class PaypalService(XMLObject):
   """Paypal Service for payment"""
 
   meta_type = 'Paypal Service'
   portal_type = 'Paypal Service'
   security = ClassSecurityInfo()
-  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()

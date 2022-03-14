@@ -39,6 +39,8 @@ from erp5.component.interface.IBusinessLink import IBusinessLink
 
 import zope.interface
 
+@zope.interface.implementer(IBusinessLink,
+                            interfaces.IPredicate,)
 class BusinessLink(Path, Predicate):
   """
     The BusinessLink class embeds all information related to
@@ -92,11 +94,6 @@ class BusinessLink(Path, Predicate):
                     , PropertySheet.Reference
                     , PropertySheet.PaymentCondition # XXX-JPS must be renames some day
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IBusinessLink,
-                            interfaces.IPredicate,
-                            )
 
   # Helper Methods
   def _getExplanationRelatedSimulationMovementValueList(self, explanation):

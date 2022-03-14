@@ -27,7 +27,7 @@ from Acquisition import aq_parent
 from App.class_init import InitializeClass
 from OFS.Folder import Folder
 from zLOG import LOG, ERROR, INFO, PROBLEM
-from zope.interface import implements
+from zope.interface import implementer
 from zope.i18n import translate
 from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
      unregisterBeforeTraverse, queryBeforeTraverse, NameCaller
@@ -53,6 +53,7 @@ def manage_addLocalizer(self, title, languages, REQUEST=None, RESPONSE=None):
         RESPONSE.redirect('manage_main')
 
 
+@implementer(ILocalizer)
 class Localizer(LanguageManager, Folder):
     """
     The Localizer meta type lets you customize the language negotiation
@@ -60,7 +61,6 @@ class Localizer(LanguageManager, Folder):
     """
 
     meta_type = 'Localizer'
-    implements(ILocalizer)
 
     id = 'Localizer'
 

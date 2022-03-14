@@ -239,6 +239,7 @@ class BaseAmountResolver(BaseAmountDict):
     return 0
 
 
+@zope.interface.implementer(IAmountGenerator,)
 class AmountGeneratorMixin:
   """
   This class provides a generic implementation of IAmountGenerator.
@@ -254,9 +255,6 @@ class AmountGeneratorMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IAmountGenerator,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')

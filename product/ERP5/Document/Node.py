@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
+@zope.interface.implementer(interfaces.INode)
 class Node(XMLObject):
     """Node base class.
 
@@ -40,8 +41,6 @@ class Node(XMLObject):
     meta_type = 'ERP5 Node'
     portal_type = 'Node'
     add_permission = Permissions.AddPortalContent
-
-    zope.interface.implements(interfaces.INode)
 
     # Declarative security
     security = ClassSecurityInfo()

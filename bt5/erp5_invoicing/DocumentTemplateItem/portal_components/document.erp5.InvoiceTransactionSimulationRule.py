@@ -38,6 +38,9 @@ from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
+@zope.interface.implementer(IRule,
+                            IDivergenceController,
+                            IMovementCollectionUpdater,)
 class InvoiceTransactionSimulationRule(RuleMixin,
     MovementCollectionUpdaterMixin, PredicateMatrix):
   """
@@ -53,11 +56,6 @@ class InvoiceTransactionSimulationRule(RuleMixin,
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IRule,
-                            IDivergenceController,
-                            IMovementCollectionUpdater,)
 
   # Default Properties
   property_sheets = (

@@ -39,6 +39,8 @@ from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategory
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(ISolver,
+                            IConfigurable,)
 class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   """Target solver that split the prevision based on quantity.
 
@@ -62,10 +64,6 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                     , PropertySheet.Arrow
                     , PropertySheet.TargetSolver
                     )
-  # Declarative interfaces
-  zope.interface.implements(ISolver,
-                            IConfigurable,
-                           )
 
   # ISolver Implementation
   def _solve(self, activate_kw=None):

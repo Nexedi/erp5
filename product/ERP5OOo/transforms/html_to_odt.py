@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from .oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 from .oood_commandtransform import includeMetaContentType
 from zLOG import LOG
@@ -10,10 +10,9 @@ from lxml.etree import Element, SubElement
 
 html_parser = etree.HTMLParser(remove_blank_text=True, encoding='utf-8')
 
+@implementer(itransform)
 class HTMLToOdt:
   """Transforms HTML to odt by using oood"""
-
-  implements(itransform)
 
   __name__ = 'html_to_odt'
   inputs   = ('text/html',)

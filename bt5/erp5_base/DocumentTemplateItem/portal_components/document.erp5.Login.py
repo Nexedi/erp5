@@ -33,14 +33,13 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 
+@zope.interface.implementer(interfaces.INode)
 class Login(EncryptedPasswordMixin, XMLObject, LoginAccountProviderMixin):
   """Login
   """
   meta_type = 'ERP5 Login'
   portal_type = 'Login'
   add_permission = Permissions.AddPortalContent
-
-  zope.interface.implements(interfaces.INode)
 
   # Declarative security
   security = ClassSecurityInfo()

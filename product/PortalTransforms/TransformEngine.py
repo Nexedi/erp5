@@ -2,7 +2,7 @@
 from logging import DEBUG
 
 from persistent.list import PersistentList
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -36,13 +36,12 @@ from Products.PortalTransforms.utils import parseContentType
 from ZODB.POSException import ConflictError
 from zLOG import WARNING
 
+@implementer(IPortalTransformsTool, IEngine)
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     id = 'portal_transforms'
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1 # Show up in the ZMI
-
-    implements(IPortalTransformsTool, IEngine)
 
     meta_types = all_meta_types = (
         {'name': 'Transform', 'action': 'manage_addTransformForm'},

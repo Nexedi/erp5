@@ -36,6 +36,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from zLOG import LOG, INFO
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ This class will install standard ERP5 template from a repository to
   fake site. """
@@ -49,9 +50,6 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

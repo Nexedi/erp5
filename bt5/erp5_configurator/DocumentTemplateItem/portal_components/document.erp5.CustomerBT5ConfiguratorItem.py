@@ -33,6 +33,7 @@ from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class CustomerBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Create a new bt5 for customer configuration.
 
@@ -48,9 +49,6 @@ class CustomerBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

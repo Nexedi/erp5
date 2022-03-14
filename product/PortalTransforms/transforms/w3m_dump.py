@@ -30,12 +30,12 @@
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import\
                                                             subprocesstransform
-from zope.interface import implements
+from zope.interface import implementer
 
 # Conversor using w3m to replace lynx at PortalTransforms...
 
+@implementer(ITransform)
 class w3m_dump(subprocesstransform):
-  implements(ITransform)
 
   __name__ = "w3m_dump"
   inputs   = ('text/html',)

@@ -32,6 +32,7 @@ import zope.interface
 from AccessControl import allow_class
 from erp5.component.interface.IAmountList import IAmountList
 
+@zope.interface.implementer(IAmountList)
 class GeneratedAmountList(list):
   """
     Temporary object needed to aggregate Amount value
@@ -44,7 +45,6 @@ class GeneratedAmountList(list):
     2. detailed information on each movement with split(), which would be
        equivalent to call getGeneratedAmountList() on each movement
   """
-  zope.interface.implements(IAmountList)
 
   def getTotalPrice(self):
     """

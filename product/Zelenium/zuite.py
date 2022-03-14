@@ -14,7 +14,7 @@ import zipfile
 import StringIO
 import types
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import InitializeClass
@@ -107,6 +107,7 @@ def _recurseFSTestCases( result, prefix, fsobjs ):
                                , info
                                )
 
+@implementer(IZuite)
 class Zuite( OrderedFolder ):
     """ TTW-manageable browser test suite
 
@@ -122,8 +123,6 @@ class Zuite( OrderedFolder ):
                      + ( { 'label' : 'Zip', 'action' : 'manage_zipfile' },
                        )
                      )
-
-    implements(IZuite)
 
     test_case_metatypes = ( 'File'
                           , 'Page Template'

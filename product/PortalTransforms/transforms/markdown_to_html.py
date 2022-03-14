@@ -4,7 +4,7 @@ Uses the http://www.freewisdom.org/projects/python-markdown/ module
 Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.utils import log
@@ -18,8 +18,8 @@ else:
     HAS_MARKDOWN = True
 
 
+@implementer(ITransform)
 class markdown:
-    implements(ITransform)
 
     __name__ = "markdown_to_html"
     inputs  = ("text/x-web-markdown",)

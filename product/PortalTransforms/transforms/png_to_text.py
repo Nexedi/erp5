@@ -5,10 +5,10 @@ from Products.PortalTransforms.libtransforms.commandtransform \
 from subprocess import Popen, PIPE
 import os
 import tempfile
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer(ITransform)
 class png_to_text(popentransform):
-    implements(ITransform)
     __name__  = "png_to_text"
 
     inputs   = ('image/png',)

@@ -1,12 +1,11 @@
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
+@implementer(itransform)
 class PptToPptx:
   """Transforms ppt to pptx by using Cloudooo"""
-
-  implements(itransform)
 
   __name__ = 'ppt_to_pptx'
   inputs   = ('application/vnd.ms-powerpoint',

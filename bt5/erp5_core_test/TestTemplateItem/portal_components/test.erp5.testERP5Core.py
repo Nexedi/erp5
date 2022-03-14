@@ -53,9 +53,9 @@ if 1: # BBB
 
   from zope.i18n.interfaces import ITranslationDomain, \
                                    IFallbackTranslationDomainFactory
+  @zope.interface.implementer(ITranslationDomain)
+  @zope.interface.provider(IFallbackTranslationDomainFactory)
   class DummyTranslationDomainFallback(object):
-    zope.interface.implements(ITranslationDomain)
-    zope.interface.classProvides(IFallbackTranslationDomainFactory)
 
     def __init__(self, domain):
       self.domain = domain

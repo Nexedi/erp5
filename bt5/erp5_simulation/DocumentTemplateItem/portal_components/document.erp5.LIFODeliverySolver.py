@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.FIFODeliverySolver import FIFODeliverySolver
 from erp5.component.interface.IDeliverySolver import IDeliverySolver
 
+@zope.interface.implementer(IDeliverySolver,)
 class LIFODeliverySolver(FIFODeliverySolver):
   """
   The LIFO solver reduces delivered quantity by reducing the quantity of
@@ -53,9 +54,6 @@ class LIFODeliverySolver(FIFODeliverySolver):
                     , PropertySheet.DublinCore
                     , PropertySheet.DeliverySolver
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IDeliverySolver,)
 
   def _getSimulationMovementList(self):
     """

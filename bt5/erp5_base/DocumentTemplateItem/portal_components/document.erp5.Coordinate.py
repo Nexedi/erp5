@@ -37,6 +37,7 @@ import re
 
 _marker = object()
 
+@zope.interface.implementer(ICoordinate,)
 class Coordinate(Base):
   """
         Coordinates is a mix-in class which is used to store elementary
@@ -80,9 +81,6 @@ class Coordinate(Base):
   meta_type = 'ERP5 Coordinate'
   portal_type = 'Coordinate'
   add_permission = Permissions.AddPortalContent
-
-  # Declarative interface
-  zope.interface.implements(ICoordinate, )
 
   # Declarative security (replaces __ac_permissions__)
   security = ClassSecurityInfo()

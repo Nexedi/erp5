@@ -50,6 +50,9 @@ from erp5.component.module.SMSGatewayError import SMSGatewayError
 from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
 from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
 
+@zope.interface.implementer(
+        ISmsSendingGateway,
+        ISmsReceivingGateway)
 class EssendexGateway(XMLObject):
 
   """Base of SMS an Gateway. You can use push notification for delivered and new message notification."""
@@ -59,10 +62,6 @@ class EssendexGateway(XMLObject):
 
 
   add_permission = Permissions.AddPortalContent
-
-  zope.interface.implements(
-        ISmsSendingGateway,
-        ISmsReceivingGateway)
 
   # Declarative security
   security = ClassSecurityInfo()

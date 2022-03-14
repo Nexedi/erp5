@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.interface.IMovementGroup import IMovementGroup
 import zope.interface
 
+@zope.interface.implementer( IMovementGroup,)
 class MovementGroup(XMLObject):
   """
   The purpose of MovementGroup is to define how movements
@@ -58,8 +59,6 @@ class MovementGroup(XMLObject):
   """
   meta_type = 'ERP5 Movement Group'
   portal_type = 'Movement Group'
-
-  zope.interface.implements( IMovementGroup, )
 
   # Declarative security
   security = ClassSecurityInfo()

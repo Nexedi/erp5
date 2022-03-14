@@ -53,6 +53,7 @@ NEGLIGEABLE_PRICE = 10e-8
 from Products.ERP5Type.Errors import ImmobilisationValidityError
 from Products.ERP5Type.Errors import ImmobilisationCalculationError
 
+@zope.interface.implementer(IImmobilisationItem)
 class ImmobilisableItem(Item, Amount):
   """
       An Immobilisable Item is an Item which can be immobilised
@@ -78,8 +79,6 @@ class ImmobilisableItem(Item, Amount):
                     , PropertySheet.Reference
                     , PropertySheet.Amortisation
                     )
-
-  zope.interface.implements(IImmobilisationItem)
 
   # IExpandableItem interface implementation
   def getSimulationMovementSimulationState(self, simulation_movement):

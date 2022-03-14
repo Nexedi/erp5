@@ -38,6 +38,8 @@ from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategory
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(ISolver,
+                            IConfigurable,)
 class ItemListSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   """Target solver that split the prevision based on aggregated items.
 
@@ -61,10 +63,6 @@ class ItemListSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                     , PropertySheet.Arrow
                     , PropertySheet.TargetSolver
                     )
-  # Declarative interfaces
-  zope.interface.implements(ISolver,
-                            IConfigurable,
-                           )
 
   def _solve(self, activate_kw=None):
     """This method create new movement based on difference of aggregate sets.

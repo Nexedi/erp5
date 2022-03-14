@@ -40,6 +40,7 @@ from zLOG import LOG, INFO, PROBLEM
 import errno
 from StringIO import StringIO
 
+@zope.interface.implementer(IWatermarkable)
 class PDFDocument(Image):
   """
   PDFDocument is a subclass of Image which is able to
@@ -67,8 +68,6 @@ class PDFDocument(Image):
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
                     )
-
-  zope.interface.implements(IWatermarkable)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWatermarkedData')

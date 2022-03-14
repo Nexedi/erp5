@@ -41,14 +41,13 @@ ROUNDING_OPTION_DICT = {'ROUND_DOWN':ROUND_DOWN,
                         'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
                         'ROUND_HALF_UP':ROUND_HALF_UP}
 
+@zope.interface.implementer(IRoundingTool)
 class RoundingTool(BaseTool):
   """Rounding Tool"""
   id = 'portal_roundings'
   title = 'Roundings'
   meta_type = 'ERP5 Rounding Tool'
   portal_type = 'Rounding Tool'
-
-  zope.interface.implements(IRoundingTool)
 
   security = ClassSecurityInfo()
 

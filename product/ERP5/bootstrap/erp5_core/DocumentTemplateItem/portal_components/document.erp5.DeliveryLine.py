@@ -42,6 +42,7 @@ edit_args_list = getargspec(Base._edit).args
 
 from erp5.component.interface.IDivergenceController import IDivergenceController
 
+@zope.interface.implementer(IDivergenceController,)
 class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
   """
   A DeliveryLine object allows to implement lines in
@@ -70,9 +71,6 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.SortIndex
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IDivergenceController,)
 
   # Multiple inheritance definition
   updateRelatedContent = XMLMatrix.updateRelatedContent

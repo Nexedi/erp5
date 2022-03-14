@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.Delivery import Delivery
 
+@zope.interface.implementer( interfaces.IVariated,)
 class Immobilisation(Delivery, XMLObject):
   """
     An Immobilisation object holds the information about
@@ -50,9 +51,6 @@ class Immobilisation(Delivery, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

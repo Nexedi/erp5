@@ -46,6 +46,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.Expression import Expression
 
+@zope.interface.implementer( interfaces.IPredicate,)
 class Predicate(XMLObject):
   """
     A Predicate object defines a list of criterions
@@ -81,9 +82,6 @@ class Predicate(XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
                     )
-
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IPredicate, )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, tested_base_category_list=None,

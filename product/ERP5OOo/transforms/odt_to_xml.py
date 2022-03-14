@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from .oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 from zLOG import LOG
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 import re
 
+@implementer(itransform)
 class OdtToXml:
   """Transforms ODT to Doc by using oood"""
-
-  implements(itransform)
 
   __name__ = 'odt_to_xml'
   inputs   = ('application/vnd.oasis.opendocument.text',)

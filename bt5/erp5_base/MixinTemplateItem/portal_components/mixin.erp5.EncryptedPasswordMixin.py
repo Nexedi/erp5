@@ -39,15 +39,13 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
+@zope.interface.implementer(IEncryptedPassword,)
 class EncryptedPasswordMixin(object):
   """Encrypted Password Mixin
   """
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IEncryptedPassword,)
 
   security.declareProtected(Permissions.SetOwnPassword, 'checkPassword')
   def checkPassword(self, value) :

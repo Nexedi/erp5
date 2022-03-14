@@ -37,6 +37,8 @@ from erp5.component.mixin.ConfigurableMixin import ConfigurableMixin
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(ISolver,
+                            IConfigurable,)
 class ConfigurablePropertySolverMixin(SolverMixin,
                                       ConfigurableMixin,
                                       XMLObject):
@@ -52,9 +54,6 @@ class ConfigurablePropertySolverMixin(SolverMixin,
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  zope.interface.implements(ISolver,
-                            IConfigurable,)
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

@@ -33,7 +33,7 @@ from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 
 def valueFloatRenderer(value):
   if isinstance(value, basestring):
@@ -98,9 +98,8 @@ column_renderer = {
   'float': columnFloatRenderer
 }
 
+@implementer(IOperator)
 class OperatorBase(object):
-
-  implements(IOperator)
 
   def __init__(self, operator, operator_search_text=None):
     self.operator = operator

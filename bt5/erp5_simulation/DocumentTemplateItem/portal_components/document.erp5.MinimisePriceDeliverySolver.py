@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.FIFODeliverySolver import FIFODeliverySolver
 from erp5.component.interface.IDeliverySolver import IDeliverySolver
 
+@zope.interface.implementer(IDeliverySolver,)
 class MinimisePriceDeliverySolver(FIFODeliverySolver):
   """
   The Minimise Price deliver solver distributes quantity in order to minimise
@@ -53,9 +54,6 @@ class MinimisePriceDeliverySolver(FIFODeliverySolver):
                     , PropertySheet.DublinCore
                     , PropertySheet.DeliverySolver
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IDeliverySolver,)
 
   # IDeliverySolver Implementation
   security.declareProtected(Permissions.ModifyPortalContent, 'setTotalQuantity')

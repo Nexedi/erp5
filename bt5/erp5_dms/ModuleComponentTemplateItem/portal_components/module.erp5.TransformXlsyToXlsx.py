@@ -1,11 +1,10 @@
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
+@implementer(itransform)
 class XlsyToXlsx:
   """Transforms xlsy to xlsx by using Cloudooo"""
-
-  implements(itransform)
 
   __name__ = 'xlsy_to_xlsx'
   inputs   = ('application/x-asc-spreadsheet',)

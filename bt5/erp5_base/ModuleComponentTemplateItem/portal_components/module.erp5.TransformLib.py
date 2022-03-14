@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from erp5.component.document.Document import DocumentConversionServerProxy, ConversionError, enc, dec
+@implementer(ITransform)
 class DocumentConversionServerTransform:
   """
   Transformer using Conversion Server
   """
-  implements(ITransform)
 
   # Name of the Transform as registered in portal_transforms
   __name__ = None

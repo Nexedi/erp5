@@ -35,13 +35,12 @@ from Products.ERP5Type import Permissions, PropertySheet
 
 from erp5.component.interface.IJSONConvertable import IJSONConvertable
 
+@zope.interface.implementer(
+    IJSONConvertable,)
 class JSONType(XMLObject):
   """
   Represents a portal type with JSON Schema
   """
-  zope.interface.implements(
-    IJSONConvertable,
-  )
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

@@ -34,6 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfigurableMixin import ConfigurableMixin
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(IConfigurable,)
 class SolverDecision(ConfigurableMixin, XMLObject):
   """Solver Decision
 
@@ -71,15 +72,6 @@ class SolverDecision(ConfigurableMixin, XMLObject):
                     , PropertySheet.SolverSelection
                     , PropertySheet.Configurable
                     )
-  # XXX-JPS missing property sheet or categories to specify
-  #   (default)delivery or solver_application or order -> the object of application of resolution
-  #         ie. a specified delivery, a specified delivery line, etc.
-  #         (delivery should be enough)
-  #   all property sheets of target solvers (with their configuration properties)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfigurable,
-                           )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultConfigurationPropertyDict')

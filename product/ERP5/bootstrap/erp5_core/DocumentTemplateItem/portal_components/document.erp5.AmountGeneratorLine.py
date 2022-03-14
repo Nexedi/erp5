@@ -35,6 +35,7 @@ from erp5.component.document.MappedValue import MappedValue
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from erp5.component.interface.IAmountGeneratorLine import IAmountGeneratorLine
 
+@zope.interface.implementer(IAmountGeneratorLine)
 class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
                           AmountGeneratorMixin):
   """Abstract class to represent amount transformation for movements"""
@@ -44,9 +45,6 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IAmountGeneratorLine)
 
   # Declarative properties
   property_sheets = (PropertySheet.DublinCore,

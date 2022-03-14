@@ -35,6 +35,7 @@ from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 from DateTime import DateTime
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class AlarmConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup an Alarm """
 
@@ -47,9 +48,6 @@ class AlarmConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

@@ -37,6 +37,8 @@ from Products.ERP5Type.Message import translateString
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(ISolver,
+                            IConfigurable,)
 class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   meta_type = 'ERP5 Movement Split Solver'
   portal_type = 'Movement Split Solver'
@@ -55,10 +57,6 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                     , PropertySheet.Arrow
                     , PropertySheet.TargetSolver
                     )
-  # Declarative interfaces
-  zope.interface.implements(ISolver,
-                            IConfigurable,
-                           )
 
   def _solve(self, activate_kw=None):
     """
