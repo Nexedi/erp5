@@ -46,7 +46,7 @@ from Products.ZSQLCatalog.SearchText import parse
 
 MARKER = []
 
-timezone_dict = _TZINFO._zmap
+timezone_dict = _cache._zmap
 
 date_completion_format_dict = {
   None: ['01/01/%s', '01/%s'],
