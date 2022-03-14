@@ -95,8 +95,8 @@ class StringAttributeMatchConstraint(PropertyExistenceConstraint):
       'title'         : '^[^ ]'
     }
     """
-    property_list = property_dict.keys()
-    regex_list = property_dict.values()
+    property_list = list(property_dict.keys())
+    regex_list = list(property_dict.values())
     regex_list_len = len(regex_list)
     seen_property_set = set()
     for property_index, property_id in enumerate(property_list):

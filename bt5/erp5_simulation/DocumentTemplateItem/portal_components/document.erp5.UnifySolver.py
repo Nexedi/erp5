@@ -105,7 +105,7 @@ class UnifySolver(AcceptSolver):
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                set()).add(simulation_movement)
-    for movement, simulation_movement_set in delivery_dict.iteritems():
+    for movement, simulation_movement_set in delivery_dict.items():
       # get the movement that actually has the property to update
       movement = self._getActualTargetMovement(movement, solved_property)
       # and all other simulation movements we should also update

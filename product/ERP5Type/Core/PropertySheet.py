@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression

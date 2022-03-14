@@ -32,6 +32,7 @@
   publication date is entirely up to you.
 """
 
+from builtins import str
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.standard import html_quote
 
@@ -58,7 +59,7 @@ for index, column_item in enumerate(label_list):
 for line in line_list:
   rss_item_dict = {}
   column_item_list = line.getValueList()
-  for header, index in rss_column_mapping.items():
+  for header, index in list(rss_column_mapping.items()):
     value_tuple = column_item_list[index]
     # the [0] is a raw value, the [1] is rendered; we want strings rendered (as unicode),
     # but other stuff (like int or DateTime) we want as they are
@@ -72,7 +73,7 @@ for line in line_list:
     rss_item_dict[header] = value
   # build xml from dict (we have to do it here because we need to manipulate tag names
   rss_item_string = ''
-  for key, value in rss_item_dict.items():
+  for key, value in list(rss_item_dict.items()):
     if key == 'pubdate':
       # pubDate should be returned unconditionally as 'pubDate'
       key = 'pubDate'
@@ -85,19 +86,19 @@ for line in line_list:
   # if required fields not present in listbox columns as label we 
   # added theirs appropriate xml dynamically
   for required_field in required_field_list:
-    if required_field not in rss_item_dict.keys():
+    if required_field not in list(rss_item_dict.keys()):
       field_data = ''
       if required_field == 'title':
         if hasattr(line.getBrain(), 'Title'):
-          field_data = html_quote(unicode(line.getBrain().Title(), 'utf-8') or '')
+          field_data = html_quote(str(line.getBrain().Title(), 'utf-8') or '')
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data, required_field))
       elif required_field == 'link':
         if hasattr(line.getBrain(), 'absolute_url'):
-          field_data = unicode(line.getBrain().absolute_url(), 'utf-8' ) or ''
+          field_data = str(line.getBrain().absolute_url(), 'utf-8' ) or ''
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data, required_field))
       elif required_field == 'description':
         if hasattr(line.getBrain(), 'getDescription'):
-          field_data = html_quote(unicode(line.getBrain().getDescription(), 'utf-8' ) or '')
+          field_data = html_quote(str(line.getBrain().getDescription(), 'utf-8' ) or '')
         rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (required_field, field_data,required_field))
   items.append(rss_item_string)
 

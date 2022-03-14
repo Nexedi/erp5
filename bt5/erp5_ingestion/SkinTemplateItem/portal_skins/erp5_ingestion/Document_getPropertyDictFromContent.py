@@ -11,10 +11,10 @@ information = context.getContentInformation()
 
 result = {}
 property_id_list = context.propertyIds()
-for k, v in information.items():  
+for k, v in list(information.items()):  
   key = k.lower()
   if v:
-    if isinstance(v, unicode): v = v.encode('utf-8')
+    if isinstance(v, str): v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
         pass # XXX - We can not trust reference on getContentInformation
@@ -26,7 +26,7 @@ for k, v in information.items():
         result['contributor'] = p.getRelativeUrl()
     elif key == 'keywords':
       if isinstance(v, (list, tuple)):
-        v = [isinstance(x, unicode) and x.encode('utf-8') or x for x in v]
+        v = [isinstance(x, str) and x.encode('utf-8') or x for x in v]
       else:
         v = v.split()
       result['subject_list'] = v

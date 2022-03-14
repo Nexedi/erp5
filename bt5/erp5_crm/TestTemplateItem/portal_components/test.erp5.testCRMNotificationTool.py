@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import unittest
 
 from erp5.component.test.testNotificationTool import TestNotificationTool

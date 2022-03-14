@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -96,7 +98,7 @@ class TradeModelSolver(AcceptSolver):
     with self.defaultActivateParameterDict(activate_kw, True):
       # Second, apply changes on invoice lines to simulation movements,
       # then expand.
-      for movement, simulation_movement_list in delivery_dict.iteritems():
+      for movement, simulation_movement_list in delivery_dict.items():
         if movement in trade_model_related_movement_dict:
           continue
         for simulation_movement in simulation_movement_list:
@@ -106,7 +108,7 @@ class TradeModelSolver(AcceptSolver):
             if solved_property == 'quantity':
               new_value *= simulation_movement.getDeliveryRatio()
             value_dict[solved_property] = new_value
-          for property_id, value in value_dict.iteritems():
+          for property_id, value in value_dict.items():
             if not simulation_movement.isPropertyRecorded(property_id):
               simulation_movement.recordProperty(property_id)
             simulation_movement.setProperty(property_id, value)
@@ -115,7 +117,7 @@ class TradeModelSolver(AcceptSolver):
       # Third, adopt changes on trade model related lines.
       # XXX non-linear case is not yet supported.
       for movement, simulation_movement_list in \
-          trade_model_related_movement_dict.iteritems():
+          trade_model_related_movement_dict.items():
         for solved_property in solved_property_list:
           if solved_property == 'quantity':
             total_quantity = sum(x.getQuantity()
@@ -124,7 +126,7 @@ class TradeModelSolver(AcceptSolver):
             for simulation_movement in simulation_movement_list:
               quantity = simulation_movement.getQuantity()
               if total_quantity:
-                delivery_ratio = quantity / total_quantity
+                delivery_ratio = old_div(quantity, total_quantity)
               else:
                 delivery_ratio = 1.0 / len(simulation_movement_list)
               delivery_error = total_quantity * delivery_ratio - quantity

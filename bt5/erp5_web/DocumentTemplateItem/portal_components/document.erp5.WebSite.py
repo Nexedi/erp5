@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from AccessControl import ClassSecurityInfo
 
 from erp5.component.document.WebSection import WebSection
@@ -171,10 +172,10 @@ class WebSite(WebSection):
         path = section.getPhysicalPath()
         for i in range(0, len(path)):
           sub_path = tuple(path[0:i])
-          if section_dict.has_key(sub_path):
+          if sub_path in section_dict:
             del section_dict[sub_path]
 
-      section_list = section_dict.values()
+      section_list = list(section_dict.values())
 
       # Sort by Index
       section_list.sort(key=lambda x: x.getIntIndex())

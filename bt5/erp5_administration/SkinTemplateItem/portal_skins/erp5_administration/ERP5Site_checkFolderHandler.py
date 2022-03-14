@@ -1,3 +1,4 @@
+from __future__ import print_function
 def checkTopLevel():
   portal = context.getPortalObject()
   for o in portal.objectValues():
@@ -20,7 +21,7 @@ if context.getPortalType() == 'Alarm':
 else:
   active_process = context.portal_activities.newActiveProcess().getPath()
   ERP5Site_checkDataWithScript = context.portal_activities.ERP5Site_checkDataWithScript
-  print 'Results will be saved to %s' % active_process
+  print('Results will be saved to %s' % active_process)
 
 checkTopLevel()
 ERP5Site_checkDataWithScript(

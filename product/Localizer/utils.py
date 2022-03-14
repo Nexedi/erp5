@@ -16,6 +16,7 @@
 
 # Import from itools
 from __future__ import absolute_import
+from builtins import object
 from .itools.utils import get_abspath
 from .itools.i18n import AcceptLanguageType, init_language_selector
 

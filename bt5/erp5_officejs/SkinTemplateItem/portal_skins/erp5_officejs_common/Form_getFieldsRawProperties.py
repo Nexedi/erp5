@@ -21,7 +21,7 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
   # these patchs change the field property names as are required by js rendering
   form_list_patch = False
   gadget_field_patch = False
-  for key in field.values.keys():
+  for key in list(field.values.keys()):
     # sometimes, field.values returns a key as string and also as a tuple
     if isinstance(key, str):
       result["values"][key] = field.values[key]

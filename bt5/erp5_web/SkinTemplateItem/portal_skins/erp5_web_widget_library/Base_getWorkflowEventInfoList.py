@@ -16,7 +16,7 @@ for wf_id in workflow_id_list:
     pass
 
 event_list = []
-for workflow_id in history.keys():
+for workflow_id in list(history.keys()):
   event_list += history[workflow_id]
 if sort: event_list.sort(key=lambda x:x.time, reverse=True)
 return event_list

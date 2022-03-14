@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from Products.PythonScripts.standard import Object
 from json import loads
 
@@ -11,20 +12,20 @@ active_process_path = request.get('active_process')
 def _addDict(global_dict, local_dict, only_amount=False):
   if report_group_by == "both" and not only_amount:
     # we have client -> product -> period -> amount
-    for local_title, local_product_dict in local_dict.iteritems():
+    for local_title, local_product_dict in local_dict.items():
       product_dict = global_dict.setdefault(local_title, {})
-      for local_product, local_period_dict in local_product_dict.iteritems():
+      for local_product, local_period_dict in local_product_dict.items():
         period_dict = product_dict.setdefault(local_product, {})
-        for period, local_amount_dict in local_period_dict.iteritems():
+        for period, local_amount_dict in local_period_dict.items():
           amount_dict = period_dict.setdefault(period, {'amount' : 0, 'quantity' : 0, 'quantity_unit' : ''})
           amount_dict['amount'] = amount_dict['amount'] + local_amount_dict['amount']
           amount_dict['quantity'] = amount_dict['quantity'] + local_amount_dict['quantity']
           amount_dict['quantity_unit'] = local_amount_dict['quantity_unit']
   else:
     # We have client or product -> period -> amount
-    for local_title, local_period_dict in local_dict.iteritems():
+    for local_title, local_period_dict in local_dict.items():
       period_dict = global_dict.setdefault(local_title, {})
-      for period, local_amount_dict in local_period_dict.iteritems():
+      for period, local_amount_dict in local_period_dict.items():
         amount_dict = period_dict.setdefault(period, {'amount' : 0, 'quantity' : 0, 'quantity_unit' : ''})
         amount_dict['amount'] = amount_dict['amount'] + local_amount_dict['amount']
         if not only_amount:
@@ -66,18 +67,18 @@ extend = line_list.extend
 # we build lines for listbox
 if len(client_dict):
   # third party or third party + products
-  for client_title in client_dict.keys():
+  for client_title in list(client_dict.keys()):
     # lines for third party
     obj = Object(uid="new_")
     obj['client'] = client_title
     line_total_amount = 0
     for period in period_list:
       # client -> period
-      if client_dict[client_title].has_key(period):
+      if period in client_dict[client_title]:
         obj['Amount %s' %(period)] = round(client_dict[client_title][period]['amount'], 2)
         line_total_amount += client_dict[client_title][period]['amount']
         if report_group_by == "client":
-          if period_counter_dict.has_key('Amount %s' %(period)):
+          if 'Amount %s' %(period) in period_counter_dict:
             period_counter_dict['Amount %s' %(period)] = period_counter_dict['Amount %s' %(period)] + client_dict[client_title][period]['amount']
           else:
             period_counter_dict['Amount %s' %(period)] = client_dict[client_title][period]['amount']
@@ -85,7 +86,7 @@ if len(client_dict):
         obj['Amount %s' %(period)] = 0
     obj['total amount'] = round(line_total_amount, 2)
     if report_group_by == "client":
-      if period_counter_dict.has_key('total amount'):
+      if 'total amount' in period_counter_dict:
         period_counter_dict['total amount'] = period_counter_dict['total amount'] + line_total_amount
       else:
         period_counter_dict['total amount'] = line_total_amount
@@ -94,15 +95,15 @@ if len(client_dict):
     if report_group_by == "both":
       product_lines_list = []
       # one line per product
-      if product_dict.has_key(client_title):
+      if client_title in product_dict:
         line_product_dict = product_dict[client_title]
-        for product_title in line_product_dict.keys():
+        for product_title in list(line_product_dict.keys()):
           obj = Object(uid="new_")
           obj['product'] = product_title
           line_total_amount = 0
           line_total_quantity = 0
           for period in period_list:
-            if line_product_dict[product_title].has_key(period):
+            if period in line_product_dict[product_title]:
               obj['Amount %s' %(period)] = round(line_product_dict[product_title][period]['amount'], 2)
               obj['Quantity %s' %(period)] = line_product_dict[product_title][period]['quantity']
               obj['Quantity Unit %s' %(period)] = line_product_dict[product_title][period]['quantity_unit']
@@ -110,7 +111,7 @@ if len(client_dict):
               line_total_amount += line_product_dict[product_title][period]['amount']
               line_total_quantity += line_product_dict[product_title][period]['quantity']
               # counter for stat line
-              if period_counter_dict.has_key('Amount %s' %(period)):
+              if 'Amount %s' %(period) in period_counter_dict:
                 period_counter_dict['Amount %s' %(period)] = period_counter_dict['Amount %s' %(period)] + \
                                                              line_product_dict[product_title][period]['amount']
               else:
@@ -124,7 +125,7 @@ if len(client_dict):
           obj['total quantity'] = line_total_quantity
           obj['total amount'] = round(line_total_amount, 2)
           # total for stat line
-          if period_counter_dict.has_key('total amount'):
+          if 'total amount' in period_counter_dict:
             period_counter_dict['total amount'] = period_counter_dict['total amount'] + line_total_amount
           else:
             period_counter_dict['total amount'] = line_total_amount
@@ -136,13 +137,13 @@ if len(client_dict):
 else:
   # products
   if report_group_by == "product":
-    for product_title in product_dict.keys():
+    for product_title in list(product_dict.keys()):
       obj = Object(uid="new_")
       obj['product'] = product_title
       line_total_amount = 0
       line_total_quantity = 0    
       for period in period_list:
-        if product_dict[product_title].has_key(period):
+        if period in product_dict[product_title]:
           obj['Amount %s' %(period)] = round(product_dict[product_title][period]['amount'],2)
           obj['Quantity %s' %(period)] = product_dict[product_title][period]['quantity']
           obj['Quantity Unit %s' %(period)] = product_dict[product_title][period]['quantity_unit']
@@ -150,7 +151,7 @@ else:
           line_total_amount += product_dict[product_title][period]['amount']
           line_total_quantity += product_dict[product_title][period]['quantity']
           # counter for stat line
-          if period_counter_dict.has_key('Amount %s' %(period)):
+          if 'Amount %s' %(period) in period_counter_dict:
             period_counter_dict['Amount %s' %(period)] = period_counter_dict['Amount %s' %(period)] + product_dict[product_title][period]['amount']
           else:
             period_counter_dict['Amount %s' %(period)] = product_dict[product_title][period]['amount']
@@ -162,7 +163,7 @@ else:
       obj['total quantity'] = line_total_quantity
       obj['total amount'] = round(line_total_amount,2)
       # total for stat line
-      if period_counter_dict.has_key('total amount'):
+      if 'total amount' in period_counter_dict:
         period_counter_dict['total amount'] = period_counter_dict['total amount'] + line_total_amount
       else:
         period_counter_dict['total amount'] = line_total_amount
@@ -172,7 +173,7 @@ else:
 
 obj = Object(uid="new_")
 obj["client"] = 'Total'
-for k,v in period_counter_dict.items():
+for k,v in list(period_counter_dict.items()):
   if "mount" in k:
     v = round(v, 2)
   obj[k] = v

@@ -1,10 +1,16 @@
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 import zope
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, WARNING
-import random, string, hashlib, urllib2, socket
-from urlparse import urlparse
+import random, string, hashlib, urllib.request, urllib.error, urllib.parse, socket
+from urllib.parse import urlparse
 try:
   import xml.etree.cElementTree as ET
 except ImportError:
@@ -46,7 +52,7 @@ class WechatService(XMLObject):
     # https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=4_3
 
     # 1. Sort it by dict order
-    params_list = sorted(dict_content.items(), key=lambda e: e[0], reverse=False)
+    params_list = sorted(list(dict_content.items()), key=lambda e: e[0], reverse=False)
     # 2. Concatenate the list to a string
     params_str = "&".join(u"{}={}".format(k, v) for k, v in params_list)
     # 3. Add trade key in the end
@@ -85,7 +91,7 @@ class WechatService(XMLObject):
 
   def convert_dict_to_xml(self, d):
     xml = '<xml>'
-    for key, value in d.items():
+    for key, value in list(d.items()):
       if isinstance(value, basestring):
         xml += '<{0}><![CDATA[{1}]]></{0}>'.format(key, value)
       else:
@@ -102,8 +108,8 @@ class WechatService(XMLObject):
     params['sign'] = self.calculateSign(params, self.getServiceApiKey())
     LOG('WechatService', WARNING,
       "getSandboxKey : data = %s SANDBOX_KEY_URL = %s" % (self.convert_dict_to_xml(params), SANDBOX_KEY_URL), error=False)
-    result = urllib2.Request(SANDBOX_KEY_URL, data=self.convert_dict_to_xml(params))
-    result_data = urllib2.urlopen(result)
+    result = urllib.request.Request(SANDBOX_KEY_URL, data=self.convert_dict_to_xml(params))
+    result_data = urllib.request.urlopen(result)
     result_read = result_data.read()
     result_dict_content = self.convert_xml_to_dict(result_read)
     return_code = result_dict_content.get('return_code', '')
@@ -150,8 +156,8 @@ class WechatService(XMLObject):
     LOG('callWechatApi', WARNING,
       "data = %s URL = %s" % (self.convert_dict_to_xml(wechat_dict), wechat_url + URL), error=False)
     # send data
-    result = urllib2.Request(wechat_url + URL, data=self.convert_dict_to_xml(wechat_dict))
-    result_data = urllib2.urlopen(result)
+    result = urllib.request.Request(wechat_url + URL, data=self.convert_dict_to_xml(wechat_dict))
+    result_data = urllib.request.urlopen(result)
     result_read = result_data.read()
     result_dict_content = self.convert_xml_to_dict(result_read)
     return_code = result_dict_content['return_code']

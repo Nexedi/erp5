@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import json
 from DateTime import DateTime
 
@@ -153,7 +154,7 @@ return json.dumps({
     try:
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
-    except ValueError, e:
+    except ValueError as e:
       self.assertEqual(error, json.loads(str(e)))
 
   def test_call_valid_datetime_format(self):
@@ -211,6 +212,6 @@ return json.dumps({
     try:
       getattr(self.portal, method)(json_data, list_error=True)
       raise ValueError("No error raised during processing")
-    except ValueError, e:
+    except ValueError as e:
       self.assertEqual(error, json.loads(str(e)))
 

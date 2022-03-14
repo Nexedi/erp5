@@ -27,13 +27,14 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import object
 from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
 from .Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
 
 # Creation of default constructor
-class func_code: pass
+class func_code(object): pass
 
 class Getter(BaseGetter):
     """

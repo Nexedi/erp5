@@ -1,4 +1,8 @@
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from zope.interface import implementer
@@ -6,10 +10,10 @@ from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.chain import chain
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 
-class BaseTransform:
+class BaseTransform(object):
     def name(self):
         return getattr(self, '__name__', self.__class__.__name__)
 
@@ -21,7 +25,7 @@ class HtmlToText(BaseTransform):
 
     def __call__(self, orig, **kwargs):
         orig = re.sub('<[^>]*>(?i)(?m)', '', orig)
-        return urllib.unquote(re.sub('\n+', '\n', orig)).strip()
+        return urllib.parse.unquote(re.sub('\n+', '\n', orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)
@@ -38,7 +42,7 @@ class FooToBar(BaseTransform):
 
     def __call__(self, orig, **kwargs):
         orig = re.sub('foo', 'bar', orig)
-        return urllib.unquote(re.sub('\n+', '\n', orig)).strip()
+        return urllib.parse.unquote(re.sub('\n+', '\n', orig)).strip()
 
     def convert(self, orig, data, **kwargs):
         orig = self.__call__(orig)

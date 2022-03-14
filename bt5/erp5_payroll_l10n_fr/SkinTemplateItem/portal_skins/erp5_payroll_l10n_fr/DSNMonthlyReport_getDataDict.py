@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 from erp5.component.module.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
 
 portal = context.getPortalObject()
@@ -36,14 +39,14 @@ def getPaymentPeriod(date, period_type):
     denominator = 6.
   else:
     raise ValueError('Unknown denominator type : %s' % period_type)
-  return "%d%s%02d" % (date.year(), period_type, math.ceil(date.month() / denominator))
+  return "%d%s%02d" % (date.year(), period_type, math.ceil(old_div(date.month(), denominator)))
 
 # Changements
 if block_id in ('S21.G00.31', 'S21.G00.41', 'S21.G00.72'):
   change_block = kw['change_block']
   change_date = kw['change_date']
   rubric_value_dict[block_id + ".001"] = change_date
-  for rubric, value in change_block.iteritems():
+  for rubric, value in change_block.items():
     rubric_value_dict[rubric] = value
 
 # Envoi
@@ -125,9 +128,9 @@ if block_id == 'S21.G00.06':
       if getDSNOrganisation(month_report) == target.getRelativeUrl():
         manpower_dict.setdefault(month_report.getEffectiveDate().month(), []).append(int(month_report.getQuantity()))
     total_manpower = 0
-    for _, employee_quantity in manpower_dict.items():
+    for _, employee_quantity in list(manpower_dict.items()):
       total_manpower += sum(employee_quantity)
-    return total_manpower / len(manpower_dict.keys()) # Divide by number of months
+    return old_div(total_manpower, len(list(manpower_dict.keys()))) # Divide by number of months
 
   average_manpower = ''
   if context.getEffectiveDate().month() == 12 and target.getRelativeUrl() == getDSNOrganisation(context):

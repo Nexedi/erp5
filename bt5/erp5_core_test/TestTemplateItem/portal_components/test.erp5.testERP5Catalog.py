@@ -27,8 +27,13 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import str
+from builtins import range
 from functools import partial
-import httplib
+import http.client
 from random import randint
 import sys
 import threading
@@ -62,7 +67,7 @@ def format_stack(thread=None):
         thread_id,
         '     '.join(traceback.format_stack(frame)),
       )
-      for thread_id, frame in frame_dict.iteritems()
+      for thread_id, frame in frame_dict.items()
     ))
   finally:
     del frame, frame_dict
@@ -100,7 +105,8 @@ class TransactionThread(threading.Thread):
       # Login
       newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
       self.payload(portal_value=portal_value)
-    except Exception as self.exception: # pylint: disable=redefine-in-handler
+    except Exception as xxx_todo_changeme: # pylint: disable=redefine-in-handler
+      self.exception = xxx_todo_changeme # pylint: disable=redefine-in-handler
       if six.PY2:
         self.exception.__traceback__ = sys.exc_info()[2]
 
@@ -345,7 +351,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       activity_tool.distribute()
       # XXX: duplicate ActivityTool.tic, without locking as we are being
       # multiple activity nodes in a single process.
-      for activity in ActivityTool.activity_dict.itervalues():
+      for activity in ActivityTool.activity_dict.values():
         while not activity.dequeueMessage(activity_tool, node_id, ()):
           pass
     # Monkey-patch catalog to synchronise between main thread and the
@@ -566,7 +572,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # otherwise it returns the object
     self.assertEqual(obj, portal_catalog.getObject(obj.getUid()).getObject())
     # but raises KeyError if object is not in catalog
-    self.assertRaises(KeyError, portal_catalog.getObject, sys.maxint)
+    self.assertRaises(KeyError, portal_catalog.getObject, sys.maxsize)
 
   def test_getRecordForUid(self):
     portal_catalog = self.getCatalogTool()
@@ -578,16 +584,16 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     obj = self._makeOrganisation()
     self.assertEqual(obj.getPath(), portal_catalog.getpath(obj.getUid()))
-    self.assertRaises(KeyError, portal_catalog.getpath, sys.maxint)
+    self.assertRaises(KeyError, portal_catalog.getpath, sys.maxsize)
 
   def test_16_newUid(self):
     # newUid should not assign the same uid
     portal_catalog = self.getCatalogTool()
     from Products.ZSQLCatalog.SQLCatalog import UID_BUFFER_SIZE
     uid_dict = {}
-    for _ in xrange(UID_BUFFER_SIZE * 3):
+    for _ in range(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.assertTrue(isinstance(uid, long))
+      self.assertTrue(isinstance(uid, int))
       self.assertFalse(uid in uid_dict)
       uid_dict[uid] = None
 
@@ -1085,7 +1091,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     query_dict = {'query': ('B', 'C'), 'range': 'minngt'}
     from ZPublisher.HTTPRequest import record
     query_record = record()
-    for k, v in query_dict.items():
+    for k, v in list(query_dict.items()):
       setattr(query_record, k, v)
 
     self.assertEqual({org_b.getPath(), org_c.getPath()},
@@ -1276,7 +1282,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     old_default_result_limit = ctool.default_result_limit
     max_ = ctool.default_result_limit = 3
     #Create max + 2 Organisations
-    for i in xrange(max_ + 2):
+    for i in range(max_ + 2):
       self._makeOrganisation(title='abc%s' % (i), description='abc')
     self.assertEqual(max_,
                      len(self.getCatalogTool()(portal_type='Organisation')))
@@ -1644,7 +1650,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation',)
     # Ensure that the new uid is long.
     uid = organisation.uid
-    self.assertTrue(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, int))
     self.tic()
 
     # Ensure that the uid did not change after the indexing.
@@ -1656,7 +1662,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # After the indexing, the uid must be converted to long automatically,
     # and the value must be equivalent.
-    self.assertTrue(isinstance(uid, long))
+    self.assertTrue(isinstance(uid, int))
     self.assertEqual(organisation.uid, uid)
 
   def test_55_FloatFormat(self):
@@ -2080,7 +2086,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     def newContent(container, portal_type, acquire_view_permission, view_role_list, local_role_dict):
       document = container.newContent(portal_type=portal_type)
       document.manage_permission('View', roles=view_role_list, acquire=acquire_view_permission)
-      for user, role_list in local_role_dict.iteritems():
+      for user, role_list in local_role_dict.items():
         document.manage_setLocalRoles(userid=user, roles=role_list)
       return document
 
@@ -2095,7 +2101,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       return (portal_type, acquire_view_permission,
               tuple(view_role_list),
               tuple([(x, tuple(y))
-                     for x, y in local_role_dict.iteritems()])
+                     for x, y in local_role_dict.items()])
              )
 
     for container, portal_type in ((person_module, person),
@@ -3871,7 +3877,7 @@ VALUES
     group_data_map = dict(nexedi=('Nexedi', 'Nexedi Group'),
                           tiolive=('TIOLive', 'TioLive Group'),)
     existing_group_id_list = group_category.objectIds()
-    for group_id, (title, description) in group_data_map.items():
+    for group_id, (title, description) in list(group_data_map.items()):
       if group_id in existing_group_id_list:
         group = group_category[group_id]
       else:
@@ -4055,7 +4061,7 @@ VALUES
     now = DateTime()
     try:
       organisation_list = []
-      for _ in xrange(0,300):
+      for _ in range(0,300):
         organisation_list.append(
             self.portal.organisation_module.newContent().getPath())
       self.tic()
@@ -4112,7 +4118,7 @@ VALUES
     ret = self.publish(
         self.portal.portal_catalog.getPath(),
         basic='ERP5TypeTestCase:')
-    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertEqual(http.client.OK, ret.getStatus())
     # check if we did not just publish the result of `str(portal_catalog.__call__())`,
     # but a proper page
     self.assertIn('<title>Catalog Tool - portal_catalog', ret.getBody())

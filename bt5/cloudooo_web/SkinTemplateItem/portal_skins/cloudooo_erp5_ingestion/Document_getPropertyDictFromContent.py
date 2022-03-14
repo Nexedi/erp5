@@ -13,10 +13,10 @@ information = context.getContentInformation()
 
 result = {}
 property_id_list = context.propertyIds()
-for k, v in information.items():  
+for k, v in list(information.items()):  
   key = k.lower()
   if v:
-    if isinstance(v, unicode): v = v.encode('utf-8')
+    if isinstance(v, str): v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
         pass # XXX - We can not trust reference on getContentInformation

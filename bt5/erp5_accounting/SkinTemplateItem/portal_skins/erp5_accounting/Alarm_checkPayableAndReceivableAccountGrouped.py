@@ -3,6 +3,8 @@ that a 0 balance are grouped.
 
 In other words, check that all transactions that can be grouped are grouped.
 """
+from __future__ import print_function
+from builtins import str
 from Products.CMFActivity.ActiveResult import ActiveResult
 active_process = context.newActiveProcess()
 
@@ -35,7 +37,7 @@ search_params = dict(
 
 for brain in portal.portal_simulation.getInventoryList(**search_params):
   if round(brain.total_price, precision) == 0:
-    print '%s has a 0 balance but some not grouped transactions.' % brain.mirror_section_relative_url
+    print('%s has a 0 balance but some not grouped transactions.' % brain.mirror_section_relative_url)
     if fixit:
       tr = brain.getObject().getParentValue()
       grouped_line_list = tr.AccountingTransaction_guessGroupedLines()
@@ -51,9 +53,9 @@ for brain in portal.portal_simulation.getInventoryList(**search_params):
                                     portal_type=portal.getPortalAccountingMovementTypeList(),
                                     grouping_reference=None,) if not line.getObject().getGroupingReference()])
       if grouped_line_list:
-        print 'FIXED', grouped_line_list
+        print('FIXED', grouped_line_list)
       else:
-        print 'NOT FIXED'
+        print('NOT FIXED')
         
 active_result = ActiveResult(
   summary=context.getTitle(),

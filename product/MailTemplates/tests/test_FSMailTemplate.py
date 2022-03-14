@@ -5,6 +5,7 @@ from __future__ import absolute_import
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
+from builtins import object
 import os
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
@@ -26,7 +27,7 @@ else:
     from AccessControl import ClassSecurityInfo
     from App.class_init import default__class_init__ as InitializeClass
 
-    class DummyMember:
+    class DummyMember(object):
 
         security = ClassSecurityInfo()
 
@@ -43,7 +44,7 @@ else:
 
     InitializeClass(DummyMember)
 
-    class DummyMembershipTool:
+    class DummyMembershipTool(object):
 
         security = ClassSecurityInfo()
 

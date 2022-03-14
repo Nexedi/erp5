@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -35,7 +36,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from erp5.component.interface.IConfigurable import IConfigurable
 
 @zope.interface.implementer(IConfigurable,)
-class ConfigurableMixin:
+class ConfigurableMixin(object):
   """
   This class provides a generic implementation of IConfigurable.
 
@@ -60,7 +61,7 @@ class ConfigurableMixin:
   def getConfigurationPropertyIdList(self):
     """
     """
-    return self._getConfigurationPropertyDict().keys()
+    return list(self._getConfigurationPropertyDict().keys())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationPropertyDict')

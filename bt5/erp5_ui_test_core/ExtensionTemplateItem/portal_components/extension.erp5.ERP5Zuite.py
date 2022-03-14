@@ -1,3 +1,5 @@
+from future import standard_library
+standard_library.install_aliases()
 import itertools
 import time
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -33,10 +35,10 @@ def UpdateImage(image):
   image._update_image_info()
 
 def urlread(url, safe_return=0):
-  import urllib
+  import urllib.request, urllib.parse, urllib.error
   try:
-    return urllib.urlopen(url).read()
-  except IOError, e:
+    return urllib.request.urlopen(url).read()
+  except IOError as e:
     if safe_return:
       # Return an Selenium test code that will obviously fail. This 
       # prevent zelenium test run get Stalled.
@@ -59,7 +61,7 @@ def appendTestToWebPage(text, test_text):
   test_root = test_root.xpath('//table')[0]
   tutorial_test = lxml.html.fromstring('<table></table>')
   tutorial_test.tag = test_root.tag
-  for att in test_root.attrib.keys():
+  for att in list(test_root.attrib.keys()):
     tutorial_test.attrib[att] = test_root.attrib[att]
   tutorial_test.append(test_root[1])
   hidden_list = [tutorial_test] + tutorial_test.xpath('//span')

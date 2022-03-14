@@ -25,7 +25,8 @@
 #
 ##############################################################################
 
-class RSSItem:
+from builtins import object
+class RSSItem(object):
     """
         RSSItem properties for all ERP5 objects
     """

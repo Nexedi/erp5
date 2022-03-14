@@ -8,6 +8,7 @@
   
   Script can optionally include currency.
 """
+from builtins import str
 web_site = context.getWebSiteValue()
 total = 0.0
 sale_order = context.SaleOrder_getShoppingCart()

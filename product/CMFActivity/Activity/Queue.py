@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import sys
 from hashlib import sha1
 from DateTime import DateTime

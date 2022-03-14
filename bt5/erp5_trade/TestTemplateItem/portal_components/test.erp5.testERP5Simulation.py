@@ -30,6 +30,7 @@ This test is experimental for new simulation implementation.
 """
 
 
+from builtins import object
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.test.testPackingList import TestPackingListMixin

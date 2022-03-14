@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import unittest
 from subprocess import Popen, PIPE
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -113,8 +114,8 @@ class TestSpellChecking(ERP5TypeTestCase):
     """
     message = '"%s" is misspelled, suggestion are : "%s"'
     result_dict = {}
-    for word, result_list in self.spellChecker(sentence).iteritems():
-      filtered_result_list = filter(lambda x: x not in ('*', ''), result_list)
+    for word, result_list in self.spellChecker(sentence).items():
+      filtered_result_list = [x for x in result_list if x not in ('*', '')]
       if filtered_result_list:
         result_dict[word] = message % (word, \
                                 filtered_result_list[0].split(':')[-1].strip())
@@ -133,7 +134,7 @@ class TestSpellChecking(ERP5TypeTestCase):
     # check some suggestion are given for a small mistake
     self.assertNotEquals(self.validate_spell('canceled'), {})
     self.assertTrue('is misspelled' in \
-                             self.validate_spell('canceled').values()[0])
+                             list(self.validate_spell('canceled').values())[0])
 
   def test_business_template_list_with_workflow_template_item(self):
     """

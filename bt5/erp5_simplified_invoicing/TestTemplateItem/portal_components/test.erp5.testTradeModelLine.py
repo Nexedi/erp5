@@ -28,6 +28,10 @@
 #
 ##############################################################################
 
+from builtins import map
+from builtins import zip
+from builtins import str
+from builtins import range
 from UserDict import UserDict
 import random
 import unittest
@@ -39,6 +43,7 @@ from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5OOo.tests.utils import Validator
+from functools import reduce
 
 
 def save_result_as(name):
@@ -223,14 +228,14 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
         if not partial_check:
           raise
       else:
-        for k, v in expected_amount.iteritems():
+        for k, v in expected_amount.items():
           if k == 'causality_value_list':
             self.assertEqual(v, amount.getValueList('causality'))
           else:
             self.assertEqual(v, amount.getProperty(k))
         amount_dict[reference] = amount
     if partial_check:
-      for value in expected_amount_dict.itervalues():
+      for value in expected_amount_dict.values():
         self.assertEqual(None, value)
     else:
       self.assertEqual({}, expected_amount_dict)
@@ -316,7 +321,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   def copyExpectedAmountDict(self, delivery, ratio=1):
     self[delivery.getPath()] = expected_amount_dict = {}
     causality = delivery.getCausalityValue()
-    for base_amount, amount_dict in self[causality.getPath()].iteritems():
+    for base_amount, amount_dict in self[causality.getPath()].items():
       expected_amount_dict[base_amount] = new_amount_dict = {}
       for line in delivery.getMovementList():
         line_id = line.getCausalityId()
@@ -388,7 +393,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertSameSet(composed.getSpecialiseValueList(),
                        specialise_value_list)
     count = 0
-    for portal_type, n in type_count_dict.iteritems():
+    for portal_type, n in type_count_dict.items():
       count += n
       self.assertEqual(n, len(composed.objectValues(portal_type=portal_type)))
     self.assertTrue(count, len(composed.objectValues()))
@@ -397,7 +402,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     expected_result_dict = self[order.getPath()]
     def check(movement, movement_id):
       kw = {}
-      for reference, result in expected_result_dict.iteritems():
+      for reference, result in expected_result_dict.items():
         total_price = result.get(movement_id) or 0.0
         if True:
           model_line = self['trade_model_line/' + reference]
@@ -814,12 +819,12 @@ return getBaseAmountQuantity""")
            reference='tax3'),
       ))
     def createCells(line, matrix, base_application=(), base_contribution=()):
-      range_list = [set() for x in iter(matrix).next()]
+      range_list = [set() for x in next(iter(matrix))]
       for index in matrix:
         for x, y in zip(range_list, index):
           x.add(y)
       line.setCellRange(*range_list)
-      for index, price in matrix.iteritems():
+      for index, price in matrix.items():
         line.newCell(mapped_value_property='price', price=price,
           base_application_list=[index[i] for i in base_application],
           base_contribution_list=[index[i] for i in base_contribution],
@@ -901,7 +906,7 @@ return context""" % (base_amount, base_amount))
       } for index, application, contribution in lines]
     def check():
       resolver(delivery_amount, property_dict_list)
-      self.assertEqual(range(len(property_dict_list)),
+      self.assertEqual(list(range(len(property_dict_list))),
                        [x['index'] for x in property_dict_list])
 
     # Case 1: calculation of some base_amount depends on others.

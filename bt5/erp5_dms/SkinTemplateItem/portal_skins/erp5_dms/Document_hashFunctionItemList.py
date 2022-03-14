@@ -3,6 +3,8 @@
   in such way that it is possible to select multiple
   group categories for the same document
 """
+from builtins import str
+from builtins import range
 if default_sub_field_property_dict is None:
   default_sub_field_property_dict = {}
 # Initialise result

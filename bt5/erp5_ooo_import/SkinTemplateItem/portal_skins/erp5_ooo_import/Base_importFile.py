@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 from Products.ERP5OOo.OOoUtils import OOoParser
 import string
 
@@ -32,7 +34,7 @@ def getSpreadsheet(file):
 def cleanUid(uid):
   """method which clean an Uid"""
   clean = uid.strip(string.ascii_letters+'_')
-  return long(clean)
+  return int(clean)
 
 # if listbox is empty, then we are in the first step
 if listbox is None:
@@ -108,7 +110,7 @@ else:
 
       portal_type, property = portal_type_property.split('.', 1)
 
-      if not mapping.has_key(spreadsheet_name):
+      if spreadsheet_name not in mapping:
         mapping[spreadsheet_name] = (portal_type, {})
       mapping[spreadsheet_name][1][column_name] = property
 
@@ -125,7 +127,7 @@ else:
   active_process_value = context.portal_activities.newActiveProcess()
   active_process_path  = active_process_value.getRelativeUrl()
   # Convert each spreadsheet
-  for sheet_name, sheet_data in spreadsheets.items():
+  for sheet_name, sheet_data in list(spreadsheets.items()):
 
     # Build a data structure to associate column index with column title
     column_index = {}
@@ -135,8 +137,8 @@ else:
 
     # Build a data structure to associate column index with object property and portal type
     column_mapping = {}
-    for (column_name, property_dict) in mapping[spreadsheet_name][1].items():
-      for (column_id, column_title) in column_index.items():
+    for (column_name, property_dict) in list(mapping[spreadsheet_name][1].items()):
+      for (column_id, column_title) in list(column_index.items()):
         if column_name == column_title:
           column_mapping[column_id] = property_dict
           break
@@ -147,7 +149,7 @@ else:
       imported_line_property_dict = {}
 
       for line_property_index in range(len(line)):
-        if column_mapping.has_key(line_property_index):
+        if line_property_index in column_mapping:
           property_value = line[line_property_index]
           if property_value:
             # Create a new property value

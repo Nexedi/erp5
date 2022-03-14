@@ -26,9 +26,10 @@
 #
 ##############################################################################
 
+from builtins import object
 import SOAPpy
 
-class SOAPConnection:
+class SOAPConnection(object):
   """
     Holds a SOAP connection
   """

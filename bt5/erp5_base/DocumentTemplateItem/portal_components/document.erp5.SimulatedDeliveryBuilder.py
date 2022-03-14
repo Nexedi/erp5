@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 from zLOG import LOG, BLATHER
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -202,13 +204,13 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     if property_dict in (None, {}):
       return
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
-    for (prop, value) in property_dict.iteritems():
+    for (prop, value) in property_dict.items():
       delivery.setPropertyList(prop, value)
 
     # Try to remove existing properties/categories from Movements that
     # should exist on Deliveries.
     for movement in delivery.getMovementList():
-      for prop in property_dict.keys():
+      for prop in list(property_dict.keys()):
         # XXX The following should be implemented in better way.
         if movement.hasProperty(prop):
           try:
@@ -220,7 +222,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
 
     divergence_to_accept_list = []
     for divergence in delivery.getDivergenceList():
-      if divergence.getProperty('tested_property') not in property_dict.keys():
+      if divergence.getProperty('tested_property') not in list(property_dict.keys()):
         continue
       divergence_to_accept_list.append(divergence)
     self._solveDivergence(delivery_relative_url,
@@ -315,15 +317,14 @@ class SimulatedDeliveryBuilder(BuilderMixin):
                                    delivery_dict.get(delivery_path, []) + \
                                    [s_m]
 
-    for s_m_list_per_movement in delivery_dict.values():
+    for s_m_list_per_movement in list(delivery_dict.values()):
       total_quantity = sum([quantity_dict.get(s_m,
                                               s_m.getProperty('quantity')) \
                             for s_m in s_m_list_per_movement])
       if total_quantity != 0.0:
         for s_m in s_m_list_per_movement:
-          delivery_ratio = quantity_dict.get(s_m,
-                                             s_m.getProperty('quantity')) \
-                                             / total_quantity
+          delivery_ratio = old_div(quantity_dict.get(s_m,
+                                             s_m.getProperty('quantity')), total_quantity)
           s_m.edit(delivery_ratio=delivery_ratio)
       else:
         for s_m in s_m_list_per_movement:

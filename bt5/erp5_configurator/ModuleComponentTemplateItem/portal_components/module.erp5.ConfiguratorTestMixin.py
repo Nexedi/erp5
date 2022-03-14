@@ -224,7 +224,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     """ Create multiple user account """
     next_dict = {}
     for user in self.user_list:
-      for k, v in user.items():
+      for k, v in list(user.items()):
         next_dict.setdefault(k, []).append(v)
     sequence.edit(next_dict=next_dict)
 
@@ -236,7 +236,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       )
     }
     self.assertSameSet(user_id_dict, login_list)
-    return user_id_dict.values()
+    return list(user_id_dict.values())
 
 
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
@@ -822,7 +822,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                           group='my_group')
     accounting_period = organisation.newContent(
                           portal_type='Accounting Period',
-                          start_date=DateTime(2001, 01, 01),
+                          start_date=DateTime(2001, 0o1, 0o1),
                           stop_date=DateTime(2002, 12, 31))
     self.assertEqual(accounting_period.getSimulationState(), 'draft')
 
@@ -1054,8 +1054,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepAccountingTransaction(self, sequence=None, sequence_list=None, **kw):
     transaction = self.portal.accounting_module.newContent(
                       portal_type='Accounting Transaction',
-                      start_date=DateTime(2001, 01, 01),
-                      stop_date=DateTime(2001, 01, 01))
+                      start_date=DateTime(2001, 0o1, 0o1),
+                      stop_date=DateTime(2001, 0o1, 0o1))
     self.assertEqual('draft', transaction.getSimulationState())
     for user_id in self._getUserIdList(self.all_username_list):
       self.assertUserCanViewDocument(user_id, transaction)
@@ -1186,8 +1186,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepSaleInvoiceTransaction(self, sequence=None, sequence_list=None, **kw):
     transaction = self.portal.accounting_module.newContent(
                       portal_type='Sale Invoice Transaction',
-                      start_date=DateTime(2001, 01, 01),
-                      stop_date=DateTime(2001, 01, 01))
+                      start_date=DateTime(2001, 0o1, 0o1),
+                      stop_date=DateTime(2001, 0o1, 0o1))
     self.assertEqual('draft', transaction.getSimulationState())
     for user_id in self._getUserIdList(self.all_username_list):
       self.assertUserCanViewDocument(user_id, transaction)
@@ -1329,8 +1329,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepPurchaseInvoiceTransaction(self, sequence=None, sequence_list=None, **kw):
     transaction = self.portal.accounting_module.newContent(
                       portal_type='Purchase Invoice Transaction',
-                      start_date=DateTime(2001, 01, 01),
-                      stop_date=DateTime(2001, 01, 01))
+                      start_date=DateTime(2001, 0o1, 0o1),
+                      stop_date=DateTime(2001, 0o1, 0o1))
     self.assertEqual('draft', transaction.getSimulationState())
     for user_id in self._getUserIdList(self.all_username_list):
       self.assertUserCanViewDocument(user_id, transaction)
@@ -1476,8 +1476,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepPaymentTransaction(self, sequence=None, sequence_list=None, **kw):
     transaction = self.portal.accounting_module.newContent(
                       portal_type='Payment Transaction',
-                      start_date=DateTime(2001, 01, 01),
-                      stop_date=DateTime(2001, 01, 01))
+                      start_date=DateTime(2001, 0o1, 0o1),
+                      stop_date=DateTime(2001, 0o1, 0o1))
     self.assertEqual('draft', transaction.getSimulationState())
     for user_id in self._getUserIdList(self.all_username_list):
       self.assertUserCanViewDocument(user_id, transaction)
@@ -1621,29 +1621,29 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     accounting_transaction_x_related_to_a = self.portal.\
                                     accounting_module.newContent(
                                     portal_type='Accounting Transaction',
-                                    start_date=DateTime(2010, 06, 01),
-                                    stop_date=DateTime(2010, 06, 01))
+                                    start_date=DateTime(2010, 0o6, 0o1),
+                                    stop_date=DateTime(2010, 0o6, 0o1))
 
     accounting_transaction_y_related_to_a = self.portal.\
                                     accounting_module.newContent(
                                     portal_type='Accounting Transaction',
-                                    start_date=DateTime(2010, 06, 01),
-                                    stop_date=DateTime(2010, 06, 01))
+                                    start_date=DateTime(2010, 0o6, 0o1),
+                                    stop_date=DateTime(2010, 0o6, 0o1))
 
     accounting_transaction_a = self.portal.accounting_module.newContent(
                                     portal_type='Accounting Transaction',
-                                    start_date=DateTime(2010, 06, 01),
-                                    stop_date=DateTime(2010, 06, 01))
+                                    start_date=DateTime(2010, 0o6, 0o1),
+                                    stop_date=DateTime(2010, 0o6, 0o1))
 
     accounting_transaction_b = self.portal.accounting_module.newContent(
                                     portal_type='Accounting Transaction',
-                                    start_date=DateTime(2010, 06, 01),
-                                    stop_date=DateTime(2010, 06, 01))
+                                    start_date=DateTime(2010, 0o6, 0o1),
+                                    stop_date=DateTime(2010, 0o6, 0o1))
 
     accounting_transaction_c = self.portal.accounting_module.newContent(
                                    portal_type='Accounting Transaction',
-                                   start_date=DateTime(2010, 06, 01),
-                                   stop_date=DateTime(2010, 06, 01))
+                                   start_date=DateTime(2010, 0o6, 0o1),
+                                   stop_date=DateTime(2010, 0o6, 0o1))
 
     accounting_transaction_x_related_to_a.setCausalityValue(\
                                                    accounting_transaction_a)

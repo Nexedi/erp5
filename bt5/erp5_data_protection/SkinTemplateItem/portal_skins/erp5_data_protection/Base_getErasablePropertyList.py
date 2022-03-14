@@ -1,3 +1,5 @@
+from builtins import filter
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 portal = context.getPortalObject()
 document_to_inspect = context.getAgentValue()
@@ -15,7 +17,7 @@ def filterPropertyMapList(property_map):
     document_to_inspect.getProperty(property_map['id']) and \
     document_to_inspect.hasProperty(property_map['id'])
 
-property_map_list = filter(filterPropertyMapList, property_map_list)
+property_map_list = list(filter(filterPropertyMapList, property_map_list))
 property_map_list = document_to_inspect.Base_updatePropertyMapListWithFieldLabel(property_map_list)
 
 MAX_LENGHT = 25
@@ -23,7 +25,7 @@ listbox_object_list = []
 for index, property_map in enumerate(property_map_list):
   temp_object = newTempBase(portal, 'temp%s' % (index,))
   try:
-    property_value = unicode(document_to_inspect.getProperty(property_map['id']), 'utf-8')[:MAX_LENGHT]
+    property_value = str(document_to_inspect.getProperty(property_map['id']), 'utf-8')[:MAX_LENGHT]
   except UnicodeDecodeError:
     property_value = 'Not viewable: binary content'
 

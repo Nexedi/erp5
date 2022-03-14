@@ -1,10 +1,12 @@
+from builtins import str
+from builtins import object
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
 @implementer(itransform)
-class PdfToBmp:
+class PdfToBmp(object):
   """Transforms pdf to bmp by using Cloudooo"""
 
   __name__ = 'pdf_to_bmp'

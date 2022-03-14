@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implementer

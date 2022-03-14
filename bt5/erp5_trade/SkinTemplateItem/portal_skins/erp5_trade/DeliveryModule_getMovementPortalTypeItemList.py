@@ -11,4 +11,4 @@ for type_name in types_tool.getTypeInfo(context).getTypeAllowedContentTypeList()
       if cell_type_name in movement_type_list:
         type_set[cell_type_name] = 1
 
-return [(translateString(t), t) for t in type_set.keys()]
+return [(translateString(t), t) for t in list(type_set.keys())]

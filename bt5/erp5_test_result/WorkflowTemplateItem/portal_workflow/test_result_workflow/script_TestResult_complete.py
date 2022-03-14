@@ -1,3 +1,4 @@
+from builtins import map
 import re
 test_result = sci['object']
 kw = sci['kwargs']

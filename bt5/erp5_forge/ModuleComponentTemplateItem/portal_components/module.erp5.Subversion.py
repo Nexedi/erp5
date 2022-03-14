@@ -30,6 +30,10 @@
 #
 ##############################################################################
 
+from builtins import map
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 import errno, glob, os, re, shutil
 from pysvn import ClientError, Revision, opt_revision_kind, svn_err
 import threading
@@ -145,7 +149,7 @@ class Subversion(WorkingCopy):
     try:
       return self._getClient().cat(os.path.join(self.working_copy, path),
                                    Revision(opt_revision_kind.base))
-    except ClientError, e:
+    except ClientError as e:
       if e.args[1][-1][1] in (errno.ENOENT, svn_err.entry_not_found):
         raise NotVersionedError(path)
       raise
@@ -338,7 +342,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
         self.svn_file_set.add(path)
       elif status == 'conflicted':
         match = re.compile(re.escape(path) + r'\.(mine|r\d+)$').match
-        self.svn_file_set.difference_update(map(match, glob.glob(path + '.?*')))
+        self.svn_file_set.difference_update(list(map(match, glob.glob(path + '.?*'))))
     # write file unless unchanged
     try:
       if path in self.svn_file_set:
@@ -389,7 +393,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     prefix_length = len(os.path.join('.', ''))
     for dirpath, dirnames, filenames in os.walk('.'):
       dirpath = dirpath[prefix_length:]
-      for i in xrange(len(dirnames) - 1, -1, -1):
+      for i in range(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
         if d[0] == '.':
           # Ignore hidden directories (in particular '.svn')
@@ -413,7 +417,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
         shutil.rmtree(x)
 
     # Remove deleted files/dirs
-    self.client.remove([k for k, v in self.versioned_dict.iteritems()
+    self.client.remove([k for k, v in self.versioned_dict.items()
         if v is not None and self.versioned_dict[os.path.dirname(k)] is None])
     # Add new files/dirs
     self.client.add([x for x in self.added_set

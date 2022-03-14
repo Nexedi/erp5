@@ -1,3 +1,4 @@
+from builtins import map
 from Products.Formulator.Errors import FormValidationError
 from Products.ERP5Type.Utils import convertToUpperCase
 
@@ -29,14 +30,14 @@ form = getattr(context,form_id)
 try:
   # Validate
   form.validate_all_to_request(request)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)
@@ -52,9 +53,9 @@ def updateTranslation():
   def upperCase(text):
     return convertToUpperCase(text.replace('-', '_'))
 
-  for key in request.form.keys():
+  for key in list(request.form.keys()):
     if key.startswith('field_matrixbox_'):
-      property_index, language_index = map(int, key.split('_')[-3:-1])
+      property_index, language_index = list(map(int, key.split('_')[-3:-1]))
       value = request.form.get(key)
       property_name = property_list[property_index][0]
       language = language_list[language_index][0]

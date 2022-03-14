@@ -29,6 +29,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 import unittest
 from unittest import skip
 from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
@@ -689,7 +691,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     request = self.app.REQUEST
     request['here'] = test1
 
-    for i in xrange(3, 7):
+    for i in range(3, 7):
       foo_id = "foo_%s" % i
       if test1._getOb(foo_id, None) is None:
         test1.newContent(foo_id, portal_type='Foo Line')

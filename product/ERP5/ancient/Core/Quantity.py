@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Quantity:
+from builtins import object
+class Quantity(object):
   """
     Quantities are float in ERP5
   """

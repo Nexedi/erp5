@@ -17,6 +17,10 @@
 
 ## ERP5 Workflow: This must go before any Products.DCWorkflow imports as this
 ## patch createExprContext() from-imported in several of its modules
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import map
 from Products.ERP5Type.Core.Workflow import createExpressionContext
 
 # Optimized rendering of global actions (cache)
@@ -114,7 +118,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       # So, we can now put this kind of expression : <= "%(now)s"
       # May be this patch should be moved to listFilteredActions in the future
       info.now = DateTime()
-      for id, qdef in self.worklists.items():
+      for id, qdef in list(self.worklists.items()):
           if qdef.actbox_name:
             guard = qdef.guard
             # Patch for ERP5 by JP Smets in order
@@ -135,7 +139,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                       v_fmt = v(createExpressionContext(StateChangeInfo(portal,
                                 self, kwargs=info.__dict__.copy())))
                     else:
-                      v_fmt = map(lambda x, info=info: x%info, v)
+                      v_fmt = list(map(lambda x, info=info: x%info, v))
                     dict[k] = v_fmt
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
@@ -179,7 +183,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                               'category': qdef.actbox_category}))
               fmt_data._pop()
       res.sort()
-      return map((lambda id_val: id_val[1]), res)
+      return list(map((lambda id_val: id_val[1]), res))
 
     # Return Cache
     _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_factory = 'erp5_ui_short')
@@ -197,10 +201,10 @@ DCWorkflowDefinition.listObjectActions = ERP5Workflow.__dict__['listObjectAction
 from Products.DCWorkflow.Expression import Expression
 
 DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
-DCWorkflowDefinition.getWorklistVariableMatchDict = ERP5Workflow.getWorklistVariableMatchDict.im_func
+DCWorkflowDefinition.getWorklistVariableMatchDict = ERP5Workflow.getWorklistVariableMatchDict.__func__
 
 DCWorkflowDefinition.security.declarePrivate('isWorkflowMethodSupported')
-DCWorkflowDefinition.isWorkflowMethodSupported = ERP5Workflow.isWorkflowMethodSupported.im_func
+DCWorkflowDefinition.isWorkflowMethodSupported = ERP5Workflow.isWorkflowMethodSupported.__func__
 
 TransitionDefinition__init__orig = TransitionDefinition.__init__
 def TransitionDefinition__init__(self, *args, **kw):
@@ -269,7 +273,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     if tdef is not None: tdef_exprs = tdef.var_exprs
     if tdef_exprs is None: tdef_exprs = {}
     status = {}
-    for id, vdef in self.variables.items():
+    for id, vdef in list(self.variables.items()):
         if not vdef.for_status:
             continue
         expr = None
@@ -382,7 +386,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
   tdef_exprs = {}
   status = {}
-  for id, vdef in self.variables.items():
+  for id, vdef in list(self.variables.items()):
     if not vdef.for_status:
       continue
     expr = None
@@ -420,7 +424,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
 DCWorkflowDefinition._executeMetaTransition = _executeMetaTransition
 
-DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.im_func
+DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.__func__
 
 def StateDefinition_getStatePermissionRoleListDict(self):
   if self.permission_roles is None:
@@ -560,7 +564,7 @@ def DCWorkflowDefinition_getStateValueByReference(self, reference):
   return None
 def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
-    return self.states.values()
+    return list(self.states.values())
   return []
 def DCWorkflowDefinition_getStateReferenceList(self):
   if self.states is not None:
@@ -572,7 +576,7 @@ def DCWorkflowDefinition_getTransitionValueByReference(self, reference):
   return None
 def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
-    return self.transitions.values()
+    return list(self.transitions.values())
   else:
     return []
 def DCWorkflowDefinition_getTransitionIdByReference(self, reference):
@@ -584,7 +588,7 @@ def DCWorkflowDefinition_getTransitionReferenceList(self):
 def DCWorkflowDefinition_getWorklistValueByReference(self, reference):
   return self.worklists.get(reference, None)
 def DCWorkflowDefinition_getWorklistValueList(self):
-  return self.worklists.values()
+  return list(self.worklists.values())
 def DCWorkflowDefinition_getWorklistReferenceList(self):
   return self.worklists.objectIds()
 def DCWorkflowDefinition_propertyIds(self):
@@ -597,13 +601,13 @@ def DCWorkflowDefinition_getScriptValueByReference(self, reference):
   return None
 def DCWorkflowDefinition_getScriptValueList(self):
   if self.scripts is not None:
-    return self.scripts.values()
+    return list(self.scripts.values())
   return []
 def StateDefinition_getDestinationIdList(self):
   return self.transitions
 def StateDefinition_getDestinationValueList(self):
   if self.transitions: # empty tuple by default
-    return [v for i, v in self.getWorkflow().transitions.items()
+    return [v for i, v in list(self.getWorkflow().transitions.items())
             if i in self.transitions]
   return []
 def StateDefinition_getStateTypeList(self):
@@ -877,7 +881,7 @@ def method_getGuardExpressionInstance(self):
   return self.guard.expr
 
 def method_checkGuard(self, *args, **kwargs):
-  return ERP5Guardable.checkGuard.im_func(self, *args, **kwargs)
+  return ERP5Guardable.checkGuard.__func__(self, *args, **kwargs)
 
 def method_getAction(self):
   return self.actbox_url
@@ -920,8 +924,8 @@ def convertToERP5Workflow(self, temp_object=False):
   else:
     new_id = 'converting_' + self.id
   from base64 import b64encode
-  import cPickle
-  uid = b64encode(cPickle.dumps(new_id))
+  import pickle
+  uid = b64encode(pickle.dumps(new_id))
   if workflow_class_name == 'DCWorkflowDefinition':
     portal_type = 'Workflow'
   else:
@@ -1024,7 +1028,7 @@ def convertToERP5Workflow(self, temp_object=False):
         acquire_permission_list = []
         permission_roles_dict = {}
         if sdef.permission_roles:
-          for (permission, roles) in sdef.permission_roles.items():
+          for (permission, roles) in list(sdef.permission_roles.items()):
             if permission in self.permissions:
               if isinstance(roles, list): # type 'list' means acquisition
                 acquire_permission_list.append(permission)
@@ -1053,13 +1057,13 @@ def convertToERP5Workflow(self, temp_object=False):
         state_path = 'destination/' + '/'.join(state.getPath().split('/')[2:])
         tdef.setCategoryList(tdef.getCategoryList() + [state_path])
       # worklists (portal_type = Worklist)
-      for qid, qdef in self.worklists.items():
+      for qid, qdef in list(self.worklists.items()):
         worklist = workflow.newContent(portal_type='Worklist', temp_object=temp_object)
         worklist.setTitle(qdef.title)
         worklist.setReference(qdef.id)
         worklist.setDescription(qdef.description)
-        criterion_property_list = qdef.var_matches.keys()
-        for key, value in qdef.var_matches.items():
+        criterion_property_list = list(qdef.var_matches.keys())
+        for key, value in list(qdef.var_matches.items()):
           if not isinstance(value, (tuple, list)):
             raise AssertionError("%s: %s: %s: must be a list or tuple" % (qdef.id, key, value))
           worklist.setCriterion(key, value)
@@ -1120,7 +1124,7 @@ def convertToERP5Workflow(self, temp_object=False):
         interaction.setDescription(tdef.description)
 
     # create variables (portal_type = Workflow Variable)
-    for variable_id, variable_definition in self.variables.items():
+    for variable_id, variable_definition in list(self.variables.items()):
       variable = workflow.newContent(portal_type='Workflow Variable', temp_object=temp_object)
       variable.setTitle(variable_definition.title)
       variable.setReference(variable_id)
@@ -1206,9 +1210,9 @@ DCWorkflowDefinition.getTitle = method_getTitle
 DCWorkflowDefinition.getDescription = method_getDescription
 DCWorkflowDefinition.isManagerBypass = lambda self: self.manager_bypass
 DCWorkflowDefinition.getSourceValue = DCWorkflowDefinition_getSourceValue
-DCWorkflowDefinition.notifyWorkflowMethod = ERP5Workflow.notifyWorkflowMethod.im_func
-DCWorkflowDefinition.notifyBefore = ERP5Workflow.notifyBefore.im_func
-DCWorkflowDefinition.notifySuccess = ERP5Workflow.notifySuccess.im_func
+DCWorkflowDefinition.notifyWorkflowMethod = ERP5Workflow.notifyWorkflowMethod.__func__
+DCWorkflowDefinition.notifyBefore = ERP5Workflow.notifyBefore.__func__
+DCWorkflowDefinition.notifySuccess = ERP5Workflow.notifySuccess.__func__
 DCWorkflowDefinition.getVariableValueDict = DCWorkflowDefinition_getVariableValueDict
 DCWorkflowDefinition.getVariableValueByReference = DCWorkflowDefinition_getVariableValueByReference
 DCWorkflowDefinition.getStateValueByReference = DCWorkflowDefinition_getStateValueByReference
@@ -1311,8 +1315,8 @@ class ERP5TransitionDefinition (TransitionDefinition):
   pass
 
 def getAvailableScriptIds(self):
-  return self.getWorkflow().scripts.keys() + \
-   [k for k in self.getWorkflow().transitions.keys() if \
+  return list(self.getWorkflow().scripts.keys()) + \
+   [k for k in list(self.getWorkflow().transitions.keys()) if \
    self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
 
 TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds

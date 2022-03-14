@@ -26,6 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import str
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
@@ -37,7 +39,7 @@ from zExceptions import Forbidden
 
 _MARKER = object()
 
-class DownloadableMixin:
+class DownloadableMixin(object):
   security = ClassSecurityInfo()
 
   ### Content processing methods

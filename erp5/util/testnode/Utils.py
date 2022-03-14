@@ -1,3 +1,4 @@
+from builtins import map
 import os
 import six
 from six.moves import map
@@ -17,7 +18,7 @@ else:
   def deunicodeData(data):
     if isinstance(data, list):
       return list(map(deunicodeData, data))
-    if isinstance(data, unicode):
+    if isinstance(data, str):
       return data.encode('utf8')
     if isinstance(data, dict):
       return {deunicodeData(key): deunicodeData(value)

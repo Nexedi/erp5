@@ -1,3 +1,4 @@
+from builtins import range
 from Products.ERP5Type.Utils import cartesianProduct
 
 line = []

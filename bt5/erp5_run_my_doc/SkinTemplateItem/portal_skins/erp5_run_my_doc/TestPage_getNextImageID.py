@@ -2,6 +2,7 @@
   Generate an image name and check if it already exist
 """
 
+from builtins import str
 path = context.getPath()
 image_id = title.lower() + "_" + slide_type.lower()
 

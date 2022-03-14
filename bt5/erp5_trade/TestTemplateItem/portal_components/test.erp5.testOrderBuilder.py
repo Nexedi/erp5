@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -156,7 +157,7 @@ class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
     order_line, = order.contentValues(portal_type=self.order_line_portal_type)
     self.assertEqual(order_line.getResourceValue(), resource)
     self.assertEqual(order_line.getTotalQuantity(),
-      sum(self.wanted_quantity_matrix.itervalues()))
+      sum(self.wanted_quantity_matrix.values()))
 
     quantity_matrix = {}
     for cell in order_line.contentValues(portal_type=self.order_cell_portal_type):
@@ -239,7 +240,7 @@ class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
     self.wanted_quantity_matrix = self.decrease_quantity_matrix.copy()
 
     packing_list_line.setVariationCategoryList(
-      self.decrease_quantity_matrix.keys(),
+      list(self.decrease_quantity_matrix.keys()),
     )
 
     self.tic()

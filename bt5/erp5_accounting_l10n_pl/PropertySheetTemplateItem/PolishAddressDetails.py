@@ -27,7 +27,8 @@
 #
 ##############################################################################
 
-class PolishAddressDetails:
+from builtins import object
+class PolishAddressDetails(object):
     """
         Detailed address information needed to proper fill of tax reports
     """

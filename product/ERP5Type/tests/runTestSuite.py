@@ -21,7 +21,7 @@ def makeSuite(
     zserver_frontend_url_list=None,
     **kwargs):
   # BBB tests (plural form) is only checked for backward compatibility
-  for k in sys.modules.keys():
+  for k in list(sys.modules.keys()):
     if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
       del sys.modules[k]
   singular_succeed = True
@@ -143,7 +143,7 @@ def main():
   if test_result is not None:
     assert revision == test_result.revision, (revision, test_result.revision)
     while suite.acquire():
-      test = test_result.start(suite.running.keys())
+      test = test_result.start(list(suite.running.keys()))
       if test is not None:
         suite.start(test.name, lambda status_dict, __test=test:
           __test.stop(**status_dict))

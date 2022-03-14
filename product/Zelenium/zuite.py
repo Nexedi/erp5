@@ -5,13 +5,17 @@ Zuite instances are collections of Zelenium test cases.
 $Id$
 """
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import glob
 import logging
 import os
 import re
-from urllib import unquote
+from urllib.parse import unquote
 import zipfile
-import StringIO
+import io
 import types
 
 from zope.interface import implementer
@@ -178,7 +182,7 @@ class Zuite( OrderedFolder ):
         if key in self.objectIds():
             return self._getOb( key )
 
-        if key in _SUPPORT_FILES.keys():
+        if key in list(_SUPPORT_FILES.keys()):
             return _SUPPORT_FILES[ key ].__of__( self )
 
         proxy = _FilesystemProxy( key
@@ -387,7 +391,7 @@ class Zuite( OrderedFolder ):
                                )
                          )
 
-        test_ids = [ x for x in REQUEST.form.keys()
+        test_ids = [ x for x in list(REQUEST.form.keys())
                         if x.startswith( 'testTable' ) ]
         test_ids.sort()
 
@@ -448,7 +452,7 @@ class Zuite( OrderedFolder ):
         manifest = os.path.join( path, self.testsuite_name or '.objects' )
 
         if os.path.isfile( manifest ):
-            filenames = filter(None,[ x.strip() for x in open( manifest ).readlines() ])
+            filenames = [_f for _f in [ x.strip() for x in open( manifest ).readlines() ] if _f]
 
         elif self.filename_glob:
             globbed = glob.glob( os.path.join( path, self.filename_glob ) )
@@ -496,7 +500,7 @@ class Zuite( OrderedFolder ):
     def _getZipFile( self, include_selenium=True ):
         """ Generate a zip file containing both tests and scaffolding.
         """
-        stream = StringIO.StringIO()
+        stream = io.StringIO()
         archive = zipfile.ZipFile( stream, 'w' )
 
 
@@ -534,7 +538,7 @@ class Zuite( OrderedFolder ):
         archive.writestr( 'testSuite.html'
                         , convertToBytes(self.test_suite_html( test_cases=test_cases ) ) )
 
-        for pathname, filenames in paths.items():
+        for pathname, filenames in list(paths.items()):
 
             if pathname == '':
                 filename = '.objects'
@@ -557,7 +561,7 @@ class Zuite( OrderedFolder ):
 
         if include_selenium:
 
-            for k, v in _SUPPORT_FILES.items():
+            for k, v in list(_SUPPORT_FILES.items()):
                 archive.writestr( convertToBytes(k),
                        convertToBytes(v.__of__(self).manage_FTPget() ) )
 

@@ -2,6 +2,7 @@
   Return action and modules links for ERP5's navigation
   box.
 """
+from builtins import str
 from json import dumps
 
 portal= context.getPortalObject()
@@ -17,7 +18,7 @@ def unLazyActionList(action_list):
   fixed_action_list = []
   for action in action_list:
     d = {}
-    for k,v in action.items():
+    for k,v in list(action.items()):
       if k in ['url', 'title']:
         if k == 'url':
           # escape '&' as not possible use it in a JSON string

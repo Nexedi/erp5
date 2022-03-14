@@ -1,4 +1,5 @@
 """ This script is used initially by PlanningBox tests currently"""
+from builtins import str
 for i in context.objectValues():
   i.setStartDate(DateTime(DateTime().strftime("%Y/%m/%d"))+0.4)
   i.setStopDate(DateTime(DateTime().strftime("%Y/%m/%d"))+0.8)

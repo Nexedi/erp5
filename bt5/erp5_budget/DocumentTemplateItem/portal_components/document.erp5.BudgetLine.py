@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
@@ -118,7 +119,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     the value is the engaged budget.
     """
     budget_dict = {k: v * -1
-      for k, v in self.getEngagedBudgetDict(**kw).iteritems()}
+      for k, v in self.getEngagedBudgetDict(**kw).items()}
 
     cell_key_list = self.getCellKeyList()
     for cell_key in cell_key_list:

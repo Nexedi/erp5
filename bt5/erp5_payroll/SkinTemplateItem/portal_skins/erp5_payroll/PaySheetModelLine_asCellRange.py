@@ -50,7 +50,7 @@ if matrixbox :
             % script.id)
       cell_range.append(category_cell_range)
 
-    cell_range = filter(lambda x: x != [], cell_range)
+    cell_range = [x for x in cell_range if x != []]
   while len(cell_range) < 3:
     cell_range.append([])
   return cell_range
@@ -68,7 +68,7 @@ else:
         base_application_variation_dict.setdefault(base_variation, []) 
         base_application_variation_dict[base_variation].append(variation)
 
-      for v in base_application_variation_dict.values():
+      for v in list(base_application_variation_dict.values()):
         list_of_category_list.append(v)
     else:
       list_of_category_list.append(\

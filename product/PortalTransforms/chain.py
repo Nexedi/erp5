@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 from zope.interface import implementer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -16,7 +19,7 @@ from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.interfaces import IChain
 from Products.PortalTransforms.interfaces import ITransform
 
-from UserList import UserList
+from collections import UserList
 
 @implementer(IChain, ITransform)
 class chain(UserList):

@@ -5,6 +5,8 @@ from __future__ import absolute_import
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
+from past.builtins import basestring
+from builtins import object
 import os
 import rfc822
 
@@ -26,7 +28,7 @@ from ZPublisher import HTTPResponse
 # Configured using zope.conf in Zope 2.7.8, Zope 2.8.2, and above
 default_encoding = getattr(HTTPResponse,'default_encoding','iso-8859-15')
 
-class BaseMailTemplate:
+class BaseMailTemplate(object):
 
     security = ClassSecurityInfo()
 
@@ -49,7 +51,7 @@ class BaseMailTemplate:
         # So I remove it.
         if text.endswith('\n'):
             text = text[:-1]
-        if not self.html() and isinstance(text, unicode):
+        if not self.html() and isinstance(text, str):
             text = text.encode(encoding,'replace')
         # now turn the result into a MIMEText object
         msg = MIMEText(
@@ -116,7 +118,7 @@ class BaseMailTemplate:
         # we want to have it stored in ERP5, for mail threading
         headers['Message-ID'] = make_msgid()
         # turn headers into an ordered list for predictable header order
-        keys = headers.keys()
+        keys = list(headers.keys())
         keys.sort()
         return msg,values,[(key,headers[key]) for key in keys]
 

@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import object
 import os.path
 import tempfile
 import textwrap
@@ -295,11 +297,11 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         return result
         ''')
 
-    class AllowedObject:
+    class AllowedObject(object):
       __allow_access_to_unprotected_subobjects__ = 1
     allowed_object = AllowedObject()
 
-    class NotAllowedObject:
+    class NotAllowedObject(object):
       __roles__ = ()
     not_allowed_object = NotAllowedObject()
 

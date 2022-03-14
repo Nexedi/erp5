@@ -10,6 +10,8 @@ Try to convert old OpenOffice presentations into slideshows
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 
+from builtins import str
+from builtins import range
 import re
 
 blank = ''

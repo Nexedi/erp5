@@ -107,7 +107,7 @@ class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
       # Only take loyalty trade model line
       if amount.getResource() and [x for x in amount.getBaseApplicationList() if x in ['base_amount/loyalty_program/collect_point', 'base_amount/loyalty_program/using_point']]:
         movement = input_movement.asContext(**{k: v
-            for k, v in amount.__dict__.iteritems()
+            for k, v in amount.__dict__.items()
             if k[0] != '_' and k != 'categories'})
         base_category_set = set([x for x in amount.getBaseCategoryList() if x not in ('price_currency')])
         movement._setCategoryMembership(base_category_set,

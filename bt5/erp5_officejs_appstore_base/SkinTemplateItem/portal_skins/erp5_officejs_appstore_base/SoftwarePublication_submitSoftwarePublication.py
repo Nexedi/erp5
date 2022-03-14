@@ -1,3 +1,6 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 def rejectSoftwarePublication(software_publication):
   software_publication.submit()
   software_publication.reject()
@@ -60,7 +63,7 @@ if not zip_file:
   rejectSoftwarePublication(software_publication)
   return
 
-from cStringIO import StringIO
+from io import StringIO
 import zipfile
 from zipfile import BadZipfile
 

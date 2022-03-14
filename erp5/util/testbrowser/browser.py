@@ -30,6 +30,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import logging
 import sys
 from six.moves.urllib.parse import urlencode
@@ -40,6 +43,7 @@ from zope.testbrowser._compat import urlparse
 from z3c.etestbrowser.browser import ExtendedTestBrowser
 from zope.testbrowser.browser import onlyOne
 from contextlib import contextmanager
+from future.utils import with_metaclass
 
 def measurementMetaClass(prefix):
   """
@@ -96,17 +100,17 @@ def measurementMetaClass(prefix):
         @type method: function
         """
         wrapper_method = timeInSecondDecorator(method)
-        wrapper_method.func_name = method.func_name
+        wrapper_method.__name__ = method.__name__
         wrapper_method.__doc__ = method.__doc__
 
         # In order to avoid re-wrapping the method when looking at the bases
         # for example
         wrapper_method.__is_wrapper__ = True
 
-        dictionary[method.func_name] = wrapper_method
+        dictionary[method.__name__] = wrapper_method
 
       # Only wrap methods prefixed by the given prefix
-      for attribute_name, attribute in dictionary.items():
+      for attribute_name, attribute in list(dictionary.items()):
         if attribute_name.startswith(prefix) and callable(attribute):
           applyMeasure(attribute)
 
@@ -129,7 +133,7 @@ def measurementMetaClass(prefix):
 import random
 import time
 
-class Browser(ExtendedTestBrowser):
+class Browser(with_metaclass(measurementMetaClass(prefix='open'), ExtendedTestBrowser)):
   """
   Implements mechanize tests specific to an ERP5 environment through
   U{ExtendedTestBrowser<http://pypi.python.org/pypi/z3c.etestbrowser>}
@@ -141,7 +145,6 @@ class Browser(ExtendedTestBrowser):
   @todo:
    - getFormulatorFieldValue
   """
-  __metaclass__ = measurementMetaClass(prefix='open')
 
   def __init__(self,
                erp5_base_url,
@@ -299,7 +302,7 @@ class Browser(ExtendedTestBrowser):
       raise BrowserStateError(
         "can't fetch relative reference: not viewing any document")
 
-    if not isinstance(url, unicode):
+    if not isinstance(url, str):
       url = url.decode('utf-8')
 
     return str(urlparse.urljoin(self._getBaseUrl(), url).encode('utf-8'))
@@ -493,7 +496,7 @@ class Browser(ExtendedTestBrowser):
     except IndexError:
       raise LookupError("Cannot find div with ID 'transition_message'")
     else:
-      if isinstance(transition_message, unicode):
+      if isinstance(transition_message, str):
         transition_message = transition_message.encode('utf-8')
 
       return transition_message
@@ -720,13 +723,12 @@ class LoginError(Exception):
   """
   pass
 
-class MainForm(Form):
+class MainForm(with_metaclass(measurementMetaClass(prefix='submit'), Form)):
   """
   Class defining convenient methods for the main form of ERP5. All the
   methods specified are those always found in an ERP5 page in contrary
   to L{ContextMainForm}.
   """
-  __metaclass__ = measurementMetaClass(prefix='submit')
 
   def submit(self, label=None, name=None, class_attribute=None, index=None,
              *args, **kwargs):
@@ -867,7 +869,7 @@ class MainForm(Form):
       headers_cookie = self.browser.headers['set-cookie']
       cookie = Cookie.SimpleCookie()
       cookie.load(headers_cookie)
-      if '__ac' in cookie.keys():
+      if '__ac' in list(cookie.keys()):
         ac_value = cookie['__ac'].value
       else:
         reg = '__ac=\"([A-Za-z0-9%]+)*\"'
@@ -1269,19 +1271,17 @@ class ContextMainForm(MainForm):
 
 from zope.testbrowser.browser import SubmitControl
 
-class SubmitControlWithTime(SubmitControl):
+class SubmitControlWithTime(with_metaclass(measurementMetaClass(prefix='click'), SubmitControl)):
   """
   Only define to wrap click methods to measure the time spent
   """
-  __metaclass__ = measurementMetaClass(prefix='click')
 
 from zope.testbrowser.browser import ImageControl
 
-class ImageControlWithTime(ImageControl):
+class ImageControlWithTime(with_metaclass(measurementMetaClass(prefix='click'), ImageControl)):
   """
   Only define to wrap click methods to measure the time spent
   """
-  __metaclass__ = measurementMetaClass(prefix='click')
 
 import zope.testbrowser.browser
 
@@ -1305,8 +1305,7 @@ zope.testbrowser.browser.simpleControlFactory = simpleControlFactory
 
 from zope.testbrowser.browser import Link
 
-class LinkWithTime(Link):
+class LinkWithTime(with_metaclass(measurementMetaClass(prefix='click'), Link)):
   """
   Only define to wrap click methods to measure the time spent
   """
-  __metaclass__ = measurementMetaClass(prefix='click')

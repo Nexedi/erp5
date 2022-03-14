@@ -27,12 +27,14 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from warnings import warn
 
-class TextConvertableMixin:
+class TextConvertableMixin(object):
   """
   This class provides a generic implementation of ITextConvertable.
   """

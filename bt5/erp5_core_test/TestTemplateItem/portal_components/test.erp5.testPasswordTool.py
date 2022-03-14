@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -173,7 +174,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     We don't check use of random url in mail here as we have on request
     But random is also check by changeUserPassword, so it's the same
     """
-    key = self.portal.portal_password._password_request_dict.keys()[0]
+    key = list(self.portal.portal_password._password_request_dict.keys())[0]
     self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="secret",
                                                    password_confirmation="secret",
@@ -186,7 +187,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     Call method that change the password with a bad user name
     This must not work
     """
-    key = self.portal.portal_password._password_request_dict.keys()[0]
+    key = list(self.portal.portal_password._password_request_dict.keys())[0]
     sequence.edit(key=key)
     self.portal.portal_password.changeUserPassword(user_login="userZ-login",
                                                    password="secret",
@@ -224,10 +225,10 @@ class TestPasswordTool(ERP5TypeTestCase):
     Change expiration date so that reset of password is not available
     """
     # save key for url
-    key = self.portal.portal_password._password_request_dict.keys()[0]
+    key = list(self.portal.portal_password._password_request_dict.keys())[0]
     sequence.edit(key=key)
     # modify date
-    for k, v in self.portal.portal_password._password_request_dict.items():
+    for k, v in list(self.portal.portal_password._password_request_dict.items()):
       login, date = v
       date = DateTime() - 1
       self.portal.portal_password._password_request_dict[k] = (login, date)
@@ -336,12 +337,12 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA-login")
     self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
-    key_a = self.portal.portal_password._password_request_dict.keys()[0]
+    key_a = list(self.portal.portal_password._password_request_dict.keys())[0]
     self.tic()
 
     self.portal.portal_password.mailPasswordResetRequest(user_login="userB-login")
     possible_key_list =\
-        self.portal.portal_password._password_request_dict.keys()
+        list(self.portal.portal_password._password_request_dict.keys())
     self.assertEqual(2, len(possible_key_list))
     key_b = [k for k in possible_key_list if k != key_a][0]
     self.tic()
@@ -391,7 +392,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ-login ")
     self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
 
-    key_a = self.portal.portal_password._password_request_dict.keys()[0]
+    key_a = list(self.portal.portal_password._password_request_dict.keys())[0]
     self.tic()
 
     self._assertUserExists('userZ-login ', 'passwordZ')

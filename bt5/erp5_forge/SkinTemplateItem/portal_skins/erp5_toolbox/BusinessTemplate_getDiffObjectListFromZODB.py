@@ -1,3 +1,4 @@
+from builtins import range
 if REQUEST is not None:
   raise ValueError("This script cannot be called from the web")
 

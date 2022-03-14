@@ -30,6 +30,7 @@
 # There is absolutely no reason to use relative imports when loading a Component
 from __future__ import absolute_import
 
+from builtins import str
 import sys
 import imp
 import collections
@@ -443,10 +444,10 @@ class ComponentDynamicPackage(ModuleType):
       # Force reload of ModuleSecurityInfo() as it may have been changed in
       # the source code
       for modsec_dict in _moduleSecurity, _appliedModuleSecurity:
-        for k in modsec_dict.keys():
+        for k in list(modsec_dict.keys()):
           if k.startswith(self._namespace):
             del modsec_dict[k]
-      for k, v in MNAME_MAP.items():
+      for k, v in list(MNAME_MAP.items()):
         if v.startswith(self._namespace):
           del MNAME_MAP[k]
 
@@ -454,7 +455,7 @@ class ComponentDynamicPackage(ModuleType):
           if k.startswith('Products.'):
             del sys.modules[k]
 
-    for name, module in package.__dict__.items():
+    for name, module in list(package.__dict__.items()):
       if name[0] == '_' or not isinstance(module, ModuleType):
         continue
 

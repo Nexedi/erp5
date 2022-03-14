@@ -29,6 +29,12 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
+from past.builtins import cmp
+from builtins import chr
+from builtins import str
+from builtins import map
+from builtins import range
+from builtins import object
 from future import standard_library
 standard_library.install_aliases()
 import six
@@ -462,14 +468,14 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 
       return [message]
 
-  import cStringIO
+  import io
   import tempfile
   import sys
 
   #import time
   #started = time.time()
   message_list = []
-  output_file = cStringIO.StringIO()
+  output_file = io.StringIO()
   try:
     with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
                                      suffix='.py') as input_file:
@@ -745,7 +751,7 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
     from zope.interface import Interface
     from Products.ERP5Type import interfaces
     InterfaceClass = type(Interface)
-    for k, v in module.__dict__.items():
+    for k, v in list(module.__dict__.items()):
       if type(v) is InterfaceClass and v is not Interface:
         setattr(interfaces, k, v)
 
@@ -1539,7 +1545,7 @@ def mergeZRDBResults(results, key_column, edit_result):
         index[key] = len(data)
         merged_row = {}
         data.append(merged_row)
-      for column, i in columns.iteritems():
+      for column, i in columns.items():
         merged_row[column] = row[i]
 
   ## Step 3
@@ -1552,7 +1558,7 @@ def mergeZRDBResults(results, key_column, edit_result):
 # Hashing
 #####################################################
 
-class GenericSum:
+class GenericSum(object):
   def __init__(self, sum):
     self.sum = sum
 
@@ -1582,14 +1588,14 @@ allow_class(sha)
 
 try:
   import smbpasswd
-  class SambaPassword:
+  class SambaPassword(object):
     def __init__(self):
       self.sum = smbpasswd
 
     def hash(self, value):
       return self.sum.hash(value)
 except ImportError:
-  class SambaPassword:
+  class SambaPassword(object):
     pass
 allow_class(SambaPassword)
 
@@ -1647,7 +1653,7 @@ if six.PY2:
   except ImportError:
     warnings.warn("urlnorm lib is not installed", DeprecationWarning)
 import urllib.parse as urlparse
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 # Regular expressions
 re_cleanup_anchors = re.compile('#.*')
@@ -1681,7 +1687,7 @@ def legacyNormalizeUrl(url, base_url=None):
     protocol_port_mapping_dict = {'http': '80',
                                   'https': '443',
                                   'ftp': '21'}
-    for protocol, port in protocol_port_mapping_dict.items():
+    for protocol, port in list(protocol_port_mapping_dict.items()):
       # extract port_number from domain
       match_object = re_extract_port.search(url_netloc)
       if url_sheme == protocol and match_object is not None and\
@@ -1703,7 +1709,7 @@ def legacyNormalizeUrl(url, base_url=None):
   # Remove trailing '?'
   # http://www.example.com/? -> http://www.example.com/
   url = re_cleanup_tail.sub('', url)
-  if isinstance(url, unicode):
+  if isinstance(url, str):
     url = url.encode('utf-8')
   return url
 
@@ -1725,7 +1731,7 @@ def urlnormNormaliseUrl(url, base_url=None):
   if base_url and not (url_protocol or url_domain):
     # Make relative URL absolute
     url = urlparse.urljoin(base_url, url)
-  if isinstance(url, unicode):
+  if isinstance(url, str):
     url = url.encode('utf-8')
   return url
 
@@ -1767,7 +1773,7 @@ _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # reserved (maybe unsafe)
     "#$&+,/:;=?@[]"
   else "%%%02X" % x
-  for x in xrange(256)}
+  for x in range(256)}
 
 def reencodeUrlEscapes(url):
   """Fix a non-conformant %-escaped URL (or quote an unescaped one)
@@ -1775,7 +1781,7 @@ def reencodeUrlEscapes(url):
   This is a Python reimplementation of 'reencode_escapes' function of Wget 1.12
   """
   from string import hexdigits
-  next_part = iter(url.split('%')).next
+  next_part = iter(url.split('%')).__next__
   url = [_reencodeUrlEscapes_map[c] for c in next_part()]
   try:
     while True:
@@ -1804,7 +1810,7 @@ def formatRFC822Headers(headers):
   for key, value in headers:
     if value is not None:
       if type(value) in (list, tuple):
-        vallines = map(str, value)
+        vallines = list(map(str, value))
       else:
         vallines = linesplit.split(str(value))
       munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))

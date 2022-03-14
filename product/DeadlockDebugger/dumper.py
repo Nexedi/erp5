@@ -22,6 +22,8 @@
 ZServer hook to dump a traceback of the running python threads.
 """
 
+from future import standard_library
+standard_library.install_aliases()
 import _thread
 from sys import _current_frames
 import traceback
@@ -39,7 +41,7 @@ def dump_threads():
     this_thread_id = thread.get_ident()
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     res = ["Threads traceback dump at %s\n" % now]
-    for thread_id, frame in _current_frames().iteritems():
+    for thread_id, frame in _current_frames().items():
         if thread_id == this_thread_id:
             continue
 
@@ -82,7 +84,7 @@ def dump_threads():
 
     res.append("End of dump\n")
     result = '\n'.join(res)
-    if isinstance(result, unicode):
+    if isinstance(result, str):
       result = result.encode('utf-8')
     return result
 

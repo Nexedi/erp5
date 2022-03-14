@@ -25,7 +25,10 @@
 #
 ##############################################################################
 
-import urlparse
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import urllib.parse
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -343,17 +346,17 @@ class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
     self.tic()
     ret = ptg1.PaymentTransactionGroup_selectPaymentTransactionLineList(select_mode='stopped_or_delivered')
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ['Payment selection in progress.'])
     self.commit()
     ret = ptg1.PaymentTransactionGroup_selectPaymentTransactionLineList(select_mode='stopped_or_delivered')
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ['Some payments are still beeing processed in the background, please retry later'])
     self.commit()
     # another PTG is same, because we also want to prevent things like two users selecting
     # payments at the same time.
     ret = ptg2.PaymentTransactionGroup_selectPaymentTransactionLineList(select_mode='stopped_or_delivered')
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ['Some payments are still beeing processed in the background, please retry later'])

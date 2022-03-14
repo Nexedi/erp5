@@ -155,7 +155,7 @@ for line in listbox:
 status_message_list = []
 portal_status_message = None
 if status_message_dict:
-  for product_relative_url, line_id_list in status_message_dict.items():
+  for product_relative_url, line_id_list in list(status_message_dict.items()):
     product = portal.restrictedTraverse(product_relative_url)
     mapping = {'product_title': product.getTitle(''),
                'product_reference': product.getReference('')}

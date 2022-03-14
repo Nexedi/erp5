@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from builtins import str
 from cgi import escape
 from lxml import etree
 from lxml.etree import Element, SubElement, CDATA
@@ -35,7 +36,7 @@ def formToXML(form, prologue=1):
 
         fields.append(field_element)
         values_element = SubElement(field_element, 'values')
-        items = field.values.items()
+        items = list(field.values.items())
         items.sort()
         for key, value in items:
           if value is None:
@@ -53,13 +54,13 @@ def formToXML(form, prologue=1):
           elif isinstance(value, list):
             value_element = SubElement(values_element, key, type='list')
           else:
-            if not isinstance(value, (str, unicode)):
+            if not isinstance(value, str):
               value = str(value)
             value_element = SubElement(values_element, key)
           value_element.text = escape(str(value)).decode(encoding)
 
         tales_element = SubElement(field_element, 'tales')
-        items = field.tales.items()
+        items = list(field.tales.items())
         items.sort()
         for key, value in items:
           if value:

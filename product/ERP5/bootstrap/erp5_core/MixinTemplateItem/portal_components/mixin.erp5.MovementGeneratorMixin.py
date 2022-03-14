@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 class MovementGeneratorMixin(object):
   """
   This class provides a generic implementation of IMovementGenerator

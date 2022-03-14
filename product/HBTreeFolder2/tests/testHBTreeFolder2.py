@@ -12,6 +12,8 @@
 #
 ##############################################################################
 
+from builtins import range
+from builtins import object
 import random
 import unittest
 from Testing import ZopeTestCase
@@ -133,7 +135,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         for n in range(10):
             ids[self.f.generateId()] = 1
         self.assertEqual(len(ids), 10)  # All unique
-        for id in ids.keys():
+        for id in list(ids.keys()):
             self.f._checkId(id)  # Must all be valid
 
     def testGenerateIdDenialOfServicePrevention(self):
@@ -259,7 +261,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           script.REQUEST = DummyRequest
           script(h)
         finally:
-          for roles_id, orig in saved_class_attributes.iteritems():
+          for roles_id, orig in saved_class_attributes.items():
             if orig is marker:
               delattr(HBTreeFolder2, roles_id)
             else:

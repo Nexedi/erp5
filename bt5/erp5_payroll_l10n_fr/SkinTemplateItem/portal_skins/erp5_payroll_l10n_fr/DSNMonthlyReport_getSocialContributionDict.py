@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 from erp5.component.module.DateUtils import addToDate
 
 portal = context.getPortalObject()
@@ -93,7 +96,7 @@ for paysheet_id in paysheet_list:
   minimum_salary = float(paysheet.getRatioQuantityFromReference('salaire_minimum_mensuel'))
   worked_time = float(enrollment_record.getWorkingUnitQuantity())
   normal_working_time = float(enrollment_record.getStandardWorkingUnit())
-  relative_minimum_salary = minimum_salary * (worked_time / normal_working_time)
+  relative_minimum_salary = minimum_salary * (old_div(worked_time, normal_working_time))
   gross_salary = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/payroll/report/salary/gross")
   
   for paysheet_line in paysheet_line_list:
@@ -149,7 +152,7 @@ def getFeeFromDate(ctp_code, date):
                                                                 grouping_rubric='S21.G00.11.001',
                                                                 from_date=date)
   for dsn_record in aggregated_fee_list:
-    for establishment in aggregated_fee_list[dsn_record].keys():
+    for establishment in list(aggregated_fee_list[dsn_record].keys()):
       if establishment != current_establishement_code:
         continue
       for bloc in aggregated_fee_list[dsn_record][establishment]:

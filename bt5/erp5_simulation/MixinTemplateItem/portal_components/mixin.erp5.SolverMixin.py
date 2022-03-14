@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass

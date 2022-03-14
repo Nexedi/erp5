@@ -27,7 +27,8 @@
 ##############################################################################
 
 
-class TargetSolver:
+from builtins import object
+class TargetSolver(object):
   """
     Target solver is used to do backtracking of solved movement up to
     simulation tree.  It is able to detect if parent movement is frozen on

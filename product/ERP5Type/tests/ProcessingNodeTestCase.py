@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from builtins import str
+from builtins import range
+from builtins import object
 import errno, logging, os, socket, time
 import itertools
 from threading import Thread
@@ -338,7 +341,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     This aborts current transaction.
     """
-    for i in xrange(30):
+    for i in range(30):
       node_list = list(self.portal.portal_activities.getProcessingNodeList())
       if len(node_list) >= node_count:
         node_list.remove(getCurrentNode())

@@ -55,7 +55,7 @@ payable_type = account_type.liability.payable
 line_to_adjust = None
 
 asset_line = None
-for line, account_type_list in account_type_dict.iteritems():
+for line, account_type_list in account_type_dict.items():
   if receivable_type in account_type_list or payable_type in account_type_list:
     if line.getSourceSection() == context.getSourceSection() and \
         line.getDestinationSection() == context.getDestinationSection():

@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import Permissions
@@ -76,7 +77,7 @@ def ExpressionMixin(property_reference='expression'):
       setattr(self, volatile_attribute_name, result)
       return result
 
-  class ExpressionMixin:
+  class ExpressionMixin(object):
     security = ClassSecurityInfo()
 
   _setter.__name__ = '_set' + property_reference_uppercase

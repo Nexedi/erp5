@@ -14,6 +14,11 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
@@ -44,7 +49,7 @@ from Products.PythonScripts.Utility import allow_class
 from inspect import CO_VARKEYWORDS
 from functools import wraps
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import string
 import pprint
 import re
@@ -216,7 +221,7 @@ class UidBuffer(TM):
 
   def remove(self, value):
     self._register()
-    for uid_list in self.temporary_buffer.values():
+    for uid_list in list(self.temporary_buffer.values()):
       try:
         uid_list.remove(value)
       except ValueError:
@@ -275,7 +280,7 @@ class LazyIndexationParameterList(tuple):
     return value
 
   def __iter__(self):
-    for index in xrange(len(self)):
+    for index in range(len(self)):
       yield self[index]
 
   def __len__(self):
@@ -671,7 +676,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_role_keys:
       role, column = role_key.split('|')
       role_key_dict[role.strip()] = column.strip()
-    return role_key_dict.items()
+    return list(role_key_dict.items())
 
   security.declareProtected(permissions.ManagePortal, 'getSQLCatalogSecurityUidGroupsColumnsDict')
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
@@ -695,7 +700,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_local_role_keys:
       role, column = role_key.split('|')
       local_role_key_dict[role.strip()] = column.strip()
-    return local_role_key_dict.items()
+    return list(local_role_key_dict.items())
 
   security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
   def manage_historyCompare(self, rev1, rev2, REQUEST,
@@ -728,7 +733,7 @@ class Catalog(Folder,
 
     # Get security information
     security_uid = None
-    for key in wrapped_object.getLocalRolesGroupIdDict().iteritems():
+    for key in wrapped_object.getLocalRolesGroupIdDict().items():
       local_roles_group_id, allowed_roles_and_users = key
       if key in self.security_uid_dict:
         local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = self.security_uid_dict[key]
@@ -774,7 +779,7 @@ class Catalog(Folder,
     """
     result = []
     for role_list, security_uid in getattr(
-            aq_base(self), 'security_uid_dict', {}).iteritems():
+            aq_base(self), 'security_uid_dict', {}).items():
       if role_list:
         if isinstance(role_list[-1], tuple):
           local_role_group_id, role_list = role_list
@@ -1054,7 +1059,7 @@ class Catalog(Folder,
     Calls the show table method and returns dictionnary of
     Field Ids
     """
-    return self._getCatalogSchema().keys()
+    return list(self._getCatalogSchema().keys())
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
@@ -1138,7 +1143,7 @@ class Catalog(Folder,
       )
       global_clear_reserved_time = self._last_clear_reserved_time
       try:
-        return long(uid_buffer.pop())
+        return int(uid_buffer.pop())
       except IndexError:
         uid_buffer.extend(
           self.getPortalObject().portal_ids.generateNewIdList(
@@ -1149,7 +1154,7 @@ class Catalog(Folder,
           ),
         )
         try:
-          return long(uid_buffer.pop())
+          return int(uid_buffer.pop())
         except IndexError:
           raise CatalogError("Could not retrieve new uid")
 
@@ -1231,7 +1236,7 @@ class Catalog(Folder,
     c_elapse = time.clock() - c_elapse
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
+              urllib.parse.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
 
   security.declarePrivate('catalogObject')
   def catalogObject(self, object, path, is_object_moved=0):
@@ -1262,7 +1267,7 @@ class Catalog(Folder,
     the object list, because calling _catalogObjectList with too many
     objects at a time bloats the process's memory consumption, due to
     caching."""
-    for i in xrange(0, len(object_list), OBJECT_LIST_SIZE):
+    for i in range(0, len(object_list), OBJECT_LIST_SIZE):
       self._catalogObjectList(object_list[i:i + OBJECT_LIST_SIZE],
                               method_id_list=method_id_list,
                               disable_cache=disable_cache,
@@ -1300,9 +1305,9 @@ class Catalog(Folder,
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
     if check_uid:
-      path_uid_dict = self.getUidDictForPathList(path_list=object_path_dict.values())
+      path_uid_dict = self.getUidDictForPathList(path_list=list(object_path_dict.values()))
       uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
-      for object, path in object_path_dict.iteritems():
+      for object, path in object_path_dict.items():
         uid = object.uid
         if path_uid_dict.setdefault(path, uid) != uid:
           error_message = 'path %r has uids %r (catalog) and %r (being indexed) ! This can break relations' % (
@@ -1373,7 +1378,7 @@ class Catalog(Folder,
         except KeyError:
           pass
         if expression is None:
-          catalogged_object_list = object_path_dict.keys()
+          catalogged_object_list = list(object_path_dict.keys())
         else:
           text = expression.text
           catalogged_object_list = catalogged_object_list_cache.get(text)
@@ -1656,7 +1661,7 @@ class Catalog(Folder,
       if hasattr(self, 'aq_parent'): self=self.aq_parent
       else: self=None
 
-    ids=map(lambda item: (item[1], item[0]), ids.items())
+    ids=[(item[1], item[0]) for item in list(ids.items())]
     ids.sort()
     return ids
 
@@ -1936,7 +1941,7 @@ class Catalog(Folder,
         query_logical_operator = None
       else:
         query_logical_operator = logical_operator
-      for comparison_operator, value_list in value_dict.iteritems():
+      for comparison_operator, value_list in value_dict.items():
         append(search_key.buildQuery(value_list, comparison_operator=comparison_operator, logical_operator=query_logical_operator))
       if logical_operator == 'not' or len(query_list) > 1:
         result = ComplexQuery(query_list, logical_operator=logical_operator)
@@ -2021,7 +2026,7 @@ class Catalog(Folder,
     # empty_value_dict: contains all keys whose value causes them to be
     # discarded.
     empty_value_dict = {}
-    for key, value in kw.iteritems():
+    for key, value in kw.items():
       result = None
       if key in DOMAIN_STRICT_MEMBERSHIP_DICT:
         if value is None:
@@ -2106,7 +2111,7 @@ class Catalog(Folder,
     if len(empty_value_dict):
       LOG('SQLCatalog', WARNING, 'Discarding columns with empty values: %r' % (empty_value_dict, ))
     if len(unknown_column_dict):
-      message = 'Unknown columns ' + repr(unknown_column_dict.keys())
+      message = 'Unknown columns ' + repr(list(unknown_column_dict.keys()))
       if ignore_unknown_columns:
         LOG('SQLCatalog', WARNING, message)
       else:
@@ -2257,7 +2262,7 @@ class Catalog(Folder,
       'FullTextKey': self.getSqlCatalogFullTextSearchKeysList(),
       'DateTimeKey': self.getSqlCatalogDatetimeSearchKeysList(),
     }
-    for key, column_list in search_key_column_dict.iteritems():
+    for key, column_list in search_key_column_dict.items():
       for column in column_list:
         if column in result:
           LOG('SQLCatalog', WARNING, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))

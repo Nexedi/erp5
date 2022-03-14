@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -114,7 +115,7 @@ class UrlRegistryTool(BaseTool):
     if context is not None:
       warn('context argument ignored', DeprecationWarning)
     mapping = self._getMappingDict()
-    if url in mapping.keys() and mapping[url] == reference:
+    if url in list(mapping.keys()) and mapping[url] == reference:
       # No need to update mapping
       return
     mapping[url] = reference
@@ -138,7 +139,7 @@ class UrlRegistryTool(BaseTool):
     """
     if context is not None:
       warn('context argument ignored', DeprecationWarning)
-    return self._getMappingDict().values()
+    return list(self._getMappingDict().values())
 
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -150,7 +151,7 @@ class UrlRegistryTool(BaseTool):
       warn('context argument ignored', DeprecationWarning)
     mapping = self._getMappingDict()
     url_list = []
-    for url, stored_reference in mapping.iteritems():
+    for url, stored_reference in mapping.items():
       if reference == stored_reference:
         url_list.append(url)
     return url_list
@@ -172,7 +173,7 @@ class UrlRegistryTool(BaseTool):
       object_list_len = len(object_list)
       portal_activities = portal.portal_activities
       object_path_list = [x.path for x in object_list]
-      for i in xrange(0, object_list_len, ACTIVITY_GROUPING_COUNT):
+      for i in range(0, object_list_len, ACTIVITY_GROUPING_COUNT):
         current_path_list = object_path_list[i:i+ACTIVITY_GROUPING_COUNT]
         portal_activities.activate(activity='SQLQueue', priority=3)\
                                     .callMethodOnObjectList(current_path_list,
@@ -201,13 +202,13 @@ class BTreeMappingDict(Implicit):
     return len(self._getStorage())
 
   def keys(self):
-    return self._getStorage().keys()
+    return list(self._getStorage().keys())
 
   def values(self):
-    return self._getStorage().values()
+    return list(self._getStorage().values())
 
   def items(self):
-    return self._getStorage().items()
+    return list(self._getStorage().items())
 
   def __getitem__(self, key):
     if key is None:
@@ -215,7 +216,7 @@ class BTreeMappingDict(Implicit):
     return self._getStorage()[key]
 
   def __contains__(self, key):
-    return key in self._getStorage().keys()
+    return key in list(self._getStorage().keys())
 
   def get(self, key, default=None):
     if key is None:

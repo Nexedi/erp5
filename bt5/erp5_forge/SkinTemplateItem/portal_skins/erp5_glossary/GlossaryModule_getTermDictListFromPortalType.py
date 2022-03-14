@@ -16,7 +16,7 @@ bt_dict = dict([(x.getTitle(), [y for y in x.getTemplatePortalTypeIdList()] + \
                  ) for x in bt_list])
 business_field_dict = {}
 prefix = 'erp5_'
-for bt_title, bt_portal_type_list in bt_dict.items():
+for bt_title, bt_portal_type_list in list(bt_dict.items()):
   if bt_title.startswith(prefix):
     bt_title = bt_title[len(prefix):]
   for portal_type in bt_portal_type_list:
@@ -36,7 +36,7 @@ for portal_type in portal_type_list:
       for x in remove_suffix_list:
         if property_id.endswith(x):
           property_id = property_id[:-len(x)]
-      if id_dict.has_key(property_id) or property_id in skip_id_list:
+      if property_id in id_dict or property_id in skip_id_list:
         continue
       result.append({'reference':property_id,
                      'language':language,

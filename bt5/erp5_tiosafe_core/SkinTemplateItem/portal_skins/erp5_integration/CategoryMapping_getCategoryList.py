@@ -1,3 +1,4 @@
+from past.builtins import cmp
 request = context.REQUEST
 
 display_cache = {}

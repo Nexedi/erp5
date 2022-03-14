@@ -26,14 +26,17 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Globals import get_request
-from StringIO import StringIO
+from io import StringIO
 from DateTime import DateTime
 
-class DummyFieldStorage:
+class DummyFieldStorage(object):
   """A dummy FieldStorage to be wrapped in a FileUpload object.
   """
   def __init__(self):
@@ -101,13 +104,13 @@ class TestPlanningBox(ERP5TypeTestCase):
     bloc = planning.content[0]
     self.assertEqual(bloc.name , 'group_1_activity_1_block_1')
     self.assertEqual(bloc.title , 'Title 0')
-    for info in bloc.info.values():
+    for info in list(bloc.info.values()):
       self.assertEqual(info.info,'Title 0')
       self.assertEqual(info.link ,
                         '%s/foo_module/0/0' % self.getPortal().absolute_url())
     # Check Parent Activities
     parent = bloc.parent_activity
-    for info in parent.info.values():
+    for info in list(parent.info.values()):
       self.assertEqual(info,'Title 0')
     self.assertEqual(parent.link ,
                       '/%s/foo_module/0/0' % self.getPortal().getId())

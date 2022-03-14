@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from builtins import object
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
@@ -32,7 +33,7 @@ else:
 import os.path
 
 @implementer(ITransform)
-class word_to_html:
+class word_to_html(object):
 
     __name__ = "word_to_html"
     inputs   = ('application/msword',)

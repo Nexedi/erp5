@@ -5,12 +5,12 @@ record = context
 def byteify(string):
   if isinstance(string, dict):
     tmp = {}
-    for key, value in string.iteritems():
+    for key, value in string.items():
       tmp[byteify(key)] = byteify(value)
     return tmp
   elif isinstance(string, list):
     return [byteify(element) for element in string]
-  elif isinstance(string, unicode):
+  elif isinstance(string, str):
     return string.encode('utf-8')
   else:
     return string

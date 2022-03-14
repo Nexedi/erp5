@@ -4,6 +4,8 @@ Uses the http://www.freewisdom.org/projects/python-markdown/ module
 Author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 """
 
+from builtins import str
+from builtins import object
 from zope.interface import implementer
 
 from Products.PortalTransforms.interfaces import ITransform
@@ -19,7 +21,7 @@ else:
 
 
 @implementer(ITransform)
-class markdown:
+class markdown(object):
 
     __name__ = "markdown_to_html"
     inputs  = ("text/x-web-markdown",)
@@ -31,7 +33,7 @@ class markdown:
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
             # markdown expects unicode input:
-            orig = unicode(orig.decode('utf-8'))
+            orig = str(orig.decode('utf-8'))
             # PortalTransforms, however expects a string as result,
             # so we encode the unicode result back to UTF8:
             html = markdown_transformer.markdown(orig).encode('utf-8')

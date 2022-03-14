@@ -12,6 +12,7 @@ from __future__ import absolute_import
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+from builtins import object
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from .Permissions import AccessContentsInformation, ManagePortal, \
@@ -48,11 +49,11 @@ class TranslationProviderBase(object):
       pass
     else:
       property_domain_dict.update(my_property_domain_dict)
-    return {k: v.__of__(self) for k, v in property_domain_dict.iteritems()}
+    return {k: v.__of__(self) for k, v in property_domain_dict.items()}
 
   security.declarePublic('getContentTranslationDomainPropertyNameList')
   def getContentTranslationDomainPropertyNameList(self):
-    return [x for x, y in self.getPropertyTranslationDomainDict().iteritems()
+    return [x for x, y in self.getPropertyTranslationDomainDict().items()
       if y.getDomainName() == TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
 
   security.declareProtected(ManagePortal, 'setTranslationDomain')
@@ -111,6 +112,6 @@ class TranslationInformation(SimpleItem):
   security.declareProtected(ModifyPortalContent, 'edit')
   def edit(self, edit_order=(), **kw):
     self._p_changed = 1
-    self.__dict__.update((k, v or None) for k, v in kw.iteritems())
+    self.__dict__.update((k, v or None) for k, v in kw.items())
 
 InitializeClass(TranslationInformation)

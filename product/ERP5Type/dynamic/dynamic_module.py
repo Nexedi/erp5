@@ -73,7 +73,7 @@ class RefManager(dict):
     from Products.ERP5Type.Globals import get_request
     self.add_request(get_request())
 
-    for (_, module_obj_set) in self.itervalues():
+    for (_, module_obj_set) in self.values():
       module_obj_set.add(module_obj)
 
   def gc(self):
@@ -81,7 +81,7 @@ class RefManager(dict):
     Remove cache items with no Request Left.
     """
     for (current_last_sync,
-         (request_obj_weakset, _)) in self.items():
+         (request_obj_weakset, _)) in list(self.items()):
       if not request_obj_weakset:
         del self[current_last_sync]
 

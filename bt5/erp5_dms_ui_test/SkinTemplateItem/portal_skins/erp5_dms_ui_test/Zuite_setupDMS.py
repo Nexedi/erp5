@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Setup System Preference
 dms_system_preference_id = 'dms_system_preference_ui_tests'
 portal_preferences = context.portal_preferences
@@ -42,5 +43,5 @@ tiolive_logo_image = context.portal_catalog.getResultValue(
 if tiolive_logo_image is not None and tiolive_logo_image.getValidationState() == 'published':
   tiolive_logo_image.reject()
 
-print "Done"
+print("Done")
 return printed

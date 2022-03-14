@@ -64,7 +64,7 @@ for language in available_language_set:
   else:
     website_url_set[language] = re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_site.absolute_url())
 
-for language, url in website_url_set.items():
+for language, url in list(website_url_set.items()):
   result_list += '<li><a href="%s" hreflang="%s"><abbr lang="%s">%s</abbr></a></li>' % (__(url), __(language), __(language), _(language))
 result_list.append('</ul></nav>')
 

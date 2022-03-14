@@ -1,3 +1,4 @@
+from builtins import object
 from threading import local
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -18,10 +19,10 @@ def _getActivityRuntimeEnvironment():
   return getattr(_activity_runtime_environment, 'value', None)
 
 
-class BaseMessage:
+class BaseMessage(object):
 
   def __property(**kw):
-    (k, v), = kw.items()
+    (k, v), = list(kw.items())
     return property(lambda self: self.activity_kw.get(k, v))
 
   delay = __property(delay=None)

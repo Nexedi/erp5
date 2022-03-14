@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 support_request = context.getFollowUpValue()

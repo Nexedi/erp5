@@ -28,13 +28,14 @@
 #
 ##############################################################################
 
+from builtins import object
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
 
 class FakeMovementError(Exception) : pass
 class MovementGroupError(Exception) : pass
 
-class MovementGroupNode:
+class MovementGroupNode(object):
   # XXX last_line_movement_group is a wrong name. Actually, it is
   # the last delivery movement group. This parameter is used to
   # pick up a branching point of making separate lines when
@@ -110,7 +111,7 @@ class MovementGroupNode:
       Get property dict for the futur created object
     """
     property_dict = getattr(self, '_property_dict', {}).copy()
-    for key in property_dict.keys():
+    for key in list(property_dict.keys()):
       if key.startswith('_'):
         del(property_dict[key])
     return property_dict
@@ -278,7 +279,7 @@ class MovementGroupNode:
 
 allow_class(MovementGroupNode)
 
-class FakeMovement:
+class FakeMovement(object):
   """
     A fake movement which simulates some methods on a movement needed
     by DeliveryBuilder.
@@ -423,10 +424,10 @@ class FakeMovement:
     """
     price_dict = self._getPriceDict()
     if len(price_dict) == 1:
-      return price_dict.keys()[0]
+      return list(price_dict.keys())[0]
     total_quantity = sum(price_dict.values())
     return (total_quantity and
-      sum(price * quantity for price, quantity in price_dict.items())
+      sum(price * quantity for price, quantity in list(price_dict.items()))
       / float(total_quantity))
 
   def getAddQuantity(self):
@@ -455,7 +456,7 @@ class FakeMovement:
       Return total price
     """
     price_dict = self._getPriceDict()
-    return sum(price * quantity for price, quantity in price_dict.items())
+    return sum(price * quantity for price, quantity in list(price_dict.items()))
 
   def recursiveReindexObject(self, *args, **kw):
     """

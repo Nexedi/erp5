@@ -23,11 +23,16 @@ provides message catalogs for the web.
 from __future__ import absolute_import
 
 # Import from the Standard Library
+from past.builtins import cmp
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.builtins import basestring
 from base64 import encodestring, decodestring
 from hashlib import md5
 from re import compile
 from time import gmtime, strftime, time
-from urllib import quote
+from urllib.parse import quote
 from traceback import format_list, extract_stack
 
 # Import from polib
@@ -72,8 +77,8 @@ def to_unicode(x, encoding=None):
     are considered to be in this encoding by default.
     """
     if isinstance(x, str):
-        return unicode(x, encoding or HTTPRequest.default_encoding)
-    return unicode(x)
+        return str(x, encoding or HTTPRequest.default_encoding)
+    return str(x)
 
 
 def to_str(x):
@@ -88,7 +93,7 @@ def message_encode(message):
     To be used in the user interface, to avoid problems with the
     encodings, HTML entities, etc..
     """
-    if isinstance(message, unicode):
+    if isinstance(message, str):
         encoding = HTTPRequest.default_encoding
         message = message.encode(encoding)
 
@@ -103,7 +108,7 @@ def message_decode(message):
     """
     message = decodestring(message)
     encoding = HTTPRequest.default_encoding
-    return unicode(message, encoding)
+    return str(message, encoding)
 
 
 def filter_sort(x, y):
@@ -112,10 +117,10 @@ def filter_sort(x, y):
 
 def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
     params = []
-    for key, value in kw.items():
+    for key, value in list(kw.items()):
         if value is None:
             continue
-        if isinstance(value, unicode):
+        if isinstance(value, str):
             value = value.encode('utf-8')
         params.append('%s=%s' % (key, quote(value)))
 
@@ -196,7 +201,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     @property
     def domain(self):
         """ """
-        return unicode(self.id)
+        return str(self.id)
 
 
     def translate(self, msgid, mapping=None, context=None,
@@ -209,7 +214,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         # backward compatibility.
         if mapping:
             mapping = dict([to_unicode(k), to_unicode(v)]
-                            for k, v in mapping.iteritems())
+                            for k, v in mapping.items())
         return interpolate(msgstr, mapping)
 
 
@@ -221,10 +226,10 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             return message
         # A message may be stored as unicode or byte string
         encoding = HTTPRequest.default_encoding
-        if isinstance(message, unicode):
+        if isinstance(message, str):
             message = message.encode(encoding)
         else:
-            message = unicode(message, encoding)
+            message = str(message, encoding)
         if message in self._messages:
             return message
 
@@ -238,7 +243,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         message = REQUEST.get('manage_tabs_message')
         if message is None:
             return None
-        return unicode(message, 'utf-8')
+        return str(message, 'utf-8')
 
 
     #######################################################################
@@ -388,7 +393,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             query = compile('')
 
         messages = []
-        for m, t in self._messages.items():
+        for m, t in list(self._messages.items()):
             if query.search(m) and (not empty or not t.get(lang, '').strip()):
                 messages.append(m)
         messages.sort(filter_sort)
@@ -619,11 +624,11 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         d = {}
         if x == 'locale.pot':
             filename = x
-            for k in self._messages.keys():
+            for k in list(self._messages.keys()):
                 d[to_unicode(k, encoding=charset)] = u""
         else:
             filename = '%s.po' % x
-            for k, v in self._messages.items():
+            for k, v in list(self._messages.items()):
                 k = to_unicode(k, encoding=charset)
                 d[k] = to_unicode(v.get(x, ""), encoding=charset)
 
@@ -640,7 +645,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             return x
 
         # Generate sorted msgids to simplify diffs
-        dkeys = d.keys()
+        dkeys = list(d.keys())
         dkeys.sort()
         for k in dkeys:
             r.append('msgid "%s"' % backslashescape(k))
@@ -761,7 +766,7 @@ message_catalog_aliases = { "Default": "default"
 
 # "invert" message_catalog_aliases mapping
 message_catalog_alias_sources = {}
-for name, value in message_catalog_aliases.items():
+for name, value in list(message_catalog_aliases.items()):
     message_catalog_alias_sources.setdefault(value, []).append(name)
 
 def MessageCatalog_moved(object, event):

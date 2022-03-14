@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import map
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCase, immediateCompilation
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
@@ -119,7 +120,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
         pass
       file_document_path = document_path + extension
       self.assertEqual([os.path.basename(file_document_path)],
-                       map(os.path.basename, exported))
+                       list(map(os.path.basename, exported)))
       with open(file_document_path, 'rb') as test_file:
         self.assertEqual(test_file.read(), data)
     else:
@@ -159,7 +160,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
 
     test_page = self.portal.portal_components[test_component_id]
 
-    for property_id, property_value in test_component_kw.iteritems():
+    for property_id, property_value in test_component_kw.items():
       self.assertEqual(test_page.getProperty(property_id), property_value)
 
   def test_twoFileImportExportForWebPage(self):
@@ -211,7 +212,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
                      (js_file_id, js_document_kw),
                      (css_file_id, css_document_kw)]:
       web_page = self.portal.web_page_module[web_file[0]]
-      for property_id, property_value in web_file[1].iteritems():
+      for property_id, property_value in web_file[1].items():
         self.assertEqual(web_page.getProperty(property_id), property_value)
 
   def test_twoFileImportExportForPythonScript(self):
@@ -275,7 +276,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
     import_template.install()
 
     image_page = self.portal.image_module[image_file_id]
-    for property_id, property_value in image_document_kw.iteritems():
+    for property_id, property_value in image_document_kw.items():
       self.assertEqual(image_page.getProperty(property_id), property_value)
 
 
@@ -344,7 +345,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     file_page = self.portal.document_module[file_id]
 
-    for property_id, property_value in file_document_kw.iteritems():
+    for property_id, property_value in file_document_kw.items():
       self.assertEqual(getattr(file_page, property_id), property_value)
 
   def test_twoFileImportExportForFileIdentifyingTypeByContentTypeJS(self):
@@ -515,7 +516,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     file_page = self.portal.portal_skins[skin_folder_id][test_file_id]
 
-    for property_id, property_value in file_document_kw.iteritems():
+    for property_id, property_value in file_document_kw.items():
       self.assertEqual(getattr(file_page, property_id), property_value)
 
   def test_twoFileImportExportForPDF(self):
@@ -570,7 +571,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     method_page = catalog[method_id]
 
-    for property_id, property_value in method_document_kw.iteritems():
+    for property_id, property_value in method_document_kw.items():
       self.assertEqual(getattr(method_page, property_id), property_value)
 
   def test_twoFileImportExportForERP5SQLMethodInCatalog(self):
@@ -618,7 +619,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     method_page = catalog[method_id]
 
-    for property_id, property_value in method_document_kw.iteritems():
+    for property_id, property_value in method_document_kw.items():
       self.assertEqual(getattr(method_page, property_id), property_value)
 
   def test_twoFileImportExportForCatalogMethodInPortalSkins(self):
@@ -664,7 +665,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     method_page = skin_folder[method_id]
 
-    for property_id, property_value in method_document_kw.iteritems():
+    for property_id, property_value in method_document_kw.items():
       self.assertEqual(getattr(method_page, property_id), property_value)
 
   def test_twoFileImportExportForZopePageTemplate(self):
@@ -703,7 +704,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     page_template_page = self.portal.portal_skins[skin_folder_id][page_template_id]
 
-    for property_id, property_value in page_template_kw.iteritems():
+    for property_id, property_value in page_template_kw.items():
       self.assertEqual(getattr(page_template_page, property_id), property_value)
 
   def test_twoFileImportExportForDTMLMethodIdentifyingTypeByTitle(self):
@@ -754,7 +755,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     dtml_method_page = self.portal.portal_skins[skin_folder_id][dtml_method_id]
 
-    for property_id, property_value in dtml_method_kw.iteritems():
+    for property_id, property_value in dtml_method_kw.items():
       self.assertEqual(getattr(dtml_method_page, property_id), property_value)
 
   def test_twoFileImportExportForDTMLMethodNotIdentifyingType(self):
@@ -805,7 +806,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     dtml_method_page = self.portal.portal_skins[skin_folder_id][dtml_method_id]
 
-    for property_id, property_value in dtml_method_kw.iteritems():
+    for property_id, property_value in dtml_method_kw.items():
       self.assertEqual(getattr(dtml_method_page, property_id), property_value)
 
   def test_twoFileImportExportForOOoTemplate(self):
@@ -850,7 +851,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     OOo_template_page = self.portal.portal_skins[skin_folder_id][OOo_template_id]
 
-    for property_id, property_value in OOo_template_kw.iteritems():
+    for property_id, property_value in OOo_template_kw.items():
       self.assertEqual(getattr(OOo_template_page, property_id), property_value)
 
   def test_twoFileImportExportForSpreadsheetNotIdentifyingType(self):
@@ -917,7 +918,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     test_page = self.portal.test_page_module[test_page_id]
 
-    for property_id, property_value in test_page_data_kw.iteritems():
+    for property_id, property_value in test_page_data_kw.items():
       self.assertEqual(getattr(test_page, property_id), property_value)
 
   def test_twoFileImportExportForERP5PythonScript(self):
@@ -961,7 +962,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     python_script_page = self.portal.portal_skins[skin_folder_id][python_script_id]
 
-    for property_id, property_value in python_script_kw.iteritems():
+    for property_id, property_value in python_script_kw.items():
       self.assertEqual(getattr(python_script_page, property_id), property_value)
 
   def test_templateFolderIsCleanedUpInImportAndReexport(self):
@@ -1129,7 +1130,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     # check that the page template has the expected attributes
     # but the installed version encoding is utf-8
     page_template = self.portal.portal_skins[skin_folder_id][page_template_id]
-    for property_id, property_value in page_template_kw.iteritems():
+    for property_id, property_value in page_template_kw.items():
       self.assertEqual(getattr(page_template, property_id), property_value)
 
     # uninstall and export the business template

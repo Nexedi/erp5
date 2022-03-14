@@ -14,14 +14,14 @@ def getMappingChildUid(mapping):
 
 def resetListBox(listbox, uid_list):
   for line in listbox:
-    if line.has_key('listbox_key'):
+    if 'listbox_key' in line:
       line_id = line['listbox_key']
       if line_id in uid_list:
         line['destination_reference'] = ""
   return listbox
 
 for line in listbox:
-  if line.has_key('listbox_key'):
+  if 'listbox_key' in line:
     line_id = line['listbox_key']
     mapping_dict[line_id] = line
     if line["destination_reference_text"] != "":
@@ -40,7 +40,7 @@ request= context.REQUEST
 integration_site = context   
 
 if len(bad_destination_list) > 0:
-  status_message = "Impossible to update because of redundancy of %s." % repr({}.fromkeys(bad_destination_list).keys())
+  status_message = "Impossible to update because of redundancy of %s." % repr(list({}.fromkeys(bad_destination_list).keys()))
   request.set('portal_status_message', status_message)
   return getattr(context, request.form['dialog_id'])(listbox=listbox, kw=kw)
 

@@ -1,9 +1,11 @@
+from builtins import str
+from builtins import object
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 @implementer(itransform)
-class XlsxToOds:
+class XlsxToOds(object):
   """Transforms xlsx to ods by using Cloudooo"""
 
   __name__ = 'xlsx_to_ods'

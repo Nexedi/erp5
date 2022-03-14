@@ -2,10 +2,14 @@
 # -*- Mode: Python; py-indent-offset: 4 -*-
 # Authors: Nik Kim <fafhrd@legco.biz>
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import errno, logging, os, re, socket, sys, threading, time, traceback
 from functools import partial
-from urlparse import urlsplit
-from StringIO import StringIO
+from urllib.parse import urlsplit
+from io import StringIO
 
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
@@ -35,7 +39,7 @@ class TimerServer(threading.Thread):
             ip = port = ''
             while 1:
                 time.sleep(5)
-                for k, v in socket_map.items():
+                for k, v in list(socket_map.items()):
                     if hasattr(v, 'addr'):
                         # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
                         type = str(getattr(v, '__class__', 'unknown'))

@@ -30,6 +30,9 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
+from builtins import input
+from builtins import range
+from builtins import object
 import threading
 from .AdvancedSearchTextDetector import AdvancedSearchTextDetector
 from .AdvancedSearchTextParser import AdvancedSearchTextParser
@@ -99,7 +102,7 @@ def parse(input, is_column, *args, **kw):
   return result
 
 if __name__ == '__main__':
-  class Query:
+  class Query(object):
     def __init__(self, column, value, comparison_operator='='):
       self.column = column
       self.comparison_operator = comparison_operator
@@ -122,7 +125,7 @@ if __name__ == '__main__':
     def __ne__(self, other):
       return not (self == other)
 
-  class ComplexQuery:
+  class ComplexQuery(object):
     def __init__(self, query_list, logical_operator):
       self.logical_operator = logical_operator
       self.query_list = query_list
@@ -136,7 +139,7 @@ if __name__ == '__main__':
           return False
         other_query_list = other.query_list[:]
         for my_query in self.query_list:
-          for other_index in xrange(len(other_query_list)):
+          for other_index in range(len(other_query_list)):
             other_query = other_query_list[other_index]
             if my_query == other_query:
               other_query_list.pop(other_index)
@@ -322,7 +325,7 @@ if __name__ == '__main__':
   print('%i/%i checks succeeded.' % (success_count, len(check_list)))
   while 1:
     try:
-      input = raw_input('catalog> ')
+      input = input('catalog> ')
     except (EOFError, KeyboardInterrupt):
       break
     print(repr(input))

@@ -1,6 +1,7 @@
 # This script searches for a trade condition matching the order
 # and tries to complete some fields
 
+from past.builtins import cmp
 order = context
 Base_translateString = context.Base_translateString
 trade_condition_portal_type = 'Purchase Trade Condition'

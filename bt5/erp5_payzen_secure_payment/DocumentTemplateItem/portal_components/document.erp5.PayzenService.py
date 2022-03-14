@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 import zope
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -43,7 +45,7 @@ else:
   del(os.environ['TZ'])
 time.tzset()
 
-class PayzenREST:
+class PayzenREST(object):
   """REST communication
 
   Methods are returning list of:
@@ -156,7 +158,7 @@ class PayzenService(XMLObject, PayzenREST):
     signature = self._getSignature(payzen_dict, sorted(payzen_dict.keys()))
     payzen_dict['signature'] = signature
     field_list = []
-    for k,v in payzen_dict.iteritems():
+    for k,v in payzen_dict.items():
       field_list.append((k, v))
     return field_list
 

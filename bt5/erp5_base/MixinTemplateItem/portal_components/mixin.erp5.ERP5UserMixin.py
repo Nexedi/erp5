@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 
-class ERP5UserMixin:
+class ERP5UserMixin(object):
   """
   Makes reference acquire from user_id.
 

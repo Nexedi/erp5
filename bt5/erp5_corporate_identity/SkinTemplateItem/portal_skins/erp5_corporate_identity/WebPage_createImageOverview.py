@@ -7,6 +7,7 @@ Parse a string for images and return a list with image information
 # ------------------------------------------------------------------------------
 # document_content                     document content in string representation
 
+from builtins import str
 import re
 
 def setFigureAnchor(my_counter, my_title, my_href):

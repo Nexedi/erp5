@@ -40,7 +40,7 @@ class XupdateUtils(XMLSyncUtilsMixin):
     Parse the xupdate and then it will call the conduit
     """
     conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
+    if isinstance(xupdate, str):
       xupdate = FromXml(xupdate)
 
     for subnode in xupdate:

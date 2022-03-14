@@ -26,10 +26,13 @@
 #
 ##############################################################################
 
-import xmlrpclib
-from urlparse import urlparse
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+import xmlrpc.client
+from urllib.parse import urlparse
 
-class XMLRPCConnection:
+class XMLRPCConnection(object):
   """
     Holds an XML-RPC connection to a remote XML-RPC server.
   """
@@ -47,4 +50,4 @@ class XMLRPCConnection:
       schema = urlparse(url)
       url = '%s://%s:%s@%s%s' %(schema[0], self._user_name, self._password,
                                 schema[1], schema[2])
-    return xmlrpclib.ServerProxy(url, allow_none=1)
+    return xmlrpc.client.ServerProxy(url, allow_none=1)

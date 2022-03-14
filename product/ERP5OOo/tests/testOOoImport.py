@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 from collections import Counter
 import unittest
 import os
@@ -809,7 +811,7 @@ class TestOOoImport(TestOOoImportMixin):
     # strings are encoded in UTF8
     self.assertTrue(isinstance(region[1]['title'], str))
     self.assertTrue(isinstance(region[1]['path'], str))
-    for k in region[1].keys():
+    for k in list(region[1].keys()):
       self.assertTrue(isinstance(k, str), (k, type(k)))
 
   def test_Base_getCategoriesSpreadSheetMapping_DuplicateIdsAtSameLevel(self):
@@ -918,7 +920,7 @@ class TestOOoImport(TestOOoImportMixin):
     parser.openFile(open(makeFilePath('import_big_spreadsheet.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
-    for spread, values in mapping.iteritems():
+    for spread, values in mapping.items():
       self.assertEqual(len(values), 41001)
       not_ok = 0
     if not_ok:

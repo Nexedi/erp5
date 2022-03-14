@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
 from string import zfill

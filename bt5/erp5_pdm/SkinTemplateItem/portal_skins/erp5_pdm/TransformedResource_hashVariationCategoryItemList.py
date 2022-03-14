@@ -14,7 +14,7 @@ for item in item_list:
   item_split = string.split(item_value, '/')
   item_key = string.join(item_split[:split_depth] , '/' )
 
-  if not sub_field_dict.has_key(item_key):
+  if item_key not in sub_field_dict:
     # Create property dict
     sub_field_property_dict = default_sub_field_property_dict.copy()
     sub_field_property_dict['key'] = item_key
@@ -29,4 +29,4 @@ for item in item_list:
   if item_value in value_list:
     sub_field_dict[item_key]['value'] = item_value
 
-return sub_field_dict.values()
+return list(sub_field_dict.values())

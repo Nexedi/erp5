@@ -27,7 +27,9 @@
 ##############################################################################
 
 
-import hashlib, httplib
+from future import standard_library
+standard_library.install_aliases()
+import hashlib, http.client
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
@@ -90,7 +92,7 @@ def File_viewAsWeb(self):
     RESPONSE.write(data.data)
     # Load next object without keeping previous chunks in memory.
     deactivate = data._p_deactivate
-    data = data.next
+    data = data.__next__
     deactivate()
 
 def WebSite_viewAsWebPost(self, *args, **kwargs):
@@ -110,6 +112,6 @@ def WebSite_viewAsWebPost(self, *args, **kwargs):
     # security check should be done already.
     document.publish()
 
-  self.REQUEST.RESPONSE.setStatus(httplib.CREATED)
+  self.REQUEST.RESPONSE.setStatus(http.client.CREATED)
   return sha512sum
 

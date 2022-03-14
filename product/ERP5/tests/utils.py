@@ -25,11 +25,14 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import os
 import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
-from urllib import url2pathname
+from urllib.request import url2pathname
 from ZODB.DemoStorage import DemoStorage
 from ZODB import DB
 from OFS.XMLExportImport import importXML
@@ -45,7 +48,7 @@ db = DB(DemoStorage())
 connection = db.open()
 
 
-class BusinessTemplateInfoBase:
+class BusinessTemplateInfoBase(object):
 
   def __init__(self, target):
     self.target = target
@@ -109,7 +112,7 @@ class BusinessTemplateInfoBase:
     def parse(file_path):
       action_information = importXML(connection, file_path)
       action_information.__repr__()
-      for key, value in action_information.__dict__.iteritems():
+      for key, value in action_information.__dict__.items():
         if value not in (None, "") and key in ('action', 'condition') :
           setattr(action_information, key, value.text)
       actions = action_information.__dict__.copy()

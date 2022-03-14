@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet

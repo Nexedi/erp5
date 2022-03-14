@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.Globals import DTMLFile
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.ActionInformation import ActionInformation

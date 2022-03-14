@@ -1,5 +1,7 @@
-from urlparse import urlparse
-from urlparse import parse_qsl
+from future import standard_library
+standard_library.install_aliases()
+from urllib.parse import urlparse
+from urllib.parse import parse_qsl
 
 
 context.REQUEST.RESPONSE.setCookie("loyalty_reward", "enable", path='/')

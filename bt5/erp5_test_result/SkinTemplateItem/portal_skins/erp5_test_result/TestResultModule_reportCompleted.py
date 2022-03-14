@@ -19,7 +19,7 @@ edit_dict = all_test_results.pop('edit', None)
 if edit_dict:
   test_report.edit(**edit_dict)
 
-for test_id, test_result in all_test_results.items():
+for test_id, test_result in list(all_test_results.items()):
   # save log files
   log_files = test_result['files']
 

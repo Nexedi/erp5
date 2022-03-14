@@ -1,3 +1,4 @@
+from builtins import str
 from ZODB.POSException import ConflictError
 from erp5.component.document.Document import ConversionError
 from erp5.component.module.Log import log
@@ -7,9 +8,9 @@ try:
   return context.updateBaseMetadata(**kw)
 except ConflictError:
   raise
-except ConversionError, e:
+except ConversionError as e:
   message = 'Conversion Error: %s' % (str(e) or 'undefined.')
-except Exception, e:
+except Exception as e:
   message = 'Problem: %s' % (repr(e) or 'undefined.')
 
 # reach here, then exception was raised, message must be logged in workflow

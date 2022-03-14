@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
@@ -40,8 +43,8 @@ from AccessControl.SecurityManagement import getSecurityManager, \
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 import time
 import socket
-import httplib
-import urllib
+import http.client
+import urllib.request, urllib.parse, urllib.error
 import json
 from zLOG import LOG, ERROR, INFO
 
@@ -117,7 +120,7 @@ def addERP5GoogleExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
       'ERP5GoogleExtractionPlugin+added.'
       % dispatcher.absolute_url())
 
-class ERP5ExternalOauth2ExtractionPlugin:
+class ERP5ExternalOauth2ExtractionPlugin(object):
 
   cache_factory_name = 'external_oauth2_token_cache_factory'
   security = ClassSecurityInfo()

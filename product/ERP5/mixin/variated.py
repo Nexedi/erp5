@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -37,7 +38,7 @@ import zope.interface
 
 @zope.interface.implementer(interfaces.IVariated,
                             interfaces.IVariationRange)
-class VariatedMixin:
+class VariatedMixin(object):
   """
     Mix-in class for all classes which implement the Variated Interface.
 

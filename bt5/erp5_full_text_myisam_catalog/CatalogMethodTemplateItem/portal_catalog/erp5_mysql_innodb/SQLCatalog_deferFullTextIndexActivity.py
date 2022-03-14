@@ -26,11 +26,11 @@ for path in path_list:
     raise
   except Unauthorized: # should happen in tricky testERP5Catalog tests only 
     continue
-  except Exception, e:
+  except Exception as e:
     exception = e
     failed_path_list.append(path)
   else:
-    for property, value in tmp_dict.items():
+    for property, value in list(tmp_dict.items()):
       parameter_dict.setdefault(property, []).append(value)
 
 if len(failed_path_list):

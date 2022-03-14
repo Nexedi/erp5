@@ -26,6 +26,11 @@
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,
 # USA.
 ##############################################################################
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import PropertySheet, Permissions
@@ -41,7 +46,7 @@ from AccessControl import ClassSecurityInfo
 from OFS.role import RoleManager
 from OFS.SimpleItem import Item
 from OFS.PropertyManager import PropertyManager
-from urllib import quote, quote_plus
+from urllib.parse import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
 from zLOG import LOG, DEBUG, INFO, WARNING
@@ -339,7 +344,7 @@ class ODFStrategy(Implicit):
     if here is None:
       raise ValueError('Can not create a ODF Document without a parent acquisition context')
     form = extra_context['form']
-    if not extra_context.has_key('printout_template') or \
+    if 'printout_template' not in extra_context or \
         extra_context['printout_template'] is None:
       raise ValueError('Can not create a ODF Document without a printout template')
 
@@ -523,7 +528,7 @@ class ODFStrategy(Implicit):
       return
     def getNameAttribute(target_element):
       attrib = target_element.attrib
-      for key in attrib.keys():
+      for key in list(attrib.keys()):
         if key.endswith("}name"):
           return key
       return None
@@ -622,18 +627,18 @@ class ODFStrategy(Implicit):
     h = Decimal(height_tuple[0])
     aspect_ratio = 1
     try: # try image properties
-      aspect_ratio = Decimal(picture.width) / Decimal(picture.height)
+      aspect_ratio = old_div(Decimal(picture.width), Decimal(picture.height))
     except (TypeError, ZeroDivisionError):
       try: # try Image Document API
         height = Decimal(picture.getHeight())
         if height:
-          aspect_ratio = Decimal(picture.getWidth()) / height
+          aspect_ratio = old_div(Decimal(picture.getWidth()), height)
       except AttributeError: # fallback to Photo API
         height = float(picture.height())
         if height:
-          aspect_ratio = Decimal(picture.width()) / height
+          aspect_ratio = old_div(Decimal(picture.width()), height)
     resize_w = h * aspect_ratio
-    resize_h = w / aspect_ratio
+    resize_h = old_div(w, aspect_ratio)
     if resize_w < w:
       w = resize_w
     elif resize_h < h:
@@ -826,7 +831,7 @@ class ODFStrategy(Implicit):
     translated_value = translated_value.replace('\t', tab_element_str)
     translated_value = translated_value.replace('\r', '')
     translated_value = translated_value.replace('\n', line_break_element_str)
-    translated_value = unicode(str(translated_value),'utf-8')
+    translated_value = str(str(translated_value),'utf-8')
     # create a paragraph
     template = '<text:p xmlns:text="%s">%s</text:p>'
     fragment_element_tree = etree.XML(template % (TEXT_URI, translated_value))
@@ -837,7 +842,7 @@ class ODFStrategy(Implicit):
     # if remaining these attribetes, the column shows its default value,
     # such as '0.0', '$0'
     attrib = column.attrib
-    for key in attrib.keys():
+    for key in list(attrib.keys()):
       if 'office' in column.nsmap and key.startswith("{%s}" % column.nsmap['office']):
         del attrib[key]
     column.text = None
@@ -845,7 +850,7 @@ class ODFStrategy(Implicit):
 
   def _clearColumnValue(self, column):
     attrib = column.attrib
-    for key in attrib.keys():
+    for key in list(attrib.keys()):
       value_attribute = self._getColumnValueAttribute(column)
       if value_attribute is not None:
         column.set(value_attribute, '')
@@ -859,7 +864,7 @@ class ODFStrategy(Implicit):
 
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
-    for key in attrib.keys():
+    for key in list(attrib.keys()):
       if key.endswith("value"):
         return key
     return None
@@ -889,10 +894,10 @@ class ODFStrategy(Implicit):
 
   def _toUnicodeString(self, field_value = None):
     value = ''
-    if isinstance(field_value, unicode):
+    if isinstance(field_value, str):
       value = field_value
     elif field_value is not None:
-      value = unicode(str(field_value), 'utf-8')
+      value = str(str(field_value), 'utf-8')
     return value
 
 class ODTStrategy(ODFStrategy):

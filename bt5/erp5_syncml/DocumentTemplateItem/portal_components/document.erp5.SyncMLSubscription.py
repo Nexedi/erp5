@@ -27,9 +27,14 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 from base64 import b16encode, b16decode
 from logging import getLogger
-from urlparse import urlparse
+from urllib.parse import urlparse
 from lxml import etree
 from copy import deepcopy
 
@@ -112,7 +117,7 @@ class SyncMLSubscription(XMLObject):
     activate_kw : activity parameters to pass to activate call
     kw : any parameter getAndActivate can required if it calls itself
     """
-    if kw.has_key("packet_size"):
+    if "packet_size" in kw:
       search_kw = dict(kw)
       packet_size = search_kw.pop('packet_size', 30)
       limit = packet_size * search_kw.pop('activity_count', 100)
@@ -160,7 +165,7 @@ class SyncMLSubscription(XMLObject):
         activate = self.activate
         callback_method = getattr(activate(**activate_kw), callback)
         if generated_other_activity:
-          for i in xrange(0, result_count, packet_size):
+          for i in range(0, result_count, packet_size):
             syncml_logger.info("-- getAndIndex : recursive call, generating for %s",
                                r[i:i+packet_size])
             callback_method(path_list=r[i:i+packet_size],
@@ -168,7 +173,7 @@ class SyncMLSubscription(XMLObject):
                             **method_kw)
         else:
           if result_count > packet_size and limit:
-            for i in xrange(0, result_count-packet_size, packet_size):
+            for i in range(0, result_count-packet_size, packet_size):
               syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s",
                                  i, r[i:i+packet_size], activate_kw)
               callback_method(path_list=r[i:i+packet_size],
@@ -277,7 +282,7 @@ class SyncMLSubscription(XMLObject):
     syncml_logger.debug("--> calling getAndActivate packet size = %s, limit = %s",
                         packet_size, limit)
     # We must know if we have a lower limit or not to propagate
-    if not kw.has_key("strict_min_gid"):
+    if "strict_min_gid" not in kw:
       first_call = True
     else:
       first_call = False
@@ -310,7 +315,7 @@ class SyncMLSubscription(XMLObject):
       if generated_other_activity:
         #  XXX Can be factorized with following code
         # upper_limit of xrange + some check ???
-        for i in xrange(0, result_count, packet_size):
+        for i in range(0, result_count, packet_size):
           if first_call:
             min_gid = None
             first_call = False
@@ -330,7 +335,7 @@ class SyncMLSubscription(XMLObject):
       else:
         i = 0
         if result_count > packet_size:
-          for i in xrange(0, result_count-packet_size, packet_size):
+          for i in range(0, result_count-packet_size, packet_size):
             if first_call:
               min_gid = None
               first_call = False
@@ -539,7 +544,7 @@ class SyncMLSubscription(XMLObject):
           xml_document = etree.tostring(xml_document, encoding='utf-8',
                                         pretty_print=True)
 
-        if isinstance(xml_document, unicode):
+        if isinstance(xml_document, str):
           xml_document = xml_document.encode('utf-8')
         # Link the signature to the document
         if signature:
@@ -973,7 +978,7 @@ class SyncMLSubscription(XMLObject):
       # old way using the conduit
       conduit = self.getConduit()
       raw_gid = conduit.getGidFromObject(object)
-    if isinstance(raw_gid, unicode):
+    if isinstance(raw_gid, str):
       raw_gid = raw_gid.encode('ascii', 'ignore')
     if encoded:
       gid = b16encode(raw_gid)
@@ -1146,7 +1151,7 @@ class SyncMLSubscription(XMLObject):
     """
     object_id_list = list(self.getObjectIds())
     object_list_len = len(object_id_list)
-    for i in xrange(0, object_list_len, MAX_OBJECTS):
+    for i in range(0, object_list_len, MAX_OBJECTS):
       current_id_list = object_id_list[i:i+MAX_OBJECTS]
       self.activate(activity='SQLQueue',
                     priority=ACTIVITY_PRIORITY).manage_delObjects(current_id_list)

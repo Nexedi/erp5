@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,6 +27,7 @@
 #
 ##############################################################################
 
+from past.utils import old_div
 import unittest
 from unittest import skip
 
@@ -549,10 +551,10 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
-    self.assertEqual(second_availability / 2,
+    self.assertEqual(old_div(second_availability, 2),
                       person.getAvailableTime(from_date=start_date,
                                               to_date=self.middle_date))
-    self.assertEqual(second_availability / 2,
+    self.assertEqual(old_div(second_availability, 2),
                       person.getAvailableTime(from_date=self.middle_date,
                                                      to_date=stop_date))
     # Check 2 periods
@@ -610,10 +612,10 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(second_availability,
                       person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
-    self.assertEqual(second_availability / 2,
+    self.assertEqual(old_div(second_availability, 2),
                       person.getAvailableTime(from_date=start_date,
                                               to_date=self.middle_date))
-    self.assertEqual(second_availability / 2,
+    self.assertEqual(old_div(second_availability, 2),
                       person.getAvailableTime(from_date=self.middle_date,
                                                      to_date=stop_date))
     # Check 2 periods

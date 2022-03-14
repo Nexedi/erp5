@@ -28,6 +28,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import str
 from .Constraint import Constraint
 
 class CategoryMembershipArity(Constraint):

@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -308,7 +310,7 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepClickUnsubscriptionLinkInEvent(self, sequence=None, sequence_list=None,
       **kw):
-    from urllib import urlopen
+    from urllib.request import urlopen
     link = sequence['unsubscription_link']
     self.logout()
     data = urlopen(link)

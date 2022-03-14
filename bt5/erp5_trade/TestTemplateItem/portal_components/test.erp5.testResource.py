@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 import random, unittest
 from unittest import expectedFailure
 from Testing import ZopeTestCase
@@ -637,7 +639,7 @@ class TestResource(ERP5TypeTestCase):
                                    portal_type=self.product_portal_type,
                                    title='Product%i' % i)
       # Configure pricing parameters
-      for key, value in config.items():
+      for key, value in list(config.items()):
         if key != 'price':
           if value not in [None, []]:
             if not isinstance(value, list):

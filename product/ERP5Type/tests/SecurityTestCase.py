@@ -29,6 +29,7 @@
 """Base Class for security tests using ERP5Security and DCWorkflow
 """
 
+from builtins import object
 from pprint import pformat
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager

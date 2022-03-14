@@ -69,7 +69,7 @@ class TioSafeBaseConduit(ERP5Conduit):
     # In the case where this new node is a object to add
     xpath_expression = xml.get('select')
     if xml.xpath('name()') in XUPDATE_INSERT_OR_ADD_LIST and\
-           MARSHALLER_NAMESPACE_URI not in xml.nsmap.values():
+           MARSHALLER_NAMESPACE_URI not in list(xml.nsmap.values()):
       # change the context according select expression
       get_target_parent = xml.xpath('name()') in XUPDATE_INSERT_LIST
       context = self.getContextFromXpath(object, xpath_expression,
@@ -106,7 +106,7 @@ class TioSafeBaseConduit(ERP5Conduit):
   def applyXupdate(self, object=None, xupdate=None, previous_xml=None, **kw):
     """ Parse the xupdate and then it will call the conduit. """
     conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
+    if isinstance(xupdate, str):
       xupdate = etree.XML(xupdate, parser=parser)
     if kw.get('conduit', None) is not None:
       for subnode in xupdate:

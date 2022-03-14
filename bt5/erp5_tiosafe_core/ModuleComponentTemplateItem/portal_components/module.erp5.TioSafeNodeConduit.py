@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
 
 

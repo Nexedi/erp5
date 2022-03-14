@@ -12,7 +12,7 @@ if filter_dict is None:
 
 portal_type_list = []
 append = portal_type_list.append
-for portal_type, constraint_type_list in constraint_type_per_type.iteritems():
+for portal_type, constraint_type_list in constraint_type_per_type.items():
   if constraint_type in constraint_type_list:
     append(portal_type)
 

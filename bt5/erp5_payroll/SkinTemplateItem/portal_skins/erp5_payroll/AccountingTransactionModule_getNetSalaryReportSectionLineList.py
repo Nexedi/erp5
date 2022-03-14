@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from Products.PythonScripts.standard import Object
 from DateTime import DateTime
 

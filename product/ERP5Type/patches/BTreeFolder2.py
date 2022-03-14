@@ -44,25 +44,25 @@ def _cleanup(self):
     path = '/'.join(self.getPhysicalPath())
     try:
         check(self._tree)
-        for key in self._tree.keys():
+        for key in list(self._tree.keys()):
             if key not in self._tree:
                 raise AssertionError(
                     "Missing value for key: %s" % repr(key))
         check(self._mt_index)
-        for key, object in self._tree.items():
+        for key, object in list(self._tree.items()):
             meta_type = getattr(object, 'meta_type', None)
             if meta_type is not None:
               if meta_type not in self._mt_index:
                   raise AssertionError(
                       "Missing meta_type index for key: %s" % repr(key))
-        for key, value in self._mt_index.items():
+        for key, value in list(self._mt_index.items()):
             if (key not in self._mt_index
                 or self._mt_index[key] is not value):
                 raise AssertionError(
                     "Missing or incorrect meta_type index: %s"
                     % repr(key))
             check(value)
-            for k in value.keys():
+            for k in list(value.keys()):
                 if k not in value or k not in self._tree:
                     raise AssertionError(
                         "Missing values for meta_type index: %s"
@@ -75,7 +75,7 @@ def _cleanup(self):
         try:
             self._tree = OOBTree(self._tree)
             mt_index = OOBTree()
-            for id, object in self._tree.items():
+            for id, object in list(self._tree.items()):
               # Update the meta type index.
               meta_type = getattr(object, 'meta_type', None)
               if meta_type is not None:

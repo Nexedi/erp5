@@ -25,11 +25,12 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 
-class TestRealTimeInventoryAccountingMixin:
+class TestRealTimeInventoryAccountingMixin(object):
   def assertIterableLen(self, iterable, expected_len):
     if len(iterable) != expected_len:
       self.fail('Length of %s is not equal to %d' % (repr(iterable),
@@ -54,7 +55,7 @@ class TestRealTimeInventoryAccountingMixin:
         self.portal.portal_workflow.doActionFor(document, workflow_method_id)
       else:
         getattr(document, workflow_method_id)()
-    except ValidationFailed, error:
+    except ValidationFailed as error:
       self.fail("Transition '%s' on %r should have succeeded (%s)" % \
                   (workflow_method_id, document,
                    sorted([m.message for m in error.msg])))
@@ -163,7 +164,7 @@ class TestRealTimeInventoryAccountingMixin:
                      delivery_property_dict=None,
                      movement_property_dict_tuple=()):
     if delivery_property_dict is not None:
-      for property_id, property_value in delivery_property_dict.iteritems():
+      for property_id, property_value in delivery_property_dict.items():
         self.assertEquals(delivery.getProperty(property_id), property_value)
 
     if not movement_property_dict_tuple:

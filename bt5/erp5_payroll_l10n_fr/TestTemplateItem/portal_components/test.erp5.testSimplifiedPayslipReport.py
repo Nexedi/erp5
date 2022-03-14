@@ -25,10 +25,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
+from builtins import range
+from past.utils import old_div
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from PIL import Image
-import cStringIO
+import io
 import math
 import os.path
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
@@ -57,13 +64,13 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     # http://snipplr.com/view/757/compare-two-pil-images-in-python/
     # http://effbot.org/zone/pil-comparing-images.htm
     # http://effbot.org/imagingbook/image.htm
-    image1 = Image.open(cStringIO.StringIO(image_data_1))
-    image2 = Image.open(cStringIO.StringIO(image_data_2))
+    image1 = Image.open(io.StringIO(image_data_1))
+    image2 = Image.open(io.StringIO(image_data_2))
 
     # image can be converted into greyscale without transparency
     h1 = image1.histogram()
     h2 = image2.histogram()
-    rms = math.sqrt(sum((a - b) ** 2 for a, b in zip(h1, h2)) / len(h1))
+    rms = math.sqrt(old_div(sum((a - b) ** 2 for a, b in zip(h1, h2)), len(h1)))
 
     # Note:
     # - rms is ~5300.0 same page, bmp without alpha and bmp transparent back
@@ -107,7 +114,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     "total_contribution_relief": 468.88
     }
     payslip_content = test_pay_sheet_transaction.PaySheetTransaction_getPayslipData()
-    for key, value in expected_payslip_content.iteritems():
+    for key, value in expected_payslip_content.items():
       self.assertAlmostEquals(value, payslip_content[key])
 
     expected_non_contribution_dict_list= [
@@ -124,7 +131,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     for index in  range(len(expected_non_contribution_dict_list)):
       expected_value_dict = expected_non_contribution_dict_list[index]
       value_dict = non_contribution_dict_list[index]
-      for key, value in expected_value_dict.iteritems():
+      for key, value in expected_value_dict.items():
         self.assertEquals(value_dict[key], value)
 
     expected_contribution_dict_list = [
@@ -163,7 +170,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     for index in  range(len(expected_contribution_dict_list)):
       expected_value_dict = expected_contribution_dict_list[index]
       value_dict = contribution_dict_list[index]
-      for key, value in expected_value_dict.iteritems():
+      for key, value in expected_value_dict.items():
         self.assertAlmostEquals(value_dict[key], value)
 
     test_pay_sheet_transaction.setStartDate(DateTime("2020/01/01"))

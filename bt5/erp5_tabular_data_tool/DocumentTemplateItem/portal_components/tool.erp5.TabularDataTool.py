@@ -1,3 +1,4 @@
+from builtins import zip
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass

@@ -2,6 +2,7 @@
 and redirects to the accounting transaction view which is easier to
 use.
 '''
+from builtins import range
 from Products.ERP5Type.Message import translateString
 
 for _ in range(line_count):

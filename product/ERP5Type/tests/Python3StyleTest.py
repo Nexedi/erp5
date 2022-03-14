@@ -27,10 +27,12 @@
 
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import os, sys
 import unittest
 from subprocess import check_output, CalledProcessError
-from cStringIO import StringIO
+from io import StringIO
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from lib2to3.main import main
 

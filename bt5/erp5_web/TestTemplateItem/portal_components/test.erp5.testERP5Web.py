@@ -28,11 +28,15 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import re
 import time
 from unittest import expectedFailure, skip
-from StringIO import StringIO
-from urllib import urlencode
+from io import StringIO
+from urllib.parse import urlencode
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from DateTime import DateTime
@@ -61,7 +65,7 @@ class WebTraversalHookTestMixin(object):
     """
     self.assertEquals(1, len(self.web_section.__before_traverse__))
     self.assertIsInstance(
-      self.web_section.__before_traverse__.values()[0],
+      list(self.web_section.__before_traverse__.values())[0],
       self.traversal_hook_class)
 
   def test_TraversalHook_on_clone(self):
@@ -98,9 +102,9 @@ class WebTraversalHookTestMixin(object):
     # We have cleaned up the useless before traversal hook, but keep the unrelated one
     self.assertEquals(2, len(self.web_section.__before_traverse__))
     self.assertEquals(1, len([hook for hook in
-      self.web_section.__before_traverse__.values() if isinstance(hook, self.traversal_hook_class)]))
+      list(self.web_section.__before_traverse__.values()) if isinstance(hook, self.traversal_hook_class)]))
     self.assertEquals(1, len([hook for hook in
-      self.web_section.__before_traverse__.values() if isinstance(hook, DummyTraversalHook)]))
+      list(self.web_section.__before_traverse__.values()) if isinstance(hook, DummyTraversalHook)]))
 
 
 class TestWebSiteTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
@@ -302,7 +306,7 @@ Hé Hé Hé!""", page.asText().strip())
               default_email_text='test@test.com',
               password='abc',
               password_confirm='abc',)
-    for key, item in kw.items():
+    for key, item in list(kw.items()):
       request.set('field_your_%s' % key, item)
     website = self.web_site_module[self.website_id]
     website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
@@ -521,7 +525,7 @@ Hé Hé Hé!""", page.asText().strip())
                      '15': dict(language='pt', version="2", reference="F"),
                      '16': dict(language='', version="1", reference="A"),
                     }
-    sequence_one = property_dict.keys()
+    sequence_one = list(property_dict.keys())
     sequence_two = ['01', '13', '12', '09', '06', '15', '04', '11', '02',
                     '05', '03', '07', '10', '08', '14', '16']
     sequence_three = ['05', '12', '13', '14', '06', '09', '10', '07',

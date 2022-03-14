@@ -2,6 +2,7 @@
   Generic random string generator.
   
 """
+from builtins import range
 from random import choice
 from string import letters, digits
 

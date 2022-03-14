@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from builtins import range
 def createSPL(result, browser):
   """
   Create a Sale Packing List & go until the stopped state
@@ -44,7 +45,7 @@ def createSPL(result, browser):
 
   # Use fast input
   result("Open fast input", browser.open(spl_url+'/Delivery_checkConsistencyForDeliveryFastInputDialog'))
-  for i in xrange(1,10):
+  for i in range(1,10):
     browser.mainForm.getControl(name='field_listbox_title_new_%s' %(i,)).value = 'Luxury %s' %(i,)
     browser.mainForm.getControl(name='field_listbox_quantity_new_%s' %(i,)).value = '%s' %(i,)
   result("Update fast input", browser.mainForm.submitDialogUpdate(sleep=(10, 30)))

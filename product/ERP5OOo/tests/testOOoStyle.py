@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import io
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -34,11 +36,11 @@ from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
-import httplib
+import http.client
 import lxml.html
 import PyPDF2
 
-HTTP_OK = httplib.OK
+HTTP_OK = http.client.OK
 
 # setting this to True allows the .publish() calls to provide tracebacks
 debug = False

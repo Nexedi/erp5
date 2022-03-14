@@ -121,7 +121,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
       workflow = workflow_tool._getOb(workflow_id)
       class_name = workflow.__class__.__name__
       if class_name == 'DCWorkflowDefinition':
-        for state in workflow.states.items():
+        for state in list(workflow.states.items()):
           state_title = state[1].title
           state_id = state[0]
           msgid = getMessageIdWithContext(state_title, 'state', workflow_id)
@@ -134,14 +134,14 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
               translation_dict[translated_state_title] = {state_id}
 
 
-    for key, value in translation_dict.items():
+    for key, value in list(translation_dict.items()):
       if len(value) == 1:
         translation_dict.pop(key)
 
     if translation_dict != {}:
       # State ID has multiple translation associated, and it leads to
       # unexpected results for the user when using portal catalog.
-      rejected_key_list = translation_dict.keys()
+      rejected_key_list = list(translation_dict.keys())
       result_dict = {x: [] for x in rejected_key_list}
       error_dict =  {x: [] for x in rejected_key_list}
       error = 0
@@ -151,7 +151,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
         if workflow.__class__.__name__ == 'DCWorkflowDefinition':
           workflow_id = workflow.id
           workflow_dict = {}
-          for state_id, state in workflow.states._mapping.items():
+          for state_id, state in list(workflow.states._mapping.items()):
             state_title = state.title
             translated_state_title = \
               self.portal.Localizer.erp5_ui.gettext(state_title, lang=self.lang)
@@ -161,13 +161,13 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
 
       # XXX To be improved
       not_used_workflow_id_list = []
-      for key, item_list in result_dict.items():
+      for key, item_list in list(result_dict.items()):
         wrong_state_id_list = [x[1] for x in item_list]
         for workflow_id, wrong_state_id, state_title in item_list:
           if workflow_id not in not_used_workflow_id_list:
             workflow = self.portal.portal_workflow._getOb(workflow_id)
             state_id_list = []
-            for state_id in workflow.states._mapping.keys():
+            for state_id in list(workflow.states._mapping.keys()):
               if (state_id in wrong_state_id_list) and \
                   (state_id != wrong_state_id):
                 state_id_list.append(state_id)
@@ -178,7 +178,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
               error = 1
 
       if error:
-        for key, item_list in error_dict.items():
+        for key, item_list in list(error_dict.items()):
           if len(item_list) != 0:
             self.logMessage("\n'%s'" % key.encode('utf-8'))
             self.logMessage('\t### Conflicting workflow with common states (ie, what user can see) ###')

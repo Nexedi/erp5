@@ -89,7 +89,7 @@ def MessageCatalog_getMessageDict(self):
     Get Localizer's MessageCatalog instance messages.
   """
   d = {}
-  for k,v in self._messages.iteritems():
+  for k,v in self._messages.items():
     d[k] = v
   return d
 
@@ -99,8 +99,8 @@ def MessageCatalog_getNotTranslatedMessageDict(self):
   """
   not_translated_message_dict = {}
   messages = MessageCatalog_getMessageDict(self)
-  for k, v in messages.iteritems():
-    if not [x for x in v.values() if x]:
+  for k, v in messages.items():
+    if not [x for x in list(v.values()) if x]:
       not_translated_message_dict[k] = v
   return not_translated_message_dict
 
@@ -109,10 +109,10 @@ def MessageCatalog_deleteNotTranslatedMessageDict(self):
     Delete from  Localizer's MessageCatalog instance messages that are NOT translated.
   """
   not_translated_message_dict = MessageCatalog_getNotTranslatedMessageDict(self)
-  for k,_ in not_translated_message_dict.iteritems():
+  for k,_ in not_translated_message_dict.items():
     # delete message from dict
     del(self._messages[k])
-  return len(not_translated_message_dict.keys())
+  return len(list(not_translated_message_dict.keys()))
 
 def MessageCatalog_cleanUpMessageDict(self):
   """
@@ -121,8 +121,8 @@ def MessageCatalog_cleanUpMessageDict(self):
     MessageCatalog instance messages.
   """
   count = 0
-  for k,v in self._messages.items():
-    for lang, translation in v.items():
+  for k,v in list(self._messages.items()):
+    for lang, translation in list(v.items()):
       if len(translation) == 0 or translation == k:
         del self._messages[k][lang]
     if len(v) == 0:

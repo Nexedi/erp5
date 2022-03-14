@@ -14,7 +14,9 @@
 #
 ##############################################################################
 
-from cStringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from io import StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface
@@ -185,13 +187,13 @@ class BigFile(File):
         else:
           # Date
           date = if_range.split( ';')[0]
-          try: mod_since=long(DateTime(date).timeTime())
+          try: mod_since=int(DateTime(date).timeTime())
           except Exception: mod_since=None
           if mod_since is not None:
             last_mod = self._data_mtime()
             if last_mod is None:
               last_mod = 0
-            last_mod = long(last_mod)
+            last_mod = int(last_mod)
             if last_mod > mod_since:
               # Modified, so send a normal response. We delete
               # the ranges, which causes us to skip to the 200

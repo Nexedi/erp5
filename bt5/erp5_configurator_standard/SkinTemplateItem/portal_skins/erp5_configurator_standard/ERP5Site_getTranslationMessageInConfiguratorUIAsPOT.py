@@ -1,3 +1,4 @@
+from __future__ import print_function
 message_dict = {}
 FUNC_NAME_LIST = ('N_',
                   'Base_translateString',
@@ -135,13 +136,13 @@ MESSAGE_TEMPLATE = '''\
 msgid %s
 msgstr ""
 '''
-message_list = message_dict.keys()
+message_list = list(message_dict.keys())
 message_list.sort()
 for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, formatText(message))
+  print(MESSAGE_TEMPLATE % (comment, formatText(message)))
 
 context.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
 

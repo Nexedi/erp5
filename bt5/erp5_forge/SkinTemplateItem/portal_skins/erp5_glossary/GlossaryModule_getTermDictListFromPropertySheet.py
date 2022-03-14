@@ -35,7 +35,7 @@ for i in all_field_list:
         dic[key] = i
 
 result = []
-for (reference, business_field, title) in dic.keys():
+for (reference, business_field, title) in list(dic.keys()):
   language = 'en'
   field = dic[(reference, business_field, title)]
   description = field.get_value('description')

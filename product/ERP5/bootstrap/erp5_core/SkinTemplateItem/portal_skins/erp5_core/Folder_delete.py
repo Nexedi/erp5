@@ -13,6 +13,7 @@ the selection.
 :param uids: {list[int]} list of "selected" uids from the previous View (only in JS UI)
 :param selection_name: {str} if present then user is using XHTML UI
 """
+from builtins import str
 from ZODB.POSException import ConflictError
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.Message import Message

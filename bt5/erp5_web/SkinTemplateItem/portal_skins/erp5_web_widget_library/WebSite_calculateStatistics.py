@@ -10,7 +10,7 @@ def sortDictByValues(adict):
     Sort a dictionary by maximal values. 
     Return sorted list of tuples [(key, value),...]
   """
-  items = adict.items()
+  items = list(adict.items())
   items.sort(key=lambda x: x[1], reverse=True)
   return items
 

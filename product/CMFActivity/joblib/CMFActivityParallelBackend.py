@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from zLOG import LOG, INFO, WARNING
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityRuntimeEnvironment import \

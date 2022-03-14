@@ -1,6 +1,9 @@
+from __future__ import division
 #  - Months always starts at 0h of the current month's first day  and 
 #  finish 0h of the next month's first day.
 
+from builtins import str
+from past.utils import old_div
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Document import newTempBase
 from Products.PythonScripts.standard import url_quote
@@ -19,7 +22,7 @@ zoom_begin = DateTime(bound_start.year(), bound_start.month(), bound_start.day()
 
 # Normalize Month.
 month = zoom_begin.month() + zoom_variation
-year = zoom_begin.year() + (month - 1) / 12
+year = zoom_begin.year() + old_div((month - 1), 12)
 month = month % 12
 if month == 0:
   month = 12

@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from erp5.component.mixin.ConfigurablePropertySolverMixin import ConfigurablePropertySolverMixin
@@ -50,7 +52,7 @@ class AdoptSolver(ConfigurablePropertySolverMixin):
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
-    for movement, simulation_movement_list in delivery_dict.iteritems():
+    for movement, simulation_movement_list in delivery_dict.items():
       if activate_kw is not None:
         movement.setDefaultActivateParameterDict(activate_kw)
       for solved_property in solved_property_list:
@@ -68,7 +70,7 @@ class AdoptSolver(ConfigurablePropertySolverMixin):
               delivery_ratio = 1.
               delivery_error = 0
             else:
-              delivery_ratio = quantity / total_quantity
+              delivery_ratio = old_div(quantity, total_quantity)
               delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error,

@@ -1,8 +1,10 @@
 """Return python source code in business template
 """
+from builtins import str
+from builtins import object
 import json
 
-class Message:
+class Message(object):
   """A python code linter message, with a link to edit the source code.
 
   Supports both being displayed in a listbox and being printed.
@@ -54,7 +56,7 @@ def checkPythonScript(script_instance, script_path):
       {'bound_names': extra_builtins +
          script_instance.getBindingAssignments().getAssignedNamesInOrder(),
        'params': script_instance.params(),
-       'code': unicode(script_instance.body(), 'utf8')
+       'code': str(script_instance.body(), 'utf8')
       }))['annotations']:
     annotation["script_path"] = script_path
     line_list.append(
@@ -75,7 +77,7 @@ def checkComponent(component_instance):
         edit_url=component_relative_url,
         jio_key=component_relative_url,),)
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
-        {'code': unicode(component_instance.getTextContent(), 'utf8')}))['annotations']:
+        {'code': str(component_instance.getTextContent(), 'utf8')}))['annotations']:
     annotation['component_path'] = component_relative_url
     line_list.append(
       Message(

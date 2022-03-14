@@ -3,6 +3,7 @@
 Downgrade headers in passed content by 1 or number of levels specified
 ================================================================================
 """
+from builtins import str
 import re
 
 def pushDown(level):

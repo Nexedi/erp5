@@ -114,7 +114,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     when this dict is changed
     """
     self.state_permission_role_list_dict = PersistentMapping(
-        {k: tuple(v) for (k, v) in permission_roles.items()})
+        {k: tuple(v) for (k, v) in list(permission_roles.items())})
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStatePermissionRoleListDict')
@@ -124,7 +124,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     """
     if self.state_permission_role_list_dict is None:
       return {}
-    return dict(self.state_permission_role_list_dict.items())
+    return dict(list(self.state_permission_role_list_dict.items()))
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setPermission')

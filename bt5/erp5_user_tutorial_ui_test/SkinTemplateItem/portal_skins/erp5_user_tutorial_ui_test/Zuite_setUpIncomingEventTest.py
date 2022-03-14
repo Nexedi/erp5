@@ -1,3 +1,4 @@
+from builtins import str
 if clean:
   context.Zuite_tearDownIncomingEventTest()
 

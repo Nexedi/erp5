@@ -110,4 +110,4 @@ class PropertyExistenceConstraint(ConstraintMixin):
       'condition'     : 'python: object.getPortalType() == 'Foo',
     }
     """
-    yield dict(constraint_property_list=property_dict.keys())
+    yield dict(constraint_property_list=list(property_dict.keys()))

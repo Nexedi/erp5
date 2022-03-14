@@ -27,7 +27,10 @@
 #
 ##############################################################################
 
-import re, zipfile, cStringIO
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import re, zipfile, io
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata
@@ -149,7 +152,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      from xmlrpclib import Fault
+      from xmlrpc.client import Fault
       server_proxy = DocumentConversionServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
@@ -198,7 +201,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       raise NotConvertedError()
     if format == 'text-content':
       # Extract text from the ODF file
-      cs = cStringIO.StringIO()
+      cs = io.StringIO()
       cs.write(str(self.getBaseData()))
       z = zipfile.ZipFile(cs)
       s = z.read('content.xml')
@@ -301,7 +304,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       if is_html:
         # Extra processing required since
         # we receive a zip file
-        cs = cStringIO.StringIO()
+        cs = io.StringIO()
         cs.write(str(data))
         z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
         for f in z.infolist():
@@ -324,7 +327,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         # create temporary image and use it to resize accordingly
         temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
-                                       file=cStringIO.StringIO(),
+                                       file=io.StringIO(),
                                        filename=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
@@ -346,7 +349,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       format_list = [x for x in self.getTargetFormatList()
                                 if x.startswith('html') or x.endswith('html')]
       mime, data = self._getConversionFromProxyServer(format_list[0])
-      archive_file = cStringIO.StringIO()
+      archive_file = io.StringIO()
       archive_file.write(str(data))
       zip_file = zipfile.ZipFile(archive_file)
       must_close = 1

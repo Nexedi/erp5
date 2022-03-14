@@ -64,7 +64,7 @@ XMLPROCS_CONF = {
     }
 
 bin = None
-for proc in XMLPROCS_CONF.keys():
+for proc in list(XMLPROCS_CONF.keys()):
     try:
         bin = bin_search(proc)
         break
@@ -82,5 +82,5 @@ if bin is not None:
         TRANSFORMS[name] = tr
 
 def initialize(engine):
-    for transform in TRANSFORMS.values():
+    for transform in list(TRANSFORMS.values()):
         engine.registerTransform(transform)

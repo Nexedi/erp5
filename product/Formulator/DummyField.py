@@ -10,15 +10,16 @@ actual field object.
 """
 from __future__ import absolute_import
 
+from builtins import object
 from .FieldRegistry import FieldRegistry
 
-class DummyFieldFactory:
+class DummyFieldFactory(object):
     def __getattr__(self, name):
         return DummyField(name)
 
 fields = DummyFieldFactory()
 
-class DummyField:
+class DummyField(object):
     def __init__(self, desired_meta_class):
         self.desired_meta_class = desired_meta_class
 

@@ -2,6 +2,7 @@
 
 Check that password matchs with confirmation and that it complies to the authentication policy.
 """
+from builtins import str
 from AccessControl import getSecurityManager
 from Products.Formulator.Errors import ValidationError
 

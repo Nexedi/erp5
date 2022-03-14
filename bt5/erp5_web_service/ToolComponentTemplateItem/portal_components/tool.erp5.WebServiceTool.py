@@ -55,7 +55,7 @@ handler_module_dict = {
   'sql' : "SQLConnection",
   'document' : "DocumentConnection",
 }
-for handler_id, module_id in handler_module_dict.iteritems():
+for handler_id, module_id in handler_module_dict.items():
   # Ignore non-functionnal plugins.
   # This is done to avoid adding strict dependencies.
   # Code relying on the presence of a plugin will fail upon
@@ -91,7 +91,7 @@ class WebServiceTool(BaseTool):
     """
     Return list of available connection plugins
     """
-    plugin_list = connection_plugin_registry.keys()
+    plugin_list = list(connection_plugin_registry.keys())
     plugin_list.sort()
     return plugin_list
 

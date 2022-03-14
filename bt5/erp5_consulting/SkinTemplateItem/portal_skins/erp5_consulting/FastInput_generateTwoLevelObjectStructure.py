@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from string import zfill
 
 ##################################################
@@ -34,7 +35,7 @@ fast_input_lines = []
 
 # get the fast input form datas
 for inputline in listbox:
-  if inputline.has_key('listbox_key'):
+  if 'listbox_key' in inputline:
     line = {}
     line['id'] = int(inputline['listbox_key'])
     for data_name in input_data_names:
@@ -75,7 +76,7 @@ for line in fast_input_lines:
     new_1st_level_sub_items.append(new_2nd_level_item)
 
   if has_1st_level == True:
-    if structured_input_data.has_key(new_1st_level_key):
+    if new_1st_level_key in structured_input_data:
       new_1st_level_sub_items = structured_input_data[new_1st_level_key][1] + new_1st_level_sub_items
     else:
       structured_input_data[new_1st_level_key] = [None, None]
@@ -86,7 +87,7 @@ for line in fast_input_lines:
 for upper_level_key in structured_input_data:
   first_level = structured_input_data[upper_level_key][0]
   new_1st_level_obj = destination.newContent(portal_type = level_portal_types[0])
-  for property_title in first_level.keys():
+  for property_title in list(first_level.keys()):
     new_1st_level_obj.setProperty(property_title, first_level[property_title])
   second_level_id = 0
   for second_level in structured_input_data[upper_level_key][1]:
@@ -94,7 +95,7 @@ for upper_level_key in structured_input_data:
     new_2nd_level_obj = new_1st_level_obj.newContent( portal_type = level_portal_types[1]
                                                     , id          = zfill(second_level_id, 4)
                                                     )
-    for property_title in second_level.keys():
+    for property_title in list(second_level.keys()):
       new_2nd_level_obj.setProperty(property_title, second_level[property_title])
 
 # return to the module

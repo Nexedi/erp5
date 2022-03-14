@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.CMFCore.Expression import Expression
 from AccessControl import ClassSecurityInfo

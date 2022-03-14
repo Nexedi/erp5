@@ -1,3 +1,4 @@
+from __future__ import print_function
 from Products.ERP5Type.Utils import getMessageIdWithContext
 message_dict = {}
 
@@ -40,7 +41,7 @@ iterate(context.portal_skins)
 
 # Collect python script from workflow objects.
 for workflow in context.portal_workflow.objectValues():
-  for i in workflow.getScriptValueDict().values():
+  for i in list(workflow.getScriptValueDict().values()):
     if i.meta_type=='Script (Python)':
       python_script_list.append(i)
 
@@ -74,7 +75,7 @@ for i in form_list:
   if (i.getId().endswith('FieldLibrary')):
     continue
   add_message(i.title, portal_url.getRelativeContentURL(i))
-  for group, list_ in i.groups.items():
+  for group, list_ in list(i.groups.items()):
     if group == 'hidden':
       continue
     for j in (i[x] for x in list_):
@@ -157,7 +158,7 @@ for action_title, action_provider_id in context.Base_getActionTitleListFromAllAc
 for property_sheet in context.portal_property_sheets.objectValues():
   for property_ in property_sheet.objectValues():
     if property_.getId().endswith('constraint'):
-      for key, value in property_.showDict().items():
+      for key, value in list(property_.showDict().items()):
         if key.startswith('message_'):
           add_message(value, portal_url.getRelativeContentURL(property_))
 
@@ -172,23 +173,23 @@ def formatString(string):
   else:
     return '\n'.join(['""']+[formatString(i) for i in line_list])
 
-print '''msgid ""
+print('''msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-'''
+''')
 
 MESSAGE_TEMPLATE = '''\
 %s
 msgid %s
 msgstr ""
 '''
-message_list = message_dict.keys()
+message_list = list(message_dict.keys())
 message_list.sort()
 for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, formatString(message))
+  print(MESSAGE_TEMPLATE % (comment, formatString(message)))
 
 RESPONSE = context.REQUEST.RESPONSE
 RESPONSE.setHeader('Content-disposition', 'attachment;filename=translation.pot')

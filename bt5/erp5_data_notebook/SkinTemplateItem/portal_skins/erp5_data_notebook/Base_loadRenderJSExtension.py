@@ -1,3 +1,4 @@
+from builtins import object
 import json
 
 # This script provides the backend-functionality of the Juypter Notebook RenderJS Extension.
@@ -15,7 +16,7 @@ import json
 # 7. The ERP5Kernel interprets the object with _repr_html_ as text/html message and injects it into the notebook
 # 8. Now the Javascript code is executed as part of the (client) extension (e.g. a renderJS-gadget is loaded into the page)
 
-class RJSExtension:
+class RJSExtension(object):
 
   def __init__(self):
     pass
@@ -122,7 +123,7 @@ class RJSExtension:
     return RJSHtmlMessage(script)
 
 
-class RJSHtmlMessage:
+class RJSHtmlMessage(object):
   '''
     Represents a HTML-injection into the frontend. Returning such an object from the ERP5
     backend is sufficient, as the _repr_html_ will be called internally.

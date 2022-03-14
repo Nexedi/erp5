@@ -1,4 +1,5 @@
 # Get sections.
+from builtins import str
 source_section = None
 source_section_value = context.getSourceSectionValue()
 if source_section_value is not None \

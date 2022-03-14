@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 from erp5.component.module.DateUtils import getNumberOfDayInMonth
 
 portal = context.getPortalObject()
@@ -30,7 +33,7 @@ if block_id in ('S21.G00.31', 'S21.G00.41', 'S21.G00.72'):
   change_bloc = kw['change_bloc']
   change_date = kw['change_date']
   rubric_value_dict[block_id + ".001"] = change_date
-  for rubric, value in change_bloc.iteritems():
+  for rubric, value in change_bloc.items():
     rubric_value_dict[rubric] = value
 
 # Envoi
@@ -94,7 +97,7 @@ if block_id == 'S21.G00.06':
     report_list = portal.dsn_module.searchFolder(effective_date=str(context.getEffectiveDate().year()))
     for month_report in report_list:
       manpower_list.append(int(month_report.getQuantity()))
-    average_manpower = str(sum(manpower_list) / len(manpower_list))
+    average_manpower = str(old_div(sum(manpower_list), len(manpower_list)))
   rubric_value_dict['S21.G00.06.001'] = ''.join(target.getCorporateRegistrationCode().split(' '))[:9]
   rubric_value_dict['S21.G00.06.002'] = ''.join(target.getCorporateRegistrationCode().split(' '))[-5:]
   rubric_value_dict['S21.G00.06.003'] = target.getActivityCode()

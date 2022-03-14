@@ -1,4 +1,6 @@
 """Create sub object for Foo"""
+from builtins import str
+from builtins import range
 from DateTime import DateTime
 date = DateTime('2009/01/01')
 for i in range(start, start + num):

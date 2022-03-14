@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -137,7 +138,7 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     del id_tool.__class__.getTypeInfo
     bt = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_core',
                                                                   strict=True)
-    for path, obj in bt._path_item._objects.iteritems():
+    for path, obj in bt._path_item._objects.items():
       path, obj_id = path.rsplit('/', 1)
       if path == 'portal_ids':
         id_tool._setObject(obj_id, obj._getCopy(bt))
@@ -173,14 +174,14 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
 
   def _setUpLastMaxIdDict(self, id_generator_reference):
     def countup(id_generator, id_group, until):
-      for _ in xrange(until + 1):
+      for _ in range(until + 1):
         self.id_tool.generateNewId(id_generator=id_generator_reference,
                                    id_group=id_group)
 
     countup(id_generator_reference, 'A-01', 2)
     countup(id_generator_reference, 'B-01', 1)
     var_id = 'C-%04d'
-    for x in xrange(self.a_lot_of_key):
+    for x in range(self.a_lot_of_key):
       countup(id_generator_reference, var_id % x, 0)
 
   def _getLastIdDictName(self, id_generator):
@@ -214,7 +215,7 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     last_id_dict = self._getLastIdDict(id_generator)
     self.assertEqual(2, self._getValueFromLastIdDict(last_id_dict, 'A-01'))
     self.assertEqual(1, self._getValueFromLastIdDict(last_id_dict, 'B-01'))
-    for x in xrange(self.a_lot_of_key):
+    for x in range(self.a_lot_of_key):
       key = 'C-%04d' % x
       self.assertEqual(0, self._getValueFromLastIdDict(last_id_dict, key))
 

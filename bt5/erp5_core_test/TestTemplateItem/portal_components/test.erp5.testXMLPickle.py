@@ -26,15 +26,19 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import unittest
 import pickle
 import re
 import xml.parsers.pyexpat
-from StringIO import StringIO
+from io import StringIO
 from Shared.DC.xml import ppml
 
 
-class DummyClass:
+class DummyClass(object):
   """
   A dummy data class
   """

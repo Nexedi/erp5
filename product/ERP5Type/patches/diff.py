@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import warnings
 from collections import Mapping
 from collections import Iterable

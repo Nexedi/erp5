@@ -15,7 +15,7 @@ total_quantity = 0
 
 line_list = []
 
-inventory_kw = dict(strict_base_contribution_uid=base_contribution_uid_dict.values(),
+inventory_kw = dict(strict_base_contribution_uid=list(base_contribution_uid_dict.values()),
           section_category=context.getGroup(base=1),
           portal_type=portal_type,
           simulation_state=('stopped', 'delivered'),

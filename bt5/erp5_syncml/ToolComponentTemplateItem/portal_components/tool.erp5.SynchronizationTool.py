@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.builtins import basestring
 from os import path
 from logging import getLogger, Formatter
 

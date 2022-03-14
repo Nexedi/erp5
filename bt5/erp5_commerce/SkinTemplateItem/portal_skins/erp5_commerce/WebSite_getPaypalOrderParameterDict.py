@@ -1,3 +1,4 @@
+from builtins import str
 order_parameter_dict = context.WebSite_getPaypalSecurityParameterDict()
 if order_parameter_dict is None:
   return None

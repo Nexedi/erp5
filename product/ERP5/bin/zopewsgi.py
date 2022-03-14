@@ -1,3 +1,9 @@
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import argparse
 from io import BytesIO
 import logging
@@ -8,7 +14,7 @@ import socket
 import sys
 from tempfile import TemporaryFile
 import time
-from urllib import quote, splitport
+from urllib.parse import quote, splitport
 
 from waitress.server import create_server
 import ZConfig
@@ -56,9 +62,9 @@ class TransLogger(object):
         if bytes is None:
             bytes = '-'
         if time.daylight:
-                offset = time.altzone / 60 / 60 * -100
+                offset = old_div(old_div(time.altzone, 60), 60) * -100
         else:
-                offset = time.timezone / 60 / 60 * -100
+                offset = old_div(old_div(time.timezone, 60), 60) * -100
         if offset >= 0:
                 offset = "+%0.4d" % (offset)
         elif offset < 0:

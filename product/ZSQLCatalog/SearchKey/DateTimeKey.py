@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.builtins import basestring
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
@@ -275,7 +276,7 @@ class DateTimeKey(SearchKey):
     column = self.getColumn()
     query_list = []
     extend = query_list.extend
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in operator_value_dict.items():
       reference_value = value_list[0]
       if isinstance(reference_value, dict):
         reference_value = reference_value['query']

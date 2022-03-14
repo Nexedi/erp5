@@ -1,3 +1,4 @@
+from builtins import zip
 from Products.CMFActivity.ActiveResult import ActiveResult
 portal = context.getPortalObject()
 

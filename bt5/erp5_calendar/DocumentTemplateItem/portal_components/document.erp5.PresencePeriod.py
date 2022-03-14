@@ -29,6 +29,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from copy import copy
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime

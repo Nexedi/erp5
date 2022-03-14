@@ -26,11 +26,14 @@ from __future__ import absolute_import
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 from future import standard_library
 standard_library.install_aliases()
 
 import socket
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import threading
 import sys
 import six
@@ -135,7 +138,7 @@ def getServerAddress():
             zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
         except KeyError:
             from asyncore import socket_map
-            for k, v in socket_map.items():
+            for k, v in list(socket_map.items()):
                 if hasattr(v, 'addr'):
                     # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
                     type = str(getattr(v, '__class__', 'unknown'))
@@ -703,7 +706,7 @@ class ActivityTool (BaseTool):
     security.declarePrivate('initialize')
     def initialize(self):
       self.maybeMigrateConnectionClass()
-      for activity in activity_dict.itervalues():
+      for activity in activity_dict.values():
         activity.initialize(self, clear=False)
       # Remove old skin if any.
       skins_tool = self.getPortalObject().portal_skins
@@ -743,10 +746,10 @@ class ActivityTool (BaseTool):
         url = '%s/manageLoadBalancing?manage_tabs_message=' %self.absolute_url()
         if not service:
             LOG('ActivityTool', INFO, 'TimerService not available')
-            url += urllib.quote('TimerService not available')
+            url += urllib.parse.quote('TimerService not available')
         else:
             service.subscribe(self)
-            url += urllib.quote("Subscribed to Timer Service")
+            url += urllib.parse.quote("Subscribed to Timer Service")
         if RESPONSE is not None:
             RESPONSE.redirect(url)
 
@@ -757,10 +760,10 @@ class ActivityTool (BaseTool):
         url = '%s/manageLoadBalancing?manage_tabs_message=' %self.absolute_url()
         if not service:
             LOG('ActivityTool', INFO, 'TimerService not available')
-            url += urllib.quote('TimerService not available')
+            url += urllib.parse.quote('TimerService not available')
         else:
             service.unsubscribe(self)
-            url += urllib.quote("Unsubscribed from Timer Service")
+            url += urllib.parse.quote("Unsubscribed from Timer Service")
         if RESPONSE is not None:
             RESPONSE.redirect(url)
 
@@ -776,7 +779,7 @@ class ActivityTool (BaseTool):
         self.activity_tracking = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Tracking log enabled')
+          url += urllib.parse.quote('Tracking log enabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'manage_disableActivityTracking')
@@ -787,7 +790,7 @@ class ActivityTool (BaseTool):
         self.activity_tracking = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Tracking log disabled')
+          url += urllib.parse.quote('Tracking log disabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'isActivityMailNotificationEnabled')
@@ -802,7 +805,7 @@ class ActivityTool (BaseTool):
         self.activity_failure_mail_notification = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Mail notification enabled')
+          url += urllib.parse.quote('Mail notification enabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'manage_disableMailNotification')
@@ -813,7 +816,7 @@ class ActivityTool (BaseTool):
         self.activity_failure_mail_notification = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Mail notification disabled')
+          url += urllib.parse.quote('Mail notification disabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'isActivityTimingLoggingEnabled')
@@ -828,7 +831,7 @@ class ActivityTool (BaseTool):
         self.activity_timing_log = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Timing log enabled')
+          url += urllib.parse.quote('Timing log enabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'manage_disableActivityTimingLogging')
@@ -839,7 +842,7 @@ class ActivityTool (BaseTool):
         self.activity_timing_log = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Timing log disabled')
+          url += urllib.parse.quote('Timing log disabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'isActivityCreationTraceEnabled')
@@ -854,7 +857,7 @@ class ActivityTool (BaseTool):
         self.activity_creation_trace = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Activity creation trace enabled')
+          url += urllib.parse.quote('Activity creation trace enabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'manage_disableActivityCreationTrace')
@@ -865,7 +868,7 @@ class ActivityTool (BaseTool):
         self.activity_creation_trace = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Activity creation trace disabled')
+          url += urllib.parse.quote('Activity creation trace disabled')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'isCancelAndInvokeLinksHidden')
@@ -879,7 +882,7 @@ class ActivityTool (BaseTool):
         self.cancel_and_invoke_links_hidden = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Cancel and invoke links hidden')
+          url += urllib.parse.quote('Cancel and invoke links hidden')
           RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'manage_showCancelAndInvokeLinks')
@@ -889,7 +892,7 @@ class ActivityTool (BaseTool):
         self.cancel_and_invoke_links_hidden = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
-          url += urllib.quote('Cancel and invoke links visible')
+          url += urllib.parse.quote('Cancel and invoke links visible')
           RESPONSE.redirect(url)
 
     security.declarePrivate('manage_beforeDelete')
@@ -934,9 +937,9 @@ class ActivityTool (BaseTool):
     def getNodeList(self, role=None):
       node_dict = self.getNodeDict()
       if role is None:
-        result = [x for x in node_dict.keys()]
+        result = [x for x in list(node_dict.keys())]
       else:
-        result = [node_id for node_id, node_role in node_dict.items() if node_role == role]
+        result = [node_id for node_id, node_role in list(node_dict.items()) if node_role == role]
       result.sort()
       return result
 
@@ -1002,7 +1005,7 @@ class ActivityTool (BaseTool):
         self.addNodeToFamily(node_id, family_name)
       REQUEST.RESPONSE.redirect(
         REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message=' +
-        urllib.quote('Nodes added to family.'),
+        urllib.parse.quote('Nodes added to family.'),
       )
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'removeNodeFromFamily')
@@ -1033,7 +1036,7 @@ class ActivityTool (BaseTool):
         self.removeNodeFromFamily(node_id, family_name)
       REQUEST.RESPONSE.redirect(
         REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message=' +
-        urllib.quote('Nodes removed from family.'),
+        urllib.parse.quote('Nodes removed from family.'),
       )
 
     def _checkFamilyName(self, name):
@@ -1077,8 +1080,8 @@ class ActivityTool (BaseTool):
         for node_id in family_new_node_list:
           self.addNodeToFamily(node_id, new_family_name)
       except ValueError as exc:
-        raise Redirect(redirect_url + urllib.quote(str(exc)))
-      REQUEST.RESPONSE.redirect(redirect_url + urllib.quote('Family created.'))
+        raise Redirect(redirect_url + urllib.parse.quote(str(exc)))
+      REQUEST.RESPONSE.redirect(redirect_url + urllib.parse.quote('Family created.'))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'renameFamily')
     def renameFamily(self, old_name, new_name):
@@ -1103,8 +1106,8 @@ class ActivityTool (BaseTool):
       try:
         self.renameFamily(old_family_name, new_family_name)
       except ValueError as exc:
-        raise Redirect(redirect_url + urllib.quote(str(exc)))
-      REQUEST.RESPONSE.redirect(redirect_url + urllib.quote('Family renamed.'))
+        raise Redirect(redirect_url + urllib.parse.quote(str(exc)))
+      REQUEST.RESPONSE.redirect(redirect_url + urllib.parse.quote('Family renamed.'))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'deleteFamily')
     def deleteFamily(self, name):
@@ -1126,8 +1129,8 @@ class ActivityTool (BaseTool):
       try:
         self.deleteFamily(family_name)
       except ValueError as exc:
-        raise Redirect(redirect_url + urllib.quote(str(exc)))
-      REQUEST.RESPONSE.redirect(redirect_url + urllib.quote('Family deleted'))
+        raise Redirect(redirect_url + urllib.parse.quote(str(exc)))
+      REQUEST.RESPONSE.redirect(redirect_url + urllib.parse.quote('Family deleted'))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyNameList')
     def getFamilyNameList(self):
@@ -1144,7 +1147,7 @@ class ActivityTool (BaseTool):
       family_id = self.getFamilyId(family_name)
       return [
         x
-        for x, y in self._getNodeFamilyIdDict().items()
+        for x, y in list(self._getNodeFamilyIdDict().items())
         if family_id in y
       ]
 
@@ -1190,13 +1193,13 @@ class ActivityTool (BaseTool):
               REQUEST.RESPONSE.redirect(
                   REQUEST.URL1 +
                   '/manageLoadBalancing?manage_tabs_message=' +
-                  urllib.quote("Distributing Node successfully changed."))
+                  urllib.parse.quote("Distributing Node successfully changed."))
         else :
           if REQUEST is not None:
               REQUEST.RESPONSE.redirect(
                   REQUEST.URL1 +
                   '/manageLoadBalancing?manage_tabs_message=' +
-                  urllib.quote("Malformed Distributing Node."))
+                  urllib.parse.quote("Malformed Distributing Node."))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_delNode')
     def manage_delNode(self, unused_node_list=None, REQUEST=None):
@@ -1221,7 +1224,7 @@ class ActivityTool (BaseTool):
         REQUEST.RESPONSE.redirect(
           REQUEST.URL1 +
           '/manageLoadBalancing?manage_tabs_message=' +
-          urllib.quote(message))
+          urllib.parse.quote(message))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_addToProcessingList')
     def manage_addToProcessingList(self, unused_node_list=None, REQUEST=None):
@@ -1237,7 +1240,7 @@ class ActivityTool (BaseTool):
         REQUEST.RESPONSE.redirect(
           REQUEST.URL1 +
           '/manageLoadBalancing?manage_tabs_message=' +
-          urllib.quote(message))
+          urllib.parse.quote(message))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_removeFromProcessingList')
     def manage_removeFromProcessingList(self, processing_node_list=None, REQUEST=None):
@@ -1253,7 +1256,7 @@ class ActivityTool (BaseTool):
         REQUEST.RESPONSE.redirect(
           REQUEST.URL1 +
           '/manageLoadBalancing?manage_tabs_message=' +
-          urllib.quote(message))
+          urllib.parse.quote(message))
 
     security.declarePrivate('process_shutdown')
     def process_shutdown(self, phase, time_in_phase):
@@ -1329,7 +1332,7 @@ class ActivityTool (BaseTool):
         Distribute load
       """
       # Call distribute on each queue
-      for activity in activity_dict.itervalues():
+      for activity in activity_dict.values():
         activity.distribute(aq_inner(self), node_count)
 
     security.declarePublic('tic')
@@ -1357,7 +1360,7 @@ class ActivityTool (BaseTool):
         # use a round-robin algorithm.
         # XXX: We always finish by iterating over all queues, in case that
         #      getPriority does not see messages dequeueMessage would process.
-        activity_list = activity_dict.values()
+        activity_list = list(activity_dict.values())
         def sort_key(activity):
           return activity.getPriority(self, processing_node,
             node_family_id_set)
@@ -1393,7 +1396,7 @@ class ActivityTool (BaseTool):
       quote = db.string_literal
       return bool(db.query("(%s)" % ") UNION ALL (".join(
         activity.hasActivitySQL(quote, path=path, **kw)
-        for activity in activity_dict.itervalues()))[1])
+        for activity in activity_dict.values()))[1])
 
     security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
@@ -1495,7 +1498,7 @@ class ActivityTool (BaseTool):
         object_path = obj
       else:
         object_path = obj.getPhysicalPath()
-      for activity in activity_dict.itervalues():
+      for activity in activity_dict.values():
         activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
 
     def invoke(self, message):
@@ -1602,7 +1605,7 @@ class ActivityTool (BaseTool):
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
-      expanded_object_list = sum(message_dict.itervalues(), [])
+      expanded_object_list = sum(iter(message_dict.values()), [])
       try:
         if expanded_object_list:
           # Store site info
@@ -1630,7 +1633,7 @@ class ActivityTool (BaseTool):
           error_log.raising(exc_info)
       else:
         # Note there can be partial failures.
-        for m, expanded_object_list in message_dict.iteritems():
+        for m, expanded_object_list in message_dict.items():
           result_list = []
           for result in expanded_object_list:
             try:
@@ -1742,7 +1745,7 @@ class ActivityTool (BaseTool):
       """
         Recreate tables, clearing all activities
       """
-      for activity in activity_dict.itervalues():
+      for activity in activity_dict.values():
         activity.initialize(self, clear=True)
 
       if RESPONSE is not None:
@@ -1771,7 +1774,7 @@ class ActivityTool (BaseTool):
         return activity_dict[activity].getMessageList(aq_inner(self), **kw)
 
       message_list = []
-      for activity in activity_dict.itervalues():
+      for activity in activity_dict.values():
         try:
           message_list += activity.getMessageList(aq_inner(self), **kw)
         except AttributeError:
@@ -1801,7 +1804,7 @@ class ActivityTool (BaseTool):
       quote = db.string_literal
       return sum(x for x, in db.query("(%s)" % ") UNION ALL (".join(
         activity.countMessageSQL(quote, **kw)
-        for activity in activity_dict.itervalues()))[1])
+        for activity in activity_dict.values()))[1])
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, REQUEST=None, **kw):
@@ -1814,11 +1817,11 @@ class ActivityTool (BaseTool):
 
     security.declarePrivate('getSQLTableNameSet')
     def getSQLTableNameSet(self):
-      return [x.sql_table for x in activity_dict.itervalues()]
+      return [x.sql_table for x in activity_dict.values()]
 
     # Required for tests (time shift)
     def timeShift(self, delay):
-      for activity in activity_dict.itervalues():
+      for activity in activity_dict.values():
         activity.timeShift(aq_inner(self), delay)
 
 InitializeClass(ActivityTool)

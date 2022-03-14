@@ -1,10 +1,13 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
 from DateTime import DateTime
 import responses
-import httplib
+import http.client
 
 
 class TaskDistributionTestCase(ERP5TypeTestCase):
@@ -1134,7 +1137,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Generate informations for nodes to subscribe
     nodes = dict([("COMP%d-Scalability-Node_test14" %i, "COMP-%d" %i) for i in range(0,5)])
     # Subscribe nodes
-    for node_title in nodes.keys():
+    for node_title in list(nodes.keys()):
       self.scalability_distributor.subscribeNode(node_title, computer_guid=nodes[node_title])
     self.tic()
     # Get validated test nodes
@@ -1142,7 +1145,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Get test node title list
     test_node_titles = [x.getTitle() for x in test_nodes]
     # Check subscription
-    for node_title in nodes.keys():
+    for node_title in list(nodes.keys()):
       self.assertTrue(node_title in test_node_titles)
     # Check ping date
     # TODO..
@@ -1259,7 +1262,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # -Delete master test node suite from dict
     del config_nodes[current_master_test_node.getTitle()]
     # Check if slave test node have got empty list
-    for suite in config_nodes.values():
+    for suite in list(config_nodes.values()):
       self.assertEquals(suite, [])
 
   def test_16A_startTestSuiteERP5ScalabilityDistributorWithRunningTestResult(self):
@@ -1348,7 +1351,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       zope_partition_dict += "{% endif %}\n"
     cluster_configuration += zope_partition_dict + '\n}}'
     # -Generate graph coordinate
-    graph_coordinate = range(1, len(node_list)+1)
+    graph_coordinate = list(range(1, len(node_list)+1))
     # -Create the test suite
     self._createTestSuite(quantity=1,priority=1, reference_correction=0,
                        specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite",
@@ -1675,7 +1678,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           self.id(),
           body['name'])
-      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+      return (http.client.CREATED, {'content-type': 'application/json'}, '{}')
     return _callback
 
   def test_start_test(self):
@@ -1830,7 +1833,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           'https://erp5js.example.com/#%s' % self.test_result.getRelativeUrl(),
           body['target_url'])
-      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+      return (http.client.CREATED, {'content-type': 'application/json'}, '{}')
 
     with responses.RequestsMock() as rsps:
       rsps.add_callback(
@@ -1912,7 +1915,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
           responses.POST,
           self.post_commit_status_url,
           json={"message": 'Cannot transition status via :run from :running (Reason(s): Status cannot transition via "run")'},
-          status=httplib.BAD_REQUEST,
+          status=http.client.BAD_REQUEST,
       )
       self.test_result.start()
       self.tic()

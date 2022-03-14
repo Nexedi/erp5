@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 from erp5.component.document.ERP5ProjectUnitTestDistributor import ERP5ProjectUnitTestDistributor
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from zLOG import LOG,ERROR
@@ -128,7 +130,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
         if test_node.getValidationState() != 'validated':
           try:
             test_node.validate()
-          except Exception, e:
+          except Exception as e:
             LOG('Test Node Validate',ERROR,'%s' %e)
       return test_node
     return None
@@ -269,7 +271,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
         if current_container == my_value :
           return True
         elif isinstance(current_container, dict):
-          for k, v in current_container.items():
+          for k, v in list(current_container.items()):
             if str(my_value) in str(k):
               return True
             if _isInMyDictOrList(v) :
@@ -342,7 +344,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
 
     try:
       template = jinja2.Template(cluster_configuration)
-      for index in xrange(0, len(number_configuration_list)):
+      for index in range(0, len(number_configuration_list)):
         template_vars = { "count" : number_configuration_list[index],
                           "comp" : remaining_nodes }
         configuration_list_json.append( json.loads(

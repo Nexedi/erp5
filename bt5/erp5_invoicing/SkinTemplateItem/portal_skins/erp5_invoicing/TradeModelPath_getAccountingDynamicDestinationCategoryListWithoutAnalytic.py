@@ -1,3 +1,4 @@
+from builtins import next
 portal = context.getPortalObject()
 
 category_list = [

@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import functools
 import re
 import warnings
@@ -119,7 +120,7 @@ class EntireQuery(object):
       # so align with the lowest denominator: selectable also cover columns,
       # which when there is no table name is an identifier.
       checkSelectable(alias): checkSelectable(column)
-      for alias, column in defaultDict(select_dict).iteritems()
+      for alias, column in defaultDict(select_dict).items()
     }
     # No need to sanitize, it's compared against columns and not included in SQL
     self.left_join_list = left_join_list
@@ -172,7 +173,7 @@ class EntireQuery(object):
         column_map.registerColumn(extra_column)
       for column in self.group_by_list:
         column_map.registerColumn(column)
-      for alias, column in self.select_dict.iteritems():
+      for alias, column in self.select_dict.items():
         if column is None:
           column = alias
         else:
@@ -194,7 +195,7 @@ class EntireQuery(object):
       self.group_by_list = new_column_list
       # Build a dictionnary from select_dict aliasing their mapped representations
       self.final_select_dict = select_dict = {}
-      for alias, raw_column in self.select_dict.iteritems():
+      for alias, raw_column in self.select_dict.items():
         if raw_column is None:
           column = alias
           if '.' in alias:

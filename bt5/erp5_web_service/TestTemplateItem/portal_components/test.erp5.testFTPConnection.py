@@ -25,9 +25,11 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import os
 import unittest
-import urlparse
+import urllib.parse
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -36,7 +38,7 @@ class TestSFTPConnection(ERP5TypeTestCase):
   if os.environ.get("testSFTPConnection_SFTP_URL"):
     def afterSetUp(self):
       url = os.environ["testSFTPConnection_SFTP_URL"]
-      parsed_url = urlparse.urlparse(url)
+      parsed_url = urllib.parse.urlparse(url)
       self.connection = self.portal.portal_web_services.newContent(
           portal_type='FTP Connector',
           reference=self.id(),

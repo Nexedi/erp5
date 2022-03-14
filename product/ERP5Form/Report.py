@@ -27,6 +27,9 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -35,7 +38,7 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator.Form import ZMIForm
 from zLOG import LOG, WARNING
 
-from urllib import quote
+from urllib.parse import quote
 from warnings import warn
 from Products.ERP5Type import PropertySheet
 
@@ -169,7 +172,7 @@ def add_and_edit(self, id, REQUEST):
         u = "%s/%s" % (u, quote(id))
     REQUEST.RESPONSE.redirect(u+'/manage_main')
 
-class ReportSection:
+class ReportSection(object):
   """ A section in an ERP5Report.
 
   ERP5 Reports are made of sections, which are some standards ERP5 Forms
@@ -323,7 +326,7 @@ class ReportSection:
         selection_list.append(selection_name)
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
-    for selection_name in filter(lambda x: x is not None, selection_list):
+    for selection_name in [x for x in selection_list if x is not None]:
       if self.temporary_selection:
         portal_selections.pushSelection(selection_name)
       else:

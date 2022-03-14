@@ -181,7 +181,7 @@ if detailed:
 else:
   if mirror_section_relative_url:
     total_amount = 0
-    for (node, mirror_section), amount in total_payable_price_per_node_section.items(): # pylint: disable=unused-variable
+    for (node, mirror_section), amount in list(total_payable_price_per_node_section.items()): # pylint: disable=unused-variable
       if mirror_section == mirror_section_relative_url:
         total_amount += amount
     return total_amount

@@ -1,3 +1,4 @@
+from builtins import str
 if context.getPortalType() != 'Person':
   raise TypeError('Person object is required')
 from DateTime import DateTime

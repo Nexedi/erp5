@@ -20,6 +20,7 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
+from builtins import str
 from Products.PageTemplates.utils import convertToUnicode
 
 def patched_convertToUnicode(source, content_type, preferred_encodings):
@@ -29,17 +30,17 @@ def patched_convertToUnicode(source, content_type, preferred_encodings):
 
 # PATCH BEGINING
 # See https://bugs.launchpad.net/zope2/+bug/706946
-    if isinstance(source, unicode):
+    if isinstance(source, str):
         return source, 'utf-8'
 # PATCH END
     if content_type.startswith('text/xml'):
         encoding = encodingFromXMLPreamble(source)
-        return unicode(source, encoding), encoding
+        return str(source, encoding), encoding
 
     elif content_type.startswith('text/html'):
         encoding = charsetFromMetaEquiv(source)
         if encoding:
-            return unicode(source, encoding), encoding
+            return str(source, encoding), encoding
 
     # Try to detect the encoding by converting it unicode without raising
     # exceptions. There are some smarter Python-based sniffer methods
@@ -48,11 +49,11 @@ def patched_convertToUnicode(source, content_type, preferred_encodings):
 
     for enc in preferred_encodings:
         try:
-            return unicode(source, enc), enc
+            return str(source, enc), enc
         except UnicodeDecodeError:
                 continue
 
-    return unicode(source), None
+    return str(source), None
 
 try:
     convertToUnicode(u'', 'text/xml', ())

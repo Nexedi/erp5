@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,6 +27,11 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import sys
 import math
 import os
@@ -33,6 +39,7 @@ import csv
 import logging
 import signal
 import traceback
+from future.utils import with_metaclass
 
 class BenchmarkResultStatistic(object):
   def __init__(self, suite, label):
@@ -41,7 +48,7 @@ class BenchmarkResultStatistic(object):
 
     self.full_label = '%s: %s' % (self.suite, self.label)
 
-    self.minimum = sys.maxint
+    self.minimum = sys.maxsize
     self.maximum = -1
     self.n = 0
     self.error_sum = 0
@@ -75,20 +82,20 @@ class BenchmarkResultStatistic(object):
     self.n += 1
 
     delta = value - self._variance_mean
-    self._variance_mean += delta / self.n
+    self._variance_mean += old_div(delta, self.n)
     self._variance_sum += delta * (value - self._variance_mean)
 
   @property
   def mean(self):
     if self.n == 0:
       self.n = 1
-    return self._value_sum / self.n
+    return old_div(self._value_sum, self.n)
 
   @property
   def standard_deviation(self):
     if self.n == 0:
       self.n = 1
-    return math.sqrt(self._variance_sum / self.n)
+    return math.sqrt(old_div(self._variance_sum, self.n))
 
 class NothingFlushedException(Exception):
   pass
@@ -96,9 +103,7 @@ class NothingFlushedException(Exception):
 import abc
 import time
 
-class BenchmarkResult(object):
-  __metaclass__ = abc.ABCMeta
-
+class BenchmarkResult(with_metaclass(abc.ABCMeta, object)):
   def __init__(self, argument_namespace, nb_users, user_index,
                current_repeat_range):
     self._argument_namespace = argument_namespace
@@ -225,7 +230,7 @@ class BenchmarkResult(object):
 
     if self._current_use_case_counter != 0:
       self._current_suite_dict['use_case_stat'].add(
-        self._current_use_case_counter / (elapsed_time / 60.0))
+        old_div(self._current_use_case_counter, (elapsed_time / 60.0)))
 
     self._current_suite_dict['all_result_list'].append(self._current_result_list)
     self._current_suite_index += 1
@@ -332,7 +337,7 @@ class CSVBenchmarkResult(BenchmarkResult):
       self.logger.error(logged_msg)
       raise RuntimeError(msg)
 
-from cStringIO import StringIO
+from io import StringIO
 
 from six.moves import xmlrpc_client as xmlrpclib
 import datetime

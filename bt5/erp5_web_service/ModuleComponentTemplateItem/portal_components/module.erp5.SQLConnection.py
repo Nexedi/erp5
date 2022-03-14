@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5.ERP5Site import getSite
 
 class MethodWrapper(object):
@@ -45,7 +46,7 @@ class MethodWrapper(object):
       from erp5.component.tool.WebServiceTool import ConnectionError
       raise ConnectionError("Method %s does not exist" %(method_name))
 
-class SQLConnection:
+class SQLConnection(object):
   """
     Holds a connection to a SQL Database
     Nothing is managed here, this is just a method wrapper to Z SQL Methods

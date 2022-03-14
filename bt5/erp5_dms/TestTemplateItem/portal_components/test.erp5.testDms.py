@@ -44,10 +44,17 @@
   - email ingestion
   These are subject to another suite "testIngestion".
 """
+from __future__ import division
+from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import unittest
 import time
-import StringIO
+import io
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
@@ -63,8 +70,8 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
-import httplib
-import urllib
+import http.client
+import urllib.request, urllib.parse, urllib.error
 import difflib
 import re
 from AccessControl import Unauthorized
@@ -228,7 +235,7 @@ class TestDocument(TestDocumentMixin):
     # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
     url = '%s?%s&__ac=%s' %(uri, make_query(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
     format_=kw.get('format', 'jpeg')
-    infile = urllib.urlopen(url)
+    infile = urllib.request.urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
     filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format_)
     f = open(filename, "w")
@@ -807,7 +814,7 @@ class TestDocument(TestDocumentMixin):
       if portal_type is not None:
         kw['portal_type'] = portal_type
       if src__==1:
-        print portal.portal_catalog(src__=src__,**kw)
+        print(portal.portal_catalog(src__=src__,**kw))
       result_list = [x.getObject() for x in portal.portal_catalog(**kw)]
       return [x for x in result_list if x in test_document_set]
 
@@ -906,7 +913,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('%s "%s"' %(kw['searchabletext_any'], kw['searchabletext_phrase']), \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string.keys()))
 
 
     # search "with all of the words"
@@ -915,7 +922,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string.keys()))
 
     # search without these words
     kw["searchabletext_without"] = "searchabletext_without1 searchabletext_without2"
@@ -923,7 +930,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertEqual(['searchabletext'], parsed_string.keys())
+    self.assertEqual(['searchabletext'], list(parsed_string.keys()))
 
     # search limited to a certain date range
     kw['created_within'] = '1w'
@@ -931,7 +938,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w', \
                       search_string)
     parsed_string = parse(search_string)
-    self.assertSameSet(['searchabletext', 'creation_from'], parsed_string.keys())
+    self.assertSameSet(['searchabletext', 'creation_from'], list(parsed_string.keys()))
 
     # search with portal_type
     kw['search_portal_type'] = 'Document'
@@ -940,7 +947,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # search by reference
@@ -950,7 +957,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
 
@@ -961,7 +968,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -974,7 +981,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -988,7 +995,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1002,7 +1009,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1017,7 +1024,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1033,7 +1040,7 @@ class TestDocument(TestDocumentMixin):
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
     self.assertEqual(kw['reference'], parsed_string['reference'])
     self.assertEqual(kw['version'], parsed_string['version'])
@@ -1050,7 +1057,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
-                        parsed_string.keys())
+                        list(parsed_string.keys()))
     #self.assertEqual(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
@@ -1701,7 +1708,7 @@ class TestDocument(TestDocumentMixin):
     # as it is done in reality
 
     # Mimic the behaviour of a FileUpload from WebPage_view
-    file_like = StringIO.StringIO()
+    file_like = io.StringIO()
     file_like.write(html_content)
     setattr(file_like, 'filename', 'something.htm')
     web_page.edit(file=file_like)
@@ -1829,7 +1836,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     </html>
 """
     web_page.edit(text_content=html_content)
-    from HTMLParser import HTMLParseError
+    from html.parser import HTMLParseError
     try:
       web_page.asStrippedHTML()
     except HTMLParseError:
@@ -1897,17 +1904,17 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
-          assert response.getStatus() == httplib.OK
+          assert response.getStatus() == http.client.OK
 
     # assume there is no password
     credential = '%s:' % (getSecurityManager().getUser().getId(),)
     tested_list = []
-    frame_list = range(pages_number)
+    frame_list = list(range(pages_number))
     # assume that ZServer is configured with 4 Threads
-    conversion_per_tread = pages_number / 4
+    conversion_per_tread = old_div(pages_number, 4)
     while frame_list:
       local_frame_list = [frame_list.pop() for i in\
-                            xrange(min(conversion_per_tread, len(frame_list)))]
+                            range(min(conversion_per_tread, len(frame_list)))]
       instance = ThreadWrappedConverter(self.publish, document.getPath(),
                                         local_frame_list, credential)
       tested_list.append(instance)
@@ -1925,7 +1932,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     result_list = []
-    for i in xrange(pages_number):
+    for i in range(pages_number):
       # all conversions should succeeded and stored in cache storage
       convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
@@ -1978,7 +1985,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
     web_page.edit(text_content=text_content)
     self.assertTrue(my_utf_eight_token in web_page.asStrippedHTML())
-    self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
+    self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), str))
 
   def test_PDFDocument_asTextConversion(self):
     """Test a PDF document with embedded images
@@ -1990,7 +1997,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertEqual(document.asText(), 'ERP5 is a free software.')
 
   def test_broken_pdf_asText(self):
-    class StringIOWithFilename(StringIO.StringIO):
+    class StringIOWithFilename(io.StringIO):
       filename = 'broken.pdf'
     document = self.portal.document_module.newContent(
         portal_type='PDF',
@@ -2003,7 +2010,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     pdf_writer = PyPDF2.PdfFileWriter()
     pdf_writer.addPage(pdf_reader.getPage(0))
     pdf_writer.encrypt('secret')
-    encrypted_pdf_stream = StringIO.StringIO()
+    encrypted_pdf_stream = io.StringIO()
     pdf_writer.write(encrypted_pdf_stream)
     document = self.portal.document_module.newContent(
         portal_type='PDF',
@@ -2286,8 +2293,8 @@ return 1
     """
     def getURL(uri, **kw):
       # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
-      return urllib.urlopen(url)
+      url = '%s?%s&__ac=%s' %(uri, urllib.parse.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      return urllib.request.urlopen(url)
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')

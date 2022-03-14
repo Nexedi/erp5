@@ -1,5 +1,6 @@
 # this script allow to create a new object from this current one
 
+from builtins import str
 current_object = context.getObject()
 module = context.getPortalObject().sale_opportunity_module
 

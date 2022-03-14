@@ -27,10 +27,11 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import object
 from .Base import Setter
 
 # Creation of default constructor
-class func_code: pass
+class func_code(object): pass
 
 class Reindex(Setter):
     """

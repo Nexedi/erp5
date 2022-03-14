@@ -67,7 +67,7 @@ class ProductForm(BasicForm):
         # Unfortunately, Formulator doesn't do this already in Field.__init__
         # and there isn't a Python-oriented method for altering message values
         # so at present it's the only option.
-        for arg in kwargs.keys():
+        for arg in list(kwargs.keys()):
             if arg in fieldObject.message_values:
                 fieldObject.message_values[arg] = kwargs[arg]
 

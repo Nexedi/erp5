@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.SubscriptionItem import SubscriptionItem
 from AccessControl import ClassSecurityInfo

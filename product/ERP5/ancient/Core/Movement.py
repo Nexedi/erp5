@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Movement:
+from builtins import object
+class Movement(object):
   """
     Movement of a quantity of resource in a given variation
     from a source to a destination. Discrete variation

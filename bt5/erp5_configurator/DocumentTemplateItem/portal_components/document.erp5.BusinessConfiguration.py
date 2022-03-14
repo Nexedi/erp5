@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from builtins import range
 from AccessControl import ClassSecurityInfo
 from Persistence import PersistentMapping
 from Acquisition import aq_base
@@ -74,7 +76,7 @@ def getWorkflowHistory(state, document, remove_undo=0, remove_not_displayed=0):
   else:
     result = []
     for x in wh:
-      if x.has_key('undo') and x['undo'] == 1:
+      if 'undo' in x and x['undo'] == 1:
         result.pop()
       else:
         result.append(x.copy())
@@ -95,7 +97,7 @@ def _updateWorkflowHistory(workflow, document, status_dict):
 
   # Add an entry for the workflow in the history
   workflow_key = workflow.getReference()
-  if not document.workflow_history.has_key(workflow_key):
+  if workflow_key not in document.workflow_history:
     document.workflow_history[workflow_key] = ()
 
   # Update history
@@ -349,11 +351,11 @@ class BusinessConfiguration(Item):
       ## so remove from it already existing configuration items
       if configuration_save != self:  # don't delete ourselves
         existing_conf_items = configuration_save.objectIds()
-        existing_conf_items = map(None, existing_conf_items)
+        existing_conf_items = list(existing_conf_items)
         configuration_save.manage_delObjects(existing_conf_items)
 
     modified_form_kw = {}
-    for k in form_kw.keys():
+    for k in list(form_kw.keys()):
       if form_kw[k].__class__.__name__ != 'FileUpload':
         modified_form_kw[k] = form_kw[k]
     configuration_save.edit(**modified_form_kw)
@@ -532,7 +534,7 @@ class BusinessConfiguration(Item):
     if getattr(aq_base(self),
                '_global_configuration_attributes', None) is None:
       self._global_configuration_attributes = PersistentMapping()
-    for key, value in kw.items():
+    for key, value in list(kw.items()):
       self._global_configuration_attributes[key] = value
 
   security.declareProtected(Permissions.View, 'getGlobalConfigurationAttr')

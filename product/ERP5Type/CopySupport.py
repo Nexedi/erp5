@@ -12,6 +12,9 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
+from builtins import object
 from functools import partial
 from OFS import Moniker
 from zExceptions import BadRequest
@@ -40,7 +43,7 @@ _marker = object()
 
 from zLOG import LOG
 
-class CopyContainer:
+class CopyContainer(object):
   """This class redefines the copy/paste methods  which are required in ERP5 in
   relation with the ZSQLCatalog and CMFCategory. Class using class should also
   inherit from ERP5Type.Base
@@ -119,7 +122,7 @@ class CopyContainer:
       changed = False
       category_list = object.getCategoryList()
       path_len = len(path_item_list)
-      for position in xrange(len(category_list)):
+      for position in range(len(category_list)):
           # only need to compare the first path_len components after the portal
           category_name = category_list[position].split('/', path_len+1)
           if category_name[1:path_len + 1] == path_item_list:
@@ -256,7 +259,7 @@ class CopyContainer:
           #remove previous owners
           local_role_dict = self.__ac_local_roles__
           removable_role_key_list = []
-          for key, value in local_role_dict.items():
+          for key, value in list(local_role_dict.items()):
             if 'Owner' in value:
               value.remove('Owner')
             if len(value) == 0:
@@ -554,7 +557,7 @@ class CopyContainer:
         if userid is not None:
           #remove previous owners
           dict = self.__ac_local_roles__
-          for key, value in dict.items():
+          for key, value in list(dict.items()):
             if 'Owner' in value:
               value.remove('Owner')
           #add new owner
@@ -590,7 +593,7 @@ class CopyContainer:
     cp = None
     if cb_copy_data is not None:
       cp = cb_copy_data
-    elif REQUEST is not None and REQUEST.has_key('__cp'):
+    elif REQUEST is not None and '__cp' in REQUEST:
       cp = REQUEST['__cp']
     if cp is None:
       raise CopyError("No Data")

@@ -3,6 +3,9 @@
 
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 __version__ = "$Revision: 1.10 $"[11:-2]
 
 try:
@@ -70,7 +73,7 @@ class ERP5LDIFRecordList(LDIFRecordList):
             raise ValueError('Read changetype: before getting valid dn: line.')
           if changetype!=None:
             raise ValueError('Two lines starting with changetype: in one record.')
-          if not valid_changetype_dict.has_key(attr_value):
+          if attr_value not in valid_changetype_dict:
             raise ValueError('changetype value %r is invalid.' % (attr_value,))
           changetype = attr_value
           attr_type, attr_value = self._parseAttrTypeandValue()
@@ -90,9 +93,9 @@ class ERP5LDIFRecordList(LDIFRecordList):
           #don't add new entry for the same dn
           break
         elif attr_value not in (None, '') and \
-             not self._ignored_attr_types.has_key(string.lower(attr_type)):
+             string.lower(attr_type) not in self._ignored_attr_types:
           # Add the attribute to the entry if not ignored attribute
-          if entry.has_key(attr_type):
+          if attr_type in entry:
             entry[attr_type].append(attr_value)
           else:
             entry[attr_type]=[attr_value]
@@ -119,7 +122,7 @@ class Filter(DocumentTemplate.HTML):
 class nvLDIF(DocumentTemplate.HTML):
     # Non-validating Ldif Template for use by LDIFFiles.
     commands={}
-    for k, v in DocumentTemplate.HTML.commands.items(): commands[k] = v
+    for k, v in list(DocumentTemplate.HTML.commands.items()): commands[k] = v
     commands['ldifvar' ] = ldifvar.LDIFVar
     commands['ldifline' ] = ldifvar.LDIFLine
 
@@ -142,13 +145,13 @@ def LDAPConnectionIDs(self):
                     and o._isAnLDAPConnection() and hasattr(o,'id')):
                     id=o.id
                     if type(id) is not StringType: id=id()
-                    if not ids.has_key(id):
+                    if id not in ids:
                         if hasattr(o,'title_and_id'): o=o.title_and_id()
                         else: o=id
                         ids[id]=id
         if hasattr(self, 'aq_parent'): self=self.aq_parent
         else: self=None
-    ids=map(lambda item: (item[1], item[0]), ids.items())
+    ids=[(item[1], item[0]) for item in list(ids.items())]
     ids.sort()
     return ids
 
@@ -295,7 +298,7 @@ class LDAPMethod(Aqueduct.BaseQuery,
                 '<hr><strong>Filter used:</strong><br>\n<pre>\n%s\n</pre>\n<hr>\n'
                 '</body></html>' % (r, src)
                 )
-            report=apply(report,(self,REQUEST),{self.id:res})
+            report=report(*(self,REQUEST), **{self.id:res})
 
             if tb is not None:
                 self.raise_standardErrorMessage(
@@ -312,7 +315,7 @@ class LDAPMethod(Aqueduct.BaseQuery,
         else:
             for dn,attrs in res:
                 s = s + ('<ul><li><b>DN: %s</b></li>\n<ul>' % dn)
-                s = s + str(pretty_results(attrs=attrs.items()))
+                s = s + str(pretty_results(attrs=list(attrs.items())))
                 s = s + '</ul></ul>'
         return s
 
@@ -352,12 +355,12 @@ class LDAPMethod(Aqueduct.BaseQuery,
         f.cook()
         if getSecurityManager is None:
             # working in a pre-Zope 2.2 instance
-            f = apply(f, (p,argdata))       #apply the template
+            f = f(*(p,argdata))       #apply the template
         else:
             # Working with the new security manager (Zope 2.2.x ++)
             security = getSecurityManager()
             security.addContext(self)
-            try:     f = apply(f, (p,), argdata)  # apply the template
+            try:     f = f(*(p,), **argdata)  # apply the template
             finally: security.removeContext(self)
 
         f = str(f)                      #ensure it's a string
@@ -485,19 +488,19 @@ class LDIFMethod(LDAPMethod):
     ldif.cook()
     if getSecurityManager is None:
       # working in a pre-Zope 2.2 instance
-      ldif = apply(ldif, (p, argdata))       #apply the template
+      ldif = ldif(*(p, argdata))       #apply the template
     else:
       # Working with the new security manager (Zope 2.2.x ++)
       security = getSecurityManager()
       security.addContext(self)
-      try:     ldif = apply(ldif, (p,), argdata)  # apply the template
+      try:     ldif = ldif(*(p,), **argdata)  # apply the template
       finally: security.removeContext(self)
 
     ldif = str(ldif)                      #ensure it's a string
     #LOG('ldif', 0, ldif)
     if src__: return ldif              #return the rendered source
     ### Apply Query
-    from cStringIO import StringIO
+    from io import StringIO
     file = StringIO(ldif)
     l = ERP5LDIFRecordList(file)
     l.parse()
@@ -525,7 +528,7 @@ class LDIFMethod(LDAPMethod):
       dn = record[0]
       entry = record[1]
       if type(entry) == type({}):
-        authorized_modify_key = [key for key in entry.keys() if key in CHANGE_TYPES]
+        authorized_modify_key = [key for key in list(entry.keys()) if key in CHANGE_TYPES]
         if len(authorized_modify_key):
           for key in authorized_modify_key:
             tuple_list = entry[key]

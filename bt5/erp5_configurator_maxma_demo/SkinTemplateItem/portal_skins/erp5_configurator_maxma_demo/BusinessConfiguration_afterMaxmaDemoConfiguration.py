@@ -1,4 +1,5 @@
 """ This script will be called to apply the customization. """
+from __future__ import print_function
 from AccessControl import getSecurityManager
 from erp5.component.module.Log import log
 
@@ -62,17 +63,17 @@ module_business_application_map = {'base': ('currency_module',
                                            'transformation_module',),
                                    }
 
-for business_application_category_id, module_ids in module_business_application_map.items():
+for business_application_category_id, module_ids in list(module_business_application_map.items()):
   for module_id in module_ids:
     module = getattr(portal, module_id, None)
     if module is not None:
       module.edit(business_application = business_application_category_id)
 
-print "Indexing translations"
+print("Indexing translations")
 portal.ERP5Site_updateTranslationTable()
 
 # clear cache so user security is recalculated
 portal.portal_caches.clearAllCache()
-print "Clear cache."
+print("Clear cache.")
 
 log("%s" % printed)

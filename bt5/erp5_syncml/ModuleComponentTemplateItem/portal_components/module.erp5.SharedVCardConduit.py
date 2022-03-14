@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from AccessControl import ClassSecurityInfo
 
 from erp5.component.module.VCardConduit import VCardConduit

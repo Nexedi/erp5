@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Publish all knowledge pad gadgets
 for gadget in context.portal_gadgets.objectValues():
   if gadget.getValidationState() == 'invisible':
@@ -17,5 +18,5 @@ if remove_existing_pads:
   user_knowledge_pad_list = context.ERP5Site_getKnowledgePadListForUser(mode = mode)
   context.knowledge_pad_module.manage_delObjects([x.getId() for x in user_knowledge_pad_list])
 
-print "Done"
+print("Done")
 return printed

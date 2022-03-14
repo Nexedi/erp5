@@ -24,6 +24,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import str
+from builtins import map
+from builtins import object
 import errno
 import os
 import re
@@ -146,7 +149,7 @@ class Updater(object):
       return self._git_find_rev(h)
     elif self.getRepositoryType() == SVN_TYPE:
       stdout = self.spawn('svn', 'info', *path_list)['stdout']
-      return str(max(map(int, SVN_CHANGED_REV.findall(stdout))))
+      return str(max(list(map(int, SVN_CHANGED_REV.findall(stdout)))))
     raise NotImplementedError
 
   def deleteRepository(self):

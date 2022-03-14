@@ -1,4 +1,5 @@
-for k, v in kw.items():
+from builtins import str
+for k, v in list(kw.items()):
   if v:
     if k == "str_object_path":
       kw["path"] = v

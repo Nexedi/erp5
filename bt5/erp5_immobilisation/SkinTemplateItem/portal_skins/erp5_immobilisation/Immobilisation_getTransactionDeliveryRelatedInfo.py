@@ -40,7 +40,7 @@ for simulation_movement in delivery_related_list:
 
 
 returned_value = []
-for item, data in returned_dict.items():
+for item, data in list(returned_dict.items()):
   for detail in data:
     returned_value.append(detail)
 

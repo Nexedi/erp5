@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
@@ -45,13 +46,13 @@ from BTrees.OIBTree import OIBTree
 
 _marker = object()
 
-class Priority:
+class Priority(object):
   """ names for priorities """
   SITE  = 1
   GROUP = 2
   USER  = 3
 
-class func_code: pass
+class func_code(object): pass
 
 class PreferenceMethod(Method):
   """ A method object that lookup the attribute on preferences. """
@@ -280,8 +281,7 @@ class PreferenceTool(BaseTool):
         'portal_preferences.getDocumentTemplateList.{}'.format(self._getCacheId()),
         cache_factory='erp5_ui_long')
 
-    allowed_content_types = map(lambda pti: pti.id,
-                                folder.allowedContentTypes())
+    allowed_content_types = [pti.id for pti in folder.allowedContentTypes()]
     user_id = getToolByName(self, 'portal_membership').getAuthenticatedMember().getId()
     template_list = []
     for portal_type in allowed_content_types:

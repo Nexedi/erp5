@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 from DateTime import DateTime
@@ -54,7 +55,7 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
     'int':                (int, ),
     'boolean':            (int, bool),
     'float':              (float, ),
-    'long':               (long, ),
+    'long':               (int, ),
     'tales':              (str, ),
     'lines':              (list, tuple),
     'tokens':             (list, tuple),

@@ -4,10 +4,11 @@ Return JSON with message to be displayed and set according HTTP STATUS for messa
 :param message: {str}
 :param level: {str | int} use ERP5Type.Log levels or simply strings like "info", "warning", or "error"
 """
+from builtins import str
 import json
 from erp5.component.module.Log import WARNING, ERROR
 
-if isinstance(level, (str, unicode)):
+if isinstance(level, str):
   if level.lower() == "error":
     response_code = 500
   elif level.lower().startswith("warn"):

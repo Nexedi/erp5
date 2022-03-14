@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
@@ -28,6 +29,7 @@
 #
 ##############################################################################
 
+from past.utils import old_div
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
@@ -118,4 +120,4 @@ class Consumption(XMLObject, XMLMatrix, VariatedMixin):
         else:
           cell_quantity_ratio_list.append( cell_quantity_ratio )
 
-    return cell_quantity_ratio_list[1] / cell_quantity_ratio_list[0]
+    return old_div(cell_quantity_ratio_list[1], cell_quantity_ratio_list[0])

@@ -1,3 +1,4 @@
+from builtins import str
 from decimal import Decimal
 import datetime
 import time
@@ -10,7 +11,7 @@ try:
   results = context.manage_test(query)
   data = [ results.names() ]
   data.extend(results.tuples())
-except Exception, e:
+except Exception as e:
   response.setStatus(500)
   try:
     response.write(str(e[1]))

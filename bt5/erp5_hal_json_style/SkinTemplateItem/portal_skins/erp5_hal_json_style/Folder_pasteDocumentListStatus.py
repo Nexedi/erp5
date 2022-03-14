@@ -1,3 +1,4 @@
+from builtins import str
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 translate = Base_translateString

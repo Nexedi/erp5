@@ -4,6 +4,7 @@
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from email import Encoders
 from email.MIMEBase import MIMEBase

@@ -1,3 +1,5 @@
+from past.builtins import cmp
+from builtins import range
 from Products.PythonScripts.standard import Object
 request = container.REQUEST
 portal = context.getPortalObject()
@@ -32,7 +34,7 @@ unassigned_dic['ticket_type']=portal.Base_translateString("Unassigned")
 
 #Return index of uid into the list and append if not exists
 def createReturnLine(uid, list_):
-  for i in xrange(len(list_)):
+  for i in range(len(list_)):
     if list[i]['uid']==uid:
       return i
   new_dic=default_dic.copy()

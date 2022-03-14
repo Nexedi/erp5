@@ -94,7 +94,7 @@ class RamCache(BaseCache):
       ## time to check for expired cache items
       self._next_cache_expire_check_at = now + self.cache_expire_check_interval
       cache = self.getCacheStorage()
-      for key, value in cache.items():
+      for key, value in list(cache.items()):
         if value.isExpired():
           try:
             del cache[key]
@@ -122,13 +122,13 @@ class RamCache(BaseCache):
 
   def getScopeList(self):
     scope_set = set()
-    for scope, cache_id in self.getCacheStorage().iterkeys():
+    for scope, cache_id in self.getCacheStorage().keys():
       scope_set.add(scope)
     return list(scope_set)
 
   def getScopeKeyList(self, scope):
     key_list = []
-    for key in self.getCacheStorage().iterkeys():
+    for key in self.getCacheStorage().keys():
       if scope == key[0]:
         key_list.append(key[1])
     return key_list
@@ -139,7 +139,7 @@ class RamCache(BaseCache):
 
   def clearCacheForScope(self, scope):
     cache = self.getCacheStorage()
-    for key in cache.keys():
+    for key in list(cache.keys()):
       if key[0] == scope:
         try:
           del cache[key]
@@ -155,7 +155,7 @@ class RamCache(BaseCache):
     total_size = 0
     cache_keys_total_size = {}
     cache = self.getCacheStorage()
-    for key, value in cache.iteritems():
+    for key, value in cache.items():
       value_size = calcPythonObjectMemorySize(value)
       total_size += value_size
       cache_keys_total_size[key[1]] = value_size

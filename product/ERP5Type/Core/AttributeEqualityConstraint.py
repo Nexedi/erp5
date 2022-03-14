@@ -133,5 +133,5 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
       'condition'     : 'python: object.getPortalType() == 'Foo',
     }
     """
-    for name, value in property_dict.iteritems():
+    for name, value in property_dict.items():
       yield dict(name=value)

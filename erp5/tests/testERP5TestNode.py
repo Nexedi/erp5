@@ -1,3 +1,8 @@
+from __future__ import print_function
+from builtins import next
+from builtins import str
+from builtins import range
+from builtins import object
 import unittest
 from unittest import TestCase
 from contextlib import contextmanager
@@ -1015,7 +1020,7 @@ shared = true
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEqual(2, len(test_node.node_test_suite_dict))
-      for suite in test_node.node_test_suite_dict.values():
+      for suite in list(test_node.node_test_suite_dict.values()):
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)

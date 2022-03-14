@@ -1,4 +1,5 @@
 """ Called after test results are saved under ERP5 from workflow transition. """
+from __future__ import print_function
 
 recipient_list = []
 include_link = 1
@@ -15,6 +16,6 @@ if recipient_list:
                                            mail_from='nobody@svn.erp5.org',
                                            include_link=include_link,
                                            include_diff=True)
-  print 'Successfully sent to: ', recipient_list
-print 'OK'
+  print('Successfully sent to: ', recipient_list)
+print('OK')
 return printed

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from MethodObject import Method
 
 """
@@ -45,7 +46,7 @@ from MethodObject import Method
   made generic.
 """
 
-class InteractorMethodCall:
+class InteractorMethodCall(object):
   """
   Method's wrapper used to keep arguments passed, in order to retrieve them
   from before and after scripts if needed.
@@ -71,8 +72,8 @@ class InteractorMethod(Method):
     self.after_action_list = []
     self.before_action_list = []
     self.method = method
-    self.__code__ = self.func_code = method.func_code
-    self.__defaults__ = self.func_defaults = method.func_defaults
+    self.__code__ = self.__code__ = method.__code__
+    self.__defaults__ = self.__defaults__ = method.__defaults__
     self.__name__ = method.__name__
 
   def registerBeforeAction(self, action, args, kw):
@@ -90,7 +91,7 @@ class InteractorMethod(Method):
       action(method_call_object, *args, **kw)
     return result
 
-class InteractorSource:
+class InteractorSource(object):
   """
   """
 
@@ -104,7 +105,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.im_class
+      im_class = self.method.__self__.__class__
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -116,7 +117,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.im_class
+      im_class = self.method.__self__.__class__
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -124,7 +125,7 @@ class InteractorSource:
     # Register the action
     self.method.registerAfterAction(action, args, kw)
 
-class Interactor:
+class Interactor(object):
   """
   Interactor base class.
 

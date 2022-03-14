@@ -25,6 +25,7 @@
 # 02110-1301, USA.
 #
 ##############################################################################
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.Core.Predicate import Predicate

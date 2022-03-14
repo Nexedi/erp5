@@ -1,9 +1,12 @@
+from __future__ import division
 #  this API uses format= as argument
 # pylint: disable=redefined-builtin
 
 # We wants to get data in order to do a nice summary of items inside the order
 # This report will mainly usefull when the same resource is ordered on many
 # different lines
+from past.builtins import cmp
+from past.utils import old_div
 from erp5.component.module.Log import log
 if target_language:
   container.REQUEST['AcceptLanguage'].set(target_language, 10)
@@ -148,7 +151,7 @@ for source_trade in source_trade_dict:
   if total_price_dict.get(source_trade, 0) != 0 and \
       total_quantity_dict.get(source_trade, 0) != 0:
     unit_price_dict[source_trade] = \
-      total_price_dict.get(source_trade, 0) / total_quantity_dict.get(source_trade, 0)
+      old_div(total_price_dict.get(source_trade, 0), total_quantity_dict.get(source_trade, 0))
 unit_price_object = context.asContext(title = "Unit Price",
                                       reference = "",
                                       stop_date = "",

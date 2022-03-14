@@ -27,6 +27,12 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import map
+from builtins import range
+from past.builtins import basestring
 from collections import defaultdict
 from contextlib import contextmanager
 from itertools import product
@@ -89,7 +95,7 @@ def render_datetime(x):
   return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
 
 if six.PY2:
-  _SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
+  _SQLTEST_NO_QUOTE_TYPE_SET = int, float, int
 else:
   _SQLTEST_NO_QUOTE_TYPE_SET = int, float
 _SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
@@ -310,7 +316,7 @@ CREATE TABLE %s (
     def insert(reset_uid):
       values = self._insert_separator.join(values_list)
       del values_list[:]
-      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+      for _ in range(UID_ALLOCATION_TRY_COUNT):
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.
@@ -368,7 +374,7 @@ CREATE TABLE %s (
     #      value should be ignored, instead of trying to render them
     #      (with comparisons with NULL).
     q = db.string_literal
-    sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.iteritems())
+    sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.items())
     sql = "SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
       self.sql_table,
       sql and '\nWHERE ' + sql,
@@ -391,11 +397,11 @@ CREATE TABLE %s (
   def countMessageSQL(self, quote, **kw):
     return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
       self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
-        sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v
+        sqltest_dict[k](v, quote) for (k, v) in kw.items() if v
         ) or "1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
-    where = [sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v]
+    where = [sqltest_dict[k](v, quote) for (k, v) in kw.items() if v]
     if only_valid:
       where.append('processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
@@ -474,7 +480,7 @@ CREATE TABLE %s (
       for (
         dependency_name,
         dependency_value,
-      ) in message.activity_kw.iteritems():
+      ) in message.activity_kw.items():
         try:
           column_list, _, _ = dependency_tester_dict[dependency_name]
         except KeyError:
@@ -547,13 +553,13 @@ CREATE TABLE %s (
       dependency_name,
       dependency_value_dict,
     ) in sorted(
-      dependency_dict.iteritems(),
+      iter(dependency_dict.items()),
       # Test first the condition with the most values.
       # XXX: after_path=('foo', 'bar') counts as 2 points for after_path
       # despite being a single activity. Is there a fairer (while cheap) way ?
       key=lambda dependency_dict_item: sum(
         len(message_set)
-        for message_set in dependency_dict_item[1].itervalues()
+        for message_set in dependency_dict_item[1].values()
       ),
       reverse=True,
     ):
@@ -566,7 +572,7 @@ CREATE TABLE %s (
         for (
           message_dependency_name,
           message_dependency_value_list,
-        ) in message_dependency_dict[blocked_message].iteritems():
+        ) in message_dependency_dict[blocked_message].items():
           message_dependency_value_dict = dependency_dict[message_dependency_name]
           if not message_dependency_value_dict:
             # This dependency was already dropped or evaluated, nothing to
@@ -658,7 +664,7 @@ CREATE TABLE %s (
           else:
             serialization_tag_dict.setdefault(serialization_tag,
                                               []).append(message)
-        for message_list in serialization_tag_dict.itervalues():
+        for message_list in serialization_tag_dict.values():
           # Sort list of messages to validate the message with highest score
           message_list.sort(key=sort_message_key)
           distributable_uid_set.add(message_list[0].uid)
@@ -862,8 +868,8 @@ CREATE TABLE %s (
     except:
       self._log(WARNING, 'Exception while reserving messages.')
       if uid_to_duplicate_uid_list_dict:
-        to_free_uid_list = uid_to_duplicate_uid_list_dict.keys()
-        for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
+        to_free_uid_list = list(uid_to_duplicate_uid_list_dict.keys())
+        for uid_list in uid_to_duplicate_uid_list_dict.values():
           to_free_uid_list += uid_list
         try:
           self.assignMessageList(db, 0, to_free_uid_list)

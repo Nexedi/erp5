@@ -27,9 +27,11 @@
 ##############################################################################
 
 
-from urllib import quote_plus
-from urlparse import urlparse
-from urlparse import urljoin
+from future import standard_library
+standard_library.install_aliases()
+from urllib.parse import quote_plus
+from urllib.parse import urlparse
+from urllib.parse import urljoin
 import logging
 
 from AccessControl import ClassSecurityInfo

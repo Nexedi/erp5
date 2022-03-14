@@ -1,3 +1,4 @@
+from builtins import str
 import json
 context.log(error_message)
 if not text_content:

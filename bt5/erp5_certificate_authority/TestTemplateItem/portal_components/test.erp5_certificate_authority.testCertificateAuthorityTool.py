@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import os
 import random
 import unittest

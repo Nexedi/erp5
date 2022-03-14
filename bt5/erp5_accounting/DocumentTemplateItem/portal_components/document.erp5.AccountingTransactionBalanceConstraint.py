@@ -62,7 +62,7 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
         section = line.getDestinationSectionValue()
         destination_sum[section].append(line.getDestinationInventoriatedTotalAssetPrice() or 0)
 
-    for section, amount_list in source_sum.items():
+    for section, amount_list in list(source_sum.items()):
       precision = 2
       if amount_list and section is not None and\
           section.getPortalType() == 'Organisation':
@@ -75,7 +75,7 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
                 mapping=dict(section_title=section.getTranslatedTitle())))
           break
 
-    for section, amount_list in destination_sum.items():
+    for section, amount_list in list(destination_sum.items()):
       precision = 2
       if amount_list and section is not None and\
           section.getPortalType() == 'Organisation':

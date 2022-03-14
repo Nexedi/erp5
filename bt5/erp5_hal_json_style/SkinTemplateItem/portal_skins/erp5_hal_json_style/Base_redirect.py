@@ -21,7 +21,7 @@ if form_id == 'view':
 else:
   redirect_url = '%s/%s' % (context.absolute_url(), form_id)
 
-parameters = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))
+parameters = make_query(dict([(k, v) for k, v in list(request_form.items()) if k and v is not None]))
 if len(parameters):
   if '?' in redirect_url:
     separator = '&'

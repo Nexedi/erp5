@@ -6,7 +6,7 @@ filename = "standard_default_accounts.ods"
 object_list = cachedMethod(filename)
 
 for item in object_list:
-  for k in item.keys():
+  for k in list(item.keys()):
     if k.startswith('gap_'):
       gap_id = k[len('gap_'):]
       account_list = result.setdefault(gap_id, [])

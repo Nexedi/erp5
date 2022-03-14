@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 

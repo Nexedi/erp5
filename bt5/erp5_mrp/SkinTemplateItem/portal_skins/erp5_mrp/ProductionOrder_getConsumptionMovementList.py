@@ -39,7 +39,7 @@ for inventory in portal.portal_simulation.getFutureInventoryList(*args,**kwargs)
                  inventory.variation_text,
                  inventory.node_relative_url] = inventory
 
-result_list = inventory_dict.values()
+result_list = list(inventory_dict.values())
 consumption_dict = {}
 for movement in movement_list:
   for material in transformation_line_list_dict[movement]:

@@ -1,3 +1,4 @@
+from builtins import range
 history = context.Base_getWorkflowHistory()
 bug_history = history.get('bug_workflow', None)
 

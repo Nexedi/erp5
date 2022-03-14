@@ -14,6 +14,8 @@ Extract all object referenced by html components
   by `context.ERP5Site_getWebSiteDomainDict()` is used.
 """
 
+from builtins import str
+from builtins import range
 from zExceptions import Unauthorized
 portal = context.getPortalObject()
 

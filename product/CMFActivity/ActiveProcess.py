@@ -132,7 +132,7 @@ class ActiveProcess(Base):
     #      moment, although this is inefficient and the caller never needs a
     #      copy (currently). Same for IOBTree.itervalues().
     if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
-      return result_list.values()
+      return list(result_list.values())
     return list(result_list)
 
   security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultDict')

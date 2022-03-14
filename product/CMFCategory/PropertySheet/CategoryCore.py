@@ -28,7 +28,8 @@
 
 
 
-class CategoryCore:
+from builtins import object
+class CategoryCore(object):
     """
         Properties of CategoryCore
     """

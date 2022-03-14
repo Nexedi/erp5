@@ -8,6 +8,7 @@ field_name - Name of the the field which gives us the path
 selection_index - Index of the object we want to get from the selection list
                   in case we don't have any path from field
 """
+from builtins import str
 from DateTime import DateTime
 
 portal = context.getPortalObject()

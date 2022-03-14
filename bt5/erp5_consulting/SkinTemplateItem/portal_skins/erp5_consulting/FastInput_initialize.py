@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 from Products.ERP5Type.Document import newTempBase
 from string import zfill
 

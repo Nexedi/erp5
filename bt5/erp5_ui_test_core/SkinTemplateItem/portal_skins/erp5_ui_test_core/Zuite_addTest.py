@@ -7,7 +7,7 @@ if REQUEST:
 assert context.getPortalType() == "Test Tool", "bad context"
 
 if test_id is None or test_id == '':
-  test_id = ''.join(list(filter(lambda a: a not in ["'",'_', '-','.',' ','~', ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '(', ')', '*','+',';','='], title)))
+  test_id = ''.join(list([a for a in title if a not in ["'",'_', '-','.',' ','~', ':', '/', '?', '#', '[', ']', '@', '!', '$', '&', '(', ')', '*','+',';','=']]))
 
 if test_id not in context.objectIds():
   factory = context.manage_addProduct['PageTemplates']

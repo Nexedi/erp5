@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Utils import createExpressionContext

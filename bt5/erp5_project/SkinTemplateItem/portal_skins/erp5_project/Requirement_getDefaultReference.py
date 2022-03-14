@@ -1,3 +1,4 @@
+from builtins import str
 requirement = context
 reference_list = []
 

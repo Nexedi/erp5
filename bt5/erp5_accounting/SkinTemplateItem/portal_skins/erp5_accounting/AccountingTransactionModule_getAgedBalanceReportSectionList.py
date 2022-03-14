@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Form.Report import ReportSection
 
@@ -30,7 +31,7 @@ previous_period = 0
 for idx, period in enumerate(period_list):
   if idx != 0:
     previous_period = period_list[idx - 1]
-  selection_columns.append(('period_%s' % idx, unicode(translateString(
+  selection_columns.append(('period_%s' % idx, str(translateString(
       'Period ${period_number} (from ${from} to ${to} days)',
       mapping={'period_number': 1 + idx,
                'from': previous_period,
@@ -38,7 +39,7 @@ for idx, period in enumerate(period_list):
   editable_columns.append(('period_%s' % idx, ''))
 
 selection_columns.append(('period_%s' % (idx + 1),
-  unicode(translateString('Older (more than ${day_count} days)',
+  str(translateString('Older (more than ${day_count} days)',
    mapping={'day_count': period_list[-1]}))))
 editable_columns.append(('period_%s' % (idx + 1), ''))
 

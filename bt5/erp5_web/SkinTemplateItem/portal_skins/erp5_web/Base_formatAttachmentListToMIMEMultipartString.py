@@ -98,7 +98,7 @@ if replace_header_list is not None:
   for key, value in replace_header_list:
     outer.replace_header(key, value)
 if header_dict is not None:  # adds headers, does not replace or set
-  for key, value in header_dict.items():
+  for key, value in list(header_dict.items()):
     outer.add_header(key, value)
 if add_header_list is not None:
   for key, value in add_header_list:
@@ -143,7 +143,7 @@ for attachment in attachment_list:
       encode_noop(part)
   for key, value in attachment.get("replace_header_list", []):
     part.replace_header(key, value)
-  for key, value in attachment.get("header_dict", {}).items():  # adds headers, does not replace or set
+  for key, value in list(attachment.get("header_dict", {}).items()):  # adds headers, does not replace or set
     part.add_header(key, value)
   for key, value in attachment.get("add_header_list", []):
     part.add_header(key, value)

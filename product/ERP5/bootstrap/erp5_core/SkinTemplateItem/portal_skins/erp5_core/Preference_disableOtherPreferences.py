@@ -1,5 +1,6 @@
 # When validating a user preference, we invalidate other user preferences.
 
+from builtins import str
 from Products.ERP5Type.Message import translateString
 
 portal = context.getPortalObject()

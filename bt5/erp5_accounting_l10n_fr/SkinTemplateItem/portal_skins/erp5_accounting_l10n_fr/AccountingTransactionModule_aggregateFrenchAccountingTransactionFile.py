@@ -1,4 +1,7 @@
-from cStringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from io import StringIO
 import zipfile
 from Products.ERP5Type.Message import translateString
 
@@ -25,7 +28,7 @@ attachment_list = (
 
 portal.ERP5Site_notifyReportComplete(
     user_name=user_name,
-    subject=unicode(translateString('French Accounting Transaction File')),
+    subject=str(translateString('French Accounting Transaction File')),
     message='',
     attachment_list=attachment_list)
 

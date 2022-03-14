@@ -96,7 +96,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     # Now a web message has been created
     telephone_key = 'source_person_default_telephone_text'
     event = self.portal.event_module.objectValues()[0]
-    for property_id, value in form_kw.iteritems():
+    for property_id, value in form_kw.items():
       if property_id == telephone_key:
         value =  '+(0)-%s' % value
 
@@ -177,7 +177,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     telephone_key = "source_person_default_telephone_text"
     # Now a web message has been created
     event = self.portal.event_module.objectValues()[0]
-    for property_id, value in form_kw.iteritems():
+    for property_id, value in form_kw.items():
       if property_id == telephone_key:
         value =  '+(0)-%s' % value
       self.assertEqual(event.getProperty(property_id), value)

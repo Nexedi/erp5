@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from itertools import chain
 from AccessControl import ClassSecurityInfo
 import ExtensionClass
@@ -44,16 +45,16 @@ def _makeForbiddenCharList(*args):
 # https://tools.ietf.org/html/rfc7230#section-3.2
 IS_FORBIDDEN_HEADER_NAME_CHAR_LIST = _makeForbiddenCharList(
   (ord(x) for x in "!#$%&'*+-.^_`|~"),
-  xrange(0x30, 0x3a), # DIGIT
-  xrange(0x61, 0x7b), # ALPHA, only lower-case
+  range(0x30, 0x3a), # DIGIT
+  range(0x61, 0x7b), # ALPHA, only lower-case
 )
 # Note: RFC defines field_value as not starting with SP nor HTAB,
 # but this is because these are stripped during parsing. Allow
 # them during generation.
 IS_FORBIDDEN_HEADER_VALUE_CHAR_LIST = _makeForbiddenCharList(
   [0x09], # HTAB
-  xrange(0x20, 0x7f), # SP + VCHAR
-  xrange(0x80, 0x100), # obs-text
+  range(0x20, 0x7f), # SP + VCHAR
+  range(0x80, 0x100), # obs-text
 )
 del _makeForbiddenCharList
 
@@ -120,7 +121,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
         }
         for (
           header_name, (method_id, fallback_value, fallback_value_replace)
-        ) in getattr(self, '_response_header_rule_dict', {}).iteritems()
+        ) in getattr(self, '_response_header_rule_dict', {}).items()
       }
 
     def _getResponseHeaderRuleDictForModification(self):
@@ -187,7 +188,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
       else:
         for (
           header_name, (method_id, value, value_replace)
-        ) in getattr(self, '_response_header_rule_dict', {}).iteritems():
+        ) in getattr(self, '_response_header_rule_dict', {}).items():
           if method_id:
             try:
               method_value = getattr(self, method_id)

@@ -61,12 +61,12 @@ class PermissionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     business_configuration = self.getBusinessConfigurationValue()
     sheets_dict = business_configuration.ConfigurationTemplate_readOOCalcFile(\
                            self.filename)
-    for module_id, permissions in sheets_dict.items():
+    for module_id, permissions in list(sheets_dict.items()):
       module_permissions = {}
       for permission in permissions:
         roles = []
         permission_name = permission.pop('permission')
-        for role, checked in permission.items():
+        for role, checked in list(permission.items()):
           if checked == '1':  roles.append(role)
         module_permissions[permission_name] = roles
       # add to module map
@@ -74,11 +74,11 @@ class PermissionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
     # set permissions in fake site
     portal = self.getPortalObject()
-    for module_id, permissions_map in module_permissions_map.items():
+    for module_id, permissions_map in list(module_permissions_map.items()):
       if permissions_map != {}:
         template_module_id_list.append(module_id)
         module = portal[module_id]
-        for permission_name, roles in permissions_map.items():
+        for permission_name, roles in list(permissions_map.items()):
           # we must alway include additionally 'Manager' and 'Owner'
           roles.extend(['Manager', 'Owner'])
           if fixit:

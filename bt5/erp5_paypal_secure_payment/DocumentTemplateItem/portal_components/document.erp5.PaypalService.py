@@ -26,9 +26,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from future import standard_library
+standard_library.install_aliases()
 import zope
-from urllib import urlencode
-from urllib2 import urlopen, Request
+from urllib.parse import urlencode
+from urllib.request import urlopen, Request
 from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -58,7 +60,7 @@ class PaypalService(XMLObject):
 
   def _getFieldList(self, paypal_dict):
     field_list = []
-    for k,v in paypal_dict.iteritems():
+    for k,v in paypal_dict.items():
       field_list.append((k, v))
     return field_list
 
@@ -94,7 +96,7 @@ class PaypalService(XMLObject):
     param_dict = REQUEST.form
     LOG("PaypalService", DEBUG, param_dict)
     param_dict["cmd"] = "_notify-validate"
-    if param_dict.has_key("service"):
+    if "service" in param_dict:
       param_dict.pop("service")
     param_list = urlencode(param_dict)
     paypal_url = self.getLinkUrlString()

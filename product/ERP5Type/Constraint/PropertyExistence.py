@@ -59,7 +59,7 @@ class PropertyExistence(Constraint):
     """
     error_list = []
     # For each attribute name, we check if defined
-    for property_id in self.constraint_definition.keys():
+    for property_id in list(self.constraint_definition.keys()):
       # Check existence of property
       mapping = dict(property_id=property_id)
       if not obj.hasProperty(property_id):

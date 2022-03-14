@@ -22,6 +22,6 @@ for sub_object in sub_object_list:
   sub_object_by_model.setdefault(
            sub_object.getParentValue(), []).append(sub_object.getId())
 
-for model, sub_object_id_list in sub_object_by_model.items():
+for model, sub_object_id_list in list(sub_object_by_model.items()):
   copy_data = model.manage_copyObjects(sub_object_id_list)
   context.manage_pasteObjects(copy_data)

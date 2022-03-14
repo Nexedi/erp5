@@ -4,7 +4,7 @@ portal = context.getPortalObject()
 
 def makeContext(doc, **kw):
   categories = []
-  for k, v in kw.items():
+  for k, v in list(kw.items()):
     if v:
       categories.append('%s/%s' % (k,v))
   return doc.asContext(categories=categories)

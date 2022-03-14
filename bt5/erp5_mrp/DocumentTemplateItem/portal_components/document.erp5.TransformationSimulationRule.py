@@ -138,7 +138,7 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
         # FIXME: Is it the right way to have source/destination and other
         #        non-Amount properties set on the generated movement ?
         movement = newMovement(amount.getCausality(), dict((k, v)
-            for k, v in amount.__dict__.iteritems()
+            for k, v in amount.__dict__.items()
             if k[0] != '_' and k != 'categories'))
         base_category_set = set(amount.getBaseCategoryList())
         base_category_set.remove('price_currency') # XXX

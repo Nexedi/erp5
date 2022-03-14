@@ -29,7 +29,10 @@
 """Receive or send SMS"""
 
 #Import python module
-import urllib
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import urllib.request, urllib.parse, urllib.error
 from lxml import etree
 from DateTime import DateTime
 
@@ -91,14 +94,14 @@ class EssendexGateway(XMLObject):
       if len(parts) == 1:
         data = parts[0].split('=')
         #Remove \n et \r from value
-        result[data[0]] = urllib.unquote(data[1].replace('\r','').replace('\n',''))
+        result[data[0]] = urllib.parse.unquote(data[1].replace('\r','').replace('\n',''))
 
       else:
         #Mutil values
         subresult = {}
         for part in parts:
           data = part.split('=')
-          subresult[data[0]] = urllib.unquote(data[1].replace('\r','').replace('\n',''))
+          subresult[data[0]] = urllib.parse.unquote(data[1].replace('\r','').replace('\n',''))
         result[index] = subresult
         #Increment index for next
         index += 1
@@ -161,8 +164,8 @@ class EssendexGateway(XMLObject):
       params['Test'] = 1
       LOG("EssendexGateway", INFO, params)
 
-    params = urllib.urlencode(params)
-    page = urllib.urlopen(base_url, params)
+    params = urllib.parse.urlencode(params)
+    page = urllib.request.urlopen(base_url, params)
     result = self._fetchPageAsDict(page)
     if result['Result'] == "OK":
       message_ids = result.get('MessageIDs', "")
@@ -171,7 +174,7 @@ class EssendexGateway(XMLObject):
       return message_ids.split(",")
     elif result['Result'] == "Error":
       #we get an error when call the gateway
-      raise SMSGatewayError(urllib.unquote(result.get('Message', "Impossible to send the SMS")))
+      raise SMSGatewayError(urllib.parse.unquote(result.get('Message', "Impossible to send the SMS")))
     elif result['Result'] == "Test":
       #just a test, no message id
       return None
@@ -190,15 +193,15 @@ class EssendexGateway(XMLObject):
               'MessageID': message_id,
               }
 
-    params = urllib.urlencode(params)
-    page = urllib.urlopen(base_url, params)
+    params = urllib.parse.urlencode(params)
+    page = urllib.request.urlopen(base_url, params)
     result = self._fetchPageAsDict(page)
 
     if result['Result'] == "OK":
       return result.get('MessageStatus').lower()
     elif result['Result'] == "Error":
       #we get an error when call the gateway
-      raise SMSGatewayError(urllib.unquote(result.get('Message', "Impossible to get the message status")))
+      raise SMSGatewayError(urllib.parse.unquote(result.get('Message', "Impossible to get the message status")))
 
   security.declarePublic('receive')
   def receive(self, REQUEST, **kw):
@@ -319,15 +322,15 @@ class EssendexGateway(XMLObject):
       params['Test'] = 1
       LOG("EssendexGateway", INFO, params)
 
-    params = urllib.urlencode(params)
-    page = urllib.urlopen(base_url, params)
+    params = urllib.parse.urlencode(params)
+    page = urllib.request.urlopen(base_url, params)
     result = self._fetchPageAsDict(page)
 
     if result['Result'] == "OK":
       #Push all message
       type_mapping = {'Text': 'text/plain'}
       now = DateTime()
-      for key, value in result.items():
+      for key, value in list(result.items()):
         if isinstance(key, int):
           reception_date = self._parseDate(value['ReceivedAt'])
           #Take only message received more than 10s
@@ -344,6 +347,6 @@ class EssendexGateway(XMLObject):
       LOG("EssendexGateway", INFO, result)
     elif result['Result'] == "Error":
       #we get an error when call the gateway
-      raise SMSGatewayError(urllib.unquote(result.get('Message', "Impossible to get last message list")))
+      raise SMSGatewayError(urllib.parse.unquote(result.get('Message', "Impossible to get last message list")))
 
 

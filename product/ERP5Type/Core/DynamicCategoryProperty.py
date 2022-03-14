@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from zLOG import LOG, INFO

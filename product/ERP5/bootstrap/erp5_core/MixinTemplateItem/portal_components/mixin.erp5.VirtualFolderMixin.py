@@ -28,6 +28,7 @@
 ##############################################################################
 
 
+from builtins import object
 _marker=object()
 
 from AccessControl import ClassSecurityInfo
@@ -36,7 +37,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 
-class VirtualFolderMixin:
+class VirtualFolderMixin(object):
   """
     Virtual Folder Mixin is a class which allows to customize the _setObject
     and _getOb methods for a given portal type.

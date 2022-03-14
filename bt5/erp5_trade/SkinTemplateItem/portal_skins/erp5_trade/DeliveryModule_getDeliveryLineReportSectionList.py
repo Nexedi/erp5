@@ -1,3 +1,4 @@
+from builtins import range
 from Products.ERP5Form.Report import ReportSection
 portal = context.getPortalObject()
 
@@ -22,7 +23,7 @@ try:
 
   # split in chunks
   batch_size = 1000
-  for uid_list in [all_uid_list[x:x+batch_size] for x in xrange(0, len(all_uid_list), batch_size)]:
+  for uid_list in [all_uid_list[x:x+batch_size] for x in range(0, len(all_uid_list), batch_size)]:
     report_section_list.append(
       ReportSection(form_id='DeliveryModule_viewDeliveryLineList',
                      path=context.getPhysicalPath(),

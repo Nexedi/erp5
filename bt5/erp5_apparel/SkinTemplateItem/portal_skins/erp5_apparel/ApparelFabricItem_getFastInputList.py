@@ -1,5 +1,7 @@
 # erp5_apparel/ApparelFabricItem_getFastInputList
 
+from builtins import str
+from builtins import range
 from Products.ERP5Type.Document import newTempBase
 
 object_list = []

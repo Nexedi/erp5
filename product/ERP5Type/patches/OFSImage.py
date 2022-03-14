@@ -16,6 +16,7 @@
 
   Monkey patch uses 2.12.3 original code.
 """
+from builtins import str
 import OFS.Image
 import struct
 from io import BytesIO as StringIO

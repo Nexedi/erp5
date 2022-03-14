@@ -372,7 +372,7 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
     }
     property_ = {}
     # Translate kw with the good PropertySheet
-    for k, v in kw.items():
+    for k, v in list(kw.items()):
       k = mapping.get(k, k)
       property_[k] = v
     object._edit(**property_)

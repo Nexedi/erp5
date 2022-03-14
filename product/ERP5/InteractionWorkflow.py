@@ -17,6 +17,7 @@
 #
 ##############################################################################
 from __future__ import absolute_import
+from builtins import str
 """
 DCWorkflow implementation *deprecated* in favor of ERP5 Workflow.
 """
@@ -207,7 +208,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionValueList')
   def getTransitionValueList(self):
     if self.interactions is not None:
-      return self.interactions.values()
+      return list(self.interactions.values())
     return []
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionReferenceList')
@@ -219,7 +220,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariableValueList')
   def getVariableValueList(self):
     if self.variables is not None:
-      return self.variables.values()
+      return list(self.variables.values())
     return []
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')
@@ -394,6 +395,6 @@ for method_name, security in (
     security(method_name)
   setattr(InteractionWorkflowDefinition,
           method_name,
-          getattr(ERP5InteractionWorkflow, method_name).im_func)
+          getattr(ERP5InteractionWorkflow, method_name).__func__)
 
 Globals.InitializeClass(InteractionWorkflowDefinition)

@@ -1,11 +1,12 @@
 """Cache
 """
+from builtins import object
 from time import time
 from Acquisition import aq_base
 
 _marker = object()
 
-class Cache:
+class Cache(object):
 
     def __init__(self, obj, context=None, _id='_v_transform_cache'):
         self.obj = obj

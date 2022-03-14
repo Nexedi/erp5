@@ -28,6 +28,10 @@
 #
 ##############################################################################
 
+from __future__ import division
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import unittest
 import os
 
@@ -41,6 +45,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 import Products.ERP5.tests
+from functools import reduce
 
 class TestOrderMixin(SubcontentReindexingWrapper):
 
@@ -464,7 +469,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     """
       Split a list and return tuple with the 2 half
     """
-    middle = len(l)/2 + len(l)%2
+    middle = old_div(len(l),2) + len(l)%2
     return ( l[:middle] , l[middle:] )
 
   def stepSetOrderLineHalfVCL(self,sequence=None, sequence_list=None, **kw):
@@ -1094,14 +1099,14 @@ class TestOrderMixin(SubcontentReindexingWrapper):
           self.checkAcquisition(packing_list_movement,
                                 related_simulation_movement)
           # Test delivery ratio
-          self.assertEqual(related_simulation_movement.getQuantity() /\
-                            packing_list_movement_quantity, \
+          self.assertEqual(old_div(related_simulation_movement.getQuantity(),\
+                            packing_list_movement_quantity), \
                             related_simulation_movement.getDeliveryRatio())
 
 
         self.assertEqual(quantity, packing_list_movement.getQuantity())
         # Test price
-        self.assertEqual(total_price / quantity, packing_list_movement.getPrice())
+        self.assertEqual(old_div(total_price, quantity), packing_list_movement.getPrice())
 
       sequence.edit(packing_list=packing_list)
 

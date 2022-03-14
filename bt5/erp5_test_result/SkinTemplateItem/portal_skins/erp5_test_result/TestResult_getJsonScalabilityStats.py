@@ -1,3 +1,4 @@
+from builtins import map
 import json
 
 # Get result lines
@@ -13,7 +14,7 @@ for tl in test_result_lines:
   stdout = tl.getProperty('stdout')
   if stdout:
     count = count + 1
-    stdout_lines = filter(None, stdout.split('\n'))
+    stdout_lines = [_f for _f in stdout.split('\n') if _f]
     for stdout_line in stdout_lines:
       tests_list = stdout_line.split(';')
       tests_list = [x for x in tests_list if x.strip()!='']
@@ -22,14 +23,14 @@ for tl in test_result_lines:
         test_name = test.split(':')[0]
         test_documents_created = test.split(':')[1].replace('doc/hour', '').strip()
         # initial init
-        if test_name not in results.keys():
+        if test_name not in list(results.keys()):
           results[test_name] = []
         results[test_name].append({'created_docs': test_documents_created,  
                                    'duration':3600})
 
 test_suite = context.getPortalObject().test_suite_module.searchFolder(title=context.getTitle())[0]
 
-xs = map(int, test_suite.getGraphCoordinate())
+xs = list(map(int, test_suite.getGraphCoordinate()))
 
 # testnode usually runs multiple tests, for example for Person and Sale Order creation but
 # viewer shows only one graph thus return only one test

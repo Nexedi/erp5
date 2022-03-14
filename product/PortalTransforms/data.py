@@ -1,9 +1,10 @@
+from builtins import object
 from zope.interface import implementer
 import six
 from Products.PortalTransforms.interfaces import IDataStream
 
 @implementer(IDataStream)
-class datastream:
+class datastream(object):
     """A transformation datastream packet"""
     if six.PY2:
         __slots__ = ('name', '_data', '_metadata')

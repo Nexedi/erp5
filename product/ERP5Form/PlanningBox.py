@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2005,2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -39,6 +40,9 @@ from __future__ import absolute_import
     # fit the constraints.
 
 # Class monitoring access security control
+from builtins import str
+from builtins import object
+from past.utils import old_div
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Globals import InitializeClass
 
@@ -205,7 +209,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         axis_length = 'height'
 
       # calculating center of block over main axis to check block position
-      block_moved['center'] = (block_moved['report_axis_length'] / 2) + \
+      block_moved['center'] = (old_div(block_moved['report_axis_length'], 2)) + \
                                block_moved['report_axis_position']
 
       # now that block coordinates are recovered as well as planning
@@ -274,7 +278,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # getting round_script if exists
     round_script=getattr(context, field.get_value('round_script'), None)
     # now processing activity updates
-    for activity_name in activity_dict.keys():
+    for activity_name in list(activity_dict.keys()):
       # recovering list of moved blocks in the current activity
       activity_block_moved_list = activity_dict[activity_name]
       # recovering activity object from first moved block
@@ -284,7 +288,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       if activity_object.name in warning_activity_list:
         # activity contains a block that has not been validated
         # The validation update process is canceled, and the error is reported
-        err = ValidationError(StandardError,activity_object)
+        err = ValidationError(Exception,activity_object)
         errors_list.append(err)
         pass
       else:
@@ -416,7 +420,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     good_group_name = ''
     # recovering group name
-    for axis_name in axis_groups.keys():
+    for axis_name in list(axis_groups.keys()):
       if  axis_groups[axis_name][group_position] < block_moved['center'] and \
           axis_groups[axis_name][group_position] + \
           axis_groups[axis_name][group_length] > block_moved['center']:
@@ -450,11 +454,11 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # => In case of calendar mode, axis_bounds are recovered from the
     #    destination group instead of the planning itself
 
-    delta_start = block_moved['lane_axis_position'] / \
-                  planning_coordinates['frame']['planning_content'][axis_length]
-    delta_stop  = (block_moved['lane_axis_position'] + \
-                  block_moved['lane_axis_length']) / \
-                  planning_coordinates['frame']['planning_content'][axis_length]
+    delta_start = old_div(block_moved['lane_axis_position'], \
+                  planning_coordinates['frame']['planning_content'][axis_length])
+    delta_stop  = old_div((block_moved['lane_axis_position'] + \
+                  block_moved['lane_axis_length']), \
+                  planning_coordinates['frame']['planning_content'][axis_length])
 
     # testing different cases of invalidation
     if delta_stop < 0 or delta_start > 1 :
@@ -555,7 +559,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       for axis_element in axis_group.axis_element_list:
         for activity in axis_element.activity_list:
           # for each activity, saving its properties into a dict
-          if activity.link in object_dict.keys():
+          if activity.link in list(object_dict.keys()):
             object_dict[activity.link].append(
                        { 'activity_name' : activity.name,
                          'axis_start': activity.lane_axis_start,
@@ -589,7 +593,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
                        })
     return object_dict
 
-class PlanningBoxEditor:
+class PlanningBoxEditor(object):
   """
   A class holding all values required to update objects
   """
@@ -605,7 +609,7 @@ class PlanningBoxEditor:
     pass
 
   def edit(self, context):
-    for url, kw in self.update_dict.items():
+    for url, kw in list(self.update_dict.items()):
       context.restrictedTraverse(url).edit(**kw)
 
 allow_class(PlanningBoxEditor)
@@ -1011,7 +1015,7 @@ class PlanningBoxWidget(Widget.Widget):
 # instanciating class
 PlanningBoxWidgetInstance = PlanningBoxWidget()
 
-class BasicStructure:
+class BasicStructure(object):
   """
   First Structure recovered from ERP5 objects. Does not represent in any
   way the final structure used for rendering the Planning (for that see
@@ -1083,7 +1087,7 @@ class BasicStructure:
     # select_expression is passed, this can raise an exception, because stat
     # method sets select_expression, and this might cause duplicated column
     # names.
-    if 'select_expression' in kw.keys():
+    if 'select_expression' in list(kw.keys()):
       del kw['select_expression']
 
     sec_layer_method_name = None
@@ -1095,15 +1099,15 @@ class BasicStructure:
     if getattr(self.list_method, 'method_name', None) is not None:
       # building a complex query so we should not pass too many variables
       kw={}
-      if self.REQUEST.has_key('portal_type'):
+      if 'portal_type' in self.REQUEST:
         kw['portal_type'] = self.REQUEST['portal_type']
       elif self.getPortalTypeList() is not None:
         kw['portal_type'] = self.getPortalTypeList()
-      elif kw.has_key('portal_type'):
+      elif 'portal_type' in kw:
         if kw['portal_type'] in ['', []]:
           del kw['portal_type']
       # remove useless matter
-      for cname in self.params.keys():
+      for cname in list(self.params.keys()):
         if self.params[cname] not in ['',None]:
           kw[cname] = self.params[cname]
       # try to get the method through acquisition
@@ -1612,11 +1616,11 @@ class BasicStructure:
       axis_dict['bound_stop'] = min(axis_dict['bound_end'],
                bound_start + axis_dict['bound_axis_groups'])
       # calculating total number of pages
-      axis_dict['bound_page_total'] = int(max(axis_dict['bound_end'] - 1,0) / \
-               axis_dict['bound_axis_groups']) + 1
+      axis_dict['bound_page_total'] = int(old_div(max(axis_dict['bound_end'] - 1,0), \
+               axis_dict['bound_axis_groups'])) + 1
       # calculating current page number
-      axis_dict['bound_page_current'] = int(bound_start / \
-               axis_dict['bound_axis_groups']) + 1
+      axis_dict['bound_page_current'] = int(old_div(bound_start, \
+               axis_dict['bound_axis_groups'])) + 1
       # adjusting first group displayed on current page
       bound_start = min(bound_start, max(0,
            (axis_dict['bound_page_total']-1) * axis_dict['bound_axis_groups']))
@@ -1690,7 +1694,7 @@ class BasicStructure:
       return 1
 
 
-class BasicGroup:
+class BasicGroup(object):
   """
   A BasicGroup holds information about an ERP5Object and is stored
   exclusively in BasicStructure. for each activity that will need to be
@@ -1914,8 +1918,8 @@ class BasicGroup:
       else:
         block_end = None
 
-      if lane_axis_info.has_key('bound_start') and \
-               lane_axis_info.has_key('bound_stop'):
+      if 'bound_start' in lane_axis_info and \
+               'bound_stop' in lane_axis_info:
         # testing if activity is visible according to the current zoom selection
         # over the lane_axis
         if (block_begin is None):
@@ -1977,7 +1981,7 @@ class BasicGroup:
             self.basic_activity_list = []
             self.basic_activity_list.append(activity)
 
-class BasicActivity:
+class BasicActivity(object):
   """ Represents an activity, a task, in the group it belongs to. Beware
       nothing about multitask rendering. """
 
@@ -2002,7 +2006,7 @@ class BasicActivity:
     self.property_dict = property_dict # dict containing specific properties
 
 
-class PlanningStructure:
+class PlanningStructure(object):
   """
   class aimed to generate the Planning final structure, including :
   - activities with their blocs (so contains Activity structure)
@@ -2320,7 +2324,7 @@ class PlanningStructure:
     return 1
 
 
-class Activity:
+class Activity(object):
   """
   Class representing a task in the Planning, for example an appointment or
   a duration. Can be divided in several blocs for being rendered correctly
@@ -2570,7 +2574,7 @@ class Activity:
 
 
 
-class Bloc:
+class Bloc(object):
   """
   structure that will be rendered as a bloc, a task element.
   Blocs are referenced in the Activity they belong to (logical structure), but
@@ -2643,7 +2647,7 @@ class Bloc:
         self.buildInfo(info_dict=info_dict, area='info_botleft'),
         self.buildInfo(info_dict=info_dict, area='info_botright'),
       ]
-      if info_dict.has_key('info_tooltip'):
+      if 'info_tooltip' in info_dict:
         self.title = info_dict['info_tooltip']
       else:
         self.title = " | ".join(title_list)
@@ -2664,7 +2668,7 @@ class Bloc:
     else:
       return ''
 
-class Position:
+class Position(object):
   """
   gives a bloc [/or an area] information about it's position on the X or Y
   axis. can specify position in every kind of axis : continuous or listed
@@ -2684,7 +2688,7 @@ class Position:
     self.relative_range = relative_range
 
 
-class Axis:
+class Axis(object):
   """
   Structure holding information about a specified axis. Can be X or Y axis.
   Is aimed to handle axis with any kind of unit : continuous or listed (
@@ -2713,7 +2717,7 @@ class Axis:
     # dict containing all class properties with their values
     self.render_dict=None
 
-class AxisGroup:
+class AxisGroup(object):
   """
   Class representing an item, that can have the following properties :
   - one or several rendered lines (multiTasking) : contains AxisElement
@@ -2988,7 +2992,7 @@ class AxisGroup:
         position_report.relative_range = final_range
     return 1
 
-class AxisElement:
+class AxisElement(object):
   """
   Represents a line in an item. In most cases, an AxisGroup element will
   hold ony one AxisElement (simple listed axis), but sometimes more
@@ -3011,7 +3015,7 @@ class AxisElement:
     self.parent_axis_group = parent_axis_group
 
 
-class Info:
+class Info(object):
   """
   Class holding all information to display an info text div inside of a block
   or AxisGroup or whatever

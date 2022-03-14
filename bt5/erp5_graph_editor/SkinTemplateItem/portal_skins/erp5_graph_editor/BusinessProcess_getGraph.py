@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Message import translateString
 import json
 portal = context.getPortalObject()
@@ -23,7 +24,7 @@ def getBusinessProcessGraph(business_process):
         _class='erp5.business_process.trade_state',
         name=trade_state.getTranslatedTitle())
 
-  for state_id in graph['node'].keys():
+  for state_id in list(graph['node'].keys()):
     if position_graph and state_id in position_graph['node']:
       graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
 
@@ -49,9 +50,9 @@ def getBusinessProcessGraph(business_process):
 
   for specialise in [context] + business_process.getSpecialiseValueList(portal_type='Business Process'):
     specialise_graph = getBusinessProcessGraph(specialise)
-    for node_id, node_data in specialise_graph['node'].items():
+    for node_id, node_data in list(specialise_graph['node'].items()):
       graph['node'].setdefault(node_id, node_data)
-    for node_id, node_data in specialise_graph['edge'].items():
+    for node_id, node_data in list(specialise_graph['edge'].items()):
       graph['edge'].setdefault(node_id, node_data)
   return graph
 

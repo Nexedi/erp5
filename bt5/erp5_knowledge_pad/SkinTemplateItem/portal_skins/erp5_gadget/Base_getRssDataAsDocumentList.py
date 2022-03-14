@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
 

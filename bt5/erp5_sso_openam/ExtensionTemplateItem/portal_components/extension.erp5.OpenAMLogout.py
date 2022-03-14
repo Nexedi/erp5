@@ -25,8 +25,10 @@
 #
 ##############################################################################
 
-from urllib import urlencode
-from urllib2 import urlopen
+from future import standard_library
+standard_library.install_aliases()
+from urllib.parse import urlencode
+from urllib.request import urlopen
 
 def OpenAMLogout(self, url, token):
   code = urlopen(url, urlencode({'subjectid':token})).getcode()

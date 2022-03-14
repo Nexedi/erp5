@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
+from builtins import object
 import re
 from . import PatternChecker
 from .DummyField import fields
 from DateTime import DateTime
 from threading import Thread
-from urllib import urlopen
-from urlparse import urljoin
+from urllib.request import urlopen
+from urllib.parse import urljoin
 from .Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
 import unicodedata
 
-class ValidatorBase:
+class ValidatorBase(object):
     """Even more minimalistic base class for validators.
     """
     property_names = ['enabled','editable']
@@ -117,7 +123,7 @@ class StringValidator(StringBaseValidator):
     property_names = StringBaseValidator.property_names +\
                      ['unicode', 'max_length', 'truncate']
 
-    unicode = fields.CheckBoxField('unicode',
+    str = fields.CheckBoxField('unicode',
                                    title='Unicode',
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
@@ -150,7 +156,7 @@ class StringValidator(StringBaseValidator):
         value = StringBaseValidator.validate(self, field, key, REQUEST)
         if field.get_value('unicode'):
             # use acquisition to get encoding of form
-            value = unicode(value, field.get_form_encoding())
+            value = str(value, field.get_form_encoding())
 
         max_length = field.get_value('max_length') or 0
         truncate = field.get_value('truncate')
@@ -364,7 +370,7 @@ class FloatValidator(StringBaseValidator):
     try:
       value = float(value)
       if input_style.find('%')>=0:
-        value = value / 100
+        value = old_div(value, 100)
     except ValueError:
       self.raise_error('not_float', field)
     return value
@@ -375,7 +381,7 @@ class LinesValidator(StringBaseValidator):
   property_names = StringBaseValidator.property_names +\
                     ['unicode', 'max_lines', 'max_linelength', 'max_length']
 
-  unicode = fields.CheckBoxField('unicode',
+  str = fields.CheckBoxField('unicode',
                                   title='Unicode',
                                   description=(
       "Checked if the field delivers a unicode string instead of an "
@@ -422,7 +428,7 @@ class LinesValidator(StringBaseValidator):
     if value == "" and not field.get_value('required'):
       return []
     if field.get_value('unicode'):
-        value = unicode(value, field.get_form_encoding())
+        value = str(value, field.get_form_encoding())
     # check whether the entire input is too long
     max_length = field.get_value('max_length') or 0
     if max_length and len(value) > max_length:
@@ -468,7 +474,7 @@ class SelectionValidator(StringBaseValidator):
     property_names = StringBaseValidator.property_names +\
                      ['unicode']
 
-    unicode = fields.CheckBoxField('unicode',
+    str = fields.CheckBoxField('unicode',
                                    title='Unicode',
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
@@ -500,7 +506,7 @@ class SelectionValidator(StringBaseValidator):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, unicode):
+        if field.get_value('unicode') and isinstance(item_value, str):
           str_value = item_value.encode(field.get_form_encoding())
         else:
           str_value = str(item_value)
@@ -523,7 +529,7 @@ class MultiSelectionValidator(Validator):
         "data."),
                                     default=1)
 
-    unicode = fields.CheckBoxField('unicode',
+    str = fields.CheckBoxField('unicode',
                                    title='Unicode',
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
@@ -553,7 +559,7 @@ class MultiSelectionValidator(Validator):
           return values
       # convert everything to unicode if necessary
       if field.get_value('unicode'):
-        values = [unicode(value, field.get_form_encoding())
+        values = [str(value, field.get_form_encoding())
                     for value in values]
 
       # create a dictionary of possible values
@@ -581,10 +587,10 @@ class MultiSelectionValidator(Validator):
           int_value = int(value)
         except ValueError:
           int_value = None
-        if int_value is not None and value_dict.has_key(int_value):
+        if int_value is not None and int_value in value_dict:
           result.append(int_value)
           continue
-        if value_dict.has_key(value):
+        if value in value_dict:
           result.append(value)
           continue
         self.raise_error('unknown_selection', field)
@@ -613,7 +619,7 @@ class FileValidator(Validator):
 
 FileValidatorInstance = FileValidator()
 
-class LinkHelper:
+class LinkHelper(object):
     """A helper class to check if links are openable.
     """
     status = 0

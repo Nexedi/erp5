@@ -31,6 +31,12 @@
   ERP5 portal_selection tool.
 """
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from builtins import str
+from builtins import range
+from builtins import object
 from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from AccessControl import ClassSecurityInfo
@@ -42,7 +48,7 @@ from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 from hashlib import md5
 import string, re
-from urlparse import urlsplit, urlunsplit
+from urllib.parse import urlsplit, urlunsplit
 from zLOG import LOG, INFO, WARNING
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
@@ -213,10 +219,10 @@ class SelectionTool( BaseTool, SimpleItem ):
         return
 
       form = REQUEST.form
-      if no_reset and form.has_key('reset'):
+      if no_reset and 'reset' in form:
         form['noreset'] = form['reset'] # Kept for compatibility - might no be used anymore
         del form['reset']
-      if no_report_depth and form.has_key('report_depth'):
+      if no_report_depth and 'report_depth' in form:
         form['noreport_depth'] = form['report_depth'] # Kept for compatibility - might no be used anymore
         del form['report_depth']
 
@@ -433,7 +439,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             selection_uid_dict[int(uid)] = 1
           except (ValueError, TypeError):
             selection_uid_dict[uid] = 1
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -451,10 +457,10 @@ class SelectionTool( BaseTool, SimpleItem ):
           selection_uid_dict[uid] = 1
         for uid in listbox_uid:
           try:
-            if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
+            if int(uid) in selection_uid_dict: del selection_uid_dict[int(uid)]
           except (ValueError, TypeError):
-            if selection_uid_dict.has_key(uid): del selection_uid_dict[uid]
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+            if uid in selection_uid_dict: del selection_uid_dict[uid]
+        self.setSelectionCheckedUidsFor(list_selection_name, list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -607,8 +613,8 @@ class SelectionTool( BaseTool, SimpleItem ):
         selection.edit(sort_on=new_sort_on)
 
       if REQUEST is not None:
-        if form.has_key('listbox_uid') and \
-            form.has_key('uids'):
+        if 'listbox_uid' in form and \
+            'uids' in form:
           self.uncheckAll(selection_name, REQUEST.get('listbox_uid'))
           self.checkAll(selection_name, REQUEST.get('uids'))
 
@@ -797,7 +803,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
-        if form.has_key('page_start'):
+        if 'page_start' in form:
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
           except (ValueError, TypeError):
@@ -820,7 +826,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
-        if form.has_key('page_start'):
+        if 'page_start' in form:
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
           except (ValueError, TypeError):
@@ -843,7 +849,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
-        if form.has_key('page_start'):
+        if 'page_start' in form:
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
           except (ValueError, TypeError):
@@ -948,7 +954,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def setDomainDictFromParam(self, selection_name, domain_dict):
       domain_list = []
       domain_path = []
-      for key, value in domain_dict.items():
+      for key, value in list(domain_dict.items()):
         domain_path.append(key)
         splitted_domain_list = value[1].split('/')[1:]
         for i in range(len(splitted_domain_list)):
@@ -1312,7 +1318,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         # Save the current REQUEST form
         # We can't put FileUpload instances because we can't pickle them
         saved_form_data = {key: value
-          for key, value in REQUEST.form.items()
+          for key, value in list(REQUEST.form.items())
           if not isinstance(value, FileUpload)}
 
         kw = {
@@ -1374,7 +1380,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       domain_item_dict = domain.asDomainItemDict()
       # XXX: why even put Nones in domain if they are ignored ?
       domain_item_dict.pop(None, None)
-      for key, value in domain_item_dict.iteritems():
+      for key, value in domain_item_dict.items():
         if getattr(aq_base(value), 'isPredicate', 0):
           append(
             value.asQuery(strict_membership=strict_membership),
@@ -1534,7 +1540,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getSelectionNameListFromContainer(self):
       user_id = self._getUserId()
       return list(set(self._getContainer().getSelectionNameList(user_id) +
-                      self.getTemporarySelectionDict().keys()))
+                      list(self.getTemporarySelectionDict().keys())))
 
     def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
@@ -1599,7 +1605,7 @@ class TransactionalCacheContainer(MemcachedContainer):
 class PersistentMappingContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     try:
-      return self._container[user_id].keys()
+      return list(self._container[user_id].keys())
     except KeyError:
       return []
 
@@ -1625,7 +1631,7 @@ class PersistentMappingContainer(BaseContainer):
       pass
 
   def deleteGlobalSelection(self, user_id, selection_name):
-    for user_container in self._container.itervalues():
+    for user_container in self._container.values():
       try:
         del(user_container[selection_name])
       except KeyError:
@@ -1647,7 +1653,7 @@ class SelectionPersistentMapping(PersistentMapping):
     return newState
 
 
-class TreeListLine:
+class TreeListLine(object):
   def __init__(self,object,is_pure_summary,depth, is_open,select_domain_dict,exception_uid_list):
     self.object=object
     self.is_pure_summary=is_pure_summary
@@ -1698,7 +1704,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
 
   is_empty_level = 1
   while is_empty_level:
-    if not root_dict.has_key(base_category):
+    if base_category not in root_dict:
       root = None
       if portal_categories is not None:
         if portal_categories._getOb(base_category, None) is not None:
@@ -1863,13 +1869,13 @@ for property_id in candidate_method_id_list:
     list_start_property_id = "%s_list_start" % listbox_id
     page_start_property_id = "%s_page_start" % listbox_id
     # Rename request parameters
-    if request.has_key(selection_name_property_id):
+    if selection_name_property_id in request:
       request.form['list_selection_name'] = request[selection_name_property_id]
-    if request.has_key(listbox_uid_property_id):
+    if listbox_uid_property_id in request:
       request.form['listbox_uid'] = request[listbox_uid_property_id]
-    if request.has_key(list_start_property_id):
+    if list_start_property_id in request:
       request.form['list_start'] = request[list_start_property_id]
-    if request.has_key(page_start_property_id):
+    if page_start_property_id in request:
       request.form['page_start'] = request[page_start_property_id]
     # Call the wrapper
     method = getattr(portal_selection, wrapper_property_id)
@@ -1924,13 +1930,13 @@ def createFolderMixInPageSelectionMethod(listbox_id):
       list_start_property_id = "%s_list_start" % listbox_id
       page_start_property_id = "%s_page_start" % listbox_id
       # Rename request parameters
-      if request.has_key(selection_name_property_id):
+      if selection_name_property_id in request:
         request.form['list_selection_name'] = request[selection_name_property_id]
-      if request.has_key(listbox_uid_property_id):
+      if listbox_uid_property_id in request:
         request.form['listbox_uid'] = request[listbox_uid_property_id]
-      if request.has_key(list_start_property_id):
+      if list_start_property_id in request:
         request.form['list_start'] = request[list_start_property_id]
-      if request.has_key(page_start_property_id):
+      if page_start_property_id in request:
         request.form['page_start'] = request[page_start_property_id]
       # Call the wrapper
       method = getattr(portal_selection, wrapper_property_id)

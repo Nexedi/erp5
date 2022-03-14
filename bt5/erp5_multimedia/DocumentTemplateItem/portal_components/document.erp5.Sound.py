@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.File import File, _MARKER

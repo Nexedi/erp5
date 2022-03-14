@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from builtins import range
 def get_distance(a, b):
     """This function was giving by Magnus Lie Hetland. It calculates the gap
     (mathematical distance) between two strings with the cost of word's

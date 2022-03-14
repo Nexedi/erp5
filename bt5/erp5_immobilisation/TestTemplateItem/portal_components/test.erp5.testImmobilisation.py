@@ -27,6 +27,7 @@
 ##############################################################################
 
 
+from builtins import range
 import unittest
 from Testing import ZopeTestCase
 from zExceptions import Unauthorized
@@ -122,7 +123,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       Create all ERP5 users needed for the test.
       ERP5 user = Person object + Assignment object in erp5 person_module.
     """
-    for user_login, user_data in user_dict.items():
+    for user_login, user_data in list(user_dict.items()):
       user_roles = user_data[0]
       # Create the Person.
       if len([p for p in self.getPersonModule().objectValues() if p.getReference() == user_login]) == 0:
@@ -864,7 +865,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for property_ in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
                       'extra_cost_price','disposal_price'):
       del parameter_dict[property_]
-    for property_ in self.account_dict.keys():
+    for property_ in list(self.account_dict.keys()):
       del parameter_dict[property_]
     parameter_dict.update(self.extra_monthly_dict)
     sequence.edit(datetime = DateTime('2002/03/01'),
@@ -1089,10 +1090,10 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       e_period = e_period_list[e_period_cursor]
       #LOG('e_period :', 0, e_period)
       e_period_cursor += 1
-      for key in e_period.keys():
+      for key in list(e_period.keys()):
         e_value = e_period[key]
         #LOG('testing c_period %s "%s" value' % (e_period_cursor-1, key), 0, '')
-        self.assertTrue(c_period.has_key(key))
+        self.assertTrue(key in c_period)
         c_value = c_period[key]
         is_float = 0
         try:
@@ -2057,7 +2058,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         e_movement = e_simulation_movement_list[e_cursor]
         wrong_movement = 0
         key_cursor = 0
-        key_list = e_movement.keys()
+        key_list = list(e_movement.keys())
         key_list.remove('id')
         while key_cursor < len(key_list) and not wrong_movement:
           key = key_list[key_cursor]
@@ -2895,7 +2896,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         e_transaction = e_transaction_list[e_cursor]
         wrong_transaction = 0
         key_cursor = 0
-        key_list = e_transaction.keys()
+        key_list = list(e_transaction.keys())
         if 'line_list' in key_list:
           key_list.remove('line_list')
         if 'id' in key_list:
@@ -2947,7 +2948,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
           e_line = e_line_list[e_line_cursor]
           wrong_line = 0
           key_cursor = 0
-          key_list = e_line.keys()
+          key_list = list(e_line.keys())
           while key_cursor < len(key_list) and not wrong_line:
             key = key_list[key_cursor]
             e_value = e_line[key]

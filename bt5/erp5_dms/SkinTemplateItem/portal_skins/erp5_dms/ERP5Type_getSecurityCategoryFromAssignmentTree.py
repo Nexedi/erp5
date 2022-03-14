@@ -9,6 +9,8 @@ Differences to the stock implementation:
   (unless we say it is strict)
 """
 
+from builtins import str
+from builtins import range
 from erp5.component.module.Log import log
 
 category_list = []
@@ -44,7 +46,7 @@ for assignment in person_object.contentValues(filter={'portal_type': 'Assignment
           cdict = category_dict.copy()
           cdict[base_category] = '/'.join(grouplist[:-i])
           category_list.append(cdict)
-    except RuntimeError,e:
+    except RuntimeError as e:
       log(str(e))
 
 return category_list

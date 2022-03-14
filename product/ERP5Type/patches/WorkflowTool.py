@@ -52,7 +52,7 @@ class WorkflowHistoryList(NewWorkflowHistoryList):
   def __getstate__(self):
     return self._prev, self._log
 
-  def __nonzero__(self):
+  def __bool__(self):
     # not faster than __len__ but avoids migration
     if self._log:
       return True
@@ -105,7 +105,7 @@ def WorkflowTool_getChainDict(self):
     """Test if the given transition exist from the current state.
     """
     chain_dict = {}
-    for portal_type, wf_id_list in self._chains_by_type.iteritems():
+    for portal_type, wf_id_list in self._chains_by_type.items():
         for wf_id in wf_id_list:
             chain_dict.setdefault(wf_id, []).append(portal_type)
     return chain_dict

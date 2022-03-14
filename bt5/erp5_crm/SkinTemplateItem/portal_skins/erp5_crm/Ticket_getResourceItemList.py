@@ -37,6 +37,7 @@ getPreferredCategoryChildItemListMethodId.
 #   merged with a following /2/)
 # - all resource child must be properly indented
 # It is much simpler if only "empty_category=False" case is handled.
+from builtins import range
 from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import getSecurityManager
 portal = context.getPortalObject()
@@ -67,7 +68,7 @@ def getResourceItemList():
     def getCategoryTitle_(category, depth):
       result = []
       append = result.append
-      for _ in xrange(depth + 1):
+      for _ in range(depth + 1):
         append(getattr(category, accessor_id)())
         category = category.getParentValue()
       return '/'.join(result[::-1])

@@ -1,3 +1,4 @@
+from past.builtins import cmp
 def sort(a, b):
   return cmp(a[0], b[0])
 

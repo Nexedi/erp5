@@ -1,3 +1,4 @@
+from past.builtins import basestring
 import json
 
 commit_dict = json.loads(commit_json) if commit_json is not None else {
@@ -13,7 +14,7 @@ for key, file_list in (('added', added), ('modified', modified), ('removed', rem
   if file_list is not None:
     # XXX: ERP5VCS_doCreateJavaScriptStatus should send lists
     if isinstance(file_list, basestring):
-      file_list = file_list != 'none' and filter(None, file_list.split(',')) or ()
+      file_list = file_list != 'none' and [_f for _f in file_list.split(',') if _f] or ()
     commit_dict[key] = file_list
 
 if changelog is not None:
@@ -52,5 +53,5 @@ try:
     modified=commit_dict['modified'],
     removed=commit_dict['removed']
   )
-except Exception, error:
+except Exception as error:
   return context.BusinessTemplate_handleException(error, script.id, commit_dict)

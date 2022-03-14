@@ -25,10 +25,11 @@
 #
 ##############################################################################
 
+from builtins import object
 from erp5.component.module.SyncMLTransportHTTP import ConnectionError
 from Products.ERP5.ERP5Site import getSite
 
-class MailTransport:
+class MailTransport(object):
 
   def send(self, from_url, to_url, xml, sync_id, content_type):
     to_address = to_url[len('mailto:'):]

@@ -28,14 +28,17 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 import unittest
 import os
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from unittest import expectedFailure
 
-import httplib
-from StringIO import StringIO
+import http.client
+from io import StringIO
 from DateTime import DateTime
 
 from lxml import etree
@@ -98,7 +101,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='PUT',
                             stdin=file_object,
                             basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), http.client.CREATED)
     image = person['erp5_logo.png']
     self.assertEqual(image.getPortalType(), 'Embedded File')
     self.assertEqual(image.getContentType(), 'image/png')
@@ -118,7 +121,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=file_object,
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), http.client.CREATED)
     document_module = self.getDocumentModule()
     self.assertTrue(filename in document_module.objectIds())
     self.assertEqual(document_module[filename].getPortalType(), 'Presentation')
@@ -140,7 +143,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=file_object,
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), http.client.CREATED)
     self.tic()
 
     # check Document fetching
@@ -153,7 +156,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), http.client.OK)
     self.assertEqual(response.getBody(), document.getData(),
           'Error in getting data, get:%r' % response.getHeader('content-type'))
 
@@ -168,7 +171,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='PUT',
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), http.client.CREATED)
     web_page_module = self.getWebPageModule()
     self.assertTrue(filename in web_page_module.objectIds())
     self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
@@ -186,13 +189,13 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     iso_text_content = text_content.decode('utf-8').encode('iso-8859-1')
     path = web_page_module.getPath()
-    for _ in xrange(2): # Run twice to check the code that compares
+    for _ in range(2): # Run twice to check the code that compares
                         # old & new data when setting file attribute.
       response = self.publish('%s/%s' % (path, filename),
                               request_method='PUT',
                               stdin=StringIO(iso_text_content),
                               basic=self.authentication)
-      self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
+      self.assertEqual(response.getStatus(), http.client.NO_CONTENT)
       self.assertEqual(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
     self.tic()
@@ -223,7 +226,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), http.client.OK)
     self.assertEqual(response.getBody(), document.getData(),
              'Error in getting data, get:%r' % response.getHeader('content-type'))
 
@@ -247,7 +250,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), http.client.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
     self.assertEqual(xml_metadata.find('{DAV:}response/{DAV:}href').text,
@@ -285,7 +288,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), http.client.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
     self.assertEqual(xml_metadata.find(

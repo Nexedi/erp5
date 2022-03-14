@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from base64 import b16encode
 
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
@@ -321,7 +322,7 @@ class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
     }
     # Translate kw with the PropertySheet
     property_ = {}
-    for k, v in kw.items():
+    for k, v in list(kw.items()):
       k = mapping.get(k, k)
       property_[k] = v
     object._edit(**property_)

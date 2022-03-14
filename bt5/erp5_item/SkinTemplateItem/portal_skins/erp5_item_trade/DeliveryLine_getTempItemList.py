@@ -1,3 +1,4 @@
+from builtins import range
 portal = context.getPortalObject()
 
 try:

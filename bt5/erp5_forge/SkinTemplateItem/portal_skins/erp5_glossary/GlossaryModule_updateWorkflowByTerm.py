@@ -5,7 +5,7 @@ suffix_length = len(suffix)
 portal_workflow = context.portal_workflow
 portal_catalog = context.portal_catalog
 
-for i in kw.keys():
+for i in list(kw.keys()):
   is_action = 0
   if not(i.startswith(prefix) and kw[i]):
     continue

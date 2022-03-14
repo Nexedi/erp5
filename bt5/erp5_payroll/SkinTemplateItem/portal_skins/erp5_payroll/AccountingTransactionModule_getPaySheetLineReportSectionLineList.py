@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from Products.PythonScripts.standard import Object
 from DateTime import DateTime
 
@@ -113,7 +114,7 @@ request.set('total', total)
 
 
 sorted_inventory_list = []
-sorted_inventory_list = inventory_list.values()
+sorted_inventory_list = list(inventory_list.values())
 
 # sort by salary range, and add intermediate sums if needed
 def sort_method(a, b):

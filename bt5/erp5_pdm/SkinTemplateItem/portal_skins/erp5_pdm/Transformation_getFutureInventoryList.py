@@ -8,7 +8,7 @@ def getTransformationResourceList():
     r = m.getResource()
     if r is not None:
       resource_dict[r] = 1
-  return resource_dict.keys()
+  return list(resource_dict.keys())
 
 resource_list = getTransformationResourceList()
 if not resource_list:

@@ -1,10 +1,13 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
-from StringIO import StringIO
+from io import StringIO
 import PIL.Image
 
 @implementer(ITransform)
-class PILTransforms:
+class PILTransforms(object):
     __name__  = "piltransforms"
     def __init__(self, name=None):
          if name is not None:

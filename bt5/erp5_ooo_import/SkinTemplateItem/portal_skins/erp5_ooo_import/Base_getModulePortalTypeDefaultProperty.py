@@ -1,3 +1,4 @@
+from past.builtins import cmp
 forbidden_property = ('uid', 'portal_type',)
 match_property_list = []
 

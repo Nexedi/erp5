@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2008,2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -25,6 +26,7 @@ from __future__ import absolute_import
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 ##############################################################################
 
+from past.utils import old_div
 from .TargetSolver import TargetSolver
 
 class Copy(TargetSolver):
@@ -59,7 +61,7 @@ class Copy(TargetSolver):
       new_quantity = delivery_quantity * delivery_ratio
       quantity_ratio = 0
       if old_quantity != 0.0:
-        quantity_ratio = new_quantity / old_quantity
+        quantity_ratio = old_div(new_quantity, old_quantity)
       quantity = old_quantity * quantity_ratio
       quantity_error = delivery_quantity * delivery_ratio - quantity
       value_dict['delivery_error'] = quantity_error

@@ -6,12 +6,12 @@ form = getattr(context, form_id)
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix='my_')
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   result = {}
   result['field_errors'] = {}
   field_errors = form.ErrorFields(validation_errors)
-  for key, value in field_errors.items():
+  for key, value in list(field_errors.items()):
     result['field_errors'][key] = value.error_text
   return form()
 

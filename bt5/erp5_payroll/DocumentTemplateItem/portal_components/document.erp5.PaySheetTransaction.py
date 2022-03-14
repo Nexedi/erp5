@@ -143,7 +143,7 @@ class PaySheetTransaction(Invoice):
                                      portal_type_list=portal_type_list,
                                      property_list=property_list)
       traverse = self.getPortalObject().unrestrictedTraverse
-      for model_url, id_list in model_reference_dict.items():
+      for model_url, id_list in list(model_reference_dict.items()):
         model = traverse(model_url)
         sub_object_list.extend([model._getOb(x) for x in id_list])
     return sub_object_list
@@ -168,7 +168,7 @@ class PaySheetTransaction(Invoice):
                         'base_application_list', 'base_contribution_list')})
 
     return {'movement_to_delete_list': movement_to_delete_list,
-            'movement_to_add_list': amount_dict.values()}
+            'movement_to_add_list': list(amount_dict.values())}
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'applyTransformation')
@@ -199,10 +199,10 @@ class PaySheetTransaction(Invoice):
         if movement.getTotalPrice() not in (0, None):
           # remove movement with 0 total_price
           trade_phase = movement.getTradePhase()
-          if not movement_list_trade_phase_dic.has_key(trade_phase):
+          if trade_phase not in movement_list_trade_phase_dic:
             movement_list_trade_phase_dic[trade_phase] = []
           movement_list_trade_phase_dic[trade_phase].append(movement)
-      for trade_phase in movement_list_trade_phase_dic.keys():
+      for trade_phase in list(movement_list_trade_phase_dic.keys()):
         business_link_list = business_process.getBusinessLinkValueList(trade_phase=\
             trade_phase)
         # convert Amount into Simulation Movement with Business Link

@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 from time import time
 import gc
 import subprocess
@@ -209,7 +212,7 @@ class TestPerformance(TestPerformanceMixin):
     self.tic()
     # Check performance
     before_view = time()
-    for _ in xrange(100):
+    for _ in range(100):
       # XXX: Note that we don't clean TransactionVariable cache and REQUEST
       #      before each call to 'view' requests. In reality, they would be
       #      always empty at the beginning of such requests.
@@ -219,8 +222,8 @@ class TestPerformance(TestPerformanceMixin):
       bar.Bar_viewPerformance()
     after_view = time()
     req_time = (after_view - before_view)/100.
-    print "%s time to view object form %.4f < %.4f < %.4f\n" % \
-            (prefix, min_, req_time, max_)
+    print("%s time to view object form %.4f < %.4f < %.4f\n" % \
+            (prefix, min_, req_time, max_))
     if PROFILE:
       self.profile(bar.Bar_viewPerformance)
     if DO_TEST:
@@ -249,9 +252,9 @@ class TestPerformance(TestPerformanceMixin):
     # call view once to fill caches
     self.bar_module.BarModule_viewBarList()
     # add object in bar module
-    for i in xrange(10):
+    for i in range(10):
       def add():
-        for x in xrange(100):
+        for x in range(100):
           self.bar_module.newContent(portal_type='Bar',
                                          title='Bar Test',
                                          quantity="%4d" %(x,))
@@ -270,7 +273,7 @@ class TestPerformance(TestPerformanceMixin):
       after_tic = time()
       gc.collect()
       before_form = time()
-      for _ in xrange(100):
+      for _ in range(100):
         self.bar_module.BarModule_viewBarList()
       after_form = time()
       # store result
@@ -281,7 +284,7 @@ class TestPerformance(TestPerformanceMixin):
 
       if PROFILE:
         self.profile(self.bar_module.BarModule_viewBarList, i)
-    keys = view_result.keys()
+    keys = list(view_result.keys())
     keys.sort()
     # first display results
     i = 0
@@ -291,10 +294,10 @@ class TestPerformance(TestPerformanceMixin):
       add_value = add_result[key]
       min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
       max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
-      print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
-      print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
-      print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
-      print
+      print("nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
+      print("\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC))
+      print("\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view))
+      print()
       i += 1
     # then check results
     if DO_TEST:
@@ -332,15 +335,15 @@ class TestPerformance(TestPerformanceMixin):
     self.tic()
     # Check performance
     before_view = time()
-    for _ in xrange(100):
+    for _ in range(100):
       foo.Foo_viewProxyField()
     after_view = time()
     req_time = (after_view - before_view)/100.
 
-    print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
+    print("time to view proxyfield form %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_PROXYFIELD_VIEW,
                 req_time,
-                MAX_OBJECT_PROXYFIELD_VIEW )
+                MAX_OBJECT_PROXYFIELD_VIEW ))
     if PROFILE:
       self.profile(foo.Foo_viewProxyField)
     if DO_TEST:
@@ -357,21 +360,21 @@ class TestPerformance(TestPerformanceMixin):
     """
     foo = self.foo_module.newContent(portal_type='Foo',
                                      title='Foo Test')
-    for i in xrange(100):
+    for i in range(100):
       foo.newContent(portal_type='Foo Line',
                      title='Line %s' % i)
     self.tic()
     # Check performance
     before_view = time()
-    for _ in xrange(100):
+    for _ in range(100):
       foo.Foo_viewPerformance()
     after_view = time()
     req_time = (after_view - before_view)/100.
 
-    print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
+    print("time to view object form with many lines %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_MANY_LINES_VIEW,
                 req_time,
-                MAX_OBJECT_MANY_LINES_VIEW )
+                MAX_OBJECT_MANY_LINES_VIEW ))
     if PROFILE:
       self.profile(foo.Foo_viewPerformance)
     if DO_TEST:
@@ -402,7 +405,7 @@ class TestPropertyPerformance(TestPerformanceMixin):
   def _benchmark(self, nb_iterations, min_time, max_time):
     def decorated(f):
       before = time()
-      for i in xrange(nb_iterations):
+      for i in range(nb_iterations):
         f(i)
       after = time()
       total_time = (after - before) / 100.

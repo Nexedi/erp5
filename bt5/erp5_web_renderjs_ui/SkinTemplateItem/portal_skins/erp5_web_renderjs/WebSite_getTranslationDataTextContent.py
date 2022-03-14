@@ -1,5 +1,6 @@
 """Returns the `text_content` that should be set on the translation data script for this RJS website.
 """
+from builtins import str
 import json
 
 portal = context.getPortalObject()
@@ -32,7 +33,7 @@ tmp = {}
 for language in context.getAvailableLanguageSet():
   tmp[language] = {}
   for word in translatable_message_set:
-    tmp[language][word] = unicode(Base_translateString(word, lang = language), 'utf-8')
+    tmp[language][word] = str(Base_translateString(word, lang = language), 'utf-8')
 
 
 # We pass unicode to this json.dump(ensure_ascii=False), so that it produce

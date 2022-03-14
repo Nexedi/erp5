@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import object
 from rigging import transformer
 
 import os
@@ -11,7 +12,7 @@ from stat import ST_MTIME
 
 file = "/tmp/word.doc"
 
-class curry:
+class curry(object):
     def __init__(self, func, *fixed_args):
         self.func = func
         self.fixed_args = fixed_args

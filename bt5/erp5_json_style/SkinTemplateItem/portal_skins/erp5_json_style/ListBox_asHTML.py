@@ -1,3 +1,4 @@
+from builtins import range
 from collections import OrderedDict
 from json import dumps
 label_list = context.getLabelValueList()

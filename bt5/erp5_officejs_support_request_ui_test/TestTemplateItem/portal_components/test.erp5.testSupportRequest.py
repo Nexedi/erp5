@@ -24,10 +24,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
 import json
-from StringIO import StringIO
-import urlparse
-import httplib
+from io import StringIO
+import urllib.parse
+import http.client
 
 import feedparser
 from DateTime import DateTime
@@ -461,7 +466,7 @@ class TestSupportRequestRSSSOneEvent(SupportRequestRSSTestCase, DefaultTestRSSMi
   """Tests for simple cases of RSS with only one event.
   """
   def _checkRSS(self, response):
-    self.assertEqual(httplib.OK, response.getStatus())
+    self.assertEqual(http.client.OK, response.getStatus())
     rss = feedparser.parse(response.getBody())
     self.assertEqual(rss['feed']['title'], "Support Requests")
     item, = rss.entries
@@ -500,7 +505,7 @@ class TestSupportRequestRSSSOneEvent(SupportRequestRSSTestCase, DefaultTestRSSMi
     # get rss link url
     self.getWebSite().support_request_module.SupportRequestModule_generateRSSLinkUrl()
     restricted_access_url = self.portal.REQUEST.form["your_rss_url"]
-    parsed_url = urlparse.urlparse(restricted_access_url)
+    parsed_url = urllib.parse.urlparse(restricted_access_url)
     restricted_access_url = restricted_access_url.replace(
         '%s://%s' % (parsed_url.scheme, parsed_url.netloc), '', 1)
     # and check it
@@ -538,7 +543,7 @@ class TestSupportRequestRSSSMultipleEvents(SupportRequestRSSTestCase, DefaultTes
     self.tic()
 
   def _checkRSS(self, response):
-    self.assertEqual(httplib.OK, response.getStatus())
+    self.assertEqual(http.client.OK, response.getStatus())
     rss = feedparser.parse(response.getBody())
     self.assertEqual(rss['feed']['title'], "Support Requests")
     self.assertEqual(len(rss.entries), 3)
@@ -562,7 +567,7 @@ class TestSupportRequestRSSSNonVisibleSupportRequest(SupportRequestRSSTestCase, 
     self.tic()
 
   def _checkRSS(self, response):
-    self.assertEqual(httplib.OK, response.getStatus())
+    self.assertEqual(http.client.OK, response.getStatus())
     rss = feedparser.parse(response.getBody())
     item, = rss.entries
     self.assertEqual(item['author'], self.user.getTitle())
@@ -584,7 +589,7 @@ class TestSupportRequestRSSSNonVisibleAttachment(SupportRequestRSSTestCase, Defa
     self.tic()
 
   def _checkRSS(self, response):
-    self.assertEqual(httplib.OK, response.getStatus())
+    self.assertEqual(http.client.OK, response.getStatus())
     rss = feedparser.parse(response.getBody())
     item, = rss.entries
     # no enclosure

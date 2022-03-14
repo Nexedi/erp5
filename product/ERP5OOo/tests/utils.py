@@ -34,13 +34,17 @@ as first argument and returns list of errors.
 """
 from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
 import sys
 import tempfile
 import zipfile
 import popen2
-import urllib2
-from cStringIO import StringIO
+import urllib.request, urllib.error, urllib.parse
+from io import StringIO
 
 try:
   import lxml
@@ -52,7 +56,7 @@ except ImportError:
   odfpy = None
 
 if lxml:
-  class LXMLValidator:
+  class LXMLValidator(object):
     """Validate ODF document using RelaxNG and lxml"""
     schema_url = \
       'http://docs.oasis-open.org/office/v1.1/OS/OpenDocument-schema-v1.1.rng'
@@ -85,7 +89,7 @@ if lxml:
 
 elif odfpy:
 
-  class OdflintValidator:
+  class OdflintValidator(object):
     """Validates ODF files using odflint, available on pypi
     http://opendocumentfellowship.org/development/projects/odfpy
     """
@@ -106,7 +110,7 @@ elif odfpy:
 
 else:
 
-  class NoValidator:
+  class NoValidator(object):
     """Does not actually validate, but keep the interface."""
     def validate(self, odf_file_content):
       print('No validator available', file=sys.stderr)

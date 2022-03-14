@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from erp5.component.module.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -192,16 +193,16 @@ class VCardConduit(ERP5Conduit):
 
         else:
           property_name=property_
-        if isinstance(property_name, unicode):
+        if isinstance(property_name, str):
           property_name = property_name.encode('utf-8')
 
         tmp = []
         for property_value in property_value_list:
-          if isinstance(property_value, unicode):
+          if isinstance(property_value, str):
             property_value = property_value.encode('utf-8')
           tmp.append(property_value)
         property_value_list = tmp
-        if property_name in convert_dict.keys():
+        if property_name in list(convert_dict.keys()):
           if property_name == 'N' and len(property_value_list) > 1:
             edit_dict[convert_dict['N']] = property_value_list[0]
             edit_dict[convert_dict['FN']] = property_value_list[1]

@@ -28,6 +28,9 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import persistent
 from hashlib import md5
 
@@ -37,7 +40,7 @@ from hashlib import md5
 
 from ZPublisher.HTTPRequest import FileUpload
 from OFS.Image import Pdata
-from StringIO import StringIO
+from io import StringIO
 import transaction
 
 class PdataHelper(persistent.Persistent):
@@ -67,8 +70,8 @@ class PdataHelper(persistent.Persistent):
 
     n = self._max_len
 
-    if isinstance(value, (str, unicode)):
-      if isinstance(value, unicode):
+    if isinstance(value, str):
+      if isinstance(value, str):
         value = value.encode('utf-8')
       size=len(value)
       if size < n:
@@ -142,7 +145,7 @@ class PdataHelper(persistent.Persistent):
     next_ = pdata
     while next_ is not None:
       md5_hash.update(next_.data)
-      next_ = next_.next
+      next_ = next_.__next__
     return md5_hash.hexdigest()
 
   def _read_size_from_pdata(self, pdata):
@@ -152,7 +155,7 @@ class PdataHelper(persistent.Persistent):
     next_ = pdata
     while next_ is not None:
       size += len(next_.data)
-      next_ = next_.next
+      next_ = next_.__next__
     return size
 
   def __len__(self):
@@ -186,9 +189,9 @@ class PdataHelper(persistent.Persistent):
     of a Pdata chains
     """
     pdata = self._data
-    next_ = pdata.next
+    next_ = pdata.__next__
 
     while next_ is not None:
       pdata = next_
-      next_ = pdata.next
+      next_ = pdata.__next__
     return pdata

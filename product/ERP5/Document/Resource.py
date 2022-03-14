@@ -28,6 +28,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 from math import log
 from warnings import warn
 
@@ -804,8 +806,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       # 'variation_list' parameter may be deprecated:
       # cf Measure.getConvertedQuantity
       try:
-        result = quantity * self._getConversionRatio(from_unit, variation_list)\
-                        / self._getConversionRatio(to_unit, variation_list)
+        result = old_div(quantity * self._getConversionRatio(from_unit, variation_list), self._getConversionRatio(to_unit, variation_list))
       except (ArithmeticError, AttributeError, LookupError, TypeError) as error:
         # For compatibility, we only log the error and return None.
         # No exception for the moment.
@@ -945,7 +946,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       uid = self.getUid()
       row_list = []
-      for unit_uid, value in self._getQuantityUnitDefinitionDict().iteritems():
+      for unit_uid, value in self._getQuantityUnitDefinitionDict().items():
         definition_uid, quantity = value
         row_list.append(dict(uid=definition_uid,
                              resource_uid=uid,
@@ -977,7 +978,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           metric_type_map[metric_type] = measure
 
       insert_list = []
-      for measure in metric_type_map.itervalues():
+      for measure in metric_type_map.values():
         if measure is not None:
           insert_list += measure.asCatalogRowList(quantity_unit_definition_dict)
 

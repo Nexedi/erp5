@@ -31,7 +31,7 @@ def getTestResultStateForTestSuiteRepository(test_result_line_pattern):
 
 test_suite_data = context.TestResult_getTestSuiteData()
 if test_suite_data:
-  for repository_info in test_suite_data['repository_dict'].values():
+  for repository_info in list(test_suite_data['repository_dict'].values()):
     connector_url = repository_info['connector_relative_url']
     if connector_url:
       connector = portal.restrictedTraverse(connector_url)

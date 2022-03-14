@@ -21,7 +21,7 @@ else:
   ## take shopping cart for this customer
   shopping_cart_id = 'shopping_cart'
   session = portal_sessions[session_id]
-  if not shopping_cart_id in session.keys():
+  if not shopping_cart_id in list(session.keys()):
     web_site = context.getWebSiteValue()
     shopping_cart = context.getPortalObject().newContent(temp_object=True, portal_type='Order', id=shopping_cart_id)
     shopping_cart.setPriceCurrency(web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl())

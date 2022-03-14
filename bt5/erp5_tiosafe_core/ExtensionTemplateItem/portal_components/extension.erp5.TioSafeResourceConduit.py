@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import zip
 from Products.ERP5Type.Utils import cartesianProduct
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
 from erp5.component.document.SyncMLConflict import SyncMLConflict as Conflict
@@ -87,7 +88,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     if variation_dict:
       # the cartesianProduct requires to build a list of list of variations
       builder_variation_list = []
-      for key, value in variation_dict.items():
+      for key, value in list(variation_dict.items()):
         variation_list = []
         for variation in value:
           variation_list.append((key, variation))
@@ -227,12 +228,12 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     else:
       # getter used to retrieve the current values and to check conflicts
       property_list = ['sale_price', 'purchase_price', 'ean13']
-      getter_value_dict = dict(zip(
+      getter_value_dict = dict(list(zip(
         property_list, [
           getattr(document, prop, None)
           for prop in property_list
         ]
-      ))
+      )))
 
       # create and fill a conflict when the integration site value, the erp5
       # value and the previous value are differents

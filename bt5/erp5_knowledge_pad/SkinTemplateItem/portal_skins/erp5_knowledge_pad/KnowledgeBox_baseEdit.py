@@ -1,13 +1,14 @@
 """
   This script edits a Knowledge Box instance used for saving a Gadget preferences.
 """
+from builtins import str
 from Products.Formulator.Errors import FormValidationError
 from json import dumps
 
 kw = {}
 request = context.REQUEST
 form = request.form
-fields = filter(lambda x: x.startswith(form_fields_main_prefix), form.keys())
+fields = [x for x in list(form.keys()) if x.startswith(form_fields_main_prefix)]
 box = context.restrictedTraverse(box_relative_url)
 portal_selection = context.getPortalObject().portal_selections
 
@@ -16,7 +17,7 @@ form = getattr(box, form_id)
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix=form_fields_main_prefix)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
@@ -25,7 +26,7 @@ except FormValidationError, validation_errors:
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)

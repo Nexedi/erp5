@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import map
 from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
 import sys

@@ -27,6 +27,7 @@
 ##############################################################################
 
 # ERP5 imports
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
@@ -293,7 +294,7 @@ class EmailReader(ExternalSource):
       folder_list = available_folder_list
     else:
       # A scope is defined, so we only need to filter
-      folder_list = filter(lambda x: x in available_folder_list, folder_list)
+      folder_list = [x for x in folder_list if x in available_folder_list]
     # Interleave default folder for better reactivity
     default_folder = self.getDefaultCrawlingScope()
     if default_folder and default_folder in available_folder_list:
@@ -330,11 +331,11 @@ class EmailReader(ExternalSource):
     # This is very sequential and could be improved probably
     try:
       message_uid_list = self._getMailServer().getMessageUIDList(message_folder=message_folder)
-    except ValueError, error_message:  # Use a better exception here XXX
+    except ValueError as error_message:  # Use a better exception here XXX
       message_uid_list = []
     # Reduce list size based on asumption of growing sequence of uids
     latest_uid = self._latest_uid.get(message_folder, 0)
-    message_uid_list = filter(lambda uid: int(uid) >  latest_uid, message_uid_list)
+    message_uid_list = [uid for uid in message_uid_list if int(uid) >  latest_uid]
     # And update biggest uid - for next time
     for uid in message_uid_list:
       # Cache lastest UID (only works if uid is increasing) - XXX-JPS
@@ -343,8 +344,7 @@ class EmailReader(ExternalSource):
     # Do not retrieve existing messages - XXX maybe there is a faster way to compute this
     # This should probably be handled within ingestMessageList and splitted among
     # activities
-    message_uid_list = filter(lambda uid: 
-      not self.hasContent(self.getMessageID(uid, message_folder)), message_uid_list)
+    message_uid_list = [uid for uid in message_uid_list if not self.hasContent(self.getMessageID(uid, message_folder))]
     self.activate(after_tag=message_activity_tag, priority=2, activity='SQLQueue',
                   tag=list_activity_tag).ingestMessageList(message_uid_list,
                                                    message_folder=message_folder)

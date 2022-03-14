@@ -1,8 +1,9 @@
 
+from builtins import object
 __version__="$Revision: 1.3 $"[11:-2]
 
 from Acquisition import aq_base
-class LDAPConnectionAccessors:
+class LDAPConnectionAccessors(object):
     """ getters / setters for LDAP Properties """
 
     __ac_permissions__ = (

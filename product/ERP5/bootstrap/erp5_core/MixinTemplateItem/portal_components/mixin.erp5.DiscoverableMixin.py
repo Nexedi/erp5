@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass
 from ZODB.POSException import ConflictError
@@ -164,7 +165,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       else:
         result = method()
       if result is not None:
-        for key, value in result.iteritems():
+        for key, value in result.items():
           if value not in (None, ''):
             kw[key]=value
     # Prepare the content edit parameters

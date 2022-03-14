@@ -2,13 +2,14 @@
 A simple identity transform
 """
 
+from builtins import object
 __revision__ = '$Id: identity.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 
 @implementer(ITransform)
-class IdentityTransform:
+class IdentityTransform(object):
     """ Identity transform
 
     return content unchanged.

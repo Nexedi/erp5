@@ -1,3 +1,4 @@
+from builtins import str
 portal = context.getPortalObject()
 state = context.getSimulationState()
 if (state not in ('accepted')):
@@ -47,7 +48,7 @@ from Products.ERP5Type.Core.Workflow import ValidationFailed
 from zExceptions import Redirect
 try:
   transaction.Base_checkConsistency()
-except ValidationFailed, error_message:
+except ValidationFailed as error_message:
   if getattr(error_message, 'msg', None):
     # use of Message class to store message+mapping+domain
     message = error_message.msg

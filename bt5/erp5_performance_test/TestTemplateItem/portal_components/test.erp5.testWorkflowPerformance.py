@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2002-2016 Nexedi SA and Contributors. All Rights Reserved.
@@ -25,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from test import pystone
 from time import time
 pystone.clock = time
@@ -47,11 +49,11 @@ class TestWorkflowPerformance(TestPerformanceMixin):
 
     foo_list = []
     foo_list_append = foo_list.append
-    range_10 = range(10)
+    range_10 = list(range(10))
     portal_workflow = self.portal.portal_workflow
     foo_count = 100
 
-    for x in xrange(foo_count):
+    for x in range(foo_count):
       foo = self.foo_module.newContent()
       foo_list_append(foo)
 
@@ -72,10 +74,10 @@ class TestWorkflowPerformance(TestPerformanceMixin):
 
     end = time()
 
-    print "\n%s pystones/second" % pystone.pystones()[1]
+    print("\n%s pystones/second" % pystone.pystones()[1])
     message = "\n%s took %.4gs (%s foo(s))" % (self._testMethodName,
                                              end - start, foo_count)
-    print message
+    print(message)
     ZopeTestCase._print(message)
 
     # some checking to make sure we tested something relevant

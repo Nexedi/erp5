@@ -1,3 +1,4 @@
+from past.builtins import cmp
 sync_list = []
 
 

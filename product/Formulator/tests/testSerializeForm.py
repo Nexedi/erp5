@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from builtins import str
+from builtins import object
 import unittest
 
 from Products.Formulator.Form import ZMIForm
@@ -9,7 +11,7 @@ from Products.Formulator.Errors import ValidationError, FormValidationError
 from Testing import ZopeTestCase
 ZopeTestCase.installProduct('Formulator')
 
-class FakeRequest:
+class FakeRequest(object):
     """ a fake request for testing.
     Actually we need this only for item acces,
     and for evaluating to false always, for
@@ -35,7 +37,7 @@ class FakeRequest:
     def clear(self):
         self.dict.clear()
 
-    def __nonzero__(self):
+    def __bool__(self):
         return 0
 
 class SerializeTestCase(unittest.TestCase):
@@ -258,7 +260,7 @@ class SerializeTestCase(unittest.TestCase):
                           }
         try:
             request = FakeRequest()
-            for key, sub_field in int_field.form.fields.iteritems():
+            for key, sub_field in int_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'42',
@@ -266,7 +268,7 @@ class SerializeTestCase(unittest.TestCase):
             int_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in float_field.form.fields.iteritems():
+            for key, sub_field in float_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'1.7',
@@ -275,7 +277,7 @@ class SerializeTestCase(unittest.TestCase):
 
             # XXX cannot test "defaults to now", as this may fail randomly
             request.clear()
-            for key, sub_field in date_field.form.fields.iteritems():
+            for key, sub_field in date_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_input_style': 'list',
@@ -303,7 +305,7 @@ class SerializeTestCase(unittest.TestCase):
             date_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in list_field.form.fields.iteritems():
+            for key, sub_field in list_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'foo',
@@ -312,7 +314,7 @@ class SerializeTestCase(unittest.TestCase):
             list_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in multi_field.form.fields.iteritems():
+            for key, sub_field in multi_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'foo',
@@ -324,7 +326,7 @@ class SerializeTestCase(unittest.TestCase):
             multi_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in link_field.form.fields.iteritems():
+            for key, sub_field in link_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'http://www.absurd.org',
@@ -335,7 +337,7 @@ class SerializeTestCase(unittest.TestCase):
             link_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in empty_field.form.fields.iteritems():
+            for key, sub_field in empty_field.form.fields.items():
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'None',
@@ -362,7 +364,7 @@ class SerializeTestCase(unittest.TestCase):
             # naively.
             message = 'the values of %r and %r are different: %r != %r' \
                     % (field, field2, field.values, field2.values)
-            self.assertEqual(sorted(field.values.iterkeys()),
+            self.assertEqual(sorted(field.values.keys()),
                     sorted(field2.values.keys()),
                     message)
 
@@ -373,7 +375,7 @@ class SerializeTestCase(unittest.TestCase):
                     b = ''
                 return a == b
 
-            for key in field.values.keys():
+            for key in list(field.values.keys()):
                 self.assertTrue(compare(field.values[key], field2.values[key]),
                         message)
 

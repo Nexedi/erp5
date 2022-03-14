@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
@@ -36,7 +37,7 @@ no_crawl_protocol_list = ['mailto', 'javascript', ]
 no_host_protocol_list = ['mailto', 'news', 'javascript',]
 default_protocol_dict = { 'Email' : 'mailto',
                         }
-class UrlMixin:
+class UrlMixin(object):
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -57,7 +58,7 @@ class UrlMixin:
       # A quick fix for all objects which did not
       # define protocol such as email addresses
       ptype = self.getPortalType()
-      if default_protocol_dict.has_key(ptype):
+      if ptype in default_protocol_dict:
         protocol = default_protocol_dict[ptype]
       else:
         protocol = 'http'

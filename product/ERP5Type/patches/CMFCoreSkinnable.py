@@ -12,10 +12,14 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from past.builtins import basestring
+from builtins import object
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
 
-from thread import get_ident
+from _thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
 
@@ -57,7 +61,7 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   if portal_callables is not None:
     portal_callables = portal_callables.aq_base
   skin_selection_mapping = {}
-  for selection_name, skin_folder_id_string in portal_skins._getSelections().iteritems():
+  for selection_name, skin_folder_id_string in portal_skins._getSelections().items():
     skin_selection_mapping[selection_name] = _initializeCache(portal_callables,
       portal_skins, skin_folder_id_string.split(','))
   portal_skins._v_skin_location_list = skin_selection_mapping
@@ -186,7 +190,7 @@ PortalObjectBase.__getattr__ = CMFCoreSkinnableSkinnableObjectManager___getattr_
 # A case where it's easy to trigger such error is CMFActivity's REQUEST
 # separation mechanism, where one request is created for each single activity.
 
-class SkinDataCleanup:
+class SkinDataCleanup(object):
   def __init__(self, tid, skindata):
     self.tid = tid
     self.skindata_id = self.hashSkinData(skindata)

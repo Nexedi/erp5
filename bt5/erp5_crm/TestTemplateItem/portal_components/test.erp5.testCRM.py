@@ -26,8 +26,12 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import unittest
-import urlparse
+import urllib.parse
 import os
 import textwrap
 from unittest import expectedFailure
@@ -543,7 +547,7 @@ class TestCRM(BaseTestCRM):
     # This action checks everything is properly defined
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Recipients must be defined"])
     campaign.setDefaultEventPathDestination(
         "portal_domains/%s" % person_domain.getRelativeUrl())
@@ -551,38 +555,38 @@ class TestCRM(BaseTestCRM):
     campaign.setDefaultEventPathEventPortalType(None)
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Event Type must be defined"])
     campaign.setDefaultEventPathEventPortalType('Mail Message')
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Sender must be defined"])
     campaign.setDefaultEventPathSource(sender.getRelativeUrl())
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Notification Message must be defined"])
     campaign.setDefaultEventPathResource(notification_message.getRelativeUrl())
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Notification Message must be validated"])
     notification_message.setReference(notification_message_reference)
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Notification Message must be validated"])
     notification_message.validate()
     self.tic()
 
     ret = campaign.Ticket_createEventFromDefaultEventPath()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["Events are being created in background"])
     self.tic()
     event_list = [event for event in campaign.getFollowUpRelatedValueList()
@@ -2002,7 +2006,7 @@ class TestCRMMailSend(BaseTestCRM):
       method_id='MailMessage_sendByActivity')
     self.commit()
     message_list = [i for i in portal_activities.getMessageList() \
-                    if i.kw.has_key("event_relative_url")]
+                    if "event_relative_url" in i.kw]
     try:
       # 5 recipients -> 5 activities
       self.assertEqual(5, len(message_list))

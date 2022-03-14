@@ -30,9 +30,11 @@
 ##############################################################################
 
 
+from future import standard_library
+standard_library.install_aliases()
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from StringIO import StringIO
+from io import StringIO
 
 class TestFormPrintoutMixin(ERP5TypeTestCase):
   run_all_test = 1

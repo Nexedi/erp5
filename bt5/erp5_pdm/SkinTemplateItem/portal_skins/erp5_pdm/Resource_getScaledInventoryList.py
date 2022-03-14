@@ -7,8 +7,12 @@ Uses sampling_amount, defaults to 20.
 Samples inventory by proper differency, returns
 sampling_amount inventory lines, sorted by date.
 """
+from __future__ import division
 
 # XXX: Might be set in preferences
+from builtins import str
+from builtins import range
+from past.utils import old_div
 sampling_amount = kwargs.get('sampling_amount',20)
 
 from DateTime import DateTime
@@ -32,7 +36,7 @@ if from_date is None or at_date is None or node is None:
   return []
  
 # Lower by one, to be include from_date and at_date
-sampling_delta = ( DateTime(at_date) - DateTime(from_date) ) / (sampling_amount - 1)
+sampling_delta = old_div(( DateTime(at_date) - DateTime(from_date) ), (sampling_amount - 1))
 
 common_kw = {}
 common_kw.update(

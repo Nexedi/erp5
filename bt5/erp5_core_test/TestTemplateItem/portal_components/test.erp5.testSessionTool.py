@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -99,7 +101,7 @@ class SessionToolTestCase(ERP5TypeTestCase):
     ## check temp (RAM based) attributes stored in session
     for i in range (1, 3):
       attr_name = 'attr_%s' %i
-      self.assertIn(attr_name, session.keys())
+      self.assertIn(attr_name, list(session.keys()))
       attr = session[attr_name]
       self.assertEqual(str(i), attr.getId())
       self.assertEqual(0, len(attr.objectIds()))
@@ -157,15 +159,15 @@ class SessionToolTestCase(ERP5TypeTestCase):
     # get again session object again and check that session value is updated
     # (this makes sense for memcached)
     session = portal_sessions[self.session_id]
-    self.assertNotIn('attr_1', session.keys())
-    self.assertNotIn('attr_2', session.keys())
+    self.assertNotIn('attr_1', list(session.keys()))
+    self.assertNotIn('attr_2', list(session.keys()))
 
     session.update(**{'key_1': 'value_1',
                       'key_2': 'value_2',})
     session = portal_sessions[self.session_id]
-    self.assertIn('key_1', session.keys())
+    self.assertIn('key_1', list(session.keys()))
     self.assertEqual(session['key_1'], 'value_1')
-    self.assertIn('key_2', session.keys())
+    self.assertIn('key_2', list(session.keys()))
     self.assertEqual(session['key_2'], 'value_2')
 
     session.clear()
@@ -259,7 +261,7 @@ class SessionToolTestCase(ERP5TypeTestCase):
 
     # test big session
     session.clear()
-    for key in kw.keys():
+    for key in list(kw.keys()):
       kw[key] = ''.join([choice(LETTERS) for _ in range(1000)])
     session.update(kw)
     session = self.portal.portal_sessions[self.session_id]

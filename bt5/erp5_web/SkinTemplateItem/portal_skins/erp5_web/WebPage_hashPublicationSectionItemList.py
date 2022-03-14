@@ -4,6 +4,8 @@
   publication sections for a single web page.
 """
 # Initialise result
+from builtins import str
+from builtins import range
 sub_field_list = []
 if default_sub_field_property_dict is None:
   default_sub_field_property_dict = {}

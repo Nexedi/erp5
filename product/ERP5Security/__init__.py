@@ -39,7 +39,7 @@ def mergedLocalRoles(object):
     if local_role_dict:
       if callable(local_role_dict):
         local_role_dict = local_role_dict() or {}
-      for k, v in local_role_dict.iteritems():
+      for k, v in local_role_dict.items():
         merged[k] += v
     # block acquisition
     if not getattr(object, '_getAcquireLocalRoles', lambda: True)():

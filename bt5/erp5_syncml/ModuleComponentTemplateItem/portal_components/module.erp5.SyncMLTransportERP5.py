@@ -27,9 +27,10 @@
 
 
 
+from builtins import object
 from Products.ERP5.ERP5Site import getSite
 
-class ERP5Transport:
+class ERP5Transport(object):
   """
   This transport is usefull when both subscription & publication
   are on the same ERP5 site

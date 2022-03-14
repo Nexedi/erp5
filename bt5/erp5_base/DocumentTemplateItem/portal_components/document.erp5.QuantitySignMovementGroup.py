@@ -46,6 +46,7 @@ implementation of erp5_immobilisation seriously, to understand why and
 whether this is really required.
 """
 
+from past.builtins import cmp
 from erp5.component.document.MovementGroup import MovementGroup
 
 class QuantitySignMovementGroup(MovementGroup):

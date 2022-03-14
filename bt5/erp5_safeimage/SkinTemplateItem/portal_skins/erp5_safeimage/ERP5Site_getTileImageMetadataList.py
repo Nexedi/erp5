@@ -1,7 +1,8 @@
+from __future__ import print_function
 import json
 portal = context.getPortalObject()
 context.REQUEST.response.setHeader('Access-Control-Allow-Origin', '*')
-print portal.portal_catalog(portal_type="Image Title", src__=1)
+print(portal.portal_catalog(portal_type="Image Title", src__=1))
 #return printed
 data = {}
 data["image_list"] = []

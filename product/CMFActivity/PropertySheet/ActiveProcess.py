@@ -27,7 +27,8 @@
 ##############################################################################
 
 
-class ActiveProcess:
+from builtins import object
+class ActiveProcess(object):
     """
         Properties which allow to define a generic Active Process.
 

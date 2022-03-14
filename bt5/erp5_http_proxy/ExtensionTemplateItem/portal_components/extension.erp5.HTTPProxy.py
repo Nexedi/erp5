@@ -48,7 +48,7 @@ def request(self, url, REQUEST):
     if status_code == 500:
       status_code = 520
 
-    for k, v in proxy_response.headers.items():
+    for k, v in list(proxy_response.headers.items()):
       k = k.title()
       if k in ["Content-Disposition", "Content-Type", "Date", "Last-Modified",
                "Vary", "Cache-Control", "Etag", "Accept-Ranges",

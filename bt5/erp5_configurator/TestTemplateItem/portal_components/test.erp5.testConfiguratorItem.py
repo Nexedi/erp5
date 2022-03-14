@@ -26,6 +26,7 @@
 ##############################################################################
 
 
+from builtins import str
 import uuid
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript

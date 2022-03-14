@@ -1,3 +1,5 @@
+from __future__ import division
+from past.utils import old_div
 from pprint import pformat
 portal = context.getPortalObject()
 request= portal.REQUEST
@@ -160,7 +162,7 @@ for budget in budget_list:
     for cell_range_list in budget_line_as_cell_range_matrixbox:
       for category, title in cell_range_list:
         if category in level_2_variation_category_list:
-          min_depth = min((title.count('\xA0') / 4) or title.count('/'),
+          min_depth = min((old_div(title.count('\xA0'), 4)) or title.count('/'),
                           min_depth)
 
     if min_depth == 100:
@@ -170,7 +172,7 @@ for budget in budget_list:
       for category, title in cell_range_list:
         cell_name_dict[category] = title.decode('utf8').replace(u'\xA0', '')
         if category in level_2_variation_category_list:
-          depth = -min_depth + (title.count('\xA0') / 4) or title.count('/')
+          depth = -min_depth + (old_div(title.count('\xA0'), 4)) or title.count('/')
           cell_depth_dict[category] = depth
           if depth == 1:
             cell_style_dict[category] = 'Level2.1'
@@ -261,7 +263,7 @@ for budget in budget_list:
 
           consumed_ratio = 0
           if current_budget:
-            consumed_ratio = consumed_budget / current_budget
+            consumed_ratio = old_div(consumed_budget, current_budget)
 
           if level_4_category is not None:
             level_3_line_list.append(dict(title=cell_name_dict[level_4_category],
@@ -284,7 +286,7 @@ for budget in budget_list:
         if len(level_3_line_list) > 1 or level_4_category is None:
           consumed_ratio = 0
           if total_level_3_current_budget:
-            consumed_ratio = total_level_3_consumed_budget / total_level_3_current_budget
+            consumed_ratio = old_div(total_level_3_consumed_budget, total_level_3_current_budget)
           level_2_line_list.append(dict(title=cell_name_dict[level_3_category],
                                         is_level_3=True,
                                         initial_budget=total_level_3_initial_budget,
@@ -299,7 +301,7 @@ for budget in budget_list:
       if len(level_2_line_list) > 1:
         consumed_ratio = 0
         if total_level_2_current_budget:
-          consumed_ratio = total_level_2_consumed_budget / total_level_2_current_budget
+          consumed_ratio = old_div(total_level_2_consumed_budget, total_level_2_current_budget)
         level_1_line_list.append(dict(is_level_2=True,
                                       title=cell_name_dict[level_2_category],
                                       style=cell_style_dict[level_2_category],
@@ -321,7 +323,7 @@ for budget in budget_list:
     if len(level_1_line_list) > 1:
       consumed_ratio = 0
       if total_level_1_current_budget:
-        consumed_ratio = total_level_1_consumed_budget / total_level_1_current_budget
+        consumed_ratio = old_div(total_level_1_consumed_budget, total_level_1_current_budget)
       line_list.append(dict(is_level_1=True,
                             title=budget_line.getTitle().decode('utf8'),
                             initial_budget=total_level_1_initial_budget,

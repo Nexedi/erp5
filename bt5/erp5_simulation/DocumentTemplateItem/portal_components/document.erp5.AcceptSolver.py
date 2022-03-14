@@ -84,7 +84,7 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
   # like recording the same values in other simulation movements
   def _updateSimulationMovement(self, simulation_movement, value_dict,
                                 activate_kw):
-    for property_id, value in value_dict.iteritems():
+    for property_id, value in value_dict.items():
       if not simulation_movement.isPropertyRecorded(property_id):
         simulation_movement.recordProperty(property_id)
       simulation_movement.setProperty(property_id, value)

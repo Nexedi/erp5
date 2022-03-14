@@ -1,6 +1,7 @@
 """
 This script returns the default value for second_date field.
 """
+from builtins import str
 portal = context.getPortalObject()
 request = context.REQUEST
 history_size = portal.portal_preferences.getPreferredHtmlStyleZodbHistorySize()

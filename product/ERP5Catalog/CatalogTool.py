@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,6 +27,9 @@
 #
 ##############################################################################
 
+from builtins import range
+from past.utils import old_div
+from builtins import object
 import sys
 from copy import deepcopy
 from collections import defaultdict
@@ -112,7 +116,7 @@ class IndexableObjectWrapper(object):
         skip_role_set = set()
         skip_role = skip_role_set.add
         clear_skip_role = skip_role_set.clear
-        for group_id, role_list in mergedLocalRoles(ob).iteritems():
+        for group_id, role_list in mergedLocalRoles(ob).items():
           new_role_list = []
           new_role = new_role_list.append
           clear_skip_role()
@@ -142,7 +146,7 @@ class IndexableObjectWrapper(object):
       no_indexable_role = self.__catalog_role_set.isdisjoint
       return (
         group_id
-        for group_id, role_list in self.__getLocalRoleDict().iteritems()
+        for group_id, role_list in self.__getLocalRoleDict().items()
         if group_id not in self.__user_set and
           # group_id is returned only if any of its roles is indexable
           not no_indexable_role(role_list)
@@ -185,7 +189,7 @@ class IndexableObjectWrapper(object):
               local_roles_container,
               '__ac_local_roles_group_id_dict__',
               {},
-            ).iteritems():
+            ).items():
               local_roles_group_id_dict.setdefault(
                 role_definition_group,
                 set(),
@@ -197,7 +201,7 @@ class IndexableObjectWrapper(object):
           '': allowed_role_set,
         }
         optimized_role_set = set()
-        for role_definition_group, user_and_role_list in local_roles_group_id_dict.iteritems():
+        for role_definition_group, user_and_role_list in local_roles_group_id_dict.items():
           group_allowed_set = allowed_by_local_roles_group_id.setdefault(
             role_definition_group,
             set(),
@@ -212,7 +216,7 @@ class IndexableObjectWrapper(object):
         user_view_permission_role_dict = {}
         catalog_role_set = self.__catalog_role_set
         user_set = self.__user_set
-        for group_id, role_list in self.__getLocalRoleDict().iteritems():
+        for group_id, role_list in self.__getLocalRoleDict().items():
           # Warning: only valid when group_id is candidate for indexation in a
           # catalog_role column !
           group_id_is_user = group_id in user_set
@@ -239,7 +243,7 @@ class IndexableObjectWrapper(object):
                   group_allowed_set.add(prefix + ':' + role)
 
         # sort and freeze `allowed` principals
-        for local_roles_group_id, allowed in allowed_by_local_roles_group_id.iteritems():
+        for local_roles_group_id, allowed in allowed_by_local_roles_group_id.items():
           allowed_by_local_roles_group_id[local_roles_group_id] = tuple(sorted(allowed))
 
         self.__security_parameter_cache = result = (
@@ -758,11 +762,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           )
       query_list = []
       append = query_list.append
-      for key, value in role_column_dict.iteritems():
+      for key, value in role_column_dict.items():
         append(SimpleQuery(**{key : value}))
       if security_uid_dict:
         catalog_security_uid_groups_columns_dict = self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
-        for local_roles_group_id, security_uid_list in security_uid_dict.iteritems():
+        for local_roles_group_id, security_uid_list in security_uid_dict.items():
           assert security_uid_list
           append(SimpleQuery(
             **{catalog_security_uid_groups_columns_dict[local_roles_group_id]: security_uid_list}
@@ -773,7 +777,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           query = ComplexQuery(
             [
               SimpleQuery(**{key : value})
-              for key, value in local_role_column_dict.items()
+              for key, value in list(local_role_column_dict.items())
             ] + [query],
             logical_operator='AND',
           )
@@ -941,7 +945,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           security_uid_dict,
           w.optimised_roles_and_users,
         ) = getSecurityUidDict(document_w)
-        for local_roles_group_id, security_uid in security_uid_dict.iteritems():
+        for local_roles_group_id, security_uid in security_uid_dict.items():
           catalog_column = catalog_security_uid_groups_columns_dict.get(
             local_roles_group_id,
             default_security_uid_column,
@@ -1049,11 +1053,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       identity_criterion = getattr(object,'_identity_criterion',None)
       range_criterion = getattr(object,'_range_criterion',None)
       if identity_criterion is not None:
-        for property, value in identity_criterion.items():
+        for property, value in list(identity_criterion.items()):
           if value is not None:
             property_dict[property] = value
       if range_criterion is not None:
-        for property, (min, max) in range_criterion.items():
+        for property, (min, max) in list(range_criterion.items()):
           if min is not None:
             property_dict['%s_range_min' % property] = min
           if max is not None:
@@ -1131,7 +1135,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             prefix = prefix[len(PARENT_METHOD_NAME):]
             flag_bitmap |= DYNAMIC_RELATED_KEY_FLAG_PARENT
           split_key = prefix.split('_')
-          for i in xrange(len(split_key) - 1, 0, -1):
+          for i in range(len(split_key) - 1, 0, -1):
             base_category_id = '_'.join(split_key[0:i])
             if base_category_id in base_category_id_set or (
               i == len(split_key) - 1 and base_category_id == IGNORE_BASE_CATEGORY_UID
@@ -1207,7 +1211,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       suffix = ('' if forward else '__related') + '__uid'
       parent_document_set = base_category_dict.pop('parent', None)
       query_list = []
-      for base_category_id, document_set in base_category_dict.iteritems():
+      for base_category_id, document_set in base_category_dict.items():
         column = prefix + base_category_id + suffix
         category_query = SimpleQuery(**{
           column: {document.getUid() for document in document_set},
@@ -1364,7 +1368,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       else:
         group_method_cost = group_kw.get('group_method_cost', .034) # 30 objects
         limit = catalog_kw.pop('activity_count', None) or \
-          100 * int(ceil(1 / group_method_cost))
+          100 * int(ceil(old_div(1, group_method_cost)))
       if min_uid:
         catalog_kw['min_uid'] = SimpleQuery(uid=min_uid,
                                             comparison_operator='>')
@@ -1388,7 +1392,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             activity='SQLQueue', **activate_kw)
           r = getattr(portal_activities, select_method_id)(r)
           activate = getattr(active_portal_activities, method_id)
-          for i in xrange(0, len(r), packet_size):
+          for i in range(0, len(r), packet_size):
             activate(r[i:i+packet_size], *method_args, **method_kw)
         else:
           kw = activate_kw.copy()
@@ -1435,7 +1439,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               break
 
       queries_by_connection_id = defaultdict(list)
-      for connection_id, method_list in method_list_by_connection_id.items():
+      for connection_id, method_list in list(method_list_by_connection_id.items()):
         connection = connection_by_connection_id[connection_id]
         db = connection()
         with db.lock():
@@ -1447,7 +1451,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             for query in queries_by_connection_id[connection_id]:
               db.query(query)
 
-      return sum(queries_by_connection_id.values(), [])
+      return sum(list(queries_by_connection_id.values()), [])
 
     security.declarePublic('getDocumentValueList')
     def getDocumentValueList(self, sql_catalog_id=None,

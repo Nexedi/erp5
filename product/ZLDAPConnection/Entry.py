@@ -3,13 +3,17 @@ LDAP Entry Objects
 """
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from builtins import filter
 __version__ = "$Revision: 1.13 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
 import transaction
 from App.special_dtml import HTMLFile
 from App.Dialogs import MessageDialog
-import ldap, urllib, UserList
+import ldap, urllib.request, urllib.parse, urllib.error, collections
 
 ConnectionError='ZLDAP Connection Error'
 
@@ -19,7 +23,7 @@ def isNotBlank(s):
         return 0
     else: return 1
 
-class AttrWrap(UserList.UserList):
+class AttrWrap(collections.UserList):
     """simple attr-wrapper for LDAP attributes"""
     def __str__(self):
         return string.join(self.data,', ')
@@ -95,7 +99,7 @@ class GenericEntry(Acquisition.Implicit):
             se=self._subentries()
             if key in se:
                 return se[key]
-        key = '%s, %s' % (urllib.unquote(key), self.dn)
+        key = '%s, %s' % (urllib.parse.unquote(key), self.dn)
         conn= self._connection()
         if conn.hasEntry(key):
             return conn.getEntry(key, self)
@@ -124,7 +128,7 @@ class GenericEntry(Acquisition.Implicit):
         both a dictionary AND\OR keywork arguments """
         kwdict.update(kw)
         data = self._data
-        for attr, value in kwdict.items():
+        for attr, value in list(kwdict.items()):
             if type(value) is type(''):
                 value = [value]
             data[attr] = value
@@ -158,7 +162,7 @@ class GenericEntry(Acquisition.Implicit):
     def _modify(self):
         modlist = []
 
-        for attribute, values in self._data.items():
+        for attribute, values in list(self._data.items()):
             modlist.append((ldap.MOD_REPLACE, attribute, values))
         for attribute in self._mod_delete:
             modlist.append((ldap.MOD_DELETE, attribute, None))
@@ -204,7 +208,7 @@ class GenericEntry(Acquisition.Implicit):
     def _beforeDelete(self, **ignored):
         """ Go through all the subentries and delete them too """
         conn = self._connection()
-        for entry in self._subentries().values():
+        for entry in list(self._subentries().values()):
             entry._beforeDelete()
             conn._deleteEntry(entry.dn) # Delete from the server
             self._delSubentry(entry.id) # Delete our own reference
@@ -238,7 +242,7 @@ class GenericEntry(Acquisition.Implicit):
 
         # Now split out the first attr based on the RDN (ie 'cn=bob') and
         # turn it into one of our attributes (ie attr[cn] = 'bob')
-        key, value = map(string.strip, string.split(rdn,'='))
+        key, value = list(map(string.strip, string.split(rdn,'=')))
         attrs[key] = value
 
         # If the objectclass is not already set in the attrs, set it now
@@ -248,7 +252,7 @@ class GenericEntry(Acquisition.Implicit):
         # Instantiate the instance based on the connections EntryFactory
         Entry = conn._EntryFactory()
         entry = Entry(dn, attrs, conn, isNew=1).__of__(self)
-        conn._addEntry(dn, attrs.items()) # Physically add the new entry
+        conn._addEntry(dn, list(attrs.items())) # Physically add the new entry
         self._setSubentry(entry.id, entry)
 
         return entry
@@ -318,7 +322,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
 
         kwdict.update(kw)
         data = self._data
-        for attr, value in kwdict.items():
+        for attr, value in list(kwdict.items()):
             if type(value) is type(''):
                 value = [value]
             data[attr] = value
@@ -360,7 +364,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
     ### Adding and Deleting sub-entries.
     def _beforeDelete(self, **ignored):
         c=self._connection()
-        for entry in self._subentries().values():
+        for entry in list(self._subentries().values()):
             entry.manage_beforeDelete()
             c._registerDelete(entry.dn)
             entry._isDeleted=1
@@ -400,7 +404,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
 
         # now split out the first attr based on the rdn (ie 'cn=bob', turns
         # into attr['cn'] = 'bob'
-        key, value = map(string.strip,string.split(rdn,'='))
+        key, value = list(map(string.strip,string.split(rdn,'=')))
         attrs[key] = value
 
         #if objectclass is not set in the attrs, set it now
@@ -447,35 +451,35 @@ class ZopeEntry(OFS.SimpleItem.Item):
     #### Entry & Attribute Access Machinery #####################
 
     def attributesMap(self):
-        return self._data.items()
+        return list(self._data.items())
 
     def __bobo_traverse__(self, REQUEST, key):
         ' allow traversal to subentries '
-        key=urllib.unquote(key)
+        key=urllib.parse.unquote(key)
         if key in self.objectIds(): return self[key]
         else: return getattr(self,key)
 
     ###### Tree Machinery ######
 
     def tpValues(self):
-        return self._subentries().values()
+        return list(self._subentries().values())
 
     def tpId(self):
         return self.id
 
     def tpURL(self):
         """Return string to be used as URL relative to parent."""
-        return urllib.quote(self.id)
+        return urllib.parse.quote(self.id)
 
     ### Object Manager-ish Machinery
     def objectValues(self):
-        return self._subentries().values()
+        return list(self._subentries().values())
 
     def objectIds(self):
-        return self._subentries().keys()
+        return list(self._subentries().keys())
 
     def objectItems(self):
-        return self._subentries().items()
+        return list(self._subentries().items())
 
     ### Zope management stuff
 
@@ -517,9 +521,9 @@ class ZopeEntry(OFS.SimpleItem.Item):
     def manage_editAttributes(self, REQUEST):
         """Edit entry's attributes via the web."""
 
-        for attribute in self._data.keys():
+        for attribute in list(self._data.keys()):
             values = REQUEST.get(attribute, [])
-            values = filter(isNotBlank, values)   #strip out blanks
+            values = list(filter(isNotBlank, values))   #strip out blanks
 
             self.set(attribute, values)
 
@@ -538,10 +542,10 @@ class ZopeEntry(OFS.SimpleItem.Item):
         if REQUEST and not kw:
             kw=REQUEST
 
-        datakeys = self._data.keys()
+        datakeys = list(self._data.keys())
 
         if kw:
-            for name, value in kw.items():
+            for name, value in list(kw.items()):
                 if name in datakeys:
                     self.set(name, value)
 

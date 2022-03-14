@@ -1,3 +1,4 @@
+from builtins import zip
 from Products.PythonScripts.standard import Object
 
 cell_list = []

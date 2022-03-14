@@ -29,6 +29,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import gc
 import os
 import shutil
@@ -1390,7 +1393,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # Passing a unicode object to a not-Value setter should raise
     with self.assertRaises(TypeError):
       organisation = self.portal.organisation_module.newContent()
-      person.setSubordination(unicode(organisation.getRelativeUrl()))
+      person.setSubordination(str(organisation.getRelativeUrl()))
 
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool
@@ -1702,7 +1705,7 @@ class TestZodbModuleComponent(SecurityTestCase):
       'find_module': ComponentMixin._message_invalid_reference,
       'load_module': ComponentMixin._message_invalid_reference}
 
-    for invalid_reference, error_message in invalid_reference_dict.iteritems():
+    for invalid_reference, error_message in invalid_reference_dict.items():
       # Reset should not be performed
       ComponentTool.reset = assertResetNotCalled
       try:
@@ -1792,7 +1795,7 @@ class TestZodbModuleComponent(SecurityTestCase):
       ComponentMixin._message_invalid_id,
       mapping={'id_prefix': self._document_class.getIdPrefix()})
 
-    for invalid_version, error_message in invalid_version_dict.iteritems():
+    for invalid_version, error_message in invalid_version_dict.items():
       # Reset should not be performed
       ComponentTool.reset = assertResetNotCalled
       try:
@@ -2749,7 +2752,7 @@ class TestGC(XMLObject):
     import gc
     initial_gc_debug_flags = gc.get_debug()
     initial_stderr = sys.stderr
-    from cStringIO import StringIO
+    from io import StringIO
     stderr = StringIO()
     try:
       gc.disable()

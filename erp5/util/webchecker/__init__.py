@@ -28,6 +28,7 @@
 ##############################################################################
 from __future__ import print_function
 
+from builtins import object
 import os
 import shutil
 import sys
@@ -281,7 +282,7 @@ class HTTPCacheCheckerTestSuite(object):
       """
       pick_content_type = re.compile('^no_header\s*content-type=(.*)')
       pick_url = re.compile('^no_header\s*url=(.*)')
-      section_list = self.no_header_dict.keys()
+      section_list = list(self.no_header_dict.keys())
       no_check_header_list = []
       for section in section_list:
         content_type_regex_str_match = pick_content_type.match(section)
@@ -305,7 +306,7 @@ class HTTPCacheCheckerTestSuite(object):
     def getConditionalHeaderDict(url, fetched_data):
       """ create header policy by the url and header"""
       conditional_header_dict = {}
-      section_list = self.conditional_header_dict.keys()
+      section_list = list(self.conditional_header_dict.keys())
       pick_content_type = re.compile('header\s*content-type=(.*)')
       pick_url = re.compile('header\s*url=(.*)')
       for section in section_list:
@@ -330,8 +331,8 @@ class HTTPCacheCheckerTestSuite(object):
     validator_dict = {}
     no_header_list = getNoCheckHeaderList(url, fetched_data)
     conditional_header_dict = getConditionalHeaderDict(url, fetched_data)
-    conditional_header_list = conditional_header_dict.keys()
-    global_header_list = self.header_list.keys()
+    conditional_header_list = list(conditional_header_dict.keys())
+    global_header_list = list(self.header_list.keys())
     header_policy_list = []
     if conditional_header_list:
       conditional_check_header_set = (set(conditional_header_list)
@@ -582,7 +583,7 @@ def web_checker_utility():
     file_log_path = config.get('web_checker', 'file_log_path')
   header_list = {}
   for header, configuration in config.items('header_list'):
-    if header in config.defaults().keys():
+    if header in list(config.defaults().keys()):
       # defaults are shared for all sections.
       # so discard them from header_list
       continue

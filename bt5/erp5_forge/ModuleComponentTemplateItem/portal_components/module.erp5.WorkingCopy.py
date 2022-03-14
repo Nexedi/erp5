@@ -29,6 +29,10 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import errno, json, os, re, shutil
 from base64 import b64encode, b64decode
 from tempfile import gettempdir
@@ -138,7 +142,7 @@ class WorkingCopy(Implicit):
   def _getCookie(self, name, default=None):
     try:
       return json.loads(b64decode(self.REQUEST[name]))
-    except StandardError:
+    except Exception:
       return default
 
   def _setCookie(self, name, value, days=30):
@@ -269,7 +273,7 @@ class WorkingCopy(Implicit):
     try:
       with open(os.path.join(self.working_copy, path), 'rU') as f:
         text = f.read()
-    except IOError, e:
+    except IOError as e:
       if e.errno == errno.EISDIR:
         return '%s<hr/>%r is a folder!' % (head, path)
       if e.errno != errno.ENOENT:
@@ -369,7 +373,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     try:
       try:
         file_obj = open(path, 'r+b')
-      except IOError, e:
+      except IOError as e:
         if e.errno == errno.EISDIR:
           shutil.rmtree(path, ignore_errors=True)
         elif e.errno != errno.ENOENT:
@@ -405,7 +409,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     prefix_length = len(os.path.join(self.path, ''))
     for dirpath, dirnames, filenames in os.walk(self.path):
       dirpath = dirpath[prefix_length:]
-      for i in xrange(len(dirnames) - 1, -1, -1):
+      for i in range(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
         if d[0] != '.':
           d = os.path.join(dirpath, d)

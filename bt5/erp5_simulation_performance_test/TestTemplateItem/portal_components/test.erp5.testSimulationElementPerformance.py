@@ -68,7 +68,9 @@ So, the relationship between Sale Order and Sale Packing List is 1:N,
 and that between Sale Packing List and Sale Invoice is M:N.
 
 """
+from __future__ import print_function
 
+from builtins import range
 import unittest
 from time import time
 import gc
@@ -304,8 +306,8 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       after_time = time()
       amount_of_time = after_time - before_time
       min_time, max_time = self._getMinMaxTime(target)
-      print "\n%s took %.4f (%.4f < %.4f < %.4f)" \
-              % (target, amount_of_time, min_time, amount_of_time, max_time)
+      print("\n%s took %.4f (%.4f < %.4f < %.4f)" \
+              % (target, amount_of_time, min_time, amount_of_time, max_time))
       # Reset the target to make sure that the same target is not
       # measured again.
       sequence.edit(measure_target=None)
@@ -397,7 +399,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     destination_decision = sequence.get('destination_decision')
     destination_administration = sequence.get('destination_administration')
     resource = sequence.get('resource')
-    for i in xrange(number_of_sale_orders):
+    for i in range(number_of_sale_orders):
       start_date = base_date + i
       stop_date = base_date + i + 1
       order = module.newContent(
@@ -409,7 +411,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
               stop_date=stop_date)
       # Set the rest through the trade condition.
       order.SaleOrder_applySaleTradeCondition()
-      for _ in xrange(number_of_sale_order_lines):
+      for _ in range(number_of_sale_order_lines):
         order.newContent(portal_type='Sale Order Line',
                 resource=resource, quantity=1.0)
 
@@ -766,7 +768,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     number = sequence.get('number_of_additional_sale_packing_list_lines')
     resource = sequence.get('resource')
     for packing_list in module.contentValues(portal_type='Sale Packing List'):
-      for _ in xrange(number):
+      for _ in range(number):
         packing_list.newContent(portal_type='Sale Packing List Line',
                 resource=resource, quantity=1.0)
 
@@ -792,13 +794,13 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     if measurable:
       result = sequence.get('result')
       if result:
-        print ''
+        print('')
         failure_list = []
         for target, min_time, real_time, max_time in result:
           condition = (min_time < real_time < max_time)
-          print '%s%s: %.4f < %.4f < %.4f' \
+          print('%s%s: %.4f < %.4f < %.4f' \
                   % (condition and ' ' or '!',
-                          target, min_time, real_time, max_time)
+                          target, min_time, real_time, max_time))
           if not condition:
             failure_list.append(target)
         self.assertTrue(not failure_list,

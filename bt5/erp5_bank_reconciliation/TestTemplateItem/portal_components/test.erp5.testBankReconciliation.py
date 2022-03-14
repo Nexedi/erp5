@@ -28,6 +28,7 @@
 """Tests Bank Reconciliation
 """
 
+from builtins import str
 import unittest
 
 from DateTime import DateTime

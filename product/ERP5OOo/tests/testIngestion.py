@@ -29,9 +29,13 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import unittest
 import os
-import StringIO
+import io
 from cgi import FieldStorage
 from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
@@ -47,10 +51,10 @@ from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
 import ZPublisher.HTTPRequest
 from unittest import expectedFailure
-import urllib
-import urllib2
-import httplib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.client
+import urllib.parse
 import base64
 
 # test files' home
@@ -199,7 +203,7 @@ class TestIngestion(IngestionTestCase):
     # Note : this code was taken from the CategoryTool_importCategoryFile python
     #        script (packaged in erp5_core).
     for category in self.category_list:
-      keys = category.keys()
+      keys = list(category.keys())
       if 'path' in keys:
         base_path_obj = self.portal_categories
         is_base_category = True
@@ -379,7 +383,7 @@ class TestIngestion(IngestionTestCase):
     Asserts that metadata of document ID document_id
     is the same as expected_metadata
     """
-    for k, v in expected_metadata.items():
+    for k, v in list(expected_metadata.items()):
       self.assertEqual(document.getProperty(k), v)
 
   def receiveEmail(self, data,
@@ -991,7 +995,7 @@ class TestIngestion(IngestionTestCase):
                                            'ODT': 'Text',
                                            'PDF': 'PDF',
                                            'PPT': 'Presentation'}
-    for sub_reference, portal_type in extension_reference_portal_type_map.items():
+    for sub_reference, portal_type in list(extension_reference_portal_type_map.items()):
       ingested_document = self.portal_catalog.getResultValue(
                                portal_type=portal_type,
                                reference='TEST%s' %sub_reference,
@@ -1072,7 +1076,7 @@ class TestIngestion(IngestionTestCase):
             'sxd' : 'Drawing',
             'xxx' : 'File',
           }
-    for type, portal_type in correct_type_mapping.items():
+    for type, portal_type in list(correct_type_mapping.items()):
       filename = 'aaa.' + type
       self.assertEqual(reg.findPortalTypeName(filename=filename),
                         portal_type)
@@ -2001,13 +2005,13 @@ return result
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
-    url_split = urlparse.urlsplit(portal_url)
+    url_split = urllib.parse.urlsplit(portal_url)
     url_dict = dict(protocol=url_split[0],
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
-    request = urllib2.Request(push_url, urllib.urlencode(
+    request = urllib.request.Request(push_url, urllib.parse.urlencode(
                                         {'data': data,
                                         'filename': filename,
                                         'reference': reference,
@@ -2018,8 +2022,8 @@ return result
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
-    response = urllib2.urlopen(request)
-    self.assertEqual(response.getcode(), httplib.OK)
+    response = urllib.request.urlopen(request)
+    self.assertEqual(response.getcode(), http.client.OK)
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
                                                          reference=reference)
@@ -2074,7 +2078,7 @@ return result
       [('', ''), ('Draft', 'draft'), ('Shared', 'shared'), ('Released', 'released')])
 
 
-class Base_contributeMixin:
+class Base_contributeMixin(object):
   """Tests for Base_contribute script.
   """
   def test_Base_contribute(self):
@@ -2108,7 +2112,7 @@ class Base_contributeMixin:
     """
     person = self.portal.person_module.newContent(portal_type='Person')
     empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=StringIO.StringIO(),
+                            fp=io.StringIO(),
                             environ=dict(REQUEST_METHOD='PUT'),
                             headers={"content-disposition":
                               "attachment; filename=empty;"}))

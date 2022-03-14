@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
+from builtins import object
 from Acquisition import aq_base
 from webdav.NullResource import NullResource
 
-class ExtensibleTraversableMixin:
+class ExtensibleTraversableMixin(object):
   def __bobo_traverse__(self, request, name):
     """
     If no subobject is found through Folder API

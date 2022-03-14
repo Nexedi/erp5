@@ -5,6 +5,7 @@ Responsible for validating form data and redirecting to the form action.
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
+from builtins import str
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
     field = field.getRecursiveTemplateField()
@@ -90,7 +91,7 @@ try:
   request.set('editable_mode', 1)
   form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
@@ -131,7 +132,7 @@ if len(listbox_id_list):
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
-    listbox_keys = listbox.keys()
+    listbox_keys = list(listbox.keys())
     listbox_keys.sort()
     for key in listbox_keys:
       listbox_line = listbox[key]
@@ -159,14 +160,14 @@ listbox_uid = kw.get('listbox_uid', None)
 # In some cases, the listbox exists, is editable, but the selection name
 # has no meaning, for example fast input dialogs.
 # In such cases, we must not try to update a non-existing selection.
-if listbox_uid is not None and kw.has_key('list_selection_name'):
+if listbox_uid is not None and 'list_selection_name' in kw:
   uids = kw.get('uids')
   context.portal_selections.updateSelectionCheckedUidList(
     kw['list_selection_name'],
     listbox_uid, uids)
 # Remove values which doesn't work with make_query.
 clean_kw = {}
-for k, v in kw.items() :
+for k, v in list(kw.items()) :
   if v not in (None, [], ()) :
     clean_kw[k] = kw[k]
 

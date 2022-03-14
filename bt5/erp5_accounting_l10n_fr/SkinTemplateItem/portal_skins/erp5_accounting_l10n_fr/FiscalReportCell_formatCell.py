@@ -1,4 +1,6 @@
 """ display value in the cell according to (french) fiscality rules """
+from builtins import str
+from builtins import range
 context.log(cell_name, cell_value)
 
 if same_type(cell_value, 0) or same_type(cell_value, 0.0) : 
@@ -8,7 +10,7 @@ if same_type(cell_value, 0) or same_type(cell_value, 0.0) :
 
   negative = number < 0
   amount = str(abs(number))
-  indexes = range(len(amount))
+  indexes = list(range(len(amount)))
   indexes.reverse()
   string = ''
   count = 0

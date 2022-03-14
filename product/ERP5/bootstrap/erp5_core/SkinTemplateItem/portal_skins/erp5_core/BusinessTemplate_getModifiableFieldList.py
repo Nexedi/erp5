@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 portal = context.getPortalObject()
 field_list = []
@@ -114,7 +115,7 @@ for skin_folder_id in skin_id_list:
       form_id = form.getId()
       form_path = '%s/%s' % (skin_folder_id, form_id)
 
-      if modified_object_dict.has_key(form_path):
+      if form_path in modified_object_dict:
         # The form is a Field Library
         if modified_object_dict[form_path] == '4_delete_form':
           # As the form will be deleted, no need to manage its fields
@@ -155,12 +156,12 @@ for skin_folder_id in skin_id_list:
             # The nice developper probably have a good reason not to do it.
             modified_object_dict[field_path] = '0_keep_non_proxy_field'
 
-for field_path, proxy_field_list in field_library_dict.items():
+for field_path, proxy_field_list in list(field_library_dict.items()):
   if not proxy_field_list:
     modified_object_dict[field_path] = '0_unused_proxy_field'
 
 i = 0
-for key, value in modified_object_dict.items():
+for key, value in list(modified_object_dict.items()):
   line = newTempBase(context, 'tmp_install_%s' %(str(i)))
   if isinstance(value, tuple):
     value, template_id = value

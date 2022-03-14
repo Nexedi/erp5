@@ -1,3 +1,4 @@
+from builtins import str
 request = context.REQUEST
 isAnon = context.portal_membership.isAnonymousUser()
 translateString = context.Base_translateString

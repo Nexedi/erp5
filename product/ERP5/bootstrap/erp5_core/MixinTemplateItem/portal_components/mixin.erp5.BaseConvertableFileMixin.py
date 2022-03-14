@@ -26,15 +26,19 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
-from cStringIO import StringIO
+from io import StringIO
 _MARKER = object()
 
-class BaseConvertableFileMixin:
+class BaseConvertableFileMixin(object):
   """
   This class provides a generic implementation of IBaseConvertable.
   This Mixin combine BaseConvertable  and Files documents.

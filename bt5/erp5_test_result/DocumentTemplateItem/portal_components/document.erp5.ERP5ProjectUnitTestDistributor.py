@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 # Copyright (c) 2013 Nexedi SA and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
@@ -24,6 +25,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+from builtins import range
+from past.utils import old_div
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
 import json
@@ -213,17 +216,17 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       # suites required
       int_index = test_suite.getIntIndex()
       # we divide per 3 because we have 3 cores per node
-      node_quantity_min = PRIORITY_MAPPING[int_index][0]/3
-      node_quantity_max = PRIORITY_MAPPING[int_index][1]/3
-      for x in xrange(0, node_quantity_min):
+      node_quantity_min = old_div(PRIORITY_MAPPING[int_index][0],3)
+      node_quantity_max = old_div(PRIORITY_MAPPING[int_index][1],3)
+      for x in range(0, node_quantity_min):
         score = float(x)/(x+1)
         all_test_suite_list.append((score, test_suite_url, title))
         test_suite_score.setdefault(test_suite_url, []).append(score)
       # additional suites, lower score
-      for x in xrange(0, node_quantity_max -
+      for x in range(0, node_quantity_max -
                    node_quantity_min ):
-        score = float(1) + x/(x+1)
-        all_test_suite_list.append((1 + x/(x+1), test_suite_url, title))
+        score = float(1) + old_div(x,(x+1))
+        all_test_suite_list.append((1 + old_div(x,(x+1)), test_suite_url, title))
         test_suite_score.setdefault(test_suite_url, []).append(score)
     all_test_suite_list.sort(key=lambda x: (x[0], x[2]))
     return test_suite_score, [x[1] for x in all_test_suite_list]
@@ -271,7 +274,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         if test_node.getValidationState() != 'validated':
           try:
             test_node.validate()
-          except Exception, e:
+          except Exception as e:
             LOG('Test Node Validate',ERROR,'%s' %e)
       if test_node is None:
         test_node = test_node_module.newContent(portal_type="Test Node", title=title, computer_guid=computer_guid,
@@ -296,7 +299,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     # sql server
     now = DateTime()
     from_date = now - 30
-    max_test_core_per_suite = max([x[1] for x in PRIORITY_MAPPING.values()])
+    max_test_core_per_suite = max([x[1] for x in list(PRIORITY_MAPPING.values())])
     def getTestSuiteSortKey(test_suite):
       test_result_list = portal.portal_catalog(portal_type="Test Result",
                                           title=SimpleQuery(title=test_suite.getTitle()),
@@ -325,7 +328,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
             # This allows to affect more test nodes to test suites with higher priority
             wanted_test_core_quantity = PRIORITY_MAPPING[test_suite.getIntIndex()][1]
             factor = float(max_test_core_per_suite) / wanted_test_core_quantity
-            missing_quantity = wanted_test_core_quantity/3 - len(test_result.objectValues(portal_type="Test Result Node"))
+            missing_quantity = old_div(wanted_test_core_quantity,3) - len(test_result.objectValues(portal_type="Test Result Node"))
             key = (max_test_core_per_suite - missing_quantity * 3 * factor, modification_date)
       else:
         key = (0, random.random())
@@ -380,7 +383,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
               repository_dict[property_name] = property_value
           vcs_repository_list.append(repository_dict)
         config["vcs_repository_list"] = vcs_repository_list
-        to_delete_key_list = [x for x,y in config.items() if y==None]
+        to_delete_key_list = [x for x,y in list(config.items()) if y==None]
         for x in to_delete_key_list:
           config.pop(x)
         config_list.append(config)

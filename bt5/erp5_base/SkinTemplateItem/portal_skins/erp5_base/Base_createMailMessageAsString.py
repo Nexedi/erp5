@@ -15,6 +15,7 @@
 
 Notes: for from_url and to_url, we should use email.utils.formataddr
 """
+from builtins import str
 if extra_header_dict is None:
   extra_header_dict = {}
 

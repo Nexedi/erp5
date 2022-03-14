@@ -53,7 +53,7 @@ class SimulableMixin(Base):
     """
     tv = getTransactionalVariable()
     key = 'SimulableMixin.updateSimulation', self.getUid()
-    item_list = kw.items()
+    item_list = list(kw.items())
     try:
       kw, ignore = tv[key]
       kw.update(item_list)

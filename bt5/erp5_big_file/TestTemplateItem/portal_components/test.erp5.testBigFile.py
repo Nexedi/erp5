@@ -24,7 +24,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-from cStringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from io import StringIO
 
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
@@ -48,7 +50,7 @@ def makerequest(environ=None, stdin=''):
 
   # Header-Name -> HEADER_NAME
   _ = {}
-  for k,v in environ.items():
+  for k,v in list(environ.items()):
     k = k.replace('-', '_').upper()
     _[k] = v
   environ = _
@@ -69,7 +71,7 @@ def request_function(method_name):
       environ = {}
     environ.setdefault('REQUEST_METHOD', method_name)
     return makerequest(environ, stdin)
-  method_func.func_name = method_name
+  method_func.__name__ = method_name
   return method_func
 
 # requests
@@ -106,7 +108,7 @@ class TestBigFile(ERP5TypeTestCase):
       ret = ''
     self.assertEqual(ret,       result)
     self.assertEqual(status,    request.RESPONSE.getStatus())
-    for h,v in header_dict.items():
+    for h,v in list(header_dict.items()):
       rv = request.RESPONSE.getHeader(h)
       self.assertEqual(v, rv, '%s: %r != %r' % (h, v, rv))
 
@@ -296,7 +298,7 @@ class TestBigFile(ERP5TypeTestCase):
     # NOTE this change is automatically reverted back in calling helper
     self.assertIsInstance(f._baseGetData._default, str)
     self.assertEqual(f._baseGetData._default, '')
-    f._baseGetData.im_func._default = None  # NOTE not possible to do on just f._baseGetData
+    f._baseGetData.__func__._default = None  # NOTE not possible to do on just f._baseGetData
     self.assertIs(f._baseGetData._default, None)
     self.assertIs(f._baseGetData(), None)   # <- oops
 
@@ -330,7 +332,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(_, '')
 
     # NOTE obtaining getter is not possible via BigFile._baseGetData
-    g = f._baseGetData.im_func
+    g = f._baseGetData.__func__
     self.assertIsInstance(g._default, str)
     self.assertEqual(g._default, '')
 

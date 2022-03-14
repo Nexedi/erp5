@@ -30,6 +30,8 @@
 """
 Base Cache plugin.
 """
+from builtins import str
+from builtins import object
 from time import time
 
 class CachedMethodError(Exception):

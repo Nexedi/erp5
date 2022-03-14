@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from DateTime import DateTime
 
 """
@@ -80,7 +81,7 @@ def asLong(value):
     Return the value as a long or a type-specific default value if it fails.
   """
   try:
-    result = long(value)
+    result = int(value)
   except TypeError:
     result = type_definition['long']['default']
   return result
@@ -93,7 +94,7 @@ def asString(value):
     if value is None:
       result = ''
     else:
-      if isinstance(value, unicode):
+      if isinstance(value, str):
         result = value.encode('utf-8')
       else:
         result = str(value)

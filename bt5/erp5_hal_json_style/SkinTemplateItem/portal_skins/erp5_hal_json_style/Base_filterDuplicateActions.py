@@ -16,7 +16,7 @@ def filterActions(actions):
   """Reorganise and rename action categories for templates so they do not need to contain any logic."""
   filtered_actions = {}
 
-  for action_category_name, action_list in actions.items():
+  for action_category_name, action_list in list(actions.items()):
     # action category _onlyjio_ contains actions shown only in RenderJS interface
     # we hide this detail from templates because they should not contain any logic
     if action_category_name == "object_onlyjio_view":
@@ -30,13 +30,13 @@ def filterActions(actions):
     else:
       filtered_actions[action_category_name] = action_list
   return {action_category_name: sorted(action_list, key=lambda x: x.get('priority', 1.0))
-          for action_category_name, action_list in filtered_actions.items()}
+          for action_category_name, action_list in list(filtered_actions.items())}
 
 
 def filterDuplicateActions(actions):
   new_actions = {}
 
-  for action_category_name, action_list in actions.items():
+  for action_category_name, action_list in list(actions.items()):
 
     new_actions.setdefault(action_category_name, {})
 
@@ -67,17 +67,17 @@ def filterDuplicateActions(actions):
 
   # return dict[str: list] of category_name: sorted list of contained actions
   # global actions do not have priority so we give them 1.0 by default
-  return {action_category_name: sorted(action_dict.values(), key=lambda x: x.get('priority', 1.0))
-          for action_category_name, action_dict in new_actions.items()}
+  return {action_category_name: sorted(list(action_dict.values()), key=lambda x: x.get('priority', 1.0))
+          for action_category_name, action_dict in list(new_actions.items())}
 
 
 def hasJIODuplicateActions(portal_type, user_name):
   len_actions = 0
   len_filtered_actions = 0
-  for cat in actions.values():
+  for cat in list(actions.values()):
     len_actions += len(cat)
   filtered_actions = filterDuplicateActions(actions)
-  for cat in filtered_actions.values():
+  for cat in list(filtered_actions.values()):
     len_filtered_actions += len(cat)
   return len_actions != len_filtered_actions
 

@@ -31,7 +31,11 @@
 TODO: test variation
       test selection_report
 """
+from __future__ import division
 
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import os
 import random
 import unittest
@@ -1600,7 +1604,7 @@ class TestInventoryList(InventoryAPITestCase):
     resource_uid = resource.getUid()
 
     # create all movements
-    for month, value in data.iteritems():
+    for month, value in data.items():
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
         self._makeMovement(start_date=d, resource_uid=resource_uid, **mov)
@@ -1625,7 +1629,7 @@ class TestInventoryList(InventoryAPITestCase):
       '2011/01':
         dict(movement_list=[h(22, 8910)], after=h(291, 133344)),
      }
-    for month, value in internal_data.iteritems():
+    for month, value in internal_data.items():
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
         self._makeMovement(is_internal=1, start_date=d, resource_uid=resource_uid, **mov)
@@ -2771,8 +2775,8 @@ class TestTrackingList(InventoryAPITestCase):
       node_1_uid: 1,
       node_2_uid: 2
     }
-    for date, location_dict in date_location_dict.iteritems():
-      for param_id, location_uid in location_dict.iteritems():
+    for date, location_dict in date_location_dict.items():
+      for param_id, location_uid in location_dict.items():
         param_dict = {param_id: date}
         uid_list = [x.node_uid for x in getTrackingList(
                             aggregate_uid=self.item.getUid(), **param_dict)]
@@ -2911,7 +2915,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
   def afterSetUp(self):
     InventoryAPITestCase.afterSetUp(self)
     self.CACHE_LAG = cache_lag = self.getSimulationTool().getInventoryCacheLag()
-    min_lag = cache_lag / 2
+    min_lag = old_div(cache_lag, 2)
     self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
     self.CACHE_DATE = cache_date = now - min_lag
     from erp5.component.tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
@@ -2952,7 +2956,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       True: all values from criterion_dict match given inventory_line.
       False otherwise.
     """
-    for criterion_id, criterion_value in criterion_dict.iteritems():
+    for criterion_id, criterion_value in criterion_dict.items():
       if criterion_id not in inventory_line \
          or criterion_value != inventory_line[criterion_id]:
         return False
@@ -2984,7 +2988,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       inventory_list = inventory_list[:] # That list is modified in this method
     for criterion_dict in criterion_dict_list:
       success = False
-      for inventory_position in xrange(len(inventory_list)):
+      for inventory_position in range(len(inventory_list)):
         if self._doesInventoryLineMatch(criterion_dict,
                                         inventory_list[inventory_position]):
           del inventory_list[inventory_position]
@@ -3740,7 +3744,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
   def setUpUnitDefinition(self):
 
     unit_module = self.portal.quantity_unit_conversion_module
-    for base, t in self.QUANTITY_UNIT_DICT.iteritems():
+    for base, t in self.QUANTITY_UNIT_DICT.items():
       standard, definition_dict = t
 
       group = unit_module._getOb(base, None)
@@ -3752,7 +3756,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
       if group.getValidationState() in ('draft', 'invalidated'):
         group.validate()
 
-      for unit, amount in definition_dict.iteritems():
+      for unit, amount in definition_dict.items():
         definition = group._getOb(unit, None)
         if definition is None:
           definition = group.newContent(
@@ -3783,7 +3787,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
 
   def getNeededCategoryList(self):
     category_list = ['metric_type/' + c for c in self.METRIC_TYPE_CATEGORY_LIST]
-    for base, t in self.QUANTITY_UNIT_DICT.iteritems():
+    for base, t in self.QUANTITY_UNIT_DICT.items():
       standard, definition_dict = t
 
       quantity = 'quantity_unit/%s/' % base
@@ -3842,7 +3846,7 @@ class TestUnitConversion(BaseTestUnitConversion):
           ('unit/2',  None,         123,  None), #
           (None,      'mass/kg',    123,  None), #
           (None,      None,         None, None), ## empty
-        )}.iteritems():
+        )}.items():
       for measure in measure_list:
         kw = {keys[i]: v for i, v in enumerate(measure) if v is not None}
         resource.newContent(portal_type='Measure', **kw)
@@ -3875,7 +3879,7 @@ class TestUnitConversion(BaseTestUnitConversion):
     self.assertEqual(11, self.convertedSimulation('unit'))
 
     self.assertEqual(11 * .123 - .789, self.convertedSimulation('mass/net'))
-    self.assertEqual((11 * 123 - 789) / 1e6,
+    self.assertEqual(old_div((11 * 123 - 789), 1e6),
                       self.convertedSimulation('mass/net',
                                                quantity_unit='mass/t'))
 

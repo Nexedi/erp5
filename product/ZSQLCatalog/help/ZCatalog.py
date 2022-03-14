@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+from builtins import object
 def manage_addZCatalog(id, title, vocab_id=None):
     """
 
@@ -25,7 +26,7 @@ def manage_addZCatalog(id, title, vocab_id=None):
 
 
 
-class ZCatalog:
+class ZCatalog(object):
     """
 
     ZCatalog object

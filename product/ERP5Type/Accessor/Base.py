@@ -28,6 +28,8 @@ from __future__ import absolute_import
 ##############################################################################
 
 
+from builtins import str
+from builtins import object
 from ZPublisher.HTTPRequest import FileUpload
 from .TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
 from .Accessor import Accessor as Method
@@ -40,7 +42,7 @@ from AccessControl.ImplPython import rolesForPermissionOn
 from AccessControl.PermissionRole import PermissionRole
 
 # Creation of default constructor
-class func_code: pass
+class func_code(object): pass
 
 class Setter(Method):
     """
@@ -104,7 +106,7 @@ class Setter(Method):
         modified_object_list.append(instance)
       return modified_object_list
 
-    class __roles__:
+    class __roles__(object):
       @staticmethod
       def rolesForPermissionOn(ob):
         self = ob.__self__
@@ -187,7 +189,7 @@ class Getter(Method):
 
     psyco.bind(__call__)
 
-    class __roles__:
+    class __roles__(object):
       @staticmethod
       def rolesForPermissionOn(ob):
         self = ob.__self__

@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from past.builtins import basestring
 from compiler.consts import CO_VARKEYWORDS
 from random import getrandbits
 from Acquisition import aq_base

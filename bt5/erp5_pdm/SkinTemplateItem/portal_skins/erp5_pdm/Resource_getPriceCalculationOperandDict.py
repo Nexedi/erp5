@@ -1,4 +1,8 @@
 # coding: utf-8
+from __future__ import division
+from builtins import next
+from builtins import zip
+from past.utils import old_div
 result = context.getPriceParameterDict(context=movement, **kw)
 
 # Calculate
@@ -24,7 +28,7 @@ result = context.getPriceParameterDict(context=movement, **kw)
 if result["slice_base_price"]:
   total_price = 0.
   quantity = movement.getQuantity()
-  sliced_base_price_list = zip(result["slice_base_price"], result["slice_quantity_range"])
+  sliced_base_price_list = list(zip(result["slice_base_price"], result["slice_quantity_range"]))
   for slice_price, slice_range in sliced_base_price_list:
     slice_min, slice_max = slice_range
     if slice_max is None:
@@ -33,7 +37,7 @@ if result["slice_base_price"]:
       slice_min = 1
     priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
     total_price += priced_quantity * slice_price
-  result["base_price"] = total_price / quantity
+  result["base_price"] = old_div(total_price, quantity)
 
 base_price = result["base_price"]
 if base_price in (None, ""):

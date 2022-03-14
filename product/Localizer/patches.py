@@ -17,8 +17,10 @@
 """
 This is a hotfix, it dynamically applies several patches to Zope.
 """
+from __future__ import division
 
 # Import from the Standard Library
+from past.utils import old_div
 import logging
 import os
 
@@ -102,7 +104,7 @@ def new_processInputs(self):
         langs = []
         for lang in [ x.strip() for x in accept_language.split(',') ]:
             langs.append('%s;q=%f' % (lang, q))
-            q = q/2
+            q = old_div(q,2)
         accept_language = ','.join(langs)
 
     accept_language = AcceptLanguageType.decode(accept_language)

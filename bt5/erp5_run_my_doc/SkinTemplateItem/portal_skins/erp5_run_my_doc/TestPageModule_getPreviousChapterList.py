@@ -3,7 +3,7 @@
 """
 
 session = context.ERP5Site_acquireRunMyDocsSession()
-if session.has_key('listbox'):
+if 'listbox' in session:
   listbox = session['listbox']
 else:
   listbox = []

@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import default__class_init__ as InitializeClass
 from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base

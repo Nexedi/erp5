@@ -21,6 +21,9 @@ Output dates and times in locale format.
 from __future__ import absolute_import
 
 # Import from the Standard Library
+from builtins import map
+from builtins import next
+from builtins import range
 from decimal import Decimal
 
 # Import from itools
@@ -33,7 +36,7 @@ def get_format(source, accept):
         accept = get_accept()
 
     # Negotiate
-    available_languages = source.keys()
+    available_languages = list(source.keys())
     language = accept.select_language(available_languages)
     if language is None:
         language = 'en'
@@ -98,7 +101,7 @@ def moneyfmt(value, places=2, curr=u'', sep=u',', dp=u'.', pos=u'',
     q = Decimal(10) ** -places      # 2 places --> '0.01'
     sign, digits, exp = value.quantize(q).as_tuple()
     result = []
-    digits = map(unicode, digits)
+    digits = list(map(str, digits))
     build, next = result.append, digits.pop
     if curr:
         build(curr)

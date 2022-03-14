@@ -9,7 +9,10 @@
   
   Script can optionally include currency.
 """
+from __future__ import division
 
+from builtins import str
+from past.utils import old_div
 web_site = context.getWebSiteValue()
 total = 0.0
 shopping_cart_item_list = context.SaleOrder_getShoppingCartItemList(include_shipping)
@@ -22,8 +25,8 @@ for order_line in shopping_cart_item_list:
 if include_taxes:
   tax_info = context.Person_getApplicableTaxList()
   if tax_info is not None:
-    for tax in tax_info.values():
-      total += total*(tax['percent']/100)
+    for tax in list(tax_info.values()):
+      total += total*(old_div(tax['percent'],100))
     
 if include_currency:
   currency = web_site.WebSite_getShoppingCartDefaultCurrency()

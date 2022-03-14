@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import str
+from builtins import object
 import re
 
 # Symbols that are used to represent groups of characters
@@ -14,7 +16,7 @@ NUMCHARSYMBOL = 'f'             # a-zA-Z0-9
 
 DANGEROUSCHARS = '\\()+?.$'
 
-class PatternChecker:
+class PatternChecker(object):
     """
     This class defines a basic user friendly checker and processor of
     string values according to pattern.

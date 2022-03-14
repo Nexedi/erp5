@@ -4,6 +4,9 @@ is based on calculation of the frequency_index and creation_date_index.
 Documents which their frequency_index and creation_date_index are the
 same as those calculated, are updated.
 """
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 from erp5.component.module.DateUtils import convertDateToHour
 date_dict = {}
 
@@ -21,12 +24,12 @@ for frequency in context.portal_categories.update_frequency.contentValues():
   date_dict[frequency_reference] = alarm_date % frequency_reference
 
 #Step3: update documents
-for frequency_reference, creation_date in date_dict.items():
+for frequency_reference, creation_date in list(date_dict.items()):
   sql_kw = {'creation_date_index':creation_date, 'frequency_index':frequency_reference, 'limit':None}
   documents_to_update = len(context.portal_catalog(**sql_kw))
   max_in_activities = 1000 
   offset = 0
-  loop = documents_to_update / max_in_activities
+  loop = old_div(documents_to_update, max_in_activities)
   for _ in range(loop):
     limit = '%s,%s' % (offset, max_in_activities)
     sql_kw['limit'] = limit

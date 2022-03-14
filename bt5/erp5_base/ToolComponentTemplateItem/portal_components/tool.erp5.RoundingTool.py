@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import zip
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -112,4 +113,4 @@ class RoundingTool(BaseTool):
     Return the possible decimal rounding option item list which is provided
     by python standard decimal module.
     """
-    return ROUNDING_OPTION_DICT.items()
+    return list(ROUNDING_OPTION_DICT.items())

@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from logging import getLogger
 
 from erp5.component.mixin.SyncMLEngineMixin import SyncMLEngineMixin

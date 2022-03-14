@@ -11,6 +11,7 @@ reference is generated as <container_reference>.<children_index>:
   1.3.1
 """
 
+from builtins import str
 parent = context.getParentValue()
 portal_type = context.getPortalType()
 

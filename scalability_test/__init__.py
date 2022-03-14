@@ -1,3 +1,6 @@
+from builtins import str
+from builtins import range
+from builtins import object
 import os.path
 import json
 
@@ -6,7 +9,7 @@ ZOPE_ACTIVITIES_FAMILIY = "activities"
 PERSON_KEY = "person_per_hour"
 ORDER_KEY = "sale_order_per_hour"
 
-class ERP5_scalability():
+class ERP5_scalability(object):
 
   def getTestList(self):
     return ['createPerson', 'createSaleOrder']

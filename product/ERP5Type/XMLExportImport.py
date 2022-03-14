@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 from future import standard_library
 standard_library.install_aliases()
 import six
@@ -115,7 +117,7 @@ def Base_asXML(object, root=None):
         # <data><block>ZERD</block><block>OEJJM</block></data>
         size_block = 60
         if isinstance(value, str):
-          for index in xrange(0, len(value), size_block):
+          for index in range(0, len(value), size_block):
             content = value[index:index + size_block]
             data_encoded = standard_b64encode(content)
             block = SubElement(sub_object, 'block_data')
@@ -127,21 +129,21 @@ def Base_asXML(object, root=None):
             for word in value]
         sub_object.append(marshaller(value))
       elif prop_type in ('text', 'string',):
-        sub_object.text = unicode(escape(value), 'utf-8')
+        sub_object.text = str(escape(value), 'utf-8')
       elif prop_type != 'None':
         sub_object.text = str(value)
 
   # We have to describe the workflow history
   if getattr(self, 'workflow_history', None) is not None:
     workflow_list = self.workflow_history
-    workflow_list_keys = workflow_list.keys()
+    workflow_list_keys = list(workflow_list.keys())
     workflow_list_keys.sort() # Make sure it is sorted
 
     for workflow_id in workflow_list_keys:
       for workflow_action in workflow_list[workflow_id]:
         workflow_node = SubElement(object, 'workflow_action',
                                    attrib=dict(workflow_id=workflow_id))
-        workflow_variable_list = workflow_action.keys()
+        workflow_variable_list = list(workflow_action.keys())
         workflow_variable_list.sort()
         for workflow_variable in workflow_variable_list:
           variable_type = "string" # Somewhat bad, should find a better way
@@ -155,7 +157,7 @@ def Base_asXML(object, root=None):
                                      attrib=dict(type=variable_type))
           if variable_type != 'None':
             variable_node_text = str(workflow_action[workflow_variable])
-            variable_node.text = unicode(variable_node_text, 'utf-8')
+            variable_node.text = str(variable_node_text, 'utf-8')
 
             if workflow_variable == 'time':
               time = variable_node.text
@@ -172,7 +174,7 @@ def Base_asXML(object, root=None):
     #convert local_roles in string because marshaller can't do it
     role_list = []
     for role in user_role[1]:
-      if isinstance(role, unicode):
+      if isinstance(role, str):
         role = role.encode('utf-8')
       role_list.append(role)
     local_role_node.append(marshaller(tuple(role_list)))

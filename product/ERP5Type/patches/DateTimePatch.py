@@ -164,7 +164,7 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
           tm = s
           continue
       # Check for and skip day of week:
-      elif DayOfWeekNames.has_key(s):
+      elif s in DayOfWeekNames:
         continue
 
     raise SyntaxError(st)
@@ -285,6 +285,6 @@ if __name__ == '__main__':
     b = DateTimeKlass()
     b.__setstate__(a.__getstate__())
     print(a, a.__dict__ == b.__dict__)
-    for i in a.__dict__.keys():
+    for i in list(a.__dict__.keys()):
       if a.__dict__[i] != b.__dict__[i]:
         print(i, a.__dict__[i], b.__dict__[i])

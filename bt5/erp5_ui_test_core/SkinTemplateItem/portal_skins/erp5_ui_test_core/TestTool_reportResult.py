@@ -16,7 +16,7 @@ result.append('')
 
 # Details.
 table_list = []
-for key in request.form.keys():
+for key in list(request.form.keys()):
   if key.startswith('testTable'):
     prefix, num = key.split('.')
     table_list.append((prefix, int(num)))

@@ -1,3 +1,5 @@
+from __future__ import division
+from past.utils import old_div
 initial_durability = kw.get('initial_durability')
 if start_remaining_annuities is None or stop_remaining_annuities is None \
      or start_remaining_durability is None or stop_remaining_durability is None \
@@ -10,8 +12,8 @@ consumpted_durability = start_remaining_durability - stop_remaining_durability
 annuities_number = start_remaining_annuities - stop_remaining_annuities
 
 try:
-  per_annuity_consumption = (consumpted_durability / (annuities_number + 0.))
-  ratio = per_annuity_consumption / start_remaining_durability
+  per_annuity_consumption = (old_div(consumpted_durability, (annuities_number + 0.)))
+  ratio = old_div(per_annuity_consumption, start_remaining_durability)
   return ratio
   #return ratio * start_remaining_durability / initial_durability
 except ZeroDivisionError:

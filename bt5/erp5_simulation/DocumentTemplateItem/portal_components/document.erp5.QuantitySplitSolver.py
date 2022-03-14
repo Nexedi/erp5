@@ -83,7 +83,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
-    for movement, simulation_movement_list in delivery_dict.iteritems():
+    for movement, simulation_movement_list in delivery_dict.items():
       decision_quantity = movement.getQuantity()
       delivery_solver = self.getParentValue().newContent(
         portal_type=configuration_dict['delivery_solver'],

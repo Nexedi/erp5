@@ -1,4 +1,5 @@
-class Form:
+from builtins import object
+class Form(object):
     """A Formulator Form; this is the base class of all forms.
     """
     def move_field_up(field_id, group):

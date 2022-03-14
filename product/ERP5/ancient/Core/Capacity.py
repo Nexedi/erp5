@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Capacity:
+from builtins import object
+class Capacity(object):
   """
     A capacity is defined as a set of resources with quantities
     expressed in a standard unit

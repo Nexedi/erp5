@@ -13,6 +13,8 @@
 ##############################################################################
 
 # State types patch for DCWorkflow
+from builtins import str
+from builtins import map
 from Products.DCWorkflow.States import StateDefinition
 from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import _dtmldir

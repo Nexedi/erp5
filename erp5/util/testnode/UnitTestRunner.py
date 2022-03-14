@@ -24,6 +24,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import filter
+from builtins import object
 import os
 import glob
 import json
@@ -159,9 +161,9 @@ class UnitTestRunner(object):
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
     def path(name, compat): # BBB
-        path, = filter(os.path.exists, (base + relative
+        path, = list(filter(os.path.exists, (base + relative
           for relative in ('/bin/' + name, '/parts/' + compat)
-          for base in software_list))
+          for base in software_list)))
         return path
     for option, value in (
         ('--firefox_bin', lambda: path('firefox', 'firefox/firefox-slapos')),

@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import filter
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base
@@ -180,7 +182,7 @@ class asComposedDocument(object):
     if d is not _MARKER:
       return d
 
-class CompositionMixin:
+class CompositionMixin(object):
   """
   """
 

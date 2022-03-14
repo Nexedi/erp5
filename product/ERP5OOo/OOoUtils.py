@@ -28,6 +28,10 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
@@ -36,7 +40,7 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import StringIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions
@@ -79,7 +83,7 @@ class OOoBuilder(Implicit):
         dat = document.data
         while dat is not None:
           self._document.write(dat.data)
-          dat = dat.next
+          dat = dat.__next__
       else:
         # Default behaviour
         self._document.write(document.data)
@@ -108,7 +112,7 @@ class OOoBuilder(Implicit):
     except KeyError:
       # This is a new file
       pass
-    if isinstance(stream, unicode):
+    if isinstance(stream, str):
       stream = stream.encode('utf-8')
     zf.writestr(filename, stream)
     zf.close()
@@ -389,7 +393,7 @@ class OOoParser(Implicit):
         # Get all cells
         find_path = './/{%s}table-cell' % line.nsmap['table']
         cells = line.findall(find_path)
-        cell_index_range = range(len(cells))
+        cell_index_range = list(range(len(cells)))
 
         for cell_index in cell_index_range:
           cell = cells[cell_index]

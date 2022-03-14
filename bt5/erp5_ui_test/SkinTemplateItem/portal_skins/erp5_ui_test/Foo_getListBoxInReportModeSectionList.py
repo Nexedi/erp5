@@ -1,4 +1,5 @@
 """Return a list of Report Section"""
+from builtins import range
 from Products.ERP5Form.Report import ReportSection
 kw = {
   'path': context.getPhysicalPath(),
@@ -8,4 +9,4 @@ kw = {
 #  'selection_params': {},
   'temporary_selection': False,
 }
-return [ReportSection(**kw) for _ in xrange(3)]
+return [ReportSection(**kw) for _ in range(3)]

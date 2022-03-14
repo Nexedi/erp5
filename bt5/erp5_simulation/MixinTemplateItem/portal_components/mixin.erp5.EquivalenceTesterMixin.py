@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import object
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -37,7 +39,7 @@ from zLOG import LOG, WARNING
 from erp5.component.interface.IEquivalenceTester import IEquivalenceTester
 
 @zope.interface.implementer(IEquivalenceTester,)
-class EquivalenceTesterMixin:
+class EquivalenceTesterMixin(object):
   """
   Provides generic methods and helper methods to implement
   IEquivalenceTester
@@ -198,7 +200,7 @@ class EquivalenceTesterMixin:
                            # related packing list
       }
     message = divergence_message.getProperty('message')
-    mapping = dict([(x, h(y)) for (x,y) in divergence_message.getProperty('mapping', {}).items()])
+    mapping = dict([(x, h(y)) for (x,y) in list(divergence_message.getProperty('mapping', {}).items())])
     return str(Message(domain='erp5_ui', message=introduction_message,
                mapping=introduction_mapping)) \
            + str(Message(domain='erp5_ui', message=message, mapping=mapping))

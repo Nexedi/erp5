@@ -1,3 +1,4 @@
+from builtins import str
 portal = context.getPortalObject()
 skin_folder = getattr(portal.portal_skins, skin_folder)
 

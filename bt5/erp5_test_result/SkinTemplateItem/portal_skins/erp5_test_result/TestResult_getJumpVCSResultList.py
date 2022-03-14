@@ -29,7 +29,7 @@ def makeVCSLink(repository_url, revision):
     repository=repository_url,
     revision=revision)
   
-for repository in test_suite_data['repository_dict'].values():
+for repository in list(test_suite_data['repository_dict'].values()):
   result_list.append(
     makeVCSLink(
       repository['repository_url'],

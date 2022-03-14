@@ -116,7 +116,7 @@ class TestComputerWithComputerModel(ERP5TypeTestCase):
     model = self.newModel(**category_dict)
 
     category_list = []
-    for k, v in category_dict.iteritems():
+    for k, v in category_dict.items():
       for l in v:
         category_list.append('%s/%s' % (k,l))
     category_list.append('specialise/%s' % model.getRelativeUrl())

@@ -11,7 +11,7 @@ for skin_dir in skin_dir_list:
     region = id_tokens[2]
     # Determine amortisation methods available in this region
     for subfolder in skin_dir.objectValues():
-      if "ratioCalculation" in map(lambda o: o.getId(), subfolder.objectValues()):
+      if "ratioCalculation" in [o.getId() for o in subfolder.objectValues()]:
         return_list.append((region,subfolder))
 
 return return_list

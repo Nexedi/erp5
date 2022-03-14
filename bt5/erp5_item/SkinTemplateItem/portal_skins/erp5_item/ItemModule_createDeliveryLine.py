@@ -1,5 +1,6 @@
 # Creates one Order/Packing list per Different Source sections
 # Creates one Line per Resource
+from builtins import str
 from Products.ERP5Type.Message import translateString
 selection_name = "item_module_selection"
 cell_portal_type = '%s Cell' % portal_type
@@ -24,7 +25,7 @@ module = context.getDefaultModule(portal_type=portal_type)
 line_portal_type = '%s Line' % portal_type
 
 pl_property_dict = {}
-for k,v in property_dict.items():
+for k,v in list(property_dict.items()):
   pl_property_dict[k]=v
 
 pl_dict = {}
@@ -35,7 +36,7 @@ for ss in source_section_list:
   else:
     uid = 'UID' 
 
-  if not pl_dict.has_key(uid):
+  if uid not in pl_dict:
     pl_dict[uid] = module.newContent(**pl_property_dict)
     pl_dict[uid].setSourceSectionValue(ss)
 

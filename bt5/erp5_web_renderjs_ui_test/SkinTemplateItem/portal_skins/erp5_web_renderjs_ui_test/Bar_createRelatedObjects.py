@@ -1,3 +1,4 @@
+from builtins import range
 module = context.getParentValue()
 
 for i in range(0, num):

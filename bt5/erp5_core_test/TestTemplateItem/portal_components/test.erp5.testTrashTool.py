@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import unittest
 
 from Testing import ZopeTestCase
@@ -76,7 +77,7 @@ class TestTrashTool(ERP5TypeTestCase):
     base_category = pc._getOb(bc_id, None)
     self.assertTrue(base_category is not None)
     category_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       category = base_category.newContent(portal_type='Category')
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
@@ -266,7 +267,7 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_path = base_category.getPath().split('/')[2:-1]
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=1)
-    self.assertTrue(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+    self.assertTrue(list(backup_subobjects_ids.keys()).sort() == list(subobjects_ids).sort())
 
   def stepBackupFolderObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
     """
@@ -296,7 +297,7 @@ class TestTrashTool(ERP5TypeTestCase):
     bc_path = base_category.getPath().split('/')[1:-1]
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=0)
-    self.assertTrue(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+    self.assertTrue(list(backup_subobjects_ids.keys()).sort() == list(subobjects_ids).sort())
 
   def stepBackupObjectsWithKeepingSubobjects(self, sequence=None, sequence_list=None, **kw):
     """

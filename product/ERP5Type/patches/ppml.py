@@ -13,6 +13,10 @@
 #
 ##############################################################################
 
+from builtins import map
+from builtins import str
+from builtins import range
+from builtins import object
 import re
 from future import standard_library
 standard_library.install_aliases()
@@ -30,7 +34,7 @@ from zLOG import LOG
 reprs = {}
 ### patch begin: create a conversion table for [\x00-\x1f]. this table is
 ###              used for a valid utf-8 string.
-for c in map(chr, range(32)): reprs[c] = repr(c)[1:-1]
+for c in map(chr, list(range(32))): reprs[c] = repr(c)[1:-1]
 ### patch end
 reprs['\n'] = "\\n\n"
 reprs['\t'] = "\\t"
@@ -42,11 +46,11 @@ reprs2['<'] = "\\074"
 reprs2['>'] = "\\076"
 reprs2['&'] = "\\046"
 
-reprs_re = re.compile('|'.join(re.escape(k) for k in reprs.keys()))
+reprs_re = re.compile('|'.join(re.escape(k) for k in list(reprs.keys())))
 def sub_reprs(m):
   return reprs[m.group(0)]
 
-reprs2_re = re.compile('|'.join(re.escape(k) for k in reprs2.keys()))
+reprs2_re = re.compile('|'.join(re.escape(k) for k in list(reprs2.keys())))
 def sub_reprs2(m):
   return reprs2[m.group(0)]
 
@@ -56,7 +60,7 @@ def convert(S):
     ###              [\x00-\x1f] characters will be escaped to make a more
     ###              readable output.
     try:
-        if not isinstance(S, unicode):
+        if not isinstance(S, str):
             S.decode('utf8')
     except UnicodeDecodeError:
         return 'base64', base64.encodestring(S)[:-1]
@@ -83,7 +87,7 @@ def unconvert(encoding,S):
 
 ppml.unconvert = unconvert
 
-class Global:
+class Global(object):
 
     def __init__(self, module, name, mapping):
         self.module=module
@@ -100,7 +104,7 @@ class Global:
 
 ppml.Global = Global
 
-class Scalar:
+class Scalar(object):
 
     def __init__(self, v, mapping):
         self._v=v
@@ -121,7 +125,7 @@ class Scalar:
 
 ppml.Scalar = Scalar
 
-class Immutable:
+class Immutable(object):
     def __init__(self, value):
         self.value = value
 
@@ -171,7 +175,7 @@ class Unicode(String):
 
 ppml.Unicode = Unicode
 
-class Wrapper:
+class Wrapper(object):
 
     def __init__(self, v, mapping):
         self._v=v
@@ -194,7 +198,7 @@ class Wrapper:
 
 ppml.Wrapper = Wrapper
 
-class Collection:
+class Collection(object):
 
     def __init__(self, mapping):
         self.mapping = mapping
@@ -306,7 +310,7 @@ ppml.Object = Object
 
 blanck_line_expression = re.compile('^ +$')
 
-class NoBlanks:
+class NoBlanks(object):
     """
     This allows to ignore at least whitespaces between elements and also
     correctly handle string/unicode
@@ -324,7 +328,7 @@ class NoBlanks:
         """
         # Ignore element data between elements (eg '<e> <f> </f> </e>')...
         if data.strip():
-            if isinstance(data, unicode):
+            if isinstance(data, str):
                 data = data.encode('raw_unicode_escape')
             self.append(data)
 
@@ -348,14 +352,14 @@ class NoBlanks:
                     self.previous_discarded_data = None
                     self.previous_stack_end = None
 
-                if isinstance(data, unicode):
+                if isinstance(data, str):
                     data = data.encode('raw_unicode_escape')
 
                 self.append(data)
 
 ppml.NoBlanks = NoBlanks
 
-class IdentityMapping:
+class IdentityMapping(object):
 
     def __init__(self):
       self.resetMapping()
@@ -513,7 +517,7 @@ class ToXMLUnpickler(Unpickler):
     dispatch[BININT2] = load_binint2
 
     def load_long(self):
-        self.append(Long(long(self.readline()[:-1], 0), self.id_mapping))
+        self.append(Long(int(self.readline()[:-1], 0), self.id_mapping))
     dispatch[LONG] = load_long
 
     def load_float(self):
@@ -535,13 +539,13 @@ class ToXMLUnpickler(Unpickler):
     dispatch[BINSTRING] = load_binstring
 
     def load_unicode(self):
-        self.append(Unicode(unicode(eval(self.readline()[:-1],
+        self.append(Unicode(str(eval(self.readline()[:-1],
                                          {'__builtins__': {}})), self.id_mapping)) # Let's be careful
     dispatch[UNICODE] = load_unicode
 
     def load_binunicode(self):
         len = mloads('i' + self.read(4))
-        self.append(Unicode(unicode(self.read(len), 'utf-8'), self.id_mapping))
+        self.append(Unicode(str(self.read(len), 'utf-8'), self.id_mapping))
     dispatch[BINUNICODE] = load_binunicode
 
     def load_short_binstring(self):
@@ -653,7 +657,7 @@ class ToXMLUnpickler(Unpickler):
         self.stack[-1].id=self.idprefix+repr(i)
     dispatch[LONG_BINPUT] = load_long_binput
 
-    class LogCall:
+    class LogCall(object):
       def __init__(self, func):
         self.func = func
 
@@ -756,7 +760,7 @@ class xmlPickler(NoBlanks, xyap):
         end = self.end_handlers
         if tag in end:
             top = end[tag](self, tag, top)
-        if isinstance(top, unicode):
+        if isinstance(top, str):
             top = top.encode('raw_unicode_escape')
         append(top)
 

@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 translateString = context.Base_translateString
 specialise_value = context.getSpecialiseValue()
 
@@ -120,15 +122,15 @@ total_price = 0.0
 total_vat = 0.0
 
 def unicodeDict(d):
-  for k, v in d.items():
+  for k, v in list(d.items()):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k:str(v, 'utf8')})
   return d
 
 line_list = context.PaySheetTransaction_getLineListAsDict()
 inch_cm_ratio = 2.54 / 100.0
 
-class EmptyOrganisation:
+class EmptyOrganisation(object):
   """Used for default when organisation is not found.
   """
   def getTitle(self):

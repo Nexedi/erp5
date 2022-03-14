@@ -27,6 +27,7 @@
 ##############################################################################
 
 
+from builtins import object
 class BaseConduit(object):
   """
   A base class for conduit which implement the most generic methods

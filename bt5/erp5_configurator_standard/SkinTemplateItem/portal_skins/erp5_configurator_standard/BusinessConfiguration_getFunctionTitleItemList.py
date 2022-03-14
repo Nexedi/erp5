@@ -1,4 +1,5 @@
 # coding: utf-8
+from builtins import str
 from Products.ERP5Type.Message import translateString
 
 if context.getGlobalConfigurationAttr('categories_spreadsheet_configuration_save_relative_url'):

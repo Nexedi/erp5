@@ -7,6 +7,7 @@ Parse a string for links and return a list with link information
 # ------------------------------------------------------------------------------
 # document_content                 string representation of document content
 
+from builtins import str
 import re
 
 def setCitation(my_counter, my_title):

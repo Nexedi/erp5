@@ -2,6 +2,7 @@
   Create new report dialog
 """
 
+from builtins import str
 MARKER = ['', None]
 portal_gadgets = context.getPortalObject().portal_gadgets
 portal_skins = context.getPortalObject().portal_skins

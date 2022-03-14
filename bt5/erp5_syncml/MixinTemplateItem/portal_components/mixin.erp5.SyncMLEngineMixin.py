@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import object
 from logging import getLogger
 
 from AccessControl import ClassSecurityInfo, getSecurityManager

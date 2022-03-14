@@ -1,3 +1,4 @@
+from past.builtins import cmp
 column_item_list = [ ('person_career_reference', 'Employee Number'),
                      ('person_title', 'Name'), ]
 

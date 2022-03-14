@@ -58,13 +58,15 @@
 ############################################################################
 #__version__='$Revision: 1.14.10.2 $'[11:-2]
 
+from builtins import str
+from builtins import object
 from DocumentTemplate.DT_Util import ParseError, parse_params, name_param
 from string import find, split, join, atoi, atof
 StringType=type('')
 
 str=__builtins__['str']
 
-class LDIFVar:
+class LDIFVar(object):
     name='ldifvar'
 
     def __init__(self, args):
@@ -126,7 +128,7 @@ class LDIFVar:
                     'Invalid floating-point value for <em>%s</em>' % name)
 
         else:
-            if not isinstance(v, (str, unicode)):
+            if not isinstance(v, str):
                 v=str(v)
             if not v and t=='nb':
                 if 'optional' in args and args['optional']:
@@ -139,7 +141,7 @@ class LDIFVar:
 
     __call__=render
 
-class LDIFLine:
+class LDIFLine(object):
     name='ldifline'
 
     def __init__(self, args):
@@ -212,7 +214,7 @@ class LDIFLine:
                     'Invalid floating-point value for <em>%s</em>' % name)
 
         else:
-            if not isinstance(v, (str, unicode)):
+            if not isinstance(v, str):
                 v=str(v)
             if not v and t=='nb':
                 if 'optional' in args and args['optional']:

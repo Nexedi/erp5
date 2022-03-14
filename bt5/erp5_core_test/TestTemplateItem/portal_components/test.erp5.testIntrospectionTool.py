@@ -38,7 +38,7 @@ class TestIntrospectionTool(ERP5TypeTestCase):
     signature_by_json = json.loads(signature_json)
     signature = self.portal.portal_introspections.getSystemSignatureDict()
 
-    self.assertSameSet(signature_by_json.keys(), signature.keys())
+    self.assertSameSet(list(signature_by_json.keys()), list(signature.keys()))
     for key in signature:
       self.assertEqual(signature[key], signature_by_json[key])
 

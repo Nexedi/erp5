@@ -65,7 +65,7 @@ class SphinxSEFullTextKey(SearchKey):
     column = self.getColumn()
     query_list = []
     append = query_list.append
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in operator_value_dict.items():
       if len(value_list) == 1:
         value_list = value_list[0].split()
       append(SimpleQuery(search_key=self,

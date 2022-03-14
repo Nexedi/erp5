@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -36,7 +39,7 @@ import email, re
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 import cgi
-import urlparse
+import urllib.parse
 
 use_verbose_security = 0
 if use_verbose_security:
@@ -177,7 +180,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     # Back up original file
     theMail['__original__'] = file_
     # Recode headers to UTF-8 if needed
-    for key, value in msg.items():
+    for key, value in list(msg.items()):
       decoded_value_list = decode_header(value)
       unicode_value = make_header(decoded_value_list)
       new_value = unicode_value.__unicode__().encode('utf-8')
@@ -207,7 +210,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         payload = part.get_payload(decode=True)
         #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
         if charset:
-          payload = unicode(payload, charset).encode('utf-8')
+          payload = str(payload, charset).encode('utf-8')
         if body_found:
           # Keep the content type
           theMail['attachment_list'].append((file_name,
@@ -779,7 +782,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     url = url.strip()
     self.assertNotEquals(url, None)
     self.publish(url)
-    parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
+    parameters = cgi.parse_qs(urllib.parse.urlparse(url)[4])
     self.assertTrue(
       'reset_key' in parameters,
       'reset_key not found in mail message : %s' % body_message
@@ -1261,7 +1264,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.ERP5Site_viewNewPersonCredentialUpdateDialog()
     ret = self.portal.ERP5Site_newPersonCredentialUpdate(password='new_password')
     self.assertEqual(
-      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
       ['Password changed.'],
     )
     self.tic()
@@ -1429,7 +1432,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     ret = self.portal.ERP5Site_newCredentialRecovery(reference=self._testMethodName)
     self.assertEqual(
-      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
       ['We have sent you an email to enable you to reset your password. Please check your inbox and your junk/spam mail for this email and follow the link to reset your password.'],
     )
     person.setDefaultEmailCoordinateText(None)

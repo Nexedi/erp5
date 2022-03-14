@@ -3,10 +3,15 @@
 
 $Id$
 """
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import str
+from builtins import object
 import unittest
 
 
-class DummyResponse:
+class DummyResponse(object):
 
     def __init__( self ):
         self._headers = {}
@@ -112,9 +117,9 @@ class ZuiteTests( unittest.TestCase ):
         return old
 
     def _verifyArchive( self, bits, contents ):
-        import StringIO
+        import io
         import zipfile
-        stream = StringIO.StringIO( bits )
+        stream = io.StringIO( bits )
         archive = zipfile.ZipFile( stream, 'r' )
 
         names = list( archive.namelist() )
@@ -139,12 +144,12 @@ class ZuiteTests( unittest.TestCase ):
 
     def _verifyManifest( self, bits, name, contents ):
 
-        import StringIO
+        import io
         import zipfile
-        stream = StringIO.StringIO( bits )
+        stream = io.StringIO( bits )
         archive = zipfile.ZipFile( stream, 'r' )
 
-        manifest = filter( None, archive.read( name ).split( '\n' ) )
+        manifest = [_f for _f in archive.read( name ).split( '\n' ) if _f]
         self.assertEqual( len( manifest ), len( contents ) )
 
         for lhs, rhs in zip( manifest, contents ):
@@ -159,7 +164,7 @@ class ZuiteTests( unittest.TestCase ):
         expected_names.append( 'testSuite.html' )
 
         if include_selenium:
-            expected_names.extend( _SUPPORT_FILES.keys() )
+            expected_names.extend( list(_SUPPORT_FILES.keys()) )
 
         return expected_names
 
@@ -208,7 +213,7 @@ class ZuiteTests( unittest.TestCase ):
 
         zuite = self._makeOne()
 
-        for name in _SUPPORT_FILES.keys():
+        for name in list(_SUPPORT_FILES.keys()):
             object = zuite[ name ]
             self.assertEqual( object.meta_type, 'File' )
 

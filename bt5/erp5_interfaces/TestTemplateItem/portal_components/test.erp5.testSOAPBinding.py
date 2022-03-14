@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import unittest
 import SOAPpy
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.CMFCore.WorkflowCore import WorkflowException
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
 from lxml import etree
@@ -181,7 +182,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     for mapping in mapping_list:
       category_list = mapping.pop('category')
       base_category_list = [x.split('/', 1)[0] for x in category_list]
-      property_list = mapping.keys()
+      property_list = list(mapping.keys())
       for prop in property_list:
         line = self._getMappedPropertyLine(resource, prop)
         line.edit(variation_base_category_list=base_category_list,
@@ -316,7 +317,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     }
     # Translate kw with the PropertySheet
     property_ = {}
-    for k, v in kw.items():
+    for k, v in list(kw.items()):
       k = mapping.get(k, k)
       property_[k] = v
     object._edit(**property_)
@@ -342,7 +343,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
               cat = iv.getTitle()
             lcat_list.append(base+"/"+cat)
           cell_dict[str(lcat_list)] = cell
-        ordered_key_list = cell_dict.keys()
+        ordered_key_list = list(cell_dict.keys())
         ordered_key_list.sort()
         cell_key = ordered_key_list[index-1]
         cell_list.append(cell_dict[cell_key])
@@ -381,10 +382,10 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
           % previous_xml
       )
 
-    if isinstance(previous_value, unicode):
+    if isinstance(previous_value, str):
       previous_value = previous_value.encode('utf-8')
 
-    if isinstance(new_value, unicode):
+    if isinstance(new_value, str):
       new_value = new_value.encode('utf-8')
 
     # check if it'a work on product or on categories
@@ -482,7 +483,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       getter_id = "get%s" %(tag.capitalize(),)
       getter = getattr(cell, getter_id)
       current_value = getter()
-      if isinstance(current_value, unicode):
+      if isinstance(current_value, str):
         current_value = current_value.encode('utf-8')
       if current_value not in [new_value, previous_value]:
         conflict_list.append(self._generateConflict(document.getPhysicalPath(),
@@ -509,7 +510,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       current_value = getter_value_dict[base_tag]
       if isinstance(current_value, float):
         current_value = '%.6f' % current_value
-      if isinstance(current_value, unicode):
+      if isinstance(current_value, str):
         current_value = current_value.encode('utf-8')
       if current_value not in [new_value, previous_value]:
         conflict_list.append(self._generateConflict(document.getPhysicalPath(),
@@ -551,7 +552,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
           % previous_xml
         )
 
-      if isinstance(previous_value, unicode):
+      if isinstance(previous_value, str):
         previous_value = previous_value.encode('utf-8')
 
       # boolean which check update
@@ -591,7 +592,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
         getter_id = "get%s" %(tag.capitalize(),)
         getter = getattr(cell, getter_id)
         current_value = getter()
-        if isinstance(current_value, unicode):
+        if isinstance(current_value, str):
           current_value = current_value.encode('utf-8')
         if current_value not in [new_value, previous_value]: # pylint: disable=undefined-variable
           conflict_list.append(self._generateConflict(document.getPhysicalPath(),

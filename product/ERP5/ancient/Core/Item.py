@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Item:
+from builtins import object
+class Item(object):
   """
     An Item defines a serial number and is referenced by an amount
     or a movement (or a couple of). During transformations, a tracking

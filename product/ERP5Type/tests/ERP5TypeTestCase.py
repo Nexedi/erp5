@@ -5,11 +5,15 @@
 # ERP5TypeTestCase
 #
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 __version__ = '0.3.0'
 
 import base64
 import errno
-import httplib
+import http.client
 import os
 import random
 import re
@@ -18,11 +22,11 @@ import string
 import sys
 import time
 import traceback
-import urllib
-import ConfigParser
+import urllib.request, urllib.parse, urllib.error
+import configparser
 from contextlib import contextmanager
-from cStringIO import StringIO
-from cPickle import dumps
+from io import StringIO
+from pickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
@@ -168,7 +172,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   cloudooo_url_list = _getConversionServerUrlList()
 
-  promise_config = ConfigParser.RawConfigParser()
+  promise_config = configparser.RawConfigParser()
   promise_config.add_section('external_service')
   promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
@@ -597,12 +601,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
 
       def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
+        urltype, url = urllib.parse.splittype(path + '/' + template)
         if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
+          host, selector = urllib.parse.splithost(url)
+          user_passwd, host = urllib.parse.splituser(host)
+          host = urllib.parse.unquote(host)
+          h = http.client.HTTP(host)
           h.putrequest('HEAD', selector)
           h.putheader('Host', host)
           if user_passwd:
@@ -655,7 +659,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                               searchable_business_template_list=("erp5_base",)):
       template_tool = self.portal.portal_templates
       bt_set = set(searchable_business_template_list).difference(x['title']
-        for x in template_tool.repository_dict.itervalues() for x in x)
+        for x in template_tool.repository_dict.values() for x in x)
       if bt_set:
         template_tool.updateRepositoryBusinessTemplateList(
           {os.path.dirname(x[0]) for x in self._getBTPathAndIdList(bt_set)},
@@ -808,7 +812,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         elif user:
           PAS = self.portal.acl_users.__class__
           orig_extractUserIds = PAS._extractUserIds
-          from thread import get_ident
+          from _thread import get_ident
           me = get_ident()
           def _extractUserIds(pas, request, plugins):
             if me == get_ident():
@@ -832,7 +836,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           # However, we need to inject the content of `extra` inside the
           # request.
           if extra:
-            for k, v in extra.items(): request[k] = v
+            for k, v in list(extra.items()): request[k] = v
 
           publish_module_standard('Zope2',
                          request=request,
@@ -898,7 +902,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         serialized_sequence=sequence.serializeSequenceDict(),
         document_dict=document_dict,
       )
-      for module_id, object_id_list in document_dict.iteritems():
+      for module_id, object_id_list in document_dict.items():
         for object_id in object_id_list:
           self.portal.portal_trash.backupObject(
             trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
@@ -908,7 +912,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       sequence_title = "sequence_title"
       trashbin_value = self.portal.portal_trash[sequence_title]
       document_dict = trashbin_value.getProperty('document_dict')
-      for module_id, object_id_list in document_dict.iteritems():
+      for module_id, object_id_list in document_dict.items():
         for object_id in object_id_list:
           self.portal.portal_trash.restoreObject(
             trashbin_value, [module_id], object_id, pass_if_exist=True
@@ -1109,7 +1113,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       # update connection strings
       for connection_string_name, connection_string in\
-                                    _getConnectionStringDict().items():
+                                    list(_getConnectionStringDict().items()):
         connection_name = connection_string_name.replace('_string', '')
         getattr(self.portal, connection_name).edit('', connection_string)
 
@@ -1403,7 +1407,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         try:
           portal_activities = self.portal.portal_activities
           message_list = portal_activities.getMessageList()
-        except StandardError: # AttributeError, TransactionFailedError ...
+        except Exception: # AttributeError, TransactionFailedError ...
           pass
         else:
           for m in message_list:
@@ -1421,7 +1425,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         for connector in self.__connector_set:
           connector.__dict__.pop('_v_database_connection', None)
         database_connection_pool = Products.ZMySQLDA.DA.database_connection_pool
-        for value in database_connection_pool.itervalues():
+        for value in database_connection_pool.values():
           value.clear()
         database_connection_pool.clear()
 
@@ -1445,7 +1449,7 @@ ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
   ERP5TypeCommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
 
-class ResponseWrapper:
+class ResponseWrapper(object):
     '''Decorates a response object with additional introspective methods.'''
 
     _headers_separator_re = re.compile('(?:\r?\n){2}')
@@ -1526,7 +1530,7 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     """Check properties of a report line.
     """
     diff_list = []
-    for k, v in kw.items():
+    for k, v in list(kw.items()):
       if v != line.getColumnProperty(k):
         diff_list.append('`%s`: expected: %r actual: %r' %
                                 (k, v, line.getColumnProperty(k)))
@@ -1568,7 +1572,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
@@ -1631,8 +1635,8 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   # Python Scripts are exported without those 2 attributes:
-  PythonScript.__code__ = PythonScript.func_code = lazy_func_prop('func_code', None)
-  PythonScript.__defaults__ = PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
+  PythonScript.__code__ = PythonScript.__code__ = lazy_func_prop('func_code', None)
+  PythonScript.__defaults__ = PythonScript.__defaults__ = lazy_func_prop('func_defaults', None)
 
   def _compile(self):
     if immediate_compilation:
@@ -1643,7 +1647,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent

@@ -7,7 +7,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query
 defaut_dict = {'mode': 'ext2', # full text search mode
                'limit': 1000,  # max number of results
               }
-for key, item in defaut_dict.items():
+for key, item in list(defaut_dict.items()):
   operator = ';%s' %key
   if operator not in value and value not in ('', None):
     value = '%s%s=%s' %(value, operator, item)

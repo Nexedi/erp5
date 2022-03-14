@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import object
 from .lexer import lexer, update_docstrings
 try:
   from Products.ZSQLCatalog.interfaces.abstract_syntax_node import INode, IValueNode, ILogicalNode, IColumnNode

@@ -8,7 +8,7 @@ The script must be called on the context of the document.
 def filterDuplicateActions(actions):
   new_actions = {}
 
-  for action_category, action_list in actions.items():
+  for action_category, action_list in list(actions.items()):
     if action_category == 'object_onlyxhtml_view':
       action_category = 'object_view'
 

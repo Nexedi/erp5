@@ -30,7 +30,9 @@
 # This extension should be replaced by a clever parser provided by
 # ERP5OOo or probably by CloudOOo itself.
 
-import StringIO
+from future import standard_library
+standard_library.install_aliases()
+import io
 
 def read(self, filename, data):
   """
@@ -38,9 +40,9 @@ def read(self, filename, data):
   """
   if data is None:
     oo_template_file = getattr(self, filename)
-    fp = StringIO.StringIO(oo_template_file)
+    fp = io.StringIO(oo_template_file)
   else:
-    fp = StringIO.StringIO(data)
+    fp = io.StringIO(data)
   fp.filename = filename
   return fp
 
@@ -67,7 +69,7 @@ def getIdFromString(string):
     elif char.isspace() or char in ('+', '-'):
       clean_id += '_'
     else:
-      for (safe_char, char_list) in translation_map.items():
+      for (safe_char, char_list) in list(translation_map.items()):
         if char in char_list:
           clean_id += safe_char
           break
@@ -84,7 +86,7 @@ def convert(self, filename, data=None):
   spreadsheets = OOoParser.getSpreadsheetsMapping()
 
   table_dict = {}
-  for table_name, table in spreadsheets.items():
+  for table_name, table in list(spreadsheets.items()):
     if not table:
       continue
     # Get the header of the table
@@ -126,7 +128,7 @@ def convert(self, filename, data=None):
         object_list.append(object_property_dict)
     table_dict[table_name.encode('UTF-8')] = object_list
 
-  if len(table_dict.keys()) == 1:
+  if len(list(table_dict.keys())) == 1:
     return object_list
   else:
     return table_dict

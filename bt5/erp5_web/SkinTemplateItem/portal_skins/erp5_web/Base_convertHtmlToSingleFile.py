@@ -15,6 +15,8 @@ TODO: export same components into one mhtml attachment if possible.
 # ERP5 web uses format= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
 
+from builtins import str
+from builtins import range
 from zExceptions import Unauthorized
 from base64 import b64encode, b64decode
 portal = context.getPortalObject()
@@ -191,7 +193,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
         data = str(obj.data or "")
       else:
         data = getattr(obj, "getData", lambda: str(obj))() or ""
-      if isinstance(data, unicode):
+      if isinstance(data, str):
         data = data.encode("utf-8")
       return handleLinkedData(mime, data, src)
     return handleLinkedData(default_mimetype, default_data, src)
@@ -201,7 +203,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
   # use the same behavior as when we call a script from browser URL bar.
   if not hasattr(obj, "getPortalType") and callable(obj):
     mime, data = "text/html", obj()
-    if isinstance(data, unicode):
+    if isinstance(data, str):
       data = data.encode("utf-8")
     return handleLinkedData(mime, data, src)
 

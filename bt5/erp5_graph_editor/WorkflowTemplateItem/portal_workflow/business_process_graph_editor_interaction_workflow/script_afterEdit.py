@@ -1,3 +1,4 @@
+from builtins import str
 import json
 business_process = sci['object']
 graph = business_process.getProperty('jsplumb_graph')
@@ -10,7 +11,7 @@ if graph:
     trade_state_dict[trade_state.getReference() or trade_state.getId()] = trade_state
 
   graph = json.loads(graph)['graph']
-  for edge_data in graph['edge'].values():
+  for edge_data in list(graph['edge'].values()):
     # Create the business link if it does not exist yet.
     if not edge_data.get('business_link_url'):
       business_link = business_process.newContent(

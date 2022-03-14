@@ -25,7 +25,7 @@ def createCategory(object_mapping=None, category=""):
 mapping_dict = {}
 destination_list = []
 for line in listbox:
-  if line.has_key('listbox_key'):
+  if 'listbox_key' in line:
     line_id = line['listbox_key']
     mapping_dict[line_id] = line
     if line["destination_reference_text"] != "":
@@ -44,7 +44,7 @@ request= context.REQUEST
 integration_site = context   
 
 if len(bad_destination_list) > 0:
-  status_message = "Impossible to create mapping because of %s redundancie(s), use update button before defining mapping" % len({}.fromkeys(bad_destination_list).keys())
+  status_message = "Impossible to create mapping because of %s redundancie(s), use update button before defining mapping" % len(list({}.fromkeys(bad_destination_list).keys()))
   request.set('portal_status_message', status_message)
   return context.Base_redirect("IntegrationSite_viewCategoryMappingFastInputDialog",
           keep_items=dict(portal_status_message=translateString(status_message),),)

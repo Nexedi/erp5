@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from collections import defaultdict
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -38,7 +39,7 @@ class treenode(defaultdict):
     defaultdict.__init__(self, self.__class__)
 
 
-class ExplanationCache:
+class ExplanationCache(object):
   """ExplanationCache provides a central access to
   all parameters and values which are needed to process
   an explanation. It is based on the idea that a value is calculated
@@ -239,7 +240,7 @@ class ExplanationCache:
 
     # Build a list of path patterns which apply to current business_link
     path_list = iter(self.getSimulationPathPatternList())
-    path_dict = {x: path_list.next() for x in path_list}
+    path_dict = {x: next(path_list) for x in path_list}
     # path_dict is like this;
     # {'/erp5/portal_simulation/3/4': r'/erp5/portal\_simulation/3/4/%'}
     path_list = []

@@ -1,5 +1,6 @@
 
-class ZMIForm:
+from builtins import object
+class ZMIForm(object):
     """Form used from Zope Management Interface. Inherits from
     ObjectManager to present folderish view.
     """

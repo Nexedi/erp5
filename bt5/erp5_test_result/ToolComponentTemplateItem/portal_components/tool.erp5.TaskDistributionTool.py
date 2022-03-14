@@ -26,13 +26,16 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 from zLOG import LOG, DEBUG
-from xmlrpclib import Binary
+from xmlrpc.client import Binary
 
 class TaskDistributionTool(BaseTool):
   """
@@ -266,7 +269,7 @@ class TaskDistributionTool(BaseTool):
     extract all xmlrpclib.Binary instance
     """
     return {x: y.data if isinstance(y, Binary) else y
-       for x, y in xmlrpc_dict.iteritems()}
+       for x, y in xmlrpc_dict.items()}
 
   security.declarePublic('reportTaskFailure')
   def reportTaskFailure(self, test_result_path, status_dict, node_title):

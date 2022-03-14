@@ -44,12 +44,12 @@ for image_url in image_url_list:
         # we need a way to do this by introspection
         if ((getattr(document, "getData", None) is not None and document.getData() not in MARKER) or \
            (getattr(document, "getBaseData", None) is not None and document.getBaseData() not in MARKER)):
-          if 'display' in convert_kw.keys():
+          if 'display' in list(convert_kw.keys()):
             # conversion script aggregate all possible display options into a list
             convert_kw['display_list'] = [convert_kw.pop('display')]
 
           # only certain arguments make sense due to API so leave only them
-          for key in convert_kw.keys():
+          for key in list(convert_kw.keys()):
             if key not in API_ARGUMENT_LIST:
               convert_kw.pop(key)
 

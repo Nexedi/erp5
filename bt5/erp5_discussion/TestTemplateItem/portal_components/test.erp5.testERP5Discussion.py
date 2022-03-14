@@ -29,6 +29,8 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

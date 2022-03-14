@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
@@ -56,7 +57,7 @@ def testCharsetAndConvert(text_content, content_type, encoding):
   return text_content, encoding
 
 
-class MailMessageMixin:
+class MailMessageMixin(object):
   """
   Contains methods to read email's content or metadata for the data property
   of the self object.
@@ -116,10 +117,10 @@ class MailMessageMixin:
     way of representing strings in ERP5.
     """
     result = {}
-    for (name, value) in self._getMessage().items():
+    for (name, value) in list(self._getMessage().items()):
       try:
         decoded_header = decode_header(value)
-      except HeaderParseError, error_message:
+      except HeaderParseError as error_message:
         decoded_header = ()
         LOG('MailMessageMixin.getContentInformation', INFO,
             'Failed to decode %s header of %s with error: %s' %
@@ -142,7 +143,7 @@ class MailMessageMixin:
     result = []
     for i, part in enumerate(self._getMessage().walk()):
       if not part.is_multipart():
-        kw = dict(part.items())
+        kw = dict(list(part.items()))
         kw['uid'] = 'part_%s' % i
         kw['index'] = i
         filename = part.get_filename()
@@ -182,7 +183,7 @@ class MailMessageMixin:
       if index == i:
         # This part should be handled in skin script
         # but it was a bit easier to access items here
-        kw = dict(part.items())
+        kw = dict(list(part.items()))
         content_type = part.get_content_type()
         if REQUEST is not None:
           filename = part.get_filename()

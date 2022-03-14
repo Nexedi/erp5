@@ -1,4 +1,6 @@
-import feedparser, urllib2, socket
+from future import standard_library
+standard_library.install_aliases()
+import feedparser, urllib.request, urllib.error, urllib.parse, socket
 from hashlib import md5
 
 def getRssDataAsDict(context, url, username=None, password=None):
@@ -11,9 +13,9 @@ def getRssDataAsDict(context, url, username=None, password=None):
   # use authentication or not?
   handlers = []
   if username is not None and password is not None:
-    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+    passman = urllib.request.HTTPPasswordMgrWithDefaultRealm()
     passman.add_password(None, url, username, password)
-    auth_handler = urllib2.HTTPBasicAuthHandler(passman)
+    auth_handler = urllib.request.HTTPBasicAuthHandler(passman)
     handlers.append(auth_handler)
 
   # set shorter timeouts and revert default at enf of read  
@@ -24,14 +26,14 @@ def getRssDataAsDict(context, url, username=None, password=None):
   finally:
     socket.setdefaulttimeout(default_timeout)
 
-  if d.bozo and isinstance(d.bozo_exception, urllib2.URLError):
+  if d.bozo and isinstance(d.bozo_exception, urllib.error.URLError):
     # we have an URL error
     return {'status':-2}
   elif d.bozo:
     # some bozo exceptions can be ignored
     if not isinstance(d.bozo_exception, (
         feedparser.CharacterEncodingOverride,
-        feedparser.NonXMLContentType,
+        feedparser.NonXMLContentType
       )):
       return {'status': -5}
   if d.status == 401:

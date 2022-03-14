@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from string import zfill
 
 destination_obj = context.getObject()
@@ -10,7 +11,7 @@ items = []
 
 # get the user information
 for inputline in listbox:
-  if inputline.has_key('listbox_key'):
+  if 'listbox_key' in inputline:
     scenario = {}
     scenario['id'] = int(inputline['listbox_key'])
     scenario['title'] = inputline['scenario_title']
@@ -55,7 +56,7 @@ for item in items:
     new_1st_level_item.append(new_2nd_level_item)
 
   if has_1st_level == True:
-    if clean_input_lines.has_key(new_1st_level_key):
+    if new_1st_level_key in clean_input_lines:
       new_1st_level_item = clean_input_lines[new_1st_level_key] + new_1st_level_item
     clean_input_lines[new_1st_level_key] = new_1st_level_item
 
@@ -67,7 +68,7 @@ except:
   int_index = 1
 
 # create items objects and sub-objects
-for key in clean_input_lines.keys():
+for key in list(clean_input_lines.keys()):
   new_1st_level_obj = destination_obj.newContent( portal_type = first_level_type
                                                 , int_index   = int_index
                                                 , title       = key

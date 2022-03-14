@@ -57,4 +57,4 @@ class PropertyGroupingMovementGroup(MovementGroup):
         key_value_list.append((prop, getProperty(prop)))
       # key_value_list as a grouping key
       movement_dict.setdefault(tuple(key_value_list), []).append(movement)
-    return [(movement_list, {}) for movement_list in movement_dict.values()]
+    return [(movement_list, {}) for movement_list in list(movement_dict.values())]

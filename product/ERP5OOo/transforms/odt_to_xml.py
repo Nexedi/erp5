@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implementer
 from .oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
@@ -8,7 +10,7 @@ from Products.ERP5OOo.OOoUtils import OOoBuilder
 import re
 
 @implementer(itransform)
-class OdtToXml:
+class OdtToXml(object):
   """Transforms ODT to Doc by using oood"""
 
   __name__ = 'odt_to_xml'

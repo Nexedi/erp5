@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import str
 def recursiveDocumentList(obj):
   ret = []
   ret.append(obj.getPath())
@@ -78,7 +80,7 @@ for property_dict in object_list:
   gap = str(gap)
   if gap:
     gap = gap.replace('CLASSE ', '')
-    print '+ %s - %s - %s' % (gap or '', title or '', description or '')
+    print('+ %s - %s - %s' % (gap or '', title or '', description or ''))
     path = root
     b = ''
     for a in gap:
@@ -96,7 +98,7 @@ for path in existing_path_list:
   description = document.getDescription() or ''
   gap = document.getId() or ''
   title = document.getTitle() or ''
-  print '- %s - %s - %s' % (gap or '', title or '', description or '')
+  print('- %s - %s - %s' % (gap or '', title or '', description or ''))
   document.getParentValue().deleteContent(document.getId())
 
 return printed

@@ -10,6 +10,8 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+from builtins import map
+from builtins import str
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime
@@ -72,7 +74,7 @@ if 1: # For easy diff with original
                     ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
 
             else:
-                if not isinstance(v, (str, unicode)):
+                if not isinstance(v, str):
                     v = str(v)
                 v=md.getitem('sql_quote__',0)(v)
                 #if find(v,"\'") >= 0: v=join(split(v,"\'"),"''")

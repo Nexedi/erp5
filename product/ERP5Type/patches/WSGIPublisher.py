@@ -14,6 +14,8 @@
 ##############################################################################
 """ Python Object Publisher -- Publish Python objects on web servers
 """
+from builtins import str
+from builtins import range
 import sys
 from contextlib import closing
 from contextlib import contextmanager
@@ -271,7 +273,7 @@ def _exc_view_created_response(exc, request, response):
         # with the (environ, start_response) WSGI tuple.
         response.setStatus(exc.__class__)
         if hasattr(exc, 'headers'):
-            for key, value in exc.headers.items():
+            for key, value in list(exc.headers.items()):
                 response.setHeader(key, value)
 
         # Set the response body to the result of calling the view.

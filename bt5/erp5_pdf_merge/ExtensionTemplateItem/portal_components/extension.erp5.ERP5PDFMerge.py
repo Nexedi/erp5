@@ -26,6 +26,9 @@
 ##############################################################################
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 def mergePDFList(self, pdf_data_list, start_on_recto=False):
   """Merge multiple PDFs in a new PDF.
   
@@ -35,7 +38,7 @@ def mergePDFList(self, pdf_data_list, start_on_recto=False):
   to have each PDF as the recto page. This is useful if you have to print the
   merged pdf in recto/verso mode.
   """
-  from StringIO import StringIO
+  from io import StringIO
   from PyPDF2 import PdfFileWriter, PdfFileReader
   
   output = PdfFileWriter()

@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -28,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.utils import old_div
 from .TargetSolver import TargetSolver
 
 class CopyToTarget(TargetSolver):
@@ -59,7 +61,7 @@ class CopyToTarget(TargetSolver):
     # Calculate delta
     quantity_ratio = 0
     if old_quantity not in (None,0.0): # XXX: What if quantity happens to be an integer ?
-      quantity_ratio = new_quantity / old_quantity
+      quantity_ratio = old_div(new_quantity, old_quantity)
     start_date_delta = 0
     stop_date_delta = 0
     # get the date delta in milliseconds, to prevent rounding issues
@@ -114,7 +116,7 @@ class CopyToTarget(TargetSolver):
       parent_movement = None
 
     for date_delta in ('start_date_delta', 'stop_date_delta'):
-      if date_delta in value_delta_dict.keys():
+      if date_delta in list(value_delta_dict.keys()):
         if abs(value_delta_dict[date_delta]) <= \
             applied_rule.getProperty('max_allowed_delta', max_allowed_delta):
           value_delta_dict.pop(date_delta)

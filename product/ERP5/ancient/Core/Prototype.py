@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Prototype:
+from builtins import object
+class Prototype(object):
   """
     A transformed resource which can be extended
     All Transformations should be prototypes

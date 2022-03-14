@@ -13,6 +13,9 @@
 ##############################################################################
 
 # Properties
+from builtins import filter
+from builtins import map
+from past.builtins import basestring
 from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
 from Products.ERP5Type.Globals import DTMLFile
@@ -90,7 +93,7 @@ def PropertyManager_setProperty(self, id, value, type=None):
         type = 'lines'
       elif isinstance(value, int):
         type = 'int'
-      elif isinstance(value, long):
+      elif isinstance(value, int):
         type = 'long'
       elif isinstance(value, float):
         type = 'float'
@@ -143,16 +146,16 @@ def PropertyManager_delProperty(self, id):
 
 def PropertyManager_propertyIds(self, local_properties=False):
     """Return a list of property ids """
-    return map(lambda i: i['id'], self._propertyMap(
-      local_properties=local_properties))
+    return [i['id'] for i in self._propertyMap(
+      local_properties=local_properties)]
 
 def PropertyManager_propertyValues(self):
     """Return a list of actual property objects """
-    return map(lambda i,s=self: s.getProperty(i['id']), self._propertyMap())
+    return list(map(lambda i,s=self: s.getProperty(i['id']), self._propertyMap()))
 
 def PropertyManager_propertyItems(self):
     """Return a list of (id,property) tuples """
-    return map(lambda i,s=self: (i['id'],s.getProperty(i['id'])), self._propertyMap())
+    return list(map(lambda i,s=self: (i['id'],s.getProperty(i['id'])), self._propertyMap()))
 
 def PropertyManager_propertyMap(self, local_properties=False):
     """Return a tuple of mappings, giving meta-data for properties """

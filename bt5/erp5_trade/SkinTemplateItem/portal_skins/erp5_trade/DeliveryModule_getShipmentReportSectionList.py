@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Form.Report import ReportSection
 from Products.ERP5Type.Message import translateString
 request = container.REQUEST

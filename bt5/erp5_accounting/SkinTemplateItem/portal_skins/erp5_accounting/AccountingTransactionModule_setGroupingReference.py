@@ -65,7 +65,7 @@ if grouping == 'grouping':
     for line in grouped_line_list:
       transaction_list[portal.restrictedTraverse(line).getParentValue()] = 1
 
-    for transaction in transaction_list.keys():
+    for transaction in list(transaction_list.keys()):
       if transaction.getPortalType() == 'Balance Transfer Transaction':
         transaction = transaction.getCausalityValue()
       # Check if this document has a payment_state

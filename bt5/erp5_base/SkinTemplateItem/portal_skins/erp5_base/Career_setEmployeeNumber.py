@@ -1,3 +1,4 @@
+from builtins import str
 Base_translateString = context.Base_translateString
 
 if not context.getReference() or force:

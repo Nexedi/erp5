@@ -31,4 +31,4 @@ for social_contract in social_contract_list:
     if partner_uid != context.getUid():
       partner_uid_dict[partner_uid] = 1
 
-return len( partner_uid_dict.keys() )
+return len( list(partner_uid_dict.keys()) )

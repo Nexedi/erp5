@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from zope.interface import implementer
 from Products.ERP5Type.interfaces.property_translatable import IPropertyTranslatable
 from AccessControl import ClassSecurityInfo
@@ -35,7 +36,7 @@ from Products.ERP5Type.Globals import InitializeClass
 INTERNAL_TRANSLATION_DICT_NAME = '__translation_dict'
 
 @implementer(IPropertyTranslatable)
-class PropertyTranslatableBuiltInDictMixIn:
+class PropertyTranslatableBuiltInDictMixIn(object):
   """An implementation of IPropertyTranslatable with built-in dict."""
 
   security = ClassSecurityInfo()

@@ -1,4 +1,10 @@
 from __future__ import absolute_import
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from past.utils import old_div
+from builtins import object
 import AccessControl
 import OFS
 from App.class_init import default__class_init__ as InitializeClass
@@ -11,10 +17,10 @@ from OFS.ObjectManager import ObjectManager
 from OFS.PropertyManager import PropertyManager
 from OFS.SimpleItem import Item
 import Acquisition
-from urllib import quote
+from urllib.parse import quote
 import os
 import string
-from StringIO import StringIO
+from io import StringIO
 
 from .Errors import ValidationError, FormValidationError, FieldDisabledError
 from .FieldRegistry import FieldRegistry
@@ -31,7 +37,7 @@ from App.Dialogs import MessageDialog
 from OFS.CopySupport import CopyError
 import sys
 
-class Form:
+class Form(object):
     """Form base class.
     """
     security = ClassSecurityInfo()
@@ -80,7 +86,7 @@ class Form:
     def field_removed(self, field_id):
         """A field was removed from the form.
         """
-        for field_list in self.groups.values():
+        for field_list in list(self.groups.values()):
             if field_id in field_list:
                 field_list.remove(field_id)
                 break # should be done as soon as we found it once
@@ -131,7 +137,7 @@ class Form:
         """Add a new group.
         """
         groups = self.groups
-        if groups.has_key(group):
+        if group in groups:
             return False # group already exists (NOTE: should we raise instead?)
         groups[group] = []
         # add the group to the bottom of the list of groups
@@ -148,7 +154,7 @@ class Form:
         groups = self.groups
         if group == self.group_list[0]:
             return False # can't remove first group
-        if not groups.has_key(group):
+        if group not in groups:
             return False # group does not exist (NOTE: should we raise instead?)
         # move whatever is in the group now to the end of the first group
         groups[self.group_list[0]].extend(groups[group])
@@ -167,9 +173,9 @@ class Form:
         """
         group_list = self.group_list
         groups = self.groups
-        if not groups.has_key(group):
+        if group not in groups:
             return False # can't rename unexisting group
-        if groups.has_key(name):
+        if name in groups:
             return False # can't rename into existing name
         i = group_list.index(group)
         group_list[i] = name
@@ -296,7 +302,7 @@ class Form:
             w('<h2>%s</h2>\n' % group)
             w('<table border="0" cellspacing="0" cellpadding="2">\n')
             for field in self.get_fields_in_group(group):
-                if dict.has_key(field.id):
+                if field.id in dict:
                     value = dict[field.id]
                 else:
                     value = None
@@ -323,7 +329,7 @@ class Form:
             w('<h2>%s</h2>\n' % group)
             w('<table border="0" cellspacing="0" cellpadding="2">\n')
             for field in self.get_fields_in_group(group):
-                if dict.has_key(field.id):
+                if field.id in dict:
                     value = dict[field.id]
                 else:
                     value = None
@@ -358,7 +364,7 @@ class Form:
         """Validation, stop validating as soon as error.
         """
         result = self.validate(REQUEST)
-        for key, value in result.items():
+        for key, value in list(result.items()):
             REQUEST.set(key, value)
         return result
 
@@ -382,7 +388,7 @@ class Form:
                 alternate_name = field.get_value('alternate_name')
                 if alternate_name:
                     result[alternate_name] = value
-            except ValidationError, err:
+            except ValidationError as err:
                 errors.append(err)
         if len(errors) > 0:
             raise FormValidationError(errors, result)
@@ -395,13 +401,13 @@ class Form:
         """
         try:
             result = self.validate_all(REQUEST, key_prefix=key_prefix)
-        except FormValidationError, e:
+        except FormValidationError as e:
             # put whatever result we have in REQUEST
-            for key, value in e.result.items():
+            for key, value in list(e.result.items()):
                 REQUEST.set(key, value)
             # reraise exception
             raise
-        for key, value in result.items():
+        for key, value in list(result.items()):
             REQUEST.set(key, value)
         return result
 
@@ -784,10 +790,10 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         try:
             result = self.settings_form.validate_all(REQUEST)
-        except FormValidationError, e:
+        except FormValidationError as e:
             message = "Validation error(s).<br />" + string.join(
-                map(lambda error: "%s: %s" % (error.field.get_value('title'),
-                                              error.error_text), e.errors), "<br />")
+                ["%s: %s" % (error.field.get_value('title'),
+                                              error.error_text) for error in e.errors], "<br />")
             return self.formSettings(self, REQUEST,
                                      manage_tabs_message=message)
         # if we need to switch encoding, get xml representation before setting
@@ -812,7 +818,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
             self.set_xml(xml, encoding)
 
         # now set the form settings
-        for key, value in result.items():
+        for key, value in list(result.items()):
             setattr(self, key, value)
         message="Settings changed."
         if unicode_message is not None:
@@ -834,7 +840,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         field_ids = []
         for field in self.get_fields_in_group(group, include_disabled=True):
-            if REQUEST.form.has_key(field.id):
+            if field.id in REQUEST.form:
                 field_ids.append(field.id)
         return field_ids
 
@@ -846,7 +852,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         row_length = self.row_length
         groups = self.get_groups(include_empty=True)
         # get the amount of rows
-        rows = len(groups) / row_length
+        rows = old_div(len(groups), row_length)
         # if we would have extra groups not in a row, add a row
         if len(groups) % self.row_length != 0:
             rows = rows + 1
@@ -945,7 +951,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
     def manage_rename_group(self, group, REQUEST):
         """Renames group.
         """
-        if REQUEST.has_key('new_name'):
+        if 'new_name' in REQUEST:
             new_name = string.strip(REQUEST['new_name'])
             if self.rename_group(group, new_name):
                 message = "Group %s renamed to %s." % (group, new_name)
@@ -1019,7 +1025,7 @@ def initializeForm(field_registry):
     form_class = ZMIForm
 
     meta_types = []
-    for meta_type, field in field_registry.get_field_classes().items():
+    for meta_type, field in list(field_registry.get_field_classes().items()):
         # don't set up in form if this is a field for internal use only
         if field.internal_field:
             continue

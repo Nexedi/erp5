@@ -86,7 +86,7 @@ class InotifyTool(TimerServiceMixin, BaseTool):
                   p = os.path.join(inode_path, name)
                   try:
                     s = os.lstat(p)
-                  except OSError, e:
+                  except OSError as e:
                     if e.errno != errno.ENOENT:
                       raise
                   else:
@@ -95,7 +95,7 @@ class InotifyTool(TimerServiceMixin, BaseTool):
                 update_state_dict[path] = new_state
                 events = [{'path': p, 'mask': IN_DELETE}
                   for p in set(state).difference(new_state)]
-                for p, m in new_state.iteritems():
+                for p, m in new_state.items():
                   if p in state:
                     if m == state[p]:
                       continue

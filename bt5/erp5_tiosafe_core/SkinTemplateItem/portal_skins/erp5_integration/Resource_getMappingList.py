@@ -1,5 +1,6 @@
 """ Retrieve the category list of the resource. """
 
+from builtins import str
 result_list = []
 
 # add to the list the shared variations
@@ -24,7 +25,7 @@ for mapping in context.contentValues(portal_type="Mapped Property Type"):
     mapping_dict[str(lcat_list)] = {'category' : lcat_list,}
     mapping_dict[str(lcat_list)][prop] = value
     
-ordered_key_list = mapping_dict.keys()
+ordered_key_list = list(mapping_dict.keys())
 ordered_key_list.sort()
 
 return [mapping_dict[key] for key in ordered_key_list]

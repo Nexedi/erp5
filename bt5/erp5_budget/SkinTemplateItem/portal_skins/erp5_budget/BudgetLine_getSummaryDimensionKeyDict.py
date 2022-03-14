@@ -31,7 +31,7 @@ if budget_model is not None:
 
 # build a dict of dependant dimensions
 dependant_dimensions_dict = {}
-for bc in non_strict_base_category_set.keys():
+for bc in list(non_strict_base_category_set.keys()):
   vcl = sorted(context.getVariationCategoryList(base_category_list=(bc,)), reverse=True)
   for vc in vcl:
     dependant_vc_list = [other_vc for other_vc in vcl

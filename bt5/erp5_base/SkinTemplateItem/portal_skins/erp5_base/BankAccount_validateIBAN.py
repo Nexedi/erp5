@@ -1,5 +1,8 @@
 """External Validator for IBAN on bank account
 """
+from builtins import str
+from builtins import zip
+from builtins import range
 import string
 if not editor:
   return True
@@ -61,7 +64,7 @@ iban_len_dict = {
 if len(editor) != iban_len_dict.get(country_code, -1):
   return False
 
-letter_code_dict = dict( zip(string.ascii_uppercase, range(10,36)) )
+letter_code_dict = dict( list(zip(string.ascii_uppercase, list(range(10,36)))) )
 
 iban_code = ''.join([str(letter_code_dict.get(x, x))
                 for x in bban + country_code + checksum])

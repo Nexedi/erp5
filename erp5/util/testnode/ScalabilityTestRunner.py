@@ -24,6 +24,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import str
+from builtins import range
+from builtins import object
 import datetime
 import os
 import subprocess
@@ -89,7 +92,7 @@ HOSTFILE = "/hosts"
 SR_DICT = "frontend_software_dict"
 INSTANCE_DICT = "instances_dict"
 
-class ScalabilityTestRunner():
+class ScalabilityTestRunner(object):
   def __init__(self, testnode):
     self.testnode =  testnode
     self.slapos_controler = SlapOSControler.SlapOSControler(
@@ -255,7 +258,7 @@ ces or already launched.")
     Return True if it remains softwares to install, otherwise return False
     """
     # Remove from grid installed software entries
-    for computer_guid, software_path in self.remaining_software_installation_dict.items():
+    for computer_guid, software_path in list(self.remaining_software_installation_dict.items()):
       if self.isSoftwareReleaseReady(software_path, computer_guid):
         del self.remaining_software_installation_dict[computer_guid]
     # Not empty grid means that all softwares are not installed

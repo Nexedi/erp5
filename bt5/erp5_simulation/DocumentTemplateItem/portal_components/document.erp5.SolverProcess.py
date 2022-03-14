@@ -100,7 +100,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       if solver is None:
         continue
       solver_conviguration_dict = decision.getConfigurationPropertyDict()
-      configuration_mapping = solver_conviguration_dict.items()
+      configuration_mapping = list(solver_conviguration_dict.items())
       configuration_mapping.sort() # Make sure the list is sorted in canonical way
       configuration_mapping = tuple(configuration_mapping)
       for movement in decision.getDeliveryValueList():
@@ -120,8 +120,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     #   }
     #
     solver_dict = {}
-    for movement, movement_solver_dict in movement_dict.items():
-      for solver, movement_solver_configuration_list in movement_solver_dict.items():
+    for movement, movement_solver_dict in list(movement_dict.items()):
+      for solver, movement_solver_configuration_list in list(movement_solver_dict.items()):
         solver_movement_dict = solver_dict.setdefault(solver, {})
         solver_movement_dict[movement] = movement_solver_configuration_list
 
@@ -137,8 +137,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     #          }
     #   }
     grouped_solver_dict = {}
-    for movement, movement_solver_dict in movement_dict.items():
-      for solver, movement_solver_configuration_list in movement_solver_dict.items():
+    for movement, movement_solver_dict in list(movement_dict.items()):
+      for solver, movement_solver_configuration_list in list(movement_solver_dict.items()):
         for configuration_mapping in movement_solver_configuration_list:
           # Detect conflicts. This includes finding out that a solver which
           # is exclusive per movement, conflicts with another solver on the same
@@ -161,11 +161,11 @@ class SolverProcess(XMLObject, ActiveProcess):
       return message_list
 
     # Fourth, build target solvers
-    for solver, solver_key_dict in grouped_solver_dict.items():
-      for solver_key, solver_movement_dict in solver_key_dict.items():
+    for solver, solver_key_dict in list(grouped_solver_dict.items()):
+      for solver_key, solver_movement_dict in list(solver_key_dict.items()):
         solver_instance = self.newContent(portal_type=solver.getId())
-        solver_instance._setDeliveryValueList(solver_movement_dict.keys())
-        for movement, configuration_list in solver_movement_dict.iteritems():
+        solver_instance._setDeliveryValueList(list(solver_movement_dict.keys()))
+        for movement, configuration_list in solver_movement_dict.items():
           for configuration_mapping in configuration_list:
             if len(configuration_mapping):
               solver_instance.updateConfiguration(**dict(configuration_mapping))
@@ -263,9 +263,9 @@ class SolverProcess(XMLObject, ActiveProcess):
     # grouping
     solver_decision_list = self.objectValues(portal_type='Solver Decision')
     unmatched_solver_decision_list = set(solver_decision_list)
-    for solver_decision_key, movement_dict in solver_decision_dict.items():
+    for solver_decision_key, movement_dict in list(solver_decision_dict.items()):
       causality, _, solver_list = solver_decision_key
-      movement_url_list = [x.getRelativeUrl() for x in movement_dict.keys()]
+      movement_url_list = [x.getRelativeUrl() for x in list(movement_dict.keys())]
       movement_url_list.sort()
       matched_solver_decision_list = [
         x for x in solver_decision_list \

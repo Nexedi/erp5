@@ -95,7 +95,7 @@ class InternetProtocolAddress(Coordinate):
     self._setCoordinateText(coordinate_text)
     kw_dict = self._splitCoordinateText(coordinate_text)
 
-    for name, value in kw_dict.iteritems():
+    for name, value in kw_dict.items():
       setter_name = 'set%s' % convertToUpperCase(name)
       setter_method = getattr(self, setter_name)
       setter_method(value)

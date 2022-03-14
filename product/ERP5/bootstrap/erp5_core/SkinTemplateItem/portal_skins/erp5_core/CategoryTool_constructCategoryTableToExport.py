@@ -1,3 +1,4 @@
+from builtins import map
 editable_property_id_list = ('id', 'title', 'short_title', 'reference',
                              'codification', 'int_index', 'description')
 
@@ -45,7 +46,7 @@ for cat_info in cat_info_list:
     for cat in cat_list:
       path_cell_list = [''] * (max_cat_depth - 1)
       path_cell_list[len(cat.getRelativeUrl().split('/')) - 2] = '*'
-      category_property_list = map(cat.getProperty, editable_property_id_list)
+      category_property_list = list(map(cat.getProperty, editable_property_id_list))
       row_list.append({
         'path_cell_list': path_cell_list,
         'category_property_list': category_property_list,

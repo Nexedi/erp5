@@ -6,6 +6,7 @@ Redirect to domain specified as layout property on website
 # parameters
 # ------------------------------------------------------------------------------
 
+from builtins import str
 import binascii
 import base64
 

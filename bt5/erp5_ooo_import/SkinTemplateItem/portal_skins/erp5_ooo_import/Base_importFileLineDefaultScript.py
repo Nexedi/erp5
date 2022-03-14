@@ -46,7 +46,7 @@ else:
   
   # Separate categories from properties
   imported_line_category_dict = {}
-  for prop_key in imported_line_property_dict.keys():
+  for prop_key in list(imported_line_property_dict.keys()):
     if prop_key in base_category_list:
       imported_line_category_dict[prop_key] = imported_line_property_dict.pop(prop_key)
 
@@ -57,7 +57,7 @@ else:
                                       **imported_line_property_dict)
   except ConflictError:
     raise
-  except Exception, error:
+  except Exception as error:
     translated_msg = Message('erp5_ui',
                      'An error Occurred while creating object: ${error}',
                      mapping=dict(error=Message('erp5_ui',
@@ -67,7 +67,7 @@ else:
     success = 0
 
   # Save the categories
-  for category, value in imported_line_category_dict.items():
+  for category, value in list(imported_line_category_dict.items()):
     category_dict = context.ERP5Site_getCategoriesFullPath(
                                        category_dict={category: value})
     if category_dict not in (None, {}):
@@ -75,7 +75,7 @@ else:
         new_object.edit(**category_dict)
       except ConflictError:
         raise
-      except Exception, error:
+      except Exception as error:
         #context.log('category: %s' %category)
         translated_msg = Message(
                      'erp5_ui',
@@ -93,8 +93,8 @@ else:
 
   # Not found categories
   if imported_line_category_dict not in ({}, None):
-    value_list = ', '.join(imported_line_category_dict.values())
-    category_list = ', '.join(imported_line_category_dict.keys())
+    value_list = ', '.join(list(imported_line_category_dict.values()))
+    category_list = ', '.join(list(imported_line_category_dict.keys()))
 
     translated_msg = Message('erp5_ui',
            'An error occured, values ("${value_list}") not found in categories ("${category_list}")',

@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import uuid
 
 from AccessControl import ClassSecurityInfo
@@ -38,7 +40,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Globals import PersistentMapping
 from BTrees.OOBTree import OOBTree
-from urllib import urlencode
+from urllib.parse import urlencode
 
 redirect_path = '/login_form'
 def redirect(REQUEST, site_url, message):
@@ -232,7 +234,7 @@ class PasswordTool(BaseTool):
     """
     current_date = DateTime()
     password_request_dict = self._password_request_dict
-    for key, (_, date) in password_request_dict.items():
+    for key, (_, date) in list(password_request_dict.items()):
       if date < current_date:
         del password_request_dict[key]
 

@@ -1,3 +1,4 @@
+from builtins import str
 preference = context.portal_preferences.accounting_zuite_preference
 preference.setPreferredAccountingTransactionSectionCategory('group/demo_group')
 preference.setPreferredSectionCategory('group/demo_group')

@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
 from matplotlib.figure import Figure
 from IPython.core.display import DisplayObject
 from IPython.lib.display import IFrame
-from cStringIO import StringIO
+from io import StringIO
 from erp5.portal_type import Image
 from types import ModuleType
 from ZODB.serialize import ObjectWriter
-import cPickle
+import pickle
 import sys
 import traceback
 import ast
@@ -176,7 +181,7 @@ def matplotlib_pre_run():
         'figure.dpi': 72,
         'figure.subplot.bottom' : .125
         }
-  for key, value in rc.items():
+  for key, value in list(rc.items()):
     matplotlib.rcParams[key] = value
   plt.gcf().clear()
 
@@ -382,7 +387,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       removed_setup_message_list = []
       for func_alias in environment_collector.getEnvironmentRemoveList():
         found = False
-        for key, data in notebook_context['setup'].items():
+        for key, data in list(notebook_context['setup'].items()):
           if key == func_alias:
             found = True
             func_name = data['func_name']
@@ -414,13 +419,13 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Removing all the setup functions if user call environment.clearAll()
       if environment_collector.clearAll():
-        keys = notebook_context ['setup'].keys()
+        keys = list(notebook_context ['setup'].keys())
         for key in keys:
           del notebook_context['setup'][key]
       
       # Running all the setup functions that we got
       failed_setup_key_list = []
-      for key, value in notebook_context['setup'].iteritems():
+      for key, value in notebook_context['setup'].items():
         try:
           code = compile(value['code'], '<string>', 'exec')
           exec(code, user_context, user_context)
@@ -439,7 +444,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are functions and saving them as setup functions.
-      for func_name, data in current_setup_dict.iteritems():
+      for func_name, data in current_setup_dict.items():
         setup_string = (
           "%s\n"
           "_result = %s()\n"
@@ -454,7 +459,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
-      for variable, value, in current_var_dict.iteritems():
+      for variable, value, in current_var_dict.items():
         setup_string = "%s = %s\n" % (variable, repr(value))
         notebook_context['setup'][variable] = {
           'func_name': variable,
@@ -495,11 +500,11 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
     # Saves a list of all the variables we injected into the user context and
     # shall be deleted before saving the context.
-    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context.get('_volatile_variable_list', [])
+    volatile_variable_list = list(current_setup_dict.keys()) + list(inject_variable_dict.keys()) + user_context.get('_volatile_variable_list', [])
     volatile_variable_list.append('__builtins__')
 
-    for key, val in user_context.items():
-      if not key in globals_dict.keys() and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
+    for key, val in list(user_context.items()):
+      if not key in list(globals_dict.keys()) and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
         if canSerialize(val):
           notebook_context['variables'][key] = val
         else:
@@ -514,7 +519,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     
     # Deleting from the variable storage the keys that are not in the user 
     # context anymore (i.e., variables that are deleted by the user).
-    for key in notebook_context['variables'].keys():
+    for key in list(notebook_context['variables'].keys()):
       if not key in user_context:
         del notebook_context['variables'][key]
     
@@ -557,7 +562,7 @@ def canSerialize(obj):
   if isinstance(obj, container_type_tuple):
     if isinstance(obj, dict):
       result_list = []
-      for key, value in obj.iteritems():
+      for key, value in obj.items():
         result_list.append(canSerialize(key))
         result_list.append(canSerialize(value))
     else:
@@ -589,7 +594,7 @@ def canSerialize(obj):
     # for example: if the user defines a dict with an object of a class 
     # that he created the dump will stil work, but the load will fail. 
     try:
-      cPickle.loads(cPickle.dumps(obj))
+      pickle.loads(pickle.dumps(obj))
     # By unknowing reasons, trying to catch cPickle.PicklingError in the "normal"
     # way isn't working. This issue might be related to some weirdness in 
     # pickle/cPickle that is reported in this issue: http://bugs.python.org/issue1457119.
@@ -599,7 +604,7 @@ def canSerialize(obj):
     # 
     # Even though the issue seems complicated, this quickfix should be 
     # properly rewritten in a better way as soon as possible.
-    except (cPickle.PicklingError, TypeError, NameError, AttributeError):
+    except (pickle.PicklingError, TypeError, NameError, AttributeError):
       return False
     else:
       return True
@@ -823,7 +828,7 @@ class ImportFixer(ast.NodeTransformer):
         mod = importlib.import_module(node.module)
         tmp_dict = mod.__dict__
 
-        for name in tmp_dict.keys():
+        for name in list(tmp_dict.keys()):
           if (name[0] != '_'):
             module_names.append(name)
 

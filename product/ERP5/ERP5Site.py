@@ -16,9 +16,15 @@
 """
 from __future__ import absolute_import
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import map
+from builtins import filter
+from builtins import object
 from DateTime import DateTime
 from six.moves import map
-import thread, threading
+import _thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals
@@ -156,7 +162,7 @@ def addERP5Tool(portal, id, portal_type):
   obj = klass()
   portal._setObject(id, obj)
 
-class ReferCheckerBeforeTraverseHook:
+class ReferCheckerBeforeTraverseHook(object):
   """This before traverse hook checks the HTTP_REFERER argument in the request
   and refuses access to anything else that portal_url.
 
@@ -371,7 +377,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   def _registerMissingTools(self):
     tool_id_list = ("portal_skins", "portal_types", "portal_membership",
                     "portal_url", "portal_workflow")
-    if (None in map(self.get, tool_id_list) or not
+    if (None in list(map(self.get, tool_id_list)) or not
         TransactionalResource.registerOnce(__name__, 'site_manager', self.id)):
       return
     self._registerTools(tool_id_list + self._registry_tool_id_list)
@@ -467,7 +473,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
   def skinSuper(self, skin, id):
     if id[:1] != '_' and id[:3] != 'aq_':
-      skin_info = SKINDATA.get(thread.get_ident())
+      skin_info = SKINDATA.get(_thread.get_ident())
       if skin_info is not None:
         _, skin_selection_name, _, _ = skin_info
         skin_value = skinResolve(self, (skin_selection_name, skin), id)
@@ -805,12 +811,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       parameter_dict = config.product_config.get(self.getPath(), {})
       if 'promise_path' in parameter_dict:
         promise_path = parameter_dict['promise_path']
-        import ConfigParser
-        configuration = ConfigParser.ConfigParser()
+        import configparser
+        configuration = configparser.ConfigParser()
         configuration.read(promise_path)
         try:
           return configuration.get(section, option)
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (configparser.NoOptionError, configparser.NoSectionError):
           pass
     return None
 
@@ -1912,7 +1918,7 @@ def getBootstrapBusinessTemplateUrl(bt_title):
 
 factory_type_information = () # No original CMF portal_types installed by default
 
-class PortalGenerator:
+class PortalGenerator(object):
 
     klass = PortalObjectBase
 
@@ -2269,7 +2275,7 @@ class ERP5Generator(PortalGenerator):
                      'business_template_installation_workflow']
     tool = p.portal_workflow
     try:
-      tool.manage_delObjects(filter(tool.hasObject, workflow_list))
+      tool.manage_delObjects(list(filter(tool.hasObject, workflow_list)))
     except BadRequest:
       pass
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
@@ -2493,7 +2499,7 @@ def initialize(self):
             REQUEST.RESPONSE.unauthorized()
           newSecurityManager(None, user.__of__(uf))
           manage_addERP5Site(app.__of__(RequestContainer(REQUEST=REQUEST)),
-            **{k: kw.get(k, v) for k, v in default_kw.iteritems()
+            **{k: kw.get(k, v) for k, v in default_kw.items()
                                if isinstance(v, str)})
           transaction.get().note('Created ' + meta_type)
           transaction.commit()

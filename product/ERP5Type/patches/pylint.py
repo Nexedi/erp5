@@ -70,7 +70,7 @@ def string_build(self, data, modname='', path=None):
       module.file_bytes = data.encode('utf-8')
       return self._post_build(module, 'utf-8')
     """
-    if isinstance(data, unicode):
+    if isinstance(data, str):
 	# When called internally by pylint/astroid and if the source code imports
 	# `unicode_literals`, the source code may end up being an unicode object
 	# (example: `infer_named_tuple()`)
@@ -82,7 +82,7 @@ def string_build(self, data, modname='', path=None):
     try:
         # BytesIO() does not handle unicode:
         #   TypeError: 'unicode' does not have the buffer interface
-        if isinstance(data, unicode):
+        if isinstance(data, str):
             data = data.encode(encoding)
         else:
             # Just to avoid error later on...

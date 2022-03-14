@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import time
 import unittest
 

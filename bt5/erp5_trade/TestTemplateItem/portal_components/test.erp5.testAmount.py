@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import unittest
 import os
 
@@ -157,9 +158,9 @@ class TestAmount(ERP5TypeTestCase):
     """
     amount = sequence.get('amount')
     vpd = amount.getVariationPropertyDict()
-    self.failIfDifferentSet(vpd.keys(),
-                            sequence.get('variation_property_dict').keys())
-    for key in vpd.keys():
+    self.failIfDifferentSet(list(vpd.keys()),
+                            list(sequence.get('variation_property_dict').keys()))
+    for key in list(vpd.keys()):
       self.assertEqual(vpd[key], sequence.get('variation_property_dict')[key])
 
   def stepSetWrongVariationPropertyDict(self, sequence=None,

@@ -1,5 +1,6 @@
 
-class BasicForm:
+from builtins import object
+class BasicForm(object):
     """
     Use BasicForm to construct and use Formulator forms from
     Python code.

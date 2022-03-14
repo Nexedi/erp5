@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -34,7 +35,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 from DateTime import DateTime
 
-class TestSupplyMixin:
+class TestSupplyMixin(object):
   def getBusinessTemplateList(self):
     """
       List of needed Business Templates

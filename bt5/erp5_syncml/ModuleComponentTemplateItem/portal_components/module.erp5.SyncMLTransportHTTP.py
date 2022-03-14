@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from os import environ
 from logging import getLogger
 from requests import post
@@ -35,7 +36,7 @@ class ConnectionError(Exception):
   pass
 
 
-class HTTPTransport:
+class HTTPTransport(object):
 
   def getProxyMapping(self):
     """

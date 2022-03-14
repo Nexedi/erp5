@@ -29,7 +29,10 @@
 """Receive or send SMS"""
 
 #Import python module
-import urllib
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+import urllib.request, urllib.parse, urllib.error
 from DateTime import DateTime
 
 #Import Zope module
@@ -179,8 +182,8 @@ class MobytGateway(XMLObject):
       LOG("MobytGateway", INFO, params)
       result =  {'status': "Test"}
     else:
-      params = urllib.urlencode(params)
-      page = urllib.urlopen(base_url, params)
+      params = urllib.parse.urlencode(params)
+      page = urllib.request.urlopen(base_url, params)
       result = self._fetchSendResponseAsDict(page)
 
     #Check result and return
@@ -188,7 +191,7 @@ class MobytGateway(XMLObject):
       return [result.get('status_info', "")] #return message id (gateway side)
     elif result['status'] == "KO":
       #we get an error when call the gateway
-      raise SMSGatewayError(urllib.unquote(result.get('status_info', "Impossible to send the SMS")))
+      raise SMSGatewayError(urllib.parse.unquote(result.get('status_info', "Impossible to send the SMS")))
     elif result['status'] == "Test":
       #just a test, no message id
       return None
@@ -206,8 +209,8 @@ class MobytGateway(XMLObject):
                 "type" : 'notify',
                 "schema" : 1  }
 
-    params = urllib.urlencode(params)
-    page = urllib.urlopen(base_url, params)
+    params = urllib.parse.urlencode(params)
+    page = urllib.request.urlopen(base_url, params)
     result = self._fetchStatusResponseAsDict(page)
 
     if result['status'] == "OK":
@@ -223,7 +226,7 @@ class MobytGateway(XMLObject):
 
     elif result['status'] == "KO":
       #we get an error when call the gateway
-      raise SMSGatewayError(urllib.unquote(result.get('status_info', "Impossible to get the message status")))
+      raise SMSGatewayError(urllib.parse.unquote(result.get('status_info', "Impossible to get the message status")))
 
   security.declarePublic('receive')
   def receive(self,REQUEST):

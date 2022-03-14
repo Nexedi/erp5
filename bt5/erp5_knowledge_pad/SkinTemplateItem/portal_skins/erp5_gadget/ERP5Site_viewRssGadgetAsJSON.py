@@ -1,3 +1,4 @@
+from builtins import str
 from json import dumps
 
 request = context.REQUEST
@@ -12,7 +13,7 @@ gadget_title_dom_id = '%s_gadget_title' %box_dom_id
 
 # return some JavaScript which will update respective page
 gadget_title = request.get('rss_gadget_title', box.getSpecialiseValue().getTitle())
-gadget_title = unicode(gadget_title).encode('utf-8')[:40]
+gadget_title = str(gadget_title).encode('utf-8')[:40]
 javascript = '$("#%s").html("%s");' %(gadget_title_dom_id, gadget_title)
 
 request.RESPONSE.setHeader("Content-Type", "application/json;; charset=utf-8")

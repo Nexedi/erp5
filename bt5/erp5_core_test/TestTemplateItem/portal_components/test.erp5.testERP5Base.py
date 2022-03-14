@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from collections import defaultdict
 import os
 
@@ -799,7 +800,7 @@ class TestERP5Base(ERP5TypeTestCase):
     """Tests dates on Person objects.
     """
     pers = self.getPersonModule().newContent(portal_type='Person')
-    birthday = DateTime(1999, 01, 01)
+    birthday = DateTime(1999, 0o1, 0o1)
     now = DateTime()
     pers.edit(birthday = birthday)
     self.assertEqual(birthday, pers.getBirthday())
@@ -814,7 +815,7 @@ class TestERP5Base(ERP5TypeTestCase):
     """Tests dates on Organisation objects.
     """
     org = self.getOrganisationModule().newContent(portal_type='Organisation')
-    start_date = DateTime(1999, 01, 01)
+    start_date = DateTime(1999, 0o1, 0o1)
     now = DateTime()
     org.edit(start_date = start_date)
     self.assertEqual(start_date, org.getStartDate())
@@ -964,7 +965,7 @@ class TestERP5Base(ERP5TypeTestCase):
                               subordination_value=first_organisation,
                               start_date=DateTime(1996, 9, 9))
     another_cancelled_career.cancel()
-    self.assertEqual(DateTime(2001, 01, 01),
+    self.assertEqual(DateTime(2001, 0o1, 0o1),
          person.Person_getCareerStartDate(
             subordination_relative_url=first_organisation.getRelativeUrl()))
 
@@ -1841,7 +1842,7 @@ class TestERP5Base(ERP5TypeTestCase):
       assertPublishedHeaderEqual(portal, header_name, script_value)
       assertPublishedHeaderEqual(person_module, header_name, script_value + ', ' + other_value)
     finally:
-      for document, header_name_set in response_header_dict.iteritems():
+      for document, header_name_set in response_header_dict.items():
         for header_name in header_name_set:
           try:
             document.deleteResponseHeaderRule(header_name)

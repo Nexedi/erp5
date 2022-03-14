@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import print_function
 ##############################################################################
 # Copyright (C) 2005  Adam Smith  asmith@agile-software.com
 # 
@@ -16,8 +18,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import os, sys, shutil, tempfile
-from cStringIO import StringIO
+from io import StringIO
 from zLOG import LOG,ERROR,INFO,WARNING
 from OFS.Image import File, Image
 import os, transaction
@@ -27,12 +34,12 @@ try:
 except ImportError: # BBB Zope2
   from Globals import package_home
 import PIL.Image as PIL_Image
-import thread
+import _thread
 import random
 import base64
 from OFS.Folder import Folder 
 
-class ZoomifyBase:
+class ZoomifyBase(object):
 
   _v_imageFilename = ''
   format = ''
@@ -61,15 +68,15 @@ class ZoomifyBase:
     width, height = (self.originalWidth, self.originalHeight)
     self._v_scaleInfo = [(width, height)]
     while (width > self.tileSize) or (height > self.tileSize):
-      width, height = (width / 2, height / 2)
+      width, height = (old_div(width, 2), old_div(height, 2))
       self._v_scaleInfo.insert(0, (width, height))
     totalTiles=0
     tier, rows, columns = (0,0,0)
     for tierInfo in self._v_scaleInfo:
-      rows = height/self.tileSize
+      rows = old_div(height,self.tileSize)
       if height % self.tileSize > 0:
         rows +=1
-      columns = width/self.tileSize
+      columns = old_div(width,self.tileSize)
       if width%self.tileSize > 0:
         columns += 1
       totalTiles += rows * columns
@@ -86,7 +93,7 @@ class ZoomifyBase:
     width, height = (self.originalWidth, self.originalHeight)
     self._v_scaleInfo = [(width, height)]
     while (width > self.tileSize) or (height > self.tileSize):
-      width, height = (width / 2, height / 2)
+      width, height = (old_div(width, 2), old_div(height, 2))
       self._v_scaleInfo.insert(0, (width, height))
     # tile and tile group information
     self.preProcess()
@@ -175,15 +182,15 @@ class ZoomifyBase:
         lr_y = ul_y + self.tileSize
       else:
         lr_y = self.originalHeight
-      print "Going to open image"
+      print("Going to open image")
       imageRow = image.crop([0, ul_y, self.originalWidth, lr_y])
       saveFilename = root + str(tier) + '-' + str(row) +  ext
       if imageRow.mode != 'RGB':
         imageRow = imageRow.convert('RGB')
       imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
                                                         'JPEG', quality=100)
-      print "os path exist : %r" % os.path.exists(os.path.join(
-                                        tempfile.gettempdir(), saveFilename))
+      print("os path exist : %r" % os.path.exists(os.path.join(
+                                        tempfile.gettempdir(), saveFilename)))
       if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)): 
         self.processRowImage(tier=tier, row=row)
       row += 1
@@ -191,9 +198,9 @@ class ZoomifyBase:
   def processRowImage(self, tier=0, row=0):
     """ for an image, create and save tiles """
 
-    print '*** processing tier: ' + str(tier) + ' row: ' + str(row)
+    print('*** processing tier: ' + str(tier) + ' row: ' + str(row))
     tierWidth, tierHeight = self._v_scaleInfo[tier]
-    rowsForTier = tierHeight/self.tileSize
+    rowsForTier = old_div(tierHeight,self.tileSize)
     if tierHeight % self.tileSize > 0:
       rowsForTier +=1
     root, ext = os.path.splitext(self._v_imageFilename)  
@@ -260,7 +267,7 @@ class ZoomifyBase:
         # a bug was discovered when a row was exactly 1 pixel in height
         # this extra checking accounts for that
         if imageHeight > 1:
-          tempImage = imageRow.resize((imageWidth/2, imageHeight/2),
+          tempImage = imageRow.resize((old_div(imageWidth,2), old_div(imageHeight,2)),
                                                      PIL_Image.ANTIALIAS)
           tempImage.save(os.path.join(tempfile.gettempdir(), root + str(tier)
                                        + '-' + str(row) + ext))
@@ -268,9 +275,9 @@ class ZoomifyBase:
       rowImage = None
       if tier > 0:
         if row % 2 != 0:
-          self.processRowImage(tier=(tier-1), row=((row-1)/2))
+          self.processRowImage(tier=(tier-1), row=(old_div((row-1),2)))
         elif row == rowsForTier-1:
-          self.processRowImage(tier=(tier-1), row=(row/2))
+          self.processRowImage(tier=(tier-1), row=(old_div(row,2)))
 
   def ZoomifyProcess(self, imageNames):
     """ the method the client calls to generate zoomify metadata """

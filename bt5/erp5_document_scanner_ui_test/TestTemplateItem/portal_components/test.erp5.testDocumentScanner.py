@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import json
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

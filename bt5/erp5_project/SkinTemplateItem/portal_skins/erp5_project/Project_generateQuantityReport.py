@@ -1,8 +1,10 @@
+from __future__ import division
 # This is what we want to display in the report
 # project_month     worker1    worker2    worker3
 #    january           34              32             15
 #    february          10              14             20
 
+from past.utils import old_div
 def getYearAndMonth(date):
   if date is None:
     return(None,None)
@@ -25,7 +27,7 @@ def getMonthDict(line):
       year_and_month = getYearAndMonth(current_date)
       while previous_current_date.month()==current_date.month() and current_date < stop_date:
         current_date = current_date + 1
-      month_dict[year_and_month] = quantity / nb_days * (current_date-previous_current_date) * 86400
+      month_dict[year_and_month] = old_div(quantity, nb_days) * (current_date-previous_current_date) * 86400
       
       
   return month_dict
@@ -36,8 +38,8 @@ def getTotalQuantity(line,worker):
   if len(child_list)>0:
     for child in child_list:
       child_quantity = getTotalQuantity(child,worker)
-      for key,value in child_quantity.items():
-        if not quantity.has_key(key):
+      for key,value in list(child_quantity.items()):
+        if key not in quantity:
           quantity[key] = 0
         quantity[key] = quantity[key] + value
   else:
@@ -73,7 +75,7 @@ for year,month in month_list:
   listbox_line['month'] = month
   for worker in worker_list:
     quantity = 0
-    if worker_quantity[worker].has_key((year,month)):
+    if (year,month) in worker_quantity[worker]:
       quantity = worker_quantity[worker][(year,month)]
     worker_title = 'unknown'
     if worker is not None:

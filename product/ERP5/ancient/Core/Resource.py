@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Resource:
+from builtins import object
+class Resource(object):
   """
     Describes a resource
   """

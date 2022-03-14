@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Variation:
+from builtins import object
+class Variation(object):
   """
     Discrete variation
   """

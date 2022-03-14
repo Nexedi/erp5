@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import str
 from Products.CMFCore.Expression import Expression
 from ZODB.POSException import ConflictError
 

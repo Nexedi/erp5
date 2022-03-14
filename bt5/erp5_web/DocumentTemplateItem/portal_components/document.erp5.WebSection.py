@@ -158,7 +158,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     # unregister all before traversal hooks that do not belong to us.
     my_handle = self.meta_type + '/' + self.getId()
     handle_to_unregister_list = []
-    for (_, handle), hook in self.__before_traverse__.items():
+    for (_, handle), hook in list(self.__before_traverse__.items()):
       if isinstance(hook, self._getTraversalHookClass()) and handle != my_handle:
         handle_to_unregister_list.append(handle)
     for handle in handle_to_unregister_list:

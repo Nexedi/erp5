@@ -68,7 +68,7 @@ if web_mode:
   # Set properties to the new object
   edit_kw = {}
   property_id_list = new_object.propertyIds()
-  for (key, val) in form_data.items():
+  for (key, val) in list(form_data.items()):
     if key in ACCEPTABLE_FORM_ID_LIST and key[len('clone_'):] in property_id_list:
       edit_kw[key[len('clone_'):]] = val
   new_object.edit(**edit_kw)

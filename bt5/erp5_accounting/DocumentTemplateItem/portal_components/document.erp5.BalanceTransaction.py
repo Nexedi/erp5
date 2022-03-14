@@ -346,7 +346,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       for new_stock in new_stock_list:
         matching_diff = None
         for diff in stock_diff_list:
-          for prop in [k for k in diff.keys() if k not in ('quantity',
+          for prop in [k for k in list(diff.keys()) if k not in ('quantity',
                           'total_price', 'id', 'uid', 'relative_url')]:
             if diff[prop] != new_stock.get(prop):
               break
@@ -377,7 +377,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
     delta_list = []
     for current_stock_key, current_stock_value_list in \
-                            current_stock_dict.items():
+                            list(current_stock_dict.items()):
       if current_stock_key in new_stock_dict:
         delta_list.extend(computeStockDifference(
                               current_stock_value_list,
@@ -388,7 +388,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
     # now add every thing in new stock which was not in current stock
     for new_stock_key, new_stock_value_list in \
-                                new_stock_dict.items():
+                                list(new_stock_dict.items()):
       if new_stock_key not in current_stock_dict:
         delta_list.extend(new_stock_value_list)
 

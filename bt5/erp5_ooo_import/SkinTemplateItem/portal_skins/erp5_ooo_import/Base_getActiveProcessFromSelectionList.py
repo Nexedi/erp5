@@ -2,19 +2,20 @@
 get the list of active process from the selection 
 '''
 
+from past.builtins import cmp
 user_name = context.portal_membership.getAuthenticatedMember().getId()
 module_title=context.getTitle()
 
 active_process_dict = {}
 
-selection_param_list = context.portal_selections.getSelectionParamsFor('file_import_parameters_selection').items()
+selection_param_list = list(context.portal_selections.getSelectionParamsFor('file_import_parameters_selection').items())
 
 for (x,y) in selection_param_list:
   if x.startswith('portal_activities'):
     if y['import_module']==module_title and y['import_user_name']==user_name:
       active_process_dict[x] = "Module %s, imported at %s by %s" % (y['import_module'], y['import_date_time'], y['import_user_name'])
 
-active_process_list = [(y,x) for (x,y) in active_process_dict.items()]
+active_process_list = [(y,x) for (x,y) in list(active_process_dict.items())]
 
 active_process_list.sort(lambda x, y: cmp(x[1],y[1]), reverse=True )
 

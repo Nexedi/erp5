@@ -3,7 +3,7 @@ prefix_length = len(prefix)
 portal_skins = context.portal_skins
 portal_catalog = context.portal_catalog
 
-for i in kw.keys():
+for i in list(kw.keys()):
   if not(i.startswith(prefix) and kw[i]):
     continue
 

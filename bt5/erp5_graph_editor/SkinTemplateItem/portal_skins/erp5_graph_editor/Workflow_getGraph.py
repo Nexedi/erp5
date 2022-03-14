@@ -46,7 +46,7 @@ def getWorkflowGraph(workflow):
 
 
   if position_graph:
-    for state_id in graph['node'].keys():
+    for state_id in list(graph['node'].keys()):
       if state_id in position_graph['node']:
         graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
   return graph

@@ -1,3 +1,4 @@
+from builtins import range
 gap_root = kw.get('gap_root', context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap())
 
 parts=[]

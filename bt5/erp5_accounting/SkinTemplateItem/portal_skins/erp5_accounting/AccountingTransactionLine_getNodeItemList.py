@@ -4,6 +4,7 @@ The id of the line is used to filter the list, unless `omit_filter` is true.
 If `mirror` is set to a true value, the list will be filtered for the mirror
 node.
 """
+from past.builtins import cmp
 from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import getSecurityManager
 

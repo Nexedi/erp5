@@ -13,17 +13,20 @@
 # user: user2    password: user2
 
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 from threading import Thread
 from time import sleep
 from urllib import addinfourl
-from urllib import splithost
-from urllib import splituser
-from urllib import unquote
-from urllib import splittype
+from urllib.parse import splithost
+from urllib.parse import splituser
+from urllib.parse import unquote
+from urllib.parse import splittype
 import string
 
-from urllib import FancyURLopener
-from Cookie import SimpleCookie
+from urllib.request import FancyURLopener
+from http.cookies import SimpleCookie
 
 def main():
   max_thread = 7  # The number of thread we want by the same time
@@ -77,7 +80,7 @@ class URLOpener(FancyURLopener):
 
     def open_http(self, url, data=None):
         """Use HTTP protocol."""
-        import httplib
+        import http.client
         user_passwd = None
         if type(url) is type(""):
             host, selector = splithost(url)
@@ -105,14 +108,14 @@ class URLOpener(FancyURLopener):
             auth = string.strip(base64.encodestring(user_passwd))
         else:
             auth = None
-        h = httplib.HTTP(host)
+        h = http.client.HTTP(host)
         if data is not None:
             h.putrequest('POST', selector)
             h.putheader('Content-type', 'application/x-www-form-urlencoded')
             h.putheader('Content-length', '%d' % len(data))
         else:
             h.putrequest('GET', selector)
-        for cookie in self.cookies.items():
+        for cookie in list(self.cookies.items()):
             h.putheader('Cookie', '%s=%s;' % cookie)
 
         if auth: h.putheader('Authorization', 'Basic %s' % auth)

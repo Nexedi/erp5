@@ -1,5 +1,6 @@
 # Example code:
 
+from past.builtins import cmp
 def getCompactTitle(category):
   title_list = []
   while category.getPortalType() == 'Category':

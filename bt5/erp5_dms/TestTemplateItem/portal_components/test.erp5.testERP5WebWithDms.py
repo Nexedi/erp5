@@ -27,11 +27,14 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 import unittest
 import os
 import quopri
 import functools
-from StringIO import StringIO
+from io import StringIO
 from lxml import etree
 from base64 import b64decode, b64encode
 from email.parser import Parser as EmailParser
@@ -493,7 +496,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     policy_list = self.portal.caching_policy_manager.listPolicies()
     policy = [policy[1] for policy in policy_list\
                 if policy[0] == 'unauthenticated no language'][0]
-    for i in xrange(3):
+    for i in range(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
@@ -668,7 +671,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(policy.getMaxAgeSecs(), 1200)
     self.assertEquals(policy.getStaleWhileRevalidateSecs(), 30)
     self.assertEquals(policy.getStaleIfErrorSecs(), 600)
-    for i in xrange(3):
+    for i in range(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
@@ -1144,7 +1147,7 @@ return True
     self.assertEqual(message.get("Subject"), title)
     htmlmessage, = message.get_payload()
     self.assertEqual(  # should have only one content transfer encoding header
-      len([h for h in htmlmessage.keys() if h == "Content-Transfer-Encoding"]),
+      len([h for h in list(htmlmessage.keys()) if h == "Content-Transfer-Encoding"]),
       1,
     )
     self.assertEqual(
@@ -1198,7 +1201,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, = message.get_payload()
     self.assertEqual(  # should have only one content transfer encoding header
-      len([h for h in htmlmessage.keys() if h == "Content-Transfer-Encoding"]),
+      len([h for h in list(htmlmessage.keys()) if h == "Content-Transfer-Encoding"]),
       1,
     )
     self.assertEqual(
@@ -1247,7 +1250,7 @@ return True
     message = EmailParser().parsestr(mhtml_data)
     htmlmessage, = message.get_payload()
     self.assertEqual(  # should have only one content transfer encoding header
-      len([h for h in htmlmessage.keys() if h == "Content-Transfer-Encoding"]),
+      len([h for h in list(htmlmessage.keys()) if h == "Content-Transfer-Encoding"]),
       1,
     )
     self.assertEqual(
@@ -1326,7 +1329,7 @@ return True
         obj.absolute_url() + "?format=" + ext,
       )
       self.assertEqual(  # should have only one content transfer encoding header
-        len([h for h in message.keys() if h == "Content-Transfer-Encoding"]),
+        len([h for h in list(message.keys()) if h == "Content-Transfer-Encoding"]),
         1,
       )
       self.assertEqual(message.get("Content-Type"), content_type)
@@ -1454,7 +1457,7 @@ return True
         location,
       )
       self.assertEqual(  # should have only one content transfer encoding header
-        len([h for h in message.keys() if h == "Content-Transfer-Encoding"]),
+        len([h for h in list(message.keys()) if h == "Content-Transfer-Encoding"]),
         1,
       )
       encoding = message.get("Content-Transfer-Encoding")
@@ -1578,7 +1581,7 @@ return True
       img.absolute_url() + "?format=",
     )
     self.assertEqual(  # should have only one content transfer encoding header
-      len([h for h in imagemessage.keys() if h == "Content-Transfer-Encoding"]),
+      len([h for h in list(imagemessage.keys()) if h == "Content-Transfer-Encoding"]),
       1,
     )
     encoding = imagemessage.get("Content-Transfer-Encoding")

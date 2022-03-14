@@ -19,4 +19,4 @@ if not temporary_dict:
 
 # For the present, we only use reference.
 # Result document will be the latest version with appropriate language by user setting.)
-return context.Base_zGetImplicitSuccessorValueList(reference_list=temporary_dict.keys())
+return context.Base_zGetImplicitSuccessorValueList(reference_list=list(temporary_dict.keys()))

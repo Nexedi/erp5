@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Delivery:
+from builtins import object
+class Delivery(object):
   """
     A Delivery object is a collection of movements
   """

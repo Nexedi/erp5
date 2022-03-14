@@ -36,6 +36,7 @@
   }
 """
 
+from builtins import map
 def mapObject(property_dict):
   result = {}
   my_object = property_dict.get('section', None)
@@ -87,7 +88,7 @@ def getSiteMapItemTree(section, depth=0, level=None):
     site = context.getWebSiteValue()
     result.insert(0, {'url': site.absolute_url(), 'level': level, 'section': site, 'document': section.getDefaultDocumentValue(), 'subsection': None})
   if property_mapping:
-    return map(mapObject, result)
+    return list(map(mapObject, result))
   return result
 
 return getSiteMapItemTree(context, depth=depth)

@@ -27,6 +27,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 from random import getrandbits
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 import MySQLdb
@@ -87,7 +89,7 @@ CREATE TABLE %s (
     def insert(reset_uid):
       values = self._insert_separator.join(values_list)
       del values_list[:]
-      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+      for _ in range(UID_ALLOCATION_TRY_COUNT):
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.

@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 
-class CacheProviderMixIn:
+class CacheProviderMixIn(object):
   """
    Generic Cache Plugin set / get API implementation.
   """

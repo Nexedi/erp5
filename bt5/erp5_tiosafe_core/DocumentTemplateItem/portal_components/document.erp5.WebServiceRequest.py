@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -111,11 +112,11 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     if REQUEST is not None:
       return self.view()
     #LOG("_call__", 300, kw)
-    if kw.has_key("id"):
+    if "id" in kw:
       kw[self.getIDParameterName()] = str(kw.pop("id"))
 
     sub_id = None
-    if kw.has_key(self.getIDParameterName()) and ID_SEPARATOR in kw[self.getIDParameterName()]:
+    if self.getIDParameterName() in kw and ID_SEPARATOR in kw[self.getIDParameterName()]:
       kw[self.getIDParameterName()], sub_id = kw[self.getIDParameterName()].split(ID_SEPARATOR)
 
     object_list = []
@@ -160,7 +161,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     new_kw = kw.copy()
     args = []
     if self.getDestination():
-      for k,v in kw.iteritems():
+      for k,v in kw.items():
         new_key = site.getMappingFromProperty(self.getDestinationValue(), k)
         new_kw.pop(k)
         if new_key is None:
@@ -184,7 +185,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     # Call the method
     try:
       url, xml = callRequest(self, method_name, *args, **kw)
-    except ConnectionError, msg:
+    except ConnectionError as msg:
       if test_mode:
         error = msg
         url = connection.url
@@ -267,7 +268,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     """
     # build parameter name
     try:
-      long(item)
+      int(item)
     except ValueError:
       raise KeyError("Item %s does not exists call by Web Service Request %s : not a long" % (item,
                                                                                                self.getTitle(),))
@@ -287,11 +288,11 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     data_list = []
     for dictionnary in dict_list:
       property_dict = {}
-      for k, v in dictionnary.items():
+      for k, v in list(dictionnary.items()):
         k = parser_dict.get(k)
         if k is not None:
           k = k[0]
-          property_dict[k] = unicode(v)
+          property_dict[k] = str(v)
       data_list.append(property_dict)
     return data_list
 

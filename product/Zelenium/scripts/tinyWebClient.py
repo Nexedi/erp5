@@ -1,6 +1,8 @@
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 import sys
-import httplib
+import http.client
 
 if ( len(sys.argv) != 5 ):
     print("usage tinyWebClient.py host port method path")
@@ -12,6 +14,6 @@ else:
 
     info = (host, port)
     print("%s:%s" % info)
-    conn = httplib.HTTPConnection("%s:%s" % info)
+    conn = http.client.HTTPConnection("%s:%s" % info)
     conn.request(method, path)
     print(conn.getresponse().msg)

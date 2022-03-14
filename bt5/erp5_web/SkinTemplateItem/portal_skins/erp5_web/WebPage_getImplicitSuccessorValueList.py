@@ -9,7 +9,7 @@
   and returns the list of uniq objects.
 """
 uid_set = set()
-for obj in context.WebPage_extractReferredObjectDict().values():
+for obj in list(context.WebPage_extractReferredObjectDict().values()):
   if obj is not None:
     uid_set.add(obj.getUid())
 if uid_set:

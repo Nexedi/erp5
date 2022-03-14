@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -71,7 +73,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
       delivery_dict.setdefault(delivery, []).append(simulation_movement)
 
     for delivery, split_simulation_movement_list \
-        in delivery_dict.iteritems():
+        in delivery_dict.items():
       # First, duplicate the whole delivery document including its
       # sub objects.
       old_delivery_url = delivery.getRelativeUrl()
@@ -162,11 +164,11 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
             delivery_movement = simulation_movement.getDeliveryValue()
             total_quantity = quantity_dict[delivery_movement]
             quantity = simulation_movement.getQuantity()
-            delivery_ratio = quantity / total_quantity
+            delivery_ratio = old_div(quantity, total_quantity)
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error)
-          for movement, quantity in quantity_dict.iteritems():
+          for movement, quantity in quantity_dict.items():
             movement.setQuantity(quantity)
 
       assert delivery.getMovementList() and new_delivery.getMovementList()
@@ -206,7 +208,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           if getattr(parent, 'setVariationCategoryList', None) is not None:
             line_dict.setdefault(parent, []).extend(
               movement.getVariationCategoryList())
-        for line, category_list in line_dict.iteritems():
+        for line, category_list in line_dict.items():
           line.setVariationCategoryList(sorted(set(category_list)))
       _updateVariationCategoryList(delivery)
       _updateVariationCategoryList(new_delivery)

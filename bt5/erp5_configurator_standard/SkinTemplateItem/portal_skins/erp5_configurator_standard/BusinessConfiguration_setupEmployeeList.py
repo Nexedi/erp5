@@ -1,3 +1,4 @@
+from builtins import range
 configuration_save_url = kw.get('configuration_save_url', None)
 configuration_save = context.restrictedTraverse(configuration_save_url)
 organisation_id = context.getGlobalConfigurationAttr('organisation_id')
@@ -6,7 +7,7 @@ group_id = context.getGlobalConfigurationAttr('group_id')
 company_employees_number = context.getGlobalConfigurationAttr('company_employees_number')
 
 ## get only form keys
-form_keys = [i for i in kw.keys() if i.startswith('field_your_') \
+form_keys = [i for i in list(kw.keys()) if i.startswith('field_your_') \
                          and i not in ['field_your_search_text', 'field_your_business_configuration']]
 
 if company_employees_number==1:

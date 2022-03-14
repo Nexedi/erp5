@@ -1,3 +1,4 @@
+from builtins import str
 context_obj = context.getObject()
 
 module_type   = 'Task Module'
@@ -14,7 +15,7 @@ task_items = []
 
 # get the user information
 for task in listbox:
-  if task.has_key('listbox_key'):
+  if 'listbox_key' in task:
     task_id = int(task['listbox_key'])
     task_dict = {}
     task_dict['id'] = task_id

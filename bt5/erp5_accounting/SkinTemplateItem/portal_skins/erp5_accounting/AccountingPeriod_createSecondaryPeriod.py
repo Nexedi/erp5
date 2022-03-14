@@ -1,3 +1,4 @@
+from builtins import str
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate
 from Products.ERP5Type.Message import translateString

@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import map
+from builtins import range
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
@@ -277,7 +279,7 @@ class ImmobilisationMovement(Movement, XMLObject):
 
     if (split_char is not None) and (split_qty != 0):
       new_parameter_dict = {}
-      for key in parameter_dict.keys():
+      for key in list(parameter_dict.keys()):
         param_list = parameter_dict[key]
         if param_list is None:
           new_parameter_dict[key] = []

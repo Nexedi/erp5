@@ -37,6 +37,7 @@
  XXX The organisation of DiffUtils should be reviewed and reorganised in a tool
  if a general tool want to be provided.
 """
+from builtins import object
 import os, re
 from xml.sax.saxutils import escape
 
@@ -95,7 +96,7 @@ class DiffFile(object):
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
 
-  def __nonzero__(self):
+  def __bool__(self):
     return self.binary or bool(self.children)
 
   def __len__(self):
@@ -174,7 +175,7 @@ class DiffFile(object):
     return block_list
 
 
-class CodeBlock:
+class CodeBlock(object):
   """
    A code block contains several SubCodeBlocks
    Members :
@@ -234,7 +235,7 @@ class CodeBlock:
       tmp.extend(child.getNewCodeList())
     return tmp
 
-class SubCodeBlock:
+class SubCodeBlock(object):
   """ a SubCodeBlock contain 0 or 1 modification (not more)
   """
   def __init__(self, code):

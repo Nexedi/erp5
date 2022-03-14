@@ -1,4 +1,5 @@
 # pylint: disable-all
+from builtins import str
 from Products.PythonScripts.standard import html_quote
 from Products.CMFCore.utils import getToolByName
 from Products.FCKeditor.utils import fckCreateValidZopeId
@@ -120,7 +121,7 @@ def utf8Encode(chaine) :
     if charsetSite.lower() in ("utf-8", "utf8"):
       return chaine
     else:
-      return unicode(chaine, charsetSite, errors).encode("utf-8", errors)
+      return str(chaine, charsetSite, errors).encode("utf-8", errors)
 
 def utf8Decode(chaine) :
     # because browser upload form is in utf-8 we need it
@@ -129,7 +130,7 @@ def utf8Decode(chaine) :
         return chaine
     else:
         try:
-            chaine = unicode(chaine, "utf-8", "strict").encode(charsetSite, "strict")
+            chaine = str(chaine, "utf-8", "strict").encode(charsetSite, "strict")
         except:
             chaine = chaine.encode(charsetSite, "strict")
         return chaine
@@ -710,13 +711,13 @@ portal_path = portal_url.replace(server_url,'')
 
 if ConfigUserFilesPath != "" :
    sUserFilesPath = ConfigUserFilesPath
-elif dicoRequest.has_key('ServerPath'):
+elif 'ServerPath' in dicoRequest:
    sUserFilesPath = dicoRequest ['ServerPath']
 else :
    sUserFilesPath = "/"
 
 
-if dicoRequest.has_key('CurrentFolder'):
+if 'CurrentFolder' in dicoRequest:
    sCurrentFolder = dicoRequest ['CurrentFolder']
    if sUserFilesPath!='/' and sUserFilesPath.rstrip('/') not in sCurrentFolder:
         sCurrentFolder = sUserFilesPath
@@ -725,23 +726,23 @@ else :
 
 
 
-if dicoRequest.has_key('Command'):
+if 'Command' in dicoRequest:
     sCommand = dicoRequest ['Command']
 else :
     message_error="No Command in request"
 
-if dicoRequest.has_key('Type'):
+if 'Type' in dicoRequest:
     sResourceType = dicoRequest ['Type']
 else :
     message_error="No Type in request"
 
 
-if dicoRequest.has_key('NewFolderName'):
+if 'NewFolderName' in dicoRequest:
     sFolderName = dicoRequest ['NewFolderName']
 
 
 # interception File Upload
-if sCommand=='FileUpload' and dicoRequest.has_key('NewFile'):
+if sCommand=='FileUpload' and 'NewFile' in dicoRequest:
     sData = dicoRequest ['NewFile']
     sTitle = utf8Decode(dicoRequest ['Title'])
     chaineHtmlUpload = UploadFile(sResourceType, sCurrentFolder, sData, sTitle)

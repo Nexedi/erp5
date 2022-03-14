@@ -331,7 +331,7 @@ class AcquiredProperty(StandardProperty):
   def _applyTranslationAcquiredGetterDefinitionDictOnAccessorHolder(cls,
      capitalised_composed_id, key, property_dict, accessor_holder):
     for name_format, klass in \
-          cls._translation_acquired_getter_definition_dict.iteritems():
+          cls._translation_acquired_getter_definition_dict.items():
       instance = klass(
         name_format % capitalised_composed_id, key,
         property_dict['elementary_type'],

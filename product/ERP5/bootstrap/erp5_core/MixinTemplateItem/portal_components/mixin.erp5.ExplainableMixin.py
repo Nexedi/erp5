@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -33,7 +34,7 @@ from Products.ERP5Type import Permissions
 from erp5.component.interface.IExplainable import IExplainable
 
 @zope.interface.implementer(IExplainable,)
-class ExplainableMixin:
+class ExplainableMixin(object):
   """A mixin which provides common implementation of
   IExplainable to simulation movements and applied rules
 

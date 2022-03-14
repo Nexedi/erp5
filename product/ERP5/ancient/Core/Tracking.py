@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Tracking:
+from builtins import object
+class Tracking(object):
   """
     Points to items invoved in a transformation
     (incl. identity transformation)

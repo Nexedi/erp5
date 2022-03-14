@@ -75,7 +75,7 @@ class ERP5DocumentConduit(ERP5Conduit):
       # if time <= action.get('time'):
       #   # action in the past are not appended
       #   addable = WORKFLOW_ACTION_INSERTABLE
-      key_list = action.keys()
+      key_list = list(action.keys())
       # key_list.remove("time")
       # XXX-AUREL For document it seems that checking time != is required
       # I don't know why ?

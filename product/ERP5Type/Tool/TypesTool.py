@@ -15,6 +15,10 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import map
+from past.builtins import basestring
+from builtins import object
 import imp, sys, warnings
 import inspect
 from itertools import chain
@@ -383,7 +387,7 @@ class OldTypesTool(OFSFolder):
     try:
       new_type.generateNewId = generateNewId
       new_type._setObject = _eventLessSetObject(new_type)
-      for k, v in old_type.__dict__.iteritems():
+      for k, v in old_type.__dict__.items():
         if k == '_actions':
           for action in v:
             new_type._importOldAction(action)
@@ -394,7 +398,7 @@ class OldTypesTool(OFSFolder):
           if k == '_property_domain_dict':
             v = {k: t.__class__(property_name=t.property_name,
                                 domain_name=t.domain_name)
-                 for k, t in v.iteritems()}
+                 for k, t in v.items()}
           setattr(new_type, k, v)
     finally:
       del new_type.generateNewId

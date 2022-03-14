@@ -1,6 +1,7 @@
 #  - Years always starts at 0h of the current year's first day and
 #    finish 0h of the next year's first day.
 
+from builtins import str
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
 from Products.PythonScripts.standard import url_quote

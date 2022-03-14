@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import range
+from past.utils import old_div
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from string import capitalize
@@ -97,7 +100,7 @@ class AmortisationRule(RuleMixin):
         Return a list of the properties which have been modified
         """
         modified_properties = []
-        for (key, value) in calculated_movement.items():
+        for (key, value) in list(calculated_movement.items()):
           if key not in ('name','status','id','divergent'):
             getter_name = 'get%s' % ''.join([capitalize(o) for o in key.split('_')])
             getter = getattr(simulation_movement, getter_name)
@@ -231,7 +234,7 @@ class AmortisationRule(RuleMixin):
         the already made correction
         """
         method_movements_created = 0
-        for (m_type, aggregated_movement_list) in aggregated_movement_dict.items():
+        for (m_type, aggregated_movement_list) in list(aggregated_movement_dict.items()):
           if m_type != self.movement_name_dict['correction']:
             for aggregated_movement in aggregated_movement_list:
               movements_created = updateSimulationMovementToZero(aggregated_movement = aggregated_movement,
@@ -242,7 +245,7 @@ class AmortisationRule(RuleMixin):
               method_movements_created += movements_created
         # Some correction movements may still be unused, we need to set them to 0
         unused_correction_list = []
-        for correction_movement_list_list in correction_movement_dict.values():
+        for correction_movement_list_list in list(correction_movement_dict.values()):
           for correction_movement_list in correction_movement_list_list:
             for correction_movement in correction_movement_list:
               unused_correction_list.append(correction_movement)
@@ -348,8 +351,8 @@ class AmortisationRule(RuleMixin):
 
       # Then, we need to make a correspondance between aggregated movements and calculated ones
       for current_dict in (aggregated_period_dict, calculated_period_dict):
-        for type_dict in current_dict.values():
-          for movement_list in type_dict.values():
+        for type_dict in list(current_dict.values()):
+          for movement_list in list(type_dict.values()):
             movement_list.sort(key=lambda x: x['stop_date'])
       matched_dict = self._matchAmortisationPeriods(calculated_period_dict, aggregated_period_dict)
 
@@ -360,13 +363,13 @@ class AmortisationRule(RuleMixin):
           new_period = max(aggregated_period_dict.keys()) + 1
       except TypeError:
         pass
-      for (c_period_number, calculated_dict) in calculated_period_dict.items():
+      for (c_period_number, calculated_dict) in list(calculated_period_dict.items()):
         # First, look for a potential found match
         match = matched_dict.get(c_period_number, None)
         if match is None:
           # We did not find any match for this calculated period, so we
           # simply add the Simulation Movements into the Simulation
-          for (mov_type, movement_list) in calculated_dict.items():
+          for (mov_type, movement_list) in list(calculated_dict.items()):
             for movement_number in range(len(movement_list)):
               movement = movement_list[movement_number]
               if movement['quantity'] != 0:
@@ -386,7 +389,7 @@ class AmortisationRule(RuleMixin):
           correction_data = self._getCorrectionMovementData(aggregated_movement_dict)
           correction_number = correction_data['correction_number']
           correction_movement_dict = correction_data['correction_movement_dict']
-          for (mov_type, calculated_movement_list) in calculated_dict.items():
+          for (mov_type, calculated_movement_list) in list(calculated_dict.items()):
             aggregated_movement_list = aggregated_movement_dict.get(mov_type, [])
             new_aggregated_number = 0
             for aggregated_movement in aggregated_movement_list:
@@ -394,7 +397,7 @@ class AmortisationRule(RuleMixin):
               if movement_id + 1 > new_aggregated_number:
                 new_aggregated_number = movement_id + 1
 
-            if mov_type in self.movement_name_dict['annuity'].values():
+            if mov_type in list(self.movement_name_dict['annuity'].values()):
               # Annuity movement
               # We use relocate to match the movements.
               to_delete_from_aggregated = []
@@ -488,7 +491,7 @@ class AmortisationRule(RuleMixin):
 
 
       # The matching process is finished. Now we set to 0 each remaining aggregated movement
-      for (aggregated_period_number, aggregated_movement_dict) in aggregated_period_dict.items():
+      for (aggregated_period_number, aggregated_movement_dict) in list(aggregated_period_dict.items()):
         correction_data = self._getCorrectionMovementData(aggregated_movement_dict)
         correction_number = correction_data['correction_number']
         correction_movement_dict = correction_data['correction_movement_dict']
@@ -566,9 +569,9 @@ class AmortisationRule(RuleMixin):
         return matching
 
       matching_ratio_list = []
-      for (calculated_period_number,calculated_dict) in calculated_period_dict.items():
+      for (calculated_period_number,calculated_dict) in list(calculated_period_dict.items()):
         calculated_immobilisation = calculated_dict.get(self.movement_name_dict['immobilisation']['immo'], [])
-        for (aggregated_period_number, aggregated_dict) in aggregated_period_dict.items():
+        for (aggregated_period_number, aggregated_dict) in list(aggregated_period_dict.items()):
           # We first compare the dates of immobilisation, so we can compare the annuity suit
           # first directly, and then by relocating in time
           relocate_list = [0, 1, -1]
@@ -610,9 +613,9 @@ class AmortisationRule(RuleMixin):
             if current_matching['max'] == 0:
               current_matching_ratio = 0
             else:
-              current_matching_ratio = current_matching['score'] / (current_matching['max']+0.)
+              current_matching_ratio = old_div(current_matching['score'], (current_matching['max']+0.))
             if relocate_matching['max'] == 0: relocate_matching['max'] = 1
-            relocate_matching_ratio = relocate_matching['score'] / (relocate_matching['max']+0.)
+            relocate_matching_ratio = old_div(relocate_matching['score'], (relocate_matching['max']+0.))
             if relocate_matching_ratio >= current_matching_ratio:
               if relocate_matching_ratio > current_matching_ratio or abs(relocate) < abs(current_matching['relocate']):
                 current_matching = relocate_matching
@@ -621,7 +624,7 @@ class AmortisationRule(RuleMixin):
           # two movements of each type here, so we can compare each movement with all
           # of the others without losing much time
           for movement_type in ('immobilisation', 'unimmobilisation'):
-            for immobilisation_type in self.movement_name_dict['immobilisation'].values():
+            for immobilisation_type in list(self.movement_name_dict['immobilisation'].values()):
               a_movement_list = aggregated_dict.get(immobilisation_type, [])
               c_movement_list = calculated_dict.get(immobilisation_type, [])
               local_best_matching = {'score':0, 'max':0, 'non-annuity':{} }
@@ -632,9 +635,9 @@ class AmortisationRule(RuleMixin):
                   c_movement = c_movement_list[c_number]
                   local_current_matching = calculateMovementMatch(a_movement, c_movement, compare_dates=1)
                   if local_best_matching['max'] == 0: local_best_matching['max'] = 1
-                  local_best_ratio = local_best_matching['score'] / (local_best_matching['max']+0.)
+                  local_best_ratio = old_div(local_best_matching['score'], (local_best_matching['max']+0.))
                   if local_current_matching['max'] == 0: local_current_matching['max'] = 1
-                  local_current_ratio = local_current_matching['score'] / (local_current_matching['max']+0.)
+                  local_current_ratio = old_div(local_current_matching['score'], (local_current_matching['max']+0.))
                   if local_current_ratio > local_best_ratio:
                     local_best_matching = local_current_matching
                     local_best_matching['non-annuity'] = { immobilisation_type: [a_number, c_number] }
@@ -648,7 +651,7 @@ class AmortisationRule(RuleMixin):
           if current_matching['max'] == 0:
             ratio = 0
           else:
-            ratio = current_matching['score'] / (current_matching['max']+0.)
+            ratio = old_div(current_matching['score'], (current_matching['max']+0.))
           matching_ratio_list.append( { 'calculated_period' : calculated_period_number,
                                         'aggregated_period' : aggregated_period_number,
                                         'ratio'             : ratio,
@@ -660,8 +663,8 @@ class AmortisationRule(RuleMixin):
       # according to these ratio : the highest ratio gets the priority, then the next
       # highest is taken into account if corresponding resources are free, and so on
       matching_ratio_list.sort(key=lambda x: x['ratio'], reverse=True)
-      calculated_to_match = calculated_period_dict.keys()
-      aggregated_to_match = aggregated_period_dict.keys()
+      calculated_to_match = list(calculated_period_dict.keys())
+      aggregated_to_match = list(aggregated_period_dict.keys())
       match_dict = {}
       for matching_ratio in matching_ratio_list:
         calculated  = matching_ratio['calculated_period']

@@ -26,11 +26,12 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
 
-class MilestoneReportingMixin:
+class MilestoneReportingMixin(object):
 
   business_template_list = ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade', 'erp5_project',
     # XXX This report have to be updated not to use movement table

@@ -11,6 +11,10 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import next
+from builtins import object
 import copy
 import sys
 import types
@@ -130,7 +134,7 @@ def allow_class_attribute(klass, access=1):
   _safe_class_attribute_dict[klass] = access
 
 
-class TypeAccessChecker:
+class TypeAccessChecker(object):
   """Check Access for class instances (whose type() is `type`).
   """
   def __call__(self, name, v):
@@ -162,7 +166,7 @@ class TypeAccessChecker:
       return v
     return factory
 
-  def __nonzero__(self):
+  def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
     # thinking it's a simple type, but we don't want this for type, because
     # type(x) is type for classes, being trueish would skip security check on
@@ -174,7 +178,7 @@ ContainerAssertions[type] = TypeAccessChecker()
 if BBB_ACCESS_CONTROL:
   class SafeIterItems(SafeIter):
 
-      def next(self):
+      def __next__(self):
           ob = self._next()
           c = self.container
           guard(c, ob[0])
@@ -183,7 +187,7 @@ if BBB_ACCESS_CONTROL:
 else:
   class SafeIterItems(SafeIter):
 
-      def next(self):
+      def __next__(self):
           ob = next(self._iter)
           c = self.container
           guard(c, ob[0])
@@ -191,7 +195,7 @@ else:
           return ob
   
 def get_iteritems(c, name):
-    return lambda: SafeIterItems(c.iteritems(), c)
+    return lambda: SafeIterItems(iter(c.items()), c)
 _dict_white_list['iteritems'] = get_iteritems
 
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
@@ -281,7 +285,7 @@ def allow_full_write(t):
   # (closure) directly to allow write access (using __setattr__ and __delattr__)
   # to ndarray and pandas DataFrame below.
   from RestrictedPython.Guards import full_write_guard
-  safetype = full_write_guard.func_closure[1].cell_contents
+  safetype = full_write_guard.__closure__[1].cell_contents
   if isinstance(safetype, set): # 5.1
     safetype.add(t)
   else: # 3.6
@@ -329,12 +333,12 @@ allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
 allow_module('StringIO')
-import StringIO
-StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
+import io
+io.StringIO.__allow_access_to_unprotected_subobjects__ = 1
 allow_module('cStringIO')
-import cStringIO
-allow_type(cStringIO.InputType)
-allow_type(cStringIO.OutputType)
+import io
+allow_type(io.InputType)
+allow_type(io.OutputType)
 allow_module('io')
 import io
 allow_type(io.BytesIO)
@@ -378,9 +382,9 @@ allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('unicodedata')
 allow_module('urlparse')
-import urlparse
-allow_type(urlparse.ParseResult)
-allow_type(urlparse.SplitResult)
+import urllib.parse
+allow_type(urllib.parse.ParseResult)
+allow_type(urllib.parse.SplitResult)
 allow_module('struct')
 
 ModuleSecurityInfo('os.path').declarePublic(
@@ -405,7 +409,7 @@ MNAME_MAP = {
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
 }
-for alias, real in MNAME_MAP.items():
+for alias, real in list(MNAME_MAP.items()):
   assert '.' not in alias, alias # TODO: support this
   allow_module(real)
 del alias, real

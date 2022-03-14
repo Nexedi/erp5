@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 from zLOG import LOG, PROBLEM

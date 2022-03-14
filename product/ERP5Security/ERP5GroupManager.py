@@ -133,7 +133,7 @@ class ERP5GroupManager(BasePlugin):
         generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
         group_id_list_generator = getattr(self, generator_name, None)
       security_group_list = []
-      for base_category_list, category_value_list in security_category_dict.iteritems():
+      for base_category_list, category_value_list in security_category_dict.items():
         for category_dict in category_value_list:
           try:
             group_id_list = group_id_list_generator(

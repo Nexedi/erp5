@@ -1,4 +1,5 @@
 # params
+from builtins import range
 section_title = 'My Organisation'
 business_process = 'business_process_module/erp5_default_business_process'
 portal = context.getPortalObject()

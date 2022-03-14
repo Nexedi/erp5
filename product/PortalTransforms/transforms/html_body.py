@@ -1,9 +1,10 @@
+from builtins import object
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 from Products.PortalTransforms.libtransforms.utils import bodyfinder
 
 @implementer(ITransform)
-class HTMLBody:
+class HTMLBody(object):
     """Simple transform which extracts the content of the body tag"""
 
     __name__ = "html_body"

@@ -29,6 +29,7 @@
 
 # TODO: Some tests from this file can be merged into Formulator
 
+from builtins import str
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import hashlib
 import mock
@@ -64,12 +65,12 @@ class TestRenderViewAPI(ERP5TypeTestCase):
     return "{Field,Widget}.render_view"
 
   def test_signature(self):
-    for field in FieldRegistry.get_field_classes().itervalues(): # pylint: disable=no-value-for-parameter
+    for field in FieldRegistry.get_field_classes().values(): # pylint: disable=no-value-for-parameter
       self.assertEqual(('self', 'value', 'REQUEST', 'render_prefix'),
-                        field.render_view.im_func.func_code.co_varnames)
+                        field.render_view.__func__.__code__.co_varnames)
       if field is not ProxyField.ProxyField:
         self.assertEqual(('self', 'field', 'value', 'REQUEST'),
-          field.widget.render_view.im_func.func_code.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.im_func.func_code.co_varnames[:4]))
+          field.widget.render_view.__func__.__code__.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.__func__.__code__.co_varnames[:4]))
 
 
 class TestFloatField(ERP5TypeTestCase):
@@ -384,7 +385,7 @@ class TestDateTimeField(ERP5TypeTestCase):
              .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0])
 
   def test_render_odt_variable(self):
-    value = DateTime(2010, 12, 06, 10, 23, 32, 'GMT+5')
+    value = DateTime(2010, 12, 0o6, 10, 23, 32, 'GMT+5')
     self.field.values['default'] = value
     node = self.field.render_odt_variable(as_string=False)
     self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'date')
@@ -1119,7 +1120,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
     addField(DateTimeField('datetime_field'))
     form.datetime_field._p_oid = makeDummyOid()
     form.datetime_field._edit(dict(input_style='list'))
-    for i in form.datetime_field._get_sub_form().fields.values():
+    for i in list(form.datetime_field._get_sub_form().fields.values()):
       i._p_oid = makeDummyOid()
 
   def test_method_field(self):
@@ -1130,7 +1131,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def _getCacheSize(self, cache_id):
     count = 0
-    for cache_key in field_value_cache.iterkeys():
+    for cache_key in field_value_cache.keys():
       if cache_key[0] == cache_id:
         count += 1
 

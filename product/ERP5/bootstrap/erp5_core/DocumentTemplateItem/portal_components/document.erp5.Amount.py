@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import filter
 import zope.interface
 from collections import defaultdict
 from math import log
@@ -93,7 +94,7 @@ class Amount(Base, VariatedMixin):
         and not omit_optional_variation):
       variation_list.append('industrial_phase')
     if base_category_list:
-      variation_list = filter(base_category_list.__contains__, variation_list)
+      variation_list = list(filter(base_category_list.__contains__, variation_list))
     return self.getAcquiredCategoryMembershipList(variation_list, base=1)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -121,7 +122,7 @@ class Amount(Base, VariatedMixin):
       render_category_list = Renderer(display_id=display_id, **kw).render
       kw['display_id'] = 'title'
       for base_category, (object_list,
-                          category_list) in variation_dict.iteritems():
+                          category_list) in variation_dict.items():
         if base_category_list and base_category not in base_category_list:
           continue
         variation_category_item_list += render_category_list(category_list)
@@ -299,7 +300,7 @@ class Amount(Base, VariatedMixin):
       variation_list = resource.getVariationPropertyList()
     else:
       variation_list = []
-    for property_id, property_value in property_dict.items():
+    for property_id, property_value in list(property_dict.items()):
       if property_id not in variation_list:
         raise KeyError("Can not set the property variation %r" % property_id)
       else:

@@ -75,16 +75,16 @@ else:
 # build list from dictionnary structure
 # this list will e converted to a string afterwards
 returned_list = []
-for area_name in properties_structure.keys():
+for area_name in list(properties_structure.keys()):
   css_dict = properties_structure[area_name]
-  for class_name in css_dict.keys():
+  for class_name in list(css_dict.keys()):
     if class_name == 'planning_content':
       returned_list.append('.%s{' % class_name)
     elif class_name == 'planning_box':
       returned_list.append('.%s{' % class_name)
     else:
       returned_list.append('#%s{' % class_name)
-    for id_ in css_dict[class_name].keys():
+    for id_ in list(css_dict[class_name].keys()):
       if same_type(css_dict[class_name][id_], ''):
         returned_list.append('%s:%s;\n' % (id_, css_dict[class_name][id_]))
       else:

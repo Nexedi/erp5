@@ -25,7 +25,9 @@
 #
 ##############################################################################
 
-from HTMLParser import HTMLParser
+from future import standard_library
+standard_library.install_aliases()
+from html.parser import HTMLParser
 class HtmlParseHelper(HTMLParser):
   """
   Listens to all the HTMLParser methods and push results in a list of tuple.

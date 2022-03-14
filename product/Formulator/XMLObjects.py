@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+from builtins import str
+from builtins import object
 from xml.dom.minidom import parse, parseString, Node
 from xml.sax.saxutils import unescape
 # an extremely simple system for loading in XML into objects
 
-class Object:
+class Object(object):
     pass
 
-class XMLObject:
+class XMLObject(object):
     def __init__(self):
         self.elements = Object()
         self.first = Object()
@@ -24,7 +26,7 @@ def elementToObject(parent, node):
     # create an object to represent element node
     object = XMLObject()
     # make object attributes off node attributes
-    for key, value in node.attributes.items():
+    for key, value in list(node.attributes.items()):
         object.attributes[key] = value
     # make lists of child elements (or ignore them)
     for child in node.childNodes:

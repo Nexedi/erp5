@@ -35,7 +35,7 @@ for item in item_list:
   base_category = item_split[0]
   multi = False # XXX or now budget level are only single value.
 
-  if not sub_field_dict.has_key(item_key):
+  if item_key not in sub_field_dict:
     # Create property dict
     sub_field_property_dict = default_sub_field_property_dict.copy()
     sub_field_property_dict['key'] = item_key
@@ -68,6 +68,6 @@ for item in item_list:
     else:
       sub_field_dict[item_key]['title'] = base_category
 
-sub_field_values = sub_field_dict.values()
+sub_field_values = list(sub_field_dict.values())
 sub_field_values.sort(key=lambda d:d['int_index'])
 return sub_field_values

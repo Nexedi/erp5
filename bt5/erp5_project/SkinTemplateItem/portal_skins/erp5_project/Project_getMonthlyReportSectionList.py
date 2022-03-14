@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 request = context.REQUEST
 
 object_dict = {} # it contains required temp object to display the listbox
@@ -79,7 +82,7 @@ project_relative_url_dict = {}
 def fillDictWithParentAndChildRelativeUrls(my_dict, document_url):
   if my_dict.get(document_url) is None:
     splitted_document_url = document_url.split('/')
-    for x in xrange(0, len(splitted_document_url)):
+    for x in range(0, len(splitted_document_url)):
       my_dict['/'.join(splitted_document_url[0:x+1])] = 1
 
 
@@ -127,7 +130,7 @@ for task_line in result_list:
   project_relative_url = project_dict['relative_url']
   full_date_total_worker_quantity_dict[source_relative_url] = \
     full_date_total_worker_quantity_dict.get(source_relative_url, 0) + quantity
-  if not full_date_total_object_dict.has_key(project_relative_url):
+  if project_relative_url not in full_date_total_object_dict:
     temp_object = temp_object_container.newContent(portal_type = 'Project Line',
                 temp_object=1,
                 string_index = full_date_string,
@@ -153,14 +156,14 @@ for task_line in result_list:
     project_to_display_dict = monthly_project_to_display_dict.setdefault(string_index, {})
     fillDictWithParentAndChildRelativeUrls(project_to_display_dict, project_relative_url)
     
-    if not quantity_dict.has_key(project_relative_url):
+    if project_relative_url not in quantity_dict:
       temp_object = temp_object_container.newContent(portal_type = 'Project Line',
                   temp_object=1,
                   string_index = string_index,
                   category_list = ['source_project/%s' % project_relative_url])
       quantity_dict[project_relative_url] = temp_object
     current_temp_object = quantity_dict[project_relative_url]
-    current_month_quantity = (min(next_timekeeper,stop_date_task+1) - timekeeper )/ diff_day * quantity
+    current_month_quantity = old_div((min(next_timekeeper,stop_date_task+1) - timekeeper ), diff_day) * quantity
     object_quantity = current_month_quantity + current_temp_object.getProperty(source_relative_url, 0)
     worker_quantity_dict[source_relative_url] = worker_quantity_dict.get(source_relative_url, 0) + current_month_quantity
     current_temp_object.setProperty(source_relative_url, object_quantity)
@@ -168,22 +171,22 @@ for task_line in result_list:
 
 # Now build temp objects for quantity per month and per worker
 summary_dict = {}
-for string_index, worker_quantity_dict in monthly_worker_quantity_dict.items():
+for string_index, worker_quantity_dict in list(monthly_worker_quantity_dict.items()):
   temp_object = temp_object_container.newContent(portal_type = 'Project Line',
               temp_object=1,
               string_index = string_index)
   summary_dict[string_index] = temp_object
-  for source_relative_url, quantity in worker_quantity_dict.items():
+  for source_relative_url, quantity in list(worker_quantity_dict.items()):
     temp_object.setProperty(source_relative_url, quantity)
 
 # Now build temp objects for quantity per worker
 total_summary_dict = {}
-for string_index, worker_quantity_dict in total_worker_quantity_dict.items():
+for string_index, worker_quantity_dict in list(total_worker_quantity_dict.items()):
   temp_object = temp_object_container.newContent(portal_type = 'Project Line',
               temp_object=1,
               string_index = string_index)
   total_summary_dict[string_index] = temp_object
-  for source_relative_url, quantity in worker_quantity_dict.items():
+  for source_relative_url, quantity in list(worker_quantity_dict.items()):
     temp_object.setProperty(source_relative_url, quantity)
 
 column_list.extend(worker_column_list)
@@ -196,7 +199,7 @@ result = []
 from Products.ERP5Form.Report import ReportSection
 
 project_dict = {}
-for project_relative_url in project_relative_url_dict.keys():
+for project_relative_url in list(project_relative_url_dict.keys()):
   project_dict[project_relative_url] = portal.restrictedTraverse(project_relative_url)
 param_list = [object_dict, summary_dict, column_list, project_dict,
               monthly_project_to_display_dict, False, full_date_string]

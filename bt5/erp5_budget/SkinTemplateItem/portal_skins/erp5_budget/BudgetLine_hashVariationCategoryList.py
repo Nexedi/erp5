@@ -43,7 +43,7 @@ for item in item_list:
   if item_key in line_level_variation_list:
     multi = False
 
-  if not sub_field_dict.has_key(item_key):
+  if item_key not in sub_field_dict:
     # Create property dict
     sub_field_property_dict = default_sub_field_property_dict.copy()
     sub_field_property_dict['key'] = item_key
@@ -76,4 +76,4 @@ for item in item_list:
     else:
       sub_field_dict[item_key]['title'] = base_category
 
-return sorted(sub_field_dict.values(), key=lambda d:d['int_index'])
+return sorted(list(sub_field_dict.values()), key=lambda d:d['int_index'])

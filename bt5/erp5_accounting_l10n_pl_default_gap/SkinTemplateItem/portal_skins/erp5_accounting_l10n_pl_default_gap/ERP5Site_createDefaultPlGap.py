@@ -4,6 +4,7 @@ Creates gap structure under gap/pl/default.
 The definition text is a raw text representation of a wiki page
 with accountants-approved gap structure
 """
+from __future__ import print_function
 
 gap_text = \
 """* [0] Aktywa trwałe
@@ -251,7 +252,7 @@ for line in gap_text.splitlines():
       cpath += n
       path.append(cpath)
     parent = gap.restrictedTraverse('/'.join(path))
-    print 'Added to ',parent
+    print('Added to ',parent)
 
   parent.newContent(id=num, title=descr)  
   

@@ -29,7 +29,7 @@ text_search_list = []
 for text, prop_dict in context.getSearchableReferenceList():
   if text:
     text_search_list.append(text)
-  if prop_dict.has_key('reference'):
+  if 'reference' in prop_dict:
     reference_search_list.append(prop_dict['reference'])
 
 # Search reference ticket or project

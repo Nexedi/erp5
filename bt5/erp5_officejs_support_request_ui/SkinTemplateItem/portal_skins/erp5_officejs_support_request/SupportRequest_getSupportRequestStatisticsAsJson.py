@@ -55,7 +55,7 @@ count_by_state_and_date_range = {
 
 # XXX
 state_title_by_state_id = portal.ERP5Site_getTicketWorkflowStateInfoDict()
-for c in state_title_by_state_id.keys():
+for c in list(state_title_by_state_id.keys()):
   if c not in count_by_state_and_date_range:
     count_by_state_and_date_range[c] = {
     "date_range_list": date_range_list,

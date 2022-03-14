@@ -28,10 +28,11 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zLOG import LOG, INFO
 
-class ConfiguratorItemMixin:
+class ConfiguratorItemMixin(object):
   """ This is the base class for all configurator item. """
 
   def getBusinessConfigurationValue(self):

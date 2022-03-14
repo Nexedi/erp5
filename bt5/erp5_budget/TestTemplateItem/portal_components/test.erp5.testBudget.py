@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import unittest
 
 from DateTime import DateTime
@@ -627,7 +628,7 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(2, len(budget_line.contentValues()))
 
     test_class_self = self
-    class ReferenceQuery:
+    class ReferenceQuery(object):
       """Helper class to compare queries
       """
       def __eq__(self, query):
@@ -732,7 +733,7 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(1, len(budget_line.contentValues()))
 
     test_class_self = self
-    class ReferenceQuery:
+    class ReferenceQuery(object):
       """Helper class to compare queries
       """
       def __eq__(self, query):

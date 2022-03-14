@@ -27,13 +27,15 @@
 #
 ##############################################################################
 
+from builtins import range
+from builtins import object
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import Message
 
-class PeriodicityMixin:
+class PeriodicityMixin(object):
   """
   Periodicity is a Mixin Class used to calculate date periodicity.
   """

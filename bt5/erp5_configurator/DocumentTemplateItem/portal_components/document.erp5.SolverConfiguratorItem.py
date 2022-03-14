@@ -66,7 +66,7 @@ class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         property_dict = solver_property_dict.get(self.getId())
         argument_dict = {}
 
-        for k, v in property_dict.iteritems():
+        for k, v in property_dict.items():
           if k not in ("content_list",) and k in self.showDict():
             argument_dict[k] = v
 

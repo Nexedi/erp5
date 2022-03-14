@@ -10,6 +10,6 @@ result_list.sort()
 
 for [method_id, result] in result_list:
   if not result['success']:
-    return [(x,x) for x in result['object'].keys()]
+    return [(x,x) for x in list(result['object'].keys())]
 
 return []

@@ -35,7 +35,7 @@ for property_sheet in portal.portal_property_sheets.objectValues():
     constraint_type_per_id.setdefault(property_sheet_id, []).extend(type_list)
 
 constraint_type_per_type = {}
-for property_sheet_id, category_list in constraint_type_per_id.iteritems():
+for property_sheet_id, category_list in constraint_type_per_id.items():
   for portal_type in property_sheet_by_type_dict.get(property_sheet_id, []):
     constraint_type_per_type.setdefault(portal_type, set()).update(category_list)
 

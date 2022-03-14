@@ -1,3 +1,5 @@
+from __future__ import division
+from past.utils import old_div
 from DateTime import DateTime
 now = DateTime()
 
@@ -21,7 +23,7 @@ if timeout is None:
   timeout = 1.0/24*3
 else:
   # transform it has number of days (instead of seconds)
-  timeout = float(timeout) / 3600 / 24
+  timeout = old_div(float(timeout) / 3600, 24)
 
 old_date = now-timeout
 if context.getSimulationState() == "started":

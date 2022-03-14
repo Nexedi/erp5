@@ -1,10 +1,11 @@
+from builtins import object
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
 from reStructuredText import HTML
 import sys
 
 @implementer(ITransform)
-class rest:
+class rest(object):
     r"""Converts from reST to HTML.
 
       >>> transform = rest()

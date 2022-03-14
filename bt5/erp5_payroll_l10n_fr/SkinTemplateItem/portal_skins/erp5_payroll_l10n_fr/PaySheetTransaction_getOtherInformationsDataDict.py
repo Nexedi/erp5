@@ -1,3 +1,4 @@
+from builtins import str
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
 request = context.REQUEST
@@ -166,9 +167,9 @@ year_to_date_taxable_net_salary = paysheet.PaySheetTransaction_getYearToDateSlic
     'base_contribution/base_amount/payroll/base/income_tax')
 
 def unicodeDict(d):
-  for k, v in d.items():
+  for k, v in list(d.items()):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k:str(v, 'utf8')})
   return d
 
 source_section = paysheet.getSourceSectionValue()

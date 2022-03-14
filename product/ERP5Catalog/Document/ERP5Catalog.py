@@ -27,6 +27,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
@@ -41,7 +44,7 @@ from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 class Filter(object):
   """
@@ -114,7 +117,7 @@ class FilterDict(object):
 
   def __setitem__(self, key, item):
     filter_ = self[key]
-    for k, v in item.iteritems():
+    for k, v in item.items():
       filter_[k] = v
 
   def get(self, key, default=None):

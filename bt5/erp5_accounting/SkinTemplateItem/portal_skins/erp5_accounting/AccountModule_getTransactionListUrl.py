@@ -1,3 +1,4 @@
+from builtins import str
 from ZTUtils import make_query
 from Products.PythonScripts.standard import html_quote
 

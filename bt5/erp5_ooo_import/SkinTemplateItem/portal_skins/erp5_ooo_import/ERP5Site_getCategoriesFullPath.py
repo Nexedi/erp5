@@ -7,7 +7,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 portal = context.getPortalObject()
 result_dict = {}
 
-for base_category_name, category in category_dict.items():
+for base_category_name, category in list(category_dict.items()):
   category_object = \
     context.getPortalObject().portal_categories[base_category_name]
   

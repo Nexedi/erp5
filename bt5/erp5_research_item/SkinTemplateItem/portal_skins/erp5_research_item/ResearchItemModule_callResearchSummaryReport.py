@@ -57,13 +57,13 @@ def getColumnUrl(brain=None, column_id=None, **kw):
 absolute_url = portal.absolute_url()
 
 if len(summary_dict):
-  for person in portal.portal_catalog(portal_type=("Person", "Organisation"), uid=summary_dict.keys(), select_list=["title"]):
+  for person in portal.portal_catalog(portal_type=("Person", "Organisation"), uid=list(summary_dict.keys()), select_list=["title"]):
     person_title_dict[person.uid] = person.title
-  for person_uid in summary_dict.keys():
+  for person_uid in list(summary_dict.keys()):
     person_kw = summary_dict[person_uid]
     person_kw["source_title"] = person_title_dict[person_uid]
     person = portal.person_module.newContent(temp_object=1, **person_kw)
-    for item_url in summary_dict[person_uid].keys():
+    for item_url in list(summary_dict[person_uid].keys()):
       task_report_module_url = "%s/task_report_module/view?reset:int=1&default_source_uid=%s&title=%%" % (absolute_url, person_uid)
       if item_url == "None":
         task_report_module_url += "&child_aggregate_relative_url=%%3dNULL&left_join_list=child_aggregate_relative_url&ledger_relative_url=ledger/%s" % \
@@ -89,14 +89,14 @@ if item_url_set:
 # define which property to display in columns
 column_list = [("source_title", "Worker"),
                 ("None", "Undefined"), ]
-for item_url, item_title in sorted(item_title_dict.items(), key=lambda url_title: url_title[1]):
+for item_url, item_title in sorted(list(item_title_dict.items()), key=lambda url_title: url_title[1]):
   if item_url != 'None':
     column_list.append((item_url, item_title))
 column_list.append(("total", "Total"))
 
 # define which script to display url in columns
 column_url_script_list = []
-for item_url in item_title_dict.keys():
+for item_url in list(item_title_dict.keys()):
   column_url_script_list.append((item_url, "getColumnUrl"))
 
 context = context.asContext(column_list=column_list,

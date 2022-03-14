@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import json
 import warnings
 try:
@@ -49,7 +50,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 
 @implementer(IJSONRepresentable)
-class JSONRepresentableMixin:
+class JSONRepresentableMixin(object):
   """
   An implementation for IJSONRepresentable
   """

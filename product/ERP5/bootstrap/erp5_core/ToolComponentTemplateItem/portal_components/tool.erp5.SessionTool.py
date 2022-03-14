@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -54,7 +55,7 @@ def remove_acquisition_wrapper(obj):
   if isinstance(obj, collections.Mapping):
     return obj.__class__({
         remove_acquisition_wrapper(k): remove_acquisition_wrapper(v)
-        for k, v in obj.items()})
+        for k, v in list(obj.items())})
   if isinstance(obj, (collections.Sequence, collections.Set)):
     return obj.__class__([remove_acquisition_wrapper(o) for o in obj])
   return obj
@@ -68,7 +69,7 @@ def restore_acquisition_wrapper(obj, context):
   if isinstance(obj, collections.Mapping):
     return obj.__class__({
         restore_acquisition_wrapper(k, context): restore_acquisition_wrapper(v, context)
-        for k, v in obj.items()})
+        for k, v in list(obj.items())})
   if isinstance(obj, (collections.Sequence, collections.Set)):
     return obj.__class__([restore_acquisition_wrapper(o, context) for o in obj])
   return obj
@@ -97,7 +98,7 @@ class Session(UserDict):
     """
     state = {
         'session_duration': self.session_duration,
-        'data': {k: aq_base(v) for k, v in self.data.iteritems()}
+        'data': {k: aq_base(v) for k, v in self.data.items()}
     }
     if 'session_id' in self.__dict__:
       state['session_id']  = self.session_id
@@ -124,7 +125,7 @@ class Session(UserDict):
 
   def edit(self, **kw):
     """ Edit session object. """
-    for key, item in kw.items():
+    for key, item in list(kw.items()):
       self.__setitem__(key, item)
 
   def __setitem__(self, key, item):
@@ -132,7 +133,7 @@ class Session(UserDict):
     UserDict.__setitem__(self, key, remove_acquisition_wrapper(item))
 
   def update(self, dict=None, **kwargs):  # pylint: disable=redefined-builtin
-    for k, v in (dict or kwargs).iteritems():
+    for k, v in (dict or kwargs).items():
       # make sure to use our __setitem__ which removes acquistion wrappers
       self[k] = v
 

@@ -1,3 +1,4 @@
+from builtins import range
 from Products.Formulator.Errors import FormValidationError
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
@@ -18,7 +19,7 @@ for form in (real_form, target_form):
     request.set('editable_mode', 1)
     form.validate_all_to_request(request)
     request.set('editable_mode', editable_mode)
-  except FormValidationError, validation_errors:
+  except FormValidationError as validation_errors:
     # Pack errors into the request
     field_errors = form.ErrorFields(validation_errors)
     request.set('field_errors', field_errors)
@@ -43,7 +44,7 @@ for form in (real_form, target_form):
   if listbox is not None:
     listbox_line_list = []
     listbox = getattr(request,'listbox',None) # XXX: hardcoded field name
-    listbox_keys = listbox.keys()
+    listbox_keys = list(listbox.keys())
     listbox_keys.sort()
     for key in listbox_keys:
       listbox_line = listbox[key]
@@ -75,7 +76,7 @@ batch_size = 100 # XXX
 priority = 3
 path_list_len = len(path_list)
 
-for i in xrange(0, path_list_len, batch_size):
+for i in range(0, path_list_len, batch_size):
   current_path_list = path_list[i:i+batch_size]
   context.activate(activity='SQLQueue', priority=priority, tag=tag).callMethodOnObjectList(
     current_path_list, 'Base_workflowStatusModify',  batch_mode=True, **do_action_for_param_dict)

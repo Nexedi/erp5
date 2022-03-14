@@ -5,10 +5,10 @@ msg = context.Base_translateString('No Apparel Model Colour Variation found.')
 if apparel_colour_range is None:
   msg = context.Base_translateString('Apparel Colour Range must be defined.')
 else:
-  apparel_colour_range_variation_list = map( lambda x: x.getObject(), apparel_colour_range.searchFolder(portal_type=('Apparel Colour Range Variation',)))
+  apparel_colour_range_variation_list = [x.getObject() for x in apparel_colour_range.searchFolder(portal_type=('Apparel Colour Range Variation',))]
 
   apparel_model_colour_variation_list  = context.searchFolder(portal_type=('Apparel Model Colour Variation',))
-  apparel_model_colour_variation_title_list = map( lambda x: x.getObject().getTitle(), apparel_model_colour_variation_list)
+  apparel_model_colour_variation_title_list = [x.getObject().getTitle() for x in apparel_model_colour_variation_list]
 
   count = 0
   for apparel_colour_range_variation in apparel_colour_range_variation_list:

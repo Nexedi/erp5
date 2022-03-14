@@ -26,12 +26,14 @@
 #
 ##############################################################################
 
+from builtins import map
+from builtins import object
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 
 
-class TextContentHistoryMixin:
+class TextContentHistoryMixin(object):
   """Mixin that provides access to history of edit of the text content property.
 
   To be used with erp5_code_mirror

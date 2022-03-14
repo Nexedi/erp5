@@ -42,9 +42,9 @@ def callAddNodeOnConduit(self, conduit_id, uid):
 
 
 def diffXML(xml_plugin="", xml_erp5="", html=True):
-  if isinstance(xml_erp5, unicode):
+  if isinstance(xml_erp5, str):
     xml_erp5 = xml_erp5.encode('utf-8')
-  if isinstance(xml_plugin, unicode):
+  if isinstance(xml_plugin, str):
     xml_plugin = xml_plugin.encode('utf-8')
 
   diff_list = list(unified_diff(xml_plugin.split('\n'), xml_erp5.split('\n'), tofile="erp5 xml", fromfile="plugin xml", lineterm=''))

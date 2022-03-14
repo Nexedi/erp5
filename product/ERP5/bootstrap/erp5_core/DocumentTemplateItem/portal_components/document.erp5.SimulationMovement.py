@@ -286,7 +286,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
-    applicable_rule_list = applicable_rule_dict.values()
+    applicable_rule_list = list(applicable_rule_dict.values())
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
       try:
@@ -673,7 +673,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                                          path_set_to_check):
               yield d
 
-      for id_, t in tree_node.visited_movement_dict.iteritems():
+      for id_, t in tree_node.visited_movement_dict.items():
         subdocument, path = t
         to_check = path_set_to_check
         # do we need to change/copy the set?

@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import object
 from hashlib import md5
 from warnings import warn
 import string
@@ -40,7 +42,7 @@ from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
 
 def makeSortedTuple(kw):
-  items = kw.items()
+  items = list(kw.items())
   items.sort()
   return tuple(items)
 
@@ -52,11 +54,11 @@ def hashPdataObject(pdata_object):
   while pdata_object is not None:
     chunk = pdata_object.aq_base
     md5_hash.update(chunk.data)
-    pdata_object = chunk.next
+    pdata_object = chunk.__next__
     chunk._p_deactivate()
   return md5_hash.hexdigest()
 
-class CachedConvertableMixin:
+class CachedConvertableMixin(object):
   """
   This class provides a generic implementation of IConvertable.
 
@@ -135,7 +137,7 @@ class CachedConvertableMixin:
       cached_value = data
       conversion_md5 = md5(str(data.data)).hexdigest()
       size = len(data.data)
-    elif isinstance(data, (str, unicode,)):
+    elif isinstance(data, str):
       cached_value = data
       conversion_md5 = md5(cached_value).hexdigest()
       size = len(cached_value)

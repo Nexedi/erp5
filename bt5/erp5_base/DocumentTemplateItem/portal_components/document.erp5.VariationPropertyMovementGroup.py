@@ -45,7 +45,7 @@ class VariationPropertyMovementGroup(MovementGroup):
   def test(self, document, property_dict, **kw):
     updatable = False
     variation_property_dict = document.getVariationPropertyDict()
-    variation_property_list = variation_property_dict.keys()
+    variation_property_list = list(variation_property_dict.keys())
     if len(variation_property_list) == \
            len(property_dict['variation_property_dict']):
       # Same number of property. Good point.

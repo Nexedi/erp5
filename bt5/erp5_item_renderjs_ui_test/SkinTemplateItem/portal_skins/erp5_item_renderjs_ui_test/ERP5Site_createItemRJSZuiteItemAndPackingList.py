@@ -1,3 +1,4 @@
+from builtins import zip
 from erp5.component.module.DateUtils import getClosestDate
 
 portal = context.getPortalObject()

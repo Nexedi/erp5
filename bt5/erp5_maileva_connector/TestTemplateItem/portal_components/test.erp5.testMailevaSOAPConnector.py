@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import mock
 from DateTime import DateTime
@@ -41,7 +42,7 @@ class dotdict(dict):
   __setattr__ = dict.__setitem__
   __delattr__ = dict.__delitem__
 
-class ServiceWithSuccess:
+class ServiceWithSuccess(object):
   get_notification_detail = False
   def submit(self, **kw):
     return 'success'
@@ -71,7 +72,7 @@ class ServiceWithSuccess:
       'notificationType': 'GENERAL'
     })
 
-class ClientWithSuccess:
+class ClientWithSuccess(object):
   def __init__(self):
     self.service = ServiceWithSuccess()
 
@@ -81,7 +82,7 @@ def submitRequestWithSuccess(**kw):
 
 
 
-class ServiceWithFailure:
+class ServiceWithFailure(object):
   get_notification_detail = False
   def submit(self, **kw):
     return 'success'
@@ -108,7 +109,7 @@ class ServiceWithFailure:
       'notificationType': 'GENERAL'
     })
 
-class ClientWithFailure:
+class ClientWithFailure(object):
   def __init__(self):
     self.service = ServiceWithFailure()
 
@@ -119,11 +120,11 @@ def submitRequestWithFailure(**kw):
 
 
 
-class ServiceWithException:
+class ServiceWithException(object):
   def submit(self, **kw):
     raise Exception('exception')
 
-class ClientWithException:
+class ClientWithException(object):
   def __init__(self):
     self.service = ServiceWithException()
 

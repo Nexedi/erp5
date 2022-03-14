@@ -24,7 +24,7 @@ for group_object in object_list:
   except Exception:
     group_object.raised()
   else:
-    for property, value in tmp_dict.iteritems():
+    for property, value in tmp_dict.items():
       parameter_dict[property].append(value)
     group_object.result = None
 

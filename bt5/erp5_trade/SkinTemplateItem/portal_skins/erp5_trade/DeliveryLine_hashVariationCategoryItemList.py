@@ -32,4 +32,4 @@ for item in item_list:
     # Only one value per variation
     sub_field_property_dict['value'] = item_value
 
-return sub_field_dict.values()
+return list(sub_field_dict.values())

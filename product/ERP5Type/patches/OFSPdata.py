@@ -31,18 +31,18 @@ from OFS.Image import Pdata
 
 def getLastPdata(self):
   """Return the last Pdata chunk"""
-  next = self.next
+  next = self.__next__
 
   while next is not None:
     self = next
-    next = self.next
+    next = self.__next__
   return self
 
 Pdata.getLastPdata = getLastPdata
 
 def __nonzero__(self):
   while not self.data:
-    self = self.next
+    self = self.__next__
     if self is None:
       return False
   return True

@@ -26,6 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from past.builtins import basestring
+from builtins import object
 import time
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
@@ -153,11 +155,11 @@ if memcache is not None:
         expiration_time = self.expiration_time
         if self.expiration_time_since_epoch:
           expiration_time += time.time()
-        for key, value in self.local_cache.iteritems():
+        for key, value in self.local_cache.items():
           if getattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, None):
             delattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID)
             self.scheduled_action_dict[key] = UPDATE_ACTION
-        for key, action in self.scheduled_action_dict.iteritems():
+        for key, action in self.scheduled_action_dict.items():
           encoded_key = encodeKey(key)
           if action is UPDATE_ACTION:
             self.memcached_connection.set(

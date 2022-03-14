@@ -1,6 +1,7 @@
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
+from builtins import str
 request=context.REQUEST
 
 o = context.portal_catalog.getObject(object_uid)

@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Rule:
+from builtins import object
+class Rule(object):
   """
     Implemented as a movement template in XSL approach
   """

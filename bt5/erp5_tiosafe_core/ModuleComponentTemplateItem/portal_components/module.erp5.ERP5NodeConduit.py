@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit, \
      ADDRESS_TAG_LIST
 from DateTime import DateTime
@@ -61,7 +62,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
                                                                           destination=object.getRelativeUrl(),
                                                                           destination_decision=object.getRelativeUrl(),
                                                                           destination_administration=object.getRelativeUrl(),
-                                                                          version=001)
+                                                                          version=0o01)
     stc.validate()
 
   def _updateSaleTradeCondition(self, object, **kw): # pylint: disable=redefined-builtin
@@ -321,7 +322,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       }
     # translate kw with the good PropertySheet
     property_ = {}
-    for k, v in kw.items():
+    for k, v in list(kw.items()):
       k = mapping.get(k, k)
       property_[k] = v
     object._edit(**property_)

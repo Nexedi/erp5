@@ -28,6 +28,8 @@ from __future__ import absolute_import
 ##############################################################################
 
 
+from builtins import str
+from builtins import map
 from .Base import func_code, type_definition, list_types,\
                  ATTRIBUTE_PREFIX, Method, evaluateTales
 from .TypeDefinition import asList, identity
@@ -96,7 +98,7 @@ class ListSetter(DefaultSetter):
       else:
         value = self._cast(args[0])
         if self._item_cast is not identity:
-          value = map(self._item_cast, value)
+          value = list(map(self._item_cast, value))
         setattr(instance, self._storage_id, tuple(value))
 
 Setter = ListSetter
@@ -143,7 +145,7 @@ class SetSetter(Base.Setter):
       else:
         value = self._cast(value)
         if self._item_cast is not identity:
-          value = map(self._item_cast, value)
+          value = list(map(self._item_cast, value))
         if value:
           value = set(value)
           list_value = getattr(instance, self._storage_id, None)

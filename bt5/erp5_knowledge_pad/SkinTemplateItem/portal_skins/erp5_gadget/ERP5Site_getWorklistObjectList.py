@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Message import translateString
 return_list = []
 i = 1

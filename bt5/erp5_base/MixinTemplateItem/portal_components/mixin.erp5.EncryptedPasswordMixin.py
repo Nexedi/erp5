@@ -28,6 +28,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from past.builtins import basestring
+from builtins import object
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from AccessControl.AuthEncoding import pw_encrypt, pw_validate

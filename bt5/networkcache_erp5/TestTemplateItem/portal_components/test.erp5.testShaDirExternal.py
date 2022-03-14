@@ -28,10 +28,13 @@
 ##############################################################################
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import base64
 import json
 import os
-import httplib
+import http.client
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
@@ -75,7 +78,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       Test the external usage to POST information
     """
     now = DateTime()
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = http.client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('PUT', self.path, self.data, self.header_dict)
       result = connection.getresponse()
@@ -114,7 +117,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     if not annonymous:
       header_dict = self.header_dict
 
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = http.client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('GET', self.path, headers=header_dict)
       result = connection.getresponse()
@@ -135,7 +138,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
   def test_external_post_anonymous(self):
     """
     """
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = http.client.HTTPConnection('%s:%s' % (self.host, self.port))
     header_dict = {'Content-Type': self.content_type}
     try:
       connection.request('PUT', self.path, self.data, header_dict)
@@ -157,7 +160,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     data[0] = json.dumps(data[0])
     data = json.dumps(data)
 
-    connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
+    connection = http.client.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
       connection.request('PUT', self.path, data, self.header_dict)
       result = connection.getresponse()

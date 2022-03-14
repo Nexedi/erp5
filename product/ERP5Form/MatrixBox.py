@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import map
+from builtins import str
 from AccessControl import ClassSecurityInfo
 from AccessControl.ZopeGuards import guarded_getattr
 from ZODB.POSException import ConflictError

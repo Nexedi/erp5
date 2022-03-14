@@ -1,3 +1,4 @@
+from builtins import str
 from Products.PythonScripts.standard import Object
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
@@ -43,19 +44,19 @@ for prop_dict in context.getPropertyMap():
     new_value = base_error_message
   if new_value != old_value or error:
     # check if values are unicode convertible (binary are not)
-    if isinstance(new_value, (str, unicode)):
+    if isinstance(new_value, str):
       try:
-        unicode(str(new_value), 'utf-8')
+        str(str(new_value), 'utf-8')
       except UnicodeDecodeError:
         new_value = binary_data_explanation
-    if isinstance(old_value, (str, unicode)):
+    if isinstance(old_value, str):
       try:
-        unicode(str(old_value), 'utf-8')
+        str(str(old_value), 'utf-8')
       except UnicodeDecodeError:
         old_value = binary_data_explanation
-    if isinstance(current_value, (str, unicode)):
+    if isinstance(current_value, str):
       try:
-        unicode(str(current_value), 'utf-8')
+        str(str(current_value), 'utf-8')
       except UnicodeDecodeError:
         current_value = binary_data_explanation
     x = {'property_name': prop,

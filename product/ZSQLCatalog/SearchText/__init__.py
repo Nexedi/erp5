@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from past.builtins import basestring
 from .SearchTextParser import parse, isAdvancedSearchText
 
 def dequote(value):

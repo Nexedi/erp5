@@ -1,3 +1,4 @@
+from builtins import range
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 
@@ -6,7 +7,7 @@ section_title = 'My Organisation'
 portal = context.getPortalObject()
 accounting_module = portal.accounting_module
 year = 2005
-default_date = DateTime(year, 01, 01)
+default_date = DateTime(year, 0o1, 0o1)
 
 business_process = portal.portal_catalog.getResultValue(
   reference=('default_erp5_business_process', # erp5_configurator

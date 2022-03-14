@@ -1,5 +1,6 @@
 # JM: a 'preferred_category_display_method_id' preference would be better
 
+from builtins import object
 def getPreferredCategoryChildItemListMethodId():
   return context.getPortalObject().portal_preferences.getPreference(
     'preferred_category_child_item_list_method_id',
@@ -11,7 +12,7 @@ def getPreferredCategoryDisplayMethodId():
   return method == 'getTranslatedCompactTitle' and 'getCompactTranslatedTitle' \
       or method
 
-class ResourceSelection:
+class ResourceSelection(object):
   """
   Helper class to handle a selection of resources.
   """

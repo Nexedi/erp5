@@ -9,6 +9,7 @@ Parse a string for tables and return a list with tables information
 #
 # Note: also handles reports which look like tables and have a caption.
 
+from builtins import str
 import re
 
 def setTableCaption(my_counter, my_title, my_shift):

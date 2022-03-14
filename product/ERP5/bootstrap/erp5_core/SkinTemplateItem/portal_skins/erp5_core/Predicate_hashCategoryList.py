@@ -1,6 +1,7 @@
 """
   This script is used in parallel list fields in Predicate_view
 """
+from builtins import str
 if default_sub_field_property_dict is None:
   default_sub_field_property_dict = {}
 # Initialise result

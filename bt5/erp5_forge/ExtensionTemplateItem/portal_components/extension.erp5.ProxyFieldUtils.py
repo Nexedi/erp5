@@ -11,7 +11,7 @@ def get_field_data(field):
 
   if field.meta_type=='ProxyField':
     template_field = field.getRecursiveTemplateField()
-    for ui_field_id in template_field.form.fields.keys():
+    for ui_field_id in list(template_field.form.fields.keys()):
       value = field.get_recursive_orig_value(ui_field_id)
       if isinstance(value, Method):
         value = value.method_name
@@ -23,7 +23,7 @@ def get_field_data(field):
       value_dict[ui_field_id] = value
       tales_dict[ui_field_id] = tales_text
   else:
-    for ui_field_id in field.form.fields.keys():
+    for ui_field_id in list(field.form.fields.keys()):
       value = field.get_orig_value(ui_field_id)
       if isinstance(value, Method):
         value = value.method_name

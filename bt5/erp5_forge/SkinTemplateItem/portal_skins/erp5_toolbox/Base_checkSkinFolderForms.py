@@ -1,3 +1,5 @@
+from builtins import map
+from builtins import str
 from cgi import escape
 portal = context.getPortalObject()
 skin_folder = portal.portal_skins[original_skin_name]
@@ -41,7 +43,7 @@ for original_form in skin_folder.objectValues():
             map(escape, ('[%s]' % key if T else key, str(old), str(new[key]))))
         for T, old, new in ((0, original_value_dict, new_value_dict),
                             (1, original_value_tales, new_value_tales))
-        for key, old in old.iteritems()
+        for key, old in old.items()
         if old != new[key])
 
       output_append("</table></blockquote><p>")

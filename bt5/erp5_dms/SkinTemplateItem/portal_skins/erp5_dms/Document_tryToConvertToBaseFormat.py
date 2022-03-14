@@ -1,7 +1,10 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from erp5.component.document.Document import ConversionError
 from erp5.component.module.Log import log
 from ZODB.POSException import ConflictError
-from xmlrpclib import Fault
+from xmlrpc.client import Fault
 from socket import error as SocketError
 
 message = None
@@ -11,13 +14,13 @@ if context.getExternalProcessingState() not in ('converted', 'empty'):
     return context.convertToBaseFormat()
   except ConflictError:
     raise
-  except ConversionError, e:
+  except ConversionError as e:
     message = 'Conversion Error: %s' % (str(e) or 'undefined.')
-  except Fault, e:
+  except Fault as e:
     message = 'XMLFault: %s' % (repr(e) or 'undefined.')
-  except SocketError, e:
+  except SocketError as e:
     message = 'Socket Error: %s' % (repr(e) or 'undefined.')
-  except Exception, e:
+  except Exception as e:
     message = 'Problem: %s' % (repr(e) or 'undefined.')
   # reach here, then exception was raised, message must be logged in workflow
   # do not simply raise but rather change external processing state

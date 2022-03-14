@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 import transaction
 
 from AccessControl import ClassSecurityInfo
@@ -144,7 +145,7 @@ class PropertySheetTool(BaseTool):
     failed_import = []
     append = failed_import.append
     # Get all the filesystem Property Sheets
-    for name, klass in PropertySheet.__dict__.iteritems():
+    for name, klass in PropertySheet.__dict__.items():
       # If the Property Sheet is a string, it means that the Property
       # Sheets has either been already migrated or it is not available
       # (perhaps defined in a bt5 not installed yet?)
@@ -198,5 +199,5 @@ class PropertySheetTool(BaseTool):
     Return a sorted set of all the permissions useful for read/write
     permissions for properties of ZODB Property Sheets
     """
-    return sorted({value for key, value in Permissions.__dict__.iteritems()
+    return sorted({value for key, value in Permissions.__dict__.items()
                          if key[0].isupper()})

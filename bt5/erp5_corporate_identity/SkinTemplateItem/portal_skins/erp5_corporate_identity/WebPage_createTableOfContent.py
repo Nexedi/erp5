@@ -11,6 +11,7 @@ Create HTML table of content (to be used on web pages instead of xsl for pdf)
 # doc_content                 text content of document being rendered
 # doc_toc_title               translated title for table of content
 
+from builtins import str
 import re
 from Products.PythonScripts.standard import html_quote
 

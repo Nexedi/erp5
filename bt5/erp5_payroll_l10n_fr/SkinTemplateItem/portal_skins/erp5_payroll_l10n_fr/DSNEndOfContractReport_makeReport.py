@@ -54,7 +54,7 @@ dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.11', target=establishment
 
 for collective_contract in collective_contract_list:
   if collective_contract['S21.G00.15.005'] in set([x[1] for x in paysheet_data_dict['taxable_base']]):
-    dsn_file.append({key: value for key, value in collective_contract.items() if key != 'S21.G00.15.004'})
+    dsn_file.append({key: value for key, value in list(collective_contract.items()) if key != 'S21.G00.15.004'})
 
 dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.30', target=employee))
 
@@ -80,10 +80,10 @@ for remuneration_block in paysheet_data_dict['remuneration']:
     continue
   dsn_file.append(remuneration_block)
 
-for bonus_category in paysheet_data_dict['other_bonus'].itervalues():
+for bonus_category in paysheet_data_dict['other_bonus'].values():
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.52', target=bonus_category))
 
-for bonus_category in paysheet_data_dict['other_income'].itervalues():
+for bonus_category in paysheet_data_dict['other_income'].values():
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.54', target=bonus_category))
 
 # Print DSN Record

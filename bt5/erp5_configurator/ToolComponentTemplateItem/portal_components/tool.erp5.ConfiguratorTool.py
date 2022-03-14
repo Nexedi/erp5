@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     ConstantGetter
@@ -160,12 +161,12 @@ class ConfiguratorTool(BaseTool):
       failed_forms_counter = 0
       transition = business_configuration.getNextTransition()
       form = getattr(business_configuration, transition.getTransitionFormId())
-      for form_key in [x for x in kw.keys() if x.startswith('field_')]:
+      for form_key in [x for x in list(kw.keys()) if x.startswith('field_')]:
         form_kw[form_key] = kw[form_key]
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
         single_form_kw = {}
-        for key, value in form_kw.items():
+        for key, value in list(form_kw.items()):
           if isinstance(value, list) or isinstance(value, tuple):
             ## we have more than one form shown
             single_form_kw[key] = value[form_counter]
@@ -177,7 +178,7 @@ class ConfiguratorTool(BaseTool):
             ## ONE form!
             single_form_kw[key] = value
         ## update properly REQUEST with current form data
-        for key, value in single_form_kw.items():
+        for key, value in list(single_form_kw.items()):
           self.REQUEST.set(key, value)
         ## get validation status
         validation_status, dummy, validation_errors = \
@@ -185,7 +186,7 @@ class ConfiguratorTool(BaseTool):
 
         ## clean up REQUEST from traces from validate_all_to_request
         ## otherwise next form will use previous forms details
-        cleanup_keys = [x for x in self.REQUEST.other.keys() if x.startswith('my_') or x.startswith('your_')]
+        cleanup_keys = [x for x in list(self.REQUEST.other.keys()) if x.startswith('my_') or x.startswith('your_')]
         for key in cleanup_keys:
           self.REQUEST.other.pop(key, None)
         ## render HTML code

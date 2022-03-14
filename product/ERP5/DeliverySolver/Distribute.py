@@ -29,6 +29,8 @@
 
 
 from __future__ import absolute_import
+from __future__ import division
+from past.utils import old_div
 from .DeliverySolver import DeliverySolver
 
 class Distribute(DeliverySolver):
@@ -54,7 +56,7 @@ class Distribute(DeliverySolver):
 
     if simulation_quantity != 0:
       for simulation_movement in simulation_movement_list:
-        simulation_movement.edit(delivery_ratio=simulation_movement.getCorrectedQuantity() / simulation_quantity)
+        simulation_movement.edit(delivery_ratio=old_div(simulation_movement.getCorrectedQuantity(), simulation_quantity))
     else:
       if len(simulation_movement_list) > 0:
         delivery_ratio = 1./len(simulation_movement_list)

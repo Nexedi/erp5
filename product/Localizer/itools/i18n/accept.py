@@ -20,9 +20,13 @@ protocol.
 """
 
 # Import from the Standard Library
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import six
 if six.PY2:
-    import __builtin__
+    import builtins
 else:
     import builtins as __builtin__
 from decimal import Decimal
@@ -125,7 +129,7 @@ class AcceptLanguageType(object):
     @staticmethod
     def encode(accept):
         # Sort
-        accept = [ (y, x) for x, y in accept.items() ]
+        accept = [ (y, x) for x, y in list(accept.items()) ]
         accept.sort()
         accept.reverse()
         # Encode
@@ -161,7 +165,7 @@ def select_language(languages=None):
 
 
 def init_language_selector(language_selector=select_language):
-    __builtin__.__dict__['select_language'] = language_selector
+    builtins.__dict__['select_language'] = language_selector
 
 
 # Set default language selector

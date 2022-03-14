@@ -25,6 +25,7 @@ Patch CookieCrumbler to prevent came_from to appear in the URL
 when ERP5 runs in "require_referer" mode.
 """
 
+from builtins import object
 from future import standard_library
 standard_library.install_aliases()
 from AccessControl.SecurityInfo import ClassSecurityInfo
@@ -206,7 +207,7 @@ CookieCrumbler.credentialsChanged = credentialsChanged
 # redirection to login page. Recent CMF uses a view that is implemented
 # in CMFDefault (UnauthorizedView, on zExceptions.Unauthorized).
 
-class ResponseCleanup:
+class ResponseCleanup(object):
     def __init__(self, resp):
         self.resp = resp
 
@@ -284,7 +285,7 @@ if 1:
     def unauthorized(self):
         resp = self._cleanupResponse()
         # If we set the auth cookie before, delete it now.
-        if resp.cookies.has_key(self.auth_cookie):
+        if self.auth_cookie in resp.cookies:
             del resp.cookies[self.auth_cookie]
         # Redirect if desired.
         url = self.getUnauthorizedURL()
@@ -296,7 +297,7 @@ if 1:
     def _unauthorized(self):
         resp = self._cleanupResponse()
         # If we set the auth cookie before, delete it now.
-        if resp.cookies.has_key(self.auth_cookie):
+        if self.auth_cookie in resp.cookies:
             del resp.cookies[self.auth_cookie]
         # Redirect if desired.
         url = self.getUnauthorizedURL()

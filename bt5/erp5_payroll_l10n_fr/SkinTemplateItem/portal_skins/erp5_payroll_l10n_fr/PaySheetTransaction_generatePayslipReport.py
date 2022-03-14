@@ -4,7 +4,7 @@ kw["report_data"]["total_holiday"] = context.REQUEST.get('field_your_total_holid
 kw["report_data"]["taken_holiday"] = context.REQUEST.get('field_your_taken_holiday', 0)
 rep_content = context.PaySheetTransaction_generatePayslipReportContent(**kw)
 
-if isinstance(rep_content, unicode):
+if isinstance(rep_content, str):
   rep_content = rep_content.encode("utf8")
 
 return rep_content,"",""

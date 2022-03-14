@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.testDms import makeFileUpload
 from time import time

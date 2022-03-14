@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import warnings, six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass

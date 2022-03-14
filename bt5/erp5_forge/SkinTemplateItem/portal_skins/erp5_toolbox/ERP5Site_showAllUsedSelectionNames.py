@@ -1,3 +1,4 @@
+from __future__ import print_function
 # This tool is able to check, if selection_name in listboxes in forms
 # are unique "enough".
 # It shall print nothing on properly made site, which will mean
@@ -34,7 +35,7 @@ def callback(o,seldict):
             form_name = o.absolute_url() # TODO it could be done much better
             # assumes that name of form is unique enough
             form_name = form_name[form_name.rfind('/')+1:]
-            if seldict.has_key(field.get_value('selection_name')):
+            if field.get_value('selection_name') in seldict:
               old_list = seldict[field.get_value('selection_name')]
               if form_name not in old_list:
                 old_list.append(form_name)
@@ -46,9 +47,9 @@ def callback(o,seldict):
 seldict = {}
 recurse(o, callback, seldict)
 
-for selection_name in seldict.keys():
+for selection_name in list(seldict.keys()):
   if len(seldict[selection_name]) != 1 or all_selections:
-    print "'%s' [%s]"%(selection_name,len(seldict[selection_name]))
+    print("'%s' [%s]"%(selection_name,len(seldict[selection_name])))
     for form_name in seldict[selection_name]:
-      print "\t%s"%(form_name,)
+      print("\t%s"%(form_name,))
 return printed

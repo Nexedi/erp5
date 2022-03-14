@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import map
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from past.utils import old_div
+from builtins import object
 import string
 from .DummyField import fields
 from DocumentTemplate.DT_Util import html_quote
@@ -7,7 +17,7 @@ from DateTime import DateTime, Timezones
 from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
-from urlparse import urljoin
+from urllib.parse import urljoin
 from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import ElementMaker
@@ -51,8 +61,8 @@ def convert_to_xml_compatible_string(value):
   # (any Unicode character, excluding the surrogate blocks, FFFE, and FFFF)
   _char_tail = ''
   if sys.maxunicode > 0x10000:
-    _char_tail = u'%s-%s' % (unichr(0x10000),
-                             unichr(min(sys.maxunicode, 0x10FFFF)))
+    _char_tail = u'%s-%s' % (chr(0x10000),
+                             chr(min(sys.maxunicode, 0x10FFFF)))
   _nontext_sub = re.compile(
           ur'[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD%s]' % _char_tail,
           re.U).sub
@@ -60,7 +70,7 @@ def convert_to_xml_compatible_string(value):
 
 
 RE_OOO_ESCAPE = re.compile(r'([\n\t])?([^\n\t]*)')
-class OOoEscaper:
+class OOoEscaper(object):
   """Replacement function to use inside re.sub expression.
   This function replace \t by <text:tab/>
                         \n by <text:line-break/>
@@ -80,11 +90,11 @@ class OOoEscaper:
       line_break.tail = convert_to_xml_compatible_string(match_object.group(2))
 
 def convertToString(value):
-  if not isinstance(value, (str, unicode)):
+  if not isinstance(value, str):
     return str(value)
   return value
 
-class Widget:
+class Widget(object):
   """A field widget that knows how to display itself as HTML.
   """
 
@@ -736,15 +746,15 @@ class LinesTextAreaWidget(TextAreaWidget):
     implementation. So explicit conversion to list is required before
     passing to LinesTextAreaWidget's render and render_view methods.
     """
-    if isinstance(value, (str, unicode)):
+    if isinstance(value, str):
       value = [value]
-    value = string.join(map(convertToString, value), "\n")
+    value = string.join(list(map(convertToString, value)), "\n")
     return TextAreaWidget.render(self, field, key, value, REQUEST)
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
     if value is None:
       return ''
-    if isinstance(value, (str, unicode)):
+    if isinstance(value, str):
       value = value.split('\n')
     line_separator = field.get_value('view_separator')
 
@@ -760,7 +770,7 @@ class LinesTextAreaWidget(TextAreaWidget):
       render_prefix, attr_dict, local_name):
     if value is None:
       value = ['']
-    elif isinstance(value, (str, unicode)):
+    elif isinstance(value, str):
       value = [value]
     value = '\n'.join(map(convertToString, value))
     return TextAreaWidget.render_odt_view(self, field, value, as_string,
@@ -1490,7 +1500,7 @@ class DateTimeWidget(Widget):
     format_dict = self.format_to_sql_format_dict
     input_order = format_dict.get(self.getInputOrder(field),
                                   self.sql_format_default)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
             'format': field.get_value('date_separator').join(input_order),
@@ -1671,7 +1681,7 @@ class DateTimeWidget(Widget):
       number_of_second_in_day = 86400 #24 * 60 * 60
       timestamp = float(value)
       ooo_offset_timestamp = float(DateTime(1899, 12, 30, 0, 0, 0, value.timezone()))
-      days_value = (timestamp - ooo_offset_timestamp) / number_of_second_in_day
+      days_value = old_div((timestamp - ooo_offset_timestamp), number_of_second_in_day)
       attr_dict['{%s}formula' % TEXT_URI] = 'ooow:%f' % days_value
       text_node.attrib.update(attr_dict)
     if as_string:
@@ -1735,7 +1745,7 @@ def render_tag(tag, **kw):
     extra = ""
 
   # handle other attributes
-  for key, value in kw.items():
+  for key, value in list(kw.items()):
     if value == None:
         value = key
     attr_list.append('%s="%s"' % (key, html_quote(value)))
@@ -2038,9 +2048,9 @@ class FloatWidget(TextWidget):
       # in 'format', the only important thing is the number of decimal places,
       # so we add some places until we reach the precision defined on the
       # field.
-      for x in xrange(0, precision):
+      for x in range(0, precision):
         format += '0'
-    if isinstance(value, unicode):
+    if isinstance(value, str):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
             'format': format,

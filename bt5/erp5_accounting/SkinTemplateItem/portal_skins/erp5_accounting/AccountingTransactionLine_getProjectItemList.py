@@ -3,6 +3,7 @@
 This script is indented to be used on custom listfields for accounting lines, and on reports.
 If this script returns an empty list, it means that reports by project are disabled.
 """
+from builtins import str
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 

@@ -31,6 +31,9 @@
 """Generate repository information on Business Templates.
 """
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
 import posixpath
 import tarfile
 import os
@@ -45,14 +48,14 @@ from hashlib import sha1
 try:
   from urllib.parse import unquote
 except ImportError:
-  from urllib import unquote
+  from urllib.parse import unquote
 
 if sys.version_info[0] == 3:
   def iteritems(d):
-    return iter(d.items())
+    return iter(list(d.items()))
 else:
   def iteritems(d):
-    return d.iteritems()
+    return iter(d.items())
 
 # Order is important for installation
 # We want to have:

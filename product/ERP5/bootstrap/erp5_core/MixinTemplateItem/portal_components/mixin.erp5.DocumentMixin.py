@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from builtins import object
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
@@ -33,7 +34,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 LOCK_PERMISSION_KEY = 'TRANSACTIONAL_VARIABLE_FORMAT_PERMISSION_LOCK_FLAG'
 
-class DocumentMixin:
+class DocumentMixin(object):
   """
   Implementation of IDocument interface
    convert must not be overloaded as it checks conversion

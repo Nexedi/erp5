@@ -1,3 +1,4 @@
+from builtins import range
 if initial_remaining_annuities is None or current_annuity is None:
   context.log('Error in degressive ratioCalculation :',
             'initial_remaining_annuities (%s) or current_annuity (%s) is None' % (initial_remaining_annuities, current_annuity))

@@ -1,3 +1,4 @@
+from builtins import str
 sub = context.restrictedTraverse(context_document)
 while sub.getParentValue().getPortalType() !=  "Synchronization Tool":
   sub = sub.getParentValue()

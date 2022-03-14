@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
@@ -35,7 +36,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from erp5.component.document.Movement import Movement
 from erp5.component.document.EmailDocument import EmailDocument
 
-class AcknowledgeableMixin:
+class AcknowledgeableMixin(object):
   """
   Mixin class for all documents that we can acknowledge
   """

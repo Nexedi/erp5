@@ -28,6 +28,14 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from builtins import str
+from builtins import filter
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 from struct import unpack
 from copy import copy
 import warnings
@@ -195,7 +203,7 @@ class WorkflowMethod(Method):
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
     once_transition_dict = {}
-    for wf_id, transition_list in invoke_once_dict.iteritems():
+    for wf_id, transition_list in invoke_once_dict.items():
       valid_transition_list = []
       for transition_id in transition_list:
         once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
@@ -206,7 +214,7 @@ class WorkflowMethod(Method):
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
     candidate_transition_item_list = valid_invoke_once_item_list + \
-                           self._invoke_always.get(portal_type, {}).items()
+                           list(self._invoke_always.get(portal_type, {}).items())
 
     #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
 
@@ -378,7 +386,7 @@ class PropertyHolder(object):
     self.constraints = []
 
   def _getPropertyHolderItemList(self):
-    return [x for x in self.__dict__.items() if x[0] not in
+    return [x for x in list(self.__dict__.items()) if x[0] not in
         PropertyHolder.RESERVED_PROPERTY_SET]
 
   def registerWorkflowMethod(self, id, wf_id, tr_id, once_per_transaction=0):
@@ -467,7 +475,7 @@ class PropertyHolder(object):
     """
     Return a list of tuple (id, method) for every property of a class
     """
-    return self._getClassDict(klass, inherited=inherited, local=local).items()
+    return list(self._getClassDict(klass, inherited=inherited, local=local).items())
 
   def getClassMethodItemList(self, klass, inherited=1, local=1):
     """
@@ -577,9 +585,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     storage[wf_id] = (transition_id_set, trigger_dict)
 
   # Generate Workflow method
-  for wf_id, v in workflow_dict.iteritems():
+  for wf_id, v in workflow_dict.items():
     transition_id_set, trigger_dict = v
-    for tr_id, tdef in trigger_dict.iteritems():
+    for tr_id, tdef in trigger_dict.items():
       method_id = convertToMixedCase(tr_id)
       try:
         method = getattr(ptype_klass, method_id)
@@ -617,9 +625,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
   interaction_queue = []
   # XXX This part is (more or less...) a copy and paste
-  for wf_id, v in interaction_workflow_dict.iteritems():
+  for wf_id, v in interaction_workflow_dict.items():
     transition_id_set, trigger_dict = v
-    for tr_id, tdef in trigger_dict.iteritems():
+    for tr_id, tdef in trigger_dict.items():
       # Check portal type filter
       portal_type_filter_list = tdef.getPortalTypeFilterList()
       if (portal_type_filter_list and
@@ -648,7 +656,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                     method_id_matcher))
 
           # XXX - class stuff is missing here
-          method_id_list = filter(method_id_matcher, class_method_id_list)
+          method_id_list = list(filter(method_id_matcher, class_method_id_list))
         else:
           # Single method
           # XXX What if the method does not exist ?
@@ -1495,7 +1503,7 @@ class Base(
     """
     if not kw:
       return
-    key_list = kw.keys()
+    key_list = list(kw.keys())
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
@@ -1561,7 +1569,7 @@ class Base(
     setChangedPropertyList(ordered_key_list)
 
     if reindex_object:
-      for o in modified_object_dict.itervalues():
+      for o in modified_object_dict.values():
         o.reindexObject(activate_kw=activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
@@ -2151,8 +2159,8 @@ class Base(
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
-    references = map(self.getPortalObject().portal_catalog.getObject,
-                     (uids,) if isinstance(uids, (int, long)) else uids)
+    references = list(map(self.getPortalObject().portal_catalog.getObject,
+                     (uids,) if isinstance(uids, int) else uids))
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                    keep_default=keep_default, checked_permission=checked_permission)
 
@@ -2445,7 +2453,7 @@ class Base(
     method = self._getTypeBasedMethod('getIdTranslationDict')
     if method is not None:
       user_dict = method()
-      for k in user_dict.keys():
+      for k in list(user_dict.keys()):
         if property_dict.get(k, None) is not None:
           property_dict[k].update(user_dict[k])
         else:
@@ -2720,20 +2728,20 @@ class Base(
         id_list = filt.get('id', None)
         if not isinstance(id_list, (list, tuple)):
           id_list = [id_list]
-        constraints = filter(lambda x:x.id in id_list, constraints)
+        constraints = [x for x in constraints if x.id in id_list]
       # New ZODB based constraint uses reference for identity
       if 'reference' in filt:
         reference_list = filt.get('reference', None)
         if not isinstance(reference_list, (list, tuple)):
           reference_list = [reference_list]
-        constraints = filter(lambda x:x.getReference() in \
-            reference_list, constraints)
+        constraints = [x for x in constraints if x.getReference() in \
+            reference_list]
       if 'constraint_type' in filt:
         constraint_type_list = filt.get('constraint_type', None)
         if not isinstance(constraint_type_list, (list, tuple)):
           constraint_type_list = [constraint_type_list]
-        constraints = filter(lambda x:x.__of__(self).getConstraintType() in \
-                constraint_type_list, constraints)
+        constraints = [x for x in constraints if x.__of__(self).getConstraintType() in \
+                constraint_type_list]
 
     return constraints
 
@@ -2771,7 +2779,7 @@ class Base(
         # Avoid copying a SESSION object, because it is newly created
         # implicitly when not present, thus it may induce conflict errors.
         # As ERP5 does not use Zope sessions, it is better to skip SESSION.
-        for k in REQUEST.keys():
+        for k in list(REQUEST.keys()):
           if k != 'SESSION':
             setattr(context, k, REQUEST[k])
       # Set the original document
@@ -3255,7 +3263,7 @@ class Base(
       except LookupError:
         try:
           return min(history[0]['time']
-            for history in history_list.itervalues()
+            for history in history_list.values()
             if history and 'time' in history[0])
         except ValueError:
           pass
@@ -3278,7 +3286,7 @@ class Base(
       pass
     else:
       max_date = None
-      for history in history_list.itervalues():
+      for history in history_list.values():
         try:
           date = history[-1]['time']
         except (IndexError, KeyError, TypeError):
@@ -3611,9 +3619,9 @@ class Base(
     """
     if not isinstance(group, basestring):
       raise TypeError('group must be a string')
-    if not isinstance(default, (int, long)):
+    if not isinstance(default, int):
       raise TypeError('default must be an integer')
-    if not isinstance(count, (int, long)):
+    if not isinstance(count, int):
       raise TypeError('count must be an integer')
     if count < 0:
       raise ValueError('count cannot be negative')
@@ -3629,13 +3637,13 @@ class Base(
     except KeyError:
       if onMissing is not None:
         default = onMissing()
-        if not isinstance(default, (int, long)):
+        if not isinstance(default, int):
           raise TypeError('onMissing must return an integer')
       id_generator_state[group] = PersistentContainer(default)
       next_id = default
     new_next_id = None if poison else next_id + count
     id_generator_state[group].value = new_next_id
-    return range(next_id, new_next_id)
+    return list(range(next_id, new_next_id))
 
 InitializeClass(Base)
 

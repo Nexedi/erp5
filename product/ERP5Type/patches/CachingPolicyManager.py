@@ -1,3 +1,4 @@
+from builtins import str
 from Products.CMFCore.CachingPolicyManager import CachingPolicy, \
     CachingPolicyManager, createCPContext
 from App.special_dtml import DTMLFile

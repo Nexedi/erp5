@@ -73,7 +73,7 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       for oo_module_dict in object_list:
         mod_conf_list = []
         portal_type = oo_module_dict.pop('portal_type')
-        for category, role_list_string in oo_module_dict.items():
+        for category, role_list_string in list(oo_module_dict.items()):
           # passed from outside (it has higher priority than configuration file)
           category = dynamic_values.get(category, category)
           title = category.replace('/', '_')
@@ -90,7 +90,7 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       # XXX rafael: improve this, the ignore list is quite ugly.
       ignore_list = []
       portal_type_id_list = portal.portal_types.objectIds()
-      for portal_type, role_list in portal_type_dict.items():
+      for portal_type, role_list in list(portal_type_dict.items()):
         for role_dict in role_list:
           if portal_type in portal_type_id_list:
             portal.portal_types[portal_type].newContent(portal_type='Role Information', \
@@ -105,6 +105,6 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       # keep existing roles definition (from previous configuration saves)
       for existing_type in bt5_obj.getTemplatePortalTypeRoleList():
         portal_type_dict[existing_type] = 1
-      bt5_obj.edit(template_portal_type_role_list=[i for i in portal_type_dict.keys() if i not in ignore_list])
+      bt5_obj.edit(template_portal_type_role_list=[i for i in list(portal_type_dict.keys()) if i not in ignore_list])
 
     return error_list

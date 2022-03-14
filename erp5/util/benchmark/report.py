@@ -32,6 +32,10 @@
 ##############################################################################
 
 from __future__ import print_function
+from __future__ import division
+from builtins import next
+from builtins import range
+from past.utils import old_div
 import argparse
 import re
 import six
@@ -449,21 +453,21 @@ def drawConcurrentUsersUseCasePlot(axes,
       maximum_sum += stat.maximum
       stddev = max(stddev, stat.standard_deviation)
 
-    use_case_per_hour_min = count / maximum_sum
+    use_case_per_hour_min = old_div(count, maximum_sum)
     use_case_per_hour_min_list.append(use_case_per_hour_min)
 
-    use_case_per_hour_mean = count / mean_sum
+    use_case_per_hour_mean = old_div(count, mean_sum)
     use_case_per_hour_mean_list.append(use_case_per_hour_mean)
 
-    use_case_per_hour_max = count / minimum_sum
+    use_case_per_hour_max = old_div(count, minimum_sum)
     use_case_per_hour_max_list.append(use_case_per_hour_max)
 
     if stddev:
       y_error_lower = use_case_per_hour_mean - max(use_case_per_hour_min,
-                                                   count / (mean_sum + stddev))
+                                                   old_div(count, (mean_sum + stddev)))
 
       y_error_upper = min(use_case_per_hour_max,
-                          count / (mean_sum - stddev)) - use_case_per_hour_mean
+                          old_div(count, (mean_sum - stddev))) - use_case_per_hour_mean
     else:
       y_error_lower = y_error_upper = 0
 
@@ -558,7 +562,7 @@ def generateReport():
   is_range_user = len(per_nb_users_report_dict) > 1
   range_user_report_dict = {}
 
-  for nb_users, report_dict in sorted(per_nb_users_report_dict.items(),
+  for nb_users, report_dict in sorted(list(per_nb_users_report_dict.items()),
                                       key=lambda d: d[0]):
     stat_list, use_case_dict = computeStatisticFromFilenameList(
       argument_namespace, report_dict['filename'], range_user_report_dict,
@@ -574,7 +578,7 @@ def generateReport():
                                DIAGRAM_PER_PAGE],
                      only_average=argument_namespace.only_average)
 
-    for suite_name, use_case_dict in use_case_dict.viewitems():
+    for suite_name, use_case_dict in use_case_dict.items():
       drawUseCasePerNumberOfUserPlot(
         pdf,
         "Scalability for %s with %d users" % (suite_name, nb_users),

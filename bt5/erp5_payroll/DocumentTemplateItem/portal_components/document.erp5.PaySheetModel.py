@@ -122,7 +122,7 @@ class PaySheetModel(TradeCondition, XMLMatrix):
       id_list = []
       model_reference_list = model.getReferenceDict(
                             portal_type_list, property_list=property_list)
-      for reference in model_reference_list.keys():
+      for reference in list(model_reference_list.keys()):
         if reference not in reference_list:
           reference_list.append(reference)
           id_list.append(model_reference_list[reference])

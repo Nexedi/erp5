@@ -35,7 +35,7 @@ class TestWorkflowMixin(ERP5TypeTestCase):
       selection_name = getattr(self, 'module_selection_name', None)
       if selection_name is not None:
         selection_parameter_dict = self.portal.portal_selections.getSelectionParamsFor(selection_name)
-        for parameter, value in url_parameter_dict.iteritems():
+        for parameter, value in url_parameter_dict.items():
           self.assertIn(parameter, selection_parameter_dict)
           self.assertEqual(value, selection_parameter_dict[parameter])
 

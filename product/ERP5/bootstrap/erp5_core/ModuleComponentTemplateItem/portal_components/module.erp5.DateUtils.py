@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 import warnings
 
 from AccessControl import ModuleSecurityInfo
@@ -121,7 +123,7 @@ def addToDate(date, to_add=None, **kw):
     if 1 > return_value[key] % 1 > 0:
       return_value[lesser_key_dict[key]] += return_value[key] % 1 * number_less_of_in_dict[key]
       return_value[key] = int(return_value[key])
-      for local_key in return_value.keys():
+      for local_key in list(return_value.keys()):
         if local_key not in ('day', 'year'):
           treatPositiveValues(return_value, local_key)
 
@@ -198,7 +200,7 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
     to_inverse = 0
 
   diff_value = {}
-  for key in keys.keys():
+  for key in list(keys.keys()):
     if key:
       diff_value[key] = 0
 
@@ -213,7 +215,7 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
     diff_value['day'] = round(to_date - from_date)
 
   returned_value = {}
-  for key, value in diff_value.items():
+  for key, value in list(diff_value.items()):
     if to_inverse:
       returned_value[key] = -value
     else:
@@ -268,7 +270,7 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
                               []).append(to_date.strftime(format_dict[current_key]))
 
   returned_value_dict = {}
-  for key, value in diff_value_dict.iteritems():
+  for key, value in diff_value_dict.items():
     if to_inverse:
       value.reverse()
       returned_value_dict[key] = value
@@ -334,7 +336,7 @@ def getMonthFraction(date, days):
     reference_month_date = addToDate(date, {'month':-1} )
 
   number_of_days_in_month = addToDate(reference_month_date, {'month':1}) - reference_month_date + 0.
-  return days / number_of_days_in_month
+  return old_div(days, number_of_days_in_month)
 
 
 def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year):
@@ -343,9 +345,9 @@ def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year)
   represented by the given number of days OR the number of months.
   """
   if days is None and months is not None:
-    return months / number_of_months_in_year
+    return old_div(months, number_of_months_in_year)
   else:
-    return days / days_in_year
+    return old_div(days, days_in_year)
 
 def getAccountableYearFraction(from_date=None, to_date=None):
   """
@@ -371,8 +373,8 @@ def getAccountableYearFraction(from_date=None, to_date=None):
     days = days_before + days_after
   else:
     days = 0
-  year_fraction = months / accountable_months_in_year
-  year_fraction += (1 / accountable_months_in_year) * ( days / accountable_days_in_month)
+  year_fraction = old_div(months, accountable_months_in_year)
+  year_fraction += (old_div(1, accountable_months_in_year)) * ( old_div(days, accountable_days_in_month))
   return year_fraction
 
 def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
@@ -417,7 +419,7 @@ def roundMonthToGreaterEntireYear(months_number):
   Round the given number of months in order to have an entire
   number of years.
   """
-  years_number = months_number / number_of_months_in_year
+  years_number = old_div(months_number, number_of_months_in_year)
   if int(years_number) != years_number:
     years_number += 1
   return int(years_number) * 12
@@ -446,7 +448,7 @@ def convertDateToHour(date=None):
   # and this provides the use of toordinal method.
   formatted_creation_date = datetime(creation_date_dict['year'],creation_date_dict['month'],creation_date_dict['day'])
   # reference date which is the first day of creation date year
-  reference_date = datetime(creation_date_dict['year'], 01, 1)
+  reference_date = datetime(creation_date_dict['year'], 0o1, 1)
   # calculate the ordinal date of the creation date and the reference date
   ordinal_date = datetime.toordinal(formatted_creation_date)
   ordinal_reference_date = datetime.toordinal(reference_date)
@@ -473,7 +475,7 @@ def createDateTimeFromMillis(millis): # pylint: disable=redefined-outer-name
   Another solution would be a DateTime implementation that relies exclusively
   on integer values internally.
   """
-  millis = long(millis)
+  millis = int(millis)
   date = DateTime(millis / 1000.)
   date._millis = millis
   return date

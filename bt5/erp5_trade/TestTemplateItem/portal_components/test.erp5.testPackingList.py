@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from collections import deque
 import unittest
 

@@ -1,3 +1,6 @@
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 from erp5.component.module.DateUtils import getNumberOfDayInMonth
 
 portal = context.getPortalObject()
@@ -94,7 +97,7 @@ def makeTaxableBaseComponentBlock(movement, category):
     else:
       worked_time = float(enrollment_record.getWorkingUnitQuantity())
       normal_working_time = float(enrollment_record.getStandardWorkingUnit())
-      base = minimum_salary * (worked_time / normal_working_time)
+      base = minimum_salary * (old_div(worked_time, normal_working_time))
   else:
     base = movement.base
   return {

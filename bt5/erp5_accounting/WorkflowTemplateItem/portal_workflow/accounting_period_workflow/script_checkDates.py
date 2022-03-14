@@ -1,3 +1,4 @@
+from builtins import next
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 

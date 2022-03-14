@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import decimal
 
 from AccessControl import ClassSecurityInfo
@@ -36,7 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.mixin.EquivalenceTesterMixin import EquivalenceTesterMixin
 
 ROUNDING_OPTION_DICT = {name: value
-                        for name, value in decimal.__dict__.items()
+                        for name, value in list(decimal.__dict__.items())
                         if name.startswith('ROUND_')}
 
 # XXX: We could compute a value based on sys.float_info.epsilon

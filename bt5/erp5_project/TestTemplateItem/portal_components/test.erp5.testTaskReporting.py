@@ -71,14 +71,14 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
         rule.validate()
 
     # create organisations
-    if not self.portal.organisation_module.has_key('Organisation_1'):
+    if 'Organisation_1' not in self.portal.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1')
 
-    if not self.portal.organisation_module.has_key('Organisation_2'):
+    if 'Organisation_2' not in self.portal.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
@@ -86,13 +86,13 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
                               id='Organisation_2')
 
     # create persons
-    if not self.portal.person_module.has_key('Person_1'):
+    if 'Person_1' not in self.portal.person_module:
       self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
-    if not self.portal.person_module.has_key('Person_2'):
+    if 'Person_2' not in self.portal.person_module:
       self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
@@ -100,7 +100,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
                               id='Person_2')
 
     # create project
-    if not self.portal.project_module.has_key('Project_1'):
+    if 'Project_1' not in self.portal.project_module:
       project = self.portal.project_module.newContent(
                               portal_type='Project',
                               reference='Project_1',
@@ -114,7 +114,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
       project.newContent(portal_type='Project Line',
                          id='Line_2',
                          title='Line_2')
-    if not self.portal.project_module.has_key('Project_2'):
+    if 'Project_2' not in self.portal.project_module:
       project = self.portal.project_module.newContent(
                               portal_type='Project',
                               reference='Project_2',
@@ -125,7 +125,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
 
     # create unit categories
     for unit_id in ('day', 'hour',):
-      if not self.portal.portal_categories['quantity_unit'].has_key(unit_id):
+      if unit_id not in self.portal.portal_categories['quantity_unit']:
         self.portal.portal_categories.quantity_unit.newContent(
                                   portal_type='Category',
                                   title=unit_id.title(),
@@ -134,7 +134,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
 
     # Create resources
     module = self.portal.product_module
-    if not module.has_key('development'):
+    if 'development' not in module:
       module.newContent(
           portal_type='Product',
           id='development',
@@ -142,7 +142,7 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
           reference='ref 1',
           quantity_unit='day'
           )
-    if not module.has_key('consulting'):
+    if 'consulting' not in module:
       module.newContent(
           portal_type='Product',
           id='consulting',

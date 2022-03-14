@@ -1,3 +1,4 @@
+from builtins import str
 parent = context.getParentValue()
 portal_type = context.getPortalType()
 

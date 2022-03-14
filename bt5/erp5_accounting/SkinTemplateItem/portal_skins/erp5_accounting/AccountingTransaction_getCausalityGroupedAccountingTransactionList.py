@@ -15,4 +15,4 @@ for accounting_transaction in [context] + context.getCausalityValueList(
     if related_causality.getSimulationState() not in ('cancelled', 'deleted'):
       accounting_transaction_set[related_causality] = 1
 
-return accounting_transaction_set.keys()
+return list(accounting_transaction_set.keys())

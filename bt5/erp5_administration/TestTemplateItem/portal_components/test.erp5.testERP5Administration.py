@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import unittest
 import time
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from zExceptions import BadRequest
 portal_tests = container.portal_tests
 if test_zuite_relative_url is not None:
@@ -10,5 +11,5 @@ try:
           for x in portal_tests.objectValues('Zuite Results')])
 except BadRequest:
   pass
-print "OK"
+print("OK")
 return printed

@@ -2,6 +2,7 @@
 
 This script has proxy role, as only manager can access workflow configuration.
 """
+from builtins import str
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 
@@ -14,9 +15,9 @@ for state in workflow.getStateValueList():
   if 0:
     # We don't translate yet, it needs several other fixes
     # see https://lab.nexedi.com/nexedi/erp5/merge_requests/778
-    state_title = unicode(translateString(
+    state_title = str(translateString(
       '%s [state in %s]' % (state_title, workflow.getId()),
-      default=unicode(translateString(state_title))))
+      default=str(translateString(state_title))))
   info[state.getReference()] = state_title
 
 return info

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import time
 from datetime import datetime
 portal = context.getPortalObject()
@@ -227,5 +228,5 @@ if create_project_documents:
                                     portal_type = 'Project',
                                     reference = draft_project)
 
-print "Project Created"
+print("Project Created")
 return printed

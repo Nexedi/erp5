@@ -1,6 +1,8 @@
+from future import standard_library
+standard_library.install_aliases()
 import json
 import re
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 if REQUEST is None:
   REQUEST = context.REQUEST

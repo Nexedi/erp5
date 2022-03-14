@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 from Products.PortalTransforms.interfaces import ITransform
 import os
 import subprocess
@@ -5,7 +7,7 @@ from zope.interface import implementer
 
 
 @implementer(ITransform)
-class ImageMagickTransforms:
+class ImageMagickTransforms(object):
     __name__  = "imagemagick_transforms"
     def __init__(self, name=None):
          if name is not None:

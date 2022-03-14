@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 portal =  context.getPortalObject()
 
 """Delete objects we are about to create """

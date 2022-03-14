@@ -3,6 +3,7 @@
 Check that the provided password matchs with the confirmation
 and if authentication policy is enabled, that the password match the policy.
 """
+from builtins import str
 from Products.Formulator.Errors import ValidationError
 password_confirm = request.get('field_password_confirm',
                                request.get('password_confirm'))

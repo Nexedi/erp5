@@ -6,17 +6,22 @@ to work inside erp5 and adapt to receipt binaries and with more
 explanation
 https://github.com/tmbdev/ocropy
 """
+from __future__ import division
 # pylint: disable=unpacking-non-sequence
 # Pylint is confused by ocropy.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import scipy.ndimage as ndi
-import StringIO
+import io
 from matplotlib import pylab
 import matplotlib.image as mpimg
 import scipy.stats as stats
 import re
-import cPickle
+import pickle
 import ocrolib
 
 def getReceiptValue(self, image_data, model_name = "en-default.pyrnn"):
@@ -38,7 +43,7 @@ def getReceiptValue(self, image_data, model_name = "en-default.pyrnn"):
   This function look for euros only and return a price with a two digit
   precison like "135.79" or "43,89".
   """
-  image_as_string = StringIO.StringIO(image_data)
+  image_as_string = io.StringIO(image_data)
   image_as_array = mpimg.imread(image_as_string, format = 'JPG')
   line_list, cleared = getLinesFromPicture(image_as_array)
 
@@ -102,7 +107,7 @@ def getRnnModelFromDataStream(self, model_name="en-default.pyrnn"):
   WARNING: This function present a security issue and should NOT be called with
   an user-defined model name (see cpickle security issue)
   """
-  network = cPickle.loads(self.data_stream_module[model_name].getData())
+  network = pickle.loads(self.data_stream_module[model_name].getData())
   lnorm = getattr(network, "lnorm", None)
   return network, lnorm
 
@@ -234,11 +239,11 @@ def getLineSeed(binary, scale, bottom, top):
   # Find the top boundary
   tmarked = ndi.maximum_filter(
     top == ndi.maximum_filter(top,(vrange, 0)), (2, 2))
-  tmarked = tmarked * (top > threshold * np.amax(top) * threshold / 2)
+  tmarked = tmarked * (top > old_div(threshold * np.amax(top) * threshold, 2))
   tmarked = ndi.maximum_filter(tmarked, (1, 20))
   # Create seeds
   seeds = np.zeros(binary.shape, 'i')
-  line_spacing = vrange / 2
+  line_spacing = old_div(vrange, 2)
   for x in range(bmarked.shape[1]):
     transitions = sorted([(y, 1) for y in pylab.find(bmarked[ : , x])] \
                          + [(y, 0) for y in pylab.find(tmarked[ : , x])])[:: -1]
@@ -290,7 +295,7 @@ def getSegmentizedImage(binary, scale):
   # Label the seeds then group them by line inside boxmaps
   seeds,_ = ocrolib.morph.label(seeds)
   labels = ocrolib.morph.propagate_labels(boxmap, seeds, conflict = 1)
-  spread = ocrolib.morph.spread_labels(seeds, maxdist = (scale / 4))
+  spread = ocrolib.morph.spread_labels(seeds, maxdist = (old_div(scale, 4)))
   labels = np.where(labels > 0, labels, spread * binary)
   return labels * binary
 
@@ -328,7 +333,7 @@ def removeObjects(binarized):
     scalemap[sub_object] = ocrolib.sl.area(sub_object) ** 0.5
   scale = ndi.median(scalemap[(scalemap > 3) & (scalemap < 100)])
   # Take the mesurement of small objects
-  sums = ndi.measurements.sum(binarized, labels, range(n + 1))
+  sums = ndi.measurements.sum(binarized, labels, list(range(n + 1)))
   sums = sums[labels]
   # Find all objects and remove big ones
   for i, b in enumerate(objects):
@@ -456,7 +461,7 @@ def imageBinarization(flattened_image):
   low = stats.scoreatpercentile(sharpened.ravel(), 5)
   high = stats.scoreatpercentile(sharpened.ravel(), 70)
   # rescale the image to enhance differences
-  sharpened = (sharpened - low) / (high - low)
+  sharpened = old_div((sharpened - low), (high - low))
   sharpened = np.clip(sharpened, 0, 1)
   # Binarization
   return sharpened > 0.7

@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import str
+from builtins import range
+from builtins import object
 from zLOG import ERROR
-from HTMLParser import HTMLParser, HTMLParseError
+from html.parser import HTMLParser, HTMLParseError
 import re
 from cgi import escape
 import codecs
@@ -179,13 +185,13 @@ def decode_htmlentity(m):
          c = int(entity_value[1:], 16)
       else:
          c = int(entity_value)
-      return unichr(c)
+      return chr(c)
    except ValueError:
       return entity_value
 
 charset_parser = re.compile('charset="?(?P<charset>[^"]*)"?[\S/]?',
                             re.IGNORECASE)
-class CharsetReplacer:
+class CharsetReplacer(object):
   def __init__(self, encoding):
     self.encoding = encoding
 
@@ -239,10 +245,10 @@ class StrippingParser(HTMLParser):
         # Cannot use name2codepoint directly, because HTMLParser supports apos,
         # which is not part of HTML 4
         if getattr(self, 'entitydefs', None) is None:
-            import htmlentitydefs
+            import html.entities
             entitydefs = HTMLParser.entitydefs = {'apos':u"'"}
-            for k, v in htmlentitydefs.name2codepoint.iteritems():
-                entitydefs[k] = unichr(v)
+            for k, v in html.entities.name2codepoint.items():
+                entitydefs[k] = chr(v)
         # (end) copied from Python-2.6's HTMLParser.py
         if name in self.entitydefs:
             x = ';'
@@ -376,7 +382,7 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
     return result
 
 @implementer(ITransform)
-class SafeHTML:
+class SafeHTML(object):
     """Simple transform which uses CMFDefault functions to
     clean potentially bad tags.
 
@@ -533,7 +539,7 @@ class SafeHTML:
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
-                if isinstance(orig, unicode):
+                if isinstance(orig, str):
                   orig = orig.encode('utf-8')
                 data.setData(orig)
                 break

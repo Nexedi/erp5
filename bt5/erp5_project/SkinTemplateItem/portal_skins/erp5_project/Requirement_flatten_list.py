@@ -1,3 +1,4 @@
+from builtins import str
 result = []
 
 def getContentValues(item, parent_id):

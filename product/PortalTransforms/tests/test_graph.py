@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
 
 from .utils import input_file_path
@@ -37,7 +39,7 @@ class TestGraph(ATSiteTestCase):
             5<-------+
         """
         # we need a DummyTransform class
-        class DT:
+        class DT(object):
             def __init__(self, name):
                 self._name = name
             def name(self):
@@ -78,7 +80,7 @@ class TestGraph(ATSiteTestCase):
                 # build the name of the path
                 pathName = orig + '-' + target
                 # do we have any expectation for this path ?
-                if pathName in expectedPathes.keys():
+                if pathName in list(expectedPathes.keys()):
                     # we do. Here is the expected shortest path
                     expectedPath = expectedPathes[pathName]
                     # what's the shortest path according to the engine ?

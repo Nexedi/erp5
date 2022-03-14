@@ -28,6 +28,9 @@
 #
 ##############################################################################
 
+from builtins import zip
+from past.builtins import basestring
+from builtins import object
 from zLOG import LOG
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
@@ -73,7 +76,7 @@ operator_value_deprocessor_dict = {
   'like': deprocessLikeValue
 }
 
-numeric_type_set = (long, float) # get mapped to int, so do not mention it
+numeric_type_set = (int, float) # get mapped to int, so do not mention it
 
 @implementer(ISearchKey)
 class SearchKey(object):
@@ -328,7 +331,7 @@ class SearchKey(object):
       append(SimpleQuery(search_key=self, comparison_operator='in',
                          group=group,
                          **{column: operator_value_dict.pop('=')}))
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in operator_value_dict.items():
       for value in value_list:
         append(SimpleQuery(search_key=self,
                            comparison_operator=comparison_operator,

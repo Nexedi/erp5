@@ -12,6 +12,7 @@
 ###    implement the transform, if register needs to fail for now it
 ###    should raise an ImportError as well (dumb, I know)
 
+from builtins import str
 from zLOG import DEBUG, ERROR
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import MissingBinary

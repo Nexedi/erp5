@@ -73,9 +73,9 @@ class ContributionPredicate(Predicate, XMLObject):
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
-    for property_, value in self._identity_criterion.iteritems():
+    for property_, value in self._identity_criterion.items():
       result = result and (context.getProperty(property_) in value)
-    for property_, (min_, max_) in self._range_criterion.iteritems():
+    for property_, (min_, max_) in self._range_criterion.items():
       value = context.getProperty(property_)
       if min_ is not None:
         result = result and (value >= min_)
@@ -112,7 +112,7 @@ class ContributionPredicate(Predicate, XMLObject):
           tested_base_category[bc] = tested_base_category[bc] or \
                                      context.isMemberOf(c)
 
-    result = result and (0 not in tested_base_category.values())
+    result = result and (0 not in list(tested_base_category.values()))
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
     if test_method_id_list:

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
 from hashlib import md5
 
 # Some workflow does not make sense in the context of mass transition and are
@@ -125,7 +126,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
 
 
     for (ptype, workflow_id, _), (doc, document_count) in\
-                workflow_state_dict.iteritems():
+                workflow_state_dict.items():
       workflow = wf_tool.getWorkflowById(workflow_id)
       state_var = workflow.getStateVariable()
       translated_workflow_state_title = doc.getProperty(

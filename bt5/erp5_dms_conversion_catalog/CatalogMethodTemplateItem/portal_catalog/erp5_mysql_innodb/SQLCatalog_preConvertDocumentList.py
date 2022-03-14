@@ -1,3 +1,4 @@
+from builtins import range
 portal = context.getPortalObject()
 
 # make sure cloudoo is available. this check is required ONLY due to

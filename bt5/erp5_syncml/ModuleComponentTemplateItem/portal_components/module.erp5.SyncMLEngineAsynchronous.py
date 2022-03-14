@@ -25,6 +25,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
 from logging import getLogger
 
 from erp5.component.mixin.SyncMLEngineMixin import SyncMLEngineMixin
@@ -282,7 +284,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       response_id_list.reverse()
     else:
       response_id_list = [None for _ in
-                          xrange(len(syncml_request.sync_command_list))]
+                          range(len(syncml_request.sync_command_list))]
     split = getSite().portal_preferences.getPreferredSyncActionPerActivityCount()
     if not split:  # We do not use activities
       if send_response:

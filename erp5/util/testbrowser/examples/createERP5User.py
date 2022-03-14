@@ -9,6 +9,7 @@
 # TODO: There must be a better way than the code below to do that though...
 
 from __future__ import print_function
+from builtins import range
 import sys
 
 from erp5.util.testbrowser.browser import Browser

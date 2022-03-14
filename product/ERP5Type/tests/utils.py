@@ -28,6 +28,8 @@
 
 """Utility functions and classes for unit testing
 """
+from builtins import range
+from builtins import object
 import errno
 import os
 import logging
@@ -115,7 +117,7 @@ class DummyMailHost(DummyMailHostMixin, MailHost):
   pass
 
 
-class DummyTranslationService:
+class DummyTranslationService(object):
   """A dummy translation service where you can access translated msgids and
   mappings in _translated.
   """
@@ -124,7 +126,7 @@ class DummyTranslationService:
     self._translated.setdefault(domain, []).append((msgid, mapping))
     return msgid
 
-class DummyMessageCatalog:
+class DummyMessageCatalog(object):
   __allow_access_to_unprotected_subobjects__ = 1
   def __init__(self):
     self._translated = []
@@ -138,7 +140,7 @@ class DummyMessageCatalog:
                 target_language=None, default=None, *args, **kw):
     return default
 
-class DummyLocalizer:
+class DummyLocalizer(object):
   """A replacement for stock cookie - based localizer.
 
   You can change the current language by calling 'changeLanguage'
@@ -328,9 +330,9 @@ class getMySQLArguments(object):
     self = object.__new__(cls)
     self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
     self.conv = None
-    DB._parse_connection_string.im_func(self)
+    DB._parse_connection_string.__func__(self)
     return ''.join('-%s%s ' % (self.args_dict[k], v)
-                   for k, v in self._kw_args.iteritems()
+                   for k, v in self._kw_args.items()
                    if k in self.args_dict
                    ) + self._kw_args['db']
 
@@ -371,7 +373,7 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
   m = 499 # must be a prime number
   x = instance_random.randrange(0, m)
   c = instance_random.randrange(1, m)
-  for i in xrange(m):
+  for i in range(m):
     yield default_host, 55000 + x
     x = (x + c) % m
   raise RuntimeError("Can't find free port (tried ports %u to %u)\n"
@@ -397,7 +399,7 @@ def createZServer(log=os.devnull, zserver_type='http'):
       hs.__init__(ip, port, resolver=None, logger_object=lg)
       hs.install_handler(zhandler_class(module='Zope2', uri_base=''))
       return hs
-    except socket.error, e:
+    except socket.error as e:
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()
@@ -449,7 +451,7 @@ def reindex(func):
 #  - if a TODO test is in fact successful, no one will ever know
 todo_erp5 = unittest.skip("TODO ERP5")
 
-class LogInterceptor:
+class LogInterceptor(object):
     '''Replacement for Products.CMFCore.tests.base.testcase.LogInterceptor
 
     On CMF 1, LogInterceptor would bail if a log record with too high
@@ -589,7 +591,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
 
   def getSortedCategoryList(line, base_id, category_list):
     result = []
-    index_list = line.index[base_id].keys()
+    index_list = list(line.index[base_id].keys())
     index_list.sort()
     for category in category_list:
       for index in index_list:
@@ -666,7 +668,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
                           *category_list)
 
       cell.edit(**mapped_value_dict)
-      cell.setMappedValuePropertyList(mapped_value_dict.keys())
+      cell.setMappedValuePropertyList(list(mapped_value_dict.keys()))
 
       base_category_list = [category_path
                             for category_path in category_list

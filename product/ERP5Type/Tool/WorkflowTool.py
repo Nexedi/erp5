@@ -28,6 +28,7 @@
 """
 Most of the code in this file has been taken from patches/WorkflowTool.py
 """
+from past.builtins import basestring
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -91,7 +92,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException('No workflows found.')
       found = False
       for workflow in workflow_list:
-        if not isinstance(workflow, (InteractionWorkflowDefinition, InteractionWorkflow,)) and \
+        if not isinstance(workflow, (InteractionWorkflowDefinition, InteractionWorkflow)) and \
           state_id in workflow.getStateReferenceList():
             found = True
             break
@@ -154,10 +155,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       notify(ActionWillBeInvokedEvent(ob, w, action))
     try:
       res = func(*args, **kw)
-    except ObjectDeleted, ex:
+    except ObjectDeleted as ex:
       res = ex.getResult()
       reindex = 0
-    except ObjectMoved, ex:
+    except ObjectMoved as ex:
       res = ex.getResult()
       ob = ex.getNewObject()
     except:
@@ -350,7 +351,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         else:
           try:
             self.Base_zClearWorklistTable()
-          except ProgrammingError, error_value:
+          except ProgrammingError as error_value:
             # 1146 = table does not exist
             if error_value[0] != 1146:
               raise
@@ -404,13 +405,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           catalog_brain_result = search_result(**search_result_kw)
           value_column_dict = {x: [] for x in table_column_id_set}
           for catalog_brain_line in catalog_brain_result.dictionaries():
-            for column_id, value in catalog_brain_line.iteritems():
+            for column_id, value in catalog_brain_line.items():
               if column_id in value_column_dict:
                 value_column_dict[column_id].append(value)
           if len(value_column_dict[COUNT_COLUMN_TITLE]):
             try:
               Base_zInsertIntoWorklistTable(**value_column_dict)
-            except (ProgrammingError, OperationalError), error_value:
+            except (ProgrammingError, OperationalError) as error_value:
               # OperationalError 1054 = unknown column
               if isinstance(error_value, OperationalError) and error_value[0] != 1054:
                 raise
@@ -490,7 +491,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       if use_cache:
         ignored_security_column_id_set = self._getWorklistIgnoredSecurityColumnSet()
         ignored_security_uid_parameter_set = {x
-          for x, y in catalog_security_uid_groups_columns_dict.iteritems()
+          for x, y in catalog_security_uid_groups_columns_dict.items()
           if y in ignored_security_column_id_set
         }
         _getSecurityUidDictAndRoleColumnDict = getSecurityUidDictAndRoleColumnDict
@@ -510,7 +511,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         # BBB
         def search_result(select_dict, group_by, query, limit, src__):
           select_item_list = []
-          for alias, expression in select_dict.iteritems():
+          for alias, expression in select_dict.items():
             if expression is None:
               expression = alias
             select_item_list.append('%s AS %s' % (expression, alias))
@@ -567,16 +568,16 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             raise
           LOG('WorkflowTool.listActions', WARNING,
               'Exception while computing worklists: %s'
-              % grouped_worklist_dict.keys(),
+              % list(grouped_worklist_dict.keys()),
               error=True)
           continue
-        except ProgrammingError, error_value:
+        except ProgrammingError as error_value:
           # 1146 = table does not exist
           if not use_cache or error_value[0] != 1146:
             raise
           try:
             self.Base_zCreateWorklistTable()
-          except ProgrammingError, error_value:
+          except ProgrammingError as error_value:
             # 1050 = table exists (alarm run just a bit too late)
             if error_value[0] != 1050:
               raise
@@ -586,7 +587,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           grouped_worklist_result = sumCatalogResultByWorklist(
             grouped_worklist_dict=grouped_worklist_dict,
             catalog_result=catalog_brain_result)
-          for key, value in grouped_worklist_result.iteritems():
+          for key, value in grouped_worklist_result.items():
             worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
       if not src__:
         action_list = sorted(
@@ -654,11 +655,11 @@ def getValidCriterionDict(worklist_match_dict, sql_catalog,
   valid_criterion_dict = {}
   metadata = None
   isValidColumn = sql_catalog.isValidColumn
-  for criterion_id, criterion_value in worklist_match_dict.iteritems():
+  for criterion_id, criterion_value in worklist_match_dict.items():
     if isValidColumn(criterion_id):
       if isinstance(criterion_value, tuple):
         criterion_value = list(criterion_value)
-      elif isinstance(criterion_value, (str, int, long)):
+      elif isinstance(criterion_value, (str, int)):
         criterion_value = [criterion_value]
       assert criterion_id not in valid_criterion_dict
       valid_criterion_dict[criterion_id] = criterion_value
@@ -674,7 +675,7 @@ def getValidCriterionDict(worklist_match_dict, sql_catalog,
   return valid_criterion_dict, metadata
 
 def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criterion_dict):
-  worklist_set_dict_key = valid_criterion_dict.keys()
+  worklist_set_dict_key = list(valid_criterion_dict.keys())
   if len(worklist_set_dict_key):
     worklist_set_dict_key.sort()
     worklist_set_dict_key = tuple(worklist_set_dict_key)
@@ -723,8 +724,8 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   # One entry per worklist group, based on filter criterions.
   worklist_set_dict = {}
   metadata_dict = {}
-  for workflow_id, worklist in worklist_dict.iteritems():
-    for worklist_id, worklist_match_dict in worklist.iteritems():
+  for workflow_id, worklist in worklist_dict.items():
+    for worklist_id, worklist_match_dict in worklist.items():
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
       if getSecurityUidDictAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
@@ -745,15 +746,15 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         uid_dict, role_column_dict, local_role_column_dict = \
             getSecurityUidDictAndRoleColumnDict(**security_kw)
 
-        for key, value in local_role_column_dict.items():
+        for key, value in list(local_role_column_dict.items()):
           worklist_match_dict[key] = [value]
 
-        for local_roles_group_id, uid_list in uid_dict.iteritems():
+        for local_roles_group_id, uid_list in uid_dict.items():
           role_column_dict[
             catalog_security_uid_groups_columns_dict[local_roles_group_id]] = uid_list
 
         # Make sure every item is a list - or a tuple
-        for security_column_id in role_column_dict.iterkeys():
+        for security_column_id in role_column_dict.keys():
           value = role_column_dict[security_column_id]
           if not isinstance(value, (tuple, list)):
             role_column_dict[security_column_id] = [value]
@@ -761,7 +762,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         # TODO: make security criterions be examined in the same order for all
         # worklists if possible at all.
         for security_column_id, security_column_value in \
-            role_column_dict.iteritems():
+            role_column_dict.items():
           valid_criterion_dict, metadata = getValidCriterionDict(
             worklist_match_dict=worklist_match_dict,
             sql_catalog=sql_catalog,
@@ -779,7 +780,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
             worklist_set_dict=worklist_set_dict,
             workflow_worklist_key=workflow_worklist_key,
             valid_criterion_dict=valid_criterion_dict)
-  return worklist_set_dict.values(), metadata_dict
+  return list(worklist_set_dict.values()), metadata_dict
 
 def generateNestedQuery(getQuery, priority_list, criterion_dict,
                         possible_worklist_id_dict=None):
@@ -793,12 +794,12 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
   append = query_list.append
   my_criterion_dict = criterion_dict[my_criterion_id]
   if len(my_priority_list) > 0:
-    for criterion_value, worklist_id_dict in my_criterion_dict.iteritems():
+    for criterion_value, worklist_id_dict in my_criterion_dict.items():
       if possible_worklist_id_dict is not None:
         criterion_worklist_id_dict = worklist_id_dict.copy()
         # Do not use iterkeys since the dictionary will be modified in the
         # loop
-        for worklist_id in criterion_worklist_id_dict.keys():
+        for worklist_id in list(criterion_worklist_id_dict.keys()):
           if worklist_id not in possible_worklist_id_dict:
             del criterion_worklist_id_dict[worklist_id]
       else:
@@ -822,10 +823,10 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
     impossible_value_list = tuple()
     possible = True
     for criterion_value, criterion_worklist_id_dict \
-        in my_criterion_dict.iteritems():
+        in my_criterion_dict.items():
       if possible_worklist_id_dict is not None:
         possible = False
-        for worklist_id in criterion_worklist_id_dict.iterkeys():
+        for worklist_id in criterion_worklist_id_dict.keys():
           if worklist_id in possible_worklist_id_dict:
             possible = True
             break
@@ -863,8 +864,8 @@ def getWorklistListQuery(getQuery, grouped_worklist_dict):
       grouped_worklist_dict
   """
   total_criterion_id_dict = {}
-  for worklist_id, worklist in grouped_worklist_dict.iteritems():
-    for criterion_id, criterion_value in worklist.iteritems():
+  for worklist_id, worklist in grouped_worklist_dict.items():
+    for criterion_id, criterion_value in worklist.items():
       criterion_value_to_worklist_dict_dict = \
         total_criterion_id_dict.setdefault(criterion_id, {})
       criterion_value.sort()
@@ -876,7 +877,7 @@ def getWorklistListQuery(getQuery, grouped_worklist_dict):
         criterion_value_to_worklist_dict_dict.setdefault(criterion_value, {})
       criterion_value_to_worklist_dict[worklist_id] = None
   total_criterion_id_list = sorted(total_criterion_id_dict, key=lambda y: max(
-    len(x) for x in total_criterion_id_dict[y].itervalues()))
+    len(x) for x in total_criterion_id_dict[y].values()))
   query = generateNestedQuery(
     getQuery=getQuery,
     priority_list=total_criterion_id_list,
@@ -893,7 +894,7 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
   action_list = []
   append = action_list.append
 
-  for key, metadata in worklist_metadata.iteritems():
+  for key, metadata in worklist_metadata.items():
     document_count = worklist_result.get(key, 0)
     if document_count:
       format_data = metadata['format_data']
@@ -915,8 +916,8 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
 # This dict is used to tell which cast to apply to worklist parameters to get
 # values comparable with SQL result content.
 _sql_cast_dict = {
-  'i': long,
-  'l': long,
+  'i': int,
+  'l': int,
   'n': float,
   'd': DateTime,
 }
@@ -942,9 +943,9 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
     # Transtype all worklist definitions where needed
     criterion_id_list = []
     class_dict = {name: _sql_cast_dict.get(x['type'], _sql_cast_fallback)
-      for name, x in catalog_result.data_dictionary().iteritems()}
-    for criterion_dict in grouped_worklist_dict.itervalues():
-      for criterion_id, criterion_value_list in criterion_dict.iteritems():
+      for name, x in catalog_result.data_dictionary().items()}
+    for criterion_dict in grouped_worklist_dict.values():
+      for criterion_id, criterion_value_list in criterion_dict.items():
         if type(criterion_value_list) is not ExclusionList:
           criterion_id_list.append(criterion_id)
           expected_class = class_dict[criterion_id]
@@ -955,7 +956,7 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
     # Read catalog result and distribute to matching worklists
     for result_line in catalog_result:
       result_count = int(result_line[COUNT_COLUMN_TITLE])
-      for worklist_id, criterion_dict in grouped_worklist_dict.iteritems():
+      for worklist_id, criterion_dict in grouped_worklist_dict.items():
         is_candidate = True
         for criterion_id in criterion_id_list:
           criterion_value_set = criterion_dict[criterion_id]

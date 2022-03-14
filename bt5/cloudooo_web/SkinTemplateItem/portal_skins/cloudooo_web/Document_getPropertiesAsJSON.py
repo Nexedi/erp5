@@ -1,3 +1,4 @@
+from __future__ import print_function
 #try:         //Implement try catch instead of if else
 #from Products.ERP5Type.JSON import dumps
 from Products.ERP5Type.JSONEncoder import encodeInJson as dumps
@@ -26,9 +27,9 @@ informations = { 'processing': processing,
 
 if informations['processing'] in ['converted', 'conversion_failed','empty']:
   informations['permanent_url'] = document.Document_getPermanentUrl()
-  print dumps(informations) #print info before del object
+  print(dumps(informations)) #print info before del object
   portal.portal_sessions.manage_delObjects(reference)
 else:
-  print dumps(informations)
+  print(dumps(informations))
 
 return printed

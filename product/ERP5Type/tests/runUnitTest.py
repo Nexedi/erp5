@@ -1,5 +1,8 @@
 #!/usr/bin/env python2.7
 from __future__ import print_function
+from builtins import map
+from builtins import str
+from builtins import object
 import os
 import sys
 import pdb
@@ -452,7 +455,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
 
 unittest.loader.TestLoader = ERP5TypeTestLoader
 
-class DebugTestResult:
+class DebugTestResult(object):
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
   """
   def __init__(self, result):
@@ -609,7 +612,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   ZopeLite._theApp = None
 
   from Products.ERP5Type.tests.utils import DbFactory
-  root_db_name, = cfg.dbtab.databases.keys()
+  root_db_name, = list(cfg.dbtab.databases.keys())
   db_factory = DbFactory(root_db_name)
   db_factory.addMountPoint('/')
 
@@ -901,10 +904,9 @@ def main(argument_list=None):
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
 
-  bt5_path_list += filter(None,
-    os.environ.get("erp5_tests_bt5_path", "").split(','))
+  bt5_path_list += [_f for _f in os.environ.get("erp5_tests_bt5_path", "").split(',') if _f]
   valid_path_list = []
-  for path in map(os.path.expanduser, bt5_path_list) if bt5_path_list else (
+  for path in list(map(os.path.expanduser, bt5_path_list)) if bt5_path_list else (
       os.path.join(real_instance_home if WIN else instance_home, 'bt5'),):
     if os.path.exists(path):
       valid_path_list.append(path)

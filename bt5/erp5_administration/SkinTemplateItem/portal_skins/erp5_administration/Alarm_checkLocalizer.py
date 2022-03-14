@@ -6,8 +6,8 @@ alarm_warn_ratio = 0.25
 
 localizer = context.Localizer
 for message_catalog in localizer.objectValues('MessageCatalog'):
-  all_messages = len(message_catalog.MessageCatalog_getMessageDict().keys())
-  not_translated = len(message_catalog.MessageCatalog_getNotTranslatedMessageDict().keys())
+  all_messages = len(list(message_catalog.MessageCatalog_getMessageDict().keys()))
+  not_translated = len(list(message_catalog.MessageCatalog_getNotTranslatedMessageDict().keys()))
   enable_warning = not_translated > all_messages * alarm_warn_ratio
   if enable_warning:
     # we have more than allowed number of untranslated messages,

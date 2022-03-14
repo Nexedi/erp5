@@ -1,3 +1,4 @@
+from builtins import str
 translateString = context.Base_translateString
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences
@@ -61,9 +62,9 @@ def getPrototype():
   return None
 
 def unicodeDict(d):
-  for k, v in d.items():
+  for k, v in list(d.items()):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k:str(v, 'utf8')})
   return d
 
 data_dict = {

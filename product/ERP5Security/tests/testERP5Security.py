@@ -30,11 +30,13 @@
 """Tests ERP5 User Management.
 """
 
+from future import standard_library
+standard_library.install_aliases()
 import mock
 import itertools
 import transaction
 import unittest
-import urlparse
+import urllib.parse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -55,7 +57,7 @@ class UserManagementTestCase(ERP5TypeTestCase):
   """TestCase for user manement, with utilities to create users and helpers
   assertion methods.
   """
-  _login_generator = itertools.count().next
+  _login_generator = itertools.count().__next__
 
 
   def getBusinessTemplateList(self):
@@ -648,12 +650,12 @@ class TestPreferences(UserManagementTestCase):
       current_password='bad' + password,
       new_password=new_password,
     )
-    parsed_url = urlparse.urlparse(result)
+    parsed_url = urllib.parse.urlparse(result)
     self.assertEqual(
         parsed_url.path.split('/')[-2:],
         ['portal_preferences', 'PreferenceTool_viewChangePasswordDialog'])
     self.assertEqual(
-        urlparse.parse_qs(parsed_url.query),
+        urllib.parse.parse_qs(parsed_url.query),
         {'portal_status_message': ['Current password is wrong.'], 'portal_status_level': ['error']})
 
     self.login()
@@ -1421,7 +1423,7 @@ class TestKeyAuthentication(RoleManagementTestCase):
     # status code to login_form
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
-    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('location' in list(response.headers.keys()))
     self.assertTrue(response.headers['location'].endswith('login_form'))
 
     # view front page we should be logged in if we use authentication key
@@ -1434,7 +1436,7 @@ class TestKeyAuthentication(RoleManagementTestCase):
     base_url = person_module.absolute_url(relative=1)
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
-    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('location' in list(response.headers.keys()))
     self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
@@ -1448,7 +1450,7 @@ class TestKeyAuthentication(RoleManagementTestCase):
     base_url = web_site.absolute_url(relative=1)
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
-    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('location' in list(response.headers.keys()))
     self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
     # web site access
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
@@ -1624,7 +1626,7 @@ class TestReindexObjectSecurity(UserManagementTestCase):
 
     check([])
     # We need at least one person for this test.
-    self.assertTrue(len(person_module.keys()))
+    self.assertTrue(len(list(person_module.keys())))
     # When we update security of a module...
     person_module.reindexObjectSecurity()
     self.commit()

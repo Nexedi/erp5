@@ -14,6 +14,9 @@
     Extra parameters passed to catalog
   retry
 """
+from builtins import map
+from builtins import str
+from builtins import range
 from DateTime import DateTime
 from Products.CMFActivity.ActiveResult import ActiveResult
 active_result = ActiveResult()
@@ -54,7 +57,7 @@ if catalog_uid_list is None:
       'tag': tag,
       'fixit': fixit,
     }
-    for _ in xrange(activity_count):
+    for _ in range(activity_count):
       if len(catalog_uid_list) == 0:
         result_list.append('No more uids to check, stop spawning activities.')
         break
@@ -142,7 +145,7 @@ else:
       reference_dict = getattr(context, property_override_method_id)(instance=actual_object)
     do_reindex = False
     for attribute_id in attribute_id_list:
-      if not reference_dict.has_key(attribute_id):
+      if attribute_id not in reference_dict:
         reference_value = actual_object.getProperty(attribute_id)
       else:
         reference_value = reference_dict[attribute_id]
@@ -152,8 +155,8 @@ else:
       # stocks (1 line with a positive value and another with a negative one).
       is_reference_value_list = same_type(reference_value, ()) \
                              or same_type(reference_value, [])
-      if (catalog_value not in map(normalize, not is_reference_value_list
-          and (reference_value,) or reference_value)):
+      if (catalog_value not in list(map(normalize, not is_reference_value_list
+          and (reference_value,) or reference_value))):
         if error('%s.%s %s %r, but catalog contains %r'
                  % (actual_object.getRelativeUrl(), attribute_id,
                     is_reference_value_list and 'has candidate list' or '=',

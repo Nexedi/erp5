@@ -28,6 +28,12 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import next
+from builtins import str
+from past.utils import old_div
 from types import StringType
 from mimetypes import guess_extension
 from OFS.Image import File
@@ -37,13 +43,13 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
-from urllib import quote
+from urllib.parse import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import StringIO
 import re
 import itertools
 
@@ -113,7 +119,7 @@ class OOoContext(ZopeContext):
   def _handleText(self, text, expr):
     if isinstance(text, str):
       # avoid calling the IUnicodeEncodingConflictResolver utility
-      return unicode(text, 'utf-8')
+      return str(text, 'utf-8')
     return ZopeContext._handleText(self, text, expr)
 
 def createOOoZopeEngine():
@@ -383,13 +389,13 @@ class OOoTemplate(ZopePageTemplate):
       if h is None:
         if w is None:
           w = 10.0
-        h = w / aspect_ratio
+        h = old_div(w, aspect_ratio)
       elif w is None:
         w = h * aspect_ratio
       # picture is too large
       if maxwidth and maxwidth < w:
         w = maxwidth
-        h = w / aspect_ratio
+        h = old_div(w, aspect_ratio)
       if maxheight and maxheight < h:
         h = maxheight
         w = h * aspect_ratio
@@ -405,7 +411,7 @@ class OOoTemplate(ZopePageTemplate):
                      '<draw:image %s %s/>')[is_legacy] % (
         '''draw:name="ERP5Image%d" svg:width="%.3fcm" svg:height="%.3fcm"%s'''
         % (actual_idx, w, h,
-           ''.join(' %s="%s"' % opt for opt in options_dict.iteritems())),
+           ''.join(' %s="%s"' % opt for opt in options_dict.items())),
         '''xlink:href="%s%s" xlink:type="simple"
            xlink:show="embed" xlink:actuate="onLoad"'''
         % (is_legacy and '#' or '', pic_name))
@@ -489,7 +495,7 @@ class OOoTemplate(ZopePageTemplate):
       default_styles_text = None
 
     # Add the associated files
-    for dir_name, document_dict in attachments_dict.iteritems():
+    for dir_name, document_dict in attachments_dict.items():
       # Special case : the document is an OOo one
       if document_dict['doc_type'].startswith(self._OOo_content_type_root) or \
          document_dict['doc_type'].startswith(self._ODF_content_type_root):

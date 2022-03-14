@@ -137,9 +137,9 @@ if release_display_about:
     release_relative_url=release_relative_url,
   )
   #release_content = release_content.decode() + release_about.decode()
-  if isinstance(release_content, unicode):
+  if isinstance(release_content, str):
     release_content = release_content.encode("UTF-8")
-  if isinstance(release_about, unicode):
+  if isinstance(release_about, str):
     release_about = release_about.encode("UTF-8")
 
   release_content = release_content + release_about

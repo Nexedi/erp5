@@ -8,7 +8,7 @@ edit_form_id = gadget.getEditFormId()
 if edit_form_id is not None:
   edit_form = getattr(context, edit_form_id, None)
   if edit_form is not None:
-    fields = filter(lambda x: x.getId().startswith('my_'), edit_form.objectValues())
+    fields = [x for x in edit_form.objectValues() if x.getId().startswith('my_')]
     for field in fields:
       field_id = field.getId().replace('my_', '')
       # box has higher priority so check it first

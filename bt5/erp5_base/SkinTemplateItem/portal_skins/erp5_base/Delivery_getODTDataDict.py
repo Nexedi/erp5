@@ -1,4 +1,6 @@
 # coding: utf-8
+from builtins import str
+from builtins import object
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
 request = context.REQUEST
@@ -110,9 +112,9 @@ total_tax_price = 0.0
 number_line_not_tax = 0
 
 def unicodeDict(d):
-  for k, v in d.items():
+  for k, v in list(d.items()):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k:str(v, 'utf8')})
   return d
 
 
@@ -224,7 +226,7 @@ line_tax.sort(key=lambda obj:obj.get('number_tax_line'))
 
 inch_cm_ratio = 2.54 / 100.0
 
-class EmptyOrganisation:
+class EmptyOrganisation(object):
   """Used for default when organisation is not found.
   """
   def getTitle(self):

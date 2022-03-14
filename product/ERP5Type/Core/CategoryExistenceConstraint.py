@@ -121,5 +121,5 @@ class CategoryExistenceConstraint(ConstraintMixin):
     constraint_portal_type_str = isinstance(portal_type, Expression) and \
         portal_type.text or 'python: ' + repr(portal_type)
 
-    yield dict(constraint_base_category_list=base_category_dict.keys(),
+    yield dict(constraint_base_category_list=list(base_category_dict.keys()),
                constraint_portal_type=constraint_portal_type_str)

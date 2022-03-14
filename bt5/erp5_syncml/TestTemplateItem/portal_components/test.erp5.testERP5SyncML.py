@@ -27,6 +27,9 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
+from past.builtins import basestring
 import unittest
 from base64 import b64encode, b64decode, b16encode
 from lxml import etree
@@ -255,7 +258,7 @@ class TestERP5SyncMLMixin(TestMixin):
       # only first call will return an answer
       result = portal_sync.processServerSynchronization(publication.getPath())
       self.tic()
-      for _ in xrange(2):
+      for _ in range(2):
         portal_sync.processServerSynchronization(publication.getPath())
         self.tic()
       nb_message += 1
@@ -263,7 +266,7 @@ class TestERP5SyncMLMixin(TestMixin):
         break
       result = portal_sync.processClientSynchronization(subscription.getPath())
       self.tic()
-      for _ in xrange(2):
+      for _ in range(2):
         portal_sync.processClientSynchronization(subscription.getPath())
         self.tic()
       nb_message += 1
@@ -1620,7 +1623,7 @@ return [context[%r]]
     # Check same person on client & server side
     client_person_module = self.getPersonClient1()
     server_person_module = self.getPersonServer()
-    for x in xrange(1, 61):
+    for x in range(1, 61):
       client_person = client_person_module._getOb(str(x))
       server_person = server_person_module._getOb(str(x))
       self.assertEqual(client_person.getFirstName(), self.first_name1)
@@ -1643,7 +1646,7 @@ return [context[%r]]
     self.assertEqual(len(subscription1), 0)
     self.assertEqual(len(subscriber), 0)
 
-    for x in xrange(1, 61):
+    for x in range(1, 61):
       client_person = client_person_module._getOb(str(x))
       server_person = server_person_module._getOb(str(x))
       self.assertEqual(client_person.getFirstName(), self.first_name2)
@@ -1663,7 +1666,7 @@ return [context[%r]]
     self.assertEqual(len(subscription1), 0)
     self.assertEqual(len(subscriber), 0)
 
-    for x in xrange(1, 61):
+    for x in range(1, 61):
       client_person = client_person_module._getOb(str(x))
       server_person = server_person_module._getOb(str(x))
       self.assertEqual(client_person.getLastName(), self.last_name2)

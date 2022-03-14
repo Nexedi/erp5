@@ -1,3 +1,4 @@
+from builtins import map
 test_result = sci['object']
 kw = sci['kwargs']
 stop_date = kw.get('date') or DateTime()

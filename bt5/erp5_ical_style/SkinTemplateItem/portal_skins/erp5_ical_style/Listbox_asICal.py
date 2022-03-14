@@ -81,7 +81,7 @@ for line in line_list:
   column_item_list = line.getValueList()
   ical_item_dict = {}
   # collect values
-  for header, index in ical_column_mapping.items():
+  for header, index in list(ical_column_mapping.items()):
     value_tuple = column_item_list[index]
     # the [0] is a raw value, the [1] is rendered; we want strings rendered (as unicode),
     # but other stuff (like int or DateTime) we want as they are

@@ -10,6 +10,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+from builtins import zip
 from Products.ERP5Type.Timeout import getPublisherDeadlineValue
 try:
     from ZServer.ZPublisher import Publish

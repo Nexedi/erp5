@@ -28,6 +28,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.builtins import basestring
 from erp5.component.module.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST, \
      XUPDATE_DEL, XUPDATE_UPDATE
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
@@ -51,7 +53,7 @@ class TioSafeBaseConduit(ERP5Conduit):
     XXX name of method is not good, because content is not necessarily XML
     return a xml with id replaced by a new id
     """
-    if isinstance(xml, unicode):
+    if isinstance(xml, str):
       xml = xml.encode("utf-8")
     if isinstance(xml, basestring):
       xml = etree.XML(str(xml), parser=parser)
@@ -109,7 +111,7 @@ class TioSafeBaseConduit(ERP5Conduit):
     # In the case where this new node is a object to add
     xpath_expression = xml.get('select')
     if xml.xpath('name()') in XUPDATE_INSERT_OR_ADD_LIST and \
-           MARSHALLER_NAMESPACE_URI not in xml.nsmap.values():
+           MARSHALLER_NAMESPACE_URI not in list(xml.nsmap.values()):
       # change the context according select expression
       get_target_parent = xml.xpath('name()') in XUPDATE_INSERT_LIST
       context = self.getContextFromXpath(object, xpath_expression,
@@ -135,7 +137,7 @@ class TioSafeBaseConduit(ERP5Conduit):
   def applyXupdate(self, object=None, object_xml=None, xupdate=None, previous_xml=None, **kw): # pylint: disable=redefined-builtin
     """ Parse the xupdate and then it will call the conduit. """
     conflict_list = []
-    if isinstance(xupdate, unicode):
+    if isinstance(xupdate, str):
       xupdate = xupdate.encode("utf-8")
     if isinstance(xupdate, basestring):
       xupdate = etree.XML(xupdate, parser=parser)

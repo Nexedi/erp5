@@ -1,3 +1,5 @@
+from future import standard_library
+standard_library.install_aliases()
 def setPortalTypeDescription(self, portal_type, description):
   self.getPortalObject().portal_types[portal_type]._updateProperty(
     'description', description)
@@ -53,7 +55,7 @@ def getActionTitleListFromAllActionProvider(portal):
   return result
 
 
-from StringIO import StringIO
+from io import StringIO
 from zope.tal.htmltalparser import HTMLTALParser
 from zope.tal.talparser import TALParser
 from zope.tal.talgenerator import TALGenerator
@@ -121,7 +123,7 @@ def findStaticTranslationText(page_template, func_name_list):
   iterate(parser.gen.program, 'insertText', addTextFromPythonExpression)
   iterate(parser.gen.program, 'setLocal', addTextFromPythonExpression)
   iterate(parser.gen.program, 'setGlobal', addTextFromPythonExpression)
-  return text_dict.keys()
+  return list(text_dict.keys())
 
 #
 # Utility class for findStaticTranslationText

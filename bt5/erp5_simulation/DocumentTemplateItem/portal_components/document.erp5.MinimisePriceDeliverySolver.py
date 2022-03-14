@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -79,7 +81,7 @@ class MinimisePriceDeliverySolver(FIFODeliverySolver):
           movement_quantity = quantity - remaining_quantity
           delivery_ratio = 1.
           if new_quantity:
-            delivery_ratio = movement_quantity / new_quantity
+            delivery_ratio = old_div(movement_quantity, new_quantity)
           movement.edit(quantity=movement_quantity,
                         delivery_ratio=delivery_ratio,
                         activate_kw=activate_kw)

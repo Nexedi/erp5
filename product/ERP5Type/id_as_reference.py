@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import transaction
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet

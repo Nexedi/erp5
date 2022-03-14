@@ -13,6 +13,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import collections
 import email
 import transaction
@@ -23,12 +26,12 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
 from zExceptions import Forbidden
-from cStringIO import StringIO
+from io import StringIO
 
 security = ModuleSecurityInfo(__name__)
 
 
-class TextContent:
+class TextContent(object):
   """
       Implements GET and PUT for the text_content by
       mapping properties to meta tags in HTML or RFC822
@@ -51,7 +54,7 @@ class TextContent:
       # this is probably not html code, try rfc822 parsing
       message = email.message_from_string(text)
       return {k.capitalize(): '\n'.join(message.get_all(k))
-              for k in message.keys()}
+              for k in list(message.keys())}
 
     headers = collections.defaultdict(list)
     for meta in tree.iterfind(".//meta"):
@@ -61,7 +64,7 @@ class TextContent:
     title = tree.find("head/title")
     if title is not None:
       headers["title"] = title.text
-    return {k: v if len(v) > 1 else v[0] for k, v in headers.iteritems()}
+    return {k: v if len(v) > 1 else v[0] for k, v in headers.items()}
 
   ## FTP handlers
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')

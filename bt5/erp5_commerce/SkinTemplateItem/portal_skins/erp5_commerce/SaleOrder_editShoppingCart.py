@@ -8,7 +8,7 @@ translateString = context.Base_translateString
 quantity = field_my_buy_quantity
 shipping_method =  field_my_shipping_method
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping=True)
-shopping_cart_products_items = filter(lambda x: x.getId()!='shipping_method', shopping_cart_items)
+shopping_cart_products_items = [x for x in shopping_cart_items if x.getId()!='shipping_method']
 shopping_cart = context.SaleOrder_getShoppingCart()
 
 # handle change in quantity for shopping items

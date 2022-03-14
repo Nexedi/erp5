@@ -26,8 +26,10 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import zope.interface
-from StringIO import StringIO
+from io import StringIO
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -71,7 +73,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     cache = self._category_cache
     object_id_list = ctool.objectIds()
     error_list = []
-    for bc_id, category_list in cache.items():
+    for bc_id, category_list in list(cache.items()):
       if bc_id in object_id_list:
         bc = ctool._getOb(bc_id)
       else:
@@ -94,7 +96,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
               path = path[cat]
           edit_dict = category_info.copy()
           edit_dict.pop('path')
-          if 'id' in edit_dict.keys():
+          if 'id' in list(edit_dict.keys()):
             edit_dict.pop('id')
 
           path.edit(**edit_dict)
@@ -149,7 +151,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     category_path_dict = {item['path']: item
       for item in cache[base_category_id]}
 
-    for path in category_path_dict.iterkeys():
+    for path in category_path_dict.keys():
       # the first item in this list is the base category itself, so we skip it.
       if path == base_category_id:
         continue

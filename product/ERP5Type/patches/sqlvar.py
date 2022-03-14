@@ -14,6 +14,7 @@
 
 # dtml-sqlvar patch to convert None to NULL, and deal with DateTime
 
+from builtins import str
 from builtins import map
 #from builtins import str
 from builtins import range
@@ -87,7 +88,7 @@ def SQLVar_render(self, md):
 
 # Patched by yo. datetime is added.
 new_valid_types = 'int', 'float', 'string', 'nb', 'datetime'
-new_valid_types += tuple(map('datetime(%s)'.__mod__, xrange(7)))
+new_valid_types += tuple(map('datetime(%s)'.__mod__, range(7)))
 try:
   # BBB
   from Shared.DC.ZRDB.sqlvar import valid_type

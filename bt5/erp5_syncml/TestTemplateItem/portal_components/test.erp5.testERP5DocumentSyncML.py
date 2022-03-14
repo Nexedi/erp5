@@ -27,6 +27,10 @@
 #
 ##############################################################################
 
+from __future__ import division
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import os
 from base64 import b16encode
 from unittest import expectedFailure
@@ -55,9 +59,9 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
 
   nb_objects = 10
   #for objects
-  ids = range(1, nb_objects+1)
+  ids = list(range(1, nb_objects+1))
   #id_max_text : number of document text
-  id_max_text = nb_objects/2
+  id_max_text = old_div(nb_objects,2)
   id1 = '2'
   id2 = '3'
   #for documents (encoding in unicode for utf-8)
@@ -138,7 +142,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
 
   def clearFiles(self):
     # reset files, because we do sync by files
-    for filename in self.subscription_url.values():
+    for filename in list(self.subscription_url.values()):
       file_ = open(filename[len('file:/'):], 'w')
       file_.write('')
       file_.close()

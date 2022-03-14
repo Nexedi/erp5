@@ -1,4 +1,8 @@
-from urlparse import urlparse
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from past.utils import old_div
+from urllib.parse import urlparse
 
 portal = context.getPortalObject()
 kw = {}
@@ -9,7 +13,7 @@ else:
   expire_interval /= 86400. # seconds -> days
   now = DateTime()
   kw['expires'] = (now + expire_interval).toZone('GMT').rfc822()
-  ac_renew = (now + expire_interval / 2).millis()
+  ac_renew = (now + old_div(expire_interval, 2)).millis()
 portal.portal_sessions[
   portal.Base_getAutoLogoutSessionKey(
     username=portal.Base_getUsernameFromAuthenticationCookie(

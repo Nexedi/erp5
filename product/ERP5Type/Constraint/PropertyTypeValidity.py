@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import str
 from .Constraint import Constraint
 from DateTime import DateTime
 import six
@@ -57,7 +58,7 @@ class PropertyTypeValidity(Constraint):
     'date':               (DateTime, ),
   }
   if six.PY2:
-      _type_dict['long'] = (long,)
+      _type_dict['long'] = (int,)
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object', 'data')
 

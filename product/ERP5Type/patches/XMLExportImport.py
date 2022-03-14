@@ -14,6 +14,8 @@
 
 # Make sure the xml export will be ordered
 
+from builtins import str
+from past.builtins import basestring
 from functools import partial
 from inspect import getargspec
 from ZODB.utils import u64, p64
@@ -77,7 +79,7 @@ def _mapOid(id_mapping, oid):
     idprefix = str(u64(oid))
     id = id_mapping[idprefix]
     old_aka = encodestring(oid)[:-1]
-    aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
+    aka=encodestring(p64(int(id)))[:-1]  # Rebuild oid based on mapped id
     id_mapping.setConvertedAka(old_aka, aka)
     return idprefix+'.', id, aka
 

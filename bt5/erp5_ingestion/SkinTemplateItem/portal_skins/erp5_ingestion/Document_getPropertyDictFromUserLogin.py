@@ -15,7 +15,7 @@ if group_list:
   #Get the highest levels groups of the assignments
   ##if group_list = ['g1', 'g1/g1.1', 'g1/g1.2'] returns ['g1']
   ##if group_list = ['g1/g1.1', 'g1/g1.2'] returns ['g1/g1.1', 'g1/g1.2']
-  highest_level_group_value = min(group_level_dict.itervalues())
+  highest_level_group_value = min(group_level_dict.values())
   highest_level_group_list = [k for k in group_level_dict if group_level_dict[k] == highest_level_group_value]
   return {'group_list': highest_level_group_list}
 

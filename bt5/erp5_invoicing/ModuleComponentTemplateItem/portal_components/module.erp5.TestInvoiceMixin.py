@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -27,6 +28,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.utils import old_div
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -167,7 +170,7 @@ class TestInvoiceMixin(TestPackingListMixin):
                   'product_line/apparel'))
       account_module = portal.account_module
       for account_id, account_gap, account_type in self.account_definition_list:
-        if not account_module.has_key(account_id):
+        if account_id not in account_module:
           account = account_module.newContent(account_id, gap=account_gap,
                                               account_type=account_type)
           account.validate()
@@ -493,13 +496,13 @@ class TestInvoiceMixin(TestPackingListMixin):
           self.checkAcquisition(invoice_movement,
                                 related_simulation_movement)
           # Test delivery ratio
-          self.assertEqual(related_simulation_movement.getQuantity() /\
-                            invoice_movement_quantity, \
+          self.assertEqual(old_div(related_simulation_movement.getQuantity(),\
+                            invoice_movement_quantity), \
                             related_simulation_movement.getDeliveryRatio())
 
         self.assertEqual(quantity, invoice_movement.getQuantity())
         # Test price
-        self.assertEqual(total_price / quantity, invoice_movement.getPrice())
+        self.assertEqual(old_div(total_price, quantity), invoice_movement.getPrice())
 
       sequence.edit(invoice = invoice)
 
@@ -694,8 +697,8 @@ class TestInvoiceMixin(TestPackingListMixin):
       'receivable_vat' : total_price * self.vat_rate,
       'customer' : - (total_price + total_price * self.vat_rate)
       }
-    self.failIfDifferentSet(expected_dict.keys(),found_dict.keys())
-    for key in found_dict.keys():
+    self.failIfDifferentSet(list(expected_dict.keys()),list(found_dict.keys()))
+    for key in list(found_dict.keys()):
       self.assertAlmostEquals(expected_dict[key],found_dict[key],places=2)
     found_dict = {}
     for line in new_invoice.objectValues(
@@ -708,8 +711,8 @@ class TestInvoiceMixin(TestPackingListMixin):
       'receivable_vat' : total_price * self.vat_rate,
       'customer' : - (total_price + total_price * self.vat_rate)
       }
-    self.failIfDifferentSet(expected_dict.keys(), found_dict.keys())
-    for key in found_dict.keys():
+    self.failIfDifferentSet(list(expected_dict.keys()), list(found_dict.keys()))
+    for key in list(found_dict.keys()):
       self.assertAlmostEquals(expected_dict[key], found_dict[key], places=2)
 
   def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
@@ -985,7 +988,7 @@ class TestInvoiceMixin(TestPackingListMixin):
     """
     try:
       self.tic()
-    except RuntimeError, exc:
+    except RuntimeError as exc:
       invoice = sequence.get('invoice')
       # check which activities are failing
       self.assertTrue(str(exc).startswith('tic is looping forever.'),
@@ -1046,7 +1049,7 @@ class TestInvoiceMixin(TestPackingListMixin):
       """
       rule_type = rule.getSpecialiseValue().getPortalType()
       rule_def = rule_dict.get(rule_type, {})
-      for k, v in rule_def.iteritems():
+      for k, v in rule_def.items():
         if k == 'movement_type_list':
           for movement in rule.objectValues():
             if movement.getDeliveryValue() is not None:
@@ -1067,7 +1070,7 @@ class TestInvoiceMixin(TestPackingListMixin):
             # for each movement, we want to make sure that each rule is not
             # instanciated more than once
             if len(found_rule_dict):
-              self.assertEqual(set(found_rule_dict.itervalues()), {1})
+              self.assertEqual(set(found_rule_dict.values()), {1})
         elif k == 'parent_movement_type_list':
           if rule.getParentValue().getDeliveryValue() is not None:
             parent_type = rule.getParentValue().getDeliveryValue().getPortalType()

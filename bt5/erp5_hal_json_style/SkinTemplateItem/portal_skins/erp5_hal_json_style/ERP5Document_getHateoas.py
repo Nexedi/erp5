@@ -47,9 +47,13 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 -  python-object parsed from raw values under <field.id>
 """
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import map
 from ZTUtils import make_query
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
@@ -83,7 +87,7 @@ def toBasicTypes(obj):
   """Ensure that  obj contains only basic types."""
   if obj is None:
     return obj
-  if isinstance(obj, (bool, int, float, long, str, unicode)):
+  if isinstance(obj, (bool, int, float, str)):
     return obj
   if isinstance(obj, list):
     return [toBasicTypes(x) for x in obj]
@@ -124,12 +128,12 @@ def renderHiddenField(form, name, value):
 # http://stackoverflow.com/a/13105359
 def byteify(string):
   if isinstance(string, dict):
-    return {byteify(key): byteify(value) for key, value in string.iteritems()}
+    return {byteify(key): byteify(value) for key, value in string.items()}
   elif isinstance(string, list):
     return [byteify(element) for element in string]
   elif isinstance(string, tuple):
     return tuple(byteify(element) for element in string)
-  elif isinstance(string, unicode):
+  elif isinstance(string, str):
     return string.encode('utf-8')
   else:
     return string
@@ -141,7 +145,7 @@ def ensureUTF8(obj):
   """
   if isinstance(obj, str):
     return obj.decode('utf-8', 'replace').encode('utf-8')
-  elif isinstance(obj, unicode):
+  elif isinstance(obj, str):
     return obj.encode('utf-8', 'replace')
   return obj
 
@@ -250,7 +254,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
     func_param_list = func.func_args
     if len(func_param_list) > 0 and func_param_list[0] == "self":
       func_param_list = func_param_list[1:]
-    func_default_list = func.func_defaults
+    func_default_list = func.__defaults__
     func_param_list = [(func_param, func_default_list[i]) if len(func_default_list) >= (i + 1) else (func_param, )
                         for i, func_param in enumerate(func_param_list)]
 
@@ -421,8 +425,8 @@ def getFieldDefault(form, field, key, value=MARKER):
   if value is MARKER:
     # use marker because default value can be intentionally empty string
     value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
-    if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, unicode):
-      value = unicode(value, form.get_form_encoding())
+    if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, str):
+      value = str(value, form.get_form_encoding())
   if getattr(value, 'translate', None) is not None:
     return "%s" % value
   return value
@@ -470,7 +474,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     selected_language = erp5_ui.get_selected_language()
     result["translate_title_href"] = '%s/manage_messages?%s' % (
       '/'.join(erp5_ui.getPhysicalPath()[2:]),
-      urllib.urlencode({"regex": "^%s$" % field.title(),
+      urllib.parse.urlencode({"regex": "^%s$" % field.title(),
                         "lang": selected_language})
     )
 
@@ -478,7 +482,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     if field_description:
       result["translate_description_href"] = '%s/manage_messages?%s' % (
         '/'.join(erp5_ui.getPhysicalPath()[2:]),
-        urllib.urlencode({"regex": "^%s$" % field_description,
+        urllib.parse.urlencode({"regex": "^%s$" % field_description,
                           "lang": selected_language})
       )
 
@@ -572,7 +576,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       if not options['pre_converted_only']:
         del options['pre_converted_only']
 
-      parameters = '&'.join(('%s=%s' % (k, v) for k, v in options.items()
+      parameters = '&'.join(('%s=%s' % (k, v) for k, v in list(options.items())
                              if v))
       if parameters:
         result["default"] = '%s?%s' % (result["default"], parameters)
@@ -704,7 +708,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
                                                                           or field.get_value("editable_columns"))]
     all_column_list = [(name, title) for name, title in field.get_value("all_columns")]
     catalog_column_list = [(name, title)
-                           for name, title in OrderedDict(column_list + all_column_list).items()
+                           for name, title in list(OrderedDict(column_list + all_column_list).items())
                            if sql_catalog.isValidColumn(name)]
 
     # try to get specified searchable columns and fail back to all searchable columns
@@ -1087,7 +1091,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
                                               selection_params=selection_params,
                                               request_field=not use_relation_form_page_template,
                                               form_relative_url=form_relative_url)
-        if field_errors.has_key(field.id):
+        if field.id in field_errors:
           response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
         # Do not crash if field configuration is wrong.
@@ -1208,7 +1212,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['report_section_list'] = report_result_list
   # end-if report_section
 
-  for key, value in byteify(previous_request_other.items()):
+  for key, value in byteify(list(previous_request_other.items())):
     if value is not None:
       REQUEST.set(key, value)
 
@@ -1268,7 +1272,7 @@ def renderFormDefinition(form, response_dict):
 
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
-  if isinstance(level, (str, unicode)):
+  if isinstance(level, str):
     if level.lower() == "error":
       return "error"
     elif level.lower().startswith("warn"):
@@ -1381,7 +1385,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
 
     # Use extra param as request param
-    for k, v in byteify(extra_param_json.items()):
+    for k, v in byteify(list(extra_param_json.items())):
       REQUEST.set(k, v)
       REQUEST.form[k] = v
 
@@ -1447,7 +1451,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # Find current action URL and extract embedded view
     erp5_action_dict = portal.Base_filterDuplicateActions(
       portal.portal_actions.listFilteredActionsFor(traversed_document))
-    for erp5_action_key in erp5_action_dict.keys():
+    for erp5_action_key in list(erp5_action_dict.keys()):
       for view_action in erp5_action_dict[erp5_action_key]:
         # Try to embed the form in the result
         if (view == view_action['id']):
@@ -1483,7 +1487,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         # Put all query parameters (?reset:int=1&workflow_action=start_action) in request to mimic usual form display
         # Request is later used for method's arguments discovery so set URL params into REQUEST (just like it was sent by form)
-        for query_key, query_value in byteify(current_action['params'].items()):
+        for query_key, query_value in byteify(list(current_action['params'].items())):
           REQUEST.set(query_key, query_value)
           REQUEST.form[query_key] = query_value
 
@@ -1509,7 +1513,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                    selection_params=extra_param_json, extra_param_json=extra_param_json)
 
         if view_instance.pt in ["form_python_action", "form_jump"]:
-          for k, v in current_action['params'].items():
+          for k, v in list(current_action['params'].items()):
             renderHiddenField(embedded_dict, k, v)
             embedded_dict['_embedded']['form_definition']['group_list'][-1][1].append((k, {'meta_type': 'StringField'}))
 
@@ -1529,7 +1533,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           '_view': embedded_dict
         }
 
-    for erp5_action_key in erp5_action_dict.keys():
+    for erp5_action_key in list(erp5_action_dict.keys()):
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
         # Action condition is probably checked in Base_filterDuplicateActions
@@ -1752,7 +1756,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if isinstance(extra_param_json, str):
       extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
 
-    for key, value in byteify(extra_param_json.items()):
+    for key, value in byteify(list(extra_param_json.items())):
       REQUEST.set(key, value)
 
     # in case we have custom list method
@@ -1909,7 +1913,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
           all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
           selection_kw['columns'] = [(name, title)
-                                     for name, title in OrderedDict(column_list + all_column_list).items()]
+                                     for name, title in list(OrderedDict(column_list + all_column_list).items())]
         else:
           selection_kw['columns'] = []
 
@@ -1928,7 +1932,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # specified input parameters). In case some list_method does not work
       # this is the first place to try to uncomment.
       #
-      for k, v in catalog_kw.items():
+      for k, v in list(catalog_kw.items()):
         REQUEST.set(k, v)
       search_result_iterable = callable_list_method(**catalog_kw)
 
@@ -1981,7 +1985,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # handle the case when list-scripts are ignoring `limit` - paginate for them
     if limit is not None:
       if isinstance(limit, (tuple, list)):
-        start, num_items = map(int, limit)
+        start, num_items = list(map(int, limit))
       elif isinstance(limit, int):
         start, num_items = 0, limit
       else:
@@ -2101,7 +2105,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             value=default_field_value,
             key='field_%s_%s' % (editable_field.id, brain_uid))
           # Include cell error text in case of form validation
-          if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
+          if '%s_%s' % (editable_field.id, brain_uid) in field_errors:
             contents_item[select]['field_gadget_param']["error_text"] = \
               field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text
 
@@ -2254,7 +2258,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         contents_stat_list = toBasicTypes(stat_method_result) or []
 
       for contents_stat in contents_stat_list:
-        for key, value in contents_stat.items():
+        for key, value in list(contents_stat.items()):
           if key in editable_field_dict:
             contents_stat[key] = renderField(
               traversed_document, editable_field_dict[key], listbox_form, value, key=editable_field_dict[key].id + '__sum')

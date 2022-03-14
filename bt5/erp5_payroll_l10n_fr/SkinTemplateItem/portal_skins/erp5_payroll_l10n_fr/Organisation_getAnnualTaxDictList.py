@@ -19,7 +19,7 @@ tax_property_name_list = {
 year_start_date = DateTime(dsn_report.getEffectiveDate().year(), 1, 1)
 year_stop_date = DateTime(dsn_report.getEffectiveDate().year(), 12, 31)
 
-for tax, value_list in tax_property_name_list.items():
+for tax, value_list in list(tax_property_name_list.items()):
   # CVAE is now out of DSN's scope, so always declare as not subjected
   # http://dsn-info.custhelp.com/app/answers/detail/a_id/1885
   if tax == 'cvae_fee_liability':

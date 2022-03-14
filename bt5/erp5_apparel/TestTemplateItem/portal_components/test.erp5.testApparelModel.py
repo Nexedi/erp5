@@ -159,10 +159,10 @@ class TestApparelModel(ERP5TypeTestCase):
     self.assertEqual(elasthane.getProperty('quantity'), 0.12)
 
     # check indexes are present
-    self.assertTrue(apparel_model.index.has_key('composition'))
+    self.assertTrue('composition' in apparel_model.index)
     index = apparel_model.index['composition'][0]
-    self.assertTrue(index.has_key('composition/elasthane'))
-    self.assertTrue(index.has_key('composition/acrylique'))
+    self.assertTrue('composition/elasthane' in index)
+    self.assertTrue('composition/acrylique' in index)
 
   def test_checkCopyColourRangeVariation(self):
     '''

@@ -1,6 +1,6 @@
 from erp5.component.module.Log import log
 
-log("Folder method received dialog_id, form_id, uids and {!s}".format(kwargs.keys()))
+log("Folder method received dialog_id, form_id, uids and {!s}".format(list(kwargs.keys())))
 
 message = "First submission."
 

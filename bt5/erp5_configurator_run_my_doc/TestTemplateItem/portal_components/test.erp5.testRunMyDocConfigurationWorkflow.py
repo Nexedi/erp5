@@ -131,7 +131,7 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Generic step to create multiple user account """
     next_dict = {}
     for user in user_list:
-      for k, v in user.items():
+      for k, v in list(user.items()):
         next_dict.setdefault(k, []).append(v)
     sequence.edit(next_dict=next_dict)
 

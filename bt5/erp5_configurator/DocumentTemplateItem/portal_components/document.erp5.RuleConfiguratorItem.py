@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import SOAPpy
 from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
 from AccessControl.SecurityInfo import allow_class
@@ -156,7 +157,7 @@ class MethodWrapper(object):
   def __call__(self, *args, **kw):
     try:
       return self._method(*args, **kw)
-    except SOAPpy.Types.faultType, exception:
+    except SOAPpy.Types.faultType as exception:
       raise SOAPWSDLException(*exception())
 
 # SOAPpy says nothing about thread-safeness of parsed WSDL.
@@ -176,7 +177,7 @@ def WSDL___del__(self):
       pass
 SOAPpy.wstools.WSDLTools.WSDL.__del__ = WSDL___del__
 
-class SOAPWSDLConnection:
+class SOAPWSDLConnection(object):
   """
     Holds a SOAP connection described by a WSDL file.
     This uses a patch from NGNPro over SOAPpy's WSDL.py file, allowing the

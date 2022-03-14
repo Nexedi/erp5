@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import range
+from builtins import object
 from Testing import ZopeTestCase
 from zLOG import LOG
 import random
@@ -68,7 +70,7 @@ def special_extract_tb(tb, limit = None):
 traceback.extract_tb = special_extract_tb
 
 
-class Step:
+class Step(object):
 
   def __init__(self,method_name='',required=1,max_replay=1):
     self._method_name = method_name
@@ -90,7 +92,7 @@ class Step:
         LOG('Step.play', 0, 'Playing step... %s' % self._method_name)
       method(sequence=sequence)
 
-class Sequence:
+class Sequence(object):
 
   def __init__(self, context=None):
     self._step_list = []
@@ -210,7 +212,7 @@ class StoredSequence(Sequence):
       return result_dict
 
     result_list = []
-    for key, value in self._dict.iteritems():
+    for key, value in self._dict.items():
       result_list.append(_serialise(key, value))
     return result_list
 
@@ -247,7 +249,7 @@ class StoredSequence(Sequence):
       serialised_sequence=self.serialiseSequenceDict(),
       document_dict=document_dict,
     )
-    for module_id, object_id_list in document_dict.iteritems():
+    for module_id, object_id_list in document_dict.items():
       for object_id in object_id_list:
         context.portal.portal_trash.backupObject(
           trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
@@ -259,7 +261,7 @@ class StoredSequence(Sequence):
     context.login()
     trashbin_value = context.portal.portal_trash[self._getTrashBinId(context)]
     document_dict = trashbin_value.getProperty('document_dict')
-    for module_id, object_id_list in document_dict.iteritems():
+    for module_id, object_id_list in document_dict.items():
       for object_id in object_id_list:
         context.portal.portal_trash.restoreObject(
           trashbin_value, [module_id], object_id, pass_if_exist=True
@@ -284,7 +286,7 @@ class StoredSequence(Sequence):
       self.restore(context)
     Sequence.play(self, context, **kw)
 
-class SequenceList:
+class SequenceList(object):
 
   def __init__(self):
     self._sequence_list = []

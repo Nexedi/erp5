@@ -25,9 +25,14 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import map
+from builtins import range
 import os
 from string import zfill
-from urllib import urlencode
+from urllib.parse import urlencode
 import tempfile
 from DateTime import DateTime
 from zLOG import LOG
@@ -37,7 +42,7 @@ lp =  'lp'
 
 def escapeString(string):
   #Barcode can accept only ASCII
-  string = str(unicode(str(string), 'utf-8'))
+  string = str(str(str(string), 'utf-8'))
   #Escape
   string = string.replace('"', '\\"')
   return string

@@ -1,3 +1,4 @@
+from builtins import str
 document = state_change['object']
 portal = document.getPortalObject()
 

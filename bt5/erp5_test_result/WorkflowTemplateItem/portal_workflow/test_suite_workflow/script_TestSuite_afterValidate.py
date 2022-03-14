@@ -1,3 +1,5 @@
+from builtins import chr
+from builtins import range
 import string
 from random import choice
 

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import re
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Tool.TemplateTool import BusinessTemplateUnknownError
@@ -368,8 +369,8 @@ class TestUpgrader(ERP5TypeTestCase):
   def stepCheckPersonNotInConstraintTypeListPerPortalType(self, sequence=None):
     constraint_type_per_type, _ = \
       self.portal.Base_getConstraintTypeListPerPortalType()
-    self.assertFalse("Person" in constraint_type_per_type.keys(), \
-      "Person in %s" % constraint_type_per_type.keys())
+    self.assertFalse("Person" in list(constraint_type_per_type.keys()), \
+      "Person in %s" % list(constraint_type_per_type.keys()))
 
   def stepRemoveSameConstraintInPersonAndPersonModule(self, sequence=None):
     types_tool = self.portal.portal_types

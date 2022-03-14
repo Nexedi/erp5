@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002-2018 Nexedi SA and Contributors. All Rights Reserved.
@@ -25,10 +26,15 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import zip
+from past.utils import old_div
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
 from PIL import Image
-import cStringIO
+import io
 import math
 import os.path
 
@@ -120,13 +126,13 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     # http://snipplr.com/view/757/compare-two-pil-images-in-python/
     # http://effbot.org/zone/pil-comparing-images.htm
     # http://effbot.org/imagingbook/image.htm
-    image1 = Image.open(cStringIO.StringIO(image_data_1))
-    image2 = Image.open(cStringIO.StringIO(image_data_2))
+    image1 = Image.open(io.StringIO(image_data_1))
+    image2 = Image.open(io.StringIO(image_data_2))
 
     # image can be converted into greyscale without transparency
     h1 = image1.histogram()
     h2 = image2.histogram()
-    rms = math.sqrt(sum((a - b) ** 2 for a, b in zip(h1, h2)) / len(h1))
+    rms = math.sqrt(old_div(sum((a - b) ** 2 for a, b in zip(h1, h2)), len(h1)))
 
     # Note:
     # - rms is ~5300.0 same page, bmp without alpha and bmp transparent back

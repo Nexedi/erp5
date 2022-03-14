@@ -26,7 +26,7 @@ node_inventory_dict = {}
 activate_kw = {"tag": tag}
 for inventory in node_inventory_list:
   # Do only one inventory per node
-  if not node_inventory_dict.has_key(inventory.node_relative_url):
+  if inventory.node_relative_url not in node_inventory_dict:
     
     inv = inventory_module.newContent(portal_type="Archive Inventory",
                                       destination=inventory.node_relative_url,
@@ -69,9 +69,9 @@ for inventory in node_inventory_list:
     inv_line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
     # create cell
     cell_range_key_list = inv_line.getCellRangeKeyList(base_id=base_id)
-    if cell_range_key_list <> [[None, None]] :
+    if cell_range_key_list != [[None, None]] :
       for k in cell_range_key_list:
-        category_list = filter(lambda k_item: k_item is not None, k)
+        category_list = [k_item for k_item in k if k_item is not None]
         cell = inv_line.newCell(*k, **line_kwd)
         cell.setDefaultActivateParameterDict(activate_kw)
         cell.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))
@@ -87,7 +87,7 @@ for inventory in node_inventory_list:
 
 
 # deliver all inventory
-for inv in node_inventory_dict.values():  
+for inv in list(node_inventory_dict.values()):  
   inv.setDefaultActivateParameterDict(activate_kw)
   inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))
   inv.deliver()
@@ -99,7 +99,7 @@ for inv in node_inventory_dict.values():
 payment_inventory_dict = {}
 for inventory in payment_inventory_list:
   # Do only one inventory per payment
-  if not payment_inventory_dict.has_key(inventory.payment_uid):
+  if inventory.payment_uid not in payment_inventory_dict:
     
     inv = inventory_module.newContent(portal_type="Archive Inventory",
                                       destination=inventory.node_relative_url,
@@ -127,7 +127,7 @@ for inventory in payment_inventory_list:
 
 
 # deliver all inventory
-for inv in payment_inventory_dict.values():  
+for inv in list(payment_inventory_dict.values()):  
   inv.setDefaultActivateParameterDict(activate_kw)
   inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))
   inv.deliver()

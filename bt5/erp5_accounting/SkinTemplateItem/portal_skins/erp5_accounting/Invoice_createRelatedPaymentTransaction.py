@@ -77,7 +77,7 @@ bank = related_payment.newContent(
 bank_quantity = 0
 
 for (line_node, line_mirror_section), quantity in\
-                        total_payable_price_details.items():
+                        list(total_payable_price_details.items()):
   if line_mirror_section == mirror_section:
     bank_quantity += quantity
     if is_source:

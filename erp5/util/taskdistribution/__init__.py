@@ -40,6 +40,11 @@ Example use:
       test_line.stop()
 """
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from past.builtins import basestring
+from builtins import object
 import six
 from six.moves import (
   map,
@@ -102,13 +107,13 @@ try: # PY3
   basestring
 except NameError:
   basestring = bytes, str
-  unicode = str
+  str = str
 
 def binarize_args(arg):
   # Converts recursively basestring arg into xmlrpclib.Binary, as they can
   # contain non-XML allowed characters
   if isinstance(arg, basestring):
-    if isinstance(arg, unicode):
+    if isinstance(arg, str):
       arg = arg.encode('utf-8')
     return xmlrpclib.Binary(arg)
   if isinstance(arg, (list, tuple, set)):

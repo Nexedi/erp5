@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from collections import defaultdict, deque
 import random
 import zope.interface
@@ -240,7 +241,7 @@ class BaseAmountResolver(BaseAmountDict):
 
 
 @zope.interface.implementer(IAmountGenerator,)
-class AmountGeneratorMixin:
+class AmountGeneratorMixin(object):
   """
   This class provides a generic implementation of IAmountGenerator.
   It is used by Transformation, Trade Model, Paysheet, etc. It is
@@ -415,7 +416,7 @@ class AmountGeneratorMixin:
           del cell_aggregate[self_key]
 
         # Allow base_application & base_contribution to be variated.
-        for property_dict in cell_aggregate.itervalues():
+        for property_dict in cell_aggregate.values():
           base_amount_set = property_dict['base_application_set']
           variation_list = tuple(sorted(x for x in base_amount_set
                                           if not x.startswith('base_amount/')))
@@ -481,7 +482,7 @@ class AmountGeneratorMixin:
         amount._setQuantity(quantity)
         amount._setTitle(self.getTitle())
         amount._setDescription(self.getDescription())
-        for x in property_dict.iteritems():
+        for x in property_dict.items():
           amount._setProperty(*x)
         # convert to default management unit if possible
         amount._setQuantity(amount.getConvertedQuantity())

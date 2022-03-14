@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -39,6 +40,10 @@
 #       aggregated item ?
 
 
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import unittest
 from unittest import expectedFailure
 
@@ -660,9 +665,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           specialise=self.business_process)
       packing_list_list.append(packing_list)
       # Add properties
-      property_list = [x for x in data.items() if x[0] not in ('lines','start_date')]
+      property_list = [x for x in list(data.items()) if x[0] not in ('lines','start_date')]
       property_list = [(x[0], organisation_list[x[1]].getRelativeUrl()) for x in property_list] + \
-                      [x for x in data.items() if x[0] in ('start_date',)]
+                      [x for x in list(data.items()) if x[0] in ('start_date',)]
       property_dict = {}
       property_dict['price_currency'] = self.price_currency
       for (id_, value) in property_list:
@@ -1301,7 +1306,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                 packing_list_workflow, packing_list)[state_variable])
 
       LOG('Testing with these workflow states :', 0, state_list)
-      for name, e_inventory in expected_values.items():
+      for name, e_inventory in list(expected_values.items()):
         method_name = 'get%sInventory' % name
         method = getattr(simulation, method_name, None)
         if method is None:
@@ -1391,49 +1396,49 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # Build expected list
     expected_list = []
     for i in range(1, 31):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': quantity })
     for i in range(31, 33):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 1,
                              'inventory': quantity })
     for i in range(33, 34):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 2,
                              'inventory': quantity })
     for i in range(33, 40):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 3,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': quantity })
     for i in range(40, 41):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 3,
                              'section_relative_url': 0,
                              'resource_relative_url': 2,
                              'inventory': quantity })
     for i in range(1, 24):
-      quantity = (i + 0.) / 4
+      quantity = old_div((i + 0.), 4)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': - quantity })
     for i in range(12, 18):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': - quantity })
     for i in range(12, 13):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 1,
@@ -1463,7 +1468,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                   'resource': resource_list }
     expected_l = expected_list[:]
     for expected in expected_l:
-      for attribute in [x for x in expected.keys()
+      for attribute in [x for x in list(expected.keys())
                           if x.endswith('_relative_url')]:
         attr_name = attribute.split('_')[0]
         expected[attribute] = item_dict[attr_name]\
@@ -1483,37 +1488,37 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # Build expected list
     expected_list = []
     for i in range(1, 31):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': quantity })
     for i in range(31, 33):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 1,
                              'inventory': quantity })
     for i in range(33, 34):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 2,
                              'inventory': quantity })
     for i in range(1, 24):
-      quantity = (i + 0.) / 4
+      quantity = old_div((i + 0.), 4)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': - quantity })
     for i in range(12, 18):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 0,
                              'inventory': - quantity })
     for i in range(12, 13):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2,
                              'section_relative_url': 0,
                              'resource_relative_url': 1,
@@ -1530,7 +1535,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                   'resource': resource_list }
     expected_l = expected_list[:]
     for expected in expected_l:
-      for attribute in [x for x in expected.keys()
+      for attribute in [x for x in list(expected.keys())
                             if x.endswith('_relative_url')]:
         attr_name = attribute.split('_')[0]
         expected[attribute] = item_dict[attr_name]\
@@ -1550,13 +1555,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # Build expected list
     expected_list = []
     for i in range(1, 24):
-      quantity = (i + 0.) / 4
+      quantity = old_div((i + 0.), 4)
       expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
     for i in range(12, 18):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
     for i in range(12, 13):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':-quantity })
     for i in [7.5, 5, 3]:
       quantity = (i + 0.)
@@ -1568,7 +1573,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
     expected_l = expected_list[:]
     for expected in expected_l:
-      for attribute in [x for x in expected.keys() if x.endswith('_relative_url')]:
+      for attribute in [x for x in list(expected.keys()) if x.endswith('_relative_url')]:
         attr_name = attribute.split('_')[0]
         expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
     self._testGetInventoryList(expected=expected_l, section=organisation_list[0].getRelativeUrl(), omit_simulation=1, omit_input=1)
@@ -1584,25 +1589,25 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # Build expected list
     expected_list = []
     for i in range(1, 31):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':quantity })
     for i in range(31, 33):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':quantity })
     for i in range(33, 34):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':quantity })
     for i in range(33, 40):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':quantity })
     for i in range(40, 41):
-      quantity = (i + 0.) / 2
+      quantity = old_div((i + 0.), 2)
       expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':quantity })
 
     item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
     expected_l = expected_list[:]
     for expected in expected_l:
-      for attribute in [x for x in expected.keys() if x.endswith('_relative_url')]:
+      for attribute in [x for x in list(expected.keys()) if x.endswith('_relative_url')]:
         attr_name = attribute.split('_')[0]
         expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
     self._testGetInventoryList(expected=expected_l, section=organisation_list[0].getRelativeUrl(), omit_simulation=1, omit_output=1)
@@ -1677,7 +1682,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       param, expected_list = expected_tuple
       expected_l = expected_list[:]
       for expected in expected_l:
-        for attribute in [x for x in expected.keys() if x.endswith('_relative_url')]:
+        for attribute in [x for x in list(expected.keys()) if x.endswith('_relative_url')]:
           attr_name = attribute.split('_')[0]
           expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
       LOG('Testing getInventoryList with', 0, param)
@@ -1692,7 +1697,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     simulation = self.getPortal().portal_simulation
     expected = expected[:]
     if len(expected) > 0:
-      attribute_list = [x for x in expected[0].keys() if x != 'inventory']
+      attribute_list = [x for x in list(expected[0].keys()) if x != 'inventory']
     else:
       attribute_list = []
 
@@ -1709,7 +1714,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       a_inventory = inventory.inventory
       # Build a function to filter on attributes
       def cmpfunction(item):
-        for (key, value) in a_attributes.items(): # pylint: disable=cell-var-from-loop
+        for (key, value) in list(a_attributes.items()): # pylint: disable=cell-var-from-loop
           if item[key] != value:
             return 0
         return 1

@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import zip
 from .Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.query import IQuery
@@ -57,7 +58,7 @@ class ComplexQuery(Query):
     self.logical_operator = kw.pop('logical_operator', 'and').lower()
     assert self.logical_operator in ('and', 'or', 'not'), self.logical_operator
     if kw:
-      raise TypeError('Unknown named arguments: %r' % (kw.keys(), ))
+      raise TypeError('Unknown named arguments: %r' % (list(kw.keys()), ))
     query_list = []
     append = query_list.append
     extend = query_list.extend

@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import str
 from Products.Formulator import Widget
 from Products.Formulator import Widget, Validator
 from Products.Formulator.DummyField import fields

@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -27,6 +28,12 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from future import standard_library
+standard_library.install_aliases()
+from past.builtins import basestring
+from builtins import object
+from past.utils import old_div
 from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
@@ -56,7 +63,7 @@ from MySQLdb.constants.ER import NO_SUCH_TABLE
 
 from hashlib import md5
 from warnings import warn
-from cPickle import loads, dumps
+from pickle import loads, dumps
 from copy import deepcopy
 
 MYSQL_MIN_DATETIME_RESOLUTION = 1/86400.
@@ -322,9 +329,9 @@ class SimulationTool(BaseTool):
       # XXX In this case, we must not set sql_kw[input_simumlation_state] before
       input_simulation_state = None
       output_simulation_state = None
-      if sql_kw.has_key('input_simulation_state'):
+      if 'input_simulation_state' in sql_kw:
         input_simulation_state = sql_kw.get('input_simulation_state')
-      if sql_kw.has_key('output_simulation_state'):
+      if 'output_simulation_state' in sql_kw:
         output_simulation_state = sql_kw.get('output_simulation_state')
       if input_simulation_state is not None \
          or output_simulation_state is not None:
@@ -438,15 +445,14 @@ class SimulationTool(BaseTool):
 
     # Column values
     column_value_dict = new_kw.pop('column_value_dict', {})
-    for key, value in column_value_dict.iteritems():
+    for key, value in column_value_dict.items():
       new_kw['%s.%s' % (table, key)] = value
     # Related keys
     # First, the passthrough (acts as default values)
-    for key, value in new_kw.pop('related_key_dict_passthrough', {})\
-        .iteritems():
+    for key, value in new_kw.pop('related_key_dict_passthrough', {}).items():
       new_kw[key] = value
     # Second, calculated values
-    for key, value in new_kw.pop('related_key_dict', {}).iteritems():
+    for key, value in new_kw.pop('related_key_dict', {}).items():
       new_kw['%s_%s' % (table, key)] = value
     # Simulation states matched with input and output omission
     def getSimulationQuery(simulation_dict, omit_dict):
@@ -518,7 +524,7 @@ class SimulationTool(BaseTool):
       )
       from_table_dict[alias] = table
     sql_kw.update(catalog_sql_kw)
-    sql_kw['from_table_list'] = from_table_dict.items()
+    sql_kw['from_table_list'] = list(from_table_dict.items())
     return sql_kw
 
   def _generateKeywordDict(self,
@@ -1423,7 +1429,8 @@ class SimulationTool(BaseTool):
       inventory_cache_kw['date'] = to_date
     try:
       cached_sql_result = Resource_zGetInventoryCacheResult(**inventory_cache_kw)
-    except ProgrammingError, (code, _):
+    except ProgrammingError as xxx_todo_changeme:
+      (code, _) = xxx_todo_changeme.args
       if code != NO_SUCH_TABLE:
         raise
       # First use of the optimisation, we need to create the table
@@ -1462,7 +1469,7 @@ class SimulationTool(BaseTool):
       # soon as we store it (except if to_date is fixed for many queries,
       # which we cannot tell here).
       # So store it at half the cache_lag before to_date.
-      cached_date = to_date - cache_lag / 2
+      cached_date = to_date - old_div(cache_lag, 2)
       new_cache_kw = deepcopy(sql_kw)
       if cached_result:
         # We can use cached result to generate new cache result
@@ -1611,7 +1618,7 @@ class SimulationTool(BaseTool):
         line_key = getInventoryListKey(line)
         line_a = inventory_list_dict.get(line_key)
         inventory_list_dict[line_key] = addLineValues(line_a, line)
-    sorted_inventory_list = inventory_list_dict.values()
+    sorted_inventory_list = list(inventory_list_dict.values())
     # Sort results manually when required
     sort_on = new_kw.get('sort_on')
     if sort_on:
@@ -2189,7 +2196,7 @@ class SimulationTool(BaseTool):
     # Pass simulation state to request
     if next_item_simulation_state:
       new_kw['simulation_state_list'] = next_item_simulation_state
-    elif kw.has_key('item.simulation_state'):
+    elif 'item.simulation_state' in kw:
       new_kw['simulation_state_list'] = kw['item.simulation_state']
     else:
       new_kw['simulation_state_list'] =  None
@@ -2737,7 +2744,7 @@ class SimulationTool(BaseTool):
 
 from erp5.component.module.DateUtils import addToDate
 
-class SequenceItem:
+class SequenceItem(object):
   """
   SequenceItem define a time period.
   period.
@@ -2746,7 +2753,7 @@ class SequenceItem:
     self.from_date = from_date
     self.to_date = to_date
 
-class Sequence:
+class Sequence(object):
   """
   Sequence is a iterable object, which calculate a range of time
   period.

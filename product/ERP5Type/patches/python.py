@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import os, re, sys
 
 if sys.version_info[:3] < (2, 7, 9):

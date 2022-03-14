@@ -1,8 +1,9 @@
+from builtins import zip
 import json
 
 return json.dumps({
   q + ('2' if i else ''): {
-    'line_list': [dict(zip(results.names(), row)) for row in results]
+    'line_list': [dict(list(zip(results.names(), row))) for row in results]
   }
   for i, q in enumerate((context.ActivityTool_getCurrentActivities,
                          context.ActivityTool_getSQLActivities))

@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 
 divergence_list =  context.getDivergenceList()
@@ -30,7 +31,7 @@ for divergence in divergence_list:
     prevision_title_list.append(prevision_title)
   candidate_dict[prop] = [divergence.getTranslatedMessage(), candidate_list, value_list, decision_title_list, prevision_title_list]
 
-for prop, candidate_list in candidate_dict.items():
+for prop, candidate_list in list(candidate_dict.items()):
   uid = 'new_%s' % prop
   document = context
 

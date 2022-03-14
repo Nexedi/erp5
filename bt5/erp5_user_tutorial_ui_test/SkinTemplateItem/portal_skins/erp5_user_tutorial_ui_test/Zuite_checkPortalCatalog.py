@@ -1,5 +1,5 @@
 query_dict = {}
-for key in kw.keys():
+for key in list(kw.keys()):
   if key == "portal_type":
     query_dict["portal_type"] = kw[key]
   else:
@@ -12,7 +12,7 @@ functional_another_test_username = context.Base_getUserIdByUserName(context.Zuit
 for result in result_list:
   object = result.getObject()
   # check that every property of the research have been well taken in account
-  for key in kw.keys():
+  for key in list(kw.keys()):
     method_name = 'get%s' % (''.join([x.capitalize() for x in key.split('_')]))
     method = getattr(object, method_name)
     if strict_check_mode and method() != kw[key]:

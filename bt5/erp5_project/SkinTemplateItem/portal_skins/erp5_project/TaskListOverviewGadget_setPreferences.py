@@ -1,3 +1,4 @@
+from builtins import str
 gadget_selection = context.Base_getListboxGadgetSelectionName\
 (context.REQUEST.get('box_relative_url', ''))
 

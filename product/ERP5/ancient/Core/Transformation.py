@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Transformation:
+from builtins import object
+class Transformation(object):
   """
     Collection of transformed resources
   """

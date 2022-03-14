@@ -1,5 +1,7 @@
+from future import standard_library
+standard_library.install_aliases()
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-from httplib import OK as HTTP_OK
+from http.client import OK as HTTP_OK
 
 class TestDiscussionThread(SecurityTestCase):
   """

@@ -11,10 +11,10 @@ def appendNewTempDomain(id_, criterion_dict=None, **kw):
     criterion_dict.update(parents_criterion_dict)
   domain = parent.generateTempDomain(id=id_)
   domain.edit(
-    criterion_property_list=criterion_dict.keys(),
+    criterion_property_list=list(criterion_dict.keys()),
     **kw
   )
-  for property_id, criterion_kw in criterion_dict.items():
+  for property_id, criterion_kw in list(criterion_dict.items()):
     domain.setCriterion(property_id, **criterion_kw)
   domain_list.append(domain)
 

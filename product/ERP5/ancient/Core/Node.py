@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Node:
+from builtins import object
+class Node(object):
   """
     People, machines,
   """

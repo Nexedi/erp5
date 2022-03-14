@@ -28,10 +28,12 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 from functools import partial
-from StringIO import StringIO
+from io import StringIO
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
@@ -71,7 +73,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     """
     portal = self.getPortal()
 
-    stdin = urllib.urlencode({
+    stdin = urllib.parse.urlencode({
       '__ac_name': self.manager_username,
       '__ac_password': self.manager_password,
     })

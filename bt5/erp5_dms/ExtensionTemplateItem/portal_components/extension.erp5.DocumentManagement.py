@@ -25,8 +25,11 @@
 #
 ##############################################################################
 
-import zipfile, cStringIO, re
-import xmlrpclib, base64
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+import zipfile, io, re
+import xmlrpc.client, base64
 from Products.CMFCore.utils import getToolByName
 
 def extractContent(data):
@@ -36,7 +39,7 @@ def extractContent(data):
   """
   # XXX probably not used - to really get text content it should
   # strip xml too
-  cs = cStringIO.StringIO()
+  cs = io.StringIO()
   cs.write(data)
   try:
     z = zipfile.ZipFile(cs)
@@ -68,7 +71,7 @@ def mkProxy(self):
   nr = pref.getPreferredDmsOoodocServerPortNumber()
   if adr is None or nr is None:
     raise Exception('you should set conversion server coordinates in preferences')
-  sp = xmlrpclib.ServerProxy('http://%s:%d' % (adr,nr), allow_none=True)
+  sp = xmlrpc.client.ServerProxy('http://%s:%d' % (adr,nr), allow_none=True)
   return sp
 
 def generateFile(self, name, data, format):  # pylint: disable=redefined-builtin
@@ -92,7 +95,7 @@ def getLastWorkflowDate(self, state_name='simulation_state', state=('released','
   or JP says "there is an API for it" and we trash this one'''
   if not hasattr(self, 'workflow_history'):
     return None
-  for wflow in self.workflow_history.values():
+  for wflow in list(self.workflow_history.values()):
     if wflow is None or len(wflow) == 0: continue # empty history
     if wflow[0].get(state_name) is None: continue # not the right one
     for i in range(len(wflow)):

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import os, sys, weakref
 from difflib import unified_diff
 from pprint import pprint, pformat
@@ -219,7 +220,7 @@ class ui_dump_test(object):
                             for x in obj.aq_chain[len(path)-1::-1])
         if not best_object or sorting_key < best_object[0]:
           best_object[:] = sorting_key, path, obj
-    for key, (sorting_key, path, obj) in best_object_dict.iteritems():
+    for key, (sorting_key, path, obj) in best_object_dict.items():
       self.track_object_dict[key] = path
       yield path, obj
 
@@ -240,7 +241,7 @@ class ui_dump_test(object):
         has_permission = getSecurityManager().getUser().has_permission
         permission = ''.join(sorted(permission_code
                                     for permission_code, permission in
-                                      self.getPermissionDict().iteritems()
+                                      self.getPermissionDict().items()
                                     if has_permission(permission, obj)))
         dump = dict(permission=permission)
         if 'V' in permission:
@@ -250,7 +251,7 @@ class ui_dump_test(object):
                                 for action in action_list
                                 if action['id'] != 'consistency'))
               for action_type, action_list in context.portal.portal_actions
-                .listFilteredActionsFor(obj).iteritems()
+                .listFilteredActionsFor(obj).items()
               if action_list and action_type in ('object_view',
                                                  'object_action',
                                                  'object_jump',
@@ -264,7 +265,7 @@ class ui_dump_test(object):
       setSecurityManager(security_manager)
       path = self.getVirtualPath(path, obj)
       dump = (path, dict(x for x in obj.getWorkflowStateItemList() if x[1]),
-                    sorted(dump_dict.itervalues(), key=lambda x: x['user']))
+                    sorted(iter(dump_dict.values()), key=lambda x: x['user']))
       if dump != self.last_dump_dict.get(path):
         self.last_dump_dict[path] = dump
         dump_list.append(dump)

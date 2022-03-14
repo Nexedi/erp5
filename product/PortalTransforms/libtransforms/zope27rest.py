@@ -17,6 +17,7 @@ This implementation requires docutils 0.3.4+ from http://docutils.sf.net/
 Based on the new implementation of Zope 2.7.1 altered for PortalTransforms
 
 """
+from builtins import object
 try:
     import docutils
 except ImportError:
@@ -55,7 +56,7 @@ if default_lang and '_' in default_lang:
     default_lang = default_lang[:default_lang.index('_')]
 
 
-class Warnings:
+class Warnings(object):
 
     def __init__(self):
         self.messages = []

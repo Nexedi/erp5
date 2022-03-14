@@ -10,7 +10,7 @@ if not len(divergence_list):
 delivery_solve_property_dict = {}
 listbox = state_change['kwargs'].get('delivery_group_listbox')
 if listbox is not None:
-  for k, v in listbox.items():
+  for k, v in list(listbox.items()):
     object_url = v['choice']
     if object_url != 'ignore':
       delivery_solve_property_dict[k] = delivery.restrictedTraverse(object_url).getPropertyList(k)
@@ -27,7 +27,7 @@ for listbox in [state_change['kwargs'].get('line_group_listbox'),
                 state_change['kwargs'].get('cell_group_listbox')]:
   if listbox is None:
     continue
-  for k, v in listbox.items():
+  for k, v in list(listbox.items()):
     divergence = divergence_dict.get(k, None)
     if divergence is None:
       raise ValidationFailed(Base_translateString('Some divergences seem already solved. Please retry.'))

@@ -1,8 +1,10 @@
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 input_file = open('big_file.log', 'r')
 
-import httplib
-connection =  httplib.HTTPConnection('192.168.242.68:12001')
+import http.client
+connection =  http.client.HTTPConnection('192.168.242.68:12001')
 
 import base64
 base64string = base64.encodestring('zope:insecure')[:-1]

@@ -28,6 +28,9 @@ from __future__ import print_function
 #
 ##############################################################################
 
+from builtins import str
+from builtins import range
+from builtins import object
 import os
 import signal
 import sys
@@ -193,7 +196,7 @@ class WebDriverWait(_WebDriverWait):
       raise
 
 
-class FunctionalTestRunner:
+class FunctionalTestRunner(object):
 
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600

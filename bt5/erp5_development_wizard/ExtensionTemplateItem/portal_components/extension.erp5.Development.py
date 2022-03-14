@@ -11,7 +11,7 @@ def getMethodObject(self, method_id):
   return Method(method_id)
   
 def editForm(self, form, update_dicts):
-  for key, value in update_dicts.items():
+  for key, value in list(update_dicts.items()):
     setattr(form, key, value)
     
 def Base_runPythonCode(self, code):

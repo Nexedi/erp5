@@ -1,3 +1,4 @@
+from builtins import str
 from DateTime import DateTime
 try:
   token_dict = context.Base_getBearerToken(token)

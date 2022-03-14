@@ -27,6 +27,10 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
 import sys
 import tempfile
@@ -51,7 +55,7 @@ access_log = logging.getLogger("access")
 
 # XXX This Mixin is not finished yet. Added as a reference for the
 # future implementation which will come.
-class LogMixin:
+class LogMixin(object):
   """
     The idea of this mixin is to try to share all the code related
     to log file access, caching, log filtering and filtering
@@ -145,7 +149,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     # Unlazyfy URLs and other lazy values so that it can be marshalled
     result = {}
-    for key, action_list in erp5_menu_dict.items():
+    for key, action_list in list(erp5_menu_dict.items()):
       result[key] = [ dict(action) for action in action_list ]
 
     return result
@@ -319,8 +323,8 @@ class IntrospectionTool(LogMixin, BaseTool):
       forbidden areas in the system.
     """
     def cached_loadExternalConfig():
-      import ConfigParser
-      config = ConfigParser.ConfigParser()
+      import configparser
+      config = configparser.ConfigParser()
       config.readfp(open('/etc/erp5.cfg'))
       return config
 

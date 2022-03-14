@@ -2,6 +2,7 @@
   Translates a short account number (eg 280) to a full gap category url (eg gap/2/28/280).
 """
 
+from builtins import range
 number = gap_id.strip()
 
 gap_url = gap_base

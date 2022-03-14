@@ -10,11 +10,10 @@ for c in base_category_list:
   # try to display line first, then column, and finally others
   if matrixbox==1:
     # XXX matrixbox is right_display (not as listfield) => invert display and value in item
-    cell_range.append(map(lambda x: (x[1], x[0]),
-                          resource.getVariationCategoryItemList(
+    cell_range.append([(x[1], x[0]) for x in resource.getVariationCategoryItemList(
                                  base_category_list=(c,),
                                  display_base_category=display_base_category,
-                                 omit_individual_variation=0, sort_id='id')))
+                                 omit_individual_variation=0, sort_id='id')])
   else:
     cell_range.append(
              resource.getVariationCategoryList(base_category_list=(c,),
@@ -26,15 +25,14 @@ predicate_list = context.contentValues(
 pred_ids = []
 if predicate_list != []:
   if matrixbox == 1:
-    pred_ids = list(map(lambda x: (x.getRelativeUrl(), x.getTitle()), 
-                                   predicate_list))
+    pred_ids = list([(x.getRelativeUrl(), x.getTitle()) for x in predicate_list])
   else:
-    pred_ids = list(map(lambda x: x.getRelativeUrl(), predicate_list))
+    pred_ids = list([x.getRelativeUrl() for x in predicate_list])
 
 # Insert predicat list for display in columns
 cell_range.insert(1, pred_ids)
 
 # Remove empty range
-cell_range = filter(lambda x: x!=[], cell_range)
+cell_range = [x for x in cell_range if x!=[]]
 
 return cell_range

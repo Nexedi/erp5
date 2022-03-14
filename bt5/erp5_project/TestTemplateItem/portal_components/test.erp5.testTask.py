@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import object
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -35,7 +37,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 
-class TestTaskMixin:
+class TestTaskMixin(object):
 
   default_quantity = 99.99999999
   default_price = 555.88888888

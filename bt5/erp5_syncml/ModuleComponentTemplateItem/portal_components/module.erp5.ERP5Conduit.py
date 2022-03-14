@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.builtins import basestring
 from erp5.component.module.XMLSyncUtils import XMLSyncUtilsMixin
 from erp5.component.module.XMLSyncUtils import getXupdateObject
 from Products.ERP5Type.Utils import deprecated
@@ -173,7 +175,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml.xpath('local-name()') == HISTORY_TAG and not reset:
       conflict_list += self.addWorkflowNode(object, xml, simulate)
     elif xml.xpath('name()') in XUPDATE_INSERT_OR_ADD_LIST and\
-                            MARSHALLER_NAMESPACE_URI not in xml.nsmap.values():
+                            MARSHALLER_NAMESPACE_URI not in list(xml.nsmap.values()):
       # change the context according select expression
       get_target_parent = xml.xpath('name()') in XUPDATE_INSERT_LIST
       context = self.getContextFromXpath(object, xpath_expression,
@@ -221,7 +223,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       # /erp5/object[@gid='313730']/../workflow_action[@id=SHA(TIME + ACTOR)]
       wf_action_id = EXTRACT_ID_FROM_XPATH.findall(xpath_expression)[-1][-1]
       def deleteWorkflowNode():
-        for wf_id, wf_history_tuple in object.workflow_history.iteritems():
+        for wf_id, wf_history_tuple in object.workflow_history.items():
           for wf_history_index, wf_history in enumerate(wf_history_tuple):
             if sha1(wf_id + str(wf_history['time']) +
                        wf_history['actor']).hexdigest() == wf_action_id:
@@ -421,18 +423,18 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     convert any unicode string to string
     """
     new_args = {}
-    for keyword in args.keys():
+    for keyword in list(args.keys()):
       data = args[keyword]
-      if isinstance(keyword, unicode):
+      if isinstance(keyword, str):
         keyword = keyword.encode(self.getEncoding())
       if isinstance(data, (tuple, list)):
         new_data = []
         for item in data:
-          if isinstance(item, unicode):
+          if isinstance(item, str):
             item = item.encode(self.getEncoding())
           new_data.append(item)
         data = new_data
-      if isinstance(data, unicode):
+      if isinstance(data, str):
         data = data.encode(self.getEncoding())
       new_args[keyword] = data
     return new_args
@@ -616,8 +618,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml is a string, convert it to a node
     """
     if xml is None: return None
-    if isinstance(xml, (str, unicode)):
-      if isinstance(xml, unicode):
+    if isinstance(xml, str):
+      if isinstance(xml, str):
         xml = xml.encode('utf-8')
       xml = etree.XML(xml, parser=parser)
     # If we have the xml from the node erp5, we just take the subnode
@@ -770,7 +772,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if data_type == NONE_TYPE:
       return None
     data = node.text
-    if data is not None and isinstance(data, unicode):
+    if data is not None and isinstance(data, str):
       data = data.encode('utf-8')
     elif data is None and data_type in TEXT_TYPE_LIST:
       return ''
@@ -804,7 +806,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     Parse the xupdate and then it will call the conduit
     """
     conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
+    if isinstance(xupdate, str):
       xupdate = etree.XML(xupdate, parser=parser)
     #LOG("applyXupdate", INFO, etree.tostring(xupdate, pretty_print=True))
     xupdate_builded = False
@@ -812,7 +814,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for subnode in xupdate:
       original_xpath_expression = subnode.get('select', '')
       if not xupdate_builded and \
-          MARSHALLER_NAMESPACE_URI in subnode.nsmap.values() \
+          MARSHALLER_NAMESPACE_URI in list(subnode.nsmap.values()) \
           or 'block_data' in original_xpath_expression:
         # It means that the xpath expression is targetting
         # marshalled values or data nodes. We need to rebuild the original xml
@@ -822,7 +824,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         xupdate_builded = True
 
         # Find the prefix used by marshaller.
-        for prefix, namespace_uri in subnode.nsmap.iteritems():
+        for prefix, namespace_uri in subnode.nsmap.items():
           if namespace_uri == MARSHALLER_NAMESPACE_URI:
             break
         # TODO add support of etree objects for xuproc to avoid
@@ -831,7 +833,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           previous_xml = etree.tostring(previous_xml)
         xupdated_tree = xuproc.applyXUpdate(xml_xu_string=etree.tostring(xupdate),
                                             xml_doc_string=previous_xml)
-      if MARSHALLER_NAMESPACE_URI in subnode.nsmap.values():
+      if MARSHALLER_NAMESPACE_URI in list(subnode.nsmap.values()):
         xpath_expression = original_xpath_expression
         get_target_parent = subnode.xpath('name()') in XUPDATE_INSERT_LIST
         context = self.getContextFromXpath(object, xpath_expression,
@@ -880,7 +882,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          previous_xml=previous_xml, **kw)
 
     # Now apply collected xupdated_node
-    for update_dict in xpath_expression_update_dict.itervalues():
+    for update_dict in xpath_expression_update_dict.values():
       update_dict.update(kw)
       conflict_list += self.updateNode(previous_xml=previous_xml,
                                        **update_dict)
@@ -905,7 +907,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if time <= action.get('time'):
         # action in the past are not appended
         addable = WORKFLOW_ACTION_INSERTABLE
-      key_list = action.keys()
+      key_list = list(action.keys())
       key_list.remove("time")
       for key in key_list:
         if status[key] != action[key]:

@@ -25,6 +25,9 @@
 #
 ##############################################################################
 
+from builtins import str
+from builtins import map
+from builtins import object
 import string, re
 
 redundant_chars='"\'.:;,-+<>()*~' # chars we need to strip from a word before we see if it matches, and from the searchwords to eliminate boolean mode chars
@@ -40,7 +43,7 @@ class FoundWord(str):
   def __str__(self):
     return self.tags[0]+self+self.tags[1]
 
-class Part:
+class Part(object):
 
   def __init__(self,tags,trail):
     self.chain=[]

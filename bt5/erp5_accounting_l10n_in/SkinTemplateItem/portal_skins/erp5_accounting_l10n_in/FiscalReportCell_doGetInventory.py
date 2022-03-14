@@ -16,6 +16,7 @@
 
 """
 
+from builtins import str
 def shortAccountNameToFullGapCategory(accountName) :
   """ translates a short account name (eg asset/current_assets) to a full gap category url 
     (eg gap/in/sme1/asset/current_assets) """

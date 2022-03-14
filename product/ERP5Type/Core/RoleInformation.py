@@ -28,6 +28,7 @@
 """ Information about customizable roles.
 """
 
+from past.builtins import basestring
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -94,7 +95,7 @@ class RoleInformation(XMLObject):
                          self.getDescription(),
                          self.getConditionText(),
                          self.getRoleBaseCategoryScriptId()]
-    return ' '.join(filter(None, search_source_list))
+    return ' '.join([_f for _f in search_source_list if _f])
 
   security.declarePrivate("getLocalRolesFor")
   def getLocalRolesFor(self, ob, user_name=None):
@@ -148,7 +149,7 @@ class RoleInformation(XMLObject):
       # category_result is a dict (which provide group IDs directly)
       # which represents of mapping of roles, security group IDs
       # XXX explain that this is for providing user IDs mostly
-      for role, group_id_list in category_result.iteritems():
+      for role, group_id_list in category_result.items():
         if role in role_list:
           for group_id in group_id_list:
             group_id_role_dict.setdefault(group_id, set()).add(role)

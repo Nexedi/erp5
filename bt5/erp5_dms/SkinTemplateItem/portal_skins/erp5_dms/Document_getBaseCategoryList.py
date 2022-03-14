@@ -15,6 +15,6 @@ for type_info in type_list:
   for base_cat in type_base_cat_list:
     basecatdict[base_cat] = basecatdict.setdefault(base_cat, 0)+1
 
-basecatlist = [k for k,v in basecatdict.items() if v == nr_of_types]
+basecatlist = [k for k,v in list(basecatdict.items()) if v == nr_of_types]
 basecatlist.sort()
 return basecatlist

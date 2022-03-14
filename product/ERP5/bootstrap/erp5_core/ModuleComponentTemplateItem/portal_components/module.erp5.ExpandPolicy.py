@@ -27,6 +27,7 @@
 
 ##############################################################################
 
+from builtins import object
 from time import time
 import transaction
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod

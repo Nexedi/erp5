@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from builtins import str
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform \
     import popentransform

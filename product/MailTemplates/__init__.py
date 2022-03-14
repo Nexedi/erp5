@@ -5,11 +5,14 @@ from __future__ import absolute_import
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from AccessControl import allow_module,allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from .MailTemplate import MailTemplate
 from types import ClassType
-from urllib import quote
+from urllib.parse import quote
 
 try:
     import Products.CMFCore

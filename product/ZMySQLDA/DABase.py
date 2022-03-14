@@ -82,6 +82,9 @@
 # attributions are listed in the accompanying credits file.
 #
 ##############################################################################
+from builtins import str
+from builtins import range
+from builtins import object
 __doc__='''Database Connection
 
 $Id: DABase.py,v 1.5 2001/08/17 02:17:38 adustman Exp $'''
@@ -157,7 +160,7 @@ class Browser(Base):
         try: return self._d[name]
         except KeyError: raise AttributeError(name)
 
-class values:
+class values(object):
 
     def len(self): return 1
 

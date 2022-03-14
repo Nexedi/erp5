@@ -1,6 +1,8 @@
 # first we build a dict of desired container lines
 # key of dict : id of resource
 # item of dict : tuples (resource_value, variation_category_list, quantity)
+from builtins import str
+from builtins import range
 from ZTUtils import make_query
 from Products.ERP5Type.ImmediateReindexContextManager import ImmediateReindexContextManager
 
@@ -20,7 +22,7 @@ for listitem in listbox :
       if resource is not None:
         quantity_unit_dict[resource.getRelativeUrl()] =\
                                                 movement.getQuantityUnit()
-        if resource.getRelativeUrl() in desired_lines.keys():
+        if resource.getRelativeUrl() in list(desired_lines.keys()):
           desired_lines[resource.getRelativeUrl()].append(
                                   (movement.getVariationCategoryList(),
                                   container_quantity))
@@ -52,7 +54,7 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
     next_container_number += 1
 
     # now build container_lines
-    for resource_url in desired_lines.keys():
+    for resource_url in list(desired_lines.keys()):
 
       # compute variation_base_category_list and variation_category_list for this line
       line_variation_base_category_dict = {}
@@ -67,7 +69,7 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
             if len(variation_base_category_items) > 0:
               line_variation_base_category_dict[variation_base_category_items[0]] = 1
 
-        line_variation_base_category_list = line_variation_base_category_dict.keys()
+        line_variation_base_category_list = list(line_variation_base_category_dict.keys())
 
       # construct new content (container_line)
       resource_url = resource_url

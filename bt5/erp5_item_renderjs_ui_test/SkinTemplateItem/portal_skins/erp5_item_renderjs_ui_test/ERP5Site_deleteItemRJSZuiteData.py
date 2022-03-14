@@ -1,3 +1,4 @@
+from builtins import zip
 portal = context.getPortalObject()
 
 delivery_portal_type_list = ["Purchase Packing List", "Sale Packing List"]

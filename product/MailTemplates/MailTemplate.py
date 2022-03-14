@@ -99,7 +99,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
     def pt_render(self, source=False, extra_context={}):
         # Override to support empty strings
         result = PageTemplate.pt_render(self, source, extra_context) or u''
-        assert isinstance(result, unicode)
+        assert isinstance(result, str)
         return result
 
 InitializeClass(MailTemplate)

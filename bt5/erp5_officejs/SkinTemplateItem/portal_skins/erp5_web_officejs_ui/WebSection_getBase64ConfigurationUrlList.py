@@ -1,3 +1,4 @@
+from builtins import str
 import json
 import base64
 from erp5.component.module.Log import log

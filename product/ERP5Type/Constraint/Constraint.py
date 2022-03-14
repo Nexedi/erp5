@@ -28,13 +28,14 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.interfaces import IConstraint
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zope.interface import implementer
 
 @implementer(IConstraint)
-class Constraint:
+class Constraint(object):
     """
       Default Constraint implementation
     """
@@ -64,7 +65,7 @@ class Constraint:
       if type is not None:
         self.type = type
       self.condition = condition
-      for key, value in constraint_definition.items():
+      for key, value in list(constraint_definition.items()):
         if key in self._message_id_list:
           self.message_id_dict[key] = value
         else:

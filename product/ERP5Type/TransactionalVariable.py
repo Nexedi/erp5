@@ -55,6 +55,7 @@ Example::
     toto = tv['toto'] = getToto()
 """
 
+from builtins import object
 import warnings
 from threading import local
 from transaction import get as get_transaction

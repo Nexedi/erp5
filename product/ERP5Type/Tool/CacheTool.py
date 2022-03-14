@@ -135,7 +135,7 @@ class CacheTool(BaseTool):
         del cp
     CachingMethod.factories = {}
     ## read configuration from ZODB
-    for key, item in self.getCacheFactoryList().items():
+    for key, item in list(self.getCacheFactoryList().items()):
       #If there is no cache_plugins, do not create Cache Factory
       if item["cache_plugins"]:
         ## init cache backend storages
@@ -150,7 +150,7 @@ class CacheTool(BaseTool):
     # Clear all cache factories. This method is public to be called from
     # scripts, but without docstring to prevent calling it from the URL
     ram_cache_root = self.getRamCacheRoot()
-    for cf_key in ram_cache_root.keys():
+    for cf_key in list(ram_cache_root.keys()):
       for cp in ram_cache_root[cf_key].getCachePluginList():
         cp.clearCache()
 
@@ -210,7 +210,7 @@ class CacheTool(BaseTool):
     stats = {}
     total_size = 0
     ram_cache_root = self.getRamCacheRoot()
-    for cf_key, cf_value in ram_cache_root.items():
+    for cf_key, cf_value in list(ram_cache_root.items()):
       for cp in cf_value.getCachePluginList():
         cp_total_size, cp_cache_keys_total_size = cp.getCachePluginTotalMemorySize()
         total_size += cp_total_size

@@ -30,9 +30,14 @@
 #
 ##############################################################################
 
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from past.utils import old_div
 import os
 import subprocess
-from cStringIO import StringIO
+from io import StringIO
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -452,10 +457,10 @@ class Image(TextConvertableMixin, File, OFSImage):
     img_width = int(img_width)
     img_height = int(img_height)
 
-    if height > img_height * width / img_width:
-      height = img_height * width / img_width
+    if height > old_div(img_height * width, img_width):
+      height = old_div(img_height * width, img_width)
     else:
-      width =  img_width * height / img_height
+      width =  old_div(img_width * height, img_height)
     return (width, height)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSizeFromImageDisplay')

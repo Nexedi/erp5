@@ -19,12 +19,12 @@ import json
 # http://stackoverflow.com/a/13105359
 def byteify(value):
   if isinstance(value, dict):
-    return {byteify(key): byteify(value) for key, value in value.iteritems()}
+    return {byteify(key): byteify(value) for key, value in value.items()}
   elif isinstance(value, list):
     return [byteify(element) for element in value]
   elif isinstance(value, tuple):
     return tuple(byteify(element) for element in value)
-  elif isinstance(value, unicode):
+  elif isinstance(value, str):
     return value.encode('utf-8')
   else:
     return value
@@ -146,7 +146,7 @@ except FormValidationError as validation_errors:
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)
@@ -186,7 +186,7 @@ if len(listbox_id_list):
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
-    listbox_keys = listbox.keys()
+    listbox_keys = list(listbox.keys())
     listbox_keys.sort()
     for key in listbox_keys:
       listbox_line = listbox[key]

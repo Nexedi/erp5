@@ -1,3 +1,4 @@
+from builtins import str
 if body is None:
   body = context.getTextContent() #XXX This does not support structured text format.
 

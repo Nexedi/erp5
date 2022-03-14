@@ -1,3 +1,5 @@
+from builtins import str
+from past.builtins import basestring
 from AccessControl import getSecurityManager
 from zExceptions import Unauthorized
 from Products.ERP5Type.Document import newTempBase
@@ -12,7 +14,7 @@ def beautifyChange(change_dict):
   for property_name, property_value in sorted(change_dict.items()):
     if isinstance(property_value, basestring):
       try:
-        unicode(property_value, 'utf-8')
+        str(property_value, 'utf-8')
       except UnicodeDecodeError:
         property_value = '(binary)'
     change_list.append('%s:%s' % (property_name, property_value))

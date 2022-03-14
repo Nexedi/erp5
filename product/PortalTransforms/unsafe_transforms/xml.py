@@ -3,12 +3,14 @@ A custom transform using external command
 """
 from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
 __revision__ = '$Id: xml.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
 from os.path import join, dirname, exists
 import re
 from os import popen3, popen4, system
-from cStringIO import StringIO
+from io import StringIO
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer

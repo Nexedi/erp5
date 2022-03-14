@@ -1,3 +1,4 @@
+from builtins import str
 from string import zfill
 request = context.REQUEST
 
@@ -5,7 +6,7 @@ if kw.get('update', False):
   # Ensure ERP5JS correctly refresh the page
   request.RESPONSE.setStatus(400)
 
-for k in kw.keys():
+for k in list(kw.keys()):
   v = kw[k]
   if k.endswith('listbox'):
     listbox = {}
@@ -13,7 +14,7 @@ for k in kw.keys():
     if v is not None:
       i = 1
       for line in v:
-        if line.has_key(listbox_key):
+        if listbox_key in line:
           key = '%s' % line[listbox_key]
         else:
           key = str(zfill(i,3))

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import unittest
 from DocumentTemplate import String
 

@@ -55,7 +55,7 @@ for field_name in default:
 
 
 # update defaults with user defined values
-for composed_key, value in property_dict.items():
+for composed_key, value in list(property_dict.items()):
   field_dict = default
   field_name, property_name = composed_key.split('__')
   if property_name.endswith('_tales'):
@@ -71,7 +71,7 @@ for field_name in default:
   field = form.get_field(field_name)
   field.manage_edit(
     {'field_' + key: value
-     for key, value in default[field_name].items()}
+     for key, value in list(default[field_name].items())}
   )
 
 # update actual fields TALES expressions
@@ -79,7 +79,7 @@ for field_name in tales_default:
   field = form.get_field(field_name)
   field.manage_tales(  # this function actually eats ValidationError exceptions
     {'field_' + key: value
-     for key, value in tales_default[field_name].items()}
+     for key, value in list(tales_default[field_name].items())}
   )
 
 return 'Set Successfully.'

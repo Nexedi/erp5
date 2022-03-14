@@ -34,6 +34,7 @@
 # class may be copied in the pickle of the container, and we can't access it
 # from __setstate__.
 
+from builtins import object
 import logging, re
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base

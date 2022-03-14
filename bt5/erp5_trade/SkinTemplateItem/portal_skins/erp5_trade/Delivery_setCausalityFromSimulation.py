@@ -35,5 +35,5 @@ for simulation_movement in simulation_movement_list :
   if explanation_value is not None :
     causality_value_set[explanation_value] = 1
 
-LOG('setCausalityValueList %s'%causality_value_set.keys())
-delivery.setCausalityValueList(causality_value_set.keys() + delivery.getCausalityValueList())
+LOG('setCausalityValueList %s'%list(causality_value_set.keys()))
+delivery.setCausalityValueList(list(causality_value_set.keys()) + delivery.getCausalityValueList())

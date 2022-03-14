@@ -25,6 +25,9 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 from lxml.builder import ElementMaker
 from lxml.etree import Element
 from lxml import etree

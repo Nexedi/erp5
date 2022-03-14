@@ -1,7 +1,7 @@
 """This script returns the Discussion Thread list that is associated to this context.
 Need a proxy to work correctly with anonymous user"""
 
-if not kw.has_key('portal_type'):
+if 'portal_type' not in kw:
   kw["portal_type"] = "Discussion Thread"
 kw["follow_up_uid"] = context.getUid()
  

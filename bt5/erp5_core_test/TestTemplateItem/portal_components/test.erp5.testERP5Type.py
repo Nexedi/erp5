@@ -26,10 +26,16 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import str
+from builtins import range
+from builtins import object
 try:
   from ZODB._compat import cPickle
 except ImportError: # BBB: ZODB < 4
-  import cPickle
+  import pickle
 import unittest
 import sys
 import mock
@@ -65,8 +71,8 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     """Clean up """
     ttool = self.getTypesTool()
     # remove all property sheet we added to type informations
-    for ti_name, psheet_list in getattr(self, '_added_property_sheets',
-                                   {}).items():
+    for ti_name, psheet_list in list(getattr(self, '_added_property_sheets',
+                                   {}).items()):
       ti = ttool.getTypeInfo(ti_name)
       property_sheet_set = set(ti.getTypePropertySheetList())
       for psheet in psheet_list:
@@ -314,7 +320,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     portal.person_module._setObject(o.getId(), aq_base(o))
     try:
       self.commit()
-    except cPickle.PicklingError:
+    except pickle.PicklingError:
       self.abort()
     else:
       self.fail("No exception raised when storing explicitly a temp object"
@@ -989,7 +995,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDummyPsProp(1)
     self.assertEqual('1', person.getDummyPsProp())
 
-    class Dummy:
+    class Dummy(object):
       def __str__(self):
         return 'string representation'
     person.setDummyPsProp(Dummy())
@@ -1742,7 +1748,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person')
     self.assertFalse(person.hasTitle())
-    self.assertFalse(person.__dict__.has_key('title'))
+    self.assertFalse('title' in person.__dict__)
 
   def test_24_relatedValueAccessor(self):
     """
@@ -2358,7 +2364,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       foo.getRegionList())
     # using relations to non existant objects will issue a warning in
     # event.log
-    self._catch_log_errors(ignored_level=sys.maxint)
+    self._catch_log_errors(ignored_level=sys.maxsize)
     self.assertEqual([beta],
                       foo.getRegionValueList())
     self.assertEqual([beta_title],

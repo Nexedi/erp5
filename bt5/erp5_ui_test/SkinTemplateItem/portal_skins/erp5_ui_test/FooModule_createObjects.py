@@ -1,4 +1,6 @@
 """Create objects with given parameters"""
+from builtins import str
+from builtins import range
 from DateTime import DateTime
 if category_list is None:
   category_list = ('a', 'b', 'a/a1', 'a/a2')

@@ -41,7 +41,7 @@ if depth == 0:
 
     category_list = []
     #i = 1
-    month_dict_list = month_dict.keys()
+    month_dict_list = list(month_dict.keys())
     month_dict_list.sort()
     for year, month in month_dict_list:
       category_list.append(here.getObject().asContext(title="%s - %s" % (year, month),
@@ -53,8 +53,8 @@ else:
   string_index = getattr(parent, 'string_index')
   project_to_display_dict = here.monthly_project_to_display_dict.get(string_index, {})
   if depth == 1:
-    category_list = [here.project_dict[x] for x in project_to_display_dict.keys() if
-                        here.project_dict.has_key(x)]
+    category_list = [here.project_dict[x] for x in list(project_to_display_dict.keys()) if
+                        x in here.project_dict]
   else:
     parent_category_list = parent.getMembershipCriterionCategoryList()
     category_list = []
@@ -63,12 +63,12 @@ else:
     # need to be displayed for this month
     for parent_category in parent_category_list:
       parent_category = '/'.join(parent_category.split('/')[1:])
-      if project_to_display_dict.has_key(parent_category):
+      if parent_category in project_to_display_dict:
         parent_category_object = context.restrictedTraverse(parent_category)
         category_child_list = parent_category_object.contentValues(portal_type=project_line_portal_type)
         #category_list.append(parent_category_object)
         for category_child in category_child_list:
-          if project_to_display_dict.has_key(category_child.getRelativeUrl()):
+          if category_child.getRelativeUrl() in project_to_display_dict:
             category_list.append(category_child)
 
 

@@ -1,5 +1,6 @@
 # vobject integration for ERP5
 
+from builtins import str
 try:
   import vobject
 except ImportError:
@@ -9,7 +10,7 @@ except ImportError:
 def decode(string):
   if not string:
     return ''
-  return unicode(string, 'utf8', 'repr')
+  return str(string, 'utf8', 'repr')
 
 def Person_viewPersonAsvCard(self, REQUEST=None):
   """Returns a vCard representation of a Person object.

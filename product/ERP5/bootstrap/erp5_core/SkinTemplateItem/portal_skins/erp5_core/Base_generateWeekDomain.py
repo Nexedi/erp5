@@ -1,6 +1,7 @@
 #  - Weeks always starts at 0H of the last Sunday and finish at 0h of
 #  the next sunday.
 
+from builtins import str
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
 from Products.PythonScripts.standard import url_quote

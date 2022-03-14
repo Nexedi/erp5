@@ -26,11 +26,12 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.ERP5Type.Utils import getPath
 from zLOG import LOG, INFO
 from Products.PythonScripts.Utility import allow_class
 
-class ActiveResult:
+class ActiveResult(object):
   """
     Encapsulates the result of deferred activity.
     This class is used by processes to store results

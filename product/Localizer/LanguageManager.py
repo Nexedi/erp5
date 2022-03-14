@@ -16,7 +16,9 @@
 
 # Import from the Standard Library
 from __future__ import absolute_import
-from urlparse import urlparse
+from future import standard_library
+standard_library.install_aliases()
+from urllib.parse import urlparse
 
 # Import from itools
 from .itools.i18n import get_language_name, get_languages

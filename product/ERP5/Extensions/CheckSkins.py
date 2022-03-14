@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 from Products.ERP5Type.Globals import get_request
 import re
 import os
@@ -179,7 +181,7 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
     return msg
 
   with open(os.path.join(data_dir, file)) as file:
-    class NamingInformation: pass
+    class NamingInformation(object): pass
     info_list = []
     reader = csv.reader(file)
     for row in reader:

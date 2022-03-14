@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import unittest
 from unittest import expectedFailure
 

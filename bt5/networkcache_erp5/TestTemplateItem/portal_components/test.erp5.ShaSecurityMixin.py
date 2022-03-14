@@ -28,6 +28,7 @@
 ##############################################################################
 
 
+from builtins import object
 from AccessControl.SecurityManagement import newSecurityManager
 
 

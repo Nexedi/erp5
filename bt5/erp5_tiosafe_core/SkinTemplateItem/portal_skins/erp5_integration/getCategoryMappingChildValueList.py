@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from Products.ERP5Type.Utils import sortValueList
 
 def getCategoryMappingChildValueList(category_mapping, sort_on=None, sort_order=None,

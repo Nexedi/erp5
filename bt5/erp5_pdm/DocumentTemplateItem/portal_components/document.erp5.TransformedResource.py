@@ -30,6 +30,7 @@
 #
 ##############################################################################
 
+from builtins import filter
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.AmountGeneratorLine import AmountGeneratorLine
@@ -78,7 +79,7 @@ class TransformedResource(AmountGeneratorLine):
       resource = self.getDefaultResourceValue()
       if resource is not None:
         result += resource.getVariationPropertyList()
-      result = filter(self.hasProperty, result)
+      result = list(filter(self.hasProperty, result))
     return result
 
   def getMappedValueBaseCategoryList(self, *args, **kw):

@@ -1,3 +1,4 @@
+from builtins import str
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.PythonScripts.standard import Object
 from ZTUtils import make_query
@@ -40,7 +41,7 @@ for base_contribution in base_contribution_list:
 
 inventory_kw = dict(
         section_category=context.getGroup(base=1),
-        strict_base_contribution_uid=base_contribution_uid_dict.values(),
+        strict_base_contribution_uid=list(base_contribution_uid_dict.values()),
         portal_type=portal_type,
         parent_portal_type=delivery_portal_type,
         simulation_state=('stopped', 'delivered'),

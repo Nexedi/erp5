@@ -7,6 +7,8 @@ as first element or not (just like category tool API)
 
 The state titles will be translated unless you pass translate=False
 '''
+from builtins import str
+from past.builtins import basestring
 if translate:
   from Products.ERP5Type.Message import translateString
 else:

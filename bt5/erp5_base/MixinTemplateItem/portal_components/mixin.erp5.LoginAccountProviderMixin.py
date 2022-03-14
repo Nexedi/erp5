@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import zope.interface
 
 from Products.ERP5Type import Permissions
@@ -36,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 
 @zope.interface.implementer(ILoginAccountProvider)
-class LoginAccountProviderMixin:
+class LoginAccountProviderMixin(object):
   """
   This class provides a generic implementation of ILoginAccountProvider.
   """

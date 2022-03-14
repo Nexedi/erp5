@@ -28,7 +28,7 @@ for action in ordered_global_action_list:
     query_dict = context.WebSite_getWorklistSettingsFor(action)
     if query_dict:
       sub_query_list = []
-      for k, v in query_dict.items():
+      for k, v in list(query_dict.items()):
         sub_query_list.append(Query(**{k: v}))
       complex_query = ComplexQuery(logical_operator="AND", *sub_query_list)
       # add to query filtering by local roles as defined in worklist

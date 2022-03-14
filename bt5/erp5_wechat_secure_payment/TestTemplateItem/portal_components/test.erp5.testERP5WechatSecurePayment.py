@@ -26,6 +26,7 @@
 ##############################################################################
 
 
+from builtins import str
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import hashlib
 import mock

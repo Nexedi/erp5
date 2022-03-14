@@ -77,7 +77,7 @@ class TestjIOApiStyle(ERP5TypeTestCase):
       "alldocs": "object_json_api_all_docs",
       "get": "object_json_api_get",
     }
-    for key, action_type in self.action_type_dict.iteritems():
+    for key, action_type in self.action_type_dict.items():
       self.updateCreateActionType(action_type)
       self.api_web_section.setProperty(
         "configuration_%s_action_type" % key,

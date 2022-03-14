@@ -64,7 +64,7 @@ else:
                           kw = kw)
   for line in found_result_list:
     uid = line['uid']
-    if uid not in repeating_uid_category_map.keys():
+    if uid not in list(repeating_uid_category_map.keys()):
       # first time 
       repeating_uid_category_map[uid] = []
     category_relative_url = line['category_relative_url']
@@ -74,7 +74,7 @@ else:
       if not len(sections):
         # try to find by similarity if no exact match so if document belongs to 'group/nexedi/hq'
         # and we have a section 'group/nexedi' it will belong to this section
-        for key,value in category_section_map.items():
+        for key,value in list(category_section_map.items()):
           if category_relative_url.startswith(key):
             sections.extend(value)
       repeating_uid_category_map[uid].extend(sections)
@@ -106,6 +106,6 @@ else:
       sections = repeating_uid_category_map[uid]
       for section in sections:
         unique_sections[section['uid']] = section['relative_url']
-      line['section_list'] = unique_sections.values()
+      line['section_list'] = list(unique_sections.values())
       result_list.append(line)
   return [newTempBase(portal, x['title'], **x) for x in result_list]

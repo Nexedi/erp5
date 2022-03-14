@@ -11,6 +11,7 @@
 
 
 ## First step : retrieve the raw list
+from builtins import object
 current_section = context.getWebSectionValue()
 subject_list = []
 
@@ -20,7 +21,7 @@ for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS - this 
 ## Now, build the object list so that a Listbox can be used to display the results of this script.
 result = []
 
-class Category:
+class Category(object):
   def setTitle(self, title):
     self.title = title
   def getTitle(self):

@@ -1,3 +1,4 @@
+from builtins import str
 divergence_messages_list =  context.getDivergenceList()
 
 from Products.ERP5Type.Document import newTempBase

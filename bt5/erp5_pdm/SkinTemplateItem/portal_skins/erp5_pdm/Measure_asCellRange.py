@@ -1,3 +1,4 @@
+from builtins import range
 cell_range = []
 for i in range(len(context.getMeasureVariationBaseCategoryList())):
   if matrixbox:

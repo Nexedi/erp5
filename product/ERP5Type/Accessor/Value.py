@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import map
 from collections import OrderedDict
 from operator import methodcaller
 from .Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
@@ -186,7 +187,7 @@ def defMethodGetter(key, method=None):
   name = '%sListGetter' % key
   def __call__(self, instance, *args, **kw):
     r = ListGetter.__call__(self, instance, **kw)
-    return map(method, r) if r or not args else args[0]
+    return list(map(method, r)) if r or not args else args[0]
   psyco.bind(__call__)
   globals()[name] = type(name, (ListGetter,), {'__call__': __call__})
 

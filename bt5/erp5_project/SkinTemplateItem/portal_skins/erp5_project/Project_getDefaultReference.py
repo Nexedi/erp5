@@ -1,3 +1,4 @@
+from builtins import str
 project = context
 reference_list = []
 

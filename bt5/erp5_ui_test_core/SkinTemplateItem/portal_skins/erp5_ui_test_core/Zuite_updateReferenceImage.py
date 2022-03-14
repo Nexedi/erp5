@@ -1,4 +1,6 @@
-from StringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from io import StringIO
 portal = context.getPortalObject()
 
 image_file = StringIO(image_data.replace('data:image/png;base64,', '').decode('base64'))

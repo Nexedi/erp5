@@ -32,17 +32,17 @@ assert 'error_list' not in category_list_mapping
 
 
 #Process on each category
-for category_list in category_list_mapping.values():
+for category_list in list(category_list_mapping.values()):
   for category in category_list:
     #Take only needed attributes
     for attribute in translated_attributes_list:
       #Test attribute exist
-      if category.has_key(attribute) and category.has_key(translation_prefix+attribute):
+      if attribute in category and translation_prefix+attribute in category:
         initial_value = category.get(attribute,'').strip().replace('"',"'")
         if initial_value != '':
           translate_value = category.get(translation_prefix+attribute,'').strip().replace('"',"'")
           if translate_value != '':
-            if translation_dict.has_key(initial_value):
+            if initial_value in translation_dict:
               #Test any duplicate  translation ('car' can't be translated to 'voiture' and 'auto', 
               #user should be choice 'voiture' or 'car')
               if translation_dict[initial_value] != translate_value: 
@@ -64,7 +64,7 @@ if error_report and len(detailed_report_result) > 0:
 
 #No error, we build the file
 po_data = ""
-for msgid, msgstr in translation_dict.items():
+for msgid, msgstr in list(translation_dict.items()):
   po_data += 'msgid "%s"\nmsgstr "%s"\n\n' % (msgid, msgstr)
 
 filename = "%s%s.po" % (translation_prefix,"".join(import_filename.split('.')[:-1]))

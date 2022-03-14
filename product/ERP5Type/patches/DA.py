@@ -13,6 +13,7 @@
 ##############################################################################
 
 # XML content of zsql methods
+from builtins import str
 import re
 try: from IOBTree import Bucket
 except: Bucket=lambda:{}

@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.builtins import basestring
 from .DefaultKey import DefaultKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
@@ -80,7 +81,7 @@ class FullTextKey(DefaultKey):
       else:
         operator_value_dict['match'] = new_value_list
     # Dequote for non full-text queries.
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in operator_value_dict.items():
       if comparison_operator not in ('match', 'match_boolean'):
         operator_value_dict[comparison_operator] = [
           isinstance(value, basestring) and dequote(value) or value

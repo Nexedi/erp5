@@ -1,3 +1,4 @@
+from past.builtins import basestring
 toggable_pad = None
 all_knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode)
 if isinstance(knowledge_pad_url, basestring):

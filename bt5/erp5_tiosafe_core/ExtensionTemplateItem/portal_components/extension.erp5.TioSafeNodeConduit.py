@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
 from erp5.component.document.SyncMLConflict import SyncMLConflict as Conflict
 from lxml import etree

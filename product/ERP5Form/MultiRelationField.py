@@ -28,6 +28,11 @@
 #
 ##############################################################################
 
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -428,7 +433,7 @@ $(document).ready(function() {
       )
     return ''
 
-class MultiRelationEditor:
+class MultiRelationEditor(object):
     """
       A class holding all values required to update a relation
     """

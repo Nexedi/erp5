@@ -28,6 +28,7 @@
 ##############################################################################
 
 
+from builtins import range
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
 from Products.CMFCore.utils import getToolByName
 import random
@@ -82,7 +83,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     portal = self.portal
     contribution_tool = getToolByName(portal, 'portal_contributions')
     # seed parameter is here to ensure entropy for document id generation
-    seed = ''.join([random.choice(string.ascii_letters) for _ in xrange(20)])
+    seed = ''.join([random.choice(string.ascii_letters) for _ in range(20)])
     url = portal.absolute_url()
     url += '/%s?seed=%s' % (script_id, seed)
     if filename:

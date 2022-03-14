@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import os, re, subprocess
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
@@ -67,7 +68,7 @@ class Git(WorkingCopy):
     argv = ['git']
     try:
       return subprocess.Popen(argv + list(args), **kw)
-    except OSError, e:
+    except OSError as e:
       from zLOG import LOG, WARNING
       LOG('Git', WARNING,
           'will not work as the executable cannot be executed, perhaps not '
@@ -117,7 +118,7 @@ class Git(WorkingCopy):
       env.update(ERP5_GIT_USERNAME=userpwd[0], ERP5_GIT_PASSWORD=userpwd[1])
     try:
       return self.git(*args, **kw)
-    except GitError, e:
+    except GitError as e:
       message = 'Authentication failed'
       if message in str(e):
         raise GitLoginError(userpwd and message or
@@ -148,7 +149,7 @@ class Git(WorkingCopy):
       local, remote = self.git('rev-parse', '--symbolic-full-name',
                                'HEAD', '@{u}').splitlines()
       remote = remote[:13] == 'refs/remotes/' and remote[13:] or None
-    except GitError, e:
+    except GitError as e:
       local = e.stdout.splitlines()[0]
       remote = None
     if local != 'HEAD':
@@ -229,7 +230,7 @@ class Git(WorkingCopy):
     path_dict = dict.fromkeys(self.git('ls-files').splitlines(), '')
     path_dict.update(self._patch_with_raw()[0])
     node_dict = {}
-    path_list = path_dict.keys()
+    path_list = list(path_dict.keys())
     for path in path_list:
       status = path_dict[path]
       parent = os.path.dirname(path)
@@ -293,7 +294,7 @@ class Git(WorkingCopy):
     try:
       return self.git('show', 'HEAD:' + self.prefix + path,
                       strip=False, cwd=self.toplevel)
-    except GitError, e:
+    except GitError as e:
       err = e.args[0]
       if ' does not exist in ' in err or ' exists on disk, but not in ' in err:
         raise NotVersionedError(path)
@@ -350,7 +351,7 @@ class Git(WorkingCopy):
         push_args = 'push', '--porcelain', remote, '%s:%s' % (src, dst)
         try:
           self.remote_git(*push_args)
-        except GitError, e:
+        except GitError as e:
           # first check why we could not push
           status = [x for x in e.stdout.splitlines() if x[:1] == '!']
           if (len(status) !=  1 or
@@ -365,7 +366,7 @@ class Git(WorkingCopy):
           # TODO: solve conflicts on */bt/revision automatically
           try:
             self.git(merge, '@{u}', env=env)
-          except GitError, e:
+          except GitError as e:
             # XXX: how to know how it failed ?
             try:
               self.git(merge, '--abort')
@@ -377,7 +378,7 @@ class Git(WorkingCopy):
             reset += 1
           # retry to push everything
           self.remote_git(*push_args)
-    except (GitError, GitLoginError), e:
+    except (GitError, GitLoginError) as e:
       self.git('reset', '--soft', '@{%u}' % reset)
       if isinstance(e, GitLoginError):
         raise

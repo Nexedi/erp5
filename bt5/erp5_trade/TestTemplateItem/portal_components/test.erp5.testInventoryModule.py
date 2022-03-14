@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
@@ -627,7 +628,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                     specialise=self.business_process,
                     source_value = from_organisation,
                     destination_value = organisation,
-                    start_date=DateTime(2019, 02, 20),
+                    start_date=DateTime(2019, 0o2, 20),
                   )
     resource_value = sequence.get('resource')
     delivery.newContent( portal_type='Internal Packing List Line',
@@ -649,7 +650,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual(2, getInventoryQuantity())
 
     inventory = self.getInventoryModule().newContent()
-    inventory.edit(start_date=DateTime(2019, 02, 21),
+    inventory.edit(start_date=DateTime(2019, 0o2, 21),
                    destination_value=organisation,
                    full_inventory=True)
     inventory.deliver()
@@ -694,7 +695,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual(2, getInventoryQuantity())
 
     inventory = self.getInventoryModule().newContent()
-    inventory.edit(start_date=DateTime(2019, 02, 21),
+    inventory.edit(start_date=DateTime(2019, 0o2, 21),
                    destination_value=organisation,
                    full_inventory=True)
     inventory_line = inventory.newContent(portal_type='Inventory Line',

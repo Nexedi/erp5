@@ -1,4 +1,5 @@
 # return worklists from ticket workflow in JSON format
+from builtins import str
 from Products.ERP5Type.Message import translateString
 import json
 portal = context.getPortalObject()
@@ -11,7 +12,7 @@ worklist_query_dict = portal.ERP5Site_getTicketWorkflowWorklistInfoDict(
 # extend this information with the query from our helper script.
 worklist_action_list = [
   {
-    'action_name': unicode(translateString(action['name'].rsplit(' (', 1)[0])), # Action name include the count, but we display it separatly.
+    'action_name': str(translateString(action['name'].rsplit(' (', 1)[0])), # Action name include the count, but we display it separatly.
     'action_count': action['count'],
     'query': worklist_query_dict[action['worklist_id']],
   }

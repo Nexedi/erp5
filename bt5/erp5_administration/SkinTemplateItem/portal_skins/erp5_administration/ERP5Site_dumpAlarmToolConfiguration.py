@@ -1,3 +1,4 @@
+from builtins import str
 alarm_tool = context.getPortalObject().portal_alarms
 periodicity_list = [
   'periodicity_day_frequency',

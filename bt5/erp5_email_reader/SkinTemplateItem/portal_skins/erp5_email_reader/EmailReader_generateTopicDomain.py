@@ -3,6 +3,7 @@
   depth, parent, **kw
 """
 
+from builtins import range
 from Products.ERP5Type.Cache import CachingMethod
 from erp5.component.module.Log import log
 #log("depth: %s parent: %s kw: %s" % (depth, repr(parent), repr(kw)))
@@ -31,8 +32,7 @@ def getAvailableSubjectList(subject_list=(), container_uid=None):
       kw['subject_filter_%s' % i] = subject_list[i]    
   result_list = context.portal_catalog(**kw)
   #return result_list
-  result = filter(lambda x: x not in subject_list,
-                map(lambda r: r.subject, result_list))
+  result = [x for x in [r.subject for r in result_list] if x not in subject_list]
   result.sort()
   return result
 

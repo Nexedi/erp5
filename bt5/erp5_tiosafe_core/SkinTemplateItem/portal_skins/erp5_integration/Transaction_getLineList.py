@@ -1,4 +1,5 @@
 """ Retrieve the movement list of the transaction. """
+from past.builtins import cmp
 movement_list = []
 
 sub = context.restrictedTraverse(context_document)

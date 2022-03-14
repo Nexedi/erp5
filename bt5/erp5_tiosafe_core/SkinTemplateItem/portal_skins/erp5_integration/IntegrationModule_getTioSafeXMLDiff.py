@@ -1,3 +1,4 @@
+from past.builtins import cmp
 im = context
 pub_source = im.getSourceSectionValue().getSourceValue()
 pub_list = im.getSourceSectionValue().getListMethodId()

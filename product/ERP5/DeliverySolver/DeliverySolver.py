@@ -27,7 +27,8 @@
 #
 ##############################################################################
 
-class DeliverySolver:
+from builtins import object
+class DeliverySolver(object):
   """
     Delivery solver is used to have control of how quantity property is
     accepted into simulation.

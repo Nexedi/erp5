@@ -25,8 +25,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from DateTime import DateTime
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from lxml import etree
 import re
 from zLOG import LOG
@@ -47,11 +50,11 @@ def setTextContent(self):
     Edit text_content
   """
   try:
-    text_content = urllib2.urlopen(self.asURL()).read()
+    text_content = urllib.request.urlopen(self.asURL()).read()
     try:
-      text_content = unicode(text_content, "utf-8").encode("utf-8")
+      text_content = str(text_content, "utf-8").encode("utf-8")
     except UnicodeDecodeError:
-      text_content = unicode(text_content, "iso-8859-1").encode("utf-8")
+      text_content = str(text_content, "iso-8859-1").encode("utf-8")
   except IOError:
     text_content = None
   if text_content is not None:

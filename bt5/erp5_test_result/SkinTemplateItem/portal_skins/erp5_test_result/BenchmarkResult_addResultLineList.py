@@ -1,3 +1,4 @@
+from builtins import zip
 for result_line, stdout in zip(result_line_list, stdout_list):
   context.newContent(portal_type='Benchmark Result Line',
                      title='%s repeat with %s concurrent users' % (repeat, concurrent_user),

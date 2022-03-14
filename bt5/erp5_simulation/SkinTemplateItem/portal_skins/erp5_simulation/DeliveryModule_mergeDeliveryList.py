@@ -1,3 +1,4 @@
+from builtins import str
 REQUEST=context.REQUEST
 selection_name = REQUEST['selection_name']
 object_list = context.portal_selections.getSelectionValueList(selection_name, context=context, REQUEST=REQUEST)

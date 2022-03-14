@@ -1,3 +1,5 @@
+from builtins import range
+from builtins import object
 import os, os.path, sys
 
 def package_home(globals_dict):
@@ -17,7 +19,7 @@ setup_ini = 'file://%s/uno.ini' % package_home(globals())
 import PyUNO
 
 
-class uno:
+class uno(object):
     def __init__ ( self, connection='socket,host=localhost,port=2002;urp', setup=setup_ini ):
         """ do the bootstrap
 

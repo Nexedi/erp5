@@ -30,11 +30,13 @@
 """Test suite for erp5_accounting_l10n_fr
 """
 
+from future import standard_library
+standard_library.install_aliases()
 import unittest
 import zipfile
 import email
 import os.path
-from cStringIO import StringIO
+from io import StringIO
 from DateTime import DateTime
 
 from lxml import etree

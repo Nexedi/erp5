@@ -13,11 +13,14 @@ Original code from active state recipe
  to scan Python source code and re-emit it with no changes to its
  original formatting (which is the hard part).
 """
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 __revision__ = '$Id: python.py 3661 2005-02-23 17:05:31Z tiran $'
 
 import string
 import keyword, token, tokenize
-from cStringIO import StringIO
+from io import StringIO
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
@@ -28,7 +31,7 @@ from DocumentTemplate.DT_Util import html_quote
 _KEYWORD = token.NT_OFFSET + 1
 _TEXT    = token.NT_OFFSET + 2
 
-class Parser:
+class Parser(object):
     """ Send colored python source.
     """
 
@@ -106,7 +109,7 @@ class Parser:
 
 
 @implementer(ITransform)
-class PythonTransform:
+class PythonTransform(object):
     """Colorize Python source files
     """
 

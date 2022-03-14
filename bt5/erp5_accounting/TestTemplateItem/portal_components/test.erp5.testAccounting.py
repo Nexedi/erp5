@@ -30,7 +30,11 @@
 
 """
 
-from StringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from io import StringIO
 import lxml
 
 from DateTime import DateTime

@@ -1,3 +1,4 @@
+from past.builtins import cmp
 from erp5.component.module.DateUtils import atTheEndOfPeriod
 request = container.REQUEST
 portal = context.getPortalObject()

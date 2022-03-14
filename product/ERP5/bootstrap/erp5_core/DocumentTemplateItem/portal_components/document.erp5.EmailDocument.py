@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import re
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo

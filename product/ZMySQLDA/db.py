@@ -84,6 +84,7 @@
 ##############################################################################
 
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
+from builtins import map
 __version__='$Revision: 1.20 $'[11:-2]
 import six
 import os
@@ -159,8 +160,8 @@ type_xlate = {
 
 def _mysql_timestamp_converter(s):
         s = s.ljust(14, '0')
-        parts = map(int, (s[:4],s[4:6],s[6:8],
-                          s[8:10],s[10:12],s[12:14]))
+        parts = list(map(int, (s[:4],s[4:6],s[6:8],
+                          s[8:10],s[10:12],s[12:14])))
         return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
 # DateTime(str) is slow. As the date format is part of the specifications,
@@ -348,7 +349,7 @@ class DB(TM):
                 if short_type not in ('set','enum'):
                     if ',' in size:
                         info['Scale'], info['Precision'] = \
-                                       map(int, size.split(',', 1))
+                                       list(map(int, size.split(',', 1)))
                     else:
                         info['Scale'] = int(size)
             else:

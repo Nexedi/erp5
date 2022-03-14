@@ -27,6 +27,11 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
 import unittest
 import logging
 from unittest import expectedFailure, skip
@@ -35,7 +40,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
-from urllib import pathname2url
+from urllib.request import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -606,7 +611,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module.manage_permission('Copy or Move', ['Assignor'], False)
     sequence.edit(module_id=module.getId())
     module_object_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       obj = module.newContent(portal_type = 'Geek Object')
       self.assertIsNotNone(obj)
       module_object_list.append(obj)
@@ -630,7 +635,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module = portal._getOb(module_id, None)
     self.assertIsNotNone(module)
     module_object_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       obj = module.newContent(portal_type = 'Geek Object')
       self.assertIsNotNone(obj)
       module_object_list.append(obj.getId())
@@ -940,8 +945,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIsNotNone(form)
     group_dict = sequence.get('group_dict')
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
-                      sorted(group_dict.iterkeys()))
-    for group in group_dict.iterkeys():
+                      sorted(group_dict.keys()))
+    for group in group_dict.keys():
       id_list = []
       for field in form.get_fields_in_group(group):
         id_list.append(field.getId())
@@ -1178,7 +1183,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.assertTrue(base_category is not None)
     category_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       category = base_category.newContent(portal_type='Category')
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
@@ -1245,7 +1250,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(category is not None)
     subcategory_list = []
     subcategory_uid_dict = {}
-    for _ in xrange(10):
+    for _ in range(10):
       subcategory = category.newContent(portal_type='Category', title='toto')
       subcategory_list.append(subcategory.getId())
       subcategory_uid_dict[subcategory.getId()] = subcategory.getUid()
@@ -2535,7 +2540,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     object_list = import_bt.preinstall()
     install_object_dict = {}
-    for obj in object_list.keys():
+    for obj in list(object_list.keys()):
       state = object_list[obj][0]
       if state == 'Removed':
         install_state = 'save_and_remove'
@@ -2553,7 +2558,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     object_list = import_bt.preinstall()
     install_object_dict = {}
-    for obj in object_list.keys():
+    for obj in list(object_list.keys()):
       state = object_list[obj][0]
       if state in ('Removed', 'Removed but used'):
         install_state = 'save_and_remove'
@@ -2679,7 +2684,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     for item_name in item_list:
       item = getattr(bt, item_name)
       if item is not None:
-        for data in item._objects.itervalues():
+        for data in item._objects.values():
           if hasattr(data, '__ac_local_roles__'):
             self.assertTrue(data.__ac_local_roles__ is None)
           if hasattr(data, '_owner'):
@@ -3040,7 +3045,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateFakeZODBScript(self, sequence=None, **kw):
     """Create a Script inside portal_skins
     """
-    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in xrange(10)])
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in range(10)])
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
@@ -3268,7 +3273,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     copied, = template_tool.manage_pasteObjects(cb_data)
     current = current_bt._property_sheet_item._objects.copy()
     current_bt._property_sheet_item._objects = PersistentMapping()
-    for k,v in current.iteritems():
+    for k,v in current.items():
       k = k.lstrip('portal_property_sheets/')
       current_bt._property_sheet_item._objects[k] = v
     sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
@@ -6717,7 +6722,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         ('another_group', ['Assignee']),
         ('group', ['Assignee', 'Assignor']),
         ]), sorted([item for item in
-            path.__ac_local_roles__.items() if item[1] != ['Owner']]))
+            list(path.__ac_local_roles__.items()) if item[1] != ['Owner']]))
       self.assertEqual(initial___ac_local_roles_group_id_dict__,
         path.__ac_local_roles_group_id_dict__)
       # make sure we can reindexing the object works
@@ -7887,7 +7892,7 @@ class _ZodbComponentTemplateItemMixin(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-class _ProductMigrationTemplateItemMixin:
+class _ProductMigrationTemplateItemMixin(object):
   """
   Test Cases specific to migration of Products from filesystem
   (Products.XXX.{Document,mixin,interfaces}.YYY) to ZODB Components
@@ -8027,7 +8032,7 @@ class _ProductMigrationTemplateItemMixin:
     sequence_list.play(self)
 
 # bt5 (instancehome and ZODB Component)
-class _LocalTemplateItemMixin:
+class _LocalTemplateItemMixin(object):
   """
   Test Cases for (legacy) local documents (eg instancehome/{Document,Test,
   Constraint,Extensions}) and their migration to ZODB Components.

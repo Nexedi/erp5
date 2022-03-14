@@ -1,3 +1,4 @@
+from __future__ import print_function
 # This method outputs the skin properties in the format that you can
 # easily get diff like the following:
 # ---
@@ -13,5 +14,5 @@ for name, layers in skin_tool.getSkinPaths():
     if ignore_skin_folder_list is not None and\
         layer in ignore_skin_folder_list:
       continue
-    print '%s,%s' % (name, layer)
+    print('%s,%s' % (name, layer))
 return printed

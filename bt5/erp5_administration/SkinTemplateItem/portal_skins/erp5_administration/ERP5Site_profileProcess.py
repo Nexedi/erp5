@@ -17,8 +17,10 @@ zipfile (bool)
   When true, the result is a zip file containing profiling result along with the python code (and, when not possible, the disassembled bytecode) of all files which appear in the profiling result.
   When false, the result is a bare profiling result (cachegrind file format).
 """
+from future import standard_library
+standard_library.install_aliases()
 from time import sleep
-from StringIO import StringIO
+from io import StringIO
 profiler, thread = context.ERP5Site_getStatisticalProfilerAndThread(single=False)
 with thread:
   sleep(duration)

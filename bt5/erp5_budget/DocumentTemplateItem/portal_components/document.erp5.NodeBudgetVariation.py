@@ -133,7 +133,7 @@ class NodeBudgetVariation(BudgetVariation):
       consumption_dict = budget_line.getConsumedBudgetDict()
     else:
       consumption_dict = budget_line.getEngagedBudgetDict()
-    for consumed_budget_key in consumption_dict.keys():
+    for consumed_budget_key in list(consumption_dict.keys()):
       for item in consumed_budget_key:
         if item.startswith(prefix):
           used_node_item_set.add(item)

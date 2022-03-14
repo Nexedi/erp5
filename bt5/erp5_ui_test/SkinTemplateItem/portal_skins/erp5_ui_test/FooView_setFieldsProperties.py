@@ -40,7 +40,7 @@ default = {
     view_separator='<br />',
     width='40',
     height='5',
-    unicode='',
+    str='',
     max_linelength='',
     max_lines='',
     max_length='',
@@ -99,7 +99,7 @@ start_date | Date""",
 '''
 
 # update defaults with user defined values
-for composed_key, value in property_dict.items():
+for composed_key, value in list(property_dict.items()):
   field_name, property_name = composed_key.split('__')
   # to allow overriding only default values
   # throw an exception in case of non-existence of the field/property
@@ -112,7 +112,7 @@ for field_name in default:
   field.manage_edit_xmlrpc(
     field.form.validate(
       {'field_' + key: value
-       for key, value in default[field_name].items()}
+       for key, value in list(default[field_name].items())}
     )
   )
 

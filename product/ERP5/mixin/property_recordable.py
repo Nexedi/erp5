@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from zope.interface import implementer
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -35,7 +36,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 
 @implementer(interfaces.IPropertyRecordable)
-class PropertyRecordableMixin:
+class PropertyRecordableMixin(object):
   """
   This class provides a generic implementation of IPropertyRecordable.
 
@@ -93,7 +94,7 @@ class PropertyRecordableMixin:
     Returns the list of property IDs which have
     been recorded.
     """
-    return self._getRecordedPropertyDict({}).keys()
+    return list(self._getRecordedPropertyDict({}).keys())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isPropertyRecorded')

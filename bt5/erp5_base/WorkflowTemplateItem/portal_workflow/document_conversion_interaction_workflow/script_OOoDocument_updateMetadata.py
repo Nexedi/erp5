@@ -13,7 +13,7 @@ metadata_field_mapping_dict = document.getMetadataMappingDict()
 # edit metadata (only if we have OOo file)
 if document.hasBaseData():
   new_metadata = {}
-  for field in metadata_field_mapping_dict.keys():
+  for field in list(metadata_field_mapping_dict.keys()):
     value = kw.get(field, None)
     if value is None:
       value = kw.get('%s_list' % field, None)

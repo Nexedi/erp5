@@ -1,4 +1,5 @@
 # an external script is need to extract content from body: REQUEST.get('BODY')
+from builtins import str
 mode = mode or context.REQUEST.form.get("mode", "get")
 text_content = text_content or context.REQUEST.form.get("text_content", "")
 document_id = document_id or context.REQUEST.form.get("document_id", "")
@@ -34,7 +35,7 @@ def _byteify(data, ignore_dicts = False):
   if isinstance(data, dict) and not ignore_dicts:
     return {
       _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
-      for key, value in data.items() # changed to .items() for python 2.7/3
+      for key, value in list(data.items()) # changed to .items() for python 2.7/3
     }
 
   # python 3 compatible duck-typing
@@ -60,7 +61,7 @@ mode_dict = {
 }
 
 if mode not in mode_dict:
-  return "Used Mode is not defined in the mode list %s" % mode_dict.keys()
+  return "Used Mode is not defined in the mode list %s" % list(mode_dict.keys())
 
 # Check JSON Form
 try:
@@ -96,7 +97,7 @@ erp5_action_dict = portal.Base_filterDuplicateActions(
     portal.portal_actions.listFilteredActionsFor(document))
 
 # Try to find an action matching the text_content
-for erp5_action_key in erp5_action_dict.keys():
+for erp5_action_key in list(erp5_action_dict.keys()):
   for view_action in erp5_action_dict[erp5_action_key]:
     if (action_type == view_action['category']):
       try:
@@ -112,7 +113,7 @@ for erp5_action_key in erp5_action_dict.keys():
         if mode != "allDocs":
           return result
         result_list += result
-      except ValueError, e:
+      except ValueError as e:
         try:
           error_dict.update(json.loads(str(e)))
         except ValueError:

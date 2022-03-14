@@ -1,3 +1,4 @@
+from builtins import object
 getInventory=context.FiscalReportCell_doGetInventory
 
 # pobiera stan kont po stronie credit
@@ -9,7 +10,7 @@ getDebit=context.getDebit
 # pobiera różnicę dla kont po obu stronach 
 getBalance=context.getBalance
 
-class PL:pass
+class PL(object):pass
 pl=PL()
 
 pl.AI=-getBalance(('70',))

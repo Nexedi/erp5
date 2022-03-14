@@ -30,6 +30,11 @@
   Tests invoice creation from simulation.
 
 """
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import xml.dom.minidom
 import zipfile
 
@@ -281,16 +286,16 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(other_resource,
             invoice_movement.getResourceValue())
 
-    order_line.setStartDate(DateTime(2001, 02, 03))
+    order_line.setStartDate(DateTime(2001, 0o2, 0o3))
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEqual(DateTime(2001, 02, 03),
+    self.assertEqual(DateTime(2001, 0o2, 0o3),
                  invoice_movement.getStartDate())
 
-    order_line.setStopDate(DateTime(2002, 03, 04))
+    order_line.setStopDate(DateTime(2002, 0o3, 0o4))
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEqual(DateTime(2002, 03, 04),
+    self.assertEqual(DateTime(2002, 0o3, 0o4),
                  invoice_movement.getStopDate())
 
   @newSimulationExpectedFailure
@@ -478,20 +483,20 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(456,
             invoice_transaction_movement.getQuantity())
 
-    order_line.setStartDate(DateTime(2001, 02, 03))
+    order_line.setStartDate(DateTime(2001, 0o2, 0o3))
     self.tic()
     self.assertEqual(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEqual(DateTime(2001, 02, 03),
+    self.assertEqual(DateTime(2001, 0o2, 0o3),
                  invoice_transaction_movement.getStartDate())
 
-    order_line.setStopDate(DateTime(2002, 03, 04))
+    order_line.setStopDate(DateTime(2002, 0o3, 0o4))
     self.tic()
     self.assertEqual(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEqual(DateTime(2002, 03, 04),
+    self.assertEqual(DateTime(2002, 0o3, 0o4),
                  invoice_transaction_movement.getStopDate())
 
   def test_Invoice_viewAsODT(self):
@@ -560,8 +565,8 @@ class TestInvoice(TestInvoiceMixin):
     invoice.confirm()
     self.tic()
     odt = invoice.Invoice_viewAsODT()
-    import cStringIO
-    output = cStringIO.StringIO()
+    import io
+    output = io.StringIO()
     output.write(odt)
     m = OpenDocumentTextFile(output)
     text_content=m.toString().encode('ascii','replace')
@@ -1273,7 +1278,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
-    print invoice, divergence_list
+    print(invoice, divergence_list)
     self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
@@ -1326,7 +1331,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEqual('solved', packing_list.getCausalityState())
 
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
-    print invoice, divergence_list
+    print(invoice, divergence_list)
     self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(
@@ -2609,7 +2614,7 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
       stepTic
     """
 
-class OpenDocumentTextFile :
+class OpenDocumentTextFile(object) :
   def __init__ (self, filelikeobj):
     with zipfile.ZipFile(filelikeobj) as z:
       self.content = xml.dom.minidom.parseString(z.read("content.xml"))

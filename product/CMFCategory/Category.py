@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from builtins import filter
+from builtins import map
 import string
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -349,7 +352,7 @@ class Category(Folder):
         checkPermission = self.portal_membership.checkPermission
         def permissionFilter(obj):
           return checkPermission(checked_permission, obj)
-        value_list = filter(permissionFilter, value_list)
+        value_list = list(filter(permissionFilter, value_list))
 
       return sortValueList(value_list, sort_on, sort_order, **kw)
 
@@ -606,7 +609,7 @@ class Category(Folder):
       if current_category_list:
         kw['display_none_category'] = False
         current_category_item_list = Renderer(base=base, **kw).render(
-          map(self.portal_categories.resolveCategory, current_category_list))
+          list(map(self.portal_categories.resolveCategory, current_category_list)))
         item_set = {tuple(x) for x in item_list}
         additional_item_list = []
         for current_category_item in current_category_item_list:
@@ -903,7 +906,7 @@ class BaseCategory(Category):
         checkPermission = self.portal_membership.checkPermission
         def permissionFilter(obj):
           return checkPermission(checked_permission, obj)
-        value_list = filter(permissionFilter, value_list)
+        value_list = list(filter(permissionFilter, value_list))
 
       return sortValueList(value_list, sort_on, sort_order, **kw)
 

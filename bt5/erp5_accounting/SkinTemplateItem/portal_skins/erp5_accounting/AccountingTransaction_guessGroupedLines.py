@@ -72,7 +72,7 @@ for line in accounting_transaction_line_value_list:
          path=line.getRelativeUrl()))
 
 changed_line_list = []
-for (node, section, mirror_section, _), line_info_list in lines_per_node.items():
+for (node, section, mirror_section, _), line_info_list in list(lines_per_node.items()):
   if node is None:
     continue
   total_price = sum([l['total_price'] for l in line_info_list])

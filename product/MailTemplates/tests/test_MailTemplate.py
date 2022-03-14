@@ -4,6 +4,10 @@
 # This Software is released under the MIT License:
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from builtins import object
 import os
 
 try:
@@ -14,7 +18,7 @@ except ImportError:
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import system as SystemUser, SimpleUser
-from cStringIO import StringIO
+from io import StringIO
 from difflib import unified_diff
 from Products.MailHost.MailHost import MailHost
 from Testing.makerequest import makerequest
@@ -30,7 +34,7 @@ except ImportError:
 
 test_folder = os.path.dirname(__file__)
 
-class DummyFieldStorage:
+class DummyFieldStorage(object):
     def __init__(self,filename,value):
         self.filename = filename
         self.value = value
@@ -703,7 +707,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££'.encode('utf-8'),
+            str=u'£££'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -719,7 +723,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££'.encode('utf-8'),
+            str=u'£££'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -732,7 +736,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££',
+            str=u'£££',
             encoding='utf-8'
             )
 
@@ -753,7 +757,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££',
+            str=u'£££',
             encoding='utf-8'
             )
 

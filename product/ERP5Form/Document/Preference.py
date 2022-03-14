@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
@@ -33,7 +34,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Form.PreferenceTool import PreferenceTool
 
-class Priority:
+class Priority(object):
   """ names for priorities
       XXX This was moved to PreferenceTool directly
   """

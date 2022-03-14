@@ -1,6 +1,8 @@
 """
   Parse the test report
 """
+from future import standard_library
+standard_library.install_aliases()
 def parseTestReport(text):
   from lxml import etree
   parser = etree.HTMLParser(remove_comments=True)
@@ -57,8 +59,8 @@ def parseTestReport(text):
   Return the content of a web page
 """
 def urlread(url):
-  import urllib
-  return urllib.urlopen(url).read()
+  import urllib.request, urllib.parse, urllib.error
+  return urllib.request.urlopen(url).read()
 
 """
   Remove everything but the test in a webpage

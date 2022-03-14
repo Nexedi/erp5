@@ -84,7 +84,7 @@ book_description = html_quote(override_document_description) if override_documen
 book_title = html_quote(override_document_title) if override_document_title else book.getTitle()
 
 # unicode
-if isinstance(book_content, unicode):
+if isinstance(book_content, str):
   book_content = book_content.encode("UTF-8")
 
 # backcompat

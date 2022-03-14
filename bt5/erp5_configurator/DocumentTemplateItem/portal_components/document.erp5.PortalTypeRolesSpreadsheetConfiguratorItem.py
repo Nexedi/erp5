@@ -60,7 +60,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     portal = self.getPortalObject()
     portal_type_role_dict = self._getPortalTypeRoleDict()
     error_list = []
-    for type_name, role_list in portal_type_role_dict.items():
+    for type_name, role_list in list(portal_type_role_dict.items()):
       portal_type = portal.portal_types.getTypeInfo(type_name)
       if portal_type is None:
         LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
@@ -93,7 +93,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
       business_configuration = self.getBusinessConfigurationValue()
       bt5_obj = business_configuration.getSpecialiseValue()
       if bt5_obj is not None:
-        bt5_obj.edit(template_portal_type_role_list=portal_type_role_dict.keys())
+        bt5_obj.edit(template_portal_type_role_list=list(portal_type_role_dict.keys()))
 
     return error_list
 
@@ -115,7 +115,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
                       "portal_roles_spreadsheet.ods",
                       data=self.getDefaultConfigurationSpreadsheetData())
 
-    for table in info_dict.values():
+    for table in list(info_dict.values()):
       for line in table:
         if 'Portal_Type' in line:
           ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])

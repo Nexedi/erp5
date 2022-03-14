@@ -1,6 +1,7 @@
 """
   Fetches Commentaries to display them in a listbox
 """
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 annotation_list = context.getAnnotation().split('\n')
 

@@ -3,6 +3,7 @@
   As such documents contains frames do convert them too.
 """
 
+from builtins import range
 portal = context.getPortalObject()
 
 format_kw = {'format': format,
@@ -17,7 +18,7 @@ frames = int(context.getContentInformation().get('Pages', 0))
 if frames==0:
   frame_list = [0]
 else:
-  frame_list = range(0, frames) 
+  frame_list = list(range(0, frames)) 
 
 for frame in frame_list:
   format_kw['frame'] = frame

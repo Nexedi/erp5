@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import itertools
 from types import MethodType
 import zope.interface
@@ -112,7 +113,7 @@ class Predicate(XMLObject):
 #    LOG('PREDICATE TEST', 0,
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
-    for property, value in self._identity_criterion.iteritems():
+    for property, value in self._identity_criterion.items():
       if not value:
         continue
       if isinstance(value, (list, tuple)):
@@ -124,7 +125,7 @@ class Predicate(XMLObject):
 #          (result, property, context.getProperty(property), value))
       if not result:
         return result
-    for property, (min, max) in self._range_criterion.iteritems():
+    for property, (min, max) in self._range_criterion.items():
       value = context.getProperty(property)
       if min is not None:
         result = value >= min
@@ -168,7 +169,7 @@ class Predicate(XMLObject):
                  not tested_base_category.get(bc):
               tested_base_category[bc] = \
                 isMemberOf(context, c, strict_membership=strict_membership)
-      if 0 in tested_base_category.itervalues():
+      if 0 in iter(tested_base_category.values()):
         return 0
 
     # Test method calls
@@ -218,7 +219,7 @@ class Predicate(XMLObject):
         x for x in category_list
         if x.split('/', 1)[0] in base_category_set
       ]
-    next_join_counter = itertools.count().next
+    next_join_counter = itertools.count().__next__
     def buildSeparateJoinQuery(name, value):
       query = buildSingleQuery(name, value)
       suffix = str(next_join_counter())
@@ -325,7 +326,7 @@ class Predicate(XMLObject):
       criterion_dict[p].property = p
       criterion_dict[p].min = self._range_criterion.get(p, (None, None))[0]
       criterion_dict[p].max = self._range_criterion.get(p, (None, None))[1]
-    criterion_list = criterion_dict.values()
+    criterion_list = list(criterion_dict.values())
     criterion_list.sort()
     return criterion_list
 
@@ -378,10 +379,10 @@ class Predicate(XMLObject):
       criterion_property_list = kwd['criterion_property_list']
       identity_criterion = PersistentMapping()
       range_criterion = PersistentMapping()
-      for criterion in self._identity_criterion.iterkeys() :
+      for criterion in self._identity_criterion.keys() :
         if criterion in criterion_property_list :
           identity_criterion[criterion] = self._identity_criterion[criterion]
-      for criterion in self._range_criterion.iterkeys() :
+      for criterion in self._range_criterion.keys() :
         if criterion in criterion_property_list :
           range_criterion[criterion] = self._range_criterion[criterion]
       self._identity_criterion = identity_criterion

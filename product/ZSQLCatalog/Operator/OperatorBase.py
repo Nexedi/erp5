@@ -28,6 +28,9 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.builtins import basestring
+from builtins import object
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
@@ -52,13 +55,13 @@ def valueNoneRenderer(value):
 
 value_renderer = {
   int: str,
-  long: str,
+  int: str,
   float: valueFloatRenderer,
   DateTime: valueDateTimeRenderer,
   None.__class__: valueNoneRenderer,
   bool: int,
   str: escapeString,
-  unicode: escapeString,
+  str: escapeString,
 }
 
 value_search_text_renderer = {
@@ -115,7 +118,7 @@ class OperatorBase(object):
 
   def _render(self, column, value,
               value_renderer_get={k.__name__: v
-                for k, v in value_renderer.iteritems()}.get):
+                for k, v in value_renderer.items()}.get):
     """
       Render given column and value for use in SQL.
       Value is rendered to convert it to SQL-friendly value.

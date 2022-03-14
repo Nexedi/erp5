@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from erp5.component.tool.WebServiceTool import ConnectionError
 from Products.ERP5.ERP5Site import getSite
 
@@ -51,7 +52,7 @@ class MethodWrapper(object):
     else:
       raise ConnectionError("Method %s does not exist" %(method_name))
 
-class DocumentConnection:
+class DocumentConnection(object):
   """
     Holds a connection to the document module.
   """

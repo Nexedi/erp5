@@ -11,10 +11,12 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import base64
-from cStringIO import StringIO
+from io import StringIO
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder
@@ -68,7 +70,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.responseOut = StringIO()
     self.req = makerequest(root, self.responseOut)
 
-    self.credentials = urllib.quote(
+    self.credentials = urllib.parse.quote(
         base64.encodestring('abraham:pass-w').replace('\012', ''))
 
   def testCookieLongLogin(self):
@@ -79,11 +81,11 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.req.cookies['__ac_password'] = long_pass
     self.req.traverse('/')
 
-    self.assert_(self.req.has_key('AUTHENTICATED_USER'))
+    self.assert_('AUTHENTICATED_USER' in self.req)
     self.assertEqual(self.req['AUTHENTICATED_USER'].getId(),
                          'abrahammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
     resp = self.req.response
-    self.assert_(resp.cookies.has_key('__ac'))
+    self.assert_('__ac' in resp.cookies)
     self.credentials = base64.encodestring('%s:%s' % (long_name, long_pass)).replace('\012', '')
     self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)

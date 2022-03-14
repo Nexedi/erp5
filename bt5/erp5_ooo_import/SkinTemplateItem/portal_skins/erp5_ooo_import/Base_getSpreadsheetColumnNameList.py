@@ -12,7 +12,7 @@ try:
 except KeyError:
   return []
 
-for spreadsheet in spreadsheets.keys():
+for spreadsheet in list(spreadsheets.keys()):
   # In the case of empty spreadsheet do nothing
   if spreadsheets[spreadsheet] not in (None, []):
     column_name_list = spreadsheets[spreadsheet][0]

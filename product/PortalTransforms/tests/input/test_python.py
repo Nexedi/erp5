@@ -1,6 +1,7 @@
 """ nice docstring """
 
-class A : pass
+from builtins import object
+class A(object) : pass
 
 # comment
 

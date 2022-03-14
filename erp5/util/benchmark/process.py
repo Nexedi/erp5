@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import multiprocessing
 import traceback
 import signal

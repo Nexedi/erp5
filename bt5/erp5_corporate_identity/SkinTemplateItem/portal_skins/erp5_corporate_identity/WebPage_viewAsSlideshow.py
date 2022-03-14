@@ -23,6 +23,7 @@ MAIN FILE: generate presentation in different output formats
 # ------
 # remote_content:           convert legacy odp, sxi formats (not active)
 
+from builtins import next
 import re
 
 from base64 import b64encode

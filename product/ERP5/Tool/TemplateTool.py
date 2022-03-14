@@ -27,6 +27,11 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from future import standard_library
+standard_library.install_aliases()
+from builtins import filter
+from builtins import range
 from webdav.client import Resource
 
 from App.config import getConfiguration
@@ -47,14 +52,15 @@ from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
-from cStringIO import StringIO
-from urllib import pathname2url, urlopen, splittype, urlretrieve
-import urllib2
+from io import StringIO
+from urllib.request import pathname2url, urlopen, urlretrieve
+from urllib.parse import splittype
+import urllib.request, urllib.error, urllib.parse
 import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
 import struct
-import cPickle
+import pickle
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
@@ -513,7 +519,7 @@ class TemplateTool (BaseTool):
         Migrate business templates to new format where files like .py or .html
         are exported seprately than the xml.
       """
-      repository_list = filter(bool, repository_list)
+      repository_list = list(filter(bool, repository_list))
 
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
@@ -695,7 +701,7 @@ class TemplateTool (BaseTool):
       """
         Get the list of repositories.
       """
-      return self.repository_dict.keys()
+      return list(self.repository_dict.keys())
 
     security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
     def decodeRepositoryBusinessTemplateUid(self, uid):
@@ -703,7 +709,7 @@ class TemplateTool (BaseTool):
         Decode the uid of a business template from a repository.
         Return a repository and an id.
       """
-      return cPickle.loads(b64decode(uid))
+      return pickle.loads(b64decode(uid))
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -711,7 +717,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(cPickle.dumps((repository, id)))
+      return b64encode(pickle.dumps((repository, id)))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
@@ -769,7 +775,7 @@ class TemplateTool (BaseTool):
        tuple (repository, id)
       """
       result = None
-      for repository, property_dict_list in self.repository_dict.items():
+      for repository, property_dict_list in list(self.repository_dict.items()):
         for property_dict in property_dict_list:
           provision_list = property_dict.get('provision_list', [])
           if title in provision_list:
@@ -791,7 +797,7 @@ class TemplateTool (BaseTool):
        the given business template
       """
       result_list = []
-      for repository, property_dict_list in self.repository_dict.items():
+      for repository, property_dict_list in list(self.repository_dict.items()):
         for property_dict in property_dict_list:
           provision_list = property_dict['provision_list']
           if (title in provision_list) and (property_dict['title'] not in result_list):
@@ -811,7 +817,7 @@ class TemplateTool (BaseTool):
       # for meta business templates
       if bt[0] != 'meta':
         result_list = []
-        for repository, property_dict_list in self.repository_dict.items():
+        for repository, property_dict_list in list(self.repository_dict.items()):
           if repository == bt[0]:
             for property_dict in property_dict_list:
               if property_dict['id'] == bt[1]:
@@ -904,7 +910,7 @@ class TemplateTool (BaseTool):
 
       # Calculate the reverse dependency graph
       reverse_dependency_dict = {}
-      for bt_id, dependency_id_list in dependency_dict.items():
+      for bt_id, dependency_id_list in list(dependency_dict.items()):
         update_dependency_id_list = []
         for dependency_id in dependency_id_list:
 
@@ -995,7 +1001,7 @@ class TemplateTool (BaseTool):
       template_item_list = []
       # First of all, filter Business Templates in repositories.
       template_item_dict = {}
-      for repository, property_dict_list in self.repository_dict.items():
+      for repository, property_dict_list in list(self.repository_dict.items()):
         for property_dict in property_dict_list:
           title = property_dict['title']
           if template_set and not(title in template_set):
@@ -1017,7 +1023,7 @@ class TemplateTool (BaseTool):
                 template_item_dict[title] = (repository, property_dict)
       # Next, select only updated business templates.
       if update_only:
-        for repository, property_dict in template_item_dict.values():
+        for repository, property_dict in list(template_item_dict.values()):
           installed_bt = \
               self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
           if installed_bt is not None:
@@ -1112,7 +1118,7 @@ class TemplateTool (BaseTool):
           e = 0
         return e
 
-      for i in xrange(max(len(v1), len(v2))):
+      for i in range(max(len(v1), len(v2))):
         e1 = convert(v1, i)
         e2 = convert(v2, i)
         result = cmp(e1, e2)
@@ -1380,16 +1386,16 @@ class TemplateTool (BaseTool):
           LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
               % url)
         try:
-          urllib2.urlopen(url)
+          urllib.request.urlopen(url)
           return url
-        except (urllib2.HTTPError, OSError):
+        except (urllib.error.HTTPError, OSError):
           # XXX Try again with ".bt5" in case the folder format be used
           # Instead tgz one.
           url = "%s.bt5" % url
           try:
-            urllib2.urlopen(url)
+            urllib.request.urlopen(url)
             return url
-          except (urllib2.HTTPError, OSError):
+          except (urllib.error.HTTPError, OSError):
             pass
       LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: '
                         '%s.' % (bt5_title, base_url_list))

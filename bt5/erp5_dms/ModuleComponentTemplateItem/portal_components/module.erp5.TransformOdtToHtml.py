@@ -1,10 +1,12 @@
+from builtins import str
+from builtins import object
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
 @implementer(itransform)
-class OdtToHtml:
+class OdtToHtml(object):
   """Transforms odt to html by using Cloudooo"""
 
   __name__ = 'odt_to_html'

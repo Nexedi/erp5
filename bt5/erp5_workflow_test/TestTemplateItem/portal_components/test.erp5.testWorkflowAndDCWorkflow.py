@@ -1,4 +1,7 @@
-import urlparse
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+import urllib.parse
 import unittest
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
 from Products.ERP5Type.Core.Workflow import ValidationFailed
@@ -157,7 +160,7 @@ class TestERP5WorkflowMixin(TestWorkflowMixin):
     self.assertEqual(3, len(item_list))
     def checkLine(expected_data, index):
       line = item_list[index]
-      for key in expected_data.keys():
+      for key in list(expected_data.keys()):
         self.assertEqual(expected_data[key], line.getProperty(key))
     checkLine({'state': 'draft'}, 0)
     checkLine({'state': 'draft'}, 1)
@@ -412,9 +415,9 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     text_document3 = self.getTestObject()
     text_document3_permission = getattr(text_document3, permission_key, None)
 
-    print 'text_document1_permission: %r' % (text_document1_permission, )
-    print 'text_document2_permission: %r' % (text_document2_permission, )
-    print 'text_document3_permission: %r' % (text_document3_permission, )
+    print('text_document1_permission: %r' % (text_document1_permission, ))
+    print('text_document2_permission: %r' % (text_document2_permission, ))
+    print('text_document3_permission: %r' % (text_document3_permission, ))
     self.assertEqual(tuple(getattr(text_document3, permission_key)),
                      ('Assignee', 'Assignor', 'Auditor', 'Author'))
  
@@ -437,7 +440,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     self.tic()
     ret = self.workflow.Workflow_updateSecurityRoles()
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        urllib.parse.parse_qs(urllib.parse.urlparse(ret).query)['portal_status_message'],
         ["1 documents updated."])
     self.tic()
     self.assertEqual(text_document._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager'))
@@ -491,7 +494,7 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     self.assertEqual(5, len(item_list))
     def checkLine(expected_data, index):
       line = item_list[index]
-      for key in expected_data.keys():
+      for key in list(expected_data.keys()):
         self.assertEqual(expected_data[key], line.getProperty(key))
     checkLine({'state':       'draft'}, 0)
     checkLine({'state':       'draft'}, 1)

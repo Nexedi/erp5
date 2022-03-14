@@ -12,7 +12,7 @@ if user is None:
 kw['owner'] = user
 kw['portal_type'] = context.getPortalMyDocumentTypeList()
 
-if not kw.has_key('validation_state'):
+if 'validation_state' not in kw:
   kw['validation_state'] = "!=embedded"
 
 return context.portal_catalog.countResults(**kw)

@@ -8,7 +8,7 @@ boxes = context.contentValues(portal_type = 'Knowledge Box',
 isAnon = context.portal_membership.isAnonymousUser()
 validation_state_map = {1: ('public',),
                         0: ('visible', 'invisible', 'public',)}
-boxes = filter(lambda x: x.getValidationState() in validation_state_map[isAnon] and x.test(real_context), boxes)
+boxes = [x for x in boxes if x.getValidationState() in validation_state_map[isAnon] and x.test(real_context)]
 for box in boxes:
   all_box_ids.append(box.getId())
 
@@ -18,7 +18,7 @@ if user_layout is not None:
   sections = user_layout.split('##')
   for section in sections:
     section_layout = []
-    boxes = filter(lambda x: x.strip()!='', section.split('|'))
+    boxes = [x for x in section.split('|') if x.strip()!='']
     for box in boxes:
       box_id = box.replace('box_','').replace('_main','')
       ## must exists

@@ -102,7 +102,7 @@ class CacheFactory(XMLObject):
       # fall back to default ones
       allowed_type_list = self.allowed_types
     cache_plugins = self.objectValues(allowed_type_list)
-    cache_plugins = map(None, cache_plugins)
+    cache_plugins = list(cache_plugins)
     cache_plugins.sort(key=lambda x: x.getIntIndex(0))
     return cache_plugins
 

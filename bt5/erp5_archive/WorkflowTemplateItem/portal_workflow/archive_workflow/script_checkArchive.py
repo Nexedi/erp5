@@ -1,3 +1,5 @@
+from past.builtins import cmp
+from builtins import range
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import Message
 
@@ -25,7 +27,7 @@ if archive.getStopDateRangeMax() is not None:
 
   if len(previous_archive_list) > 0:
     # Check the date
-    for x in xrange(len(previous_archive_list)):
+    for x in range(len(previous_archive_list)):
       previous_archive = previous_archive_list[x]
       # find a previous archive which was not for current catalog
       if previous_archive.getStopDateRangeMax() is not None:
@@ -40,7 +42,7 @@ else:
 
   if len(previous_archive_list) > 0:
     # Check the date
-    for x in xrange(len(previous_archive_list)):
+    for x in range(len(previous_archive_list)):
       previous_archive = previous_archive_list[x]
       # find a previous archive which was not for current catalog
       if previous_archive.getStopDateRangeMax() is not None:

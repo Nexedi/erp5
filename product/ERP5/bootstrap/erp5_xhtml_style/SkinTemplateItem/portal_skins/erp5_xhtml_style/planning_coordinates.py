@@ -29,12 +29,16 @@ done in this script.
 This script is also used by the validator script in order to recover the
 groups of moved blocks
 """
+from __future__ import division
 
 
 # the following values are hard-defined and can be modified if necessary to comply with
 # special constraints (big fonts for example)
 
 # caracter height
+from builtins import str
+from builtins import range
+from past.utils import old_div
 car_height = 10 
 # caracter width
 car_width = 6 
@@ -136,7 +140,7 @@ for axis in (planning.Y, planning.X):
       axis_dict['margin-left'] = size_border_width_left + size_y_axis_width + size_y_axis_space
 
     axis_previous['margin-left'] = -20
-    axis_previous['margin-top'] = (axis_dict['height'] - 15) / 2
+    axis_previous['margin-top'] = old_div((axis_dict['height'] - 15), 2)
     axis_next['margin-left'] = axis_dict['width'] + 5
     axis_next['margin-top'] = axis_previous['margin-top']
 
@@ -165,7 +169,7 @@ for axis in (planning.Y, planning.X):
       axis_dict['margin-left'] = size_border_width_left
 
 
-    axis_previous['margin-left'] = (axis_dict['width'] -15) / 2
+    axis_previous['margin-left'] = old_div((axis_dict['width'] -15), 2)
     axis_previous['margin-top'] = -20
     axis_next['margin-left'] = axis_previous['margin-left']
     axis_next['margin-top'] = axis_dict['height'] + 5
@@ -256,7 +260,7 @@ for axis_group in planning.report_axis.axis_group:
       # height matches info
       if len(axis_group.info_title.info) * car_width > axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max(old_div((axis_group_dict['width'] - car_width * 3), car_width), 0 )
         # cutting activity
         axis_group.info_title.edit(axis_group.info_title.info[:int(nb)] + '..')
 
@@ -340,7 +344,7 @@ for axis_group in planning.report_axis.axis_group:
       # height matches info
       if len(axis_group.info_title.info) * car_width > axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max(old_div((axis_group_dict['width'] - car_width * 3), car_width), 0 )
         # cutting activity
         axis_group.info_title.edit(axis_group.info_title.info[:int(nb)] + '..')
 
@@ -429,7 +433,7 @@ for lane_axis_group in planning.lane_axis.axis_group:
       # height matches info
       if len(lane_axis_group.info_title.info) * car_width > lane_axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((lane_axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max(old_div((lane_axis_group_dict['width'] - car_width * 3), car_width), 0 )
         # cutting activity
         lane_axis_group.info_title.edit(lane_axis_group.info_title.info[:int(nb)] + '..')
     # adding axis_definitions to dictionnary
@@ -468,7 +472,7 @@ for lane_axis_group in planning.lane_axis.axis_group:
       # height matches info
       if len(lane_axis_group.info_title.info) * car_width > lane_axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((lane_axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max(old_div((lane_axis_group_dict['width'] - car_width * 3), car_width), 0 )
         # cutting activity
         lane_axis_group.info_title.edit(lane_axis_group.info_title.info[:int(nb)] + '..')
 
@@ -564,7 +568,7 @@ for block_object in planning.content:
     bot_list = []
     center = ''
     # recovering full string that will have to be displayed on the top & bottom line
-    for info_name in block_object.info.keys():
+    for info_name in list(block_object.info.keys()):
       if 'top' in info_name:
         top_string += block_object.info[info_name].info
         top_list.append(info_name)
@@ -604,7 +608,7 @@ for block_object in planning.content:
     if block_dict['height'] < car_height:
       # there is no room to display any text in the block
       # escaping all text
-      for info_name in block_object.info.keys():
+      for info_name in list(block_object.info.keys()):
         block_object.info[info_name].edit('')
     else:
       if block_dict['height'] < (car_height* lines):

@@ -29,6 +29,8 @@
 ##############################################################################
 from __future__ import division, print_function
 
+from builtins import str
+from builtins import object
 from datetime import date
 from os import path
 import rpy2.robjects as robjects

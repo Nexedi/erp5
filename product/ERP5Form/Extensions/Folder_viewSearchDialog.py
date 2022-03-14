@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from Products.ERP5Type.Globals import get_request
 from Products.Formulator.TALESField import TALESMethod
 from Products.CMFCore.utils import getToolByName

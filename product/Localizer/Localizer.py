@@ -16,6 +16,7 @@
 
 # Import from the Standard Library
 from __future__ import absolute_import
+from builtins import object
 from future import standard_library
 standard_library.install_aliases()
 from urllib.parse import unquote
@@ -249,7 +250,7 @@ class Localizer(LanguageManager, Folder):
     def translationContext(self, lang):
       """Context manager to temporarily change the current language.
       """
-      class ForcedLanguage:
+      class ForcedLanguage(object):
         __allow_access_to_unprotected_subobjects__ = 1
         def __init__(self, lang):
           self.lang = lang

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList, StoredSequence

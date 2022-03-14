@@ -172,7 +172,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       portal_type=self.trade_model_path_portal_type, **kw)
     if criterion_property_dict:
       trade_model_path._setCriterionPropertyList(tuple(criterion_property_dict))
-      for property_, identity in criterion_property_dict.iteritems():
+      for property_, identity in criterion_property_dict.items():
         trade_model_path.setCriterion(property_, identity)
     reference = kw.get('reference', None)
     if reference is not None:
@@ -444,7 +444,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     context_movement = self.createMovement()
     self.assertEqual(None, business_path.getSourceValue())
-    self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
+    self.assertFalse('source' in business_path.getArrowCategoryDict(context=context_movement))
 
   def test_BusinessPathDynamicCategoryAccessProviderReplaceCategory(self):
     business_path = self.createTradeModelPath()

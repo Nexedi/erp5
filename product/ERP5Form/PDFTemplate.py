@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
@@ -35,10 +38,10 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
 
-from urllib import quote
+from urllib.parse import quote
 from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from ZODB.POSException import ConflictError
 
 from Products.ERP5Type.Utils import UpperCase
@@ -220,9 +223,9 @@ if ReportTool:
   from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
 
   from Products.PageTemplates.Expressions import boboAwareZopeTraverse
-  from StringIO import StringIO
+  from io import StringIO
   import xml.dom.minidom
-  import urllib,os.path
+  import urllib.request, urllib.parse, urllib.error,os.path
 
 
   if HAS_ZODB_RESOURCE_HANDLER:
@@ -260,7 +263,7 @@ if ReportTool:
       ''' Wrapper for ZODB Resources and files'''
       def __init__(self, context=None, resource_path=None):
           zodbhandler = ERP5ZODBHandler(context)
-          self.opener = urllib2.build_opener(zodbhandler)
+          self.opener = urllib.request.build_opener(zodbhandler)
 
     class ERP5ZODBHandler(ZODBHandler):
       def zodb_open(self, req):
@@ -314,8 +317,8 @@ if ReportTool:
     #LOG('ReportTool_renderPDF', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
 
     # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
-    template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
-    document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
+    template_xml = str(template_xml,encoding).encode('iso-8859-1')
+    document_xml = str(document_xml,encoding).encode('iso-8859-1','replace')
     encoding = 'iso-8859-1'
 
     # create the PDFTemplate from xml

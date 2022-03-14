@@ -1,3 +1,4 @@
+from builtins import map
 portal = context.getPortalObject()
 
 def formatDate(datetime):
@@ -41,7 +42,7 @@ def formatHeaderElement(element):
   return ','.join(element)
 
 dsn_file_as_list = dsn_file_as_list[:header_line_number] + \
-                   map(formatHeaderElement, header_bloc) + \
+                   list(map(formatHeaderElement, header_bloc)) + \
                    dsn_file_as_list[header_line_number+header_length:]
 
 clone = context.Base_createCloneDocument(batch_mode=1)

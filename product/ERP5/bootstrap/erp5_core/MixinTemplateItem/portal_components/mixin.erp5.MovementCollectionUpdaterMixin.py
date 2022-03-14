@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import object
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -36,7 +37,7 @@ from erp5.component.mixin.RuleMixin import _compare
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
 @zope.interface.implementer(IMovementCollectionUpdater,)
-class MovementCollectionUpdaterMixin:
+class MovementCollectionUpdaterMixin(object):
   """Movement Collection Updater.
 
   Documents which implement IMovementCollectionUpdater
@@ -109,8 +110,8 @@ class MovementCollectionUpdaterMixin:
 
     # First find out all existing (decision) movements which belong to no group
     no_group_list = []
-    for tester_key in decision_movement_dict.keys():
-      if prevision_movement_dict.has_key(tester_key):
+    for tester_key in list(decision_movement_dict.keys()):
+      if tester_key in prevision_movement_dict:
         for decision_movement in decision_movement_dict[tester_key]:
           no_match = True
           for prevision_movement in prevision_movement_dict[tester_key]:
@@ -130,7 +131,7 @@ class MovementCollectionUpdaterMixin:
       prevision_to_decision_map.append((None, no_group_list))
 
     # Second, let us create small groups of movements
-    for tester_key in prevision_movement_dict.keys():
+    for tester_key in list(prevision_movement_dict.keys()):
       for prevision_movement in prevision_movement_dict[tester_key]:
         map_list = []
         for decision_movement in decision_movement_dict.get(tester_key, ()):

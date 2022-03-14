@@ -19,7 +19,7 @@ for prop in property_list:
       mapped_property_list.append(mapped_prop)
       continue
     prop_value = object.getProperty(mapped_prop)
-  if isinstance(prop_value, unicode):
+  if isinstance(prop_value, str):
     prop_value = prop_value.encode('utf-8')
   gid += " %s" %(prop_value,)
 

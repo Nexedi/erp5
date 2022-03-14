@@ -20,12 +20,14 @@
 #                        All Rights Reserved.
 
 
+from future import standard_library
+standard_library.install_aliases()
 from ZServer.medusa.http_server import http_request
 import ZPublisher.HTTPRequest
 import string
 import base64
 import time
-from urllib import quote
+from urllib.parse import quote
 
 def log (self, bytes):
     addr = self.channel.addr[0]

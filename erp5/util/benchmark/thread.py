@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import threading
 import time
 import requests

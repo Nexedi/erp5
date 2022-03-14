@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from __future__ import division
+from past.utils import old_div
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
@@ -453,13 +455,12 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                                    delivery_dict.get(delivery_path, []) + \
                                    [s_m]
 
-    for s_m_list_per_movement in delivery_dict.values():
+    for s_m_list_per_movement in list(delivery_dict.values()):
       total_quantity = sum([quantity_dict.get(s_m, s_m.getQuantity()) \
                             for s_m in s_m_list_per_movement])
       if total_quantity != 0.0:
         for s_m in s_m_list_per_movement:
-          delivery_ratio = quantity_dict.get(s_m, s_m.getQuantity()) \
-                                             / total_quantity
+          delivery_ratio = old_div(quantity_dict.get(s_m, s_m.getQuantity()), total_quantity)
           s_m.edit(delivery_ratio=delivery_ratio)
       else:
         for s_m in s_m_list_per_movement:

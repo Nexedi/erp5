@@ -12,10 +12,17 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import map
+from builtins import next
+from builtins import range
+from builtins import object
 import operator
 from cgi import escape
-from itertools import chain, imap, islice
-from urllib import quote
+from itertools import chain, islice
+from urllib.parse import quote
 from random import randint
 from types import StringType
 
@@ -86,7 +93,7 @@ class HBTreeObjectIds(object):
                         return
             except KeyError:
                 return
-        self._items = lambda: (i for i in h.iteritems()
+        self._items = lambda: (i for i in h.items()
                                  if type(i[1]) is not OOBTree)
 
     def _count(self):
@@ -98,13 +105,13 @@ class HBTreeObjectIds(object):
         return self._count()
 
     def __iter__(self):
-        return imap(self._item_result, self._items())
+        return map(self._item_result, self._items())
 
     _item_result = operator.itemgetter(0)
 
     def __getitem__(self, item):
         if isinstance(item, slice):
-            return map(self.__getitem__, xrange(*item.indices(self._count())))
+            return list(map(self.__getitem__, range(*item.indices(self._count()))))
         if item < 0:
             item += self._count()
         i = self._index
@@ -369,7 +376,7 @@ class HBTreeFolder2Base (Persistent):
               if type(h) is not OOBTree:
                 break
               id += H_SEPARATOR + sub_id
-              if type(next(h.itervalues())) is not OOBTree:
+              if type(next(iter(h.values()))) is not OOBTree:
                 sub_id = id
             else:
               id = sub_id
@@ -385,7 +392,7 @@ class HBTreeFolder2Base (Persistent):
               id, h = next(i)
               if type(h) is OOBTree:
                 recurse_stack.append(i)
-                i = h.iteritems()
+                i = iter(h.items())
               else:
                 yield id, h
           except StopIteration:
@@ -397,7 +404,7 @@ class HBTreeFolder2Base (Persistent):
         """ Return list of all tree ids
         """
         r = []
-        s = [(None, self._htree.iteritems())]
+        s = [(None, iter(self._htree.items()))]
         while s:
           base_id, items = s.pop()
           if base_id:
@@ -408,16 +415,16 @@ class HBTreeFolder2Base (Persistent):
                 # support mixed buckets except at the root, we consider that
                 # this one only contains leafs.
                 break
-              s.append((base_id + H_SEPARATOR + k, v.iteritems()))
+              s.append((base_id + H_SEPARATOR + k, iter(v.items())))
           else:
             for k, v in items:
               if type(v) is not OOBTree:
                 r.append(base_id)
                 for k, v in items:
                   if type(v) is OOBTree:
-                    s.append((k, v.iteritems()))
+                    s.append((k, iter(v.items())))
                 break
-              s.append((k, v.iteritems()))
+              s.append((k, iter(v.items())))
         r.sort()
         return r
 

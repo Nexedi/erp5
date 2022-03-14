@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import map
 from collections import deque
 import sys
 import transaction
@@ -230,7 +231,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
           sm_dict = old_dict.setdefault(line, {})
           recurse_list = deque(({get_matching_key(sm): (sm,)},))
           while recurse_list:
-            for k, x in recurse_list.popleft().iteritems():
+            for k, x in recurse_list.popleft().items():
               if not k:
                 continue
               if len(x) > 1:
@@ -246,7 +247,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
                   if sm_list:
                     r.setdefault(x.getSpecialise(), []).append(sm_list)
                 # For each rule...
-                for x in r.values():
+                for x in list(r.values()):
                   if len(x) > 1:
                     # There were several AR applying the same rule.
                     # Choose the one with a built SM (it will fail if
@@ -316,7 +317,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
             try:
               best_sm_list = best_dict[None]
             except KeyError:
-              best_sm_list, = best_dict.values()
+              best_sm_list, = list(best_dict.values())
             if len(best_sm_list) < len(sm_list):
               sm_dict[k] = list(set(sm_list).difference(best_sm_list))
             sm_list = best_sm_list
@@ -367,7 +368,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
 
             old_dict[sm] = old_sm
             sm = None
-      deleted = old_dict.items()
+      deleted = list(old_dict.items())
       for delivery, sm_dict in deleted:
         if not sm_dict:
           del old_dict[delivery]
@@ -385,8 +386,8 @@ class AppliedRule(XMLObject, ExplainableMixin):
         mixin.updateMovementCollection = orig_updateMovementCollection
         del AppliedRule.isIndexable, SimulationMovement.isIndexable
       self.recursiveReindexObject()
-      assert str not in map(type, old_dict), old_dict
-      return {k: sum(v.values(), []) for k, v in deleted}, delivery_set
+      assert str not in list(map(type, old_dict)), old_dict
+      return {k: sum(list(v.values()), []) for k, v in deleted}, delivery_set
     simulation_tool._delObject(self.getId())
 
   def _checkExpand(self):

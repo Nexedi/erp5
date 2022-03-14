@@ -1,3 +1,4 @@
+from __future__ import print_function
 portal_templates = context.getPortalObject().portal_templates
 delete_list = []
 bt_list = portal_templates.objectValues()
@@ -16,6 +17,6 @@ for bt in bt_list:
         delete_list.append(bt_id)
         break
 
-print 'Deleted id list:%r' % delete_list
+print('Deleted id list:%r' % delete_list)
 portal_templates.manage_delObjects(delete_list)
 return printed

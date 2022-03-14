@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from builtins import str
+from past.builtins import basestring
 import transaction
 
 from AccessControl import getSecurityManager, ClassSecurityInfo
@@ -108,7 +110,7 @@ class InteractionWorkflow(Workflow):
     workflow.  This method must perform its own security checks.
     '''
     vdef = getattr(self, name, _MARKER)
-    for r, v in self.getVariableValueDict().iteritems():
+    for r, v in self.getVariableValueDict().items():
       if r == name:
         vdef = v
         break

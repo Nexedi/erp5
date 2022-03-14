@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import object
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -128,7 +129,7 @@ class FormBoxWidget(Widget.Widget):
         return getattr(context, target_id)(REQUEST=REQUEST, key_prefix=key)
     return ''
 
-class FormBoxEditor:
+class FormBoxEditor(object):
   """An editor returned from FormBox validation able to `edit` document."""
 
   def __init__(self, result, context):

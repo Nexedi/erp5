@@ -28,10 +28,13 @@
 #
 #---------------------------------------------------------------------
 
+from builtins import str
+from builtins import range
+from builtins import object
 from hashlib import md5
 import random
 
-class CaptchasDotNet:
+class CaptchasDotNet(object):
     def __init__ (self, client, secret,
                   alphabet = 'abcdefghkmnopqrstuvwxyz',
                   letters = 6,

@@ -1,3 +1,4 @@
+from builtins import str
 request = context.REQUEST
 total_line = int(kw.get('total_line','0')) or int(request.get('total_line','0'))
 title = kw.get('rss_title', None) or request.get('rss_title','No title')

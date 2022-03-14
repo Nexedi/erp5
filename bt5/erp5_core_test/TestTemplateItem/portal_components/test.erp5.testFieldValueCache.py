@@ -73,17 +73,17 @@ class TestFieldValueCache(ERP5TypeTestCase):
                 field._p_oid,
                 id_)
     # Make sure cache has field
-    self.assertTrue(field_value_cache.has_key(cache_id))
+    self.assertTrue(cache_id in field_value_cache)
     # Make sure cache and field are equal
     self.assertEqual(field.get_value(id_), field_value_cache[cache_id])
     # Call manage_renameObject
     form.manage_renameObject('my_first_name', 'my_first_name2')
     form.manage_renameObject('my_first_name2', 'my_first_name')
     # Make sure cache has no field
-    self.assertFalse(field_value_cache.has_key(cache_id))
+    self.assertFalse(cache_id in field_value_cache)
     # Render
     form()
     # Make sure cache has field
-    self.assertTrue(field_value_cache.has_key(cache_id))
+    self.assertTrue(cache_id in field_value_cache)
     # Make sure cache and field are equal
     self.assertEqual(field.get_value(id_), field_value_cache[cache_id])

@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class MetaResource:
+from builtins import object
+class MetaResource(object):
   """
     A meta resource is an abstract resource which summarizes
     a collection of resources.

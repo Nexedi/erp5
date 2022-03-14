@@ -7,6 +7,7 @@ Arguments:
 - ``bt1``: The first business template object to compare
 - ``bt2``: The second business template object to compare
 """
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 from ZODB.POSException import ConflictError
 
@@ -16,7 +17,7 @@ assert bt1.getBuildingState() == "built"
 assert bt2.getBuildingState() == "built"
 
 modified_object_list = bt2.preinstall(check_dependencies=0, compare_to=bt1)
-keys = modified_object_list.keys()
+keys = list(modified_object_list.keys())
 #keys.sort() # XXX don't care ?
 bt1_id = bt1.getId()
 bt2_id = bt2.getId()

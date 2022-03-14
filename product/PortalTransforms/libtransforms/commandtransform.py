@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from builtins import str
+from builtins import object
 import os
 import sys
 import tempfile
@@ -12,7 +14,7 @@ from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, g
 from Products.PortalTransforms.interfaces import ITransform
 
 @implementer(ITransform)
-class commandtransform:
+class commandtransform(object):
     """abstract class for external command based transform
     """
 
@@ -56,7 +58,7 @@ class commandtransform:
         shutil.rmtree(tmpdir)
 
 @implementer(ITransform)
-class popentransform:
+class popentransform(object):
     """abstract class for external command based transform
 
     Command must read from stdin and write to stdout
@@ -116,7 +118,7 @@ from subprocess import Popen, PIPE
 import shlex
 
 @implementer(ITransform)
-class subprocesstransform:
+class subprocesstransform(object):
     """abstract class for subprocess command based transform
 
     Command must read from stdin and write to stdout

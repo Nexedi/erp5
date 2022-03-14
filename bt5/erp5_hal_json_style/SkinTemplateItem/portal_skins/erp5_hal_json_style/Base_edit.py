@@ -11,6 +11,7 @@
   TODO: split the generic form validation logic
   from the context update logic
 """
+from builtins import str
 from Products.Formulator.Errors import FormValidationError
 from Products.CMFActivity.Errors import ActivityPendingError
 
@@ -47,7 +48,7 @@ except FormValidationError as validation_errors:
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)
@@ -68,12 +69,12 @@ def editListBox(listbox_field, listbox):
                 if listbox_field.has_value('global_attributes') \
                 else {}
 
-  for item_url, item_value in listbox.items():
+  for item_url, item_value in list(listbox.items()):
     item_value.update(global_attr)
     # Form: '' -> ERP5: None
     editor_list = []
     value_dict = {}
-    for key, value in item_value.items():
+    for key, value in list(item_value.items()):
       # for every value decide whether it is an attribute or an editor
       if hasattr(value, 'edit'):
         editor_list.append(value)
@@ -169,7 +170,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
       if cell_range != matrixbox_cell_range:
         matrix_context.setCellRange(base_id=cell_base_id, *matrixbox_cell_range)
 
-  for cell_index_tuple, cell_value_dict in matrixbox.items():
+  for cell_index_tuple, cell_value_dict in list(matrixbox.items()):
     # Only update cells which still exist
     if not matrix_context.hasInRange(*cell_index_tuple, **kd):
       return "Cell %s does not exist" % str(cell_index_tuple)
@@ -179,11 +180,11 @@ def editMatrixBox(matrixbox_field, matrixbox):
       return "Could not create cell %s" % str(cell_index_tuple)
 
     cell.edit(edit_order=edit_order, **gv)  # First update globals which include the def. of property_list
-    if cell_value_dict.has_key('variated_property'):
+    if 'variated_property' in cell_value_dict:
       # For Variated Properties
       value = cell_value_dict['variated_property']
       del cell_value_dict['variated_property']
-      if gv.has_key('mapped_value_property_list'):
+      if 'mapped_value_property_list' in gv:
         # Change the property which is defined by the
         # first element of mapped_value_property_list
         # XXX Kato: What? Why?
@@ -192,7 +193,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
         cell_value_dict[key] = value
     # Form: '' -> ERP5: None
     cleaned_v = cell_value_dict.copy()
-    for key, value in cleaned_v.items():
+    for key, value in list(cleaned_v.items()):
       if value == '':
         cleaned_v[key] = None
     cell.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values

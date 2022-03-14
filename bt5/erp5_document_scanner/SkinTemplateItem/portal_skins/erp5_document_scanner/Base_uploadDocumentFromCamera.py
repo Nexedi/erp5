@@ -1,4 +1,7 @@
-from StringIO import StringIO
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from io import StringIO
 
 class StringIOWithFileName(StringIO):
   filename =  "{}.pdf".format(

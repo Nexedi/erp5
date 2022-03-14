@@ -52,7 +52,7 @@ for inventory in context.getFutureInventoryList(*args, **kwargs):
   line_list.append(inventory)
 
 if movement_dict:
-  for movement_list in movement_dict.values():
+  for movement_list in list(movement_dict.values()):
     for movement in movement_list:
       resource_value = movement.getResourceValue()
 

@@ -27,10 +27,11 @@
 ##############################################################################
 """Try to import psyco. If failed, make a dummy for convenience."""
 
+from builtins import object
 try:
   import psyco
 except ImportError:
-  class psyco:
+  class psyco(object):
     """This is a dummy class for psyco."""
     def bind(cls, *args, **kw):
       pass

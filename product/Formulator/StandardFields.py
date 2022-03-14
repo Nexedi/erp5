@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+from builtins import str
+from builtins import range
 from .Form import BasicForm
 from .Field import ZMIField
 from .DummyField import fields

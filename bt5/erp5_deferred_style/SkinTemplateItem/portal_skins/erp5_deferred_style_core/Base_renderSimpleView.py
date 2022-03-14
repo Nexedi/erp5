@@ -1,4 +1,5 @@
 # Render a "normal" form or an OOo template in an activity and send it by email
+from builtins import str
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 if notify_report_complete_kwargs is None:

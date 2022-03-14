@@ -1,6 +1,7 @@
+from __future__ import print_function
 for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lambda x:x.getId()):
-  print ti.getId()
-  print " ", "\n  ".join([x for x in (
+  print(ti.getId())
+  print(" ", "\n  ".join([x for x in (
     "Short Title: %s" % ti.getShortTitle(),
     "Class: %s" % ti.getTypeClass(),
     "Init Script: %s" % ti.getTypeInitScriptId(),
@@ -12,7 +13,7 @@ for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lam
     "Hidden Content Types: %r" % sorted(ti.getTypeHiddenContentTypeList()),
     "Searchable Property: %r" % sorted(ti.getSearchableTextPropertyIdList()),
     "Searchable Method: %r" % sorted(ti.getSearchableTextMethodIdList()),
-    )])
-  print
+    )]))
+  print()
 
 return printed

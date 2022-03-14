@@ -25,9 +25,10 @@
 #
 ##############################################################################
 
+from builtins import object
 from erp5.component.module.SyncMLTransportHTTP import ConnectionError
 
-class FileTransport:
+class FileTransport(object):
 
   def send(self, to_url, data, sync_id, content_type):
     filename = to_url[len('file:/'):]

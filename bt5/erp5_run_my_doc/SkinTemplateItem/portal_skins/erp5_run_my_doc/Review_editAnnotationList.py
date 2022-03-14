@@ -1,3 +1,4 @@
+from builtins import str
 annotation_list = context.getAnnotation().split('\n')
 user_name = context.getPortalObject().portal_membership.getAuthenticatedMember().getId()
 for uid in listbox_uid:

@@ -26,7 +26,7 @@ session = portal_sessions[session_id]
 
 # some cleanup could be required if the shopping cart
 # comes from a previous user with same session
-if shopping_cart_id in session.keys():
+if shopping_cart_id in list(session.keys()):
   shopping_cart = session[shopping_cart_id]
   if shopping_cart.getStartDate() is None:
     shopping_cart.edit(start_date=DateTime())
@@ -35,7 +35,7 @@ if shopping_cart_id in session.keys():
   #  session = portal_sessions[session_id]
 
 # create shopping cart
-if not shopping_cart_id in session.keys():
+if not shopping_cart_id in list(session.keys()):
   shopping_cart = context.sale_order_module.newContent(portal_type="Sale Order",
     temp_object=True,
     id=shopping_cart_id,

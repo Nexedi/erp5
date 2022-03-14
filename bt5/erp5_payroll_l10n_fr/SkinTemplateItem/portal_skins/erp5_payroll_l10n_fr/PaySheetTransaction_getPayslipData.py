@@ -58,7 +58,7 @@ def groupSameReportSectionLine(line_to_group_list):
     tmp_base_dict[base]['employee_price'] = tmp_base_dict[base]['employee_price'] + (line_dict['employee_price'] or 0)
     tmp_base_dict[base]['employee_total_price'] = tmp_base_dict[base]['employee_total_price'] + (line_dict['employee_total_price'] or 0)
  # Check if can group by same rate
-  for _, value in tmp_base_dict.iteritems():
+  for _, value in tmp_base_dict.items():
     new_key = (value['employer_price'], value['employee_price'])
     if new_key not in tmp2_base_dict:
       tmp2_base_dict[new_key] = value
@@ -68,7 +68,7 @@ def groupSameReportSectionLine(line_to_group_list):
       tmp2_base_dict[new_key]['employee_total_price'] = tmp2_base_dict[new_key]['employee_total_price'] + value['employee_total_price']
   new_value_list = []
   # recalculate for rounding issue
-  for value_dict in tmp2_base_dict.values():
+  for value_dict in list(tmp2_base_dict.values()):
     value_dict['employer_total_price'] = value_dict['base'] * value_dict['employer_price']
     value_dict['employee_total_price'] = value_dict['base'] * value_dict['employee_price']
     new_value_list.append(value_dict)

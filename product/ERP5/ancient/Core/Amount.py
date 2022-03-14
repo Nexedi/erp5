@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class Amount:
+from builtins import object
+class Amount(object):
   """
     An amount defines a quantity and variation of a resource
   """

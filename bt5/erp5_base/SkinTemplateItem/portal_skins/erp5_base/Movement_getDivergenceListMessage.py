@@ -1,3 +1,4 @@
+from builtins import str
 message_list = []
 
 for m in context.getDivergenceList():

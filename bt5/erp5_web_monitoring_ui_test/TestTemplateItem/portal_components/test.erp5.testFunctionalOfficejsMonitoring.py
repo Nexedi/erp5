@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.
@@ -24,14 +25,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
-from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler
 from threading import Thread
 from datetime import datetime
 
-import SocketServer
+import socketserver
 import tempfile
 import shutil
 import time
@@ -73,7 +77,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   root_title = "TEST Instance Tree"
 
   def start_httpd_server(self, root_folder):
-    self.httpd = SocketServer.TCPServer(('localhost', 5378), CustomHTTPRequestHandler)
+    self.httpd = socketserver.TCPServer(('localhost', 5378), CustomHTTPRequestHandler)
     self.httpd.timeout = 2
     os.chdir(root_folder)
     #self.httpd.serve_forever()
@@ -86,7 +90,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
     ERP5TypeFunctionalTestCase.afterSetUp(self)
 
     self.http_root_dir = tempfile.mkdtemp()
-    print "Serving files on http from %r" % self.http_root_dir
+    print("Serving files on http from %r" % self.http_root_dir)
 
     self.generateMonitoringInstanceTree()
     self.httpd_is_alive = True

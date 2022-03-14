@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class BaseCategory:
+from builtins import object
+class BaseCategory(object):
     """
         Properties for BaseCategory Objects
     """

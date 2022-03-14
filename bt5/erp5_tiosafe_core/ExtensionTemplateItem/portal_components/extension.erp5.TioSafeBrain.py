@@ -13,6 +13,9 @@
 ##############################################################################
 
 
+from past.builtins import cmp
+from builtins import zip
+from builtins import str
 from Acquisition import Explicit, aq_base
 from AccessControl import ClassSecurityInfo
 from base64 import b16encode
@@ -39,7 +42,7 @@ class TioSafeBrain(Explicit):
     self.object_type = object_type
     self.context = context
     # save properties as attributes
-    for k,v in kw.iteritems():
+    for k,v in kw.items():
       # FIXME: '0000-00-00 00:00:00' is an error find in the Prestashop sync
       if v is not None and v != '0000-00-00 00:00:00':
         setattr(self, k.lower(), v)
@@ -49,7 +52,7 @@ class TioSafeBrain(Explicit):
     Update self properties with the one from
     another brain
     """
-    for k,v in brain.__dict__.iteritems():
+    for k,v in brain.__dict__.items():
       setattr(self, k, v)
 
   def _asXML(self):
@@ -462,7 +465,7 @@ class Resource(TioSafeBrain):
         category = etree.SubElement(element, 'category')
         category.text = category_value
       mapping.pop('category_list')
-      for k, v in mapping.iteritems():
+      for k, v in mapping.items():
         prop = etree.SubElement(element, k)
         prop.text = v
 

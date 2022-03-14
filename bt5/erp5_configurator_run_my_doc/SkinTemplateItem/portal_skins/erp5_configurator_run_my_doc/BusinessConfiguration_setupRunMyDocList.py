@@ -1,10 +1,11 @@
+from builtins import range
 configuration_save_url = kw.get('configuration_save_url', None)
 configuration_save = context.restrictedTraverse(configuration_save_url)
 
 user_number = context.getGlobalConfigurationAttr('user_number')
 
 ## get only form keys
-form_keys = [i for i in kw.keys() if i.startswith('field_your_') and i!='field_your_search_text']
+form_keys = [i for i in list(kw.keys()) if i.startswith('field_your_') and i!='field_your_search_text']
 
 
 function = "function/runmydocs_user/assignor"

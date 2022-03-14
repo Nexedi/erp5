@@ -1,5 +1,5 @@
 from Products.ERP5Type.Message import translateString
-choosen = [choice for choice in editor.values() if choice['workflow_action']]
+choosen = [choice for choice in list(editor.values()) if choice['workflow_action']]
 if len(choosen) == 1:
   return True
 

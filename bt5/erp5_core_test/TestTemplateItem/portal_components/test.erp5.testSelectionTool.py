@@ -26,10 +26,12 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
 import contextlib
 import unittest
 from threading import Thread
-from thread import get_ident
+from _thread import get_ident
 from unittest import skip
 
 import transaction
@@ -315,7 +317,7 @@ class TestSelectionPersistence(unittest.TestCase):
     # this check is quite low level.
     # we know that setUp stored one selection, and each of our 2 threads stored
     # one selection.
-    self.assertEqual(3, len(self.portal_selections.selection_data.keys()))
+    self.assertEqual(3, len(list(self.portal_selections.selection_data.keys())))
 
   def testPersistentSelections(self):
     # test that selection parameters are persistent

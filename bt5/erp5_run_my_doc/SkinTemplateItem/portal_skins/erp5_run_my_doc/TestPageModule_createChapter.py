@@ -3,6 +3,7 @@
   Adds a chapter in the listbox, and upload an image if necessary (it doesn't generate the html code corresponding to the text)
 """
 
+from builtins import str
 from Products.ERP5Type.Document import newTempBase
 
 portal_status_message = ""
@@ -11,7 +12,7 @@ if image_caption in [None, ""]:
   image_caption = chapter_title
 
 session = context.ERP5Site_acquireRunMyDocsSession()
-if session.has_key('listbox') and len(session['listbox']) > 0:
+if 'listbox' in session and len(session['listbox']) > 0:
   listbox = session['listbox']
   int_index = listbox[-1].int_index + 1
 else:

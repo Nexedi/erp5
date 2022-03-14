@@ -14,7 +14,7 @@ for result_line in context.objectValues(portal_type='Test Result Line'):
   stdout = result_line.getProperty('stdout') or ''
   if stdout:
     for line in result_line.getProperty('stdout').splitlines():
-      for k, v in test_dict.items():
+      for k, v in list(test_dict.items()):
         if k in line:
           test['%' in v and v % object_count or v] = \
             float(line.split('<')[1].strip())

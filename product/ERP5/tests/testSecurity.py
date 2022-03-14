@@ -98,11 +98,11 @@ class TestSecurityMixin(ERP5TypeTestCase):
             continue
           func_code = method.__code__
           error_dict[(func_code.co_filename, func_code.co_firstlineno, method_id)] = True
-    error_list = error_dict.keys()
+    error_list = list(error_dict.keys())
     if os.environ.get('erp5_debug_mode', None):
       pass
     else:
-      error_list = filter(lambda x:'/erp5/' in x[0], error_list)
+      error_list = [x for x in error_list if '/erp5/' in x[0]]
     if error_list:
       message = '\nThe following %s methods have a docstring but have no security assertions.\n\t%s' \
                     % (len(error_list), '\n\t'.join(['%s:%s %s' % x for x in sorted(error_list)]))

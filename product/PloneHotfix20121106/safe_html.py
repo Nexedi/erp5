@@ -1,5 +1,8 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
 import re
-from HTMLParser import HTMLParser, HTMLParseError
+from html.parser import HTMLParser, HTMLParseError
 from Products.PortalTransforms.libtransforms.utils import IllegalHTML
 from Products.PortalTransforms.transforms import safe_html
 
@@ -21,7 +24,7 @@ def decode_charref(s):
             c = int(s[1:], 16)
         else:
             c = int(s)
-        return unichr(c)
+        return chr(c)
     except ValueError:
         return '&#'+s+';'
 

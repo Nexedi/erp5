@@ -24,4 +24,4 @@ for movement in movement_list:
   if line is not None:
     deliveries_keys[line.getExplanationValue()] = 1
 
-return [x for x in deliveries_keys.keys() if x is not None]
+return [x for x in list(deliveries_keys.keys()) if x is not None]

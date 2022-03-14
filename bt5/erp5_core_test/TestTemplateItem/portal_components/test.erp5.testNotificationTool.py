@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import str
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -51,7 +52,7 @@ def decode_email(file_):
   # Back up original file
   theMail['__original__'] = file_
   # Recode headers to UTF-8 if needed
-  for key, value in msg.items():
+  for key, value in list(msg.items()):
     decoded_value_list = decode_header(value)
     unicode_value = make_header(decoded_value_list)
     new_value = unicode_value.__unicode__().encode('utf-8')
@@ -81,7 +82,7 @@ def decode_email(file_):
       payload = part.get_payload(decode=True)
       #LOG('CMFMailIn -> ',0,'charset: %s, payload: %s' % (charset,payload))
       if charset:
-        payload = unicode(payload, charset).encode('utf-8')
+        payload = str(payload, charset).encode('utf-8')
       if body_found:
         # Keep the content type
         theMail['attachment_list'].append((file_name,

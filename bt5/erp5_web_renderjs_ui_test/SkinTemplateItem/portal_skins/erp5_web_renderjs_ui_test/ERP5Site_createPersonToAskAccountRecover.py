@@ -1,3 +1,4 @@
+from builtins import range
 alpha = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 new_password = ''.join([random.choice(alpha) for _ in range(10)])
 

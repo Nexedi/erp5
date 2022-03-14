@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import range
 from BTrees.LOBTree import LOBTree
 from persistent import Persistent
 import itertools
@@ -314,7 +316,7 @@ class BTreeData(Persistent):
 if __name__ == '__main__':
 
   def check(tree, length, read_offset, read_length, data_, keys=None):
-    print list(tree._tree.items())
+    print(list(tree._tree.items()))
     tree_length = len(tree)
     tree_data = tree.read(read_offset, read_length)
     tree_iterator_data = ''.join(tree.iterate(read_offset, read_length))
@@ -418,22 +420,22 @@ if __name__ == '__main__':
   check(data, 36, 0, 36, '01ABC56789ABcDEFGHIJKL\x00NOPQRSTUVWXYZ', [0, 10, 20, 23, 33])
 
   data = BTreeData(max_chunk_size=10)
-  for x in xrange(255):
+  for x in range(255):
     data.write('%02x' % x, x * 2)
-  check(data, 510, 0, 10, '0001020304', [x * 2 for x in xrange(255)])
+  check(data, 510, 0, 10, '0001020304', [x * 2 for x in range(255)])
   defragment_generator = data.defragment(batch_size=2)
-  defragment_generator.next()
-  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in xrange(2, 255)])
-  opaque = defragment_generator.next()
+  next(defragment_generator)
+  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in range(2, 255)])
+  opaque = next(defragment_generator)
   defragment_generator.close()
-  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in xrange(4, 255)])
+  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in range(4, 255)])
   defragment_generator = data.defragment(batch_size=2, resume_at=opaque)
-  defragment_generator.next()
-  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in xrange(5, 255)])
+  next(defragment_generator)
+  check(data, 510, 0, 10, '0001020304', [0] + [x * 2 for x in range(5, 255)])
   defragment_generator.send(10)
-  check(data, 510, 0, 10, '0001020304', [0, 10, 20] + [x * 2 for x in xrange(13, 255)])
-  defragment_generator.next()
-  check(data, 510, 0, 10, '0001020304', [0, 10, 20, 30, 40] + [x * 2 for x in xrange(23, 255)])
+  check(data, 510, 0, 10, '0001020304', [0, 10, 20] + [x * 2 for x in range(13, 255)])
+  next(defragment_generator)
+  check(data, 510, 0, 10, '0001020304', [0, 10, 20, 30, 40] + [x * 2 for x in range(23, 255)])
   for _ in defragment_generator:
     pass
-  check(data, 510, 0, 10, '0001020304', [x * 10 for x in xrange(51)])
+  check(data, 510, 0, 10, '0001020304', [x * 10 for x in range(51)])

@@ -1,3 +1,4 @@
+from past.builtins import basestring
 import json
 from Products.ERP5Type.Utils import checkPythonSourceCode
 

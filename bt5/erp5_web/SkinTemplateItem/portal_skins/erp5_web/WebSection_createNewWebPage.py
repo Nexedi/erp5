@@ -26,7 +26,7 @@ keep_items = dict(editable_mode=1,
               mapping = dict(web_section=title)))
 
 request_form.update(keep_items)
-message = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))
+message = make_query(dict([(k, v) for k, v in list(request_form.items()) if k and v is not None]))
 
 redirect_url = '%s/%s/view?%s' % (
             context.absolute_url(), web_page.getRelativeUrl(),message)

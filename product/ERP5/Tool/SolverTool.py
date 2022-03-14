@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from zope.interface import implementer
 import re
 

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import map
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
@@ -65,7 +66,7 @@ class SOAPBinding(Base):
   @classmethod
   def getRegisteredServiceClassItemList(cls):
     return sorted(('%s (%s)' % (v.__name__, v.__module__), k)
-                  for k, v in cls._service_class_dict.iteritems())
+                  for k, v in cls._service_class_dict.items())
 
   security.declarePrivate('getListItemUrl')
   def getListItemUrl(self, *args):
@@ -79,7 +80,7 @@ class SOAPBinding(Base):
     except AttributeError:
       pass
     server = HttpBase(Application(
-      map(self._service_class_dict.__getitem__, self.getServiceClassList()),
+      list(map(self._service_class_dict.__getitem__, self.getServiceClassList())),
       self.getTargetNamespace(),
       in_protocol=Soap11(), out_protocol=Soap11()))
     self._v_server = self._p_serial, server

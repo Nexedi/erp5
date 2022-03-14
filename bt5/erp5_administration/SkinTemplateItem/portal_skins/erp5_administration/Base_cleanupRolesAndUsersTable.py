@@ -1,5 +1,6 @@
+from functools import reduce
 portal = context.getPortalObject()
-security_uid_field_list = [x + ("_" if x != "" else "") + "security_uid" for x in portal.portal_catalog.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict().keys()]
+security_uid_field_list = [x + ("_" if x != "" else "") + "security_uid" for x in list(portal.portal_catalog.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict().keys())]
 security_uid_set_list = []
 for security_uid_field in security_uid_field_list:
   security_uid_set_list.append({getattr(x, security_uid_field) for x in context.z_get_referenced_security_uid_set_for(security_uid_field=security_uid_field)})

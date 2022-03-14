@@ -30,7 +30,7 @@ from difflib import unified_diff
 from erp5.component.module.DiffUtils import DiffFile
 
 def diffXML(xml_plugin="", xml_erp5="", gid="", html=True):
-  if isinstance(xml_erp5, unicode):
+  if isinstance(xml_erp5, str):
     xml_erp5 = xml_erp5.encode('utf-8')
   if xml_plugin == "":
     xml_plugin="<object>Not found</object>"
@@ -42,7 +42,7 @@ def diffXML(xml_plugin="", xml_erp5="", gid="", html=True):
   except etree.XMLSyntaxError:
     pass
 
-  if isinstance(xml_plugin, unicode):
+  if isinstance(xml_plugin, str):
     xml_plugin = xml_plugin.encode('utf-8')
   try:
     xml = etree.fromstring(xml_plugin)

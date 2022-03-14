@@ -28,6 +28,7 @@
 ##############################################################################
 
 
+from builtins import str
 import os
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList

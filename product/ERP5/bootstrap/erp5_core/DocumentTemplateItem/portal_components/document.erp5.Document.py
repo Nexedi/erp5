@@ -27,6 +27,12 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import map
+from builtins import str
+from builtins import range
+from builtins import object
 import re
 from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
@@ -92,10 +98,10 @@ DOCUMENT_CONVERSION_SERVER_RETRY = 0
 global_server_proxy_uri_failure_time = {}
 from Products.CMFCore.utils import getToolByName
 from functools import partial
-from xmlrpclib import Fault, ServerProxy, ProtocolError
+from xmlrpc.client import Fault, ServerProxy, ProtocolError
 from socket import error as SocketError
 from DateTime import DateTime
-class DocumentConversionServerProxy():
+class DocumentConversionServerProxy(object):
   """
   xmlrpc-like ServerProxy object adapted for conversion server
   """
@@ -152,18 +158,18 @@ class DocumentConversionServerProxy():
           # Cloudooo return result in (200 or 402, dict(), '') format or just based type
           # 402 for error and 200 for ok
           result_set =  func(*args, **kw)
-        except SocketError, e:
+        except SocketError as e:
           message = 'Socket Error: %s' % (repr(e) or 'undefined.')
           socket_error_list.append(message)
           retry_server_list.append((uri, server_proxy))
-        except ProtocolError, e:
+        except ProtocolError as e:
           # Network issue
           message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
           if e.errcode == -1:
             message = "%s: Connection refused" % (e.url)
           protocol_error_list.append(message)
           retry_server_list.append((uri, server_proxy))
-        except Fault, e:
+        except Fault as e:
           # Return not supported data types
           fault_error_list.append(e)
         else:
@@ -476,11 +482,11 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     tmp = {}
     for match in rx_search.finditer(text):
       group = match.group()
-      group_item_list = match.groupdict().items()
+      group_item_list = list(match.groupdict().items())
       group_item_list.sort()
       key = (group, tuple(group_item_list))
       tmp[key] = None
-    for group, group_item_tuple in tmp.keys():
+    for group, group_item_tuple in list(tmp.keys()):
       result.append((group, dict(group_item_tuple)))
     return result
 
@@ -581,7 +587,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
 
     getRelatedList(self)
     lista_latest = {}
-    for o in lista.keys():
+    for o in list(lista.keys()):
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
 
     # remove this document
@@ -589,7 +595,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     # remove last version of document itself from related documents
     lista_latest.pop(self.getLatestVersionValue(), None)
 
-    return lista_latest.keys()
+    return list(lista_latest.keys())
 
   ### Version and language getters - might be moved one day to a mixin class in base
   security.declareProtected(Permissions.View, 'getLatestVersionValue')
@@ -702,7 +708,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       Returns the list of revision numbers of the current document
       by by analysing the change log of the current object.
     """
-    return map(str, range(1, 1 + int(self.getRevision())))
+    return list(map(str, list(range(1, 1 + int(self.getRevision())))))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'mergeRevision')
   def mergeRevision(self):

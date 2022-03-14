@@ -1,6 +1,7 @@
 """
 This script returns a dictionary of possible values for Unify Solver.
 """
+from builtins import str
 solver_decision = context.getCausalityValue()
 tester = solver_decision.getCausalityValue()
 value_list_dict = {}

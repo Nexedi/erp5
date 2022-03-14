@@ -27,6 +27,7 @@ from __future__ import print_function
 #
 ##############################################################################
 
+from builtins import object
 from ply import lex, yacc
 import sys
 from io import BytesIO as StringIO

@@ -27,8 +27,16 @@
 #
 ##############################################################################
 
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 from base64 import encodestring, decodestring
-from urllib import quote, unquote
+from urllib.parse import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Globals import InitializeClass
@@ -54,7 +62,7 @@ from Crypto.Cipher import AES
 from Crypto import Random
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
-class AESCipher:
+class AESCipher(object):
   mode = AES.MODE_CFB
 
   def __init__(self, encryption_key):
@@ -64,7 +72,7 @@ class AESCipher:
   def encrypt(self, login):
     iv = Random.new().read(AES.block_size)
     encryptor = AES.new(self.encryption_key, self.mode, IV=iv)
-    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust(((len(login)-1)/16+1)*16)))
+    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust((old_div((len(login)-1),16)+1)*16)))
 
   def decrypt(self, crypted_login):
     decoded_crypted_login = urlsafe_b64decode(crypted_login)
@@ -73,7 +81,7 @@ class AESCipher:
     return decryptor.decrypt(decoded_crypted_login[AES.block_size:]).rstrip()
 
 # This cipher is weak. Do not use.
-class CesarCipher:
+class CesarCipher(object):
   block_length = 3
 
   def __init__(self, encryption_key):
@@ -276,7 +284,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           creds['remote_address'] = request.getClientAddr()
         except AttributeError:
           creds['remote_address'] = request.get('REMOTE_ADDR', '')
-    except StandardError, e:
+    except Exception as e:
       #Log standard error to check error
       LOG('ERP5KeyAuthPlugin.extractCredentials', PROBLEM, str(e))
 
@@ -372,7 +380,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
         return _authenticateCredentials(login=login)
       except _AuthenticationFailure:
         return None
-      except StandardError, e:
+      except Exception as e:
         #Log standard error
         LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
         return None

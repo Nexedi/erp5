@@ -77,7 +77,7 @@ class ItemListSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
 
-    for movement, simulation_movement_list in delivery_dict.iteritems():
+    for movement, simulation_movement_list in delivery_dict.items():
       decision_aggregate_set = set(movement.getAggregateList())
       split_list = []
       for simulation_movement in simulation_movement_list:

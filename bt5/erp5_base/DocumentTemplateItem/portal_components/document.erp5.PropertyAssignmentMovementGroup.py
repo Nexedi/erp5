@@ -1,3 +1,4 @@
+from __future__ import division
 
 ##############################################################################
 #
@@ -26,6 +27,7 @@
 #
 ##############################################################################
 
+from past.utils import old_div
 from erp5.component.document.MovementGroup import MovementGroup
 from Products.ERP5Type import PropertySheet
 
@@ -96,5 +98,5 @@ class PropertyAssignmentMovementGroup(MovementGroup):
     """Calculate the average property from the list, only numeric types are
     supported.
     """
-    return sum(property_list) / len(property_list)
+    return old_div(sum(property_list), len(property_list))
 

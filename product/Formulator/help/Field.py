@@ -1,4 +1,5 @@
-class Field:
+from builtins import object
+class Field(object):
     """Formulator field base class; shared functionality of all
     fields.
     """

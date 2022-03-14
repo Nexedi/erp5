@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from builtins import map
+from builtins import range
 from collections import deque
 import unittest
 
@@ -102,7 +105,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.validateRules()
 
     portal_categories = self.getCategoriesTool()
-    for name, kw in self.category_dict.iteritems():
+    for name, kw in self.category_dict.items():
       try:
         bc = portal_categories[name]
       except KeyError:
@@ -168,7 +171,7 @@ class TestCMFCategory(ERP5TypeTestCase):
   def beforeTearDown(self):
     """Clean up."""
     # type informations
-    for portal_type, categories in self._original_categories.iteritems():
+    for portal_type, categories in self._original_categories.items():
       ti = self.getTypesTool().getTypeInfo(portal_type)
       ti.filter_content_types = 1
       ti._setTypeBaseCategoryList(categories)
@@ -1306,9 +1309,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(get(bc.id), list('aa'))
     _set(bc.id, list('baa'))
     self.assertEqual(get(bc.id), list('aba'))
-    _set(bc.id, map(base, 'bb'), 1)
+    _set(bc.id, list(map(base, 'bb')), 1)
     self.assertEqual(get(bc.id), list('bb'))
-    _set(bc.id, map(base, 'abb'), 1)
+    _set(bc.id, list(map(base, 'abb')), 1)
     self.assertEqual(get(bc.id), list('bab'))
     _set(bc.id, ())
 

@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import str
 from .Constraint import Constraint
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import CachingMethod

@@ -23,6 +23,8 @@
 ##############################################################################
 
 from __future__ import print_function
+from builtins import str
+from builtins import object
 SBALANCE_VERSION = '4.0'
 
 import sys
@@ -37,9 +39,9 @@ import re
 if not hasattr(socket, 'setdefaulttimeout'):
   raise RuntimeError('Your Python interpreter is too old. Please upgrade it.')
 
-class ClientInfo: pass
+class ClientInfo(object): pass
 
-class Balancer:
+class Balancer(object):
   def __init__(self, port, server_list, bind = '', connect_timeout = 5, select_timeout = None,
                debug = 0, foreground = 0, packet_dump = 0):
     """
@@ -118,7 +120,7 @@ class Balancer:
           if addr not in self.disabled_server_dict:
             count_dict[addr] = 0
         expired_server_list = []
-        for key,value in self.sticked_server_dict.items():
+        for key,value in list(self.sticked_server_dict.items()):
           if self.debug:
             print('cur_time = %f, value.atime = %f' % (cur_time, value.atime))
           if cur_time > value.atime + 60 * 10:
@@ -135,7 +137,7 @@ class Balancer:
           print('count_dict = %s, sticked_server_dict = %s, disabled_server_dict = %s' % (str(count_dict), str(self.sticked_server_dict), str(self.disabled_server_dict)))
         max = -1
         min = len(self.sticked_server_dict) + 1
-        for addr,count in count_dict.items():
+        for addr,count in list(count_dict.items()):
           if count > max:
             max = count
             max_addr = addr
@@ -145,7 +147,7 @@ class Balancer:
         # If the max is significantly greater than the min, move some clients.
         if max > min + 1:
           num = max - min - 1
-          for key,value in self.sticked_server_dict.items():
+          for key,value in list(self.sticked_server_dict.items()):
             if value.addr == max_addr:
               if self.debug:
                 print("Moving %s from %s to %s" % (str(key), str(max_addr), str(min_addr)))
@@ -155,7 +157,7 @@ class Balancer:
                 break
         # Enable old entries in disabled servers.
         enabled_server_list = []
-        for addr,ctime in self.disabled_server_dict.items():
+        for addr,ctime in list(self.disabled_server_dict.items()):
           if cur_time > ctime + 60 * 3:
             enabled_server_list.append(addr)
         for addr in enabled_server_list:

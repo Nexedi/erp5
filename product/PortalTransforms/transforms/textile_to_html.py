@@ -4,6 +4,7 @@ Uses Roberto A. F. De Almeida's http://dealmeida.net/ module to do its handy wor
 author: Tom Lazar <tom@tomster.org> at the archipelago sprint 2006
 
 """
+from builtins import object
 import os
 
 from zope.interface import implementer
@@ -25,7 +26,7 @@ else:
 
 
 @implementer(ITransform)
-class textile:
+class textile(object):
 
     __name__ = "textile_to_html"
     inputs  = ("text/x-web-textile",)

@@ -1,3 +1,4 @@
+from builtins import str
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 connection = portal.erp5_sql_connection

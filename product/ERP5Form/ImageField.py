@@ -27,6 +27,9 @@
 #
 ##############################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -115,7 +118,7 @@ class ImageFieldWidget(Widget.TextWidget):
           # only add if it's True as conversion machine assume that if it is missing
           # then conversion should happen "on the fly"
           options['pre_converted_only'] = pre_converted_only
-        parameters = '&'.join(['%s=%s' % (k, v) for k, v in options.items() \
+        parameters = '&'.join(['%s=%s' % (k, v) for k, v in list(options.items()) \
                                if v])
         if parameters:
             image = '%s?%s' % (image, parameters)
@@ -217,18 +220,18 @@ class ImageFieldWidget(Widget.TextWidget):
       h = float(height_tuple[0])
       aspect_ratio = 1
       try: # try image properties
-        aspect_ratio = picture_width / picture_height
+        aspect_ratio = old_div(picture_width, picture_height)
       except (TypeError, ZeroDivisionError):
         try: # try Image Document API
           height = picture_height
           if height:
-            aspect_ratio = picture_width / height
+            aspect_ratio = old_div(picture_width, height)
         except AttributeError: # fallback to Photo API
           height = float(picture_height)
           if height:
-            aspect_ratio = picture_width / height
+            aspect_ratio = old_div(picture_width, height)
       resize_w = h * aspect_ratio
-      resize_h = w / aspect_ratio
+      resize_h = old_div(w, aspect_ratio)
       if resize_w < w:
         w = resize_w
       elif resize_h < h:

@@ -7,7 +7,7 @@ preferred_extension_dict = {
 
 def initialize(registry):
     mime_types.initialize(registry)
-    for ext, mime in preferred_extension_dict.iteritems():
+    for ext, mime in preferred_extension_dict.items():
         mime, = registry.lookup(mime)
         assert type(mime.extensions) is tuple
         x = list(mime.extensions)

@@ -26,6 +26,10 @@
 #
 ##############################################################################
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import tempfile, os, pickle
 
 import zope.interface
@@ -38,7 +42,7 @@ from erp5.component.document.Document import ConversionError
 from subprocess import Popen, PIPE
 from zLOG import LOG, INFO, PROBLEM
 import errno
-from StringIO import StringIO
+from io import StringIO
 
 @zope.interface.implementer(IWatermarkable)
 class PDFDocument(Image):
@@ -280,7 +284,7 @@ class PDFDocument(Image):
                  '-noframes', '-i', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
+      except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdftohtml was not found')
         raise
@@ -309,7 +313,7 @@ class PDFDocument(Image):
       command = ['pdf2djvu', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
+      except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdf2djvu was not found')
         raise
@@ -338,7 +342,7 @@ class PDFDocument(Image):
       command = ['pdfinfo', '-meta', '-box', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
+      except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdfinfo was not found')
         raise
@@ -360,9 +364,9 @@ class PDFDocument(Image):
       else:
         try:
           pdf_file = PdfFileReader(tmp)
-          for info_key, info_value in (pdf_file.getDocumentInfo() or {}).iteritems():
+          for info_key, info_value in (pdf_file.getDocumentInfo() or {}).items():
             info_key = info_key.lstrip("/")
-            if isinstance(info_value, unicode):
+            if isinstance(info_value, str):
               info_value = info_value.encode("utf-8")
 
             # Ignore values that cannot be pickled ( such as AAPL:Keywords )

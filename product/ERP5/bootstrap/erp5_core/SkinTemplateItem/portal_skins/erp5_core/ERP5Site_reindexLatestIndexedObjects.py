@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Reindex objects which indexation_timestamp is at most
 # delta seconds before current time (ie, bound inclued).
 # Unindex objects which cannot be found.
@@ -24,5 +25,5 @@ for candidate in candidate_list:
     obj.reindexObject()
     reindex_count += 1
 
-print '%s object reindexed, %s object unindexed' % (reindex_count, unindex_count)
+print('%s object reindexed, %s object unindexed' % (reindex_count, unindex_count))
 return printed

@@ -1,3 +1,5 @@
+from future import standard_library
+standard_library.install_aliases()
 import re
 import os
 import sys
@@ -145,7 +147,7 @@ class IllegalHTML( ValueError ):
 class StrippingParser( SGMLParser ):
     """ Pass only allowed tags;  raise exception for known-bad.  """
 
-    from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
+    from html.entities import entitydefs # replace entitydefs from sgmllib
 
     def __init__( self ):
 
@@ -163,7 +165,7 @@ class StrippingParser( SGMLParser ):
 
     def handle_entityref(self, name):
 
-        if self.entitydefs.has_key(name):
+        if name in self.entitydefs:
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
@@ -175,7 +177,7 @@ class StrippingParser( SGMLParser ):
 
         """ Delete all tags except for legal ones.
         """
-        if VALID_TAGS.has_key(tag):
+        if tag in VALID_TAGS:
 
             self.result = self.result + '<' + tag
 

@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from builtins import str
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
 from Products.ERP5Type.tests.utils import todo_erp5
 
@@ -98,7 +99,7 @@ class TestWorklist(TestWorkflowMixin):
     portal = self.getPortal()
     module = portal.getDefaultModule("Person")
     # Create the Person.
-    for user_login, user_data in user_dict.items():
+    for user_login, user_data in list(user_dict.items()):
       # Create the Person.
       self.logMessage("Create user: %s" % user_login)
       person = module.newContent(
@@ -179,7 +180,7 @@ class TestWorklist(TestWorkflowMixin):
       if v:
         worklist_value.setCriterion(SECURITY_PARAMETER_ID,
                                     [var.strip() for var in v.split(';')])
-      for k, v in kw.iteritems():
+      for k, v in kw.items():
         if k not in (SECURITY_PARAMETER_ID, workflow_value.getStateVariable()):
           variable_value = workflow_value.getVariableValueByReference(k)
           if variable_value is None:
@@ -194,7 +195,7 @@ class TestWorklist(TestWorkflowMixin):
       worklist_value.setProperties('',
         actbox_name='%s (%%(count)s)' % actbox_name, actbox_url=actbox_url,
         props={k if k.startswith('guard_') else 'var_match_' + k: v
-               for k, v in kw.iteritems()})
+               for k, v in kw.items()})
 
 
   def removeWorklist(self, workflow_id, worklist_id_list):

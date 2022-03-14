@@ -1,3 +1,4 @@
+from builtins import str
 import time
 from Products.StandardCacheManagers.AcceleratedHTTPCacheManager import \
     AcceleratedHTTPCache, AcceleratedHTTPCacheManager

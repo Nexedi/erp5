@@ -1,5 +1,9 @@
 from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import range
+from builtins import object
 import argparse
 import re, os, shlex, glob
 import sys, threading, subprocess

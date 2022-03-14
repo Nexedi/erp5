@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-class MetaNode:
+from builtins import object
+class MetaNode(object):
   """
     A metanode aggregates a collection of real nodes.
     It is used for planning and budgeting.
