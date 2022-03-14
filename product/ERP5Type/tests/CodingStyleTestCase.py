@@ -113,7 +113,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
   # Paths for which we ignore differences when re-exporting business templates
   rebuild_business_template_ignored_path = """
   # portal_transforms seem to be always different TODO: really ?
-  erp5_core/ToolTemplateItem/portal_transforms.xml
+  XXX erp5_core/ToolTemplateItem/portal_transforms.xml
 
   # Empty messages are exported in message catalog, so they can be different because of
   # empty messages. Reindexing during creation for example insert entries for all workflow
