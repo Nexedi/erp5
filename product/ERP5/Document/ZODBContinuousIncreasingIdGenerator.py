@@ -34,11 +34,11 @@ from BTrees.OOBTree import OOBTree
 
 from zLOG import LOG, INFO
 
+@zope.interface.implementer(interfaces.IIdGenerator)
 class ZODBContinuousIncreasingIdGenerator(IdGenerator):
   """
     Create some Ids with the zodb storage
   """
-  zope.interface.implements(interfaces.IIdGenerator)
   # CMF Type Definition
   meta_type = 'ERP5 ZODB Continous Increasing Id Generator'
   portal_type = 'ZODB Continous Increasing Id Generator'

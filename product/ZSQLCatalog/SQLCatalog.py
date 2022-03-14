@@ -58,7 +58,7 @@ from hashlib import md5
 
 from .interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 
 from .SearchText import isAdvancedSearchText, dequote
 
@@ -289,6 +289,7 @@ ContainerAssertions[LazyIndexationParameterList] = 1
 
 related_key_warned_column_set = set()
 
+@implementer(ISearchKeyCatalog)
 class Catalog(Folder,
               Persistent,
               Acquisition.Implicit,
@@ -317,8 +318,6 @@ class Catalog(Folder,
   or search_mode_Table_Key
 
  """
-
-  implements(ISearchKeyCatalog)
 
 
   meta_type = "SQLCatalog"

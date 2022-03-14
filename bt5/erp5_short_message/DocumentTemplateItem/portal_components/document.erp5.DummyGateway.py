@@ -47,6 +47,9 @@ from Products import ERP5Security
 from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
 from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
 
+@zope.interface.implementer(
+        ISmsSendingGateway,
+        ISmsReceivingGateway)
 class DummyGateway(XMLObject):
 
   """Dummy SMS Gateway Implementation"""
@@ -56,10 +59,6 @@ class DummyGateway(XMLObject):
 
 
   add_permission = Permissions.AddPortalContent
-
-  zope.interface.implements(
-        ISmsSendingGateway,
-        ISmsReceivingGateway)
 
   # Declarative security
   security = ClassSecurityInfo()

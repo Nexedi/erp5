@@ -1,12 +1,11 @@
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
+@implementer(itransform)
 class DocToDocx:
   """Transforms doc to docx by using Cloudooo"""
-
-  implements(itransform)
 
   __name__ = 'doc_to_docx'
   inputs   = ('application/msword',)

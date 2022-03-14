@@ -35,6 +35,8 @@ from Products.ERP5Type import interfaces, Permissions, PropertySheet
 import zope.interface
 
 
+@zope.interface.implementer(interfaces.IVariated,
+                            interfaces.IVariationRange)
 class VariatedMixin:
   """
     Mix-in class for all classes which implement the Variated Interface.
@@ -53,10 +55,6 @@ class VariatedMixin:
 
   # Declarative security
   security = ClassSecurityInfo()
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IVariated,
-                            interfaces.IVariationRange)
 
   isRADContent = 1 # for 'property_sheets'
   property_sheets = (PropertySheet.VariationRange, )

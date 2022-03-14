@@ -37,12 +37,12 @@ from MySQLdb.constants.ER import NO_SUCH_TABLE
 from zLOG import LOG, INFO
 from BTrees.OOBTree import OOBTree
 
+@zope.interface.implementer(interfaces.IIdGenerator)
 class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
   """
     Generate some ids with mysql storage and also zodb is enabled
     by the checkbox : StoredInZodb
   """
-  zope.interface.implements(interfaces.IIdGenerator)
   # CMF Type Definition
   meta_type = 'ERP5 SQL Non Continous Increasing Id Generator'
   portal_type = 'SQL Non Continous Increasing Id Generator'

@@ -34,6 +34,8 @@ from erp5.component.interface.IAmountGenerator import IAmountGenerator
 
 import zope.interface
 
+@zope.interface.implementer(
+      IAmountGenerator)
 class TradeModelCell(TradeModelLine):
   """Trade Model Line
   """
@@ -44,12 +46,6 @@ class TradeModelCell(TradeModelLine):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  #    interfaces.IVariated as soon as interfaces.IVariated will be zope3
-  zope.interface.implements(
-      IAmountGenerator
-  )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

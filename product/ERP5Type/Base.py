@@ -716,6 +716,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       else:
         method.registerTransitionAlways(portal_type, wf_id, tr_id)
 
+@zope.interface.implementer(interfaces.ICategoryAccessProvider,
+                            interfaces.IValueAccessProvider,)
 class Base(
             ResponseHeaderGenerator,
             CopyContainer,
@@ -776,11 +778,6 @@ class Base(
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.ICategoryAccessProvider,
-                            interfaces.IValueAccessProvider,
-                            )
 
   # We want to use a default property view
   manage_main = manage_propertiesForm = DTMLFile( 'properties', _dtmldir )

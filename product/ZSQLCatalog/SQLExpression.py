@@ -31,7 +31,7 @@ from __future__ import absolute_import
 import warnings
 from .interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 from types import NoneType
 
 SQL_LIST_SEPARATOR = ', '
@@ -81,9 +81,8 @@ def conflictSafeGet(dikt, key, default=None):
     result() # Raises
   return result
 
+@implementer(ISQLExpression)
 class SQLExpression(object):
-
-  implements(ISQLExpression)
 
   def __init__(self,
                query,

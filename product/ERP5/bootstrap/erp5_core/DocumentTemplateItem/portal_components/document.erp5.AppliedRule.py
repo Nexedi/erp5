@@ -46,6 +46,8 @@ from erp5.component.mixin.RuleMixin import RuleMixin
 from erp5.component.interface.IExpandable import IExpandable
 from erp5.component.interface.IMovementCollection import IMovementCollection
 
+@zope.interface.implementer(IExpandable,
+                            IMovementCollection)
 class AppliedRule(XMLObject, ExplainableMixin):
   """
     An applied rule holds a list of simulation movements.
@@ -80,10 +82,6 @@ class AppliedRule(XMLObject, ExplainableMixin):
                     , PropertySheet.CategoryCore
                     , PropertySheet.AppliedRule
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IExpandable,
-                            IMovementCollection)
 
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """

@@ -42,6 +42,7 @@ from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLObject import XMLObject
 
 
+@zope.interface.implementer(interfaces.ILocalRoleGenerator)
 class RoleInformation(XMLObject):
   """ Represent a role definition.
 
@@ -54,8 +55,6 @@ class RoleInformation(XMLObject):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(AccessContentsInformation)
-
-  zope.interface.implements(interfaces.ILocalRoleGenerator)
 
   # Declarative properties
   property_sheets = ( PropertySheet.CategoryCore

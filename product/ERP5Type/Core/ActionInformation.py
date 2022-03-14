@@ -146,11 +146,10 @@ class ActionInformation(XMLObject):
                            permission_list=self.getActionPermissionList())
 
 
+@zope.interface.implementer(interfaces.IAction)
 class CacheableAction(object):
   """The purpose of this class is to provide a cacheable instance having
   an enough information of Action Information document."""
-
-  zope.interface.implements(interfaces.IAction)
 
   test_permission = None
 

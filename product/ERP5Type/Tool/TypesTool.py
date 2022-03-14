@@ -77,12 +77,13 @@ class ComposedObjectIds(object):
 
 CMFCore_TypesTool = CMFCore_TypesToolModule.TypesTool
 
+@zope.interface.implementer(ITypeProvider)
 class TypeProvider(BaseTool, CMFCore_TypesTool):
   """Provides portal content types
   """
-  zope.interface.implements(ITypeProvider)
 
 
+@zope.interface.implementer(ITypesTool)
 class TypesTool(TypeProvider):
   """Provides a configurable registry of portal content types
   """
@@ -91,8 +92,6 @@ class TypesTool(TypeProvider):
   portal_type = 'Types Tool'
   title = 'Portal Types'
   allowed_types = ()
-
-  zope.interface.implements(ITypesTool)
 
   # TODO: UI to configure this is missing
   type_provider_list = ( )
