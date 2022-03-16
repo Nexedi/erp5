@@ -195,3 +195,16 @@ class CodingStyleTestCase(ERP5TypeTestCase):
                   'action_name': action_name,
               })
       self.assertEqual(duplicate_action_list, [])
+
+  def test_workflow_consistency(self):
+    self.maxDiff = None
+    workflow_id_set = set()
+    for business_template in self._getTestedBusinessTemplateValueList():
+      workflow_id_set.update(business_template.getTemplateWorkflowIdList())
+
+    message_list = []
+    for workflow_id in workflow_id_set:
+      message_list.extend(
+          self.portal.portal_workflow[workflow_id].checkConsistency())
+
+    self.assertEqual(message_list, [])
