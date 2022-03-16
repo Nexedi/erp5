@@ -785,6 +785,17 @@ class Workflow(XMLObject):
 
     tool = self.getParentValue()
     state_var = self.getStateVariable()
+
+    # `status_dict` will hold the new status.
+    # Unlike DCWorkflow implementation, we don't start with an empty dict, but start
+    # by making a copy of the current status dict, this way the string used as keys
+    # will be the same string instances and this will reduce the pickle size:
+    # Copying existing dict saves space: when __setitem__(key, value) points at an
+    # existing key, python will just keep the existing string as key, which then
+    # means if both history entries are pickled together, the keys will be stored
+    # just once instead of once per dict.
+    # This is especially important with ERP5's WorkflowVariable implemented with
+    # IdAsReferenceMixin, because every call to getReference return a different string.
     status_dict = self.getCurrentStatusDict(ob)
 
     if tdef is None:
