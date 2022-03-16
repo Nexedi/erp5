@@ -958,6 +958,26 @@ class Workflow(XMLObject):
       raise ObjectMoved(ex.getNewObject(), res)
     return res
 
+  def _checkConsistency(self):
+    """Checks the workflow definition.
+    """
+    consistency_message_list = []
+    # make sure we have necessary variables
+    variable_reference_set = {
+        v.getReference()
+        for v in self.contentValues(portal_type='Workflow Variable')
+    }
+    for variable_reference in 'error_message', :
+      if variable_reference not in variable_reference_set:
+        consistency_message_list.append(
+            ConsistencyMessage(
+                self,
+                object_relative_url=self.getRelativeUrl(),
+                message=
+                'Required variable {variable_reference} missing in workflow.'.
+                format(variable_reference=variable_reference)))
+    return consistency_message_list
+
   security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
   def showAsXML(self, root=None):
     from lxml import etree
