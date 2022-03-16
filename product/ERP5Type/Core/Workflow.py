@@ -30,6 +30,7 @@
 ## Used in Products.ERP5Type.patches.DCWorkflow so this needs to go first...
 from Acquisition import aq_parent, aq_inner
 from Products.PageTemplates.Expressions import SecureModuleImporter
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from AccessControl import getSecurityManager
 from Products.PageTemplates.Expressions import getEngine
 from six import reraise
@@ -958,7 +959,7 @@ class Workflow(XMLObject):
       raise ObjectMoved(ex.getNewObject(), res)
     return res
 
-  def _checkConsistency(self):
+  def _checkConsistency(self, fixit=False):
     """Checks the workflow definition.
     """
     consistency_message_list = []

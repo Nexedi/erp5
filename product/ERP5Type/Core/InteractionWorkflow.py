@@ -358,6 +358,9 @@ class InteractionWorkflow(Workflow):
   def getStateValueList(self):
     return []
 
+  def _checkConsistency(self, fixit=False):
+    return []
+
   security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
   def showAsXML(self, root=None):
     from lxml import etree
