@@ -30,6 +30,7 @@
 ## Used in Products.ERP5Type.patches.DCWorkflow so this needs to go first...
 from Acquisition import aq_parent, aq_inner
 from Products.PageTemplates.Expressions import SecureModuleImporter
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from AccessControl import getSecurityManager
 from Products.PageTemplates.Expressions import getEngine
 from six import reraise
@@ -957,6 +958,26 @@ class Workflow(XMLObject):
       # Re-raise with a different result.
       raise ObjectMoved(ex.getNewObject(), res)
     return res
+
+  def _checkConsistency(self, fixit=False):
+    """Checks the workflow definition.
+    """
+    consistency_message_list = []
+    # make sure we have necessary variables
+    variable_reference_set = {
+        v.getReference()
+        for v in self.contentValues(portal_type='Workflow Variable')
+    }
+    for variable_reference in 'error_message', :
+      if variable_reference not in variable_reference_set:
+        consistency_message_list.append(
+            ConsistencyMessage(
+                self,
+                object_relative_url=self.getRelativeUrl(),
+                message=
+                'Required variable {variable_reference} missing in workflow.'.
+                format(variable_reference=variable_reference)))
+    return consistency_message_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
   def showAsXML(self, root=None):
