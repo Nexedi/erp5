@@ -472,6 +472,19 @@
       <td tal:content="python: response_configuration['field_my_portal_type']"></td>
       <td></td>
     </tr>
+    <tal:block tal:condition="python: response_configuration['field_my_portal_type'] not in ('Visit', 'Phone Call')">
+      <tr>
+        <td>assertElementPresent</td>
+        <td>//div[@class="field date_field"]/label[contains(text(),"Date")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertElementNotPresent</td>
+        <td>//label[contains(text(),"Stop Date")]</td>
+        <td></td>
+      </tr>
+
+    </tal:block>
     <tr>
       <td>verifyValue</td>
       <td>field_my_resource</td>
