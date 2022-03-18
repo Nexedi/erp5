@@ -87,6 +87,7 @@ class CopyToTarget(TargetSolver):
     """
       Generate values to save on simulation movement.
     """
+    raise ValueError("this is used !")
     from erp5.component.module.DateUtils import createDateTimeFromMillis
     value_dict = {}
     # Modify quantity, start_date, stop_date
