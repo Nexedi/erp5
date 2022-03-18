@@ -81,7 +81,9 @@ def initialize( context ):
                                                    'WorkflowException')
 
   # Make sure InteactionWorkflow is visible in UI
-  import Products.ERP5.InteractionWorkflow
+  from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+  if WITH_LEGACY_WORKFLOW:
+    import Products.ERP5.InteractionWorkflow
 
 # backward compatibility names
 XML = None

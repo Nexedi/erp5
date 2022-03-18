@@ -114,7 +114,10 @@ def getPropertyFields(obj):
     """
     fields = []
     for property_name in obj.property_names:
-        fields.append(getattr(obj, property_name))
+        try:
+          fields.append(getattr(obj, property_name))
+        except:
+          import pdb; pdb.set_trace()
     return fields
 
 def setupIcon(klass, icon, repository):

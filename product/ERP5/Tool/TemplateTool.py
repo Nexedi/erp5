@@ -32,7 +32,8 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import filter
 from builtins import range
-from webdav.client import Resource
+## XXX: WebDAV client implementation from ZServer
+##from webdav.client import Resource
 
 from App.config import getConfiguration
 import os

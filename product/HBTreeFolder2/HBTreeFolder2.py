@@ -24,7 +24,6 @@ from cgi import escape
 from itertools import chain, islice
 from urllib.parse import quote
 from random import randint
-from types import StringType
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.special_dtml import DTMLFile

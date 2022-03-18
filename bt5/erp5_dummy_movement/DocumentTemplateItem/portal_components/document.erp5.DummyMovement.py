@@ -72,7 +72,10 @@ class DummyMovement(Movement):
     parent = self.getParentValue()
     if isinstance(parent, DummyDelivery):
       self = parent
-    return DummyDelivery.getSimulationState.__func__(self)
+    getSimulationState = DummyDelivery.getSimulationState
+    if six.PY2:
+      getSimulationState = getSimulationState.__func__
+    return getSimulationState(self)
 
   def getDeliveryValue(self):
     """

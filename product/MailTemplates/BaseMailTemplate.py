@@ -8,14 +8,13 @@ from __future__ import absolute_import
 from past.builtins import basestring
 from builtins import object
 import os
-import email.utils
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from email.Header import Header
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.Utils import make_msgid, formataddr, getaddresses
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import make_msgid, formataddr, getaddresses
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.Common import package_home
@@ -148,8 +147,7 @@ class BaseMailTemplate(object):
             v = values.get(key)
             if v:
                 if isinstance(v, basestring):
-                    v = [email.utils.formataddr(addr) for addr \
-                            in email.utils.getaddresses([v])]
+                    v = [formataddr(addr) for addr in getaddresses([v])]
                 to_addrs += tuple(v)
 
         self._send(values['mfrom'], to_addrs, msg)

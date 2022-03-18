@@ -64,7 +64,7 @@ def convert_to_xml_compatible_string(value):
     _char_tail = u'%s-%s' % (chr(0x10000),
                              chr(min(sys.maxunicode, 0x10FFFF)))
   _nontext_sub = re.compile(
-          ur'[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD%s]' % _char_tail,
+          u'[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD%s]' % _char_tail,
           re.U).sub
   return _nontext_sub(u'\uFFFD', value)
 

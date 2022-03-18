@@ -123,7 +123,7 @@ class StringValidator(StringBaseValidator):
     property_names = StringBaseValidator.property_names +\
                      ['unicode', 'max_length', 'truncate']
 
-    str = fields.CheckBoxField('unicode',
+    unicode = fields.CheckBoxField('unicode',
                                    title='Unicode',
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
@@ -381,7 +381,7 @@ class LinesValidator(StringBaseValidator):
   property_names = StringBaseValidator.property_names +\
                     ['unicode', 'max_lines', 'max_linelength', 'max_length']
 
-  str = fields.CheckBoxField('unicode',
+  unicode = fields.CheckBoxField('unicode',
                                   title='Unicode',
                                   description=(
       "Checked if the field delivers a unicode string instead of an "
@@ -474,7 +474,7 @@ class SelectionValidator(StringBaseValidator):
     property_names = StringBaseValidator.property_names +\
                      ['unicode']
 
-    str = fields.CheckBoxField('unicode',
+    unicode = fields.CheckBoxField('unicode',
                                    title='Unicode',
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
@@ -529,7 +529,7 @@ class MultiSelectionValidator(Validator):
         "data."),
                                     default=1)
 
-    str = fields.CheckBoxField('unicode',
+    unicode = fields.CheckBoxField('unicode',
                                    title='Unicode',
                                    description=(
         "Checked if the field delivers a unicode string instead of an "

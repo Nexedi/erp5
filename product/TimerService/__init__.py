@@ -26,13 +26,3 @@ def getTimerService(context):
             control_panel._delObject(cp_id)
         root._setObject(cp_id, timer_service)
     return timer_service
-
-try:
-    old = sys.modules['timerserver']
-except KeyError:
-    pass
-else: # BBB: old timerserver loaded from zope config, force use of new one
-    assert 'timerserver.TimerServer' not in sys.modules
-    from .timerserver import TimerServerFactory
-    old.TimerServerFactory.create = TimerServerFactory.create.__func__
-    del old, TimerServerFactory

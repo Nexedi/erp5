@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from future import standard_library
+standard_library.install_aliases()
+
 from builtins import zip
 from zLOG import ERROR
-from UserDict import UserDict
+from collections import UserDict
 
 from zope.interface import implementer
 

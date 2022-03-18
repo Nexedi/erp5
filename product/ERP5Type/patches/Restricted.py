@@ -18,6 +18,7 @@ from builtins import object
 import copy
 import sys
 import types
+import six
 
 try:
   from RestrictedPython.transformer import FORBIDDEN_FUNC_NAMES
@@ -299,11 +300,15 @@ from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
 allow_full_write(defaultdict)
 
-# In contrary to builtins such as dict/defaultdict, it is possible to set
-# attributes on OrderedDict instances, so only allow setitem/delitem
+# On Python2 only: In contrary to builtins such as dict/defaultdict, it is
+# possible to set attributes on OrderedDict instances, so only allow
+# setitem/delitem
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
-OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
-OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+if six.PY2:
+  OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
+  OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+else:
+  allow_full_write(OrderedDict)
 
 _counter_white_list = copy.copy(_dict_white_list)
 _counter_white_list['most_common'] = 1
@@ -332,16 +337,19 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-allow_module('StringIO')
-import io
-io.StringIO.__allow_access_to_unprotected_subobjects__ = 1
-allow_module('cStringIO')
-import io
-allow_type(io.InputType)
-allow_type(io.OutputType)
 allow_module('io')
 import io
 allow_type(io.BytesIO)
+if six.PY2:
+  allow_module('StringIO')
+  import StringIO
+  StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
+  allow_module('cStringIO')
+  import cStringIO
+  allow_type(cStringIO.InputType)
+  allow_type(cStringIO.OutputType)
+else:
+  allow_type(io.StringIO)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')

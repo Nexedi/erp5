@@ -110,10 +110,12 @@ if six.PY2:
   # No ZServer
   from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
-from Products.ERP5Type.patches import urllib_opener
+# XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
+#from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
 from Products.ERP5Type.Core.Workflow import ValidationFailed
-from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base

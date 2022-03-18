@@ -12,7 +12,10 @@ def patch():
     import traceback
     from unittest import TextTestResult, TextTestRunner
 
-    TextTestResult_addError = TextTestResult.addError.__func__
+    TextTestResult_addError = TextTestResult.addError
+    import six
+    if six.PY2:
+      TextTestResult_addError = TextTestResult_addError.__func__
     def addError(self, test, err):
         if isinstance(err[1], SetupSiteError):
             self.errors.append(None)
@@ -40,7 +43,10 @@ def patch():
             self.stream.writeln("SUCCESS: %s" % self.getDescription(test))
     TextTestResult.printErrors = printErrors
 
-    TextTestRunner_run = TextTestRunner.run.__func__
+    TextTestRunner_run = TextTestRunner.run
+    import six
+    if six.PY2:
+        TextTestRunner_run = TextTestRunner_run.__func__
     def run(self, test):
         def t(result):
             try:

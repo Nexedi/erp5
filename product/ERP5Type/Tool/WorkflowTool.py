@@ -43,7 +43,6 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Utils import deprecated
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
-from sets import ImmutableSet
 from zLOG import LOG, WARNING
 from six import reraise
 
@@ -359,7 +358,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         portal_catalog = self.getPortalObject().portal_catalog
         search_result = portal_catalog.unrestrictedSearchResults
         sql_catalog = portal_catalog.getSQLCatalog()
-        table_column_id_set = ImmutableSet(
+        table_column_id_set = frozenset(
             [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
         security_column_id_list = list(
           sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict().values()) + \
@@ -950,9 +949,9 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
           criterion_id_list.append(criterion_id)
           expected_class = class_dict[criterion_id]
           if type(criterion_value_list[0]) is not expected_class:
-            criterion_dict[criterion_id] = ImmutableSet([expected_class(x) for x in criterion_value_list])
-          elif type(criterion_value_list) is not ImmutableSet:
-            criterion_dict[criterion_id] = ImmutableSet(criterion_dict[criterion_id])
+            criterion_dict[criterion_id] = frozenset([expected_class(x) for x in criterion_value_list])
+          elif type(criterion_value_list) is not frozenset:
+            criterion_dict[criterion_id] = frozenset(criterion_dict[criterion_id])
     # Read catalog result and distribute to matching worklists
     for result_line in catalog_result:
       result_count = int(result_line[COUNT_COLUMN_TITLE])

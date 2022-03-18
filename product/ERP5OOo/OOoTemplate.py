@@ -34,7 +34,7 @@ standard_library.install_aliases()
 from builtins import next
 from builtins import str
 from past.utils import old_div
-from types import StringType
+from past.builtins import basestring
 from mimetypes import guess_extension
 from OFS.Image import File
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
@@ -214,7 +214,7 @@ class OOoTemplate(ZopePageTemplate):
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError("File is locked via WebDAV")
 
-    if type(file) is not StringType:
+    if not isinstance(file, basestring):
       if not file: raise ValueError('File not specified')
       file = file.read()
 

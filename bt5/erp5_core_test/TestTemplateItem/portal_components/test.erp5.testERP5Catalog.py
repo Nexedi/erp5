@@ -3317,7 +3317,10 @@ VALUES
   def test_reindexWithGroupId(self):
     CatalogTool = type(self.getCatalogTool().aq_base)
     counts = []
-    orig_catalogObjectList = CatalogTool.catalogObjectList.__func__
+    orig_catalogObjectList = CatalogTool.catalogObjectList
+    import six
+    if six.PY2:
+      orig_catalogObjectList = orig_catalogObjectList.__func__
     def catalogObjectList(self, object_list, *args, **kw):
       counts.append(len(object_list))
       return orig_catalogObjectList(self, object_list, *args, **kw)

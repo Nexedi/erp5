@@ -24,6 +24,7 @@ from builtins import filter
 from builtins import object
 from DateTime import DateTime
 from six.moves import map
+import six
 import _thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
@@ -52,7 +53,6 @@ from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGene
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
-from string import join
 import os
 import warnings
 import transaction
@@ -685,7 +685,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
       Returns the absolute path of an object
     """
-    return join(self.getPhysicalPath(),'/')
+    return '/'.join(self.getPhysicalPath())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
   def getRelativeUrl(self):
@@ -2447,7 +2447,10 @@ class ERP5Generator(PortalGenerator):
 
 
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
-AppInitializer_initialize = AppInitializer.initialize.__func__
+AppInitializer_initialize = AppInitializer.initialize
+if six.PY2:
+  # No more unbound methods in py3
+  AppInitializer_initialize = AppInitializer_initialize.__func__
 def initialize(self):
   AppInitializer.initialize = AppInitializer_initialize
   self.initialize()

@@ -95,17 +95,25 @@ class InteractorSource(object):
   """
   """
 
-  def __init__(self, method):
+  def __init__(self, *args):
     """
       Register method
     """
-    self.method = method
+    if len(args) == 1:
+      self.klass = method.im_class
+      self.method = method
+    else:
+      # No im_class on Python3 and Interactors only makes sense with non-ERP5
+      # objects anyway, so add a class argument to InteractorSource to make it
+      # simple
+      self.klass = args[0]
+      self.method = getattr(self.klass, args[1])
 
   def doBefore(self, action, *args, **kw):
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.__self__.__class__
+      im_class = self.klass
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -117,7 +125,7 @@ class InteractorSource(object):
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.__self__.__class__
+      im_class = self.klass
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -148,9 +156,9 @@ class Interactor(object):
     raise NotImplementedError
 
   # Interaction implementation
-  def on(self, method):
+  def on(self, *args):
     """
       Parameters may hold predicates ?
       no need - use InteractorMethodCall and decide on action
     """
-    return InteractorSource(method)
+    return InteractorSource(*args)

@@ -73,7 +73,7 @@ if patch is False:
     logger.info('Install "Globals.get_request".')
 
     # Apply the patch
-    Publish.publish = get_new_publish(Publish.publish)
+##    Publish.publish = get_new_publish(Publish.publish)
     patch = True
 
     # Add to Globals for backwards compatibility 

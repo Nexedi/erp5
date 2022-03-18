@@ -25,10 +25,7 @@ standard_library.install_aliases()
 from builtins import str
 from builtins import object
 import six
-if six.PY2:
-    import builtins
-else:
-    import builtins as __builtin__
+import builtins
 from decimal import Decimal
 from locale import getdefaultlocale
 

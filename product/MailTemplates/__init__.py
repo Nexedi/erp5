@@ -11,7 +11,6 @@ from builtins import str
 from AccessControl import allow_module,allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from .MailTemplate import MailTemplate
-from types import ClassType
 from urllib.parse import quote
 
 try:
@@ -84,6 +83,8 @@ for name in email.__all__:
         mod = getattr(mod,name)
         for mod_name in dir(mod):
             obj = getattr(mod,mod_name)
-            if isinstance(obj,ClassType):
-                allow_class(obj)
-
+            if isinstance(obj,type):
+              try:
+                  allow_class(obj)
+              except TypeError:
+                  continue

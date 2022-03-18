@@ -2,7 +2,7 @@
 """some common utilities
 """
 
-import mimetools, six
+import six
 if six.PY2:
     from email import message_from_file as message_from_bytes
 else:
@@ -34,7 +34,7 @@ def safeToInt(value):
         return 0
 
 def parseContentType(content_type):
-  """Parses `text/plain;charset="utf-8"` to a mimetools.Message object.
+  """Parses `text/plain;charset="utf-8"` to a Message object.
 
   Note: Content type or MIME type are built like `maintype/subtype[;params]`.
 

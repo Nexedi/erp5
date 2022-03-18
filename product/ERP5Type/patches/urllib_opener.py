@@ -32,7 +32,6 @@
 from future import standard_library
 standard_library.install_aliases()
 import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
 from io import BytesIO as StringIO
 import socket
 import os
@@ -52,7 +51,10 @@ class DirectoryFileHandler(urllib.request.FileHandler):
 
     # Use local file or FTP depending on form of URL
     def file_open(self, req):
-        url = req.get_selector()
+        if six.PY2:
+            url = req.get_selector()
+        else:
+            url = req.selector
         if url[:2] == '//' and url[2:3] != '/':
             req.type = 'ftp'
             return self.parent.open(req)
@@ -61,8 +63,12 @@ class DirectoryFileHandler(urllib.request.FileHandler):
 
     # not entirely sure what the rules are here
     def open_local_file(self, req):
-        host = req.get_host()
-        file = req.get_selector()
+        if six.PY2:
+            host = req.get_host()
+            file = req.get_selector()
+        else:
+            host = req.host
+            file = req.selector
         localfile = urllib2.url2pathname(file)
         stats = os.stat(localfile)
         size = stats.st_size

@@ -63,7 +63,6 @@ from Products.DCWorkflow.Guard import Guard, _checkPermission
 from Products.DCWorkflow.States import StateDefinition
 from Products.DCWorkflow.Variables import VariableDefinition
 from Products.DCWorkflow.Worklists import WorklistDefinition
-from types import StringTypes
 from zLOG import LOG, INFO, WARNING
 # Libraries related to showAsXML
 from lxml import etree

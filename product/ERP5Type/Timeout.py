@@ -30,8 +30,7 @@ import threading
 import time, six
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from ZPublisher.HTTPResponse import status_codes
-if six.PY2:
-  from Products.TimerService.timerserver.TimerServer import TimerRequest
+from Products.TimerService.timerserver.TimerServer import TimerRequest
 
 __all__ = (
   'TimeoutReachedError', 'Deadline', 'getDeadline', 'getTimeLeft',
