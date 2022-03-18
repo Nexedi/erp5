@@ -358,6 +358,10 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                        <tuple>
                           <string>source_title</string>
                           <string>Sender or Caller</string>
                         </tuple>
@@ -525,6 +529,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -555,6 +563,10 @@
                 <item>
                     <key> <string>page_navigation_mode</string> </key>
                     <value> <string>slider</string> </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
