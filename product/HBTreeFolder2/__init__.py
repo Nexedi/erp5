@@ -24,9 +24,6 @@ def initialize(context):
         icon='btreefolder2.gif',
         )
 
-    #context.registerHelp()
-    #context.registerHelpTitle('Zope Help')
-
     try:
         from Products.CMFCore import utils
     except ImportError:

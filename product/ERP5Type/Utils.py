@@ -1208,25 +1208,6 @@ def initializeProduct( context,
                       fti=contentFactoryTypeInformations,
                      ).initialize( context )
 
-  # Register Help and API Reference. This trick to make registerHelp works
-  # with 2 directories was taken originally from CMFCore, but it required at
-  # least a (possibly) help directory...
-  help = context.getProductHelp()
-  lastRegistered = help.lastRegistered
-
-  help_list = []
-  for d in 'help', 'interfaces':
-    if os.path.exists(os.path.join(this_module.__path__[0], d)):
-      context.registerHelp(directory=d, clear=1)
-      help_list.append(d)
-
-  if help.lastRegistered != lastRegistered and len(help_list) > 1:
-    for i, d in enumerate(help_list):
-      help.lastRegistered = None
-      context.registerHelp(directory=d, clear=not i)
-
-  context.registerHelpTitle('%s Help' % product_name)
-
   # Register Objets
   for c in object_classes:
     registerDocumentClass(c.__module__, c.__name__)

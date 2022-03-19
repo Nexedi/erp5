@@ -588,7 +588,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
 
-  from Products.ERP5Type.patches import noZopeHelp
   from OFS.Application import AppInitializer
   AppInitializer.install_session_data_manager = lambda self: None
 
