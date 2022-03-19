@@ -68,8 +68,6 @@ def initialize(context):
     FieldRegistry.registerField(StandardFields.RangedIntegerField,
                                 'www/RangedIntegerField.gif')
 
-    # register help for the product
-    context.registerHelp()
     # register field help for all fields
     FieldRegistry.registerFieldHelp(context)
 

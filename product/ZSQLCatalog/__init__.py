@@ -33,9 +33,6 @@ def initialize(context):
         icon='www/ZCatalog.gif',
         )
 
-    context.registerHelp()
-    context.registerHelpTitle('Zope Help')
-
 from AccessControl import ModuleSecurityInfo, ClassSecurityInfo
 ModuleSecurityInfo('Products.ZSQLCatalog.SQLCatalog').declarePublic(
             'ComplexQuery', 'Query', 'NegatedQuery', 'AndQuery', 'OrQuery',

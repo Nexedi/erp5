@@ -172,8 +172,6 @@ def initialize( context ):
     FieldRegistry.registerField(HoneypotField.HoneypotField,
                                 'www/StringField.gif')
 
-    # register help for the product
-    context.registerHelp()
     # register field help for all fields
     FieldRegistry.registerFieldHelp(context)
 
