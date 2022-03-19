@@ -44,7 +44,7 @@ class TimerServer(threading.Thread):
 
         class handle(object):
             def __init__(self, module_name, request, response):
-                self.service = partial(zopewsgi.publish_module,
+                self.service = partial(Products.ERP5.bin.zopewsgi.publish_module,
                     request.environ,
                     start_response,
                     _module_name=module_name,
