@@ -66,6 +66,3 @@ def initialize(context):
         constructors = (MessageCatalog.manage_addMessageCatalogForm,
                         MessageCatalog.manage_addMessageCatalog),
         icon='img/message_catalog.gif')
-
-    context.registerHelp()
-
