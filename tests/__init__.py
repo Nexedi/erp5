@@ -260,6 +260,24 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
     return log_directory
 
 
+class ReExportERP5BusinessTemplateTestSuite(ERP5TypeTestSuite):
+
+  def getTestList(self):
+    return sorted([
+        os.path.basename(path)
+        for path in chain(
+            glob(HERE + '/../bt5/*'),
+            glob(HERE + '/../product/ERP5/bootstrap/*'))
+        if not os.path.exists(path + '/bt/skip_coding_style_test') and os.path.isdir(path)
+    ])
+
+  def run(self, full_test):
+    return self.runUnitTest(
+        '--portal_id=erp5',
+        'ReExportBusinessTemplate',
+        RE_EXPORT_BUSINESS_TEMPLATE=full_test)
+
+
 class RJS_Only(_ERP5):
   def getTestList(self):
     rjs_officejs_bt_list = ["erp5_officejs_",
