@@ -2,7 +2,7 @@
 from glob import glob
 import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
-from test_suite import ERP5TypeTestSuite
+from test_suite import ERP5TypeTestSuite, SavedTestSuite
 import sys
 from itertools import chain
 
@@ -258,6 +258,35 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
         args[-1] + '-' + (kw.get('TESTED_BUSINESS_TEMPLATE') or kw['TESTED_PRODUCT']))
     os.mkdir(log_directory)
     return log_directory
+
+
+class ReExportERP5BusinessTemplateTestSuite(ERP5TypeTestSuite):
+
+  def getTestList(self):
+    return sorted([
+        os.path.basename(path)
+        for path in chain(
+            glob(HERE + '/../bt5/*'),
+            glob(HERE + '/../product/ERP5/bootstrap/*'))
+        if not os.path.exists(path + '/bt/skip_coding_style_test') and os.path.isdir(path)
+    ])
+
+  def run(self, full_test):
+    return self.runUnitTest(
+        '--load',
+        '--portal_id=erp5',
+        'ReExportBusinessTemplate',
+        RE_EXPORT_BUSINESS_TEMPLATE=full_test)
+
+  def setup(self):
+    super(ReExportERP5BusinessTemplateTestSuite, self).setup()
+    self.runUnitTest(
+        '--save',
+        '--portal_id=erp5',
+        'ReExportBusinessTemplate',
+        # XXX we save with movement catalog because this test does not support installing
+        # business templates changing catalog structure
+        RE_EXPORT_BUSINESS_TEMPLATE='erp5_movement_table_catalog')
 
 
 class RJS_Only(_ERP5):
