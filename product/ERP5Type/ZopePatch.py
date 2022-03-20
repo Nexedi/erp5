@@ -99,6 +99,8 @@ from Products.ERP5Type.patches import users
 from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 from Products.ERP5Type.patches import urllib_opener
+from Products.ERP5Type.patches import SharedDCScriptsBindings
+from Products.ERP5Type.patches import ZPublisherBeforeTraverse
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
