@@ -110,6 +110,8 @@ from Products.ERP5Type.patches import WSGITask
 if six.PY2:
   # XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
   from Products.ERP5Type.patches import urllib_opener
+from Products.ERP5Type.patches import SharedDCScriptsBindings
+from Products.ERP5Type.patches import ZPublisherBeforeTraverse
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
