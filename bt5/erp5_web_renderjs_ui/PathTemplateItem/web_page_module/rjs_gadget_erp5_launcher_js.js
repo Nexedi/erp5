@@ -111,18 +111,17 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
-  function refreshHeaderAndPanel(gadget, refresh, delay_promise) {
-    var promise = new RSVP.Queue(delay_promise)
-      .push(function () {
-        if (refresh) {
-          return route(gadget, "header", 'render',
-                       [gadget.props.header_argument_list]);
-        }
-        return updateHeader(gadget);
-      });
+  function refreshHeaderAndPanel(gadget, refresh, loading_delay_promise) {
     return RSVP.all([
-      promise,
-      updatePanel(gadget)
+      updatePanel(gadget),
+      new RSVP.Queue(loading_delay_promise)
+        .push(function () {
+          if (refresh) {
+            return route(gadget, "header", 'render',
+                         [gadget.props.header_argument_list]);
+          }
+          return updateHeader(gadget);
+        })
     ]);
   }
 
@@ -815,7 +814,7 @@
         initHeaderOptions(gadget);
         initPanelOptions(gadget);
         if (!modification_dict.hasOwnProperty('first_bootstrap')) {
-          slow_loading_promise = RSVP.delay(100);
+          slow_loading_promise = RSVP.delay(50);
           promise_list.push(route(gadget, 'header', 'notifyLoading'));
         }
       }
