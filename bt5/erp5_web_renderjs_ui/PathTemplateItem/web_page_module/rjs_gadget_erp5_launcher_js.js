@@ -843,18 +843,18 @@
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
             }
+            return refreshHeaderAndPanel(gadget, false, slow_loading_promise);
           }));
       } else if (modification_dict.hasOwnProperty('render_timestamp')) {
         // Same subgadget
         promise_list.push(gadget.getDeclaredGadget(MAIN_SCOPE)
           .push(function (page_gadget) {
             return page_gadget.render(gadget.state.options);
+          })
+          .push(function () {
+            return refreshHeaderAndPanel(gadget, false, slow_loading_promise);
           }));
       }
-
-      promise_list.push(function () {
-        return refreshHeaderAndPanel(gadget, false, slow_loading_promise);
-      });
 
       // Update the panel state
       if (modification_dict.hasOwnProperty('panel_visible')) {
