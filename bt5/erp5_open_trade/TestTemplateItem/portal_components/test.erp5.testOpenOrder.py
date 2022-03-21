@@ -26,17 +26,13 @@
 ##############################################################################
 import unittest
 import os
+import sys
 import time
+import mock
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
-# explicitly set Europe/Paris timezone
-os.environ['TZ']='Europe/Paris'
-time.tzset()
-DateTime._localzone0 = 'GMT+1'
-DateTime._localzone1 = 'GMT+2'
-DateTime._multipleZones = True
 
 class TestOpenOrder(ERP5TypeTestCase):
   """
@@ -47,6 +43,19 @@ class TestOpenOrder(ERP5TypeTestCase):
     return 'Test Open Order'
 
   def afterSetUp(self):
+    # explicitly set Europe/Paris timezone
+    # We use mock, to make sure we patch in the right place, but the stopping
+    # the patcher does not really work as we also have to set TZ
+    os.environ['TZ'] = 'Europe/Paris'
+    time.tzset()
+    for patcher in (
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone0', new='GMT+1'),
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone1', new='GMT+2'),
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_multipleZones', new=True),
+    ):
+      patcher.start()
+      self.addCleanup(patcher.stop)
+
     if getattr(self.portal, '_run_after_setup', None) is not None:
       return
 
