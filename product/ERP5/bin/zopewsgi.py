@@ -183,7 +183,6 @@ def runwsgi():
     # Configure logging previously handled by ZConfig/ZServer
     logging.captureWarnings(True)
     root_logger = logging.getLogger()
-    root_logger.setLevel(logging.INFO)
 
     event_log_handler = logging.FileHandler(args.event_log_file)
     event_log_handler.setFormatter(logging.Formatter(
@@ -202,8 +201,11 @@ def runwsgi():
       console_handler.setFormatter(logging.Formatter(
         "%(asctime)s,%(msecs)d %(levelname)s %(name)s %(message)s",
         "%Y-%m-%d %H:%M:%S"))
-      console_handler.setLevel(logging.NOTSET)
+      console_handler.setLevel(logging.DEBUG)
       root_logger.addHandler(console_handler)
+      root_logger.setLevel(logging.DEBUG)
+    else:
+      root_logger.setLevel(logging.INFO)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
