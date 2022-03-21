@@ -112,20 +112,18 @@
   }
 
   function refreshHeaderAndPanel(gadget, refresh, delay_promise) {
-    return new RSVP.Queue(delay_promise)
+    var promise = new RSVP.Queue(delay_promise)
       .push(function () {
-        var promise;
         if (refresh) {
-          promise = route(gadget, "header", 'render',
-                          [gadget.props.header_argument_list]);
-        } else {
-          promise = updateHeader(gadget);
+          return route(gadget, "header", 'render',
+                       [gadget.props.header_argument_list]);
         }
-        return RSVP.all([
-          promise,
-          updatePanel(gadget)
-        ]);
+        return updateHeader(gadget);
       });
+    return RSVP.all([
+      promise,
+      updatePanel(gadget)
+    ]);
   }
 
   function callJioGadget(gadget, method, param_list) {
