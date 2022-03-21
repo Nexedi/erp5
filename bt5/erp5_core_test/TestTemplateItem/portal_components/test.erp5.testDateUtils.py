@@ -32,6 +32,7 @@ import unittest
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate, getIntervalListBetweenDates, \
     atTheEndOfPeriod, getClosestDate
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestDateUtils(unittest.TestCase):
   """
@@ -175,7 +176,23 @@ class TestDateUtils(unittest.TestCase):
     self.assertEqual('Sep. 10, 2008 12:00 am GMT-2',
       getClosestDate(date=date, target_date=target_date, precision='month', before=False).pCommonZ())
 
+
+class TestPinDateTime(ERP5TypeTestCase):
+  def test_pinDateTime(self):
+    actual_begin_date = DateTime()
+    datetime = DateTime('2001/01/01 01:01:01')
+    fixed_date_with_timezone = DateTime('2002/02/02 02:02:02 GMT+2')
+
+    self.pinDateTime(datetime)
+    self.assertEqual(DateTime(), datetime)
+    self.assertEqual(DateTime('2002/02/02 02:02:02 GMT+2'), fixed_date_with_timezone)
+
+    self.unpinDateTime()
+    self.assertGreaterEqual(DateTime(), actual_begin_date)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDateUtils))
+  suite.addTest(unittest.makeSuite(TestPinDateTime))
   return suite
