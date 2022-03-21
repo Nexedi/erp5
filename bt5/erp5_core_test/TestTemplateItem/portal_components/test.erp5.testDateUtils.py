@@ -190,6 +190,14 @@ class TestPinDateTime(ERP5TypeTestCase):
     self.unpinDateTime()
     self.assertGreaterEqual(DateTime(), actual_begin_date)
 
+  def test_pinDateTime_context_manager(self):
+    actual_begin_date = DateTime()
+    datetime = DateTime('2001/01/01 01:01:01')
+
+    with self.pinDateTime(datetime):
+      self.assertEqual(DateTime(), datetime)
+    self.assertGreaterEqual(DateTime(), actual_begin_date)
+
 
 def test_suite():
   suite = unittest.TestSuite()
