@@ -13,6 +13,9 @@
 #
 ##############################################################################
 
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+assert WITH_LEGACY_WORKFLOW
+
 from zLOG import LOG, WARNING
 
 # Make sure Interaction Workflows are called even if method not wrapped
@@ -22,8 +25,6 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.WorkflowTool import WorkflowTool
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 from Products.DCWorkflow.utils import Message as _
 from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 

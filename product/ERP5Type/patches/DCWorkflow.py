@@ -13,7 +13,8 @@
 #
 ##############################################################################
 
-# WITH_LEGACY_WORKFLOW
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+assert WITH_LEGACY_WORKFLOW
 
 ## ERP5 Workflow: This must go before any Products.DCWorkflow imports as this
 ## patch createExprContext() from-imported in several of its modules

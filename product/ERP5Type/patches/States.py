@@ -12,6 +12,9 @@
 #
 ##############################################################################
 
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+assert WITH_LEGACY_WORKFLOW
+
 # State types patch for DCWorkflow
 from builtins import str
 from builtins import map
