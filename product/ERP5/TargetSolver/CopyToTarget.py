@@ -28,6 +28,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+import datetime
+from DateTime import DateTime
 from .TargetSolver import TargetSolver
 
 class CopyToTarget(TargetSolver):
@@ -60,13 +62,11 @@ class CopyToTarget(TargetSolver):
     quantity_ratio = 0
     if old_quantity not in (None,0.0): # XXX: What if quantity happens to be an integer ?
       quantity_ratio = new_quantity / old_quantity
-    start_date_delta = 0
-    stop_date_delta = 0
-    # get the date delta in milliseconds, to prevent rounding issues
+    stop_date_delta = start_date_delta = datetime.timedelta()
     if new_start_date is not None and old_start_date is not None:
-      start_date_delta = new_start_date.millis() - old_start_date.millis()
+      start_date_delta = new_start_date.asdatetime() - old_start_date.asdatetime()
     if new_stop_date is not None and old_stop_date is not None:
-      stop_date_delta = new_stop_date.millis() - old_stop_date.millis()
+      stop_date_delta = new_stop_date.asdatetime() - old_stop_date.asdatetime()
     return {
       'quantity_ratio': quantity_ratio,
       'start_date_delta': start_date_delta,
@@ -87,15 +87,14 @@ class CopyToTarget(TargetSolver):
     """
       Generate values to save on simulation movement.
     """
-    from erp5.component.module.DateUtils import createDateTimeFromMillis
     value_dict = {}
     # Modify quantity, start_date, stop_date
     start_date = simulation_movement.getStartDate()
     if start_date is not None:
-      value_dict['start_date'] = createDateTimeFromMillis(start_date.millis() + start_date_delta)
+      value_dict['start_date'] = DateTime(start_date.asdatetime() + start_date_delta)
     stop_date = simulation_movement.getStopDate()
     if stop_date is not None:
-      value_dict['stop_date'] = createDateTimeFromMillis(stop_date.millis() + stop_date_delta)
+      value_dict['stop_date'] = DateTime(stop_date.asdatetime() + stop_date_delta)
     value_dict['quantity'] = simulation_movement.getQuantity() * quantity_ratio
     return value_dict
 
