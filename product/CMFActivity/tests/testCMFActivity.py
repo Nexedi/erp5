@@ -30,6 +30,10 @@ import inspect
 import warnings
 from functools import wraps
 from itertools import product
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SecurityManagement import setSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
+from Acquisition import aq_base, aq_parent
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -40,6 +44,7 @@ from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
+from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from erp5.portal_type import Organisation
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
@@ -2798,3 +2803,34 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
       self.portal.portal_activities.manageActivitiesAdvanced()
       self.portal.portal_activities.manageLoadBalancing()
     self.assertEqual(catched_warnings, [])
+
+  @for_each_activity
+  def testSpawnTimeUserGroupAndRoleUsedDuringExecution(self, activity):
+    obj = self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.tic()
+    # This user cannot be created by userfolder API, validating that activity
+    # execution does not use it.
+    # Using a PropertiedUser because it is the lowest-level class which has a
+    # groups notion.
+    artificial_user = PropertiedUser(
+      id='this user does not exist',
+      login='does not matter',
+    ).__of__(self.portal.acl_users)
+    artificial_user._addGroups(groups=('group 1', 'group 2'))
+    artificial_user._addRoles(roles=('role 1', 'role 2'))
+    initial_security_manager = getSecurityManager()
+    def checkUserGroupAndRole(organisation_self):
+      user = getSecurityManager().getUser()
+      self.assertIs(type(aq_base(user)), PropertiedUser)
+      self.assertEqual(aq_parent(user), aq_parent(artificial_user))
+      self.assertEqual(user.getId(), artificial_user.getId())
+      self.assertItemsEqual(user.getGroups(), artificial_user.getGroups())
+      self.assertItemsEqual(user.getRoles(), artificial_user.getRoles())
+    Organisation.checkUserGroupAndRole = checkUserGroupAndRole
+    try:
+      newSecurityManager(None, artificial_user)
+      obj.activate(activity=activity).checkUserGroupAndRole()
+      self.tic()
+    finally:
+      setSecurityManager(initial_security_manager)
+      del Organisation.checkUserGroupAndRole
