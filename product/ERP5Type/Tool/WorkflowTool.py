@@ -99,7 +99,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException('No workflow provides the destination state %r'\
                                                                       % state_id)
     else:
-      workflow = self.getWorkflowById(wf_id)
+      workflow = self._getOb(wf_id, None)
       if workflow is None:
         raise WorkflowException('Requested workflow definition not found.')
 
@@ -194,7 +194,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           Message(u"No workflow provides the '${action_id}' action.",
                   mapping={'action_id': action}))
     else:
-      workflow = self.getWorkflowById(workflow_id)
+      workflow = self._getOb(workflow_id, None)
       if workflow is None:
         raise WorkflowException(Message(u'Requested workflow not found.'))
 
@@ -334,7 +334,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       worklist_dict = {}
       wf_ids = self.objectIds()
       for wf_id in wf_ids:
-        wf = self.getWorkflowById(wf_id)
+        wf = self._getOb(wf_id, None)
         if wf is not None:
           a = wf.getWorklistVariableMatchDict(info, check_guard=False)
           if a is not None:
