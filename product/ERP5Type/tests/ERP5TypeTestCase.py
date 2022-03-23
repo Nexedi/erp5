@@ -373,11 +373,24 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     def pinDateTime(self, date_time):
       # pretend time has stopped at a certain date (i.e. the test runs
-      # infinitely fast), to avoid errors on tests that are started
+      # infinitely fast), for example to avoid errors on tests that are started
       # just before midnight.
+      # This can be used as a context manager, otherwise use unpinDateTime to
+      # reset.
       global _pinned_date_time
       assert date_time is None or isinstance(date_time, DateTime)
       _pinned_date_time = date_time
+
+      unpinDateTime = self.unpinDateTime
+      class UnpinContextManager(object):
+        def __enter__(self):
+          return self
+        def __exit__(self, *args):
+          unpinDateTime()
+      return UnpinContextManager()
+
+    def unpinDateTime(self):
+      self.pinDateTime(None)
 
     def setTimeZoneToUTC(self):
       # Make sure tests runs with UTC timezone. Some tests are checking values
@@ -392,9 +405,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone1', new='UTC').start()
       mock.patch.object(sys.modules['DateTime.DateTime'], '_multipleZones', new=False).start()
 
-
-    def unpinDateTime(self):
-      self.pinDateTime(None)
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
