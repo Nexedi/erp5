@@ -126,7 +126,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
 
     for (ptype, workflow_id, _), (doc, document_count) in\
                 workflow_state_dict.iteritems():
-      workflow = wf_tool.getWorkflowById(workflow_id)
+      workflow = wf_tool[workflow_id]
       state_var = workflow.getStateVariable()
       translated_workflow_state_title = doc.getProperty(
                       'translated_%s_title' % state_var)
@@ -185,7 +185,7 @@ def getWorkflowActionDocumentList(self, **kw):
         selection_params['uid'] = selection_uid_list
 
       workflow_id, action = listbox_selection['workflow_action'].split('/')[:2]
-      workflow = wtool.getWorkflowById(workflow_id)
+      workflow = wtool._getOb(workflow_id)
       for doc in selection_tool.callSelectionFor(selection_name, params=selection_params):
         doc = doc.getObject()
         action_list = [ai for ai in
