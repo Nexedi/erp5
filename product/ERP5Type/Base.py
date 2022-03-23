@@ -3373,7 +3373,7 @@ class Base(
     There's no check that the document is actually chained to the workflow,
     it's caller responsability to perform this check.
     """
-    workflow = self.portal_workflow.getWorkflowById(wf_id)
+    workflow = self.portal_workflow._getOb(wf_id, None)
     if workflow is not None:
       changed = workflow.updateRoleMappingsFor(self)
       if changed:
