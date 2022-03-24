@@ -47,6 +47,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.User import system as system_user
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Security.ERP5UserFactory import ERP5User
 from Acquisition import aq_base, aq_inner, aq_parent
 from .ActivityBuffer import ActivityBuffer
 from .ActivityRuntimeEnvironment import BaseMessage
@@ -178,6 +179,9 @@ MESSAGE_EXECUTED = 1
 MESSAGE_NOT_EXECUTABLE = 2
 
 
+def _getEmptyTuple():
+  return ()
+
 class SkippedMessage(Exception):
   pass
 
@@ -198,6 +202,9 @@ class Message(BaseMessage):
   document_uid = None
   is_registered = False
   line = None
+  user_role_list = None
+  user_group_list = None
+  user_folder_path = None
 
   def __init__(
       self,
@@ -224,7 +231,18 @@ class Message(BaseMessage):
       # was generated.
       # Strip last stack entry, since it will always be the same.
       self.call_traceback = ''.join(format_list(extract_stack()[:-1]))
-    self.user_name = getSecurityManager().getUser().getIdOrUserName()
+    user = getSecurityManager().getUser()
+    self.user_name = user.getIdOrUserName()
+    try:
+      # XXX: userfolders are not ERP5 objects, so use OFS API.
+      self.user_folder_path = user.aq_parent.getPhysicalPath()
+    except AttributeError:
+      pass
+    else:
+      self.user_role_list = tuple(user.getRoles())
+      self.user_group_list = tuple(
+        getattr(user, 'getGroups', _getEmptyTuple)(),
+      )
     # Store REQUEST Info
     self.request_info = {}
     if request is not None:
@@ -298,34 +316,50 @@ class Message(BaseMessage):
         pass
     return 1
 
-  def changeUser(self, user_name, activity_tool):
+  def changeUser(self, activity_tool):
     """restore the security context for the calling user."""
     portal = activity_tool.getPortalObject()
-    portal_uf = portal.acl_users
-    uf = portal_uf
-    user = uf.getUserById(user_name)
-    # if the user is not found, try to get it from a parent acl_users
-    # XXX this is still far from perfect, because we need to store all
-    # information about the user (like original user folder, roles) to
-    # replay the activity with exactly the same security context as if
-    # it had been executed without activity.
-    if user is None:
-      uf = portal.aq_parent.acl_users
-      user = uf.getUserById(user_name)
-    if user is None and user_name == system_user.getUserName():
-      # The following logic partly comes from unrestricted_apply()
-      # implementation in ERP5Type.UnrestrictedMethod but we get roles
-      # from the portal to have more roles.
-      uf = portal_uf
-      role_list = uf.valid_roles()
-      user = PrivilegedUser(user_name, None, role_list, ()).__of__(uf)
+    if self.user_role_list is None: # BBB
+      user_folder = portal_user_folder = portal.acl_users
+      user = user_folder.getUserById(self.user_name)
+      # if the user is not found, try to get it from a parent acl_users
+      # XXX this is still far from perfect, because we need to store all
+      # information about the user (like original user folder, roles) to
+      # replay the activity with exactly the same security context as if
+      # it had been executed without activity.
+      if user is None:
+        user_folder = portal.aq_parent.acl_users
+        user = user_folder.getUserById(self.user_name)
+      if user is None and self.user_name == system_user.getUserName():
+        # The following logic partly comes from unrestricted_apply()
+        # implementation in ERP5Type.UnrestrictedMethod but we get roles
+        # from the portal to have more roles.
+        user_folder = portal_user_folder
+        user = PrivilegedUser(
+          self.user_name,
+          None,
+          user_folder.valid_roles(),
+          (),
+        )
+    else:
+      # Note: original user may not have been an ERP5User (ex: if that user was
+      # defined outside of ERP5 Site's user folder), but ERP5User should be a
+      # functional superset.
+      user = ERP5User(id=self.user_name)
+      user._addRoles(roles=self.user_role_list)
+      user._addGroups(groups=self.user_group_list)
+      # XXX: assume ERP5Site's parent is parent to all possible user folders,
+      # IOW that ERP5Site is just under Zope's root.
+      user_folder = portal.aq_parent.unrestrictedTraverse(
+        self.user_folder_path,
+      )
     if user is not None:
-      user = user.__of__(uf)
+      user = user.__of__(user_folder)
       newSecurityManager(None, user)
-      transaction.get().setUser(user_name, '/'.join(uf.getPhysicalPath()))
+      transaction.get().setUser(self.user_name, '/'.join(user_folder.getPhysicalPath()))
     else :
       LOG("CMFActivity", WARNING,
-          "Unable to find user %r in the portal" % user_name)
+          "Unable to find user %r in the portal" % self.user_name)
       noSecurityManager()
     return user
 
@@ -347,7 +381,7 @@ class Message(BaseMessage):
         try:
           # Change user if required (TO BE DONE)
           # We will change the user only in order to execute this method
-          self.changeUser(self.user_name, activity_tool)
+          self.changeUser(activity_tool)
           # XXX: There is no check to see if user is allowed to access
           #      that method !
           method = getattr(obj, self.method_id)
@@ -420,7 +454,7 @@ Named Parameters: %r
     try:
       # Change user if required (TO BE DONE)
       # We will change the user only in order to execute this method
-      user = self.changeUser(self.user_name, activity_tool)
+      user = self.changeUser(activity_tool)
       active_obj = obj.activate(activity=activity, **self.activity_kw)
       getattr(active_obj, self.method_id)(*self.args, **self.kw)
     finally:
@@ -1664,7 +1698,7 @@ class ActivityTool (BaseTool):
               message = m._message
               if user_name != message.user_name:
                 user_name = message.user_name
-                message.changeUser(user_name, m.object)
+                message.changeUser(m.object)
               m.result = getattr(m.object, method_id)(*m.args, **m.kw)
           except Exception:
             m.raised()
