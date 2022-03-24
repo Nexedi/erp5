@@ -5569,7 +5569,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Returns the current state in building
       """
       portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow['business_template_building_workflow']
+      wf = portal_workflow._getOb('business_template_building_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -5579,7 +5579,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Returns the current state in installation
       """
       portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
-      wf = portal_workflow['business_template_installation_workflow']
+      wf = portal_workflow._getOb('business_template_installation_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'toxml')

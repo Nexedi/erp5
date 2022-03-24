@@ -185,7 +185,7 @@ def getWorkflowActionDocumentList(self, **kw):
         selection_params['uid'] = selection_uid_list
 
       workflow_id, action = listbox_selection['workflow_action'].split('/')[:2]
-      workflow = wtool[workflow_id]
+      workflow = wtool._getOb(workflow_id)
       for doc in selection_tool.callSelectionFor(selection_name, params=selection_params):
         doc = doc.getObject()
         action_list = [ai for ai in
