@@ -87,7 +87,7 @@ def WorkflowTool_listActionParameterList(self):
 
   for action in action_list:
     if (action['workflow_id'] not in workflow_dict):
-      workflow = self.getWorkflowById(action['workflow_id'])
+      workflow = self._getOb(action['workflow_id'], None)
       if workflow is not None:
         workflow_dict[action['workflow_id']] = workflow.getWorklistVariableMatchDict(info, check_guard=False)
 

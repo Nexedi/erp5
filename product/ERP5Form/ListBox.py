@@ -2888,23 +2888,17 @@ class ListBox(ZMIField):
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
-    if (id == 'default'):
-      if (kw.get('render_format') in ('list', )):
-        request = kw.get('REQUEST', None)
+    if id == 'default':
+      render_format = kw.get('render_format')
+      if render_format == 'list':
+        request = kw.get('REQUEST')
         if request is None:
           request = get_request()
-        # here the field can be a a proxyfield target, in this case just find
-        # back the original proxy field so that renderer's calls to .get_value
-        # are called on the proxyfield.
-        field = request.get(
-          'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
-          self)
+        field = kw.get('field', self) # for proxy field
         return self.widget.render(field, self.generate_field_key(), None,
                                   request,
-                                  render_format=kw.get('render_format'),
+                                  render_format=render_format,
                                   render_prefix=kw.get('render_prefix'))
-      else:
-        return None
     else:
       return ZMIField.get_value(self, id, **kw)
 
@@ -3213,7 +3207,3 @@ allow_class(ListBoxLine)
 from Products.ERP5Type.PsycoWrapper import psyco
 #psyco.bind(ListBoxWidget.render)
 psyco.bind(ListBoxValidator.validate)
-
-# Register get_value
-from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
-registerOriginalGetValueClassAndArgument(ListBox, 'default')
