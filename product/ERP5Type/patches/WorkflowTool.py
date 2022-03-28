@@ -160,7 +160,7 @@ def canDoActionFor(self, ob, action, wf_id=None, guard_kw={}):
   if wf_id is None:
     workflow_list = self.getWorkflowValueListFor(ob) or ()
   else:
-    workflow = self.getWorkflowById(wf_id)
+    workflow = self._getOb(wf_id, None)
     if workflow:
       workflow_list = (workflow,)
     else:

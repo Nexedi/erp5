@@ -57,7 +57,7 @@ class Getter(BaseGetter):
 
     def __call__(self, instance):
       portal_workflow = instance.getPortalObject().portal_workflow
-      wf = portal_workflow.getWorkflowById(self._key)
+      wf = portal_workflow._getOb(self._key)
       return wf._getWorkflowStateOf(instance, id_only=1)
 
     psyco.bind(__call__)
@@ -82,7 +82,7 @@ class TitleGetter(BaseGetter):
 
     def __call__(self, instance):
       portal_workflow = instance.getPortalObject().portal_workflow
-      wf = portal_workflow.getWorkflowById(self._key)
+      wf = portal_workflow._getOb(self._key)
       return wf._getWorkflowStateOf(instance).title
 
     psyco.bind(__call__)
@@ -93,7 +93,7 @@ class TranslatedGetter(Getter):
 
     def __call__(self, instance):
       portal = instance.getPortalObject()
-      wf = portal.portal_workflow.getWorkflowById(self._key)
+      wf = portal.portal_workflow._getOb(self._key)
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
@@ -110,7 +110,7 @@ class TranslatedTitleGetter(TitleGetter):
       portal = instance.getPortalObject()
       localizer = portal.Localizer
       wf_id = self._key
-      wf = portal.portal_workflow.getWorkflowById(wf_id)
+      wf = portal.portal_workflow._getOb(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
       msg_id = '%s [state in %s]' % (state_title, wf_id)

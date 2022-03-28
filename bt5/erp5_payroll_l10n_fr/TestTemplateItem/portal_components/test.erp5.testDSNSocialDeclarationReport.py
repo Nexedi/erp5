@@ -31,12 +31,6 @@ import time
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-# As tests rely on documents exported in test bt5, setting up timezone allows
-# consistency between test environment execution and virtual ERP5 instance
-os.environ['TZ'] = 'GMT'
-time.tzset()
-DateTime._localzone0 = 'GMT'
-
 class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
   """
   Test Suite for the generation of the French Social Declaration Report,
@@ -50,8 +44,8 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     """
     This is ran before anything, used to set the environment
     """
-    self.portal = self.getPortalObject()
     self.dsn_module = self.portal.getDefaultModuleValue("DSN Monthly Report")
+    self.setTimeZoneToUTC()
     self.pinDateTime(DateTime(2015, 12, 0o1))
     # Create the id_group 'dsn_event_counter'
     self.portal.portal_ids.generateNewId(id_group='dsn_event_counter', id_generator='continuous_integer_increasing')

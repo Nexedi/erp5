@@ -455,31 +455,6 @@ def convertDateToHour(date=None):
   hour_ = (ordinal_date - ordinal_reference_date) * number_of_hours_in_day + number_of_hours_in_day + date.hour()
   return int(hour_)
 
-def createDateTimeFromMillis(millis): # pylint: disable=redefined-outer-name
-  """
-  Returns a DateTime object, build from the number of milliseconds since epoch.
-  Parameter should be a int or long.
-
-  This one should be used by solvers, as DateTime.__cmp__ actually only
-  compares the _millis parameter of the two DateTime objects.
-
-  This is currently not perfect: DateTime only supports creating a new object
-  from a floating point number of seconds since epoch, so a rounding issue is
-  still possible, that's why _millis is explicitely set to the same value
-  after the DateTime object has been created from (millis / 1000.)
-
-  A better way would be to compute (yr,mo,dy,hr,mn,sc,tz,t,d,s,millisecs) from
-  millis, and then create the DateTime object from it (see "elif ac == 11:" in
-  DateTime._parse_args).
-
-  Another solution would be a DateTime implementation that relies exclusively
-  on integer values internally.
-  """
-  millis = int(millis)
-  date = DateTime(millis / 1000.)
-  date._millis = millis
-  return date
-
 def getNumberOfDayInMonth(date):
   month = date.month()
   mapping = {

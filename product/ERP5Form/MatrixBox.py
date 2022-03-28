@@ -631,10 +631,17 @@ class MatrixBox(ZMIField):
 
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
-      if id=='default' and kw.get('render_format') in ('list', ):
-        return self.widget.render(self, self.generate_field_key(), None,
-                                  kw.get('REQUEST'),
-                                  render_format=kw.get('render_format'))
+      if id == 'default':
+        render_format = kw.get('render_format')
+        if render_format == 'list':
+          request = kw.get('REQUEST')
+          if request is None:
+            request = get_request()
+          field = kw.get('field', self) # for proxy field
+          return self.widget.render(field, self.generate_field_key(), None,
+                                    request,
+                                    render_format=render_format,
+                                    render_prefix=kw.get('render_prefix'))
       else:
         return ZMIField.get_value(self, id, **kw)
 
@@ -642,7 +649,3 @@ class MatrixBox(ZMIField):
 from Products.ERP5Type.PsycoWrapper import psyco
 psyco.bind(MatrixBoxWidget.render)
 psyco.bind(MatrixBoxValidator.validate)
-
-# Register get_value
-from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
-registerOriginalGetValueClassAndArgument(MatrixBox, 'default')

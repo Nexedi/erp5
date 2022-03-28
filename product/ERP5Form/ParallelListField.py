@@ -225,7 +225,11 @@ class ParallelListField(ZMIField):
     Optionally pass keyword arguments that get passed to TALES
     expression.
     """
-    return paralellListFieldGetValue(self, id, REQUEST=REQUEST, **kw)
+    if REQUEST is not None:
+      result = REQUEST.get(KEYWORD % id, MARKER)
+      if result is not MARKER:
+        return result
+    return ZMIField.get_value(self, id, REQUEST=REQUEST, **kw)
 
 def generateSubForm(self, value, REQUEST):
   item_list = [x for x in self.get_value('items', REQUEST=REQUEST)
@@ -259,21 +263,3 @@ def generateSubForm(self, value, REQUEST):
     empty_sub_field_property_dict['item_list'] = item_list
     empty_sub_field_property_dict['value'] = value_list
     return [empty_sub_field_property_dict]
-
-def paralellListFieldGetValue(field, id, REQUEST=None, **kw):
-  result = MARKER
-  key = KEYWORD % id
-  if REQUEST is not None and key in REQUEST:
-    result = REQUEST.get(key)
-  if result is MARKER:
-    result = ZMIField.get_value(field, id, REQUEST=REQUEST, **kw)
-  return result
-
-# Register get_value
-from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
-registerOriginalGetValueClassAndArgument(
-    ParallelListField,
-    ('title', 'required', 'size', 'default', 'first_item', 'items'),
-    paralellListFieldGetValue)
-
-

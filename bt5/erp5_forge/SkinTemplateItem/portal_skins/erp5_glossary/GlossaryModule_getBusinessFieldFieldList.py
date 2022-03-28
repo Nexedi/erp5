@@ -55,7 +55,7 @@ for business_field in business_field_list:
     if field.meta_type=='ProxyField':
       if field.is_delegated('title') is True:
         field_note_list.append('Delegated.')
-      elif field.get_tales_expression('title') is not None:
+      elif field.get_recursive_tales('title') is not None:
         field_note_list.append('Tales is used.')
 
     if len(term_list) == 1 and \
