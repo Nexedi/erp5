@@ -83,7 +83,7 @@ def unconvert(encoding,S):
     if encoding == 'base64':
         return base64.decodestring(S)
     else:
-        return eval("'" + S.replace('\n', '') + "'")
+        return bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"), 'utf-8')
 
 ppml.unconvert = unconvert
 
@@ -671,31 +671,28 @@ class ToXMLUnpickler(Unpickler):
 ppml.ToXMLUnpickler = ToXMLUnpickler
 
 def save_string(self, tag, data):
-    binary=self.binary
-    v=''
-    a=data[1]
-    if len(data)>2:
-        v = ''.join(data[2:])
-    encoding=a.get('encoding','repr') # JPS: repr is default encoding
+    a = data[1]
+    v = b''.join(data[2:])
+    encoding = a.get('encoding', 'repr') # JPS: repr is default encoding
     if encoding is not '':
-        v=unconvert(encoding,v)
-    put='p'
-    if binary:
-        l=len(v)
-        s=mdumps(l)[1:]
-        if (l<256):
-            v='U'+s[0]+v
+        v = unconvert(encoding, v)
+    if self.binary:
+        l = len(v)
+        if l < 256:
+            if isinstance(v, str):
+                import pdb; pdb.set_trace()
+            v = SHORT_BINSTRING + bytes([l]) + v
         else:
-            v='T'+s+v
-        put='q'
-    else: v="S'"+v+"'\012"
+            v = BINSTRING + struct.pack('<i', l) + v
+    else:
+        v = STRING + repr(v) + '\n'
     return save_put(self, v, a)
 
 ppml.save_string = save_string
 
 def save_unicode(self, tag, data):
     binary=self.binary
-    v=''
+    v=b''
     a=data[1]
     if len(data)>2:
         for x in data[2:]:
@@ -715,20 +712,20 @@ ppml.save_unicode = save_unicode
 def save_object(self, tag, data):
     if len(data)==5:
         #OBJECT
-        v='('+data[2]
+        v=b'('+data[2]
         x=data[3][1:]
-        stop=x.rfind('t')  # This seems
+        stop=x.rfind(b't')  # This seems
         if stop>=0: x=x[:stop]    # wrong!
-        v=save_put(self, v+x+'o', data[1])
-        v=v+data[4]+'b' # state
+        v=save_put(self, v+x+b'o', data[1])
+        v=v+data[4]+b'b' # state
         return v
     else:
         #REDUCE
         #data does not contain state.(See Object.__setstate__ definition)
         #So, we can assume that this is a reduce. (Yusei)
-        v='('+data[2]
+        v=b'('+data[2]
         v=save_put(self, data[2]+data[3], data[1])
-        v=v+'R'
+        v=v+b'R'
         return v
 
 ppml.save_object = save_object
@@ -737,16 +734,16 @@ def save_pickle_start(self, tag, attrs):
     return [tag, attrs]
 
 def save_pickle(self, tag, data):
-    return data[2] + '.'
+    return data[2] + b'.'
 
 def save_none(self, tag, data):
-    return 'N'
+    return b'N'
 
 def save_long(self, tag, data):
-    return 'L'+data[2]+'L\012'
+    return b'L'+data[2]+b'L\012'
 
 def save_item(self, tag, data):
-    return ''.join(data[2:])
+    return b''.join(data[2:])
 
 def save_value(self, tag, data):
     return data[2]
@@ -819,7 +816,7 @@ def importXML(jar, file, clue=''):
     # So we have to declare an encoding but not use unicode, so the unpickler
     # can deal with the utf-8 strings directly
     p=xml.parsers.expat.ParserCreate('utf-8')
-    p.returns_unicode = False
+#    p.returns_unicode = False
     # </patch>
     p.CharacterDataHandler=F.handle_data
     p.StartElementHandler=F.unknown_starttag

@@ -457,7 +457,7 @@ class DB(TM):
         return items, result
 
     def string_literal(self, s):
-        return self.db.string_literal(s)
+        return self.db.string_literal(s).decode('utf-8')
 
     def _begin(self, *ignored):
         """Begin a transaction (when TM is enabled)."""

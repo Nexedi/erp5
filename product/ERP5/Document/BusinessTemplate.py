@@ -97,11 +97,7 @@ from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-import six
-if six.PY2:
-  from urllib.parse import quote, unquote
-else:
-  from urllib.parse import quote_from_bytes as quote, unquote_to_bytes as unquote
+from urllib.parse import quote, unquote
 from difflib import unified_diff
 import posixpath
 import transaction
@@ -1042,7 +1038,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       F.binary=1
       F.file=outfile
       p=xml.parsers.expat.ParserCreate('utf-8')
-      p.returns_unicode = False
+      p.buffer_text = True
       p.CharacterDataHandler=F.handle_data
       p.StartElementHandler=F.unknown_starttag
       p.EndElementHandler=F.unknown_endtag
@@ -5928,11 +5924,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
           prop_type = prop['type']
           value = bt_item.get(pid)
           if prop_type in ('text', 'string'):
-            prop_dict[pid] = value or ''
+            prop_dict[pid] = value.decode('utf-8') if value else ''
           elif prop_type in ('int', 'boolean'):
             prop_dict[pid] = value or 0
           elif prop_type in ('lines', 'tokens'):
-            prop_dict[pid[:-5]] = (value or '').splitlines()
+            prop_dict[pid[:-5]] = (value.decode('utf-8') if value
+                                   else '').splitlines()
       self._edit(**prop_dict)
 
       try:

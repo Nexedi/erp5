@@ -421,10 +421,11 @@ class ComponentDynamicPackage(ModuleType):
       # load_module(), and returning module 'name' in contrary to __import__
       # returning 'erp5' (requiring fromlist parameter which is slower)
       return import_module(fullname)
+    except ModuleNotFoundError: # >= 3.6
+      pass
     except ImportError as e:
-      if str(e) != "No module named " + name:
-        LOG("ERP5Type.dynamic", WARNING,
-            "Could not load Component module %r" % fullname, error=True)
+      LOG("ERP5Type.dynamic", WARNING,
+          "Could not load Component module %r" % fullname, error=True)
 
     return None
 
