@@ -72,6 +72,7 @@ def manage_addERP5SiteForm(*args, **kw):
 
 default_sql_connection_string = 'test test'
 
+import pdb
 # ERP5Site Constructor
 def manage_addERP5Site(self,
                        id,
@@ -96,30 +97,33 @@ def manage_addERP5Site(self,
   '''
   Adds a portal instance.
   '''
-  gen = ERP5Generator()
-  id = str(id).strip()
-  p = gen.create(self,
-                 id,
-                 create_userfolder,
-                 erp5_catalog_storage,
-                 erp5_sql_connection_string,
-                 cmf_activity_sql_connection_string,
-                 bt5_repository_url,
-                 bt5,
-                 id_store_interval,
-                 cloudooo_url,
-                 create_activities=create_activities,
-                 light_install=light_install,
-                 reindex=reindex,
-                 sql_reset=sql_reset)
-  gen.setupDefaultProperties(p,
-                             title,
-                             description,
-                             email_from_address,
-                             email_from_name,
-                             validate_email)
-  if RESPONSE is not None:
-    RESPONSE.redirect(p.absolute_url())
+  try:
+    gen = ERP5Generator()
+    id = str(id).strip()
+    p = gen.create(self,
+                   id,
+                   create_userfolder,
+                   erp5_catalog_storage,
+                   erp5_sql_connection_string,
+                   cmf_activity_sql_connection_string,
+                   bt5_repository_url,
+                   bt5,
+                   id_store_interval,
+                   cloudooo_url,
+                   create_activities=create_activities,
+                   light_install=light_install,
+                   reindex=reindex,
+                   sql_reset=sql_reset)
+    gen.setupDefaultProperties(p,
+                               title,
+                               description,
+                               email_from_address,
+                               email_from_name,
+                               validate_email)
+    if RESPONSE is not None:
+      RESPONSE.redirect(p.absolute_url())
+  except:
+    pdb.post_mortem()
 
 def getCatalogStorageList(*args, **kw):
   """
@@ -2518,6 +2522,8 @@ def initialize(self):
               'MySQL error while trying to create ERP5 site. Retrying...',
               error=1)
         time.sleep(5)
+      except:
+        import pdb; pdb.post_mortem()
   from Products.TimerService.timerserver.TimerServer import TimerRequest
   def traverse(*args, **kw):
     del TimerRequest.traverse

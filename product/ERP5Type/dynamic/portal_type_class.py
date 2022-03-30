@@ -476,7 +476,11 @@ def synchronizeDynamicModules(context, force=False):
             migrate = True
           else:
             continue
-          tool._bootstrap()
+          try:
+            tool._bootstrap()
+          except Exception as e:
+            import pdb; pdb.post_mortem()
+            raise
           tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
         # TODO: Create portal_activities here, and even before portal_types:
         #       - all code in ActiveObject could assume that it always exists

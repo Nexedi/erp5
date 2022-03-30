@@ -60,7 +60,7 @@ def convert(S):
     ###              [\x00-\x1f] characters will be escaped to make a more
     ###              readable output.
     try:
-        if not isinstance(S, str):
+        if isinstance(S, bytes):
             S.decode('utf8')
     except UnicodeDecodeError:
         return 'base64', base64.encodestring(S)[:-1]
@@ -328,7 +328,8 @@ class NoBlanks(object):
         """
         # Ignore element data between elements (eg '<e> <f> </f> </e>')...
         if data.strip():
-            if isinstance(data, str):
+            if isinstance(data, bytes):
+                import pdb; pdb.set_trace()
                 data = data.encode('raw_unicode_escape')
             self.append(data)
 
@@ -352,7 +353,8 @@ class NoBlanks(object):
                     self.previous_discarded_data = None
                     self.previous_stack_end = None
 
-                if isinstance(data, str):
+                if isinstance(data, bytes):
+                    import pdb; pdb.set_trace()
                     data = data.encode('raw_unicode_escape')
 
                 self.append(data)
@@ -610,6 +612,7 @@ class ToXMLUnpickler(Unpickler):
     dispatch[OBJ] = load_obj
 
     def load_global(self):
+#        import pdb; pdb.set_trace()
         module = self.readline()[:-1]
         name = self.readline()[:-1]
         self.append(Global(module, name, self.id_mapping))
@@ -681,9 +684,17 @@ def save_string(self, tag, data):
         if l < 256:
             if isinstance(v, str):
                 import pdb; pdb.set_trace()
-            v = SHORT_BINSTRING + bytes([l]) + v
+            if encoding == 'base64':
+              op = SHORT_BINBYTES
+            else:
+              op = SHORT_BINSTRING
+            v = op + bytes([l]) + v
         else:
-            v = BINSTRING + struct.pack('<i', l) + v
+            if encoding == 'base64':
+              op = BINBYTES
+            else:
+              op = BINSTRING
+            v = op + struct.pack('<i', l) + v
     else:
         v = STRING + repr(v) + '\n'
     return save_put(self, v, a)
@@ -758,6 +769,7 @@ class xmlPickler(NoBlanks, xyap):
         if tag in end:
             top = end[tag](self, tag, top)
         if isinstance(top, str):
+            import pdb; pdb.set_trace()
             top = top.encode('raw_unicode_escape')
         append(top)
 
@@ -804,6 +816,10 @@ def importXML(jar, file, clue=''):
     if type(file) is str:
         file=open(file, 'rb')
     outfile=TemporaryFile()
+#    def write(*args, **kwargs):
+#      import pdb; pdb.set_trace()
+#      return TemporaryFile.write(*args, **kwargs)
+#    outfile.write = write
     data=file.read()
     F=xmlPickler()
     F.end_handlers['record'] = save_record

@@ -217,7 +217,7 @@ def runwsgi():
     else:
       SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
 
-    if args.timerserver_interval:
+    if args.timerserver_interval and False:
       import Products.TimerService
       Products.TimerService.timerserver.TimerServer.TimerServer(
           module='Zope2',
