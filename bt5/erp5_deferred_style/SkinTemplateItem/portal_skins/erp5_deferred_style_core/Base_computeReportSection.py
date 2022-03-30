@@ -25,7 +25,7 @@ with portal.Localizer.translationContext(localizer_language):
 report_request = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 active_process = portal.portal_activities.newActiveProcess()
-inner_tag = 'compute-report-%s' % random.randint(0, 1000)
+inner_tag = tag + '-render'
 
 for idx, report_section in enumerate(report_section_list):
   if report_section.getPath():
