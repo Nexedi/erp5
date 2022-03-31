@@ -141,33 +141,41 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   # separate file, with extension specified by 'extension'.
   # 'extension' must be None for auto-detection.
   #
-  # class_name: (extension, unicode_data, property_name),
-  "Document Component":  ("py",   0, "text_content"),
-  "DTMLDocument":        (None,   0, "raw"),
-  "DTMLMethod":          (None,   0, "raw"),
-  "Extension Component": ("py",   0, "text_content"),
-  "File":                (None,   0, "data"),
-  "Image":               (None,   0, "data"),
-  "Interface Component": ("py",   0, "text_content"),
-  "OOoTemplate":         ("oot",  1, "_text"),
-  "Mixin Component":     ("py",   0, "text_content"),
-  "Module Component":    ("py",   0, "text_content"),
-  "PDF":                 ("pdf",  0, "data"),
-  "PyData Script":       ("py",   0, "_body"),
-  "Python Script":       ("py",   0, "_body"),
-  "Workflow Script":     ("py",   0, "_body"),
-  "PythonScript":        ("py",   0, "_body"),
-  "Spreadsheet":         (None,   0, "data"),
-  "SQL":                 ("sql",  0, "src"),
-  "SQL Method":          ("sql",  0, "src"),
-  "Test Component":      ("py",   0, "text_content"),
-  "Test Page":           (None,   0, "text_content"),
-  "Tool Component":      ("py",   0, "text_content"),
-  "Web Illustration":    ("svg",  0, "text_content"),
-  "Web Page":            (None,   0, "text_content"),
-  "Web Script":          (None,   0, "text_content"),
-  "Web Style":           (None,   0, "text_content"),
-  "ZopePageTemplate":    ("zpt",  1, "_text"),
+  # class_name: (extension, unicode_data, property_name, text),
+  "Document Component":  ("py",   0, "text_content", True ),
+  "DTMLDocument":        (None,   0, "raw",          True ),
+  "DTMLMethod":          (None,   0, "raw",          True ),
+  "Extension Component": ("py",   0, "text_content", True ),
+  "File":                (None,   0, "data",         lambda obj: (obj.content_type.startswith('text/') or
+                                                                  obj.content_type in ('application/javascript',
+                                                                                       'application/js',
+                                                                                       'application/json',
+                                                                                       'application/schema+json',
+                                                                                       'application/x-javascript',
+                                                                                       'application/xml',
+                                                                                       'application/x-php',
+                                                                                       'image/svg+xml'))),
+  "Image":               (None,   0, "data",         False),
+  "Interface Component": ("py",   0, "text_content", True ),
+  "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "Mixin Component":     ("py",   0, "text_content", True ),
+  "Module Component":    ("py",   0, "text_content", True ),
+  "PDF":                 ("pdf",  0, "data",         False),
+  "PyData Script":       ("py",   0, "_body",        True ),
+  "Python Script":       ("py",   0, "_body",        True ),
+  "Workflow Script":     ("py",   0, "_body",        True ),
+  "PythonScript":        ("py",   0, "_body",        True ),
+  "Spreadsheet":         (None,   0, "data",         False),
+  "SQL":                 ("sql",  0, "src",          True ),
+  "SQL Method":          ("sql",  0, "src",          True ),
+  "Test Component":      ("py",   0, "text_content", True ),
+  "Test Page":           (None,   0, "text_content", True ),
+  "Tool Component":      ("py",   0, "text_content", True ),
+  "Web Illustration":    ("svg",  0, "text_content", True ),
+  "Web Page":            (None,   0, "text_content", True ),
+  "Web Script":          (None,   0, "text_content", True ),
+  "Web Style":           (None,   0, "text_content", True ),
+  "ZopePageTemplate":    ("zpt",  1, "_text",        True ),
 }
 
 def _getCatalog(acquisition_context):
@@ -823,7 +831,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(obj, name=key, ext='.py')
       else:
         try:
-          extension, unicode_data, record_id = \
+          extension, unicode_data, record_id, _ = \
             SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
         except KeyError:
           pass
@@ -877,10 +885,14 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(xml_data, key + '.catalog_keys', path=path)
 
   def _restoreSeparatelyExportedProperty(self, obj, data):
-    unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
-      obj.__class__.__name__][1:]
+    class_name = obj.__class__.__name__
+    unicode_data, property_name, is_text = SEPARATELY_EXPORTED_PROPERTY_DICT[
+      class_name][1:]
     if unicode_data:
       data = data.decode(obj.output_encoding)
+    elif ((callable(is_text) and is_text(obj)) or
+          (not callable(is_text) and is_text)):
+      data = data.decode('utf-8')
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
@@ -897,6 +909,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     obj_key, file_ext = os.path.splitext(file_name)
     # id() for installing several bt5 in the same transaction
     transactional_variable_obj_key = "%s-%s" % (id(self), obj_key)
+    obj = None
     if file_ext != '.xml':
       # if the document has not been migrated yet (its class is file and
       # it is not in portal_components) use legacy importer
@@ -943,6 +956,12 @@ class ObjectTemplateItem(BaseTemplateItem):
           pass
       if catalog_method_template_item:
         self.removeProperties(obj, 0)
+    if obj is not None:
+      bytes_item_list = [(k, v) for k, v in obj.__dict__.items()
+                         if isinstance(k, bytes) or isinstance(v, bytes) ]
+      if bytes_item_list:
+        print("%r: %s" % (getattr(obj, 'content_type', None), file_name))
+        import pdb; pdb.set_trace()
 
   def build_sub_objects(self, context, id_list, url, **kw):
     # XXX duplicates code from build
@@ -3954,6 +3973,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     text = file.read()
+    import pdb; pdb.set_trace()
     self._objects[file_name[:-3]] = text
 
 class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
@@ -4885,6 +4905,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         bta.addObject('\n'.join(xml_data), 'language', path=path)
 
   def _importFile(self, file_name, file):
+    import pdb; pdb.set_trace()
     name = posixpath.split(file_name)[1]
     if name == 'translation.po':
       text = file.read()

@@ -83,7 +83,7 @@ def unconvert(encoding,S):
     if encoding == 'base64':
         return base64.decodestring(S)
     else:
-        return bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"), 'utf-8')
+        return eval(b"'" + S.replace(b'\n', b'') + b"'").encode('utf-8')
 
 ppml.unconvert = unconvert
 
@@ -328,9 +328,8 @@ class NoBlanks(object):
         """
         # Ignore element data between elements (eg '<e> <f> </f> </e>')...
         if data.strip():
-            if isinstance(data, bytes):
-                import pdb; pdb.set_trace()
-                data = data.encode('raw_unicode_escape')
+            if isinstance(data, str):
+                data = data.encode('utf-8')
             self.append(data)
 
         # Except for strings and unicode data as whitespaces should be
@@ -353,9 +352,8 @@ class NoBlanks(object):
                     self.previous_discarded_data = None
                     self.previous_stack_end = None
 
-                if isinstance(data, bytes):
-                    import pdb; pdb.set_trace()
-                    data = data.encode('raw_unicode_escape')
+                if isinstance(data, str):
+                    data = data.encode('utf-8')
 
                 self.append(data)
 
@@ -769,8 +767,7 @@ class xmlPickler(NoBlanks, xyap):
         if tag in end:
             top = end[tag](self, tag, top)
         if isinstance(top, str):
-            import pdb; pdb.set_trace()
-            top = top.encode('raw_unicode_escape')
+            top = top.encode('utf-8')
         append(top)
 
     start_handlers={

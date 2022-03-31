@@ -2524,6 +2524,7 @@ def initialize(self):
         time.sleep(5)
       except:
         import pdb; pdb.post_mortem()
+        raise
   from Products.TimerService.timerserver.TimerServer import TimerRequest
   def traverse(*args, **kw):
     del TimerRequest.traverse
