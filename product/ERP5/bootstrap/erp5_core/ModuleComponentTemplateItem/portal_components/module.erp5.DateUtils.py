@@ -34,7 +34,6 @@ import warnings
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from datetime import datetime
-from string import zfill
 
 security = ModuleSecurityInfo(__name__)
 security.declarePublic('addToDate', 'getClosestDate',
@@ -495,7 +494,7 @@ def atTheEndOfPeriod(date, period):
   if period == 'year':
     end = addToDate(DateTime('%s/01/01 00:00:00 %s' % (date.year(), date.timezone())), **{period:1})
   elif period == 'month':
-    end = addToDate(DateTime('%s/%s/01 00:00:00 %s' % (date.year(), zfill(date.month(), 2), date.timezone())), **{period:1})
+    end = addToDate(DateTime('%s/%02d/01 00:00:00 %s' % (date.year(), date.month(), date.timezone())), **{period:1})
   elif period == 'day':
     end = addToDate(date.earliestTime(), hour=36).earliestTime()
   elif period == 'week':

@@ -1,5 +1,4 @@
 from past.builtins import cmp
-from string import zfill
 
 destination_obj = context.getObject()
 

@@ -6,7 +6,6 @@ context.log('source_project_title', source_project_title)
 portal = context.getPortalObject()
 line_portal_type = "Sale Order Line"
 request = context.REQUEST
-from string import zfill
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Message import translateString
 
@@ -36,7 +35,7 @@ portal = context.getPortalObject()
 for line in line_list:
   line_dict = {}
   #line_dict['listbox_key'] = "%s" % line_id
-  key = zfill(i,3)
+  key = "%03d" % i
   for property_name in ('title', 'quantity_unit_title', 'quantity',
                         'resource_title', 'total_price', 'price',
                         'reference', 'relative_url'):

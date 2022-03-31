@@ -31,7 +31,6 @@ from builtins import str
 from builtins import map
 from builtins import range
 import os
-from string import zfill
 from urllib.parse import urlencode
 import tempfile
 from DateTime import DateTime
@@ -87,14 +86,14 @@ def printBarcodeSheet(self, sheet_number=1, input_list=[], test=False):
   tempfile.tempdir = tempdir
   if test:
     #Fake list
-    input_list = os.linesep.join(['TEST%s' % zfill(b, 8) for b in range(1111111,  1111111 + ( row_number * column_number * sheet_number ))])
+    input_list = os.linesep.join(['TEST%08d' % b for b in range(1111111,  1111111 + ( row_number * column_number * sheet_number ))])
   elif input_list not in ('', None):
    if not isinstance(input_list, list):
      input_list = os.linesep.join(map(escapeString, input_list.split(os.linesep)))
    else:
      input_list = os.linesep.join(input_list)
   else:
-    input_list = os.linesep.join(['%s' % zfill(self.portal_ids.generateNewId(id_group='barcode'), 12) for b in range( row_number * column_number * sheet_number )])
+    input_list = os.linesep.join(['%012d' % self.portal_ids.generateNewId(id_group='barcode') for b in range( row_number * column_number * sheet_number )])
   text_command = 'echo "%s" > %s' % (input_list, new_txt_file_path)
   ret = os.system(text_command)
   if ret != 0:

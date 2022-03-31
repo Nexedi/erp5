@@ -5,7 +5,6 @@ from builtins import str
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
 from Products.PythonScripts.standard import url_quote
-from string import zfill
 
 portal = context.getPortalObject()
 request = context.REQUEST
@@ -40,7 +39,7 @@ if depth == 0:
   # This case show Seven days
   while current_date < bound_stop:
     # Create one Temp Object
-    o = newTempBase(portal, id='week', uid='new_%s' % zfill('week',4))
+    o = newTempBase(portal, id='week', uid='new_week')
      # Setting Axis Dates start and stop
     o.setProperty('start',current_date)
     o.setProperty('stop', current_date+1)

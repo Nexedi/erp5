@@ -1,7 +1,6 @@
 from __future__ import print_function
 from past.builtins import cmp
 from builtins import range
-from string import zfill
 
 ##################################################
 #### About the transformation_rules structure ####

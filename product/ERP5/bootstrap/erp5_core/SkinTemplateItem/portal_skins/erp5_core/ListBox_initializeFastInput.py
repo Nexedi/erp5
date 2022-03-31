@@ -1,7 +1,6 @@
 from builtins import str
 from builtins import range
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
 if listbox_id is None:
   listbox_id = 'listbox'
 
@@ -30,7 +29,7 @@ if hasattr(request, listbox_id):
 
   for i in keys_list:
     o = newTempBase(portal_object, i)
-    o.setUid('new_%s' % zfill(i,int_len))
+    o.setUid('new_%s' % str(i).zfill(int_len))
 
     is_empty = 1
 
@@ -52,7 +51,7 @@ if not('field_errors' in request):
   for i in range(first_empty_line_id,first_empty_line_id+empty_line_number):
 
     o = newTempBase(portal_object, str(i))
-    o.setUid('new_%s' % zfill(i,int_len))   
+    o.setUid('new_%s' % str(i).zfill(int_len))
     # zfill is used here to garantee sort order - XXX - cleaner approach required
     l.append(o)
 

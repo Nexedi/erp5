@@ -1,5 +1,4 @@
 from past.builtins import cmp
-from string import zfill
 
 ##################################################
 #### About the transformation_rules structure ####
@@ -93,7 +92,7 @@ for upper_level_key in structured_input_data:
   for second_level in structured_input_data[upper_level_key][1]:
     second_level_id += 10
     new_2nd_level_obj = new_1st_level_obj.newContent( portal_type = level_portal_types[1]
-                                                    , id          = zfill(second_level_id, 4)
+                                                    , id          = "%04d" % second_level_id
                                                     )
     for property_title in list(second_level.keys()):
       new_2nd_level_obj.setProperty(property_title, second_level[property_title])

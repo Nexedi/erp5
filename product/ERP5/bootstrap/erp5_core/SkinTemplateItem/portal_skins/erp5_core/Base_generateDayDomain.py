@@ -1,7 +1,6 @@
 from builtins import str
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
 portal = context.getPortalObject()
 request = context.REQUEST
 domain_list = []
@@ -29,7 +28,7 @@ if depth == 0:
  # 0.125 means 3 hours in DateTime float format
   while current_date < bound_stop:
     # Create one Temp Object
-    o = newTempBase(portal, id='year', uid='new_%s' % zfill('year',4))
+    o = newTempBase(portal, id='year', uid='new_year')
     # Setting Axis Dates start and stop
     o.setProperty('start',current_date)
     o.setProperty('stop', current_date + 0.125)

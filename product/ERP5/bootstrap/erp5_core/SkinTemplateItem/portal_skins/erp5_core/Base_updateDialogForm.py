@@ -1,5 +1,4 @@
 from builtins import str
-from string import zfill
 request = context.REQUEST
 
 if kw.get('update', False):
@@ -17,7 +16,7 @@ for k in list(kw.keys()):
         if listbox_key in line:
           key = '%s' % line[listbox_key]
         else:
-          key = str(zfill(i,3))
+          key = '%03d' % i
         listbox[key] = line
         i+=1
       request.set(k,listbox)
