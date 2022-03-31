@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
+
+from future.standard_library import install_aliases
+install_aliases()
+
 from builtins import str
 from builtins import range
 from builtins import object
 import errno, logging, os, socket, time
 import itertools
 from threading import Thread
-from UserDict import IterableUserDict
+from collections import UserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase

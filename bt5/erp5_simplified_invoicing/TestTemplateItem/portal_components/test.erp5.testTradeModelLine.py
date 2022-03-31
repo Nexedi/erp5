@@ -28,11 +28,14 @@
 #
 ##############################################################################
 
+from future.standard_library import install_aliases
+install_aliases()
+
 from builtins import map
 from builtins import zip
 from builtins import str
 from builtins import range
-from UserDict import UserDict
+from collections import UserDict
 import random
 import unittest
 from unittest import expectedFailure
