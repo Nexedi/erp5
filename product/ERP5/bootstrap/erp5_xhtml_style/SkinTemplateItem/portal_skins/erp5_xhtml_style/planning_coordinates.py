@@ -29,7 +29,6 @@ done in this script.
 This script is also used by the validator script in order to recover the
 groups of moved blocks
 """
-from __future__ import division
 
 
 # the following values are hard-defined and can be modified if necessary to comply with

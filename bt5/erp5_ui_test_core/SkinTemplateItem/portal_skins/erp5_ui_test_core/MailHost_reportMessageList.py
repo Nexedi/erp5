@@ -6,7 +6,6 @@
   the instance spam mailing lists during the
   Functional Tests.
 """
-from __future__ import print_function
 if getattr(context.MailHost, "getMessageList", None) is None:
   return "ERROR: MailHost is not a DummyMailHost"
 

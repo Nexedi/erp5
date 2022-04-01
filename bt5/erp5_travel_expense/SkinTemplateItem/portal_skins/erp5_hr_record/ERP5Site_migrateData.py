@@ -1,4 +1,3 @@
-from __future__ import print_function
 portal = context.getPortalObject()
 
 # Update Photos

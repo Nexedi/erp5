@@ -1,4 +1,3 @@
-from __future__ import print_function
 for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lambda x:x.getId()):
   for ri in sorted(ti.contentValues(portal_type='Role Information'), key=lambda x:(x.getTitle(), x.getLocalRoleGroupId(), x.getRoleBaseCategoryScriptId(), x.getRoleBaseCategoryList())):
     print(ti.getId())

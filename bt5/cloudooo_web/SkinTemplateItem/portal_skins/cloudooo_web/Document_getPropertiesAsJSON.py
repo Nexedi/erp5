@@ -1,4 +1,3 @@
-from __future__ import print_function
 #try:         //Implement try catch instead of if else
 #from Products.ERP5Type.JSON import dumps
 from Products.ERP5Type.JSONEncoder import encodeInJson as dumps

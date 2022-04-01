@@ -1,7 +1,6 @@
 """List all skins that are present in more than one skin folder, ordered by
 priority.
 """
-from __future__ import print_function
 
 # make sure context is the skins tool
 stool = context.portal_skins

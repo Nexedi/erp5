@@ -1,4 +1,3 @@
-from __future__ import print_function
 group_id_list_generator = getattr(context, 'ERP5Type_asSecurityGroupId')
 
 security_category_dict = {}

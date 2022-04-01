@@ -1,4 +1,3 @@
-from __future__ import print_function
 from erp5.component.module.DiffUtils import DiffFile
 from Products.PythonScripts.standard import html_quote
 

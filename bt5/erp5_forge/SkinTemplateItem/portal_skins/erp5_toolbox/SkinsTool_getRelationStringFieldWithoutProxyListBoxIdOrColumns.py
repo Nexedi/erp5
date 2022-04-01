@@ -1,4 +1,3 @@
-from __future__ import print_function
 multi_relation_field_meta_type_list = ['RelationStringField',
                                        'MultiRelationStringField']
 for field_path, field in context.ZopeFind(

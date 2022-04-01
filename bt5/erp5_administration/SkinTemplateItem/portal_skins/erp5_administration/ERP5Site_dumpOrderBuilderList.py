@@ -1,4 +1,3 @@
-from __future__ import print_function
 for builder in sorted(context.getPortalObject().portal_orders.contentValues(),
                   key=lambda x:x.getTitle()):
   print(builder.getId())

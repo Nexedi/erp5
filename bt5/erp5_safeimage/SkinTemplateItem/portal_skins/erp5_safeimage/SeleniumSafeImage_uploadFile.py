@@ -1,4 +1,3 @@
-from __future__ import print_function
 #from Products.ERP5.Document.TileImageTransformed import TileImageTransformed
 #from cStringIO import StringIO
 

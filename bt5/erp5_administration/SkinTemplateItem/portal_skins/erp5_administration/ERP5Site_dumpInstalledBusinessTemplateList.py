@@ -1,4 +1,3 @@
-from __future__ import print_function
 if ignore_business_template_list is None:
   ignore_business_template_list = []
 for business_template in sorted(context.getPortalObject().portal_templates.contentValues(portal_type='Business Template'),

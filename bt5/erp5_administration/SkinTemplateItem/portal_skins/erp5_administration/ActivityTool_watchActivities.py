@@ -1,4 +1,3 @@
-from __future__ import print_function
 print('<html><head><meta http-equiv="refresh" content="%s"></head><body>' % refresh_interval)
 
 for table in 'message', 'message_queue':

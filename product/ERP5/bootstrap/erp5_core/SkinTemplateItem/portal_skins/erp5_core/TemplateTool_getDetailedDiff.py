@@ -1,4 +1,3 @@
-from __future__ import print_function
 ZMI_OBJECT_CLASS_LIST = ["Skin"]
 ERP5_OBJECT_CLASS_LIST = ["Path", "Category", "PortalType", "Module"]
 PORTAL_TYPE_OBJECT_LIST = ["PortalTypePropertySheet", "PortalTypeBaseCategory", 

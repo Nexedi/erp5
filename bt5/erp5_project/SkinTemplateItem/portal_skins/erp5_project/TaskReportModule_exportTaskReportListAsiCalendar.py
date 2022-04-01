@@ -1,6 +1,5 @@
 """Export the current selection in task report module in iCalendar format.
 """
-from __future__ import print_function
 from zExceptions import Unauthorized
 # XXX bypass CookieCrumbler
 if context.REQUEST.AUTHENTICATED_USER.getUserName() == 'Anonymous User': 

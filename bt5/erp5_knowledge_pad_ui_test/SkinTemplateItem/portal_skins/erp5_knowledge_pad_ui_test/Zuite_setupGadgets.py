@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Publish all knowledge pad gadgets
 for gadget in context.portal_gadgets.objectValues():
   if gadget.getValidationState() == 'invisible':

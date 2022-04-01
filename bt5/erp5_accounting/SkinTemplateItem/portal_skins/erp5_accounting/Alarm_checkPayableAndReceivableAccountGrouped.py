@@ -3,7 +3,6 @@ that a 0 balance are grouped.
 
 In other words, check that all transactions that can be grouped are grouped.
 """
-from __future__ import print_function
 from builtins import str
 from Products.CMFActivity.ActiveResult import ActiveResult
 active_process = context.newActiveProcess()

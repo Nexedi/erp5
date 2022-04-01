@@ -1,4 +1,3 @@
-from __future__ import print_function
 for error_entry in context.error_log.getLogEntries():
   for key in error_entry:
     if key not in ["tb_text", "tb_html", 'req_html']:

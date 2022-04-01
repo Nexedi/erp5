@@ -2,7 +2,6 @@
 This script is intended to be run before exporting business template of test pages
 It will change ID of all published/shared/released test page so that it can be exported easily
 """
-from __future__ import print_function
 portal = context.getPortalObject()
 
 test_pages = portal.test_page_module.searchFolder(validation_state=

@@ -1,4 +1,3 @@
-from __future__ import division
 #  - Months always starts at 0h of the current month's first day  and 
 #  finish 0h of the next month's first day.
 

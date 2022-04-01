@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Setup System Preference
 dms_system_preference_id = 'dms_system_preference_ui_tests'
 portal_preferences = context.portal_preferences

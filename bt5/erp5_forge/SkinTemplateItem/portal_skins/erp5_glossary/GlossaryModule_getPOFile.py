@@ -1,4 +1,3 @@
-from __future__ import print_function
 from DateTime import DateTime
 MESSAGE_TEMPLATE = '''\
 msgid %(english)s

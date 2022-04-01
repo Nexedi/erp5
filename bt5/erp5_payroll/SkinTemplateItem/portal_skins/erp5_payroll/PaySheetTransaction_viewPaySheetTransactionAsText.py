@@ -2,7 +2,6 @@
   this script is just made to have a simple visual render of the paysheet
   calculation
 '''
-from __future__ import print_function
 
 from builtins import str
 line_dict_list = context.PaySheetTransaction_getLineListAsDict()

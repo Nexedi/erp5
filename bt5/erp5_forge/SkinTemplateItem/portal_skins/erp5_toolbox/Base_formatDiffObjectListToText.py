@@ -1,4 +1,3 @@
-from __future__ import print_function
 def sortDiffObjectList(diff_object_list):
   return sorted(diff_object_list, key=lambda x: (x.object_state, x.object_class, x.object_id))
 

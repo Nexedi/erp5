@@ -1,4 +1,3 @@
-from __future__ import division
 from past.utils import old_div
 initial_durability = kw.get('initial_durability')
 if start_remaining_annuities is None or stop_remaining_annuities is None \

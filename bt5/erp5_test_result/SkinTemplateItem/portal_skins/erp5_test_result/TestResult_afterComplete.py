@@ -1,5 +1,4 @@
 """ Called after test results are saved under ERP5 from workflow transition. """
-from __future__ import print_function
 
 recipient_list = []
 include_link = 1

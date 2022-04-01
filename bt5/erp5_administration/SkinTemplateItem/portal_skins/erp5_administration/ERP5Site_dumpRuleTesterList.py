@@ -1,4 +1,3 @@
-from __future__ import print_function
 for rule in sorted(context.getPortalObject().portal_rules.contentValues(),
                   key=lambda x:x.getTitle()):
   if rule.getValidationState() != 'validated':

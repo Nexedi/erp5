@@ -1,6 +1,5 @@
 """Obsolete compatibility script.
 """
-from __future__ import print_function
 from erp5.component.module.Log import log
 log("Obsolete script, please use BaseType_copyRoleList instead")
 

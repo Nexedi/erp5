@@ -4,7 +4,6 @@ Creates gap structure under gap/pl/default.
 The definition text is a raw text representation of a wiki page
 with accountants-approved gap structure
 """
-from __future__ import print_function
 
 gap_text = \
 """* [0] Aktywa trwałe

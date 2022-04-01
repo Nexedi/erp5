@@ -1,4 +1,3 @@
-from __future__ import print_function
 from builtins import str
 new_category_list = ()
 from_cat = from_cat + '/'

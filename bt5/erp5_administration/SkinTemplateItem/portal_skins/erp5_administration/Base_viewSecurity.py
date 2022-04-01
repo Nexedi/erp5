@@ -1,4 +1,3 @@
-from __future__ import print_function
 from AccessControl import getSecurityManager
 from zExceptions import Unauthorized
 from pprint import pformat

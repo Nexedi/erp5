@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Reindex objects which indexation_timestamp is at most
 # delta seconds before current time (ie, bound inclued).
 # Unindex objects which cannot be found.

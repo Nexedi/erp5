@@ -4,7 +4,6 @@ is based on calculation of the frequency_index and creation_date_index.
 Documents which their frequency_index and creation_date_index are the
 same as those calculated, are updated.
 """
-from __future__ import division
 from builtins import range
 from past.utils import old_div
 from erp5.component.module.DateUtils import convertDateToHour

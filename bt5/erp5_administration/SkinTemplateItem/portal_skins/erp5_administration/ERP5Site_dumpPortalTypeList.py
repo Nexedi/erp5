@@ -1,4 +1,3 @@
-from __future__ import print_function
 for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lambda x:x.getId()):
   print(ti.getId())
   print(" ", "\n  ".join([x for x in (

@@ -1,4 +1,3 @@
-from __future__ import division
 #  this API uses format= as argument
 # pylint: disable=redefined-builtin
 

@@ -1,4 +1,3 @@
-from __future__ import print_function
 result = context.GlossaryModule_getTermDictListFromPropertySheet(property_sheet_list)
 
 if export_tsv:

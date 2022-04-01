@@ -1,4 +1,3 @@
-from __future__ import print_function
 from string import capitalize
 
 view_id_basis = "%s_%s_amortisation_method_view_details"

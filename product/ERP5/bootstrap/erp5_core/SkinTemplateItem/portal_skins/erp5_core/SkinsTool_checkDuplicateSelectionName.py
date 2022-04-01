@@ -1,7 +1,6 @@
 """
   Print all listbox that uses the same selection name.
 """
-from __future__ import print_function
 
 selection_name_dict = context.SkinsTool_getDuplicateSelectionNameDict()
 for selection_name, field_map in list(selection_name_dict.items()):

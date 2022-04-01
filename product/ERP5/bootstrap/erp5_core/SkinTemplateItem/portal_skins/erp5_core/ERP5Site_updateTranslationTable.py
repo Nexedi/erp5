@@ -1,4 +1,3 @@
-from __future__ import print_function
 from Products.ERP5Type.Utils import getMessageIdWithContext
 
 supported_languages = context.Localizer.get_supported_languages()

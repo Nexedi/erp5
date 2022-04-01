@@ -1,4 +1,3 @@
-from __future__ import print_function
 result = context.GlossaryModule_getTermDictListFromPortalType(portal_type_list)
 
 if export_tsv:

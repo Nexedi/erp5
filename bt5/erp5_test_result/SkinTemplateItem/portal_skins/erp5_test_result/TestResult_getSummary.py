@@ -2,7 +2,6 @@
   Return for buildbot test summary info.
   status, all tests, failures, errors
 """
-from __future__ import print_function
 seconds = 0.0
 for obj in context.contentValues():
   seconds += obj.getProperty('duration')

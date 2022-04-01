@@ -1,5 +1,4 @@
 """ This script will be called to apply the customization. """
-from __future__ import print_function
 from AccessControl import getSecurityManager
 from erp5.component.module.Log import log
 

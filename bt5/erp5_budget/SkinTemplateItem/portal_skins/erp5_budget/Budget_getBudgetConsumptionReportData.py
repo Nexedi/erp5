@@ -1,4 +1,3 @@
-from __future__ import division
 from past.utils import old_div
 from pprint import pformat
 portal = context.getPortalObject()

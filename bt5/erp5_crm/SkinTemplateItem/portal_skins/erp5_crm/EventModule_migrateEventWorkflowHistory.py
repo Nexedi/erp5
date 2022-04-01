@@ -1,4 +1,3 @@
-from __future__ import print_function
 portal = context.getPortalObject()
 active_process = portal.portal_activities.newActiveProcess()
 portal.event_module.recurseCallMethod(

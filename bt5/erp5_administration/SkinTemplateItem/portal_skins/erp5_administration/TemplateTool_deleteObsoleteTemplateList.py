@@ -1,4 +1,3 @@
-from __future__ import print_function
 portal_templates = context.getPortalObject().portal_templates
 delete_list = []
 bt_list = portal_templates.objectValues()

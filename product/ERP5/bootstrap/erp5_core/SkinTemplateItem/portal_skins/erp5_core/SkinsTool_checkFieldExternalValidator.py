@@ -1,6 +1,5 @@
 """Print all field that uses non existing scripts as external_validator
 """
-from __future__ import print_function
 portal = context.getPortalObject()
 restrictedTraverse = portal.restrictedTraverse
 skins_tool = portal.portal_skins

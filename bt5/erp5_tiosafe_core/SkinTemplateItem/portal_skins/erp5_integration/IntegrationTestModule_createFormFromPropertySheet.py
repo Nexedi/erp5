@@ -1,4 +1,3 @@
-from __future__ import print_function
 # This script is intented to be called on a form
 
 ps = context.getPortalObject().portal_property_sheets[property_sheet_id]

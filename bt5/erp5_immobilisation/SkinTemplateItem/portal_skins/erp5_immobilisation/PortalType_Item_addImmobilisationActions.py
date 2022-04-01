@@ -1,4 +1,3 @@
-from __future__ import print_function
 actions_to_add = [
   {'name' : 'Immobilisation Periods',
    'id':     'immobilisation_periods',

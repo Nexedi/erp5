@@ -1,4 +1,3 @@
-from __future__ import print_function
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
 if len(uids) == 0:
 #   uids = map(lambda x:x.uid, context.portal_selections.callSelectionFor(selection_name))

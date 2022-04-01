@@ -1,4 +1,3 @@
-from __future__ import print_function
 # This tool is able to check, if selection_name in listboxes in forms
 # are unique "enough".
 # It shall print nothing on properly made site, which will mean

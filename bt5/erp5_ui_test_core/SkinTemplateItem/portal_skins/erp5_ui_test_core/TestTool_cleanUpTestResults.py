@@ -1,4 +1,3 @@
-from __future__ import print_function
 from zExceptions import BadRequest
 portal_tests = container.portal_tests
 if test_zuite_relative_url is not None:

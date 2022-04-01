@@ -1,4 +1,3 @@
-from __future__ import division
 # This is what we want to display in the report
 # project_month     worker1    worker2    worker3
 #    january           34              32             15

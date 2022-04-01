@@ -1,4 +1,3 @@
-from __future__ import print_function
 if ignore_property_sheet_list is None:
   ignore_property_sheet_list = []
 

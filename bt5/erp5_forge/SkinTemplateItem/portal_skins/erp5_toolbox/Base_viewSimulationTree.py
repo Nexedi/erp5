@@ -1,4 +1,3 @@
-from __future__ import print_function
 # License: GPL
 # Author: Lukasz Nowak <lukasz.nowak@ventis.com.pl>
 # Copyright 2007 Ventis s. c.

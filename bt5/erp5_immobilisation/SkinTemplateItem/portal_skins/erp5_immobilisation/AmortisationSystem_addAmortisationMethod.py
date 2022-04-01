@@ -1,4 +1,3 @@
-from __future__ import print_function
 # XXX Not updated, Immobilisation portal_type does not exist anymore
 # but it has to update each delivery line and cell portal_type which
 # has already such actions

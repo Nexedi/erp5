@@ -1,4 +1,3 @@
-from __future__ import print_function
 actions_to_add = [
   {'name' : 'Immobilisation Validity Errors',
    'id':     'immobilisation_validity_errors',

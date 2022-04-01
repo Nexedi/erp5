@@ -1,4 +1,3 @@
-from __future__ import division
 # different part of the configuration process in estimatd percentages
 # values for machine with pystones =(1.3600000000000012, 36764.705882352908)
 from past.utils import old_div

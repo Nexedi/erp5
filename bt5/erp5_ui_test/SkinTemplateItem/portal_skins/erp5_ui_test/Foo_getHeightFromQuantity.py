@@ -1,5 +1,4 @@
 """Returns the quantity divided by the max quantity"""
-from __future__ import division
 from past.utils import old_div
 q = context.getQuantity()
 max_q = 0.0

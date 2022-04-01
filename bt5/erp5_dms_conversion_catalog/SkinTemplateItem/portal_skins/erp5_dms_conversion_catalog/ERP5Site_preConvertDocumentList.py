@@ -4,7 +4,6 @@
   It will do that recursively in entire ERP5 instance.
 
 """
-from __future__ import print_function
 context.ERP5Site_checkDataWithScript("Base_callPreConvert", 
                                      tag="pre_convert",
                                      packet=2,

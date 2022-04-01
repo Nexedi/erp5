@@ -2,7 +2,6 @@
   This script when triggered will migrate all embedded "File" and "Image" 
   objects to an unified "Embedded File".
 """
-from __future__ import print_function
 active_process = context.getPortalObject().portal_activities.newActiveProcess()
 context.ERP5Site_checkDataWithScript("Base_migrateToEmbeddedFile",
                                      tag="migrate",

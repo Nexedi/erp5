@@ -1,4 +1,3 @@
-from __future__ import print_function
 from random import getrandbits
 portal = context.getPortalObject()
 if clear_catalog:

@@ -1,4 +1,3 @@
-from __future__ import print_function
 from builtins import str
 portal = context.getPortalObject()
 html_status_report = str(portal.portal_configurator.getInstallationStatusReport(active_process_id=2))

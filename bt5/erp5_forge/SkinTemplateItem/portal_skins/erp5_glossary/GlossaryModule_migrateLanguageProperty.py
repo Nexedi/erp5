@@ -1,4 +1,3 @@
-from __future__ import print_function
 # This script set language property according to existing language category.
 for i in context.getPortalObject().glossary_module.objectValues():
   lang_list = [x.split('/')[1] for x in i.categories if x.startswith('language/')]

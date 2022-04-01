@@ -1,4 +1,3 @@
-from __future__ import print_function
 portal = context.getPortalObject()
 req = portal.erp5_sql_connection.manage_test
 

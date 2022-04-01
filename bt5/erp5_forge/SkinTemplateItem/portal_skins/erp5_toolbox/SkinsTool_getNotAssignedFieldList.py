@@ -1,7 +1,6 @@
 """Prints all fields that are in 'not assigned' group.
 This happens after updating a form where some fields have been added locally.
 """
-from __future__ import print_function
 
 for form_path, form in context.ZopeFind(
             context.portal_skins, obj_metatypes=['ERP5 Form'], search_sub=1):

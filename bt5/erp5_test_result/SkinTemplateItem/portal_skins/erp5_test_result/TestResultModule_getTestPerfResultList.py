@@ -1,4 +1,3 @@
-from __future__ import division
 #from Products.ERP5Type.Document import newTempBase
 #from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from builtins import str

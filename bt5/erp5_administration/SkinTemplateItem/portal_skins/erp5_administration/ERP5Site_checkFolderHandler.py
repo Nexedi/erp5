@@ -1,4 +1,3 @@
-from __future__ import print_function
 def checkTopLevel():
   portal = context.getPortalObject()
   for o in portal.objectValues():

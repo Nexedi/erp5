@@ -7,7 +7,6 @@ Uses sampling_amount, defaults to 20.
 Samples inventory by proper differency, returns
 sampling_amount inventory lines, sorted by date.
 """
-from __future__ import division
 
 # XXX: Might be set in preferences
 from builtins import str

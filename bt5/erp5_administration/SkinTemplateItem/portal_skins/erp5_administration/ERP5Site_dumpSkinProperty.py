@@ -1,4 +1,3 @@
-from __future__ import print_function
 # This method outputs the skin properties in the format that you can
 # easily get diff like the following:
 # ---

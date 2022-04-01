@@ -1,4 +1,3 @@
-from __future__ import print_function
 category_list = context.portal_catalog(path="%portal_categories/gap2/br%")
 
 for cat in category_list:

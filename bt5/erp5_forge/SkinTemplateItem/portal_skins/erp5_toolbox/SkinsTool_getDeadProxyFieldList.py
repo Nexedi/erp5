@@ -1,6 +1,5 @@
 """List all dead proxy fields
 """
-from __future__ import print_function
 portal_skin = context.REQUEST.get('portal_skin', 'View')
 
 print("<html>")

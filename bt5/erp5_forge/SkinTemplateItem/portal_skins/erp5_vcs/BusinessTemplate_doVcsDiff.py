@@ -1,4 +1,3 @@
-from __future__ import print_function
 from past.builtins import basestring
 vcs_tool = context.getVcsTool()
 template_tool = context.getPortalObject().portal_templates

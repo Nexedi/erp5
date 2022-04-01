@@ -1,7 +1,6 @@
 """Utility script listing all relation fields that are using relation_setter_id feature.
 This helps migrating them after r33837
 """
-from __future__ import print_function
 multi_relation_field_meta_type_list = ['RelationStringField',
                                        'MultiRelationStringField']
 for field_path, field in context.ZopeFind(

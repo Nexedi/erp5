@@ -1,4 +1,3 @@
-from __future__ import print_function
 message_dict = {}
 FUNC_NAME_LIST = ('N_',
                   'Base_translateString',
