@@ -141,20 +141,25 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   # separate file, with extension specified by 'extension'.
   # 'extension' must be None for auto-detection.
   #
+  # XXX-zope4py3: `text` was added but what we should do is check the
+  #               PropertySheet ('string' (str) /'data' (bytes)) but for now,
+  #               only work on bootstrap...
+  #
   # class_name: (extension, unicode_data, property_name, text),
   "Document Component":  ("py",   0, "text_content", True ),
   "DTMLDocument":        (None,   0, "raw",          True ),
   "DTMLMethod":          (None,   0, "raw",          True ),
   "Extension Component": ("py",   0, "text_content", True ),
-  "File":                (None,   0, "data",         lambda obj: (obj.content_type.startswith('text/') or
-                                                                  obj.content_type in ('application/javascript',
-                                                                                       'application/js',
-                                                                                       'application/json',
-                                                                                       'application/schema+json',
-                                                                                       'application/x-javascript',
-                                                                                       'application/xml',
-                                                                                       'application/x-php',
-                                                                                       'image/svg+xml'))),
+  # OFS.File raises ValueError("Must be bytes")
+  "File":                (None,   0, "data",         False), # lambda obj: (obj.content_type.startswith('text/') or
+                                                             #      obj.content_type in ('application/javascript',
+                                                             #                           'application/js',
+                                                             #                           'application/json',
+                                                             #                           'application/schema+json',
+                                                             #                           'application/x-javascript',
+                                                             #                           'application/xml',
+                                                             #                           'application/x-php',
+                                                             #                           'image/svg+xml'))),
   "Image":               (None,   0, "data",         False),
   "Interface Component": ("py",   0, "text_content", True ),
   "OOoTemplate":         ("oot",  1, "_text",        True ),
@@ -5073,7 +5078,7 @@ class bt(dict):
   """Fake 'bt' item to read bt/* files through BusinessTemplateArchive"""
 
   def _importFile(self, file_name, file):
-    self[file_name] = file.read()
+    self[file_name] = file.read().decode('utf-8')
 
 
 class BusinessTemplate(XMLObject):
@@ -5943,12 +5948,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
           prop_type = prop['type']
           value = bt_item.get(pid)
           if prop_type in ('text', 'string'):
-            prop_dict[pid] = value.decode('utf-8') if value else ''
+            prop_dict[pid] = value or ''
           elif prop_type in ('int', 'boolean'):
             prop_dict[pid] = value or 0
           elif prop_type in ('lines', 'tokens'):
-            prop_dict[pid[:-5]] = (value.decode('utf-8') if value
-                                   else '').splitlines()
+            prop_dict[pid[:-5]] = (value or '').splitlines()
       self._edit(**prop_dict)
 
       try:
