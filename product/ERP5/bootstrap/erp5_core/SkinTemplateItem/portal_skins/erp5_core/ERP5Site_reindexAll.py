@@ -51,8 +51,9 @@ if person_module is not None:
     },
     max_depth=1, # Do not reindex Person's subobjects
   )
-print("#### Indexing translations ####")
-portal.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)
+## XXX-zope4py3: Localizer is unicode()-based
+##print("#### Indexing translations ####")
+##portal.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)
 print(reindex(
   [portal.portal_categories],
   tag=category_tag,
