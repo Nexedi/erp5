@@ -104,6 +104,5 @@ if create and len(validation_errors) == 0:
               destination_section=delivery_line.getDestinationSection(),
               destination_decision=delivery_line.getDestinationDecision())
   return context.Base_redirect(form_id, keep_items=dict(
-        portal_status_message=translateString('%s Tasks Created.' %(len(listbox),))))
-
+        portal_status_message=translateString('${task_count} Tasks Created.', mapping={'task_count': len(listbox)})))
 return context.Delivery_viewTaskFastInputDialog(listbox=listbox, **kw)
