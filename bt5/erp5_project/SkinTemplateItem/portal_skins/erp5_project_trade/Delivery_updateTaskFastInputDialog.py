@@ -7,7 +7,7 @@ portal = context.getPortalObject()
 line_portal_type = "Sale Order Line"
 request = context.REQUEST
 from string import zfill
-from Products.ERP5Type.Document import newTempBase
+from Products.PythonScripts.standard import Object
 from Products.ERP5Type.Message import translateString
 
 context.log('original listbox', listbox)
@@ -65,9 +65,12 @@ for line in line_list:
     else:
       line_dict['source_project_relative_url'] = result[0].getRelativeUrl()
     if error_message:
-      error = newTempBase(context, key)
-      error.edit(error_text=error_message)
-      validation_errors['listbox_source_project_title_new_%s' % key] = error
+      validation_errors['listbox_source_project_title_new_%s' % key] = Object(
+          field_id='listbox_source_project_title_new_%s' % key,
+          getMessage=lambda translateString: translateString(error_message),
+      )
+
+      )
   listbox.append(line_dict)
   i += 1
 
