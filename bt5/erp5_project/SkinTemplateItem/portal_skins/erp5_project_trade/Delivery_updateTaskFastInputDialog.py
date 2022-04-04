@@ -2,7 +2,6 @@
 going to be created. If values are already there, this script check if
 informations are correct.
 """
-context.log('source_project_title', source_project_title)
 portal = context.getPortalObject()
 line_portal_type = "Sale Order Line"
 request = context.REQUEST
@@ -10,7 +9,6 @@ from string import zfill
 from Products.PythonScripts.standard import Object
 from Products.ERP5Type.Message import translateString
 
-context.log('original listbox', listbox)
 initial_value_dict = {}
 for line in (listbox or []):
   initial_value_dict[line['listbox_key']] = line
@@ -74,7 +72,6 @@ for line in line_list:
   listbox.append(line_dict)
   i += 1
 
-context.log('listbox', listbox)
 context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)
 
 if len(validation_errors):
