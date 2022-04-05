@@ -29,7 +29,6 @@ line_list = []
 getRecursiveLineList(context, line_list)
 i = 1
 project_search_dict = {}
-portal = context.getPortalObject()
 for line in line_list:
   line_dict = {}
   key = zfill(i,3)
