@@ -312,7 +312,11 @@ import urlparse
 allow_type(urlparse.ParseResult)
 allow_type(urlparse.SplitResult)
 allow_module('struct')
+allow_module('zlib')
 
+ModuleSecurityInfo('bz2').declarePublic(
+  'compress', 'decompress', 'BZ2Compressor', 'BZ2Decompressor',
+)
 ModuleSecurityInfo('os.path').declarePublic(
 # Allow functions accessing neither file system nor environment.
   'abspath', 'basename', 'commonprefix', 'dirname', 'isabs', 'join',
