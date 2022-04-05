@@ -1,6 +1,6 @@
-"""At first call, this script prefill values for all tasks that are
-going to be created. If values are already there, this script check if
-informations are correct.
+"""At first call, this script prefills values for all tasks that are
+going to be created. If values are already there, this script check that
+information is correct.
 """
 portal = context.getPortalObject()
 line_portal_type = "Sale Order Line"
@@ -17,7 +17,7 @@ listbox = []
 validation_errors = {}
 def getRecursiveLineList(current, line_list):
   # We parse recursively all delivery line and we keep only ones
-  # without childs
+  # without child
   sub_line_list = current.objectValues(portal_type=line_portal_type)
   if len(sub_line_list) == 0:
     if current.getPortalType() == line_portal_type:
@@ -32,7 +32,6 @@ project_search_dict = {}
 portal = context.getPortalObject()
 for line in line_list:
   line_dict = {}
-  #line_dict['listbox_key'] = "%s" % line_id
   key = zfill(i,3)
   for property_name in ('title', 'quantity_unit_title', 'quantity',
                         'resource_title', 'total_price', 'price',
