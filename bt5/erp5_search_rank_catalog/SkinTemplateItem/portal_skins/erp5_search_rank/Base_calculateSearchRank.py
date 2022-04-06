@@ -1,3 +1,5 @@
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
+
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 # PR(B) = (1-d) + d x ( PR(A1) / N(A1) + ... + PR(An) / N(An) )
@@ -16,6 +18,7 @@ rank = 0
 # Search all document linking to the context
 for sql_result in portal_catalog(
   select_list=['search_rank'],
+  search_rank=NegatedQuery(SimpleQuery(search_rank=0)),
   **{'category.category_uid': context.getUid()}
 ):
   # In case of acquired category, it is not explicitely defined on the document
