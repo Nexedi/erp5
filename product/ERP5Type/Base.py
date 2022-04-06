@@ -104,6 +104,8 @@ import zope.interface
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
+import six
+
 _MARKER = []
 
 class PersistentContainer(Persistent):
@@ -1887,6 +1889,9 @@ class Base(
     if 'Owner' in rolesForPermissionOn(Permissions.View, self):
       owner_list = self.users_with_local_role('Owner')
       if owner_list:
+        if six.PY3:
+          # keys() returns a dict_keys not supporting Indexing
+          owner_list = list(owner_list)
         return owner_list[0]
 
   # Private accessors for the implementation of relations based on
