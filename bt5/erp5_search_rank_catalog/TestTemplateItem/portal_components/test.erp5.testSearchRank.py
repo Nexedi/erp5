@@ -83,13 +83,37 @@ class TestSearchRank(ERP5TypeTestCase):
     self.assertIndexedDocumentSearchRankEqual(linked_document_1, '15000')
     self.assertIndexedDocumentSearchRankEqual(linked_document_2, '15000')
 
+    # Linked from one document only with no score
+    linked_document_1.setFooCategoryValue(document)
+    linked_document_1.Base_zUpdateSearchRank(
+      uid=linked_document_1.getUid(),
+      search_rank=0
+    )
+    self.tic()
+    document.Base_updateSearchRank()
+    self.assertIndexedDocumentSearchRankEqual(document, '15000')
+    self.assertIndexedDocumentSearchRankEqual(linked_document_1, '0')
+    self.assertIndexedDocumentSearchRankEqual(linked_document_2, '15000')
+
+    # Linked from one document only with a lower score
+    linked_document_1.setFooCategoryValue(document)
+    linked_document_1.Base_zUpdateSearchRank(
+      uid=linked_document_1.getUid(),
+      search_rank=100
+    )
+    self.tic()
+    document.Base_updateSearchRank()
+    self.assertIndexedDocumentSearchRankEqual(document, '15085')
+    self.assertIndexedDocumentSearchRankEqual(linked_document_1, '100')
+    self.assertIndexedDocumentSearchRankEqual(linked_document_2, '15000')
+
     # Linked from 2 documents (rank is higher than one doc only)
     linked_document_1.setFooCategoryValue(document)
     linked_document_2.setFooCategoryValue(document)
     self.tic()
-    document.Base_updateSearchRank()
     linked_document_1.Base_updateSearchRank()
     linked_document_2.Base_updateSearchRank()
+    document.Base_updateSearchRank()
     self.assertIndexedDocumentSearchRankEqual(document, '40500')
     self.assertIndexedDocumentSearchRankEqual(linked_document_1, '15000')
     self.assertIndexedDocumentSearchRankEqual(linked_document_2, '15000')
