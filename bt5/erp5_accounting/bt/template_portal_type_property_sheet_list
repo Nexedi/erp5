@@ -5,6 +5,7 @@ Balance Transaction | AccountingTransactionConstraint
 Cash Register | BankAccount
 Internal Invoice Transaction Line | AccountingTransactionLineConstraint
 Internal Invoice Transaction | AccountingTransactionConstraint
+Payment Transaction | AccountingTransactionConstraint
 Purchase Invoice Transaction Line | AccountingTransactionLineConstraint
 Purchase Invoice Transaction | AccountingTransactionConstraint
 Sale Invoice Transaction Line | AccountingTransactionLineConstraint

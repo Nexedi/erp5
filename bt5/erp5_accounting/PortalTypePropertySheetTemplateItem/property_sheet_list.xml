@@ -20,6 +20,9 @@
  <portal_type id="Internal Invoice Transaction Line">
   <item>AccountingTransactionLineConstraint</item>
  </portal_type>
+ <portal_type id="Payment Transaction">
+  <item>AccountingTransactionConstraint</item>
+ </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>AccountingTransactionConstraint</item>
  </portal_type>
