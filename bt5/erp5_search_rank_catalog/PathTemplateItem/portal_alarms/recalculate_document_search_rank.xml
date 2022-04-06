@@ -35,7 +35,11 @@ Maybe document without search rank should be dropped?</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>recalculate_document_search_rank</string> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_day_frequency</string> </key>
+            <value> <int>7</int> </value>
         </item>
         <item>
             <key> <string>periodicity_hour</string> </key>
@@ -95,9 +99,7 @@ Maybe document without search rank should be dropped?</string> </value>
         <item>
             <key> <string>periodicity_week_day</string> </key>
             <value>
-              <tuple>
-                <string>Sunday</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
