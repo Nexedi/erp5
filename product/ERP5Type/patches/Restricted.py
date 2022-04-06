@@ -153,10 +153,14 @@ def get_iteritems(c, name):
 _dict_white_list['iteritems'] = get_iteritems
 
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
+    if cmp is not None:
+        from functools import cmp_to_key
+        key = cmp_to_key(cmp)
+
     if not isinstance(seq, SafeIter):
         for i, x in enumerate(seq):
             guard(seq, x, i)
-    return sorted(seq, cmp=cmp, key=key, reverse=reverse)
+    return sorted(seq, key=key, reverse=reverse)
 safe_builtins['sorted'] = guarded_sorted
 
 def guarded_reversed(seq):
