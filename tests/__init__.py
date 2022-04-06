@@ -53,6 +53,7 @@ class _ERP5(ERP5TypeTestSuite):
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
         glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_search_rank/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_osoe_web_renderjs_ui/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
