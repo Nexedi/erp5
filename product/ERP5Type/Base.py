@@ -104,6 +104,8 @@ import zope.interface
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
+import six
+
 _MARKER = []
 
 class PersistentContainer(Persistent):
@@ -1887,6 +1889,9 @@ class Base(
     if 'Owner' in rolesForPermissionOn(Permissions.View, self):
       owner_list = self.users_with_local_role('Owner')
       if owner_list:
+        # https://github.com/zopefoundation/AccessControl/pull/128
+        if not isinstance(owner_list, (tuple, list)):
+          owner_list = tuple(owner_list)
         return owner_list[0]
 
   # Private accessors for the implementation of relations based on
