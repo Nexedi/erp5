@@ -127,8 +127,12 @@
           //Exception is raised if network is lost for some reasons,
           //in this case, try patiently until network is back.
           console.warn("Unable to fetch activities from ERP5", error);
-          form_gadget.element.querySelector(".activity_watcher_gadget")
-                     .textContent = "Unable to fetch activities from ERP5";
+          return form_gadget.getDeclaredGadget('html_viewer')
+            .push(function (html_viewer) {
+              return html_viewer.render({
+                value: "Unable to fetch activities from ERP5"
+              });
+            });
         });
 
     }, 1000);
