@@ -1,10 +1,10 @@
-/*global window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray */
+/*global window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray, console */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /**
 Page Form is a top-level gadget (a "Page") taking care of rendering form
 and handling data send&receive.
 */
-(function (window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray) {
+(function (window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray, console) {
   "use strict";
 
   /*jslint regexp: true*/
@@ -532,7 +532,7 @@ and handling data send&receive.
         .push(null, function (error) {
           /** Fail branch of the JIO call. */
           var error_text = 'Encountered an unknown error. Try to resubmit.';
-
+          console.warn(error_text, error);
           if (error instanceof RSVP.CancellationError) {
             // CancellationError is thrown on "redirect" to cancel any pending
             // promises. Since it is not a failure we rethrow.
@@ -683,4 +683,4 @@ and handling data send&receive.
     });
 
 
-}(window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray));
+}(window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray, console));
