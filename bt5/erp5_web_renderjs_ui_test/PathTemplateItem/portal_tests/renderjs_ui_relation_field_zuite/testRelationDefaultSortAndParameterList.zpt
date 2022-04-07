@@ -45,14 +45,14 @@
 
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
 
@@ -64,27 +64,20 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_parameter_list']</td>
-  <td></td>
-</tr>
-
-
-<tr>
   <td>type</td>
   <td>//input[@name='field_parameter_list']</td>
   <td>python: [('id', '<5 AND >2')]</td>
 </tr>
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
 
@@ -252,14 +245,14 @@
 
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
 
@@ -271,27 +264,20 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_parameter_list']</td>
-  <td></td>
-</tr>
-
-
-<tr>
   <td>type</td>
   <td>//input[@name='field_parameter_list']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
 

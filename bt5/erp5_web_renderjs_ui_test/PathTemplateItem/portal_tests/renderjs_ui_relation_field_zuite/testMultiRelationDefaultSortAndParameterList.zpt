@@ -30,13 +30,6 @@
   <td></td>
 </tr>
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//textarea[@name='field_sort']</td>
-  <td></td>
-</tr>
-
 <tr>
   <td>type</td>
   <td>//textarea[@name='field_sort']</td>
@@ -45,30 +38,22 @@
 
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>open</td>
   <td>${base_url}/Foo_viewRelationField/my_bar_category_title_list/manage_talesForm</td>
   <td></td>
 </tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_parameter_list']</td>
-  <td></td>
-</tr>
-
 
 <tr>
   <td>type</td>
@@ -83,8 +68,8 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
 
@@ -236,19 +221,11 @@
   <td></td>
 </tr>
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//textarea[@name='field_sort']</td>
-  <td></td>
-</tr>
-
 <tr>
   <td>type</td>
   <td>//textarea[@name='field_sort']</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>click</td>
@@ -257,11 +234,10 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>open</td>
@@ -270,33 +246,22 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_parameter_list']</td>
-  <td></td>
-</tr>
-
-
-<tr>
   <td>type</td>
   <td>//input[@name='field_parameter_list']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
-
-
-
-
 
 </tbody></table>
 </body>
