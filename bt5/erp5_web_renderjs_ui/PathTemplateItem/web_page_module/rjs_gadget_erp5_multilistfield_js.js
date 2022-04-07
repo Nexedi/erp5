@@ -145,7 +145,12 @@
 
       var gadget = this,
         sub_gadget;
-      return gadget.getDeclaredGadget(scope)
+      // Propage the notification before maybe dropping the subgadget
+      // which will cancel the current call
+      return gadget.notifyChange("change")
+        .push(function () {
+          return gadget.getDeclaredGadget(scope);
+        })
         .push(function (result) {
           sub_gadget = result;
           return sub_gadget.getContent();
@@ -162,9 +167,6 @@
               gadget.element.removeChild(sub_gadget.element);
             }
           }
-        })
-        .push(function () {
-          return gadget.notifyChange();
         });
     })
 
