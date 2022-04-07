@@ -17,8 +17,8 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 <tr><td>open</td>
     <td>${base_url}/portal_caches/manage_clearAllCache</td><td></td></tr>
-<tr><td>assertElementPresent</td>
-    <td>//div[@class="system-msg" and contains(text(), "All cache factories cleared")]</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>All cache factories cleared</td><td></td></tr>
 
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>

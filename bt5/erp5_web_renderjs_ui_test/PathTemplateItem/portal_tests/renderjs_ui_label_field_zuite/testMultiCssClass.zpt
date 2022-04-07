@@ -17,28 +17,18 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>name=field_css_class</td>
-  <td></td>
-</tr>
-<tr>
   <td>type</td>
   <td>name=field_css_class</td>
   <td>class1 class2 class3</td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>clickAndWait</td>
   <td>//input[@name='submit']</td>
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//input[@name='submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='system-msg']</td>
+  <td>assertTextPresent</td>
+  <td>Content changed.</td>
   <td></td>
 </tr>
 <tr>
