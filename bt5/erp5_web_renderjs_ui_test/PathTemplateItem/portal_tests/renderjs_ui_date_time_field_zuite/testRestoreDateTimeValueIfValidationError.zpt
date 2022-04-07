@@ -68,13 +68,14 @@
 </tr>
 
 <tr>
-  <td>clickAndWait</td>
+  <td>click</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
+
 <tr>
-  <td>assertTextPresent</td>
-  <td>Content changed</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='system-msg']</td>
   <td></td>
 </tr>
 
@@ -171,15 +172,17 @@
 </tr>
 
 <tr>
-  <td>clickAndWait</td>
+  <td>click</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
+
 <tr>
-  <td>assertTextPresent</td>
-  <td>Content changed</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='system-msg']</td>
   <td></td>
 </tr>
+
 
 </tbody></table>
 </body>
