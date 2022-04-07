@@ -35,22 +35,7 @@
   */
 (function (window, rJS, RSVP, domsugar, JSON) {
   "use strict";
-/*
-  // Recursively introspect an object if it is empty
-  function isEmptyRecursive(data) {
-    var item;
 
-    if (typeof data === 'object') {
-      for (item in data) {
-        if (data.hasOwnProperty(item) && !item.startsWith("_")) {
-          if (isEmptyRecursive(data[item]) === false) {return false; } // one non-empty element is enough
-        }
-      }
-      return true;
-    }
-    return !data && true; // convert basic types to boolean
-  }
-*/
   function copy(obj) {
     return JSON.parse(JSON.stringify(obj));
   }
