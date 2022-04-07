@@ -225,5 +225,5 @@ class TestDedup(ERP5TypeTestCase):
     new_obj_length, = deduped # pylint: disable=unbalanced-tuple-unpacking
     # The exact boundary does not matter much, but it should be greater than
     # some arbitrary value considered satisfying.
-    self.assertGreaterEqual(new_obj_length, 24)
+    self.assertGreaterEqual(new_obj_length, 30)
     self.assertEqual(len(list(whl)), new_obj_length + 1)

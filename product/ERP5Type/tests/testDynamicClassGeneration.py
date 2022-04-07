@@ -1659,6 +1659,38 @@ class TestZodbModuleComponent(SecurityTestCase):
       self.tic()
       self.assertEqual(component.checkConsistency(), [])
 
+
+  def testWorkflowErrorMessage(self):
+    """Check that validation error messages are stored in workflow
+    """
+    component = self._newComponent(self._generateReference('WorkflowErrorMessage'))
+    valid_id = component.getId()
+    self.tic()
+    component.setId('wrong')
+    from Products.ERP5Type.Core.Workflow import ValidationFailed
+    with self.assertRaises(ValidationFailed):
+      self.portal.portal_workflow.doActionFor(component, 'validate_action')
+    last_error_message = str(
+        self.portal.portal_workflow.getInfoFor(
+            component, 'history',
+            wf_id='component_validation_workflow')[-1]['error_message'][0])
+    self.assertEqual(
+        last_error_message,
+        self.portal.Base_translateString(
+            ComponentMixin._message_invalid_id,
+            mapping={'id_prefix': self._document_class.getIdPrefix()}))
+    self.tic()
+
+    # non-regression test: when there is no error the error is no longer
+    # in workflow history
+    component.setId(valid_id)
+    component.validate()
+    self.tic()
+    last_error_message = self.portal.portal_workflow.getInfoFor(
+            component, 'history',
+            wf_id='component_validation_workflow')[-1]['error_message']
+    self.assertEqual(last_error_message, '')
+
   def testReferenceWithReservedKeywords(self):
     """
     Check whether checkConsistency has been properly implemented for checking
