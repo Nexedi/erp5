@@ -6,7 +6,7 @@ portal_catalog = portal.portal_catalog
 
 if context.getRelativeUrl().startswith('portal_'):
   # Show module content before tools content (Category)
-  d = 0.80
+  d = 0.90
 else:
   d = 0.85
 
