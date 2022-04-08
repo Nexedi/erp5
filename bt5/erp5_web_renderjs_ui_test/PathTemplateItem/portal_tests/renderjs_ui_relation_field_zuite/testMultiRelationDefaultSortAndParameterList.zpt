@@ -62,7 +62,7 @@
 </tr>
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
@@ -228,7 +228,7 @@
 </tr>
 
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//input[@value='Save Changes']</td>
   <td></td>
 </tr>
