@@ -76,7 +76,7 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertTextPresent</td>
   <td>Content changed.</td>
   <td></td>
 </tr>
