@@ -541,6 +541,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # Set debug mode after importing ZopeLite that resets it to 0
   cfg.debug_mode = debug
 
+  from ZPublisher.HTTPRequest import HTTPRequest
+  HTTPRequest.retry_max_count = 3
+
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
   root_logger = logging.getLogger()
