@@ -32,9 +32,14 @@ import threading
 import unittest
 import urllib
 import transaction
+import pkg_resources
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+
+ZEO5 = pkg_resources.parse_version(
+  pkg_resources.get_distribution('ZEO').version
+) >= pkg_resources.parse_version('5')
 
 class TestInvalidationBug(ERP5TypeTestCase):
 
@@ -94,9 +99,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
     self.assertEqual(result_catalog_count, 1)
     self.assertGreaterEqual(result_activity_count, 1)
 
-  # TODO: - skip this test for ZEO>=5 because it's covered upstream
-  #         (and later remove it)
-  #       - in slapos.git, enable server_sync in zope.conf
+  @unittest.skipIf(ZEO5, "Covered upstream on ZEO>=5")
   def testLateInvalidationFromZEO(self):
     ### Check unit test is run properly
     from ZEO.ClientStorage import ClientStorage
