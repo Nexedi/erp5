@@ -29,6 +29,7 @@ from six import text_type
 from six.moves._thread import allocate_lock
 
 import transaction
+from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Acquisition import aq_acquire
@@ -230,6 +231,10 @@ def dont_publish_class(klass, request):
     request.response.forbiddenError("class %s" % klass.__name__)
 
 
+def validate_user(request, user):
+    newSecurityManager(request, user)
+
+
 def get_module_info(module_name='Zope2'):
     global _MODULES
     info = _MODULES.get(module_name)
@@ -241,7 +246,7 @@ def get_module_info(module_name='Zope2'):
         app = getattr(module, 'bobo_application', module)
         realm = _DEFAULT_REALM if _DEFAULT_REALM is not None else module_name
         error_hook = getattr(module,'zpublisher_exception_hook', None)
-        validated_hook = getattr(module,'zpublisher_validated_hook', None)
+        validated_hook = getattr(module,'zpublisher_validated_hook', validate_user)
         _MODULES[module_name] = info = (app, realm, _DEFAULT_DEBUG_MODE, validated_hook, error_hook)
     return info
 
@@ -309,6 +314,9 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
 
         try:
             retry = False
+            unauth = False
+            debug_exc = getattr(response, 'debug_exceptions', False)
+
             try:
                 # Raise exception from app if handle-errors is False
                 # (set by zope.testbrowser in some cases)
@@ -339,14 +347,18 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                             raise
                         exc_view_created = True
                 else:
-                    # Handle exception view
-                    exc_view_created = _exc_view_created_response(
-                        exc, request, response)
-
+                    # Handle exception view. Make sure an exception view that
+                    # blows up doesn't leave the user e.g. unable to log in.
+                    try:
+                        exc_view_created = _exc_view_created_response(
+                            exc, request, response)
+                    except Exception:
+                        exc_view_created = False
+                    # _unauthorized modifies the response in-place. If this hook
+                    # is used, an exception view for Unauthorized has to merge
+                    # the state of the response and the exception instance.
                     if isinstance(exc, Unauthorized):
-                        # _unauthorized modifies the response in-place. If this hook
-                        # is used, an exception view for Unauthorized has to merge
-                        # the state of the response and the exception instance.
+                        unauth = True
                         exc.setRealm(response.realm)
                         response._unauthorized()
                         response.setStatus(exc.getStatus())
@@ -357,10 +369,8 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
                 tm.abort()
                 notify(pubevents.PubFailure(request, exc_info, retry))
 
-            if retry:
-                reraise(*exc_info)
-
-            if not (exc_view_created or isinstance(exc, Unauthorized)):
+            if retry or \
+               (not unauth and (debug_exc or not exc_view_created)):
                 reraise(*exc_info)
         finally:
             # Avoid traceback / exception reference cycle.
@@ -376,6 +386,7 @@ def publish(request, module_info):
         request.processInputs()
         response = request.response
 
+        # TODO: here is different
         if debug_mode:
             response.debug_mode = debug_mode
 
@@ -476,6 +487,12 @@ def publish_module(environ, start_response,
                 with load_app(module_info) as new_mod_info:
                     with transaction_pubevents(request, response, err_hook):
                         response = _publish(request, new_mod_info)
+                        # TODO: outside of load_app, because this cause
+                        # "should not load state when connection is closed"
+                        # if used in original place (eg. erp5_web_renderjs_ui_test:testFunctionalRJSDeveloperMode)
+                        user = getSecurityManager().getUser()
+                        if user is not None and user.getUserName() != 'Anonymous User':
+                            environ['REMOTE_USER'] = user.getUserName()
                 break
             except TransientError:
                 if request.supports_retry():
@@ -491,6 +508,7 @@ def publish_module(environ, start_response,
         status, headers = response.finalize()
         start_response(status, headers)
 
+        # TODO: this part is slightly different
         result = response.body
         if isinstance(result, _FILE_TYPES):
             if response.stdout.getvalue():
