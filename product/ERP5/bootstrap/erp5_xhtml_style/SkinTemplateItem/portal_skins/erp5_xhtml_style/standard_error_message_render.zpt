@@ -4,8 +4,8 @@
   xmlns:i18n="http://xml.zope.org/namespaces/i18n"
   metal:define-macro="standard_error_message_render"
 >
-<div tal:condition="options/error_message" tal:content="structure options/error_message" />
-<div tal:condition="not: options/error_message">
+<div tal:condition="python: options.get('error_message')" tal:content="structure options/error_message" />
+<div tal:condition="python: not options.get('error_message')">
   <h2 i18n:translate="">Site Error</h2>
   <p i18n:translate="">An error was encountered while publishing this resource.</p>
   <p>
