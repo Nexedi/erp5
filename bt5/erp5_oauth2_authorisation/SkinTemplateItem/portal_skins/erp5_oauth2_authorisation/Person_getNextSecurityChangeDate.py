@@ -8,13 +8,13 @@ now = DateTime()
 result = None
 for assignment_value in context.objectValues(portal_type='Assignment'):
   if assignment_value.getValidationState() == 'open':
-    for assignent_date in (
+    for assignment_date in (
       assignment_value.getStartDate(),
       assignment_value.getStopDate(),
     ):
-      if assignent_date is not None and assignent_date > now and (
+      if assignment_date is not None and assignment_date > now and (
         result is None or
-        result > assignent_date
+        result > assignment_date
       ):
-        result = assignent_date
+        result = assignment_date
 return result
