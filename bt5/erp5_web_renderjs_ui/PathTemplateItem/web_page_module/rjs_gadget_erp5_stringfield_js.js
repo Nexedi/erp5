@@ -20,6 +20,7 @@
           title: field_json.description,
           hidden: field_json.hidden,
           trim: true,
+          maxlength: field_json.maxlength,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()

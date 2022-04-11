@@ -551,6 +551,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
   if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
                    "LinesField", "ImageField", "FileField", "IntegerField",
                    "PasswordField", "EditorField", "HyperLinkField", "LinkField"):
+    if meta_type in ("StringField", "EmailField"):
+      result.update({
+        "maxlength": field.get_value("display_maxwidth"),
+      })
     if meta_type == "FloatField":
       result.update({
         "precision": field.get_value("precision"),
