@@ -25,6 +25,8 @@ Patch CookieCrumbler to prevent came_from to appear in the URL
 when ERP5 runs in "require_referer" mode.
 """
 
+import six
+
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import InitializeClass
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
@@ -137,7 +139,11 @@ def modifyRequest(self, req, resp):
         attempt = ATTEMPT_LOGIN
         name = req[self.name_cookie]
         pw = req[self.pw_cookie]
-        ac = standard_b64encode('%s:%s' % (name, pw))
+        if six.PY2:
+          ac = standard_b64encode('%s:%s' % (name, pw)).rstrip()
+        else:
+          ac = standard_b64encode(
+            ('%s:%s' % (name, pw)).encode()).rstrip().decode()
         self._setAuthHeader(ac, req, resp)
         if req.get(self.persist_cookie, 0):
           # Persist the user name (but not the pw or session)
@@ -158,7 +164,10 @@ def modifyRequest(self, req, resp):
         ac = unquote(req[self.auth_cookie])
         if ac and ac != 'deleted':
           try:
-            standard_b64decode(ac)
+            if six.PY2:
+              standard_b64decode(ac)
+            else:
+              standard_b64decode(ac.encode())
           except:
             # Not a valid auth header.
             pass
