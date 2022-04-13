@@ -40,8 +40,10 @@ from erp5.component.interface.IAmount import IAmount
 
 from zLOG import LOG, ERROR
 from warnings import warn
+import six
 
 
+@zope.interface.implementer(IAmount)
 class Amount(Base, VariatedMixin):
   """
     A mix-in class which provides some utilities
@@ -57,9 +59,6 @@ class Amount(Base, VariatedMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IAmount)
 
   property_sheets = ( PropertySheet.SimpleItem
                     , PropertySheet.Amount
@@ -95,7 +94,7 @@ class Amount(Base, VariatedMixin):
         and not omit_optional_variation):
       variation_list.append('industrial_phase')
     if base_category_list:
-      variation_list = filter(base_category_list.__contains__, variation_list)
+      variation_list = [v for v in variation_list if v in base_category_list]
     return self.getAcquiredCategoryMembershipList(variation_list, base=1)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -123,7 +122,7 @@ class Amount(Base, VariatedMixin):
       render_category_list = Renderer(display_id=display_id, **kw).render
       kw['display_id'] = 'title'
       for base_category, (object_list,
-                          category_list) in variation_dict.iteritems():
+                          category_list) in six.iteritems(variation_dict):
         if base_category_list and base_category not in base_category_list:
           continue
         variation_category_item_list += render_category_list(category_list)

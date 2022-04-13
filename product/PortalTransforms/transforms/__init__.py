@@ -52,12 +52,12 @@ for m in modules:
     try:
         ns = __import__(m, g, g, None)
         transforms.append(ns.register())
-    except ImportError, e:
+    except ImportError as e:
         msg = "Problem importing module %s : %s" % (m, e)
         log(msg, severity=ERROR)
-    except MissingBinary, e:
+    except MissingBinary as e:
         log(str(e), severity=DEBUG)
-    except Exception, e:
+    except Exception as e:
         import traceback
         traceback.print_exc()
         log("Raised error %s for %s" % (e, m), severity=ERROR)

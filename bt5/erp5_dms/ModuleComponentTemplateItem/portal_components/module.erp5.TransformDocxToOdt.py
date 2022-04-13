@@ -1,11 +1,10 @@
 from Products.PortalTransforms.interfaces import itransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
+@implementer(itransform)
 class DocxToOdt:
   """Transforms docx to odt by using Cloudooo"""
-
-  implements(itransform)
 
   __name__ = 'docx_to_odt'
   inputs   = ('application/vnd.openxmlformats-officedocument.wordprocessingml.document',)

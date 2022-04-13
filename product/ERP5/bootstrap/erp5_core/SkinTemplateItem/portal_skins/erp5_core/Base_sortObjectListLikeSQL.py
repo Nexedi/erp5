@@ -1,3 +1,4 @@
+from past.builtins import cmp
 def generic_sort(a,b):
   result = 0
   for k,v in sort_order:

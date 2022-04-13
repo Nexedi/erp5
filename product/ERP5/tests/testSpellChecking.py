@@ -29,6 +29,7 @@
 import unittest
 from subprocess import Popen, PIPE
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import six
 
 
 # XXX (lucas): this list must be added in text file
@@ -113,7 +114,7 @@ class TestSpellChecking(ERP5TypeTestCase):
     """
     message = '"%s" is misspelled, suggestion are : "%s"'
     result_dict = {}
-    for word, result_list in self.spellChecker(sentence).iteritems():
+    for word, result_list in six.iteritems(self.spellChecker(sentence)):
       filtered_result_list = filter(lambda x: x not in ('*', ''), result_list)
       if filtered_result_list:
         result_dict[word] = message % (word, \

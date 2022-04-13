@@ -90,11 +90,10 @@ class PayzenREST:
 
 
 from erp5.component.interface.IPaymentService import IPaymentService
+@zope.interface.implementer(IPaymentService)
 class PayzenService(XMLObject, PayzenREST):
   meta_type = 'Payzen Service'
   portal_type = 'Payzen Service'
-
-  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()

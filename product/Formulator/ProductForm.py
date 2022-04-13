@@ -60,7 +60,7 @@ class ProductForm(BasicForm):
         # pass a title parameter to the Field
         kwargs['title'] = field_id
 
-        fieldObject = apply(formulatorFieldClass, (field_id, ), kwargs)
+        fieldObject = formulatorFieldClass(*(field_id, ), **kwargs)
 
         # alter Field error messages
         # Note: This messes with Formulator innards and may break in the future.
@@ -68,7 +68,7 @@ class ProductForm(BasicForm):
         # and there isn't a Python-oriented method for altering message values
         # so at present it's the only option.
         for arg in kwargs.keys():
-            if fieldObject.message_values.has_key(arg):
+            if arg in fieldObject.message_values:
                 fieldObject.message_values[arg] = kwargs[arg]
 
         # Add the new Field to the wrapped BasicForm object
@@ -115,7 +115,7 @@ class ProductForm(BasicForm):
 
         try:
             result=self.validate_all(REQUEST)
-        except FormValidationError, e:
+        except FormValidationError as e:
             for error in e.errors:
                 errors[error.field.get_value('title')]=error.error_text
 

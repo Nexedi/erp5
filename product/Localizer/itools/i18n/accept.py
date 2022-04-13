@@ -20,7 +20,7 @@ protocol.
 """
 
 # Import from the Standard Library
-import __builtin__
+import builtins
 from decimal import Decimal
 from locale import getdefaultlocale
 
@@ -160,7 +160,7 @@ def select_language(languages=None):
 
 
 def init_language_selector(language_selector=select_language):
-    __builtin__.__dict__['select_language'] = language_selector
+    builtins.__dict__['select_language'] = language_selector
 
 
 # Set default language selector

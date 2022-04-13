@@ -4,7 +4,6 @@
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
 from Products.PythonScripts.standard import url_quote
-from string import zfill
 
 portal = context.getPortalObject()
 request = context.REQUEST
@@ -27,7 +26,7 @@ if depth == 0:
   count = 0
   while   count < 12:
     # Create one Temp Object
-    o = newTempBase(portal, id='year', uid='new_%s' % zfill('year',4))
+    o = newTempBase(portal, id='year', uid='new_year')
     # Setting delimiter
     if current_date.month() in [1, 7]:
       o.setProperty('delimiter_type', 1)

@@ -36,6 +36,7 @@ from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.CMFCore.Expression import Expression
+import six
 
 class AttributeEqualityConstraint(PropertyExistenceConstraint):
   """
@@ -133,5 +134,5 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
       'condition'     : 'python: object.getPortalType() == 'Foo',
     }
     """
-    for name, value in property_dict.iteritems():
+    for name, value in six.iteritems(property_dict):
       yield dict(name=value)

@@ -7,6 +7,7 @@ from Products.Formulator.FormToXML import formToXML
 from DateTime import DateTime
 from Products.Formulator.Errors import ValidationError, FormValidationError
 from Testing import ZopeTestCase
+import six
 ZopeTestCase.installProduct('Formulator')
 
 class FakeRequest:
@@ -258,7 +259,7 @@ class SerializeTestCase(unittest.TestCase):
                           }
         try:
             request = FakeRequest()
-            for key, sub_field in int_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(int_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'42',
@@ -266,7 +267,7 @@ class SerializeTestCase(unittest.TestCase):
             int_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in float_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(float_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'1.7',
@@ -275,7 +276,7 @@ class SerializeTestCase(unittest.TestCase):
 
             # XXX cannot test "defaults to now", as this may fail randomly
             request.clear()
-            for key, sub_field in date_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(date_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_input_style': 'list',
@@ -303,7 +304,7 @@ class SerializeTestCase(unittest.TestCase):
             date_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in list_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(list_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'foo',
@@ -312,7 +313,7 @@ class SerializeTestCase(unittest.TestCase):
             list_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in multi_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(multi_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'foo',
@@ -324,7 +325,7 @@ class SerializeTestCase(unittest.TestCase):
             multi_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in link_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(link_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'http://www.absurd.org',
@@ -335,7 +336,7 @@ class SerializeTestCase(unittest.TestCase):
             link_field.manage_edit(REQUEST=request)
 
             request.clear()
-            for key, sub_field in empty_field.form.fields.iteritems():
+            for key, sub_field in six.iteritems(empty_field.form.fields):
               request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'None',
@@ -362,7 +363,7 @@ class SerializeTestCase(unittest.TestCase):
             # naively.
             message = 'the values of %r and %r are different: %r != %r' \
                     % (field, field2, field.values, field2.values)
-            self.assertEqual(sorted(field.values.iterkeys()),
+            self.assertEqual(sorted(six.iterkeys(field.values)),
                     sorted(field2.values.keys()),
                     message)
 

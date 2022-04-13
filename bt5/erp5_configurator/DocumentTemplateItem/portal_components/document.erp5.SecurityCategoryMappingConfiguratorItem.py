@@ -35,6 +35,7 @@ from erp5.component.mixin.SkinConfiguratorItemMixin import \
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,
                                               XMLObject):
   """ Setup the ERP5Type_getSecurityCategoryMapping Python Script which
@@ -49,9 +50,6 @@ class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

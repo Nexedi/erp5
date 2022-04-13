@@ -69,5 +69,5 @@ class Cache:
         else:
             cache = getattr(obj, id)
             key = self._genCacheKey(key)
-            if cache.has_key(key):
+            if key in cache:
                 del cache[key]

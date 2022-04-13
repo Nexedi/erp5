@@ -23,6 +23,7 @@ DCWorkflow implementation *deprecated* in favor of ERP5 Workflow.
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 assert WITH_LEGACY_WORKFLOW
 
+import six
 import transaction
 from Products.ERP5Type import Globals
 import App
@@ -393,6 +394,6 @@ for method_name, security in (
     security(method_name)
   setattr(InteractionWorkflowDefinition,
           method_name,
-          getattr(ERP5InteractionWorkflow, method_name).im_func)
+          six.get_unbound_function(getattr(ERP5InteractionWorkflow, method_name)))
 
 Globals.InitializeClass(InteractionWorkflowDefinition)

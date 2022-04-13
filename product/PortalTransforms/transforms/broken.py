@@ -1,10 +1,11 @@
+from __future__ import print_function
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.utils import log
 WARNING=100
 
+@implementer(ITransform)
 class BrokenTransform:
-    implements(ITransform)
 
     __name__ = "broken transform"
     inputs  = ("BROKEN",)
@@ -23,7 +24,7 @@ class BrokenTransform:
         msg = "Calling convert on BROKEN transform %s (%s). Error: %s" % \
               (self.id, self.module, self.error)
         log(msg, severity=WARNING)
-        print msg
+        print(msg)
         data.setData('')
         return data
 

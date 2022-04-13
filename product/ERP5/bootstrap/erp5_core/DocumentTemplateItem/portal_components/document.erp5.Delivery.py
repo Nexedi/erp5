@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 import zope.interface
 
 from AccessControl import ClassSecurityInfo
@@ -47,6 +48,9 @@ from erp5.component.interface.IMovementCollection import IMovementCollection
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IAmountGenerator import IAmountGenerator
 
+@zope.interface.implementer(IAmountGenerator,
+                            IDivergenceController,
+                            IMovementCollection)
 class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                CompositionMixin, AmountGeneratorMixin):
   """
@@ -74,11 +78,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                     , PropertySheet.Reference
                     , PropertySheet.Price
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(IAmountGenerator,
-                            IDivergenceController,
-                            IMovementCollection)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
   def isAccountable(self):

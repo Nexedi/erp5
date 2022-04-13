@@ -34,10 +34,9 @@ from Products.ERP5Type.Globals import InitializeClass
 
 INTERNAL_TRANSLATION_DICT_NAME = '__translation_dict'
 
+@zope.interface.implementer(IPropertyTranslatable)
 class PropertyTranslatableBuiltInDictMixIn:
   """An implementation of IPropertyTranslatable with built-in dict."""
-
-  zope.interface.implements(IPropertyTranslatable)
 
   security = ClassSecurityInfo()
 

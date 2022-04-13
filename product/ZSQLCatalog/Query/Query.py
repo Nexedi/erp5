@@ -30,15 +30,14 @@
 
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer(IQuery)
 class Query(object):
   """
     This is the base class of all kind of queries. Its only purpose is to be
     able to distinguish any kind of value from a query.
   """
-
-  implements(IQuery)
   __allow_access_to_unprotected_subobjects__ = 1
 
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):

@@ -25,6 +25,7 @@ from textwrap import dedent
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.PythonScripts.PythonScript import PythonScript
+import six
 
 
 class HBTreeFolder2Tests(ERP5TypeTestCase):
@@ -259,7 +260,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           script.REQUEST = DummyRequest
           script(h)
         finally:
-          for roles_id, orig in saved_class_attributes.iteritems():
+          for roles_id, orig in six.iteritems(saved_class_attributes):
             if orig is marker:
               delattr(HBTreeFolder2, roles_id)
             else:

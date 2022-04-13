@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 from Products.ERP5Type.Constraint import Constraint
 
 class ContentExistence(Constraint):

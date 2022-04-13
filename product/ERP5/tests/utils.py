@@ -33,6 +33,7 @@ from urllib import url2pathname
 from ZODB.DemoStorage import DemoStorage
 from ZODB import DB
 from Products.ERP5Type.XMLExportImport import importXML
+import six
 
 if int(os.environ.get('erp5_report_new_simulation_failures') or 0):
   newSimulationExpectedFailure = lambda test: test
@@ -109,7 +110,7 @@ class BusinessTemplateInfoBase:
     def parse(file_path):
       action_information = importXML(connection, file_path)
       action_information.__repr__()
-      for key, value in action_information.__dict__.iteritems():
+      for key, value in six.iteritems(action_information.__dict__):
         if value not in (None, "") and key in ('action', 'condition') :
           setattr(action_information, key, value.text)
       actions = action_information.__dict__.copy()

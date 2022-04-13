@@ -10,11 +10,12 @@ import re
 import getopt
 import glob
 import cgi
-import mimetools
-import urllib
-import urlparse
+import six.moves import .urllib
 import multifile
-import StringIO
+if six.PY2:
+    from email import message_from_file as message_from_bytes
+else:
+    from email import message_from_bytes
 
 _TEST_CASE_HEADER = """\
 <html>
@@ -181,7 +182,7 @@ class ScenarioGenerator:
                                            , 'test-case-title='
                                            ]
                                          )
-        except getopt.GetoptError, msg:
+        except getopt.GetoptError as msg:
             self.printUsage( msg=msg)
 
         for o, v in opts:
@@ -309,9 +310,9 @@ class ScenarioGenerator:
         , url_parm
         , query
         , fragment
-        ) = urlparse.urlparse( uri )
+        ) = urllib.parse.urlparse( uri )
 
-        site_host = urlparse.urlunparse( ( scheme, netloc, '', '', '', '' ) )
+        site_host = urllib.parse.urlunparse( ( scheme, netloc, '', '', '', '' ) )
 
         if scheme and parms.get( 'site_host' ) is None:
             parms[ 'site_host' ] = site_host
@@ -322,7 +323,7 @@ class ScenarioGenerator:
         if self._site_path and path.startswith( self._site_path ):
             path = path[ len( self._site_path ) : ]
 
-        uri = urlparse.urlunparse(
+        uri = urllib.parse.urlunparse(
                             ( '', '', path, url_parm, query, fragment ) )
 
         return uri, query
@@ -370,7 +371,7 @@ class ScenarioGenerator:
         if uri is None:
             return # XXX foreign site
 
-        headers = mimetools.Message( f )
+        headers = message_from_bytes ( f )
 
         body_start = f.tell()
         content_length = body_end - body_start
@@ -423,7 +424,7 @@ class ScenarioGenerator:
             status = response_file.readline().rstrip()
             match = RESPONSE_LINE.match( status )
             http_verb, code, reason = match.groups()
-            response_headers = mimetools.Message( response_file )
+            response_headers = message_from_bytes ( response_file )
             response_file.close()
         else:
             code = 200

@@ -133,7 +133,7 @@ class CacheFactory:
     l = []
     for cp in self.cache_plugins:
       l.append(cp.cache_expire_check_interval)
-    l = filter(lambda x: x is not None and x != 0, l)
+    l = [x for x in l if x is not None and x != 0]
     self.cache_expire_check_interval = min(l)
     self._next_cache_expire_check_at = time() + self.cache_expire_check_interval
 
@@ -324,7 +324,7 @@ def clearCache(cache_factory_list=(DEFAULT_CACHE_FACTORY,)):
        stacklevel=2)
   cache_storage = CachingMethod.factories
   for cf_key in cache_factory_list:
-    if cache_storage.has_key(cf_key):
+    if cf_key in cache_storage:
       for cp in cache_storage[cf_key].getCachePluginList():
         cp.clearCache()
 

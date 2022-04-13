@@ -41,7 +41,8 @@ from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
-import urllib
+from six.moves import urllib
+import six
 
 class Filter(object):
   """
@@ -114,7 +115,7 @@ class FilterDict(object):
 
   def __setitem__(self, key, item):
     filter_ = self[key]
-    for k, v in item.iteritems():
+    for k, v in six.iteritems(item):
       filter_[k] = v
 
   def get(self, key, default=None):

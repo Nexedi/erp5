@@ -1,5 +1,6 @@
 from collections import defaultdict
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
+import six
 operator_value_dict, logical_operator, _ = search_key.processSearchValue(
   detect_like=True,
   search_value=search_value,
@@ -27,7 +28,7 @@ query_list = [
     ),
     logical_operator='and',
   )
-  for original_message, portal_type_set in original_message_dict.iteritems()
+  for original_message, portal_type_set in six.iteritems(original_message_dict)
 ]
 if len(query_list) == 1:
   return query_list[0]

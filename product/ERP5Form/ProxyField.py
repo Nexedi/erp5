@@ -28,7 +28,8 @@
 #
 ##############################################################################
 
-from thread import get_ident
+import six
+from _thread import get_ident
 
 from AccessControl import allow_class, ClassSecurityInfo
 from Acquisition import aq_base
@@ -130,7 +131,7 @@ class ProxyValidator(Validator.Validator):
     proxy_field = field.getRecursiveTemplateField()
     try:
       result = proxy_field.validator.validate(field, key, REQUEST)
-    except ValidationError, error:
+    except ValidationError as error:
       error.field_id = field.id
       raise error
     return result
@@ -180,13 +181,13 @@ class ProxyField(ZMIField):
         for field in template_field.form.get_fields_in_group(group):
           field_id = field.id
           checkbox_key = "surcharge_%s" % field_id
-          if not REQUEST.has_key(checkbox_key):
+          if checkbox_key not in REQUEST:
             surcharge_list.append(field_id)
 
       try:
         # validate the form and get results
         result = template_field.form.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -204,7 +205,7 @@ class ProxyField(ZMIField):
     try:
       # validate the form and get results
       result = self.form.validate(REQUEST)
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -243,9 +244,9 @@ class ProxyField(ZMIField):
     if self.get_unicode_mode():
       new_result = {}
       for key, value in result.items():
-        if type(value) == type(''):
+        if isinstance(value, six.binary_type):
           # in unicode mode, Formulator UI always uses UTF-8
-          value = unicode(value, 'UTF-8')
+          value = value.decode('UTF-8')
         new_result[key] = value
       result = new_result
 
@@ -254,7 +255,7 @@ class ProxyField(ZMIField):
       # XXX Remove old values
       values.pop(key, None)
       # store keys for which we want to notify change
-      if not values.has_key(key) or values[key] != value:
+      if key not in values or values[key] != value:
         changed.append(key)
 
     proxied_field = self.getTemplateField()
@@ -289,14 +290,14 @@ class ProxyField(ZMIField):
         for field in template_field.tales_form.get_fields_in_group(group):
           field_id = field.id
           checkbox_key = "surcharge_%s" % field_id
-          if not REQUEST.has_key(checkbox_key):
+          if checkbox_key not in REQUEST:
             surcharge_list.append(field_id)
 
 
       try:
         # validate the form and get results
         result = template_field.tales_form.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -310,7 +311,7 @@ class ProxyField(ZMIField):
     try:
       # validate the form and get results
       result = self.tales_form.validate(REQUEST)
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -348,8 +349,8 @@ class ProxyField(ZMIField):
     self.tales = tales
     self.delegated_list = sorted(surcharge_list)
     # Put a default value on not delegated parameter
-    for key in result.keys():
-      if not self.values.has_key(key):
+    for key in list(result.keys()):
+      if key not in self.values:
         self.values[key] = self.get_recursive_orig_value(key, include=0)
 
   security.declareProtected('Change Formulator Fields', 'manage_messages')
@@ -361,11 +362,11 @@ class ProxyField(ZMIField):
     unicode_mode = self.get_unicode_mode()
     for message_key in self.get_error_names():
       checkbox_key = "surcharge_%s" % message_key
-      if not REQUEST.has_key(checkbox_key):
+      if checkbox_key not in REQUEST:
         surcharge_list.append(message_key)
         message = REQUEST[message_key]
         if unicode_mode:
-          message = unicode(message, 'UTF-8')
+          message = message.decode('UTF-8')
         messages[message_key] = message
       else:
         if message_key in messages:
@@ -530,7 +531,7 @@ class ProxyField(ZMIField):
     if include and \
       ((id in self.widget.property_names) or \
        ((not self.is_delegated(id)) and \
-       (self.values.has_key(id)))):
+       (id in self.values))):
       return self.get_orig_value(id)
     else:
       proxied_field = self.getTemplateField()

@@ -95,8 +95,9 @@ class DiffFile(object):
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
 
-  def __nonzero__(self):
+  def __bool__(self):
     return self.binary or bool(self.children)
+  __nonzero__ = __bool__ # six.PY2
 
   def __len__(self):
     return len(self.children)

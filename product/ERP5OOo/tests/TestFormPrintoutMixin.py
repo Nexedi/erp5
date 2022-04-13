@@ -32,7 +32,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from StringIO import StringIO
+from six import StringIO
 
 class TestFormPrintoutMixin(ERP5TypeTestCase):
   run_all_test = 1

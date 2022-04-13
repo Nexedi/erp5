@@ -36,6 +36,7 @@ from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 from zLOG import LOG, INFO
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup role per module basis. """
 
@@ -48,9 +49,6 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

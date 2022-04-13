@@ -1,3 +1,4 @@
+import six
 portal = context.getPortalObject()
 getWorkflowValueListFor = portal.portal_workflow.getWorkflowValueListFor
 translateString = portal.Base_translateString
@@ -47,7 +48,7 @@ for line in context.searchFolder(group_by=column_list, select_dict=select_dict, 
     state_count_dict[state] = count + state_count_dict[state]
 listbox = []
 append = listbox.append
-for (portal_type, workflow), state_count_dict in sorted(type_workflow_state_count_dict_dict.iteritems(), key=lambda x: x[0]):
+for (portal_type, workflow), state_count_dict in sorted(six.iteritems(type_workflow_state_count_dict_dict), key=lambda x: x[0]):
   if sum(state_count_dict.values()):
     append({
       'translated_portal_type': '%s - %s' % (portal_type_translated_title_dict[portal_type], workflow_translated_title_dict[workflow]),
@@ -55,7 +56,7 @@ for (portal_type, workflow), state_count_dict in sorted(type_workflow_state_coun
       'count' : '',
     })
     translated_state_title_dict = workflow_translated_state_title_dict[workflow]
-    for state, count in sorted(state_count_dict.iteritems(), key=lambda x: x[0]):
+    for state, count in sorted(six.iteritems(state_count_dict), key=lambda x: x[0]):
       if count:
         append({
           'translated_portal_type': '',
