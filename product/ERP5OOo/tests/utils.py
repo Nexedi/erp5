@@ -32,14 +32,15 @@ Validator: a class defining a `validate` method that expects odf file content
 as first argument and returns list of errors.
 
 """
+from __future__ import print_function
 
 import os
 import sys
 import tempfile
 import zipfile
 import popen2
-import urllib2
-from cStringIO import StringIO
+from six.moves import urllib
+from six.moves import cStringIO as StringIO
 
 try:
   import lxml
@@ -108,7 +109,7 @@ else:
   class NoValidator:
     """Does not actually validate, but keep the interface."""
     def validate(self, odf_file_content):
-      print >> sys.stderr, 'No validator available'
+      print('No validator available', file=sys.stderr)
 
   Validator = NoValidator
 

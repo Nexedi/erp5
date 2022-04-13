@@ -1,4 +1,5 @@
-for k, v in kw.items():
+from Products.ERP5Type.Utils import ensure_list
+for k, v in ensure_list(kw.items()):
   if v:
     if k == "str_object_path":
       kw["path"] = v

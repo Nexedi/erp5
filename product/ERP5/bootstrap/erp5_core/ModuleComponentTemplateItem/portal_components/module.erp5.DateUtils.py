@@ -32,7 +32,7 @@ import warnings
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from datetime import datetime
-from string import zfill
+import six
 
 security = ModuleSecurityInfo(__name__)
 security.declarePublic('addToDate', 'getClosestDate',
@@ -268,7 +268,7 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
                               []).append(to_date.strftime(format_dict[current_key]))
 
   returned_value_dict = {}
-  for key, value in diff_value_dict.iteritems():
+  for key, value in six.iteritems(diff_value_dict):
     if to_inverse:
       value.reverse()
       returned_value_dict[key] = value
@@ -446,7 +446,7 @@ def convertDateToHour(date=None):
   # and this provides the use of toordinal method.
   formatted_creation_date = datetime(creation_date_dict['year'],creation_date_dict['month'],creation_date_dict['day'])
   # reference date which is the first day of creation date year
-  reference_date = datetime(creation_date_dict['year'], 01, 1)
+  reference_date = datetime(creation_date_dict['year'], 0o1, 1)
   # calculate the ordinal date of the creation date and the reference date
   ordinal_date = datetime.toordinal(formatted_creation_date)
   ordinal_reference_date = datetime.toordinal(reference_date)
@@ -494,7 +494,7 @@ def atTheEndOfPeriod(date, period):
   if period == 'year':
     end = addToDate(DateTime('%s/01/01 00:00:00 %s' % (date.year(), date.timezone())), **{period:1})
   elif period == 'month':
-    end = addToDate(DateTime('%s/%s/01 00:00:00 %s' % (date.year(), zfill(date.month(), 2), date.timezone())), **{period:1})
+    end = addToDate(DateTime('%s/%02d/01 00:00:00 %s' % (date.year(), date.month(), date.timezone())), **{period:1})
   elif period == 'day':
     end = addToDate(date.earliestTime(), hour=36).earliestTime()
   elif period == 'week':

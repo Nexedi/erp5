@@ -35,6 +35,7 @@ from Products.ERP5Type import Permissions
 import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
+@zope.interface.implementer(IComponent)
 class ModuleComponent(ComponentMixin, TextContentHistoryMixin):
   """
   ZODB Component for Modules, eg non-Documents from Products, and the base
@@ -42,8 +43,6 @@ class ModuleComponent(ComponentMixin, TextContentHistoryMixin):
   """
   meta_type = 'ERP5 Module Component'
   portal_type = 'Module Component'
-
-  zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

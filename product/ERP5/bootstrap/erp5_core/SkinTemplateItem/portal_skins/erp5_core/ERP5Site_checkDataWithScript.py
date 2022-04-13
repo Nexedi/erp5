@@ -18,6 +18,7 @@ From document pointed to by 'relative_url':
 For the portal, 'relative_url' must be false and only module objects are
 considered if id_list is None.
 """
+from six.moves import xrange
 document = context.getPortalObject()
 context = document.portal_activities
 if relative_url:

@@ -33,10 +33,11 @@ Accessor Holders, that is, generation of methods for ERP5
 * Utils, Property Sheet Tool can be probably be cleaned up as well by
 moving specialized code here.
 """
+from six import string_types as basestring
 from types import ModuleType
 
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import createExpressionContext
+from Products.ERP5Type.Utils import createExpressionContext, ensure_list
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
@@ -45,6 +46,7 @@ from Products.ERP5Type.Accessor import Related, RelatedValue
 from AccessControl import ClassSecurityInfo
 
 from zLOG import LOG, ERROR, INFO, WARNING
+import six
 
 class AccessorHolderType(type):
   _skip_permission_tuple = (Permissions.AccessContentsInformation,
@@ -97,7 +99,7 @@ class AccessorHolderModuleType(ModuleType):
     """
     Clear the content of the module
     """
-    for klass in self.__dict__.values():
+    for klass in ensure_list(self.__dict__.values()):
       if isinstance(klass, AccessorHolderType):
         # Delete these attributes (computed on the portal type class
         # from its accessor holder) before deleting the class itself
@@ -335,7 +337,7 @@ def applyCategoryAsRelatedValueAccessor(accessor_holder,
   accessor = RelatedValue.IdListGetter(accessor_name + 'RelatedIds', category_id)
   accessor_holder.registerAccessor(accessor, read_permission)
 
-  for accessor_class, accessor_name_list in related_accessor_definition_dict.items():
+  for accessor_class, accessor_name_list in six.iteritems(related_accessor_definition_dict):
     for accessor_name in accessor_name_list:
       accessor = accessor_class(accessor_name % uppercase_category_id, category_id)
       accessor_holder.registerAccessor(accessor, read_permission)

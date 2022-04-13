@@ -35,6 +35,7 @@ from Products.CMFCategory.Category import NBSP_UTF8
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+import six
 
 class TestCMFCategory(ERP5TypeTestCase):
 
@@ -102,7 +103,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.validateRules()
 
     portal_categories = self.getCategoriesTool()
-    for name, kw in self.category_dict.iteritems():
+    for name, kw in six.iteritems(self.category_dict):
       try:
         bc = portal_categories[name]
       except KeyError:
@@ -168,7 +169,7 @@ class TestCMFCategory(ERP5TypeTestCase):
   def beforeTearDown(self):
     """Clean up."""
     # type informations
-    for portal_type, categories in self._original_categories.iteritems():
+    for portal_type, categories in six.iteritems(self._original_categories):
       ti = self.getTypesTool().getTypeInfo(portal_type)
       ti.filter_content_types = 1
       ti._setTypeBaseCategoryList(categories)

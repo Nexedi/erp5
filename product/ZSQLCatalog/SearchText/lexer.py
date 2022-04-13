@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -26,15 +27,17 @@
 #
 ##############################################################################
 
+import six
+from io import BytesIO
+
 from ply import lex, yacc
 import sys
-from cStringIO import StringIO
 
 try:
   from zLOG import LOG
 except ImportError:
   def LOG(channel, level, message):
-    print >>sys.stderr, message
+    print(message, file=sys.stderr)
 
 class ParserOrLexerError(Exception):
   pass
@@ -48,8 +51,7 @@ class ParserError(ParserOrLexerError):
 class lexer(object):
   def init(self, **kw):
     debug = kw.pop('debug', False)
-    # Catch all logs with a cStringIO
-    output = sys.stdout = sys.stderr = StringIO()
+    output = sys.stdout = sys.stderr = BytesIO()
     self.lexer = lex.lex(object=self, **kw)
     self.parser = yacc.yacc(module=self, debug=debug,
                             debugfile="%s.out" % (self.__class__.__name__, ),
@@ -145,6 +147,6 @@ def update_docstrings(klass):
       if callable(source):
         destination = getattr(klass, property)
         assert callable(destination)
+        destination = six.get_unbound_function(destination)
         if destination.__doc__ is None:
-          destination.im_func.__doc__ = source.__doc__
-
+          destination.__doc__ = source.__doc__

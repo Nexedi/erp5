@@ -28,6 +28,7 @@
 ##############################################################################
 import hashlib
 import re
+import six
 
 from copy import deepcopy
 
@@ -42,7 +43,7 @@ from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type import CodingStyle
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 
-from urllib import quote
+from six.moves.urllib.parse import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
 from AccessControl import Unauthorized, ClassSecurityInfo
 from DateTime import DateTime
@@ -397,8 +398,8 @@ def _get_default(self, key, value, REQUEST):
     # this solves a problem when re-rendering a sticky form with
     # values from request
     if (self.has_value('unicode') and self.get_value('unicode') and
-        type(value) == type('')):
-        return unicode(value, self.get_form_encoding())
+        isinstance(value, six.binary_type)):
+        return six.text_type(value, self.get_form_encoding())
     else:
         return value
 
@@ -747,12 +748,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                     alternate_name = field.get_value('alternate_name')
                     if alternate_name:
                         result[alternate_name] = value
-                except FormValidationError, e: # XXX JPS Patch for listbox
+                except FormValidationError as e: # XXX JPS Patch for listbox
                     errors.extend(e.errors)
                     result.update(e.result)
-                except ValidationError, err:
+                except ValidationError as err:
                     errors.append(err)
-                except KeyError, err:
+                except KeyError as err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
 
         if len(errors) > 0:
@@ -765,7 +766,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         "".join(
           str(validated_data[key])
           for key in sorted(validated_data.keys())
-          if isinstance(validated_data[key], (str, unicode, int, long, float, DateTime)))
+          if isinstance(validated_data[key], (six.text_type, six.binary_type, float, DateTime) + six.integer_types))
       ).hexdigest()
 
     # FTP/DAV Access
@@ -1030,7 +1031,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
               if field.meta_type == 'ProxyField':
                 key = "%s.%s" % (field.get_value('form_id'),
                                  field.get_value('field_id'))
-                if proxy_dict.has_key(key):
+                if key in proxy_dict:
                   proxy_dict[key]['related_proxy_list'].append(
                       {'short_path': "%s.%s" % \
                       (field.aq_parent.id, field.id),
@@ -1051,8 +1052,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
       return proxy_dict_list
 
-    _proxy_copy_type_list = (bytes, unicode, int, long, float, bool, list,
-                             tuple, dict, DateTime)
+    _proxy_copy_type_list = (bytes, six.text_type, float, bool, list,
+                             tuple, dict, DateTime) + six.integer_types
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
     def proxifyField(self, field_dict=None, force_delegate=False,
@@ -1066,7 +1067,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         """
         def copy(field, value_type):
             new_dict = {}
-            for key, value in getFieldDict(field, value_type).iteritems():
+            for key, value in six.iteritems(getFieldDict(field, value_type)):
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
                 elif not (value is None or
@@ -1188,7 +1189,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         """
         def copy(field, value_type):
             new_dict = {}
-            for key, value in getFieldDict(field, value_type).iteritems():
+            for key, value in six.iteritems(getFieldDict(field, value_type)):
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
                 elif not (value is None or

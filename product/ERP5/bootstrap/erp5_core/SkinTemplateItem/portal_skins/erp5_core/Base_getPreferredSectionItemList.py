@@ -33,7 +33,8 @@ section_item_list = getPreferredSectionItemList(portal_type, validation_state)
 if base_category:
   section_item_list = section_item_list[::] # make a copy not to modify the cache value
   current_category = context.getProperty(base_category)
-  if current_category and current_category not in zip(*section_item_list)[1]:
+  from Products.ERP5Type.Utils import ensure_list
+  if current_category and current_category not in ensure_list(zip(*section_item_list))[1]:
     section_item_list.append(
         (context.getProperty('%s_title' % base_category),
          context.getProperty(base_category)))

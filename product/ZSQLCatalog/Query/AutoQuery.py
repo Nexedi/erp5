@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six import string_types as basestring
 from .Query import Query
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.query import IQuery

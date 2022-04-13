@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import six
+
 from cgi import escape
 from lxml import etree
 from lxml.etree import Element, SubElement, CDATA
@@ -53,7 +55,7 @@ def formToXML(form, prologue=1):
           elif isinstance(value, list):
             value_element = SubElement(values_element, key, type='list')
           else:
-            if not isinstance(value, (str, unicode)):
+            if not isinstance(value, six.string_types):
               value = str(value)
             value_element = SubElement(values_element, key)
           value_element.text = escape(str(value)).decode(encoding)

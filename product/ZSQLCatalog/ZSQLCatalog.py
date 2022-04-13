@@ -13,6 +13,9 @@
 ##############################################################################
 """ZCatalog product"""
 from __future__ import absolute_import
+import six
+from six.moves import urllib
+from Products.ERP5Type.Utils import ensure_list
 
 from App.special_dtml import DTMLFile
 from App.Dialogs import MessageDialog
@@ -34,7 +37,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import clearCache
 import string, sys
 import time
-import urllib
 from ZODB.POSException import ConflictError
 
 from zLOG import LOG, ERROR, INFO
@@ -636,7 +638,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     c_elapse = time.clock() - c_elapse
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
+              urllib.parse.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
 
   security.declareProtected(manage_zcatalog_entries, 'manage_editSchema')
   def manage_editSchema(self, names, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
@@ -755,7 +757,7 @@ class ZCatalog(Folder, Persistent, Implicit):
               goto_current_catalog = 1
               continue
             priority = archive.getPriority()
-            if catalog_dict.has_key(catalog_id):
+            if catalog_id in catalog_dict:
               catalog_dict[catalog_id]['obj'].append(obj)
             else:
               catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
@@ -771,7 +773,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     # run activity or execute for each archive depending on priority
     if catalog_dict:
-      for catalog_id in catalog_dict.keys():
+      for catalog_id in ensure_list(catalog_dict.keys()):
         if goto_current_catalog and catalog_id == default_catalog.id:
           # if we reindex in current catalog, do not relaunch an activity for this
           continue
@@ -1089,7 +1091,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     "Return list of valid roles"
     obj=self
     dict={}
-    dup =dict.has_key
+    dup =dict.__contains__
     x=0
     while x < 100:
       if hasattr(obj, '__ac_roles__'):
@@ -1101,7 +1103,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         break
       obj=obj.aq_parent
       x=x+1
-    roles=dict.keys()
+    roles=ensure_list(dict.keys())
     roles.sort()
     return roles
 
@@ -1256,7 +1258,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       fixed = []
       removed = []
 
-      for path, rid in uids.items():
+      for path, rid in six.iteritems(uids):
         ob = None
         if path[:1] == '/':
           ob = self.resolve_url(path[1:],REQUEST)

@@ -30,6 +30,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import ensure_list
+
     # XXX need to decide how Constraints between task should be defined on
     # planning.
     # ideally, an external method should be called for validating all
@@ -284,7 +286,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       if activity_object.name in warning_activity_list:
         # activity contains a block that has not been validated
         # The validation update process is canceled, and the error is reported
-        err = ValidationError(StandardError,activity_object)
+        err = ValidationError(Exception,activity_object)
         errors_list.append(err)
         pass
       else:
@@ -1083,7 +1085,7 @@ class BasicStructure:
     # select_expression is passed, this can raise an exception, because stat
     # method sets select_expression, and this might cause duplicated column
     # names.
-    if 'select_expression' in kw.keys():
+    if 'select_expression' in ensure_list(kw.keys()):
       del kw['select_expression']
 
     sec_layer_method_name = None
@@ -1095,11 +1097,11 @@ class BasicStructure:
     if getattr(self.list_method, 'method_name', None) is not None:
       # building a complex query so we should not pass too many variables
       kw={}
-      if self.REQUEST.has_key('portal_type'):
+      if 'portal_type' in self.REQUEST:
         kw['portal_type'] = self.REQUEST['portal_type']
       elif self.getPortalTypeList() is not None:
         kw['portal_type'] = self.getPortalTypeList()
-      elif kw.has_key('portal_type'):
+      elif 'portal_type' in kw:
         if kw['portal_type'] in ['', []]:
           del kw['portal_type']
       # remove useless matter
@@ -1914,8 +1916,8 @@ class BasicGroup:
       else:
         block_end = None
 
-      if lane_axis_info.has_key('bound_start') and \
-               lane_axis_info.has_key('bound_stop'):
+      if 'bound_start' in lane_axis_info and \
+               'bound_stop' in lane_axis_info:
         # testing if activity is visible according to the current zoom selection
         # over the lane_axis
         if (block_begin is None):
@@ -2643,7 +2645,7 @@ class Bloc:
         self.buildInfo(info_dict=info_dict, area='info_botleft'),
         self.buildInfo(info_dict=info_dict, area='info_botright'),
       ]
-      if info_dict.has_key('info_tooltip'):
+      if 'info_tooltip' in info_dict:
         self.title = info_dict['info_tooltip']
       else:
         self.title = " | ".join(title_list)

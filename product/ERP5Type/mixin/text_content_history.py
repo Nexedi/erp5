@@ -75,7 +75,7 @@ class TextContentHistoryMixin:
     from struct import pack
     from OFS.History import historicalRevision
 
-    serial = apply(pack, ('>HHHH',) + tuple(map(int, key.split('.'))))
+    serial = pack(*('>HHHH',) + tuple(map(int, key.split('.'))))
     rev = historicalRevision(self, serial)
 
     return rev._baseGetTextContent()

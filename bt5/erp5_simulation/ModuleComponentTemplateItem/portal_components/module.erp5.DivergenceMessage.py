@@ -31,6 +31,7 @@ from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 from erp5.component.interface.IDivergenceMessage import IDivergenceMessage
 
+@zope.interface.implementer(IDivergenceMessage,)
 class DivergenceMessage(ObjectMessage):
   """
   Divergence Message is used for notifications to user about divergences.
@@ -58,8 +59,6 @@ class DivergenceMessage(ObjectMessage):
    * message
      User understandable message about divergence
   """
-
-  zope.interface.implements(IDivergenceMessage,)
 
   def getMovementGroup(self):
     """Returns movement group of a builder which was responsible for generating tested_property"""

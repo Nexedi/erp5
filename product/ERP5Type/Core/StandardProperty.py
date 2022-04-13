@@ -37,6 +37,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import type_definition, list_type
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext, \
      evaluateExpressionFromString
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
+import six
 
 class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
   """
@@ -204,7 +205,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @type permission: str
     """
     uppercase_reference = UpperCase(reference)
-    for format, klass in definition_dict.iteritems():
+    for format, klass in six.iteritems(definition_dict):
       name = format % uppercase_reference
 
       instance = klass(name, reference, *argument_list)
@@ -662,7 +663,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     # Prepare a dictionnary of the ZODB property
     zodb_property_dict = {}
 
-    for fs_property_name, value in filesystem_property_dict.iteritems():
+    for fs_property_name, value in six.iteritems(filesystem_property_dict):
       # Convert filesystem property name to ZODB if necessary
       zodb_property_name = \
           fs_property_name in cls._name_mapping_filesystem_to_zodb_dict and \

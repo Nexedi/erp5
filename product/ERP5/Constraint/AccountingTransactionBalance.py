@@ -58,7 +58,7 @@ class AccountingTransactionBalance(Constraint):
         destination_sum[section] = destination_sum.get(section, 0) + \
           (line.getDestinationInventoriatedTotalAssetPrice() or 0)
 
-    for section, total in source_sum.items():
+    for section, total in list(source_sum.items()):
       precision = 2
       if section is not None and\
           section.getPortalType() == 'Organisation':
@@ -71,7 +71,7 @@ class AccountingTransactionBalance(Constraint):
                 mapping=dict(section_title=section.getTranslatedTitle())))
           break
 
-    for section, total in destination_sum.items():
+    for section, total in list(destination_sum.items()):
       precision = 2
       if section is not None and\
           section.getPortalType() == 'Organisation':

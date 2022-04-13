@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import ensure_list
+
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import permissions as CMFCorePermissions
@@ -101,7 +103,7 @@ class ActiveProcess(Base):
           # use a random id in order to store result in a way with
           # fewer conflict errors
           random_id = randrange(0, 10000 * (self.result_len.value + 1))
-          while result_list.has_key(random_id):
+          while random_id in result_list:
             random_id += 1
           result_list[random_id] = result
           self.result_len.change(1)
@@ -132,7 +134,7 @@ class ActiveProcess(Base):
     #      moment, although this is inefficient and the caller never needs a
     #      copy (currently). Same for IOBTree.itervalues().
     if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
-      return result_list.values()
+      return ensure_list(result_list.values())
     return list(result_list)
 
   security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultDict')

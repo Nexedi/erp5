@@ -21,6 +21,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.Globals import PersistentMapping, Persistent
 from Products.ERP5Type.Accessor.Translation import \
   TRANSLATION_DOMAIN_CONTENT_TRANSLATION
+import six
 
 class TranslationProviderBase(object):
   """
@@ -48,11 +49,11 @@ class TranslationProviderBase(object):
       pass
     else:
       property_domain_dict.update(my_property_domain_dict)
-    return {k: v.__of__(self) for k, v in property_domain_dict.iteritems()}
+    return {k: v.__of__(self) for k, v in six.iteritems(property_domain_dict)}
 
   security.declarePublic('getContentTranslationDomainPropertyNameList')
   def getContentTranslationDomainPropertyNameList(self):
-    return [x for x, y in self.getPropertyTranslationDomainDict().iteritems()
+    return [x for x, y in six.iteritems(self.getPropertyTranslationDomainDict())
       if y.getDomainName() == TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
 
   security.declareProtected(ManagePortal, 'setTranslationDomain')
@@ -111,6 +112,6 @@ class TranslationInformation(SimpleItem):
   security.declareProtected(ModifyPortalContent, 'edit')
   def edit(self, edit_order=(), **kw):
     self._p_changed = 1
-    self.__dict__.update((k, v or None) for k, v in kw.iteritems())
+    self.__dict__.update((k, v or None) for k, v in six.iteritems(kw))
 
 InitializeClass(TranslationInformation)

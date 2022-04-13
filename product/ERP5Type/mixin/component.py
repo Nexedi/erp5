@@ -46,6 +46,7 @@ from zLOG import LOG, INFO
 
 from ExtensionClass import ExtensionClass
 from Products.ERP5Type.Utils import convertToUpperCase, checkPythonSourceCode
+import six
 
 class RecordablePropertyMetaClass(ExtensionClass):
   """
@@ -107,7 +108,7 @@ class RecordablePropertyMetaClass(ExtensionClass):
       return getter
 
     for (property_name,
-         property_getter) in dictionary['_property_name_getter_dict'].iteritems():
+         property_getter) in six.iteritems(dictionary['_property_name_getter_dict']):
       getter_name = 'get' + convertToUpperCase(property_name)
       dictionary[getter_name] = getterWrapper(getter_name, property_name,
                                               property_getter)

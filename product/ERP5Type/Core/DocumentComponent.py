@@ -37,6 +37,7 @@ import zope.interface
 import re
 from Products.ERP5Type.interfaces.component import IComponent
 
+@zope.interface.implementer(IComponent)
 class DocumentComponent(ModuleComponent):
   """
   ZODB Component for Documents in bt5 only for now (which used to be installed
@@ -45,8 +46,6 @@ class DocumentComponent(ModuleComponent):
   """
   meta_type = 'ERP5 Document Component'
   portal_type = 'Document Component'
-
-  zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

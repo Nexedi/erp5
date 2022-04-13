@@ -11,6 +11,8 @@
 #
 ##############################################################################
 
+import six
+
 from inspect import getargs
 from types import MethodType
 from Products.ExternalMethod.ExternalMethod import *
@@ -24,7 +26,7 @@ class _(PatchClass(ExternalMethod)):
     reloadIfChanged = getFuncDefaults = getFuncCode = filepath = None
 
     @property
-    def func_defaults(self):
+    def __defaults__(self):
         """Return a tuple of default values.
         The first value is for the "second" parameter (self is ommited)
 
@@ -33,10 +35,12 @@ class _(PatchClass(ExternalMethod)):
           will have func_defaults = ('', )
         """
         return self._getFunction()[1]
+    func_defaults = __defaults__
 
     @property
-    def func_code(self):
+    def __code__(self):
         return self._getFunction()[2]
+    func_code = __code__
 
     @property
     def func_args(self):
@@ -88,7 +92,7 @@ class _(PatchClass(ExternalMethod)):
           arg_list.append('**' + argument_object.keywords)
 
         i = isinstance(f, MethodType)
-        ff = f.__func__ if i else f
+        ff = six.get_unbound_function(f) if i else f
         has_self = len(arg_list) > i and arg_list[i] == 'self'
         i += has_self
         if i:

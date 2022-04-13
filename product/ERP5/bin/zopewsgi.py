@@ -9,7 +9,11 @@ import socket
 import sys
 from tempfile import TemporaryFile
 import time
-from urllib import quote, splitport
+from six.moves.urllib.parse import quote
+try:
+  from urllib import splitport
+except ImportError: # six.PY3
+  from urllib.parse import splitport
 
 from waitress.server import create_server
 import ZConfig

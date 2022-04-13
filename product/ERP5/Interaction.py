@@ -23,6 +23,9 @@ implementation *deprecated* in favor of ERP5 Workflow.
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 assert WITH_LEGACY_WORKFLOW
 
+import six
+from Products.ERP5Type.Utils import ensure_list
+
 from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type.Globals import DTMLFile, PersistentMapping
 from Acquisition import aq_inner, aq_parent
@@ -102,13 +105,13 @@ class InteractionDefinition (SimpleItem):
         return aq_parent(aq_inner(aq_parent(aq_inner(self))))
 
     def getAvailableStateIds(self):
-        return self.getWorkflow().states.keys()
+        return ensure_list(self.getWorkflow().states.keys())
 
     def getAvailableScriptIds(self):
-        return self.getWorkflow().scripts.keys()
+        return ensure_list(self.getWorkflow().scripts.keys())
 
     def getAvailableVarIds(self):
-        return self.getWorkflow().variables.keys()
+        return ensure_list(self.getWorkflow().variables.keys())
 
     def getTriggerMethodIdList(self):
       return self.method_id
@@ -232,7 +235,7 @@ class InteractionDefinition (SimpleItem):
                 return wf_vars
         ret = []
         for vid in wf_vars:
-            if not self.var_exprs.has_key(vid):
+            if vid not in self.var_exprs:
                 ret.append(vid)
         return ret
 
@@ -256,7 +259,7 @@ class InteractionDefinition (SimpleItem):
         '''
         ve = self.var_exprs
         for id in ids:
-            if ve.has_key(id):
+            if id in ve:
                 del ve[id]
 
         if REQUEST is not None:
@@ -271,7 +274,7 @@ class InteractionDefinition (SimpleItem):
         ve = self.var_exprs
 
         if REQUEST is not None:
-            for id in ve.keys():
+            for id in ensure_list(ve.keys()):
                 fname = 'varexpr_%s' % id
 
                 val = REQUEST[fname]
@@ -304,7 +307,7 @@ class InteractionDefinition (SimpleItem):
 
     def checkGuard(self, *args, **kwargs):
         from Products.ERP5Type.mixin.guardable import GuardableMixin
-        return GuardableMixin.checkGuard.im_func(self, *args, **kwargs)
+        return six.get_unbound_function(GuardableMixin.checkGuard)(self, *args, **kwargs)
 
     def getPortalTypeGroupFilterList(self):
         if self.portal_type_group_filter is None:

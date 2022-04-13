@@ -1,8 +1,9 @@
 """
 PortalTransforms setup handlers.
 """
+from __future__ import print_function
 
-from StringIO import StringIO
+from six import StringIO
 from Products.CMFCore.utils import getToolByName
 
 
@@ -15,16 +16,16 @@ def correctMapping(out, portal):
             for transform in transforms:
                 if transform.id not in pt_ids:
                     #error, mapped transform is no object in portal_transforms. correct it!
-                    print >>out, "have to unmap transform (%s) cause its not in portal_transforms ..." % transform.id
+                    print("have to unmap transform (%s) cause its not in portal_transforms ..." % transform.id, file=out)
                     try:
                         pt._unmapTransform(transform)
                     except:
                         raise
                     else:
-                        print >>out, "...ok"
+                        print("...ok", file=out)
 
 def updateSafeHtml(out, portal):
-    print >>out, 'Update safe_html...'
+    print('Update safe_html...', file=out)
     safe_html_id = 'safe_html'
     safe_html_module = "Products.PortalTransforms.transforms.safe_html"
     pt = getToolByName(portal, 'portal_transforms')
@@ -34,16 +35,16 @@ def updateSafeHtml(out, portal):
             try:
                 disable_transform = transform.get_parameter_value('disable_transform')
             except KeyError:
-                print >>out, '  replace safe_html (%s, %s) ...' % (transform.name(), transform.module)
+                print('  replace safe_html (%s, %s) ...' % (transform.name(), transform.module), file=out)
                 try:
                     pt.unregisterTransform(id)
                     pt.manage_addTransform(id, safe_html_module)
                 except:
                     raise
                 else:
-                    print >>out, '  ...done'
+                    print('  ...done', file=out)
 
-    print >>out, '...done'
+    print('...done', file=out)
 
 
 def installPortalTransforms(portal):

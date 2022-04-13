@@ -38,7 +38,7 @@ from zExceptions import BadRequest
 from zLOG import LOG, WARNING
 from DateTime import DateTime
 from Acquisition import aq_base
-from cStringIO import StringIO
+from io import BytesIO
 
 class TrashTool(BaseTool):
   """
@@ -146,7 +146,7 @@ class TrashTool(BaseTool):
         for subobject_id in list(obj.objectIds()):
           subobject = obj[subobject_id]
           subobjects_dict[subobject_id] = subobject._p_jar.exportFile(
-            subobject._p_oid, StringIO())
+            subobject._p_oid, BytesIO())
 
           if save: # remove subobjecs from backup object
             obj._delObject(subobject_id)

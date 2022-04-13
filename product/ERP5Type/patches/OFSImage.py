@@ -18,7 +18,7 @@
 """
 import OFS.Image
 import struct
-from cStringIO import StringIO
+from io import BytesIO
 from zExceptions import Forbidden
 
 def getImageInfo_with_svg_fix(data):
@@ -57,7 +57,7 @@ def getImageInfo_with_svg_fix(data):
     # handle JPEGs
     elif (size >= 2) and (data[:2] == '\377\330'):
         content_type = 'image/jpeg'
-        jpeg = StringIO(data)
+        jpeg = BytesIO(data)
         jpeg.read(2)
         b = jpeg.read(1)
         try:

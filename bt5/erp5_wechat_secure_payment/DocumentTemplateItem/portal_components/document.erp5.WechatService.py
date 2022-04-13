@@ -16,14 +16,13 @@ class WechatException(Exception):
     super(WechatException, self).__init__(msg)
 
 from erp5.component.interface.IPaymentService import IPaymentService
+@zope.interface.implementer(IPaymentService)
 class WechatService(XMLObject):
   meta_type = 'Wechat Service'
   portal_type = 'Wechat Service'
 
   ORDER_URL = "/pay/unifiedorder" # Wechat unified order API
   QUERY_URL = "/pay/orderquery"
-
-  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()

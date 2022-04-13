@@ -36,6 +36,7 @@ from Products.PythonScripts.standard import html_quote as h
 from zLOG import LOG, WARNING
 from erp5.component.interface.IEquivalenceTester import IEquivalenceTester
 
+@zope.interface.implementer(IEquivalenceTester,)
 class EquivalenceTesterMixin:
   """
   Provides generic methods and helper methods to implement
@@ -44,9 +45,6 @@ class EquivalenceTesterMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IEquivalenceTester,)
 
   # Implementation of IEquivalenceTester
   security.declarePrivate('testEquivalence')
