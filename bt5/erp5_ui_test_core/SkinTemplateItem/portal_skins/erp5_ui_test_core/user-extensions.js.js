@@ -210,74 +210,6 @@ function generateElement(tagName, childList, attributeDict, textContent) {
 }
 
 /**
- * Generate an HTML form to update the reference snapshot
- *
- * @param {string} referenceImageURL relative URL of the reference image
- * @param {string} newImageData the new image data, base64 encoded
- * @return {Promise<string>} the base64 encoded html form
- */
-function generateUpdateForm(referenceImageURL, newImageData) {
-  return new Promise((resolve, reject) => {
-    var fr = new FileReader();
-    fr.onerror = reject;
-    fr.onload = () => resolve(fr.result);
-    fr.readAsDataURL(
-      new Blob(
-        [
-          generateElement('html', [
-            generateElement('body', [
-              generateElement('p', [
-                document.createTextNode('Replacing this old snapshot:'),
-                generateElement('br'),
-                generateElement('img', [], {
-                  src: location.origin + referenceImageURL,
-                  alt: 'reference image'
-                }),
-                generateElement('br'),
-                document.createTextNode('with this new snapshot:'),
-                generateElement('br'),
-                generateElement('img', [], {
-                  src: newImageData,
-                  alt: 'new image'
-                })
-              ]),
-              generateElement(
-                'form',
-                [
-                  generateElement('input', [], {
-                    type: 'hidden',
-                    name: 'image_data',
-                    value: newImageData
-                  }),
-                  generateElement('input', [], {
-                    type: 'hidden',
-                    name: 'image_path',
-                    value: referenceImageURL
-                  }),
-                  generateElement('input', [], {
-                    type: 'submit',
-                    value: 'Update Reference Snapshot'
-                  })
-                ],
-                {
-                  action:
-                    location.origin +
-                    '/' +
-                    referenceImageURL.split('/')[1] + // ERP5 portal
-                    '/Zuite_updateReferenceImage',
-                  method: 'POST'
-                }
-              )
-            ])
-          ]).innerHTML
-        ],
-        { type: 'text/html' }
-      )
-    );
-  });
-}
-
-/**
  * verify that the rendering of the element `locator` matches the previously saved reference.
  *
  * Note that this is implemented as do* method and not a assert* method because only do* methods are asynchronous.
@@ -360,35 +292,33 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
           })
           .then(diff => {
             if (diff.rawMisMatchPercentage > misMatchToleranceFloat) {
-              return generateUpdateForm(referenceImageURL, actual).then(
-                updateReferenceImageForm => {
-                  htmlTestRunner.currentTest.currentRow.trElement
-                    .querySelector('td')
-                    .appendChild(
-                      generateElement('div', [
-                        document.createTextNode('Image differences:'),
-                        generateElement('br'),
-                        generateElement('img', [], {
-                          src: diff.getImageDataUrl(),
-                          alt: 'Image differences'
-                        }),
-                        generateElement('br'),
-                        document.createTextNode('Click '),
-                        generateElement(
-                          'a',
-                          [document.createTextNode('here')],
-                          {
-                            href: updateReferenceImageForm
-                          }
-                        ),
-                        document.createTextNode(
-                          ' to update reference snapshot.'
-                        )
-                      ])
-                    );
-                  throw new Error('Images are ' + diff.misMatchPercentage + '% different');
-                }
-              );
+              htmlTestRunner.currentTest.currentRow.trElement
+                .querySelector('td')
+                .appendChild(
+                  generateElement('div', [
+                    document.createTextNode('Image differences:'),
+                    generateElement('br'),
+                    generateElement('img', [], {
+                      src: diff.getImageDataUrl(),
+                      alt: 'Image differences'
+                    }),
+                    generateElement('br'),
+                    document.createTextNode('Click '),
+                    generateElement('a', [document.createTextNode('here')], {
+                      href: actual,
+                      download: referenceImageURL.split('/').pop(),
+                    }),
+                    document.createTextNode(' to download actual image for '),
+                    generateElement('code', [
+                      generateElement('a', [
+                        document.createTextNode(referenceImageURL),
+                      ],
+                        { href: referenceImageURL + '/manage_main' }
+                      )
+                    ])
+                  ])
+                );
+              throw new Error('Images are ' + diff.misMatchPercentage + '% different');
             }
           });
       }));
