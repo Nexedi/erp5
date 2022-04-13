@@ -14,10 +14,15 @@
 
 import operator
 from cgi import escape
-from itertools import chain, imap, islice
-from urllib import quote
+from itertools import chain, islice
+import six
+try:
+  from itertools import imap as map
+except ImportError: # six.PY3
+  pass
+from six.moves.urllib.parse import quote
 from random import randint
-from types import StringType
+from six.moves import xrange
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.special_dtml import DTMLFile
@@ -86,7 +91,7 @@ class HBTreeObjectIds(object):
                         return
             except KeyError:
                 return
-        self._items = lambda: (i for i in h.iteritems()
+        self._items = lambda: (i for i in six.iteritems(h)
                                  if type(i[1]) is not OOBTree)
 
     def _count(self):
@@ -98,13 +103,13 @@ class HBTreeObjectIds(object):
         return self._count()
 
     def __iter__(self):
-        return imap(self._item_result, self._items())
+        return map(self._item_result, self._items())
 
     _item_result = operator.itemgetter(0)
 
     def __getitem__(self, item):
         if isinstance(item, slice):
-            return map(self.__getitem__, xrange(*item.indices(self._count())))
+            return [self.__getitem__(x) for x in xrange(*item.indices(self._count()))]
         if item < 0:
             item += self._count()
         i = self._index
@@ -255,7 +260,7 @@ class HBTreeFolder2Base (Persistent):
           if type(htree) is not OOBTree:
             assert self._htree[sub_id] is htree, (htree, id)
             raise KeyError('There is already an item whose id is %r' % sub_id)
-        if htree.has_key(id):
+        if id in htree:
           raise KeyError('There is already an item named %r.' % id)
         htree[id] = object
         self._count.change(1)
@@ -365,11 +370,11 @@ class HBTreeFolder2Base (Persistent):
         try:
           for sub_id in self.hashId(min) if min else ('',):
             if recurse_stack:
-              i.next()
+              next(i)
               if type(h) is not OOBTree:
                 break
               id += H_SEPARATOR + sub_id
-              if type(h.itervalues().next()) is not OOBTree:
+              if type(next(six.itervalues(h))) is not OOBTree:
                 sub_id = id
             else:
               id = sub_id
@@ -382,10 +387,10 @@ class HBTreeFolder2Base (Persistent):
           i = recurse_stack.pop()
           try:
             while 1:
-              id, h = i.next()
+              id, h = next(i)
               if type(h) is OOBTree:
                 recurse_stack.append(i)
-                i = h.iteritems()
+                i = six.iteritems(h)
               else:
                 yield id, h
           except StopIteration:
@@ -397,7 +402,7 @@ class HBTreeFolder2Base (Persistent):
         """ Return list of all tree ids
         """
         r = []
-        s = [(None, self._htree.iteritems())]
+        s = [(None, six.iteritems(self._htree))]
         while s:
           base_id, items = s.pop()
           if base_id:
@@ -408,16 +413,16 @@ class HBTreeFolder2Base (Persistent):
                 # support mixed buckets except at the root, we consider that
                 # this one only contains leafs.
                 break
-              s.append((base_id + H_SEPARATOR + k, v.iteritems()))
+              s.append((base_id + H_SEPARATOR + k, six.iteritems(v)))
           else:
             for k, v in items:
               if type(v) is not OOBTree:
                 r.append(base_id)
                 for k, v in items:
                   if type(v) is OOBTree:
-                    s.append((k, v.iteritems()))
+                    s.append((k, six.iteritems(v)))
                 break
-              s.append((k, v.iteritems()))
+              s.append((k, six.iteritems(v)))
         r.sort()
         return r
 
@@ -448,7 +453,7 @@ class HBTreeFolder2Base (Persistent):
         return dict.fromkeys(self.objectIds(t), 1)
 
     def _checkId(self, id, allow_dup=0):
-        if not allow_dup and self.has_key(id):
+        if not allow_dup and id in self:
             raise BadRequestException(
                 'The id %r is invalid--it is already in use.' % id)
 
@@ -458,7 +463,7 @@ class HBTreeFolder2Base (Persistent):
         if v is not None: id=v
 
         # If an object by the given id already exists, remove it.
-        if self.has_key(id):
+        if id in self:
             self._delObject(id)
 
         self._setOb(id, object)
@@ -485,7 +490,7 @@ class HBTreeFolder2Base (Persistent):
         object = self._getOb(id)
         try:
             object.manage_beforeDelete(object, self)
-        except BeforeDeleteException, ob:
+        except BeforeDeleteException as ob:
             raise
         except ConflictError:
             raise
@@ -527,7 +532,7 @@ class HBTreeFolder2Base (Persistent):
         while 1:
             if n % 4000 != 0 and n <= rand_ceiling:
                 id = '%s%d%s' % (prefix, n, suffix)
-                if not tree.has_key(id):
+                if id not in tree:
                     break
             n = randint(1, rand_ceiling)
             attempt = attempt + 1

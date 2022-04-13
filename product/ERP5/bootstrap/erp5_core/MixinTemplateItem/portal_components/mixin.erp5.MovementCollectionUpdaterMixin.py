@@ -35,6 +35,7 @@ from erp5.component.module.MovementCollectionDiff import (
 from erp5.component.mixin.RuleMixin import _compare
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
+@zope.interface.implementer(IMovementCollectionUpdater,)
 class MovementCollectionUpdaterMixin:
   """Movement Collection Updater.
 
@@ -48,9 +49,6 @@ class MovementCollectionUpdaterMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IMovementCollectionUpdater,)
 
   # Implementation of IMovementCollectionUpdater
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -112,7 +110,7 @@ class MovementCollectionUpdaterMixin:
     # First find out all existing (decision) movements which belong to no group
     no_group_list = []
     for tester_key in decision_movement_dict.keys():
-      if prevision_movement_dict.has_key(tester_key):
+      if tester_key in prevision_movement_dict:
         for decision_movement in decision_movement_dict[tester_key]:
           no_match = True
           for prevision_movement in prevision_movement_dict[tester_key]:

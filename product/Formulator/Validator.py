@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import re
+import six
 from . import PatternChecker
 from .DummyField import fields
 from DateTime import DateTime
 from threading import Thread
-from urllib import urlopen
-from urlparse import urljoin
+from six.moves.urllib.request import urlopen
+from six.moves.urllib.parse import urljoin
 from .Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
 import unicodedata
@@ -150,7 +151,7 @@ class StringValidator(StringBaseValidator):
         value = StringBaseValidator.validate(self, field, key, REQUEST)
         if field.get_value('unicode'):
             # use acquisition to get encoding of form
-            value = unicode(value, field.get_form_encoding())
+            value = six.text_type(value, field.get_form_encoding())
 
         max_length = field.get_value('max_length') or 0
         truncate = field.get_value('truncate')
@@ -422,7 +423,7 @@ class LinesValidator(StringBaseValidator):
     if value == "" and not field.get_value('required'):
       return []
     if field.get_value('unicode'):
-        value = unicode(value, field.get_form_encoding())
+        value = six.text_type(value, field.get_form_encoding())
     # check whether the entire input is too long
     max_length = field.get_value('max_length') or 0
     if max_length and len(value) > max_length:
@@ -500,7 +501,7 @@ class SelectionValidator(StringBaseValidator):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, unicode):
+        if field.get_value('unicode') and isinstance(item_value, six.text_type):
           str_value = item_value.encode(field.get_form_encoding())
         else:
           str_value = str(item_value)
@@ -553,7 +554,7 @@ class MultiSelectionValidator(Validator):
           return values
       # convert everything to unicode if necessary
       if field.get_value('unicode'):
-        values = [unicode(value, field.get_form_encoding())
+        values = [six.text_type(value, field.get_form_encoding())
                     for value in values]
 
       # create a dictionary of possible values
@@ -581,10 +582,10 @@ class MultiSelectionValidator(Validator):
           int_value = int(value)
         except ValueError:
           int_value = None
-        if int_value is not None and value_dict.has_key(int_value):
+        if int_value is not None and int_value in value_dict:
           result.append(int_value)
           continue
-        if value_dict.has_key(value):
+        if value in value_dict:
           result.append(value)
           continue
         self.raise_error('unknown_selection', field)

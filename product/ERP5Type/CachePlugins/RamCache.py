@@ -36,6 +36,8 @@ import time
 from .BaseCache import BaseCache, CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
+import six
+from Products.ERP5Type.Utils import ensure_list
 
 def calcPythonObjectMemorySize(i):
   """
@@ -49,12 +51,10 @@ def calcPythonObjectMemorySize(i):
     return 0
 
 _MARKER = []
+@zope.interface.implementer(
+        interfaces.ICachePlugin)
 class RamCache(BaseCache):
   """ RAM based cache plugin."""
-
-  zope.interface.implements(
-        interfaces.ICachePlugin
-    )
 
   cache_expire_check_interval = 300
 
@@ -96,7 +96,7 @@ class RamCache(BaseCache):
       ## time to check for expired cache items
       self._next_cache_expire_check_at = now + self.cache_expire_check_interval
       cache = self.getCacheStorage()
-      for key, value in cache.items():
+      for key, value in ensure_list(cache.items()):
         if value.isExpired():
           try:
             del cache[key]
@@ -124,13 +124,13 @@ class RamCache(BaseCache):
 
   def getScopeList(self):
     scope_set = set()
-    for scope, cache_id in self.getCacheStorage().iterkeys():
+    for scope, cache_id in six.iterkeys(self.getCacheStorage()):
       scope_set.add(scope)
     return list(scope_set)
 
   def getScopeKeyList(self, scope):
     key_list = []
-    for key in self.getCacheStorage().iterkeys():
+    for key in six.iterkeys(self.getCacheStorage()):
       if scope == key[0]:
         key_list.append(key[1])
     return key_list
@@ -141,7 +141,7 @@ class RamCache(BaseCache):
 
   def clearCacheForScope(self, scope):
     cache = self.getCacheStorage()
-    for key in cache.keys():
+    for key in ensure_list(cache.keys()):
       if key[0] == scope:
         try:
           del cache[key]
@@ -157,7 +157,7 @@ class RamCache(BaseCache):
     total_size = 0
     cache_keys_total_size = {}
     cache = self.getCacheStorage()
-    for key, value in cache.iteritems():
+    for key, value in six.iteritems(cache):
       value_size = calcPythonObjectMemorySize(value)
       total_size += value_size
       cache_keys_total_size[key[1]] = value_size

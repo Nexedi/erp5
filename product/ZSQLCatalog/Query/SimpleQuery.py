@@ -34,12 +34,13 @@ from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
 from zLOG import LOG, WARNING
+from Products.ERP5Type.Utils import ensure_list
 
 NULL_SEARCH_TEXT_OPERATOR_DICT = {
   '=': 'is',
   '!=': 'is not',
 }
-for value in NULL_SEARCH_TEXT_OPERATOR_DICT.values():
+for value in ensure_list(NULL_SEARCH_TEXT_OPERATOR_DICT.values()):
   NULL_SEARCH_TEXT_OPERATOR_DICT[value] = value
 
 class SimpleQuery(Query):

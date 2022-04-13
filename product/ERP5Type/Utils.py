@@ -29,6 +29,10 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
+from past.builtins import cmp
+from six import int2byte as chr
+from six import string_types as basestring
+from six.moves import xrange
 import six
 import os
 import re
@@ -230,7 +234,7 @@ def deprecated(message=''):
   @simple_decorator
   def _deprecated(wrapped):
     m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
-      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+      wrapped.__name__, wrapped.__module__, wrapped.__code__.co_firstlineno)
     def deprecated(*args, **kw):
       warnings.warn(m, DeprecationWarning, 2)
       return wrapped(*args, **kw)
@@ -253,7 +257,7 @@ def convertToUpperCase(key):
   try:
     return _cached_convertToUpperCase[key]
   except KeyError:
-    if not isinstance(key, basestring):
+    if not isinstance(key, six.string_types):
       raise TypeError('%r is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
@@ -278,7 +282,7 @@ def convertToMixedCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  if not isinstance(key, basestring):
+  if not isinstance(key, six.string_types):
     raise TypeError('%r is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
@@ -383,15 +387,14 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
 
-from rfc822 import AddressList
-
 def Email_parseAddressHeader(text):
   """
   Given a text taken from a From/To/CC/... email header,
   return a list of tuples (name, address) extracted from
   this header
   """
-  return AddressList(text).addresslist
+  from email.utils import getaddresses
+  return getaddresses([text])
 
 def fill_args_from_request(*optional_args):
   """Method decorator to fill missing args from given request
@@ -442,11 +445,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   try:
     from pylint.lint import Run
     from pylint.reporters.text import TextReporter
-  except ImportError, error:
+  except ImportError as error:
     try:
       compile(source_code_str, '<string>', 'exec')
       return []
-    except Exception, error:
+    except Exception as error:
       if isinstance(error, SyntaxError):
         message = {'type': 'F',
                    'row': error.lineno,
@@ -460,14 +463,14 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 
       return [message]
 
-  import cStringIO
+  from six.moves import cStringIO as StringIO
   import tempfile
   import sys
 
   #import time
   #started = time.time()
   message_list = []
-  output_file = cStringIO.StringIO()
+  output_file = StringIO()
   try:
     with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
                                      suffix='.py') as input_file:
@@ -541,7 +544,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
 
-    output_file.reset()
+    output_file.seek(0)
     for line in output_file:
       match_obj = _pylint_message_re.match(line)
       if match_obj:
@@ -804,7 +807,7 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
     from zope.interface import Interface
     from Products.ERP5Type import interfaces
     InterfaceClass = type(Interface)
-    for k, v in module.__dict__.iteritems():
+    for k, v in six.iteritems(module.__dict__):
       if type(v) is InterfaceClass and v is not Interface:
         setattr(interfaces, k, v)
 
@@ -1127,7 +1130,7 @@ def initializeLocalRegistry(directory_name, import_local_method):
           LOG('ERP5Type', BLATHER,
               'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
-        except Exception, e:
+        except Exception as e:
           if DevelopmentMode:
             raise
           LOG('E5RP5Type', PROBLEM,
@@ -1401,7 +1404,7 @@ def evaluateExpressionFromString(expression_context, expression_string):
   # An AttributeError is raised when instanciating an Expression
   # class, and CompilerError and ValueError are raised in case of
   # error when evaluation the expression
-  except (AttributeError, CompilerError, ValueError), e:
+  except (AttributeError, CompilerError, ValueError) as e:
     raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
                                                               str(e)))
 
@@ -1416,7 +1419,7 @@ def isValidTALESExpression(value):
   """
   try:
     ExpressionEngine.compile(value)
-  except CompilerError, message:
+  except CompilerError as message:
     return False, message
   else:
     return True, None
@@ -1446,7 +1449,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
           portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
-      except (KeyError, AttributeError), err:
+      except (KeyError, AttributeError) as err:
         LOG('ERP5Type', PROBLEM, "assertAttributePortalType failed on %s" % o,
             error=True)
 
@@ -1598,7 +1601,7 @@ def mergeZRDBResults(results, key_column, edit_result):
         index[key] = len(data)
         merged_row = {}
         data.append(merged_row)
-      for column, i in columns.iteritems():
+      for column, i in six.iteritems(columns):
         merged_row[column] = row[i]
 
   ## Step 3
@@ -1698,13 +1701,14 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 #  URL Normaliser #
 ###################
 from Products.PythonScripts.standard import url_unquote
-try:
-  import urlnorm
-except ImportError:
-  warnings.warn("urlnorm lib is not installed", DeprecationWarning)
-  urlnorm = None
-import urlparse
-import urllib
+# No new release of urlnorm since 2016 and no py3 support
+urlnorm = None
+if six.PY2:
+  try:
+    import urlnorm
+  except ImportError:
+    warnings.warn("urlnorm lib is not installed", DeprecationWarning)
+from six.moves.urllib.parse import urlsplit, urlunsplit, urljoin
 
 # Regular expressions
 re_cleanup_anchors = re.compile('#.*')
@@ -1723,7 +1727,7 @@ def legacyNormalizeUrl(url, base_url=None):
   # remove anchors
   # http://www.example.com/page.html#ll -> http://www.example.com/page.html
   url = re_cleanup_anchors.sub('', url)
-  url_split = urlparse.urlsplit(url)
+  url_split = urlsplit(url)
   url_sheme = url_split[0]
   url_netloc = url_split[1]
   url_path = url_split[2]
@@ -1748,11 +1752,11 @@ def legacyNormalizeUrl(url, base_url=None):
     return url
   if base_url and not (url_sheme or url_netloc):
     # Make relative URL absolute
-    url = urlparse.urljoin(base_url, url)
+    url = urljoin(base_url, url)
   # Remove double slashes
   # http://www.example.com//bar.html -> http://www.example.com/bar.html
   url_path = re_cleanup_slashes.sub('/', url_path)
-  url = urlparse.urlunsplit((url_sheme, url_netloc, url_path,
+  url = urlunsplit((url_sheme, url_netloc, url_path,
                              url_params, url_query,))
   # Uppercase escaped characters
   # http://www.example.com/a%c2%b1b -> http://www.example.com/a%C2%B1b
@@ -1760,7 +1764,7 @@ def legacyNormalizeUrl(url, base_url=None):
   # Remove trailing '?'
   # http://www.example.com/? -> http://www.example.com/
   url = re_cleanup_tail.sub('', url)
-  if isinstance(url, unicode):
+  if isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1776,13 +1780,13 @@ def urlnormNormaliseUrl(url, base_url=None):
     # This url is not valid, a better Exception will
     # be raised
     return url
-  url_split = urlparse.urlsplit(url)
+  url_split = urlsplit(url)
   url_protocol = url_split[0]
   url_domain = url_split[1]
   if base_url and not (url_protocol or url_domain):
     # Make relative URL absolute
-    url = urlparse.urljoin(base_url, url)
-  if isinstance(url, unicode):
+    url = urljoin(base_url, url)
+  if isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1818,11 +1822,11 @@ def guessEncodingFromText(data, content_type='text/html'):
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe
-    "!'()*-." "0123456789" "_~"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz"
-    # reserved (maybe unsafe)
-    "#$&+,/:;=?@[]"
+    str2bytes("!'()*-." "0123456789" "_~"
+              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+              "abcdefghijklmnopqrstuvwxyz"
+              # reserved (maybe unsafe)
+              "#$&+,/:;=?@[]")
   else "%%%02X" % x
   for x in xrange(256)}
 
@@ -1832,7 +1836,10 @@ def reencodeUrlEscapes(url):
   This is a Python reimplementation of 'reencode_escapes' function of Wget 1.12
   """
   from string import hexdigits
-  next_part = iter(url.split('%')).next
+  if six.PY2:
+    next_part = iter(url.split('%')).next
+  else:
+    next_part = iter(url.split('%')).__next__
   url = [_reencodeUrlEscapes_map[c] for c in next_part()]
   try:
     while True:
@@ -1861,7 +1868,7 @@ def formatRFC822Headers(headers):
   for key, value in headers:
     if value is not None:
       if type(value) in (list, tuple):
-        vallines = map(str, value)
+        vallines = [str(x) for x in value]
       else:
         vallines = linesplit.split(str(value))
       munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))

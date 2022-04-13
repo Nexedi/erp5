@@ -37,14 +37,14 @@ edit_order = form.edit_order
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix=key_prefix)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
   # Make sure editors are pushed back as values into the REQUEST object
   for field in form.get_fields():
     field_id = field.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)
@@ -163,11 +163,11 @@ def editMatrixBox(matrixbox_field, matrixbox):
           cell = matrix_context.newCell(*cell_index_tuple, **k_dict)
           if cell is not None:
             cell.edit(edit_order=edit_order, **global_property_dict)  # First update globals which include the def. of property_list
-            if cell_dict.has_key('variated_property'):
+            if 'variated_property' in cell_dict:
               # For Variated Properties
               variated_property = cell_dict['variated_property']
               del cell_dict['variated_property']
-              if global_property_dict.has_key('mapped_value_property_list'):
+              if 'mapped_value_property_list' in global_property_dict:
                 # Change the property which is defined by the
                 # first element of mapped_value_property_list
                 # XXX May require some changes with Sets

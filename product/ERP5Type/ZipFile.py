@@ -30,6 +30,7 @@ Restricted zipfile module.
 
 From restricted python, use "import zipfile" (see patches/Restricted.py).
 """
+from six import string_types as basestring
 from AccessControl import allow_class as _allow_class
 from zExceptions import Unauthorized
 import zipfile as _zipfile

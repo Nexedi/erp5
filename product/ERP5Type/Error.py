@@ -50,7 +50,7 @@ class Error:
     """
     set all parameters
     """
-    if kw.has_key('object_path'):
+    if 'object_path' in kw:
       self.object_path = getPath(kw['object_path'],tuple=1)
       del kw['object_path']
     self.summary = summary
@@ -62,7 +62,7 @@ class Error:
     """
     set all parameters
     """
-    if kw.has_key('object_path'):
+    if 'object_path' in kw:
       self.object_path = getPath(kw['object_path'],tuple=1)
       del kw['object_path']
     self.__dict__.update(kw)

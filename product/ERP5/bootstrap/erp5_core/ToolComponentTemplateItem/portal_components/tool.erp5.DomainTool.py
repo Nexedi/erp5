@@ -33,6 +33,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
+import six
 
 _MARKER = object()
 
@@ -285,7 +286,7 @@ class DomainTool(BaseTool):
         # Feel free to improve.
         if getMappedValuePropertyList is not None:
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            if not mapped_value_property_dict.has_key(mapped_value_property):
+            if mapped_value_property not in mapped_value_property_dict:
               value = predicate.getProperty(mapped_value_property)
               if value is not None:
                 mapped_value_property_dict[mapped_value_property] = value
@@ -330,8 +331,8 @@ class DomainTool(BaseTool):
               per_parent_mapped_value_property_dict[mapped_value_property].setdefault(parent_uid, []).append(value)
             else:
               mapped_value_property_dict[mapped_value_property].append(value)
-      for mapped_value_property, v in per_parent_mapped_value_property_dict.iteritems():
-        for _, mapped_value_list in sorted(v.iteritems(), key=lambda x: parent_sort_index[x[0]]):
+      for mapped_value_property, v in six.iteritems(per_parent_mapped_value_property_dict):
+        for _, mapped_value_list in sorted(six.iteritems(v), key=lambda x: parent_sort_index[x[0]]):
           mapped_value_property_dict[mapped_value_property].append(mapped_value_list)
       mapped_value = self.getPortalObject().newContent(temp_object=True,
         portal_type='Supply Cell', id='multivalued_mapped_value')

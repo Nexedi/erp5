@@ -32,6 +32,7 @@ from types import ModuleType
 from . import aq_method_lock
 import sys
 import imp
+import six
 
 class PackageType(ModuleType):
   """
@@ -73,15 +74,16 @@ class RefManager(dict):
     from Products.ERP5Type.Globals import get_request
     self.add_request(get_request())
 
-    for (_, module_obj_set) in self.itervalues():
+    for (_, module_obj_set) in six.itervalues(self):
       module_obj_set.add(module_obj)
 
   def gc(self):
     """
     Remove cache items with no Request Left.
     """
+    from Products.ERP5Type.Utils import ensure_list
     for (current_last_sync,
-         (request_obj_weakset, _)) in self.items():
+         (request_obj_weakset, _)) in ensure_list(self.items()):
       if not request_obj_weakset:
         del self[current_last_sync]
 

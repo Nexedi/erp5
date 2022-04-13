@@ -49,6 +49,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 from zope.interface import Interface, implementedBy
+import six
 
 class TestPortalTypeClass(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
@@ -1734,7 +1735,7 @@ class TestZodbModuleComponent(SecurityTestCase):
       'find_module': ComponentMixin._message_invalid_reference,
       'load_module': ComponentMixin._message_invalid_reference}
 
-    for invalid_reference, error_message in invalid_reference_dict.iteritems():
+    for invalid_reference, error_message in six.iteritems(invalid_reference_dict):
       # Reset should not be performed
       ComponentTool.reset = assertResetNotCalled
       try:
@@ -1824,7 +1825,7 @@ class TestZodbModuleComponent(SecurityTestCase):
       ComponentMixin._message_invalid_id,
       mapping={'id_prefix': self._document_class.getIdPrefix()})
 
-    for invalid_version, error_message in invalid_version_dict.iteritems():
+    for invalid_version, error_message in six.iteritems(invalid_version_dict):
       # Reset should not be performed
       ComponentTool.reset = assertResetNotCalled
       try:

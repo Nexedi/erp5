@@ -43,7 +43,7 @@ erp5_role_dict = {
 erp5_permission_dict = {}
 for role,permission_list in erp5_role_dict.items():
   for permission in permission_list:
-    if not erp5_permission_dict.has_key(permission):
+    if permission not in erp5_permission_dict:
       erp5_permission_dict[permission] = []
     erp5_permission_dict[permission].append(role)
 

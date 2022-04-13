@@ -32,6 +32,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 
+@zope.interface.implementer(interfaces.ILocalRoleGenerator)
 class RoleDefinition(XMLObject):
   # CMF Type Definition
   meta_type = 'ERP5 Role Definition'
@@ -41,8 +42,6 @@ class RoleDefinition(XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  zope.interface.implements(interfaces.ILocalRoleGenerator)
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

@@ -39,6 +39,7 @@ from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import six
 
 class MatchList(list):
   def __repr__(self):
@@ -243,7 +244,7 @@ class DummyCatalog(SQLCatalog):
         comparison_operator=comparison_operator,
         group=group,
       )
-      for comparison_operator, value_list in operator_value_dict.iteritems()
+      for comparison_operator, value_list in six.iteritems(operator_value_dict)
     ]
     if len(query_list) == 1:
       return query_list[0]

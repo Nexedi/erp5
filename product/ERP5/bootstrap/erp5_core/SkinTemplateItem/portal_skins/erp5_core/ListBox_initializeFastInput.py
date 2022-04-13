@@ -1,12 +1,11 @@
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
 if listbox_id is None:
   listbox_id = 'listbox'
 
 request = context.REQUEST
 
 # It must be possible to initialise the fast input, and to add empty lines after
-if request.has_key('my_empty_line_number'):
+if 'my_empty_line_number' in request:
   empty_line_number = request['my_empty_line_number']
 
 
@@ -28,7 +27,7 @@ if hasattr(request, listbox_id):
 
   for i in keys_list:
     o = newTempBase(portal_object, i)
-    o.setUid('new_%s' % zfill(i,int_len))
+    o.setUid('new_%s' % str(i).zfill(int_len))
 
     is_empty = 1
 
@@ -37,7 +36,7 @@ if hasattr(request, listbox_id):
       # 0 was added because of checkbox field in some fast input
       if (value not in ['',None,0]) and (key != listbox_key):
         is_empty = 0
-      if (request.has_key('field_errors')):
+      if ('field_errors' in request):
         is_empty = 0
       #o.edit(key=listbox[i][key])
       o.setProperty(key,listbox[i][key])
@@ -46,11 +45,11 @@ if hasattr(request, listbox_id):
       l.append(o)
     
 # add empty lines
-if not(request.has_key('field_errors')):
+if not('field_errors' in request):
   for i in range(first_empty_line_id,first_empty_line_id+empty_line_number):
 
     o = newTempBase(portal_object, str(i))
-    o.setUid('new_%s' % zfill(i,int_len))   
+    o.setUid('new_%s' % str(i).zfill(int_len))
     # zfill is used here to garantee sort order - XXX - cleaner approach required
     l.append(o)
 

@@ -1,3 +1,4 @@
+from six import string_types as basestring
 import json
 from Products.ERP5Type.Utils import checkPythonSourceCode
 

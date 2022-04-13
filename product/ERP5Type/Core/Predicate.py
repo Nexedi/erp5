@@ -45,7 +45,9 @@ from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.Expression import Expression
+import six
 
+@zope.interface.implementer( interfaces.IPredicate,)
 class Predicate(XMLObject):
   """
     A Predicate object defines a list of criterions
@@ -82,9 +84,6 @@ class Predicate(XMLObject):
                     , PropertySheet.SortIndex
                     )
 
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IPredicate, )
-
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, tested_base_category_list=None,
            strict_membership=0, isMemberOf=None, **kw):
@@ -114,7 +113,7 @@ class Predicate(XMLObject):
 #    LOG('PREDICATE TEST', 0,
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
-    for property, value in self._identity_criterion.iteritems():
+    for property, value in six.iteritems(self._identity_criterion):
       if not value:
         continue
       if isinstance(value, (list, tuple)):
@@ -126,7 +125,7 @@ class Predicate(XMLObject):
 #          (result, property, context.getProperty(property), value))
       if not result:
         return result
-    for property, (min, max) in self._range_criterion.iteritems():
+    for property, (min, max) in six.iteritems(self._range_criterion):
       value = context.getProperty(property)
       if min is not None:
         result = value >= min
@@ -170,7 +169,7 @@ class Predicate(XMLObject):
                  not tested_base_category.get(bc):
               tested_base_category[bc] = \
                 isMemberOf(context, c, strict_membership=strict_membership)
-      if 0 in tested_base_category.itervalues():
+      if 0 in six.itervalues(tested_base_category):
         return 0
 
     # Test method calls
@@ -182,7 +181,7 @@ class Predicate(XMLObject):
           try:
             result = method(self)
           except TypeError:
-            if method.func_code.co_argcount != isinstance(method, MethodType):
+            if method.__code__.co_argcount != isinstance(method, MethodType):
               raise
             # backward compatibilty with script that takes no argument
             warn('Predicate %s uses an old-style method (%s) that does not'
@@ -220,7 +219,10 @@ class Predicate(XMLObject):
         x for x in category_list
         if x.split('/', 1)[0] in base_category_set
       ]
-    next_join_counter = itertools.count().next
+    if six.PY2:
+      next_join_counter = itertools.count().next
+    else:
+      next_join_counter = itertools.count().__next__
     def buildSeparateJoinQuery(name, value):
       query = buildSingleQuery(name, value)
       suffix = str(next_join_counter())
@@ -380,10 +382,10 @@ class Predicate(XMLObject):
       criterion_property_list = kwd['criterion_property_list']
       identity_criterion = PersistentMapping()
       range_criterion = PersistentMapping()
-      for criterion in self._identity_criterion.iterkeys() :
+      for criterion in six.iterkeys(self._identity_criterion) :
         if criterion in criterion_property_list :
           identity_criterion[criterion] = self._identity_criterion[criterion]
-      for criterion in self._range_criterion.iterkeys() :
+      for criterion in six.iterkeys(self._range_criterion) :
         if criterion in criterion_property_list :
           range_criterion[criterion] = self._range_criterion[criterion]
       self._identity_criterion = identity_criterion

@@ -99,6 +99,6 @@ def get_pipe(command, cwd=None):
     popen = Popen(command, stdout=PIPE, stderr=PIPE, cwd=cwd)
     stdoutdata, stderrdata = popen.communicate()
     if popen.returncode != 0:
-        raise EnvironmentError, (popen.returncode, stderrdata)
+        raise EnvironmentError(popen.returncode, stderrdata)
     return stdoutdata
 

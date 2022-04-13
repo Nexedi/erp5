@@ -239,7 +239,7 @@ class ExplanationCache:
 
     # Build a list of path patterns which apply to current business_link
     path_list = iter(self.getSimulationPathPatternList())
-    path_dict = {x: path_list.next() for x in path_list}
+    path_dict = {x: next(path_list) for x in path_list}
     # path_dict is like this;
     # {'/erp5/portal_simulation/3/4': r'/erp5/portal\_simulation/3/4/%'}
     path_list = []

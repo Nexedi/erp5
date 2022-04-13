@@ -46,5 +46,4 @@ class LocalDTMLFile(DomainAware, DTMLFile):
     def _exec(self, bound_data, args, kw):
         # Add our gettext first
         bound_data['gettext'] = self.gettext
-        return apply(LocalDTMLFile.inheritedAttribute('_exec'),
-                     (self, bound_data, args, kw))
+        return LocalDTMLFile.inheritedAttribute('_exec')(*(self, bound_data, args, kw))

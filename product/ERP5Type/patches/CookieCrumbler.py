@@ -29,10 +29,11 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import InitializeClass
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.CookieCrumbler import CookieCrumblerDisabled
-from urllib import quote, unquote
+from six.moves.urllib.parse import quote, unquote
 from zExceptions import Redirect
 from zope.globalrequest import getRequest
 from ZPublisher.HTTPRequest import HTTPRequest
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 ATTEMPT_NONE = 0       # No attempt at authentication
 ATTEMPT_LOGIN = 1      # Attempt to log in
@@ -132,12 +133,12 @@ def modifyRequest(self, req, resp):
         # An auth header was provided and no cookie crumbler
         # created it.  The user must be using basic auth.
         enabled = False
-      elif req.has_key(self.pw_cookie) and req.has_key(self.name_cookie):
+      elif self.pw_cookie in req and self.name_cookie in req:
         # Attempt to log in and set cookies.
         attempt = ATTEMPT_LOGIN
         name = req[self.name_cookie]
         pw = req[self.pw_cookie]
-        ac = standard_b64encode('%s:%s' % (name, pw))
+        ac = bytes2str(standard_b64encode(str2bytes('%s:%s' % (name, pw))).rstrip())
         self._setAuthHeader(ac, req, resp)
         if req.get(self.persist_cookie, 0):
           # Persist the user name (but not the pw or session)
@@ -152,13 +153,13 @@ def modifyRequest(self, req, resp):
         method = self.getCookieMethod( 'setAuthCookie'
                                        , self.defaultSetAuthCookie )
         method( resp, self.auth_cookie, quote( ac ) )
-      elif req.has_key(self.auth_cookie):
+      elif self.auth_cookie in req:
         # Attempt to resume a session if the cookie is valid.
         # Copy __ac to the auth header.
         ac = unquote(req[self.auth_cookie])
         if ac and ac != 'deleted':
           try:
-            standard_b64decode(ac)
+            standard_b64decode(str2bytes(ac))
           except:
             # Not a valid auth header.
             pass
@@ -282,7 +283,7 @@ if 1:
     def unauthorized(self):
         resp = self._cleanupResponse()
         # If we set the auth cookie before, delete it now.
-        if resp.cookies.has_key(self.auth_cookie):
+        if self.auth_cookie in resp.cookies:
             del resp.cookies[self.auth_cookie]
         # Redirect if desired.
         url = self.getUnauthorizedURL()
@@ -294,7 +295,7 @@ if 1:
     def _unauthorized(self):
         resp = self._cleanupResponse()
         # If we set the auth cookie before, delete it now.
-        if resp.cookies.has_key(self.auth_cookie):
+        if self.auth_cookie in resp.cookies:
             del resp.cookies[self.auth_cookie]
         # Redirect if desired.
         url = self.getUnauthorizedURL()
