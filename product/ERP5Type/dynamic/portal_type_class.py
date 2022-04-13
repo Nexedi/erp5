@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 import os
 import inspect
 import transaction
@@ -36,7 +37,7 @@ from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
 from . import aq_method_lock
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type.Utils import setDefaultClassProperties
+from Products.ERP5Type.Utils import setDefaultClassProperties, ensure_list
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 from Products.ERP5Type.dynamic.accessor_holder import createAllAccessorHolderList
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
@@ -60,6 +61,8 @@ ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
   for acquire_local_role in (False, True)
 }
 
+if six.PY3:
+  StandardError = Exception
 def _importFilesystemClass(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
@@ -540,7 +543,7 @@ def synchronizeDynamicModules(context, force=False):
       erp5.accessor_holder.clear()
       erp5.accessor_holder.property_sheet.clear()
 
-      for name in erp5.accessor_holder.portal_type.__dict__.keys():
+      for name in ensure_list(erp5.accessor_holder.portal_type.__dict__.keys()):
         if name[0] != '_':
           delattr(erp5.accessor_holder.portal_type, name)
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from zLOG import ERROR
-from UserDict import UserDict
+from six.moves import UserDict
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.class_init import default__class_init__ as InitializeClass
@@ -54,12 +54,11 @@ VALIDATORS = {
     'dict' : PersistentMapping,
     }
 
+@implementer(ITransform)
 class Transform(SimpleItem):
     """A transform is an external method with
     additional configuration information
     """
-
-    implements(ITransform)
 
     meta_type = 'Transform'
     meta_types = all_meta_types = ()
@@ -141,7 +140,7 @@ class Transform(SimpleItem):
             pass
         try:
             m = import_from_name(self.module)
-        except ImportError, err:
+        except ImportError as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = "Cannot register transform %s (ImportError), using BrokenTransform: Error\n %s" % (self.id, err)
             self.title = 'BROKEN'
@@ -152,7 +151,7 @@ class Transform(SimpleItem):
             raise TransformException(msg)
         try:
             transform = m.register()
-        except Exception, err:
+        except Exception as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = "Cannot register transform %s, using BrokenTransform: Error\n %s" % (self.id, err)
             self.title = 'BROKEN'
@@ -240,14 +239,14 @@ class Transform(SimpleItem):
 
         tr_tool = getToolByName(self, 'portal_transforms')
         # need to remap transform if necessary (i.e. configurable inputs / output)
-        if kwargs.has_key('inputs') or kwargs.has_key('output'):
+        if 'inputs' in kwargs or 'output' in kwargs:
             tr_tool._unmapTransform(self)
             transform = self._load_transform()
             self.inputs = kwargs.get('inputs', transform.inputs)
             self.output = kwargs.get('output', transform.output)
             tr_tool._mapTransform(self)
         # track output encoding
-        if kwargs.has_key('output_encoding'):
+        if 'output_encoding' in kwargs:
             self.output_encoding = kwargs['output_encoding']
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(tr_tool.absolute_url()+'/manage_main')

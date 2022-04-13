@@ -9,10 +9,12 @@ class SetupSiteError(Exception):
     """
 
 def patch():
+    import six
+
     import traceback
     from unittest import TextTestResult, TextTestRunner
 
-    TextTestResult_addError = TextTestResult.addError.__func__
+    TextTestResult_addError = six.get_unbound_function(TextTestResult.addError)
     def addError(self, test, err):
         if isinstance(err[1], SetupSiteError):
             self.errors.append(None)
@@ -40,7 +42,7 @@ def patch():
             self.stream.writeln("SUCCESS: %s" % self.getDescription(test))
     TextTestResult.printErrors = printErrors
 
-    TextTestRunner_run = TextTestRunner.run.__func__
+    TextTestRunner_run = six.get_unbound_function(TextTestRunner.run)
     def run(self, test):
         def t(result):
             try:

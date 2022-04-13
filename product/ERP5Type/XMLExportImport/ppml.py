@@ -23,6 +23,7 @@ from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
 
+import six
 from marshal import dumps as mdumps
 #from zLOG import LOG
 
@@ -77,7 +78,7 @@ def convert(S):
     ###              [\x00-\x1f] characters will be escaped to make a more
     ###              readable output.
     try:
-        if not isinstance(S, unicode):
+        if not isinstance(S, six.text_type):
             S.decode('utf8')
     except UnicodeDecodeError:
         return 'base64', base64.encodestring(S)[:-1]
@@ -336,7 +337,7 @@ class NoBlanks:
         """
         # Ignore element data between elements (eg '<e> <f> </f> </e>')...
         if data.strip():
-            if isinstance(data, unicode):
+            if isinstance(data, six.text_type):
                 data = data.encode('raw_unicode_escape')
             self.append(data)
 
@@ -360,7 +361,7 @@ class NoBlanks:
                     self.previous_discarded_data = None
                     self.previous_stack_end = None
 
-                if isinstance(data, unicode):
+                if isinstance(data, six.text_type):
                     data = data.encode('raw_unicode_escape')
 
                 self.append(data)
@@ -395,7 +396,7 @@ class IdentityMapping:
       return self.immutable[k]
 
     def hasImmutable(self, k):
-      return self.immutable.has_key(k)
+      return k in self.immutable
 
 class MinimalMapping(IdentityMapping):
     def resetMapping(self):
@@ -416,7 +417,7 @@ class MinimalMapping(IdentityMapping):
         sub_id = None
       else:
         raise
-      if not self.mapped_id.has_key(core_id):
+      if core_id not in self.mapped_id:
         if sub_id is not None:
           # Use existing id
           self.mapped_id[core_id] = {}
@@ -430,7 +431,7 @@ class MinimalMapping(IdentityMapping):
           self.last_id = self.last_id + 1
       if sub_id is None:
         return self.mapped_core_id[core_id]
-      if not self.mapped_id[core_id].has_key(sub_id):
+      if sub_id not in self.mapped_id[core_id]:
         # Create new sub_id if not defined
         self.mapped_id[core_id][sub_id] = self.last_sub_id[core_id]
         self.last_sub_id[core_id] = self.last_sub_id[core_id] + 1
@@ -513,13 +514,13 @@ class ToXMLUnpickler(Unpickler):
     dispatch[BINSTRING] = load_binstring
 
     def load_unicode(self):
-        self.append(Unicode(unicode(eval(self.readline()[:-1],
+        self.append(Unicode(six.text_type(eval(self.readline()[:-1],
                                          {'__builtins__': {}})), self.id_mapping)) # Let's be careful
     dispatch[UNICODE] = load_unicode
 
     def load_binunicode(self):
         len = mloads('i' + self.read(4))
-        self.append(Unicode(unicode(self.read(len), 'utf-8'), self.id_mapping))
+        self.append(Unicode(six.text_type(self.read(len), 'utf-8'), self.id_mapping))
     dispatch[BINUNICODE] = load_binunicode
 
     def load_short_binstring(self):
@@ -608,12 +609,12 @@ class ToXMLUnpickler(Unpickler):
 
     def load_binget(self):
         i = mloads('i' + self.read(1) + '\000\000\000')
-        self.append(Get(self.idprefix+`i`, self.id_mapping))
+        self.append(Get(self.idprefix+repr(i), self.id_mapping))
     dispatch[BINGET] = load_binget
 
     def load_long_binget(self):
         i = mloads('i' + self.read(4))
-        self.append(Get(self.idprefix+`i`, self.id_mapping))
+        self.append(Get(self.idprefix+repr(i), self.id_mapping))
     dispatch[LONG_BINGET] = load_long_binget
 
     def load_put(self):
@@ -623,12 +624,12 @@ class ToXMLUnpickler(Unpickler):
     def load_binput(self):
         i = mloads('i' + self.read(1) + '\000\000\000')
         #LOG('load_binput', 0, 'self.stack = %r, self.idprefix+`i` = %r' % (self.stack, self.idprefix+`i`))
-        self.stack[-1].id=self.idprefix+`i`
+        self.stack[-1].id=self.idprefix+repr(i)
     dispatch[BINPUT] = load_binput
 
     def load_long_binput(self):
         i = mloads('i' + self.read(4))
-        self.stack[-1].id=self.idprefix+`i`
+        self.stack[-1].id=self.idprefix+repr(i)
     dispatch[LONG_BINPUT] = load_long_binput
 
     class LogCall:
@@ -646,7 +647,7 @@ def ToXMLload(file):
     return ToXMLUnpickler(file).load()
 
 def ToXMLloads(str):
-    from StringIO import StringIO
+    from io import StringIO
     file = StringIO(str)
     return ToXMLUnpickler(file).load()
 
@@ -835,7 +836,7 @@ class xmlPickler(NoBlanks, xyap):
         end = self.end_handlers
         if tag in end:
             top = end[tag](self, tag, top)
-        if isinstance(top, unicode):
+        if isinstance(top, six.text_type):
             top = top.encode('raw_unicode_escape')
         append(top)
 

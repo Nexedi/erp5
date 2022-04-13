@@ -3,7 +3,7 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.interfaces import idatastream
 from erp5.component.document.Document import ConversionError
 from Acquisition import aq_base
-from zope.interface import implements
+from zope.interface import implementer
 from OFS.Image import Image as OFSImage
 from zLOG import LOG
 
@@ -14,8 +14,8 @@ from lxml import html
 from lxml.etree import ParseError, Element
 from lxml.etree import SubElement
 
-from urllib import unquote
-from urlparse import parse_qsl, urlparse
+from six.moves.urllib.parse import unquote, parse_qsl, urlparse
+from Products.ERP5Type.Utils import ensure_list
 
 def includeMetaContentType(html_node):
   """XXX Temp workaround time to fix issue
@@ -35,9 +35,9 @@ def includeMetaContentType(html_node):
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
+@implementer(idatastream)
 class OOoDocumentDataStream:
   """Handle OOoDocument in Portal Transforms"""
-  implements(idatastream)
 
   def setData(self, value):
     """set the main"""
@@ -131,7 +131,7 @@ class OOOdCommandTransform(commandtransform):
           content_type = image.getContentType()
           format = image_parameter_dict.pop('format', None)
           # convert API accepts only a certail range of arguments
-          for key, value in image_parameter_dict.items():
+          for key, value in ensure_list(image_parameter_dict.items()):
             if key not in ('format', 'display', 'quality', 'resolution',):
               image_parameter_dict.pop(key)
           if getattr(image, 'convert', None) is not None:

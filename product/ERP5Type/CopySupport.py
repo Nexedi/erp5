@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+from six.moves import xrange
 from functools import partial
 from OFS import Moniker
 from zExceptions import BadRequest
@@ -592,7 +593,7 @@ class CopyContainer:
     cp = None
     if cb_copy_data is not None:
       cp = cb_copy_data
-    elif REQUEST is not None and REQUEST.has_key('__cp'):
+    elif REQUEST is not None and '__cp' in REQUEST:
       cp = REQUEST['__cp']
     if cp is None:
       raise CopyError(eNoData)

@@ -28,6 +28,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.builtins import cmp
 from .Accessor import Accessor
 
 # Creation of default constructor
@@ -52,8 +53,9 @@ class PropertyGetter:
   def __call__(self):
     return self.value
 
-  def __nonzero__(self):
+  def __bool__(self):
     return bool(self.value)
+  __nonzero__ = __bool__ # six.PY2
 
   def __int__(self):
     return int(self.value)

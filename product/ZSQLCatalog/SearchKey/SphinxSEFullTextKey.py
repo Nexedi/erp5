@@ -26,6 +26,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+import six
+
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.SearchText import parse
@@ -65,7 +67,7 @@ class SphinxSEFullTextKey(SearchKey):
     column = self.getColumn()
     query_list = []
     append = query_list.append
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in six.iteritems(operator_value_dict):
       if len(value_list) == 1:
         value_list = value_list[0].split()
       append(SimpleQuery(search_key=self,

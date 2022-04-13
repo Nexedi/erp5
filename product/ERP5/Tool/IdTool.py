@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import warnings
 import zope.interface
 
@@ -42,11 +43,11 @@ from BTrees.Length import Length
 
 _marker = object()
 
+@zope.interface.implementer(interfaces.IIdTool)
 class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
   """
-  zope.interface.implements(interfaces.IIdTool)
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'
@@ -62,7 +63,7 @@ class IdTool(BaseTool):
     """
       the newContent is overriden to not use generateNewId
     """
-    if not kw.has_key(id):
+    if id not in kw:
       new_id = self._generateNextId()
       if new_id is not None:
         kw['id'] = new_id
@@ -229,7 +230,10 @@ class IdTool(BaseTool):
           if self.dict_length_ids.get(id_group) is None:
             self.dict_length_ids[id_group] = Length(new_id)
           self.dict_length_ids[id_group].set(new_id)
-        new_id_list = range(new_id - id_count, new_id)
+        if six.PY2:
+          new_id_list = range(new_id - id_count, new_id)
+        else:
+          new_id_list = list(range(new_id - id_count, new_id))
     return new_id_list
 
   security.declareProtected(Permissions.ModifyPortalContent,

@@ -27,6 +27,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import unicode2str
 from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
 from .Base import Getter as BaseGetter, Setter as BaseSetter
@@ -96,7 +97,7 @@ class TranslatedGetter(Getter):
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
-      return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
+      return unicode2str(portal.Localizer.erp5_ui.gettext(state_id))
 
     psyco.bind(__call__)
 
@@ -119,7 +120,7 @@ class TranslatedTitleGetter(TitleGetter):
       if result == '':
         result = localizer.erp5_ui.gettext(state_title,
                                            lang=selected_language)
-      return result.encode('utf8')
+      return unicode2str(result)
 
     psyco.bind(__call__)
 

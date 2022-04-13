@@ -31,6 +31,7 @@ from ZODB.POSException import ConflictError
 from zLOG import LOG, WARNING
 
 from Products import ERP5Security
+import six
 
 # It can be useful to set NO_CACHE_MODE to 1 in order to debug
 # complex security issues related to caching groups. For example,
@@ -133,7 +134,7 @@ class ERP5GroupManager(BasePlugin):
         generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
         group_id_list_generator = getattr(self, generator_name, None)
       security_group_list = []
-      for base_category_list, category_value_list in security_category_dict.iteritems():
+      for base_category_list, category_value_list in six.iteritems(security_category_dict):
         for category_dict in category_value_list:
           try:
             group_id_list = group_id_list_generator(

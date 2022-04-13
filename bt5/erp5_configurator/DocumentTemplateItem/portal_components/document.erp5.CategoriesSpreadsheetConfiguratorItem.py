@@ -40,6 +40,7 @@ class UnrestrictedStringIO(StringIO):
   __allow_access_to_unprotected_subobjects__ = 1
 
 
+@zope.interface.implementer(IConfiguratorItem)
 class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """Import a categories spreadsheet.
   """
@@ -53,9 +54,6 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfiguratorItem)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

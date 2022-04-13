@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import warnings
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -80,10 +81,10 @@ class TimerServiceMixin(object):
     super(TimerServiceMixin, self).manage_afterAdd(*args, **kw)
 
   security.declarePublic('getCurrentNode')
-  getCurrentNode = ActivityTool.getCurrentNode.im_func
+  getCurrentNode = six.get_unbound_function(ActivityTool.getCurrentNode)
   security.declarePublic('getServerAddress')
-  getServerAddress = ActivityTool.getServerAddress.im_func
+  getServerAddress = six.get_unbound_function(ActivityTool.getServerAddress)
 
-  _isValidNodeName = ActivityTool._isValidNodeName.im_func
+  _isValidNodeName = six.get_unbound_function(ActivityTool._isValidNodeName)
 
 InitializeClass(TimerServiceMixin)

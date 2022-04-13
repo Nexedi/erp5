@@ -136,7 +136,7 @@ for axis in (planning.Y, planning.X):
       axis_dict['margin-left'] = size_border_width_left + size_y_axis_width + size_y_axis_space
 
     axis_previous['margin-left'] = -20
-    axis_previous['margin-top'] = (axis_dict['height'] - 15) / 2
+    axis_previous['margin-top'] = (axis_dict['height'] - 15) // 2
     axis_next['margin-left'] = axis_dict['width'] + 5
     axis_next['margin-top'] = axis_previous['margin-top']
 
@@ -165,7 +165,7 @@ for axis in (planning.Y, planning.X):
       axis_dict['margin-left'] = size_border_width_left
 
 
-    axis_previous['margin-left'] = (axis_dict['width'] -15) / 2
+    axis_previous['margin-left'] = (axis_dict['width'] -15) // 2
     axis_previous['margin-top'] = -20
     axis_next['margin-left'] = axis_previous['margin-left']
     axis_next['margin-top'] = axis_dict['height'] + 5
@@ -256,7 +256,7 @@ for axis_group in planning.report_axis.axis_group:
       # height matches info
       if len(axis_group.info_title.info) * car_width > axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max((axis_group_dict['width'] - car_width * 3) // car_width, 0 )
         # cutting activity
         axis_group.info_title.edit(axis_group.info_title.info[:int(nb)] + '..')
 
@@ -340,7 +340,7 @@ for axis_group in planning.report_axis.axis_group:
       # height matches info
       if len(axis_group.info_title.info) * car_width > axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max((axis_group_dict['width'] - car_width * 3) // car_width, 0 )
         # cutting activity
         axis_group.info_title.edit(axis_group.info_title.info[:int(nb)] + '..')
 
@@ -429,7 +429,7 @@ for lane_axis_group in planning.lane_axis.axis_group:
       # height matches info
       if len(lane_axis_group.info_title.info) * car_width > lane_axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((lane_axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max((lane_axis_group_dict['width'] - car_width * 3) // car_width, 0 )
         # cutting activity
         lane_axis_group.info_title.edit(lane_axis_group.info_title.info[:int(nb)] + '..')
     # adding axis_definitions to dictionnary
@@ -468,7 +468,7 @@ for lane_axis_group in planning.lane_axis.axis_group:
       # height matches info
       if len(lane_axis_group.info_title.info) * car_width > lane_axis_group_dict['width']:
         # defining number of caracts to leave
-        nb = max((lane_axis_group_dict['width'] - car_width * 3) / car_width, 0 )
+        nb = max((lane_axis_group_dict['width'] - car_width * 3) // car_width, 0 )
         # cutting activity
         lane_axis_group.info_title.edit(lane_axis_group.info_title.info[:int(nb)] + '..')
 

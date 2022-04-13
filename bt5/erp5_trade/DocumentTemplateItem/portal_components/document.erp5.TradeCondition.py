@@ -44,6 +44,9 @@ from erp5.component.interface.IMovementCollectionUpdater import IMovementCollect
 from erp5.component.interface.IAmountGenerator import IAmountGenerator
 from erp5.component.interface.IMovementGenerator import IMovementGenerator
 
+@zope.interface.implementer(IAmountGenerator,
+                            IMovementGenerator,
+                            IMovementCollectionUpdater,)
 class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
   """
   Trade Conditions are used to store the conditions (payment, logistic,...)
@@ -74,10 +77,6 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
                            # Task propertysheet, however many tests fails
                            # if not present. Cleaning required.
                     )
-
-  zope.interface.implements(IAmountGenerator,
-                            IMovementGenerator,
-                            IMovementCollectionUpdater,)
 
 
   # Mapped Value implementation

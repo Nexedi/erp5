@@ -31,7 +31,7 @@ from .lexer import lexer, update_docstrings
 try:
   from Products.ZSQLCatalog.interfaces.abstract_syntax_node import INode, IValueNode, ILogicalNode, IColumnNode
   from zope.interface.verify import verifyClass
-  from zope.interface import implements
+  from zope.interface import implementer
 except ImportError:
   # allow this module to be imported by stand-alone scripts without
   # Products.ZSQLCatalog.interfaces or zope.interface around.
@@ -43,10 +43,10 @@ except ImportError:
     pass
   implements = verifyClass
 
+@implementer(INode)
 class Node(object):
 
   __allow_access_to_unprotected_subobjects__ = 1
-  implements(INode)
 
   def isLeaf(self):
     return False
@@ -59,9 +59,8 @@ class Node(object):
 
 verifyClass(INode, Node)
 
+@implementer(IValueNode)
 class ValueNode(Node):
-
-  implements(IValueNode)
 
   def __init__(self, value, comparison_operator=''):
     self.value = value
@@ -82,9 +81,8 @@ class ValueNode(Node):
 verifyClass(INode, ValueNode)
 verifyClass(IValueNode, ValueNode)
 
+@implementer(ILogicalNode)
 class NotNode(Node):
-
-  implements(ILogicalNode)
 
   def __init__(self, node):
     self.node = node
@@ -101,9 +99,8 @@ class NotNode(Node):
 verifyClass(INode, NotNode)
 verifyClass(ILogicalNode, NotNode)
 
+@implementer(ILogicalNode)
 class LogicalNode(Node):
-
-  implements(ILogicalNode)
 
   def __init__(self, logical_operator, node, other):
     self.logical_operator = logical_operator
@@ -129,9 +126,8 @@ class LogicalNode(Node):
 verifyClass(INode, LogicalNode)
 verifyClass(ILogicalNode, LogicalNode)
 
+@implementer(IColumnNode)
 class ColumnNode(Node):
-
-  implements(IColumnNode)
 
   def __init__(self, column_name, node):
     self.column_name = column_name

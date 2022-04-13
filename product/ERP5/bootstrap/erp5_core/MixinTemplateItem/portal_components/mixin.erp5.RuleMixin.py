@@ -42,6 +42,9 @@ def _compare(tester_list, prevision_movement, decision_movement):
       return False
   return True
 
+@zope.interface.implementer(IRule,
+                            IDivergenceController,
+                            IMovementCollectionUpdater,)
 class RuleMixin(Predicate):
   """
   Provides generic methods and helper methods to implement
@@ -50,11 +53,6 @@ class RuleMixin(Predicate):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IRule,
-                            IDivergenceController,
-                            IMovementCollectionUpdater,)
 
   # Portal Type of created children
   movement_type = 'Simulation Movement'

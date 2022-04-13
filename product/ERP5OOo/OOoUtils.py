@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import six
 from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
@@ -36,7 +37,7 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import BytesIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions
@@ -72,14 +73,17 @@ class OOoBuilder(Implicit):
 
   def __init__(self, document):
     if hasattr(document, 'data') :
-      self._document = StringIO()
+      self._document = BytesIO()
 
       if isinstance(document.data, Pdata):
         # Handle image included in the style
         dat = document.data
         while dat is not None:
           self._document.write(dat.data)
-          dat = dat.next
+          if six.PY2:
+            dat = dat.next
+          else:
+            dat = dat.__next__
       else:
         # Default behaviour
         self._document.write(document.data)
@@ -87,7 +91,7 @@ class OOoBuilder(Implicit):
     elif hasattr(document, 'read') :
       self._document = document
     else :
-      self._document = StringIO()
+      self._document = BytesIO()
       self._document.write(document)
     self._image_count = 0
     self._manifest_additions_list = []
@@ -108,7 +112,7 @@ class OOoBuilder(Implicit):
     except KeyError:
       # This is a new file
       pass
-    if isinstance(stream, unicode):
+    if isinstance(stream, six.text_type):
       stream = stream.encode('utf-8')
     zf.writestr(filename, stream)
     zf.close()
@@ -142,7 +146,6 @@ class OOoBuilder(Implicit):
         - indent the xml
     """
     content_xml = self.extract(ooo_xml_file_id)
-    output = StringIO()
     content_doc = etree.XML(content_xml)
     root = content_doc.getroottree().getroot()
     #Declare zope namespaces
@@ -231,7 +234,7 @@ class OOoParser(Implicit):
     self.filename = None
 
   def openFromString(self, text_content):
-    return self.openFile(StringIO(text_content))
+    return self.openFile(BytesIO(text_content))
 
   def openFile(self, file_descriptor):
     """
@@ -240,7 +243,7 @@ class OOoParser(Implicit):
     # Try to unzip the Open Office doc
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
-    except Exception, e:
+    except Exception as e:
       LOG('ERP5OOo', DEBUG, 'Error in openFile', error=True)
       raise CorruptedOOoFile(e)
     # Test the integrity of the file

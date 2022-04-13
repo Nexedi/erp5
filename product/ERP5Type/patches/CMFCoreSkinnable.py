@@ -12,12 +12,14 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
 
-from thread import get_ident
+from _thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
+import six
 
 """
   This patch modifies the way CMF Portal Skins gets a skin by its name from
@@ -57,7 +59,7 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   if portal_callables is not None:
     portal_callables = portal_callables.aq_base
   skin_selection_mapping = {}
-  for selection_name, skin_folder_id_string in portal_skins._getSelections().iteritems():
+  for selection_name, skin_folder_id_string in six.iteritems(portal_skins._getSelections()):
     skin_selection_mapping[selection_name] = _initializeCache(portal_callables,
       portal_skins, skin_folder_id_string.split(','))
   portal_skins._v_skin_location_list = skin_selection_mapping

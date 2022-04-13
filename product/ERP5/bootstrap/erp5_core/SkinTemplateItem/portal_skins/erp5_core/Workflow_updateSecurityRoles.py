@@ -1,6 +1,7 @@
 """
 Changes permissions of all objects related to this workflow
 """
+from six.moves import xrange
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 ACTIVITY_GROUPING_COUNT = 100

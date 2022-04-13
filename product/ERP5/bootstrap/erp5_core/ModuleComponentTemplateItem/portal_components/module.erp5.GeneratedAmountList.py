@@ -31,7 +31,9 @@ from collections import defaultdict, OrderedDict
 import zope.interface
 from AccessControl import allow_class
 from erp5.component.interface.IAmountList import IAmountList
+import six
 
+@zope.interface.implementer(IAmountList)
 class GeneratedAmountList(list):
   """
     Temporary object needed to aggregate Amount value
@@ -44,7 +46,6 @@ class GeneratedAmountList(list):
     2. detailed information on each movement with split(), which would be
        equivalent to call getGeneratedAmountList() on each movement
   """
-  zope.interface.implements(IAmountList)
 
   def getTotalPrice(self):
     """
@@ -87,7 +88,7 @@ class GeneratedAmountList(list):
       else:
         aggregate[1] += amount.getQuantity()
     from erp5.component.document.RoundingModel import RoundingProxy
-    for amount, quantity in aggregate_dict.itervalues():
+    for amount, quantity in six.itervalues(aggregate_dict):
       # Before we ignore 'quantity==0' amount here for better performance,
       # but it is not a good idea, especially when the first expand causes
       # non-zero quantity and then quantity becomes zero.

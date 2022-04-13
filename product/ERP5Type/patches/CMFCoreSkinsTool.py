@@ -12,7 +12,9 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 from Products.CMFCore.SkinsTool import SkinsTool
+import six
 
 """
   This patch invalidates the skin cache when manage_skinLayers is called to
@@ -58,13 +60,13 @@ def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
     for selection_name in skin_location_list.keys():
       if not isinstance(selection_name, basestring):
         del skin_location_list[selection_name]
-    for selection_name, skin_folder_id_string in self._getSelections().iteritems():
+    for selection_name, skin_folder_id_string in six.iteritems(self._getSelections()):
       # Add portal_callables to every selection
       skin_folder_id_list = skin_folder_id_string.split(',') + ['portal_callables']
       if container_id in skin_folder_id_list:
         skin_folder_id_list.reverse()
         this_folder_index = skin_folder_id_list.index(container_id)
-        if skin_location_list[selection_name].has_key(object_id):
+        if object_id in skin_location_list[selection_name]:
           existing_folder_index = skin_folder_id_list.index(skin_location_list[selection_name][object_id])
         else:
           existing_folder_index = this_folder_index - 1

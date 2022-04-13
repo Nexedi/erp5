@@ -30,6 +30,7 @@ import zope.interface
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from erp5.component.interface.IMovementCollectionDiff import IMovementCollectionDiff
 
+@zope.interface.implementer(IMovementCollectionDiff,)
 class MovementCollectionDiff(object):
   """
   Documents which implement IMovementCollectionDiff
@@ -38,8 +39,6 @@ class MovementCollectionDiff(object):
   They are usually generated and used by
   IMovementCollectionUpdater.
   """
-  # Declarative interfaces
-  zope.interface.implements(IMovementCollectionDiff,)
 
   def __init__(self):
     self._deletable_movement_list = []
@@ -113,7 +112,7 @@ def _getPropertyList(document, acquire=True):
     elif (x.get('storage_id') or property_id) not in document_dict:
       continue
     # we don't want acquired properties without acquisition_mask_value
-    elif x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
+    elif 'acquisition_base_category' in x and not x.get('acquisition_mask_value', 0):
       continue
     elif x['type'] in list_types and not property_id.endswith('_list'):
       property_dict[property_id] = getPropertyList(property_id)

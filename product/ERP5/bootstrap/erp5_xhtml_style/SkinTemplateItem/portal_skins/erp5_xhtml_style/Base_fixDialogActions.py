@@ -50,7 +50,7 @@ def addDialogIfNeeded(url):
       base_content_type = getattr(form, form.template).getProperty('content_type')
     else:
       base_content_type = form.getProperty('content_type')
-    if parameter_kw.has_key('format'):
+    if 'format' in parameter_kw:
       # if format is passed in action url: remove it
       target_format = parameter_kw.pop('format')
       action = '%s?%s' % (action_id, '&'.join(['='.join(tuple_parameter) for tuple_parameter in parameter_kw.items()]))

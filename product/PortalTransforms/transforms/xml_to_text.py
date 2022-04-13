@@ -1,9 +1,9 @@
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from lxml import etree
 
+@implementer(ITransform)
 class xml_to_text:
-    implements(ITransform)
 
     __name__ = 'xml_to_text'
     inputs  = ('text/xml', 'application/xml')

@@ -37,6 +37,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from erp5.component.interface.IDivergenceController import IDivergenceController
 
+@zope.interface.implementer(IDivergenceController,)
 class SolverProcessTool(BaseTool):
   """ Container for solver processes.
   """
@@ -48,9 +49,6 @@ class SolverProcessTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  # Declarative interfaces
-  zope.interface.implements(IDivergenceController, )
 
   # IDivergenceController implementation
   security.declareProtected(Permissions.AccessContentsInformation,

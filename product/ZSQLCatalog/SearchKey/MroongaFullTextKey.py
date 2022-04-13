@@ -27,11 +27,13 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from six import string_types as basestring
 from .DefaultKey import DefaultKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
+import six
 
 class MroongaFullTextKey(DefaultKey):
   default_comparison_operator = 'mroonga'
@@ -52,7 +54,7 @@ class MroongaFullTextKey(DefaultKey):
       super(MroongaFullTextKey, self)._processSearchValue(
         search_value, logical_operator, comparison_operator)
     # Dequote for non full-text queries.
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in six.iteritems(operator_value_dict):
       if comparison_operator not in ('mroonga', 'mroonga_boolean'):
         operator_value_dict[comparison_operator] = [
           isinstance(value, basestring) and dequote(value) or value

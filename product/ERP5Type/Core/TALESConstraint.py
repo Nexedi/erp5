@@ -75,7 +75,7 @@ class TALESConstraint(ConstraintMixin):
                                     self._getMessage('message_expression_false'))]
     except (ConflictError, CompilerError):
       raise
-    except Exception, e:
+    except Exception as e:
       LOG('ERP5Type', PROBLEM, 'TALESConstraint error on "%s" on %s' %
           (expression_text, obj), error=True)
 

@@ -90,7 +90,7 @@ class RelationStringFieldValidator(
   _v_dict = {}
   _v_message_name_list = []
   for message_name in message_names:
-    if not _v_dict.has_key(message_name):
+    if message_name not in _v_dict:
       _v_message_name_list.append(message_name)
       _v_dict[message_name] = 1
   message_names = _v_message_name_list
@@ -98,7 +98,7 @@ class RelationStringFieldValidator(
   _v_dict = {}
   _v_property_name_list = []
   for property_name in property_names:
-    if not _v_dict.has_key(property_name):
+    if property_name not in _v_dict:
       _v_property_name_list.append(property_name)
       _v_dict[property_name] = 1
   property_names = _v_property_name_list
