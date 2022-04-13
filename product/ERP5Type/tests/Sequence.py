@@ -35,6 +35,7 @@ import traceback
 import linecache
 import sys
 import re
+import six
 # Monkey patch traceback system to print how far we get in the current
 # sequence.
 # This part is adapted from python 2.4's traceback.py
@@ -210,7 +211,7 @@ class StoredSequence(Sequence):
       return result_dict
 
     result_list = []
-    for key, value in self._dict.iteritems():
+    for key, value in six.iteritems(self._dict):
       result_list.append(_serialise(key, value))
     return result_list
 
@@ -247,7 +248,7 @@ class StoredSequence(Sequence):
       serialised_sequence=self.serialiseSequenceDict(),
       document_dict=document_dict,
     )
-    for module_id, object_id_list in document_dict.iteritems():
+    for module_id, object_id_list in six.iteritems(document_dict):
       for object_id in object_id_list:
         context.portal.portal_trash.backupObject(
           trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
@@ -259,7 +260,7 @@ class StoredSequence(Sequence):
     context.login()
     trashbin_value = context.portal.portal_trash[self._getTrashBinId(context)]
     document_dict = trashbin_value.getProperty('document_dict')
-    for module_id, object_id_list in document_dict.iteritems():
+    for module_id, object_id_list in six.iteritems(document_dict):
       for object_id in object_id_list:
         context.portal.portal_trash.restoreObject(
           trashbin_value, [module_id], object_id, pass_if_exist=True

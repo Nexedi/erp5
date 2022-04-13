@@ -36,6 +36,7 @@ from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 # XXX make sure that get_request works.
 from new import function
 from zope.globalrequest import getRequest
+import six
 original_get_request = function(getRequest.__code__, getRequest.__globals__)
 
 from Testing.ZopeTestCase.connections import registry
@@ -670,7 +671,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                               searchable_business_template_list=("erp5_base",)):
       template_tool = self.portal.portal_templates
       bt_set = set(searchable_business_template_list).difference(x['title']
-        for x in template_tool.repository_dict.itervalues() for x in x)
+        for x in six.itervalues(template_tool.repository_dict) for x in x)
       if bt_set:
         template_tool.updateRepositoryBusinessTemplateList(
           {os.path.dirname(x[0]) for x in self._getBTPathAndIdList(bt_set)},
@@ -847,7 +848,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           # However, we need to inject the content of `extra` inside the
           # request.
           if extra:
-            for k, v in extra.items(): request[k] = v
+            for k, v in six.iteritems(extra): request[k] = v
 
           wsgi_headers = BytesIO()
 
@@ -929,7 +930,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         serialized_sequence=sequence.serializeSequenceDict(),
         document_dict=document_dict,
       )
-      for module_id, object_id_list in document_dict.iteritems():
+      for module_id, object_id_list in six.iteritems(document_dict):
         for object_id in object_id_list:
           self.portal.portal_trash.backupObject(
             trashbin_value, [module_id], object_id, save=True, keep_subobjects=True
@@ -939,7 +940,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       sequence_title = "sequence_title"
       trashbin_value = self.portal.portal_trash[sequence_title]
       document_dict = trashbin_value.getProperty('document_dict')
-      for module_id, object_id_list in document_dict.iteritems():
+      for module_id, object_id_list in six.iteritems(document_dict):
         for object_id in object_id_list:
           self.portal.portal_trash.restoreObject(
             trashbin_value, [module_id], object_id, pass_if_exist=True
@@ -1452,7 +1453,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         for connector in self.__connector_set:
           connector.__dict__.pop('_v_database_connection', None)
         database_connection_pool = Products.ZMySQLDA.DA.database_connection_pool
-        for value in database_connection_pool.itervalues():
+        for value in six.itervalues(database_connection_pool):
           value.clear()
         database_connection_pool.clear()
 

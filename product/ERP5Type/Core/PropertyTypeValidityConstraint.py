@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import six
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 from DateTime import DateTime
@@ -54,7 +55,7 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
     'int':                (int, ),
     'boolean':            (int, bool),
     'float':              (float, ),
-    'long':               (long, ),
+    'long':               (int if six.PY3 else long, ),
     'tales':              (str, ),
     'lines':              (list, tuple),
     'tokens':             (list, tuple),
@@ -117,7 +118,7 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
           if wrong_type:
             try:
               value = self._type_dict[property_type][0](value)
-            except (KeyError, ValueError), error:
+            except (KeyError, ValueError) as error:
               error_message = 'message_incorrect_type_fix_failed'
               mapping['type_cast_error'] = str(error)
 

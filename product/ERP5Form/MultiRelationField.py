@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.ERP5Type.Utils import convertToUpperCase

@@ -9,12 +9,13 @@ import glob
 import logging
 import os
 import re
-from urllib import unquote
+from six.moves.urllib.parse import unquote
 import zipfile
-import StringIO
+import io
 import types
+import six
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import InitializeClass
@@ -107,6 +108,7 @@ def _recurseFSTestCases( result, prefix, fsobjs ):
                                , info
                                )
 
+@implementer(IZuite)
 class Zuite( OrderedFolder ):
     """ TTW-manageable browser test suite
 
@@ -122,8 +124,6 @@ class Zuite( OrderedFolder ):
                      + ( { 'label' : 'Zip', 'action' : 'manage_zipfile' },
                        )
                      )
-
-    implements(IZuite)
 
     test_case_metatypes = ( 'File'
                           , 'Page Template'
@@ -449,7 +449,7 @@ class Zuite( OrderedFolder ):
         manifest = os.path.join( path, self.testsuite_name or '.objects' )
 
         if os.path.isfile( manifest ):
-            filenames = filter(None,[ x.strip() for x in open( manifest ).readlines() ])
+            filenames = [_f for _f in [ x.strip() for x in open( manifest ).readlines() ] if _f]
 
         elif self.filename_glob:
             globbed = glob.glob( os.path.join( path, self.filename_glob ) )
@@ -497,12 +497,12 @@ class Zuite( OrderedFolder ):
     def _getZipFile( self, include_selenium=True ):
         """ Generate a zip file containing both tests and scaffolding.
         """
-        stream = StringIO.StringIO()
+        stream = io.StringIO()
         archive = zipfile.ZipFile( stream, 'w' )
 
 
         def convertToBytes(body):
-            if isinstance(body, types.UnicodeType):
+            if isinstance(body, six.text_type):
                 return body.encode(_DEFAULTENCODING)
             else:
                 return body

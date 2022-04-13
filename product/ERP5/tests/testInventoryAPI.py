@@ -44,6 +44,7 @@ from MySQLdb import ProgrammingError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from zExceptions import BadRequest
+import six
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -1600,7 +1601,7 @@ class TestInventoryList(InventoryAPITestCase):
     resource_uid = resource.getUid()
 
     # create all movements
-    for month, value in data.iteritems():
+    for month, value in six.iteritems(data):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
         self._makeMovement(start_date=d, resource_uid=resource_uid, **mov)
@@ -1625,7 +1626,7 @@ class TestInventoryList(InventoryAPITestCase):
       '2011/01':
         dict(movement_list=[h(22, 8910)], after=h(291, 133344)),
      }
-    for month, value in internal_data.iteritems():
+    for month, value in six.iteritems(internal_data):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
         self._makeMovement(is_internal=1, start_date=d, resource_uid=resource_uid, **mov)
@@ -2771,8 +2772,8 @@ class TestTrackingList(InventoryAPITestCase):
       node_1_uid: 1,
       node_2_uid: 2
     }
-    for date, location_dict in date_location_dict.iteritems():
-      for param_id, location_uid in location_dict.iteritems():
+    for date, location_dict in six.iteritems(date_location_dict):
+      for param_id, location_uid in six.iteritems(location_dict):
         param_dict = {param_id: date}
         uid_list = [x.node_uid for x in getTrackingList(
                             aggregate_uid=self.item.getUid(), **param_dict)]
@@ -2952,7 +2953,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       True: all values from criterion_dict match given inventory_line.
       False otherwise.
     """
-    for criterion_id, criterion_value in criterion_dict.iteritems():
+    for criterion_id, criterion_value in six.iteritems(criterion_dict):
       if criterion_id not in inventory_line \
          or criterion_value != inventory_line[criterion_id]:
         return False
@@ -3740,7 +3741,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
   def setUpUnitDefinition(self):
 
     unit_module = self.portal.quantity_unit_conversion_module
-    for base, t in self.QUANTITY_UNIT_DICT.iteritems():
+    for base, t in six.iteritems(self.QUANTITY_UNIT_DICT):
       standard, definition_dict = t
 
       group = unit_module._getOb(base, None)
@@ -3752,7 +3753,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
       if group.getValidationState() in ('draft', 'invalidated'):
         group.validate()
 
-      for unit, amount in definition_dict.iteritems():
+      for unit, amount in six.iteritems(definition_dict):
         definition = group._getOb(unit, None)
         if definition is None:
           definition = group.newContent(
@@ -3783,7 +3784,7 @@ class BaseTestUnitConversion(InventoryAPITestCase):
 
   def getNeededCategoryList(self):
     category_list = ['metric_type/' + c for c in self.METRIC_TYPE_CATEGORY_LIST]
-    for base, t in self.QUANTITY_UNIT_DICT.iteritems():
+    for base, t in six.iteritems(self.QUANTITY_UNIT_DICT):
       standard, definition_dict = t
 
       quantity = 'quantity_unit/%s/' % base
@@ -3826,7 +3827,7 @@ class TestUnitConversion(BaseTestUnitConversion):
     self.other_resource.setQuantityUnit('mass/g')
 
     keys = ('metric_type', 'quantity_unit', 'quantity', 'default_metric_type')
-    for resource, measure_list in {
+    for resource, measure_list in six.iteritems({
         self.resource: (
           ('mass/net',        'mass/kg', .123, None),
           ('mass/nutr/lipid', 'mass/g',  45,   True),
@@ -3842,7 +3843,7 @@ class TestUnitConversion(BaseTestUnitConversion):
           ('unit/2',  None,         123,  None), #
           (None,      'mass/kg',    123,  None), #
           (None,      None,         None, None), ## empty
-        )}.iteritems():
+        )}):
       for measure in measure_list:
         kw = {keys[i]: v for i, v in enumerate(measure) if v is not None}
         resource.newContent(portal_type='Measure', **kw)

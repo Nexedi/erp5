@@ -42,7 +42,7 @@ import random
 from hashlib import md5
 import time
 from zope.interface import Interface
-from zope.interface import implements
+from zope.interface import implementer
 
 class ICaptchaProvider(Interface):
   """The CaptchaProvider interface provides a captcha generator."""
@@ -57,9 +57,8 @@ class ICaptchaProvider(Interface):
   def getExtraPropertyList(self):
     """Returns the list of additionnary properties that are configurable"""
 
+@implementer(ICaptchaProvider)
 class CaptchasDotNetProvider(object):
-
-  implements(ICaptchaProvider)
 
   def getImageGenerator (self, field):
     captchas_client = field.get_value("captcha_dot_net_client") or "demo"
@@ -107,9 +106,8 @@ class CaptchasDotNetProvider(object):
             TALESField(**self._dynamic_property_list[1]),
             TALESField(**self._dynamic_property_list[2])]
 
+@implementer(ICaptchaProvider)
 class NumericCaptchaProvider(object):
-
-  implements(ICaptchaProvider)
 
   # No division because it would create decimal numbers
   operator_set = {"+": "plus", "-": "minus", "*": "times"}
@@ -165,14 +163,14 @@ class CaptchaWidget(Widget.TextWidget):
 
   def add_captcha(self, portal_sessions, key, value):
     session = portal_sessions[key]
-    if session.has_key(key):
+    if key in session:
       return False
     session[key] = value
     return True
 
   def validate_answer(self, portal_sessions, key, value):
     session = portal_sessions[key]
-    if not(session.has_key(key)):
+    if not(key in session):
       return False
     result = (session[key] == value)
     # Forbid several use of the same captcha.
@@ -263,7 +261,7 @@ class CaptchaField(ZMIField):
       try:
         # validate the form and get results
         result[field.get_real_field().id] = field.get_real_field().validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -279,7 +277,7 @@ class CaptchaField(ZMIField):
     try:
       # validate the form and get results
       result.update(self.form.validate(REQUEST))
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -329,7 +327,7 @@ class CaptchaField(ZMIField):
       try:
         # validate the form and get results
         result[field.id] = field.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -342,7 +340,7 @@ class CaptchaField(ZMIField):
     try:
       # validate the form and get results
       result.update(self.tales_form.validate(REQUEST))
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)

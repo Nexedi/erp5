@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
@@ -34,11 +35,11 @@ from BTrees.OOBTree import OOBTree
 
 from zLOG import LOG, INFO
 
+@zope.interface.implementer(interfaces.IIdGenerator)
 class ZODBContinuousIncreasingIdGenerator(IdGenerator):
   """
     Create some Ids with the zodb storage
   """
-  zope.interface.implements(interfaces.IIdGenerator)
   # CMF Type Definition
   meta_type = 'ERP5 ZODB Continous Increasing Id Generator'
   portal_type = 'ZODB Continous Increasing Id Generator'
@@ -85,7 +86,10 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     """
     new_id = 1 + self._generateNewId(id_group=id_group, id_count=id_count,
                                      default=default, poison=poison)
-    return range(new_id - id_count, new_id)
+    if six.PY2:
+      return range(new_id - id_count, new_id)
+    else:
+      return list(range(new_id - id_count, new_id))
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
@@ -106,7 +110,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       for id_group, last_id in portal_ids.dict_ids.items():
         if not isinstance(id_group, str):
           id_group = repr(id_group)
-        if self.last_id_dict.has_key(id_group) and \
+        if id_group in self.last_id_dict and \
            self.last_id_dict[id_group] > last_id:
           continue
         self.last_id_dict[id_group] = last_id
@@ -146,7 +150,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     if not isinstance(id_dict, dict):
       raise TypeError('the argument given is not a dictionary')
     for value in id_dict.values():
-      if not isinstance(value, (int, long)):
+      if not isinstance(value, six.integer_types):
         raise TypeError('the value given in dictionary is not a integer')
     self.last_id_dict.update(id_dict)
 

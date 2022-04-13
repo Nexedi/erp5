@@ -3,13 +3,13 @@ Uses the http://sf.net/projects/rtf2xml bin to do its handy work
 
 """
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 import os
 
+@implementer(ITransform)
 class rtf_to_xml(commandtransform):
-    implements(ITransform)
 
     __name__ = "rtf_to_xml"
     inputs   = ('application/rtf',)

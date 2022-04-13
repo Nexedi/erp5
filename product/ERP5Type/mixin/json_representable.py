@@ -36,17 +36,14 @@ except ImportError:
   warnings.warn("Please install xmltodict, it is needed by json_representable mixin",
                  DeprecationWarning)
 import zope.interface
-try:
-  from OFS import XMLExportImport
-except ImportError:
-  # XXX make Zope patch work in software
-  pass
-from StringIO import StringIO
+from Products.ERP5Type import XMLExportImport
+from io import BytesIO as StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.interfaces.json_representable import IJSONRepresentable
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 
+@zope.interface.implementer(IJSONRepresentable)
 class JSONRepresentableMixin:
   """
   An implementation for IJSONRepresentable
@@ -55,8 +52,6 @@ class JSONRepresentableMixin:
   # Declarative Security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  zope.interface.implements(IJSONRepresentable)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'asJSON')
   def asJSON(self):

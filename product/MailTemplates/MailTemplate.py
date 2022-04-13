@@ -6,6 +6,7 @@ from __future__ import absolute_import
 # See license.txt for more details.
 
 import os
+import six
 
 from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
@@ -67,7 +68,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
 
     def _exec(self, bound_names, args, kw):
         """Call a Page Template"""
-        if not kw.has_key('args'):
+        if 'args' not in kw:
             kw['args'] = args
         bound_names['options'] = kw
 
@@ -99,7 +100,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
     def pt_render(self, source=False, extra_context={}):
         # Override to support empty strings
         result = PageTemplate.pt_render(self, source, extra_context) or u''
-        assert isinstance(result, unicode)
+        assert isinstance(result, six.text_type)
         return result
 
 InitializeClass(MailTemplate)

@@ -1,5 +1,6 @@
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Utils import ensure_list
 Base_translateString = context.Base_translateString
 
 def getModifiedObjectList(context):
@@ -20,7 +21,7 @@ getModifiedObjectList = CachingMethod(getModifiedObjectList,
                               cache_id_generator=cache_id_generator)
 
 modified_object_list = getModifiedObjectList(context)
-keys = modified_object_list.keys()
+keys = ensure_list(modified_object_list.keys())
 keys.sort()
 
 no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document',

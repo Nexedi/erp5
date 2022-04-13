@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 import transaction
 
 from AccessControl import getSecurityManager, ClassSecurityInfo
@@ -36,6 +37,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.WorkflowTransition import TRIGGER_WORKFLOW_METHOD
 from Products.ERP5Type.Core.Workflow import Workflow, createExpressionContext
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+import six
 
 _MARKER = []
 
@@ -108,7 +110,7 @@ class InteractionWorkflow(Workflow):
     workflow.  This method must perform its own security checks.
     '''
     vdef = getattr(self, name, _MARKER)
-    for r, v in self.getVariableValueDict().iteritems():
+    for r, v in six.iteritems(self.getVariableValueDict()):
       if r == name:
         vdef = v
         break

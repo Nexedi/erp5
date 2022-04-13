@@ -48,6 +48,9 @@ from erp5.component.module.SMSGatewayError import SMSGatewayError
 from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
 from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
 
+@zope.interface.implementer(
+        ISmsSendingGateway,
+        ISmsReceivingGateway)
 class MobytGateway(XMLObject):
 
   """Mobyt SMS Gateway Implementation"""
@@ -56,10 +59,6 @@ class MobytGateway(XMLObject):
   security = ClassSecurityInfo()
 
   add_permission = Permissions.AddPortalContent
-
-  zope.interface.implements(
-        ISmsSendingGateway,
-        ISmsReceivingGateway)
 
   # Declarative security
   security = ClassSecurityInfo()

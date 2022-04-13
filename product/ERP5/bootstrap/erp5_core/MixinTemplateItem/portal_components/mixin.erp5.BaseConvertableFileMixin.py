@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
-from cStringIO import StringIO
+from io import StringIO
 _MARKER = object()
 
 class BaseConvertableFileMixin:

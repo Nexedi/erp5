@@ -61,11 +61,11 @@ from transaction import get as get_transaction
 import transaction.interfaces
 import zope.interface
 
+@zope.interface.implementer(transaction.interfaces.IDataManager)
 class TransactionalVariable(dict):
   """TransactionalVariable provides a dict-like look-n-feel.
   This class must not be used directly outside.
   """
-  zope.interface.implements(transaction.interfaces.IDataManager)
 
   _unregistered = True
 
@@ -112,9 +112,8 @@ def getTransactionalVariable():
     return tv
 
 
+@zope.interface.implementer(transaction.interfaces.IDataManager)
 class TransactionalResource(object):
-
-  zope.interface.implements(transaction.interfaces.IDataManager)
 
   def __init__(self, transaction_manager=None, **kw):
     if transaction_manager is None:

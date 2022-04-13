@@ -35,6 +35,7 @@ from AccessControl.AuthEncoding import pw_validate
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 
+@zope.interface.implementer(ILoginAccountProvider)
 class LoginAccountProviderMixin:
   """
   This class provides a generic implementation of ILoginAccountProvider.
@@ -42,9 +43,6 @@ class LoginAccountProviderMixin:
 
   # Declarative security
   security = ClassSecurityInfo()
-
-  # Declarative interfaces
-  zope.interface.implements(ILoginAccountProvider)
 
   security.declareProtected(Permissions.SetOwnPassword, 'notifyLoginFailure')
   def notifyLoginFailure(self, **kw):

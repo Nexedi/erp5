@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -152,7 +153,7 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
       i=i+len(s)
       if i < l and st[i]=='.': i=i+1
       # Check for month name:
-      if MonthNumbers.has_key(s):
+      if s in MonthNumbers:
         v=MonthNumbers[s]
         if month is None:
           month = v
@@ -163,7 +164,7 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
           tm = s
           continue
       # Check for and skip day of week:
-      elif DayOfWeekNames.has_key(s):
+      elif s in DayOfWeekNames:
         continue
 
     raise SyntaxError(st)
@@ -283,7 +284,7 @@ if __name__ == '__main__':
     a = DateTimeKlass(i)
     b = DateTimeKlass()
     b.__setstate__(a.__getstate__())
-    print a, a.__dict__ == b.__dict__
+    print(a, a.__dict__ == b.__dict__)
     for i in a.__dict__.keys():
       if a.__dict__[i] != b.__dict__[i]:
-        print i, a.__dict__[i], b.__dict__[i]
+        print(i, a.__dict__[i], b.__dict__[i])

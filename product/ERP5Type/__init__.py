@@ -198,9 +198,9 @@ ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeVa
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
 
 import zExceptions
-ModuleSecurityInfo('zExceptions').declarePublic(*filter(
-  lambda x: Exception in getattr(getattr(zExceptions, x), '__mro__', ()),
-  dir(zExceptions)))
+ModuleSecurityInfo('zExceptions').declarePublic(*[
+  x for x in dir(zExceptions)
+  if Exception in getattr(getattr(zExceptions, x), '__mro__', ())])
 
 # BBB : allow load of fomer Products.CMFDefault.MembershipTool
 # that has been replaced by Products.CMFCore.MembershipTool

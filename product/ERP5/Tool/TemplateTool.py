@@ -31,6 +31,7 @@ try:
   from webdav.client import Resource
 except ImportError: # six.PY3, ZServer
   pass
+from past.builtins import cmp
 
 from App.config import getConfiguration
 import os
@@ -51,20 +52,26 @@ from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
-from cStringIO import StringIO
-from urllib import pathname2url, urlopen, splittype, urlretrieve
-import urllib2
+from six.moves import xrange
+from six.moves import cStringIO as StringIO
+from six.moves.urllib.request import pathname2url, urlopen, urlretrieve
+try:
+  from urllib import splittype
+except ImportError: # six.PY3
+  from urllib.parse import splittype
+from six.moves import urllib
 import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
 import struct
-import cPickle
+from six.moves import cPickle as pickle
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
 import time
+from Products.ERP5Type.Utils import bytes2str
 
 WIN = os.name == 'nt'
 
@@ -523,7 +530,7 @@ class TemplateTool (BaseTool):
         Migrate business templates to new format where files like .py or .html
         are exported seprately than the xml.
       """
-      repository_list = filter(bool, repository_list)
+      repository_list = [r for r in repository_list if r]
 
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
@@ -649,7 +656,7 @@ class TemplateTool (BaseTool):
             root = doc.documentElement
             for template in root.getElementsByTagName("template"):
               id = template.getAttribute('id')
-              if type(id) == type(u''):
+              if six.PY2 and type(id) == type(u''):
                 id = id.encode('utf-8')
               temp_property_dict = {}
               for node in template.childNodes:
@@ -658,7 +665,7 @@ class TemplateTool (BaseTool):
                   for text in node.childNodes:
                     if text.nodeType == text.TEXT_NODE:
                       value = text.data
-                      if type(value) == type(u''):
+                      if six.PY2 and type(value) == type(u''):
                         value = value.encode('utf-8')
                       break
                   temp_property_dict.setdefault(node.nodeName, []).append(value)
@@ -713,7 +720,7 @@ class TemplateTool (BaseTool):
         Decode the uid of a business template from a repository.
         Return a repository and an id.
       """
-      return cPickle.loads(b64decode(uid))
+      return pickle.loads(b64decode(uid))
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -721,7 +728,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(cPickle.dumps((repository, id)))
+      return b64encode(pickle.dumps((repository, id)))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
@@ -1062,7 +1069,7 @@ class TemplateTool (BaseTool):
         uid = self.encodeRepositoryBusinessTemplateUid(repository, id)
         obj = self.newContent(temp_object=True,
                               portal_type='Business Template',
-                              id='temp_' + uid,
+                              id='temp_' + bytes2str(uid),
                               version_state=version_state,
                               version_state_title=version_state.title(),
                               filename=filename,
@@ -1390,16 +1397,16 @@ class TemplateTool (BaseTool):
           LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
               % url)
         try:
-          urllib2.urlopen(url)
+          urllib.request.urlopen(url)
           return url
-        except (urllib2.HTTPError, OSError):
+        except (urllib.error.HTTPError, OSError):
           # XXX Try again with ".bt5" in case the folder format be used
           # Instead tgz one.
           url = "%s.bt5" % url
           try:
-            urllib2.urlopen(url)
+            urllib.request.urlopen(url)
             return url
-          except (urllib2.HTTPError, OSError):
+          except (urllib.error.HTTPError, OSError):
             pass
       LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: '
                         '%s.' % (bt5_title, base_url_list))

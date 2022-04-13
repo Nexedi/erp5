@@ -162,36 +162,39 @@ class TypeAccessChecker:
       return v
     return factory
 
-  def __nonzero__(self):
+  def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
     # thinking it's a simple type, but we don't want this for type, because
     # type(x) is type for classes, being trueish would skip security check on
     # classes.
     return False
+  __nonzero__ = __bool__ # six.PY2
 
 ContainerAssertions[type] = TypeAccessChecker()
 
 if BBB_ACCESS_CONTROL:
   class SafeIterItems(SafeIter):
 
-      def next(self):
+      def __next__(self):
           ob = self._next()
           c = self.container
           guard(c, ob[0])
           guard(c, ob[1])
           return ob
+      next = __next__ # six.PY2
 else:
   class SafeIterItems(SafeIter):
 
-      def next(self):
+      def __next__(self):
           ob = next(self._iter)
           c = self.container
           guard(c, ob[0])
           guard(c, ob[1])
           return ob
+      next = __next__ # six.PY2
   
 def get_iteritems(c, name):
-    return lambda: SafeIterItems(c.iteritems(), c)
+    return lambda: SafeIterItems(six.iteritems(c), c)
 _dict_white_list['iteritems'] = get_iteritems
 
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
@@ -266,7 +269,7 @@ def allow_full_write(t):
   
   This supports both RestrictedPython-3.6.0, where the safetype is implemented as:
   
-      safetype = {dict: True, list: True}.has_key
+      safetype = {dict: True, list: True}.__contains__
       ...
       safetype(t)
 
@@ -281,7 +284,7 @@ def allow_full_write(t):
   # (closure) directly to allow write access (using __setattr__ and __delattr__)
   # to ndarray and pandas DataFrame below.
   from RestrictedPython.Guards import full_write_guard
-  safetype = full_write_guard.func_closure[1].cell_contents
+  safetype = full_write_guard.__closure__[1].cell_contents
   if isinstance(safetype, set): # 5.1
     safetype.add(t)
   else: # 3.6
@@ -405,7 +408,7 @@ MNAME_MAP = {
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
 }
-for alias, real in MNAME_MAP.items():
+for alias, real in six.iteritems(MNAME_MAP):
   assert '.' not in alias, alias # TODO: support this
   allow_module(real)
 del alias, real

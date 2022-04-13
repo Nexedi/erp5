@@ -28,11 +28,13 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from six import string_types as basestring
 from struct import unpack
 from copy import copy
 import warnings
 import types
-import thread, threading
+import _thread as thread
+import threading
 
 from BTrees.OOBTree import OOBTree
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -65,6 +67,7 @@ from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
 from Products.ERP5Type.Utils import INFINITE_SET
 from Products.ERP5Type.Utils import deprecated
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
@@ -92,7 +95,7 @@ from zope.interface import classImplementsOnly, implementedBy
 
 import sys, re
 
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from socket import gethostname, gethostbyaddr
 import random
 
@@ -196,7 +199,7 @@ class WorkflowMethod(Method):
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
     once_transition_dict = {}
-    for wf_id, transition_list in invoke_once_dict.iteritems():
+    for wf_id, transition_list in six.iteritems(invoke_once_dict):
       valid_transition_list = []
       for transition_id in transition_list:
         once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
@@ -207,7 +210,7 @@ class WorkflowMethod(Method):
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
     candidate_transition_item_list = valid_invoke_once_item_list + \
-                           self._invoke_always.get(portal_type, {}).items()
+                           ensure_list(self._invoke_always.get(portal_type, {}).items())
 
     #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
 
@@ -264,7 +267,7 @@ class WorkflowMethod(Method):
       except ObjectDeleted:
         # Re-raise with a different result.
         raise ObjectDeleted(result)
-      except ObjectMoved, ex:
+      except ObjectMoved as ex:
         # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), result)
 
@@ -379,7 +382,7 @@ class PropertyHolder(object):
     self.constraints = []
 
   def _getPropertyHolderItemList(self):
-    return [x for x in self.__dict__.items() if x[0] not in
+    return [x for x in six.iteritems(self.__dict__) if x[0] not in
         PropertyHolder.RESERVED_PROPERTY_SET]
 
   def registerWorkflowMethod(self, id, wf_id, tr_id, once_per_transaction=0):
@@ -443,7 +446,7 @@ class PropertyHolder(object):
     Return a list of tuple (id, method) for every workflow method
     """
     return [x for x in self._getPropertyHolderItemList() if isinstance(x[1], WorkflowMethod)
-        or (isinstance(x[1], types.TupleType)
+        or (isinstance(x[1], tuple)
             and x[1] is PropertyHolder.WORKFLOW_METHOD_MARKER)]
 
   def getWorkflowMethodIdList(self):
@@ -578,9 +581,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
     storage[wf_id] = (transition_id_set, trigger_dict)
 
   # Generate Workflow method
-  for wf_id, v in workflow_dict.iteritems():
+  for wf_id, v in six.iteritems(workflow_dict):
     transition_id_set, trigger_dict = v
-    for tr_id, tdef in trigger_dict.iteritems():
+    for tr_id, tdef in six.iteritems(trigger_dict):
       method_id = convertToMixedCase(tr_id)
       try:
         method = getattr(ptype_klass, method_id)
@@ -618,9 +621,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
   interaction_queue = []
   # XXX This part is (more or less...) a copy and paste
-  for wf_id, v in interaction_workflow_dict.iteritems():
+  for wf_id, v in six.iteritems(interaction_workflow_dict):
     transition_id_set, trigger_dict = v
-    for tr_id, tdef in trigger_dict.iteritems():
+    for tr_id, tdef in six.iteritems(trigger_dict):
       # Check portal type filter
       portal_type_filter_list = tdef.getPortalTypeFilterList()
       if (portal_type_filter_list and
@@ -649,7 +652,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                     method_id_matcher))
 
           # XXX - class stuff is missing here
-          method_id_list = filter(method_id_matcher, class_method_id_list)
+          method_id_list = [x for x in class_method_id_list if method_id_matcher(x)]
         else:
           # Single method
           # XXX What if the method does not exist ?
@@ -705,7 +708,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   # ex. an interaction workflow creates a workflow method which matches
   # the regexp of another interaction workflow
   for wf_id, tr_id, transition_id_set, once, method_id_matcher in interaction_queue:
-    for method_id in filter(method_id_matcher, added_method_set):
+    for method_id in [x for x in added_method_set if method_id_matcher(x)]:
       # method must already exist and be a workflow method
       method = getattr(ptype_klass, method_id)
       transition_id = method.getTransitionId()
@@ -716,6 +719,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       else:
         method.registerTransitionAlways(portal_type, wf_id, tr_id)
 
+@zope.interface.implementer(interfaces.ICategoryAccessProvider,
+                            interfaces.IValueAccessProvider,)
 class Base(
             ResponseHeaderGenerator,
             CopyContainer,
@@ -776,11 +781,6 @@ class Base(
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.ICategoryAccessProvider,
-                            interfaces.IValueAccessProvider,
-                            )
 
   # We want to use a default property view
   manage_main = manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
@@ -1565,7 +1565,7 @@ class Base(
     setChangedPropertyList(ordered_key_list)
 
     if reindex_object:
-      for o in modified_object_dict.itervalues():
+      for o in six.itervalues(modified_object_dict):
         o.reindexObject(activate_kw=activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
@@ -2158,8 +2158,8 @@ class Base(
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
-    references = map(self.getPortalObject().portal_catalog.getObject,
-                     (uids,) if isinstance(uids, (int, long)) else uids)
+    references = [self.getPortalObject().portal_catalog.getObject(x)
+                  for x in ((uids,) if isinstance(uids, int) else uids)]
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                    keep_default=keep_default, checked_permission=checked_permission)
 
@@ -2727,20 +2727,20 @@ class Base(
         id_list = filt.get('id', None)
         if not isinstance(id_list, (list, tuple)):
           id_list = [id_list]
-        constraints = filter(lambda x:x.id in id_list, constraints)
+        constraints = [x for x in constraints if x.id in id_list]
       # New ZODB based constraint uses reference for identity
       if 'reference' in filt:
         reference_list = filt.get('reference', None)
         if not isinstance(reference_list, (list, tuple)):
           reference_list = [reference_list]
-        constraints = filter(lambda x:x.getReference() in \
-            reference_list, constraints)
+        constraints = [x for x in constraints if x.getReference() in \
+            reference_list]
       if 'constraint_type' in filt:
         constraint_type_list = filt.get('constraint_type', None)
         if not isinstance(constraint_type_list, (list, tuple)):
           constraint_type_list = [constraint_type_list]
-        constraints = filter(lambda x:x.__of__(self).getConstraintType() in \
-                constraint_type_list, constraints)
+        constraints = [x for x in constraints if x.__of__(self).getConstraintType() in \
+                constraint_type_list]
 
     return constraints
 
@@ -3262,7 +3262,7 @@ class Base(
       except LookupError:
         try:
           return min(history[0]['time']
-            for history in history_list.itervalues()
+            for history in six.itervalues(history_list)
             if history and 'time' in history[0])
         except ValueError:
           pass
@@ -3285,7 +3285,7 @@ class Base(
       pass
     else:
       max_date = None
-      for history in history_list.itervalues():
+      for history in six.itervalues(history_list):
         try:
           date = history[-1]['time']
         except (IndexError, KeyError, TypeError):
@@ -3420,8 +3420,8 @@ class Base(
     # We remove attributes from the instance
     # We do this rather than self.isIndexable = 0 because we want to
     # go back to previous situation (class based definition)
-    if self.__dict__.has_key('isIndexable'): delattr(self, 'isIndexable')
-    if self.__dict__.has_key('isTemplate'): delattr(self, 'isTemplate')
+    if 'isIndexable' in self.__dict__: delattr(self, 'isIndexable')
+    if 'isTemplate' in self.__dict__: delattr(self, 'isTemplate')
 
     # Add to catalog
     self.reindexObject()
@@ -3618,9 +3618,9 @@ class Base(
     """
     if not isinstance(group, basestring):
       raise TypeError('group must be a string')
-    if not isinstance(default, (int, long)):
+    if not isinstance(default, six.integer_types):
       raise TypeError('default must be an integer')
-    if not isinstance(count, (int, long)):
+    if not isinstance(count, six.integer_types):
       raise TypeError('count must be an integer')
     if count < 0:
       raise ValueError('count cannot be negative')
@@ -3636,7 +3636,7 @@ class Base(
     except KeyError:
       if onMissing is not None:
         default = onMissing()
-        if not isinstance(default, (int, long)):
+        if not isinstance(default, six.integer_types):
           raise TypeError('onMissing must return an integer')
       id_generator_state[group] = PersistentContainer(default)
       next_id = default

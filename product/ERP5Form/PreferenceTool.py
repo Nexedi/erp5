@@ -280,8 +280,7 @@ class PreferenceTool(BaseTool):
         'portal_preferences.getDocumentTemplateList.{}'.format(self._getCacheId()),
         cache_factory='erp5_ui_long')
 
-    allowed_content_types = map(lambda pti: pti.id,
-                                folder.allowedContentTypes())
+    allowed_content_types = [pti.id for pti in folder.allowedContentTypes()]
     user_id = getToolByName(self, 'portal_membership').getAuthenticatedMember().getId()
     template_list = []
     for portal_type in allowed_content_types:

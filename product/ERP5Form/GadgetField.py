@@ -3,10 +3,10 @@ from Products.Formulator import Widget
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
 from zLOG import LOG, ERROR
-from cStringIO import StringIO
+from io import StringIO
 from json import dumps
 from Acquisition import aq_base
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 
 class GadgetWidget(Widget.Widget):
   """

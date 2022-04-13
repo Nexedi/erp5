@@ -28,12 +28,14 @@
 #
 ##############################################################################
 
+import  six
+from six import string_types as basestring
 from zLOG import LOG
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 from Products.ZSQLCatalog.SQLCatalog import list_type_list
 
 single_operator_dict = {
@@ -73,11 +75,14 @@ operator_value_deprocessor_dict = {
   'like': deprocessLikeValue
 }
 
-numeric_type_set = (long, float) # get mapped to int, so do not mention it
+# get mapped to int, so do not mention it
+if six.PY2:
+  numeric_type_set = (long, float)
+else:
+  numeric_type_set = (float,)
 
+@implementer(ISearchKey)
 class SearchKey(object):
-
-  implements(ISearchKey)
 
   # Comparison operator to use when parsing a string value and no operator is
   # found.
@@ -329,7 +334,7 @@ class SearchKey(object):
       append(SimpleQuery(search_key=self, comparison_operator='in',
                          group=group,
                          **{column: operator_value_dict.pop('=')}))
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in six.iteritems(operator_value_dict):
       for value in value_list:
         append(SimpleQuery(search_key=self,
                            comparison_operator=comparison_operator,

@@ -36,6 +36,7 @@ from Products.ERP5Type.Accessor import Base, List, Content, ContentProperty, \
      Acquired, Alias, Translation, AcquiredProperty as AcquiredPropertyAccessor
 
 from zLOG import LOG, WARNING
+import six
 
 class AcquiredProperty(StandardProperty):
   """
@@ -331,7 +332,7 @@ class AcquiredProperty(StandardProperty):
   def _applyTranslationAcquiredGetterDefinitionDictOnAccessorHolder(cls,
      capitalised_composed_id, key, property_dict, accessor_holder):
     for name_format, klass in \
-          cls._translation_acquired_getter_definition_dict.iteritems():
+          six.iteritems(cls._translation_acquired_getter_definition_dict):
       instance = klass(
         name_format % capitalised_composed_id, key,
         property_dict['elementary_type'],
