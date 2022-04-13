@@ -1,8 +1,9 @@
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from reStructuredText import HTML
 import sys
 
+@implementer(ITransform)
 class rest:
     r"""Converts from reST to HTML.
 
@@ -41,7 +42,6 @@ class rest:
       ...         print 'Failure'
       Good
     """
-    implements(ITransform)
 
     __name__ = "rest_to_html"
     inputs  = ("text/x-rst", "text/restructured",)

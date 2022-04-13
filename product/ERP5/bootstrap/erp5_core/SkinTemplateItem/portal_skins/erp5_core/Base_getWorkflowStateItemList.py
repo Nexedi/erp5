@@ -14,7 +14,7 @@ for workflow_id in workflow_id_list:
   for state in workflow.getStateValueList():
     state_reference = state.getReference()
     if state.getTitle() and state_reference != 'deleted':
-      if not state_dict.has_key(state_reference):
+      if state_reference not in state_dict:
         # we hide states without titles
         item_list.append((state.getTitle(), state_reference))
         state_dict[state_reference] = None

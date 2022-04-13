@@ -44,6 +44,7 @@ from Products.ERP5.mixin.variated import VariatedMixin
 from Products.CMFCategory.Renderer import Renderer
 
 from zLOG import LOG, WARNING
+import six
 
 class Resource(XMLObject, XMLMatrix, VariatedMixin):
     """
@@ -806,7 +807,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       try:
         result = quantity * self._getConversionRatio(from_unit, variation_list)\
                         / self._getConversionRatio(to_unit, variation_list)
-      except (ArithmeticError, AttributeError, LookupError, TypeError), error:
+      except (ArithmeticError, AttributeError, LookupError, TypeError) as error:
         # For compatibility, we only log the error and return None.
         # No exception for the moment.
         LOG('Resource.convertQuantity', WARNING,
@@ -945,7 +946,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       uid = self.getUid()
       row_list = []
-      for unit_uid, value in self._getQuantityUnitDefinitionDict().iteritems():
+      for unit_uid, value in six.iteritems(self._getQuantityUnitDefinitionDict()):
         definition_uid, quantity = value
         row_list.append(dict(uid=definition_uid,
                              resource_uid=uid,
@@ -977,7 +978,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           metric_type_map[metric_type] = measure
 
       insert_list = []
-      for measure in metric_type_map.itervalues():
+      for measure in six.itervalues(metric_type_map):
         if measure is not None:
           insert_list += measure.asCatalogRowList(quantity_unit_definition_dict)
 

@@ -7,7 +7,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from . import aq_method_lock
 from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Utils import UpperCase, ensure_list
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
 
@@ -20,6 +20,7 @@ from .portal_type_class import generatePortalTypeClass
 from .accessor_holder import AccessorHolderType
 from . import persistent_migration
 from ZODB.POSException import ConflictError
+import six
 
 class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
   # PersistentBroken can't be reused directly
@@ -114,7 +115,7 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
         self.__class__.loadClass()
       except ConflictError:
         raise
-      except Exception, e:
+      except Exception as e:
         LOG('lazy_class.__getattribute__', WARNING, 'Failed to load class : %r' % (e,),
             error=True)
         raise
@@ -206,7 +207,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
           if content or property['type'] != 'content':
             property_dict.setdefault(property['id'], property)
 
-    return property_dict.itervalues()
+    return six.itervalues(property_dict)
 
   def resetAcquisition(cls):
     # First, fill the __get__ slot of the class
@@ -243,7 +244,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
        erp5.portal_type.XXX, GhostBaseMetaClass instance, *TAIL
     """
     if not cls.__isghost__:
-      for attr in cls.__dict__.keys():
+      for attr in ensure_list(cls.__dict__.keys()):
         if attr not in ('__module__',
                         '__doc__',
                         '__setstate__',
@@ -316,7 +317,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     result = PropertyHolder._getPropertyHolderItemList(cls)
     for parent in cls.mro():
       if parent.__module__.startswith('erp5.accessor_holder'):
-        for x in parent.__dict__.items():
+        for x in six.iteritems(parent.__dict__):
           if x[0] not in PropertyHolder.RESERVED_PROPERTY_SET:
             result.append(x)
     return result
@@ -367,7 +368,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
       klass.resetAcquisition()
 
-      for key, value in attribute_dict.iteritems():
+      for key, value in six.iteritems(attribute_dict):
         setattr(klass, key, value)
 
       if getattr(klass.__setstate__, 'im_func', None) is \

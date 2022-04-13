@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 from Products.ERP5Type.Globals import InitializeClass, Persistent
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
@@ -81,7 +82,7 @@ if 1: # BBB
   getGlobalTranslationService = GlobalTranslationService
 
 from Products.ERP5Type import Globals
-from cPickle import dumps, loads
+from six.moves.cPickle import dumps, loads
 from string import Template
 from base64 import b64encode, b64decode
 
@@ -130,7 +131,7 @@ class Message(Persistent):
     if self.domain is None:
       # Map the translated string with given parameters
       if type(self.mapping) is dict:
-        if isinstance(message, unicode) :
+        if isinstance(message, six.text_type) :
           message = message.encode('utf-8')
         message = Template(message).substitute(self.mapping)
     else:
@@ -139,7 +140,7 @@ class Message(Persistent):
       translation_service = getGlobalTranslationService()
       if self.mapping:
         unicode_mapping = {}
-        for k, v in self.mapping.iteritems():
+        for k, v in six.iteritems(self.mapping):
           if isinstance(v, str):
             v = v.decode('utf-8')
           unicode_mapping[k] = v
@@ -155,7 +156,7 @@ class Message(Persistent):
         message = translated_message
 
     if isinstance(self.message, str):
-      if isinstance(message, unicode):
+      if isinstance(message, six.text_type):
         message = message.encode('utf-8')
     elif isinstance(message, str):
       message = message.decode('utf-8')
@@ -170,7 +171,7 @@ class Message(Persistent):
     Return the translated message as a string object.
     """
     message = self.translate()
-    if isinstance(message, unicode):
+    if isinstance(message, six.text_type):
       message = message.encode('utf-8')
     return message
 

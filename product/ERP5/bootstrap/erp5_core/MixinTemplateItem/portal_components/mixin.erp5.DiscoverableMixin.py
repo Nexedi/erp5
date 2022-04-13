@@ -36,6 +36,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
 import os
 import re
+import six
 
 try:
   import magic
@@ -164,7 +165,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       else:
         result = method()
       if result is not None:
-        for key, value in result.iteritems():
+        for key, value in six.iteritems(result):
           if value not in (None, ''):
             kw[key]=value
     # Prepare the content edit parameters

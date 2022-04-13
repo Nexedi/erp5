@@ -37,6 +37,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from erp5.component.document.MappedValue import MappedValue
 from erp5.component.interface.IAmountGenerator import IAmountGenerator
+import six
 
 # XXX What should be done when there is no base_application ?
 #     There are 2 options:
@@ -239,6 +240,7 @@ class BaseAmountResolver(BaseAmountDict):
     return 0
 
 
+@zope.interface.implementer(IAmountGenerator,)
 class AmountGeneratorMixin:
   """
   This class provides a generic implementation of IAmountGenerator.
@@ -254,9 +256,6 @@ class AmountGeneratorMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IAmountGenerator,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
@@ -417,7 +416,7 @@ class AmountGeneratorMixin:
           del cell_aggregate[self_key]
 
         # Allow base_application & base_contribution to be variated.
-        for property_dict in cell_aggregate.itervalues():
+        for property_dict in six.itervalues(cell_aggregate):
           base_amount_set = property_dict['base_application_set']
           variation_list = tuple(sorted(x for x in base_amount_set
                                           if not x.startswith('base_amount/')))
@@ -483,7 +482,7 @@ class AmountGeneratorMixin:
         amount._setQuantity(quantity)
         amount._setTitle(self.getTitle())
         amount._setDescription(self.getDescription())
-        for x in property_dict.iteritems():
+        for x in six.iteritems(property_dict):
           amount._setProperty(*x)
         # convert to default management unit if possible
         amount._setQuantity(amount.getConvertedQuantity())

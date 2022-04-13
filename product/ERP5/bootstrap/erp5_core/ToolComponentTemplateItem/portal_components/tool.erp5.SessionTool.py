@@ -27,12 +27,15 @@
 #
 ##############################################################################
 
+
+from six import string_types as basestring
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base
-from UserDict import UserDict
+from collections import UserDict
 import collections
+import six
 
 # the ERP5 cache factory used as a storage
 SESSION_CACHE_FACTORY = 'erp5_session_cache'
@@ -97,7 +100,7 @@ class Session(UserDict):
     """
     state = {
         'session_duration': self.session_duration,
-        'data': {k: aq_base(v) for k, v in self.data.iteritems()}
+        'data': {k: aq_base(v) for k, v in six.iteritems(self.data)}
     }
     if 'session_id' in self.__dict__:
       state['session_id']  = self.session_id
@@ -132,7 +135,7 @@ class Session(UserDict):
     UserDict.__setitem__(self, key, remove_acquisition_wrapper(item))
 
   def update(self, dict=None, **kwargs):  # pylint: disable=redefined-builtin
-    for k, v in (dict or kwargs).iteritems():
+    for k, v in six.iteritems((dict or kwargs)):
       # make sure to use our __setitem__ which removes acquistion wrappers
       self[k] = v
 

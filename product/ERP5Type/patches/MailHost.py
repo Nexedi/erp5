@@ -20,15 +20,16 @@ In ERP5, we have Activity Tool to postpone mail delivery.
 
 from inspect import getargspec, isfunction
 from Products.MailHost.MailHost import MailBase
+import six
 
-for f in MailBase.__dict__.itervalues():
+for f in six.itervalues(MailBase.__dict__):
   if isfunction(f):
     args, _, _, defaults = getargspec(f)
     try:
       i = args.index('immediate') - len(args)
     except ValueError:
       continue
-    f.func_defaults = defaults[:i] + (True,) + defaults[i+1 or len(args):]
+    f.__defaults__ = defaults[:i] + (True,) + defaults[i+1 or len(args):]
 
 from App.special_dtml import DTMLFile
 MailBase.manage = MailBase.manage_main = DTMLFile('dtml/manageMailHost', globals())

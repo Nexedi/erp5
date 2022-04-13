@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+import six
 import copy
 import sys
 import types
@@ -128,12 +129,13 @@ class TypeAccessChecker:
       return v
     return factory
 
-  def __nonzero__(self):
+  def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
     # thinking it's a simple type, but we don't want this for type, because
     # type(x) is type for classes, being trueish would skip security check on
     # classes.
     return False
+  __nonzero__ = __bool__ # six.PY2
 
 ContainerAssertions[type] = TypeAccessChecker()
 
@@ -146,9 +148,10 @@ class SafeIterItems(SafeIter):
         guard(c, ob[0])
         guard(c, ob[1])
         return ob
+    next = __next__ # six.PY2
 
 def get_iteritems(c, name):
-    return lambda: SafeIterItems(c.iteritems(), c)
+    return lambda: SafeIterItems(six.iteritems(c), c)
 _dict_white_list['iteritems'] = get_iteritems
 
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
@@ -335,7 +338,7 @@ MNAME_MAP = {
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
 }
-for alias, real in MNAME_MAP.items():
+for alias, real in six.iteritems(MNAME_MAP):
   assert '.' not in alias, alias # TODO: support this
   allow_module(real)
 del alias, real

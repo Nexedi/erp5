@@ -18,7 +18,7 @@
 """
 import OFS.Image
 import struct
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from zExceptions import Forbidden
 
 def getImageInfo_with_svg_fix(data):

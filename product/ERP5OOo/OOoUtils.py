@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import six
 from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
@@ -36,7 +37,7 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import StringIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions
@@ -79,7 +80,7 @@ class OOoBuilder(Implicit):
         dat = document.data
         while dat is not None:
           self._document.write(dat.data)
-          dat = dat.next
+          dat = dat.__next__
       else:
         # Default behaviour
         self._document.write(document.data)
@@ -108,7 +109,7 @@ class OOoBuilder(Implicit):
     except KeyError:
       # This is a new file
       pass
-    if isinstance(stream, unicode):
+    if isinstance(stream, six.text_type):
       stream = stream.encode('utf-8')
     zf.writestr(filename, stream)
     zf.close()
@@ -240,7 +241,7 @@ class OOoParser(Implicit):
     # Try to unzip the Open Office doc
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
-    except Exception, e:
+    except Exception as e:
       LOG('ERP5OOo', DEBUG, 'Error in openFile', error=True)
       raise CorruptedOOoFile(e)
     # Test the integrity of the file

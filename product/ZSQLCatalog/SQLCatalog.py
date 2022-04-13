@@ -14,13 +14,16 @@
 ##############################################################################
 
 from __future__ import absolute_import
+import six
+from six import string_types as basestring
+from six.moves import xrange
 from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
 import OFS.History
 from App.class_init import default__class_init__ as InitializeClass
 from App.special_dtml import DTMLFile
-from thread import allocate_lock, get_ident
+from _thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import (
@@ -40,17 +43,18 @@ from zLOG import LOG, WARNING, INFO, TRACE, ERROR
 from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.Utils import ensure_list
 
-from compiler.consts import CO_VARKEYWORDS
+from inspect import CO_VARKEYWORDS
 from functools import wraps
 import time
-import urllib
+from six.moves import urllib
 import string
 import pprint
 import re
 import warnings
 from contextlib import contextmanager
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
@@ -58,9 +62,12 @@ from hashlib import md5
 
 from .interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
-from zope.interface import implements
+from zope.interface import implementer
 
 from .SearchText import isAdvancedSearchText, dequote
+
+if six.PY3:
+  long = int
 
 # Try to import ActiveObject in order to make SQLCatalog active
 try:
@@ -289,6 +296,7 @@ ContainerAssertions[LazyIndexationParameterList] = 1
 
 related_key_warned_column_set = set()
 
+@implementer(ISearchKeyCatalog)
 class Catalog(Folder,
               Persistent,
               Acquisition.Implicit,
@@ -317,8 +325,6 @@ class Catalog(Folder,
   or search_mode_Table_Key
 
  """
-
-  implements(ISearchKeyCatalog)
 
 
   meta_type = "SQLCatalog"
@@ -672,7 +678,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_role_keys:
       role, column = role_key.split('|')
       role_key_dict[role.strip()] = column.strip()
-    return role_key_dict.items()
+    return ensure_list(role_key_dict.items())
 
   security.declareProtected(permissions.ManagePortal, 'getSQLCatalogSecurityUidGroupsColumnsDict')
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
@@ -696,7 +702,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_local_role_keys:
       role, column = role_key.split('|')
       local_role_key_dict[role.strip()] = column.strip()
-    return local_role_key_dict.items()
+    return ensure_list(local_role_key_dict.items())
 
   security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
   def manage_historyCompare(self, rev1, rev2, REQUEST,
@@ -729,7 +735,7 @@ class Catalog(Folder,
 
     # Get security information
     security_uid = None
-    for key in wrapped_object.getLocalRolesGroupIdDict().iteritems():
+    for key in six.iteritems(wrapped_object.getLocalRolesGroupIdDict()):
       local_roles_group_id, allowed_roles_and_users = key
       if key in self.security_uid_dict:
         local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = self.security_uid_dict[key]
@@ -774,8 +780,8 @@ class Catalog(Folder,
       Goal: make it possible to regenerate a table containing this data.
     """
     result = []
-    for role_list, security_uid in getattr(
-            aq_base(self), 'security_uid_dict', {}).iteritems():
+    for role_list, security_uid in six.iteritems(getattr(
+            aq_base(self), 'security_uid_dict', {})):
       if role_list:
         if isinstance(role_list[-1], tuple):
           local_role_group_id, role_list = role_list
@@ -804,7 +810,7 @@ class Catalog(Folder,
     # Make sure no duplicates
     if getattr(aq_base(self), 'subject_set_uid_dict', None) is None:
       self._clearSubjectCache()
-    elif self.subject_set_uid_dict.has_key(subject_list):
+    elif subject_list in self.subject_set_uid_dict:
       return (self.subject_set_uid_dict[subject_list], None)
     # If the id_tool is there, it is better to use it, it allows
     # to create many new subject uids by the same time
@@ -982,7 +988,7 @@ class Catalog(Folder,
     Returns the list of columns in given table.
     Raises KeyError on unknown table.
     """
-    return self._getCatalogSchema()[table]
+    return ensure_list(self._getCatalogSchema()[table])
 
   security.declarePublic('getColumnIds')
   @transactional_cache_decorator
@@ -1055,7 +1061,7 @@ class Catalog(Folder,
     Calls the show table method and returns dictionnary of
     Field Ids
     """
-    return self._getCatalogSchema().keys()
+    return ensure_list(self._getCatalogSchema().keys())
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
@@ -1232,7 +1238,7 @@ class Catalog(Folder,
     c_elapse = time.clock() - c_elapse
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
+              urllib.parse.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
 
   security.declarePrivate('catalogObject')
   def catalogObject(self, object, path, is_object_moved=0):
@@ -1301,9 +1307,9 @@ class Catalog(Folder,
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
     if check_uid:
-      path_uid_dict = self.getUidDictForPathList(path_list=object_path_dict.values())
+      path_uid_dict = self.getUidDictForPathList(path_list=ensure_list(object_path_dict.values()))
       uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
-      for object, path in object_path_dict.iteritems():
+      for object, path in six.iteritems(object_path_dict):
         uid = object.uid
         if path_uid_dict.setdefault(path, uid) != uid:
           error_message = 'path %r has uids %r (catalog) and %r (being indexed) ! This can break relations' % (
@@ -1374,7 +1380,7 @@ class Catalog(Folder,
         except KeyError:
           pass
         if expression is None:
-          catalogged_object_list = object_path_dict.keys()
+          catalogged_object_list = ensure_list(object_path_dict.keys())
         else:
           text = expression.text
           catalogged_object_list = catalogged_object_list_cache.get(text)
@@ -1447,7 +1453,7 @@ class Catalog(Folder,
     if meta_type in self.HAS_ARGUMENT_SRC_METATYPE_SET:
       return method.arguments_src.split()
     elif meta_type in self.HAS_FUNC_CODE_METATYPE_SET:
-      return method.func_code.co_varnames[:method.func_code.co_argcount]
+      return method.__code__.co_varnames[:method.__code__.co_argcount]
     # Note: Raising here would completely prevent indexation from working.
     # Instead, let the method actually fail when called, so _catalogObjectList
     # can log the error and carry on.
@@ -1641,7 +1647,7 @@ class Catalog(Folder,
     This function return a list of ids.
     """
     ids={}
-    have_id=ids.has_key
+    have_id=ids.__contains__
 
     while self is not None:
       if hasattr(self, 'objectValues'):
@@ -1657,7 +1663,7 @@ class Catalog(Folder,
       if hasattr(self, 'aq_parent'): self=self.aq_parent
       else: self=None
 
-    ids=map(lambda item: (item[1], item[0]), ids.items())
+    ids=[(item[1], item[0]) for item in six.iteritems(ids)]
     ids.sort()
     return ids
 
@@ -1722,7 +1728,7 @@ class Catalog(Folder,
       return {}
     index = list(method(table=table))
     for line in index:
-      if table_index.has_key(line.KEY_NAME):
+      if line.KEY_NAME in table_index:
         table_index[line.KEY_NAME].append(line.COLUMN_NAME)
       else:
         table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
@@ -1833,7 +1839,7 @@ class Catalog(Folder,
       else:
         search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      func_code = script.func_code
+      func_code = script.__code__
       search_key = (
         AdvancedSearchKeyWrapperForScriptableKey if (
           # 5: search_value (under any name), "search_key", "group",
@@ -1937,7 +1943,7 @@ class Catalog(Folder,
         query_logical_operator = None
       else:
         query_logical_operator = logical_operator
-      for comparison_operator, value_list in value_dict.iteritems():
+      for comparison_operator, value_list in six.iteritems(value_dict):
         append(search_key.buildQuery(value_list, comparison_operator=comparison_operator, logical_operator=query_logical_operator))
       if logical_operator == 'not' or len(query_list) > 1:
         result = ComplexQuery(query_list, logical_operator=logical_operator)
@@ -2022,7 +2028,7 @@ class Catalog(Folder,
     # empty_value_dict: contains all keys whose value causes them to be
     # discarded.
     empty_value_dict = {}
-    for key, value in kw.iteritems():
+    for key, value in six.iteritems(kw):
       result = None
       if key in DOMAIN_STRICT_MEMBERSHIP_DICT:
         if value is None:
@@ -2258,7 +2264,7 @@ class Catalog(Folder,
       'FullTextKey': self.getSqlCatalogFullTextSearchKeysList(),
       'DateTimeKey': self.getSqlCatalogDatetimeSearchKeysList(),
     }
-    for key, column_list in search_key_column_dict.iteritems():
+    for key, column_list in six.iteritems(search_key_column_dict):
       for column in column_list:
         if column in result:
           LOG('SQLCatalog', WARNING, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
