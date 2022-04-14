@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_viewZeleniumTestLauncher</string> </value>
+            <value> <string>Zuite_viewRunZeleniumTestDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
