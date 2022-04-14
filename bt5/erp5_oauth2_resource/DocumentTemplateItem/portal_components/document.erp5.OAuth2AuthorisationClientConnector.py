@@ -814,11 +814,11 @@ class OAuth2AuthorisationClientConnector(
       query_list.append( # Non-standard parameter
         ('portal_status_message', portal_status_message),
       )
-    self._setStateCookie(
-      RESPONSE=RESPONSE,
-      name=name,
-      content=encrypt(identifier),
-    )
+    # self._setStateCookie(
+    #   RESPONSE=RESPONSE,
+    #   name=name,
+    #   content=encrypt(identifier),
+    # )
     if (
       self.isAuthorisationServerRemote() or
       REQUEST.environ['REQUEST_METHOD'] not in ('GET', 'HEAD')
@@ -925,37 +925,37 @@ class OAuth2AuthorisationClientConnector(
         message='Malformed state: %r reason=%r' % (state_dict, state_error),
       )
       return
-    state_cookie_dict = self._getStateCookieDict(
-      REQUEST=REQUEST,
-      RESPONSE=RESPONSE,
-    )
-    identifier_from_state = state_dict[_STATE_IDENTIFIER_NAME].encode('ascii')
-    for (
-      state_cookie_name,
-      identifier_from_cookie,
-    ) in state_cookie_dict.iteritems():
-      # Use data-invariant comparison function to not expose the
-      # "identifier_*" value to timing attacks.
-      if hmac.compare_digest(identifier_from_cookie, identifier_from_state):
-        break
-    else:
-      # Note: DO NOT try to salvage this request if the user is anonymous: a
-      # CSRF attacker *can* get everything valid except this correspondance
-      # (this is why it is checked to begin with). For example, it is not
-      # possible to trust the came_from if this check fails: an attacker could
-      # have provided their own value to a login page, which will have produced
-      # a valid state. So we must not try to send the user back to the login
-      # page with such came_from, otherwise we just reopened the CSRF
-      # vulnerability this check is designed to close.
-      error(
-        message='Inconsistent identifiers, cookie=%r (raw: %r) '
-        'parameter=%r' % (
-          state_cookie_dict,
-          self._getRawStateCookieDict(REQUEST),
-          identifier_from_state,
-        ),
-      )
-      return
+    # state_cookie_dict = self._getStateCookieDict(
+    #   REQUEST=REQUEST,
+    #   RESPONSE=RESPONSE,
+    # )
+    # identifier_from_state = state_dict[_STATE_IDENTIFIER_NAME].encode('ascii')
+    # for (
+    #   state_cookie_name,
+    #   identifier_from_cookie,
+    # ) in state_cookie_dict.iteritems():
+    #   # Use data-invariant comparison function to not expose the
+    #   # "identifier_*" value to timing attacks.
+    #   if hmac.compare_digest(identifier_from_cookie, identifier_from_state):
+    #     break
+    # else:
+    #   # Note: DO NOT try to salvage this request if the user is anonymous: a
+    #   # CSRF attacker *can* get everything valid except this correspondance
+    #   # (this is why it is checked to begin with). For example, it is not
+    #   # possible to trust the came_from if this check fails: an attacker could
+    #   # have provided their own value to a login page, which will have produced
+    #   # a valid state. So we must not try to send the user back to the login
+    #   # page with such came_from, otherwise we just reopened the CSRF
+    #   # vulnerability this check is designed to close.
+    #   error(
+    #     message='Inconsistent identifiers, cookie=%r (raw: %r) '
+    #     'parameter=%r' % (
+    #       state_cookie_dict,
+    #       self._getRawStateCookieDict(REQUEST),
+    #       identifier_from_state,
+    #     ),
+    #   )
+    #   return
     inner_response = self._callOAuth2(
       request=REQUEST,
       method='token',
@@ -983,7 +983,7 @@ class OAuth2AuthorisationClientConnector(
     # authenticated and will redirect them to their respective came_from. But
     # for those which did not reuse this cookie, they will be fully functional
     # even if the user logs out before using them.
-    self._expireStateCookie(RESPONSE=RESPONSE, name=state_cookie_name)
+    # self._expireStateCookie(RESPONSE=RESPONSE, name=state_cookie_name)
     redirect()
 
   security.declareProtected(

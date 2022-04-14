@@ -43,7 +43,10 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W:749,  6: Unused variable \'name\' (unused-variable)</string>
+                <string>W: 33,  0: Unused import hmac (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>
