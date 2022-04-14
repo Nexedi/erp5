@@ -43,23 +43,19 @@ class CodingStyleTest(CodingStyleTestCase, testXHTML.TestXHTMLMixin):
   """
 
   def getBusinessTemplateList(self):
-    # install erp5_upgrader for CodingStyleTestCase.test_run_upgrader
-    # XXX also install erp5_full_text_myisam_catalog to workaround missing test
-    # dependencies and the fact that test dependencies are not checked
-    # recursively.
-    return (
-        'erp5_upgrader',
-        'erp5_full_text_myisam_catalog',
-        self.tested_business_template)
+    # note: more business templates will be installed by
+    # _installBusinessTemplateList
+    return (self.tested_business_template, )
 
   def _installBusinessTemplateList(self,
                                    bt_list,
                                    update_repository_bt_list=True,
                                    *args,
                                    **kwargs):
-    """Install depencencies automatically
+    """Install dependencies automatically and also install erp5_upgrader,
+    which is needed for CodingStyleTestCase.test_run_upgrader
 
-    taken from runUnitTest._ZodbTestComponentBootstrapOnly.
+    the resolution approach is taken from runUnitTest._ZodbTestComponentBootstrapOnly.
     """
     template_tool = self.portal.portal_templates
 
@@ -74,11 +70,25 @@ class CodingStyleTest(CodingStyleTestCase, testXHTML.TestXHTMLMixin):
 
     template_tool.updateRepositoryBusinessTemplateList(bt5_path_list)
 
+    # Install the tested business template.
     url_bt_tuple_list = [
       ('%s/%s' % (repository, bt_title), bt_title) for repository, bt_title in
       template_tool.resolveBusinessTemplateListDependency(
         [x[1] for x in bt_list],
         with_test_dependency_list=True)]
+
+    bt_to_install_title_list = [x[1] for x in url_bt_tuple_list]
+    if 'erp5_upgrader' not in bt_to_install_title_list:
+      upgrader_url_bt_tuple_list = [
+        ('%s/%s' % (repository, bt_title), bt_title) for repository, bt_title in
+        template_tool.resolveBusinessTemplateListDependency(
+          ['erp5_upgrader'],
+          # We don't actually run erp5_upgrader test, so we don't want to install
+          # erp5_upgrader test dependencies
+          with_test_dependency_list=False)]
+      for url, bt in upgrader_url_bt_tuple_list:
+        if bt not in bt_to_install_title_list:
+          url_bt_tuple_list.append((url, bt))
 
     return super(CodingStyleTest,
                  self)._installBusinessTemplateList(url_bt_tuple_list,
