@@ -96,7 +96,8 @@
       rowspan: true,
       align: true,
       scope: true,
-      summary: true
+      summary: true,
+      download: true
     },
     style_list: {
       background: true,
