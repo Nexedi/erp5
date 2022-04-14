@@ -44,13 +44,22 @@ class CodingStyleTest(CodingStyleTestCase, testXHTML.TestXHTMLMixin):
 
   def getBusinessTemplateList(self):
     # install erp5_upgrader for CodingStyleTestCase.test_run_upgrader
-    # XXX also install erp5_full_text_myisam_catalog to workaround missing test
-    # dependencies and the fact that test dependencies are not checked
-    # recursively.
+
+    # XXX also install a full test business template, to workaround the fact
+    # that test dependencies are not checked recursively, but unless the tested
+    # business template itself is a full text business template, as we are not
+    # supposed to have more than one full text business template installed.
+    if self.tested_business_template in (
+      'erp5_full_text_mroonga_catalog',
+      'erp5_full_text_myisam_catalog',
+      'erp5_full_text_sphinxse_catalog',
+    ):
+      return ('erp5_upgrader', self.tested_business_template)
     return (
         'erp5_upgrader',
-        'erp5_full_text_myisam_catalog',
-        self.tested_business_template)
+        'erp5_full_text_mroonga_catalog',
+        self.tested_business_template,
+    )
 
   def _installBusinessTemplateList(self,
                                    bt_list,
