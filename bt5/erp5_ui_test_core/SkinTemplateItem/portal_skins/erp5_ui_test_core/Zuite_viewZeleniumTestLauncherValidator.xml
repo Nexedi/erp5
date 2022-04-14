@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_viewZeleniumTestLauncherValidator</string> </value>
+            <value> <string>Zuite_viewRunZeleniumTestDialogValidator</string> </value>
         </item>
       </dictionary>
     </pickle>
