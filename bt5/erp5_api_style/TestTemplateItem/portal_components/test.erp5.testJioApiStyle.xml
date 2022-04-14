@@ -114,52 +114,12 @@
                       <value> <string>validate</string> </value>
                   </item>
                   <item>
-                      <key> <string>error_message</string> </key>
-                      <value>
-                        <list>
-                          <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                        </list>
-                      </value>
-                  </item>
-                  <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>ID is invalid, should be \'${id_prefix}.VERSION.REFERENCE\'</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>id_prefix</string> </key>
-                    <value> <string>test</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>ID is invalid, should be \'${id_prefix}.VERSION.REFERENCE\'</string> </value>
         </item>
       </dictionary>
     </pickle>
