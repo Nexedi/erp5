@@ -383,14 +383,15 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
           )
           # Render login form.
           form = inner_request.form
-          inner_request.other['came_from'] = form['came_from'] = came_from
+          other = inner_request.other
+          other['came_from'] = form['came_from'] = came_from
           login_form_kw = {}
           if is_local_client:
             login_retry_url = self.__getSignedLoginRetryUrl()
             if login_retry_url:
-              login_form_kw['login_retry_url'] = form[
+              login_form_kw['login_retry_url'] = other[
                 'login_retry_url'
-              ] = login_retry_url
+              ] = form['login_retry_url'] = login_retry_url
             login_form = neutral_context_value.login_once_form
           else:
             login_form = neutral_context_value.login_form
