@@ -160,10 +160,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>line_exclusive</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -188,6 +184,14 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Unify value</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <list>
+                <string>solver_workflow</string>
+              </list>
+            </value>
         </item>
       </dictionary>
     </pickle>
