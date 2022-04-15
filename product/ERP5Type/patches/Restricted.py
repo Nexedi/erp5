@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+import six
 import copy
 import sys
 import types
@@ -307,10 +308,32 @@ import hashlib
 allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('unicodedata')
-allow_module('urlparse')
-import urlparse
-allow_type(urlparse.ParseResult)
-allow_type(urlparse.SplitResult)
+
+if six.PY2:
+  import urlparse
+  allow_module('urlparse')
+  allow_type(urlparse.ParseResult)
+  allow_type(urlparse.SplitResult)
+
+  ModuleSecurityInfo('urllib').declarePublic(
+    'urlencode',
+    'quote', 'unquote',
+    'quote_plus', 'unquote_plus',
+  )
+
+# six.PY2 with future.standard_library.install_aliases()
+# six.PY3
+import urllib.parse
+allow_module('urllib.parse')
+allow_type(urllib.parse.ParseResult)
+allow_type(urllib.parse.SplitResult)
+
+ModuleSecurityInfo('urllib.parse').declarePublic(
+  'urlencode',
+  'quote', 'unquote',
+  'quote_plus', 'unquote_plus',
+)
+
 allow_module('struct')
 
 ModuleSecurityInfo('os.path').declarePublic(
@@ -370,12 +393,6 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
 safe_builtins['__import__'] = guarded_import
 
 ModuleSecurityInfo('transaction').declarePublic('doom')
-
-ModuleSecurityInfo('urllib').declarePublic(
-  'urlencode',
-  'quote', 'unquote',
-  'quote_plus', 'unquote_plus',
-)
 
 import hmac
 allow_module('hmac')
