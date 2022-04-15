@@ -1,3 +1,7 @@
+# Modules aliases to support both python2 and python3
+from future import standard_library
+standard_library.install_aliases()
+
 import argparse
 from io import BytesIO
 import logging
