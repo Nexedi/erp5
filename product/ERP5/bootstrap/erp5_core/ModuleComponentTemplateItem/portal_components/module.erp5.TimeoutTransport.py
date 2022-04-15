@@ -26,9 +26,9 @@
 #
 ##############################################################################
 
-from xmlrpclib import ProtocolError
-from xmlrpclib import Transport
-from xmlrpclib import SafeTransport
+from xmlrpc.client import ProtocolError
+from xmlrpc.client import Transport
+from xmlrpc.client import SafeTransport
 import socket
 
 class TimeoutTransport(SafeTransport):

@@ -167,7 +167,7 @@ class CacheTool(BaseTool):
     # This method is public to be called from scripts, but without docstring to
     # prevent calling it from the URL
     ram_cache_root = self.getRamCacheRoot()
-    if ram_cache_root.has_key(cache_factory_id):
+    if cache_factory_id in ram_cache_root:
       ram_cache_root[cache_factory_id].clearCache()
 
   security.declareProtected(Permissions.ManagePortal, 'manage_clearCacheFactory')
@@ -195,7 +195,7 @@ class CacheTool(BaseTool):
   def clearCacheFactoryScope(self, cache_factory_id, scope, REQUEST=None):
     """ Clear only cache factory. """
     ram_cache_root = self.getRamCacheRoot()
-    if ram_cache_root.has_key(cache_factory_id):
+    if cache_factory_id in ram_cache_root:
       ram_cache_root[cache_factory_id].clearCacheForScope(scope)
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory scope %s cleared.' %cache_factory_id)

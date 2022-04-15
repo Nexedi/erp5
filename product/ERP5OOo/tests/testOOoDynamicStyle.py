@@ -29,7 +29,7 @@
 
 import os
 import unittest
-from cStringIO import StringIO
+from io import StringIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -240,8 +240,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     cs = StringIO()
     cs.write(body)
     zip_document = ZipFile(cs)
-    picture_list = filter(lambda x: "Pictures" in x.filename,
-        zip_document.infolist())
+    picture_list = [x for x in zip_document.infolist() if "Pictures" in x.filename]
     self.assertNotEquals([], picture_list)
     manifest = zip_document.read('META-INF/manifest.xml')
     content = zip_document.read('content.xml')

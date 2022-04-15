@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -96,7 +97,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         portal.IdTool_zSetLastId(id_group, None)
       # Commit the changement of new_id
       portal.IdTool_zCommit()
-    except ProgrammingError, error:
+    except ProgrammingError as error:
       if error[0] != NO_SUCH_TABLE:
         raise
 
@@ -132,7 +133,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     for line in self._getValueListFromTable():
       id_group = line['id_group']
       last_id = line['last_id']
-      if self.last_max_id_dict.has_key(id_group) and \
+      if id_group in self.last_max_id_dict and \
         self.last_max_id_dict[id_group].value > last_id:
         set_last_id_method(id_group=id_group,
             last_id=self.last_max_id_dict[id_group].value)
@@ -159,7 +160,10 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
     new_id = 1 + self._generateNewId(id_group=id_group, id_count=id_count,
                                      default=default, poison=poison)
-    return range(new_id - id_count, new_id)
+    if six.PY2:
+      return range(new_id - id_count, new_id)
+    else:
+      return list(range(new_id - id_count, new_id))
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
@@ -177,7 +181,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     portal = self.getPortalObject()
     try:
       portal.IdTool_zGetValueList()
-    except ProgrammingError, error:
+    except ProgrammingError as error:
       if error[0] != NO_SUCH_TABLE:
         raise
       portal.IdTool_zDropTable()

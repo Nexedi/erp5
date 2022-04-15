@@ -98,7 +98,7 @@ def fork():
 
 def forkNodes():
   global node_pid_list
-  for i in xrange(1, activity_node):
+  for i in range(1, activity_node):
     pid = fork()
     if not pid:
       node_pid_list = None
@@ -121,7 +121,7 @@ if neo_storage:
   storage_count = 2
   if load or save:
       db_list = [os.path.join(instance_home, 'var', 'neo%u.sqlite' % i)
-                 for i in xrange(1, storage_count+1)]
+                 for i in range(1, storage_count+1)]
   else:
       db_list = [None] * storage_count
   cwd = os.getcwd()

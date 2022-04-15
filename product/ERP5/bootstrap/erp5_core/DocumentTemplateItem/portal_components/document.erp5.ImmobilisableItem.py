@@ -325,8 +325,8 @@ class ImmobilisableItem(Item, Amount):
                                                  'price':{},
                                                  'currency': {}})
     kw['immo_cache_dict'] = immo_cache_dict
-    if immo_cache_dict['period'].has_key((self.getRelativeUrl(), from_date, to_date) +
-            tuple([(key,kw[key]) for key in kw_key_list])) :
+    if (self.getRelativeUrl(), from_date, to_date) +
+            tuple([(key,kw[key]) for key in kw_key_list]) in immo_cache_dict['period'] :
       return immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) +
           tuple( [(key,kw[key]) for key in kw_key_list]) ]
     def setPreviousPeriodParameters(period_list,
@@ -599,7 +599,7 @@ class ImmobilisableItem(Item, Amount):
     # Round dates since immobilisation calculation is made on days
     for immo_period in immo_period_list:
       for property_ in ('start_date', 'stop_date', 'initial_date',):
-        if immo_period.has_key(property_):
+        if property_ in immo_period:
           immo_period[property_] = roundDate(immo_period[property_])
     immo_cache_dict['period'][ (self.getRelativeUrl(), from_date, to_date) +
             tuple([(key,kw[key]) for key in kw_key_list]) ] = immo_period_list
@@ -644,7 +644,7 @@ class ImmobilisableItem(Item, Amount):
     elif len(immo_period_list) > 0 and at_date is None:
       return 1
     immo_period = immo_period_list[-1]
-    if immo_period.has_key('stop_date'):
+    if 'stop_date' in immo_period:
       # It means the latest period is terminated before the current date
       return 0
     return 1
@@ -667,9 +667,9 @@ class ImmobilisableItem(Item, Amount):
     if at_date is None:
       at_date = DateTime()
     new_kw = dict(kw)
-    if new_kw.has_key('to_date'):
+    if 'to_date' in new_kw:
       del new_kw['to_date']
-    if new_kw.has_key('at_date'):
+    if 'at_date' in new_kw:
       del new_kw['at_date']
     if immo_period_list is None:
       immo_period_list = self.getImmobilisationPeriodList(to_date=at_date, **new_kw)
@@ -706,9 +706,9 @@ class ImmobilisableItem(Item, Amount):
       at_date = DateTime()
 
     new_kw = dict(kw)
-    if new_kw.has_key('to_date'):
+    if 'to_date' in new_kw:
       del new_kw['to_date']
-    if new_kw.has_key('at_date'):
+    if 'at_date' in new_kw:
       del new_kw['at_date']
     if immo_period_list is None:
       immo_period_list = self.getImmobilisationPeriodList(to_date=at_date, **new_kw)
@@ -718,7 +718,7 @@ class ImmobilisableItem(Item, Amount):
 
     immo_period = immo_period_list[-1]
     # Second case : the item is not currently immobilised
-    if immo_period.has_key('stop_date'):
+    if 'stop_date' in immo_period:
       return immo_period['stop_durability']
 
     # Third case : the item is currently immobilised
@@ -778,7 +778,7 @@ class ImmobilisableItem(Item, Amount):
     """
     if at_date is None:
       at_date = DateTime()
-    kw_key_list = kw.keys()
+    kw_key_list = list(kw.keys())
     kw_key_list.sort()
 
     if kw_key_list.count('immo_cache_dict'):
@@ -790,7 +790,7 @@ class ImmobilisableItem(Item, Amount):
 
     immo_cache_dict_price_key = ((self.getRelativeUrl(), at_date) +
                                  tuple([(key,kw[key]) for key in kw_key_list]))
-    if immo_cache_dict['price'].has_key(immo_cache_dict_price_key) :
+    if immo_cache_dict_price_key in immo_cache_dict['price'] :
       returned_price = immo_cache_dict['price'][immo_cache_dict_price_key]
       if with_currency:
         currency = immo_cache_dict['currency'][immo_cache_dict_price_key]
@@ -827,7 +827,7 @@ class ImmobilisableItem(Item, Amount):
       start_durability = self.getRemainingDurability(at_date=start_date,
                                                        immo_cache_dict=immo_cache_dict)
     # Get the current period stop date, duration and durability
-    if immo_period.has_key('stop_date'):
+    if 'stop_date' in immo_period:
       stop_date = immo_period['stop_date']
       period_stop_date = stop_date
     else:

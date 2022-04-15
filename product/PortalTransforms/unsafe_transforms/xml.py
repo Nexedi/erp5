@@ -1,13 +1,14 @@
 """
 A custom transform using external command
 """
+from __future__ import print_function
 
 __revision__ = '$Id: xml.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
 from os.path import join, dirname, exists
 import re
 from os import popen3, popen4, system
-from cStringIO import StringIO
+from io import StringIO
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
@@ -85,7 +86,7 @@ file (designed by "%(transform)s").The transformation\'s result must be printed 
                 except DTException:
                     log('Unable to get doctype nor dtd in %s' % data)
                     doctype = None
-            if doctype and dtds.has_key(doctype):
+            if doctype and doctype in dtds:
                 data = self.invokeCommand(fullname, dtds[doctype])
             elif self.config['default_transform']:
                 data = self.invokeCommand(fullname, self.config['default_transform'])
@@ -162,8 +163,8 @@ def get_dtd(data):
 
 
 if __name__ == '__main__':
-    print get_doctype('''<?xml version="1.0" encoding="iso-8859-1"?>
+    print(get_doctype('''<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE article PUBLIC "-//LOGILAB/DTD DocBook V4.1.2-Based Extension V0.1//EN" "dcbk-logilab.dtd" []>
 
 <book id="devtools_user_manual" lang="fr">
-''')
+'''))

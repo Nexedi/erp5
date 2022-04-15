@@ -4,6 +4,7 @@
   containing searched words as well highlighting the searched 
   words in the text itself.
 """
+import six
 from erp5.component.document.Document import NotConvertedError
 
 encoding = 'utf-8'
@@ -27,7 +28,7 @@ if document_text is None:
   try:
     # if SearchableText is joinned as it is, we use it for better performance.
     document_text = getattr(context, 'SearchableText', None)
-    if not isinstance(document_text, (str, unicode)):
+    if not isinstance(document_text, six.string_types):
       document_text = context.getSearchableText()
   except NotConvertedError:
     return context.Base_translateString("This document is not converted yet.")

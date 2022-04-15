@@ -599,7 +599,7 @@ class MatrixBoxValidator(Validator.Validator):
                         external_validator = my_field.get_value('external_validator')
                         if external_validator and not external_validator(value, REQUEST):
                             my_field.validator.raise_error('external_validator_failed', my_field)
-                      except ValidationError, err :
+                      except ValidationError as err :
                         err.field_id = my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
                         error_list.append(err)
 

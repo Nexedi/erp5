@@ -34,7 +34,7 @@ import mock
 import itertools
 import transaction
 import unittest
-import urlparse
+import urllib.parse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -55,7 +55,7 @@ class UserManagementTestCase(ERP5TypeTestCase):
   """TestCase for user manement, with utilities to create users and helpers
   assertion methods.
   """
-  _login_generator = itertools.count().next
+  _login_generator = itertools.count().__next__
 
 
   def getBusinessTemplateList(self):
@@ -648,12 +648,12 @@ class TestPreferences(UserManagementTestCase):
       current_password='bad' + password,
       new_password=new_password,
     )
-    parsed_url = urlparse.urlparse(result)
+    parsed_url = urllib.parse.urlparse(result)
     self.assertEqual(
         parsed_url.path.split('/')[-2:],
         ['portal_preferences', 'PreferenceTool_viewChangePasswordDialog'])
     self.assertEqual(
-        urlparse.parse_qs(parsed_url.query),
+        urllib.parse.parse_qs(parsed_url.query),
         {'portal_status_message': ['Current password is wrong.'], 'portal_status_level': ['error']})
 
     self.login()

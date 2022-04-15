@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import range
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.Query import Query
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
@@ -143,7 +144,7 @@ class RelatedKey(SearchKey):
                                            table_alias_list,)
       log.warning(msg + "\n\nForcing implicit join...")
       column_map.implicit_join = True
-    for table_position in xrange(len(self.table_list) - 1):
+    for table_position in range(len(self.table_list) - 1):
       table_name = self.table_list[table_position]
       local_group = column_map.registerRelatedKeyColumn(related_column, table_position, group)
       column_map.registerTable(table_name, group=local_group)

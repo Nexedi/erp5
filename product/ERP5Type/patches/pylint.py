@@ -226,7 +226,7 @@ Module_getattr = Module.getattr
 def _getattr(self, name, *args, **kw):
     try:
         return Module_getattr(self, name, *args, **kw)
-    except NotFoundError, e:
+    except NotFoundError as e:
         if self.name.startswith('erp5.'):
             raise
 

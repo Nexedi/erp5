@@ -30,7 +30,7 @@
 import os
 import string
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from unittest import skip
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -567,14 +567,14 @@ class TestCommerce(ERP5TypeTestCase):
     self.logout()
     self.assertEqual(1, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.website.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("You need to create an account to " \
+    self.assertTrue(urllib.parse.quote("You need to create an account to " \
                               "continue. If you already have please login.") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
     self.loginByUserName('customer')
     self.portal.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
+    self.assertTrue(urllib.parse.quote("SaleOrder_viewAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
   def test_10_deleteShoppingCartItem(self):
@@ -587,7 +587,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     # Trying to remove
     self.portal.SaleOrder_deleteShoppingCartItem()
-    self.assertTrue(urllib.quote("Please select an item.") in
+    self.assertTrue(urllib.parse.quote("Please select an item.") in
                                self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # Check if the item still into the Shopping Cart
@@ -600,7 +600,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     # Check if the Product have been removed sucessfully
     self.assertTrue(
-              urllib.quote("Successfully removed from shopping cart.") in
+              urllib.parse.quote("Successfully removed from shopping cart.") in
                  self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # Check if the Shopping Cart is empty
@@ -861,7 +861,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.loginByUserName('toto')
     self.portal.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
+    self.assertTrue(urllib.parse.quote("SaleOrder_viewAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
   def test_23_getShoppingCartCustomer(self):

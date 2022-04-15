@@ -395,7 +395,7 @@ class IdentityMapping:
       return self.immutable[k]
 
     def hasImmutable(self, k):
-      return self.immutable.has_key(k)
+      return k in self.immutable
 
 class MinimalMapping(IdentityMapping):
     def resetMapping(self):
@@ -416,7 +416,7 @@ class MinimalMapping(IdentityMapping):
         sub_id = None
       else:
         raise
-      if not self.mapped_id.has_key(core_id):
+      if core_id not in self.mapped_id:
         if sub_id is not None:
           # Use existing id
           self.mapped_id[core_id] = {}
@@ -430,7 +430,7 @@ class MinimalMapping(IdentityMapping):
           self.last_id = self.last_id + 1
       if sub_id is None:
         return self.mapped_core_id[core_id]
-      if not self.mapped_id[core_id].has_key(sub_id):
+      if sub_id not in self.mapped_id[core_id]:
         # Create new sub_id if not defined
         self.mapped_id[core_id][sub_id] = self.last_sub_id[core_id]
         self.last_sub_id[core_id] = self.last_sub_id[core_id] + 1

@@ -27,7 +27,7 @@
 ##############################################################################
 from contextlib import contextmanager
 import threading
-import time
+import time, six
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from ZPublisher.HTTPResponse import status_codes
 from Products.TimerService.timerserver.TimerServer import TimerRequest

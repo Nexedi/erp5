@@ -201,7 +201,7 @@ for serie in series_list:
 # the last element must be saved
 data_groups.append(new_group)
 
-print data_groups
+print(data_groups)
  
 
 # [
@@ -236,24 +236,24 @@ def aggregate(big_list, item_to_add):
   if big_list == []:
     return []
   if getListLevel(big_list) == getListLevel(item_to_add):
-    print "big_list " + big_list
-    print "item_to_add " + item_to_add
+    print("big_list " + big_list)
+    print("item_to_add " + item_to_add)
     big_list.append(item_to_add)
     return big_list
   else:
     new_big_list_sub_level = aggregate(getLastSubList(big_list), item_to_add)
-    print "new_big_list_sub_level " + new_big_list_sub_level
-    print "big_list " + big_list
+    print("new_big_list_sub_level " + new_big_list_sub_level)
+    print("big_list " + big_list)
     return None #setLastSubList(big_list, new_big_list_sub_level)
 
   
 for group in data_groups:
   collapsed_group = group[0]
   for serie_group in group[1:]:
-    print serie_group
+    print(serie_group)
     collapsed_group = aggregate(collapsed_group, serie_group)
 
-  print collapsed_group
+  print(collapsed_group)
       
     
 #     if

@@ -35,7 +35,7 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator.Form import ZMIForm
 from zLOG import LOG, WARNING
 
-from urllib import quote
+from urllib.parse import quote
 from warnings import warn
 from Products.ERP5Type import PropertySheet
 
@@ -130,7 +130,7 @@ class ERP5Report(ERP5Form):
         if not self.report_method:
           raise KeyError('report method is not set on the report')
 
-        if not kwargs.has_key('args'):
+        if 'args' not in kwargs:
           kwargs['args'] = args
         form = self
         obj = getattr(form, 'aq_parent', None)
@@ -323,7 +323,7 @@ class ReportSection:
         selection_list.append(selection_name)
     # save report's selection and orignal form's selection,
     #as ListBox will overwrite it
-    for selection_name in filter(lambda x: x is not None, selection_list):
+    for selection_name in [x for x in selection_list if x is not None]:
       if self.temporary_selection:
         portal_selections.pushSelection(selection_name)
       else:

@@ -40,7 +40,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
 from DateTime import DateTime
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 last_tic = time.time()
 last_tic_lock = threading.Lock()
@@ -215,11 +215,11 @@ class AlarmTool(TimerServiceMixin, BaseTool):
             REQUEST.RESPONSE.redirect(
                 REQUEST.URL1 +
                 '/manageAlarmNode?manage_tabs_message=' +
-                urllib.quote("Distributing Node successfully changed."))
+                urllib.parse.quote("Distributing Node successfully changed."))
       else :
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(
                 REQUEST.URL1 +
                 '/manageAlarmNode?manage_tabs_message=' +
-                urllib.quote("Malformed Distributing Node."))
+                urllib.parse.quote("Malformed Distributing Node."))
 

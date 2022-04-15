@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from six.moves import map
+import six
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
 from AccessControl.requestmethod import postonly
@@ -267,10 +267,10 @@ def dedupStrings(obj):
       obj._tz = dedup(obj._tz)
     elif t is bytes:
       obj = _bytes.setdefault(obj, obj)
-    elif t is unicode:
+    elif t is six.text_type:
       obj = _str.setdefault(obj, obj)
     elif t in _sequence_type_list:
-      obj = t(map(dedup, obj))
+      obj = t([dedup(x) for x in obj])
     elif t is dict:
       obj = {dedup(k): dedup(v) for k, v in obj.iteritems()}
     else:

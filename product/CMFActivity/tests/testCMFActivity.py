@@ -727,7 +727,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     messages.
     """
     activity_tool = self.portal.portal_activities
-    for _ in xrange(loop_size):
+    for _ in range(loop_size):
       activity_tool.distribute(node_count=1)
       activity_tool.tic(processing_node=1)
 
@@ -920,7 +920,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     Organisation.updateDesc = updateDesc
 
     # First check dequeue read same message only once
-    for i in xrange(10):
+    for i in range(10):
       p.activate(activity="SQLDict").updateDesc()
       self.commit()
 
@@ -929,7 +929,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(p.getDescription(), "a")
 
     # Check if there is pending activity after deleting an object
-    for i in xrange(10):
+    for i in range(10):
       p.activate(activity="SQLDict").updateDesc()
       self.commit()
 
@@ -959,7 +959,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(0,organisation.getFoobar())
 
     # Test group_method_id is working without group_id
-    for x in xrange(5):
+    for x in range(5):
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar").reindexObject(number=1)
       self.commit()
 
@@ -971,7 +971,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
 
     # Test group_method_id is working with one group_id defined
-    for x in xrange(5):
+    for x in range(5):
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       self.commit()
 
@@ -984,7 +984,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     del foobar_list[:]
 
     # Test group_method_id is working with many group_id defined
-    for x in xrange(5):
+    for x in range(5):
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       self.commit()
       organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="2").reindexObject(number=3)
@@ -1020,7 +1020,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     activity_tool = self.getActivityTool()
     def delete_volatiles():
-      for property_id in activity_tool.__dict__.keys():
+      for property_id in list(activity_tool.__dict__.keys()):
         if property_id.startswith('_v_'):
           delattr(activity_tool, property_id)
     organisation_module = self.getOrganisationModule()
@@ -1540,7 +1540,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # on REQUEST information when the method was activated.
     request = self.portal.REQUEST
 
-    request.setServerURL('http', 'test.erp5.org', '9080')
+    request.setServerURL('http', 'test.erp5.org', 9080)
     request.other['PARENTS'] = [self.portal.organisation_module]
     request.setVirtualRoot('virtual_root')
 
@@ -1559,7 +1559,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
       # REQUEST, such as TimerServer.
-      request.setServerURL('https', 'anotherhost.erp5.org', '443')
+      request.setServerURL('https', 'anotherhost.erp5.org', 443)
       request.other['PARENTS'] = [self.app]
       request.setVirtualRoot('')
       # obviously, the object url is different
@@ -1894,7 +1894,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           raise Skip
       return original_query(self, query_string, *args, **kw)
     def check():
-      for i in xrange(1, N):
+      for i in range(1, N):
         activity_tool.activate(activity=activity, group_id=str(i)
                               ).doSomething(arg)
       activity_tool.activate(activity=activity, group_id='~'
@@ -2393,7 +2393,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     #            /  \   |
     #           c3  c4  c5
     c = [category_tool.newContent()]
-    for i in xrange(5):
+    for i in range(5):
       c.append(c[i//2].newContent())
     self.tic()
     def activate(i, priority=1, **kw):
@@ -2464,7 +2464,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       check(1, tag="foo")
       check(0, tag="foo", method_id="getUid")
       check(1, processing_node=-1)
-      check(3, processing_node=range(-5,5))
+      check(3, processing_node=list(range(-5,5)))
     test()
     self.commit()
     test(check)

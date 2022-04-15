@@ -28,7 +28,7 @@ for f in MailBase.__dict__.itervalues():
       i = args.index('immediate') - len(args)
     except ValueError:
       continue
-    f.func_defaults = defaults[:i] + (True,) + defaults[i+1 or len(args):]
+    f.__defaults__ = defaults[:i] + (True,) + defaults[i+1 or len(args):]
 
 from App.special_dtml import DTMLFile
 MailBase.manage = MailBase.manage_main = DTMLFile('dtml/manageMailHost', globals())

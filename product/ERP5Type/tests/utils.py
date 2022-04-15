@@ -371,7 +371,7 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
   m = 499 # must be a prime number
   x = instance_random.randrange(0, m)
   c = instance_random.randrange(1, m)
-  for i in xrange(m):
+  for i in range(m):
     yield default_host, 55000 + x
     x = (x + c) % m
   raise RuntimeError("Can't find free port (tried ports %u to %u)\n"
@@ -397,7 +397,7 @@ def createZServer(log=os.devnull, zserver_type='http'):
       hs.__init__(ip, port, resolver=None, logger_object=lg)
       hs.install_handler(zhandler_class(module='Zope2', uri_base=''))
       return hs
-    except socket.error, e:
+    except socket.error as e:
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()
@@ -589,8 +589,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
 
   def getSortedCategoryList(line, base_id, category_list):
     result = []
-    index_list = line.index[base_id].keys()
-    index_list.sort()
+    index_list = sorted(line.index[base_id].keys())
     for category in category_list:
       for index in index_list:
         if line.index[base_id][index]:
@@ -666,7 +665,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
                           *category_list)
 
       cell.edit(**mapped_value_dict)
-      cell.setMappedValuePropertyList(mapped_value_dict.keys())
+      cell.setMappedValuePropertyList(list(mapped_value_dict.keys()))
 
       base_category_list = [category_path
                             for category_path in category_list

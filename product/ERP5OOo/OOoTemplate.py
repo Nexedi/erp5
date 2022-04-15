@@ -28,7 +28,7 @@
 ##############################################################################
 
 from __future__ import absolute_import
-from types import StringType
+from past.builtins import basestring
 from mimetypes import guess_extension
 from OFS.Image import File
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
@@ -37,15 +37,16 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
-from urllib import quote
+from urllib.parse import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import StringIO
 import re
 import itertools
+import six
 
 try:
   from webdav.Lockable import ResourceLockedError
@@ -111,9 +112,9 @@ class OOoContext(ZopeContext):
   """
 
   def _handleText(self, text, expr):
-    if isinstance(text, str):
+    if isinstance(text, six.binary_type):
       # avoid calling the IUnicodeEncodingConflictResolver utility
-      return unicode(text, 'utf-8')
+      return text.decode('utf-8')
     return ZopeContext._handleText(self, text, expr)
 
 def createOOoZopeEngine():
@@ -208,7 +209,7 @@ class OOoTemplate(ZopePageTemplate):
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError("File is locked via WebDAV")
 
-    if type(file) is not StringType:
+    if not isinstance(file, basestring):
       if not file: raise ValueError('File not specified')
       file = file.read()
 
@@ -299,7 +300,7 @@ class OOoTemplate(ZopePageTemplate):
       document_type = document.content_type
 
       # Prepare a subdirectory to store embedded objects
-      actual_idx = self.document_counter.next()
+      actual_idx = next(self.document_counter)
       dir_name = '%s%d'%(self._OLE_directory_prefix, actual_idx)
 
       if sub_document: # sub-document means sub-directory
@@ -394,7 +395,7 @@ class OOoTemplate(ZopePageTemplate):
         h = maxheight
         w = h * aspect_ratio
 
-      actual_idx = self.document_counter.next()
+      actual_idx = next(self.document_counter)
       pic_name = 'Pictures/picture%d%s' \
                  % (actual_idx, guess_extension(picture_type) or '')
 
@@ -498,7 +499,7 @@ class OOoTemplate(ZopePageTemplate):
         ooo_builder.addFileEntry(full_path=dir_name + '/content.xml',
                                  media_type='text/xml', content=document_dict['document'])
         styles_text = default_styles_text
-        if document_dict.has_key('stylesheet') and document_dict['stylesheet']:
+        if 'stylesheet' in document_dict and document_dict['stylesheet']:
           styles_text = document_dict['stylesheet']
         if styles_text:
           ooo_builder.addFileEntry(full_path=dir_name + '/styles.xml',

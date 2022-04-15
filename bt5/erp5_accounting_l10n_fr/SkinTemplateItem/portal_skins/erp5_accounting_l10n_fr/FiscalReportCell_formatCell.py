@@ -8,7 +8,7 @@ if same_type(cell_value, 0) or same_type(cell_value, 0.0) :
 
   negative = number < 0
   amount = str(abs(number))
-  indexes = range(len(amount))
+  indexes = list(range(len(amount)))
   indexes.reverse()
   string = ''
   count = 0

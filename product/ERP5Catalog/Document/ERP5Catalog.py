@@ -41,7 +41,7 @@ from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 class Filter(object):
   """

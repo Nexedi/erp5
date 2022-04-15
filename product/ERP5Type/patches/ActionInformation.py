@@ -15,7 +15,7 @@
 from Products.CMFCore.ActionInformation import ActionInformation
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
-from types import StringType
+from past.builtins import basestring
 
 if 1:
 
@@ -93,7 +93,7 @@ if 1:
         """
         icon = self._getIconObject()
         expr = icon and icon.text or ''
-        if expr and type( expr ) is StringType:
+        if expr and isinstance(expr, basestring):
             if not expr.startswith('python:') and not expr.startswith('string:'):
                 expr = 'string:${object_url}/%s' % expr
                 self.icon = Expression( expr )
@@ -101,7 +101,7 @@ if 1:
 
     security.declarePrivate( 'setIconExpression' )
     def setIconExpression(self, icon):
-        if icon and type( icon ) is StringType:
+        if icon and isinstance(icon, basestring):
             if not icon.startswith('python:')  and not icon.startswith('string:'):
                 icon = 'string:${object_url}/%s' % icon
                 icon = Expression( icon )

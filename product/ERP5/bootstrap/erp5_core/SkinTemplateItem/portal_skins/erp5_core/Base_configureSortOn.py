@@ -20,7 +20,7 @@ try:
         sort_on += [(k, v, t)]
     i += 1
   context.portal_selections.setSelectionSortOrder(selection_name, sort_on)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)

@@ -1,7 +1,8 @@
+from __future__ import print_function
 input_file = open('big_file.log', 'r')
 
-import httplib
-connection =  httplib.HTTPConnection('192.168.242.68:12001')
+import http.client
+connection =  http.client.HTTPConnection('192.168.242.68:12001')
 
 import base64
 base64string = base64.encodestring('zope:insecure')[:-1]
@@ -22,7 +23,7 @@ result = connection.getresponse()
 path = result.getheader("X-Document-Location")
 result.close()
 path = '/%s' % '/'.join(path.split('/')[3:])
-print path
+print(path)
 
 ######################################
 # Upload chunks

@@ -29,6 +29,9 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
+from past.builtins import cmp, basestring
+from builtins import chr, range
+import six
 import os
 import re
 import string
@@ -229,7 +232,7 @@ def deprecated(message=''):
   @simple_decorator
   def _deprecated(wrapped):
     m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
-      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+      wrapped.__name__, wrapped.__module__, wrapped.__code__.co_firstlineno)
     def deprecated(*args, **kw):
       warnings.warn(m, DeprecationWarning, 2)
       return wrapped(*args, **kw)
@@ -252,7 +255,7 @@ def convertToUpperCase(key):
   try:
     return _cached_convertToUpperCase[key]
   except KeyError:
-    if not isinstance(key, basestring):
+    if not isinstance(key, six.string_types):
       raise TypeError('%r is not a string' % (key,))
     _cached_convertToUpperCase[key] = ''.join([part.capitalize() for part in key.split('_')])
     return _cached_convertToUpperCase[key]
@@ -277,7 +280,7 @@ def convertToMixedCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  if not isinstance(key, basestring):
+  if not isinstance(key, six.string_types):
     raise TypeError('%r is not a string' % (key,))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
@@ -441,11 +444,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   try:
     from pylint.lint import Run
     from pylint.reporters.text import TextReporter
-  except ImportError, error:
+  except ImportError as error:
     try:
       compile(source_code_str, '<string>', 'exec')
       return []
-    except Exception, error:
+    except Exception as error:
       if isinstance(error, SyntaxError):
         message = {'type': 'F',
                    'row': error.lineno,
@@ -459,14 +462,14 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 
       return [message]
 
-  import cStringIO
+  import io
   import tempfile
   import sys
 
   #import time
   #started = time.time()
   message_list = []
-  output_file = cStringIO.StringIO()
+  output_file = io.StringIO()
   try:
     with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
                                      suffix='.py') as input_file:
@@ -536,7 +539,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
 
-    output_file.reset()
+    output_file.seek(0)
     for line in output_file:
       match_obj = _pylint_message_re.match(line)
       if match_obj:
@@ -1116,7 +1119,7 @@ def initializeLocalRegistry(directory_name, import_local_method):
           LOG('ERP5Type', BLATHER,
               'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
-        except Exception, e:
+        except Exception as e:
           if DevelopmentMode:
             raise
           LOG('E5RP5Type', PROBLEM,
@@ -1390,7 +1393,7 @@ def evaluateExpressionFromString(expression_context, expression_string):
   # An AttributeError is raised when instanciating an Expression
   # class, and CompilerError and ValueError are raised in case of
   # error when evaluation the expression
-  except (AttributeError, CompilerError, ValueError), e:
+  except (AttributeError, CompilerError, ValueError) as e:
     raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
                                                               str(e)))
 
@@ -1405,7 +1408,7 @@ def isValidTALESExpression(value):
   """
   try:
     ExpressionEngine.compile(value)
-  except CompilerError, message:
+  except CompilerError as message:
     return False, message
   else:
     return True, None
@@ -1435,7 +1438,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
           portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
-      except (KeyError, AttributeError), err:
+      except (KeyError, AttributeError) as err:
         LOG('ERP5Type', PROBLEM, "assertAttributePortalType failed on %s" % o,
             error=True)
 
@@ -1692,8 +1695,8 @@ try:
 except ImportError:
   warnings.warn("urlnorm lib is not installed", DeprecationWarning)
   urlnorm = None
-import urlparse
-import urllib
+import urllib.parse as urlparse
+import urllib.request, urllib.parse, urllib.error
 
 # Regular expressions
 re_cleanup_anchors = re.compile('#.*')
@@ -1749,7 +1752,7 @@ def legacyNormalizeUrl(url, base_url=None):
   # Remove trailing '?'
   # http://www.example.com/? -> http://www.example.com/
   url = re_cleanup_tail.sub('', url)
-  if isinstance(url, unicode):
+  if isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1771,7 +1774,7 @@ def urlnormNormaliseUrl(url, base_url=None):
   if base_url and not (url_protocol or url_domain):
     # Make relative URL absolute
     url = urlparse.urljoin(base_url, url)
-  if isinstance(url, unicode):
+  if isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1813,7 +1816,7 @@ _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # reserved (maybe unsafe)
     "#$&+,/:;=?@[]"
   else "%%%02X" % x
-  for x in xrange(256)}
+  for x in range(256)}
 
 def reencodeUrlEscapes(url):
   """Fix a non-conformant %-escaped URL (or quote an unescaped one)
@@ -1821,7 +1824,7 @@ def reencodeUrlEscapes(url):
   This is a Python reimplementation of 'reencode_escapes' function of Wget 1.12
   """
   from string import hexdigits
-  next_part = iter(url.split('%')).next
+  next_part = iter(url.split('%')).__next__
   url = [_reencodeUrlEscapes_map[c] for c in next_part()]
   try:
     while True:
@@ -1850,7 +1853,7 @@ def formatRFC822Headers(headers):
   for key, value in headers:
     if value is not None:
       if type(value) in (list, tuple):
-        vallines = map(str, value)
+        vallines = [str(x) for x in value]
       else:
         vallines = linesplit.split(str(value))
       munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))

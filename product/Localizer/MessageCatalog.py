@@ -23,11 +23,13 @@ provides message catalogs for the web.
 from __future__ import absolute_import
 
 # Import from the Standard Library
-from base64 import encodestring, decodestring
+from past.builtins import cmp
+from past.builtins import basestring
+from base64 import encodebytes, decodebytes
 from hashlib import md5
 from re import compile
 from time import gmtime, strftime, time
-from urllib import quote
+from urllib.parse import quote
 from traceback import format_list, extract_stack
 
 # Import from polib
@@ -92,7 +94,7 @@ def message_encode(message):
         encoding = HTTPRequest.default_encoding
         message = message.encode(encoding)
 
-    return encodestring(message)
+    return encodebytes(message)
 
 
 def message_decode(message):
@@ -101,7 +103,7 @@ def message_decode(message):
     To be used in the user interface, to avoid problems with the
     encodings, HTML entities, etc..
     """
-    message = decodestring(message)
+    message = decodebytes(message)
     encoding = HTTPRequest.default_encoding
     return unicode(message, encoding)
 
@@ -292,13 +294,13 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         # Add it if it's not in the dictionary
         if add is None:
             add = getattr(self, 'policy', self.POLICY_ADD_TRUE)
-        if add != self.POLICY_ADD_FALSE and not self._messages.has_key(message) and message:
+        if add != self.POLICY_ADD_FALSE and message not in self._messages and message:
             if add == self.POLICY_ADD_LOG:
                 LOG('New entry added to message catalog %s :' % self.id,  INFO, '%s\n%s' % (message, ''.join(format_list(extract_stack()[:-1]))))
             self._messages[message] = PersistentMapping()
 
         # Get the string
-        if self._messages.has_key(message):
+        if message in self._messages:
             m = self._messages[message]
 
             if lang is None:

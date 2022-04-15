@@ -93,7 +93,7 @@ class Amount(Base, VariatedMixin):
         and not omit_optional_variation):
       variation_list.append('industrial_phase')
     if base_category_list:
-      variation_list = filter(base_category_list.__contains__, variation_list)
+      variation_list = [v for v in variation_list if v in base_category_list]
     return self.getAcquiredCategoryMembershipList(variation_list, base=1)
 
   security.declareProtected(Permissions.AccessContentsInformation,

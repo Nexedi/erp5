@@ -42,8 +42,8 @@ from AccessControl.SecurityManagement import getSecurityManager, \
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 import time
 import socket
-import httplib
-import urllib
+import http.client
+import urllib.request, urllib.parse, urllib.error
 import json
 from zLOG import LOG, ERROR, INFO
 

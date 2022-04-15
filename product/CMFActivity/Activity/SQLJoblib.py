@@ -37,6 +37,7 @@ from .SQLBase import (
 )
 from Products.CMFActivity.ActivityTool import Message
 from .SQLDict import SQLDict
+from builtins import range
 
 class SQLJoblib(SQLDict):
   """
@@ -87,15 +88,15 @@ CREATE TABLE %s (
     def insert(reset_uid):
       values = self._insert_separator.join(values_list)
       del values_list[:]
-      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+      for _ in range(UID_ALLOCATION_TRY_COUNT):
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.
           db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (self.sql_table, values))
-        except MySQLdb.IntegrityError, (code, _):
-          if code != DUP_ENTRY:
+        except MySQLdb.IntegrityError as e:
+          if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
         else:

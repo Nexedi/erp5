@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet

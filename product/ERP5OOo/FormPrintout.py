@@ -41,7 +41,7 @@ from AccessControl import ClassSecurityInfo
 from OFS.role import RoleManager
 from OFS.SimpleItem import Item
 from OFS.PropertyManager import PropertyManager
-from urllib import quote, quote_plus
+from urllib.parse import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
 from zLOG import LOG, DEBUG, INFO, WARNING
@@ -50,6 +50,7 @@ from DateTime import DateTime
 from decimal import Decimal
 from xml.sax.saxutils import escape
 import re
+import six
 
 try:
   from webdav.Lockable import ResourceLockedError
@@ -339,7 +340,7 @@ class ODFStrategy(Implicit):
     if here is None:
       raise ValueError('Can not create a ODF Document without a parent acquisition context')
     form = extra_context['form']
-    if not extra_context.has_key('printout_template') or \
+    if 'printout_template' not in extra_context or \
         extra_context['printout_template'] is None:
       raise ValueError('Can not create a ODF Document without a printout template')
 
@@ -815,6 +816,7 @@ class ODFStrategy(Implicit):
       \n -> line-breaks
       DateTime -> Y-m-d
     """
+    assert six.PY3 # TODO-py3
     if value is None:
       value = ''
     translated_value = str(value)
@@ -889,7 +891,7 @@ class ODFStrategy(Implicit):
 
   def _toUnicodeString(self, field_value = None):
     value = ''
-    if isinstance(field_value, unicode):
+    if isinstance(field_value, six.text_type):
       value = field_value
     elif field_value is not None:
       value = unicode(str(field_value), 'utf-8')

@@ -5,9 +5,9 @@
 # See license.txt for more details.
 
 from AccessControl import ClassSecurityInfo
-from email import Encoders
-from email.MIMEBase import MIMEBase
-from email.MIMEMultipart import MIMEMultipart
+from email.encoders import encode_base64
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
 from App.class_init import default__class_init__ as InitializeClass
 try:
     from OFS.content_types import guess_content_type
@@ -67,7 +67,7 @@ class MTMultipart(MIMEMultipart):
             data=theFile.read()
             headers=theFile.headers
             if content_type is None:
-                if headers.has_key('content-type'):
+                if 'content-type' in headers:
                     content_type=headers['content-type']
                 else:
                     content_type, enc=guess_content_type(filename, data)
@@ -76,7 +76,7 @@ class MTMultipart(MIMEMultipart):
 
         msg = MIMEBase(*content_type.split('/'))
         msg.set_payload(data)
-        Encoders.encode_base64(msg)
+        encode_base64(msg)
         msg.add_header('Content-ID', '<%s>' % \
             ''.join(['%s' % ord(i) for i in filename]))
         msg.add_header('Content-Disposition', 'attachment',

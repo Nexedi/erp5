@@ -27,10 +27,10 @@
 #
 ##############################################################################
 
-import cStringIO
+import io
 import re
-import urllib2, urllib
-import urlparse
+import urllib.request, urllib.error, urllib.parse, urllib.request, urllib.parse, urllib.error
+import urllib.parse
 from cgi import parse_header
 import os
 
@@ -168,7 +168,7 @@ class ContributionTool(BaseTool):
         except KeyError:
           raise ValueError('data must be provided')
         if data is not None:
-          file_object = cStringIO.StringIO()
+          file_object = io.StringIO()
           file_object.write(data)
           file_object.seek(0)
           kw['file'] = file_object
@@ -508,7 +508,7 @@ class ContributionTool(BaseTool):
     for url in set(content.getContentNormalisedURLList()):
       # LOG('trying to crawl', 0, url)
       # Some url protocols should not be crawled
-      if urlparse.urlsplit(url)[0] in no_crawl_protocol_list:
+      if urllib.parse.urlsplit(url)[0] in no_crawl_protocol_list:
         continue
       if container is None:
         #if content.getParentValue()
@@ -549,7 +549,7 @@ class ContributionTool(BaseTool):
       try:
         url = content.asURL()
         file_object, filename, content_type = self._openURL(url)
-      except urllib2.URLError:
+      except urllib.error.URLError:
         if repeat == 0 or not batch_mode:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
           raise
@@ -598,7 +598,7 @@ class ContributionTool(BaseTool):
       elif document.getCrawlingDepth() > 0:
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
-    except urllib2.HTTPError:
+    except urllib.error.HTTPError:
       if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
@@ -635,10 +635,10 @@ class ContributionTool(BaseTool):
     # Quote path part of url
     url = reencodeUrlEscapes(url)
     # build a new file from the url
-    url_file = urllib2.urlopen(urllib2.Request(url,
+    url_file = urllib.request.urlopen(urllib.request.Request(url,
                                                headers={'Accept':'*/*'}))
     data = url_file.read() # time out must be set or ... too long XXX
-    file_object = cStringIO.StringIO()
+    file_object = io.StringIO()
     file_object.write(data)
     file_object.seek(0)
     # if a content-disposition header is present,
@@ -654,9 +654,9 @@ class ContributionTool(BaseTool):
       # See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30
       url = url_file.geturl()
       # Create a file name based on the URL and quote it
-      filename = urlparse.urlsplit(url)[-3]
+      filename = urllib.parse.urlsplit(url)[-3]
       filename = os.path.basename(filename)
-      filename = urllib.quote(filename, safe='')
+      filename = urllib.parse.quote(filename, safe='')
       filename = filename.replace('%', '')
     content_type = header_info.gettype()
     return file_object, filename, content_type

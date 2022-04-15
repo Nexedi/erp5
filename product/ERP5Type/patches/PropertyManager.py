@@ -13,6 +13,9 @@
 ##############################################################################
 
 # Properties
+import six
+
+from past.builtins import basestring
 from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
 from Products.ERP5Type.Globals import DTMLFile
@@ -41,7 +44,7 @@ def PropertyManager_updateProperty(self, id, value, local_properties=False):
     if isinstance(value, str):
         proptype=self.getPropertyType(id, local_properties=local_properties) \
            or 'string'
-        if type_converters.has_key(proptype):
+        if proptype in type_converters:
             value=type_converters[proptype](value)
     self._setPropValue(id, value)
 
@@ -90,7 +93,7 @@ def PropertyManager_setProperty(self, id, value, type=None):
         type = 'lines'
       elif isinstance(value, int):
         type = 'int'
-      elif isinstance(value, long):
+      elif six.PY2 and isinstance(value, long):
         type = 'long'
       elif isinstance(value, float):
         type = 'float'
@@ -130,7 +133,7 @@ def PropertyManager_valid_property_id(self, id):
     from Products.ERP5Type.Base import Base
     if not id or id[:1]=='_' or (id[:3]=='aq_') \
        or (' ' in id) or (hasattr(aq_base(self), id) and \
-       not (Base.__dict__.has_key(id) and Base.__dict__[id] is None)) or escape(id) != id:
+       not (id in Base.__dict__ and Base.__dict__[id] is None)) or escape(id) != id:
         return 0
     return 1
 
@@ -143,16 +146,16 @@ def PropertyManager_delProperty(self, id):
 
 def PropertyManager_propertyIds(self, local_properties=False):
     """Return a list of property ids """
-    return map(lambda i: i['id'], self._propertyMap(
-      local_properties=local_properties))
+    return [i['id'] for i in self._propertyMap(
+      local_properties=local_properties)]
 
 def PropertyManager_propertyValues(self):
     """Return a list of actual property objects """
-    return map(lambda i,s=self: s.getProperty(i['id']), self._propertyMap())
+    return list(map(lambda i,s=self: s.getProperty(i['id']), self._propertyMap()))
 
 def PropertyManager_propertyItems(self):
     """Return a list of (id,property) tuples """
-    return map(lambda i,s=self: (i['id'],s.getProperty(i['id'])), self._propertyMap())
+    return list(map(lambda i,s=self: (i['id'],s.getProperty(i['id'])), self._propertyMap()))
 
 def PropertyManager_propertyMap(self, local_properties=False):
     """Return a tuple of mappings, giving meta-data for properties """
@@ -161,10 +164,10 @@ def PropertyManager_propertyMap(self, local_properties=False):
     for p in property_map:
       property_dict[p['id']] = None
       # base_id is defined for properties which are associated to multiple accessors
-      if p.has_key('base_id'): property_dict[p['base_id']] = None
+      if 'base_id' in p: property_dict[p['base_id']] = None
     # Only add those local properties which are not global
     for p in getattr(self, '_local_properties', ()):
-      if not property_dict.has_key(p['id']):
+      if p['id'] not in property_dict:
         property_map.append(p)
     return tuple(property_map)
 
@@ -177,7 +180,7 @@ def PropertyManager_propdict(self):
 def PropertyManager_manage_addProperty(self, id, value, type, REQUEST=None):
     """Add a new property via the web. Sets a new property with
     the given id, type, and value."""
-    if type_converters.has_key(type):
+    if type in type_converters:
         value=type_converters[type](value)
     #LOG('manage_addProperty', 0, 'id = %r, value = %r, type = %r, REQUEST = %r' % (id, value, type, REQUEST))
     self._setProperty(id.strip(), value, type)

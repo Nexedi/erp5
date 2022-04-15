@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import six
 from functools import partial
 import unittest
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
@@ -98,7 +99,7 @@ class ReferenceQuery:
       else:
         self.args.append(arg)
     if len(kw) == 1:
-      self.column, value = kw.items()[0]
+      self.column, value = list(kw.items())[0]
       if not isinstance(value, MatchList):
         value = MatchList([value])
       self.value = value
@@ -117,7 +118,7 @@ class ReferenceQuery:
         return False
       other_query_list = other.query_list[:]
       for subquery in self.args:
-        for other_query_id in xrange(len(other_query_list)):
+        for other_query_id in range(len(other_query_list)):
           other_query = other_query_list[other_query_id]
           if subquery == other_query:
             other_query_list.pop(other_query_id)
@@ -243,7 +244,7 @@ class DummyCatalog(SQLCatalog):
         comparison_operator=comparison_operator,
         group=group,
       )
-      for comparison_operator, value_list in operator_value_dict.iteritems()
+      for comparison_operator, value_list in six.iteritems(operator_value_dict)
     ]
     if len(query_list) == 1:
       return query_list[0]

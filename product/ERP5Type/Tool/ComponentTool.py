@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 from types import ModuleType
 
 import transaction
@@ -283,7 +284,7 @@ class Test(ERP5TypeTestCase):
     debug=boolean        Invoke debugger on errors / failures.
     verbose=boolean      Display more information when running tests
     """
-    from StringIO import StringIO
+    from io import StringIO
     global global_stream
     global live_test_running
     self.serialize()

@@ -27,6 +27,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from builtins import range
+from past.builtins import basestring
 import sys
 from OFS.Traversable import NotFound
 from AccessControl import ClassSecurityInfo, Unauthorized
@@ -1423,7 +1425,7 @@ class ListBoxRenderer:
     is_empty_level = 1
     category = base_category
     while is_empty_level:
-      if not root_dict.has_key(category):
+      if category not in root_dict:
         root = None
         if category_tool is not None:
           try:
@@ -2000,7 +2002,7 @@ class ListBoxRenderer:
       current_section_base_index = 0
       current_section = report_section_list[0]
       current_section_size = current_section.object_list_len
-      for i in xrange(start, end):
+      for i in range(start, end):
         # Make sure we go to the right section.
         while current_section_base_index + current_section_size <= i:
           current_section_base_index += current_section_size
@@ -2336,7 +2338,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       url = None
 
       # Find an URL method.
-      if url_column_dict.has_key(sql):
+      if sql in url_column_dict:
         url_method_id = url_column_dict.get(sql)
         if url_method_id != sql:
           if url_method_id not in (None, ''):
@@ -2775,7 +2777,7 @@ class ListBoxValidator(Validator.Validator):
                   value = editable_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
                   row_result[sql] = value
-                except ValidationError, err:
+                except ValidationError as err:
                   pass
                 except KeyError:
                   pass
@@ -2809,7 +2811,7 @@ class ListBoxValidator(Validator.Validator):
                   try:
                     row_result[sql] = editable_field._validate_helper(
                       key, REQUEST) # We need cell
-                  except ValidationError, err:
+                  except ValidationError as err:
                     #LOG("ListBox ValidationError",0,str(err))
                     err.field_id = error_result_key
                     errors.append(err)
@@ -2825,7 +2827,7 @@ class ListBoxValidator(Validator.Validator):
               # because sometimes, we can be provided bad uids
               try :
                 o = here.portal_catalog.getObject(uid)
-              except (KeyError, NotFound, ValueError), err:
+              except (KeyError, NotFound, ValueError) as err:
                 # It is possible that this object is not catalogged yet. So
                 # the object must be obtained from ZODB.
                 if object_list is None:
@@ -2853,7 +2855,7 @@ class ListBoxValidator(Validator.Validator):
                     try:
                       row_result[sql] = error_result[error_result_key] = \
                         editable_field._validate_helper(key, REQUEST)
-                    except ValidationError, err:
+                    except ValidationError as err:
                       err.field_id = error_result_key
                       errors.append(err)
                     except KeyError:

@@ -16,7 +16,7 @@
 
 # Import from the Standard Library
 from __future__ import absolute_import
-from urllib import unquote
+from urllib.parse import unquote
 from contextlib import contextmanager
 
 # Import from Zope

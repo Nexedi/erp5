@@ -86,7 +86,7 @@ try:
     bath = ''
     for item in created_item_list:
       bath = str(item.grouping_reference)
-      if bath_dict.has_key(bath):
+      if bath in bath_dict:
         bath_dict[str(bath)].extend([item])
       else:
         bath_dict[str(bath)] = [item]
@@ -142,7 +142,7 @@ try:
         new_movement = context.portal_simulation.solveMovement(movement, None, 'SplitQuantity', additional_parameters={'aggregate_list':apparel_bath_list}, start_date=start_date, stop_date=stop_date, quantity=quantity)
         movement_list.append(new_movement[0].getRelativeUrl())
     # update root movement if require
-    if bath_dict.has_key(movement_bath):
+    if movement_bath in bath_dict:
       items = bath_dict[movement_bath]
       quantity = 0
       for item in items:
@@ -181,7 +181,7 @@ try:
           if cell.getVariationText() == variation_text:
             # update aggregate list with items
             cell_aggregate_list = cell.getAggregateValueList()
-            if bath_dict.has_key(line_bath):
+            if line_bath in bath_dict:
               # new items on cell
               cell_item = bath_dict[line_bath]
               cell_aggregate_list.extend(cell_item)
@@ -196,7 +196,7 @@ try:
               cell.edit(quantity=total_quantity)
 
 
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   redirect_url = '%s/view?%s' % ( context.absolute_url()
                                   , 'portal_status_message=%s' % localizer.erp5_ui.gettext("input failed.")
                                   )

@@ -28,11 +28,15 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.builtins import basestring
 import warnings
 from .interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
 from zope.interface import implementer
-from types import NoneType
+try:
+  from types import NoneType
+except ImportError: # six.PY3 < 3.10
+  NoneType = type(None)
 
 SQL_LIST_SEPARATOR = ', '
 SQL_TABLE_FORMAT = '%s' # XXX: should be changed to '`%s`', but this breaks some ZSQLMethods.

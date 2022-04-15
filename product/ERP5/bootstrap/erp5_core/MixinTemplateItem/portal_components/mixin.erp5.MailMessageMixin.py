@@ -119,7 +119,7 @@ class MailMessageMixin:
     for (name, value) in self._getMessage().items():
       try:
         decoded_header = decode_header(value)
-      except HeaderParseError, error_message:
+      except HeaderParseError as error_message:
         decoded_header = ()
         LOG('MailMessageMixin.getContentInformation', INFO,
             'Failed to decode %s header of %s with error: %s' %

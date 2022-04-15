@@ -16,7 +16,7 @@
 
 # Import from the Standard Library
 from __future__ import absolute_import
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 # Import from itools
 from .itools.i18n import get_language_name, get_languages
@@ -152,7 +152,7 @@ class LanguageManager(Tabs):
         Accepts keyword arguments which will be passed to
         'get_available_languages'.
         """
-        available_languages = apply(self.get_available_languages, (), kw)
+        available_languages = self.get_available_languages(*(), **kw)
 
         return lang_negotiator(available_languages) \
                or self.get_default_language()

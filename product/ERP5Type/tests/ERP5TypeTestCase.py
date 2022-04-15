@@ -9,7 +9,7 @@ __version__ = '0.3.0'
 
 import base64
 import errno
-import httplib
+import http.client
 import os
 import random
 import re
@@ -18,11 +18,11 @@ import string
 import sys
 import time
 import traceback
-import urllib
-import ConfigParser
+import urllib.request, urllib.parse, urllib.error
 from contextlib import contextmanager
-from cStringIO import StringIO
-from cPickle import dumps
+from io import StringIO
+from six.moves import configparser
+from six.moves.cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
@@ -168,7 +168,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   cloudooo_url_list = _getConversionServerUrlList()
 
-  promise_config = ConfigParser.RawConfigParser()
+  promise_config = configparser.RawConfigParser()
   promise_config.add_section('external_service')
   promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
@@ -607,12 +607,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
 
       def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
+        urltype, url = urllib.parse.splittype(path + '/' + template)
         if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
+          host, selector = urllib.parse.splithost(url)
+          user_passwd, host = urllib.parse.splituser(host)
+          host = urllib.parse.unquote(host)
+          h = http.client.HTTP(host)
           h.putrequest('HEAD', selector)
           h.putheader('Host', host)
           if user_passwd:
@@ -815,7 +815,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         elif user:
           PAS = self.portal.acl_users.__class__
           orig_extractUserIds = PAS._extractUserIds
-          from thread import get_ident
+          from _thread import get_ident
           me = get_ident()
           def _extractUserIds(pas, request, plugins):
             if me == get_ident():
@@ -1575,7 +1575,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
@@ -1652,7 +1652,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent

@@ -23,7 +23,7 @@ else:
   new_id = person.generateNewId()
   try:
     default_career.setId(new_id)
-  except ActivityPendingError, error:
+  except ActivityPendingError as error:
     message = Base_translateString("%s" % error)
     return context.Base_redirect(form_id=form_id,
                                  selection_name=selection_name,

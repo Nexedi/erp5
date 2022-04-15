@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from builtins import range
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -170,12 +171,12 @@ class Inventory(Delivery):
       current_inventory_key_id_list = [x["key"] for x in inventory_calculation_dict['first_level']]
       for line in current_inventory_list:
         current_inventory_key = [line[x] for x in current_inventory_key_id_list]
-        for x in xrange(len(current_inventory_key)):
+        for x in range(len(current_inventory_key)):
           if current_inventory_key[x] is None:
             current_inventory_key[x] = ""
         current_inventory_key = tuple(current_inventory_key)
 
-        if inventory_calculation_dict.has_key("second_level"):
+        if "second_level" in inventory_calculation_dict:
           # two level of variation
           try:
             current_inventory_by_sub_variation = \
@@ -219,7 +220,7 @@ class Inventory(Delivery):
               key_list.append(method())
           inventory_value = current_inventory_dict.get(tuple(key_list), 0)
           second_key_list = []
-          if inventory_calculation_dict.has_key('second_level'):
+          if 'second_level' in inventory_calculation_dict:
             if inventory_value == 0:
               inventory_value = {}
             # two level
@@ -229,7 +230,7 @@ class Inventory(Delivery):
               if method is not None:
                 second_key_list.append(method())
               second_key_list = tuple(second_key_list)
-              if inventory_value.has_key(second_key_list):
+              if second_key_list in inventory_value:
                 total_quantity = inventory_value.pop(second_key_list)
                 # Put remaining subvariation in a dict to know which one
                 # to removed at end
@@ -264,10 +265,10 @@ class Inventory(Delivery):
             category_list = self.getCategoryList()
 
             setter_list = [x['setter'] for x in inventory_calculation_dict['first_level']]
-            if inventory_calculation_dict.has_key("second_level"):
+            if "second_level" in inventory_calculation_dict:
               setter_list.extend([x['setter'] for x in inventory_calculation_dict['second_level']])
             value_list = list(key_list) + list(second_key_list)
-            for x in xrange(len(setter_list)):
+            for x in range(len(setter_list)):
               value = value_list[x]
               setter = setter_list[x]
               base_category = ""
@@ -310,10 +311,10 @@ class Inventory(Delivery):
             category_list = self.getCategoryList()
 
             setter_list = [x['setter'] for x in inventory_calculation_dict['first_level']]
-            if inventory_calculation_dict.has_key("second_level"):
+            if "second_level" in inventory_calculation_dict:
               setter_list.extend([x['setter'] for x in inventory_calculation_dict['second_level']])
             value_list = list(first_level_key) + list(second_level_key)
-            for x in xrange(len(setter_list)):
+            for x in range(len(setter_list)):
               value = value_list[x]
               setter = setter_list[x]
               base_category = ""
