@@ -43,6 +43,7 @@ interface.erp5.IMovementList
 interface.erp5.IProductionMovement
 interface.erp5.IReferenceable
 interface.erp5.IRoundable
+interface.erp5.IRoundingTool
 interface.erp5.IRule
 interface.erp5.ISendable
 interface.erp5.ISimilarityProvider
