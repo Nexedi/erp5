@@ -1,27 +1,54 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+# Copyright (c) 2001,2002 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2002,2005 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
-# Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
 # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
 # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+"""Provide conversion between Python pickles and XML
+"""
+
+from pickle import *
+import struct
+import base64
+import re
+from marshal import loads as mloads
+from .xyap import NoBlanks
+from .xyap import xyap
 
 import re
-
-# Import everything right now, not after
-# or new patch will not work
-from Shared.DC.xml.ppml import *
-from Shared.DC.xml import ppml
-
 from marshal import dumps as mdumps
-from zLOG import LOG
+#from zLOG import LOG
+
+binary = re.compile('[^\x1f-\x7f]').search
+
+def escape(s, encoding='repr'):
+    if binary(s) and isinstance(s, str):
+        s = base64.encodestring(s)[:-1]
+        encoding = 'base64'
+    elif '>' in s or '<' in s or '&' in s:
+        if not ']]>' in s:
+            s = '<![CDATA[' + s + ']]>'
+            encoding = 'cdata'
+        else:
+            s = s.replace('&', '&amp;')
+            s = s.replace('>', '&gt;')
+            s = s.replace('<', '&lt;')
+    return encoding, s
+
+def unescape(s, encoding):
+    if encoding == 'base64':
+        return base64.decodestring(s)
+    else:
+        s = s.replace('&lt;', '<')
+        s = s.replace('&gt;', '>')
+        return s.replace('&amp;', '&')
 
 # For converting to a more readable expression.
 reprs = {}
@@ -38,15 +65,12 @@ reprs2={}
 reprs2['<'] = "\\074"
 reprs2['>'] = "\\076"
 reprs2['&'] = "\\046"
-
 reprs_re = re.compile('|'.join(re.escape(k) for k in reprs.keys()))
 def sub_reprs(m):
   return reprs[m.group(0)]
-
 reprs2_re = re.compile('|'.join(re.escape(k) for k in reprs2.keys()))
 def sub_reprs2(m):
   return reprs2[m.group(0)]
-
 def convert(S):
     new = ''
     ### patch begin: if the input string is a valid utf8 string, only
@@ -69,8 +93,6 @@ def convert(S):
             return 'repr', reprs2_re.sub(sub_reprs2, new)
     return 'repr', new
 
-ppml.convert = convert
-
 # For optimization.
 def unconvert(encoding,S):
     if encoding == 'base64':
@@ -78,10 +100,7 @@ def unconvert(encoding,S):
     else:
         return eval("'" + S.replace('\n', '') + "'")
 
-ppml.unconvert = unconvert
-
 class Global:
-
     def __init__(self, module, name, mapping):
         self.module=module
         self.name=name
@@ -95,10 +114,14 @@ class Global:
         return '%s<%s%s name="%s" module="%s"/>\n' % (
             ' '*indent, name, id, self.name, self.module)
 
-ppml.Global = Global
+class Immutable:
+    def __init__(self, value):
+        self.value = value
+
+    def getValue(self):
+        return self.value
 
 class Scalar:
-
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
@@ -116,17 +139,14 @@ class Scalar:
             self.mapping.setImmutable(self.id, Immutable(value = result))
         return result
 
-ppml.Scalar = Scalar
-
-class Immutable:
-    def __init__(self, value):
-        self.value = value
-
-    def getValue(self):
-        return self.value
+class Long(Scalar):
+    def value(self):
+        result = str(self._v)
+        if result[-1:] == 'L':
+            return result[:-1]
+        return result
 
 class String(Scalar):
-
     encoding = None
 
     def __init__(self, v, mapping, encoding=''):
@@ -160,16 +180,11 @@ class String(Scalar):
             self.mapping.setImmutable(self.id, Immutable(value = result))
         return '%s%s\n' % (' '*indent, result)
 
-ppml.String = String
-
 class Unicode(String):
     def value(self):
         return self._v.encode('utf-8')
 
-ppml.Unicode = Unicode
-
 class Wrapper:
-
     def __init__(self, v, mapping):
         self._v=v
         self.mapping = mapping
@@ -189,10 +204,7 @@ class Wrapper:
             v=v.__str__(indent+2)
             return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
 
-ppml.Wrapper = Wrapper
-
 class Collection:
-
     def __init__(self, mapping):
         self.mapping = mapping
 
@@ -208,14 +220,15 @@ class Collection:
         else:
             return '%s<%s%s/>\n' % (i, name, id)
 
-ppml.Collection = Collection
-
 class Dictionary(Collection):
     def __init__(self, mapping):
         self.mapping = mapping
         self._d=[]
+
     def __len__(self): return len(self._d)
+
     def __setitem__(self, k, v): self._d.append((k,v))
+
     def value(self, indent):
         #self._d.sort(lambda a, b: cmp(a[0]._v, b[0]._v)) # Sort the sequence by key JPS Improvement
         ind = ' ' * indent
@@ -230,10 +243,7 @@ class Dictionary(Collection):
                  for i in self._d
             )
 
-ppml.Dictionary = Dictionary
-
 class Sequence(Collection):
-
     def __init__(self, mapping, v=None):
         if not v: v=[]
         self._subs=v
@@ -251,26 +261,10 @@ class Sequence(Collection):
             v.__str__(indent) for v in
             self._subs)
 
-ppml.Sequence = Sequence
-
-class Persistent(Wrapper):
-
+class none:
     def __str__(self, indent=0):
-        id = ''
-        if hasattr(self, 'id'):
-            if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
-        name=self.__class__.__name__.lower()
-        v=self._v
-        i=' '*indent
-        if isinstance(v,String):
-            return '%s<%s%s> %s </%s>\n' % (i, name, id, v.__str__(map_value=1)[:-1], name)
-        elif isinstance(v,Scalar):
-            return '%s<%s%s> %s </%s>\n' % (i, name, id, str(v)[:-1], name)
-        else:
-            v=v.__str__(indent+2)
-            return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
-
-ppml.Persistent = Persistent
+        return ' ' * indent + '<none/>\n'
+none = none()
 
 class Reference(Scalar):
     def __init__(self, v, mapping):
@@ -288,9 +282,7 @@ class Reference(Scalar):
           value = '<%s id="%s"/>' % (name, self.mapping[v])
         return '%s%s\n' % (' '*indent, value)
 
-ppml.Reference = Reference
 Get = Reference
-ppml.Get = Get
 
 class Object(Sequence):
     def __init__(self, klass, args, mapping):
@@ -299,10 +291,33 @@ class Object(Sequence):
 
     def __setstate__(self, v): self.append(State(v, self.mapping))
 
-ppml.Object = Object
+class Int(Scalar): pass
+class Float(Scalar): pass
+class List(Sequence): pass
+class Tuple(Sequence): pass
+class Key(Wrapper): pass
+class Value(Wrapper): pass
+class Klass(Wrapper): pass
+class State(Wrapper): pass
+class Pickle(Wrapper): pass
+
+class Persistent(Wrapper):
+    def __str__(self, indent=0):
+        id = ''
+        if hasattr(self, 'id'):
+            if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
+        name=self.__class__.__name__.lower()
+        v=self._v
+        i=' '*indent
+        if isinstance(v,String):
+            return '%s<%s%s> %s </%s>\n' % (i, name, id, v.__str__(map_value=1)[:-1], name)
+        elif isinstance(v,Scalar):
+            return '%s<%s%s> %s </%s>\n' % (i, name, id, str(v)[:-1], name)
+        else:
+            v=v.__str__(indent+2)
+            return '%s<%s%s>\n%s%s</%s>\n' % (i, name, id, v, i, name)
 
 blanck_line_expression = re.compile('^ +$')
-
 class NoBlanks:
     """
     This allows to ignore at least whitespaces between elements and also
@@ -350,10 +365,7 @@ class NoBlanks:
 
                 self.append(data)
 
-ppml.NoBlanks = NoBlanks
-
 class IdentityMapping:
-
     def __init__(self):
       self.resetMapping()
       self.immutable = {}
@@ -385,11 +397,7 @@ class IdentityMapping:
     def hasImmutable(self, k):
       return self.immutable.has_key(k)
 
-
-ppml.IdentityMapping = IdentityMapping
-
 class MinimalMapping(IdentityMapping):
-
     def resetMapping(self):
       self.mapped_id = {}
       self.mapped_core_id = {}
@@ -443,30 +451,7 @@ class MinimalMapping(IdentityMapping):
     def __str__(self, a):
       return "Error here"
 
-ppml.MinimalMapping = MinimalMapping
-
-class List(Sequence): pass
-class Tuple(Sequence): pass
-
-class Klass(Wrapper): pass
-class State(Wrapper): pass
-class Pickle(Wrapper): pass
-
-class Int(Scalar): pass
-class Float(Scalar): pass
-
-class Key(Wrapper): pass
-class Value(Wrapper): pass
-
-class Long(Scalar):
-    def value(self):
-        result = str(self._v)
-        if result[-1:] == 'L':
-            return result[:-1]
-        return result
-
 class ToXMLUnpickler(Unpickler):
-
     def load(self, id_mapping=None):
       if id_mapping is None:
         self.id_mapping = IdentityMapping()
@@ -657,7 +642,58 @@ class ToXMLUnpickler(Unpickler):
     #for code in dispatch.keys():
     #  dispatch[code] = LogCall(dispatch[code])
 
-ppml.ToXMLUnpickler = ToXMLUnpickler
+def ToXMLload(file):
+    return ToXMLUnpickler(file).load()
+
+def ToXMLloads(str):
+    from StringIO import StringIO
+    file = StringIO(str)
+    return ToXMLUnpickler(file).load()
+
+def name(self, tag, data):
+    return ''.join(data[2:]).strip()
+
+def start_pickle(self, tag, attrs):
+    self._pickleids = {}
+    return [tag, attrs]
+
+def save_int(self, tag, data):
+    if self.binary:
+        v = int(name(self, tag, data))
+        if v >= 0:
+            if v <= 0xff:
+                return BININT1 + chr(v)
+            if v <= 0xffff:
+                return '%c%c%c' % (BININT2, v & 0xff, v >> 8)
+        hb = v >> 31
+        if hb == 0 or hb == -1:
+            return BININT + struct.pack('<i', v)
+    return INT + name(self, tag, data) + '\n'
+
+def save_float(self, tag, data):
+    if self.binary:
+        return BINFLOAT + struct.pack('>d', float(name(self, tag, data)))
+    else:
+        return FLOAT + name(self, tag, data) + '\n'
+
+def save_put(self, v, attrs):
+    id = attrs.get('id', '')
+    if id:
+        prefix = id.rfind('.')
+        if prefix >= 0:
+            id = id[prefix + 1:]
+        elif id[0] == 'i':
+            id = id[1:]
+        if self.binary:
+            id = int(id)
+            if id < 256:
+                id = BINPUT + chr(id)
+            else:
+                id = LONG_BINPUT + struct.pack('<i', id)
+        else:
+            id = PUT + repr(id) + '\n'
+        return v + id
+    return v
 
 def save_string(self, tag, data):
     binary=self.binary
@@ -680,8 +716,6 @@ def save_string(self, tag, data):
     else: v="S'"+v+"'\012"
     return save_put(self, v, a)
 
-ppml.save_string = save_string
-
 def save_unicode(self, tag, data):
     binary=self.binary
     v=''
@@ -699,7 +733,50 @@ def save_unicode(self, tag, data):
     else: v=UNICODE+"'"+v+"'\012"
     return save_put(self, v, a)
 
-ppml.save_unicode = save_unicode
+def save_tuple(self, tag, data):
+    T = data[2:]
+    if not T:
+        return EMPTY_TUPLE
+    return save_put(self, MARK + ''.join(T) + TUPLE, data[1])
+
+def save_list(self, tag, data):
+    L = data[2:]
+    if self.binary:
+        v = save_put(self, EMPTY_LIST, data[1])
+        if L:
+            v = v + MARK + ''.join(L) + APPENDS
+    else:
+        v = save_put(self, MARK + LIST, data[1])
+        if L:
+            v = APPEND.join(L) + APPEND
+    return v
+
+def save_dict(self, tag, data):
+    D = data[2:]
+    if self.binary:
+        v = save_put(self, EMPTY_DICT, data[1])
+        if D:
+            v = v + MARK + ''.join(D) + SETITEMS
+    else:
+        v = save_put(self, MARK + DICT, data[1])
+        if D:
+            v = v + SETITEM.join(D) + SETITEM
+    return v
+
+def save_reference(self, tag, data):
+    a = data[1]
+    id = a['id']
+    prefix = id.rfind('.')
+    if prefix >= 0:
+        id = id[prefix + 1:]
+    if self.binary:
+        id = int(id)
+        if id < 256:
+            return BINGET + chr(id)
+        else:
+            return LONG_BINGET + struct.pack('<i', i)
+    else:
+        return GET + repr(id) + '\n'
 
 def save_object(self, tag, data):
     if len(data)==5:
@@ -720,7 +797,16 @@ def save_object(self, tag, data):
         v=v+'R'
         return v
 
-ppml.save_object = save_object
+def save_global(self, tag, data):
+    a = data[1]
+    return save_put(self, GLOBAL + a['module'] + '\n' + a['name'] + '\n', a)
+
+def save_persis(self, tag, data):
+    v = data[2]
+    if self.binary:
+        return v + BINPERSID
+    else:
+        return PERSID + v
 
 def save_pickle_start(self, tag, attrs):
     return [tag, attrs]
@@ -778,41 +864,3 @@ class xmlPickler(NoBlanks, xyap):
         'persistent': save_persis,
         }
 
-# FIXME: Leo: Do we still need to replace ppml.xmlPickler now that we're
-# using our own xmlPickler in our own importXML function below? Do we support
-# any other use of xmlPickler except for Business Template export/import?
-ppml.xmlPickler = xmlPickler
-
-class Tuple(Sequence): pass
-
-ppml.Tuple = Tuple
-
-# Copied from OFS.XMLExportImport.importXML (of Zope 2.12)
-# Imported and used directly by Products.ERP5.Document.BusinessTemplate
-from OFS.XMLExportImport import save_record, save_zopedata, start_zopedata
-from tempfile import TemporaryFile
-import xml.parsers.expat
-def importXML(jar, file, clue=''):
-    if type(file) is str:
-        file=open(file, 'rb')
-    outfile=TemporaryFile()
-    data=file.read()
-    F=xmlPickler()
-    F.end_handlers['record'] = save_record
-    F.end_handlers['ZopeData'] = save_zopedata
-    F.start_handlers['ZopeData'] = start_zopedata
-    F.binary=1
-    F.file=outfile
-    # <patch>
-    # Our BTs XML files don't declare encoding but have accented chars in them
-    # So we have to declare an encoding but not use unicode, so the unpickler
-    # can deal with the utf-8 strings directly
-    p=xml.parsers.expat.ParserCreate('utf-8')
-    p.returns_unicode = False
-    # </patch>
-    p.CharacterDataHandler=F.handle_data
-    p.StartElementHandler=F.unknown_starttag
-    p.EndElementHandler=F.unknown_endtag
-    r=p.Parse(data)
-    outfile.seek(0)
-    return jar.importFile(outfile,clue)
