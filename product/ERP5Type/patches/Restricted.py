@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+import six
 import copy
 import sys
 import types
@@ -198,10 +199,14 @@ def get_iteritems(c, name):
 _dict_white_list['iteritems'] = get_iteritems
 
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
+    if cmp is not None: # six.PY2
+        from functools import cmp_to_key
+        key = cmp_to_key(cmp)
+
     if not isinstance(seq, SafeIter):
         for i, x in enumerate(seq):
             guard(seq, x, i)
-    return sorted(seq, cmp=cmp, key=key, reverse=reverse)
+    return sorted(seq, key=key, reverse=reverse)
 safe_builtins['sorted'] = guarded_sorted
 
 def guarded_reversed(seq):
@@ -298,11 +303,15 @@ from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
 allow_full_write(defaultdict)
 
-# In contrary to builtins such as dict/defaultdict, it is possible to set
-# attributes on OrderedDict instances, so only allow setitem/delitem
+# On Python2 only: In contrary to builtins such as dict/defaultdict, it is
+# possible to set attributes on OrderedDict instances, so only allow
+# setitem/delitem
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
-OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
-OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+if six.PY2:
+  OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
+  OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+else:
+  allow_full_write(OrderedDict)
 
 _counter_white_list = copy.copy(_dict_white_list)
 _counter_white_list['most_common'] = 1
@@ -331,16 +340,19 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-allow_module('StringIO')
-import StringIO
-StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
-allow_module('cStringIO')
-import cStringIO
-allow_type(cStringIO.InputType)
-allow_type(cStringIO.OutputType)
 allow_module('io')
 import io
 allow_type(io.BytesIO)
+if six.PY2:
+  allow_module('StringIO')
+  import StringIO
+  StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
+  allow_module('cStringIO')
+  import cStringIO
+  allow_type(cStringIO.InputType)
+  allow_type(cStringIO.OutputType)
+else:
+  allow_type(io.StringIO)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
@@ -380,10 +392,36 @@ import hashlib
 allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('unicodedata')
-allow_module('urlparse')
-import urlparse
-allow_type(urlparse.ParseResult)
-allow_type(urlparse.SplitResult)
+
+if six.PY2:
+  import urlparse
+  allow_module('urlparse')
+  allow_type(urlparse.ParseResult)
+  allow_type(urlparse.SplitResult)
+
+  ModuleSecurityInfo('urllib').declarePublic(
+    'urlencode',
+    'quote', 'unquote',
+    'quote_plus', 'unquote_plus',
+  )
+
+import six
+ModuleSecurityInfo('six').declarePublic(
+  'PY2', 'PY3',
+  'iterkeys', 'iteritems', 'itervalues',
+  'string_types', 'binary_type', 'text_type')
+
+import six.moves.urllib.parse
+allow_module('six.moves.urllib.parse')
+allow_type(six.moves.urllib.parse.ParseResult)
+allow_type(six.moves.urllib.parse.SplitResult)
+
+ModuleSecurityInfo('six.moves.urllib.parse').declarePublic(
+  'urlencode',
+  'quote', 'unquote',
+  'quote_plus', 'unquote_plus',
+)
+
 allow_module('struct')
 
 ModuleSecurityInfo('os.path').declarePublic(
@@ -443,12 +481,6 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
 safe_builtins['__import__'] = guarded_import
 
 ModuleSecurityInfo('transaction').declarePublic('doom')
-
-ModuleSecurityInfo('urllib').declarePublic(
-  'urlencode',
-  'quote', 'unquote',
-  'quote_plus', 'unquote_plus',
-)
 
 import hmac
 allow_module('hmac')
