@@ -12,10 +12,13 @@
 #
 ##############################################################################
 
-# Import: add rename feature and make _importObjectFromFile return the object
-from OFS.ObjectManager import ObjectManager, customImporters
-from App.version_txt import getZopeVersion
+from Products.ERP5Type.XMLExportImport import magic, importXML
+customImporters = {magic: importXML}
 
+import OFS.ObjectManager
+OFS.ObjectManager.customImporters = customImporters
+
+# Import: add rename feature and make _importObjectFromFile return the object
 def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id=None, suppress_events=False):
     #LOG('_importObjectFromFile, filepath',0,filepath)
     # locate a valid connection
@@ -41,4 +44,4 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id
       ob.manage_changeOwnershipType(explicit=0)
     return ob
 
-ObjectManager._importObjectFromFile=ObjectManager_importObjectFromFile
+OFS.ObjectManager.ObjectManager._importObjectFromFile=ObjectManager_importObjectFromFile
