@@ -14,13 +14,14 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from past.builtins import basestring
 from Persistence import Persistent, PersistentMapping
 import Acquisition
 import ExtensionClass
 import OFS.History
 from App.class_init import default__class_init__ as InitializeClass
 from App.special_dtml import DTMLFile
-from thread import allocate_lock, get_ident
+from _thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import (
@@ -41,16 +42,16 @@ from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 
-from compiler.consts import CO_VARKEYWORDS
+from inspect import CO_VARKEYWORDS
 from functools import wraps
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import string
 import pprint
 import re
 import warnings
 from contextlib import contextmanager
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
@@ -216,7 +217,7 @@ class UidBuffer(TM):
 
   def remove(self, value):
     self._register()
-    for uid_list in self.temporary_buffer.values():
+    for uid_list in list(self.temporary_buffer.values()):
       try:
         uid_list.remove(value)
       except ValueError:
@@ -671,7 +672,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_role_keys:
       role, column = role_key.split('|')
       role_key_dict[role.strip()] = column.strip()
-    return role_key_dict.items()
+    return list(role_key_dict.items())
 
   security.declareProtected(permissions.ManagePortal, 'getSQLCatalogSecurityUidGroupsColumnsDict')
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
@@ -695,7 +696,7 @@ class Catalog(Folder,
     for role_key in self.sql_catalog_local_role_keys:
       role, column = role_key.split('|')
       local_role_key_dict[role.strip()] = column.strip()
-    return local_role_key_dict.items()
+    return list(local_role_key_dict.items())
 
   security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
   def manage_historyCompare(self, rev1, rev2, REQUEST,
@@ -803,7 +804,7 @@ class Catalog(Folder,
     # Make sure no duplicates
     if getattr(aq_base(self), 'subject_set_uid_dict', None) is None:
       self._clearSubjectCache()
-    elif self.subject_set_uid_dict.has_key(subject_list):
+    elif subject_list in self.subject_set_uid_dict:
       return (self.subject_set_uid_dict[subject_list], None)
     # If the id_tool is there, it is better to use it, it allows
     # to create many new subject uids by the same time
@@ -1231,7 +1232,7 @@ class Catalog(Folder,
     c_elapse = time.clock() - c_elapse
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
+              urllib.parse.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (repr(elapse), repr(c_elapse))))
 
   security.declarePrivate('catalogObject')
   def catalogObject(self, object, path, is_object_moved=0):
@@ -1640,7 +1641,7 @@ class Catalog(Folder,
     This function return a list of ids.
     """
     ids={}
-    have_id=ids.has_key
+    have_id=ids.__contains__
 
     while self is not None:
       if hasattr(self, 'objectValues'):
@@ -1721,7 +1722,7 @@ class Catalog(Folder,
       return {}
     index = list(method(table=table))
     for line in index:
-      if table_index.has_key(line.KEY_NAME):
+      if line.KEY_NAME in table_index:
         table_index[line.KEY_NAME].append(line.COLUMN_NAME)
       else:
         table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
@@ -1832,7 +1833,7 @@ class Catalog(Folder,
       else:
         search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      func_code = script.func_code
+      func_code = script.__code__
       search_key = (
         AdvancedSearchKeyWrapperForScriptableKey if (
           # 5: search_value (under any name), "search_key", "group",

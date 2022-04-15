@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+from __future__ import print_function
 
 # Modules aliases to support both python2 and python3
 from future import standard_library
@@ -682,7 +683,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     transaction.commit()
   except:
     import traceback
-    print "runUnitTestList Exception : %r" % (traceback.print_exc(),)
+    print("runUnitTestList Exception : %r" % (traceback.print_exc(),))
     # finally does not expect opened transaction, even in the
     # case of a Ctrl-C.
     transaction.abort()
@@ -721,10 +722,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
 def usage(stream, msg=None):
   if msg:
-    print >>stream, msg
-    print >>stream
+    print(msg, file=stream)
+    print(file=stream)
   program = os.path.basename(sys.argv[0])
-  print >>stream, __doc__ % {"program": program}
+  print(__doc__ % {"program": program}, file=stream)
 
 log_directory = None
 def main(argument_list=None):
@@ -777,7 +778,7 @@ def main(argument_list=None):
         "log_directory=",
         "with_wendelin_core"
         ])
-  except getopt.GetoptError, msg:
+  except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
     sys.exit(2)
 

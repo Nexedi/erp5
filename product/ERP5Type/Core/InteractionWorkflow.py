@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 import transaction
 
 from AccessControl import getSecurityManager, ClassSecurityInfo

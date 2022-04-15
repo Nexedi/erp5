@@ -35,10 +35,10 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
 
-from urllib import quote
+from urllib.parse import quote
 from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from ZODB.POSException import ConflictError
 
 from Products.ERP5Type.Utils import UpperCase
@@ -149,8 +149,8 @@ class PDFTemplate(ZopePageTemplate):
       # Unmarshall arguments to __call__ API
       args = extra_context.get('options', [])
       kwargs = extra_context.copy()
-      if kwargs.has_key('options'): del kwargs['options']
-      if kwargs.has_key('context'): del kwargs['context']
+      if 'options' in kwargs: del kwargs['options']
+      if 'context' in kwargs: del kwargs['context']
 
       batch_mode = extra_context.get('batch_mode', 0)
 
@@ -220,9 +220,9 @@ if ReportTool:
   from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
 
   from Products.PageTemplates.Expressions import boboAwareZopeTraverse
-  from StringIO import StringIO
+  from io import StringIO
   import xml.dom.minidom
-  import urllib,os.path
+  import urllib.request, urllib.parse, urllib.error,os.path
 
 
   if HAS_ZODB_RESOURCE_HANDLER:
@@ -260,7 +260,7 @@ if ReportTool:
       ''' Wrapper for ZODB Resources and files'''
       def __init__(self, context=None, resource_path=None):
           zodbhandler = ERP5ZODBHandler(context)
-          self.opener = urllib2.build_opener(zodbhandler)
+          self.opener = urllib.request.build_opener(zodbhandler)
 
     class ERP5ZODBHandler(ZODBHandler):
       def zodb_open(self, req):

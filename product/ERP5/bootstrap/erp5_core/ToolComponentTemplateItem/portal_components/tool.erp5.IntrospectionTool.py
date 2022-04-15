@@ -319,8 +319,8 @@ class IntrospectionTool(LogMixin, BaseTool):
       forbidden areas in the system.
     """
     def cached_loadExternalConfig():
-      import ConfigParser
-      config = ConfigParser.ConfigParser()
+      import configparser
+      config = configparser.ConfigParser()
       config.readfp(open('/etc/erp5.cfg'))
       return config
 

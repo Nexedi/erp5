@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import normaliseUrl
-from urlparse import urlsplit, urlunsplit
+from urllib.parse import urlsplit, urlunsplit
 from lxml import html as etree_html
 
 class CrawlableMixin:

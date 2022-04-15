@@ -62,7 +62,7 @@ class IdTool(BaseTool):
     """
       the newContent is overriden to not use generateNewId
     """
-    if not kw.has_key(id):
+    if id not in kw:
       new_id = self._generateNextId()
       if new_id is not None:
         kw['id'] = new_id

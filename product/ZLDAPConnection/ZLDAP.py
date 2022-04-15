@@ -15,7 +15,7 @@ from Acquisition import aq_base
 from App.special_dtml import HTMLFile
 from App.Dialogs import MessageDialog
 from Persistence import Persistent
-import ldap, urllib
+import ldap, urllib.request, urllib.parse, urllib.error
 
 from . import LDCAccessors
 from .Entry import ZopeEntry, GenericEntry, TransactionalEntry
@@ -116,7 +116,7 @@ class ZLDAPConnection(
 
     ### Tree stuff
     def __bobo_traverse__(self, REQUEST, key):
-        key=urllib.unquote(key)
+        key=urllib.parse.unquote(key)
         if getattr(self, key, None) is not None:
             return getattr(self, key)
         return self.getRoot()[key]
@@ -193,7 +193,7 @@ class ZLDAPConnection(
         o._rollback()
         o._registered=0
         if o._isNew:
-            if o.dn in getattr(self,'_v_add',{}).keys():
+            if o.dn in list(getattr(self,'_v_add',{}).keys()):
                 del self._v_add[o.dn]
         self.GetConnection().destroy_cache()
 
@@ -210,7 +210,7 @@ class ZLDAPConnection(
     ### getting entries and attributes
 
     def hasEntry(self, dn):
-        if getattr(self, '_v_add',{}).has_key(dn):
+        if dn in getattr(self, '_v_add',{}):
             #object is marked for adding
             return 1
         elif dn in getattr(self,'_v_delete',()):
@@ -227,7 +227,7 @@ class ZLDAPConnection(
 
     def getRawEntry(self, dn):
         " return raw entry from LDAP module "
-        if getattr(self, '_v_add',{}).has_key(dn):
+        if dn in getattr(self, '_v_add',{}):
             return (dn, self._v_add[dn]._data)
         elif dn in getattr(self,'_v_delete',()):
             raise ldap.NO_SUCH_OBJECT("Entry '%s' has been deleted" % dn)
@@ -245,7 +245,7 @@ class ZLDAPConnection(
         " return **unwrapped** Entry object, unless o is specified "
         Entry = self._EntryFactory()
 
-        if getattr(self, '_v_add',{}).has_key(dn):
+        if dn in getattr(self, '_v_add',{}):
             e=self._v_add[dn]
         else:
             e=self.getRawEntry(dn)
@@ -328,7 +328,7 @@ class ZLDAPConnection(
     ### adding entries
     def _registerAdd(self, o):
         a=getattr(self, '_v_add',{})
-        if not a.has_key(o.dn):
+        if o.dn not in a:
             a[o.dn]=o
         self._v_add=a
 

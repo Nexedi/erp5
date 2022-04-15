@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 import zope.interface
 
 from AccessControl import ClassSecurityInfo

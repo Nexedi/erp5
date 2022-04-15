@@ -15,6 +15,7 @@
 """ Classes: ERP5UserManager
 """
 
+from past.builtins import basestring
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.AuthEncoding import pw_validate

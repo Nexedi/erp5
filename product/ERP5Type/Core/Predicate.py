@@ -218,7 +218,7 @@ class Predicate(XMLObject):
         x for x in category_list
         if x.split('/', 1)[0] in base_category_set
       ]
-    next_join_counter = itertools.count().next
+    next_join_counter = itertools.count().__next__
     def buildSeparateJoinQuery(name, value):
       query = buildSingleQuery(name, value)
       suffix = str(next_join_counter())

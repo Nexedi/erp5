@@ -181,7 +181,7 @@ class ScenarioGenerator:
                                            , 'test-case-title='
                                            ]
                                          )
-        except getopt.GetoptError, msg:
+        except getopt.GetoptError as msg:
             self.printUsage( msg=msg)
 
         for o, v in opts:
@@ -309,9 +309,9 @@ class ScenarioGenerator:
         , url_parm
         , query
         , fragment
-        ) = urlparse.urlparse( uri )
+        ) = urllib.parse.urlparse( uri )
 
-        site_host = urlparse.urlunparse( ( scheme, netloc, '', '', '', '' ) )
+        site_host = urllib.parse.urlunparse( ( scheme, netloc, '', '', '', '' ) )
 
         if scheme and parms.get( 'site_host' ) is None:
             parms[ 'site_host' ] = site_host
@@ -322,7 +322,7 @@ class ScenarioGenerator:
         if self._site_path and path.startswith( self._site_path ):
             path = path[ len( self._site_path ) : ]
 
-        uri = urlparse.urlunparse(
+        uri = urllib.parse.urlunparse(
                             ( '', '', path, url_parm, query, fragment ) )
 
         return uri, query

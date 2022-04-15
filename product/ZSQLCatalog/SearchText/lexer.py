@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,13 +29,13 @@
 
 from ply import lex, yacc
 import sys
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 try:
   from zLOG import LOG
 except ImportError:
   def LOG(channel, level, message):
-    print >>sys.stderr, message
+    print(message, file=sys.stderr)
 
 class ParserOrLexerError(Exception):
   pass

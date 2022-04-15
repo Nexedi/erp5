@@ -46,6 +46,7 @@ from zLOG import LOG, INFO
 
 from ExtensionClass import ExtensionClass
 from Products.ERP5Type.Utils import convertToUpperCase, checkPythonSourceCode
+from future.utils import with_metaclass
 
 class RecordablePropertyMetaClass(ExtensionClass):
   """
@@ -122,7 +123,7 @@ class RecordablePropertyMetaClass(ExtensionClass):
     # ghosting/unghosting Portal Types
     return ExtensionClass.__new__(ExtensionClass, name, bases, dictionary)
 
-class ComponentMixin(PropertyRecordableMixin, Base):
+class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase', (PropertyRecordableMixin, Base), {}))):
   """
   Mixin used for all ZODB Components. Most of the code is generic, thus actual
   ZODB Components should have almost nothing to defined...
@@ -145,7 +146,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   state, checkConsistency() is called to check id, reference, version and
   errors/warnings messages (set when the Component is modified).
   """
-  __metaclass__ = RecordablePropertyMetaClass
 
   isPortalContent = 1
   isRADContent = 1

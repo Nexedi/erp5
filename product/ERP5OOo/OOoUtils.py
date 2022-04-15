@@ -36,7 +36,7 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import StringIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions
@@ -240,7 +240,7 @@ class OOoParser(Implicit):
     # Try to unzip the Open Office doc
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
-    except Exception, e:
+    except Exception as e:
       LOG('ERP5OOo', DEBUG, 'Error in openFile', error=True)
       raise CorruptedOOoFile(e)
     # Test the integrity of the file

@@ -37,7 +37,7 @@ def reindex(document_list, tag, after_tag):
 # security_uid explosion if many users (ex: persons) have local roles on
 # documents (ex: persons) granting them View permission but the user is not
 # indexed before corresponding document is.
-print "#### Indexing person_module, stage 1 ####"
+print("#### Indexing person_module, stage 1 ####")
 person_module = getattr(portal, 'person_module', None)
 if person_module is not None:
   person_module.recurseCallMethod(

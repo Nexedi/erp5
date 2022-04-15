@@ -58,7 +58,7 @@ class Matrix(object):
       return None
 
     base_id = kwd.get('base_id', "cell")
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       return None
 
     cell_id = self.keyToId(kw, base_id = base_id)
@@ -97,7 +97,7 @@ class Matrix(object):
     if getattr(aq_self, 'index', None) is None:
       return 0
 
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       return 0
 
     for i in self.getCellIds(base_id=base_id):
@@ -115,11 +115,11 @@ class Matrix(object):
       return 0
 
     base_id = kwd.get('base_id', "cell")
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       return 0
     base_item = self.index[base_id]
     for i, my_id in enumerate(kw):
-      if not base_item.has_key(i) or not base_item[i].has_key(my_id):
+      if i not in base_item or my_id not in base_item[i]:
         return 0
 
     return 1
@@ -235,7 +235,7 @@ class Matrix(object):
 
     # We must make sure the base_id exists
     # in the event of a matrix creation for example
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       # Create an index for this base_id
       self.index[base_id] = PersistentMapping()
 
@@ -329,7 +329,7 @@ class Matrix(object):
     if getattr(aq_base(self), 'index', None) is None:
       return None
     base_id = kwd.get('base_id', "cell")
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       return None
 
     cell_id = self.keyToId(kw, base_id = base_id)
@@ -363,7 +363,7 @@ class Matrix(object):
     """
     if getattr(aq_base(self), 'index', None) is None:
       return ()
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       return ()
     index = self.index[base_id]
     id_tuple = [v.keys() for v in index.itervalues()]
@@ -401,7 +401,7 @@ class Matrix(object):
     """
     if getattr(aq_base(self), 'index', None) is None:
       return ()
-    if not self.index.has_key(base_id):
+    if base_id not in self.index:
       return ()
     result = []
     append = result.append
@@ -527,7 +527,7 @@ class Matrix(object):
 
       current_dimension = len(cell_coordinate_list)
       if current_dimension > 0 and base_id is not None:
-        if not self.index.has_key(base_id):
+        if base_id not in self.index:
           # The matrix does not have this base_id
           addError("There is no index for base_id %s" % base_id)
           to_delete_set.add(object_id)

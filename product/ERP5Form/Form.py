@@ -42,7 +42,7 @@ from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type import CodingStyle
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 
-from urllib import quote
+from urllib.parse import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
 from AccessControl import Unauthorized, ClassSecurityInfo
 from DateTime import DateTime
@@ -747,12 +747,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                     alternate_name = field.get_value('alternate_name')
                     if alternate_name:
                         result[alternate_name] = value
-                except FormValidationError, e: # XXX JPS Patch for listbox
+                except FormValidationError as e: # XXX JPS Patch for listbox
                     errors.extend(e.errors)
                     result.update(e.result)
-                except ValidationError, err:
+                except ValidationError as err:
                     errors.append(err)
-                except KeyError, err:
+                except KeyError as err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
 
         if len(errors) > 0:
@@ -1030,7 +1030,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
               if field.meta_type == 'ProxyField':
                 key = "%s.%s" % (field.get_value('form_id'),
                                  field.get_value('field_id'))
-                if proxy_dict.has_key(key):
+                if key in proxy_dict:
                   proxy_dict[key]['related_proxy_list'].append(
                       {'short_path': "%s.%s" % \
                       (field.aq_parent.id, field.id),

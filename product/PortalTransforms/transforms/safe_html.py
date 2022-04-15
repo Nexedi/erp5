@@ -244,7 +244,7 @@ class StrippingParser(HTMLParser):
             for k, v in htmlentitydefs.name2codepoint.iteritems():
                 entitydefs[k] = unichr(v)
         # (end) copied from Python-2.6's HTMLParser.py
-        if self.entitydefs.has_key(name):
+        if name in self.entitydefs:
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
@@ -262,7 +262,7 @@ class StrippingParser(HTMLParser):
             if k.lower() == 'http-equiv' and v.lower() not in\
                                                  ALLOWED_HTTP_EQUIV_VALUE_LIST:
               return
-        if self.valid.has_key(tag):
+        if tag in self.valid:
             self.result.append('<' + tag)
 
             remove_script = getattr(self,'remove_javascript',True)
@@ -299,7 +299,7 @@ class StrippingParser(HTMLParser):
                 self.result.append('>')
             else:
                 self.result.append(' />')
-        elif self.nasty.has_key(tag):
+        elif tag in self.nasty:
             self.suppress = True
             if self.raise_error:
                 raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
@@ -308,7 +308,7 @@ class StrippingParser(HTMLParser):
             pass
 
     def handle_endtag(self, tag):
-        if self.nasty.has_key(tag) and not self.valid.has_key(tag):
+        if tag in self.nasty and tag not in self.valid:
             self.suppress = False
         if self.suppress: return
         if safeToInt(self.valid.get(tag)):
@@ -473,7 +473,7 @@ class SafeHTML:
 
     def convert(self, orig, data, **kwargs):
         # note if we need an upgrade.
-        if not self.config.has_key('disable_transform'):
+        if 'disable_transform' not in self.config:
             log(ERROR, 'PortalTransforms safe_html transform needs to be '
                 'updated. Please re-install the PortalTransforms product to fix.')
 
@@ -495,7 +495,7 @@ class SafeHTML:
                     remove_javascript=self.config.get('remove_javascript', True),
                     raise_error=False,
                     default_encoding=self.config.get('default_encoding', 'utf-8'))
-            except IllegalHTML, inst:
+            except IllegalHTML as inst:
                 data.setData(msg_pat % ("Error", str(inst)))
                 break
             except (HTMLParseError, UnicodeDecodeError):

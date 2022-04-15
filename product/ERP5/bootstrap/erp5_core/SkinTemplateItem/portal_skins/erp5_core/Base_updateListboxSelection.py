@@ -1,3 +1,4 @@
+from past.builtins import basestring
 portal = context.getPortalObject()
 get = portal.REQUEST.get
 selection_name = get('list_selection_name')

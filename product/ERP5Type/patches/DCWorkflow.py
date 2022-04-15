@@ -60,7 +60,6 @@ from Products.DCWorkflow.Guard import Guard, _checkPermission
 from Products.DCWorkflow.States import StateDefinition
 from Products.DCWorkflow.Variables import VariableDefinition
 from Products.DCWorkflow.Worklists import WorklistDefinition
-from types import StringTypes
 from zLOG import LOG, INFO, WARNING
 # Libraries related to showAsXML
 from lxml import etree
@@ -141,7 +140,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
                   # worklists and they are not merged
-                  if not dict.has_key('portal_type'):
+                  if 'portal_type' not in dict:
                     dict['portal_type'] = portal_type_list
                   # Patch for ERP5 by JP Smets in order
                   # to implement worklists and search of local roles
@@ -198,10 +197,10 @@ DCWorkflowDefinition.listObjectActions = ERP5Workflow.__dict__['listObjectAction
 from Products.DCWorkflow.Expression import Expression
 
 DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
-DCWorkflowDefinition.getWorklistVariableMatchDict = ERP5Workflow.getWorklistVariableMatchDict.im_func
+DCWorkflowDefinition.getWorklistVariableMatchDict = ERP5Workflow.getWorklistVariableMatchDict.__func__
 
 DCWorkflowDefinition.security.declarePrivate('isWorkflowMethodSupported')
-DCWorkflowDefinition.isWorkflowMethodSupported = ERP5Workflow.isWorkflowMethodSupported.im_func
+DCWorkflowDefinition.isWorkflowMethodSupported = ERP5Workflow.isWorkflowMethodSupported.__func__
 
 TransitionDefinition__init__orig = TransitionDefinition.__init__
 def TransitionDefinition__init__(self, *args, **kw):
@@ -255,11 +254,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         try:
             #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
             script(sci)  # May throw an exception.
-        except ValidationFailed, validation_exc:
+        except ValidationFailed as validation_exc:
             before_script_success = 0
             before_script_error_message = deepcopy(validation_exc.msg)
-            validation_exc_traceback = sys.exc_traceback
-        except ObjectMoved, moved_exc:
+            validation_exc_traceback = sys.exc_info()[2]
+        except ObjectMoved as moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
 
@@ -274,11 +273,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         if not vdef.for_status:
             continue
         expr = None
-        if state_values.has_key(id):
+        if id in state_values:
             value = state_values[id]
-        elif tdef_exprs.has_key(id):
+        elif id in tdef_exprs:
             expr = tdef_exprs[id]
-        elif not vdef.update_always and former_status.has_key(id):
+        elif not vdef.update_always and id in former_status:
             # Preserve former value
             value = former_status[id]
         else:
@@ -387,11 +386,11 @@ def _executeMetaTransition(self, ob, new_state_id):
     if not vdef.for_status:
       continue
     expr = None
-    if state_values.has_key(id):
+    if id in state_values:
       value = state_values[id]
-    elif tdef_exprs.has_key(id):
+    elif id in tdef_exprs:
       expr = tdef_exprs[id]
-    elif not vdef.update_always and former_status.has_key(id):
+    elif not vdef.update_always and id in former_status:
       # Preserve former value
       value = former_status[id]
     else:
@@ -421,7 +420,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
 DCWorkflowDefinition._executeMetaTransition = _executeMetaTransition
 
-DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.im_func
+DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.__func__
 
 def StateDefinition_getStatePermissionRoleListDict(self):
   if self.permission_roles is None:
@@ -878,7 +877,7 @@ def method_getGuardExpressionInstance(self):
   return self.guard.expr
 
 def method_checkGuard(self, *args, **kwargs):
-  return ERP5Guardable.checkGuard.im_func(self, *args, **kwargs)
+  return ERP5Guardable.checkGuard.__func__(self, *args, **kwargs)
 
 def method_getAction(self):
   return self.actbox_url
@@ -1207,9 +1206,9 @@ DCWorkflowDefinition.getTitle = method_getTitle
 DCWorkflowDefinition.getDescription = method_getDescription
 DCWorkflowDefinition.isManagerBypass = lambda self: self.manager_bypass
 DCWorkflowDefinition.getSourceValue = DCWorkflowDefinition_getSourceValue
-DCWorkflowDefinition.notifyWorkflowMethod = ERP5Workflow.notifyWorkflowMethod.im_func
-DCWorkflowDefinition.notifyBefore = ERP5Workflow.notifyBefore.im_func
-DCWorkflowDefinition.notifySuccess = ERP5Workflow.notifySuccess.im_func
+DCWorkflowDefinition.notifyWorkflowMethod = ERP5Workflow.notifyWorkflowMethod.__func__
+DCWorkflowDefinition.notifyBefore = ERP5Workflow.notifyBefore.__func__
+DCWorkflowDefinition.notifySuccess = ERP5Workflow.notifySuccess.__func__
 DCWorkflowDefinition.getVariableValueDict = DCWorkflowDefinition_getVariableValueDict
 DCWorkflowDefinition.getVariableValueByReference = DCWorkflowDefinition_getVariableValueByReference
 DCWorkflowDefinition.getStateValueByReference = DCWorkflowDefinition_getStateValueByReference

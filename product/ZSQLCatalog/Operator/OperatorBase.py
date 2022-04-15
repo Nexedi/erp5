@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator

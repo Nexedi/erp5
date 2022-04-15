@@ -28,6 +28,7 @@
 """
 Most of the code in this file has been taken from patches/WorkflowTool.py
 """
+from past.builtins import basestring
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -154,10 +155,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       notify(ActionWillBeInvokedEvent(ob, w, action))
     try:
       res = func(*args, **kw)
-    except ObjectDeleted, ex:
+    except ObjectDeleted as ex:
       res = ex.getResult()
       reindex = 0
-    except ObjectMoved, ex:
+    except ObjectMoved as ex:
       res = ex.getResult()
       ob = ex.getNewObject()
     except:
@@ -350,7 +351,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         else:
           try:
             self.Base_zClearWorklistTable()
-          except ProgrammingError, error_value:
+          except ProgrammingError as error_value:
             # 1146 = table does not exist
             if error_value[0] != 1146:
               raise
@@ -410,7 +411,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           if len(value_column_dict[COUNT_COLUMN_TITLE]):
             try:
               Base_zInsertIntoWorklistTable(**value_column_dict)
-            except (ProgrammingError, OperationalError), error_value:
+            except (ProgrammingError, OperationalError) as error_value:
               # OperationalError 1054 = unknown column
               if isinstance(error_value, OperationalError) and error_value[0] != 1054:
                 raise
@@ -570,13 +571,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               % grouped_worklist_dict.keys(),
               error=True)
           continue
-        except ProgrammingError, error_value:
+        except ProgrammingError as error_value:
           # 1146 = table does not exist
           if not use_cache or error_value[0] != 1146:
             raise
           try:
             self.Base_zCreateWorklistTable()
-          except ProgrammingError, error_value:
+          except ProgrammingError as error_value:
             # 1050 = table exists (alarm run just a bit too late)
             if error_value[0] != 1050:
               raise

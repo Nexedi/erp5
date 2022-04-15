@@ -31,7 +31,7 @@ from hashlib import sha1
 from DateTime import DateTime
 from zLOG import LOG, WARNING, ERROR
 from ZODB.POSException import ConflictError
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 # Time global parameters
 MAX_PROCESSING_TIME = 900 # in seconds

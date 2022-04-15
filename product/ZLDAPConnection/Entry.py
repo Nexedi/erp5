@@ -9,7 +9,7 @@ import Acquisition, AccessControl, OFS, string
 import transaction
 from App.special_dtml import HTMLFile
 from App.Dialogs import MessageDialog
-import ldap, urllib, UserList
+import ldap, urllib.request, urllib.parse, urllib.error, collections
 
 ConnectionError='ZLDAP Connection Error'
 
@@ -19,7 +19,7 @@ def isNotBlank(s):
         return 0
     else: return 1
 
-class AttrWrap(UserList.UserList):
+class AttrWrap(collections.UserList):
     """simple attr-wrapper for LDAP attributes"""
     def __str__(self):
         return string.join(self.data,', ')
@@ -93,9 +93,9 @@ class GenericEntry(Acquisition.Implicit):
         """getitem is used to get sub-entries, not attributes"""
         if self.__subentries:
             se=self._subentries()
-            if se.has_key(key):
+            if key in se:
                 return se[key]
-        key = '%s, %s' % (urllib.unquote(key), self.dn)
+        key = '%s, %s' % (urllib.parse.unquote(key), self.dn)
         conn= self._connection()
         if conn.hasEntry(key):
             return conn.getEntry(key, self)
@@ -103,14 +103,14 @@ class GenericEntry(Acquisition.Implicit):
             raise IndexError(key)
 
     def __getattr__(self, attr):
-        if self._data.has_key(attr):
+        if attr in self._data:
             return AttrWrap(self._data[attr])
         else:
             raise AttributeError(attr)
 
     #### Direct access for setting/getting/unsetting attributes
     def get(self, attr):
-        if self._data.has_key(attr):
+        if attr in self._data:
             return self._data[attr]
         else:
             raise AttributeError(attr)
@@ -146,7 +146,7 @@ class GenericEntry(Acquisition.Implicit):
         data = self._data
         mod_d = self._mod_delete
         for item in attr:
-            if data.has_key(item):
+            if item in data:
                 del data[attr]
                 mod_d.append(attr)
 
@@ -340,7 +340,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         data = self._data
         mod_d = self._mod_delete
         for item in attr:
-            if data.has_key(item):
+            if item in data:
                 del data[item]
                 mod_d.append(item)
 
@@ -404,7 +404,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         attrs[key] = value
 
         #if objectclass is not set in the attrs, set it now
-        if not attrs.has_key('objectclass'):
+        if 'objectclass' not in attrs:
             attrs['objectclass']=['top']
 
         #instantiate the instance based on current instances class

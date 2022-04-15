@@ -31,6 +31,7 @@ from __future__ import absolute_import
 
 from .Constraint import Constraint
 from DateTime import DateTime
+import six
 
 boolean_type_list = (int, bool)
 
@@ -123,7 +124,7 @@ class PropertyTypeValidity(Constraint):
           if wrong_type:
             try:
               value = self._type_dict[property_type][0](value)
-            except (KeyError, ValueError), error:
+            except (KeyError, ValueError) as error:
               error_message = 'message_incorrect_type_fix_failed'
               mapping['type_cast_error'] = str(error)
 

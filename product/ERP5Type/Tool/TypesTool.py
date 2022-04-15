@@ -15,6 +15,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 import imp, sys, warnings
 import inspect
 from itertools import chain
@@ -56,7 +57,7 @@ class ComposedObjectIds(object):
 
   def __contains__(self, item):
     for container in self._container_list:
-      if container.has_key(item):
+      if item in container:
         return True
     return False
 
@@ -121,7 +122,7 @@ class TypesTool(TypeProvider):
   )
 
   def _isBootstrapRequired(self):
-    if [x for x in self._bootstrap_type_list if not self.has_key(x)]:
+    if [x for x in self._bootstrap_type_list if x not in self]:
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates

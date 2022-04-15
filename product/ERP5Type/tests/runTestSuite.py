@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+from __future__ import print_function
 from __future__ import absolute_import
 import argparse, sys, os, textwrap
 from erp5.util import taskdistribution

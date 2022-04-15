@@ -224,7 +224,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           sort_on = getattr(self, 'default_sort_on', [])
         if len(sort_on) > 0:
           kw['sort_on'] = sort_on
-        elif kw.has_key('sort_on'):
+        elif 'sort_on' in kw:
           del kw['sort_on'] # We should not sort if no sort was defined
         # We should always set selection_name with self.name
         kw['selection_name'] = self.name

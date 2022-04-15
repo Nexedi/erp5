@@ -67,7 +67,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
 
     def _exec(self, bound_names, args, kw):
         """Call a Page Template"""
-        if not kw.has_key('args'):
+        if 'args' not in kw:
             kw['args'] = args
         bound_names['options'] = kw
 

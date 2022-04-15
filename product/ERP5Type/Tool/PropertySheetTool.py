@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 import transaction
 
 from AccessControl import ClassSecurityInfo
@@ -67,7 +68,7 @@ class PropertySheetTool(BaseTool):
     'template_tool_component_id_property')
 
   def _isBootstrapRequired(self):
-    if not self.has_key('InteractionWorkflowInteraction'):
+    if 'InteractionWorkflowInteraction' not in self:
       return True
 
     bt_has_key = self.BusinessTemplate.has_key

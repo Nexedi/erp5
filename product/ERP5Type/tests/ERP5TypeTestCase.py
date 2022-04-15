@@ -9,7 +9,7 @@ __version__ = '0.3.0'
 
 import base64
 import errno
-import httplib
+import http.client
 import os
 import random
 import re
@@ -18,8 +18,8 @@ import string
 import sys
 import time
 import traceback
-import urllib
-import ConfigParser
+import urllib.request, urllib.parse, urllib.error
+import configparser
 from contextlib import contextmanager
 from cStringIO import StringIO
 from cPickle import dumps
@@ -168,7 +168,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   cloudooo_url_list = _getConversionServerUrlList()
 
-  promise_config = ConfigParser.RawConfigParser()
+  promise_config = configparser.RawConfigParser()
   promise_config.add_section('external_service')
   promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
@@ -1575,7 +1575,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:

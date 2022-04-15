@@ -18,6 +18,7 @@ From document pointed to by 'relative_url':
 For the portal, 'relative_url' must be false and only module objects are
 considered if id_list is None.
 """
+from builtins import range
 document = context.getPortalObject()
 context = document.portal_activities
 if relative_url:
@@ -68,7 +69,7 @@ else:
         ])
     else:
       id_list = []
-      for day_ago in xrange(hbtree_days):
+      for day_ago in range(hbtree_days):
         date = (DateTime() - day_ago).strftime('%Y%m%d')
         try:
           id_list += document.objectIds(base_id=date)
@@ -88,7 +89,7 @@ else:
       active_script(relative_url=relative_url + id_, **kw)
   else:
     kw['relative_url'] = relative_url
-    for i in xrange(0, len(id_list), packet):
+    for i in range(0, len(id_list), packet):
       active_script(id_list=tuple(id_list[i:i + packet]), **kw)
   # return the active process path if we created one
   return result

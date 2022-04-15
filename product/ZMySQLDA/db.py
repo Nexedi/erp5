@@ -383,7 +383,7 @@ class DB(TM):
         """
         try:
             self.db.query(query)
-        except OperationalError, m:
+        except OperationalError as m:
             if m[0] in query_syntax_error:
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
@@ -402,7 +402,7 @@ class DB(TM):
           raise
         try:
           return self.db.store_result()
-        except OperationalError, m:
+        except OperationalError as m:
           if m[0] in query_timeout_error:
             raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
           else:
@@ -500,7 +500,7 @@ class DB(TM):
                 self._query("ROLLBACK")
             else:
                 LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
-        except OperationalError, m:
+        except OperationalError as m:
             LOG('ZMySQLDA', ERROR, "exception during _abort",
                 error=True)
             if m[0] not in hosed_connection:
@@ -554,7 +554,7 @@ class DB(TM):
         with (nested if src__ else self.lock)():
             try:
                 old_list, old_set, old_default = self._getTableSchema("`%s`" % name)
-            except ProgrammingError, e:
+            except ProgrammingError as e:
                 if e[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
                     raise
                 if not src__:

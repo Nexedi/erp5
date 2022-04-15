@@ -37,7 +37,7 @@ except ImportError:
                  DeprecationWarning)
 import zope.interface
 from Products.ERP5Type import XMLExportImport
-from StringIO import StringIO
+from io import BytesIO as StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.interfaces.json_representable import IJSONRepresentable
 from Products.ERP5Type import Permissions

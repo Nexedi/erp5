@@ -22,11 +22,11 @@
 ZServer hook to dump a traceback of the running python threads.
 """
 
-import thread
+import _thread
 from sys import _current_frames
 import traceback
 import time
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 from zLOG import LOG, DEBUG, ERROR
 from App.config import getConfiguration
@@ -68,7 +68,7 @@ def dump_threads():
           from Products.ZMySQLDA.db import DB
           while f is not None:
             code = f.f_code
-            if code is DB._query.func_code:
+            if code is DB._query.__code__:
               mysql_info = "\nMySQL query:\n%s\n" % f.f_locals['query']
               break
             f = f.f_back

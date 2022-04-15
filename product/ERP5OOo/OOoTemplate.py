@@ -37,13 +37,13 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
-from urllib import quote
+from urllib.parse import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
+from io import StringIO
 import re
 import itertools
 
@@ -208,7 +208,7 @@ class OOoTemplate(ZopePageTemplate):
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError("File is locked via WebDAV")
 
-    if type(file) is not StringType:
+    if not isinstance(file, basestring):
       if not file: raise ValueError('File not specified')
       file = file.read()
 
@@ -498,7 +498,7 @@ class OOoTemplate(ZopePageTemplate):
         ooo_builder.addFileEntry(full_path=dir_name + '/content.xml',
                                  media_type='text/xml', content=document_dict['document'])
         styles_text = default_styles_text
-        if document_dict.has_key('stylesheet') and document_dict['stylesheet']:
+        if 'stylesheet' in document_dict and document_dict['stylesheet']:
           styles_text = document_dict['stylesheet']
         if styles_text:
           ooo_builder.addFileEntry(full_path=dir_name + '/styles.xml',

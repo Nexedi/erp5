@@ -27,7 +27,9 @@
 #
 ##############################################################################
 
-from compiler.consts import CO_VARKEYWORDS
+from past.builtins import cmp
+from past.builtins import basestring
+from inspect import CO_VARKEYWORDS
 from random import getrandbits
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -162,7 +164,7 @@ class Alarm(XMLObject, PeriodicityMixin):
           activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
-        func_code = method.func_code
+        func_code = method.__code__
         try:
           has_kw = func_code.co_flags & CO_VARKEYWORDS
         except AttributeError:

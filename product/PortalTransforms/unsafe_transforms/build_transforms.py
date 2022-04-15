@@ -1,6 +1,7 @@
 """try to build some usefull transformations with the command and xml
 transforms and the available binaries
 """
+from __future__ import print_function
 from Products.PortalTransforms.libtransforms.utils import bin_search, MissingBinary
 
 COMMAND_CONFIGS = (

@@ -9,9 +9,9 @@ import glob
 import logging
 import os
 import re
-from urllib import unquote
+from urllib.parse import unquote
 import zipfile
-import StringIO
+import io
 import types
 
 from zope.interface import implementer
@@ -448,7 +448,7 @@ class Zuite( OrderedFolder ):
         manifest = os.path.join( path, self.testsuite_name or '.objects' )
 
         if os.path.isfile( manifest ):
-            filenames = filter(None,[ x.strip() for x in open( manifest ).readlines() ])
+            filenames = [_f for _f in [ x.strip() for x in open( manifest ).readlines() ] if _f]
 
         elif self.filename_glob:
             globbed = glob.glob( os.path.join( path, self.filename_glob ) )
@@ -496,7 +496,7 @@ class Zuite( OrderedFolder ):
     def _getZipFile( self, include_selenium=True ):
         """ Generate a zip file containing both tests and scaffolding.
         """
-        stream = StringIO.StringIO()
+        stream = io.StringIO()
         archive = zipfile.ZipFile( stream, 'w' )
 
 

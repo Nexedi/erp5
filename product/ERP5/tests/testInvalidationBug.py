@@ -30,7 +30,7 @@
 
 import threading
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -157,7 +157,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
         storage._server = None
         # ... monkey-patch done
         ## create object
-        urllib.urlopen(new_content_url).read()
+        urllib.request.urlopen(new_content_url).read()
         ## validate reindex activity
         activity_tool.distribute()
         self.assertEqual(1, len(activity_tool.getMessageList()))
@@ -212,7 +212,7 @@ if (count % 500) < 5:
     log('creation speed: %s obj/s' % ((count - start[0]) /
         (86400 * (DateTime() - start[1]))))
 """)
-    for x in xrange(0,200):
+    for x in range(0,200):
       module.activate(activity='SQLQueue', priority=2).create_script()
     self.tic()
 

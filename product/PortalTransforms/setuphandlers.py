@@ -1,8 +1,9 @@
 """
 PortalTransforms setup handlers.
 """
+from __future__ import print_function
 
-from StringIO import StringIO
+from io import StringIO
 from Products.CMFCore.utils import getToolByName
 
 
@@ -34,16 +35,16 @@ def updateSafeHtml(out, portal):
             try:
                 disable_transform = transform.get_parameter_value('disable_transform')
             except KeyError:
-                print >>out, '  replace safe_html (%s, %s) ...' % (transform.name(), transform.module)
+                print('  replace safe_html (%s, %s) ...' % (transform.name(), transform.module), file=out)
                 try:
                     pt.unregisterTransform(id)
                     pt.manage_addTransform(id, safe_html_module)
                 except:
                     raise
                 else:
-                    print >>out, '  ...done'
+                    print('  ...done', file=out)
 
-    print >>out, '...done'
+    print('...done', file=out)
 
 
 def installPortalTransforms(portal):

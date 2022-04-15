@@ -1,3 +1,4 @@
+from past.builtins import basestring
 from AccessControl import getSecurityManager
 from zExceptions import Unauthorized
 from Products.ERP5Type.Document import newTempBase

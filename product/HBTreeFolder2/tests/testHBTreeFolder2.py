@@ -98,7 +98,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
 
     def testHasKey(self):
         self.assert_(self.f.hasObject('item'))  # Old spelling
-        self.assert_(self.f.has_key('item'))  # New spelling
+        self.assert_('item' in self.f)  # New spelling
 
     def testDelete(self):
         self.f._delOb('item')
@@ -116,7 +116,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
     def testSetObject(self):
         f2 = HBTreeFolder2('item2')
         self.f._setObject(f2.id, f2)
-        self.assert_(self.f.has_key('item2'))
+        self.assert_('item2' in self.f)
         self.assertEqual(self.f.objectCount(), 2)
 
     def testWrapped(self):
@@ -152,7 +152,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         old_f._setObject(inner_f.id, inner_f)
         self.ff._populateFromFolder(old_f)
         self.assertEqual(self.ff.objectCount(), 1)
-        self.assert_(self.ff.has_key('inner'))
+        self.assert_('inner' in self.ff)
         self.assertEqual(self.getBase(self.ff._getOb('inner')), inner_f)
 
     def testObjectListing(self):

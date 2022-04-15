@@ -78,7 +78,7 @@ class _(PatchClass(ExternalMethod)):
                 return _f
         except AttributeError:
             pass
-        code = f.func_code
+        code = f.__code__
         argument_object = getargs(code)
         # reconstruct back the original names
         arg_list = argument_object.args[:]

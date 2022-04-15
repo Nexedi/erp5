@@ -264,7 +264,7 @@ class WorkflowMethod(Method):
       except ObjectDeleted:
         # Re-raise with a different result.
         raise ObjectDeleted(result)
-      except ObjectMoved, ex:
+      except ObjectMoved as ex:
         # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), result)
 
@@ -3417,8 +3417,8 @@ class Base(
     # We remove attributes from the instance
     # We do this rather than self.isIndexable = 0 because we want to
     # go back to previous situation (class based definition)
-    if self.__dict__.has_key('isIndexable'): delattr(self, 'isIndexable')
-    if self.__dict__.has_key('isTemplate'): delattr(self, 'isTemplate')
+    if 'isIndexable' in self.__dict__: delattr(self, 'isIndexable')
+    if 'isTemplate' in self.__dict__: delattr(self, 'isTemplate')
 
     # Add to catalog
     self.reindexObject()

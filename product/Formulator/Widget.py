@@ -7,7 +7,7 @@ from DateTime import DateTime, Timezones
 from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
-from urlparse import urljoin
+from urllib.parse import urljoin
 from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import ElementMaker
@@ -432,7 +432,7 @@ class TextWidget(Widget):
     """
     if value is None:
       return ''
-    if isinstance(value, types.ListType) or isinstance(value, types.TupleType):
+    if isinstance(value, list) or isinstance(value, tuple):
       old_value = value
     else:
       old_value = [str(value)]
@@ -456,7 +456,7 @@ class TextWidget(Widget):
                       render_prefix, attr_dict, local_name):
     if value is None:
       value = ['']
-    elif not isinstance(value, (types.ListType, types.TupleType)):
+    elif not isinstance(value, (list, tuple)):
       value = [str(value)]
     return Widget.render_odt_view(
       self, field, '\n'.join(value), as_string, ooo_builder, REQUEST,
@@ -577,7 +577,7 @@ class CheckBoxWidget(Widget):
     current_state_attribute_name = '{%s}current-state'% FORM_URI
     if value:
       attr_dict.update({current_state_attribute_name: 'checked'})
-    elif attr_dict.has_key(current_state_attribute_name):
+    elif current_state_attribute_name in attr_dict:
       del attr_dict[current_state_attribute_name]
     form_node.attrib.update(attr_dict)
     if as_string:
@@ -1082,8 +1082,8 @@ class MultiItemsWidget(ItemsWidget):
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
       if value is None:
           return ''
-      return string.join(self.render_items_view(field, value, REQUEST),
-                          field.get_value('view_separator'))
+      return field.get_value('view_separator').join(
+        self.render_items_view(field, value, REQUEST))
 
   def render_items_odf(self, field, value, REQUEST):
     if type(value) is not type([]):
@@ -1178,7 +1178,7 @@ class ListWidget(SingleItemsWidget):
                     name=key,
                     css_class=field.get_value('css_class', REQUEST=REQUEST),
                     size=field.get_value('size', REQUEST=REQUEST),
-                    contents=string.join(rendered_items, "\n"),
+                    contents="\n".join(rendered_items),
                     extra=field.get_value('extra', REQUEST=REQUEST))
 
       return "\n".join([list_widget, input_hidden])
@@ -1225,7 +1225,7 @@ class MultiListWidget(MultiItemsWidget):
                     multiple=None,
                     css_class=field.get_value('css_class', REQUEST=REQUEST),
                     size=field.get_value('size', REQUEST=REQUEST),
-                    contents=string.join(rendered_items, "\n"),
+                    contents="\n".join(rendered_items),
                     extra=field.get_value('extra', REQUEST=REQUEST))
 
       return "\n".join([multi_list,input_hidden])
@@ -1272,9 +1272,9 @@ class RadioWidget(SingleItemsWidget):
     rendered_items.append(input_hidden)
     orientation = field.get_value('orientation')
     if orientation == 'horizontal':
-      return string.join(rendered_items, "&nbsp;&nbsp;")
+      return "&nbsp;&nbsp;".join(rendered_items)
     else:
-      return string.join(rendered_items, "<br />")
+      return "<br />".join(rendered_items)
 
   def render_item(self, text, value, key, css_class, extra_item):
     return render_element(
@@ -1321,9 +1321,9 @@ class MultiCheckBoxWidget(MultiItemsWidget):
       rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0"))
       orientation = field.get_value('orientation')
       if orientation == 'horizontal':
-        return string.join(rendered_items, "&nbsp;&nbsp;")
+        return "&nbsp;&nbsp;".join(rendered_items)
       else:
-        return string.join(rendered_items, "<br />")
+        return "<br />".join(rendered_items)
 
     def render_item(self, text, value, key, css_class, extra_item):
         return render_element(
@@ -1516,7 +1516,7 @@ class DateTimeWidget(Widget):
     # because REQUEST always has a form property
     if (value in (None, '')) and (field.get_value('default_now')) and \
         ((REQUEST is None) or (not hasattr(REQUEST, 'form')) or \
-        (not REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')))):
+        ('subfield_%s_%s' % (key, 'year') not in REQUEST.form)):
       value = DateTime()
     year   = None
     month  = None
@@ -1563,7 +1563,7 @@ class DateTimeWidget(Widget):
     for sub_field_name, sub_field_value in order:
       result.append(field.render_sub_field(sub_field_name,
                                             sub_field_value, REQUEST, key=key))
-    date_result = string.join(result, field.get_value('date_separator'))
+    date_result = field.get_value('date_separator').join(result)
     if not field.get_value('date_only'):
       time_result = (field.render_sub_field('hour', hour, REQUEST, key=key) +
                       field.get_value('time_separator') +
@@ -1615,7 +1615,7 @@ class DateTimeWidget(Widget):
       output = [year, month]
     else:
       output = [year, month, day]
-    date_result = string.join(output, field.get_value('date_separator'))
+    date_result = field.get_value('date_separator').join(output)
 
     if mode in ('html', ):
       space = '&nbsp;'
@@ -1731,13 +1731,13 @@ def render_tag(tag, **kw):
   attr_list = []
 
   # special case handling for css_class
-  if kw.has_key('css_class'):
+  if 'css_class' in kw:
     if kw['css_class'] != "":
       attr_list.append('class="%s"' % kw['css_class'])
     del kw['css_class']
 
   # special case handling for extra 'raw' code
-  if kw.has_key('extra'):
+  if 'extra' in kw:
     extra = kw['extra'] # could be empty string but we don't care
     del kw['extra']
   else:
@@ -1749,7 +1749,7 @@ def render_tag(tag, **kw):
         value = key
     attr_list.append('%s="%s"' % (key, html_quote(value)))
 
-  attr_str = string.join(attr_list, " ")
+  attr_str = " ".join(attr_list)
   return "<%s %s %s" % (tag, attr_str, extra)
 
 VOID_ELEMENT_LIST = ('area', 'base', 'br', 'col', 'embed', 'hr', 'img',
@@ -1759,11 +1759,11 @@ def render_element(tag, **kw):
   # https://www.w3.org/TR/html5/syntax.html#start-tags
   # End tags are forbidden on void HTML elements
   if tag in VOID_ELEMENT_LIST:
-    if kw.has_key('contents'):
+    if 'contents' in kw:
       raise ValueError('Void element %s does not accept content' % tag)
-    return apply(render_tag, (tag, ), kw) + " />"
+    return render_tag(*(tag, ), **kw) + " />"
   else:
-    if kw.has_key('contents'):
+    if 'contents' in kw:
       contents = kw['contents']
       del kw['contents']
       if tag == 'textarea':
@@ -1772,7 +1772,7 @@ def render_element(tag, **kw):
         contents = '\n%s' % contents
     else:
       contents = ''
-    return "%s>%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
+    return "%s>%s</%s>" % (render_tag(*(tag, ), **kw), contents, tag)
 
 
 ##############################################################################

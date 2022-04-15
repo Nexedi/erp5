@@ -4,7 +4,6 @@
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Document import newTempBase
 from Products.PythonScripts.standard import url_quote
-from string import zfill
 portal = context.getPortalObject()
 request = context.REQUEST
 domain_list = []
@@ -47,7 +46,7 @@ if depth == 0:
   while current_date < axis_stop: 
     # Create one Temp Object
     o = newTempBase(portal, id=str(current_date.Day()),
-                    uid='new_%s' % zfill('year',4))
+                    uid='new_year')
 
      # Setting Axis Dates start and stop
     o.setProperty('start',current_date)

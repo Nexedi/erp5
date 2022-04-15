@@ -32,7 +32,6 @@ import warnings
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from datetime import datetime
-from string import zfill
 
 security = ModuleSecurityInfo(__name__)
 security.declarePublic('addToDate', 'getClosestDate',

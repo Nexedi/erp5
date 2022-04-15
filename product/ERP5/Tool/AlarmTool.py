@@ -40,7 +40,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
 from DateTime import DateTime
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 last_tic = time.time()
 last_tic_lock = threading.Lock()

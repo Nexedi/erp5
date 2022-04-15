@@ -1,5 +1,5 @@
-from urlparse import urlparse
-from urlparse import parse_qsl
+from urllib.parse import urlparse
+from urllib.parse import parse_qsl
 
 context.REQUEST.RESPONSE.setCookie("loyalty_reward", "disable", path='/')
 

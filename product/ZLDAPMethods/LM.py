@@ -70,7 +70,7 @@ class ERP5LDIFRecordList(LDIFRecordList):
             raise ValueError('Read changetype: before getting valid dn: line.')
           if changetype!=None:
             raise ValueError('Two lines starting with changetype: in one record.')
-          if not valid_changetype_dict.has_key(attr_value):
+          if attr_value not in valid_changetype_dict:
             raise ValueError('changetype value %r is invalid.' % (attr_value,))
           changetype = attr_value
           attr_type, attr_value = self._parseAttrTypeandValue()
@@ -90,9 +90,9 @@ class ERP5LDIFRecordList(LDIFRecordList):
           #don't add new entry for the same dn
           break
         elif attr_value not in (None, '') and \
-             not self._ignored_attr_types.has_key(string.lower(attr_type)):
+             string.lower(attr_type) not in self._ignored_attr_types:
           # Add the attribute to the entry if not ignored attribute
-          if entry.has_key(attr_type):
+          if attr_type in entry:
             entry[attr_type].append(attr_value)
           else:
             entry[attr_type]=[attr_value]
@@ -142,7 +142,7 @@ def LDAPConnectionIDs(self):
                     and o._isAnLDAPConnection() and hasattr(o,'id')):
                     id=o.id
                     if type(id) is not StringType: id=id()
-                    if not ids.has_key(id):
+                    if id not in ids:
                         if hasattr(o,'title_and_id'): o=o.title_and_id()
                         else: o=id
                         ids[id]=id
@@ -295,7 +295,7 @@ class LDAPMethod(Aqueduct.BaseQuery,
                 '<hr><strong>Filter used:</strong><br>\n<pre>\n%s\n</pre>\n<hr>\n'
                 '</body></html>' % (r, src)
                 )
-            report=apply(report,(self,REQUEST),{self.id:res})
+            report=report(*(self,REQUEST), **{self.id:res})
 
             if tb is not None:
                 self.raise_standardErrorMessage(
@@ -352,12 +352,12 @@ class LDAPMethod(Aqueduct.BaseQuery,
         f.cook()
         if getSecurityManager is None:
             # working in a pre-Zope 2.2 instance
-            f = apply(f, (p,argdata))       #apply the template
+            f = f(*(p,argdata))       #apply the template
         else:
             # Working with the new security manager (Zope 2.2.x ++)
             security = getSecurityManager()
             security.addContext(self)
-            try:     f = apply(f, (p,), argdata)  # apply the template
+            try:     f = f(*(p,), **argdata)  # apply the template
             finally: security.removeContext(self)
 
         f = str(f)                      #ensure it's a string
@@ -485,19 +485,19 @@ class LDIFMethod(LDAPMethod):
     ldif.cook()
     if getSecurityManager is None:
       # working in a pre-Zope 2.2 instance
-      ldif = apply(ldif, (p, argdata))       #apply the template
+      ldif = ldif(*(p, argdata))       #apply the template
     else:
       # Working with the new security manager (Zope 2.2.x ++)
       security = getSecurityManager()
       security.addContext(self)
-      try:     ldif = apply(ldif, (p,), argdata)  # apply the template
+      try:     ldif = ldif(*(p,), **argdata)  # apply the template
       finally: security.removeContext(self)
 
     ldif = str(ldif)                      #ensure it's a string
     #LOG('ldif', 0, ldif)
     if src__: return ldif              #return the rendered source
     ### Apply Query
-    from cStringIO import StringIO
+    from io import StringIO
     file = StringIO(ldif)
     l = ERP5LDIFRecordList(file)
     l.parse()

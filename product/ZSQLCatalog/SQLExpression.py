@@ -28,6 +28,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.builtins import basestring
 import warnings
 from .interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass

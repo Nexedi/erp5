@@ -255,7 +255,7 @@ class HBTreeFolder2Base (Persistent):
           if type(htree) is not OOBTree:
             assert self._htree[sub_id] is htree, (htree, id)
             raise KeyError('There is already an item whose id is %r' % sub_id)
-        if htree.has_key(id):
+        if id in htree:
           raise KeyError('There is already an item named %r.' % id)
         htree[id] = object
         self._count.change(1)
@@ -448,7 +448,7 @@ class HBTreeFolder2Base (Persistent):
         return dict.fromkeys(self.objectIds(t), 1)
 
     def _checkId(self, id, allow_dup=0):
-        if not allow_dup and self.has_key(id):
+        if not allow_dup and id in self:
             raise BadRequestException(
                 'The id %r is invalid--it is already in use.' % id)
 
@@ -458,7 +458,7 @@ class HBTreeFolder2Base (Persistent):
         if v is not None: id=v
 
         # If an object by the given id already exists, remove it.
-        if self.has_key(id):
+        if id in self:
             self._delObject(id)
 
         self._setOb(id, object)
@@ -485,7 +485,7 @@ class HBTreeFolder2Base (Persistent):
         object = self._getOb(id)
         try:
             object.manage_beforeDelete(object, self)
-        except BeforeDeleteException, ob:
+        except BeforeDeleteException as ob:
             raise
         except ConflictError:
             raise
@@ -527,7 +527,7 @@ class HBTreeFolder2Base (Persistent):
         while 1:
             if n % 4000 != 0 and n <= rand_ceiling:
                 id = '%s%d%s' % (prefix, n, suffix)
-                if not tree.has_key(id):
+                if id not in tree:
                     break
             n = randint(1, rand_ceiling)
             attempt = attempt + 1

@@ -1,3 +1,4 @@
+from __future__ import division
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -27,6 +28,8 @@
 #
 ##############################################################################
 
+from past.builtins import cmp
+from past.builtins import basestring
 from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
@@ -317,9 +320,9 @@ class SimulationTool(BaseTool):
       # XXX In this case, we must not set sql_kw[input_simumlation_state] before
       input_simulation_state = None
       output_simulation_state = None
-      if sql_kw.has_key('input_simulation_state'):
+      if 'input_simulation_state' in sql_kw:
         input_simulation_state = sql_kw.get('input_simulation_state')
-      if sql_kw.has_key('output_simulation_state'):
+      if 'output_simulation_state' in sql_kw:
         output_simulation_state = sql_kw.get('output_simulation_state')
       if input_simulation_state is not None \
          or output_simulation_state is not None:
@@ -2184,7 +2187,7 @@ class SimulationTool(BaseTool):
     # Pass simulation state to request
     if next_item_simulation_state:
       new_kw['simulation_state_list'] = next_item_simulation_state
-    elif kw.has_key('item.simulation_state'):
+    elif 'item.simulation_state' in kw:
       new_kw['simulation_state_list'] = kw['item.simulation_state']
     else:
       new_kw['simulation_state_list'] =  None

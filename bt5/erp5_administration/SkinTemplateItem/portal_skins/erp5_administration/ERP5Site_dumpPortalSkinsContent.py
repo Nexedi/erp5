@@ -21,7 +21,7 @@ def getSkinHash(skin, skin_container):
       content = skin.formXML()
       if isinstance(content, unicode):
         content = content.encode('utf8', 'repr')
-    except AttributeError, e:
+    except AttributeError as e:
       # This can happen with dead proxy fields.
       content = "broken form %s" % e
     content = 'ignore'
@@ -37,12 +37,12 @@ for skin_folder in portal.portal_skins.objectValues('Folder'):
   for skin in skin_folder.objectValues():
     if skin.getId() in ignore_skin_list:
       continue
-    print getSkinHash(skin, skin_folder)
+    print(getSkinHash(skin, skin_folder))
 
 if include_workflow_scripts:
   for workflow in portal.portal_workflow.objectValues():
     for skin in workflow.scripts.objectValues():
-      print getSkinHash(skin, workflow)
+      print(getSkinHash(skin, workflow))
 
 container.REQUEST.RESPONSE.setHeader('content-type', 'text/plain')
 return '\n'.join(sorted(printed.splitlines()))

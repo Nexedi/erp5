@@ -142,11 +142,11 @@ class TestRamCache(ERP5TypeTestCase):
       ##  check it, we MUST NOT have this key any more in cache
       self.assertEqual(False, cache_plugin.has_key(cache_id, scope))
       if not self.quiet:
-        print "\t\tOK"
+        print("\t\tOK")
 
   def generaltestSetGet(self, cache_plugin, iterations):
     if not self.quiet:
-      print "TESTING (set/get/has/del): ", cache_plugin
+      print("TESTING (set/get/has/del): ", cache_plugin)
     values = self.prepareValues(iterations)
     cache_duration = 30
     scope = "peter"

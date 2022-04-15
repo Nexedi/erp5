@@ -285,7 +285,7 @@ class DomainTool(BaseTool):
         # Feel free to improve.
         if getMappedValuePropertyList is not None:
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            if not mapped_value_property_dict.has_key(mapped_value_property):
+            if mapped_value_property not in mapped_value_property_dict:
               value = predicate.getProperty(mapped_value_property)
               if value is not None:
                 mapped_value_property_dict[mapped_value_property] = value

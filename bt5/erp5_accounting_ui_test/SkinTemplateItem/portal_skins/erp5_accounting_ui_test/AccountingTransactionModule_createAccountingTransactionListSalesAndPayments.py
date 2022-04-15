@@ -98,8 +98,8 @@ for month in range(1, month_count + 1):
             source_payment=getBankAccountByTitle('My default bank account'),
             destination_section=getOrganisationByTitle(client_title),
             created_by_builder=1,
-            start_date=DateTime(year, month, day, 01, 01) + 10,
-            stop_date=DateTime(year, month, day, 01, 01) + 10,
+            start_date=DateTime(year, month, day, 0o1, 0o1) + 10,
+            stop_date=DateTime(year, month, day, 0o1, 0o1) + 10,
             causality_value=tr,
             resource=euro_resource,
         )

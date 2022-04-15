@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from past.builtins import basestring
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey

@@ -76,7 +76,7 @@ class LDIFVar:
         self.__name__, self.expr = name, expr
 
         self.args=args
-        if not args.has_key('type'):
+        if 'type' not in args:
             raise ParseError('the type attribute is required', 'dtvar')
         t=args['type']
         if not valid_type(t):
@@ -91,7 +91,7 @@ class LDIFVar:
             if type(expr) is type(''): v=md[expr]
             else: v=expr(md)
         except:
-            if args.has_key('optional') and args['optional']:
+            if 'optional' in args and args['optional']:
                 return
             if type(expr) is not type(''):
                 raise

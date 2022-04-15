@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 
 # Symbols that are used to represent groups of characters

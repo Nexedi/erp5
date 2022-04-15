@@ -1,3 +1,4 @@
+from __future__ import print_function
 from __future__ import absolute_import
 import os
 import logging
@@ -44,8 +45,8 @@ class TransformTest(ATSiteTestCase):
             output = open(output)
         except IOError:
             import sys
-            print >>sys.stderr, 'No output file found.'
-            print >>sys.stderr, 'File %s created, check it !' % self.output
+            print('No output file found.', file=sys.stderr)
+            print('File %s created, check it !' % self.output, file=sys.stderr)
             output = open(output, 'w')
             output.write(got)
             output.close()

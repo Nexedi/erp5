@@ -31,7 +31,7 @@
 
 import unittest
 import os
-import StringIO
+import io
 from cgi import FieldStorage
 from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
@@ -47,10 +47,10 @@ from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
 import ZPublisher.HTTPRequest
 from unittest import expectedFailure
-import urllib
-import urllib2
-import httplib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.client
+import urllib.parse
 import base64
 
 # test files' home
@@ -2001,13 +2001,13 @@ return result
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
-    url_split = urlparse.urlsplit(portal_url)
+    url_split = urllib.parse.urlsplit(portal_url)
     url_dict = dict(protocol=url_split[0],
                     hostname=url_split[1])
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
-    request = urllib2.Request(push_url, urllib.urlencode(
+    request = urllib.request.Request(push_url, urllib.parse.urlencode(
                                         {'data': data,
                                         'filename': filename,
                                         'reference': reference,
@@ -2018,8 +2018,8 @@ return result
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
-    response = urllib2.urlopen(request)
-    self.assertEqual(response.getcode(), httplib.OK)
+    response = urllib.request.urlopen(request)
+    self.assertEqual(response.getcode(), http.client.OK)
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
                                                          reference=reference)
@@ -2108,7 +2108,7 @@ class Base_contributeMixin:
     """
     person = self.portal.person_module.newContent(portal_type='Person')
     empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=StringIO.StringIO(),
+                            fp=io.StringIO(),
                             environ=dict(REQUEST_METHOD='PUT'),
                             headers={"content-disposition":
                               "attachment; filename=empty;"}))

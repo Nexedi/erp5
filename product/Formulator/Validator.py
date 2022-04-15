@@ -5,8 +5,8 @@ from . import PatternChecker
 from .DummyField import fields
 from DateTime import DateTime
 from threading import Thread
-from urllib import urlopen
-from urlparse import urljoin
+from urllib.request import urlopen
+from urllib.parse import urljoin
 from .Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
 import unicodedata
@@ -581,10 +581,10 @@ class MultiSelectionValidator(Validator):
           int_value = int(value)
         except ValueError:
           int_value = None
-        if int_value is not None and value_dict.has_key(int_value):
+        if int_value is not None and int_value in value_dict:
           result.append(int_value)
           continue
-        if value_dict.has_key(value):
+        if value in value_dict:
           result.append(value)
           continue
         self.raise_error('unknown_selection', field)

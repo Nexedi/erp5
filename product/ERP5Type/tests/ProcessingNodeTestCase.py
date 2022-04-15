@@ -74,7 +74,7 @@ def patchActivityTool():
     def __init__(self, ob):
       self._ob = ob
     def __getattr__(self, attr):
-      m = getattr(self._ob, attr).im_func
+      m = getattr(self._ob, attr).__func__
       return lambda *args, **kw: m(self, *args, **kw)
   @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):
@@ -318,7 +318,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()
-          except AssertionError, e:
+          except AssertionError as e:
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages
@@ -334,7 +334,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     This aborts current transaction.
     """
-    for i in xrange(30):
+    for i in range(30):
       node_list = list(self.portal.portal_activities.getProcessingNodeList())
       if len(node_list) >= node_count:
         node_list.remove(getCurrentNode())

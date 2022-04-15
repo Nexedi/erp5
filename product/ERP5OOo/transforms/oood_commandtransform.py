@@ -14,8 +14,8 @@ from lxml import html
 from lxml.etree import ParseError, Element
 from lxml.etree import SubElement
 
-from urllib import unquote
-from urlparse import parse_qsl, urlparse
+from urllib.parse import unquote
+from urllib.parse import parse_qsl, urlparse
 
 def includeMetaContentType(html_node):
   """XXX Temp workaround time to fix issue

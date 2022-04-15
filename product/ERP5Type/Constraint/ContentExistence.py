@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from past.builtins import basestring
 from Products.ERP5Type.Constraint import Constraint
 
 class ContentExistence(Constraint):
