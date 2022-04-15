@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+import six
 import copy
 import sys
 import types
@@ -128,34 +129,47 @@ class TypeAccessChecker:
       return v
     return factory
 
-  def __nonzero__(self):
+  def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
     # thinking it's a simple type, but we don't want this for type, because
     # type(x) is type for classes, being trueish would skip security check on
     # classes.
     return False
+  __nonzero__ = __bool__ # six.PY2
 
 ContainerAssertions[type] = TypeAccessChecker()
 
 
 class SafeIterItems(SafeIter):
 
-    def next(self):
-        ob = self._next()
+    def __next__(self):
+        try:
+            ob = self._next()     # AccessControl 2.13
+        except AttributeError:
+            ob = next(self._iter) # AccessControl 4.x
         c = self.container
         guard(c, ob[0])
         guard(c, ob[1])
         return ob
+    next = __next__ # six.PY2
 
 def get_iteritems(c, name):
-    return lambda: SafeIterItems(c.iteritems(), c)
+    return lambda: SafeIterItems(six.iteritems(c), c)
 _dict_white_list['iteritems'] = get_iteritems
 
+import past.builtins # six.PY2
+allow_module('past.builtins')
+ModuleSecurityInfo('past.builtins').declarePublic('cmp')
+
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
+    if cmp is not None: # six.PY2
+        from functools import cmp_to_key
+        key = cmp_to_key(cmp)
+
     if not isinstance(seq, SafeIter):
         for i, x in enumerate(seq):
             guard(seq, x, i)
-    return sorted(seq, cmp=cmp, key=key, reverse=reverse)
+    return sorted(seq, key=key, reverse=reverse)
 safe_builtins['sorted'] = guarded_sorted
 
 def guarded_reversed(seq):
@@ -225,8 +239,6 @@ from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
 full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
 
-# In contrary to builtins such as dict/defaultdict, it is possible to set
-# attributes on OrderedDict instances, so only allow setitem/delitem
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
 OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
@@ -258,16 +270,18 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-allow_module('StringIO')
-import StringIO
-StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
-allow_module('cStringIO')
-import cStringIO
-allow_type(cStringIO.InputType)
-allow_type(cStringIO.OutputType)
 allow_module('io')
 import io
 allow_type(io.BytesIO)
+allow_type(io.StringIO)
+if six.PY2:
+  allow_module('StringIO')
+  import StringIO
+  StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
+  allow_module('cStringIO')
+  import cStringIO
+  allow_type(cStringIO.InputType)
+  allow_type(cStringIO.OutputType)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
@@ -307,10 +321,28 @@ import hashlib
 allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('unicodedata')
-allow_module('urlparse')
-import urlparse
-allow_type(urlparse.ParseResult)
-allow_type(urlparse.SplitResult)
+
+if six.PY2:
+  import urlparse
+  allow_module('urlparse')
+  allow_type(urlparse.ParseResult)
+  allow_type(urlparse.SplitResult)
+
+  ModuleSecurityInfo('urllib').declarePublic(
+    'urlencode',
+    'quote', 'unquote',
+    'quote_plus', 'unquote_plus',
+  )
+import six.moves.urllib.parse
+allow_module('six.moves.urllib.parse')
+allow_type(six.moves.urllib.parse.ParseResult)
+allow_type(six.moves.urllib.parse.SplitResult)
+ModuleSecurityInfo('six.moves.urllib.parse').declarePublic(
+  'urlencode',
+  'quote', 'unquote',
+  'quote_plus', 'unquote_plus',
+)
+
 allow_module('struct')
 allow_module('zlib')
 
@@ -338,14 +370,19 @@ MNAME_MAP = {
   'zipfile': 'Products.ERP5Type.ZipFile',
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
+  'six': 'Products.ERP5Type.Six',
 }
-for alias, real in MNAME_MAP.items():
+for alias, real in six.iteritems(MNAME_MAP):
   assert '.' not in alias, alias # TODO: support this
   allow_module(real)
 del alias, real
 orig_guarded_import = safe_builtins['__import__']
+try:
+  from AccessControl.ZopeGuards import import_default_level # zope4py3
+except ImportError:
+  import_default_level = -1
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
-    level=-1):
+    level=import_default_level):
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
@@ -374,12 +411,6 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
 safe_builtins['__import__'] = guarded_import
 
 ModuleSecurityInfo('transaction').declarePublic('doom')
-
-ModuleSecurityInfo('urllib').declarePublic(
-  'urlencode',
-  'quote', 'unquote',
-  'quote_plus', 'unquote_plus',
-)
 
 import hmac
 allow_module('hmac')
