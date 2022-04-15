@@ -9,11 +9,23 @@
       for (i = 0; i < data[string].line_list.length; i += 1) {
         array.push(domsugar('tr', [
           domsugar('td', {text: messagetype}),
-          domsugar('td', {text: data[string].line_list[i].count}),
+          domsugar('td', {
+            text: data[string].line_list[i].count,
+            style: 'text-align: right;'
+          }),
           domsugar('td', {text: data[string].line_list[i].method_id}),
-          domsugar('td', {text: data[string].line_list[i].node}),
-          domsugar('td', {text: data[string].line_list[i].min_pri}),
-          domsugar('td', {text: data[string].line_list[i].max_pri})
+          domsugar('td', {
+            text: data[string].line_list[i].node,
+            style: 'text-align: right;'
+          }),
+          domsugar('td', {
+            text: data[string].line_list[i].min_pri,
+            style: 'text-align: right;'
+          }),
+          domsugar('td', {
+            text: data[string].line_list[i].max_pri,
+            style: 'text-align: right;'
+          })
         ]));
       }
     }
@@ -25,10 +37,22 @@
       for (i = 0; i < data[string].line_list.length; i += 1) {
         array.push(domsugar('tr', [
           domsugar('td', {text: messagetype}),
-          domsugar('td', {text: data[string].line_list[i].pri}),
-          domsugar('td', {text: data[string].line_list[i].min}),
-          domsugar('td', {text: data[string].line_list[i].avg}),
-          domsugar('td', {text: data[string].line_list[i].max})
+          domsugar('td', {
+            text: data[string].line_list[i].pri,
+            style: 'text-align: right;'
+          }),
+          domsugar('td', {
+            text: data[string].line_list[i].min,
+            style: 'text-align: right;'
+          }),
+          domsugar('td', {
+            text: data[string].line_list[i].avg,
+            style: 'text-align: right;'
+          }),
+          domsugar('td', {
+            text: data[string].line_list[i].max,
+            style: 'text-align: right;'
+          })
         ]));
       }
     }
@@ -49,58 +73,66 @@
       }
       return new RSVP.Queue()
         .push(function () {
-          return jIO.util.ajax(
-            {
+          return RSVP.hash({
+            evt: jIO.util.ajax({
               "type": "GET",
               "url": form_gadget.state.read_activity_list_url,
               "xhrFields": {
                 withCredentials: true
               }
-            }
-          );
+            }),
+            html_viewer: form_gadget.getDeclaredGadget('html_viewer')
+          });
         })
-        .push(function (evt) {
-          var data = JSON.parse(evt.target.response),
+        .push(function (hash) {
+          var data = JSON.parse(hash.evt.target.response),
             tbody1_content_list = [],
             tbody2_content_list = [];
           putMessageType(data, 'dict', 'SQLDict', tbody1_content_list);
           putMessageType(data, 'queue', 'SQLQueue', tbody1_content_list);
           putMessageType2(data, 'dict', 'SQLDict2', tbody2_content_list);
           putMessageType2(data, 'queue', 'SQLQueue2', tbody2_content_list);
-          domsugar(form_gadget.element.querySelector(".activity_watcher_gadget"), [
-            'Date : ',
-            new Date().toTimeString(),
+          return hash.html_viewer.render({value: domsugar('div',
+                                                          {'class': 'page'}, [
+              'Date : ',
+              new Date().toTimeString(),
 
-            domsugar('table', [
-              domsugar('thead', [domsugar('tr', [
-                domsugar('th', {text: 'Type'}),
-                domsugar('th', {text: 'Count'}),
-                domsugar('th', {text: 'Method Id'}),
-                domsugar('th', {text: 'Processing Node'}),
-                domsugar('th', {text: 'Min pri'}),
-                domsugar('th', {text: 'Max pri'})
-              ])]),
-              domsugar('tbody', tbody1_content_list)
-            ]),
+              domsugar('table', [
+                domsugar('caption', {text: 'Current Activities'}),
+                domsugar('thead', [domsugar('tr', [
+                  domsugar('th', {text: 'Type'}),
+                  domsugar('th', {text: 'Count'}),
+                  domsugar('th', {text: 'Method Id'}),
+                  domsugar('th', {text: 'Processing Node'}),
+                  domsugar('th', {text: 'Min pri'}),
+                  domsugar('th', {text: 'Max pri'})
+                ])]),
+                domsugar('tbody', tbody1_content_list)
+              ]),
 
-            domsugar('table', [
-              domsugar('thead', [domsugar('tr', [
-                domsugar('th', {text: 'Type'}),
-                domsugar('th', {text: 'Priority'}),
-                domsugar('th', {text: 'Min'}),
-                domsugar('th', {text: 'Avg'}),
-                domsugar('th', {text: 'Max'})
-              ])]),
-              domsugar('tbody', tbody2_content_list)
-            ])
-          ]);
+              domsugar('table', [
+                domsugar('caption', {text: 'Statistics'}),
+                domsugar('thead', [domsugar('tr', [
+                  domsugar('th', {text: 'Type'}),
+                  domsugar('th', {text: 'Priority'}),
+                  domsugar('th', {text: 'Min'}),
+                  domsugar('th', {text: 'Avg'}),
+                  domsugar('th', {text: 'Max'})
+                ])]),
+                domsugar('tbody', tbody2_content_list)
+              ])
+            ]).outerHTML});
 
         }, function (error) {
           //Exception is raised if network is lost for some reasons,
           //in this case, try patiently until network is back.
           console.warn("Unable to fetch activities from ERP5", error);
-          form_gadget.element.querySelector(".activity_watcher_gadget")
-                     .textContent = "Unable to fetch activities from ERP5";
+          return form_gadget.getDeclaredGadget('html_viewer')
+            .push(function (html_viewer) {
+              return html_viewer.render({
+                value: "Unable to fetch activities from ERP5"
+              });
+            });
         });
 
     }, 1000);

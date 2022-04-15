@@ -25,6 +25,7 @@ with portal.Localizer.translationContext(localizer_language):
 report_request = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 active_process = portal.portal_activities.newActiveProcess()
+inner_tag = tag + '-render'
 
 for idx, report_section in enumerate(report_section_list):
   if report_section.getPath():
@@ -34,7 +35,7 @@ for idx, report_section in enumerate(report_section_list):
   doc.activate(activity='SQLQueue',
                node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
                active_process=active_process,
-               tag=tag,
+               tag=inner_tag,
                priority=priority,
               ).Base_renderReportSection(skin_name=skin_name,
                                          localizer_language=localizer_language,
@@ -51,7 +52,8 @@ if activity_context == portal:
 activity_context.activate(
     activity='SQLQueue',
     node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
-    after_tag=tag,
+    after_tag=inner_tag,
+    tag=tag,
     priority=priority,
 ).Base_report(
            active_process_url=active_process.getRelativeUrl(),

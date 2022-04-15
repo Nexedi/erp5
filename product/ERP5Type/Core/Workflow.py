@@ -30,6 +30,7 @@
 ## Used in Products.ERP5Type.patches.DCWorkflow so this needs to go first...
 from Acquisition import aq_parent, aq_inner
 from Products.PageTemplates.Expressions import SecureModuleImporter
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from AccessControl import getSecurityManager
 from Products.PageTemplates.Expressions import getEngine
 from six import reraise
@@ -785,6 +786,17 @@ class Workflow(XMLObject):
 
     tool = self.getParentValue()
     state_var = self.getStateVariable()
+
+    # `status_dict` will hold the new status.
+    # Unlike DCWorkflow implementation, we don't start with an empty dict, but start
+    # by making a copy of the current status dict, this way the string used as keys
+    # will be the same string instances and this will reduce the pickle size:
+    # Copying existing dict saves space: when __setitem__(key, value) points at an
+    # existing key, python will just keep the existing string as key, which then
+    # means if both history entries are pickled together, the keys will be stored
+    # just once instead of once per dict.
+    # This is especially important with ERP5's WorkflowVariable implemented with
+    # IdAsReferenceMixin, because every call to getReference return a different string.
     status_dict = self.getCurrentStatusDict(ob)
 
     if tdef is None:
@@ -946,6 +958,26 @@ class Workflow(XMLObject):
       # Re-raise with a different result.
       raise ObjectMoved(ex.getNewObject(), res)
     return res
+
+  def _checkConsistency(self, fixit=False):
+    """Checks the workflow definition.
+    """
+    consistency_message_list = []
+    # make sure we have necessary variables
+    variable_reference_set = {
+        v.getReference()
+        for v in self.contentValues(portal_type='Workflow Variable')
+    }
+    for variable_reference in 'error_message', :
+      if variable_reference not in variable_reference_set:
+        consistency_message_list.append(
+            ConsistencyMessage(
+                self,
+                object_relative_url=self.getRelativeUrl(),
+                message=
+                'Required variable {variable_reference} missing in workflow.'.
+                format(variable_reference=variable_reference)))
+    return consistency_message_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
   def showAsXML(self, root=None):

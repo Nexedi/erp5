@@ -4256,10 +4256,11 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
         continue
 
       wf_history = obj.workflow_history[wf_id][-1]
-      # Remove useless modifcation 'time' and 'actor' (conflicts with VCSs)
-      wf_history.pop('time', None)
+      # Remove useless workflow entries that are always different and cause conflicts with VCS
       wf_history.pop('actor', None)
       wf_history.pop('comment', None)
+      wf_history.pop('error_message', None)
+      wf_history.pop('time', None)
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 

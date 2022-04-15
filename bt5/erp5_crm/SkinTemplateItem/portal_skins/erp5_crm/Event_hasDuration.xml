@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>image_data, image_path</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_updateReferenceImage</string> </value>
+            <value> <string>Event_hasDuration</string> </value>
         </item>
       </dictionary>
     </pickle>

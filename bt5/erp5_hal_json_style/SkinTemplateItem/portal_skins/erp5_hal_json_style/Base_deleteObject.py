@@ -5,7 +5,7 @@ The code is a modified version of Folder_delete. We split into two files not to
 further complicate the mentioned script.
 """
 
-from ZODB.POSException import ConflictError
+from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 
 portal = context.getPortalObject()
 translate = portal.Base_translateString
@@ -31,13 +31,15 @@ if context.isDeletable(check_relation=True):
         "portal_status_message": translate("Document deleted")
       })
 
-  except ConflictError:
-    raise
-  except Exception:
-    # XXX Catch-them-all expression is never a good idea
+  except UnsupportedWorkflowMethod:
     pass
 
 request = portal.REQUEST
 request.RESPONSE.setStatus(400)
-form = getattr(context,form_id)
-return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
+return context.Base_renderForm(
+  dialog_id,
+  keep_items={
+    'portal_status_message': translate("You are not authorised to delete the document"),
+    'portal_status_level': 'warning'
+  }
+)

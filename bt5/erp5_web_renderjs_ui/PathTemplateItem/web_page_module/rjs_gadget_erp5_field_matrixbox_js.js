@@ -1,5 +1,5 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, RSVP, domsugar, JSON*/
+/*global window, rJS, RSVP, domsugar, JSON*/
 /** MatrixBox renders a N-dimensional cube of editable values based on axes description.
  *
  * Example JSON returned from HATEOAS where cell_range format is
@@ -33,35 +33,14 @@
   see around https://lab.nexedi.com/nexedi/erp5/blob/feature/renderjs-matrixbox/product/ERP5Form/MatrixBox.py#L427
   *
   */
-(function (window, document, rJS, RSVP, domsugar, JSON) {
+(function (window, rJS, RSVP, domsugar, JSON) {
   "use strict";
-
-  /** Recursively introspect an object if it is empty */
-  function is_empty_recursive(data) {
-    var item;
-
-    if (typeof data === 'object') {
-      for (item in data) {
-        if (data.hasOwnProperty(item) && !item.startsWith("_")) {
-          if (is_empty_recursive(data[item]) === false) {return false; } // one non-empty element is enough
-        }
-      }
-      return true;
-    }
-    return !data && true; // convert basic types to boolean
-  }
 
   function copy(obj) {
     return JSON.parse(JSON.stringify(obj));
   }
 
   rJS(window)
-
-    .ready(function () {
-      this.props = {
-        gadget_dict: {}  // holds references to initialized gadgets
-      };
-    })
 
     .setState({
       data: '',
@@ -71,178 +50,146 @@
       key: ''
     })
 
-
-    /** Render constructs and saves gadgets into `props.gadget_dict` if they don not exist yet. 
-     */
     .declareMethod('render', function (options) {
-      var gadget = this,
-        data = options.field_json.data,
-        // note we make COPY of data in their original form - important since
-        // data.shift used later modify the structure inplace!
-        new_state = {
-          'data': JSON.stringify(options.field_json.data),
-          'template_field_dict': JSON.stringify(options.field_json.template_field_dict),
-          'editable': options.field_json.editable,
-          'hidden': options.field_json.hidden,
-          'key': options.field_json.key
-        };
+      return this.changeState({
+        'table_list': JSON.stringify(options.field_json.data),
+        'template_field_dict': JSON.stringify(options.field_json.template_field_dict),
+        'editable': options.field_json.editable,
+        'hidden': options.field_json.hidden,
+        'key': options.field_json.key
+      });
+    }, {mutex: 'render'})
 
-      if (is_empty_recursive(data)) {
-        return;
-      }
-
-      if (!is_empty_recursive(gadget.props.gadget_dict)) {
-        return this.changeState(new_state);
-      }
-
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(data.map(function (table, table_index) {
-            var header = table.shift(), // first item of table is the header
-              table_title = header.shift(); // first item of header is the table (tab) title
-
-            return new RSVP.Queue()
-              .push(function () {
-                return RSVP.all(table.map(function (row, row_index) {
-                  var row_element = document.createElement('tr'),
-                    row_id = new_state.key + "T" + table_index + "R" + row_index;
-
-                  row.shift(); // drop the row label definition because it is not usable now
-                  row_element.setAttribute('id', row_id);
-                  row_element.appendChild(document.createElement('th'));
-
-                  return new RSVP.Queue()
-                    .push(function () {
-
-                      return RSVP.all(row.map(function (column) {
-                        // transform all cell-definitions into actual gadgets
-                        return gadget.declareGadget('gadget_erp5_label_field.html', {
-                          scope: column.key,
-                          element: 'td',
-                          sandbox: "public"
-                        })
-                          .push(function (sub_gadget) {
-                            gadget.props.gadget_dict[column.key] = sub_gadget;
-                            return sub_gadget.element;
-                          });
-                      }));
-                    })
-                    .push(function (column_element_list) {
-                      column_element_list.forEach(function (column_element) {
-                        row_element.appendChild(column_element);
-                      });
-                      return row_element;
-                    });
-                }));
-              })
-              .push(function (row_element_list) {
-                var th_dom_list = [
-                  domsugar('th', {text: table_title})
-                ],
-                  i;
-                for (i = 0; i < header.length; i += 1) {
-                  th_dom_list.push(domsugar('th', {html: header[i]}));
-                }
-                return domsugar('table', [
-                  domsugar('thead', [
-                    domsugar('tr', th_dom_list)
-                  ]),
-                  domsugar('tbody', row_element_list)
-                ]);
-              });
-          }));
-        })
-        .push(function (table_element_list) {
-          domsugar(gadget.element.querySelector('div.document_table'),
-                   table_element_list);
-          return gadget.changeState(new_state);
-        });
-    })
-
-    /** Changes state of existing gadgets inside `props.gadget_dict`. */
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this,
         template_field_dict = JSON.parse(gadget.state.template_field_dict),
-        promise_queue = new RSVP.Queue(),
-        data;
+        table_list = JSON.parse(gadget.state.table_list);
 
-      if (modification_dict.hasOwnProperty('data')) {
-        data = JSON.parse(modification_dict.data);
-        if (is_empty_recursive(data)) {
-          return;
-        }
-        data.forEach(function (table, table_index) {
-          table.shift(); // drop the header
-          table.forEach(function (row, row_index) {
-            var row_id = gadget.state.key + 'T' + table_index + 'R' + row_index,
-              row_label_element = gadget.element.querySelector('tr#' + row_id + ' th');
-            row_label_element.textContent = row.shift() || ''; // pop-up the row label from data
+      return new RSVP.Queue(RSVP.all(table_list.map(function (table,
+                                                              table_index) {
+        // first item of table is the header
+        var header_list = table.shift(),
+          // first item of header is the table (tab) title
+          table_title = header_list.shift();
 
-            // then handle all inputs within the row
-            row.forEach(function (column) {
-              promise_queue
-                .push(function () {
-                  // Rendering of embedded field is prescribed by another field
-                  // in the form (usually in "hidden" group). Therefor we have a
-                  // reference for the template field included in state (field)
-                  var template_field = template_field_dict[column.field_id],
-                    field_json = copy(template_field),
-                    sub_gadget = gadget.props.gadget_dict[column.key];
+        return new RSVP.Queue(RSVP.all(table.map(function (row, row_index) {
+          // drop the row label definition because it is not usable now
+          var row_label = row.shift();
 
-                  // we copy (unknown) structure of template_field and carefully
-                  // add known attributes from `column`
-                  field_json.default = column.value;
-                  field_json.key = "field_" + column.key;
-                  field_json.hidden = gadget.state.hidden || template_field.hidden; // any hidden will hide the element
-                  field_json.editable = gadget.state.editable && template_field.editable; // any non-editable will disable editation 
-                  field_json.error_text = column.error_text;
+          return new RSVP.Queue(RSVP.all(row.map(function (column) {
+            // transform all cell-definitions into actual gadgets
+            return gadget.declareGadget('gadget_erp5_label_field.html', {
+              scope: column.key,
+              element: 'td',
+              sandbox: "public"
+            })
+              .push(function (sub_gadget) {
+                // Rendering of embedded field is prescribed by another field
+                // in the form (usually in "hidden" group). Therefor we have a
+                // reference for the template field included in state (field)
+                var template_field = template_field_dict[column.field_id],
+                  field_json = copy(template_field);
 
-                  return sub_gadget.render({
+                // we copy (unknown) structure of template_field and carefully
+                // add known attributes from `column`
+                field_json['default'] = column.value;
+                field_json.key = "field_" + column.key;
+                field_json.hidden = gadget.state.hidden || template_field.hidden; // any hidden will hide the element
+                field_json.editable = gadget.state.editable && template_field.editable; // any non-editable will disable editation 
+                field_json.error_text = column.error_text;
+
+                return RSVP.hash({
+                  _: sub_gadget.render({
                     label: false,
                     development_link: false,
                     field_type: column.type,
                     field_json: field_json
-                  });
+                  }),
+                  sub_gadget: sub_gadget
                 });
+              })
+              .push(function (hash) {
+                return hash.sub_gadget.element;
+              });
+          })))
+            .push(function (column_element_list) {
+              // return row_element
+              return domsugar('tr', {
+                id: gadget.state.key + "T" + table_index + "R" + row_index
+              }, [
+                domsugar('th', {text: row_label}),
+                domsugar(null, column_element_list)
+              ]);
+
             });
+        })))
+          .push(function (row_element_list) {
+            var th_dom_list = [
+              domsugar('th', {text: table_title})
+            ],
+              i;
+            for (i = 0; i < header_list.length; i += 1) {
+              // XXX used to be html instead of text
+              // But as unsecure, try to restrict
+              th_dom_list.push(domsugar('th', {text: header_list[i]}));
+            }
+            return domsugar('table', [
+              domsugar('thead', [
+                domsugar('tr', th_dom_list)
+              ]),
+              domsugar('tbody', row_element_list)
+            ]);
           });
+      })))
+        .push(function (table_element_list) {
+          domsugar(gadget.element.querySelector('div.document_table'),
+                   table_element_list);
         });
-      } // end: if modification_dict.data
-      return promise_queue;
     })
 
     .declareMethod("getContent", function (options) {
       var gadget = this,
-        data = {},  // result dictionary with values
-        field_key_list = [],
-        field_key;
+        table_list = JSON.parse(gadget.state.table_list),
+        promise_list = [],
+        // result dictionary with values
+        result_dict = {};
 
-      function extendData(field_data) {
-        var key;
-        for (key in field_data) {
-          if (field_data.hasOwnProperty(key) && !key.startsWith("_")) {
-            data[key] = field_data[key];
-          }
-        }
-      }
+      table_list.map(function (table) {
+        // first item of table is the header
+        table.shift();
 
-      for (field_key in gadget.props.gadget_dict) {
-        if (gadget.props.gadget_dict.hasOwnProperty(field_key) && !field_key.startsWith("_")) {
-          field_key_list.push(field_key);
-        }
-      }
+        table.map(function (row) {
+          // drop the row label definition because it is not usable now
+          row.shift();
 
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(field_key_list.map(function (field_key) {
-            return gadget.props.gadget_dict[field_key].getContent(options);
-          }));
-        })
-        .push(function (field_value_list) {
-          field_value_list.forEach(extendData);
-          return data;
+          row.map(function (column) {
+            var field_key = column.key;
+            if (field_key.startsWith("_")) {
+              return;
+            }
+            promise_list.push(
+              gadget.getDeclaredGadget(field_key)
+                .push(function (sub_gadget) {
+                  return sub_gadget.getContent(options);
+                })
+                .push(function (field_data) {
+                  var key;
+                  for (key in field_data) {
+                    if (field_data.hasOwnProperty(key) && !key.startsWith("_")) {
+                      result_dict[key] = field_data[key];
+                    }
+                  }
+                })
+            );
+          });
         });
-    })
+      });
+
+      return new RSVP.Queue(RSVP.all(promise_list))
+        .push(function () {
+          return result_dict;
+        });
+    }, {mutex: 'render'})
 
     .allowPublicAcquisition("notifyInvalid", function () {
       return;
@@ -254,6 +201,6 @@
 
     .declareMethod("checkValidity", function () {
       return true;
-    });
+    }, {mutex: 'render'});
 
-}(window, document, rJS, RSVP, domsugar, JSON));
+}(window, rJS, RSVP, domsugar, JSON));

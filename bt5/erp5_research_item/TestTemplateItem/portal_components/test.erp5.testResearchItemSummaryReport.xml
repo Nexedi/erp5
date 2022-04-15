@@ -114,33 +114,6 @@
                       <value> <string>validate</string> </value>
                   </item>
                   <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>seb</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1385030033.93</float>
-                              <string>GMT+1</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>validated</string> </value>
                   </item>

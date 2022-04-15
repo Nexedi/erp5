@@ -156,10 +156,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>line_exclusive</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -191,6 +187,14 @@
               <tuple>
                 <string>quantity</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <list>
+                <string>solver_workflow</string>
+              </list>
             </value>
         </item>
       </dictionary>

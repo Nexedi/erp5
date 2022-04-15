@@ -33,6 +33,7 @@
         step: options.step,
         hidden: options.hidden,
         trim: options.trim || false,
+        maxlength: options.maxlength,
         multiple: options.multiple,
         accept: options.accept,
         capture: options.capture,
@@ -88,6 +89,9 @@
         }
         if (this.state.accept) {
           textarea.setAttribute('accept', this.state.accept);
+        }
+        if (this.state.maxlength) {
+          textarea.setAttribute('maxlength', this.state.maxlength);
         }
 
         if (this.state.multiple) {

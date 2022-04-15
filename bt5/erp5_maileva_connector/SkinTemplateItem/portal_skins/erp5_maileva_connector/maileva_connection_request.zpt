@@ -18,7 +18,7 @@
                         <com:AddressLine5 tal:content="python: recipient_address_line_list[4]" tal:condition="python: recipient_address_line_list[4]"></com:AddressLine5>
                         <com:AddressLine6 tal:content="python: recipient_address_line_list[5]" tal:condition="python: recipient_address_line_list[5]"></com:AddressLine6>
                       </com:AddressLines>
-                      <com:Country tal:content="recipient_region/getTitle"></com:Country>
+                      <com:Country tal:content="recipient_region/getTranslatedTitle"></com:Country>
                       <com:CountryCode tal:content="recipient_region/getCodification"></com:CountryCode>
                     </com:PaperAddress>
                     <com:DigitalAddress>
@@ -77,7 +77,7 @@
                 <pjs:RequestOption>
                   <spec:DigitalOption>
                     <spec:FoldOption>
-                      <spec:PostageClass>ECOPLI_GRAND_COMPTE</spec:PostageClass>
+                      <spec:PostageClass tal:content="python: 'ECOPLI_GRAND_COMPTE' if recipient_region.getCodification() == 'FR' else 'STANDARD'"></spec:PostageClass>
                       <spec:DepositTitle tal:content="here/getTitle"></spec:DepositTitle>
                       <spec:DepositDescription tal:content="here/getTitle"></spec:DepositDescription>
                       <spec:UseFlyLeaf>true</spec:UseFlyLeaf>

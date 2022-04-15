@@ -447,16 +447,16 @@ fieldset.bottom > .field > label {
   padding: revert;
 }
 
-.content .field label {
+.content .field > label {
   width: 30%;
 }
 
-.content .field label,
+.content .field > label,
 .content .field .input {
   float: left;
 }
 
-body[dir="rtl"] .content .field label,
+body[dir="rtl"] .content .field > label,
 body[dir="rtl"] .content .field .input {
   float: right;
 }
@@ -473,7 +473,7 @@ fieldset.bottom .field .input,
   vertical-align: middle;
 }
 
-.content .required label {
+.content .required > label {
   font-weight: bold;
 }
 

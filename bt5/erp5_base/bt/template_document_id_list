@@ -39,7 +39,6 @@ document.erp5.QuantitySignMovementGroup
 document.erp5.RequirementMovementGroup
 document.erp5.RoleDefinition
 document.erp5.RootAppliedRuleCausalityMovementGroup
-document.erp5.RoundingModel
 document.erp5.SimulatedDeliveryBuilder
 document.erp5.SplitMovementGroup
 document.erp5.Supply

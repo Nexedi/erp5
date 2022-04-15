@@ -131,7 +131,7 @@
         </item>
         <item>
             <key> <string>preferred_password</string> </key>
-            <value> <string/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>preferred_rss_feed</string> </key>
@@ -139,7 +139,7 @@
         </item>
         <item>
             <key> <string>preferred_username</string> </key>
-            <value> <string/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

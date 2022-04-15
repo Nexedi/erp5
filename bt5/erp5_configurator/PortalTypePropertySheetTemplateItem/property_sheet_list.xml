@@ -1,9 +1,9 @@
 <property_sheet_list>
- <portal_type id="Workflow Transition">
-  <item>ConfiguratorWorkflowTransition</item>
- </portal_type>
  <portal_type id="Workflow">
   <item>ConfiguratorWorkflow</item>
   <item>DefaultImage</item>
+ </portal_type>
+ <portal_type id="Workflow Transition">
+  <item>ConfiguratorWorkflowTransition</item>
  </portal_type>
 </property_sheet_list>

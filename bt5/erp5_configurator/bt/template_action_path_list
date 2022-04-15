@@ -27,7 +27,7 @@ Site Property Configurator Item | view
 Solver Configurator Item | view
 Standard BT5 Configurator Item | view
 System Preference Configurator Item | view
+Workflow Transition | configurator_settings
 Workflow | configurator_settings
 Workflow | launch_configuration
-Workflow Transition | configurator_settings
 portal_actions | use_configurator

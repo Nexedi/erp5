@@ -109,6 +109,20 @@ class TestCRM(BaseTestCRM):
       self.assertTrue(event.isMovement(),
         "%s is not a movement" % portal_type)
 
+  def test_Event_stop_date_field_enabled(self):
+    """
+      Checks if Event_view display stop_date to Phone calls and visits
+    """
+    phone_call = self.portal.event_module.newContent(
+      portal_type="Phone Call", temp_object=True)
+    self.assertTrue(phone_call.Event_view.my_stop_date.get_value("enabled"))
+    visit = self.portal.event_module.newContent(
+      portal_type="Visit", temp_object=True)
+    self.assertTrue(visit.Event_view.my_stop_date.get_value("enabled"))
+    mail_message = self.portal.event_module.newContent(
+      portal_type="Mail Message", temp_object=True)
+    self.assertFalse(mail_message.Event_view.my_stop_date.get_value("enabled"))
+
   def test_Event_CreateRelatedEvent(self):
     # test workflow to create a related event from responded event
     event_module = self.portal.event_module

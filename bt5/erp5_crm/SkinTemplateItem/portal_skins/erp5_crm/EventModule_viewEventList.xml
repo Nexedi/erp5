@@ -81,6 +81,7 @@
                       <list>
                         <string>listbox_destination_title</string>
                         <string>listbox_delivery_start_date</string>
+                        <string>listbox_delivery_stop_date</string>
                       </list>
                     </value>
                 </item>
