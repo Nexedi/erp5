@@ -11,6 +11,7 @@ tool.erp5.NotificationTool
 tool.erp5.OrderTool
 tool.erp5.PasswordTool
 tool.erp5.RuleTool
+tool.erp5.RoundingTool
 tool.erp5.SessionTool
 tool.erp5.SimulationTool
 tool.erp5.TestTool
