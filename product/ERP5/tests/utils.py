@@ -32,7 +32,7 @@ import xml.dom.minidom
 from urllib import url2pathname
 from ZODB.DemoStorage import DemoStorage
 from ZODB import DB
-from OFS.XMLExportImport import importXML
+from Products.ERP5Type.XMLExportImport import importXML
 
 if int(os.environ.get('erp5_report_new_simulation_failures') or 0):
   newSimulationExpectedFailure = lambda test: test

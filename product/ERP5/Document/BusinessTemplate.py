@@ -71,16 +71,13 @@ from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModule
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
-from OFS import SimpleItem, XMLExportImport
+from OFS import SimpleItem
 from OFS.Image import Pdata
 from cStringIO import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
-import OFS.XMLExportImport
-from Products.ERP5Type.patches.ppml import importXML
-customImporters={
-    XMLExportImport.magic: importXML,
-    }
+from Products.ERP5Type.XMLExportImport import exportXML
+from OFS.ObjectManager import customImporters
 from Products.ERP5Type.Workflow import WorkflowHistoryList
 from zLOG import LOG, WARNING, INFO
 from warnings import warn
@@ -858,7 +855,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           transaction.savepoint(optimistic=True)
 
         f = StringIO()
-        XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+        exportXML(obj._p_jar, obj._p_oid, f)
         bta.addObject(f, key, path=path)
         
       if catalog_method_template_item:
@@ -1015,8 +1012,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       pass
 
     #LOG('Business Template', 0, 'Compiling %s...' % (name,))
-    from Shared.DC.xml import ppml
-    from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
+    from Products.ERP5Type.XMLExportImport import (ppml,
+      start_zopedata, save_record, save_zopedata)
     import xml.parsers.expat
     outfile=StringIO()
     try:
@@ -1069,10 +1066,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       new_object = self._objects[path]
       new_io = StringIO()
       old_io = StringIO()
-      OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
+      exportXML(new_object._p_jar, new_object._p_oid, new_io)
       new_obj_xml = new_io.getvalue()
       try:
-        OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
+        exportXML(old_object._p_jar, old_object._p_oid, old_io)
         old_obj_xml = old_io.getvalue()
       except (ImportError, UnicodeDecodeError), e: # module is already
                                                    # removed etc.
@@ -6167,8 +6164,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         new_object = new_item.removeProperties(new_object, 1)
         installed_object = installed_item.removeProperties(installed_object, 1)
         # XML Export in memory
-        OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
-        OFS.XMLExportImport.exportXML(installed_object._p_jar,
+        exportXML(new_object._p_jar, new_object._p_oid, f1)
+        exportXML(installed_object._p_jar,
                                       installed_object._p_oid, f2)
         new_obj_xml = f1.getvalue()
         f1.close()
@@ -6503,6 +6500,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.interfaces.json_representable',
       'Products.ERP5Type.mixin.json_representable',
       'Products.ERP5Type.XMLExportImport',
+      'Products.ERP5Type.XMLExportImport.ppml',
+      'Products.ERP5Type.XMLExportImport.xyap',
       'Products.ERP5Type.mixin.property_translatable',
       'Products.ERP5Type.Error',
       'Products.ERP5Type.Errors',
