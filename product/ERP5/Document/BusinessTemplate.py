@@ -6734,6 +6734,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Monkey patches or used by monkey patches ; Restricted Python
       'Products.ERP5Type.Calendar',
       'Products.ERP5Type.Collections',
+      'Products.ERP5Type.Six',
       'Products.ERP5Type.Timeout',
       'Products.ERP5Type.ZipFile',
       'Products.ERP5Type.ZopePatch',
