@@ -31,7 +31,7 @@ import pickle
 import re
 import xml.parsers.pyexpat
 from StringIO import StringIO
-from Shared.DC.xml import ppml
+from Products.ERP5Type.XMLExportImport import ppml
 
 
 class DummyClass:

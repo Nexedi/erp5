@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2001,2002 Zope Foundation and Contributors.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE
+#
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,8 +36,8 @@
 #
 ##############################################################################
 
+## The code below was initially in ERP5Type/XMLExportImport.py
 from Acquisition import aq_base, aq_inner
-
 from collections import OrderedDict
 from cStringIO import StringIO
 from zodbpickle.pickle import Pickler
@@ -38,10 +47,9 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
-from zLOG import LOG
 from base64 import standard_b64encode
-
 from hashlib import sha1
+#from zLOG import LOG
 
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
@@ -207,3 +215,191 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
 
   return etree.tostring(root, encoding='utf-8',
                         xml_declaration=xml_declaration, pretty_print=True)
+
+## The code below was initially from OFS.XMLExportImport
+from base64 import encodestring
+from ZODB.serialize import referencesf
+from ZODB.ExportImport import TemporaryFile, export_end_marker
+from ZODB.utils import p64
+from ZODB.utils import u64
+from functools import partial
+from inspect import getargspec
+from types import TupleType
+from OFS import ObjectManager
+from . import ppml
+
+magic='<?xm' # importXML(jar, file, clue)}
+
+def reorderPickle(jar, p):
+    try:
+        from ZODB._compat import Unpickler, Pickler
+    except ImportError: # BBB: ZODB 3.10
+        from ZODB.ExportImport import Unpickler, Pickler
+    from ZODB.ExportImport import Ghost, persistent_id
+
+    oids = {}
+    storage = jar._storage
+    new_oid = storage.new_oid
+    store = storage.store
+
+    def persistent_load(ooid,
+                        Ghost=Ghost,
+                        oids=oids, wrote_oid=oids.has_key,
+                        new_oid=storage.new_oid):
+
+        "Remap a persistent id to an existing ID and create a ghost for it."
+
+        if type(ooid) is TupleType: ooid, klass = ooid
+        else: klass=None
+
+        try:
+          Ghost=Ghost()
+          Ghost.oid=ooid
+        except TypeError:
+          Ghost=Ghost(ooid)
+        return Ghost
+
+    # Reorder pickle by doing I/O
+    pfile = StringIO(p)
+    unpickler=Unpickler(pfile)
+    unpickler.persistent_load=persistent_load
+
+    newp=StringIO()
+    pickler=OrderedPickler(newp,1)
+    pickler.persistent_id=persistent_id
+
+    classdef = unpickler.load()
+    obj = unpickler.load()
+    pickler.dump(classdef)
+    pickler.dump(obj)
+    p=newp.getvalue()
+    return obj, p
+
+def _mapOid(id_mapping, oid):
+    idprefix = str(u64(oid))
+    id = id_mapping[idprefix]
+    old_aka = encodestring(oid)[:-1]
+    aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
+    id_mapping.setConvertedAka(old_aka, aka)
+    return idprefix+'.', id, aka
+
+def XMLrecord(oid, plen, p, id_mapping):
+    # Proceed as usual
+    q=ppml.ToXMLUnpickler
+    f=StringIO(p)
+    u=q(f)
+    u.idprefix, id, aka = _mapOid(id_mapping, oid)
+    p=u.load(id_mapping=id_mapping).__str__(4)
+    if f.tell() < plen:
+        p=p+u.load(id_mapping=id_mapping).__str__(4)
+    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka, p)
+    return String
+
+def exportXML(jar, oid, file=None):
+    # For performance reasons, exportXML does not use 'XMLrecord' anymore to map
+    # oids. This requires to initialize MinimalMapping.marked_reference before
+    # any string output, i.e. in ppml.Reference.__init__
+    # This also fixed random failures when DemoStorage is used, because oids
+    # can have values that have a shorter representation in 'repr' instead of
+    # 'base64' (see ppml.convert) and ppml.String does not support this.
+    load = jar._storage.load
+    if 'version' in getargspec(load).args: # BBB: ZODB<5 (TmpStore)
+        load = partial(load, version='')
+    pickle_dict = {oid: None}
+    max_cache = [1e7] # do not cache more than 10MB of pickle data
+    def getReorderedPickle(oid):
+        p = pickle_dict[oid]
+        if p is None:
+            p = load(oid)[0]
+            p = reorderPickle(jar, p)[1]
+            if len(p) < max_cache[0]:
+                max_cache[0] -= len(p)
+                pickle_dict[oid] = p
+        return p
+
+    # Sort records and initialize id_mapping
+    id_mapping = ppml.MinimalMapping()
+    reordered_oid_list = [oid]
+    for oid in reordered_oid_list:
+        _mapOid(id_mapping, oid)
+        for oid in referencesf(getReorderedPickle(oid)):
+            if oid not in pickle_dict:
+                pickle_dict[oid] = None
+                reordered_oid_list.append(oid)
+
+    # Do real export
+    if file is None:
+        file = TemporaryFile()
+    elif isinstance(file, basestring):
+        file = open(file, 'w+b')
+    write = file.write
+    write('<?xml version="1.0"?>\n<ZopeData>\n')
+    for oid in reordered_oid_list:
+        p = getReorderedPickle(oid)
+        write(XMLrecord(oid, len(p), p, id_mapping))
+    write('</ZopeData>\n')
+    return file
+
+class zopedata:
+    def __init__(self, parser, tag, attrs):
+        self.file=parser.file
+        write=self.file.write
+        write('ZEXP')
+
+    def append(self, data):
+        file=self.file
+        write=file.write
+        pos=file.tell()
+        file.seek(pos)
+        write(data)
+
+def start_zopedata(parser, tag, data):
+    return zopedata(parser, tag, data)
+
+def save_zopedata(parser, tag, data):
+    file=parser.file
+    write=file.write
+    pos=file.tell()
+    file.seek(pos)
+    write(export_end_marker)
+
+def save_record(parser, tag, data):
+    file=parser.file
+    write=file.write
+    pos=file.tell()
+    file.seek(pos)
+    a=data[1]
+    if a.has_key('id'): oid=a['id']
+    oid=p64(int(oid))
+    v=''
+    for x in data[2:]:
+        v=v+x
+    l=p64(len(v))
+    v=oid+l+v
+    return v
+
+import xml.parsers.expat
+def importXML(jar, file, clue=''):
+    if type(file) is str:
+        file=open(file, 'rb')
+    outfile=TemporaryFile()
+    data=file.read()
+    F=ppml.xmlPickler()
+    F.end_handlers['record'] = save_record
+    F.end_handlers['ZopeData'] = save_zopedata
+    F.start_handlers['ZopeData'] = start_zopedata
+    F.binary=1
+    F.file=outfile
+    # <patch>
+    # Our BTs XML files don't declare encoding but have accented chars in them
+    # So we have to declare an encoding but not use unicode, so the unpickler
+    # can deal with the utf-8 strings directly
+    p=xml.parsers.expat.ParserCreate('utf-8')
+    p.returns_unicode = False
+    # </patch>
+    p.CharacterDataHandler=F.handle_data
+    p.StartElementHandler=F.unknown_starttag
+    p.EndElementHandler=F.unknown_endtag
+    r=p.Parse(data)
+    outfile.seek(0)
+    return jar.importFile(outfile,clue)

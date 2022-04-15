@@ -40,8 +40,6 @@ if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import DynamicType
-from Products.ERP5Type.patches import XMLExportImport
-from Products.ERP5Type.patches import ppml
 from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import sqltest
 from Products.ERP5Type.patches import sqlvar
