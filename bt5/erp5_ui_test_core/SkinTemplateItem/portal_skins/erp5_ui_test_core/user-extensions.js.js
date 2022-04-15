@@ -324,3 +324,12 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
       }));
 
 };
+
+/**
+ * Wait for fonts to be loaded.
+ *
+ * This is useful before checking snapshot
+ */
+Selenium.prototype.doWaitForFontsLoaded = function() {
+  return wrapPromise(this.page().getDocument().fonts.ready);
+}
