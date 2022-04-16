@@ -594,13 +594,21 @@ class BaseTemplateItem(Implicit, Persistent):
       # PythonScript covers both Zope Python scripts
       # and ERP5 Python Scripts
       if isinstance(obj, PythonScript):
-        # `expression_instance` is included so as to add compatibility for
-        # exporting older catalog methods which might have them as their
-        # properties or in their attribute dict.
-        attr_set.update(('func_code', '__code__',
-                         'func_defaults', '__defaults__',
-                         '_code', '_lazy_compilation', 'Python_magic',
-                         'expression_instance'))
+        attr_set.update(
+          (
+            '__code__',
+            'func_code',
+            '__defaults__',
+            'func_defaults',
+            '_code',
+            '_lazy_compilation',
+            'Python_magic',
+            'Script_magic',
+            # `expression_instance` is included so as to add compatibility for
+            # exporting older catalog methods which might have them as their
+            # properties or in their attribute dict.
+            'expression_instance',
+          ))
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
@@ -863,7 +871,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         f = BytesIO()
         exportXML(obj._p_jar, obj._p_oid, f)
         bta.addObject(f, key, path=path)
-        
+
       if catalog_method_template_item:
         # add all datas specific to catalog inside one file
         xml_data = self.generateXml(key)
@@ -931,7 +939,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       # already exist, therefore BaseTemplateItem.__init__() is called which
       # does not set _archive with portal_components/ like
       # ObjectTemplateItem.__init__()
-      # XXX - the above comment is a bit unclear, 
+      # XXX - the above comment is a bit unclear,
       # still not sure if this is handled correctly
       if file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components':
         self._archive[obj_key] = None
@@ -4357,14 +4365,14 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
     action for developers
     """
     return path.startswith(self._tool_id + '/')
-  
+
   # XXX temporary should be eliminated from here
   def _importFile(self, file_name, file_obj):
     ObjectTemplateItem._importFile(self, file_name, file_obj)
-  
+
   # XXX temporary should be eliminated from here
   def export(self, context, bta, **kw):
-    ObjectTemplateItem.export(self, context, bta, **kw)  
+    ObjectTemplateItem.export(self, context, bta, **kw)
 
   def getTemplateIdList(self):
     """
