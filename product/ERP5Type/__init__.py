@@ -180,7 +180,9 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
     'Email_parseAddressHeader', 'guessEncodingFromText',
-    'isValidTALESExpression')
+    'isValidTALESExpression',
+    'ensure_list', 'bytes2str', 'str2bytes', 'unicode2str',
+)
 
 allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
