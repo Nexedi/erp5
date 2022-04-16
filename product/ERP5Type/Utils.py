@@ -554,6 +554,24 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 # Python 2-3 compat
 #####################################################
 
+if str is bytes:
+  bytes2str = str2bytes = lambda s: s
+  def unicode2str(s):
+    return s.encode('utf-8')
+else:
+  def bytes2str(s):
+    return s.decode()
+  def str2bytes(s):
+    return s.encode()
+  def unicode2str(s):
+    return s
+
+if six.PY3:
+  def ensure_list(o):
+    return list(o)
+else:
+  ensure_list = lambda x: x
+
 def with_metaclass(meta, *bases):
   """
   Function from jinja2/_compat.py. License: BSD (copy/paste here for
