@@ -550,6 +550,19 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   #LOG('Utils', INFO, 'Checking time (pylint): %.2f' % (time.time() - started))
   return message_list
 
+# Used for Python 2-3 compatibility
+if str is bytes:
+  bytes2str = str2bytes = lambda s: s
+  def unicode2str(s):
+    return s.encode('utf-8')
+else:
+  def bytes2str(s):
+    return s.decode()
+  def str2bytes(s):
+    return s.encode()
+  def unicode2str(s):
+    return s
+
 #####################################################
 # Globals initialization
 #####################################################
