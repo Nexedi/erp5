@@ -551,6 +551,22 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   return message_list
 
 #####################################################
+# Python 2-3 compat
+#####################################################
+
+if str is bytes:
+  bytes2str = str2bytes = lambda s: s
+  def unicode2str(s):
+    return s.encode('utf-8')
+else:
+  def bytes2str(s):
+    return s.decode()
+  def str2bytes(s):
+    return s.encode()
+  def unicode2str(s):
+    return s
+
+#####################################################
 # Globals initialization
 #####################################################
 
