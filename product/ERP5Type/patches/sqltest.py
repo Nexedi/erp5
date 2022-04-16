@@ -10,6 +10,13 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
+
+try:
+  from Shared.DC.ZRDB.sqlvar import StringTypes
+except ImportError: # Products.ZSQLMethods < 3.0.8
+  import six
+  StringTypes = six.string_types + (six.binary_type,)
+
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
 from DateTime import DateTime

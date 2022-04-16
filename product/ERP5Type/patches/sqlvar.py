@@ -12,6 +12,12 @@
 #
 ##############################################################################
 
+try:
+  from Shared.DC.ZRDB.sqlvar import StringTypes
+except ImportError: # Products.ZSQLMethods < 3.0.8
+  import six
+  StringTypes = six.string_types + (six.binary_type,)
+
 # dtml-sqlvar patch to convert None to NULL, and deal with DateTime
 
 from Shared.DC.ZRDB.sqlvar import *
