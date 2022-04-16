@@ -1,4 +1,9 @@
 #!/usr/bin/env python2.7
+
+# Modules aliases to support both python2 and python3
+from future import standard_library
+standard_library.install_aliases()
+
 import os
 import sys
 import pdb
