@@ -595,9 +595,16 @@ class BaseTemplateItem(Implicit, Persistent):
         # `expression_instance` is included so as to add compatibility for
         # exporting older catalog methods which might have them as their
         # properties or in their attribute dict.
-        attr_set.update(('func_code', 'func_defaults', '_code',
-                         '_lazy_compilation', 'Python_magic',
-                         'expression_instance'))
+        attr_set.update(
+          (
+            'func_code',
+            'func_defaults',
+            '_code',
+            '_lazy_compilation',
+            'Python_magic',
+            'Script_magic',
+            'expression_instance',
+          ))
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
