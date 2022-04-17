@@ -28,6 +28,7 @@ from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
 from DateTime import DateTime
+import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
@@ -399,8 +400,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       # UTC
       os.environ['TZ'] = "UTC"
       time.tzset()
-      DateTime._isDST = False
-      DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = "UTC"
+
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone0', new='UTC').start()
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone1', new='UTC').start()
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_multipleZones', new=False).start()
+
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'

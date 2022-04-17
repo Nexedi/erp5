@@ -34,10 +34,16 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+original_DateTime__eq__ = DateTimeKlass.__eq__
+DateTimeKlass.__eq__ = DateTimeKlass.equalTo
+
 original_DateTime__setstate__ = DateTimeKlass.__setstate__
 
 def DateTime__setstate__(self, state):
-  self.__dict__.clear()
+  try: # BBB DateTime 2.12.8
+    self.__dict__.clear()
+  except AttributeError:
+    pass
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
@@ -59,19 +65,38 @@ def DateTime__getstate__(self):
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
 
+try:
+  DateTimeKlass._month_len
+except AttributeError:
+  # BBB
+  from DateTime.DateTime import _MONTH_LEN
+  DateTimeKlass._month_len = _MONTH_LEN
+
 def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   # Parse date-time components from a string
   month=year=tz=tm=None
-  spaces        =self.space_chars
-  intpat        =self.int_pattern
-  fltpat        =self.flt_pattern
-  wordpat       =self.name_pattern
-  delimiters    =self.delimiters
-  MonthNumbers  =self._monthmap
-  DayOfWeekNames=self._daymap
-  ValidZones    =self._tzinfo._zidx
+  try: # BBB DateTime 2.12
+    spaces        =self.space_chars
+    intpat        =self.int_pattern
+    fltpat        =self.flt_pattern
+    wordpat       =self.name_pattern
+    delimiters    =self.delimiters
+    MonthNumbers  =self._monthmap
+    DayOfWeekNames=self._daymap
+    ValidZones    =self._tzinfo._zidx
+    _MONTH_LEN = self._month_len
+  except AttributeError:
+    from DateTime.DateTime import (SPACE_CHARS as spaces,
+                                   INT_PATTERN as intpat,
+                                   FLT_PATTERN as fltpat,
+                                   NAME_PATTERN as wordpat,
+                                   DELIMITERS as delimiters,
+                                   _MONTHMAP as MonthNumbers,
+                                   _DAYMAP as DayOfWeekNames,
+                                   _TZINFO,
+                                   _MONTH_LEN)
+    ValidZones = _TZINFO._zidx
   TimeModifiers =['am','pm']
-
   # Find timezone first, since it should always be the last
   # element, and may contain a slash, confusing the parser.
   st= st.strip()
@@ -206,10 +231,9 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   year = _correctYear(year)
   #handle dates before year 1000
   #if year < 1000: raise SyntaxError, st
-
   leap = year%4==0 and (year%100!=0 or year%400==0)
   try:
-    if not day or day > self._month_len[leap][month]:
+    if not day or day > _MONTH_LEN[leap][month]:
       raise DateError(st)
   except IndexError:
     raise DateError(st)
@@ -248,7 +272,17 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
-if __name__ == '__main__':
+
+# DateTime 3 removed exceptions as class attributes (since
+# zopefoundation/DateTime commit 8114618 ), but we have some code expecting
+# these attributes, so undo this patch for convenience.
+DateTimeKlass.DateTimeError = DateTimeError
+DateTimeKlass.SyntaxError = SyntaxError
+DateTimeKlass.DateError = DateError
+DateTimeKlass.TimeError = TimeError
+
+
+if __name__ == '__main__': # TODO: make a proper test out of this
   for i in ('2007/01/02 12:34:56.789',
             '2007/01/02 12:34:56.789 GMT+0200',
             '2007/01/02 12:34:56.789 JST',
