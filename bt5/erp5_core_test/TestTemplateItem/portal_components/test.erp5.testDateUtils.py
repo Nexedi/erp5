@@ -199,8 +199,30 @@ class TestPinDateTime(ERP5TypeTestCase):
     self.assertGreaterEqual(DateTime(), actual_begin_date)
 
 
+class TestERP5TypeTestCaseTimeZone(ERP5TypeTestCase):
+  def test_timezone_UTC(self):
+    actual_timezone = DateTime().timezone()
+    with self.timezone('UTC'):
+      self.assertEqual(DateTime().timezone(), 'UTC')
+    self.assertEqual(DateTime().timezone(), actual_timezone)
+
+  def test_timezone_with_dst(self):
+    actual_timezone = DateTime().timezone()
+    with self.timezone('Europe/Paris'):
+      self.assertEqual(DateTime(2021, 2, 1).timezone(), 'CET')
+      self.assertEqual(DateTime(2021, 7, 1).timezone(), 'CEST')
+    self.assertEqual(DateTime().timezone(), actual_timezone)
+
+  def test_timezone_without_dst(self):
+    actual_timezone = DateTime().timezone()
+    with self.timezone('Asia/Tokyo'):
+      self.assertEqual(DateTime().timezone(), 'JST')
+    self.assertEqual(DateTime().timezone(), actual_timezone)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDateUtils))
   suite.addTest(unittest.makeSuite(TestPinDateTime))
+  suite.addTest(unittest.makeSuite(TestERP5TypeTestCaseTimeZone))
   return suite

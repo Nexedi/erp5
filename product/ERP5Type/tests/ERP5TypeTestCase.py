@@ -28,6 +28,7 @@ from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
 from DateTime import DateTime
+import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
@@ -391,16 +392,38 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def unpinDateTime(self):
       self.pinDateTime(None)
 
-    def setTimeZoneToUTC(self):
-      # Make sure tests runs with UTC timezone. Some tests are checking values
-      # based on now, and this could give unexpected results:
-      # DateTime("2016/10/31") - DateTime("2016/10/30") = 1.0416666666666667 if
-      # you are running on a timezone like Europe/Paris, while it return 1.0 for
-      # UTC
-      os.environ['TZ'] = "UTC"
+    @contextmanager
+    def timezone(self, timezone):
+      """Context manager to change timezone.
+      """
+      saved_TZ = os.environ.get('TZ')
+      os.environ['TZ'] = timezone
       time.tzset()
-      DateTime._isDST = False
-      DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = "UTC"
+      _multipleZones = time.daylight
+      _localzone0 = time.tzname[0]
+      _localzone1 = time.tzname[1] if time.daylight else time.tzname[0]
+      try:
+        import DateTime
+        sys.modules['DateTime.DateTime'].DateTime._localzone0
+      except AttributeError:
+        patch_target = sys.modules['DateTime.DateTime']
+      else:
+        # BBB DateTime 2
+        patch_target = sys.modules['DateTime.DateTime'].DateTime
+
+      with mock.patch.object(patch_target, '_localzone0', new=_localzone0), \
+          mock.patch.object(patch_target, '_localzone1', new=_localzone1), \
+          mock.patch.object(patch_target, '_multipleZones', new=_multipleZones):
+        yield
+      os.environ.pop('TZ')
+      if saved_TZ:
+        os.environ['TZ'] = saved_TZ
+      time.tzset()
+
+    def setTimeZoneToUTC(self):
+      # Deprecated, because the original timezone is never restored.
+      # Prefer using `timezone` context manager instead.
+      self.timezone('UTC').__enter__()
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
