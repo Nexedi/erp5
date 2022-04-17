@@ -28,6 +28,7 @@ from glob import glob
 from hashlib import md5
 from warnings import warn
 from DateTime import DateTime
+import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
@@ -383,15 +384,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, unittest.Tes
       self.pinDateTime(None)
 
     def setTimeZoneToUTC(self):
-      # Make sure tests runs with UTC timezone. Some tests are checking values
-      # based on now, and this could give unexpected results:
-      # DateTime("2016/10/31") - DateTime("2016/10/30") = 1.0416666666666667 if
-      # you are running on a timezone like Europe/Paris, while it return 1.0 for
-      # UTC
-      os.environ['TZ'] = "UTC"
-      time.tzset()
-      DateTime._isDST = False
-      DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = "UTC"
+      # Deprecated, prefer using `timeZoneContext` context manager instead.
+      from erp5.component.module.DateUtils import timeZoneContext
+      timezone = timeZoneContext('UTC')
+      timezone.__enter__()
+      self.addCleanup(timezone.__exit__, None, None, None)
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
