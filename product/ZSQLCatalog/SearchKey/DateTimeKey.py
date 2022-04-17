@@ -31,11 +31,18 @@ from __future__ import absolute_import
 
 import six
 from six import string_types as basestring
+import calendar
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
-from DateTime.DateTime import DateTime, DateTimeError, _cache
+from DateTime.DateTime import DateTime, DateTimeError
+from DateTime import Timezones
+try:
+  from DateTime.DateTime import _TZINFO as _cache
+except ImportError:
+  # BBB DateTime 2
+  from DateTime.DateTime import _cache
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
@@ -106,7 +113,7 @@ def castDate(value, change_timezone=True):
 delimiter_list = ' -/.:,+'
 
 def getMonthLen(datetime):
-  return datetime._month_len[datetime.isLeapYear()][datetime.month()]
+  return calendar.monthrange(datetime.year(), datetime.month())[1]
 
 def getYearLen(datetime):
   return 365 + datetime.isLeapYear()
