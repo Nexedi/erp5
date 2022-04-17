@@ -2085,7 +2085,7 @@ return 1
       for credential in ['ERP5TypeTestCase:', 'zope_user:']:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertTrue('Status: 200 OK' in response.getOutput())
+        self.assertTrue('200 OK' in response.getOutput())
         # OOod produced HTML navigation, test it
         self.assertTrue('First page' in response.getBody())
         self.assertTrue('Back' in response.getBody())

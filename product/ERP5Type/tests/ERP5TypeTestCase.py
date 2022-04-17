@@ -21,7 +21,8 @@ import traceback
 import urllib
 import ConfigParser
 from contextlib import contextmanager
-from cStringIO import StringIO
+from io import BytesIO
+from functools import partial
 from cPickle import dumps
 from glob import glob
 from hashlib import md5
@@ -782,11 +783,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                 request_method='GET', stdin=None, handle_errors=True):
         '''Publishes the object at 'path' returning a response object.'''
 
-        from ZPublisher.Response import Response
-        try:
-          from ZServer.ZPublisher.Publish import publish_module_standard
-        except ImportError: # BBB Zope2
-          from ZPublisher.Publish import publish_module_standard
+        from ZPublisher.HTTPResponse import WSGIResponse
+        from ZPublisher.WSGIPublisher import publish_module
+        from ZPublisher.httpexceptions import HTTPExceptionHandler
+        from Testing.ZopeTestCase.functional import ResponseWrapper
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
@@ -805,6 +805,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         env['SERVER_NAME'] = request['SERVER_NAME']
         env['SERVER_PORT'] = request['SERVER_PORT']
         env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
+        env['SERVER_PROTOCOL'] = 'HTTP/1.1'
         env['REQUEST_METHOD'] = request_method
 
         p = path.split('?')
@@ -831,10 +832,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
             return orig_extractUserIds(pas, request, plugins)
 
         if stdin is None:
-            stdin = StringIO()
+            stdin = BytesIO()
 
-        outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
+        outstream = BytesIO()
+        response = WSGIResponse(stdout=outstream, stderr=sys.stderr)
 
         try:
           if user:
@@ -848,13 +849,29 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           if extra:
             for k, v in extra.items(): request[k] = v
 
-          publish_module_standard('Zope2',
-                         request=request,
-                         response=response,
-                         stdin=stdin,
-                         environ=env,
-                         debug=not handle_errors,
-                        )
+          wsgi_headers = BytesIO()
+
+          def start_response(status, headers):
+              # Keep the fake response in-sync with the actual values
+              # from the WSGI start_response call.
+              response.setStatus(status.split()[0])
+              for key, value in headers:
+                  response.setHeader(key, value)
+
+              wsgi_headers.write(
+                  b'HTTP/1.1 ' + status.encode('ascii') + b'\r\n')
+              headers = b'\r\n'.join([
+                  (k + ': ' + v).encode('ascii') for k, v in headers])
+              wsgi_headers.write(headers)
+              wsgi_headers.write(b'\r\n\r\n')
+
+          publish = partial(publish_module, _request=request, _response=response)
+          if handle_errors:
+              publish = HTTPExceptionHandler(publish)
+
+          wsgi_result = publish(env, start_response)
+
+
         finally:
           if user:
             PAS._extractUserIds = orig_extractUserIds
@@ -864,12 +881,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           setSite(self.portal)
 
 
-
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
         self.changeSkin(self.portal.getCurrentSkinName())
 
-        return ResponseWrapper(response, outstream, path)
+        return ResponseWrapper(response, outstream, path,
+                               wsgi_result, wsgi_headers)
 
     def getConsistencyMessageList(self, obj):
         return sorted([ str(message.getMessage())
@@ -1458,45 +1475,6 @@ from Products.ERP5 import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
   ERP5TypeCommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
-
-class ResponseWrapper:
-    '''Decorates a response object with additional introspective methods.'''
-
-    _headers_separator_re = re.compile('(?:\r?\n){2}')
-
-    def __init__(self, response, outstream, path):
-        self._response = response
-        self._outstream = outstream
-        self._path = path
-
-    def __getattr__(self, name):
-        return getattr(self._response, name)
-
-    def getOutput(self):
-        '''Returns the complete output, headers and all.'''
-        return self._outstream.getvalue()
-
-    def getBody(self):
-        '''Returns the page body, i.e. the output par headers.'''
-        output = self.getOutput()
-        try:
-            headers, body = self._headers_separator_re.split(output, 1)
-            return body
-        except ValueError:
-            # not enough values to unpack: no body
-            return None
-
-    def getPath(self):
-        '''Returns the path used by the request.'''
-        return self._path
-
-    def getHeader(self, name):
-        '''Returns the value of a response header.'''
-        return self.headers.get(name.lower())
-
-    def getCookie(self, name):
-        '''Returns a response cookie.'''
-        return self.cookies.get(name)
 
 class ERP5ReportTestCase(ERP5TypeTestCase):
   """Base class for testing ERP5 Reports
