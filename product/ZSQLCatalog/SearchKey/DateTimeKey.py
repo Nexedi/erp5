@@ -31,18 +31,21 @@ from __future__ import absolute_import
 
 import six
 from six import string_types as basestring
+import calendar
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from zLOG import LOG
-from DateTime.DateTime import DateTime, DateTimeError, _cache
+from DateTime.DateTime import DateTime, DateTimeError
+from DateTime import Timezones
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
 
 MARKER = []
 
-timezone_dict = _cache._zmap
+# We use standard DateTime timezone, plus CET for historical reasons.
+timezone_set = set(Timezones() + ['CET'])
 
 date_completion_format_dict = {
   None: ['01/01/%s', '01/%s'],
@@ -84,7 +87,7 @@ def castDate(value, change_timezone=True):
       delimiter_count = countDelimiters(value)
       if delimiter_count is not None and delimiter_count < 2:
         split_value = value.split()
-        if split_value[-1].lower() in timezone_dict:
+        if split_value[-1].lower() in timezone_set:
           value = '%s %s' % (date_completion_format_dict[date_kw.get('datefmt')][delimiter_count] % (' '.join(split_value[:-1]), ), split_value[-1])
         else:
           value = date_completion_format_dict[date_kw.get('datefmt')][delimiter_count] % (value, )
@@ -106,7 +109,7 @@ def castDate(value, change_timezone=True):
 delimiter_list = ' -/.:,+'
 
 def getMonthLen(datetime):
-  return datetime._month_len[datetime.isLeapYear()][datetime.month()]
+  return calendar.monthrange(datetime.year(), datetime.month())[1]
 
 def getYearLen(datetime):
   return 365 + datetime.isLeapYear()
@@ -119,7 +122,7 @@ def countDelimiters(value):
   split_value = value.split()
   if not split_value:
     return None
-  if split_value[-1].lower() in timezone_dict:
+  if split_value[-1].lower() in timezone_set:
     value = ' '.join(split_value[:-1])
   # Count delimiters
   delimiter_count = 0
