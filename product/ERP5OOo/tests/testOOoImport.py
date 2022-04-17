@@ -240,7 +240,7 @@ class TestOOoImport(TestOOoImportMixin):
       sorted(['male' for i in range(num)]),
       sorted([person_list[i].getGender() for i in range(num)]))
     self.assertEqual(
-      sorted([DateTime('2008/02/%02d %s' % (i+1, 'GMT')) for i in range(num)]),
+      sorted([DateTime('2008-02-%02d' % (i+1)) for i in range(num)]),
       sorted([person_list[i].getStartDate() for i in range(num)]))
 
   def stepCheckImportFloatsAndPercentage(self, sequence=None, sequence_list=None, **kw):
