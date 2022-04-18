@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # Copyright (C) 2004 Thierry Fromon <from.t@free.fr>
-# Copyright (C) 2006-2007 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+# Copyright (C) 2004, 2006-2007, 2009 J. David Ibáñez <jdavid.ibp@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,12 +17,11 @@
 
 
 def get_distance(a, b):
-    """
-    This function was giving by Magnus Lie Hetland. It calculates the gap
+    """This function was giving by Magnus Lie Hetland. It calculates the gap
     (mathematical distance) between two strings with the cost of word's
     translation inside the string.
     """
-    # XXX Find URL to original code, check license
+    # FIXME Find URL to original code, check license
     c = {}
     n = len(a)
     m = len(b)
@@ -52,8 +51,7 @@ def get_similarity(a, b):
 
 
 def is_similar(a, b, limit=0.8):
-    """
-    Returns True if both text strings are close enough, False otherwise.
+    """Returns True if both text strings are close enough, False otherwise.
     The optional parameter 'limit' defines the degree of similarity required
     to be considered 'close enough', it is a float value between '0'
     (completely different) and '1' (the same string).
@@ -62,8 +60,8 @@ def is_similar(a, b, limit=0.8):
 
 
 def get_most_similar(a, *args):
-    """
-    Returns the text string from 'args' that is closest to the given string.
+    """Returns the text string from 'args' that is closest to the given
+    string.
     """
     if not args:
         return None
