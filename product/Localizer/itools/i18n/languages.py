@@ -1,0 +1,251 @@
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2009 J. David Ibáñez <jdavid.ibp@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# ISO 639-2 (alpha-2)
+# http://www.loc.gov/standards/iso639-2/php/code_list.php
+
+
+languages = {
+    'aa': 'Afar',
+    'ab': 'Abkhazian',
+    'ae': 'Avestan',
+    'af': 'Afrikaans',
+    'ak': 'Akan',
+    'am': 'Amharic',
+    'an': 'Aragonese',
+    'ar': 'Arabic',
+    'as': 'Assamese',
+    'av': 'Avaric',
+    'ay': 'Aymara',
+    'az': 'Azerbaijani',
+    'ba': 'Bashkir',
+    'be': 'Belarusian',
+    'bg': 'Bulgarian',
+    'bh': 'Bihari',
+    'bi': 'Bislama',
+    'bm': 'Bambara',
+    'bn': 'Bengali',
+    'bo': 'Tibetan',
+    'br': 'Breton',
+    'bs': 'Bosnian',
+    'ca': 'Catalan',
+    'ce': 'Chechen',
+    'ch': 'Chamorro',
+    'co': 'Corsican',
+    'cr': 'Cree',
+    'cs': 'Czech',
+    'c': 'Church Slavic',
+    'cv': 'Chuvash',
+    'cy': 'Welsh',
+    'da': 'Danish',
+    'de': 'German',
+    'de-A': 'German/Austria',
+    'de-DE': 'German/Germany',
+    'de-CH': 'German/Switzerland',
+    'dv': 'Divehi; Dhivehi; Maldivian',
+    'dz': 'Dzongkha',
+    'ee': 'Ewe',
+    'el': 'Greek',
+    'en': 'English',
+    'en-GB': 'English/United Kingdom',
+    'en-US': 'English/United States',
+    'eo': 'Esperanto',
+    'es': 'Spanish',
+    'es-AR': 'Spanish/Argentina',
+    'es-CO': 'Spanish/Colombia',
+    'es-MX': 'Spanish/Mexico',
+    'es-ES': 'Spanish/Spain',
+    'et': 'Estonian',
+    'e': 'Basque',
+    'fa': 'Persian',
+    'ff': 'Fulah',
+    'fi': 'Finnish',
+    'fj': 'Fijian',
+    'fo': 'Faroese',
+    'fr': 'French',
+    'fr-BE': 'French/Belgium',
+    'fr-CA': 'French/Canada',
+    'fr-FR': 'French/France',
+    'fr-CH': 'French/Switzerland',
+    'fy': 'Frisian',
+    'ga': 'Irish',
+    'gd': 'Gaelic',
+    'gl': 'Galician',
+    'gn': 'Guarani',
+    'g': 'Gujarati',
+    'gv': 'Manx',
+    'ha': 'Hausa',
+    'he': 'Hebrew',
+    'hi': 'Hindi',
+    'ho': 'Hiri Mot',
+    'hr': 'Croatian',
+    'ht': 'Haitian',
+    'h': 'Hungarian',
+    'hy': 'Armenian',
+    'hz': 'Herero',
+    'ia': 'Interlingua',
+    'id': 'Indonesian',
+    'ie': 'Interlingue; Occidental',
+    'ig': 'Igbo',
+    'ii': 'Sichuan Yi; Nuos',
+    'ik': 'Inupiak',
+    'io': 'Ido',
+    'is': 'Icelandic',
+    'it': 'Italian',
+    'i': 'Inuktitut',
+    'ja': 'Japanese',
+    'jv': 'Javanese',
+    'ka': 'Georgian',
+    'kg': 'Kongo',
+    'ki': 'Kikuyu; Gikuy',
+    'kj': 'Kuanyama; Kwanyama',
+    'kk': 'Kazakh',
+    'kl': 'Kalaallisut; Greenlandic',
+    'km': 'Khmer',
+    'kn': 'Kannada',
+    'ko': 'Korean',
+    'kr': 'Kanuri',
+    'ks': 'Kashmiri',
+    'k': 'Kurdish',
+    'kv': 'Komi',
+    'kw': 'Cornish',
+    'ky': 'Kirghiz; Kyrgyz',
+    'la': 'Latin',
+    'lb': 'Luxembourgish',
+    'lg': 'Ganda',
+    'li': 'Limburgan',
+    'ln': 'Lingala',
+    'lo': 'Lao',
+    'lt': 'Lithuanian',
+    'l': 'Luba-Katanga',
+    'lv': 'Latvian',
+    'mg': 'Malagasy',
+    'mh': 'Marshallese',
+    'mi': 'Maori',
+    'mk': 'Macedonian',
+    'ml': 'Malayalam',
+    'mn': 'Mongolian',
+    'mr': 'Marathi',
+    'ms': 'Malay',
+    'mt': 'Maltese',
+    'my': 'Burmese',
+    'na': 'Naur',
+    'nb': 'Norwegian Bokmal',
+    'nd': 'Ndebele, North',
+    'ne': 'Nepali',
+    'ng': 'Ndonga',
+    'nl': 'Dutch',
+    'nl-BE': 'Dutch/Belgium',
+    'nn': 'Norwegian Nyrnosk',
+    'no': 'Norwegian',
+    'nr': 'Ndebele, South',
+    'nv': 'Navajo; Navaho',
+    'ny': 'Chichewa; Chewa; Nyanja',
+    'oc': 'Occitan',
+    'oj': 'Ojibwa',
+    'om': 'Oromo',
+    'or': 'Oriya',
+    'os': 'Ossetian; Ossetic',
+    'pa': 'Panjabi; Punjabi',
+    'pi': 'Pali',
+    'pl': 'Polish',
+    'ps': 'Pushto; Pashto',
+    'pt': 'Portuguese',
+    'pt-BR': 'Portuguese/Brazil',
+    'q': 'Quechua',
+    'rm': 'Romansh',
+    'rn': 'Rundi',
+    'ro': 'Romanian; Moldavian',
+    'r': 'Russian',
+    'rw': 'Kinyarwanda',
+    'sa': 'Sanskrit',
+    'sc': 'Sardinian',
+    'sd': 'Sindhi',
+    'se': 'Sami',
+    'sg': 'Sango',
+    'si': 'Sinhala; Sinhalese',
+    'sk': 'Slovak',
+    'sl': 'Slovenian',
+    'sm': 'Samoan',
+    'sn': 'Shona',
+    'so': 'Somali',
+    'sq': 'Albanian',
+    'sr': 'Serbian',
+    'ss': 'Swati',
+    'st': 'Sotho',
+    's': 'Sundanese',
+    'sv': 'Swedish',
+    'sw': 'Swahili',
+    'ta': 'Tamil',
+    'te': 'Telug',
+    'tg': 'Tajik',
+    'th': 'Thai',
+    'ti': 'Tigrinya',
+    'tk': 'Turkmen',
+    'tl': 'Tagalog',
+    'tn': 'Tswana',
+    'to': 'Tonga',
+    'tr': 'Turkish',
+    'ts': 'Tsonga',
+    'tt': 'Tatar',
+    'tw': 'Twi',
+    'ty': 'Tahitian',
+    'ug': 'Uighur; Uyghur',
+    'uk': 'Ukrainian',
+    'ur': 'Urd',
+    'uz': 'Uzbek',
+    've': 'Venda',
+    'vi': 'Vietnamese',
+    'vo': 'Volapuk',
+    'wa': 'Walloon',
+    'wo': 'Wolof',
+    'xh': 'Xhosa',
+    'yi': 'Yiddish',
+    'yo': 'Yoruba',
+    'za': 'Zhuang; Chuang',
+    'zh': 'Chinese',
+    'zh-CN': 'Chinese/China',
+    'zh-TW': 'Chinese/Taiwan',
+    'z': 'Zul',
+    }
+
+
+langs = [ {'code': x, 'name': languages[x]} for x in sorted(languages.keys()) ]
+
+
+###########################################################################
+# API
+###########################################################################
+def has_language(code):
+    return code in languages
+
+
+def get_languages():
+    """Returns a list of tuples with the code and the name of each language.
+    """
+    return [ x.copy() for x in langs ]
+
+
+
+def get_language_name(code):
+    """Returns the name of a language.
+    """
+    # FIXME The value returned should be a MSG object, but the MSG class comes
+    # from the itools.gettext module, which is higher level than itools.i18n
+    if code in languages:
+        return languages[code]
+    return '???'
+
