@@ -8,26 +8,18 @@ The intention is that even these few remaining functionalities should
 be replaced by native Zope API calls.
 
 The original itools distribution on which this stub is based is the
-0.50 branch of the itools repository at:
+0.77.8 branch of the itools repository at:
 
-https://github.com/hforge/itools/tree/0.50
-
-The original CREDITS.txt file can be seen at:
-
-https://github.com/hforge/itools/blob/0.50/CREDITS
+https://github.com/hforge/itools/tree/0.77
 
 The copyright notice of the original code is as follows:
 
 Copyright
 ---------
 
-Copyright (C) 2002-2008 Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
-Copyright (C) 2005-2008 Luis Arturo Belmar-Letelier <luis@itaapy.com>
-Copyright (C) 2005-2008 Herv√© Cauwelier <herve@itaapy.com>
-Copyright (C) 2005-2008 Nicolas Deram <nicolas@itaapy.com>
-
-And others. Check the CREDITS file for complete list.
-
+Copyright (C) 2004-2012 J. David Ib·Òez <jdavid.ibp@gmail.com>
+Copyright (C) 2008 David Versmisse <versmisse@lil.univ-littoral.fr>
+Copyright (C) 2009 HervÈ Cauwelier <herve@oursours.net>
 
 License
 -------

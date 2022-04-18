@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 # Copyright (C) 2004 Thierry Fromon <from.t@free.fr>
-# Copyright (C) 2004, 2006-2007 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-# Copyright (C) 2008 Henry Obein <henry@itaapy.com>
+# Copyright (C) 2004, 2006-2007, 2009 J. David Ibáñez <jdavid.ibp@gmail.com>
+# Copyright (C) 2008 Henry Obein <henry.obein@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,143 +15,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-###########################################################################
-# To add a new language, edit the dictionaries below:
-#
-#   - positive_chars
-#
-#     Defines special characters (like accentuated characters) that belong
-#     to the language.
-#
-#   - negative_chars
-#
-#     Defines special characters (like accentuated characters) that do not
-#     belong to the language.
-#
-#   - positive_words
-#
-#     Defines common words that belong to the language.
-#
-#   - negative_words
-#
-#     Defines some words that do not belong to the language.
-###########################################################################
-
-import unicodedata
-
-positive_chars = {
-    u'¡': ['es'],
-    u'¿': ['es'],
-    u'ä': ['de'],
-    u'ß': ['de'],
-    u'ç': ['fr'],
-    u'ê': ['fr'],
-    u'í': ['es'],
-    u'ñ': ['es'],
-    u'ö': ['de'],
-    u'ó': ['es'],
-    u'ü': ['de'],
-    u'ú': ['es'],
-    # Asian languages
-    # Japanese : based on particles (hiragana)
-    u'の': ['ja'],
-    u'は': ['ja'],
-    u'で': ['ja'],
-    u'に': ['ja'],
-    u'が': ['ja'],
-    u'へ': ['ja'],
-    u'を': ['ja'],
-    u'や': ['ja'],
-    u'と': ['ja'],
-    # Japanese : punctuation
-    u'、': ['ja'],
-    u'。': ['ja'],
-}
-
-negative_chars = {}
-
-
-positive_words = {
-    u'à': ['fr'],
-    u'al': ['es'],
-    u'an': ['en'],
-    u'and': ['en'],
-    u'are': ['en'],
-    u'as': ['en'],
-    u'aux': ['fr'],
-    u'but': ['en'],
-    u'como': ['es'],
-    u'con': ['es'],
-    u'de': ['es', 'fr'],
-    u'del': ['es'],
-    u'des': ['fr'],
-    u'donc': ['fr'],
-    u'du': ['fr'],
-    u'el': ['es'],
-    u'elle': ['fr'],
-    u'elles': ['fr'],
-    u'es': ['es'],
-    u'est': ['fr'],
-    u'está': ['es'],
-    u'et': ['fr'],
-    u'from': ['en'],
-    u'hay': ['es'],
-    u'he': ['en', 'es'],
-    u'i': ['en'],
-    u'il': ['fr'],
-    u'ils': ['fr'],
-    u'in': ['en'],
-    u'is': ['en'],
-    u'it': ['en'],
-    u'je': ['fr'],
-    u'las': ['es'],
-    u'le': ['es', 'fr'],
-    u'lo': ['es'],
-    u'les': ['es', 'fr'],
-    u'los': ['es'],
-    u'mais': ['fr'],
-    u'no': ['en', 'es'],
-    u'nous': ['fr'],
-    u'nueva': ['es'],
-    u'o': ['es'],
-    u'of': ['en'],
-    u'on': ['en'],
-    u'or': ['en'],
-    u'où': ['fr'],
-    u'para': ['es'],
-    u'pero': ['es'],
-    u'por': ['es'],
-    u'que': ['es', 'fr'],
-    u'qué': ['es'],
-    u'she': ['en'],
-    u'su': ['es'],
-    u'sur': ['fr'],
-    u'that': ['en'],
-    u'the': ['en'],
-    u'their': ['en'],
-    u'this': ['en'],
-    u'to': ['en'],
-    u'tu': ['es', 'fr'],
-    u'un': ['es', 'fr'],
-    u'una': ['es'],
-    u'une': ['fr'],
-    u'vous': ['fr'],
-    u'when': ['en'],
-    u'where': ['en'],
-    u'y': ['es'],
-    u'you': ['en'],
-    u'your': ['en'],
-}
-
-
-negative_words = {
-    u'du': ['es'],
-}
-
-
-# One thousand words should be enough
-MAX_WORDS = 1000
 
 
 def is_asian_character(c):
@@ -339,4 +202,139 @@ def guess_language(text):
         return languages[-1][1]
 
     return None
+
+
+###########################################################################
+# Initialize the module
+#
+# To add a new language, edit the dictionaries below:
+#
+# - positive_chars
+#     Defines special characters (like accentuated characters) that belong to
+#     the language.
+#
+# - negative_chars
+#     Defines special characters (like accentuated characters) that do not
+#     belong to the language.
+#
+# - positive_words
+#     Defines common words that belong to the language.
+#
+# - negative_words
+#     Defines some words that do not belong to the language.
+#
+###########################################################################
+
+positive_chars = {
+    u'¡': ['es'],
+    u'¿': ['es'],
+    u'ä': ['de'],
+    u'ß': ['de'],
+    u'ç': ['fr'],
+    u'ê': ['fr'],
+    u'í': ['es'],
+    u'ñ': ['es'],
+    u'ö': ['de'],
+    u'ó': ['es'],
+    u'ü': ['de'],
+    u'ú': ['es'],
+    # Asian languages
+    # Japanese : based on particles (hiragana)
+    u'の': ['ja'],
+    u'は': ['ja'],
+    u'で': ['ja'],
+    u'に': ['ja'],
+    u'が': ['ja'],
+    u'へ': ['ja'],
+    u'を': ['ja'],
+    u'や': ['ja'],
+    u'と': ['ja'],
+    # Japanese : punctuation
+    u'、': ['ja'],
+    u'。': ['ja'],
+    }
+
+negative_chars = {}
+
+
+positive_words = {
+    u'à': ['fr'],
+    u'al': ['es'],
+    u'an': ['en'],
+    u'and': ['en'],
+    u'are': ['en'],
+    u'as': ['en'],
+    u'aux': ['fr'],
+    u'but': ['en'],
+    u'como': ['es'],
+    u'con': ['es'],
+    u'de': ['es', 'fr'],
+    u'del': ['es'],
+    u'des': ['fr'],
+    u'donc': ['fr'],
+    u'du': ['fr'],
+    u'el': ['es'],
+    u'elle': ['fr'],
+    u'elles': ['fr'],
+    u'es': ['es'],
+    u'est': ['fr'],
+    u'está': ['es'],
+    u'et': ['fr'],
+    u'from': ['en'],
+    u'hay': ['es'],
+    u'he': ['en', 'es'],
+    u'i': ['en'],
+    u'il': ['fr'],
+    u'ils': ['fr'],
+    u'in': ['en'],
+    u'is': ['en'],
+    u'it': ['en'],
+    u'je': ['fr'],
+    u'las': ['es'],
+    u'le': ['es', 'fr'],
+    u'lo': ['es'],
+    u'les': ['es', 'fr'],
+    u'los': ['es'],
+    u'mais': ['fr'],
+    u'no': ['en', 'es'],
+    u'nous': ['fr'],
+    u'nueva': ['es'],
+    u'o': ['es'],
+    u'of': ['en'],
+    u'on': ['en'],
+    u'or': ['en'],
+    u'où': ['fr'],
+    u'para': ['es'],
+    u'pero': ['es'],
+    u'por': ['es'],
+    u'que': ['es', 'fr'],
+    u'qué': ['es'],
+    u'she': ['en'],
+    u'su': ['es'],
+    u'sur': ['fr'],
+    u'that': ['en'],
+    u'the': ['en'],
+    u'their': ['en'],
+    u'this': ['en'],
+    u'to': ['en'],
+    u'tu': ['es', 'fr'],
+    u'un': ['es', 'fr'],
+    u'una': ['es'],
+    u'une': ['fr'],
+    u'vous': ['fr'],
+    u'when': ['en'],
+    u'where': ['en'],
+    u'y': ['es'],
+    u'you': ['en'],
+    u'your': ['en'],
+    }
+
+
+negative_words = {
+    u'du': ['es'],
+    }
+
+
+# One thousand words should be enough
+MAX_WORDS = 1000
 
