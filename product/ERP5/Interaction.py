@@ -304,7 +304,11 @@ class InteractionDefinition (SimpleItem):
 
     def checkGuard(self, *args, **kwargs):
         from Products.ERP5Type.mixin.guardable import GuardableMixin
-        return GuardableMixin.checkGuard.im_func(self, *args, **kwargs)
+        checkGuard = GuardableMixin.checkGuard
+        import six
+        if six.PY2:
+          checkGuard = checkGuard.__func__
+        return checkGuard(self, *args, **kwargs)
 
     def getPortalTypeGroupFilterList(self):
         if self.portal_type_group_filter is None:
