@@ -19,6 +19,7 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
+import six
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 
@@ -63,7 +64,8 @@ from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
 from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
-from Products.ERP5Type.patches import StateChangeInfoPatch
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
@@ -79,7 +81,9 @@ from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
 from Products.ERP5Type.patches import _transaction
 from Products.ERP5Type.patches import default_zpublisher_encoding
-from Products.ERP5Type.patches import DCWorkflowGraph
+if six.PY2:
+  # DCWorkflowGraph is dead since 2011, so no py3 version
+  from Products.ERP5Type.patches import DCWorkflowGraph
 from Products.ERP5Type.patches import SourceCodeEditorZMI
 from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
@@ -97,5 +101,6 @@ from Products.ERP5Type.patches import urllib_opener
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
 from Products.ERP5Type.Core.Workflow import ValidationFailed
-from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base
