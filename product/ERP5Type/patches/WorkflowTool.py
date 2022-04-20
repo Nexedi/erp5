@@ -13,6 +13,9 @@
 #
 ##############################################################################
 
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+assert WITH_LEGACY_WORKFLOW
+
 from zLOG import LOG, WARNING
 from types import StringTypes
 

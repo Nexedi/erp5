@@ -91,8 +91,6 @@ from Products.DCWorkflow.utils import Message as _
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Globals import PersistentMapping, InitializeClass
-from Products.ERP5Type.patches.WorkflowTool import (SECURITY_PARAMETER_ID,
-                                                    WORKLIST_METADATA_KEY)
 from Products.ERP5Type.Utils import convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.WorkflowTransition import (TRIGGER_AUTOMATIC,
@@ -509,6 +507,8 @@ class Workflow(XMLObject):
     security_manager = getSecurityManager()
     workflow_id = self.getId()
     workflow_title = self.getTitle()
+    from Products.ERP5Type.Tool.WorkflowTool import (SECURITY_PARAMETER_ID,
+                                                     WORKLIST_METADATA_KEY)
     for worklist_definition in worklist_value_list:
       action_box_name = worklist_definition.getActionName()
       guard_role_list = worklist_definition.getGuardRoleList()
