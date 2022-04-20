@@ -75,6 +75,20 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     'DublinCore',
   )
 
+  def _isBootstrapRequired(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+    """
+    return False
+
+  def _bootstrap(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+    """
+    pass
+
   def filtered_meta_types(self, user=None):
     return False
 
