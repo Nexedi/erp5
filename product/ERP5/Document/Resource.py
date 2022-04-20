@@ -945,7 +945,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       uid = self.getUid()
       row_list = []
-      for unit_uid, value in self._getQuantityUnitDefinitionDict().iteritems():
+      for unit_uid, value in six.iteritems(self._getQuantityUnitDefinitionDict()):
         definition_uid, quantity = value
         row_list.append(dict(uid=definition_uid,
                              resource_uid=uid,
@@ -977,7 +977,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           metric_type_map[metric_type] = measure
 
       insert_list = []
-      for measure in metric_type_map.itervalues():
+      for measure in six.itervalues(metric_type_map):
         if measure is not None:
           insert_list += measure.asCatalogRowList(quantity_unit_definition_dict)
 

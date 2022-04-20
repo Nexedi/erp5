@@ -114,7 +114,7 @@ class FilterDict(object):
 
   def __setitem__(self, key, item):
     filter_ = self[key]
-    for k, v in item.iteritems():
+    for k, v in six.iteritems(item):
       filter_[k] = v
 
   def get(self, key, default=None):

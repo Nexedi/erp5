@@ -802,7 +802,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     if len(self._objects.keys()) == 0:
       return
     path = self.__class__.__name__ + '/'
-    for key, obj in self._objects.iteritems():
+    for key, obj in six.iteritems(self._objects):
       # Back compatibility with filesystem Documents
       if isinstance(obj, str):
         if not key.startswith(path):
@@ -1465,7 +1465,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           # get a jar
           connection = self.getConnection(obj)
           # import subobjects
-          for subobject_id, subobject_data in subobjects_dict.iteritems():
+          for subobject_id, subobject_data in six.iteritems(subobjects_dict):
             try:
               if obj._getOb(subobject_id, None) is None:
                 subobject_data.seek(0)
@@ -1551,7 +1551,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           # defined on the former form
           previous_group_id = None
           if not widget_in_form:
-            for old_group_id, old_group_values in old_groups_dict.iteritems():
+            for old_group_id, old_group_values in six.iteritems(old_groups_dict):
               if widget_id in old_group_values:
                 previous_group_id = old_group_id
             # if we find same group in new one, add widget to it
@@ -1565,7 +1565,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 new_groups_dict['not_assigned'] = [widget_id,]
                 obj.group_list = list(obj.group_list) + ['not_assigned']
         # second check all widget_id in order are in form
-        for group_id, group_value_list in new_groups_dict.iteritems():
+        for group_id, group_value_list in six.iteritems(new_groups_dict):
           for widget_id in tuple(group_value_list):
             if widget_id not in widget_id_list:
               # if we don't find the widget id in the form
@@ -1580,7 +1580,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     # element of object_key_list, and not just these objects themselves.
     # XXX: why does update_dict contain the path of documents not managed
     # by current instance ?
-    for path, action in update_dict.iteritems():
+    for path, action in six.iteritems(update_dict):
       if action not in ('remove', 'save_and_remove'):
         continue
       path_match = path + '/'
@@ -1775,7 +1775,7 @@ class PathTemplateItem(ObjectTemplateItem):
 
     if update_dict:
       def updateLocalRolesOnDocument():
-        for portal_type, obj_list in update_dict.iteritems():
+        for portal_type, obj_list in six.iteritems(update_dict):
           update = p.portal_types[portal_type].updateLocalRolesOnDocument
           for obj in obj_list:
             update(obj)
@@ -1839,7 +1839,7 @@ class ToolTemplateItem(PathTemplateItem):
     PathTemplateItem.install(self, context, trashbin, **kw)
     portal = context.getPortalObject()
     types_tool = portal.portal_types
-    for type_container_id, obj in self._objects.iteritems():
+    for type_container_id, obj in six.iteritems(self._objects):
       if (interfaces.ITypeProvider.providedBy(obj) and
           type_container_id != types_tool.id and
           type_container_id not in types_tool.type_provider_list):
@@ -2006,7 +2006,7 @@ class SkinTemplateItem(ObjectTemplateItem):
     # We must install/update an ERP5 Form if one of its widget is modified.
     # This allow to keep the widget order and the form layout after an update
     #   from a BT to another one.
-    for (bt_obj_path, bt_obj) in self._objects.items():
+    for (bt_obj_path, bt_obj) in six.iteritems(list(self._objects)):
       if getattr(bt_obj, 'meta_type', None) == 'ERP5 Form':
         # search sub-objects of ERP5 Forms that are marked as "modified"
         for upd_obj_path in modified_object_list.keys():
@@ -2231,7 +2231,7 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     registered_name_list = set(portal.getVersionPriorityNameList())
-    for new_version, new_priority in self._objects.iteritems():
+    for new_version, new_priority in six.iteritems(self._objects):
       action = update_dict.get(new_version)
       if (not action or action == 'nothing') and not force:
         continue
@@ -2276,7 +2276,7 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
     class_name_prefix = self.__class__.__name__[:-12]
-    for path, new_object in self._objects.iteritems():
+    for path, new_object in six.iteritems(self._objects):
       old_object = installed_item._objects.get(path)
       if old_object is not None:
         # Compare object to see it there is any change
@@ -2328,14 +2328,14 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     modified_object_dict = ObjectTemplateItem.preinstall(self, context,
                                                          installed_item, **kw)
     modified_workflow_dict = {}
-    for modified_object, state in modified_object_dict.iteritems():
+    for modified_object, state in six.iteritems(modified_object_dict):
       path = modified_object.split('/')
       if len(path) > 2:
         modified_workflow_dict.setdefault('/'.join(path[:2]), ('Modified', state[1]))
       else:
         modified_workflow_dict[modified_object] = state
     removed_workflow_id_list = [x[0].split('/', 1)[1] \
-                                for x in modified_workflow_dict.iteritems() \
+                                for x in six.iteritems(modified_workflow_dict) \
                                 if x[1][0] == 'Removed']
     if len(removed_workflow_id_list) > 0:
       installed_chain_list = [[y.strip() for y in x.split('|')] for x in \
@@ -2476,8 +2476,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     force = kw.get('force')
     # We now need to setup the list of workflows corresponding to
     # each portal type
-    for path, obj in self._objects.iteritems():
-      if update_dict.has_key(path) or force:
+    for path, obj in six.iteritems(self._objects):
+      if path in update_dict or force:
         if not force:
           action = update_dict[path]
           if action == 'nothing':
@@ -2565,7 +2565,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # and if the template is not built,
     # it should be removed here from the key
     new_objects = PersistentMapping()
-    for key, value in self._objects.iteritems():
+    for key, value in six.iteritems(self._objects):
       new_key = deepcopy(key)
       if 'portal_type_workflow_chain/' in key:
         new_key = new_key.replace('portal_type_workflow_chain/', '')
@@ -2681,7 +2681,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     new_dict = PersistentMapping()
     # Fix key from installed bt if necessary
-    for key, value in installed_item._objects.iteritems():
+    for key, value in six.iteritems(installed_item._objects):
       if not 'portal_type_workflow_chain/' in key:
         key = 'portal_type_workflow_chain/%s' % (key)
       new_dict[key] = value
@@ -2786,7 +2786,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     new_dict = PersistentMapping()
     # fix key if necessary in installed bt for diff
-    for key, value in installed_item._objects.iteritems():
+    for key, value in six.iteritems(installed_item._objects):
       if self.class_property not in key:
         key = '%s/%s' % (self.class_property, key)
       new_dict[key] = value
@@ -2995,8 +2995,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     obj = self._objects[path]
     method_id = obj.id
     xml_data = '<catalog_method>'
-    if self._method_properties.has_key(method_id):
-      for method_property, value in self._method_properties[method_id].items():
+    if method_id in self._method_properties:
+      for method_property, value in six.iteritems(self._method_properties[method_id]):
         xml_data += '\n <item key="%s" type="int">' %(method_property,)
         xml_data += '\n  <value>%s</value>' %(value,)
         xml_data += '\n </item>'
@@ -3062,8 +3062,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     if force: # get all objects
       values = self._objects.values()
     else: # get only selected object
-      for key, value in self._objects.iteritems():
-        if update_dict.has_key(key) or force:
+      for key, value in six.iteritems(self._objects):
+        if key in update_dict or force:
           if not force:
             action = update_dict[key]
             if action == 'nothing':
@@ -3377,12 +3377,12 @@ class ActionTemplateItem(ObjectTemplateItem):
           if action.priority > new_priority:
             move_down_list.append(str(index))
         obj.moveDownActions(selections=tuple(move_down_list))
-    for path, action_dict in portal_type_dict.iteritems():
+    for path, action_dict in six.iteritems(portal_type_dict):
       container = p.unrestrictedTraverse(path)
       container.manage_delObjects([obj.id
         for obj in container.getActionInformationList()
         if obj.getReference() in action_dict])
-      for name, obj in action_dict.iteritems():
+      for name, obj in six.iteritems(action_dict):
         container._importOldAction(obj).aq_base
 
   def uninstall(self, context, **kw):
@@ -3436,7 +3436,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       self._objects[relative_url] = type_role_list = []
       for role in obj.getRoleInformationList():
         type_role_dict = {}
-        for k, v in aq_base(role).__getstate__().iteritems():
+        for k, v in six.iteritems(aq_base(role).__getstate__()):
           if k == 'condition':
             if not v:
               continue
@@ -3735,8 +3735,8 @@ class ModuleTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     valid_permissions = dict.fromkeys([x[0] for x in
                                        context.ac_inherited_permissions(all=1)])
-    for path, mapping in self._objects.iteritems():
-      if update_dict.has_key(path) or force:
+    for path, mapping in six.iteritems(self._objects):
+      if path in update_dict or force:
         if not force:
           action = update_dict[path]
           if action == 'nothing':
@@ -3905,7 +3905,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     """Conversion of magically uniqued paths to real ones"""
     remove_object_dict = kw.get('remove_object_dict', {})
     kw['remove_object_dict'] = {self._getPath(k): v
-      for k, v in remove_object_dict.iteritems()
+      for k, v in six.iteritems(remove_object_dict)
       if k.startswith(self.getTemplateTypeName()+'/')}
     BaseTemplateItem.remove(self, context, **kw)
 
@@ -4000,7 +4000,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
 
       if method_name == 'preinstall':
         old_result = result.copy()
-        for k, v in old_result.iteritems():
+        for k, v in six.iteritems(old_result):
           # Magical way to have unique path (without duplicating the prefix
           # neither) in case of not yet migrated property sheets available on
           # preinstall list
@@ -4047,7 +4047,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     """
     remove_object_dict = kw.get('remove_object_dict', {})
     kw['remove_object_dict'] = {self._getPath(k): v
-      for k, v in remove_object_dict.iteritems()
+      for k, v in six.iteritems(remove_object_dict)
       if k.startswith(self.getTemplateTypeName()+'/')}
     ObjectTemplateItem.remove(self, context, **kw)
 
@@ -4858,7 +4858,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     root_path = self.__class__.__name__
-    for key, obj in self._objects.iteritems():
+    for key, obj in six.iteritems(self._objects):
       path = os.path.join(root_path, key)
       if '/' in key:
         bta.addObject(obj, 'translation', ext='.po', path=path)
@@ -5452,7 +5452,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # get objects to remove
       # do remove after because we may need backup object from installation
       remove_object_dict = {}
-      for path, action in object_to_update.iteritems():
+      for path, action in six.iteritems(object_to_update):
         if action in ('remove', 'save_and_remove'):
           remove_object_dict[path] = action
 
@@ -7122,7 +7122,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         message = (
           "The following component could not be imported: " +
           ', '.join([ "%s (%s)" % (name, error)
-                      for name, error in failed_import_dict.iteritems() ]))
+                      for name, error in six.iteritems(failed_import_dict) ]))
 
         if list_selection_name is not None:
           return self.Base_redirect('view',

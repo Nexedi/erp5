@@ -75,7 +75,7 @@ class Filter(Implicit):
       return False
     if self.filter_leave and not self._isNode(context):
       return False
-    for k, v in self.filter_dict.items():
+    for k, v in six.iteritems(self.filter_dict):
       if type(v) in (type([]), type(())):
         if context.getProperty(k) not in v:
           return False

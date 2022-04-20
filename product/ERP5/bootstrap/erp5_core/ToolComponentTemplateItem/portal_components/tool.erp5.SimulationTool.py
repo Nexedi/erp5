@@ -436,15 +436,14 @@ class SimulationTool(BaseTool):
 
     # Column values
     column_value_dict = new_kw.pop('column_value_dict', {})
-    for key, value in column_value_dict.iteritems():
+    for key, value in six.iteritems(column_value_dict):
       new_kw['%s.%s' % (table, key)] = value
     # Related keys
     # First, the passthrough (acts as default values)
-    for key, value in new_kw.pop('related_key_dict_passthrough', {})\
-        .iteritems():
+    for key, value in new_kw.pop('related_key_dict_passthrough', six.iteritems({})):
       new_kw[key] = value
     # Second, calculated values
-    for key, value in new_kw.pop('related_key_dict', {}).iteritems():
+    for key, value in new_kw.pop('related_key_dict', six.iteritems({})):
       new_kw['%s_%s' % (table, key)] = value
     # Simulation states matched with input and output omission
     def getSimulationQuery(simulation_dict, omit_dict):

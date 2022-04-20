@@ -61,7 +61,7 @@ if detailed_report_result:
   REQUEST.RESPONSE.setStatus(200, 'OK', lock=True)
   raise Exception('Spreadsheet contains errors')
 
-for base_category, category_list in category_list_spreadsheet_dict.iteritems():
+for base_category, category_list in six.iteritems(category_list_spreadsheet_dict):
   total_category_counter += len(category_list)
   category_path_set = set()
   for category in category_list:
@@ -108,7 +108,7 @@ for base_category, category_list in category_list_spreadsheet_dict.iteritems():
     category_path_set.add(category_value.getRelativeUrl())
 
     category_update_dict = {}
-    for key, value in category.iteritems():
+    for key, value in six.iteritems(category):
       if not create_local_property and key not in category_type_property_id_set:
         report(
           field_type='Update',

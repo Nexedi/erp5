@@ -2492,7 +2492,7 @@ def initialize(self):
             REQUEST.RESPONSE.unauthorized()
           newSecurityManager(None, user.__of__(uf))
           manage_addERP5Site(app.__of__(RequestContainer(REQUEST=REQUEST)),
-            **{k: kw.get(k, v) for k, v in default_kw.iteritems()
+            **{k: kw.get(k, v) for k, v in six.iteritems(default_kw)
                                if isinstance(v, str)})
           transaction.get().note('Created ' + meta_type)
           transaction.commit()

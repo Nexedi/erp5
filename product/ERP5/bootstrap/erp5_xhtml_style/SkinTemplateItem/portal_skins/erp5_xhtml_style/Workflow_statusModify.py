@@ -41,7 +41,7 @@ for f in form.get_fields():
 listbox = request.get('listbox') # XXX: hardcoded field name
 if listbox is not None:
   listbox_line_list = []
-  for key, value in sorted(listbox.iteritems()):
+  for key, value in six.iteritems(sorted(listbox)):
     value['listbox_key'] = key
     listbox_line_list.append(value)
   doaction_param_list['listbox'] = tuple(listbox_line_list)

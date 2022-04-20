@@ -673,7 +673,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                                          path_set_to_check):
               yield d
 
-      for id_, t in tree_node.visited_movement_dict.iteritems():
+      for id_, t in six.iteritems(tree_node.visited_movement_dict):
         subdocument, path = t
         to_check = path_set_to_check
         # do we need to change/copy the set?

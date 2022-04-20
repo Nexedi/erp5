@@ -869,7 +869,7 @@ class BusinessProcess(Path, XMLObject):
     if trade_phase_list: # reduce graph
       next_dict = defaultdict(set)
       # build {phase: next_set} (i.e. reverse result)
-      for next_, phase_set in result.iteritems():
+      for next_, phase_set in six.iteritems(result):
         for phase in phase_set:
           next_dict[phase].add(next_)
       # for each phase to remove

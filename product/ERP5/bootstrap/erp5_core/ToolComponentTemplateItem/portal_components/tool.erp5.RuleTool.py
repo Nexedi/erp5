@@ -143,7 +143,7 @@ class RuleTool(BaseTool):
     for m in message_list:
       expandable_dict[m.object].append(m)
     try:
-      for expandable, message_list in expandable_dict.iteritems():
+      for expandable, message_list in six.iteritems(expandable_dict):
         kw = {}
         for m in message_list:
           kw.update(m.kw)

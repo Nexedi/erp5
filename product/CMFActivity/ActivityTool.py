@@ -702,7 +702,7 @@ class ActivityTool (BaseTool):
     security.declarePrivate('initialize')
     def initialize(self):
       self.maybeMigrateConnectionClass()
-      for activity in activity_dict.itervalues():
+      for activity in six.itervalues(activity_dict):
         activity.initialize(self, clear=False)
       # Remove old skin if any.
       skins_tool = self.getPortalObject().portal_skins
@@ -1328,7 +1328,7 @@ class ActivityTool (BaseTool):
         Distribute load
       """
       # Call distribute on each queue
-      for activity in activity_dict.itervalues():
+      for activity in six.itervalues(activity_dict):
         activity.distribute(aq_inner(self), node_count)
 
     security.declarePublic('tic')
@@ -1392,7 +1392,7 @@ class ActivityTool (BaseTool):
       quote = db.string_literal
       return bool(db.query("(%s)" % ") UNION ALL (".join(
         activity.hasActivitySQL(quote, path=path, **kw)
-        for activity in activity_dict.itervalues()))[1])
+        for activity in six.itervalues(activity_dict)))[1])
 
     security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
@@ -1494,7 +1494,7 @@ class ActivityTool (BaseTool):
         object_path = obj
       else:
         object_path = obj.getPhysicalPath()
-      for activity in activity_dict.itervalues():
+      for activity in six.itervalues(activity_dict):
         activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
 
     def invoke(self, message):
@@ -1629,7 +1629,7 @@ class ActivityTool (BaseTool):
           error_log.raising(exc_info)
       else:
         # Note there can be partial failures.
-        for m, expanded_object_list in message_dict.iteritems():
+        for m, expanded_object_list in six.iteritems(message_dict):
           result_list = []
           for result in expanded_object_list:
             try:
@@ -1741,7 +1741,7 @@ class ActivityTool (BaseTool):
       """
         Recreate tables, clearing all activities
       """
-      for activity in activity_dict.itervalues():
+      for activity in six.itervalues(activity_dict):
         activity.initialize(self, clear=True)
 
       if RESPONSE is not None:
@@ -1770,7 +1770,7 @@ class ActivityTool (BaseTool):
         return activity_dict[activity].getMessageList(aq_inner(self), **kw)
 
       message_list = []
-      for activity in activity_dict.itervalues():
+      for activity in six.itervalues(activity_dict):
         try:
           message_list += activity.getMessageList(aq_inner(self), **kw)
         except AttributeError:
@@ -1800,7 +1800,7 @@ class ActivityTool (BaseTool):
       quote = db.string_literal
       return sum(x for x, in db.query("(%s)" % ") UNION ALL (".join(
         activity.countMessageSQL(quote, **kw)
-        for activity in activity_dict.itervalues()))[1])
+        for activity in six.itervalues(activity_dict)))[1])
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, REQUEST=None, **kw):
@@ -1813,11 +1813,11 @@ class ActivityTool (BaseTool):
 
     security.declarePrivate('getSQLTableNameSet')
     def getSQLTableNameSet(self):
-      return [x.sql_table for x in activity_dict.itervalues()]
+      return [x.sql_table for x in six.itervalues(activity_dict)]
 
     # Required for tests (time shift)
     def timeShift(self, delay):
-      for activity in activity_dict.itervalues():
+      for activity in six.itervalues(activity_dict):
         activity.timeShift(aq_inner(self), delay)
 
 InitializeClass(ActivityTool)

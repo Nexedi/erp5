@@ -87,7 +87,7 @@ class GeneratedAmountList(list):
       else:
         aggregate[1] += amount.getQuantity()
     from erp5.component.document.RoundingModel import RoundingProxy
-    for amount, quantity in aggregate_dict.itervalues():
+    for amount, quantity in six.itervalues(aggregate_dict):
       # Before we ignore 'quantity==0' amount here for better performance,
       # but it is not a good idea, especially when the first expand causes
       # non-zero quantity and then quantity becomes zero.

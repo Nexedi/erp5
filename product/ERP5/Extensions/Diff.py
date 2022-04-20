@@ -70,7 +70,7 @@ def diff_objects(object_a, object_b):
         for property_dict_id in ('values', 'tales', 'overrides'):
           a_property_dict = getattr(field_a, property_dict_id)
           b_property_dict = getattr(field_b, property_dict_id)
-          for property_id, a_property_value in a_property_dict.iteritems():
+          for property_id, a_property_value in six.iteritems(a_property_dict):
             b_property_value = b_property_dict[property_id]
             if a_property_value != b_property_value:
               if isinstance(a_property_value, str) and isinstance(b_property_value, str):

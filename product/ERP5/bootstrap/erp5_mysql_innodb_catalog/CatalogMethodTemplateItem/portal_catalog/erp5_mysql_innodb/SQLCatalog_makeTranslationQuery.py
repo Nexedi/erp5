@@ -27,7 +27,7 @@ query_list = [
     ),
     logical_operator='and',
   )
-  for original_message, portal_type_set in original_message_dict.iteritems()
+  for original_message, portal_type_set in six.iteritems(original_message_dict)
 ]
 if len(query_list) == 1:
   return query_list[0]

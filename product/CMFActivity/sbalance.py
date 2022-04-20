@@ -118,7 +118,7 @@ class Balancer:
           if addr not in self.disabled_server_dict:
             count_dict[addr] = 0
         expired_server_list = []
-        for key,value in self.sticked_server_dict.items():
+        for key,value in six.iteritems(self.sticked_server_dict):
           if self.debug:
             print('cur_time = %f, value.atime = %f' % (cur_time, value.atime))
           if cur_time > value.atime + 60 * 10:

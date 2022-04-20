@@ -112,7 +112,7 @@ class IndexableObjectWrapper(object):
         skip_role_set = set()
         skip_role = skip_role_set.add
         clear_skip_role = skip_role_set.clear
-        for group_id, role_list in mergedLocalRoles(ob).iteritems():
+        for group_id, role_list in six.iteritems(mergedLocalRoles(ob)):
           new_role_list = []
           new_role = new_role_list.append
           clear_skip_role()
@@ -142,7 +142,7 @@ class IndexableObjectWrapper(object):
       no_indexable_role = self.__catalog_role_set.isdisjoint
       return (
         group_id
-        for group_id, role_list in self.__getLocalRoleDict().iteritems()
+        for group_id, role_list in six.iteritems(self.__getLocalRoleDict())
         if group_id not in self.__user_set and
           # group_id is returned only if any of its roles is indexable
           not no_indexable_role(role_list)
@@ -197,7 +197,7 @@ class IndexableObjectWrapper(object):
           '': allowed_role_set,
         }
         optimized_role_set = set()
-        for role_definition_group, user_and_role_list in local_roles_group_id_dict.iteritems():
+        for role_definition_group, user_and_role_list in six.iteritems(local_roles_group_id_dict):
           group_allowed_set = allowed_by_local_roles_group_id.setdefault(
             role_definition_group,
             set(),
@@ -212,7 +212,7 @@ class IndexableObjectWrapper(object):
         user_view_permission_role_dict = {}
         catalog_role_set = self.__catalog_role_set
         user_set = self.__user_set
-        for group_id, role_list in self.__getLocalRoleDict().iteritems():
+        for group_id, role_list in six.iteritems(self.__getLocalRoleDict()):
           # Warning: only valid when group_id is candidate for indexation in a
           # catalog_role column !
           group_id_is_user = group_id in user_set
@@ -239,7 +239,7 @@ class IndexableObjectWrapper(object):
                   group_allowed_set.add(prefix + ':' + role)
 
         # sort and freeze `allowed` principals
-        for local_roles_group_id, allowed in allowed_by_local_roles_group_id.iteritems():
+        for local_roles_group_id, allowed in six.iteritems(allowed_by_local_roles_group_id):
           allowed_by_local_roles_group_id[local_roles_group_id] = tuple(sorted(allowed))
 
         self.__security_parameter_cache = result = (
@@ -758,11 +758,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           )
       query_list = []
       append = query_list.append
-      for key, value in role_column_dict.iteritems():
+      for key, value in six.iteritems(role_column_dict):
         append(SimpleQuery(**{key : value}))
       if security_uid_dict:
         catalog_security_uid_groups_columns_dict = self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
-        for local_roles_group_id, security_uid_list in security_uid_dict.iteritems():
+        for local_roles_group_id, security_uid_list in six.iteritems(security_uid_dict):
           assert security_uid_list
           append(SimpleQuery(
             **{catalog_security_uid_groups_columns_dict[local_roles_group_id]: security_uid_list}
@@ -941,7 +941,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           security_uid_dict,
           w.optimised_roles_and_users,
         ) = getSecurityUidDict(document_w)
-        for local_roles_group_id, security_uid in security_uid_dict.iteritems():
+        for local_roles_group_id, security_uid in six.iteritems(security_uid_dict):
           catalog_column = catalog_security_uid_groups_columns_dict.get(
             local_roles_group_id,
             default_security_uid_column,
@@ -1207,7 +1207,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       suffix = ('' if forward else '__related') + '__uid'
       parent_document_set = base_category_dict.pop('parent', None)
       query_list = []
-      for base_category_id, document_set in base_category_dict.iteritems():
+      for base_category_id, document_set in six.iteritems(base_category_dict):
         column = prefix + base_category_id + suffix
         category_query = SimpleQuery(**{
           column: {document.getUid() for document in document_set},

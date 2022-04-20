@@ -109,7 +109,7 @@ class BusinessTemplateInfoBase:
     def parse(file_path):
       action_information = importXML(connection, file_path)
       action_information.__repr__()
-      for key, value in action_information.__dict__.iteritems():
+      for key, value in six.iteritems(action_information.__dict__):
         if value not in (None, "") and key in ('action', 'condition') :
           setattr(action_information, key, value.text)
       actions = action_information.__dict__.copy()

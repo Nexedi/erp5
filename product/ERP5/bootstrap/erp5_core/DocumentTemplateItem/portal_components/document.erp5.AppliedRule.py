@@ -230,7 +230,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
           sm_dict = old_dict.setdefault(line, {})
           recurse_list = deque(({get_matching_key(sm): (sm,)},))
           while recurse_list:
-            for k, x in recurse_list.popleft().iteritems():
+            for k, x in six.iteritems(recurse_list.popleft()):
               if not k:
                 continue
               if len(x) > 1:

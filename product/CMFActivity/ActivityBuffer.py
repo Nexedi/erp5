@@ -59,7 +59,7 @@ class ActivityBuffer(TM):
     try:
       activity_tool = self.activity_tool
       # Try to push all messages
-      for activity, message_list in self.message_list_dict.iteritems():
+      for activity, message_list in six.iteritems(self.message_list_dict):
         activity.prepareQueueMessageList(activity_tool, message_list)
       self.message_list_dict.clear()
       self.activity_tool = None
