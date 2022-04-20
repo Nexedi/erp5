@@ -1883,7 +1883,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       Speed up test by not interrupting the first transaction
       as soon as we have the information we want.
       """
-    original_query = DB.query.__func__
+    original_query = DB.query
+    import six
+    if six.PY2:
+      original_query = original_query.__func__
     def query(self, query_string, *args, **kw):
       if query_string.startswith('INSERT'):
         insert_list.append(len(query_string))
@@ -2054,7 +2057,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def testTryNotificationSavedOnEventLogWhenNotifyUserRaises(self, activity):
     obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
-    original_notifyUser = Message.notifyUser.im_func
+    original_notifyUser = Message.notifyUser
+    import six
+    if six.PY2:
+      original_notifyUser = original_notifyUser.__func__
     def failSendingEmail(self, *args, **kw):
       raise MailHostError('Mail is not sent')
     activity_unit_test_error = Exception()
@@ -2084,7 +2090,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def testNotificationFailureIsNotSavedOnEventLogWhenMailNotificationIsDisabled(self, activity):
     obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
-    original_notifyUser = Message.notifyUser.im_func
+    original_notifyUser = Message.notifyUser
+    import six
+    if six.PY2:
+      original_notifyUser = original_notifyUser.__func__
     def failSendingEmail(self, *args, **kw):
       raise MailHostError('Mail is not sent')
     activity_unit_test_error = Exception()
@@ -2152,8 +2161,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self):
       raise activity_unit_test_error
     from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
-    original_raising = SiteErrorLog.raising.im_func
-
+    original_raising = SiteErrorLog.raising
+    import six
+    if six.PY2:
+      original_raising = original_raising.__func__
     # Monkey patch Site Error to induce conflict errors artificially.
     def raising(self, info):
       raise AttributeError

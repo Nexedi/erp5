@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import warnings
+import warnings, six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFActivity.ActivityTool import ActivityTool
@@ -79,11 +79,19 @@ class TimerServiceMixin(object):
     self.subscribe()
     super(TimerServiceMixin, self).manage_afterAdd(*args, **kw)
 
-  security.declarePublic('getCurrentNode')
-  getCurrentNode = ActivityTool.getCurrentNode.im_func
-  security.declarePublic('getServerAddress')
-  getServerAddress = ActivityTool.getServerAddress.im_func
+  if six.PY2:
+    security.declarePublic('getCurrentNode')
+    getCurrentNode = ActivityTool.getCurrentNode.__func__
+    security.declarePublic('getServerAddress')
+    getServerAddress = ActivityTool.getServerAddress.__func__
+    _isValidNodeName = ActivityTool._isValidNodeName.__func__
+  else:
+    # no more unbound in py3, we got the function directly
+    security.declarePublic('getCurrentNode')
+    getCurrentNode = ActivityTool.getCurrentNode
+    security.declarePublic('getServerAddress')
+    getServerAddress = ActivityTool.getServerAddress
+    _isValidNodeName = ActivityTool._isValidNodeName
 
-  _isValidNodeName = ActivityTool._isValidNodeName.im_func
 
 InitializeClass(TimerServiceMixin)
