@@ -391,8 +391,10 @@ for method_name, security in (
     ):
   if security is not None:
     security(method_name)
-  setattr(InteractionWorkflowDefinition,
-          method_name,
-          getattr(ERP5InteractionWorkflow, method_name).im_func)
+  func = getattr(ERP5InteractionWorkflow, method_name)
+  import six
+  if six.PY2:
+    func = func.__func__
+  setattr(InteractionWorkflowDefinition, method_name, func)
 
 Globals.InitializeClass(InteractionWorkflowDefinition)

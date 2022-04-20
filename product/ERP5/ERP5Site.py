@@ -19,6 +19,7 @@ from __future__ import absolute_import
 from DateTime import DateTime
 from six.moves import map
 import thread, threading
+import six
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals
@@ -2437,7 +2438,10 @@ class ERP5Generator(PortalGenerator):
 
 
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
-AppInitializer_initialize = AppInitializer.initialize.__func__
+AppInitializer_initialize = AppInitializer.initialize
+if six.PY2:
+  # No more unbound methods in py3
+  AppInitializer_initialize = AppInitializer_initialize.__func__
 def initialize(self):
   AppInitializer.initialize = AppInitializer_initialize
   self.initialize()

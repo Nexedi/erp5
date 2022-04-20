@@ -96,7 +96,13 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
         if _setOb:
           if isinstance(_setOb, WorkflowMethod):
             _setOb = _setOb._m
-          if _setOb.im_func is OFS_Folder._setOb.im_func:
+          import six
+          setOb_func = _setOb
+          OFS_Folder_setOb_func = OFS_Folder._setOb
+          if six.PY2:
+            setOb_func = setOb_func.__func__
+            OFS_Folder_setOb_func = OFS_Folder_setOb.__func__
+          if setOb_func is OFS_Folder_setOb_func:
             self.lazy = Ghost
         elif klass.__module__[:7] == 'BTrees.' and klass.__name__ != 'Length':
           self.lazy = LazyBTree()

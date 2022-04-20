@@ -88,7 +88,10 @@ class _(PatchClass(ExternalMethod)):
           arg_list.append('**' + argument_object.keywords)
 
         i = isinstance(f, MethodType)
-        ff = f.__func__ if i else f
+        ff = f
+        import six
+        if six.PY2 and i:
+          ff = f.__func__
         has_self = len(arg_list) > i and arg_list[i] == 'self'
         i += has_self
         if i:
