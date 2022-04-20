@@ -3794,32 +3794,9 @@ class ModuleTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = mapping
 
   def uninstall(self, context, **kw):
-    trash = kw.get('trash', 0)
-    if trash:
-      return
-    object_path = kw.get('object_path', None)
-    trashbin = kw.get('trashbin', None)
-    if object_path is None:
-      keys = self._archive.keys()
-    else:
-      keys = [object_path]
-    p = context.getPortalObject()
-    id_list = p.objectIds()
-    for key in keys:
-      if key in id_list:
-        try:
-          if trash and trashbin is not None:
-            container_path = key.split('/')
-            self.portal_trash.backupObject(trashbin, container_path,
-                                           key, save=1, keep_subobjects=1)
-          p.manage_delObjects([key])
-        except NotFound:
-          pass
+    # Do not remove any module for safety.
     BaseTemplateItem.uninstall(self, context, **kw)
 
-  def trash(self, context, new_item, **kw):
-    # Do not remove any module for safety.
-    pass
 
 # XXX-arnau: when everything has been migrated to Components, this class
 # should be removed and only _ZodbComponentTemplateItem should remain

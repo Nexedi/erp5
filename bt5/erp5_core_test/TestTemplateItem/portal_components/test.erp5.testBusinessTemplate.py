@@ -7679,6 +7679,46 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_uninstall_module(self):
+    """ModuleTemplateItem are not uninstalled
+    """
+    self.portal.newContent(
+      id='dummy_module',
+      portal_type='Folder')
+    self.tic()
+
+    bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      template_module_id_list=('dummy_module',))
+    self.tic()
+    bt.build()
+    self.tic()
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # modify the document
+    self.portal.manage_delObjects(ids=['dummy_module'])
+    self.tic()
+
+    # install the business template
+    new_bt.install()
+    self.tic()
+    self.assertIsNotNone(self.portal._getOb('dummy_module', None))
+
+    # uninstall the business template, the module should be kept
+    new_bt.uninstall()
+    self.tic()
+    self.assertIsNotNone(self.portal._getOb('dummy_module', None))
+
+
 class _ZodbComponentTemplateItemMixin(BusinessTemplateMixin):
   """
   Test cases for all Test*TemplateItem test classes.
