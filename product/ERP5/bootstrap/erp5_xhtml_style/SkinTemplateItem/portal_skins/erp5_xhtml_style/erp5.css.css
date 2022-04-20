@@ -1207,10 +1207,6 @@ fieldset > div.large-gadget {
   height: 85vh;
 }
 
-a.zocial {
-  margin-top: 10px;
-}
-
 body[dir="rtl"] .access_tab_table td > div {
   float: right !important;
 }
