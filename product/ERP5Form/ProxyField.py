@@ -54,7 +54,7 @@ allow_class(BrokenProxyField)
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
   """
-  func_code = None
+  __code__ = func_code = None
 
   def __init__(self, method_id, default=''):
     self._method_id = method_id
@@ -68,7 +68,7 @@ class WidgetDelegatedMethod(Method):
       try:
         return proxied_method(field, *args, **kw)
       finally:
-        self.func_code = getattr(proxied_method, 'func_code', None)
+        self.__code__ = self.__code__ = getattr(proxied_method, '__code__', None)
     return self._default
 
 

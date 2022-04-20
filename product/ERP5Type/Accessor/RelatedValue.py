@@ -41,10 +41,10 @@ class DefaultGetter(BaseGetter):
 
   # Generic Definition of Method Object
   # This is required to call the method form the Web
-  func_code = func_code()
-  func_code.co_varnames = ('self', )
-  func_code.co_argcount = 1
-  func_defaults = ()
+  __code__ = func_code = func_code()
+  __code__.co_varnames = ('self', )
+  __code__.co_argcount = 1
+  __defaults__ = func_defaults = ()
 
   def __init__(self, id, key, warning=0):
     """
@@ -83,10 +83,10 @@ class ListGetter(BaseGetter):
 
   # Generic Definition of Method Object
   # This is required to call the method form the Web
-  func_code = func_code()
-  func_code.co_varnames = ('self', )
-  func_code.co_argcount = 1
-  func_defaults = ()
+  __code__ = func_code = func_code()
+  __code__.co_varnames = ('self', )
+  __code__.co_argcount = 1
+  __defaults__ = func_defaults = ()
 
   def __init__(self, id, key, warning=0):
     """
@@ -123,10 +123,10 @@ class DefaultPropertyGetter(BaseGetter):
 
   # Generic Definition of Method Object
   # This is required to call the method form the Web
-  func_code = func_code()
-  func_code.co_varnames = ('self', )
-  func_code.co_argcount = 1
-  func_defaults = ()
+  __code__ = func_code = func_code()
+  __code__.co_varnames = ('self', )
+  __code__.co_argcount = 1
+  __defaults__ = func_defaults = ()
 
   def __init__(self, id, key, warning=0):
     self._id = id
@@ -160,10 +160,10 @@ class PropertyListGetter(BaseGetter):
 
   # Generic Definition of Method Object
   # This is required to call the method form the Web
-  func_code = func_code()
-  func_code.co_varnames = ('self', )
-  func_code.co_argcount = 1
-  func_defaults = ()
+  __code__ = func_code = func_code()
+  __code__.co_varnames = ('self', )
+  __code__.co_argcount = 1
+  __defaults__ = func_defaults = ()
 
   def __init__(self, id, key, warning=0):
     self._id = id

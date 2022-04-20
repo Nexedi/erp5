@@ -24,7 +24,7 @@ class _(PatchClass(ExternalMethod)):
     reloadIfChanged = getFuncDefaults = getFuncCode = filepath = None
 
     @property
-    def func_defaults(self):
+    def __defaults__(self):
         """Return a tuple of default values.
         The first value is for the "second" parameter (self is ommited)
 
@@ -33,10 +33,12 @@ class _(PatchClass(ExternalMethod)):
           will have func_defaults = ('', )
         """
         return self._getFunction()[1]
+    func_defaults = __defaults__
 
     @property
-    def func_code(self):
+    def __code__(self):
         return self._getFunction()[2]
+    func_code = __code__
 
     @property
     def func_args(self):
