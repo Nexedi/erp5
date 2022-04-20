@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 import string
 from .DummyField import fields
+from .Errors import ValidationError
 from . import Widget, Validator
 from Persistence import Persistent
 import Acquisition
@@ -77,12 +78,21 @@ except ImportError:
 
 class TALESValidator(Validator.StringBaseValidator):
 
+    message_names = Validator.StringBaseValidator.message_names +\
+                    ['invalid']
+    invalid = 'The TALES expression is invalid.'
+
     def validate(self, field, key, REQUEST):
         value = Validator.StringBaseValidator.validate(self, field, key,
                                                        REQUEST)
 
         if value == "" and not field.get_value('required'):
             return value
+
+        try:
+            getEngine().compile(value)
+        except (SyntaxError, getEngine().getCompilerError()) as e:
+            raise ValidationError('invalid', field, error_text=str(e))
 
         return TALESMethod(value)
 

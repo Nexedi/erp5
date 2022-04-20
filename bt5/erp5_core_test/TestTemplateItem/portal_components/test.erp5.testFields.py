@@ -43,7 +43,7 @@ DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
 MultiListField, IntegerField
 from Products.ERP5Form.CaptchaField import CaptchaField
 from Products.Formulator.MethodField import Method
-from Products.Formulator.TALESField import TALESMethod
+from Products.Formulator.TALESField import TALESField, TALESMethod
 
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import field_value_cache
@@ -1260,6 +1260,38 @@ class TestCaptchaField(ERP5TypeTestCase):
         })
 
 
+class TestTALESField(ERP5TypeTestCase):
+
+  def afterSetUp(self):
+    self.field = TALESField('test_field')
+    self.widget = self.field.widget
+    self.validator = self.field.validator
+
+  def test_validator_ok(self):
+    self.portal.REQUEST.set('field_test_field', 'python: 1 + 1')
+    validated = self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST)
+    self.assertIsInstance(validated, TALESMethod)
+    self.assertEqual(validated._text, 'python: 1 + 1')
+
+  def test_validator_python_syntax_error(self):
+    self.portal.REQUEST.set('field_test_field', 'python: 1 - ')
+    with self.assertRaisesRegexp(ValidationError, 'invalid') as ctx:
+      self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST)
+    self.assertEqual(ctx.exception.error_text, 'Python expression error:\ninvalid syntax (PythonExpr, line 1)')
+
+  def test_validator_string_syntax_error(self):
+    self.portal.REQUEST.set('field_test_field', 'string: ${non terminated')
+    with self.assertRaisesRegexp(ValidationError, 'invalid') as ctx:
+      self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST)
+    self.assertEqual(ctx.exception.error_text, '$ must be doubled or followed by a simple path')
+
+  def test_validator_unknown_engine(self):
+    self.portal.REQUEST.set('field_test_field', 'notexists: ???')
+    with self.assertRaisesRegexp(ValidationError, 'invalid') as ctx:
+      self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST)
+    self.assertEqual(ctx.exception.error_text, 'Unrecognized expression type "notexists".')
+
+
 def makeDummyOid():
   import time, random
   return '%s%s' % (time.time(), random.random())
@@ -1280,4 +1312,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   suite.addTest(unittest.makeSuite(TestCaptchaField))
+  suite.addTest(unittest.makeSuite(TestTALESField))
   return suite
