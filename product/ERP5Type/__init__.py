@@ -36,7 +36,11 @@ from .patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
-WITH_LEGACY_WORKFLOW = True # BBB
+if six.PY3:
+  # DCWorkflow python2-only
+  WITH_LEGACY_WORKFLOW = False
+else:
+  WITH_LEGACY_WORKFLOW = True
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
