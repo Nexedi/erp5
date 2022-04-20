@@ -39,10 +39,10 @@ class PropertyGetter:
   issues when we wish to make a property a method. For instance,
   we would like to change from isIndexable=1 to a method isIndexable().
   """
-  func_code = func_code()
-  func_code.co_varnames = ()
-  func_code.co_argcount = 0
-  func_defaults = ()
+  __code__ = func_code = func_code()
+  __code__.co_varnames = ()
+  __code__.co_argcount = 0
+  __defaults__ = func_defaults = ()
 
   def __init__(self, id, value=None):
     self._id = id
@@ -84,10 +84,10 @@ class Getter(Accessor):
   # Generic Definition of Method Object
   # This is required to call the method form the Web
   # More information at http://www.zope.org/Members/htrd/howto/FunctionTemplate
-  func_code = func_code()
-  func_code.co_varnames = ('self', )
-  func_code.co_argcount = 1
-  func_defaults = ()
+  __code__ = func_code = func_code()
+  __code__.co_varnames = ('self', )
+  __code__.co_argcount = 1
+  __defaults__ = func_defaults = ()
 
   def __init__(self, id, key, value=None):
     self._id = id
