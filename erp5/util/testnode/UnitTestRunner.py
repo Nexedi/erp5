@@ -158,16 +158,15 @@ class UnitTestRunner(object):
     SLAPOS_TEST_LOG_DIRECTORY = node_test_suite.log_folder_path
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
-    def path(name, compat): # BBB
-        path, = filter(os.path.exists, (base + relative
-          for relative in ('/bin/' + name, '/parts/' + compat)
-          for base in software_list))
+    def path(name):
+        path, = filter(os.path.exists, (software + '/bin/' + name
+            for software in software_list))
         return path
     for option, value in (
-        ('--firefox_bin', lambda: path('firefox', 'firefox/firefox-slapos')),
+        ('--firefox_bin', lambda: path('firefox')),
         ('--frontend_url', lambda: config['frontend_url']),
         ('--node_quantity', lambda: config['node_quantity']),
-        ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
+        ('--xvfb_bin', lambda: path('xvfb')),
         ('--project_title', lambda: node_test_suite.project_title),
         ('--shared_part_list', lambda: SLAPOS_TEST_SHARED_PART_LIST),
         ('--log_directory', lambda: SLAPOS_TEST_LOG_DIRECTORY),
