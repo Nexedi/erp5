@@ -102,7 +102,7 @@ def main(*args):
     instance_dict = {}
   CONFIG['instance_dict'] = instance_dict
   if 'software_list' in config.sections():
-    CONFIG['software_list'] = filter(None,
-        config.get("software_list", "path_list").split(","))
+    CONFIG['software_list'] = list(filter(None,
+        config.get("software_list", "path_list").split(",")))
   
   TestNode(CONFIG).run()
