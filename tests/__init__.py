@@ -72,11 +72,11 @@ class _ERP5(ERP5TypeTestSuite):
         glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_web_monitoring_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_officejs_support_request_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_officejs_afs_directory_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_support_request_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_afs_directory_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_configurator_standard/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_test_result/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_web_manifest_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_km_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
