@@ -46,14 +46,16 @@ elif (portal_type == "Web Manifest"):
   response.setHeader('Content-Type', 'text/cache-manifest; charset=utf-8')
 
 else:
-  if (mapping_dict is not None):
-    web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict=mapping_dict)
-
   content_security_policy = "default-src 'self' data: blob:"
   x_frame_options = "SAMEORIGIN"
   if (web_section):
     content_security_policy = web_section.getLayoutProperty("configuration_content_security_policy", default=content_security_policy)
+    content_security_policy.replace('"', "'")
     x_frame_options = web_section.getLayoutProperty("configuration_x_frame_options", default=x_frame_options)
+
+  if (mapping_dict is not None):
+    mapping_dict['content_security_policy'] = content_security_policy
+    web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict=mapping_dict)
 
   # Do not allow to put inside an iframe
   if not x_frame_options == "ALLOW-FROM-ALL":
