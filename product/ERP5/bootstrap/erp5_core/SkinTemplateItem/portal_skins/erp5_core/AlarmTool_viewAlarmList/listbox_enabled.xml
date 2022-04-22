@@ -137,7 +137,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -149,10 +149,14 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string>disabled</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
