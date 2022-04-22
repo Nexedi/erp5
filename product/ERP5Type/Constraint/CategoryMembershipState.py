@@ -64,7 +64,7 @@ class CategoryMembershipState(Constraint):
     state_var_list.pop('portal_type')
     state_var_list.pop('base_category')
 
-    for workflow_variable, valid_state_list in state_var_list.items():
+    for workflow_variable, valid_state_list in list(state_var_list.items()):
       for membership in membership_list:
         current_state = membership.getProperty(workflow_variable)
         if current_state not in valid_state_list:

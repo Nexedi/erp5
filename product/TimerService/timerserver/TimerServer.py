@@ -26,49 +26,30 @@ class TimerServer(threading.Thread):
                     interval)
 
     def run(self):
-        try:
-            zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
-        except KeyError:
-            # wait until the zhttp_server exist in socket_map
-            # because TimerService has to be started after the Zope HTTPServer
-            from asyncore import socket_map
-            ip = port = ''
-            while 1:
-                time.sleep(5)
-                for k, v in socket_map.items():
-                    if hasattr(v, 'addr'):
-                        # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                        type = str(getattr(v, '__class__', 'unknown'))
-                        if type == 'ZServer.HTTPServer.zhttp_server':
-                            ip, port = v.addr
-                            break
-                if port:
-                    break
-            from ZServer.PubCore import handle
-        else:
-            while 1:
-                time.sleep(5)
-                try:
-                    server = zopewsgi.server
-                    break
-                except AttributeError:
-                    pass
+        import Products.ERP5.bin.zopewsgi
+        while 1:
+            time.sleep(5)
+            try:
+                server = Products.ERP5.bin.zopewsgi.server
+                break
+            except AttributeError:
+                pass
 
-            ip, port = server.addr
-            start_response = lambda *_: None
+        ip, port = server.addr
+        start_response = lambda *_: None
 
-            class handle(object):
-                def __init__(self, module_name, request, response):
-                    self.service = partial(zopewsgi.publish_module,
-                        request.environ,
-                        start_response,
-                        _module_name=module_name,
-                        _request=request,
-                        _response=response)
-                    server.add_task(self)
+        class handle(object):
+            def __init__(self, module_name, request, response):
+                self.service = partial(Products.ERP5.bin.zopewsgi.publish_module,
+                    request.environ,
+                    start_response,
+                    _module_name=module_name,
+                    _request=request,
+                    _response=response)
+                server.add_task(self)
 
-                def cancel(self):
-                    pass
+            def cancel(self):
+                pass
 
         if ip == '0.0.0.0':
           ip = socket.gethostbyname(socket.gethostname())
@@ -83,7 +64,7 @@ class TimerServer(threading.Thread):
             except socket.error:
                 time.sleep(5)
                 continue
-            s.send('GET / HTTP/1.1\r\n\r\n')
+            s.send(b'GET / HTTP/1.1\r\n\r\n')
             s.recv(4096) # blocks until a response is received
             break
         s.close()

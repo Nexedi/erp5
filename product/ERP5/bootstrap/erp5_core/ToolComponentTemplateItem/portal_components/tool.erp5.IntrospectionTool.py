@@ -145,7 +145,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     # Unlazyfy URLs and other lazy values so that it can be marshalled
     result = {}
-    for key, action_list in erp5_menu_dict.items():
+    for key, action_list in list(erp5_menu_dict.items()):
       result[key] = [ dict(action) for action in action_list ]
 
     return result

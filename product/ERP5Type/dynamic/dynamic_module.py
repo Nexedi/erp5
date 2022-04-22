@@ -81,7 +81,7 @@ class RefManager(dict):
     Remove cache items with no Request Left.
     """
     for (current_last_sync,
-         (request_obj_weakset, _)) in self.items():
+         (request_obj_weakset, _)) in list(self.items()):
       if not request_obj_weakset:
         del self[current_last_sync]
 

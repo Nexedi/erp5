@@ -53,7 +53,7 @@ def addDialogIfNeeded(url):
     if 'format' in parameter_kw:
       # if format is passed in action url: remove it
       target_format = parameter_kw.pop('format')
-      action = '%s?%s' % (action_id, '&'.join(['='.join(tuple_parameter) for tuple_parameter in parameter_kw.items()]))
+      action = '%s?%s' % (action_id, '&'.join(['='.join(tuple_parameter) for tuple_parameter in list(parameter_kw.items())]))
     url = '%s/Base_viewOOoPrintDialog?dialog_action_url=%s&base_content_type=%s&field_your_format=%s' % (
                  context.absolute_url(),
                  url_quote('%s/%s' % (absolute_url, action)),

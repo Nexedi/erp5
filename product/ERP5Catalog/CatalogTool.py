@@ -774,7 +774,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           query = ComplexQuery(
             [
               SimpleQuery(**{key : value})
-              for key, value in local_role_column_dict.items()
+              for key, value in list(local_role_column_dict.items())
             ] + [query],
             logical_operator='AND',
           )
@@ -1050,11 +1050,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       identity_criterion = getattr(object,'_identity_criterion',None)
       range_criterion = getattr(object,'_range_criterion',None)
       if identity_criterion is not None:
-        for property, value in identity_criterion.items():
+        for property, value in list(identity_criterion.items()):
           if value is not None:
             property_dict[property] = value
       if range_criterion is not None:
-        for property, (min, max) in range_criterion.items():
+        for property, (min, max) in list(range_criterion.items()):
           if min is not None:
             property_dict['%s_range_min' % property] = min
           if max is not None:
@@ -1436,7 +1436,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               break
 
       queries_by_connection_id = defaultdict(list)
-      for connection_id, method_list in method_list_by_connection_id.items():
+      for connection_id, method_list in list(method_list_by_connection_id.items()):
         connection = connection_by_connection_id[connection_id]
         db = connection()
         with db.lock():
@@ -1448,7 +1448,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             for query in queries_by_connection_id[connection_id]:
               db.query(query)
 
-      return sum(queries_by_connection_id.values(), [])
+      return sum(list(queries_by_connection_id.values()), [])
 
     security.declarePublic('getDocumentValueList')
     def getDocumentValueList(self, sql_catalog_id=None,

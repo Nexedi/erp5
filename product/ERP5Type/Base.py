@@ -208,7 +208,7 @@ class WorkflowMethod(Method):
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
     candidate_transition_item_list = valid_invoke_once_item_list + \
-                           self._invoke_always.get(portal_type, {}).items()
+                           list(self._invoke_always.get(portal_type, {}).items())
 
     #LOG('candidate_transition_item_list %s' % self.__name__, 0, str(candidate_transition_item_list))
 
@@ -469,7 +469,7 @@ class PropertyHolder(object):
     """
     Return a list of tuple (id, method) for every property of a class
     """
-    return self._getClassDict(klass, inherited=inherited, local=local).items()
+    return list(self._getClassDict(klass, inherited=inherited, local=local).items())
 
   def getClassMethodItemList(self, klass, inherited=1, local=1):
     """
@@ -1497,7 +1497,7 @@ class Base(
     """
     if not kw:
       return
-    key_list = kw.keys()
+    key_list = list(kw.keys())
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
@@ -2450,7 +2450,7 @@ class Base(
     method = self._getTypeBasedMethod('getIdTranslationDict')
     if method is not None:
       user_dict = method()
-      for k in user_dict.keys():
+      for k in list(user_dict.keys()):
         if property_dict.get(k, None) is not None:
           property_dict[k].update(user_dict[k])
         else:
@@ -2776,7 +2776,7 @@ class Base(
         # Avoid copying a SESSION object, because it is newly created
         # implicitly when not present, thus it may induce conflict errors.
         # As ERP5 does not use Zope sessions, it is better to skip SESSION.
-        for k in REQUEST.keys():
+        for k in list(REQUEST.keys()):
           if k != 'SESSION':
             setattr(context, k, REQUEST[k])
       # Set the original document
@@ -3640,7 +3640,7 @@ class Base(
       next_id = default
     new_next_id = None if poison else next_id + count
     id_generator_state[group].value = new_next_id
-    return range(next_id, new_next_id)
+    return list(range(next_id, new_next_id))
 
 InitializeClass(Base)
 

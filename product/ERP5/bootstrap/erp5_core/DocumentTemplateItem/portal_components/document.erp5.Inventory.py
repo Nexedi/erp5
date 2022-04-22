@@ -291,11 +291,11 @@ class Inventory(Delivery):
       # in new inventory
       if len(not_used_inventory_dict):
         inventory_uid = self.getUid()
-        for first_level_key in not_used_inventory_dict.keys():
+        for first_level_key in list(not_used_inventory_dict.keys()):
           inventory_value = \
               not_used_inventory_dict[tuple(first_level_key)]
           # XXX-Aurel : this code does not work with only one level of variation
-          for second_level_key in inventory_value.keys():
+          for second_level_key in list(inventory_value.keys()):
             diff_quantity = - inventory_value[tuple(second_level_key)]
 
             kwd = {'uid': inventory_uid,

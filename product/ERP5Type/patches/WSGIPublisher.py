@@ -54,7 +54,12 @@ from ZPublisher.mapply import mapply
 from ZPublisher.WSGIPublisher import call_object
 from ZPublisher.WSGIPublisher import missing_name, WSGIResponse
 
-
+try:
+    from ZServer.ZPublisher import Publish
+    isZope4 = True
+except ImportError:
+    isZope4 = False
+    
 if sys.version_info >= (3, ):
     _FILE_TYPES = (IOBase, )
 else:
@@ -96,7 +101,8 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
         if lock:
             self._locked_body = 1
 
-    WSGIResponse.setBody = setBody
+    if not isZope4:
+        WSGIResponse.setBody = setBody
 
     def write(self, data):
         if not self._streaming:
@@ -265,7 +271,7 @@ def _exc_view_created_response(exc, request, response):
         # with the (environ, start_response) WSGI tuple.
         response.setStatus(exc.__class__)
         if hasattr(exc, 'headers'):
-            for key, value in exc.headers.items():
+            for key, value in list(exc.headers.items()):
                 response.setHeader(key, value)
 
         # Set the response body to the result of calling the view.
@@ -411,10 +417,17 @@ def load_app(module_info):
     try:
         yield (app, realm, debug_mode, validated_hook)
     finally:
-        if transaction.manager._txn is not None:
-            # Only abort a transaction, if one exists. Otherwise the
-            # abort creates a new transaction just to abort it.
-            transaction.abort()
+        if isZope4:
+            if transaction.manager.manager._txn is not None:
+                # Only abort a transaction, if one exists. Otherwise the
+                # abort creates a new transaction just to abort it.
+                transaction.abort()
+        else:
+            if getattr(transaction.manager, '_txn', None) is not None:
+                # Only abort a transaction, if one exists. Otherwise the
+                # abort creates a new transaction just to abort it.
+                transaction.abort()
+    
         app._p_jar.close()
 
 

@@ -20,6 +20,9 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
+import six
+assert six.PY2
+
 from Products.PageTemplates.utils import convertToUnicode
 
 def patched_convertToUnicode(source, content_type, preferred_encodings):

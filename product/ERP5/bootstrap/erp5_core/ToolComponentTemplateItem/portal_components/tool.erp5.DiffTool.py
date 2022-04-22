@@ -143,7 +143,7 @@ class PortalPatch(Explicit):
     diff_tree_list = []
 
     # Flatten the list of DiffValues
-    for key, subset in tree_diff.items():
+    for key, subset in list(tree_diff.items()):
       if isinstance(subset, set):
         sublist = list(subset)
         for item in sublist:

@@ -43,6 +43,7 @@ for prop_dict in context.getPropertyMap():
     new_value = base_error_message
   if new_value != old_value or error:
     # check if values are unicode convertible (binary are not)
+    assert six.PY2 # TODO-py3
     if isinstance(new_value, (str, unicode)):
       try:
         unicode(str(new_value), 'utf-8')

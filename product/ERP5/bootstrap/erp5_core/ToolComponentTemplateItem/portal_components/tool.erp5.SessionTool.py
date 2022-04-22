@@ -56,7 +56,7 @@ def remove_acquisition_wrapper(obj):
   if isinstance(obj, collections.Mapping):
     return obj.__class__({
         remove_acquisition_wrapper(k): remove_acquisition_wrapper(v)
-        for k, v in obj.items()})
+        for k, v in list(obj.items())})
   if isinstance(obj, (collections.Sequence, collections.Set)):
     return obj.__class__([remove_acquisition_wrapper(o) for o in obj])
   return obj
@@ -70,7 +70,7 @@ def restore_acquisition_wrapper(obj, context):
   if isinstance(obj, collections.Mapping):
     return obj.__class__({
         restore_acquisition_wrapper(k, context): restore_acquisition_wrapper(v, context)
-        for k, v in obj.items()})
+        for k, v in list(obj.items())})
   if isinstance(obj, (collections.Sequence, collections.Set)):
     return obj.__class__([restore_acquisition_wrapper(o, context) for o in obj])
   return obj
@@ -126,7 +126,7 @@ class Session(UserDict):
 
   def edit(self, **kw):
     """ Edit session object. """
-    for key, item in kw.items():
+    for key, item in list(kw.items()):
       self.__setitem__(key, item)
 
   def __setitem__(self, key, item):

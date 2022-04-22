@@ -390,7 +390,7 @@ class OOoParser(Implicit):
         # Get all cells
         find_path = './/{%s}table-cell' % line.nsmap['table']
         cells = line.findall(find_path)
-        cell_index_range = range(len(cells))
+        cell_index_range = list(range(len(cells)))
 
         for cell_index in cell_index_range:
           cell = cells[cell_index]

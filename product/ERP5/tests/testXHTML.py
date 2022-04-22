@@ -187,7 +187,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
     for portal_type in portal_types_module.contentValues(portal_type=\
         'Base Type'):
       if portal_type.getId().endswith('Module'):
-        for k, v in portal_type.getPropertyTranslationDomainDict().items():
+        for k, v in list(portal_type.getPropertyTranslationDomainDict().items()):
           if k in ('title', 'short_title') and v.getDomainName() != 'erp5_ui':
             error_list.append('"%s" should use erp5_ui for %s' % \
                 (portal_type.getId(), k))
@@ -407,7 +407,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         for id_ in skin_folder.objectIds():
           if id_.startswith('Preference_view'):
             addPreferenceView(skin_folder.id, id_)
-    for view_id, location_list in preference_view_id_dict.items():
+    for view_id, location_list in list(preference_view_id_dict.items()):
       if len(location_list) > 1:
         error_list.extend(location_list)
     self.assertEqual(error_list, [])
@@ -713,7 +713,7 @@ def addTestMethodDynamically(
     business_template_info_list.append(business_template_info)
 
   for business_template_info in business_template_info_list:
-    for portal_type, action_information_list in business_template_info.actions.items():
+    for portal_type, action_information_list in list(business_template_info.actions.items()):
       for action_information in action_information_list:
         if (action_information['category'] in ('object_view', 'object_list') and
             action_information['visible']==1 and

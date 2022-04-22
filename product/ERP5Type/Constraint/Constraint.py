@@ -64,7 +64,7 @@ class Constraint:
       if type is not None:
         self.type = type
       self.condition = condition
-      for key, value in constraint_definition.items():
+      for key, value in list(constraint_definition.items()):
         if key in self._message_id_list:
           self.message_id_dict[key] = value
         else:

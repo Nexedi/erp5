@@ -82,7 +82,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     # Default Implementation (use categories and trivial case)
     #  this default implementation should be applicable to most
     #  solvers so that use of Type Based methods is very rare
-    for solver, configuration_list in movement_dict[movement].items():
+    for solver, configuration_list in list(movement_dict[movement].items()):
       if solver is not self and solver.getTestedProperty() == self.getTestedProperty():
         return AppropriateUIMessage(whatever) # XXX-TODO
 

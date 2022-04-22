@@ -96,7 +96,7 @@ class TranslatedGetter(Getter):
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
-      return portal.Localizer.erp5_ui.gettext(state_id).encode('utf8')
+      return portal.Localizer.erp5_ui.gettext(state_id)
 
     psyco.bind(__call__)
 
@@ -119,7 +119,7 @@ class TranslatedTitleGetter(TitleGetter):
       if result == '':
         result = localizer.erp5_ui.gettext(state_title,
                                            lang=selected_language)
-      return result.encode('utf8')
+      return result
 
     psyco.bind(__call__)
 

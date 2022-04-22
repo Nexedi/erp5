@@ -112,4 +112,4 @@ class RoundingTool(BaseTool):
     Return the possible decimal rounding option item list which is provided
     by python standard decimal module.
     """
-    return ROUNDING_OPTION_DICT.items()
+    return list(ROUNDING_OPTION_DICT.items())

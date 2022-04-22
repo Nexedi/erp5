@@ -48,7 +48,12 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
-from App.Extensions import getBrain
+# pylint:disable=no-name-in-module
+try: # BBB Zope 2.12
+  from App.Extensions import getBrain
+except ImportError:
+  from Shared.DC.ZRDB.DA import getBrain
+# pylint:enable=no-name-in-module
 from MySQLdb import ProgrammingError
 from MySQLdb.constants.ER import NO_SUCH_TABLE
 
@@ -516,7 +521,7 @@ class SimulationTool(BaseTool):
       )
       from_table_dict[alias] = table
     sql_kw.update(catalog_sql_kw)
-    sql_kw['from_table_list'] = from_table_dict.items()
+    sql_kw['from_table_list'] = list(from_table_dict.items())
     return sql_kw
 
   def _generateKeywordDict(self,
@@ -1609,7 +1614,7 @@ class SimulationTool(BaseTool):
         line_key = getInventoryListKey(line)
         line_a = inventory_list_dict.get(line_key)
         inventory_list_dict[line_key] = addLineValues(line_a, line)
-    sorted_inventory_list = inventory_list_dict.values()
+    sorted_inventory_list = list(inventory_list_dict.values())
     # Sort results manually when required
     sort_on = new_kw.get('sort_on')
     if sort_on:

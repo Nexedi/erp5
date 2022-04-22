@@ -93,7 +93,8 @@ class IdTool(BaseTool):
     version_last_generator = 0
     for generator in self.objectValues():
       if generator.getReference() == reference:
-        version = generator.getVersion()
+        # Version Property Sheet defines 'version' property as a 'string'
+        version = int(generator.getVersion())
         if version > version_last_generator:
           id_last_generator = generator.getId()
           version_last_generator = version
@@ -366,7 +367,7 @@ class IdTool(BaseTool):
     """
     if getattr(self, 'dict_length_ids', None) is None:
       self.dict_length_ids = PersistentMapping()
-    return self.dict_length_ids.items()
+    return list(self.dict_length_ids.items())
 
   security.declarePrivate('dumpDictLengthIdsItems')
   def dumpDictLengthIdsItems(self):

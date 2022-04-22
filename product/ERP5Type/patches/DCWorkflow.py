@@ -114,7 +114,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       # So, we can now put this kind of expression : <= "%(now)s"
       # May be this patch should be moved to listFilteredActions in the future
       info.now = DateTime()
-      for id, qdef in self.worklists.items():
+      for id, qdef in list(self.worklists.items()):
           if qdef.actbox_name:
             guard = qdef.guard
             # Patch for ERP5 by JP Smets in order
@@ -269,7 +269,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     if tdef is not None: tdef_exprs = tdef.var_exprs
     if tdef_exprs is None: tdef_exprs = {}
     status = {}
-    for id, vdef in self.variables.items():
+    for id, vdef in list(self.variables.items()):
         if not vdef.for_status:
             continue
         expr = None
@@ -382,7 +382,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
   tdef_exprs = {}
   status = {}
-  for id, vdef in self.variables.items():
+  for id, vdef in list(self.variables.items()):
     if not vdef.for_status:
       continue
     expr = None
@@ -560,7 +560,7 @@ def DCWorkflowDefinition_getStateValueByReference(self, reference):
   return None
 def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
-    return self.states.values()
+    return list(self.states.values())
   return []
 def DCWorkflowDefinition_getStateReferenceList(self):
   if self.states is not None:
@@ -572,7 +572,7 @@ def DCWorkflowDefinition_getTransitionValueByReference(self, reference):
   return None
 def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
-    return self.transitions.values()
+    return list(self.transitions.values())
   else:
     return []
 def DCWorkflowDefinition_getTransitionIdByReference(self, reference):
@@ -584,7 +584,7 @@ def DCWorkflowDefinition_getTransitionReferenceList(self):
 def DCWorkflowDefinition_getWorklistValueByReference(self, reference):
   return self.worklists.get(reference, None)
 def DCWorkflowDefinition_getWorklistValueList(self):
-  return self.worklists.values()
+  return list(self.worklists.values())
 def DCWorkflowDefinition_getWorklistReferenceList(self):
   return self.worklists.objectIds()
 def DCWorkflowDefinition_propertyIds(self):
@@ -597,13 +597,13 @@ def DCWorkflowDefinition_getScriptValueByReference(self, reference):
   return None
 def DCWorkflowDefinition_getScriptValueList(self):
   if self.scripts is not None:
-    return self.scripts.values()
+    return list(self.scripts.values())
   return []
 def StateDefinition_getDestinationIdList(self):
   return self.transitions
 def StateDefinition_getDestinationValueList(self):
   if self.transitions: # empty tuple by default
-    return [v for i, v in self.getWorkflow().transitions.items()
+    return [v for i, v in list(self.getWorkflow().transitions.items())
             if i in self.transitions]
   return []
 def StateDefinition_getStateTypeList(self):
@@ -1024,7 +1024,7 @@ def convertToERP5Workflow(self, temp_object=False):
         acquire_permission_list = []
         permission_roles_dict = {}
         if sdef.permission_roles:
-          for (permission, roles) in sdef.permission_roles.items():
+          for (permission, roles) in list(sdef.permission_roles.items()):
             if permission in self.permissions:
               if isinstance(roles, list): # type 'list' means acquisition
                 acquire_permission_list.append(permission)
@@ -1053,13 +1053,13 @@ def convertToERP5Workflow(self, temp_object=False):
         state_path = 'destination/' + '/'.join(state.getPath().split('/')[2:])
         tdef.setCategoryList(tdef.getCategoryList() + [state_path])
       # worklists (portal_type = Worklist)
-      for qid, qdef in self.worklists.items():
+      for qid, qdef in list(self.worklists.items()):
         worklist = workflow.newContent(portal_type='Worklist', temp_object=temp_object)
         worklist.setTitle(qdef.title)
         worklist.setReference(qdef.id)
         worklist.setDescription(qdef.description)
-        criterion_property_list = qdef.var_matches.keys()
-        for key, value in qdef.var_matches.items():
+        criterion_property_list = list(qdef.var_matches.keys())
+        for key, value in list(qdef.var_matches.items()):
           if not isinstance(value, (tuple, list)):
             raise AssertionError("%s: %s: %s: must be a list or tuple" % (qdef.id, key, value))
           worklist.setCriterion(key, value)
@@ -1120,7 +1120,7 @@ def convertToERP5Workflow(self, temp_object=False):
         interaction.setDescription(tdef.description)
 
     # create variables (portal_type = Workflow Variable)
-    for variable_id, variable_definition in self.variables.items():
+    for variable_id, variable_definition in list(self.variables.items()):
       variable = workflow.newContent(portal_type='Workflow Variable', temp_object=temp_object)
       variable.setTitle(variable_definition.title)
       variable.setReference(variable_id)
@@ -1311,8 +1311,8 @@ class ERP5TransitionDefinition (TransitionDefinition):
   pass
 
 def getAvailableScriptIds(self):
-  return self.getWorkflow().scripts.keys() + \
-   [k for k in self.getWorkflow().transitions.keys() if \
+  return list(self.getWorkflow().scripts.keys()) + \
+   [k for k in list(self.getWorkflow().transitions.keys()) if \
    self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
 
 TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds

@@ -112,7 +112,7 @@ class ContributionPredicate(Predicate, XMLObject):
           tested_base_category[bc] = tested_base_category[bc] or \
                                      context.isMemberOf(c)
 
-    result = result and (0 not in tested_base_category.values())
+    result = result and (0 not in list(tested_base_category.values()))
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
     if test_method_id_list:

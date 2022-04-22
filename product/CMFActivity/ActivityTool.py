@@ -1356,7 +1356,7 @@ class ActivityTool (BaseTool):
         # use a round-robin algorithm.
         # XXX: We always finish by iterating over all queues, in case that
         #      getPriority does not see messages dequeueMessage would process.
-        activity_list = activity_dict.values()
+        activity_list = list(activity_dict.values())
         def sort_key(activity):
           return activity.getPriority(self, processing_node,
             node_family_id_set)
@@ -1390,7 +1390,7 @@ class ActivityTool (BaseTool):
       path = None if obj is None else '/'.join(obj.getPhysicalPath())
       db = self.getSQLConnection()
       quote = db.string_literal
-      return bool(db.query("(%s)" % ") UNION ALL (".join(
+      return bool(db.query(b"(%s)" % b") UNION ALL (".join(
         activity.hasActivitySQL(quote, path=path, **kw)
         for activity in activity_dict.itervalues()))[1])
 

@@ -27,7 +27,7 @@ def make_config_persistent(kwargs):
     """ iterates on the given dictionnary and replace list by persistent list,
     dictionary by persistent mapping.
     """
-    for key, value in kwargs.items():
+    for key, value in list(kwargs.items()):
         if type(value) == type({}):
             p_value = PersistentMapping(value)
             kwargs[key] = p_value
@@ -39,7 +39,7 @@ def make_config_nonpersistent(kwargs):
     """ iterates on the given dictionary and replace ListClass by python List,
         and DictClass by python Dict
     """
-    for key, value in kwargs.items():
+    for key, value in list(kwargs.items()):
         if isinstance(value, PersistentMapping):
             p_value = dict(value)
             kwargs[key] = p_value
@@ -199,7 +199,7 @@ class Transform(SimpleItem):
         type = self.get_parameter_infos(key)[0]
         if type == 'dict':
             result = {}
-            for key, val in value.items():
+            for key, val in list(value.items()):
                 result[key] = val
         elif type == 'list':
             result = list(value)
@@ -228,7 +228,7 @@ class Transform(SimpleItem):
         if not kwargs:
             kwargs = REQUEST.form
         self.preprocess_param(kwargs)
-        for param, value in kwargs.items():
+        for param, value in list(kwargs.items()):
             try:
                 self.get_parameter_value(param)
             except KeyError:

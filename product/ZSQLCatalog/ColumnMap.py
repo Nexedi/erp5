@@ -566,7 +566,7 @@ class ColumnMap(object):
 
   def getJoinTableAliasList(self):
     return [self.getTableAlias(table_name, group=group)
-            for (group, table_name) in self.join_table_map.keys()]
+            for (group, table_name) in list(self.join_table_map.keys())]
 
   def _getTableOverride(self, table_name):
     # self.table_override_map is a dictionary mapping table names to
@@ -671,7 +671,7 @@ class ColumnMap(object):
     left_join_set = set(self.left_join_list)
     self._setMinimalTableDefinition()
     catalog_table_alias = self.getCatalogTableAlias()
-    for (group, table_name), column_set in self.join_table_map.items():
+    for (group, table_name), column_set in list(self.join_table_map.items()):
       # if any of the columns for this implicit join was requested as a
       # left-join, then all columns will be subject to a left-join.
       # XXX What if one of the columns was an actual query, as opposed to a

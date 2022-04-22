@@ -80,7 +80,7 @@ class Form:
     def field_removed(self, field_id):
         """A field was removed from the form.
         """
-        for field_list in self.groups.values():
+        for field_list in list(self.groups.values()):
             if field_id in field_list:
                 field_list.remove(field_id)
                 break # should be done as soon as we found it once
@@ -358,7 +358,7 @@ class Form:
         """Validation, stop validating as soon as error.
         """
         result = self.validate(REQUEST)
-        for key, value in result.items():
+        for key, value in list(result.items()):
             REQUEST.set(key, value)
         return result
 
@@ -397,11 +397,11 @@ class Form:
             result = self.validate_all(REQUEST, key_prefix=key_prefix)
         except FormValidationError as e:
             # put whatever result we have in REQUEST
-            for key, value in e.result.items():
+            for key, value in list(e.result.items()):
                 REQUEST.set(key, value)
             # reraise exception
             raise
-        for key, value in result.items():
+        for key, value in list(result.items()):
             REQUEST.set(key, value)
         return result
 
@@ -812,7 +812,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
             self.set_xml(xml, encoding)
 
         # now set the form settings
-        for key, value in result.items():
+        for key, value in list(result.items()):
             setattr(self, key, value)
         message="Settings changed."
         if unicode_message is not None:
@@ -1019,7 +1019,7 @@ def initializeForm(field_registry):
     form_class = ZMIForm
 
     meta_types = []
-    for meta_type, field in field_registry.get_field_classes().items():
+    for meta_type, field in list(field_registry.get_field_classes().items()):
         # don't set up in form if this is a field for internal use only
         if field.internal_field:
             continue

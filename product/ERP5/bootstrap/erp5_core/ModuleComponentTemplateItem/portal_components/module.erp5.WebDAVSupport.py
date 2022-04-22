@@ -51,7 +51,7 @@ class TextContent:
       # this is probably not html code, try rfc822 parsing
       message = email.message_from_string(text)
       return {k.capitalize(): '\n'.join(message.get_all(k))
-              for k in message.keys()}
+              for k in list(message.keys())}
 
     headers = collections.defaultdict(list)
     for meta in tree.iterfind(".//meta"):

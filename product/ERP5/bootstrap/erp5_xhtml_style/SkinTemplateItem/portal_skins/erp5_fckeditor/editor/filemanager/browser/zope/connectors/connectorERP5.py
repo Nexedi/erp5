@@ -93,7 +93,7 @@ def utf8Encode(chaine) :
     if charsetSite.lower() in ("utf-8", "utf8"):
       return chaine
     else:
-      return unicode(chaine, charsetSite, errors).encode("utf-8", errors)
+      return str(chaine, charsetSite, errors).encode("utf-8", errors)
 
 def utf8Decode(chaine) :
     # because browser upload form is in utf-8 we need it
@@ -102,7 +102,7 @@ def utf8Decode(chaine) :
         return chaine
     else:
         try:
-            chaine = unicode(chaine, "utf-8", "strict").encode(charsetSite, "strict")
+            chaine = str(chaine, "utf-8", "strict").encode(charsetSite, "strict")
         except:
             chaine = chaine.encode(charsetSite, "strict")
         return chaine

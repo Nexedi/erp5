@@ -2,7 +2,8 @@ from __future__ import absolute_import
 import os
 import OFS
 from App.ImageFile import ImageFile
-from .FieldHelpTopic import FieldHelpTopic
+# XXX-AUREL this is not even used and import HelpSys which was removed
+#from .FieldHelpTopic import FieldHelpTopic
 
 class FieldRegistry:
     """A registry of fields, maintaining a dictionary with
@@ -51,7 +52,7 @@ class FieldRegistry:
         # for each field, realize fields in form
         # this is finally possible as all field classes are now
         # fully defined.
-        for field_class in self._fields.values():
+        for field_class in list(self._fields.values()):
             field_class.form._realize_fields()
             field_class.override_form._realize_fields()
             field_class.tales_form._realize_fields()

@@ -167,6 +167,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       # only start when we are the alarmNode
       alarmNode = self.getAlarmNode()
       current_node = getCurrentNode()
+      global _check_upgrade
       if alarmNode == '':
         self.setAlarmNode(current_node)
         alarmNode = current_node
@@ -179,7 +180,6 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       elif _check_upgrade and self.getServerAddress() == alarmNode:
         # BBB: check (once per run) if our node was alarm_node by address, and
         # migrate it.
-        global _check_upgrade
         _check_upgrade = False
         self.setAlarmNode(current_node)
     finally:

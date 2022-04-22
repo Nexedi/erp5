@@ -64,7 +64,7 @@ class ExtractMessageCatalog(TestXHTML):
       result[i].update(messages)
 
       f = file('%s.pot' % i, 'w')
-      for msgid in result[i].keys():
+      for msgid in list(result[i].keys()):
         f.write('msgid "%s"\nmsgstr ""\n\n' % msgid)
 
 

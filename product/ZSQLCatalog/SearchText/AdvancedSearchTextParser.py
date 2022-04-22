@@ -41,7 +41,7 @@ except ImportError:
   IColumnNode = None
   def verifyClass(*args, **kw):
     pass
-  implements = verifyClass
+  implements = verifyClass # XXX need to be reviewed as it is decorator now
 
 @implementer(INode)
 class Node(object):

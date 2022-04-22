@@ -98,7 +98,7 @@ class TestSecurityMixin(ERP5TypeTestCase):
             continue
           func_code = method.__code__
           error_dict[(func_code.co_filename, func_code.co_firstlineno, method_id)] = True
-    error_list = error_dict.keys()
+    error_list = list(error_dict.keys())
     if os.environ.get('erp5_debug_mode', None):
       pass
     else:

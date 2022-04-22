@@ -15,27 +15,52 @@ import six
 import copy
 import sys
 import types
+import six
 
-from RestrictedPython.RestrictionMutator import RestrictionMutator
+try:
+  from RestrictedPython.transformer import FORBIDDEN_FUNC_NAMES
+except:
+  # BBB
+  FORBIDDEN_FUNC_NAMES = frozenset(['printed',])
+
 _MARKER = []
-def checkNameLax(self, node, name=_MARKER):
-  """Verifies that a name being assigned is safe.
+def checkNameLax(self, node, name=_MARKER, allow_magic_methods=False):
+  """Check names if they are allowed.
 
   In ERP5 we are much more lax that than in Zope's original restricted
   python and allow to using names starting with _, because we rely on
   runtime checks to prevent access to forbidden attributes from objects.
 
   We don't allow defining attributes ending with __roles__ though.
+
+  If ``allow_magic_methods is True`` names in `ALLOWED_FUNC_NAMES`
+  are additionally allowed although their names start with `_`.
+
+TODO: zope4py2: we don't really use ALLOWED_FUNC_NAMES here
+
   """
+  if name is None:
+    return
+
   if name is _MARKER:
     # we use same implementation for checkName and checkAttrName which access
     # the name in different ways ( see RestrictionMutator 3.6.0 )
     name = node.attrname
+
   if name.endswith('__roles__'):
     self.error(node, '"%s" is an invalid variable name because '
-                     'it ends with "__roles__".' % name)
+               'it ends with "__roles__".' % name)
+  elif name in FORBIDDEN_FUNC_NAMES:
+    self.error(node, '"{name}" is a reserved name.'.format(name=name))
 
-RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
+
+try:
+  from RestrictedPython.transformer import RestrictingNodeTransformer
+  RestrictingNodeTransformer.check_name = checkNameLax
+except ImportError:
+  # BBB Restriced 3.6.0
+  from RestrictedPython.RestrictionMutator import RestrictionMutator
+  RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire
@@ -49,16 +74,20 @@ from AccessControl.ZopeGuards import (safe_builtins, _marker, Unauthorized,
 # TODO: add buffer/bytearray
 
 def add_builtins(**kw):
-    assert not set(safe_builtins).intersection(kw)
+    assert not set(safe_builtins).intersection(kw), "%r intersect %r\n%r" %(safe_builtins, kw, set(safe_builtins).intersection(kw))
     safe_builtins.update(kw)
 
 del safe_builtins['dict']
 del safe_builtins['list']
 add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
-             dict=dict, list=list, set=set, frozenset=frozenset)
+             dict=dict, list=list)
+BBB_ACCESS_CONTROL = False
+if "set" not in safe_builtins: # BBB
+    add_builtins(set=set, frozenset=frozenset, slice=slice)
+    BBB_ACCESS_CONTROL = True
 
 add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
-             property=property, slice=slice, staticmethod=staticmethod,
+             property=property, staticmethod=staticmethod,
              super=super, type=type)
 
 def guarded_next(iterator, default=_marker):
@@ -81,7 +110,11 @@ def guarded_next(iterator, default=_marker):
         if default is _marker:
             raise
         return default
-add_builtins(next=guarded_next)
+# TODO: zope4py2 clean up this
+#if "next" not in safe_builtins: # BBB
+# override the default next if exists
+safe_builtins.update(next=guarded_next)
+#    add_builtins()
 
 _safe_class_attribute_dict = {}
 import inspect
@@ -139,16 +172,25 @@ class TypeAccessChecker:
 
 ContainerAssertions[type] = TypeAccessChecker()
 
+if BBB_ACCESS_CONTROL:
+  class SafeIterItems(SafeIter):
 
-class SafeIterItems(SafeIter):
+      def __next__(self):
+          ob = self._next()
+          c = self.container
+          guard(c, ob[0])
+          guard(c, ob[1])
+          return ob
+else:
+  class SafeIterItems(SafeIter):
 
-    def next(self):
-        ob = self._next()
-        c = self.container
-        guard(c, ob[0])
-        guard(c, ob[1])
-        return ob
-
+      def __next__(self):
+          ob = next(self._iter)
+          c = self.container
+          guard(c, ob[0])
+          guard(c, ob[1])
+          return ob
+  
 def get_iteritems(c, name):
     return lambda: SafeIterItems(c.iteritems(), c)
 _dict_white_list['iteritems'] = get_iteritems
@@ -223,19 +265,50 @@ ModuleSecurityInfo('collections').declarePublic('defaultdict')
 from collections import Counter
 ModuleSecurityInfo('collections').declarePublic('Counter')
 
+
+def allow_full_write(t):
+  """Allow setattr and delattr for this type.
+  
+  This supports both RestrictedPython-3.6.0, where the safetype is implemented as:
+  
+      safetype = {dict: True, list: True}.__contains__
+      ...
+      safetype(t)
+
+  and RestrictedPython-5.1, where the safetype is implemented as:
+
+      safetypes = {dict, list}
+      ...
+      safetype(t)
+
+  """
+  # Modify 'safetype' dict in full_write_guard function of RestrictedPython
+  # (closure) directly to allow write access (using __setattr__ and __delattr__)
+  # to ndarray and pandas DataFrame below.
+  from RestrictedPython.Guards import full_write_guard
+  safetype = full_write_guard.__closure__[1].cell_contents
+  if isinstance(safetype, set): # 5.1
+    safetype.add(t)
+  else: # 3.6
+    safetype.__self__.update({t: True})
+
+
 from AccessControl.ZopeGuards import _dict_white_list
 
-# Attributes cannot be set on defaultdict, thus modify 'safetype' dict
-# (closure) directly to ignore defaultdict like dict/list
+# Attributes cannot be set on defaultdict, thus ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+allow_full_write(defaultdict)
 
-# In contrary to builtins such as dict/defaultdict, it is possible to set
-# attributes on OrderedDict instances, so only allow setitem/delitem
+# On Python2 only: In contrary to builtins such as dict/defaultdict, it is
+# possible to set attributes on OrderedDict instances, so only allow
+# setitem/delitem
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
-OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
-OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+if six.PY2:
+  OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
+  OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+else:
+  allow_full_write(OrderedDict)
 
 _counter_white_list = copy.copy(_dict_white_list)
 _counter_white_list['most_common'] = 1
@@ -264,16 +337,19 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-allow_module('StringIO')
-import StringIO
-StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
-allow_module('cStringIO')
-import cStringIO
-allow_type(cStringIO.InputType)
-allow_type(cStringIO.OutputType)
 allow_module('io')
 import io
 allow_type(io.BytesIO)
+if six.PY2:
+  allow_module('StringIO')
+  import StringIO
+  StringIO.StringIO.__allow_access_to_unprotected_subobjects__ = 1
+  allow_module('cStringIO')
+  import cStringIO
+  allow_type(cStringIO.InputType)
+  allow_type(cStringIO.OutputType)
+else:
+  allow_type(io.StringIO)
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
@@ -313,6 +389,7 @@ import hashlib
 allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('unicodedata')
+<<<<<<< Updated upstream
 
 if six.PY2:
   import urlparse
@@ -363,13 +440,17 @@ MNAME_MAP = {
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
 }
-for alias, real in MNAME_MAP.items():
+for alias, real in list(MNAME_MAP.items()):
   assert '.' not in alias, alias # TODO: support this
   allow_module(real)
 del alias, real
 orig_guarded_import = safe_builtins['__import__']
+try:
+  from AccessControl.ZopeGuards import import_default_level # zope4py3
+except ImportError:
+  import_default_level = -1
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
-    level=-1):
+    level=import_default_level):
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
@@ -447,18 +528,9 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
 allow_type(type(np.dtype('int16')))
-
-# Modify 'safetype' dict in full_write_guard function of RestrictedPython
-# (closure) directly to allow  write access to ndarray
-# (and pandas DataFrame below).
-
-from RestrictedPython.Guards import full_write_guard
-safetype = full_write_guard.func_closure[1].cell_contents.__self__
-safetype.update(dict.fromkeys((
-  np.ndarray,
-  np.core.records.recarray,
-  np.core.records.record,
-), True))
+allow_full_write(np.ndarray)
+allow_full_write(np.core.records.recarray)
+allow_full_write(np.core.records.record)
 
 def restrictedMethod(s,name):
   def dummyMethod(*args, **kw):
@@ -501,12 +573,10 @@ else:
   ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
     pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
 
-  safetype.update(dict.fromkeys((
-    pd.DataFrame,
-    pd.Series,
-    pd.tseries.index.DatetimeIndex,
-    pd.core.indexing._iLocIndexer,
-    pd.core.indexing._LocIndexer,
-    pd.MultiIndex,
-    pd.Index,
-  ), True))
+  allow_full_write(pd.DataFrame)
+  allow_full_write(pd.Series)
+  allow_full_write(pd.tseries.index.DatetimeIndex)
+  allow_full_write(pd.core.indexing._iLocIndexer)
+  allow_full_write(pd.core.indexing._LocIndexer)
+  allow_full_write(pd.MultiIndex)
+  allow_full_write(pd.Index)

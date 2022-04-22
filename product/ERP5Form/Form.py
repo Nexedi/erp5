@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import six
 import hashlib
 import re
 import six
@@ -109,7 +110,7 @@ def isCacheable(value):
 
   dic = getattr(value, '__dict__', None)
   if dic is not None:
-    for i in dic.values():
+    for i in list(dic.values()):
       jar = getattr(i, '_p_jar', None)
       if jar is not None:
         return False
@@ -133,7 +134,7 @@ def getFieldDict(field, value_type):
         else:
             raise ValueError('value_type must be values or tales')
         template_field = field.getRecursiveTemplateField()
-        for ui_field_id in template_field.form.fields.keys():
+        for ui_field_id in list(template_field.form.fields.keys()):
             result[ui_field_id] = get_method(ui_field_id)
     else:
         if value_type=='values':
@@ -142,7 +143,7 @@ def getFieldDict(field, value_type):
             get_method = getattr(field, 'get_tales')
         else:
             raise ValueError('value_type must be values or tales')
-        for ui_field_id in field.form.fields.keys():
+        for ui_field_id in list(field.form.fields.keys()):
             result[ui_field_id] = get_method(ui_field_id)
     return result
 
@@ -447,7 +448,7 @@ def initializeForm(field_registry, form_class=None):
     if form_class is None: form_class = ERP5Form
 
     meta_types = []
-    for meta_type, field in field_registry.get_field_classes().items():
+    for meta_type, field in list(field_registry.get_field_classes().items()):
         # don't set up in form if this is a field for internal use only
         if field.internal_field:
             continue
@@ -695,7 +696,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       # overriden to keep the order of a field after rename
       groups = deepcopy(self.groups)
       ret = ZMIForm.manage_renameObject(self, id, new_id, REQUEST=REQUEST)
-      for group_id, field_id_list in groups.items():
+      for group_id, field_id_list in list(groups.items()):
         if id in field_id_list:
           index = field_id_list.index(id)
           field_id_list.pop(index)
@@ -1045,7 +1046,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         # for skin_folder_id in self.getSimilarSkinFolderIdList():
         for skin_folder_id in self.getPortalObject().portal_skins.objectIds():
           iterate(getattr(skins_tool, skin_folder_id))
-        proxy_dict_list = proxy_dict.values()
+        proxy_dict_list = list(proxy_dict.values())
         proxy_dict_list.sort(key=lambda x: x['short_path'])
         for item in proxy_dict_list:
           item['related_proxy_list'].sort(key=lambda x: x['short_path'])
@@ -1091,14 +1092,14 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                 return a==b
 
         def remove_same_value(new_dict, target_dict):
-            for key, value in new_dict.items():
+            for key, value in list(new_dict.items()):
                 target_value = target_dict.get(key)
                 if force_delegate or is_equal(value, target_value):
                     del new_dict[key]
             return new_dict
 
         def get_group_and_position(field_id):
-            for i in self.groups.keys():
+            for i in list(self.groups.keys()):
                 if field_id in self.groups[i]:
                     return i, self.groups[i].index(field_id)
 
@@ -1111,7 +1112,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         if field_dict is None:
             return
 
-        for field_id in field_dict.keys():
+        for field_id in list(field_dict.keys()):
             target = field_dict[field_id]
             target_form_id, target_field_id = target.split('.')
 
@@ -1138,7 +1139,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                                           getFieldDict(target_field, 'tales'))
 
             if target_field.meta_type=='ProxyField':
-                for i in new_values.keys():
+                for i in list(new_values.keys()):
                     if not i in target_field.delegated_list:
                         # obsolete variable check
                         try:
@@ -1150,7 +1151,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                             if is_equal(target_field.get_recursive_orig_value(i),
                                         new_values[i]):
                                 del new_values[i]
-                for i in new_tales.keys():
+                for i in list(new_tales.keys()):
                     if not i in target_field.delegated_list:
                         # obsolete variable check
                         try:
@@ -1211,14 +1212,14 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                 return a==b
 
         def remove_same_value(new_dict, target_dict):
-            for key, value in new_dict.items():
+            for key, value in list(new_dict.items()):
                 target_value = target_dict.get(key)
                 if is_equal(value, target_value):
                     del new_dict[key]
             return new_dict
 
         def get_group_and_position(field_id):
-            for i in self.groups.keys():
+            for i in list(self.groups.keys()):
                 if field_id in self.groups[i]:
                     return i, self.groups[i].index(field_id)
 
@@ -1231,7 +1232,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         if field_dict is None:
             return
 
-        for field_id in field_dict.keys():
+        for field_id in list(field_dict.keys()):
             # keep current group and position.
             group, position = get_group_and_position(field_id)
 

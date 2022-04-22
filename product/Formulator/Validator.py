@@ -150,7 +150,7 @@ class StringValidator(StringBaseValidator):
         value = StringBaseValidator.validate(self, field, key, REQUEST)
         if field.get_value('unicode'):
             # use acquisition to get encoding of form
-            value = unicode(value, field.get_form_encoding())
+            value = str(value, field.get_form_encoding())
 
         max_length = field.get_value('max_length') or 0
         truncate = field.get_value('truncate')
@@ -422,7 +422,7 @@ class LinesValidator(StringBaseValidator):
     if value == "" and not field.get_value('required'):
       return []
     if field.get_value('unicode'):
-        value = unicode(value, field.get_form_encoding())
+        value = str(value, field.get_form_encoding())
     # check whether the entire input is too long
     max_length = field.get_value('max_length') or 0
     if max_length and len(value) > max_length:
@@ -500,7 +500,7 @@ class SelectionValidator(StringBaseValidator):
         # will remain integers.
         # XXX it is impossible with the UI currently to fill in unicode
         # items, but it's possible to do it with the TALES tab
-        if field.get_value('unicode') and isinstance(item_value, unicode):
+        if field.get_value('unicode') and isinstance(item_value, str):
           str_value = item_value.encode(field.get_form_encoding())
         else:
           str_value = str(item_value)
@@ -553,7 +553,7 @@ class MultiSelectionValidator(Validator):
           return values
       # convert everything to unicode if necessary
       if field.get_value('unicode'):
-        values = [unicode(value, field.get_form_encoding())
+        values = [str(value, field.get_form_encoding())
                     for value in values]
 
       # create a dictionary of possible values

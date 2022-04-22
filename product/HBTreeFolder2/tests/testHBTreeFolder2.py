@@ -133,7 +133,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         for n in range(10):
             ids[self.f.generateId()] = 1
         self.assertEqual(len(ids), 10)  # All unique
-        for id in ids.keys():
+        for id in list(ids.keys()):
             self.f._checkId(id)  # Must all be valid
 
     def testGenerateIdDenialOfServicePrevention(self):

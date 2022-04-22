@@ -4,7 +4,7 @@ if kw.get('update', False):
   # Ensure ERP5JS correctly refresh the page
   request.RESPONSE.setStatus(400)
 
-for k in kw.keys():
+for k in list(kw.keys()):
   v = kw[k]
   if k.endswith('listbox'):
     listbox = {}

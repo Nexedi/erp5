@@ -32,11 +32,14 @@
 """
 from __future__ import absolute_import
 from App.config import getConfiguration
-from .patches import python, pylint, globalrequest
+from .patches import python, globalrequest
+import six
+if six.PY2:
+  from .patches import pylint
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
-WITH_LEGACY_WORKFLOW = True # BBB
+WITH_LEGACY_WORKFLOW = False # BBB
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'

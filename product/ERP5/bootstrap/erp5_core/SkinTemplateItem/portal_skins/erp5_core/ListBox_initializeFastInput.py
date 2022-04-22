@@ -19,7 +19,7 @@ if hasattr(request, listbox_id):
   # initialize the listbox 
   listbox=request[listbox_id]
 
-  keys_list = listbox.keys()
+  keys_list = list(listbox.keys())
 
   if keys_list != []:
     keys_list.sort(key=int)

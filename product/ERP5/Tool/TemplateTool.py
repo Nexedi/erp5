@@ -27,7 +27,9 @@
 #
 ##############################################################################
 
-from webdav.client import Resource
+## XXX: WebDAV client implementation from ZServer
+##from webdav.client import Resource
+
 from past.builtins import cmp
 
 from App.config import getConfiguration
@@ -697,7 +699,7 @@ class TemplateTool (BaseTool):
       """
         Get the list of repositories.
       """
-      return self.repository_dict.keys()
+      return list(self.repository_dict.keys())
 
     security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
     def decodeRepositoryBusinessTemplateUid(self, uid):
@@ -771,7 +773,7 @@ class TemplateTool (BaseTool):
        tuple (repository, id)
       """
       result = None
-      for repository, property_dict_list in self.repository_dict.items():
+      for repository, property_dict_list in list(self.repository_dict.items()):
         for property_dict in property_dict_list:
           provision_list = property_dict.get('provision_list', [])
           if title in provision_list:
@@ -793,7 +795,7 @@ class TemplateTool (BaseTool):
        the given business template
       """
       result_list = []
-      for repository, property_dict_list in self.repository_dict.items():
+      for repository, property_dict_list in list(self.repository_dict.items()):
         for property_dict in property_dict_list:
           provision_list = property_dict['provision_list']
           if (title in provision_list) and (property_dict['title'] not in result_list):
@@ -813,7 +815,7 @@ class TemplateTool (BaseTool):
       # for meta business templates
       if bt[0] != 'meta':
         result_list = []
-        for repository, property_dict_list in self.repository_dict.items():
+        for repository, property_dict_list in list(self.repository_dict.items()):
           if repository == bt[0]:
             for property_dict in property_dict_list:
               if property_dict['id'] == bt[1]:
@@ -906,7 +908,7 @@ class TemplateTool (BaseTool):
 
       # Calculate the reverse dependency graph
       reverse_dependency_dict = {}
-      for bt_id, dependency_id_list in dependency_dict.items():
+      for bt_id, dependency_id_list in list(dependency_dict.items()):
         update_dependency_id_list = []
         for dependency_id in dependency_id_list:
 
@@ -997,7 +999,7 @@ class TemplateTool (BaseTool):
       template_item_list = []
       # First of all, filter Business Templates in repositories.
       template_item_dict = {}
-      for repository, property_dict_list in self.repository_dict.items():
+      for repository, property_dict_list in list(self.repository_dict.items()):
         for property_dict in property_dict_list:
           title = property_dict['title']
           if template_set and not(title in template_set):
@@ -1019,7 +1021,7 @@ class TemplateTool (BaseTool):
                 template_item_dict[title] = (repository, property_dict)
       # Next, select only updated business templates.
       if update_only:
-        for repository, property_dict in template_item_dict.values():
+        for repository, property_dict in list(template_item_dict.values()):
           installed_bt = \
               self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
           if installed_bt is not None:

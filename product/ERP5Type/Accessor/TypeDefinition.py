@@ -98,8 +98,8 @@ def asString(value):
     if value is None:
       result = ''
     else:
-      if isinstance(value, unicode):
-        result = value.encode('utf-8')
+      if isinstance(value, bytes):
+        result = value.decode('utf-8')
       else:
         result = str(value)
   except TypeError:
@@ -109,6 +109,8 @@ def asString(value):
 def asList(value):
   """
     Return the value as a list or a type-specific default value if it fails.
+
+    XXX-zope4py3: bytes()?
   """
   if isinstance(value, (list, tuple)):
     result = list(value)

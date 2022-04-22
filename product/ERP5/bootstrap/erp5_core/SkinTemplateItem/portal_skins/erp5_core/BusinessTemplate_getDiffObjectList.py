@@ -35,7 +35,7 @@ if p.portal_templates.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:
 else:
   modified_object_list = getModifiedObjectList(bt1, bt2)
 
-keys = modified_object_list.keys()
+keys = list(modified_object_list.keys())
 keys.sort()
 
 i = 0

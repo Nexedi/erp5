@@ -20,7 +20,7 @@ getModifiedObjectList = CachingMethod(getModifiedObjectList,
                               cache_id_generator=cache_id_generator)
 
 modified_object_list = getModifiedObjectList(context)
-keys = modified_object_list.keys()
+keys = list(modified_object_list.keys())
 keys.sort()
 
 no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document',

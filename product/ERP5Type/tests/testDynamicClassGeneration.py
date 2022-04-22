@@ -1390,7 +1390,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # Passing a unicode object to a not-Value setter should raise
     with self.assertRaises(TypeError):
       organisation = self.portal.organisation_module.newContent()
-      person.setSubordination(unicode(organisation.getRelativeUrl()))
+      person.setSubordination(str(organisation.getRelativeUrl()))
 
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool

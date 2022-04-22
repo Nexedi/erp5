@@ -374,7 +374,7 @@ class SerializeTestCase(unittest.TestCase):
                     b = ''
                 return a == b
 
-            for key in field.values.keys():
+            for key in list(field.values.keys()):
                 self.assertTrue(compare(field.values[key], field2.values[key]),
                         message)
 
