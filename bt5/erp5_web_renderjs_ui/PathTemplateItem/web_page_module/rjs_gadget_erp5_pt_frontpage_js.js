@@ -67,6 +67,10 @@
                                        .business_application_translated_title =
               result_list.data.rows[i].value
                             .business_application_translated_title || '';
+            result_list.data.rows[i].value
+                                       .translated_title =
+              result_list.data.rows[i].value
+                            .translated_title || '';
             result_list.data.rows[i].value.id =
               result_list.data.rows[i].id;
             data_rows.push(result_list.data.rows[i].value);
