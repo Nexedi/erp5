@@ -126,8 +126,8 @@ class ERP5(_ERP5):
                    or full_test_case)
 
       # skip some tests
-      if test_case.find('Performance') > 0:
-        continue
+      # if test_case.find('Performance') > 0:
+      #   continue
       test_list.append(full_test_case)
     return test_list
 
