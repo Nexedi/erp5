@@ -325,7 +325,7 @@ class Predicate(XMLObject):
       criterion_dict[p].property = p
       criterion_dict[p].min = self._range_criterion.get(p, (None, None))[0]
       criterion_dict[p].max = self._range_criterion.get(p, (None, None))[1]
-    criterion_list = criterion_dict.values()
+    criterion_list = list(criterion_dict.values())
     criterion_list.sort()
     return criterion_list
 

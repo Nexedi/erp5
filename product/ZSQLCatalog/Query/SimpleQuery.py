@@ -39,7 +39,7 @@ NULL_SEARCH_TEXT_OPERATOR_DICT = {
   '=': 'is',
   '!=': 'is not',
 }
-for value in NULL_SEARCH_TEXT_OPERATOR_DICT.values():
+for value in list(NULL_SEARCH_TEXT_OPERATOR_DICT.values()):
   NULL_SEARCH_TEXT_OPERATOR_DICT[value] = value
 
 class SimpleQuery(Query):

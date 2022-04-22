@@ -355,8 +355,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             # by this first required transform.
             # Which input types are supported by this transform ?
             supportedInputs = {}
-            for input, outputs in self._mtmap.items():
-                for output, transforms in outputs.items():
+            for input, outputs in list(self._mtmap.items()):
+                for output, transforms in list(outputs.items()):
                     for transform in transforms:
                         if transform.name() == required_transform:
                             supportedInputs[input] = 'ok'
@@ -369,7 +369,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             # shortest path ?
             shortest = 9999 # big enough, I guess
             shortestFirstPath = None
-            for supportedInput in supportedInputs.keys():
+            for supportedInput in list(supportedInputs.keys()):
                 # We start from orig
                 firstOrig = orig
                 # And want to reach supportedInput
@@ -412,7 +412,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         def typesWithPathOfLength(length):
             '''Returns the lists of known paths of a given length'''
             result = []
-            for type_, path in pathToType.items():
+            for type_, path in list(pathToType.items()):
                 if len(path) == length:
                     result.append(type_)
             return result
@@ -426,9 +426,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 # Where can we go in one step starting from here ?
                 outputs = self._mtmap.get(startingType)
                 if outputs:
-                    for reachedType, transforms in outputs.items():
+                    for reachedType, transforms in list(outputs.items()):
                         # Does this lead to a type we never reached before ?
-                        if reachedType not in pathToType.keys() and transforms:
+                        if reachedType not in list(pathToType.keys()) and transforms:
                             # Yes, we did not know any path reaching this type
                             # Let's remember the path to here
                             pathToType[reachedType] = (
@@ -474,7 +474,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         target_aliases = mto[0].mimetypes
 
         path.append(None)
-        for o_mt, transforms in outputs.items():
+        for o_mt, transforms in list(outputs.items()):
             for transform in transforms:
                 required = 0
                 name = transform.name()
@@ -599,7 +599,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # XXXFIXME: backward compat, should be removed latter
         if not hasattr(self, '_policies'):
             self._policies = PersistentMapping()
-        return self._policies.items()
+        return list(self._policies.items())
 
     # mimetype oriented conversions (iengine interface)
 
@@ -680,7 +680,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         # browse mimetypes to fill result_set of available target mimetypes
         result_set = set([source_mimetype])
         browsing_list = [source_mimetype]
-        input_output_items = input_output_dict.items()
+        input_output_items = list(input_output_dict.items())
         while len(browsing_list):
             browsing_mimetype = browsing_list.pop()
             for mimetype, output_mimetype_set in input_output_items:

@@ -48,8 +48,8 @@ class PortalTypeClassInteractor(Interactor):
       self.on(Variables.setStateVar).doAfter(self.resetDynamic)
 
     from Products.Localizer.Localizer import Localizer
-    self.on(Localizer.add_language).doAfter(self.resetDynamic)
-    self.on(Localizer.del_language).doAfter(self.resetDynamic)
+    self.on(Localizer, 'add_language').doAfter(self.resetDynamic)
+    self.on(Localizer, 'del_language').doAfter(self.resetDynamic)
 
   def resetDynamic(self, method_call_object, *args, **kw):
     """

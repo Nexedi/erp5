@@ -108,7 +108,11 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
           self.lazy = LazyBTree()
       self.oid_dict = {}
       self.oid_set = set()
-      p, serial = self._conn._storage.load(oid, '')
+      try:
+        p, serial = self._conn._storage.load(oid, '')
+      except TypeError:
+        # MVCCAdapter of ZODB5
+        p, serial = self._conn._storage.load(oid)
       unpickler = self._get_unpickler(p)
       def find_global(*args):
         self.do_migrate = args != (klass.__module__, klass.__name__) and \

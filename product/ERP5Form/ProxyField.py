@@ -226,14 +226,14 @@ class ProxyField(ZMIField):
     This method is similar to manage_edit_xmlrpc, and it marks the properties
     as not delegated.
     """
-    self._surcharged_edit(mapping, mapping.keys())
+    self._surcharged_edit(mapping, list(mapping.keys()))
 
   def manage_tales_surcharged_xmlrpc(self, mapping):
     """Edit surcharged TALES
     This method is similar to manage_tales_xmlrpc, and it marks the TALES
     properties as not delegated.
     """
-    self._surcharged_tales(mapping, mapping.keys())
+    self._surcharged_tales(mapping, list(mapping.keys()))
 
 
   def _surcharged_edit(self, result, surcharge_list):
@@ -251,7 +251,7 @@ class ProxyField(ZMIField):
       result = new_result
 
     changed = []
-    for key, value in result.items():
+    for key, value in list(result.items()):
       # XXX Remove old values
       values.pop(key, None)
       # store keys for which we want to notify change
@@ -259,7 +259,7 @@ class ProxyField(ZMIField):
         changed.append(key)
 
     proxied_field = self.getTemplateField()
-    for key, value in result.items():
+    for key, value in list(result.items()):
       if key not in surcharge_list:
         result.pop(key)
         if key in self.tales:
@@ -333,12 +333,12 @@ class ProxyField(ZMIField):
     tales = self.tales
 
     changed = []
-    for key, value in result.items():
+    for key, value in list(result.items()):
       # XXX Remove old values
       tales.pop(key, None)
 
     proxied_field = self.getTemplateField()
-    for key, value in result.items():
+    for key, value in list(result.items()):
       if key not in surcharge_list:
         result.pop(key)
         if key in self.values:

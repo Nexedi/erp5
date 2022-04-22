@@ -251,7 +251,7 @@ class Field:
         # values from request
         if (self.has_value('unicode') and self.get_value('unicode') and
             type(value) == type('')):
-            return unicode(value, self.get_form_encoding())
+            return str(value, self.get_form_encoding())
         else:
             return value
 
@@ -455,12 +455,12 @@ class Field:
           return obj.method_name
         elif obj_type is TALESField.TALESMethod:
           return obj._text
-        elif obj_type is unicode:
+        elif obj_type is str:
           return obj.encode('utf-8')
         return str(obj)
       return ' '.join(map(getSearchSource,
-                         (self.values.values()+self.tales.values()+
-                          self.overrides.values())))
+                         (list(self.values.values())+list(self.tales.values())+
+                          list(self.overrides.values()))))
 
 InitializeClass(Field)
 
@@ -536,15 +536,15 @@ class ZMIField(
         # acquire get_unicode_mode and get_stored_encoding from form..
         if self.get_unicode_mode():
             new_result = {}
-            for key, value in result.items():
+            for key, value in list(result.items()):
                 if type(value) == type(''):
                     # in unicode mode, Formulator UI always uses UTF-8
-                    value = unicode(value, 'UTF-8')
+                    value = str(value, 'UTF-8')
                 new_result[key] = value
             result = new_result
 
         changed = []
-        for key, value in result.items():
+        for key, value in list(result.items()):
             # store keys for which we want to notify change
             if key not in values or values[key] != value:
                 changed.append(key)
@@ -651,7 +651,7 @@ class ZMIField(
         # BEWARE: there is no validation on the values passed through the map
         from .TALESField import TALESMethod
         result = {}
-        for key, value in map.items():
+        for key, value in list(map.items()):
             if value:
                 result[key] = TALESMethod(value)
             else:
@@ -683,7 +683,7 @@ class ZMIField(
         for message_key in self.get_error_names():
             message = REQUEST[message_key]
             if unicode_mode:
-                message = unicode(message, 'UTF-8')
+                message = str(message, 'UTF-8')
             messages[message_key] = message
 
         self.message_values = messages

@@ -7,14 +7,13 @@ from __future__ import absolute_import
 
 from six import string_types as basestring
 import os
-import rfc822
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from email.Header import Header
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.Utils import make_msgid, formataddr, getaddresses
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import make_msgid, formataddr, getaddresses
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.Common import package_home
@@ -50,7 +49,7 @@ class BaseMailTemplate:
         # So I remove it.
         if text.endswith('\n'):
             text = text[:-1]
-        if not self.html() and isinstance(text, unicode):
+        if not self.html() and isinstance(text, str):
             text = text.encode(encoding,'replace')
         # now turn the result into a MIMEText object
         msg = MIMEText(
@@ -117,7 +116,7 @@ class BaseMailTemplate:
         # we want to have it stored in ERP5, for mail threading
         headers['Message-ID'] = make_msgid()
         # turn headers into an ordered list for predictable header order
-        keys = headers.keys()
+        keys = list(headers.keys())
         keys.sort()
         return msg,values,[(key,headers[key]) for key in keys]
 
@@ -147,8 +146,7 @@ class BaseMailTemplate:
             v = values.get(key)
             if v:
                 if isinstance(v, basestring):
-                    v = [rfc822.dump_address_pair(addr) for addr \
-                            in rfc822.AddressList(v)]
+                    v = [formataddr(addr) for addr in getaddresses([v])]
                 to_addrs += tuple(v)
 
         self._send(values['mfrom'], to_addrs, msg)

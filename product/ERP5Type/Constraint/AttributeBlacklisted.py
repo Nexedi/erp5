@@ -54,7 +54,7 @@ class AttributeBlacklisted(PropertyExistence):
       satisfied
     """
     errors = PropertyExistence._checkConsistency(self, obj, fixit=fixit)
-    for attribute_name, expression_blacklisted_list in self.constraint_definition.items():
+    for attribute_name, expression_blacklisted_list in list(self.constraint_definition.items()):
       message_id = None
       mapping = dict(attribute_name=attribute_name)
       #Evaluate expression_criterion_dict

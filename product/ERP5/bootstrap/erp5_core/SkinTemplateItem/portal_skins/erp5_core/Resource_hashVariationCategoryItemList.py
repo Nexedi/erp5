@@ -31,4 +31,4 @@ for item in item_list:
   if item_value in value_list:
     sub_field_dict[item_key]['value'] = item_value
 
-return sub_field_dict.values()
+return list(sub_field_dict.values())

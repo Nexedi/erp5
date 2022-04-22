@@ -44,6 +44,7 @@ from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
+from zExceptions import BadRequest
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -130,8 +131,14 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                     'inventory_module',
                     self.folder.getId() ]:
       folder = self.portal[module]
-      folder.manage_delObjects(list(folder.objectIds()))
-    self.portal.portal_skins.custom.manage_delObjects(list(self.portal.portal_skins.custom.objectIds()))
+      try:
+        folder.manage_delObjects(list(folder.objectIds()))
+      except BadRequest:
+        pass
+    try:
+      self.portal.portal_skins.custom.manage_delObjects(list(self.portal.portal_skins.custom.objectIds()))
+    except BadRequest:
+      pass
 
     self.tic()
 

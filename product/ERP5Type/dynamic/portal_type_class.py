@@ -71,7 +71,7 @@ def _importFilesystemClass(classpath):
     InitializeClass(klass)
 
     return klass
-  except StandardError:
+  except Exception:
     raise ImportError('Could not import document class ' + classpath)
 
 def _importComponentClass(component_package, name):
@@ -540,7 +540,7 @@ def synchronizeDynamicModules(context, force=False):
       erp5.accessor_holder.clear()
       erp5.accessor_holder.property_sheet.clear()
 
-      for name in erp5.accessor_holder.portal_type.__dict__.keys():
+      for name in list(erp5.accessor_holder.portal_type.__dict__.keys()):
         if name[0] != '_':
           delattr(erp5.accessor_holder.portal_type, name)
 

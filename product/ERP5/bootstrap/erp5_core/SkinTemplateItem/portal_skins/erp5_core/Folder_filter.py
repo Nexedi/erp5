@@ -24,7 +24,7 @@ else:
   if len(filtered_uid_dict.keys()) > 0 :
     selection_tool.checkAll(selection_name, uids, REQUEST=None)
     selection_tool.setSelectionToIds(selection_name,
-                              filtered_uid_dict.keys(), REQUEST=request)
+                              list(filtered_uid_dict.keys()), REQUEST=request)
 
 url = selection_tool.getSelectionListUrlFor(
                         selection_name, REQUEST=request)

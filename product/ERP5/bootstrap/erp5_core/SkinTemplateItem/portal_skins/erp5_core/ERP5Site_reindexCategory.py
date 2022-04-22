@@ -19,7 +19,7 @@ for error in error_list:
     #print error
     return_list.append(error)
 
-for portal_type in nb_types.keys():
+for portal_type in list(nb_types.keys()):
   # Find the number of each portal type in the catalog
   count_result = context.portal_catalog.countResults(portal_type=portal_type)
   nb_catalog = count_result[0][0]

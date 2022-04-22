@@ -129,11 +129,11 @@ def buildEmailMessage(from_url, to_url, msg=None,
     message.attach(MIMEText(msg, _charset='utf-8'))
 
   if extra_headers:
-    for key, value in extra_headers.items():
+    for key, value in list(extra_headers.items()):
       message.add_header('X-%s' % key, value)
 
   if additional_headers:
-    for key, value in additional_headers.items():
+    for key, value in list(additional_headers.items()):
       message.add_header(key, value)
 
   if subject:

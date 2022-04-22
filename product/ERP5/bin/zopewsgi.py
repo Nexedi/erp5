@@ -171,8 +171,13 @@ def runwsgi():
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
-    from Signals.SignalHandler import SignalHandler
-    SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
+    try:
+      from Signals.SignalHandler import SignalHandler
+    except ImportError:
+      # XXX-zope4py3: TODO
+      pass
+    else:
+      SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
 
     if args.timerserver_interval:
       import Products.TimerService

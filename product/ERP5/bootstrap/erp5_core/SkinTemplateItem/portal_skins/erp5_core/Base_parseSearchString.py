@@ -114,7 +114,7 @@ def recurseSyntaxNode(node, criterion=DEFAULT_CRITERION_ALIAS):
       result[criterion] = [node.getValue()]
     else:
       for subnode in node.getNodeList():
-        for criterion, value_list in recurseSyntaxNode(subnode, criterion=criterion).items():
+        for criterion, value_list in list(recurseSyntaxNode(subnode, criterion=criterion).items()):
           result.setdefault(criterion, []).extend(value_list)
   return result
 
@@ -126,15 +126,15 @@ result =  {}
 if node is None:
   result['searchabletext'] = searchstring
 else:
-  for criterion, value_list in recurseSyntaxNode(node).items():
+  for criterion, value_list in list(recurseSyntaxNode(node).items()):
     criterion, value_list = resolveCriterion(criterion, value_list)
     result.setdefault(criterion, []).extend(value_list)
   filtered_result = {}
-  for criterion, value_list in result.items():
+  for criterion, value_list in list(result.items()):
     if len(value_list) > 0:
       filtered_result[criterion] = value_list
   result = filtered_result
-  for criterion, value_list in result.items():
+  for criterion, value_list in list(result.items()):
     # XXX: yuck
     if criterion == 'searchabletext':
       result['searchabletext'] = ' '.join(value_list)

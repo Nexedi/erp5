@@ -564,7 +564,7 @@ for block_object in planning.content:
     bot_list = []
     center = ''
     # recovering full string that will have to be displayed on the top & bottom line
-    for info_name in block_object.info.keys():
+    for info_name in list(block_object.info.keys()):
       if 'top' in info_name:
         top_string += block_object.info[info_name].info
         top_list.append(info_name)
@@ -604,7 +604,7 @@ for block_object in planning.content:
     if block_dict['height'] < car_height:
       # there is no room to display any text in the block
       # escaping all text
-      for info_name in block_object.info.keys():
+      for info_name in list(block_object.info.keys()):
         block_object.info[info_name].edit('')
     else:
       if block_dict['height'] < (car_height* lines):

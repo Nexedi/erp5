@@ -55,7 +55,7 @@ class StringAttributeMatch(PropertyExistence):
                                   self, object, fixit=fixit)
     if not error_list:
       for attribute_name, regular_expression in\
-                      self.constraint_definition.items():
+                      list(self.constraint_definition.items()):
         error_message = None
         # If property does not exist, error will be raised by
         # PropertyExistence Constraint.

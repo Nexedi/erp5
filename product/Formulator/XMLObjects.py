@@ -24,7 +24,7 @@ def elementToObject(parent, node):
     # create an object to represent element node
     object = XMLObject()
     # make object attributes off node attributes
-    for key, value in node.attributes.items():
+    for key, value in list(node.attributes.items()):
         object.attributes[key] = value
     # make lists of child elements (or ignore them)
     for child in node.childNodes:

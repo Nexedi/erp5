@@ -476,11 +476,11 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     tmp = {}
     for match in rx_search.finditer(text):
       group = match.group()
-      group_item_list = match.groupdict().items()
+      group_item_list = list(match.groupdict().items())
       group_item_list.sort()
       key = (group, tuple(group_item_list))
       tmp[key] = None
-    for group, group_item_tuple in tmp.keys():
+    for group, group_item_tuple in list(tmp.keys()):
       result.append((group, dict(group_item_tuple)))
     return result
 
@@ -581,7 +581,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
 
     getRelatedList(self)
     lista_latest = {}
-    for o in lista.keys():
+    for o in list(lista.keys()):
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
 
     # remove this document
@@ -589,7 +589,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     # remove last version of document itself from related documents
     lista_latest.pop(self.getLatestVersionValue(), None)
 
-    return lista_latest.keys()
+    return list(lista_latest.keys())
 
   ### Version and language getters - might be moved one day to a mixin class in base
   security.declareProtected(Permissions.View, 'getLatestVersionValue')

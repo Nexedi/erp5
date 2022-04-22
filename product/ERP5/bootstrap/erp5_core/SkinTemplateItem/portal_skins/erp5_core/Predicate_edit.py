@@ -37,7 +37,7 @@ try:
       hidden_attributes = [x[0] for x in listbox_field.get_value('global_attributes')]
       for k in hidden_attributes:
         gv[k] = getattr(request, k,None)
-    for property_, v in listbox.items():
+    for property_, v in list(listbox.items()):
       v.update(gv)
       context.setCriterion(property_, **v)
   # Update basic attributes

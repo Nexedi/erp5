@@ -60,12 +60,12 @@ def editListBox(listbox_field, listbox):
       hidden_attribute_list = [x[0] for x in listbox_field.get_value('global_attributes')]
       for hidden_attribute in hidden_attribute_list:
         global_property_dict[hidden_attribute] = getattr(request, hidden_attribute, None)
-    for item_url, listbox_item_dict in listbox.items():
+    for item_url, listbox_item_dict in list(listbox.items()):
       listbox_item_dict.update(global_property_dict)
       # Form: '' -> ERP5: None
       encapsulated_editor_list = []
       cleaned_v = {}
-      for key, value in listbox_item_dict.items():
+      for key, value in list(listbox_item_dict.items()):
         if hasattr(value, 'edit'):
           encapsulated_editor_list.append(value)
         else:
@@ -157,7 +157,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
           if cell_range != matrixbox_cell_range:
             matrix_context.setCellRange(base_id=cell_base_id, *matrixbox_cell_range)
 
-      for cell_index_tuple, cell_dict in matrixbox.items():
+      for cell_index_tuple, cell_dict in list(matrixbox.items()):
         # Only update cells which still exist
         if matrix_context.hasInRange(*cell_index_tuple, **k_dict):
           cell = matrix_context.newCell(*cell_index_tuple, **k_dict)
@@ -175,7 +175,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
                 cell_dict[key] = variated_property
             # Form: '' -> ERP5: None
             cleaned_v = cell_dict.copy()
-            for key, value in cleaned_v.items():
+            for key, value in list(cleaned_v.items()):
               if value == '':
                 cleaned_v[key] = None
             cell.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values

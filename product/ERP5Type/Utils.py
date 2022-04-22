@@ -387,15 +387,14 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
 
-from rfc822 import AddressList
-
 def Email_parseAddressHeader(text):
   """
   Given a text taken from a From/To/CC/... email header,
   return a list of tuples (name, address) extracted from
   this header
   """
-  return AddressList(text).addresslist
+  from email.utils import getaddresses
+  return getaddresses([text])
 
 def fill_args_from_request(*optional_args):
   """Method decorator to fill missing args from given request
@@ -1692,11 +1691,13 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 #  URL Normaliser #
 ###################
 from Products.PythonScripts.standard import url_unquote
-try:
-  import urlnorm
-except ImportError:
-  warnings.warn("urlnorm lib is not installed", DeprecationWarning)
-  urlnorm = None
+# No new release of urlnorm since 2016 and no py3 support
+urlnorm = None
+if six.PY2:
+  try:
+    import urlnorm
+  except ImportError:
+    warnings.warn("urlnorm lib is not installed", DeprecationWarning)
 from six.moves.urllib.parse as urlparse
 
 # Regular expressions
@@ -1731,7 +1732,7 @@ def legacyNormalizeUrl(url, base_url=None):
     protocol_port_mapping_dict = {'http': '80',
                                   'https': '443',
                                   'ftp': '21'}
-    for protocol, port in protocol_port_mapping_dict.items():
+    for protocol, port in list(protocol_port_mapping_dict.items()):
       # extract port_number from domain
       match_object = re_extract_port.search(url_netloc)
       if url_sheme == protocol and match_object is not None and\

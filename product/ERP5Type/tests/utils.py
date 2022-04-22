@@ -136,7 +136,7 @@ class DummyMessageCatalog:
     else:
       return default
   def translate(self, msgid, mapping=None, context=None,
-                target_language=None, default=None):
+                target_language=None, default=None, *args, **kw):
     return default
 
 class DummyLocalizer:
@@ -329,7 +329,11 @@ class getMySQLArguments(object):
     self = object.__new__(cls)
     self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
     self.conv = None
-    DB._parse_connection_string.im_func(self)
+    parse_connection_string_function = DB._parse_connection_string
+    import six
+    if six.PY2:
+      parse_connection_string_function = parse_connection_string_function.__func__
+    parse_connection_string_function(self)
     return ''.join('-%s%s ' % (self.args_dict[k], v)
                    for k, v in self._kw_args.iteritems()
                    if k in self.args_dict

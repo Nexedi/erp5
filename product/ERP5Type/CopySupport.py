@@ -21,8 +21,6 @@ from AccessControl.Permission import Permission
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import CopyError
-from OFS.CopySupport import eNotSupported, eNoItemsSpecified, eNoData
-from OFS.CopySupport import eNotFound, eInvalid
 from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path
 from OFS.CopySupport import sanity_check
 from Products.ERP5Type import Permissions
@@ -71,7 +69,7 @@ class CopyContainer:
         return OriginalCopyContainer.manage_copyObjects(self, ids, REQUEST,
             RESPONSE)
       if uids is None and REQUEST is not None:
-          return eNoItemsSpecified
+          raise BadRequest('No items specified')
       elif uids is None:
           raise ValueError('uids must be specified')
 
@@ -81,7 +79,7 @@ class CopyContainer:
       for uid in uids:
           ob=self.getPortalObject().portal_catalog.getObject(uid)
           if not ob.cb_isCopyable():
-              raise CopyError(eNotSupported % uid)
+              raise CopyError('Not Supported')
           m=Moniker.Moniker(ob)
           oblist.append(m.dump())
       cp=(0, oblist)
@@ -122,7 +120,7 @@ class CopyContainer:
       changed = False
       category_list = object.getCategoryList()
       path_len = len(path_item_list)
-      for position in xrange(len(category_list)):
+      for position in range(len(category_list)):
           # only need to compare the first path_len components after the portal
           category_name = category_list[position].split('/', path_len+1)
           if category_name[1:path_len + 1] == path_item_list:
@@ -186,7 +184,7 @@ class CopyContainer:
         # Use default methode
         return OriginalCopyContainer.manage_cutObjects(self, ids, REQUEST)
       if uids is None and REQUEST is not None:
-          return eNoItemsSpecified
+          raise BadRequest('No items specified')
       elif uids is None:
           raise ValueError('uids must be specified')
 
@@ -196,7 +194,7 @@ class CopyContainer:
       for uid in uids:
           ob=self.getPortalObject().portal_catalog.getObject(uid)
           if not ob.cb_isMoveable():
-              raise CopyError(eNotSupported % id)
+              raise CopyError('Not Supported')
           m=Moniker.Moniker(ob)
           oblist.append(m.dump())
       cp=(1, oblist) # 0->1 This is the difference with manage_copyObject
@@ -259,7 +257,7 @@ class CopyContainer:
           #remove previous owners
           local_role_dict = self.__ac_local_roles__
           removable_role_key_list = []
-          for key, value in local_role_dict.items():
+          for key, value in list(local_role_dict.items()):
             if 'Owner' in value:
               value.remove('Owner')
             if len(value) == 0:
@@ -440,7 +438,7 @@ class CopyContainer:
     try:
       cp = _cb_decode(cp)
     except:
-      raise CopyError(eInvalid)
+      raise CopyError("Clipboard Error")
     oblist = []
     op = cp[0]
     app = self.getPhysicalRoot()
@@ -449,7 +447,7 @@ class CopyContainer:
       try:
         ob = m.bind(app)
       except:
-        raise CopyError(eNotFound)
+        raise CopyError('Item Not Found')
       self._verifyObjectPaste(ob, validate_src=op + 1)
       oblist.append(ob)
     result = []
@@ -476,7 +474,7 @@ class CopyContainer:
     )[op]
     for ob in oblist:
       if not getattr(ob, is_doable_id)():
-        raise CopyError(eNotSupported % escape(ob.getId()))
+        raise CopyError('Not Supported')
       try:
         ob._notifyOfCopyTo(self, op=op)
       except:
@@ -557,7 +555,7 @@ class CopyContainer:
         if userid is not None:
           #remove previous owners
           dict = self.__ac_local_roles__
-          for key, value in dict.items():
+          for key, value in list(dict.items()):
             if 'Owner' in value:
               value.remove('Owner')
           #add new owner
@@ -596,7 +594,7 @@ class CopyContainer:
     elif REQUEST is not None and '__cp' in REQUEST:
       cp = REQUEST['__cp']
     if cp is None:
-      raise CopyError(eNoData)
+      raise CopyError("No Data")
     op, result = self.__duplicate(
       cp,
       duplicate=False,

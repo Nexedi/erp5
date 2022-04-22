@@ -433,7 +433,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             selection_uid_dict[int(uid)] = 1
           except (ValueError, TypeError):
             selection_uid_dict[uid] = 1
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)
@@ -948,7 +948,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def setDomainDictFromParam(self, selection_name, domain_dict):
       domain_list = []
       domain_path = []
-      for key, value in domain_dict.items():
+      for key, value in list(domain_dict.items()):
         domain_path.append(key)
         splitted_domain_list = value[1].split('/')[1:]
         for i in range(len(splitted_domain_list)):
@@ -1221,7 +1221,10 @@ class SelectionTool( BaseTool, SimpleItem ):
           return None
       # XXX To avoid the difference of the string representations of int and long,
       # convert each element to a string.
-      return md5(str(sorted(map(str, uid_list)))).hexdigest()
+      if six.PY3:
+          return md5(str(sorted(uid_list)).encode()).hexdigest()
+      else:
+          return md5(str(sorted(map(str, uid_list)))).hexdigest()
 
     # Related document searching
     security.declarePublic('viewSearchRelatedDocumentDialog')
@@ -1312,7 +1315,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         # Save the current REQUEST form
         # We can't put FileUpload instances because we can't pickle them
         saved_form_data = {key: value
-          for key, value in REQUEST.form.items()
+          for key, value in list(REQUEST.form.items())
           if not isinstance(value, FileUpload)}
 
         kw = {
@@ -1534,7 +1537,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getSelectionNameListFromContainer(self):
       user_id = self._getUserId()
       return list(set(self._getContainer().getSelectionNameList(user_id) +
-                      self.getTemporarySelectionDict().keys()))
+                      list(self.getTemporarySelectionDict().keys())))
 
     def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
@@ -1599,7 +1602,7 @@ class TransactionalCacheContainer(MemcachedContainer):
 class PersistentMappingContainer(BaseContainer):
   def getSelectionNameList(self, user_id):
     try:
-      return self._container[user_id].keys()
+      return list(self._container[user_id].keys())
     except KeyError:
       return []
 

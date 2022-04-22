@@ -130,33 +130,46 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   # separate file, with extension specified by 'extension'.
   # 'extension' must be None for auto-detection.
   #
-  # class_name: (extension, unicode_data, property_name),
-  "Document Component":  ("py",   0, "text_content"),
-  "DTMLDocument":        (None,   0, "raw"),
-  "DTMLMethod":          (None,   0, "raw"),
-  "Extension Component": ("py",   0, "text_content"),
-  "File":                (None,   0, "data"),
-  "Image":               (None,   0, "data"),
-  "Interface Component": ("py",   0, "text_content"),
-  "OOoTemplate":         ("oot",  1, "_text"),
-  "Mixin Component":     ("py",   0, "text_content"),
-  "Module Component":    ("py",   0, "text_content"),
-  "PDF":                 ("pdf",  0, "data"),
-  "PyData Script":       ("py",   0, "_body"),
-  "Python Script":       ("py",   0, "_body"),
-  "Workflow Script":     ("py",   0, "_body"),
-  "PythonScript":        ("py",   0, "_body"),
-  "Spreadsheet":         (None,   0, "data"),
-  "SQL":                 ("sql",  0, "src"),
-  "SQL Method":          ("sql",  0, "src"),
-  "Test Component":      ("py",   0, "text_content"),
-  "Test Page":           (None,   0, "text_content"),
-  "Tool Component":      ("py",   0, "text_content"),
-  "Web Illustration":    ("svg",  0, "text_content"),
-  "Web Page":            (None,   0, "text_content"),
-  "Web Script":          (None,   0, "text_content"),
-  "Web Style":           (None,   0, "text_content"),
-  "ZopePageTemplate":    ("zpt",  1, "_text"),
+  # XXX-zope4py3: `text` was added but what we should do is check the
+  #               PropertySheet ('string' (str) /'data' (bytes)) but for now,
+  #               only work on bootstrap...
+  #
+  # class_name: (extension, unicode_data, property_name, text),
+  "Document Component":  ("py",   0, "text_content", True ),
+  "DTMLDocument":        (None,   0, "raw",          True ),
+  "DTMLMethod":          (None,   0, "raw",          True ),
+  "Extension Component": ("py",   0, "text_content", True ),
+  # OFS.File raises ValueError("Must be bytes")
+  "File":                (None,   0, "data",         False), # lambda obj: (obj.content_type.startswith('text/') or
+                                                             #      obj.content_type in ('application/javascript',
+                                                             #                           'application/js',
+                                                             #                           'application/json',
+                                                             #                           'application/schema+json',
+                                                             #                           'application/x-javascript',
+                                                             #                           'application/xml',
+                                                             #                           'application/x-php',
+                                                             #                           'image/svg+xml'))),
+  "Image":               (None,   0, "data",         False),
+  "Interface Component": ("py",   0, "text_content", True ),
+  "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "Mixin Component":     ("py",   0, "text_content", True ),
+  "Module Component":    ("py",   0, "text_content", True ),
+  "PDF":                 ("pdf",  0, "data",         False),
+  "PyData Script":       ("py",   0, "_body",        True ),
+  "Python Script":       ("py",   0, "_body",        True ),
+  "Workflow Script":     ("py",   0, "_body",        True ),
+  "PythonScript":        ("py",   0, "_body",        True ),
+  "Spreadsheet":         (None,   0, "data",         False),
+  "SQL":                 ("sql",  0, "src",          True ),
+  "SQL Method":          ("sql",  0, "src",          True ),
+  "Test Component":      ("py",   0, "text_content", True ),
+  "Test Page":           (None,   0, "text_content", True ),
+  "Tool Component":      ("py",   0, "text_content", True ),
+  "Web Illustration":    ("svg",  0, "text_content", True ),
+  "Web Page":            (None,   0, "text_content", True ),
+  "Web Script":          (None,   0, "text_content", True ),
+  "Web Style":           (None,   0, "text_content", True ),
+  "ZopePageTemplate":    ("zpt",  1, "_text",        True ),
 }
 
 def _getCatalog(acquisition_context):
@@ -813,7 +826,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(obj, name=key, ext='.py')
       else:
         try:
-          extension, unicode_data, record_id = \
+          extension, unicode_data, record_id, _ = \
             SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
         except KeyError:
           pass
@@ -867,10 +880,14 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(xml_data, key + '.catalog_keys', path=path)
 
   def _restoreSeparatelyExportedProperty(self, obj, data):
-    unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
-      obj.__class__.__name__][1:]
+    class_name = obj.__class__.__name__
+    unicode_data, property_name, is_text = SEPARATELY_EXPORTED_PROPERTY_DICT[
+      class_name][1:]
     if unicode_data:
       data = data.decode(obj.output_encoding)
+    elif ((callable(is_text) and is_text(obj)) or
+          (not callable(is_text) and is_text)):
+      data = data.decode('utf-8')
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
@@ -1028,7 +1045,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       F.binary=1
       F.file=outfile
       p=xml.parsers.expat.ParserCreate('utf-8')
-      p.returns_unicode = False
+      p.buffer_text = True
       p.CharacterDataHandler=F.handle_data
       p.StartElementHandler=F.unknown_starttag
       p.EndElementHandler=F.unknown_endtag
@@ -1184,7 +1201,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def _getObjectKeyList(self):
     # sort to add objects before their subobjects
-    keys = self._objects.keys()
+    keys = list(self._objects.keys())
     keys.sort()
     return keys
 
@@ -1546,7 +1563,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           if widget_path in update_dict and update_dict[widget_path] in ('remove', 'save_and_remove'):
             continue
           widget_in_form = 0
-          for group_value_list in new_groups_dict.values():
+          for group_value_list in list(new_groups_dict.values()):
             if widget_id in group_value_list:
               widget_in_form = 1
               break
@@ -1617,7 +1634,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._archive.keys()
+      object_keys = list(self._archive.keys())
     for relative_url in object_keys:
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
@@ -1650,7 +1667,7 @@ class PathTemplateItem(ObjectTemplateItem):
   """
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    id_list = self._archive.keys()
+    id_list = list(self._archive.keys())
     self._archive.clear()
     self._path_archive = PersistentMapping()
     for id in id_list:
@@ -1664,7 +1681,7 @@ class PathTemplateItem(ObjectTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._path_archive.keys()
+      object_keys = list(self._path_archive.keys())
     object_keys.sort()
     object_keys.reverse()
     p = context.getPortalObject()
@@ -1719,7 +1736,7 @@ class PathTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    keys = self._path_archive.keys()
+    keys = list(self._path_archive.keys())
     keys.sort()
     for path in keys:
       include_subobjects = 0
@@ -1823,7 +1840,7 @@ class ToolTemplateItem(PathTemplateItem):
     object_dict = super(ToolTemplateItem, self).preinstall(context, installed_item, **kw)
     portal_base = aq_base(context.getPortalObject())
 
-    for path, (action, type_name) in object_dict.items():
+    for path, (action, type_name) in list(object_dict.items()):
       obj = getattr(portal_base, path, None)
       if obj is not None and path in self._legacy_tool_id_list:
         if action == 'New':
@@ -1859,7 +1876,7 @@ class ToolTemplateItem(PathTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._path_archive.keys()
+      object_keys = list(self._path_archive.keys())
     for tool_id in object_keys:
       types_tool.type_provider_list = tuple([ \
         x for x in types_tool.type_provider_list \
@@ -1871,7 +1888,7 @@ class ToolTemplateItem(PathTemplateItem):
     portal = context.getPortalObject()
     types_tool = portal.portal_types
     remove_dict = kw.get('remove_object_dict', {})
-    keys = self._objects.keys()
+    keys = list(self._objects.keys())
     for tool_id in keys:
       if tool_id in remove_dict:
         action = remove_dict[tool_id]
@@ -1908,7 +1925,7 @@ class PreferenceTemplateItem(PathTemplateItem):
     """
     PathTemplateItem.install(self, context, trashbin, **kw)
     portal = context.getPortalObject()
-    for object_path in self._objects.keys():
+    for object_path in list(self._objects.keys()):
       pref = portal.unrestrictedTraverse(object_path)
       # XXX getPreferenceState is a bad name
       if pref.getPreferenceState() == 'disabled':
@@ -1945,7 +1962,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    for relative_url in self._archive.keys():
+    for relative_url in list(self._archive.keys()):
       try:
         obj = p.unrestrictedTraverse(relative_url)
         obj = obj._getCopy(context)
@@ -1983,7 +2000,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
     # as PathTemplateItem.install
     kw['object_to_update'] = {
         path: action
-        for (path, action) in kw['object_to_update'].items()
+        for (path, action) in list(kw['object_to_update'].items())
         if path.split('/')[:-1] == ['portal_categories'] or path in self._objects
     }
     return super(CategoryTemplateItem, self).install(context, trashbin, **kw)
@@ -1996,7 +2013,7 @@ class SkinTemplateItem(ObjectTemplateItem):
 
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
-    for relative_url in self._objects.keys():
+    for relative_url in list(self._objects.keys()):
       obj = self._objects[relative_url]
       if (getattr(obj, 'meta_type', None) == 'Folder') and \
         (obj.getProperty('business_template_registered_skin_selections', None) \
@@ -2009,10 +2026,10 @@ class SkinTemplateItem(ObjectTemplateItem):
     # We must install/update an ERP5 Form if one of its widget is modified.
     # This allow to keep the widget order and the form layout after an update
     #   from a BT to another one.
-    for (bt_obj_path, bt_obj) in self._objects.items():
+    for (bt_obj_path, bt_obj) in list(self._objects.items()):
       if getattr(bt_obj, 'meta_type', None) == 'ERP5 Form':
         # search sub-objects of ERP5 Forms that are marked as "modified"
-        for upd_obj_path in modified_object_list.keys():
+        for upd_obj_path in list(modified_object_list.keys()):
           if upd_obj_path.startswith(bt_obj_path):
             # a child of the ERP5 Form must be updated, so the form too
             if bt_obj_path not in modified_object_list:
@@ -2025,7 +2042,7 @@ class SkinTemplateItem(ObjectTemplateItem):
     force = kw.get('force')
     p = context.getPortalObject()
     skin_tool = p.portal_skins
-    for relative_url in self._objects.keys():
+    for relative_url in list(self._objects.keys()):
       # Do not register skin which were explicitely ask not to be installed
       if not force and update_dict.get(relative_url)  == 'nothing':
         continue
@@ -2049,7 +2066,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     portal = context.getPortalObject()
     skin_tool = getToolByName(portal, 'portal_skins')
 
-    for key in self._archive.keys():
+    for key in list(self._archive.keys()):
       skin_folder_id, skin_selection_id = key.split(' | ')
 
       skin_folder = skin_tool[skin_folder_id]
@@ -2068,7 +2085,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<registered_skin_selection>'
-    keys = self._objects.keys()
+    keys = list(self._objects.keys())
     keys.sort()
     for key in keys:
       skin_selection_list = self._objects[key]
@@ -2094,7 +2111,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     portal = context.getPortalObject()
     skin_tool = portal.portal_skins
 
-    for skin_folder_id in self._objects.keys():
+    for skin_folder_id in list(self._objects.keys()):
 
       if skin_folder_id in update_dict or force:
         if not force:
@@ -2172,7 +2189,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       else: # new object
         modified_object_list[path] = 'New', self.__class__.__name__[:-12]
     # get removed object
-    old_keys = installed_item._objects.keys()
+    old_keys = list(installed_item._objects.keys())
     for path in old_keys:
       if path not in self._objects:
         modified_object_list[path] = 'Removed', self.__class__.__name__[:-12]
@@ -2404,7 +2421,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._archive.keys()
+      object_keys = list(self._archive.keys())
     removed_workflow_id_list = {x.split('/', 1)[1] for x in object_keys}
 
     for portal_type in context.getPortalObject().portal_types.listTypeInfo():
@@ -2422,7 +2439,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
   def build(self, context, **kw):
     p = context.getPortalObject()
-    for relative_url in self._archive.keys():
+    for relative_url in list(self._archive.keys()):
       obj = p.unrestrictedTraverse(relative_url)
       # normalize relative_url, not all type informations are stored in
       # "portal_types"
@@ -2430,7 +2447,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
       obj = obj._getCopy(context)
       obj._p_activate()
-      for attr in obj.__dict__.keys():
+      for attr in list(obj.__dict__.keys()):
         if attr == '_property_domain_dict':
           continue
         if attr[0] == '_' or attr in ('allowed_content_types',
@@ -2447,7 +2464,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
   def _getObjectKeyList(self):
     # Sort portal types to install according to their dependencies
-    object_key_list = self._objects.keys()
+    object_key_list = list(self._objects.keys())
     path_dict = dict(x.split('/')[1:] + [x] for x in object_key_list)
     cache = {}
     def solveDependency(path):
@@ -2520,7 +2537,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # if - chain is removed from the exisiting one
     # if = chain replaced the existing one
     types_tool = self.getPortalObject().portal_types
-    for key in self._archive.keys():
+    for key in list(self._archive.keys()):
       wflist = key.split(' | ')
       if len(wflist) == 2:
         portal_type = wflist[0]
@@ -2549,7 +2566,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<workflow_chain>'
-    key_list = self._objects.keys()
+    key_list = list(self._objects.keys())
     key_list.sort()
     for key in key_list:
       workflow_list = self._objects[key]
@@ -2665,7 +2682,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     if object_path is not None:
       object_key_list = [object_path]
     else:
-      object_key_list = self._objects.keys()
+      object_key_list = list(self._objects.keys())
     for object_key in object_key_list:
       path_splitted = object_key.split('/', 1)
       if len(path_splitted) < 2:
@@ -2742,7 +2759,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     types_tool = getToolByName(self.getPortalObject(), 'portal_types')
-    for key in self._archive.keys():
+    for key in list(self._archive.keys()):
       try:
         portal_type, allowed_type = key.split(' | ')
       except ValueError:
@@ -2766,7 +2783,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<%s>' %(self.xml_tag,)
-    key_list = self._objects.keys()
+    key_list = list(self._objects.keys())
     key_list.sort()
     for key in key_list:
       id_value = key.replace('%s/' % self.class_property, '')
@@ -2876,7 +2893,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     if object_path is not None:
       object_key_list = [object_path]
     else:
-      object_key_list = self._objects.keys()
+      object_key_list = list(self._objects.keys())
     for key in object_key_list:
       portal_id = key.split('/')[-1]
       type_information = types_tool.getTypeInfo(portal_id)
@@ -2987,7 +3004,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     if not hasattr(self, '_method_properties'):
       self._method_properties = PersistentMapping()
 
-    for obj in self._objects.values():
+    for obj in list(self._objects.values()):
       method_id = obj.id
       # Check if the method is sub-object of Catalog
       if method_id in catalog.objectIds():
@@ -3052,7 +3069,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       portal = self.getPortalObject()
       # Will be modifying dict, so better to use .items()
       # XXX: In python3 it should be .copy.items().
-      for path, obj in self._objects.items():
+      for path, obj in list(self._objects.items()):
         method = self.unrestrictedResolveValue(portal, path)
         method_id = path.split('/')[-1]
         if method.meta_type == 'Z SQL Method':
@@ -3063,7 +3080,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         self._objects[path] = new_obj
 
     if force: # get all objects
-      values = self._objects.values()
+      values = list(self._objects.values())
     else: # get only selected object
       for key, value in self._objects.iteritems():
         if key in update_dict or force:
@@ -3078,7 +3095,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
       # Restore catalog properties for methods
       if hasattr(self, '_method_properties'):
-        for key in self._method_properties.get(method_id, {}).keys():
+        for key in list(self._method_properties.get(method_id, {}).keys()):
           old_value = getattr(catalog, key, None)
           if isinstance(old_value, str):
             setattr(catalog, key, method_id)
@@ -3156,7 +3173,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     object_path = kw.get('object_path', None)
     # get required values
     if object_path is None:
-      values = self._objects.values()
+      values = list(self._objects.values())
     else:
       try:
         value = self._objects[object_path]
@@ -3232,7 +3249,7 @@ class ActionTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, **kw):
     # XXX It's look like ObjectTemplateItem __init__
     BaseTemplateItem.__init__(self, id_list, **kw)
-    id_list = self._archive.keys()
+    id_list = list(self._archive.keys())
     self._archive.clear()
     for id in id_list:
       self._archive["%s/%s" % ('portal_types', id)] = None
@@ -3292,7 +3309,7 @@ class ActionTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    for id in self._archive.keys():
+    for id in list(self._archive.keys()):
       url, value = id.split(' | ')
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
@@ -3401,7 +3418,7 @@ class ActionTemplateItem(ObjectTemplateItem):
         # compatibility ?
         keys = [object_path]
     else:
-      keys = self._archive.keys()
+      keys = list(self._archive.keys())
     for id in keys:
       if  '|' in id:
         relative_url, value = id.split(' | ')
@@ -3431,7 +3448,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     p = context.getPortalObject()
-    for relative_url in self._archive.keys():
+    for relative_url in list(self._archive.keys()):
       obj = p.unrestrictedTraverse("portal_types/%s" %
           relative_url.split('/', 1)[1])
       # normalize url
@@ -3491,7 +3508,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     if len(self._objects.keys()) == 0:
       return
     path = self.__class__.__name__
-    for key in self._objects.keys():
+    for key in list(self._objects.keys()):
       xml_data = self.generateXml(key)
       if isinstance(xml_data, six.text_type):
         xml_data = xml_data.encode('utf-8')
@@ -3559,7 +3576,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     if object_path is not None:
       keys = [object_path]
     else:
-      keys = self._objects.keys()
+      keys = list(self._objects.keys())
     for roles_path in keys:
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
       try:
@@ -3573,7 +3590,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    for id in self._archive.keys():
+    for id in list(self._archive.keys()):
       for property in p.propertyMap():
         if property['id'] == id:
           obj = p.getProperty(id)
@@ -3628,7 +3645,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     if object_path is not None:
       keys = [object_path]
     else:
-      keys = self._archive.keys()
+      keys = list(self._archive.keys())
     for id in keys:
       if p.hasProperty(id):
         p._delProperty(id)
@@ -3653,10 +3670,10 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     return xml_data
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if len(list(self._objects.keys())) == 0:
       return
     xml_data = '<site_property>'
-    keys = self._objects.keys()
+    keys = list(self._objects.keys())
     keys.sort()
     for path in keys:
       xml_data += self.generateXml(path)
@@ -3668,7 +3685,7 @@ class ModuleTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    for module_id in self._archive.keys():
+    for module_id in list(self._archive.keys()):
       module = p.unrestrictedTraverse(module_id)
       mapping = {}
       mapping['id'] = module.getId()
@@ -3682,7 +3699,7 @@ class ModuleTemplateItem(BaseTemplateItem):
   def generateXml(self, path=None):
     mapping = self._objects[path]
     xml_data = ['<module>']
-    keys = mapping.keys()
+    keys = list(mapping.keys())
     for key in sorted(keys):
       if key == 'permission_list':
         # separe permission dict into xml
@@ -3725,7 +3742,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     path = self.__class__.__name__
-    keys = self._objects.keys()
+    keys = list(self._objects.keys())
     keys.sort()
     for key in keys:
       # export modules one by one
@@ -3800,7 +3817,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     object_path = kw.get('object_path', None)
     trashbin = kw.get('trashbin', None)
     if object_path is None:
-      keys = self._archive.keys()
+      keys = list(self._archive.keys())
     else:
       keys = [object_path]
     p = context.getPortalObject()
@@ -3848,7 +3865,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     # fix key if necessary in installed bt for diff
     extra_prefix = self.__class__.__name__ + '/'
-    for key in installed_item._objects.keys():
+    for key in list(installed_item._objects.keys()):
       if key.startswith(extra_prefix):
         new_key = key[len(extra_prefix):]
         installed_item._objects[new_key] = installed_item._objects[key]
@@ -3865,7 +3882,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
         # Note: Magical way to have unique paths
         modified_object_list[self._getKey(path)] = 'New', self.__class__.__name__[:-12]
         # get removed object
-    old_keys = installed_item._objects.keys()
+    old_keys = list(installed_item._objects.keys())
     for path in old_keys:
       if path not in self._objects:
         # Note: Magical way to have unique paths
@@ -3876,7 +3893,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     need_reset = isinstance(self, FilesystemDocumentTemplateItem)
-    for key in self._objects.keys():
+    for key in list(self._objects.keys()):
       # to achieve non data migration fresh installation parameters
       # differ from upgrade parameteres, so here the check have to be
       # care of both cases
@@ -3917,7 +3934,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._archive.keys()
+      object_keys = list(self._archive.keys())
     if object_keys:
       if isinstance(self, FilesystemDocumentTemplateItem):
         self._resetDynamicModules()
@@ -3926,10 +3943,10 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if len(list(self._objects.keys())) == 0:
       return
     extra_prefix = self.__class__.__name__ + '/'
-    for key in self._objects.keys():
+    for key in list(self._objects.keys()):
       obj = self._objects[key]
       # BBB the prefix was put into each key in the previous implementation.
       if not key.startswith(extra_prefix):
@@ -3995,7 +4012,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     backward-compatibility
     """
     def inner(self, *args, **kw):
-      if self._is_already_migrated(getattr(self, object_dict_name).keys()):
+      if self._is_already_migrated(list(getattr(self, object_dict_name).keys())):
         result = getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
       else:
         result = getattr(FilesystemDocumentTemplateItem,
@@ -4037,7 +4054,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._archive.keys()
+      object_keys = list(self._archive.keys())
 
     if self._is_already_migrated(object_keys):
       ObjectTemplateItem.uninstall(self, *args, **kw)
@@ -4079,7 +4096,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     id_set = set(tool.objectIds())
 
     # careful, that dictionary will change
-    class_id_list = migrate_object_dict.keys()
+    class_id_list = list(migrate_object_dict.keys())
     for class_id in class_id_list:
       # If the Property Sheet already exists in ZODB, then skip it,
       # otherwise it should not be needed anymore once the deletion
@@ -4145,7 +4162,7 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
         getattr(context.getPortalObject(), self._tool_id, None) is None):
       return FilesystemDocumentTemplateItem.install(self, context, **kw)
 
-    if not self._is_already_migrated(self._objects.keys()):
+    if not self._is_already_migrated(list(self._objects.keys())):
       self._migrateAllFromFilesystem(context,
                                      self._objects,
                                      self._archive,
@@ -4247,7 +4264,7 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     the source code and its state to load it is necessary for ZODB Components
     and too much history would be exported (edit_workflow)
     """
-    for wf_id in obj.workflow_history.keys():
+    for wf_id in list(obj.workflow_history.keys()):
       if wf_id != 'component_validation_workflow':
         del obj.workflow_history[wf_id]
         continue
@@ -4374,7 +4391,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
       return
 
     # After running the migration script, update bt5 property accordingly
-    if not self._is_already_migrated(self._archive.keys()):
+    if not self._is_already_migrated(list(self._archive.keys())):
       document_id_list = self.getTemplateIdList()
       if document_id_list[0] not in getattr(context.getPortalObject(),
                                             'portal_components', ()):
@@ -4391,7 +4408,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
     automatically as the version must be set manually. This should not be an
     issue as there are not so many Documents in bt5...
     """
-    if self._is_already_migrated(self._objects.keys()):
+    if self._is_already_migrated(list(self._objects.keys())):
       _ZodbComponentTemplateItem.install(self, context, **kw)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
@@ -4469,7 +4486,7 @@ class RoleTemplateItem(BaseTemplateItem):
       else: # only show new roles
         modified_object_list[role] = 'New', 'Role'
     # get removed roles
-    old_roles = installed_item._objects.keys()
+    old_roles = list(installed_item._objects.keys())
     for role in old_roles:
       if role not in self._objects:
         modified_object_list[role] = 'Removed', self.__class__.__name__[:-12]
@@ -4511,19 +4528,19 @@ class RoleTemplateItem(BaseTemplateItem):
   def trash(self, context, new_item, **kw):
     p = context.getPortalObject()
     new_roles = {}
-    for role in new_item._archive.keys():
+    for role in list(new_item._archive.keys()):
       new_roles[role] = 1
     roles = {}
     for role in p.__ac_roles__:
       roles[role] = 1
-    for role in self._archive.keys():
+    for role in list(self._archive.keys()):
       if role in roles and role not in new_roles:
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
 
   # Function to generate XML Code Manually
   def generateXml(self):
-    role_list = self._objects.keys()
+    role_list = list(self._objects.keys())
     xml_data = '<role_list>'
     for role in sorted(role_list):
       xml_data += '\n <role>%s</role>' % (role,)
@@ -4552,7 +4569,7 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       return
     catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
     key_list = []
-    for key in self._archive.keys():
+    for key in list(self._archive.keys()):
       if key in catalog_key_list:
         key_list.append(key)
       elif not self.is_bt_for_diff:
@@ -4579,10 +4596,10 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       return
 
     catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
-    if len(self._objects.keys()) == 0: # needed because of pop()
+    if len(list(self._objects.keys())) == 0: # needed because of pop()
       return
     keys = []
-    for k in self._objects.values().pop(): # because of list of list
+    for k in list(self._objects.values()).pop(): # because of list of list
       keys.append(k)
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
@@ -4605,7 +4622,7 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = self._archive.keys()
+      object_keys = list(self._archive.keys())
     for key in object_keys:
       if key in catalog_key_list:
         catalog_key_list.remove(key)
@@ -4623,9 +4640,9 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
     return xml_data
 
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
+    if len(list(self._objects.keys())) == 0:
       return
-    for name in self._objects.keys():
+    for name in list(self._objects.keys()):
       path = self.__class__.__name__
       xml_data = self.generateXml(path=name)
       bta.addObject(xml_data, name=name, path=path)
@@ -4737,7 +4754,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     localizer = context.getPortalObject().Localizer
-    for lang_key in self._archive.keys():
+    for lang_key in list(self._archive.keys()):
       if '|' in lang_key:
         lang, catalog = lang_key.split(' | ')
       else: # XXX backward compatibility
@@ -4762,7 +4779,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       else: # new object
         modified_object_list[path] = 'New', self.__class__.__name__[:-12]
     # get removed object
-    old_keys = installed_item._objects.keys()
+    old_keys = list(installed_item._objects.keys())
     for path in old_keys:
       if path not in self._objects:
         modified_object_list[path] = 'Removed', self.__class__.__name__[:-12]
@@ -4847,13 +4864,13 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       # UGH! direct attribute access... but there is no real API to access
       # all messages here.
       messages = set(fake_message_catalog._messages.keys())
-      messages.intersection_update(message_catalog._messages.keys())
+      messages.intersection_update(list(message_catalog._messages.keys()))
       for message in messages:
         # delete translations from the real catalog that are present in the
         # fake one
         fake_translations = fake_message_catalog.get_translations(message)
         translations = message_catalog.get_translations(message)
-        for lang in fake_translations.keys():
+        for lang in list(fake_translations.keys()):
           # XXX: should we check they're still the same before removing?
           translations.pop(lang, None)
 
@@ -4891,7 +4908,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     p = context.getPortalObject()
-    for path in self._archive.keys():
+    for path in list(self._archive.keys()):
       obj = p.unrestrictedTraverse(path.split('/', 1)[1])
       local_roles_dict = getattr(obj, '__ac_local_roles__',
                                         {}) or {}
@@ -5023,7 +5040,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     if object_path is not None:
       keys = [object_path]
     else:
-      keys = self._objects.keys()
+      keys = list(self._objects.keys())
     for roles_path in keys:
       path = roles_path.split('/')[1:]
       # if document does not exists anymore longer,
@@ -5040,7 +5057,7 @@ class bt(dict):
   """Fake 'bt' item to read bt/* files through BusinessTemplateArchive"""
 
   def _importFile(self, file_name, file):
-    self[file_name] = file.read()
+    self[file_name] = file.read().decode('utf-8')
 
 
 class BusinessTemplate(XMLObject):
@@ -5337,7 +5354,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
              and catalog_method is not None:
         if default_catalog.getId() == my_catalog.getId():
           # It is needed to update the catalog only if the default SQLCatalog is modified.
-          for method_id in catalog_method._objects.keys():
+          for method_id in list(catalog_method._objects.keys()):
             if 'related' not in method_id:
               # must update catalog
               return True
@@ -6346,10 +6363,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
         type_list[type_id] = ()
         # get same info for allowed portal types and hidden portal types
         for allowed_ptype_id in allowed_content_type_list:
-          if allowed_ptype_id not in type_list.keys():
+          if allowed_ptype_id not in list(type_list.keys()):
             type_list.update(getChildPortalType(allowed_ptype_id))
         for hidden_ptype_id in hidden_content_type_list:
-          if hidden_ptype_id not in type_list.keys():
+          if hidden_ptype_id not in list(type_list.keys()):
             type_list.update(getChildPortalType(hidden_ptype_id))
         return type_list
 
@@ -6372,15 +6389,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
         portal_dict[portal_type_id] = ()
 
         for allowed_type_id in allowed_content_type_list:
-          if allowed_type_id not in portal_dict.keys():
+          if allowed_type_id not in list(portal_dict.keys()):
             portal_dict.update(getChildPortalType(allowed_type_id))
 
         for hidden_type_id in hidden_content_type_list:
-          if hidden_type_id not in portal_dict.keys():
+          if hidden_type_id not in list(portal_dict.keys()):
             portal_dict.update(getChildPortalType(hidden_type_id))
 
       # construct portal type list, keep already present portal types
-      for id in portal_dict.keys():
+      for id in list(portal_dict.keys()):
         if id not in bt_portal_types_id_list:
           bt_portal_types_id_list.append(id)
 

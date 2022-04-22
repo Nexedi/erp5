@@ -295,6 +295,8 @@ if ReportTool:
     """
       Render document using template
     """
+    import six
+    assert six.PY2 # TODO-py3
 
     context = kwargs.get('context',None)
     if context is None:

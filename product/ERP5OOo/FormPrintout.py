@@ -524,7 +524,7 @@ class ODFStrategy(Implicit):
       return
     def getNameAttribute(target_element):
       attrib = target_element.attrib
-      for key in attrib.keys():
+      for key in list(attrib.keys()):
         if key.endswith("}name"):
           return key
       return None
@@ -839,7 +839,7 @@ class ODFStrategy(Implicit):
     # if remaining these attribetes, the column shows its default value,
     # such as '0.0', '$0'
     attrib = column.attrib
-    for key in attrib.keys():
+    for key in list(attrib.keys()):
       if 'office' in column.nsmap and key.startswith("{%s}" % column.nsmap['office']):
         del attrib[key]
     column.text = None
@@ -847,7 +847,7 @@ class ODFStrategy(Implicit):
 
   def _clearColumnValue(self, column):
     attrib = column.attrib
-    for key in attrib.keys():
+    for key in list(attrib.keys()):
       value_attribute = self._getColumnValueAttribute(column)
       if value_attribute is not None:
         column.set(value_attribute, '')
@@ -861,7 +861,7 @@ class ODFStrategy(Implicit):
 
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
-    for key in attrib.keys():
+    for key in list(attrib.keys()):
       if key.endswith("value"):
         return key
     return None

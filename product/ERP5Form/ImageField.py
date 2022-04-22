@@ -115,7 +115,7 @@ class ImageFieldWidget(Widget.TextWidget):
           # only add if it's True as conversion machine assume that if it is missing
           # then conversion should happen "on the fly"
           options['pre_converted_only'] = pre_converted_only
-        parameters = '&'.join(['%s=%s' % (k, v) for k, v in options.items() \
+        parameters = '&'.join(['%s=%s' % (k, v) for k, v in list(options.items()) \
                                if v])
         if parameters:
             image = '%s?%s' % (image, parameters)

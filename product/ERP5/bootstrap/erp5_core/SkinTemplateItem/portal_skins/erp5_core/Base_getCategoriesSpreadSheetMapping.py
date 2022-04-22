@@ -61,12 +61,12 @@ def getIDFromString(string=None):
   # Replace odd chars by safe ascii
   string = string.lower()
   string = string.strip()
-  for (safe_char, char_list) in translation_map.items():
+  for (safe_char, char_list) in list(translation_map.items()):
     for char in char_list:
       string = string.replace(char, safe_char)
   # Exclude all non alphanumeric chars
   for char in string:
-    if char.isalnum() or char in translation_map.keys():
+    if char.isalnum() or char in list(translation_map.keys()):
       clean_id += char
   # Delete leading and trailing char which are not alpha-numerics
   # This prevent having IDs with starting underscores
@@ -99,7 +99,7 @@ else:
 spreadsheet_list = parser.getSpreadsheetsMapping(no_empty_lines=True)
 
 
-for table_name in spreadsheet_list.keys():
+for table_name in list(spreadsheet_list.keys()):
   sheet = spreadsheet_list[table_name]
   if not sheet:
     continue
@@ -112,7 +112,7 @@ for table_name in spreadsheet_list.keys():
   for column in columns_header:
     column_id = getIDFromString(column)
     # This give us the information that the path definition has started
-    path_def_started = 'path_0' in property_map.values()
+    path_def_started = 'path_0' in list(property_map.values())
     # The path of the category has started to be expressed
     if column_id == 'path':
       property_map[column_index] = 'path_' + str(path_index)
@@ -177,7 +177,7 @@ for table_name in spreadsheet_list.keys():
     # Analyse every cell of the line
     category_property_list = {}
     cell_index = 0
-    for (property_id, cell_data) in line_data.items():
+    for (property_id, cell_data) in list(line_data.items()):
 
       # Try to generate a cell id from cell data
       cell_id = getIDFromString(cell_data)
@@ -223,7 +223,7 @@ for table_name in spreadsheet_list.keys():
           category_property_list['path'] = path
 
           # Save the current raw path item value as title if no title column defined
-          if 'title' not in category_property_list.keys():
+          if 'title' not in list(category_property_list.keys()):
             clean_title = cell_data.strip()
             # Only set title if it look like a title
             # (i.e. its tranformation to ID is not the same as the original value)
@@ -280,7 +280,7 @@ for table_name in spreadsheet_list.keys():
       # Proceed to next cell
       cell_index += 1
     line_index += 1
-    if len(category_property_list) > 0 and 'path' in category_property_list.keys():
+    if len(category_property_list) > 0 and 'path' in list(category_property_list.keys()):
       category_list.append(category_property_list)
 if error_list:
   return {'error_list':error_list}

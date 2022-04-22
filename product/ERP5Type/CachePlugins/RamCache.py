@@ -94,7 +94,7 @@ class RamCache(BaseCache):
       ## time to check for expired cache items
       self._next_cache_expire_check_at = now + self.cache_expire_check_interval
       cache = self.getCacheStorage()
-      for key, value in cache.items():
+      for key, value in list(cache.items()):
         if value.isExpired():
           try:
             del cache[key]
@@ -139,7 +139,7 @@ class RamCache(BaseCache):
 
   def clearCacheForScope(self, scope):
     cache = self.getCacheStorage()
-    for key in cache.keys():
+    for key in list(cache.keys()):
       if key[0] == scope:
         try:
           del cache[key]

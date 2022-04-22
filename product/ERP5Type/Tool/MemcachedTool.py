@@ -58,7 +58,9 @@ def encodeKey(key):
   """
   # According to the memcached's protocol.txt, the key cannot contain
   # control characters and white spaces.
-  return encodestring(key, True).replace('\n', '').replace('\r', '')
+  if isinstance(key, str):
+    key = key.encode()
+  return encodestring(key, True).replace(b'\n', b'').replace(b'\r', b'')
 
 if memcache is not None:
   # Real memcache tool

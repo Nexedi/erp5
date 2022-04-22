@@ -13,7 +13,7 @@ from pprint import pformat
 
 ret = '<html><body><table width=100%>\n'
 
-property_dict = context.showDict().items()
+property_dict = list(context.showDict().items())
 property_dict.sort()
 i = 0
 for k,v in property_dict:

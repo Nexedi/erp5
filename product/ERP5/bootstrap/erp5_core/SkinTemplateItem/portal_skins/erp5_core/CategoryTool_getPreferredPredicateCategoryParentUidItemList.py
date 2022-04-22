@@ -27,7 +27,7 @@ for base_category_id in preferred_predicate_category_list:
     # Add an empty record only if document does not have the category value and the category is enabled on the document.
     category_parent_uid_item_dict[base_category_uid] = [[0, base_category_uid, 1]]
 
-uid_item_list_list = category_parent_uid_item_dict.values()
+uid_item_list_list = list(category_parent_uid_item_dict.values())
 if uid_item_list_list:
   return reduce(lambda a,b:a+b, uid_item_list_list)
 return ()

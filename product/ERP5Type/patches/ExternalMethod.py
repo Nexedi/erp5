@@ -67,10 +67,11 @@ class _(PatchClass(ExternalMethod)):
                         last_read = None
                         path = getPath('Extensions', self._module,
                                        suffixes=('', 'py', 'pyc'))
-                    ts = os.stat(path)[stat.ST_MTIME]
-                    if last_read != ts:
-                        self._v_fs = ts, path
-                        reload = True
+                    if path:
+                        ts = os.stat(path)[stat.ST_MTIME]
+                        if last_read != ts:
+                            self._v_fs = ts, path
+                            reload = True
             f = getObject(self._module, self._function, reload)
         else:
             f = getattr(component_module, self._function)

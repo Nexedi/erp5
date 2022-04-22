@@ -140,7 +140,7 @@ class FragmentedLength(Persistent):
       self._p_changed = 1
 
   def __call__(self):
-    return sum(x() for x in self._map.values())
+    return sum(x() for x in list(self._map.values()))
 
   @staticmethod
   def _p_resolveConflict(old_state, current_state, my_state):
@@ -1294,7 +1294,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
             except AttributeError:
               newob = to_class(id)
               newob.id = id
-            keys = obase.__dict__.keys()
+            keys = list(obase.__dict__.keys())
             for k in keys:
               if k not in ('id', 'meta_type', '__class__'):
                 setattr(newob,k,obase.__dict__[k])

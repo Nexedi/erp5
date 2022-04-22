@@ -404,7 +404,7 @@ class OOoChartWidget(Widget.Widget):
       position_legend=field.get_value('position_legend'),
     )
 
-    for k, v in extra_argument_dict.items():
+    for k, v in list(extra_argument_dict.items()):
       if REQUEST.get(k) is None:
         REQUEST.form[k] = v
     return extra_argument_dict
@@ -467,7 +467,7 @@ class OOoChartWidget(Widget.Widget):
     if render_format == 'html':
       css_class = field.get_value('css_class')
       format = field.get_value('image_format') or 'png'
-      query_dict = dict(REQUEST.form.items())
+      query_dict = dict(list(REQUEST.form.items()))
       query_dict.update(render_format=format != 'raw' and format or '',
                         render_prefix=render_prefix,
                         display=field.get_value('image_display'))

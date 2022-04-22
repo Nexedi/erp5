@@ -420,10 +420,11 @@ class ComponentDynamicPackage(ModuleType):
       # load_module(), and returning module 'name' in contrary to __import__
       # returning 'erp5' (requiring fromlist parameter which is slower)
       return import_module(fullname)
+    except ModuleNotFoundError: # >= 3.6
+      pass
     except ImportError as e:
-      if str(e) != "No module named " + name:
-        LOG("ERP5Type.dynamic", WARNING,
-            "Could not load Component module %r" % fullname, error=True)
+      LOG("ERP5Type.dynamic", WARNING,
+          "Could not load Component module %r" % fullname, error=True)
 
     return None
 
@@ -443,10 +444,10 @@ class ComponentDynamicPackage(ModuleType):
       # Force reload of ModuleSecurityInfo() as it may have been changed in
       # the source code
       for modsec_dict in _moduleSecurity, _appliedModuleSecurity:
-        for k in modsec_dict.keys():
+        for k in list(modsec_dict.keys()):
           if k.startswith(self._namespace):
             del modsec_dict[k]
-      for k, v in MNAME_MAP.items():
+      for k, v in list(MNAME_MAP.items()):
         if v.startswith(self._namespace):
           del MNAME_MAP[k]
 
@@ -454,7 +455,7 @@ class ComponentDynamicPackage(ModuleType):
           if k.startswith('Products.'):
             del sys.modules[k]
 
-    for name, module in package.__dict__.items():
+    for name, module in list(package.__dict__.items()):
       if name[0] == '_' or not isinstance(module, ModuleType):
         continue
 

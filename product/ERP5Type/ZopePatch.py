@@ -19,6 +19,7 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
+import six
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 
@@ -26,7 +27,9 @@ from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
-from Products.ERP5Type.patches import Restricted
+if six.PY2:
+  # XXX Restricted changed a log, need to check closure too
+  from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
@@ -52,27 +55,33 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-from Products.ERP5Type.patches import PropertySheets
+if six.PY2:
+  # XXX- patch for webdav
+  from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
-from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-from Products.ERP5Type.patches import http_server
+if six.PY2:
+  # No more ZServer
+  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
-from Products.ERP5Type.patches import DemoStorage
+if six.PY2:
+  # Check with other work on ZODB
+  from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
-from Products.ERP5Type.patches import ZopePageTemplateUtils
+if six.PY2:
+  from Products.ERP5Type.patches import ZopePageTemplateUtils
 from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem
 from Products.ERP5Type.patches import ExternalMethod
@@ -81,22 +90,27 @@ from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
 from Products.ERP5Type.patches import _transaction
 from Products.ERP5Type.patches import default_zpublisher_encoding
-from Products.ERP5Type.patches import DCWorkflowGraph
+if six.PY2:
+  # DCWorkflowGraph is dead since 2011, so no py3 version
+  from Products.ERP5Type.patches import DCWorkflowGraph
 from Products.ERP5Type.patches import SourceCodeEditorZMI
 from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
-from Products.ERP5Type.patches import WebDAV
-from Products.ERP5Type.patches import DTMLMethod
-from Products.ERP5Type.patches import DTMLDocument
+if six.PY2:
+  # No ZServer, so no webdav
+  from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import CMFCoreUtils
-from Products.ERP5Type.patches import ZopePageTemplate
+from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-from Products.ERP5Type.patches import Publish
+if six.PY2:
+  # No ZServer
+  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
-from Products.ERP5Type.patches import urllib_opener
+# XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
+#from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
