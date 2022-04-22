@@ -6822,7 +6822,7 @@ return new Parser;
       value = [value];
     }
     for (i = 0; i < value.length; i += 1) {
-      if (typeof value[i] === 'object') {
+      if ((value[i] !== null) && (typeof value[i] === 'object')) {
         new_value[i] = value[i].content;
       } else {
         new_value[i] = value[i];
