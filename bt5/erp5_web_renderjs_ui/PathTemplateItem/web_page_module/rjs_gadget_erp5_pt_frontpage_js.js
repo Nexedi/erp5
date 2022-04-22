@@ -62,11 +62,6 @@
             i,
             len = result_list.data.total_rows;
           for (i = 0; i < len; i += 1) {
-            // queries do not accept null value
-            result_list.data.rows[i].value
-                                       .business_application_translated_title =
-              result_list.data.rows[i].value
-                            .business_application_translated_title || '';
             result_list.data.rows[i].value.id =
               result_list.data.rows[i].id;
             data_rows.push(result_list.data.rows[i].value);
@@ -113,7 +108,7 @@
 
           function pushNewCard() {
             if (module_list) {
-              if (current_business_application_title === '') {
+              if (!current_business_application_title) {
                 other_module_list = module_list;
               } else {
                 card_list.push({
