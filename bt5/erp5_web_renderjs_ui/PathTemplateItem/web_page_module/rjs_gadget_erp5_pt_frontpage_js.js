@@ -62,15 +62,6 @@
             i,
             len = result_list.data.total_rows;
           for (i = 0; i < len; i += 1) {
-            // queries do not accept null value
-            result_list.data.rows[i].value
-                                       .business_application_translated_title =
-              result_list.data.rows[i].value
-                            .business_application_translated_title || '';
-            result_list.data.rows[i].value
-                                       .translated_title =
-              result_list.data.rows[i].value
-                            .translated_title || '';
             result_list.data.rows[i].value.id =
               result_list.data.rows[i].id;
             data_rows.push(result_list.data.rows[i].value);
