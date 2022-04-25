@@ -566,6 +566,12 @@ else:
   def unicode2str(s):
     return s
 
+if six.PY3:
+  def ensure_list(o):
+    return list(o)
+else:
+  ensure_list = lambda x: x
+
 #####################################################
 # Globals initialization
 #####################################################
