@@ -87,6 +87,8 @@ class PropertyRecordableMixin:
     the property record.
     """
     self._getRecordedPropertyDict({}).pop(id, None)
+    if not self._getRecordedPropertyDict(True):
+      del self._recorded_property_dict
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRecordedPropertyIdList')

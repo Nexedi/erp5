@@ -82,7 +82,9 @@ class TestPropertyRecordable(ERP5TypeTestCase):
     p.clearRecordedProperty('first_name')
     self.assertFalse(p.isPropertyRecorded('first_name'))
     self.assertTrue(p.isPropertyRecorded('last_name'))
+    self.assertTrue(hasattr(p, '_recorded_property_dict'))
 
     p.clearRecordedProperty('last_name')
     self.assertFalse(p.isPropertyRecorded('first_name'))
     self.assertFalse(p.isPropertyRecorded('last_name'))
+    self.assertFalse(hasattr(p, '_recorded_property_dict'))
