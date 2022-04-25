@@ -92,7 +92,8 @@ class IdTool(BaseTool):
     version_last_generator = 0
     for generator in self.objectValues():
       if generator.getReference() == reference:
-        version = generator.getVersion()
+        # Version Property Sheet defines 'version' property as a 'string'
+        version = int(generator.getVersion())
         if version > version_last_generator:
           id_last_generator = generator.getId()
           version_last_generator = version
