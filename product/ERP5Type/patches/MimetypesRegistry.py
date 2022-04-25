@@ -1,4 +1,5 @@
 from Products.MimetypesRegistry import MimeTypesRegistry, mime_types
+import six
 
 preferred_extension_dict = {
   "bin": "application/octet-stream",
@@ -7,7 +8,7 @@ preferred_extension_dict = {
 
 def initialize(registry):
     mime_types.initialize(registry)
-    for ext, mime in preferred_extension_dict.iteritems():
+    for ext, mime in six.iteritems(preferred_extension_dict):
         mime, = registry.lookup(mime)
         assert type(mime.extensions) is tuple
         x = list(mime.extensions)

@@ -35,6 +35,7 @@ from Products.ERP5Type import document_class_registry
 from Products.ERP5Type.Globals import package_home, InitializeClass
 
 from zLOG import LOG
+import six
 
 product_document_registry = {}
 product_interactor_registry = []
@@ -42,7 +43,7 @@ interactor_class_id_registry = {}
 
 def getProductDocumentPathList():
   return sorted((k, os.path.dirname(sys.modules[v.rsplit('.', 1)[0]].__file__))
-                for k,v in product_document_registry.iteritems())
+                for k,v in six.iteritems(product_document_registry))
 
 def InitializeDocument(class_id, class_path):
   # Register class in ERP5Type.Document
@@ -58,7 +59,7 @@ def InitializeInteractor(interactor_class, interactor_path=None):
 def initializeProductDocumentRegistry():
   from .Utils import importLocalDocument
   count = len(product_document_registry)
-  for (class_id, class_path) in product_document_registry.iteritems():
+  for (class_id, class_path) in six.iteritems(product_document_registry):
     importLocalDocument(class_id, class_path=class_path)
     #from Testing import ZopeTestCase
     #ZopeTestCase._print('Added product document to ERP5Type repository: %s (%s) \n' % (class_id, document_path))
@@ -78,5 +79,5 @@ def registerInteractorClass(class_id, klass):
   interactor_class_id_registry[class_id] = klass
 
 def installInteractorClassRegistry():
-  for klass in interactor_class_id_registry.itervalues():
+  for klass in six.itervalues(interactor_class_id_registry):
     klass().install()

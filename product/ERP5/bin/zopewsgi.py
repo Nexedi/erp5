@@ -12,7 +12,7 @@ import socket
 import sys
 from tempfile import TemporaryFile
 import time
-from urllib import quote, splitport
+from six.moves.urllib.parse import quote, splitport
 
 from waitress.server import create_server
 import ZConfig

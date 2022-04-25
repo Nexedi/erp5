@@ -15,6 +15,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 import imp, sys, warnings
 import inspect
 from itertools import chain
@@ -32,6 +33,7 @@ from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+import six
 
 
 class ComposedObjectIds(object):
@@ -56,7 +58,7 @@ class ComposedObjectIds(object):
 
   def __contains__(self, item):
     for container in self._container_list:
-      if container.has_key(item):
+      if item in container:
         return True
     return False
 
@@ -121,7 +123,7 @@ class TypesTool(TypeProvider):
   )
 
   def _isBootstrapRequired(self):
-    if [x for x in self._bootstrap_type_list if not self.has_key(x)]:
+    if [x for x in self._bootstrap_type_list if x not in self]:
       return True
     # bootstrap is not required, but we may have a few bugfixes to apply
     # so that the user can upgrade Business Templates
@@ -384,7 +386,7 @@ class OldTypesTool(OFSFolder):
     try:
       new_type.generateNewId = generateNewId
       new_type._setObject = _eventLessSetObject(new_type)
-      for k, v in old_type.__dict__.iteritems():
+      for k, v in six.iteritems(old_type.__dict__):
         if k == '_actions':
           for action in v:
             new_type._importOldAction(action)
@@ -395,7 +397,7 @@ class OldTypesTool(OFSFolder):
           if k == '_property_domain_dict':
             v = {k: t.__class__(property_name=t.property_name,
                                 domain_name=t.domain_name)
-                 for k, t in v.iteritems()}
+                 for k, t in six.iteritems(v)}
           setattr(new_type, k, v)
     finally:
       del new_type.generateNewId

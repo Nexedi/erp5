@@ -129,12 +129,13 @@ class TypeAccessChecker:
       return v
     return factory
 
-  def __nonzero__(self):
+  def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
     # thinking it's a simple type, but we don't want this for type, because
     # type(x) is type for classes, being trueish would skip security check on
     # classes.
     return False
+  __nonzero__ = __bool__ # six.PY2
 
 ContainerAssertions[type] = TypeAccessChecker()
 
@@ -149,7 +150,7 @@ class SafeIterItems(SafeIter):
         return ob
 
 def get_iteritems(c, name):
-    return lambda: SafeIterItems(c.iteritems(), c)
+    return lambda: SafeIterItems(six.iteritems(c), c)
 _dict_white_list['iteritems'] = get_iteritems
 
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):

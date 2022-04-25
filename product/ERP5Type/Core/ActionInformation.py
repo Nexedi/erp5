@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 import zope.interface
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
@@ -130,7 +131,7 @@ class ActionInformation(XMLObject):
                           self.getDescription(),
                           self.getActionText(),
                           self.getConditionText()]
-    return ' '.join(filter(None, search_source_list))
+    return ' '.join([_f for _f in search_source_list if _f])
 
   security.declarePrivate('getCacheableAction')
   def getCacheableAction(self):

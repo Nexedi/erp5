@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from six.moves import map
+import six
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
 from AccessControl.requestmethod import postonly
@@ -127,7 +127,7 @@ def registerAllWorkflowFactories(context):
   """
   # the loop below will be empty on CMF 1.5, as the original addworkflowFactory
   # from CMF will not populate this WORKFLOW_FACTORIES dictionary.
-  for factory_info in _workflow_factories.itervalues():
+  for factory_info in six.itervalues(_workflow_factories):
     registerWorkflowFactory(context, factory_info)
 
 # Add a workflow factory for ERP5 style workflow, because some variables
@@ -267,12 +267,12 @@ def dedupStrings(obj):
       obj._tz = dedup(obj._tz)
     elif t is bytes:
       obj = _bytes.setdefault(obj, obj)
-    elif t is unicode:
+    elif t is six.text_type:
       obj = _str.setdefault(obj, obj)
     elif t in _sequence_type_list:
-      obj = t(map(dedup, obj))
+      obj = t([dedup(x) for x in obj])
     elif t is dict:
-      obj = {dedup(k): dedup(v) for k, v in obj.iteritems()}
+      obj = {dedup(k): dedup(v) for k, v in six.iteritems(obj)}
     else:
       return obj
     _by_id[id_] = obj

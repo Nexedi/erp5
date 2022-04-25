@@ -16,7 +16,7 @@ from Products.PortalTransforms.utils import _www
 from Products.PortalTransforms.interfaces import IChain
 from Products.PortalTransforms.interfaces import ITransform
 
-from UserList import UserList
+from six.moves import UserList
 
 @implementer(IChain, ITransform)
 class chain(UserList):

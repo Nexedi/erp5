@@ -1,3 +1,4 @@
+from six.moves import xrange
 from Products.Formulator.Errors import FormValidationError
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
@@ -18,7 +19,7 @@ for form in (real_form, target_form):
     request.set('editable_mode', 1)
     form.validate_all_to_request(request)
     request.set('editable_mode', editable_mode)
-  except FormValidationError, validation_errors:
+  except FormValidationError as validation_errors:
     # Pack errors into the request
     field_errors = form.ErrorFields(validation_errors)
     request.set('field_errors', field_errors)

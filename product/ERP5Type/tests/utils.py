@@ -49,6 +49,7 @@ from email import message_from_string
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
+import six
 
 class FileUpload(file):
   """Act as an uploaded file.
@@ -328,9 +329,13 @@ class getMySQLArguments(object):
     self = object.__new__(cls)
     self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
     self.conv = None
-    DB._parse_connection_string.im_func(self)
+    parse_connection_string_function = DB._parse_connection_string
+    import six
+    if six.PY2:
+      parse_connection_string_function = parse_connection_string_function.__func__
+    parse_connection_string_function(self)
     return ''.join('-%s%s ' % (self.args_dict[k], v)
-                   for k, v in self._kw_args.iteritems()
+                   for k, v in six.iteritems(self._kw_args)
                    if k in self.args_dict
                    ) + self._kw_args['db']
 

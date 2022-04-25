@@ -20,6 +20,7 @@ from .portal_type_class import generatePortalTypeClass
 from .accessor_holder import AccessorHolderType
 from . import persistent_migration
 from ZODB.POSException import ConflictError
+import six
 
 class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
   # PersistentBroken can't be reused directly
@@ -114,7 +115,7 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
         self.__class__.loadClass()
       except ConflictError:
         raise
-      except Exception, e:
+      except Exception as e:
         LOG('lazy_class.__getattribute__', WARNING, 'Failed to load class : %r' % (e,),
             error=True)
         raise
@@ -206,7 +207,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
           if content or property['type'] != 'content':
             property_dict.setdefault(property['id'], property)
 
-    return property_dict.itervalues()
+    return six.itervalues(property_dict)
 
   def resetAcquisition(cls):
     # First, fill the __get__ slot of the class
@@ -367,7 +368,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
 
       klass.resetAcquisition()
 
-      for key, value in attribute_dict.iteritems():
+      for key, value in six.iteritems(attribute_dict):
         setattr(klass, key, value)
 
       if getattr(klass.__setstate__, 'im_func', None) is \

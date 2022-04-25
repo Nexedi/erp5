@@ -37,6 +37,7 @@ from .SQLBase import (
 )
 from Products.CMFActivity.ActivityTool import Message
 from .SQLDict import SQLDict
+from six.moves import xrange
 
 class SQLJoblib(SQLDict):
   """
@@ -94,8 +95,8 @@ CREATE TABLE %s (
           db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (self.sql_table, values))
-        except MySQLdb.IntegrityError, (code, _):
-          if code != DUP_ENTRY:
+        except MySQLdb.IntegrityError as e:
+          if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
         else:

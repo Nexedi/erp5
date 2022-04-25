@@ -29,12 +29,14 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six import string_types as basestring
 from .DefaultKey import DefaultKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from Products.ZSQLCatalog.SearchText import dequote
 from zope.interface.verify import verifyClass
 import re
+import six
 
 FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*((^|\s)[\+\-<>\(\~]|[\*\)](\s|$))')
 
@@ -80,7 +82,7 @@ class FullTextKey(DefaultKey):
       else:
         operator_value_dict['match'] = new_value_list
     # Dequote for non full-text queries.
-    for comparison_operator, value_list in operator_value_dict.iteritems():
+    for comparison_operator, value_list in six.iteritems(operator_value_dict):
       if comparison_operator not in ('match', 'match_boolean'):
         operator_value_dict[comparison_operator] = [
           isinstance(value, basestring) and dequote(value) or value

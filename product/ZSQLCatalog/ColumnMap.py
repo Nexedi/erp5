@@ -39,6 +39,7 @@ from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
                                                   TableAlias,
                                                   InnerJoin,
                                                   LeftJoin)
+import six
 
 DEFAULT_GROUP_ID = None
 
@@ -203,10 +204,10 @@ class ColumnMap(object):
     catalog_table_name = self.catalog_table_name
 
     # Map all columns to tables decided by vote.
-    for column_name, candidate_dict in vote_result_dict.iteritems():
+    for column_name, candidate_dict in six.iteritems(vote_result_dict):
       # candidate_dict is never empty
       max_score = 0
-      for table_name, score in candidate_dict.iteritems():
+      for table_name, score in six.iteritems(candidate_dict):
         if score > max_score:
           max_score = score
           best_count = 0
@@ -219,7 +220,7 @@ class ColumnMap(object):
         LOG('ColumnMap', INFO, 'Mapping by vote %r to %r' % (column_name, best_choice))
       mapping_dict[column_name] = best_choice
       column_name_set.remove(column_name)
-      for table_name, column_set in table_usage_dict.iteritems():
+      for table_name, column_set in six.iteritems(table_usage_dict):
         if table_name != best_choice:
           column_set.discard(column_name)
 
@@ -236,7 +237,7 @@ class ColumnMap(object):
         result = (0, len(a[1]))
       return result
     # Sort table name list, first has the most required columns
-    weighted_table_list = sorted(table_usage_dict.iteritems(), key=table_weight)
+    weighted_table_list = sorted(six.iteritems(table_usage_dict), key=table_weight)
     while len(weighted_table_list):
       table_name, column_set = weighted_table_list.pop()
       if len(column_set):
@@ -292,7 +293,7 @@ class ColumnMap(object):
       raise ValueError('Could not map those columns: %r' % column_name_set)
 
     # Do the actual mapping
-    for column_name, table_name in mapping_dict.iteritems():
+    for column_name, table_name in six.iteritems(mapping_dict):
       # Mark this column as resolved
       if MAPPING_TRACE:
         LOG('ColumnMap', INFO, 'Mapping column %s to table %s' % (column_name, table_name))
@@ -321,7 +322,7 @@ class ColumnMap(object):
           join_query_to_build_list.append(join_query)
 
     # List all possible tables, with all used column for each
-    for group, column_set in self.registry.iteritems():
+    for group, column_set in six.iteritems(self.registry):
       # unique needed column name set
       column_name_set = set()
       # table -> column_set, including alternatives
@@ -363,7 +364,7 @@ class ColumnMap(object):
                                       table_usage_dict=table_usage_dict,
                                       group=group)
         if isinstance(vote_dict, dict):
-          for column, table in vote_dict.iteritems():
+          for column, table in six.iteritems(vote_dict):
             if column in column_name_set:
               column_vote_dict = vote_result_dict.setdefault(column, {})
               column_vote_dict[table] = column_vote_dict.get(table, 0) + 1
@@ -378,7 +379,7 @@ class ColumnMap(object):
 
     table_alias_number_dict = {}
 
-    for (group, table_name), alias in self.table_alias_dict.iteritems():
+    for (group, table_name), alias in six.iteritems(self.table_alias_dict):
       if alias is None:
         if group in self.related_group_dict:
           alias_table_name = 'related_%s_%s' % (self.related_group_dict[group], table_name)
@@ -419,21 +420,21 @@ class ColumnMap(object):
       #   Key: table name
       #   Value: table alias
       summary_dict = {}
-      for (group, column), table_name in self.column_map.iteritems():
+      for (group, column), table_name in six.iteritems(self.column_map):
         column_dict = summary_dict.setdefault(group, ({}, {}))[0]
         assert column not in column_dict, '%r in %r' % (column, column_dict)
         column_dict[column] = table_name
-      for (group, table_name), table_alias in self.table_alias_dict.iteritems():
+      for (group, table_name), table_alias in six.iteritems(self.table_alias_dict):
         table_dict = summary_dict.setdefault(group, ({}, {}))[1]
         assert table_name not in table_dict, '%r in %r' % (table_name, table_dict)
         table_dict[table_name] = table_alias
-      for group, (column_dict, table_dict) in summary_dict.iteritems():
+      for group, (column_dict, table_dict) in six.iteritems(summary_dict):
         LOG('ColumnMap', INFO, 'Group %r:' % (group, ))
         LOG('ColumnMap', INFO, ' Columns:')
-        for column, table_name in column_dict.iteritems():
+        for column, table_name in six.iteritems(column_dict):
           LOG('ColumnMap', INFO, '  %r from table %r' % (column, table_name))
         LOG('ColumnMap', INFO, ' Tables:')
-        for table_name, table_alias in table_dict.iteritems():
+        for table_name, table_alias in six.iteritems(table_dict):
           LOG('ColumnMap', INFO, '  %r as %r' % (table_name, table_alias))
 
   def asSQLColumn(self, raw_column, group=DEFAULT_GROUP_ID):

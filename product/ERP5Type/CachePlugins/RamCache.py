@@ -36,6 +36,7 @@ import time
 from .BaseCache import BaseCache, CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
+import six
 
 def calcPythonObjectMemorySize(i):
   """
@@ -122,13 +123,13 @@ class RamCache(BaseCache):
 
   def getScopeList(self):
     scope_set = set()
-    for scope, cache_id in self.getCacheStorage().iterkeys():
+    for scope, cache_id in six.iterkeys(self.getCacheStorage()):
       scope_set.add(scope)
     return list(scope_set)
 
   def getScopeKeyList(self, scope):
     key_list = []
-    for key in self.getCacheStorage().iterkeys():
+    for key in six.iterkeys(self.getCacheStorage()):
       if scope == key[0]:
         key_list.append(key[1])
     return key_list
@@ -155,7 +156,7 @@ class RamCache(BaseCache):
     total_size = 0
     cache_keys_total_size = {}
     cache = self.getCacheStorage()
-    for key, value in cache.iteritems():
+    for key, value in six.iteritems(cache):
       value_size = calcPythonObjectMemorySize(value)
       total_size += value_size
       cache_keys_total_size[key[1]] = value_size

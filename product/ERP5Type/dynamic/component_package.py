@@ -265,7 +265,7 @@ class ComponentDynamicPackage(ModuleType):
       try:
         version, name = name.split('.')
         version = version[:-self.__version_suffix_len]
-      except ValueError, error:
+      except ValueError as error:
         raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
                             (fullname, self._namespace, error))
 
@@ -337,8 +337,8 @@ class ComponentDynamicPackage(ModuleType):
         # XXX: Any loading from ZODB while exec'ing the source code will result
         # in a deadlock
         source_code_obj = compile(source_code_str, module.__file__, 'exec')
-        exec source_code_obj in module.__dict__
-      except Exception, error:
+        exec(source_code_obj, module.__dict__)
+      except Exception as error:
         del sys.modules[module_fullname]
         if module_fullname_alias:
           del sys.modules[module_fullname_alias]

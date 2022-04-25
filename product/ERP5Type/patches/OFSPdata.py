@@ -26,25 +26,35 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
+import six
 
 from OFS.Image import Pdata
 
 def getLastPdata(self):
   """Return the last Pdata chunk"""
-  next = self.next
+  if six.PY2:
+    next = self.next
+  else:
+    next = self.__next__
 
   while next is not None:
     self = next
-    next = self.next
+    if six.PY2:
+      next = self.next
+    else:
+      next = self.__next__
   return self
 
 Pdata.getLastPdata = getLastPdata
 
 def __nonzero__(self):
   while not self.data:
-    self = self.next
+    if six.PY2:
+      self = self.next
+    else:
+      self = self.__next__
     if self is None:
       return False
   return True
 
-Pdata.__nonzero__ = __nonzero__
+Pdata.__nonzero__ = Pdata.__bool__ = __nonzero__

@@ -30,7 +30,7 @@ try:
   from ZODB._compat import cPickle
   PicklingError = cPickle.PicklingError
 except ImportError: # BBB: ZODB < 4
-  from cPickle import PicklingError
+  from six.moves.cPickle import PicklingError
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
   PropertyConstantGetter

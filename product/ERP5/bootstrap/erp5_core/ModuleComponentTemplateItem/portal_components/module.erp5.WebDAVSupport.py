@@ -23,7 +23,8 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
 from zExceptions import Forbidden
-from cStringIO import StringIO
+from io import StringIO
+import six
 
 security = ModuleSecurityInfo(__name__)
 
@@ -61,7 +62,7 @@ class TextContent:
     title = tree.find("head/title")
     if title is not None:
       headers["title"] = title.text
-    return {k: v if len(v) > 1 else v[0] for k, v in headers.iteritems()}
+    return {k: v if len(v) > 1 else v[0] for k, v in six.iteritems(headers)}
 
   ## FTP handlers
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')

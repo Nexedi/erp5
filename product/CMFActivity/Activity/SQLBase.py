@@ -48,6 +48,7 @@ from .Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ERP5Type import Timeout
 from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline
+import six
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
@@ -363,7 +364,7 @@ CREATE TABLE %s (
     #      value should be ignored, instead of trying to render them
     #      (with comparisons with NULL).
     q = db.string_literal
-    sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.iteritems())
+    sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in six.iteritems(kw))
     sql = "SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
       self.sql_table,
       sql and '\nWHERE ' + sql,
@@ -386,11 +387,11 @@ CREATE TABLE %s (
   def countMessageSQL(self, quote, **kw):
     return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
       self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
-        sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v
+        sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v
         ) or "1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
-    where = [sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v]
+    where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
     if only_valid:
       where.append('processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
@@ -469,7 +470,7 @@ CREATE TABLE %s (
       for (
         dependency_name,
         dependency_value,
-      ) in message.activity_kw.iteritems():
+      ) in six.iteritems(message.activity_kw):
         try:
           column_list, _, _ = dependency_tester_dict[dependency_name]
         except KeyError:
@@ -542,13 +543,13 @@ CREATE TABLE %s (
       dependency_name,
       dependency_value_dict,
     ) in sorted(
-      dependency_dict.iteritems(),
+      six.iteritems(dependency_dict),
       # Test first the condition with the most values.
       # XXX: after_path=('foo', 'bar') counts as 2 points for after_path
       # despite being a single activity. Is there a fairer (while cheap) way ?
       key=lambda dependency_dict_item: sum(
         len(message_set)
-        for message_set in dependency_dict_item[1].itervalues()
+        for message_set in six.itervalues(dependency_dict_item[1])
       ),
       reverse=True,
     ):
@@ -561,7 +562,7 @@ CREATE TABLE %s (
         for (
           message_dependency_name,
           message_dependency_value_list,
-        ) in message_dependency_dict[blocked_message].iteritems():
+        ) in six.iteritems(message_dependency_dict[blocked_message]):
           message_dependency_value_dict = dependency_dict[message_dependency_name]
           if not message_dependency_value_dict:
             # This dependency was already dropped or evaluated, nothing to
@@ -653,7 +654,7 @@ CREATE TABLE %s (
           else:
             serialization_tag_dict.setdefault(serialization_tag,
                                               []).append(message)
-        for message_list in serialization_tag_dict.itervalues():
+        for message_list in six.itervalues(serialization_tag_dict):
           # Sort list of messages to validate the message with highest score
           message_list.sort(key=sort_message_key)
           distributable_uid_set.add(message_list[0].uid)
@@ -858,7 +859,7 @@ CREATE TABLE %s (
       self._log(WARNING, 'Exception while reserving messages.')
       if uid_to_duplicate_uid_list_dict:
         to_free_uid_list = uid_to_duplicate_uid_list_dict.keys()
-        for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
+        for uid_list in six.itervalues(uid_to_duplicate_uid_list_dict):
           to_free_uid_list += uid_list
         try:
           self.assignMessageList(db, 0, to_free_uid_list)

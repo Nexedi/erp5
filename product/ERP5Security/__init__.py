@@ -24,6 +24,7 @@ from Acquisition import aq_inner, aq_parent
 from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
+import six
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'
@@ -39,7 +40,7 @@ def mergedLocalRoles(object):
     if local_role_dict:
       if callable(local_role_dict):
         local_role_dict = local_role_dict() or {}
-      for k, v in local_role_dict.iteritems():
+      for k, v in six.iteritems(local_role_dict):
         merged[k] += v
     # block acquisition
     if not getattr(object, '_getAcquireLocalRoles', lambda: True)():

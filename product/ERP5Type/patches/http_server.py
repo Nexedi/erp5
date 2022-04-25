@@ -25,7 +25,7 @@ import ZPublisher.HTTPRequest
 import string
 import base64
 import time
-from urllib import quote
+from six.moves.urllib.parse import quote
 
 def log (self, bytes):
     addr = self.channel.addr[0]

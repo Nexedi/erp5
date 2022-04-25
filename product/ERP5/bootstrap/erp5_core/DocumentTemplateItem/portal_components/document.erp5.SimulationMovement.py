@@ -40,6 +40,7 @@ from zLOG import LOG, WARNING
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 from erp5.component.mixin.ExplainableMixin import ExplainableMixin
 from erp5.component.interface.IExpandable import IExpandable
+import six
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -673,7 +674,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                                          path_set_to_check):
               yield d
 
-      for id_, t in tree_node.visited_movement_dict.iteritems():
+      for id_, t in six.iteritems(tree_node.visited_movement_dict):
         subdocument, path = t
         to_check = path_set_to_check
         # do we need to change/copy the set?

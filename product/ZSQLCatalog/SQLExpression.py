@@ -28,11 +28,16 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six import string_types as basestring
 import warnings
 from .interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
 from zope.interface import implementer
-from types import NoneType
+import six
+try:
+  from types import NoneType
+except ImportError: # six.PY3 < 3.10
+  NoneType = type(None)
 
 SQL_LIST_SEPARATOR = ', '
 SQL_TABLE_FORMAT = '%s' # XXX: should be changed to '`%s`', but this breaks some ZSQLMethods.
@@ -141,7 +146,7 @@ class SQLExpression(object):
     for sql_expression in self.sql_expression_list:
       can_merge_sql_expression = sql_expression.can_merge_select_dict
       mergeable_set.update(sql_expression._mergeable_set)
-      for alias, column in sql_expression._select_dict.iteritems():
+      for alias, column in six.iteritems(sql_expression._select_dict):
         existing_value = select_dict.get(alias)
         if existing_value not in (None, column):
           if can_merge_sql_expression and alias in mergeable_set:
@@ -164,7 +169,7 @@ class SQLExpression(object):
           mergeable_set.add(alias)
     self._select_dict = select_dict
     self._mergeable_set = mergeable_set
-    self._reversed_select_dict = {y: x for x, y in select_dict.iteritems()}
+    self._reversed_select_dict = {y: x for x, y in six.iteritems(select_dict)}
 
   def getTableAliasDict(self):
     """
@@ -178,7 +183,7 @@ class SQLExpression(object):
     """
     result = self.table_alias_dict.copy()
     for sql_expression in self.sql_expression_list:
-      for alias, table_name in sql_expression.getTableAliasDict().iteritems():
+      for alias, table_name in six.iteritems(sql_expression.getTableAliasDict()):
         existing_value = result.get(alias)
         if existing_value not in (None, table_name):
           message = '%r is a known alias for table %r, can\'t alias it now to table %r' % (alias, existing_value, table_name)
@@ -237,7 +242,7 @@ class SQLExpression(object):
     result_dict = self.order_by_dict.copy()
     for sql_expression in self.sql_expression_list:
       order_by_dict = sql_expression._getOrderByDict(delay_error=delay_error)
-      for key, value in order_by_dict.iteritems():
+      for key, value in six.iteritems(order_by_dict):
         if key in result_dict and value != result_dict[key] \
             and not isinstance(value, MergeConflict):
           message = 'I don\'t know how to merge order_by_dict with ' \
@@ -368,7 +373,7 @@ class SQLExpression(object):
     """
     return SQL_LIST_SEPARATOR.join(
       SQL_SELECT_ALIAS_FORMAT % (column, alias)
-      for alias, column in self.getSelectDict().iteritems())
+      for alias, column in six.iteritems(self.getSelectDict()))
 
   def getFromTableList(self):
     table_alias_dict = self.getTableAliasDict()
@@ -376,7 +381,7 @@ class SQLExpression(object):
       return None
     from_table_list = []
     append = from_table_list.append
-    for alias, table in table_alias_dict.iteritems():
+    for alias, table in six.iteritems(table_alias_dict):
       append((SQL_TABLE_FORMAT % (alias, ), SQL_TABLE_FORMAT % (table, )))
     return from_table_list
 

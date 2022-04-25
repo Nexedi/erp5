@@ -4,7 +4,7 @@ from ZPublisher.HTTPRequest import HTTPRequest, sane_environment
 import ZPublisher.HTTPRequest
 import sys
 import weakref
-import thread
+import _thread as thread
 
 HTTPRequest__init__ = HTTPRequest.__init__
 def __init__(self, stdin, environ, response, clean=0):
