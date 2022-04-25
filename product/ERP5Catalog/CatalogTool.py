@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from six.moves import xrange
 import sys
 from copy import deepcopy
 from collections import defaultdict
@@ -659,7 +660,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         for user_or_group in allowedRolesAndUsers:
           for role in local_roles:
             # Performance optimisation
-            if local_role_dict.has_key(role):
+            if role in local_role_dict:
               # XXX This should be a list
               # If a given role exists as a column in the catalog,
               # then it is considered as single valued and indexed
@@ -669,7 +670,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 # which also includes all user groups
                 column_id = local_role_dict[role]
                 local_role_column_dict[column_id] = user_str
-            if role_dict.has_key(role):
+            if role in role_dict:
               # XXX This should be a list
               # If a given role exists as a column in the catalog,
               # then it is considered as single valued and indexed

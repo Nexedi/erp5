@@ -92,7 +92,7 @@ DOCUMENT_CONVERSION_SERVER_RETRY = 0
 global_server_proxy_uri_failure_time = {}
 from Products.CMFCore.utils import getToolByName
 from functools import partial
-from xmlrpclib import Fault, ServerProxy, ProtocolError
+from six.moves.xmlrpc_client import Fault, ServerProxy, ProtocolError
 from socket import error as SocketError
 from DateTime import DateTime
 class DocumentConversionServerProxy():
@@ -152,18 +152,18 @@ class DocumentConversionServerProxy():
           # Cloudooo return result in (200 or 402, dict(), '') format or just based type
           # 402 for error and 200 for ok
           result_set =  func(*args, **kw)
-        except SocketError, e:
+        except SocketError as e:
           message = 'Socket Error: %s' % (repr(e) or 'undefined.')
           socket_error_list.append(message)
           retry_server_list.append((uri, server_proxy))
-        except ProtocolError, e:
+        except ProtocolError as e:
           # Network issue
           message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
           if e.errcode == -1:
             message = "%s: Connection refused" % (e.url)
           protocol_error_list.append(message)
           retry_server_list.append((uri, server_proxy))
-        except Fault, e:
+        except Fault as e:
           # Return not supported data types
           fault_error_list.append(e)
         else:
@@ -702,7 +702,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       Returns the list of revision numbers of the current document
       by by analysing the change log of the current object.
     """
-    return map(str, range(1, 1 + int(self.getRevision())))
+    return [str(r) for r in range(1, 1 + int(self.getRevision()))]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'mergeRevision')
   def mergeRevision(self):

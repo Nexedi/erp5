@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 from hashlib import md5
 from warnings import warn
 import string
@@ -52,7 +53,10 @@ def hashPdataObject(pdata_object):
   while pdata_object is not None:
     chunk = pdata_object.aq_base
     md5_hash.update(chunk.data)
-    pdata_object = chunk.next
+    if six.PY2:
+      pdata_object = chunk.next
+    else:
+      pdata_object = chunk.__next__
     chunk._p_deactivate()
   return md5_hash.hexdigest()
 
@@ -135,7 +139,7 @@ class CachedConvertableMixin:
       cached_value = data
       conversion_md5 = md5(str(data.data)).hexdigest()
       size = len(data.data)
-    elif isinstance(data, (str, unicode,)):
+    elif isinstance(data, six.string_types):
       cached_value = data
       conversion_md5 = md5(cached_value).hexdigest()
       size = len(cached_value)

@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from six import string_types as basestring
 import time
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
@@ -57,7 +58,9 @@ def encodeKey(key):
   """
   # According to the memcached's protocol.txt, the key cannot contain
   # control characters and white spaces.
-  return encodestring(key, True).replace('\n', '').replace('\r', '')
+  if isinstance(key, str):
+    key = key.encode()
+  return encodestring(key, True).replace(b'\n', b'').replace(b'\r', b'')
 
 if memcache is not None:
   # Real memcache tool

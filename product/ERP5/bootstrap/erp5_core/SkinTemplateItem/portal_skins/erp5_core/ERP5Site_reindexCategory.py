@@ -11,7 +11,7 @@ for error in error_list:
   # We count the number of each portal type
   if error[1]=='portal_type':
     portal_type = error[3]
-    if nb_types.has_key(portal_type):
+    if portal_type in nb_types:
       nb_types[portal_type] = nb_types[portal_type] + 1
     else:
       nb_types[portal_type] = 1

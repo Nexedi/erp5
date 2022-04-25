@@ -1,3 +1,4 @@
+import six
 class PatchClass(tuple):
     """Helper to easily monkey-patch many attributes of an object
 
@@ -17,7 +18,8 @@ class PatchClass(tuple):
         if len(args) == 1:
             return tuple.__new__(cls, args)
         _, ((cls,),), d = args
-        for k, v in d.iteritems():
-            k == "__module__" or setattr(cls, k, v.im_func
-                if getattr(v, "im_class", None) is cls and v.__self__ is None
-                else v)
+        for k, v in six.iteritems(d):
+          if k != "__module__":
+            if getattr(v, "im_class", None) is cls and v.__self__ is None:
+              v = v.__func__
+            setattr(cls, k, v)

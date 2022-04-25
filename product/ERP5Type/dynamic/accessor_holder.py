@@ -33,6 +33,7 @@ Accessor Holders, that is, generation of methods for ERP5
 * Utils, Property Sheet Tool can be probably be cleaned up as well by
 moving specialized code here.
 """
+from six import string_types as basestring
 from types import ModuleType
 
 from Products.ERP5Type import Permissions

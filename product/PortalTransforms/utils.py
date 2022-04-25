@@ -2,8 +2,12 @@
 """some common utilities
 """
 
-import mimetools
-import cStringIO
+import six
+if six.PY2:
+    from email import message_from_file as message_from_bytes
+else:
+    from email import message_from_bytes
+from io import BytesIO as StringIO
 
 class TransformException(Exception):
     pass
@@ -30,7 +34,7 @@ def safeToInt(value):
         return 0
 
 def parseContentType(content_type):
-  """Parses `text/plain;charset="utf-8"` to a mimetools.Message object.
+  """Parses `text/plain;charset="utf-8"` to a Message object.
 
   Note: Content type or MIME type are built like `maintype/subtype[;params]`.
 
@@ -42,4 +46,4 @@ def parseContentType(content_type):
       parsed_content_type.getparam('charset')  -> 'utf-8'
       parsed_content_type.typeheader  -> 'text/plain;charset="utf-8"'
   """
-  return mimetools.Message(cStringIO.StringIO("Content-Type:" + content_type.replace("\r\n", "\r\n\t")))
+  return message_from_bytes(StringIO("Content-Type:" + content_type.replace("\r\n", "\r\n\t")))

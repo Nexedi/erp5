@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from six.moves import xrange
+from six import string_types as basestring
 import transaction
 from collections import deque
 from functools import wraps
@@ -76,7 +78,7 @@ from random import randint
 import os
 from zLOG import LOG, WARNING
 import warnings
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 from Products.ERP5Type.Message import translateString
 from ZODB.POSException import ConflictError
 
@@ -90,8 +92,9 @@ def dummyTestAfter(object,REQUEST=None):
 class ExceptionRaised(object):
   raised = False
 
-  def __nonzero__(self):
+  def __bool__(self):
     return self.raised
+  __nonzero__ = __bool__ # six.PY2
 
   def __call__(self, func):
     def wrapper(*args, **kw):
@@ -426,21 +429,21 @@ class FolderMixIn(ExtensionClass.Base):
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
-    if kw.has_key('selection_domain'):
+    if 'selection_domain' in kw:
       if not isinstance(kw['selection_domain'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_domain'] = kw['selection_domain'].asDomainDict()
-      if kw['selection_domain'].has_key('parent'):
+      if 'parent' in kw['selection_domain']:
         delete_parent_uid = 1
-    if kw.has_key('selection_report'):
+    if 'selection_report' in kw:
       if not isinstance(kw['selection_report'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'):
+      if 'parent' in kw['selection_report']:
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -458,21 +461,21 @@ class FolderMixIn(ExtensionClass.Base):
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
-    if kw.has_key('selection_domain'):
+    if 'selection_domain' in kw:
       if not isinstance(kw['selection_domain'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_domain'] = kw['selection_domain'].asDomainDict()
-      if kw['selection_domain'].has_key('parent'):
+      if 'parent' in kw['selection_domain']:
         delete_parent_uid = 1
-    if kw.has_key('selection_report'):
+    if 'selection_report' in kw:
       if not isinstance(kw['selection_report'], dict):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
                       "Please use a domain dict instead.",
                       DeprecationWarning)
         kw['selection_report'] = kw['selection_report'].asDomainDict()
-      if kw['selection_report'].has_key('parent'):
+      if 'parent' in kw['selection_report']:
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
@@ -543,7 +546,7 @@ class FolderMixIn(ExtensionClass.Base):
       kw['_recurse_stack'] = recurse_stack
       # We are called by user (and not in a subsequent activity).
       # Complete activate_kw, without mutating received value.
-      activate_kw = self.getDefaultActivateParameterDict.im_func(None)
+      activate_kw = self.getDefaultActivateParameterDict.__func__(None)
       activate_kw.update(kw.get('activate_kw', ()))
       activate_kw.setdefault('active_process', None)
       activate_kw.setdefault('activity', 'SQLQueue')
@@ -821,7 +824,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       tag = "%s/%s/migrate" %(self.getId(),migration_generate_id_method)
       id_list  = list(self.objectIds())
       # set new id by bundle
-      for x in xrange(len(self) / bundle_count):
+      for x in range(len(self) // bundle_count):
         self.activate(activity="SQLQueue", tag=tag, priority=3, serialization_tag='ERP5Site_setNewIdPerBundle').ERP5Site_setNewIdPerBundle(
           self.getPath(),
           id_list[x*bundle_count:(x+1)*bundle_count],
@@ -1017,7 +1020,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       if self._htree is None:
         return []
       assert spec is None
-      if kw.has_key("base_id"):
+      if "base_id" in kw:
         return CMFHBTreeFolder.objectIds(self, base_id=kw["base_id"])
       return CMFHBTreeFolder.objectIds(self)
     property_id, _, folder = self._getFolderHandlerData()
@@ -1030,7 +1033,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       if  self._htree is None:
         return []
       assert spec is None
-      if kw.has_key("base_id"):
+      if "base_id" in kw:
         return CMFHBTreeFolder.objectItems(self, base_id=kw["base_id"])
       return CMFHBTreeFolder.objectItems(self)
     property_id, _, folder = self._getFolderHandlerData()
@@ -1530,12 +1533,11 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
         return []
       object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     else:
-      object_list = map(self._getOb, self.objectIds(spec))
+      object_list = [self._getOb(x) for x in self.objectIds(spec)]
     if portal_type is not None:
       if isinstance(portal_type, str):
         portal_type = (portal_type,)
-      object_list = filter(lambda x: x.getPortalType() in portal_type,
-                           object_list)
+      object_list = [x for x in object_list if x.getPortalType() in portal_type]
     if checked_permission is not None:
       checkPermission = getSecurityManager().checkPermission
       object_list = [o for o in object_list
@@ -1560,7 +1562,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
       kw['portal_type'] = [x for x in portal_type if x in portal_type_id_list]
     object_list = self.objectValues(*args, **kw)
     if filter_kw:
-      object_list = filter(ContentFilter(**filter_kw), object_list)
+      object_list = [x for x in object_list if ContentFilter(**filter_kw)]
     return object_list
 
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)

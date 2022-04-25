@@ -1,6 +1,7 @@
+from six import unichr
 from Products.PortalTransforms.libtransforms.retransform import retransform
 
-import htmlentitydefs
+from six.moves.html_entities import name2codepoint
 
 class html_to_text(retransform):
     inputs  = ('text/html',)
@@ -10,7 +11,7 @@ def register():
     def sub_func(matchobj):
         full = matchobj.group()
         ent = matchobj.group(1)
-        result = htmlentitydefs.name2codepoint.get(ent)
+        result = name2codepoint.get(ent)
         if result is None:
             if ent.startswith('#'):
                 return unichr(int(ent[1:])).encode('utf-8')

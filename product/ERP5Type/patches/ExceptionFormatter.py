@@ -90,7 +90,7 @@ def formatLine(self, tb, *args, **kwargs):
         line_str,
         flags=re.DOTALL)
 
-  except Exception, e:
+  except Exception as e:
     pass
 
   return line_str

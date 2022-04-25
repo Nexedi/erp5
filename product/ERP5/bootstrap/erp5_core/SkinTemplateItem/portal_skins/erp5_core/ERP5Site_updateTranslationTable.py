@@ -33,7 +33,7 @@ for portal_type in portal_type_list:
       state_reference = state.getReference()
       for lang in supported_languages:
         key = (lang, portal_type.getId(), state_var, state_reference)
-        if not translated_keys.has_key(key):
+        if key not in translated_keys:
           translated_message = context.Localizer.erp5_ui.gettext(state_reference, lang=lang).encode('utf-8')
           translated_keys[key] = None # mark as translated
           object_list.append(dict(language=lang, message_context=state_var, portal_type=portal_type.getId(), original_message=state_reference,
@@ -48,7 +48,7 @@ for portal_type in portal_type_list:
             msg_id = state.getTitle()
             translated_message = context.Localizer.erp5_ui.gettext(state.getTitle().decode('utf-8'), lang=lang).encode('utf-8')
           key = (lang, portal_type.getId(), state_var_title, state_reference, msg_id)
-          if not translated_keys.has_key(key):
+          if key not in translated_keys:
             translated_keys[key] = None # mark as translated
             object_list.append(dict(language=lang, message_context=state_var_title, portal_type=portal_type.getId(), original_message=state_reference,
                                translated_message=translated_message))
@@ -64,12 +64,12 @@ for ptype in context.portal_types.objectValues():
   if not portal_type: portal_type = ptype.id
   for lang in supported_languages:
     key = (lang, 'portal_type', portal_type)
-    if not translated_keys.has_key(key):
+    if key not in translated_keys:
       translated_keys[key] = None # mark as translated
       object_list.append(dict(language=lang, message_context='portal_type', portal_type=portal_type, original_message=portal_type,
                          translated_message=context.Localizer.erp5_ui.gettext(portal_type, lang=lang).encode('utf-8')))
 if object_list:
   catalog_translation_list(object_list)
 
-print 'Done'
+print('Done')
 return printed

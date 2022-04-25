@@ -25,7 +25,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 from Products.ERP5Type import Permissions
 
 security = ClassSecurityInfo()
@@ -204,7 +204,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     security.addContext(self)
     try:
         query = self.template(p, **argdata)
-    except TypeError, msg:
+    except TypeError as msg:
         msg = str(msg)
         if 'client' in msg:
             raise NameError("'client' may not be used as an "

@@ -14,8 +14,7 @@ from lxml import html
 from lxml.etree import ParseError, Element
 from lxml.etree import SubElement
 
-from urllib import unquote
-from urlparse import parse_qsl, urlparse
+from six.moves.urllib.parse import unquote, parse_qsl, urlparse
 
 def includeMetaContentType(html_node):
   """XXX Temp workaround time to fix issue
@@ -131,7 +130,7 @@ class OOOdCommandTransform(commandtransform):
           content_type = image.getContentType()
           format = image_parameter_dict.pop('format', None)
           # convert API accepts only a certail range of arguments
-          for key, value in image_parameter_dict.items():
+          for key, value in list(image_parameter_dict.items()):
             if key not in ('format', 'display', 'quality', 'resolution',):
               image_parameter_dict.pop(key)
           if getattr(image, 'convert', None) is not None:

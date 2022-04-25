@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 from itertools import chain
 from AccessControl import ClassSecurityInfo
 import ExtensionClass
@@ -34,6 +35,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Globals import PersistentMapping
 from zLOG import LOG, ERROR
+from six.moves import xrange
 
 def _makeForbiddenCharList(*args):
   result = [True] * 256
@@ -119,7 +121,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
         }
         for (
           header_name, (method_id, fallback_value, fallback_value_replace)
-        ) in getattr(self, '_response_header_rule_dict', {}).iteritems()
+        ) in six.iteritems(getattr(self, '_response_header_rule_dict', {}))
       }
 
     def _getResponseHeaderRuleDictForModification(self):
@@ -186,7 +188,7 @@ class ResponseHeaderGenerator(ExtensionClass.Base):
       else:
         for (
           header_name, (method_id, value, value_replace)
-        ) in getattr(self, '_response_header_rule_dict', {}).iteritems():
+        ) in six.iteritems(getattr(self, '_response_header_rule_dict', {})):
           if method_id:
             try:
               method_value = getattr(self, method_id)

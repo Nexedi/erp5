@@ -17,7 +17,7 @@ __revision__ = '$Id: python.py 3661 2005-02-23 17:05:31Z tiran $'
 
 import string
 import keyword, token, tokenize
-from cStringIO import StringIO
+from io import StringIO
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
@@ -57,7 +57,7 @@ class Parser:
         self.out.write('<pre class="python">\n')
         try:
             tokenize.tokenize(text.readline, self)
-        except tokenize.TokenError, ex:
+        except tokenize.TokenError as ex:
             msg = ex[0]
             line = ex[1][0]
             self.out.write("<h5 class='error>'ERROR: %s%s</h5>" % (

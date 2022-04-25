@@ -12,10 +12,11 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
 
-from thread import get_ident
+from _thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
 

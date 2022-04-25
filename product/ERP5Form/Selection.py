@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import six
 from Products.ERP5Type.Globals import InitializeClass, Persistent
 import Acquisition
 from Acquisition import aq_base
@@ -171,7 +172,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
             if k in ('domain', 'report', 'domain_path', 'report_path', 'domain_list', 'report_list') or v is not None:
               # XXX Because method_path is an URI, it must be in ASCII.
               #     Shouldn't Zope automatically does this conversion? -yo
-              if k == 'method_path' and isinstance(v, unicode):
+              if k == 'method_path' and isinstance(v, six.text_type):
                 v = v.encode('ascii')
               if getattr(self, k, None) != v:
                 setattr(self, k, v)
@@ -224,7 +225,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           sort_on = getattr(self, 'default_sort_on', [])
         if len(sort_on) > 0:
           kw['sort_on'] = sort_on
-        elif kw.has_key('sort_on'):
+        elif 'sort_on' in kw:
           del kw['sort_on'] # We should not sort if no sort was defined
         # We should always set selection_name with self.name
         kw['selection_name'] = self.name

@@ -100,4 +100,4 @@ class Filter(Implicit):
 
   def filter(self, value_list):
     #LOG('Filter filter', 0, 'value_list = %s' % repr(value_list))
-    return filter(lambda v: self.test(v), value_list)
+    return [v for v in value_list if self.test(v)]

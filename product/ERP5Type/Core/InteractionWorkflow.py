@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 import transaction
 
 from AccessControl import getSecurityManager, ClassSecurityInfo

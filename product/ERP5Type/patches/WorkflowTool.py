@@ -17,7 +17,6 @@ from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 assert WITH_LEGACY_WORKFLOW
 
 from zLOG import LOG, WARNING
-from types import StringTypes
 
 # Make sure Interaction Workflows are called even if method not wrapped
 
@@ -35,7 +34,6 @@ from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Workflow import WorkflowHistoryList as NewWorkflowHistoryList
-from sets import ImmutableSet
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import PersistentMapping
 from MySQLdb import ProgrammingError, OperationalError
@@ -54,7 +52,7 @@ class WorkflowHistoryList(NewWorkflowHistoryList):
   def __getstate__(self):
     return self._prev, self._log
 
-  def __nonzero__(self):
+  def __bool__(self):
     # not faster than __len__ but avoids migration
     if self._log:
       return True
@@ -139,7 +137,7 @@ class WorkflowMethod( Method ):
             # No workflow tool found.
             try:
                 res = self._m(instance, *args, **kw)
-            except ObjectDeleted, ex:
+            except ObjectDeleted as ex:
                 res = ex.getResult()
             else:
                 if hasattr(aq_base(instance), 'reindexObject'):

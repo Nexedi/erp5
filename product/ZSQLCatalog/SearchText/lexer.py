@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,13 +29,13 @@
 
 from ply import lex, yacc
 import sys
-from cStringIO import StringIO
+from io import BytesIO as StringIO
 
 try:
   from zLOG import LOG
 except ImportError:
   def LOG(channel, level, message):
-    print >>sys.stderr, message
+    print(message, file=sys.stderr)
 
 class ParserOrLexerError(Exception):
   pass
@@ -146,5 +147,8 @@ def update_docstrings(klass):
         destination = getattr(klass, property)
         assert callable(destination)
         if destination.__doc__ is None:
-          destination.im_func.__doc__ = source.__doc__
+          try:
+              destination.__doc__ = source.__doc__
+          except AttributeError: # six.PY2
+              destination.__func__.__doc__ = source.__doc__
 

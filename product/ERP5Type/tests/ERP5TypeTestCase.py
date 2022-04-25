@@ -839,7 +839,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           # However, we need to inject the content of `extra` inside the
           # request.
           if extra:
-            for k, v in extra.items(): request[k] = v
+            for k, v in extra.iteritems(): request[k] = v
 
           publish_module_standard('Zope2',
                          request=request,

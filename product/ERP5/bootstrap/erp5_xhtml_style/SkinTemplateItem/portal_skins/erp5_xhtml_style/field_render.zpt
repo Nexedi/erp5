@@ -8,7 +8,7 @@
                render_prefix render_prefix | nothing;
                key_prefix key_prefix | nothing;
                field_errors python: request.get('field_errors', {});
-               field_has_error  python: field_errors.has_key(field_id);
+               field_has_error  python: field_id in field_errors;
                global form_id form_id | form/id | nothing;
                field_description field/Field_getDescription;
                is_web_mode is_web_mode | nothing">

@@ -3,6 +3,7 @@ from cgi import escape
 from lxml import etree
 from lxml.etree import Element, SubElement, CDATA
 from lxml.builder import E
+from six import string_types as basestring
 
 def formToXML(form, prologue=1):
     """Takes a formulator form and serializes it to an XML representation.
@@ -53,7 +54,7 @@ def formToXML(form, prologue=1):
           elif isinstance(value, list):
             value_element = SubElement(values_element, key, type='list')
           else:
-            if not isinstance(value, (str, unicode)):
+            if not isinstance(value, basestring):
               value = str(value)
             value_element = SubElement(values_element, key)
           value_element.text = escape(str(value)).decode(encoding)
