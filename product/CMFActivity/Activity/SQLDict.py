@@ -27,6 +27,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import str2bytes
+
 from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
 import sys
@@ -85,7 +87,7 @@ class SQLDict(SQLBase):
       uid = line.uid
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
-        sql_method_id = " AND method_id = %s AND group_method_id = %s" % (
+        sql_method_id = b" AND method_id = %s AND group_method_id = %s" % (
           quote(method_id), quote(line.group_method_id))
         m = Message.load(line.message, uid=uid, line=line)
         merge_parent = m.activity_kw.get('merge_parent')
@@ -102,11 +104,11 @@ class SQLDict(SQLBase):
             uid_list = []
             if path_list:
               # Select parent messages.
-              result = Results(db.query("SELECT * FROM message"
-                " WHERE processing_node IN (0, %s) AND path IN (%s)%s"
-                " ORDER BY path LIMIT 1 FOR UPDATE" % (
+              result = Results(db.query(b"SELECT * FROM message"
+                b" WHERE processing_node IN (0, %d) AND path IN (%s)%s"
+                b" ORDER BY path LIMIT 1 FOR UPDATE" % (
                   processing_node,
-                  ','.join(map(quote, path_list)),
+                  b','.join(map(quote, path_list)),
                   sql_method_id,
                 ), 0))
               if result: # found a parent
@@ -119,11 +121,11 @@ class SQLDict(SQLBase):
                 m = Message.load(line.message, uid=uid, line=line)
             # return unreserved similar children
             path = line.path
-            result = db.query("SELECT uid FROM message"
-              " WHERE processing_node = 0 AND (path = %s OR path LIKE %s)"
-              "%s FOR UPDATE" % (
+            result = db.query(b"SELECT uid FROM message"
+              b" WHERE processing_node = 0 AND (path = %s OR path LIKE %s)"
+              b"%s FOR UPDATE" % (
                 quote(path), quote(path.replace('_', r'\_') + '/%'),
-                sql_method_id,
+                str2bytes(sql_method_id),
               ), 0)[1]
             reserve_uid_list = [x for x, in result]
             uid_list += reserve_uid_list
@@ -132,8 +134,8 @@ class SQLDict(SQLBase):
               reserve_uid_list.append(uid)
           else:
             # Select duplicates.
-            result = db.query("SELECT uid FROM message"
-              " WHERE processing_node = 0 AND path = %s%s FOR UPDATE" % (
+            result = db.query(b"SELECT uid FROM message"
+              b" WHERE processing_node = 0 AND path = %s%s FOR UPDATE" % (
                 quote(path), sql_method_id,
               ), 0)[1]
             reserve_uid_list = uid_list = [x for x, in result]
