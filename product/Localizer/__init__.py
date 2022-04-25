@@ -23,7 +23,9 @@ from App.ImageFile import ImageFile
 from DocumentTemplate.DT_String import String
 
 # Import from Localizer
-from .patches import get_request
+import six
+if six.PY2:
+  from .patches import get_request
 from . import Localizer, MessageCatalog
 from .LocalFiles import LocalDTMLFile
 
