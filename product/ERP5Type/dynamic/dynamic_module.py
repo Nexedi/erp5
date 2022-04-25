@@ -28,6 +28,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import ensure_list
 from types import ModuleType
 from . import aq_method_lock
 import sys
@@ -82,7 +83,7 @@ class RefManager(dict):
     Remove cache items with no Request Left.
     """
     for (current_last_sync,
-         (request_obj_weakset, _)) in self.items():
+         (request_obj_weakset, _)) in ensure_list(self.items()):
       if not request_obj_weakset:
         del self[current_last_sync]
 
