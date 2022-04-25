@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import six
+
 from DateTime import DateTime
 
 """
@@ -80,7 +82,10 @@ def asLong(value):
     Return the value as a long or a type-specific default value if it fails.
   """
   try:
-    result = long(value)
+    if six.PY2:
+      result = long(value)
+    else:
+      result = int(value)
   except TypeError:
     result = type_definition['long']['default']
   return result
@@ -126,7 +131,7 @@ type_definition = {
                            },
     'long'               : { 'cast'    : asLong,
                              'null'    : ('', 'None', None,),
-                             'default' : 0L,
+                             'default' : 0 if six.PY3 else 0L,
                              'isList'  : 0,
                            },
     'date'               : { 'cast'    : asDate,

@@ -28,6 +28,7 @@
 """
 Most of the code in this file has been taken from patches/WorkflowTool.py
 """
+from six import string_types as basestring
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Acquisition import aq_base
 from DateTime import DateTime
@@ -42,8 +43,8 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Utils import deprecated
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
-from sets import ImmutableSet
 from zLOG import LOG, WARNING
+import six
 from six import reraise
 
 WORKLIST_METADATA_KEY = 'metadata'
@@ -154,10 +155,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       notify(ActionWillBeInvokedEvent(ob, w, action))
     try:
       res = func(*args, **kw)
-    except ObjectDeleted, ex:
+    except ObjectDeleted as ex:
       res = ex.getResult()
       reindex = 0
-    except ObjectMoved, ex:
+    except ObjectMoved as ex:
       res = ex.getResult()
       ob = ex.getNewObject()
     except:
@@ -350,7 +351,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         else:
           try:
             self.Base_zClearWorklistTable()
-          except ProgrammingError, error_value:
+          except ProgrammingError as error_value:
             # 1146 = table does not exist
             if error_value[0] != 1146:
               raise
@@ -358,7 +359,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         portal_catalog = self.getPortalObject().portal_catalog
         search_result = portal_catalog.unrestrictedSearchResults
         sql_catalog = portal_catalog.getSQLCatalog()
-        table_column_id_set = ImmutableSet(
+        table_column_id_set = frozenset(
             [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
         security_column_id_list = list(
           sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict().values()) + \
@@ -410,7 +411,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           if len(value_column_dict[COUNT_COLUMN_TITLE]):
             try:
               Base_zInsertIntoWorklistTable(**value_column_dict)
-            except (ProgrammingError, OperationalError), error_value:
+            except (ProgrammingError, OperationalError) as error_value:
               # OperationalError 1054 = unknown column
               if isinstance(error_value, OperationalError) and error_value[0] != 1054:
                 raise
@@ -570,13 +571,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               % grouped_worklist_dict.keys(),
               error=True)
           continue
-        except ProgrammingError, error_value:
+        except ProgrammingError as error_value:
           # 1146 = table does not exist
           if not use_cache or error_value[0] != 1146:
             raise
           try:
             self.Base_zCreateWorklistTable()
-          except ProgrammingError, error_value:
+          except ProgrammingError as error_value:
             # 1050 = table exists (alarm run just a bit too late)
             if error_value[0] != 1050:
               raise
@@ -658,7 +659,7 @@ def getValidCriterionDict(worklist_match_dict, sql_catalog,
     if isValidColumn(criterion_id):
       if isinstance(criterion_value, tuple):
         criterion_value = list(criterion_value)
-      elif isinstance(criterion_value, (str, int, long)):
+      elif isinstance(criterion_value, (str,) + six.integer_types):
         criterion_value = [criterion_value]
       assert criterion_id not in valid_criterion_dict
       valid_criterion_dict[criterion_id] = criterion_value
@@ -915,8 +916,8 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
 # This dict is used to tell which cast to apply to worklist parameters to get
 # values comparable with SQL result content.
 _sql_cast_dict = {
-  'i': long,
-  'l': long,
+  'i': int if six.PY3 else long,
+  'l': int if six.PY3 else long,
   'n': float,
   'd': DateTime,
 }
@@ -949,9 +950,9 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
           criterion_id_list.append(criterion_id)
           expected_class = class_dict[criterion_id]
           if type(criterion_value_list[0]) is not expected_class:
-            criterion_dict[criterion_id] = ImmutableSet([expected_class(x) for x in criterion_value_list])
-          elif type(criterion_value_list) is not ImmutableSet:
-            criterion_dict[criterion_id] = ImmutableSet(criterion_dict[criterion_id])
+            criterion_dict[criterion_id] = frozenset([expected_class(x) for x in criterion_value_list])
+          elif type(criterion_value_list) is not frozenset:
+            criterion_dict[criterion_id] = frozenset(criterion_dict[criterion_id])
     # Read catalog result and distribute to matching worklists
     for result_line in catalog_result:
       result_count = int(result_line[COUNT_COLUMN_TITLE])

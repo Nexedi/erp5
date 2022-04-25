@@ -62,7 +62,7 @@ class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
         # Read file first to get a correct content_type default value.
         self._updateFromFS()
 
-        if not kw.has_key('args'):
+        if 'args' not in kw:
             kw['args'] = args
         bound_names['options'] = kw
 

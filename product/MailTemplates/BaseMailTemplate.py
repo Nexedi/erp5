@@ -5,6 +5,7 @@ from __future__ import absolute_import
 # http://www.opensource.org/licenses/mit-license.html
 # See license.txt for more details.
 
+from six import string_types as basestring
 import os
 import rfc822
 

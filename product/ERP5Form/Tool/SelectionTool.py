@@ -42,13 +42,13 @@ from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 from hashlib import md5
 import string, re
-from urlparse import urlsplit, urlunsplit
+from six.moves.urllib.parse import urlsplit, urlunsplit
 from zLOG import LOG, INFO, WARNING
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 import warnings
-
+import six
 
 _MARKER = []
 
@@ -213,10 +213,10 @@ class SelectionTool( BaseTool, SimpleItem ):
         return
 
       form = REQUEST.form
-      if no_reset and form.has_key('reset'):
+      if no_reset and 'reset' in form:
         form['noreset'] = form['reset'] # Kept for compatibility - might no be used anymore
         del form['reset']
-      if no_report_depth and form.has_key('report_depth'):
+      if no_report_depth and 'report_depth' in form:
         form['noreport_depth'] = form['report_depth'] # Kept for compatibility - might no be used anymore
         del form['report_depth']
 
@@ -451,9 +451,9 @@ class SelectionTool( BaseTool, SimpleItem ):
           selection_uid_dict[uid] = 1
         for uid in listbox_uid:
           try:
-            if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
+            if int(uid) in selection_uid_dict: del selection_uid_dict[int(uid)]
           except (ValueError, TypeError):
-            if selection_uid_dict.has_key(uid): del selection_uid_dict[uid]
+            if uid in selection_uid_dict: del selection_uid_dict[uid]
         self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
@@ -607,8 +607,8 @@ class SelectionTool( BaseTool, SimpleItem ):
         selection.edit(sort_on=new_sort_on)
 
       if REQUEST is not None:
-        if form.has_key('listbox_uid') and \
-            form.has_key('uids'):
+        if 'listbox_uid' in form and \
+            'uids' in form:
           self.uncheckAll(selection_name, REQUEST.get('listbox_uid'))
           self.checkAll(selection_name, REQUEST.get('uids'))
 
@@ -797,7 +797,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
-        if form.has_key('page_start'):
+        if 'page_start' in form:
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
           except (ValueError, TypeError):
@@ -820,7 +820,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
-        if form.has_key('page_start'):
+        if 'page_start' in form:
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
           except (ValueError, TypeError):
@@ -843,7 +843,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
-        if form.has_key('page_start'):
+        if 'page_start' in form:
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
           except (ValueError, TypeError):
@@ -1698,7 +1698,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
 
   is_empty_level = 1
   while is_empty_level:
-    if not root_dict.has_key(base_category):
+    if base_category not in root_dict:
       root = None
       if portal_categories is not None:
         if portal_categories._getOb(base_category, None) is not None:
@@ -1863,13 +1863,13 @@ for property_id in candidate_method_id_list:
     list_start_property_id = "%s_list_start" % listbox_id
     page_start_property_id = "%s_page_start" % listbox_id
     # Rename request parameters
-    if request.has_key(selection_name_property_id):
+    if selection_name_property_id in request:
       request.form['list_selection_name'] = request[selection_name_property_id]
-    if request.has_key(listbox_uid_property_id):
+    if listbox_uid_property_id in request:
       request.form['listbox_uid'] = request[listbox_uid_property_id]
-    if request.has_key(list_start_property_id):
+    if list_start_property_id in request:
       request.form['list_start'] = request[list_start_property_id]
-    if request.has_key(page_start_property_id):
+    if page_start_property_id in request:
       request.form['page_start'] = request[page_start_property_id]
     # Call the wrapper
     method = getattr(portal_selection, wrapper_property_id)
@@ -1924,13 +1924,13 @@ def createFolderMixInPageSelectionMethod(listbox_id):
       list_start_property_id = "%s_list_start" % listbox_id
       page_start_property_id = "%s_page_start" % listbox_id
       # Rename request parameters
-      if request.has_key(selection_name_property_id):
+      if selection_name_property_id in request:
         request.form['list_selection_name'] = request[selection_name_property_id]
-      if request.has_key(listbox_uid_property_id):
+      if listbox_uid_property_id in request:
         request.form['listbox_uid'] = request[listbox_uid_property_id]
-      if request.has_key(list_start_property_id):
+      if list_start_property_id in request:
         request.form['list_start'] = request[list_start_property_id]
-      if request.has_key(page_start_property_id):
+      if page_start_property_id in request:
         request.form['page_start'] = request[page_start_property_id]
       # Call the wrapper
       method = getattr(portal_selection, wrapper_property_id)

@@ -129,12 +129,13 @@ class TypeAccessChecker:
       return v
     return factory
 
-  def __nonzero__(self):
+  def __bool__(self):
     # If Containers(type(x)) is true, ZopeGuard checks will short circuit,
     # thinking it's a simple type, but we don't want this for type, because
     # type(x) is type for classes, being trueish would skip security check on
     # classes.
     return False
+  __nonzero__ = __bool__ # six.PY2
 
 ContainerAssertions[type] = TypeAccessChecker()
 

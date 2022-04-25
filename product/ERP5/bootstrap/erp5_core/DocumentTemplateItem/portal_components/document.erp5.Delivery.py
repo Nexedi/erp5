@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 import zope.interface
 
 from AccessControl import ClassSecurityInfo

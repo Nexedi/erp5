@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from six import string_types as basestring
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -147,7 +148,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
     attachment_name = attachment.get('name', '')
 
     # try to guess the mime type
-    if not attachment.has_key('mime_type'):
+    if 'mime_type' not in attachment:
       mime_type, _ = guess_type( attachment_name )
       if mime_type is not None:
         attachment['mime_type'] = mime_type

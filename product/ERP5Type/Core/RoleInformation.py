@@ -28,6 +28,7 @@
 """ Information about customizable roles.
 """
 
+from six import string_types as basestring
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -94,7 +95,7 @@ class RoleInformation(XMLObject):
                          self.getDescription(),
                          self.getConditionText(),
                          self.getRoleBaseCategoryScriptId()]
-    return ' '.join(filter(None, search_source_list))
+    return ' '.join([_f for _f in search_source_list if _f])
 
   security.declarePrivate("getLocalRolesFor")
   def getLocalRolesFor(self, ob, user_name=None):

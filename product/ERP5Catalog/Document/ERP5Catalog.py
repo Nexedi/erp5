@@ -41,7 +41,7 @@ from Acquisition import aq_base
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
-import urllib
+from six.moves import urllib
 
 class Filter(object):
   """

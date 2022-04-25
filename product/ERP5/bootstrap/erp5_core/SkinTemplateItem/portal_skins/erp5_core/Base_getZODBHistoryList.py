@@ -1,3 +1,4 @@
+import six
 from AccessControl import getSecurityManager
 from zExceptions import Unauthorized
 from Products.ERP5Type.Document import newTempBase
@@ -10,9 +11,9 @@ if not getSecurityManager().getUser().has_permission('View History', context):
 def beautifyChange(change_dict):
   change_list = []
   for property_name, property_value in sorted(change_dict.items()):
-    if isinstance(property_value, basestring):
+    if isinstance(property_value, six.binary_type):
       try:
-        unicode(property_value, 'utf-8')
+        property_value.decode('utf-8')
       except UnicodeDecodeError:
         property_value = '(binary)'
     change_list.append('%s:%s' % (property_name, property_value))

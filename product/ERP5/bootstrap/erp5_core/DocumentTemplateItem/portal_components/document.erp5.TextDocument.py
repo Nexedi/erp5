@@ -35,7 +35,7 @@ from erp5.component.document.Document import Document, ConversionError, _MARKER,
 from erp5.component.document.File import File
 from erp5.component.module.WebDAVSupport import TextContent
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
-import cStringIO
+import io
 from string import Template
 
 # Mixin Import
@@ -174,7 +174,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           # Include extra parameter for image conversions
           temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
-                                       file=cStringIO.StringIO(),
+                                       file=io.StringIO(),
                                        filename=self.getId(),
                                        temp_object=1)
           temp_image._setData(result)

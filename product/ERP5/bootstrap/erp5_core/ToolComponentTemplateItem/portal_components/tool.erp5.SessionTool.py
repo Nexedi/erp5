@@ -27,11 +27,13 @@
 #
 ##############################################################################
 
+
+from six import string_types as basestring
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base
-from UserDict import UserDict
+from collections import UserDict
 import collections
 
 # the ERP5 cache factory used as a storage

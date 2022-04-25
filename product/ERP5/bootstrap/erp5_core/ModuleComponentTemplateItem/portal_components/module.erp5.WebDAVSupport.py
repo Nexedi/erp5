@@ -23,7 +23,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
 from zExceptions import Forbidden
-from cStringIO import StringIO
+from io import StringIO
 
 security = ModuleSecurityInfo(__name__)
 

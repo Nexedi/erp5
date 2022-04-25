@@ -22,6 +22,7 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from six import string_types as basestring
 from functools import partial
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
@@ -682,7 +683,7 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
       search_source_list += self.getTypeWorkflowList()
-      return ' '.join(filter(None, search_source_list))
+      return ' '.join([_f for _f in search_source_list if _f])
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultViewFor')

@@ -1,5 +1,9 @@
 import operator
-from itertools import imap as map, islice
+try:
+  from itertools import imap as map
+except ImportError: # six.PY3: builtins
+  pass
+from itertools import islice
 from persistent import Persistent
 
 

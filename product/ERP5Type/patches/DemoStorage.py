@@ -25,7 +25,7 @@ class DemoStorage(_DemoStorage.DemoStorage, ConflictResolvingStorage):
         try:
             return super(DemoStorage, self).store(
                 oid, serial, data, version, transaction)
-        except ConflictError, e:
+        except ConflictError as e:
             old = e.serials[0]
             rdata = self.tryToResolveConflict(oid, old, serial, data)
             self.changes.store(oid, old, rdata, '', transaction)

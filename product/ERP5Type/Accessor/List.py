@@ -34,7 +34,6 @@ from .TypeDefinition import asList, identity
 from . import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
-from types import ListType, TupleType
 
 from zLOG import LOG
 
@@ -97,7 +96,7 @@ class ListSetter(DefaultSetter):
       else:
         value = self._cast(args[0])
         if self._item_cast is not identity:
-          value = map(self._item_cast, value)
+          value = [self._item_cast(v) for v in value]
         setattr(instance, self._storage_id, tuple(value))
 
 Setter = ListSetter
@@ -144,7 +143,7 @@ class SetSetter(Base.Setter):
       else:
         value = self._cast(value)
         if self._item_cast is not identity:
-          value = map(self._item_cast, value)
+          value = [self._item_cast(v) for v in value]
         if value:
           value = set(value)
           list_value = getattr(instance, self._storage_id, None)
@@ -195,7 +194,7 @@ class DefaultGetter(Base.Getter):
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
-        if type(list_value) in (ListType, TupleType):
+        if isinstance(list_value, (list, tuple)):
           if len(list_value) > 0:
             return list_value[0]
           else:

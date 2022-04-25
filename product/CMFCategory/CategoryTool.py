@@ -30,6 +30,8 @@
 """\
 ERP portal_categories tool.
 """
+import six
+from six import string_types as basestring
 from collections import deque
 import re
 from BTrees.OOBTree import OOTreeSet
@@ -61,13 +63,17 @@ class RelatedIndex(): # persistent.Persistent can be added
   def __repr__(self):
     try:
       contents = ', '.join('%s=%r' % (k, list(v))
-                           for (k, v) in self.__dict__.iteritems())
+                           for (k, v) in six.iteritems(self.__dict__))
     except Exception:
       contents = '...'
     return '<%s(%s) at 0x%x>' % (self.__class__.__name__, contents, id(self))
 
   def __nonzero__(self):
     return any(self.__dict__.itervalues())
+
+  def __bool__(self):
+    return any(six.itervalues(self.__dict__))
+  __nonzero__ = __bool__  # six.PY2
 
   def add(self, base, relative_url):
     try:
@@ -1404,7 +1410,7 @@ class CategoryTool(BaseTool):
         except AttributeError:
           related = RelatedIndex()
         include_self = False
-        for base_category, category in local_index_dict.iteritems():
+        for base_category, category in six.iteritems(local_index_dict):
           if not category:
             # Categories are member of themselves.
             include_self = True
@@ -1463,11 +1469,11 @@ class CategoryTool(BaseTool):
                 related = aq_base(ob)._related_index
               except AttributeError:
                 continue
-              for base_category, category in local_index_dict.iteritems():
+              for base_category, category in six.iteritems(local_index_dict):
                 category += relative_url
                 check_local()
         # Filter out objects that are not of requested portal type.
-        result = [ob for ob in result_dict.itervalues() if ob is not None and (
+        result = [ob for ob in six.itervalues(result_dict) if ob is not None and (
           not portal_type or ob.getPortalType() in portal_type)]
         # Finish with base categories that are only indexed in catalog,
         # making sure we don't return duplicate values.
@@ -1508,7 +1514,7 @@ class CategoryTool(BaseTool):
         for permission in checked_permission:
           if checkPermission(permission, ob):
             return True
-      return filter(check, result)
+      return [r for r in result if check(r)]
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedPropertyList' )

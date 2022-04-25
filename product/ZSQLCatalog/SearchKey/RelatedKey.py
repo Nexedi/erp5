@@ -29,6 +29,7 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six.moves import xrange
 from .SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.Query import Query
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery

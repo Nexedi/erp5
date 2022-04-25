@@ -27,7 +27,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
+import six
+from six import string_types as basestring
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.interfaces.operator import IOperator
@@ -52,14 +53,17 @@ def valueNoneRenderer(value):
 
 value_renderer = {
   int: str,
-  long: str,
   float: valueFloatRenderer,
   DateTime: valueDateTimeRenderer,
   None.__class__: valueNoneRenderer,
   bool: int,
   str: escapeString,
-  unicode: escapeString,
 }
+if six.PY2:
+  value_renderer[long] = str
+  value_renderer[unicode] = escapeString
+else:
+  value_renderer[bytes] = escapeString
 
 value_search_text_renderer = {
   DateTime: str,

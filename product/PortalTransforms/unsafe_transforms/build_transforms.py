@@ -1,6 +1,7 @@
 """try to build some usefull transformations with the command and xml
 transforms and the available binaries
 """
+from __future__ import print_function
 from Products.PortalTransforms.libtransforms.utils import bin_search, MissingBinary
 
 COMMAND_CONFIGS = (
@@ -49,7 +50,7 @@ for tr_name, extension, config in COMMAND_CONFIGS:
     try:
         bin = bin_search(config['binary_path'])
     except MissingBinary:
-        print 'no such binary', config['binary_path']
+        print('no such binary', config['binary_path'])
     else:
         tr = ExternalCommandTransform(tr_name, extension)
         tr.config['binary_path'] = bin
@@ -68,10 +69,10 @@ for proc in XMLPROCS_CONF.keys():
         bin = bin_search(proc)
         break
     except MissingBinary:
-        print 'no such binary', proc
+        print('no such binary', proc)
 
 if bin is not None:
-    print 'Using %s as xslt processor' % bin
+    print('Using %s as xslt processor' % bin)
     from xml import XsltTransform
     for output in ('html', 'plain'):
         name = "xml_to_" + output

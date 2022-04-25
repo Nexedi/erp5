@@ -28,7 +28,7 @@
 ##############################################################################
 
 from base64 import encodestring, decodestring
-from urllib import quote, unquote
+from six.moves.urllib.parse import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Globals import InitializeClass
@@ -276,7 +276,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           creds['remote_address'] = request.getClientAddr()
         except AttributeError:
           creds['remote_address'] = request.get('REMOTE_ADDR', '')
-    except StandardError, e:
+    except Exception as e:
       #Log standard error to check error
       LOG('ERP5KeyAuthPlugin.extractCredentials', PROBLEM, str(e))
 
@@ -372,7 +372,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
         return _authenticateCredentials(login=login)
       except _AuthenticationFailure:
         return None
-      except StandardError, e:
+      except Exception as e:
         #Log standard error
         LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
         return None

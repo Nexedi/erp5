@@ -57,7 +57,7 @@ class UrlMixin:
       # A quick fix for all objects which did not
       # define protocol such as email addresses
       ptype = self.getPortalType()
-      if default_protocol_dict.has_key(ptype):
+      if ptype in default_protocol_dict:
         protocol = default_protocol_dict[ptype]
       else:
         protocol = 'http'
