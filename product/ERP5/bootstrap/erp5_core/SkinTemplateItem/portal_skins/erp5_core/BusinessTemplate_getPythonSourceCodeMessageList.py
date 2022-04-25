@@ -1,6 +1,7 @@
 """Return python source code in business template
 """
 import json
+import six
 
 class Message:
   """A python code linter message, with a link to edit the source code.
@@ -50,11 +51,14 @@ def checkPythonScript(script_instance, script_path):
   # RestrictedPython.Utilities.utility_builtins
   extra_builtins = ['printed', 'same_type', 'string', 'sequence', 'random',
     'DateTime', 'whrandom', 'reorder', 'sets', 'test', 'math']
+  code = script_instance.body()
+  if six.PY2:
+    code = unicode(code, 'utf8')
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
       {'bound_names': extra_builtins +
          script_instance.getBindingAssignments().getAssignedNamesInOrder(),
        'params': script_instance.params(),
-       'code': unicode(script_instance.body(), 'utf8')
+       'code': code
       }))['annotations']:
     annotation["script_path"] = script_path
     line_list.append(
@@ -74,8 +78,11 @@ def checkComponent(component_instance):
         message=consistency_message.getMessage().translate(),
         edit_url=component_relative_url,
         jio_key=component_relative_url,),)
+  code = component_instance.getTextContent()
+  if six.PY2:
+    code = unicode(code, 'utf8')
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
-        {'code': unicode(component_instance.getTextContent(), 'utf8')}))['annotations']:
+        {'code': code}))['annotations']:
     annotation['component_path'] = component_relative_url
     line_list.append(
       Message(
