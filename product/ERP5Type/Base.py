@@ -94,7 +94,6 @@ from zope.interface import classImplementsOnly, implementedBy
 
 import sys, re
 
-from io import BytesIO as StringIO
 from socket import gethostname, gethostbyaddr
 import random
 
@@ -2158,7 +2157,7 @@ class Base(
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
     references = [self.getPortalObject().portal_catalog.getObject(x)
-                  for x in ((uids,) if isinstance(uids, int) else uids)]
+                  for x in ((uids,) if isinstance(uids, six.integer_types) else uids)]
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                    keep_default=keep_default, checked_permission=checked_permission)
 

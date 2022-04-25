@@ -32,7 +32,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from io import StringIO
+from io import BytesIO
 
 class TestFormPrintoutMixin(ERP5TypeTestCase):
   run_all_test = 1
@@ -55,7 +55,7 @@ class TestFormPrintoutMixin(ERP5TypeTestCase):
     '''return odf document from the printout
     '''
     document_file = getattr(self.portal, printout_form.template, None)
-    document_file = StringIO(document_file).read()
+    document_file = BytesIO(document_file).read()
     if document_file is not None:
       return document_file
     raise ValueError ('%s template not found' % printout_form.template)

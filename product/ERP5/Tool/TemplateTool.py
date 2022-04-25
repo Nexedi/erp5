@@ -48,7 +48,7 @@ from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
-from io import StringIO
+from io import BytesIO
 from urllib.request import pathname2url, urlopen, urlretrieve
 from urllib.parse import splittype
 import urllib.request, urllib.error, urllib.parse
@@ -305,7 +305,7 @@ class TemplateTool (BaseTool):
       bt = Resource(url)
       export_string = bt.get().get_body()
       self.deleteContent(id)
-      self._importObjectFromFile(StringIO(export_string), id=id)
+      self._importObjectFromFile(BytesIO(export_string), id=id)
 
     security.declareProtected( Permissions.ManagePortal, 'manage_download' )
     def manage_download(self, url, id=None, REQUEST=None):
@@ -395,7 +395,7 @@ class TemplateTool (BaseTool):
       """
         Import Business Template from passed base64 encoded text.
       """
-      import_file = StringIO(decodestring(file_data))
+      import_file = BytesIO(decodestring(file_data))
       return self.importFile(import_file = import_file, id = id, REQUEST = REQUEST,
                              batch_mode = batch_mode, **kw)
 

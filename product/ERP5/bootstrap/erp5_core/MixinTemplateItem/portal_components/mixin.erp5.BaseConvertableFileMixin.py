@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
-from io import StringIO
+from io import BytesIO
 _MARKER = object()
 
 class BaseConvertableFileMixin:
@@ -96,7 +96,7 @@ class BaseConvertableFileMixin:
     """Wrap value into Pdata
     """
     if not isinstance(data, Pdata) and data is not None:
-      file_ = StringIO(data)
+      file_ = BytesIO(data)
       data, _ = self._read_data(file_)
     self._baseSetBaseData(data)
 

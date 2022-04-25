@@ -75,7 +75,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
 from OFS import SimpleItem
 from OFS.Image import Pdata
-from io import BytesIO as StringIO
+from io import BytesIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML
@@ -355,7 +355,7 @@ class BusinessTemplateArchive(object):
     else:
       if isinstance(obj, str):
         self.revision.hash(path, obj)
-        obj = StringIO(obj)
+        obj = BytesIO(obj)
       else:
         obj.seek(0)
         self.revision.hash(path, obj.read())
@@ -420,7 +420,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
   def __init__(self, path, creation=0, importing=0, **kw):
     super(BusinessTemplateTarball, self).__init__(path, **kw)
     if creation:
-      self.fobj = StringIO()
+      self.fobj = BytesIO()
       self.tar = tarfile.open('', 'w:gz', self.fobj)
       self.time = time.time()
     elif importing:
@@ -849,7 +849,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             if not extension:
               extension = self.guessExtensionOfDocument(obj, key,
                 data if record_id == 'data' else None)
-            bta.addObject(StringIO(data), key, path=path,
+            bta.addObject(BytesIO(data), key, path=path,
               ext='._xml' if extension == 'xml' else '.' + extension)
             break
           # since we get the obj from context we should
@@ -857,7 +857,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj = self.removeProperties(obj, 1, keep_workflow_history = True)
           transaction.savepoint(optimistic=True)
 
-        f = StringIO()
+        f = BytesIO()
         exportXML(obj._p_jar, obj._p_oid, f)
         bta.addObject(f, key, path=path)
         
@@ -1010,7 +1010,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     key = '%s:%s' % (name, mtime)
 
     try:
-      return StringIO(cache_database.db[key])
+      return BytesIO(cache_database.db[key])
     except:
       pass
 
@@ -1018,7 +1018,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     from Products.ERP5Type.XMLExportImport import (ppml,
       start_zopedata, save_record, save_zopedata)
     import xml.parsers.expat
-    outfile=StringIO()
+    outfile=BytesIO()
     try:
       data=file.read()
       F=ppml.xmlPickler()
@@ -1067,8 +1067,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     for path, old_object in upgrade_list:
       # compare object to see it there is changes
       new_object = self._objects[path]
-      new_io = StringIO()
-      old_io = StringIO()
+      new_io = BytesIO()
+      old_io = BytesIO()
       exportXML(new_object._p_jar, new_object._p_oid, new_io)
       new_obj_xml = new_io.getvalue()
       try:
@@ -1107,7 +1107,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       for subobject_id in obj.objectIds():
         subobject = obj[subobject_id]
         subobject_dict[subobject_id] = subobject._p_jar.exportFile(
-            subobject._p_oid, StringIO())
+            subobject._p_oid, BytesIO())
       return subobject_dict
     # XXX btsave is for backward compatibility
     if action in ('backup', 'btsave', 'save_and_remove',):
@@ -6161,8 +6161,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_test_item', '_message_translation_item',]
 
       if item_name in item_list_1:
-        f1 = StringIO() # for XML export of New Object
-        f2 = StringIO() # For XML export of Installed Object
+        f1 = BytesIO() # for XML export of New Object
+        f2 = BytesIO() # For XML export of Installed Object
         # Remove unneeded properties
         new_object = new_item.removeProperties(new_object, 1)
         installed_object = installed_item.removeProperties(installed_object, 1)

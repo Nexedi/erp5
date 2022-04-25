@@ -27,7 +27,7 @@ import _thread
 from sys import _current_frames
 import traceback
 import time
-from io import BytesIO as StringIO
+from io import BytesIO
 
 from zLOG import LOG, DEBUG, ERROR
 from App.config import getConfiguration
@@ -76,7 +76,7 @@ def dump_threads():
         except ImportError:
           pass
 
-        output = StringIO()
+        output = BytesIO()
         traceback.print_stack(frame, file=output)
         res.append("Thread %s%s:\n%s%s" %
             (thread_id, reqinfo, output.getvalue(), mysql_info))

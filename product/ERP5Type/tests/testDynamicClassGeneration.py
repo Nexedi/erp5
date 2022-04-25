@@ -2781,8 +2781,8 @@ class TestGC(XMLObject):
     import gc
     initial_gc_debug_flags = gc.get_debug()
     initial_stderr = sys.stderr
-    from io import StringIO
-    stderr = StringIO()
+    from io import BytesIO
+    stderr = BytesIO()
     try:
       gc.disable()
 

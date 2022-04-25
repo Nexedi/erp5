@@ -29,7 +29,7 @@
 
 import os
 import unittest
-from io import StringIO
+from io import BytesIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -237,7 +237,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Base_viewIncludeImageAsOdt.odt"',
                      response.getHeader('content-disposition'))
-    cs = StringIO()
+    cs = BytesIO()
     cs.write(body)
     zip_document = ZipFile(cs)
     picture_list = [x for x in zip_document.infolist() if "Pictures" in x.filename]

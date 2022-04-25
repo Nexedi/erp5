@@ -37,7 +37,7 @@ except ImportError:
                  DeprecationWarning)
 import zope.interface
 from Products.ERP5Type import XMLExportImport
-from io import BytesIO as StringIO
+from io import BytesIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.interfaces.json_representable import IJSONRepresentable
 from Products.ERP5Type import Permissions
@@ -71,7 +71,7 @@ class JSONRepresentableMixin:
     Gets the dict representation of the object
     """
     # Use OFS exportXML to first export to xml
-    f = StringIO()
+    f = BytesIO()
     XMLExportImport.exportXML(self._p_jar, self._p_oid, f)
 
     # Get the value of exported XML
@@ -88,7 +88,7 @@ class JSONRepresentableMixin:
     # Convert the dict_value to XML representation
     xml_value = xmltodict.unparse(dict_value)
 
-    f = StringIO(xml_value)
+    f = BytesIO(xml_value)
     return XMLExportImport.importXML(self._p_jar, f)
 
 InitializeClass(JSONRepresentableMixin)

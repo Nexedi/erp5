@@ -43,7 +43,7 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from .OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
-from io import StringIO
+from io import BytesIO
 import re
 import itertools
 import six
@@ -225,7 +225,7 @@ class OOoTemplate(ZopePageTemplate):
         self.OLE_documents_zipstring = None
       # create a zip archive and store it
       if attached_files_list:
-        memory_file = StringIO()
+        memory_file = BytesIO()
         try:
           zf = ZipFile(memory_file, mode='w', compression=ZIP_DEFLATED)
         except RuntimeError:

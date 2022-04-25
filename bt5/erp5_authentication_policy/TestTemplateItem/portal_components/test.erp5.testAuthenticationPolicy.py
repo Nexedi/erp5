@@ -32,7 +32,7 @@ from functools import partial
 import unittest
 import urllib.request, urllib.parse, urllib.error
 import urllib.parse
-from io import StringIO
+from io import BytesIO
 import time
 import http.client
 import mock
@@ -756,7 +756,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     response = self.publish(
       portal.absolute_url_path() + '/logged_in',
       basic='test-05:used_ALREADY_1234',
-      stdin=StringIO(urllib.parse.urlencode({'came_from': 'https://www.erp5.com'})),
+      stdin=BytesIO(urllib.parse.urlencode({'came_from': 'https://www.erp5.com'})),
       request_method='POST',
     )
     redirect_url = urllib.parse.urlparse(response.getHeader("Location"))
@@ -819,7 +819,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     def submit_reset_password_dialog(new_password):
       return self.publish(
         '%s/portal_password' % self.portal.getPath(),
-        stdin=StringIO(urllib.parse.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PasswordTool_viewResetPassword',
           'dialog_method': 'PasswordTool_changeUserPassword',
@@ -874,7 +874,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       return self.publish(
         '%s/portal_preferences' % self.portal.getPath(),
         basic='%s:current' % self.id(),
-        stdin=StringIO(urllib.parse.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           'Base_callDialogMethod:method': '',
           'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
           'dialog_method': 'PreferenceTool_setNewPassword',

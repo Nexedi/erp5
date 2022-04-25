@@ -30,7 +30,7 @@
 # Install openers
 # -> testTemplateTool.TestTemplateTool.test_getBusinessTemplateUrl
 import urllib.request, urllib.parse, urllib.error
-from io import BytesIO as StringIO
+from io import BytesIO
 import socket
 import os
 import mimetypes
@@ -72,7 +72,7 @@ class DirectoryFileHandler(urllib.request.FileHandler):
         size = stats.st_size
         modified = formatdate(stats.st_mtime, usegmt=True)
         mtype = mimetypes.guess_type(file)[0]
-        headers = message_from_bytes(StringIO(
+        headers = message_from_bytes(BytesIO(
             'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
             (mtype or 'text/plain', size, modified)))
         if host:
@@ -81,14 +81,14 @@ class DirectoryFileHandler(urllib.request.FileHandler):
            (not port and socket.gethostbyname(host) in self.get_names()):
             try:
               file_list = os.listdir(localfile)
-              s = StringIO()
+              s = BytesIO()
               s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
               s.write('<p>Directory Content:</p>')
               for f in file_list:
                 s.write('<p><a href="%s">%s</a></p>\n' % (urllib.parse.quote(f), f))
               s.write('</body></html>')
               s.seek(0)
-              headers = message_from_bytes(StringIO(
+              headers = message_from_bytes(BytesIO(
                   'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
                   ('text/html', size, modified)))
               return urllib2.addinfourl(s, headers, 'file:' + file)

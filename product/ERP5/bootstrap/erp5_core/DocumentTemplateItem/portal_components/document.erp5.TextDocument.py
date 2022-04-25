@@ -174,7 +174,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           # Include extra parameter for image conversions
           temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
-                                       file=io.StringIO(),
+                                       file=io.BytesIO(),
                                        filename=self.getId(),
                                        temp_object=1)
           temp_image._setData(result)

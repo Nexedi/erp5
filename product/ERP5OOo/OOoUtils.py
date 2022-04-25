@@ -37,7 +37,7 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-from io import StringIO
+from io import BytesIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions
@@ -73,7 +73,7 @@ class OOoBuilder(Implicit):
 
   def __init__(self, document):
     if hasattr(document, 'data') :
-      self._document = StringIO()
+      self._document = BytesIO()
 
       if isinstance(document.data, Pdata):
         # Handle image included in the style
@@ -88,7 +88,7 @@ class OOoBuilder(Implicit):
     elif hasattr(document, 'read') :
       self._document = document
     else :
-      self._document = StringIO()
+      self._document = BytesIO()
       self._document.write(document)
     self._image_count = 0
     self._manifest_additions_list = []
@@ -143,7 +143,7 @@ class OOoBuilder(Implicit):
         - indent the xml
     """
     content_xml = self.extract(ooo_xml_file_id)
-    output = StringIO()
+    output = BytesIO()
     content_doc = etree.XML(content_xml)
     root = content_doc.getroottree().getroot()
     #Declare zope namespaces
@@ -232,7 +232,7 @@ class OOoParser(Implicit):
     self.filename = None
 
   def openFromString(self, text_content):
-    return self.openFile(StringIO(text_content))
+    return self.openFile(BytesIO(text_content))
 
   def openFile(self, file_descriptor):
     """

@@ -30,7 +30,7 @@
 import os, sys
 import unittest
 from subprocess import check_output, CalledProcessError
-from io import StringIO
+from io import BytesIO
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from lib2to3.main import main
 
@@ -67,7 +67,7 @@ class Python3StyleTest(ERP5TypeTestCase):
     path = os.path.normpath(path + os.environ['TESTED_PRODUCT'])
     orig_stdout = sys.stdout
     try: # XXX: not thread-safe
-        sys.stdout = stdout = StringIO()
+        sys.stdout = stdout = BytesIO()
         returncode = main("lib2to3.fixes", ["--fix", fixer_name, path])
     finally:
         sys.stdout = orig_stdout

@@ -220,7 +220,7 @@ if ReportTool:
   from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
 
   from Products.PageTemplates.Expressions import boboAwareZopeTraverse
-  from io import StringIO
+  from io import BytesIO
   import xml.dom.minidom
   import urllib.request, urllib.parse, urllib.error,os.path
 
@@ -254,7 +254,7 @@ if ReportTool:
         elif hasattr(obj,'data'):
           obj = obj.data
 
-        return StringIO(str(obj))
+        return BytesIO(str(obj))
   else:
     class ERP5ResourceHandler(ResourceHandler):
       ''' Wrapper for ZODB Resources and files'''
@@ -287,7 +287,7 @@ if ReportTool:
         elif hasattr(obj,'data'):
           obj = obj.data
 
-        return StringIO(str(obj))
+        return BytesIO(str(obj))
 
 
 
@@ -329,7 +329,7 @@ if ReportTool:
     document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
 
     # create the PDF itself using the document and the template
-    buf = StringIO()
+    buf = BytesIO()
     document(template,buf)
     buf.seek(0)
     return buf.read()

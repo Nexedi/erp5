@@ -20,7 +20,7 @@ import time
 import traceback
 import urllib.request, urllib.parse, urllib.error
 from contextlib import contextmanager
-from io import StringIO
+from io import BytesIO
 from six.moves import configparser
 from six.moves.cPickle import dumps
 from glob import glob
@@ -824,9 +824,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
             return orig_extractUserIds(pas, request, plugins)
 
         if stdin is None:
-            stdin = StringIO()
+            stdin = BytesIO()
 
-        outstream = StringIO()
+        outstream = BytesIO()
         response = Response(stdout=outstream, stderr=sys.stderr)
 
         try:

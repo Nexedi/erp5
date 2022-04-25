@@ -438,7 +438,7 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     env['GATEWAY_INTERFACE']='CGI/1.1 '
     env['SCRIPT_NAME']='Main'
     env.update(headers)
-    return HTTPRequest(io.StringIO(), env, HTTPResponse())
+    return HTTPRequest(io.BytesIO(), env, HTTPResponse())
 
   def test_working_authentication(self):
     request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("login:password")})

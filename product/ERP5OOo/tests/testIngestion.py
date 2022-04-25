@@ -2108,7 +2108,7 @@ class Base_contributeMixin:
     """
     person = self.portal.person_module.newContent(portal_type='Person')
     empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=io.StringIO(),
+                            fp=io.BytesIO(),
                             environ=dict(REQUEST_METHOD='PUT'),
                             headers={"content-disposition":
                               "attachment; filename=empty;"}))
