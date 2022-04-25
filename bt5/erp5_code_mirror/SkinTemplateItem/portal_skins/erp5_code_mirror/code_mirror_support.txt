@@ -179,7 +179,7 @@
    function successHandler(data) {
      generateHistorySelectElement();
 
-     transition_message = $('#transition_message');
+     transition_message = $('.transition_message');
      transition_message.css('opacity', 0.0);
      transition_message.html(data);
      transition_message.animate({opacity: 1.0},

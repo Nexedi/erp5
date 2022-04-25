@@ -134,7 +134,7 @@ body, input, textarea, select, table {
 
 .code, code {font-family: monospace}
 
-#transition_message, .warning, .error, .important {
+.transition_message, .warning, .error, .important {
   color: #f00;
   font-weight: bold;
 }
