@@ -243,7 +243,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
        erp5.portal_type.XXX, GhostBaseMetaClass instance, *TAIL
     """
     if not cls.__isghost__:
-      for attr in cls.__dict__.keys():
+      for attr in ensure_list(cls.__dict__.keys()):
         if attr not in ('__module__',
                         '__doc__',
                         '__setstate__',
@@ -316,7 +316,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     result = PropertyHolder._getPropertyHolderItemList(cls)
     for parent in cls.mro():
       if parent.__module__.startswith('erp5.accessor_holder'):
-        for x in parent.__dict__.items():
+        for x in parent.__dict__.iteritems():
           if x[0] not in PropertyHolder.RESERVED_PROPERTY_SET:
             result.append(x)
     return result
