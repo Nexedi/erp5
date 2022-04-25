@@ -41,6 +41,7 @@ test.erp5.testPasswordTool
 test.erp5.testPerson
 test.erp5.testPredicate
 test.erp5.testPreferences
+test.erp5.testPropertyRecordable
 test.erp5.testProxify
 test.erp5.testProxyField
 test.erp5.testQueryModule
