@@ -53,7 +53,9 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-from Products.ERP5Type.patches import PropertySheets
+if six.PY2:
+  # XXX- patch for webdav
+  from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import OFSFile
@@ -63,7 +65,9 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-from Products.ERP5Type.patches import http_server
+if six.PY2:
+  # No more ZServer
+  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import StateChangeInfoPatch
@@ -89,15 +93,19 @@ from Products.ERP5Type.patches import SourceCodeEditorZMI
 from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
-from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import DTMLMethod
 from Products.ERP5Type.patches import DTMLDocument
+if six.PY2:
+  # No ZServer, so no webdav
+  from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-from Products.ERP5Type.patches import Publish
+if six.PY2:
+  # No ZServer
+  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 from Products.ERP5Type.patches import urllib_opener
 
