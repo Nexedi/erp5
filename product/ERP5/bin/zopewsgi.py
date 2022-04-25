@@ -1,3 +1,4 @@
+import six
 import argparse
 from io import BytesIO
 import logging
@@ -167,8 +168,12 @@ def runwsgi():
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
-    from Signals.SignalHandler import SignalHandler
-    SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
+    if six.PY2:
+      from Signals.SignalHandler import SignalHandler
+      SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
+    else:
+      import warnings
+      warnings.warn("zope4py3: SignalHandling not implemented!")
 
     if args.timerserver_interval:
       import Products.TimerService
