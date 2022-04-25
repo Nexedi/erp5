@@ -27,12 +27,16 @@
 #
 ##############################################################################
 
-from webdav.client import Resource
+try:
+  from webdav.client import Resource
+except ImportError: # six.PY3, Zope4
+  from webdav.Resource import Resource
 
 from App.config import getConfiguration
 import os
 import shutil
 import sys
+import six
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -285,6 +289,9 @@ class TemplateTool (BaseTool):
       """
         Publish the given business template at the given URL.
       """
+      if six.PY3:
+        raise NotImplementedError("TODO-zope4py3")
+
       business_template.build()
       export_string = self.manage_exportObject(id=business_template.getId(),
                                                download=True)
@@ -298,6 +305,9 @@ class TemplateTool (BaseTool):
       """
         Update an existing template from its publication URL.
       """
+      if six.PY3:
+        raise NotImplementedError("TODO-zope4py3")
+
       url = business_template.getPublicationUrl()
       id = business_template.getId()
       bt = Resource(url)
