@@ -1,13 +1,13 @@
 from zope.interface import implementer
-
+import six
 from Products.PortalTransforms.interfaces import IDataStream
 
 
 @implementer(IDataStream)
 class datastream:
     """A transformation datastream packet"""
-
-    __slots__ = ('name', '_data', '_metadata')
+    if six.PY2:
+        __slots__ = ('name', '_data', '_metadata')
 
     def __init__(self, name):
         self.__name__ = name
