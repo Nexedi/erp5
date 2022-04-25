@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
-from urllib import pathname2url
+from urllib.request import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -606,7 +606,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module.manage_permission('Copy or Move', ['Assignor'], False)
     sequence.edit(module_id=module.getId())
     module_object_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       obj = module.newContent(portal_type = 'Geek Object')
       self.assertIsNotNone(obj)
       module_object_list.append(obj)
@@ -630,7 +630,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module = portal._getOb(module_id, None)
     self.assertIsNotNone(module)
     module_object_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       obj = module.newContent(portal_type = 'Geek Object')
       self.assertIsNotNone(obj)
       module_object_list.append(obj.getId())
@@ -1178,7 +1178,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.assertTrue(base_category is not None)
     category_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       category = base_category.newContent(portal_type='Category')
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
@@ -1245,7 +1245,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(category is not None)
     subcategory_list = []
     subcategory_uid_dict = {}
-    for _ in xrange(10):
+    for _ in range(10):
       subcategory = category.newContent(portal_type='Category', title='toto')
       subcategory_list.append(subcategory.getId())
       subcategory_uid_dict[subcategory.getId()] = subcategory.getUid()
@@ -3040,7 +3040,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCreateFakeZODBScript(self, sequence=None, **kw):
     """Create a Script inside portal_skins
     """
-    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in xrange(10)])
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for _ in range(10)])
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:

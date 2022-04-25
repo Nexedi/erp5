@@ -49,6 +49,7 @@ from email import message_from_string
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
+from six.moves import xrange
 
 class FileUpload(file):
   """Act as an uploaded file.
@@ -397,7 +398,7 @@ def createZServer(log=os.devnull, zserver_type='http'):
       hs.__init__(ip, port, resolver=None, logger_object=lg)
       hs.install_handler(zhandler_class(module='Zope2', uri_base=''))
       return hs
-    except socket.error, e:
+    except socket.error as e:
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()
@@ -589,8 +590,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
 
   def getSortedCategoryList(line, base_id, category_list):
     result = []
-    index_list = line.index[base_id].keys()
-    index_list.sort()
+    index_list = sorted(line.index[base_id].keys())
     for category in category_list:
       for index in index_list:
         if line.index[base_id][index]:
@@ -666,7 +666,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
                           *category_list)
 
       cell.edit(**mapped_value_dict)
-      cell.setMappedValuePropertyList(mapped_value_dict.keys())
+      cell.setMappedValuePropertyList(list(mapped_value_dict.keys()))
 
       base_category_list = [category_path
                             for category_path in category_list

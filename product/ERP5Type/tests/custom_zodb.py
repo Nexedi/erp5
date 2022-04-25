@@ -7,6 +7,7 @@ from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments, instance_random
+from six.moves import xrange
 
 def _print(message):
   sys.stderr.write(message + "\n")

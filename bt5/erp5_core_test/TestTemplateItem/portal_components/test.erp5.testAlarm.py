@@ -144,7 +144,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_first_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
     now = DateTime(self.date_format               % (2006,10,6,15,00,00))
     right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,7,06,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,7,0o6,00,00))
     right_fourth_date = DateTime(self.date_format % (2006,10,7,10,00,00))
     alarm = self.newAlarm(enabled=True)
     hour_list = (6,10,15,21)
@@ -240,8 +240,8 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_09_SomeMonthDaysSomeHours(self):
     """- every 1st and 15th every month, at 12 and 14"""
-    right_first_date = DateTime(self.date_format  % (2006,10,01,12,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,01,14,00,00))
+    right_first_date = DateTime(self.date_format  % (2006,10,0o1,12,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,0o1,14,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,15,14,00,00))
     alarm = self.newAlarm(enabled=True)
@@ -253,9 +253,9 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_10_OnceEvery2Month(self):
     """- every 1st day of every 2 month, at 6"""
-    right_first_date = DateTime(self.date_format  % (2006,10,01,6,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,12,01,6,00,00))
-    right_third_date = DateTime(self.date_format  % (2007,2,01,6,00,00))
+    right_first_date = DateTime(self.date_format  % (2006,10,0o1,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,12,0o1,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2007,2,0o1,6,00,00))
     alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,))

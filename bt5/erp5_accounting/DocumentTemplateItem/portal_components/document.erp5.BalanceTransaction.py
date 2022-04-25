@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from UserDict import UserDict
+
+from collections import UserDict
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet

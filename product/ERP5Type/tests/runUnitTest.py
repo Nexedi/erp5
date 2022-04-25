@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+from __future__ import print_function
 import os
 import sys
 import pdb
@@ -677,7 +678,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     transaction.commit()
   except:
     import traceback
-    print "runUnitTestList Exception : %r" % (traceback.print_exc(),)
+    print("runUnitTestList Exception : %r" % (traceback.print_exc(),))
     # finally does not expect opened transaction, even in the
     # case of a Ctrl-C.
     transaction.abort()
@@ -716,10 +717,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
 def usage(stream, msg=None):
   if msg:
-    print >>stream, msg
-    print >>stream
+    print(msg, file=stream)
+    print(file=stream)
   program = os.path.basename(sys.argv[0])
-  print >>stream, __doc__ % {"program": program}
+  print(__doc__ % {"program": program}, file=stream)
 
 log_directory = None
 def main(argument_list=None):
@@ -772,7 +773,7 @@ def main(argument_list=None):
         "log_directory=",
         "with_wendelin_core"
         ])
-  except getopt.GetoptError, msg:
+  except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
     sys.exit(2)
 
@@ -895,10 +896,9 @@ def main(argument_list=None):
     elif opt == "--with_wendelin_core":
       os.environ["with_wendelin_core"] = "1"
 
-  bt5_path_list += filter(None,
-    os.environ.get("erp5_tests_bt5_path", "").split(','))
+  bt5_path_list += [_f for _f in os.environ.get("erp5_tests_bt5_path", "").split(',') if _f]
   valid_path_list = []
-  for path in map(os.path.expanduser, bt5_path_list) if bt5_path_list else (
+  for path in [os.path.expanduser(x) for x in bt5_path_list] if bt5_path_list else (
       os.path.join(real_instance_home if WIN else instance_home, 'bt5'),):
     if os.path.exists(path):
       valid_path_list.append(path)

@@ -141,7 +141,7 @@ for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, formatText(message))
+  print(MESSAGE_TEMPLATE % (comment, formatText(message)))
 
 context.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
 

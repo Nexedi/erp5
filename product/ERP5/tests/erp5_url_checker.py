@@ -12,17 +12,18 @@
 # user: user1    password: user1
 # user: user2    password: user2
 
+from __future__ import print_function
 from threading import Thread
 from time import sleep
 from urllib import addinfourl
-from urllib import splithost
-from urllib import splituser
-from urllib import unquote
-from urllib import splittype
+from urllib.parse import splithost
+from urllib.parse import splituser
+from urllib.parse import unquote
+from urllib.parse import splittype
 import string
 
-from urllib import FancyURLopener
-from Cookie import SimpleCookie
+from urllib.request import FancyURLopener
+from http.cookies import SimpleCookie
 
 def main():
   max_thread = 7  # The number of thread we want by the same time
@@ -53,7 +54,7 @@ def main():
       threads[len(threads)-1].start()
       request_number += 1
       i+=1
-      print "thread: %i request: %i url: %s" % (i,request_number,url)
+      print("thread: %i request: %i url: %s" % (i,request_number,url))
     else:
       for t in range(0,max_thread):
         if threads[t].isAlive() == 0:
@@ -63,7 +64,7 @@ def main():
           threads[t].start()
           i+=1
           request_number += 1
-          print "thread: %i request: %i url: %s" % (i,request_number,url)
+          print("thread: %i request: %i url: %s" % (i,request_number,url))
           break
 
 
@@ -76,7 +77,7 @@ class URLOpener(FancyURLopener):
 
     def open_http(self, url, data=None):
         """Use HTTP protocol."""
-        import httplib
+        import http.client
         user_passwd = None
         if type(url) is type(""):
             host, selector = splithost(url)
@@ -104,24 +105,24 @@ class URLOpener(FancyURLopener):
             auth = string.strip(base64.encodestring(user_passwd))
         else:
             auth = None
-        h = httplib.HTTP(host)
+        h = http.client.HTTP(host)
         if data is not None:
             h.putrequest('POST', selector)
             h.putheader('Content-type', 'application/x-www-form-urlencoded')
             h.putheader('Content-length', '%d' % len(data))
         else:
             h.putrequest('GET', selector)
-        for cookie in self.cookies.items():
+        for cookie in list(self.cookies.items()):
             h.putheader('Cookie', '%s=%s;' % cookie)
 
         if auth: h.putheader('Authorization', 'Basic %s' % auth)
         if realhost: h.putheader('Host', realhost)
-        for args in self.addheaders: apply(h.putheader, args)
+        for args in self.addheaders: h.putheader(*args)
         h.endheaders()
         if data is not None:
             h.send(data + '\r\n')
         errcode, errmsg, headers = h.getreply()
-        if headers and headers.has_key('set-cookie'):
+        if headers and 'set-cookie' in headers:
             cookies = headers.getallmatchingheaders('set-cookie')
             for cookie in cookies: self.cookies.load(cookie)
 
@@ -146,15 +147,15 @@ class Checker(URLOpener):
       thread.start()
       while thread.isAlive():
         sleep(0.5)
-      print "Connection to %s went fine" % url
-    except IOError, (errno, strerror):
-      print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
+      print("Connection to %s went fine" % url)
+    except IOError as e:
+      print("Can't connect to %s because of I/O error(%s): %s" % (url, e.errno, e.strerror))
 
   def SearchUrl(self, url=None):
     try:
       conn = self.open_http(url)
-    except IOError, (errno, strerror):
-      print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
+    except IOError as e:
+      print("Can't connect to %s because of I/O error(%s): %s" % (url, e.errno, e.strerror))
 
 
   def raise_error(self, error_key, field):

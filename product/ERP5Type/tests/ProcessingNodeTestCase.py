@@ -2,7 +2,7 @@
 import errno, logging, os, socket, time
 import itertools
 from threading import Thread
-from UserDict import IterableUserDict
+from collections import UserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase
@@ -14,7 +14,7 @@ from Products.ERP5Type.tests.utils import \
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
-class DictPersistentWrapper(IterableUserDict, object):
+class DictPersistentWrapper(UserDict, object):
 
   def __metaclass__(name, base, d):
     def wrap(attr):
@@ -74,7 +74,7 @@ def patchActivityTool():
     def __init__(self, ob):
       self._ob = ob
     def __getattr__(self, attr):
-      m = getattr(self._ob, attr).im_func
+      m = getattr(self._ob, attr).__func__
       return lambda *args, **kw: m(self, *args, **kw)
   @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):
@@ -112,7 +112,7 @@ def Application_resolveConflict(self, old_state, saved_state, new_state):
   new_state['test_distributing_node'] = test_distributing_node_set.pop()
 
   old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
-                     for state in old_state, saved_state, new_state]
+                     for state in (old_state, saved_state, new_state)]
   # The value of these attributes don't have proper __eq__ implementation.
   for attr in '__before_traverse__', '__before_publishing_traverse__':
     del old_state[attr], saved_state[attr]
@@ -318,7 +318,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()
-          except AssertionError, e:
+          except AssertionError as e:
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages

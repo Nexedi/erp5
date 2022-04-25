@@ -26,9 +26,9 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import StringIO
-import urllib
-import httplib
+import io
+import urllib.request, urllib.parse, urllib.error
+import http.client
 
 
 class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
@@ -118,7 +118,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     ret = self.publish(
       '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
       basic='%s:current' % self.id(),
-      stdin=StringIO.StringIO(urllib.urlencode({
+      stdin=io.StringIO(urllib.parse.urlencode({
         'Base_callDialogMethod:method': '',
         'dialog_id': 'Alarm_viewSolveDialog',
         'dialog_method': 'Alarm_solve',
@@ -128,7 +128,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
       request_method="POST",
       handle_errors=False
     )
-    self.assertEqual(httplib.FOUND, ret.getStatus())
+    self.assertEqual(http.client.FOUND, ret.getStatus())
 
     alarm.Alarm_solve()
 

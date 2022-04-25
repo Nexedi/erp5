@@ -17,7 +17,7 @@ def getAccountsForGap(gap_id):
   return GAP.restrictedTraverse(gap_id).getGapRelatedValueList(portal_type='Account')
 
 def getUniqueGapList(accounts_list):
-	return dict([ (x.getGap(),True) for x in accounts_list]).keys()
+	return list(dict([ (x.getGap(),True) for x in accounts_list]).keys())
 
 def getCell(row_number=1):
 	return '%s%d'%(ooo_struct['rows'][row_number-1], ooo_struct['line'])

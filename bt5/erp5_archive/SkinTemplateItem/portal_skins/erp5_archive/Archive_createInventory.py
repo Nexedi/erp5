@@ -26,7 +26,7 @@ node_inventory_dict = {}
 activate_kw = {"tag": tag}
 for inventory in node_inventory_list:
   # Do only one inventory per node
-  if not node_inventory_dict.has_key(inventory.node_relative_url):
+  if inventory.node_relative_url not in node_inventory_dict:
     
     inv = inventory_module.newContent(portal_type="Archive Inventory",
                                       destination=inventory.node_relative_url,
@@ -99,7 +99,7 @@ for inv in node_inventory_dict.values():
 payment_inventory_dict = {}
 for inventory in payment_inventory_list:
   # Do only one inventory per payment
-  if not payment_inventory_dict.has_key(inventory.payment_uid):
+  if inventory.payment_uid not in payment_inventory_dict:
     
     inv = inventory_module.newContent(portal_type="Archive Inventory",
                                       destination=inventory.node_relative_url,

@@ -28,9 +28,10 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 import threading
 import unittest
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import transaction
 import pkg_resources
 from DateTime import DateTime
@@ -67,13 +68,13 @@ class TestInvalidationBug(ERP5TypeTestCase):
       query = connection.factory()('-' + connection.connection_string).query
       sql = "rollback\0select * from %s where path='%s'" % (table, path)
       test_list.append(lambda query=query, sql=sql: len(query(sql)[1]))
-    result_list = [map(apply, test_list)]
+    result_list = [t() for t in test_list]
     Transaction_commitResources = transaction.Transaction._commitResources
     connection = module._p_jar
     def _commitResources(self):
       def tpc_finish(rm, txn):
         rm.__class__.tpc_finish(rm, txn)
-        result_list.append(None if rm is connection else map(apply, test_list))
+        result_list.append(None if rm is connection else [t() for t in test_list])
       try:
         for rm in self._resources:
           rm.tpc_finish = lambda txn, rm=rm: tpc_finish(rm, txn)
@@ -160,7 +161,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
         storage._server = None
         # ... monkey-patch done
         ## create object
-        urllib.urlopen(new_content_url).read()
+        urllib.request.urlopen(new_content_url).read()
         ## validate reindex activity
         activity_tool.distribute()
         self.assertEqual(1, len(activity_tool.getMessageList()))
@@ -188,8 +189,8 @@ class TestInvalidationBug(ERP5TypeTestCase):
     module.setIdGenerator('_generatePerDayId')
     #module.migrateToHBTree()
     self.tic()
-    print 'OID(%s) = %r' % (module.getRelativeUrl(), module._p_oid)
-    print '  OID(_tree) = %r' % module._tree._p_oid
+    print('OID(%s) = %r' % (module.getRelativeUrl(), module._p_oid))
+    print('  OID(_tree) = %r' % module._tree._p_oid)
     previous = DateTime()
     skin_folder = self.getPortal().portal_skins.custom
     if 'create_script' in skin_folder.objectIds():
@@ -215,7 +216,7 @@ if (count % 500) < 5:
     log('creation speed: %s obj/s' % ((count - start[0]) /
         (86400 * (DateTime() - start[1]))))
 """)
-    for x in xrange(0,200):
+    for x in range(0,200):
       module.activate(activity='SQLQueue', priority=2).create_script()
     self.tic()
 

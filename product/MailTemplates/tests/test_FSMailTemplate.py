@@ -127,7 +127,7 @@ else:
             from zExceptions import Redirect
             try:
                 self.assertRaises(self.ob.fake_skin.test.manage_workspace(self.r))
-            except Redirect,r:
+            except Redirect as r:
                 # this may appear to be incorrect, but http://foo/test_mt
                 # is what we set as REQUEST['URL1']
                 self.assertEqual(r.args,('http://foo/test_mt/manage_main',))

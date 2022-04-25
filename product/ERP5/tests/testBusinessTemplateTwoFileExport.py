@@ -119,7 +119,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
         pass
       file_document_path = document_path + extension
       self.assertEqual([os.path.basename(file_document_path)],
-                       map(os.path.basename, exported))
+                       list(map(os.path.basename, exported)))
       with open(file_document_path, 'rb') as test_file:
         self.assertEqual(test_file.read(), data)
     else:

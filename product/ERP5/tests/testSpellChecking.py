@@ -114,7 +114,7 @@ class TestSpellChecking(ERP5TypeTestCase):
     message = '"%s" is misspelled, suggestion are : "%s"'
     result_dict = {}
     for word, result_list in self.spellChecker(sentence).iteritems():
-      filtered_result_list = filter(lambda x: x not in ('*', ''), result_list)
+      filtered_result_list = [x for x in result_list if x not in ('*', '')]
       if filtered_result_list:
         result_dict[word] = message % (word, \
                                 filtered_result_list[0].split(':')[-1].strip())

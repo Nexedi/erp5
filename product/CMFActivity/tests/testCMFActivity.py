@@ -1020,7 +1020,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     activity_tool = self.getActivityTool()
     def delete_volatiles():
-      for property_id in activity_tool.__dict__.keys():
+      for property_id in list(activity_tool.__dict__.keys()):
         if property_id.startswith('_v_'):
           delattr(activity_tool, property_id)
     organisation_module = self.getOrganisationModule()
@@ -1540,7 +1540,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # on REQUEST information when the method was activated.
     request = self.portal.REQUEST
 
-    request.setServerURL('http', 'test.erp5.org', '9080')
+    request.setServerURL('http', 'test.erp5.org', 9080)
     request.other['PARENTS'] = [self.portal.organisation_module]
     request.setVirtualRoot('virtual_root')
 
@@ -1559,7 +1559,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
       # REQUEST, such as TimerServer.
-      request.setServerURL('https', 'anotherhost.erp5.org', '443')
+      request.setServerURL('https', 'anotherhost.erp5.org', 443)
       request.other['PARENTS'] = [self.app]
       request.setVirtualRoot('')
       # obviously, the object url is different
@@ -2464,7 +2464,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       check(1, tag="foo")
       check(0, tag="foo", method_id="getUid")
       check(1, processing_node=-1)
-      check(3, processing_node=range(-5,5))
+      check(3, processing_node=list(range(-5,5)))
     test()
     self.commit()
     test(check)

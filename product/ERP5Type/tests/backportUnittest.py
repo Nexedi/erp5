@@ -35,7 +35,7 @@ def patch():
             self.stream.writeln()
         # 'None' correspond to redundant errors due to site creation errors,
         # and we do not display them here.
-        self.printErrorList('ERROR', filter(None, self.errors))
+        self.printErrorList('ERROR', [_f for _f in self.errors if _f])
         self.printErrorList('FAIL', self.failures)
         if self.unexpectedSuccesses:
           self.stream.writeln(self.separator1)

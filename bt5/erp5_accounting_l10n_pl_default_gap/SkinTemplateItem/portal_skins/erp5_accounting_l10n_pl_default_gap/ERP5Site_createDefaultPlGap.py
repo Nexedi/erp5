@@ -251,7 +251,7 @@ for line in gap_text.splitlines():
       cpath += n
       path.append(cpath)
     parent = gap.restrictedTraverse('/'.join(path))
-    print 'Added to ',parent
+    print('Added to ',parent)
 
   parent.newContent(id=num, title=descr)  
   

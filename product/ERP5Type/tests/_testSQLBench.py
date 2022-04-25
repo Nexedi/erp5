@@ -1,3 +1,4 @@
+from __future__ import print_function
 ##############################################################################
 #
 # Copyright (c) 2013 Nexedi SA and Contributors. All Rights Reserved.
@@ -55,11 +56,11 @@ class TestSQLBench(unittest.TestCase):
        sqlbench_path + '/test-alter-table',
       '--database', database,
       '--host', host, '--user', user, '--password', password]
-    print command_list
+    print(command_list)
     process = subprocess.Popen(command_list,
       cwd = sqlbench_path,
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     self.assertEqual(0, len(error), error)
-    print output
+    print(output)
     self.assertTrue(output.find("Total time: ")>=0)

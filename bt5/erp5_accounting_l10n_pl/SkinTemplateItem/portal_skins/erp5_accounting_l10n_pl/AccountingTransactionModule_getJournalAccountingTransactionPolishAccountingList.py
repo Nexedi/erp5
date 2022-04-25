@@ -19,6 +19,7 @@ return a list of dictionnaries like that :
 }
 """
 
+from past.builtins import cmp
 request = context.REQUEST
 at_date = request['at_date']
 transaction_section_category = request['transaction_section_category']
