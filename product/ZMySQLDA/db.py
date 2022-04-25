@@ -111,6 +111,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
+from Products.ERP5Type.Utils import str2bytes
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -203,7 +204,7 @@ def ord_or_None(s):
         return ord(s)
 
 match_select = re.compile(
-    r'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
+    br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
     re.IGNORECASE | re.DOTALL,
 ).match
 
@@ -418,12 +419,14 @@ class DB(TM):
         """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None
+        if not isinstance(query_string, bytes):
+          query_string = str2bytes(query_string)
         # XXX deal with a typical mistake that the user appends
         # an unnecessary and rather harmful semicolon at the end.
         # Unfortunately, MySQLdb does not want to be graceful.
-        if query_string[-1:] == ';':
+        if query_string[-1:] == b';':
           query_string = query_string[:-1]
-        for qs in query_string.split('\0'):
+        for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
                 select_match = match_select(qs)
@@ -432,12 +435,12 @@ class DB(TM):
                     if query_timeout is not None:
                         statement, select = select_match.groups()
                         if statement:
-                            statement += ", max_statement_time=%f" % query_timeout
+                            statement += b", max_statement_time=%f" % query_timeout
                         else:
-                            statement = "max_statement_time=%f" % query_timeout
-                        qs = "SET STATEMENT %s FOR SELECT %s" % (statement, select)
+                            statement = b"max_statement_time=%f" % query_timeout
+                        qs = b"SET STATEMENT %s FOR SELECT %s" % (statement, select)
                     if max_rows:
-                        qs = "%s LIMIT %d" % (qs, max_rows)
+                        qs = b"%s LIMIT %d" % (qs, max_rows)
                 c = self._query(qs)
                 if c:
                     if desc is not None is not c.describe():
@@ -640,7 +643,7 @@ class DeferredDB(DB):
 
     def query(self, query_string, max_rows=1000):
         self._register()
-        for qs in query_string.split('\0'):
+        for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
                 if match_select(qs):
