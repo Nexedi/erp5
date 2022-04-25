@@ -53,7 +53,7 @@ SECURITY_PARAMETER_ID = 'local_roles'
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 ModuleSecurityInfo(__name__).declarePublic('SECURITY_PARAMETER_ID')
 
-class WorkflowTool(BaseTool, OriginalWorkflowTool):
+class WorkflowTool(BaseTool):
   """
   A new container for DC workflow and workflow;
   inherits methods from original WorkflowTool.py;
@@ -74,6 +74,21 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     'CategoryCore',
     'DublinCore',
   )
+
+
+  def _isBootstrapRequired(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+    """
+    return False
+
+  def _bootstrap(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+    """
+    pass
 
   def filtered_meta_types(self, user=None):
     return False
