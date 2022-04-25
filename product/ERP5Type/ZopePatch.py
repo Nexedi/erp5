@@ -73,10 +73,13 @@ if WITH_LEGACY_WORKFLOW:
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
-from Products.ERP5Type.patches import DemoStorage
+if six.PY2:
+  # Check with other work on ZODB
+  from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
-from Products.ERP5Type.patches import ZopePageTemplateUtils
+if six.PY2:
+  from Products.ERP5Type.patches import ZopePageTemplateUtils
 from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem
 from Products.ERP5Type.patches import ExternalMethod
@@ -93,6 +96,9 @@ from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
+  # Not needed with Zope4 and new ZMI
+  from Products.ERP5Type.patches import DTMLMethod
+  from Products.ERP5Type.patches import DTMLDocument
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import CMFCoreUtils
@@ -104,7 +110,9 @@ if six.PY2:
   # No ZServer
   from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
-from Products.ERP5Type.patches import urllib_opener
+if six.PY2:
+  # XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
+  from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
