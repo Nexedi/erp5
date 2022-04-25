@@ -820,6 +820,7 @@ body[dir="rtl"] .logged_in_as {
   color: #f40;
   background-color: inherit;
   font-weight: bold;
+  white-space: pre-wrap;
 }
 
 #information_area, /* BBB */
