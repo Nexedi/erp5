@@ -142,9 +142,11 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
                 categories=('price_currency/' + currency_url,
                             'resource/' + resource)))
             if exchange_ratio is not None:
-              kw[arrow + '_total_asset_price'] = round(
-                exchange_ratio * input_movement.getQuantity(),
-                currency.getQuantityPrecision())
+              if arrow == 'destination':
+                sign = 1
+              else:
+                sign = -1
+              kw[arrow + '_total_asset_price'] = exchange_ratio * input_movement.getQuantity() * sign
 
     return kw
 
