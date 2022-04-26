@@ -706,6 +706,11 @@ class BusinessProcess(Path, XMLObject):
       except ValueError:
         pass
       kw.update(update_property_dict)
+      for arrow in ('destination', 'source'):
+        asset_price = arrow + '_total_asset_price'
+        if kw.get(asset_price) and (not trade_model_path.getQuantity()) and trade_model_path.getEfficiency():
+          kw[asset_price] = kw[asset_price] * trade_model_path.getEfficiency()
+
       movement._edit(force_update=True, **kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
