@@ -8,7 +8,13 @@
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testUpgrader</string> </value>
+            <value> <string>testPropertyRecordable</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -18,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testUpgrader</string> </value>
+            <value> <string>test.erp5.testPropertyRecordable</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
