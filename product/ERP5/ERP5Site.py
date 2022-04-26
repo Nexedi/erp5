@@ -2152,6 +2152,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_catalog', 'Catalog Tool')
 
     sql_reset = kw.get('sql_reset', 0)
+    sql_reset = 1 ############### DEBUG
     def addSQLConnection(id, title, **kw):
       if p.hasObject(id):
         return
