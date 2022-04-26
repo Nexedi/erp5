@@ -113,7 +113,7 @@
 
           function pushNewCard() {
             if (module_list) {
-              if (current_business_application_title === '') {
+              if (!current_business_application_title) {
                 other_module_list = module_list;
               } else {
                 card_list.push({

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.4.72'
+version = '0.4.73'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
@@ -56,7 +56,6 @@ setup(name=name,
         'testbrowser': ['zope.testbrowser >= 5.0.0', 'z3c.etestbrowser'],
         'benchmark': benchmark_install_require_list,
         'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
-        'scalability_tester': [name+'[benchmark]', 'slapos.tool.nosqltester'],
         'zodbanalyse': ['ZODB'],
       },
       zip_safe=True,
@@ -67,8 +66,6 @@ setup(name=name,
           'testnode = erp5.util.testnode:main [testnode]',
           'performance_tester_erp5 = '\
             'erp5.util.benchmark.performance_tester:main [benchmark]',
-          'scalability_tester_erp5 = '\
-            'erp5.util.benchmark.scalability_tester:main [scalability_tester]',
           'runScalabilityTestSuite = '\
             'erp5.util.scalability.runScalabilityTestSuite:main',
           'requestUrl = '\

@@ -79,10 +79,6 @@
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>reference</string> </key>
-                    <value> <string>SOAPConnectionPlugin</string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -124,11 +120,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>modify</string> </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>modified</string> </value>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>

@@ -26,11 +26,7 @@
 #
 ##############################################################################
 
-import ZPublisher.HTTPRequest
-import ZPublisher.HTTPResponse
-import ZPublisher.Converters
+import Zope2.Startup.datatypes
 
 # Force (do not depend on) the default-zpublisher-encoding setting of zope.conf
-ZPublisher.HTTPRequest.default_encoding = 'utf-8'
-ZPublisher.HTTPResponse.default_encoding = 'utf-8'
-ZPublisher.Converters.default_encoding = 'utf-8'
+Zope2.Startup.datatypes.default_zpublisher_encoding('utf-8')
