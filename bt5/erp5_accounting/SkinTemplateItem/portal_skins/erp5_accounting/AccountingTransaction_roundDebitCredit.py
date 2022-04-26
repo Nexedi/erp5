@@ -19,7 +19,16 @@ total_quantity = 0.0
 line_list = context.getMovementList(
             portal_type=context.getPortalAccountingMovementTypeList())
 
+destination_exchange_ratio = None
+source_exchange_ratio = None
+
 for line in line_list:
+  # Get origianl exchange ratio
+  if not destination_exchange_ratio and line.getDestinationTotalAssetPrice():
+    destination_exchange_ratio = line.getDestinationTotalAssetPrice() / line.getQuantity()
+  if not source_exchange_ratio and line.getSourceTotalAssetPrice():
+    source_exchange_ratio = line.getSourceTotalAssetPrice() / line.getQuantity()
+
   line_quantity = round(line.getQuantity(), precision)
   line.setQuantity(line_quantity)
   total_quantity += line_quantity
@@ -100,3 +109,10 @@ if abs_total_quantity != 0:
 if line_to_adjust is not None:
   line_to_adjust.setQuantity(
     round(line_to_adjust.getQuantity() - total_quantity, precision))
+
+# Reset asset price for the new quantity
+for line in line_list:
+  if line.getDestinationTotalAssetPrice():
+    line.setDestinationTotalAssetPrice(line.getQuantity() * destination_exchange_ratio)
+  if line.getSourceTotalAssetPrice():
+    line.setSourceTotalAssetPrice(line.getQuantity() * source_exchange_ratio)
