@@ -469,16 +469,6 @@ div.bottom_actions button#input-save-view span.image {
   background-image: url('<tal:block tal:replace="site_url"/>/images/save-preview.png');
 }
 
-div.pdf-preview-navigation {
-  font-size:120%;
-  text-align:center;
-}
-
-div.pdf-preview-navigation img {
-  float:none;
-  margin:0;
-}
-
 div.error > div > input,
 div.error > div > textarea {
   border:1px solid red;
@@ -686,36 +676,5 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {
   text-decoration: none;
   background: #eee;
 }
-
-/* DMS PDF navigation 
-  XXX: probably part of erp5_dms.bt5 */
-div.pdf-preview-navigation img{
-  width: 22px;
-  height: 22px;
-  margin-right: 1px;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-}
-
-div.pdf-preview-navigation img.shaded{
-  opacity: 0.2;
-}
-
-div.pdf-preview-navigation img.first{
-  background-image:url("images/2leftarrowb.png");
-}
-
-div.pdf-preview-navigation img.previous{
-  background-image:url("images/1leftarrowb.png");
-}
-
-div.pdf-preview-navigation img.next{
-  background-image:url("images/1rightarrowb.png");
-}
-
-div.pdf-preview-navigation img.last{
-  background-image:url("images/2rightarrowb.png");
-}
-
 
 </tal:block>
