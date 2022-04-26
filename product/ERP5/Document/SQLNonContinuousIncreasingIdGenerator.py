@@ -197,7 +197,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if not (self.last_max_id_dict or
             getattr(portal_ids, 'dict_length_ids', None) is None):
       dump_dict = portal_ids.dict_length_ids
-      for id_group, last_id in dump_dict.items():
+      for id_group, last_id in list(dump_dict.items()):
         last_insert_id = get_last_id_method(id_group=id_group)
         last_id = int(last_id.value)
         if len(last_insert_id) != 0:
@@ -261,7 +261,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if not isinstance(id_dict, dict):
       raise TypeError('the argument given is not a dictionary')
     new_id_dict = {}
-    for key, value in id_dict.items():
+    for key, value in list(id_dict.items()):
       if isinstance(value, int):
         set_last_id_method(id_group=key, last_id=value)
         # The id must be a ScalarMaxConflictResolver object for the persistent dict

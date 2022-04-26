@@ -114,7 +114,7 @@ class NumericCaptchaProvider(object):
 
   def generate(self, field):
     # First step : generate the calculus. It is really simple.
-    terms = [str(random.randint(1, 20)), random.choice(self.operator_set.keys())]
+    terms = [str(random.randint(1, 20)), random.choice(list(self.operator_set.keys()))]
     #XXX: Find a way to prevent too complex captchas (for instance 11*7*19...)
     #terms += [str(random.randint(1, 20)), random.choice(operator_set.keys())]
     terms.append(str(random.randint(1, 20)))
@@ -128,7 +128,7 @@ class NumericCaptchaProvider(object):
   def getHTML(self, field, captcha_key):
     # Make the text harder to parse for a computer
     calculus_text = captcha_key
-    for (operator, replacement) in self.operator_set.items():
+    for (operator, replacement) in list(self.operator_set.items()):
       calculus_text = calculus_text.replace(operator, replacement)
 
     return "<span class=\"%s\">%s</span>" % (field.get_value('css_class'), calculus_text)

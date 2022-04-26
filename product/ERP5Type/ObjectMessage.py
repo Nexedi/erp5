@@ -100,7 +100,7 @@ class ObjectMessage:
   def __repr__(self):
     repr_str = '<%s object at 0x%x\n ' % (self.__class__.__name__, id(self))
     repr_str += '\n '.join([' %r: %r' % (k, v) \
-                           for k, v in self.__dict__.items()])
+                           for k, v in list(self.__dict__.items())])
     repr_str += '>'
     return repr_str
 

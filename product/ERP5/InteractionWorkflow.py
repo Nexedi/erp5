@@ -206,7 +206,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionValueList')
   def getTransitionValueList(self):
     if self.interactions is not None:
-      return self.interactions.values()
+      return list(self.interactions.values())
     return []
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionReferenceList')
@@ -218,7 +218,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariableValueList')
   def getVariableValueList(self):
     if self.variables is not None:
-      return self.variables.values()
+      return list(self.variables.values())
     return []
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')

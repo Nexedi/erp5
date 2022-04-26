@@ -162,7 +162,7 @@ class Matrix(object):
       else:
         delete = set()
         to_delete.append(delete)
-        for k, v in id_dict.items():
+        for k, v in list(id_dict.items()):
           try:
             axis.remove(k)
             if last_id < v:
@@ -254,7 +254,7 @@ class Matrix(object):
           self._delObject(cell_id)
           return False
       return True
-    cell_id_list = filter(is_in_range, cell_id_list)
+    cell_id_list = [x for x in cell_id_list if is_in_range(x)]
 
     # Secondly, rename coordinates. This does not change cell ids.
     for i in range(max(new_len, current_len)):
@@ -263,7 +263,7 @@ class Matrix(object):
       else:
         if i >= current_len:
           self.index[base_id][i] = PersistentMapping()
-        for place in self.index[base_id][i].keys():
+        for place in list(self.index[base_id][i].keys()):
           if place not in kw[i]:
             del self.index[base_id][i][place]
 
@@ -319,7 +319,7 @@ class Matrix(object):
       cell_range = aq_base(self).index[base_id]
     except (AttributeError, KeyError):
       return []
-    return [x.keys() for _, x in sorted(cell_range.iteritems())]
+    return [list(x.keys()) for _, x in sorted(cell_range.iteritems())]
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
   def newCell(self, *kw, **kwd):
@@ -366,7 +366,7 @@ class Matrix(object):
     if base_id not in self.index:
       return ()
     index = self.index[base_id]
-    id_tuple = [v.keys() for v in index.itervalues()]
+    id_tuple = [list(v.keys()) for v in index.itervalues()]
     if len(id_tuple) == 0:
       return ()
     return cartesianProduct(id_tuple)
@@ -448,7 +448,7 @@ class Matrix(object):
     """
     if getattr(aq_base(self), 'index', None) is None:
       return ()
-    return self.index.keys()
+    return list(self.index.keys())
 
   security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
   def delMatrix(self, base_id = 'cell'):
@@ -551,7 +551,7 @@ class Matrix(object):
           to_delete_set.add(object_id)
         else :
           for i, coordinate in enumerate(cell_coordinate_list):
-            if coordinate not in base_item[i].values():
+            if coordinate not in list(base_item[i].values()):
               addError("Cell %s is out of bound" % object_id)
               to_delete_set.add(object_id)
               break

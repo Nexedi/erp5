@@ -64,13 +64,11 @@ class Parser:
                 msg, self.raw[self.lines[line]:]))
         self.out.write('\n</pre>\n')
 
-    def __call__(self, toktype, toktext, (srow,scol), (erow,ecol), line):
+    def __call__(self, toktype, toktext, xxx_todo_changeme, xxx_todo_changeme1, line):
         """ Token handler.
         """
-        #print "type", toktype, token.tok_name[toktype], "text", toktext,
-        #print "start", srow,scol, "end", erow,ecol, "<br>"
-
-        ## calculate new positions
+        (srow,scol) = xxx_todo_changeme
+        (erow,ecol) = xxx_todo_changeme1
         oldpos = self.pos
         newpos = self.lines[srow] + scol
         self.pos = newpos + len(toktext)

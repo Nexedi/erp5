@@ -21,7 +21,7 @@ for char in s.encode('iso8859_1'):
   elif char.isspace() or char in ('+', '-'):
     clean_id += '_'
   else:
-    for (safe_char, char_list) in translation_map.items():
+    for (safe_char, char_list) in list(translation_map.items()):
       if char in char_list:
         clean_id += safe_char
         break

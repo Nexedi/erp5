@@ -130,7 +130,7 @@ class MovementCollectionUpdaterMixin:
       prevision_to_decision_map.append((None, no_group_list))
 
     # Second, let us create small groups of movements
-    for tester_key in prevision_movement_dict.keys():
+    for tester_key in list(prevision_movement_dict.keys()):
       for prevision_movement in prevision_movement_dict[tester_key]:
         map_list = []
         for decision_movement in decision_movement_dict.get(tester_key, ()):

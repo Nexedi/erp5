@@ -286,7 +286,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
-    applicable_rule_list = applicable_rule_dict.values()
+    applicable_rule_list = list(applicable_rule_dict.values())
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
       try:

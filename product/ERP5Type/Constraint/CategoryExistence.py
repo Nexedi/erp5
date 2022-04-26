@@ -62,7 +62,7 @@ class CategoryExistence(Constraint):
     error_list = []
     portal_type = self.constraint_definition.get('portal_type', ())
     # For each attribute name, we check if defined
-    for base_category in self.constraint_definition.keys():
+    for base_category in list(self.constraint_definition.keys()):
       if base_category in ('portal_type', ):
         continue
       mapping = dict(base_category=base_category)

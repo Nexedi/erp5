@@ -120,7 +120,7 @@ def addToDate(date, to_add=None, **kw):
     if 1 > return_value[key] % 1 > 0:
       return_value[lesser_key_dict[key]] += return_value[key] % 1 * number_less_of_in_dict[key]
       return_value[key] = int(return_value[key])
-      for local_key in return_value.keys():
+      for local_key in list(return_value.keys()):
         if local_key not in ('day', 'year'):
           treatPositiveValues(return_value, local_key)
 
@@ -197,7 +197,7 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
     to_inverse = 0
 
   diff_value = {}
-  for key in keys.keys():
+  for key in list(keys.keys()):
     if key:
       diff_value[key] = 0
 
@@ -212,7 +212,7 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
     diff_value['day'] = round(to_date - from_date)
 
   returned_value = {}
-  for key, value in diff_value.items():
+  for key, value in list(diff_value.items()):
     if to_inverse:
       returned_value[key] = -value
     else:

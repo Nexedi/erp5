@@ -20,7 +20,7 @@ keep_items.pop("portal_status_level", None)
 if REQUEST is None:
   REQUEST = context.REQUEST
 
-for key, value in keep_items.items():
+for key, value in list(keep_items.items()):
   REQUEST.set(key, value)
 
 return getattr(context, form_id)()

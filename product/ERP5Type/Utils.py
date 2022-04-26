@@ -1738,7 +1738,7 @@ def legacyNormalizeUrl(url, base_url=None):
     protocol_port_mapping_dict = {'http': '80',
                                   'https': '443',
                                   'ftp': '21'}
-    for protocol, port in protocol_port_mapping_dict.items():
+    for protocol, port in list(protocol_port_mapping_dict.items()):
       # extract port_number from domain
       match_object = re_extract_port.search(url_netloc)
       if url_sheme == protocol and match_object is not None and\

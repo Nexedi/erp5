@@ -336,7 +336,7 @@ class DomainTool(BaseTool):
       mapped_value = self.getPortalObject().newContent(temp_object=True,
         portal_type='Supply Cell', id='multivalued_mapped_value')
       mapped_value._setMappedValuePropertyList(
-        mapped_value_property_dict.keys())
+        list(mapped_value_property_dict.keys()))
       mapped_value.__dict__.update(mapped_value_property_dict)
       return mapped_value
 

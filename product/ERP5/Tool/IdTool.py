@@ -367,7 +367,7 @@ class IdTool(BaseTool):
     """
     if getattr(self, 'dict_length_ids', None) is None:
       self.dict_length_ids = PersistentMapping()
-    return self.dict_length_ids.items()
+    return list(self.dict_length_ids.items())
 
   security.declarePrivate('dumpDictLengthIdsItems')
   def dumpDictLengthIdsItems(self):

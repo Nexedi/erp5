@@ -37,7 +37,7 @@ for skin_name, skin_path_list in skins_tool.getSkinPaths():
 
 # leave only duplicating ones
 duplicating_selection_name_dict = {}
-for selection_name, field_list in selection_name_dict.items():
+for selection_name, field_list in list(selection_name_dict.items()):
   if len(field_list) > 1:
     duplicating_selection_name_dict[selection_name] = field_list
 

@@ -299,7 +299,7 @@ class Amount(Base, VariatedMixin):
       variation_list = resource.getVariationPropertyList()
     else:
       variation_list = []
-    for property_id, property_value in property_dict.items():
+    for property_id, property_value in list(property_dict.items()):
       if property_id not in variation_list:
         raise KeyError("Can not set the property variation %r" % property_id)
       else:

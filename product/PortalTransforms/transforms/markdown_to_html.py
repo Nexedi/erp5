@@ -31,7 +31,7 @@ class markdown:
     def convert(self, orig, data, **kwargs):
         if HAS_MARKDOWN:
             # markdown expects unicode input:
-            orig = unicode(orig.decode('utf-8'))
+            orig = str(orig.decode('utf-8'))
             # PortalTransforms, however expects a string as result,
             # so we encode the unicode result back to UTF8:
             html = markdown_transformer.markdown(orig).encode('utf-8')

@@ -165,7 +165,7 @@ class ComponentTool(BaseTool):
         pass
       else:
         astroid_cache = MANAGER.astroid_cache
-        for k in astroid_cache.keys():
+        for k in list(astroid_cache.keys()):
           if k.startswith('erp5.component.') and k not in component_package_list:
             del astroid_cache[k]
 

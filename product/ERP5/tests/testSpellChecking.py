@@ -133,7 +133,7 @@ class TestSpellChecking(ERP5TypeTestCase):
     # check some suggestion are given for a small mistake
     self.assertNotEquals(self.validate_spell('canceled'), {})
     self.assertTrue('is misspelled' in \
-                             self.validate_spell('canceled').values()[0])
+                             list(self.validate_spell('canceled').values())[0])
 
   def test_business_template_list_with_workflow_template_item(self):
     """

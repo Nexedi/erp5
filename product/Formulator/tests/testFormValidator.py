@@ -45,27 +45,27 @@ class StringValidatorTestCase(ValidatorTestCase):
 
     def test_basic(self):
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=0, str=0),
             'f', {'f' : 'foo'})
         self.assertEqual('foo', result)
 
     def test_htmlquotes(self):
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=0, str=0),
             'f', {'f' : '<html>'})
         self.assertEqual('<html>', result)
 
     def test_encoding(self):
         utf8_string = 'M\303\274ller' # this is a M&uuml;ller
-        unicode_string = unicode(utf8_string, 'utf-8')
+        unicode_string = str(utf8_string, 'utf-8')
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=1),
+            TestField('f', max_length=0, truncate=0, required=0, str=1),
             'f', {'f' : utf8_string})
         self.assertEqual(unicode_string, result)
 
     def test_strip_whitespace(self):
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=0, str=0),
             'f', {'f' : ' foo  '})
         self.assertEqual('foo', result)
 
@@ -73,12 +73,12 @@ class StringValidatorTestCase(ValidatorTestCase):
         self.assertValidatorRaises(
             Validator.ValidationError, 'too_long',
             self.v.validate,
-            TestField('f', max_length=10, truncate=0, required=0, unicode=0),
+            TestField('f', max_length=10, truncate=0, required=0, str=0),
             'f', {'f' : 'this is way too long'})
 
     def test_error_truncate(self):
         result = self.v.validate(
-            TestField('f', max_length=10, truncate=1, required=0, unicode=0),
+            TestField('f', max_length=10, truncate=1, required=0, str=0),
             'f', {'f' : 'this is way too long'})
         self.assertEqual('this is way too long'[:10], result)
 
@@ -87,36 +87,36 @@ class StringValidatorTestCase(ValidatorTestCase):
         self.assertValidatorRaises(
             Validator.ValidationError, 'required_not_found',
             self.v.validate,
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': ''})
         # whitespace only
         self.assertValidatorRaises(
             Validator.ValidationError, 'required_not_found',
             self.v.validate,
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': '   '})
         # not in dict
         self.assertValidatorRaises(
             Exception, 'required_not_found',
             self.v.validate,
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {})
 
     def test_whitespace_preserve(self):
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=0,
+            TestField('f', max_length=0, truncate=0, required=0, str=0,
                       whitespace_preserve=1),
             'f', {'f' : ' '})
         self.assertEqual(' ', result)
 
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=0,
+            TestField('f', max_length=0, truncate=0, required=0, str=0,
                       whitespace_preserve=0),
             'f', {'f' : ' '})
         self.assertEqual('', result)
 
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=0, unicode=0,
+            TestField('f', max_length=0, truncate=0, required=0, str=0,
                       whitespace_preserve=1),
             'f', {'f' : ' foo '})
         self.assertEqual(' foo ', result)
@@ -128,11 +128,11 @@ class EmailValidatorTestCase(ValidatorTestCase):
 
     def test_basic(self):
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': 'foo@bar.com'})
         self.assertEqual('foo@bar.com', result)
         result = self.v.validate(
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': 'm.faassen@vet.uu.nl'})
         self.assertEqual('m.faassen@vet.uu.nl', result)
 
@@ -141,12 +141,12 @@ class EmailValidatorTestCase(ValidatorTestCase):
         self.assertValidatorRaises(
             Validator.ValidationError, 'not_email',
             self.v.validate,
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': 'foo@bar.com.'})
         self.assertValidatorRaises(
             Validator.ValidationError, 'not_email',
             self.v.validate,
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': '@bar.com'})
 
     def test_error_required_not_found(self):
@@ -154,7 +154,7 @@ class EmailValidatorTestCase(ValidatorTestCase):
         self.assertValidatorRaises(
             Validator.ValidationError, 'required_not_found',
             self.v.validate,
-            TestField('f', max_length=0, truncate=0, required=1, unicode=0),
+            TestField('f', max_length=0, truncate=0, required=1, str=0),
             'f', {'f': ''})
 
 # skip PatternValidator for now

@@ -453,7 +453,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                                    delivery_dict.get(delivery_path, []) + \
                                    [s_m]
 
-    for s_m_list_per_movement in delivery_dict.values():
+    for s_m_list_per_movement in list(delivery_dict.values()):
       total_quantity = sum([quantity_dict.get(s_m, s_m.getQuantity()) \
                             for s_m in s_m_list_per_movement])
       if total_quantity != 0.0:

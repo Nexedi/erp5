@@ -603,7 +603,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   ZopeLite._theApp = None
 
   from Products.ERP5Type.tests.utils import DbFactory
-  root_db_name, = cfg.dbtab.databases.keys()
+  root_db_name, = list(cfg.dbtab.databases.keys())
   db_factory = DbFactory(root_db_name)
   db_factory.addMountPoint('/')
 

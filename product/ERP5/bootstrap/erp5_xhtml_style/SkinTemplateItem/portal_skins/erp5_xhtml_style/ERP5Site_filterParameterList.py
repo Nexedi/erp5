@@ -10,4 +10,4 @@ kept_names = ('editable_mode', 'ignore_layout',            # erp5_web
 # Cancel url is always overwritten, except when rendering
 # a dialog. So this is safe to propagate it.
 
-return dict((item for item in parameter_list.items() if item[0] in kept_names))
+return dict((item for item in list(parameter_list.items()) if item[0] in kept_names))

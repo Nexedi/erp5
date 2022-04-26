@@ -116,7 +116,7 @@ class MailMessageMixin:
     way of representing strings in ERP5.
     """
     result = {}
-    for (name, value) in self._getMessage().items():
+    for (name, value) in list(self._getMessage().items()):
       try:
         decoded_header = decode_header(value)
       except HeaderParseError as error_message:
@@ -142,7 +142,7 @@ class MailMessageMixin:
     result = []
     for i, part in enumerate(self._getMessage().walk()):
       if not part.is_multipart():
-        kw = dict(part.items())
+        kw = dict(list(part.items()))
         kw['uid'] = 'part_%s' % i
         kw['index'] = i
         filename = part.get_filename()
@@ -182,7 +182,7 @@ class MailMessageMixin:
       if index == i:
         # This part should be handled in skin script
         # but it was a bit easier to access items here
-        kw = dict(part.items())
+        kw = dict(list(part.items()))
         content_type = part.get_content_type()
         if REQUEST is not None:
           filename = part.get_filename()

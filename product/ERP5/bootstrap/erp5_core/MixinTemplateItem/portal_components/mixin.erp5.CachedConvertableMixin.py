@@ -41,7 +41,7 @@ from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
 
 def makeSortedTuple(kw):
-  items = kw.items()
+  items = list(kw.items())
   items.sort()
   return tuple(items)
 

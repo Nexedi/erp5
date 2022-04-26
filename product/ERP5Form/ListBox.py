@@ -105,7 +105,7 @@ class CatalogMethodWrapper(MethodWrapper):
     # XXX: I'm not sure if this filtering really belongs to here.
     # It is probably needed at a more generic level (Forms ? Selection ?), or
     # even a more specific one (limited to HTML ?)...
-    for key, value in kw.items():
+    for key, value in list(kw.items()):
       if value == '':
         kw.pop(key)
     return getattr(self.context, self.method_name)(*args, **kw)
@@ -1189,7 +1189,7 @@ class ListBoxRenderer:
         params.setdefault(k, v)
 
       search_prefix = 'search_%s_' % (self.getId(), )
-      for k, v in params.items():
+      for k, v in list(params.items()):
         if k.startswith(search_prefix):
           params[k[len(search_prefix):]] = v
 
@@ -1218,12 +1218,12 @@ class ListBoxRenderer:
         params.setdefault('meta_type', meta_type_list)
 
       # Remove FileUpload parameters
-      for k, v in params.items():
+      for k, v in list(params.items()):
         if k == "listbox":
           # listbox can also contain useless parameters
           new_list = []
           for line in v:
-            for k1, v1 in line.items():
+            for k1, v1 in list(line.items()):
               if hasattr(v1, 'read'):
                 del line[k1]
             new_list.append(line)
@@ -2619,7 +2619,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       update_selection = False
       form_dict = request.form
       listbox_kw = selection.getParams()
-      listbox_arguments_list = [x for x in form_dict.keys() if x.startswith(field_id)]
+      listbox_arguments_list = [x for x in list(form_dict.keys()) if x.startswith(field_id)]
       for original_listbox_argument in listbox_arguments_list:
         listbox_argument = original_listbox_argument.replace('%s_' %field_id, '', 1)
         listbox_argument_value = form_dict.get(original_listbox_argument, None)

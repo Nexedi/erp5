@@ -135,7 +135,7 @@ class DummyMessageCatalog:
     else:
       return default
   def translate(self, msgid, mapping=None, context=None,
-                target_language=None, default=None):
+                target_language=None, default=None, *args, **kw):
     return default
 
 class DummyLocalizer:

@@ -274,7 +274,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # getting round_script if exists
     round_script=getattr(context, field.get_value('round_script'), None)
     # now processing activity updates
-    for activity_name in activity_dict.keys():
+    for activity_name in list(activity_dict.keys()):
       # recovering list of moved blocks in the current activity
       activity_block_moved_list = activity_dict[activity_name]
       # recovering activity object from first moved block
@@ -416,7 +416,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     """
     good_group_name = ''
     # recovering group name
-    for axis_name in axis_groups.keys():
+    for axis_name in list(axis_groups.keys()):
       if  axis_groups[axis_name][group_position] < block_moved['center'] and \
           axis_groups[axis_name][group_position] + \
           axis_groups[axis_name][group_length] > block_moved['center']:
@@ -555,7 +555,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       for axis_element in axis_group.axis_element_list:
         for activity in axis_element.activity_list:
           # for each activity, saving its properties into a dict
-          if activity.link in object_dict.keys():
+          if activity.link in list(object_dict.keys()):
             object_dict[activity.link].append(
                        { 'activity_name' : activity.name,
                          'axis_start': activity.lane_axis_start,
@@ -605,7 +605,7 @@ class PlanningBoxEditor:
     pass
 
   def edit(self, context):
-    for url, kw in self.update_dict.items():
+    for url, kw in list(self.update_dict.items()):
       context.restrictedTraverse(url).edit(**kw)
 
 allow_class(PlanningBoxEditor)
@@ -1103,7 +1103,7 @@ class BasicStructure:
         if kw['portal_type'] in ['', []]:
           del kw['portal_type']
       # remove useless matter
-      for cname in self.params.keys():
+      for cname in list(self.params.keys()):
         if self.params[cname] not in ['',None]:
           kw[cname] = self.params[cname]
       # try to get the method through acquisition

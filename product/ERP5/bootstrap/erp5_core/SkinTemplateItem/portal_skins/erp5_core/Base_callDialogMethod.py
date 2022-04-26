@@ -131,7 +131,7 @@ if len(listbox_id_list):
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
-    listbox_keys = listbox.keys()
+    listbox_keys = list(listbox.keys())
     listbox_keys.sort()
     for key in listbox_keys:
       listbox_line = listbox[key]
@@ -166,7 +166,7 @@ if listbox_uid is not None and 'list_selection_name' in kw:
     listbox_uid, uids)
 # Remove values which doesn't work with make_query.
 clean_kw = {}
-for k, v in kw.items() :
+for k, v in list(kw.items()) :
   if v not in (None, [], ()) :
     clean_kw[k] = kw[k]
 

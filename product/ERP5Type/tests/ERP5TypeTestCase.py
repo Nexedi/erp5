@@ -1116,7 +1116,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       # update connection strings
       for connection_string_name, connection_string in\
-                                    _getConnectionStringDict().items():
+                                    list(_getConnectionStringDict().items()):
         connection_name = connection_string_name.replace('_string', '')
         getattr(self.portal, connection_name).edit('', connection_string)
 
@@ -1410,7 +1410,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         try:
           portal_activities = self.portal.portal_activities
           message_list = portal_activities.getMessageList()
-        except StandardError: # AttributeError, TransactionFailedError ...
+        except Exception: # AttributeError, TransactionFailedError ...
           pass
         else:
           for m in message_list:
@@ -1533,7 +1533,7 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     """Check properties of a report line.
     """
     diff_list = []
-    for k, v in kw.items():
+    for k, v in list(kw.items()):
       if v != line.getColumnProperty(k):
         diff_list.append('`%s`: expected: %r actual: %r' %
                                 (k, v, line.getColumnProperty(k)))

@@ -1747,7 +1747,7 @@ def render_tag(tag, **kw):
     extra = ""
 
   # handle other attributes
-  for key, value in kw.items():
+  for key, value in list(kw.items()):
     if value == None:
         value = key
     attr_list.append('%s="%s"' % (key, html_quote(value)))

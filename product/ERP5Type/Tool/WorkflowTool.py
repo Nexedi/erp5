@@ -583,7 +583,7 @@ class WorkflowTool(BaseTool):
             raise
           LOG('WorkflowTool.listActions', WARNING,
               'Exception while computing worklists: %s'
-              % grouped_worklist_dict.keys(),
+              % list(grouped_worklist_dict.keys()),
               error=True)
           continue
         except ProgrammingError as error_value:
@@ -690,7 +690,7 @@ def getValidCriterionDict(worklist_match_dict, sql_catalog,
   return valid_criterion_dict, metadata
 
 def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criterion_dict):
-  worklist_set_dict_key = valid_criterion_dict.keys()
+  worklist_set_dict_key = list(valid_criterion_dict.keys())
   if len(worklist_set_dict_key):
     worklist_set_dict_key.sort()
     worklist_set_dict_key = tuple(worklist_set_dict_key)
@@ -761,7 +761,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         uid_dict, role_column_dict, local_role_column_dict = \
             getSecurityUidDictAndRoleColumnDict(**security_kw)
 
-        for key, value in local_role_column_dict.items():
+        for key, value in list(local_role_column_dict.items()):
           worklist_match_dict[key] = [value]
 
         for local_roles_group_id, uid_list in uid_dict.iteritems():
@@ -795,7 +795,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
             worklist_set_dict=worklist_set_dict,
             workflow_worklist_key=workflow_worklist_key,
             valid_criterion_dict=valid_criterion_dict)
-  return worklist_set_dict.values(), metadata_dict
+  return list(worklist_set_dict.values()), metadata_dict
 
 def generateNestedQuery(getQuery, priority_list, criterion_dict,
                         possible_worklist_id_dict=None):
@@ -814,7 +814,7 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
         criterion_worklist_id_dict = worklist_id_dict.copy()
         # Do not use iterkeys since the dictionary will be modified in the
         # loop
-        for worklist_id in criterion_worklist_id_dict.keys():
+        for worklist_id in list(criterion_worklist_id_dict.keys()):
           if worklist_id not in possible_worklist_id_dict:
             del criterion_worklist_id_dict[worklist_id]
       else:

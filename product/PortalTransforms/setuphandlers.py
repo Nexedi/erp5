@@ -11,8 +11,8 @@ def correctMapping(out, portal):
     pt = getToolByName(portal, 'portal_transforms')
     pt_ids = pt.objectIds()
 
-    for m_in, m_out_dict in pt._mtmap.items():
-        for m_out, transforms in m_out_dict.items():
+    for m_in, m_out_dict in list(pt._mtmap.items()):
+        for m_out, transforms in list(m_out_dict.items()):
             for transform in transforms:
                 if transform.id not in pt_ids:
                     #error, mapped transform is no object in portal_transforms. correct it!

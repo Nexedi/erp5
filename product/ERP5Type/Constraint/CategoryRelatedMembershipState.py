@@ -64,7 +64,7 @@ class CategoryRelatedMembershipState(CategoryMembershipState):
     state_var_list.pop('portal_type')
     state_var_list.pop('base_category')
 
-    for workflow_variable, valid_state_list in state_var_list.items():
+    for workflow_variable, valid_state_list in list(state_var_list.items()):
       for related_membership in related_membership_list:
         current_state = related_membership.getProperty(workflow_variable)
         if current_state not in valid_state_list:

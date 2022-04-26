@@ -809,7 +809,7 @@ class TestOOoImport(TestOOoImportMixin):
     # strings are encoded in UTF8
     self.assertTrue(isinstance(region[1]['title'], str))
     self.assertTrue(isinstance(region[1]['path'], str))
-    for k in region[1].keys():
+    for k in list(region[1].keys()):
       self.assertTrue(isinstance(k, str), (k, type(k)))
 
   def test_Base_getCategoriesSpreadSheetMapping_DuplicateIdsAtSameLevel(self):

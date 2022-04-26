@@ -41,7 +41,7 @@ for workflow_item in workflow_item_list:
   # XXX removing str method generate a strange bug
   o = newTempBase(portal_object, str(i))
   i += 1
-  for key, value in workflow_item.items():
+  for key, value in list(workflow_item.items()):
     if key == 'serial' and not can_view_history:
       continue
     if key == wf_state_variable:

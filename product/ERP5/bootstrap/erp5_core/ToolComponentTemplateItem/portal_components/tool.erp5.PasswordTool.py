@@ -232,7 +232,7 @@ class PasswordTool(BaseTool):
     """
     current_date = DateTime()
     password_request_dict = self._password_request_dict
-    for key, (_, date) in password_request_dict.items():
+    for key, (_, date) in list(password_request_dict.items()):
       if date < current_date:
         del password_request_dict[key]
 

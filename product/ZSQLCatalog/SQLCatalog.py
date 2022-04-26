@@ -1060,7 +1060,7 @@ class Catalog(Folder,
     Calls the show table method and returns dictionnary of
     Field Ids
     """
-    return self._getCatalogSchema().keys()
+    return list(self._getCatalogSchema().keys())
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
@@ -1306,7 +1306,7 @@ class Catalog(Folder,
       uid_list_append(uid)
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
     if check_uid:
-      path_uid_dict = self.getUidDictForPathList(path_list=object_path_dict.values())
+      path_uid_dict = self.getUidDictForPathList(path_list=list(object_path_dict.values()))
       uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
       for object, path in object_path_dict.iteritems():
         uid = object.uid
@@ -1379,7 +1379,7 @@ class Catalog(Folder,
         except KeyError:
           pass
         if expression is None:
-          catalogged_object_list = object_path_dict.keys()
+          catalogged_object_list = list(object_path_dict.keys())
         else:
           text = expression.text
           catalogged_object_list = catalogged_object_list_cache.get(text)
@@ -2112,7 +2112,7 @@ class Catalog(Folder,
     if len(empty_value_dict):
       LOG('SQLCatalog', WARNING, 'Discarding columns with empty values: %r' % (empty_value_dict, ))
     if len(unknown_column_dict):
-      message = 'Unknown columns ' + repr(unknown_column_dict.keys())
+      message = 'Unknown columns ' + repr(list(unknown_column_dict.keys()))
       if ignore_unknown_columns:
         LOG('SQLCatalog', WARNING, message)
       else:

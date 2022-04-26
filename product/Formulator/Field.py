@@ -460,8 +460,8 @@ class Field:
           return obj.encode('utf-8')
         return str(obj)
       return ' '.join(map(getSearchSource,
-                         (self.values.values()+self.tales.values()+
-                          self.overrides.values())))
+                         (list(self.values.values())+list(self.tales.values())+
+                          list(self.overrides.values()))))
 
 InitializeClass(Field)
 
@@ -537,7 +537,7 @@ class ZMIField(
         # acquire get_unicode_mode and get_stored_encoding from form..
         if self.get_unicode_mode():
             new_result = {}
-            for key, value in result.items():
+            for key, value in list(result.items()):
                 if type(value) == type(''):
                     # in unicode mode, Formulator UI always uses UTF-8
                     value = six.u(value, 'UTF-8')
@@ -545,7 +545,7 @@ class ZMIField(
             result = new_result
 
         changed = []
-        for key, value in result.items():
+        for key, value in list(result.items()):
             # store keys for which we want to notify change
             if key not in values or values[key] != value:
                 changed.append(key)
@@ -652,7 +652,7 @@ class ZMIField(
         # BEWARE: there is no validation on the values passed through the map
         from .TALESField import TALESMethod
         result = {}
-        for key, value in map.items():
+        for key, value in list(map.items()):
             if value:
                 result[key] = TALESMethod(value)
             else:

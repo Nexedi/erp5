@@ -199,7 +199,7 @@ class TestIngestion(IngestionTestCase):
     # Note : this code was taken from the CategoryTool_importCategoryFile python
     #        script (packaged in erp5_core).
     for category in self.category_list:
-      keys = category.keys()
+      keys = list(category.keys())
       if 'path' in keys:
         base_path_obj = self.portal_categories
         is_base_category = True
@@ -379,7 +379,7 @@ class TestIngestion(IngestionTestCase):
     Asserts that metadata of document ID document_id
     is the same as expected_metadata
     """
-    for k, v in expected_metadata.items():
+    for k, v in list(expected_metadata.items()):
       self.assertEqual(document.getProperty(k), v)
 
   def receiveEmail(self, data,
@@ -991,7 +991,7 @@ class TestIngestion(IngestionTestCase):
                                            'ODT': 'Text',
                                            'PDF': 'PDF',
                                            'PPT': 'Presentation'}
-    for sub_reference, portal_type in extension_reference_portal_type_map.items():
+    for sub_reference, portal_type in list(extension_reference_portal_type_map.items()):
       ingested_document = self.portal_catalog.getResultValue(
                                portal_type=portal_type,
                                reference='TEST%s' %sub_reference,
@@ -1072,7 +1072,7 @@ class TestIngestion(IngestionTestCase):
             'sxd' : 'Drawing',
             'xxx' : 'File',
           }
-    for type, portal_type in correct_type_mapping.items():
+    for type, portal_type in list(correct_type_mapping.items()):
       filename = 'aaa.' + type
       self.assertEqual(reg.findPortalTypeName(filename=filename),
                         portal_type)

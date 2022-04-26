@@ -113,7 +113,7 @@ class CopyToTarget(TargetSolver):
       parent_movement = None
 
     for date_delta in ('start_date_delta', 'stop_date_delta'):
-      if date_delta in value_delta_dict.keys():
+      if date_delta in list(value_delta_dict.keys()):
         if abs(value_delta_dict[date_delta]) <= \
             applied_rule.getProperty('max_allowed_delta', max_allowed_delta):
           value_delta_dict.pop(date_delta)

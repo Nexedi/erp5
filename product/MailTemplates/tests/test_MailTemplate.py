@@ -704,6 +704,7 @@ class TestMailTemplate(TestCase):
             mto=('to@example.com',),
             subject='Test Subject',
             unicode=u'£££'.encode('utf-8'),
+            str=u'Â£Â£Â£'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -720,6 +721,7 @@ class TestMailTemplate(TestCase):
             mto=('to@example.com',),
             subject='Test Subject',
             unicode=u'£££'.encode('utf-8'),
+            str=u'Â£Â£Â£'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -733,6 +735,7 @@ class TestMailTemplate(TestCase):
             mto=('to@example.com',),
             subject='Test Subject',
             unicode=u'£££',
+            str=u'Â£Â£Â£',
             encoding='utf-8'
             )
 
@@ -754,6 +757,7 @@ class TestMailTemplate(TestCase):
             mto=('to@example.com',),
             subject='Test Subject',
             unicode=u'£££',
+            str=u'Â£Â£Â£',
             encoding='utf-8'
             )
 

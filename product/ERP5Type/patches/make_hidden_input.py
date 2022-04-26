@@ -39,7 +39,7 @@ def make_hidden_input(*args, **kwargs):
   d.update(kwargs)
 
   hq = lambda x:cgi.escape(x, quote=True)
-  qlist = complex_marshal(d.items())
+  qlist = complex_marshal(list(d.items()))
   for i in range(len(qlist)):
       k, m, v = qlist[i]
       qlist[i] = ('<input type="hidden" name="%s%s" value="%s" />'
