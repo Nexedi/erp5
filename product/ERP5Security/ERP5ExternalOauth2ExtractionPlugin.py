@@ -39,7 +39,6 @@ from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 import time
-import socket
 import httplib
 import urllib
 import json
@@ -235,14 +234,8 @@ def getFacebookUserEntry(token):
         'No facebook module, install facebook-sdk package. '
           'Authentication disabled.')
     return None
-  timeout = socket.getdefaulttimeout()
   args = {'fields' : 'id,name,email', }
-  try:
-    # require really fast interaction
-    socket.setdefaulttimeout(5)
-    facebook_entry = facebook.GraphAPI(token).get_object("me", **args)
-  finally:
-    socket.setdefaulttimeout(timeout)
+  facebook_entry = facebook.GraphAPI(token, timeout=5).get_object("me", **args)
 
   user_entry = {}
   if facebook_entry is not None:
