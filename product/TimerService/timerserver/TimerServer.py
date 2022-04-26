@@ -83,7 +83,7 @@ class TimerServer(threading.Thread):
             except socket.error:
                 time.sleep(5)
                 continue
-            s.send('GET / HTTP/1.1\r\n\r\n')
+            s.send(b'GET / HTTP/1.1\r\n\r\n')
             s.recv(4096) # blocks until a response is received
             break
         s.close()
