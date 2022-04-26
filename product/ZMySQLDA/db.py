@@ -292,7 +292,8 @@ class DB(TM):
     _p_oid=_p_changed=_registered=None
 
     def __del__(self):
-      self.db.close()
+      if self.db is not None:
+        self.db.close()
 
     def _forceReconnection(self):
       db = self.db
