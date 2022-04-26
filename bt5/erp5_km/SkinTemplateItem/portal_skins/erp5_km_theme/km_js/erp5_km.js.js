@@ -146,66 +146,6 @@ function initialize_form(){
    }
  }
 
-// function make_pdf_navigation_asynchronous_form(){
-//   /*
-//   Make default PDF navigation in preview in asynchronous way.
-//   */
-// 
-//   function splitUrl(url){
-//     jQuery.url.setUrl(image_src)
-//     base_url = jQuery.url.attr("base") + jQuery.url.attr("path");
-//     query_dict = {"display": jQuery.url.param("display"), 
-//                   "format": jQuery.url.param("format"),
-//                   "resolution:int": jQuery.url.param("resolution:int"),
-//                   "frame": parseInt(jQuery.url.param("frame"))};
-//     query_string = $.param(query_dict);
-//     console.log(base_url);
-//     console.log(query_string);    
-//   }
-//   
-//   function loadThumbnail(event){
-//     event.preventDefault();
-//     navigation_url = this.href;
-// 
-//     image = $("div.pdf-preview-content img");
-//     image_url = image.attr("src");
-//     
-//     // read current image URL
-//     jQuery.url.setUrl(image_url);
-//     base_url = jQuery.url.attr("base") + jQuery.url.attr("path");
-//     query_dict = {"display": jQuery.url.param("display"), 
-//                   "format": jQuery.url.param("format"),
-//                   "resolution:int": jQuery.url.param("resolution:int")};
-// 
-//     
-//     // get frame index from navigation link
-//     jQuery.url.setUrl(navigation_url);
-//     frame = parseInt(jQuery.url.param("selection_index"))
-//     query_dict["frame"]=frame;
-//     
-//     // construct new thumbnail URL
-//     query_string = $.param(query_dict);
-//     new_image_url = base_url + "?" +query_string;
-//     console.log(new_image_url);
-//     
-//     image.attr("src", new_image_url);
-//   
-//   }
-// 
-//   pdf_preview_navigation = $('div.pdf-preview-navigation');
-//   if(pdf_preview_navigation.length){
-//     
-//     // XXX: set hooks
-//    // $("div.pdf-preview-navigation a img.first").parent("a").click(loadThumbnail);
-//    // $("div.pdf-preview-navigation a img.previous").parent("a").click(loadThumbnail);
-//    // $("div.pdf-preview-navigation a img.next").parent("a").click(loadThumbnail);
-//    // $("div.pdf-preview-navigation a img.last").parent("a").click(loadThumbnail);    
-// 
-//   }
-// }
-// $(document).ready(make_pdf_navigation_asynchronous_form);
-
-
 jQuery.fn.highlight = function (str, className) {
   /*
     Highlight search word in HTML content.
