@@ -15,6 +15,12 @@
             <value> <string>Products.ERP5.Document.InvoiceTransactionSimulationRule</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>document.erp5.InvoiceTransactionSimulationRule</string> </value>
         </item>
