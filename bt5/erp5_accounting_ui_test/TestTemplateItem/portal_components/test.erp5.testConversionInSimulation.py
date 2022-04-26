@@ -313,7 +313,7 @@ class TestConversionInSimulation(AccountingTestCase):
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
      (invoice_transaction_movement_1.getDestinationTotalAssetPrice(),
-        round(655.957*delivery_movement.getTotalPrice()))
+        655.957*invoice_transaction_movement_1.getTotalPrice())
     self.assertEquals\
         (invoice_transaction_movement_1.getSourceTotalAssetPrice(),
         None)
@@ -325,7 +325,7 @@ class TestConversionInSimulation(AccountingTestCase):
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
         (invoice_transaction_movement_2.getDestinationTotalAssetPrice(),
-        round(655.957*delivery_movement.getTotalPrice()))
+        655.957*invoice_transaction_movement_2.getTotalPrice())
 
   def test_01_simulation_movement_source_asset_price(self,quiet=0,
           run=run_all_test):
@@ -405,7 +405,7 @@ class TestConversionInSimulation(AccountingTestCase):
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
         (invoice_transaction_movement.getSourceTotalAssetPrice(),
-        round(655.957*delivery_movement.getTotalPrice()))
+         -655.957*invoice_transaction_movement.getTotalPrice())
     self.assertEquals\
         (invoice_transaction_movement.getDestinationTotalAssetPrice(),
         None)
@@ -478,11 +478,6 @@ class TestConversionInSimulation(AccountingTestCase):
     related_packing_list.stop()
     self.tic()
     self.buildInvoices()
-    related_applied_rule = order.getCausalityRelatedValue(
-                             portal_type='Applied Rule')
-    order_movement = related_applied_rule.contentValues()[0]
-    delivery_applied_rule = order_movement.contentValues()[0]
-    delivery_movement = delivery_applied_rule.contentValues()[0]
     related_invoice = related_packing_list.getCausalityRelatedValue(
                             portal_type='Sale Invoice Transaction')
     self.assertNotEquals(related_invoice, None)
@@ -492,8 +487,96 @@ class TestConversionInSimulation(AccountingTestCase):
       portal_type=self.portal.getPortalAccountingMovementTypeList())
     self.assertNotEquals(line_list, None)
     for line in line_list:
-      self.assertEqual(line.getDestinationTotalAssetPrice(),
-              round(655.957*delivery_movement.getTotalPrice()))
+      self.assertEqual(line.getDestinationTotalAssetPrice(), 655.957*line.getTotalPrice())
+      self.assertEqual(line.getSourceTotalAssetPrice(), None)
+      self.assertEqual(line.getDestinationAssetCredit(), 655.957*line.getDestinationCredit())
+
+
+    self.assertEqual(len(related_invoice.checkConsistency()), 0)
+
+  def test_01_source_total_asset_price_on_accounting_lines(self,quiet=0,
+          run=run_all_test):
+    """
+    tests that the delivery builder of the invoice transaction lines
+    copies the source asset price on the accounting_lines of the invoice
+    """
+    if not run: return
+    if not quiet:
+      printAndLog(
+       'test_01_source_total_asset_price_on_accounting_lines')
+
+    resource = self.portal.product_module.newContent(
+                    portal_type='Product',
+                    title='Resource',
+                    product_line='apparel')
+    currency = self.portal.currency_module.newContent(
+                                portal_type='Currency',
+                                title='euro')
+    currency.setBaseUnitQuantity(0.01)
+    new_currency = \
+           self.portal.currency_module.newContent(portal_type='Currency')
+    new_currency.setReference('XOF')
+    new_currency.setTitle('Francs CFA')
+    new_currency.setBaseUnitQuantity(1.00)
+    self.tic()#execute transaction
+    x_curr_ex_line = currency.newContent(
+                                  portal_type='Currency Exchange Line',
+                        price_currency=new_currency.getRelativeUrl())
+    x_curr_ex_line.setTitle('Euro to Francs CFA')
+    x_curr_ex_line.setBasePrice(655.957)
+    x_curr_ex_line.setStartDate(DateTime(2008,10,21))
+    x_curr_ex_line.setStopDate(DateTime(2008,10,22))
+    x_curr_ex_line.validate()
+    self.createBusinessProcess(currency)
+    self.tic()#execute transaction
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client',
+                         default_address_region=self.default_region)
+    vendor = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Vendor',
+                         price_currency=new_currency.getRelativeUrl(),
+                         default_address_region=self.default_region)
+    order = self.portal.sale_order_module.newContent(
+                              portal_type='Sale Order',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client,
+                              start_date=DateTime(2008,10, 21),
+                              price_currency_value=currency,
+                              specialise_value=self.business_process,
+                              title='Order')
+    order.newContent(portal_type='Sale Order Line',
+                     resource_value=resource,
+                     quantity=1,
+                     price=2)
+    order.confirm()
+    self.tic()
+    self.buildPackingLists()
+    related_packing_list = order.getCausalityRelatedValue(
+                                portal_type='Sale Packing List')
+    self.assertNotEquals(related_packing_list, None)
+    related_packing_list.start()
+    related_packing_list.stop()
+    self.tic()
+    self.buildInvoices()
+    related_invoice = related_packing_list.getCausalityRelatedValue(
+                            portal_type='Sale Invoice Transaction')
+    self.assertNotEquals(related_invoice, None)
+    related_invoice.start()
+    self.tic()
+    line_list= related_invoice.contentValues(
+      portal_type=self.portal.getPortalAccountingMovementTypeList())
+    self.assertNotEquals(line_list, None)
+    for line in line_list:
+      self.assertEqual(line.getSourceTotalAssetPrice(), -655.957*line.getTotalPrice())
+      self.assertEqual(line.getDestinationTotalAssetPrice(), None)
+      self.assertEqual(line.getSourceAssetCredit(), 655.957*line.getSourceCredit())
+
+
+    self.assertEqual(len(related_invoice.checkConsistency()), 0)
 
   def test_01_diverged_sale_packing_list_destination_total_asset_price(
           self,quiet=0,run=run_all_test):
@@ -566,7 +649,7 @@ class TestConversionInSimulation(AccountingTestCase):
     related_packing_list_line= related_packing_list_line_list[0]
     self.assertEqual(related_packing_list_line.getQuantity(),5.0)
     old_destination_asset_price = \
-          round(655.957*related_packing_list_line.getTotalPrice())
+          655.957*related_packing_list_line.getTotalPrice()
 
     related_packing_list_line.edit(quantity=3.0)
     self.tic()
@@ -587,9 +670,12 @@ class TestConversionInSimulation(AccountingTestCase):
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule.contentValues()[0]
-    self.assertEqual(
+    for invoice_transaction_movement in invoice_transaction_applied_rule.contentValues():
+      if invoice_transaction_movement.getSource() == 'account_module/sale':
+        break
+    # 10*655.957*3/5  ----> 3935.7419999999997
+    # 10*3/5*655.957  ----> 3935.742
+    self.assertAlmostEquals(
        invoice_transaction_movement.getDestinationTotalAssetPrice(),
                 old_destination_asset_price *(3.0/5.0))
 
@@ -665,7 +751,7 @@ class TestConversionInSimulation(AccountingTestCase):
     related_packing_list_line= related_packing_list_line_list[0]
     self.assertEqual(related_packing_list_line.getQuantity(),5.0)
     old_source_asset_price = \
-          round(655.957*related_packing_list_line.getTotalPrice())
+          -655.957*related_packing_list_line.getTotalPrice()
 
     related_packing_list_line.edit(quantity=3.0)
     self.tic()
@@ -687,9 +773,10 @@ class TestConversionInSimulation(AccountingTestCase):
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule.contentValues()[0]
-    self.assertEqual(invoice_transaction_movement.\
+    for invoice_transaction_movement in invoice_transaction_applied_rule.contentValues():
+      if invoice_transaction_movement.getSource() == 'account_module/sale':
+        break
+    self.assertAlmostEqual(invoice_transaction_movement.\
         getSourceTotalAssetPrice(),
         old_source_asset_price *(3.0/5.0))
 
