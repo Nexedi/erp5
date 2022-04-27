@@ -235,7 +235,7 @@ from inspect import getargspec
 from OFS import ObjectManager
 from . import ppml
 
-magic='<?xm' # importXML(jar, file, clue)}
+magic=b'<?xm' # importXML(jar, file, clue)}
 
 def reorderPickle(jar, p):
     try:
@@ -351,7 +351,7 @@ class zopedata:
     def __init__(self, parser, tag, attrs):
         self.file=parser.file
         write=self.file.write
-        write('ZEXP')
+        write(b'ZEXP')
 
     def append(self, data):
         file=self.file
@@ -378,7 +378,7 @@ def save_record(parser, tag, data):
     a=data[1]
     if 'id' in a: oid=a['id']
     oid=p64(int(oid))
-    v=''
+    v=b''
     for x in data[2:]:
         v=v+x
     l=p64(len(v))
@@ -402,7 +402,8 @@ def importXML(jar, file, clue=''):
     # So we have to declare an encoding but not use unicode, so the unpickler
     # can deal with the utf-8 strings directly
     p=xml.parsers.expat.ParserCreate('utf-8')
-    p.returns_unicode = False
+    if six.PY2:
+      p.returns_unicode = False
     # </patch>
     p.CharacterDataHandler=F.handle_data
     p.StartElementHandler=F.unknown_starttag
@@ -410,3 +411,7 @@ def importXML(jar, file, clue=''):
     r=p.Parse(data)
     outfile.seek(0)
     return jar.importFile(outfile,clue)
+
+customImporters = {
+  magic: importXML
+}
