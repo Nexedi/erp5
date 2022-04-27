@@ -94,21 +94,21 @@ class xmlrpc(NoBlanks, XYap):
         'param': lambda self, tag, data: data[2],
         'value': lambda self, tag, data: data[2],
         'i4':
-        lambda self, tag, data, atoi=string.atoi, name=name:
+        lambda self, tag, data, atoi=int, name=name:
         atoi(name(self, tag, data)),
         'int':
-        lambda self, tag, data, atoi=string.atoi, name=name:
+        lambda self, tag, data, atoi=int, name=name:
             atoi(name(self, tag, data)),
         'boolean':
-        lambda self, tag, data, atoi=string.atoi, name=name:
+        lambda self, tag, data, atoi=int, name=name:
             atoi(name(self, tag, data)),
-        'string': lambda self, tag, data, join=string.join:
-            join(data[2:], ''),
+        'string': lambda self, tag, data, join=''.join:
+            join(data[2:]),
         'double':
-        lambda self, tag, data, atof=string.atof, name=name:
+        lambda self, tag, data, atof=float, name=name:
             atof(name(self, tag, data)),
         'float':
-        lambda self, tag, data, atof=string.atof, name=name:
+        lambda self, tag, data, atof=float, name=name:
             atof(name(self, tag, data)),
         'struct': struct,
         'member': tuplef,
