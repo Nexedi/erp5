@@ -100,14 +100,20 @@ def SQLLock(db, lock_name, timeout):
   """
   lock_name = db.string_literal(lock_name)
   query = db.query
-  (_, ((acquired, ), )) = query('SELECT GET_LOCK(%s, %f)' % (lock_name, timeout))
+  (_, ((acquired, ), )) = query(
+    'SELECT GET_LOCK(%s, %f)' % (lock_name, timeout),
+    max_rows=0,
+  )
   if acquired is None:
     raise ValueError('Error acquiring lock')
   try:
     yield acquired
   finally:
     if acquired:
-      query('SELECT RELEASE_LOCK(%s)' % (lock_name, ))
+      query(
+        'SELECT RELEASE_LOCK(%s)' % (lock_name, ),
+        max_rows=0,
+      )
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
