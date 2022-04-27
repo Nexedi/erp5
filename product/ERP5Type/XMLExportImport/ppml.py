@@ -23,7 +23,6 @@ from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
 
-import re
 from marshal import dumps as mdumps
 #from zLOG import LOG
 
