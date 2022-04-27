@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001,2002 Zope Corporation and Contributors. All Rights Reserved.
