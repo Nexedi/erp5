@@ -79,8 +79,7 @@ from OFS.Image import Pdata
 from io import BytesIO as StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
-from Products.ERP5Type.XMLExportImport import exportXML
-from OFS.ObjectManager import customImporters
+from Products.ERP5Type.XMLExportImport import exportXML, customImporters
 from Products.ERP5Type.Workflow import WorkflowHistoryList
 from zLOG import LOG, WARNING, INFO
 from warnings import warn

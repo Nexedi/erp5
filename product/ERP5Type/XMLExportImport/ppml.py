@@ -15,19 +15,29 @@
 """Provide conversion between Python pickles and XML
 """
 
-from pickle import *
+from zodbpickle.pickle import *
+# Python3 C implementation does not have Unpickler.dispatch attribute
+from zodbpickle.pickle_3 import _Unpickler as Unpickler
 import struct
 import base64
 import re
 from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
+from Products.ERP5Type.Utils import str2bytes
 
 import six
 from marshal import dumps as mdumps
 #from zLOG import LOG
 
 binary = re.compile('[^\x1f-\x7f]').search
+
+if six.PY2:
+  data_encoding = 'raw_unicode_escape'
+  long_ = long
+else:
+  data_encoding = 'utf-8'
+  long_ = int
 
 def escape(s, encoding='repr'):
     if binary(s) and isinstance(s, str):
@@ -47,9 +57,9 @@ def unescape(s, encoding):
     if encoding == 'base64':
         return base64.decodestring(s)
     else:
-        s = s.replace('&lt;', '<')
-        s = s.replace('&gt;', '>')
-        return s.replace('&amp;', '&')
+        s = s.replace(b'&lt;', b'<')
+        s = s.replace(b'&gt;', b'>')
+        return s.replace(b'&amp;', b'&')
 
 # For converting to a more readable expression.
 reprs = {}
@@ -99,7 +109,7 @@ def unconvert(encoding,S):
     if encoding == 'base64':
         return base64.decodestring(S)
     else:
-        return eval("'" + S.replace('\n', '') + "'")
+        return str2bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"))
 
 class Global:
     def __init__(self, module, name, mapping):
@@ -338,7 +348,7 @@ class NoBlanks:
         # Ignore element data between elements (eg '<e> <f> </f> </e>')...
         if data.strip():
             if isinstance(data, six.text_type):
-                data = data.encode('raw_unicode_escape')
+                data = data.encode(data_encoding)
             self.append(data)
 
         # Except for strings and unicode data as whitespaces should be
@@ -362,7 +372,7 @@ class NoBlanks:
                     self.previous_stack_end = None
 
                 if isinstance(data, six.text_type):
-                    data = data.encode('raw_unicode_escape')
+                    data = data.encode(data_encoding)
 
                 self.append(data)
 
@@ -461,7 +471,7 @@ class ToXMLUnpickler(Unpickler):
       return Pickle(Unpickler.load(self), self.id_mapping)
 
     dispatch = {}
-    dispatch.update(Unpickler.dispatch)
+    dispatch.update(Unpickler.dispatch.copy())
 
     def persistent_load(self, v):
         return Persistent(v, self.id_mapping)
@@ -492,7 +502,7 @@ class ToXMLUnpickler(Unpickler):
     dispatch[BININT2] = load_binint2
 
     def load_long(self):
-        self.append(Long(long(self.readline()[:-1], 0), self.id_mapping))
+        self.append(Long(long_(self.readline()[:-1], 0), self.id_mapping))
     dispatch[LONG] = load_long
 
     def load_float(self):
@@ -652,7 +662,7 @@ def ToXMLloads(str):
     return ToXMLUnpickler(file).load()
 
 def name(self, tag, data):
-    return ''.join(data[2:]).strip()
+    return b''.join(data[2:]).strip()
 
 def start_pickle(self, tag, attrs):
     self._pickleids = {}
@@ -663,19 +673,19 @@ def save_int(self, tag, data):
         v = int(name(self, tag, data))
         if v >= 0:
             if v <= 0xff:
-                return BININT1 + chr(v)
+                return BININT1 + bytes([v])
             if v <= 0xffff:
-                return '%c%c%c' % (BININT2, v & 0xff, v >> 8)
+                return BININT2 + b'%c%c' % (v & 0xff, v >> 8)
         hb = v >> 31
         if hb == 0 or hb == -1:
             return BININT + struct.pack('<i', v)
-    return INT + name(self, tag, data) + '\n'
+    return INT + name(self, tag, data) + b'\n'
 
 def save_float(self, tag, data):
     if self.binary:
         return BINFLOAT + struct.pack('>d', float(name(self, tag, data)))
     else:
-        return FLOAT + name(self, tag, data) + '\n'
+        return FLOAT + name(self, tag, data) + b'\n'
 
 def save_put(self, v, attrs):
     id = attrs.get('id', '')
@@ -688,38 +698,41 @@ def save_put(self, v, attrs):
         if self.binary:
             id = int(id)
             if id < 256:
-                id = BINPUT + chr(id)
+                id = BINPUT + str2bytes(chr(id))
             else:
                 id = LONG_BINPUT + struct.pack('<i', id)
         else:
-            id = PUT + repr(id) + '\n'
+            id = PUT + repr(id) + b'\n'
         return v + id
     return v
 
 def save_string(self, tag, data):
-    binary=self.binary
-    v=''
-    a=data[1]
-    if len(data)>2:
-        v = ''.join(data[2:])
-    encoding=a.get('encoding','repr') # JPS: repr is default encoding
+    a = data[1]
+    v = b''.join(data[2:])
+    encoding = a.get('encoding', 'repr') # JPS: repr is default encoding
     if encoding is not '':
-        v=unconvert(encoding,v)
-    put='p'
-    if binary:
-        l=len(v)
-        s=mdumps(l)[1:]
-        if (l<256):
-            v='U'+s[0]+v
+        v = unconvert(encoding, v)
+    if self.binary:
+        l = len(v)
+        if l < 256:
+            if encoding == 'base64':
+              op = SHORT_BINBYTES
+            else:
+              op = SHORT_BINSTRING
+            v = op + bytes([l]) + v
         else:
-            v='T'+s+v
-        put='q'
-    else: v="S'"+v+"'\012"
+            if encoding == 'base64':
+              op = BINBYTES
+            else:
+              op = BINSTRING
+            v = op + struct.pack('<i', l) + v
+    else:
+        v = STRING + repr(v) + '\n'
     return save_put(self, v, a)
 
 def save_unicode(self, tag, data):
     binary=self.binary
-    v=''
+    v=b''
     a=data[1]
     if len(data)>2:
         for x in data[2:]:
@@ -738,14 +751,14 @@ def save_tuple(self, tag, data):
     T = data[2:]
     if not T:
         return EMPTY_TUPLE
-    return save_put(self, MARK + ''.join(T) + TUPLE, data[1])
+    return save_put(self, MARK + b''.join(T) + TUPLE, data[1])
 
 def save_list(self, tag, data):
     L = data[2:]
     if self.binary:
         v = save_put(self, EMPTY_LIST, data[1])
         if L:
-            v = v + MARK + ''.join(L) + APPENDS
+            v = v + MARK + b''.join(L) + APPENDS
     else:
         v = save_put(self, MARK + LIST, data[1])
         if L:
@@ -757,7 +770,7 @@ def save_dict(self, tag, data):
     if self.binary:
         v = save_put(self, EMPTY_DICT, data[1])
         if D:
-            v = v + MARK + ''.join(D) + SETITEMS
+            v = v + MARK + b''.join(D) + SETITEMS
     else:
         v = save_put(self, MARK + DICT, data[1])
         if D:
@@ -773,34 +786,35 @@ def save_reference(self, tag, data):
     if self.binary:
         id = int(id)
         if id < 256:
-            return BINGET + chr(id)
+            return BINGET + str2bytes(chr(id))
         else:
             return LONG_BINGET + struct.pack('<i', i)
     else:
-        return GET + repr(id) + '\n'
+        return GET + repr(id) + b'\n'
 
 def save_object(self, tag, data):
     if len(data)==5:
         #OBJECT
-        v='('+data[2]
+        v=b'('+data[2]
         x=data[3][1:]
-        stop=x.rfind('t')  # This seems
+        stop=x.rfind(b't')  # This seems
         if stop>=0: x=x[:stop]    # wrong!
-        v=save_put(self, v+x+'o', data[1])
-        v=v+data[4]+'b' # state
+        v=save_put(self, v+x+b'o', data[1])
+        v=v+data[4]+b'b' # state
         return v
     else:
         #REDUCE
         #data does not contain state.(See Object.__setstate__ definition)
         #So, we can assume that this is a reduce. (Yusei)
-        v='('+data[2]
+        v=b'('+data[2]
         v=save_put(self, data[2]+data[3], data[1])
-        v=v+'R'
+        v=v+b'R'
         return v
 
 def save_global(self, tag, data):
     a = data[1]
-    return save_put(self, GLOBAL + a['module'] + '\n' + a['name'] + '\n', a)
+    return save_put(self, GLOBAL + str2bytes(a['module']) + b'\n' +
+                    str2bytes(a['name']) + b'\n', a)
 
 def save_persis(self, tag, data):
     v = data[2]
@@ -813,16 +827,16 @@ def save_pickle_start(self, tag, attrs):
     return [tag, attrs]
 
 def save_pickle(self, tag, data):
-    return data[2] + '.'
+    return data[2] + b'.'
 
 def save_none(self, tag, data):
-    return 'N'
+    return b'N'
 
 def save_long(self, tag, data):
-    return 'L'+data[2]+'L\012'
+    return b'L'+data[2]+b'L\012'
 
 def save_item(self, tag, data):
-    return ''.join(data[2:])
+    return b''.join(data[2:])
 
 def save_value(self, tag, data):
     return data[2]
@@ -837,7 +851,7 @@ class xmlPickler(NoBlanks, xyap):
         if tag in end:
             top = end[tag](self, tag, top)
         if isinstance(top, six.text_type):
-            top = top.encode('raw_unicode_escape')
+            top = top.encode(data_encoding)
         append(top)
 
     start_handlers={

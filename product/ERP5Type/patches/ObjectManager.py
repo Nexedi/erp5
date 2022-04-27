@@ -12,8 +12,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.XMLExportImport import magic, importXML
-customImporters = {magic: importXML}
+from Products.ERP5Type.XMLExportImport import customImporters
 
 import OFS.ObjectManager
 OFS.ObjectManager.customImporters = customImporters
