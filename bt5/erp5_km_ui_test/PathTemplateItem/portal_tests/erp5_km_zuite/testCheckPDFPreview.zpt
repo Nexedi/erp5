@@ -98,12 +98,12 @@
   <td></td>
 </tr>
 <tr>
-  <td>isElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//button[@id='zoomOut']</td>
   <td></td>
 </tr>
 <tr>
-  <td>isElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//button[@id='zoomIn']</td>
   <td></td>
 </tr>
