@@ -154,26 +154,6 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_service_worker_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_precache_manifest_script_list</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
               </tuple>
             </value>
         </item>
@@ -211,14 +191,6 @@
         <item>
             <key> <string>configuration_precache_manifest_script</string> </key>
             <value> <string>WebSection_getAppstoreHomePrecacheManifest</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_precache_manifest_script_list</string> </key>
-            <value> <string>WebSection_getAppstoreHomePrecacheManifest</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_service_worker_url</string> </key>
-            <value> <string>gadget_erp5_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -487,7 +459,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>999.54797.65152.32887</string> </value>
+                      <value> <string>998.12262.37408.9745</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -505,7 +477,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1651074126.4</float>
+                              <float>1644861800.17</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
