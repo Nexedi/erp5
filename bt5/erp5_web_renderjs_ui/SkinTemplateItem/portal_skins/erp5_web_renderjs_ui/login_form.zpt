@@ -3,6 +3,7 @@
                   portal context/getPortalObject;
                   available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
                   enable_google_login python: 'google' in available_oauth_login_list;
+                  enable_facebook_login python: 'facebook' in available_oauth_login_list;
                   enable_openidconnect_login python: 'openidconnect' in available_oauth_login_list;
                   ">
   <head>
@@ -73,6 +74,15 @@
                       >
                       <img alt="Sign in with Google" src="google_login_button.png"/>
 
+                  </a>
+                  </div>
+                  <div class="dialog_button_container" tal:condition="enable_facebook_login"
+                       tal:define="current_url python: context.getWebSiteValue().absolute_url()">
+                    <a tal:attributes="href string:${current_url}/ERP5Site_redirectToFacebookLoginPage"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      >
+                      <img alt="Login with Facebook" src="facebook_login_button.png">
                   </a>
                   </div>
                   <div class="dialog_button_container" tal:condition="enable_openidconnect_login"
