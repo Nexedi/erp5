@@ -51,6 +51,12 @@ class ComponentVersionPackage(ModuleType):
   """
   __path__ = []
 
+try:
+  ModuleNotFoundError
+except NameError: # < 3.6
+  class ModuleNotFoundError(ImportError):
+    pass
+
 class ComponentDynamicPackage(ModuleType):
   """
   A top-level component is a package as it contains modules, this is required
@@ -420,8 +426,10 @@ class ComponentDynamicPackage(ModuleType):
       # load_module(), and returning module 'name' in contrary to __import__
       # returning 'erp5' (requiring fromlist parameter which is slower)
       return import_module(fullname)
+    except ModuleNotFoundError:
+      pass
     except ImportError as e:
-      if str(e) != "No module named " + name:
+      if six.PY3 or str(e) != "No module named " + name:
         LOG("ERP5Type.dynamic", WARNING,
             "Could not load Component module %r" % fullname, error=True)
 
