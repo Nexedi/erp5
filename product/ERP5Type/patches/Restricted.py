@@ -451,8 +451,12 @@ for alias, real in six.iteritems(MNAME_MAP):
   allow_module(real)
 del alias, real
 orig_guarded_import = safe_builtins['__import__']
+try:
+  from AccessControl.ZopeGuards import import_default_level # zope4py3
+except ImportError:
+  import_default_level = -1
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
-    level=-1):
+    level=import_default_level):
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
