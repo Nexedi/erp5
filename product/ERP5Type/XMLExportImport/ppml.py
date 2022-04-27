@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001,2002 Zope Corporation and Contributors. All Rights Reserved.
@@ -22,7 +23,6 @@ from marshal import loads as mloads
 from .xyap import NoBlanks
 from .xyap import xyap
 
-import re
 from marshal import dumps as mdumps
 #from zLOG import LOG
 

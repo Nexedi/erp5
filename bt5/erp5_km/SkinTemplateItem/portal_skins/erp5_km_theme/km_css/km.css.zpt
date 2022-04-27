@@ -643,34 +643,6 @@ div.download-document-format-list-menu ul li.toggle-hidden-format-dialog-selecti
   height:20px;
 }
 
-/* DMS PDF navigation  */
-div.pdf-preview-navigation img{
-  width: 4px;
-  height: 8px;
-  margin-right: 4px;
-  background-repeat: no-repeat; 
-  vertical-align: middle;
-}
-div.pdf-preview-navigation img.shaded{
-  opacity: 0.2;
-}
-
-div.pdf-preview-navigation img.first{
-  background-image:url("km_img/2leftarrowv.png");
-}
-
-div.pdf-preview-navigation img.previous{
-  background-image:url("km_img/1leftarrowv.png");
-}
-
-div.pdf-preview-navigation img.next{
-  background-image:url("km_img/1rightarrowv.png");
-}
-
-div.pdf-preview-navigation img.last{
-  background-image:url("km_img/2rightarrowv.png");
-  width: 5px;
-}
 
 /* Editable mode actions */
 .actions{

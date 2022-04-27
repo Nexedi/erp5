@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Yet another XML parser
 
 This is meant to be very simple:
