@@ -13,13 +13,6 @@
         });
     })
     .declareMethod("render", function (options) {
-      [].forEach.call(window.document.head.querySelectorAll("base"), function (el) {
-        // XXX GadgetField adds <base> tag to fit to the parent page location, it's BAD to remove them.
-        //     In the case of pdf.js, all component are loaded dynamicaly through ajax requests in
-        //     pdf-js "folder". By setting a <base> tag, we change the url resolution behavior, and
-        //     we break all dynamic links. So, deleting <base> is required.
-        window.document.head.removeChild(el);
-      });
       this.props.key = options.key;
       webViewerLoad(options.value);
 
