@@ -29,7 +29,7 @@
 
 import six
 from six import string_types as basestring
-from Products.ERP5Type.Utils import ensure_list
+from Products.ERP5Type.Utils import ensure_list, bytes2str
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
@@ -131,33 +131,38 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   # separate file, with extension specified by 'extension'.
   # 'extension' must be None for auto-detection.
   #
-  # class_name: (extension, unicode_data, property_name),
-  "Document Component":  ("py",   0, "text_content"),
-  "DTMLDocument":        (None,   0, "raw"),
-  "DTMLMethod":          (None,   0, "raw"),
-  "Extension Component": ("py",   0, "text_content"),
-  "File":                (None,   0, "data"),
-  "Image":               (None,   0, "data"),
-  "Interface Component": ("py",   0, "text_content"),
-  "OOoTemplate":         ("oot",  1, "_text"),
-  "Mixin Component":     ("py",   0, "text_content"),
-  "Module Component":    ("py",   0, "text_content"),
-  "PDF":                 ("pdf",  0, "data"),
-  "PyData Script":       ("py",   0, "_body"),
-  "Python Script":       ("py",   0, "_body"),
-  "Workflow Script":     ("py",   0, "_body"),
-  "PythonScript":        ("py",   0, "_body"),
-  "Spreadsheet":         (None,   0, "data"),
-  "SQL":                 ("sql",  0, "src"),
-  "SQL Method":          ("sql",  0, "src"),
-  "Test Component":      ("py",   0, "text_content"),
-  "Test Page":           (None,   0, "text_content"),
-  "Tool Component":      ("py",   0, "text_content"),
-  "Web Illustration":    ("svg",  0, "text_content"),
-  "Web Page":            (None,   0, "text_content"),
-  "Web Script":          (None,   0, "text_content"),
-  "Web Style":           (None,   0, "text_content"),
-  "ZopePageTemplate":    ("zpt",  1, "_text"),
+  # XXX-py3: `text` was added but what we should do is check the PropertySheet
+  #          ('string' (str) /'data' (bytes)) but for now, only work on
+  #          bootstrap...
+  #
+  # class_name: (extension, unicode_data, property_name, text),
+  "Document Component":  ("py",   0, "text_content", True ),
+  "DTMLDocument":        (None,   0, "raw",          True ),
+  "DTMLMethod":          (None,   0, "raw",          True ),
+  "Extension Component": ("py",   0, "text_content", True ),
+  # OFS.File raises ValueError("Must be bytes")
+  "File":                (None,   0, "data",         False),
+  "Image":               (None,   0, "data",         False),
+  "Interface Component": ("py",   0, "text_content", True ),
+  "OOoTemplate":         ("oot",  1, "_text",        True ),
+  "Mixin Component":     ("py",   0, "text_content", True ),
+  "Module Component":    ("py",   0, "text_content", True ),
+  "PDF":                 ("pdf",  0, "data",         False),
+  "PyData Script":       ("py",   0, "_body",        True ),
+  "Python Script":       ("py",   0, "_body",        True ),
+  "Workflow Script":     ("py",   0, "_body",        True ),
+  "PythonScript":        ("py",   0, "_body",        True ),
+  "Spreadsheet":         (None,   0, "data",         False),
+  "SQL":                 ("sql",  0, "src",          True ),
+  "SQL Method":          ("sql",  0, "src",          True ),
+  "Test Component":      ("py",   0, "text_content", True ),
+  "Test Page":           (None,   0, "text_content", True ),
+  "Tool Component":      ("py",   0, "text_content", True ),
+  "Web Illustration":    ("svg",  0, "text_content", True ),
+  "Web Page":            (None,   0, "text_content", True ),
+  "Web Script":          (None,   0, "text_content", True ),
+  "Web Style":           (None,   0, "text_content", True ),
+  "ZopePageTemplate":    ("zpt",  1, "_text",        True ),
 }
 
 def _getCatalog(acquisition_context):
@@ -814,7 +819,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(obj, name=key, ext='.py')
       else:
         try:
-          extension, unicode_data, record_id = \
+          extension, unicode_data, record_id, _ = \
             SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
         except KeyError:
           pass
@@ -868,10 +873,13 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(xml_data, key + '.catalog_keys', path=path)
 
   def _restoreSeparatelyExportedProperty(self, obj, data):
-    unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
-      obj.__class__.__name__][1:]
+    class_name = obj.__class__.__name__
+    unicode_data, property_name, is_text = SEPARATELY_EXPORTED_PROPERTY_DICT[
+      class_name][1:]
     if unicode_data:
       data = data.decode(obj.output_encoding)
+    elif is_text:
+      data = data.decode('utf-8')
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
@@ -1029,7 +1037,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       F.binary=1
       F.file=outfile
       p=xml.parsers.expat.ParserCreate('utf-8')
-      p.returns_unicode = False
+      if six.PY2:
+        p.returns_unicode = False
       p.CharacterDataHandler=F.handle_data
       p.StartElementHandler=F.unknown_starttag
       p.EndElementHandler=F.unknown_endtag
@@ -5036,7 +5045,7 @@ class bt(dict):
   """Fake 'bt' item to read bt/* files through BusinessTemplateArchive"""
 
   def _importFile(self, file_name, file):
-    self[file_name] = file.read()
+    self[file_name] = bytes2str(file.read())
 
 
 class BusinessTemplate(XMLObject):
