@@ -142,7 +142,7 @@ ContainerAssertions[type] = TypeAccessChecker()
 
 class SafeIterItems(SafeIter):
 
-    def next(self):
+    def __next__(self):
         ob = self._next()
         c = self.container
         guard(c, ob[0])
@@ -232,15 +232,9 @@ from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
 full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
 
-# On Python2 only: In contrary to builtins such as dict/defaultdict, it is
-# possible to set attributes on OrderedDict instances, so only allow
-# setitem/delitem
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
-if six.PY2:
-  OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
-  OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
-else:
-  allow_full_write(OrderedDict)
+OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
+OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
 
 _counter_white_list = copy.copy(_dict_white_list)
 _counter_white_list['most_common'] = 1

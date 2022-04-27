@@ -204,7 +204,7 @@ def ord_or_None(s):
         return ord(s)
 
 match_select = re.compile(
-    rb'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
+    br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
     re.IGNORECASE | re.DOTALL,
 ).match
 

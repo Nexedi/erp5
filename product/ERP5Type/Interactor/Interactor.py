@@ -99,8 +99,11 @@ class InteractorSource:
       Register method
     """
     if len(args) == 1:
-      self.klass = method.im_class
-      self.method = method
+      # For backward compatibility only in case some projects still use Interactors
+      import six
+      assert six.PY2
+      self.method = args[0]
+      self.klass = self.method.im_class
     else:
       # No im_class on Python3 and Interactors only makes sense with non-ERP5
       # objects anyway, so add a class argument to InteractorSource to make it

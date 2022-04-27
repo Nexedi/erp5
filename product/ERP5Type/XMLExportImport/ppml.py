@@ -15,9 +15,9 @@
 """Provide conversion between Python pickles and XML
 """
 
+# six.PY3: Python C implementation does not have Unpickler.dispatch attribute
 from zodbpickle.pickle import *
-# Python3 C implementation does not have Unpickler.dispatch attribute
-from zodbpickle.pickle_3 import _Unpickler as Unpickler
+
 import struct
 import base64
 import re
