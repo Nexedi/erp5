@@ -13,7 +13,6 @@ for message in message_list:
   message.edit(
     str_object_path = '/'.join(message.object_path),
     uid_activity = str(message.uid) + ' ('+ message.activity[3:] +')',
-    arguments = str(message.args),
     delete = '[Delete]',
     restart = '[Restart]',
   )
