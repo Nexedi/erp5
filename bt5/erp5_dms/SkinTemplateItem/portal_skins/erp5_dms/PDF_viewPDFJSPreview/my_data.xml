@@ -104,7 +104,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.absolute_url()+\'/getData\'</string> </value>
+            <value> <string>python: context.absolute_url()+\'?format=\'</string> </value>
         </item>
       </dictionary>
     </pickle>
