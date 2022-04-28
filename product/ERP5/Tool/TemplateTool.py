@@ -64,7 +64,6 @@ import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
 import struct
-from six.moves import cPickle as pickle
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
@@ -72,6 +71,7 @@ from base64 import decodestring
 import subprocess
 import time
 from Products.ERP5Type.Utils import bytes2str
+import json
 
 WIN = os.name == 'nt'
 
@@ -534,12 +534,12 @@ class TemplateTool (BaseTool):
 
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
-        
+
       if len(repository_list) == 0 and REQUEST:
         ret_url = self.absolute_url()
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                   % (ret_url, 'No repository was defined'))
-                                    
+
       for repository in repository_list:
         repository = repository.rstrip('\n')
         repository = repository.rstrip('\r')
@@ -720,7 +720,8 @@ class TemplateTool (BaseTool):
         Decode the uid of a business template from a repository.
         Return a repository and an id.
       """
-      return pickle.loads(b64decode(uid))
+      repository, id = json.loads(b64decode(uid))
+      return repository.encode('utf-8'), id.encode('utf-8')
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -728,7 +729,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(pickle.dumps((repository, id)))
+      return b64encode(json.dumps((repository, id)))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
