@@ -1,0 +1,85 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_and_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_and_id"></td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test/Base_createUITestLanguages"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>New Languages Added</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/fr/document_module/test_ERP5_Logo_PDF/PDF_viewPDFJSPreview</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//body//div[@class='textLayer']/div[1]</td>
+  <td>This is a sample PDF with some text and an image</td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//option[@id="pageAutoOption"]</td>
+  <td>Zoom automatique</td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+<!-- Try with a language not supported by pdf.js -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_language</td>
+  <td>Xhosa</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//option[@id="pageAutoOption"]</td>
+  <td>Automatic Zoom</td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

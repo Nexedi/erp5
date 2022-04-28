@@ -1,0 +1,108 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_or_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_or_id"></td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/prepare_data" />
+
+<!-- try with a language supported (fr) in CKEditor, then a language not supported (wo) -->
+<tal:block
+  tal:define="language_and_translations python:[('fr', {'Font': 'Police', 'Actions': 'Actions'}), ('wo', {'Font': 'Font', 'Actions': 'caozhuo'})]"
+  tal:repeat="language_and_translation language_and_translations">
+<tr>
+  <td>store</td>
+  <td>${base_url}/web_site_module/renderjs_runner/<tal:block tal:replace="python: language_and_translation[0]"/>/#</td>
+  <td>renderjs_url</td>
+</tr>
+
+<tal:block tal:define="translation_dict python: language_and_translation[1]">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/view_create_new_event_dialog" />
+</tal:block>
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_title': '',
+                                                             'field_your_portal_type': 'Mail Message',
+                                                             'field_your_resource': '',
+                                                             'field_your_notification_message': '',
+                                                             'field_your_event_workflow_action': 'send',
+                                                             'field_your_source': '',
+                                                             'field_your_destination': '',
+                                                             'field_your_text_content': '<p><br></p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_create_new_event_dialog_content" />
+</tal:block>
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_title': 'erp5_crm_ui_test_create_event_title',
+                                                             'field_your_portal_type': 'Letter',
+                                                             'field_your_resource': '',
+                                                             'field_your_start_date': '2010-01-01T00:00:00',
+                                                             'field_your_notification_message': '',
+                                                             'field_your_event_workflow_action': 'send',
+                                                             'field_your_source': 'erp5_crm_ui_test_agent_title',
+                                                             'field_your_destination': 'erp5_crm_ui_test_customer_title',
+                                                             'field_your_text_content': '<p>Foo<br>Bar</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/fill_create_new_event_dialog_content" />
+</tal:block>
+
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=.cke_combo__font > .cke_combo_label</td>
+  <td tal:content="python: language_and_translation[1]['Font']"></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+<!-- Header has a save button -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Created and associated a new Letter to the ticket.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="response_configuration python: {'field_my_title': 'erp5_crm_ui_test_create_event_title',
+                                                       'field_my_portal_type': 'Letter',
+                                                       'field_my_resource': '',
+                                                       'field_my_start_date': '2010-01-01T00:00:00',
+                                                       'simulation_state': 'Sent',
+                                                       'field_my_source_title': 'erp5_crm_ui_test_agent_title',
+                                                       'field_my_destination_title': 'erp5_crm_ui_test_customer_title',
+                                                       'field_my_text_content': '<p>Foo<br>Bar</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_response_content" />
+</tal:block>
+
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=.cke_combo__font > .cke_combo_label</td>
+  <td tal:content="python: language_and_translation[1]['Font']"></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+</tal:block>
+</tbody></table>
+</body>
+</html>

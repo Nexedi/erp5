@@ -1,0 +1,123 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_or_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_or_id"></td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test/Base_createUITestLanguages"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>New Languages Added</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/prepare_data" />
+
+<!-- try with a language supported (fr) in CKEditor, then a language not supported (wo) -->
+<tal:block
+  tal:define="language_and_translations python:[('French', 'Police'), ('Wolof', 'Font')]"
+  tal:repeat="language_and_translation language_and_translations">
+
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_language</td>
+  <td tal:content="python: language_and_translation[0]"></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/view_create_new_event_dialog" />
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_title': '',
+                                                             'field_your_portal_type': 'Mail Message',
+                                                             'field_your_resource': '',
+                                                             'field_your_notification_message': '',
+                                                             'field_your_event_workflow_action': 'send',
+                                                             'field_your_source': '',
+                                                             'field_your_destination': '',
+                                                             'field_your_text_content': '<p><br></p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/check_create_new_event_dialog_content" />
+</tal:block>
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_title': 'Test event',
+                                                             'field_your_portal_type': 'Letter',
+                                                             'field_your_resource': '',
+                                                             'field_your_start_date': '2010-01-01T00:00:00',
+                                                             'field_your_notification_message': '',
+                                                             'field_your_event_workflow_action': 'send',
+                                                             'field_your_source': 'erp5_crm_ui_test_agent_title',
+                                                             'field_your_destination': 'erp5_crm_ui_test_customer_title',
+                                                             'field_your_text_content': '<p>Foo<br>Bar</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/fill_create_new_event_dialog_content" />
+</tal:block>
+
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=.cke_combo__font > .cke_combo_label</td>
+  <td tal:content="python: language_and_translation[1]"></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Created and associated a new Letter to the ticket.</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="response_configuration python: {'field_my_title': 'Test event',
+                                                       'field_my_portal_type': 'Letter',
+                                                       'field_my_resource': '',
+                                                       'field_my_start_date': '2010-01-01T00:00:00',
+                                                       'simulation_state': 'Sent',
+                                                       'field_my_source_title': 'erp5_crm_ui_test_agent_title',
+                                                       'field_my_destination_title': 'erp5_crm_ui_test_customer_title',
+                                                       'field_my_text_content': '<p>Foo<br>Bar</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMUiTest/macros/check_response_content" />
+</tal:block>
+
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=.cke_combo__font > .cke_combo_label</td>
+  <td tal:content="python: language_and_translation[1]"></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+</tal:block>
+</tbody></table>
+</body>
+</html>

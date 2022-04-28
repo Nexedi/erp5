@@ -13,16 +13,18 @@
         });
     })
     .declareMethod("render", function (options) {
-      this.props.key = options.key;
-      webViewerLoad(options.value);
-
-      // hide few buttons for now
-      this.props.element.querySelector('#viewBookmark').hidden = true;
-      this.props.element.querySelector('#documentProperties').hidden = true;
-      this.props.element.querySelector('#documentProperties').hidden = true;
-      this.props.element.querySelector('#download').hidden = true;
-      
-      return;
+      var gadget = this;
+      gadget.props.key = options.key;
+      configure(PDFJS);
+      PDFJS.locale = options.language;
+      return PDFViewerApplication.initialize().then(function() {
+        webViewerInitialized(options.value);
+        // hide some buttons that do not make sense for us 
+        gadget.props.element.querySelector('#viewBookmark').hidden = true;
+        gadget.props.element.querySelector('#documentProperties').hidden = true;
+        gadget.props.element.querySelector('#documentProperties').hidden = true;
+        gadget.props.element.querySelector('#download').hidden = true;
+      })
     })
     .declareMethod("getContent", function () {
       var form_data = {};
