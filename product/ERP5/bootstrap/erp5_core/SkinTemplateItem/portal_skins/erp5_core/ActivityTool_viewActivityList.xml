@@ -83,7 +83,7 @@
                         <string>listbox_call_traceback</string>
                         <string>listbox_activity_kw</string>
                         <string>listbox_kw</string>
-                        <string>listbox_arguments</string>
+                        <string>listbox_args</string>
                       </list>
                     </value>
                 </item>

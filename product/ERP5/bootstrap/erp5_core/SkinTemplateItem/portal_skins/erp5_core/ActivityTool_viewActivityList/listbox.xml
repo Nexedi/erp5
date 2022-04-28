@@ -127,7 +127,7 @@
                           <string>Activity Kw</string>
                         </tuple>
                         <tuple>
-                          <string>arguments</string>
+                          <string>args</string>
                           <string>Arguments</string>
                         </tuple>
                         <tuple>
@@ -278,7 +278,7 @@
                           <string></string>
                         </tuple>
                         <tuple>
-                          <string>arguments</string>
+                          <string>args</string>
                           <string></string>
                         </tuple>
                         <tuple>
