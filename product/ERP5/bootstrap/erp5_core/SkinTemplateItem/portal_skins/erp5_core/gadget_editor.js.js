@@ -1,5 +1,21 @@
 /*jslint nomen: true, indent: 2 */
 /*global window, rJS, RSVP, document, FileReader, Blob*/
+
+/**
+ * Render options for editor gadget.
+ *
+ * @typedef {object} RenderOptions
+ * @property {string} value the data to edit
+ * @property {string} editor the selected editor
+ * @property {string} content_type the mime type
+ * @property {boolean} maximize start in maximized state
+ * @property {string} portal_type the portal type
+ * @property {boolean} editable set to true to have an editor when user
+ *  can modify the content, false for a "read only" editor
+ * @property {boolean} run a hack for jsmd editor
+ * @property {string} key Key for ERP5 form
+ */
+
 (function (window, rJS, RSVP, document, FileReader, Blob) {
   "use strict";
 
@@ -45,11 +61,19 @@
         });
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render',
+    /**
+     * @param {RenderOptions} options
+     */
+    function(options) {
       return this.renderAsynchronously(options);
     })
 
-    .declareJob('renderAsynchronously', function (options) {
+    .declareJob('renderAsynchronously',
+    /**
+     * @param {RenderOptions} options
+     */
+    function (options) {
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
