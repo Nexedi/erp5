@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Represents a numpy representation of ndarray</string> </value>
+            <value> <string>Compare multiple Data Arrays</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
