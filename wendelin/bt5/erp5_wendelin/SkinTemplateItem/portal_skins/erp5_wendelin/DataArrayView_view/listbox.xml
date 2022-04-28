@@ -84,6 +84,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>predecessor_title</string>
+                          <string>Referenced Data Array</string>
+                        </tuple>
+                        <tuple>
                           <string>dtype</string>
                           <string>Dtype</string>
                         </tuple>
