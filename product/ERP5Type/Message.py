@@ -82,7 +82,6 @@ if 1: # BBB
   getGlobalTranslationService = GlobalTranslationService
 
 from Products.ERP5Type import Globals
-from six.moves.cPickle import dumps, loads
 from string import Template
 from base64 import b64encode, b64decode
 
@@ -102,24 +101,6 @@ class Message(Persistent):
     if default is None:
       default = message
     self.default = default
-
-  security.declarePublic('dump')
-  def dump(self):
-    """
-    Return a pickle version of the object
-    """
-    return b64encode(dumps(self, 2))
-
-  security.declarePublic('load')
-  def load(self, string):
-    """
-    Get properties from pickle version
-    """
-    o = loads(b64decode(string))
-    self.message = o.message
-    self.domain = o.domain
-    self.mapping = o.mapping
-    self.default = o.default
 
   def translate(self):
     """
