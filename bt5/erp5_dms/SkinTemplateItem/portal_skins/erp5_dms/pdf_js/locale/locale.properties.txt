@@ -1,0 +1,26 @@
+[de]
+@import url(de/viewer.properties)
+
+[en-GB]
+@import url(en-GB/viewer.properties)
+
+[en-US]
+@import url(en-US/viewer.properties)
+
+[fa]
+@import url(fa/viewer.properties)
+
+[fr]
+@import url(fr/viewer.properties)
+
+[ja]
+@import url(ja/viewer.properties)
+
+[pl]
+@import url(pl/viewer.properties)
+
+[pt-BR]
+@import url(pt-BR/viewer.properties)
+
+[zh-CN]
+@import url(zh-CN/viewer.properties)
