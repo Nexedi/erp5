@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>viewer.properties</string> </value>
         </item>
       </dictionary>
     </pickle>
