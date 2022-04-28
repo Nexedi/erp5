@@ -80,8 +80,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
+                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>dtype</string>
@@ -124,15 +124,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Data Array Line</string>
-                          <string>Data Array Line</string>
+                          <string>Data Array View Line</string>
+                          <string>Data Array View Line</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>data_array_line</string> </value>
+                    <value> <string>data_array_view_line</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -140,7 +140,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Data Array Lines</string> </value>
+                    <value> <string>Data Array View Lines</string> </value>
                 </item>
               </dictionary>
             </value>
