@@ -26,7 +26,7 @@ class _(PatchClass(ExternalMethod)):
     reloadIfChanged = getFuncDefaults = getFuncCode = filepath = None
 
     @property
-    def func_defaults(self):
+    def __defaults__(self):
         """Return a tuple of default values.
         The first value is for the "second" parameter (self is ommited)
 
@@ -35,10 +35,12 @@ class _(PatchClass(ExternalMethod)):
           will have func_defaults = ('', )
         """
         return self._getFunction()[1]
+    func_defaults = __defaults__
 
     @property
-    def func_code(self):
+    def __code__(self):
         return self._getFunction()[2]
+    func_code = __code__
 
     @property
     def func_args(self):
@@ -80,7 +82,7 @@ class _(PatchClass(ExternalMethod)):
                 return _f
         except AttributeError:
             pass
-        code = f.__code__
+        code = f.func_code
         argument_object = getargs(code)
         # reconstruct back the original names
         arg_list = argument_object.args[:]
@@ -95,7 +97,7 @@ class _(PatchClass(ExternalMethod)):
         i += has_self
         if i:
             code = FuncCode(ff, i)
-        self._v_f = _f = (f, f.__defaults__, code, has_self, arg_list)
+        self._v_f = _f = (f, f.func_defaults, code, has_self, arg_list)
         return _f
 
     def __call__(self, *args, **kw):
