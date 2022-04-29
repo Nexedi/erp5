@@ -9,12 +9,7 @@ def _getFacebookClientIdAndSecretKey(portal, reference="default"):
 
   Internal function.
   """
-  result_list = portal.portal_catalog.unrestrictedSearchResults(
-    portal_type="Facebook Connector",
-    reference=reference,
-    validation_state="validated",
-    limit=2,
-  )
+  result_list = unrestrictedSearchFacebookConnector(portal, reference=reference)
   assert result_list, "Facebook Connector not found"
   if len(result_list) == 2:
     raise ValueError("Impossible to select one Facebook Connector")
@@ -38,10 +33,10 @@ def getAccessTokenFromCode(self, code, redirect_uri):
     code=code, redirect_uri=redirect_uri,
     app_id=client_id, app_secret=secret_key)
 
-def unrestrictedSearchFacebookConnector(self):
+def unrestrictedSearchFacebookConnector(self, reference="default"):
   return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
             portal_type="Facebook Connector",
-            reference="default",
+            reference=reference,
             validation_state="validated",
             limit=2)
 
