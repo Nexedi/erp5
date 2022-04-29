@@ -666,7 +666,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         # clean up mimetype from its useless characters
         source_mimetype = parseContentType(source_mimetype)
-        source_mimetype = ";".join([source_mimetype.gettype()] + source_mimetype.getplist())
+        source_mimetype =  ';'.join(
+            [source_mimetype.get_content_type()] +
+            ["%s=%s" % (p, v) for (p, v) in source_mimetype.get_params()[1:]])
 
         # fill dict that will contain all possible conversion for each mimetype
         input_output_dict = {} # {"application/pdf": set(["text/html", "application/msword", ...])}
