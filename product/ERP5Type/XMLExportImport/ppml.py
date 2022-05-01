@@ -15,8 +15,9 @@
 """Provide conversion between Python pickles and XML
 """
 
-# Python3 C implementation does not have Unpickler.dispatch attribute
-from zodbpickle.pickle import *
+# XXX-zope4py3: Python3 C implementation does not have Unpickler.dispatch
+# attribute. dispatch_table should be used instead.
+from zodbpickle.slowpickle import *
 
 import struct
 import base64
