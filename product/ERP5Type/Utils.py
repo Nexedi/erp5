@@ -507,7 +507,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # 'Access to a protected member %s of a client class'
            '--disable=W0212',
            # string module does not only contain deprecated functions...
-           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
+           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec',
+           # The default considers only six.moves, let's consider six module
+           # completely to avoid `Redefining built-in 'basestring'` for example
+           '--redefining-builtins-modules=six,six.moves,past.builtins,future.builtins,builtins,io',
+      ]
 
       if portal_type == 'Interface Component':
         # __init__ method from base class %r is not called
