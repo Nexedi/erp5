@@ -85,7 +85,7 @@ class TranslatedPropertyGetter(BaseGetter):
       localizer = instance.getPortalObject().Localizer
       message_catalog = getattr(localizer, domain, None)
       if message_catalog is not None:
-        return message_catalog.gettext(unicode(value, 'utf8'), lang=self._language).encode('utf8')
+        return message_catalog.gettext(value, lang=self._language)
       else:
         return value
 
