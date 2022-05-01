@@ -40,7 +40,9 @@
 from Acquisition import aq_base, aq_inner
 from collections import OrderedDict
 from io import BytesIO
-from zodbpickle.pickle import Pickler
+# XXX-zope4py3: Python3 C implementation does not have Unpickler.dispatch
+# attribute. dispatch_table should be used instead.
+from zodbpickle.slowpickle import Pickler
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
