@@ -36,6 +36,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type.patches.Restricted import allow_class_attribute
 from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_black_list, series_black_list)
+from Products.ERP5Type.patches.Pandas import pandas_read_function_to_restrict_tuple
 from AccessControl import Unauthorized
 from AccessControl.ZopeGuards import Unauthorized as ZopeGuardsUnauthorized
 
@@ -634,6 +635,110 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           write_method = df.{write_method}
           write_method('testPandasSeriesIOWrite.data')
           '''.format(write_method=write_method))
+
+  def testPandasRestrictedReadFunctionAllowedInput(self):
+    """
+      Test if patched pandas read_* functions parse string input in expected manner.
+    """
+    read_function_to_test_data_dict = {
+      "read_json": (
+        # Normal input should be correctly handled
+        (
+          "[1, 2, 3]",
+          "[1, 2, 3]",
+        ),
+        (
+          '{"column_name": [1, 2, 3], "another_column": [3, 9.2, 100]}',
+          '{"column_name": [1, 2, 3], "another_column": [3, 9.2, 100]}',
+        ),
+      ),
+      "read_csv": (
+        # Normal input should be correctly handled
+        (
+          r"11,2,300\n50.5,99,hello",
+          r"[[50.5, 99, 'hello']], columns='11 2 300'.split(' ')",
+        ),
+        # Url like / file path like input will also just be read
+        # as an entry of the CSV content.
+        (
+          r"https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv",
+          r"[], columns=['https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv']",
+        ),
+        (
+          r"file://path/to/csv/file.csv",
+          r"[], columns=['file://path/to/csv/file.csv']",
+        ),
+      ),
+      "read_fwf": (
+        # Normal input should be correctly handled
+        (
+          r"100\n200",
+          r"[[200]], columns=['100']",
+        ),
+        # Url like / file path like input will also just be read
+        # as an entry of the Fwf content.
+        (
+          r"file://path/to/fwf/file.fwf",
+          r"[], columns=['file://path/to/fwf/file.fwf']",
+        ),
+      ),
+    }
+
+    for read_function, test_data in read_function_to_test_data_dict.items():
+      for read_argument, expected_data_frame_init in test_data:
+        self.createAndRunScript(
+          '''
+          import pandas as pd
+          expected_data_frame = pd.DataFrame({expected_data_frame_init})
+          return pd.{read_function}('{read_argument}').equals(expected_data_frame)
+          '''.format(
+            expected_data_frame_init=expected_data_frame_init,
+            read_function=read_function,
+            read_argument=read_argument,
+          ),
+          expected=True
+        )
+
+  def testPandasRestrictedReadFunctionProhibitedInput(self):
+    """
+      Test if patched pandas read_* functions raise with any input which isn't a string.
+    """
+    for pandas_read_function in pandas_read_function_to_restrict_tuple:
+      for preparation, prohibited_input in (
+        ('', 100),
+        ('from StringIO import StringIO', 'StringIO("[1, 2, 3]")'),
+      ):
+        self.assertRaises(
+          ZopeGuardsUnauthorized,
+          self.createAndRunScript,
+          '''
+          import pandas as pd
+          {preparation}
+          pd.{pandas_read_function}({prohibited_input})
+          '''.format(
+            preparation=preparation,
+            pandas_read_function=pandas_read_function,
+            prohibited_input=prohibited_input,
+          )
+        )
+
+  def testPandasReadJson(self):
+    # Test if file path, urls and other bad strings
+    # raise value errors
+    for malicous_input in (
+      # working json url
+      "https://github.com/LearnWebCode/json-example/raw/master/animals-1.json",
+      "/path/to/json/file.json",
+      "file://path/to/json/file.json",
+    ):
+      self.assertRaises(
+        ValueError,
+        self.createAndRunScript,
+        '''
+        import pandas as pd
+        pd.read_json({})
+        '''.format(malicous_input)
+      )
 
 
 def test_suite():

@@ -503,8 +503,8 @@ else:
   ContainerAssertions[pd.Series] = _check_access_wrapper(
     pd.Series, dict.fromkeys(series_black_list, restrictedMethod))
 
-  pandas_black_list = ('read_csv', 'read_json', 'read_pickle', 'read_hdf',
-                       'read_fwf', 'read_excel', 'read_html', 'read_msgpack',
+  pandas_black_list = ('read_pickle', 'read_hdf',
+                       'read_excel', 'read_html', 'read_msgpack',
                        'read_gbq', 'read_sas', 'read_stata')
   ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
 
