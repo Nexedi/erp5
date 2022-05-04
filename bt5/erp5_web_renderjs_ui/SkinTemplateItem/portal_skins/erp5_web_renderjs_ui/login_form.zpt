@@ -81,6 +81,8 @@
                     <a tal:attributes="href string:${current_url}/ERP5Site_redirectToFacebookLoginPage"
                       i18n:translate=""
                       i18n:domain="ui"
+                      class="sign_in_with_facebook"
+
                       >
                       <img alt="Login with Facebook" src="facebook_login_button.png">
                   </a>
@@ -90,6 +92,8 @@
                     <a tal:attributes="href string:${current_url}/ERP5Site_redirectToOpenIdLoginPage"
                       i18n:translate=""
                       i18n:domain="ui"
+                      class="sign_in_with_openid"
+
                       >
                       <img alt="Sign in with OpenID Connect" src="openid_login_button.png"/>
 
