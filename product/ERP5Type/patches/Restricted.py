@@ -282,7 +282,7 @@ def allow_full_write(t):
   # (closure) directly to allow write access (using __setattr__ and __delattr__)
   # to ndarray and pandas DataFrame below.
   from RestrictedPython.Guards import full_write_guard
-  safetype = full_write_guard.func_closure[1].cell_contents
+  safetype = full_write_guard.__closure__[1].cell_contents
   if isinstance(safetype, set): # 5.1
     safetype.add(t)
   else: # 3.6
@@ -296,9 +296,15 @@ from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
 allow_full_write(defaultdict)
 
+# On Python2 only: In contrary to builtins such as dict/defaultdict, it is
+# possible to set attributes on OrderedDict instances, so only allow
+# setitem/delitem
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
-OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
-OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+if six.PY2:
+  OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
+  OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+else:
+  allow_full_write(OrderedDict)
 
 _counter_white_list = copy.copy(_dict_white_list)
 _counter_white_list['most_common'] = 1
