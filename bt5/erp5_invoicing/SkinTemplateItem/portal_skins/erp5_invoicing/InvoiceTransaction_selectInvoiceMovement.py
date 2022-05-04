@@ -35,4 +35,5 @@ kw['grand_grand_grand_parent_simulation_state'] = ['started']
 
 movement_list += list(context.portal_catalog(**kw))
 
-return movement_list
+# Simulation movement's state maybe not yet updated, make sure it's the right one
+return [x for x in movement_list if x.getParentValue().getParentValue().getSimulationState() == 'started']
