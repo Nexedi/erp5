@@ -27,6 +27,8 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six.moves import xrange
+from six import string_types as basestring
 import sys
 from OFS.Traversable import NotFound
 from AccessControl import ClassSecurityInfo, Unauthorized
@@ -53,6 +55,7 @@ from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
 import cgi
+import six
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
 DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE = 'ListBox_viewSliderPageNavigationRenderer'
@@ -667,7 +670,10 @@ class ListBoxRenderer:
   def getTitle(self):
     """Return the title. Make sure that it is in unicode.
     """
-    return unicode(self.field.get_value('title'), self.getEncoding())
+    if six.PY2:
+      return unicode(self.field.get_value('title'), self.getEncoding())
+    else:
+      return self.field.get_value('title')
 
   def getMaxLineNumber(self):
     """Return the maximum number of lines shown in a page.
@@ -856,7 +862,10 @@ class ListBoxRenderer:
     """Return the columns. Make sure that the titles are in unicode.
     """
     columns = self.field.get_value('columns')
-    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in columns]
+    if six.PY2:
+      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in columns]
+    else:
+      return columns
 
   @lazyMethod
   def getAllColumnList(self):
@@ -865,9 +874,14 @@ class ListBoxRenderer:
     """
     all_column_list = list(self.getColumnList())
     all_column_id_set = {c[0] for c in all_column_list}
-    all_column_list.extend((str(c[0]), unicode(c[1], self.getEncoding()))
-                           for c in self.field.get_value('all_columns')
-                           if c[0] not in all_column_id_set)
+    if six.PY2:
+      all_column_list.extend((str(c[0]), unicode(c[1], self.getEncoding()))
+                             for c in self.field.get_value('all_columns')
+                             if c[0] not in all_column_id_set)
+    else:
+      all_column_list.extend(c
+                             for c in self.field.get_value('all_columns')
+                             if c[0] not in all_column_id_set)
     return all_column_list
 
   @lazyMethod
@@ -882,7 +896,10 @@ class ListBoxRenderer:
     """
     stat_columns = self.field.get_value('stat_columns')
     if stat_columns:
-      stat_column_list = [(str(c[0]), unicode(c[1], self.getEncoding())) for c in stat_columns]
+      if six.PY2:
+        stat_column_list = [(str(c[0]), unicode(c[1], self.getEncoding())) for c in stat_columns]
+      else:
+        stat_column_list = stat_columns
     else:
       stat_column_list = [(c[0], c[0]) for c in self.getAllColumnList()]
     return stat_column_list
@@ -912,22 +929,31 @@ class ListBoxRenderer:
     """Return the domain root list. Make sure that the titles are in unicode.
     """
     domain_root_list = self.field.get_value('domain_root_list')
-    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in domain_root_list]
+    if six.PY2:
+      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in domain_root_list]
+    else:
+      return domain_root_list
 
   @lazyMethod
   def getReportRootList(self):
     """Return the report root list. Make sure that the titles are in unicode.
     """
     report_root_list = self.field.get_value('report_root_list')
-    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
+    if six.PY2:
+      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
+    else:
+      return report_root_list
 
   @lazyMethod
   def getDisplayStyleList(self):
     """Return the list of avaible display style. Make sure that the
     titles are in unicode"""
     display_style_list = self.field.get_value('display_style_list')
-    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
+    if six.PY2:
+      return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
                                                       display_style_list]
+    else:
+      return display_style_list
 
   @lazyMethod
   def getDefaultDisplayStyle(self):
@@ -978,7 +1004,7 @@ class ListBoxRenderer:
     """
     sort_dict = {}
     for c, cast in (self.field.get_value('sort_columns') or
-                    self.getSearchColumnDict().iteritems()):
+                    six.iteritems(self.getSearchColumnDict())):
       if cast == 'float':
         sort_dict[c] = ':' + cast
       else:
@@ -1143,7 +1169,7 @@ class ListBoxRenderer:
       # Update parameters, only if list_method is defined.
       # (i.e. do not update parameters in listboxes intended to show a previously defined selection.
       listbox_prefix = '%s_' % self.getId()
-      for k, v in self.request.form.iteritems():
+      for k, v in six.iteritems(self.request.form):
         # Ignore selection keys.
         if k.endswith('selection_key'):
           continue
@@ -1423,7 +1449,7 @@ class ListBoxRenderer:
     is_empty_level = 1
     category = base_category
     while is_empty_level:
-      if not root_dict.has_key(category):
+      if category not in root_dict:
         root = None
         if category_tool is not None:
           try:
@@ -1476,7 +1502,7 @@ class ListBoxRenderer:
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = (obj, (new_root_dict[base_category][1][0], obj.getRelativeUrl()))
       domain_dict = {}
-      for k, v in new_root_dict.iteritems():
+      for k, v in six.iteritems(new_root_dict):
         domain_dict[k] = v[1]
       selection_domain = DomainSelection(domain_dict = domain_dict)
 
@@ -1601,8 +1627,8 @@ class ListBoxRenderer:
         param = param_dict.get(alias, param_dict.get(sql, u''))
         if isinstance(param, dict):
           param = param.get('query', u'')
-        if isinstance(param, str):
-          param = unicode(param, self.getEncoding())
+        if isinstance(param, six.binary_type):
+          param = six.text_type(param, self.getEncoding())
 
         # Obtain a search field, if any.
         form = self.getForm()
@@ -1684,8 +1710,12 @@ class ListBoxRenderer:
       if editable_field is not None:
         processed_value = editable_field.render_view(value=original_value)
 
-      if not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), self.getEncoding(), 'replace')
+      if not isinstance(processed_value, six.text_type):
+        if six.PY2:
+          processed_value = unicode(str(processed_value), self.getEncoding(), 'replace')
+        else:
+          processed_value = str(processed_value).encode(
+            self.getEncoding(), 'replace').decode()
 
       value_list.append((original_value, processed_value))
 
@@ -1880,7 +1910,7 @@ class ListBoxRenderer:
       if self.isDomainTreeMode():
         domain_selection = self.getDomainSelection()
         if domain_selection is not None:
-          for k, d in domain_selection.asDomainDict().iteritems():
+          for k, d in six.iteritems(domain_selection.asDomainDict()):
             if k is not None:
               domain = domain_selection._getDomainObject(
                   context.getPortalObject(), d)
@@ -2278,8 +2308,12 @@ class ListBoxRendererLine:
       # Process the value.
       if processed_value is None:
         processed_value = u''
-      elif not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), renderer.getEncoding(), 'replace')
+      elif not isinstance(processed_value, six.text_type):
+        if six.PY2:
+          processed_value = unicode(str(processed_value), renderer.getEncoding(), 'replace')
+        else:
+          processed_value = str(processed_value).encode(
+            renderer.getEncoding(), 'replace').decode()
 
       value_list.append((original_value, processed_value))
 
@@ -2336,7 +2370,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       url = None
 
       # Find an URL method.
-      if url_column_dict.has_key(sql):
+      if sql in url_column_dict:
         url_method_id = url_column_dict.get(sql)
         if url_method_id != sql:
           if url_method_id not in (None, ''):
@@ -2393,8 +2427,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           except AttributeError:
             pass
 
-      if isinstance(url, str):
-        url = unicode(url, encoding)
+      if isinstance(url, six.binary_type):
+        url = six.text_type(url, encoding)
 
       if editable_field is not None:
         uid = self.getUid()
@@ -2457,8 +2491,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             editable=(not self.isSummary()) \
               and listbox_defines_column_as_editable and editable,
           )
-          if isinstance(cell_html, str):
-            cell_html = unicode(cell_html, encoding)
+          if isinstance(cell_html, six.binary_type):
+            cell_html = six.text_type(cell_html, encoding)
         else:
           cell_html = u''
 
@@ -2659,7 +2693,7 @@ class ListBoxListRenderer(ListBoxRenderer):
         listboxline.checkLine(uid in checked_uid_set)
 
       for (original_value, processed_value), (sql, title) in zip(line.getValueList(), self.getSelectedColumnList()):
-        if isinstance(original_value, unicode):
+        if isinstance(original_value, six.text_type):
           value = original_value.encode(self.getEncoding())
         else:
           value = original_value
@@ -2677,7 +2711,7 @@ class ListBoxListRenderer(ListBoxRenderer):
       stat_listboxline.markStatLine()
 
       for (original_value, processed_value), (sql, title) in zip(self.getStatValueList(), self.getSelectedColumnList()):
-        if isinstance(original_value, unicode):
+        if isinstance(original_value, six.text_type):
           value = original_value.encode(self.getEncoding())
         else:
           value = original_value
@@ -2775,7 +2809,7 @@ class ListBoxValidator(Validator.Validator):
                   value = editable_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
                   row_result[sql] = value
-                except ValidationError, err:
+                except ValidationError as err:
                   pass
                 except KeyError:
                   pass
@@ -2809,7 +2843,7 @@ class ListBoxValidator(Validator.Validator):
                   try:
                     row_result[sql] = editable_field._validate_helper(
                       key, REQUEST) # We need cell
-                  except ValidationError, err:
+                  except ValidationError as err:
                     #LOG("ListBox ValidationError",0,str(err))
                     err.field_id = error_result_key
                     errors.append(err)
@@ -2825,7 +2859,7 @@ class ListBoxValidator(Validator.Validator):
               # because sometimes, we can be provided bad uids
               try :
                 o = here.portal_catalog.getObject(uid)
-              except (KeyError, NotFound, ValueError), err:
+              except (KeyError, NotFound, ValueError) as err:
                 # It is possible that this object is not catalogged yet. So
                 # the object must be obtained from ZODB.
                 if object_list is None:
@@ -2853,7 +2887,7 @@ class ListBoxValidator(Validator.Validator):
                     try:
                       row_result[sql] = error_result[error_result_key] = \
                         editable_field._validate_helper(key, REQUEST)
-                    except ValidationError, err:
+                    except ValidationError as err:
                       err.field_id = error_result_key
                       errors.append(err)
                     except KeyError:

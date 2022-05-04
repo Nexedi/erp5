@@ -125,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: modules[\'json\'].dumps(cell.kw, indent=True)</string> </value>
+            <value> <string>python: modules[\'pprint\'].pformat(cell.kw)</string> </value>
         </item>
       </dictionary>
     </pickle>

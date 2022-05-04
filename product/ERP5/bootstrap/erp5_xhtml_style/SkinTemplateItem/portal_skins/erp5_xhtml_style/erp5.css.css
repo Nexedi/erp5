@@ -814,12 +814,24 @@ body[dir="rtl"] .logged_in_as {
 /*   font-size: 90%; */
 }
 
-#transition_message, /* BBB */
 .transition_message {
   margin-left: 1em;
   color: #f40;
   background-color: inherit;
   font-weight: bold;
+  white-space: pre-wrap;
+}
+
+.transition_message.transition_message_debug,
+.transition_message.transition_message_info {
+  color: inherit;
+}
+.transition_message.transition_message_success {
+  color: green;
+}
+.transition_message.transition_message_error,
+.transition_message.transition_message_fatal {
+  color: red;
 }
 
 #information_area, /* BBB */
@@ -1205,10 +1217,6 @@ body[dir="rtl"] .horizontal_align_form_box >  div.input > fieldset > div.field {
 
 fieldset > div.large-gadget {
   height: 85vh;
-}
-
-a.zocial {
-  margin-top: 10px;
 }
 
 body[dir="rtl"] .access_tab_table td > div {

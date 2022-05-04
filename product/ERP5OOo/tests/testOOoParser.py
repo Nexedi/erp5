@@ -30,6 +30,7 @@ import unittest
 import os
 
 from Products.ERP5OOo.OOoUtils import OOoParser
+import six
 
 
 def makeFilePath(name):
@@ -99,7 +100,7 @@ class TestOOoParser(unittest.TestCase):
     parser.openFile(open(makeFilePath('import_big_spreadsheet.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
-    for spread, values in mapping.iteritems():
+    for spread, values in six.iteritems(mapping):
       self.assertEqual(len(values), 41001)
       not_ok = 0
     if not_ok:

@@ -2,7 +2,7 @@
 from logging import DEBUG
 
 from persistent.list import PersistentList
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -36,13 +36,12 @@ from Products.PortalTransforms.utils import parseContentType
 from ZODB.POSException import ConflictError
 from zLOG import WARNING
 
+@implementer(IPortalTransformsTool, IEngine)
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     id = 'portal_transforms'
     meta_type = id.title().replace('_', ' ')
     isPrincipiaFolderish = 1 # Show up in the ZMI
-
-    implements(IPortalTransformsTool, IEngine)
 
     meta_types = all_meta_types = (
         {'name': 'Transform', 'action': 'manage_addTransformForm'},
@@ -667,7 +666,9 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         # clean up mimetype from its useless characters
         source_mimetype = parseContentType(source_mimetype)
-        source_mimetype = ";".join([source_mimetype.gettype()] + source_mimetype.getplist())
+        source_mimetype =  ';'.join(
+            [source_mimetype.get_content_type()] +
+            ["%s=%s" % (p, v) for (p, v) in source_mimetype.get_params()[1:]])
 
         # fill dict that will contain all possible conversion for each mimetype
         input_output_dict = {} # {"application/pdf": set(["text/html", "application/msword", ...])}

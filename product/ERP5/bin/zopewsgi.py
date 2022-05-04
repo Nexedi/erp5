@@ -1,3 +1,4 @@
+import six
 import argparse
 from io import BytesIO
 import logging
@@ -8,7 +9,11 @@ import socket
 import sys
 from tempfile import TemporaryFile
 import time
-from urllib import quote, splitport
+from six.moves.urllib.parse import quote
+try:
+  from urllib import splitport
+except ImportError: # six.PY3
+  from urllib.parse import splitport
 
 from waitress.server import create_server
 import ZConfig
@@ -201,8 +206,12 @@ def runwsgi():
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
-    from Signals.SignalHandler import SignalHandler
-    SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
+    if six.PY2:
+      from Signals.SignalHandler import SignalHandler
+      SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
+    else:
+      import warnings
+      warnings.warn("zope4py3: SignalHandling not implemented!")
 
     if args.timerserver_interval:
       import Products.TimerService

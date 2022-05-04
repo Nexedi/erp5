@@ -22,7 +22,10 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 SBALANCE_VERSION = '4.0'
+
+import six
 
 import sys
 import getopt
@@ -90,17 +93,17 @@ class Balancer:
     try:
       # Make a thread for expiration of old sticky entries.
       if self.debug:
-        print "Starting an expiring daemon thread"
+        print("Starting an expiring daemon thread")
       t = threading.Thread(target=Balancer.expire, args=(self,))
       t.setDaemon(1)
       t.start()
 
       if self.debug:
-        print "Beginning the main loop to accept clients"
+        print("Beginning the main loop to accept clients")
       while 1:
         conn, addr = self.socket.accept()
         if self.debug:
-          print "New connection from %s" % str(addr)
+          print("New connection from %s" % str(addr))
         t = threading.Thread(target=Balancer.handleClient, args=(self, conn, addr))
         t.start()
     finally:
@@ -119,7 +122,7 @@ class Balancer:
         expired_server_list = []
         for key,value in self.sticked_server_dict.items():
           if self.debug:
-            print 'cur_time = %f, value.atime = %f' % (cur_time, value.atime)
+            print('cur_time = %f, value.atime = %f' % (cur_time, value.atime))
           if cur_time > value.atime + 60 * 10:
             expired_server_list.append(key)
           else:
@@ -127,14 +130,14 @@ class Balancer:
               count_dict[value.addr] += 1
         for key in expired_server_list:
           if self.debug:
-            print "Expiring %s" % str(key)
+            print("Expiring %s" % str(key))
           del self.sticked_server_dict[key] # Expire this entry.
         # Find the max and the min.
         if self.debug:
-          print 'count_dict = %s, sticked_server_dict = %s, disabled_server_dict = %s' % (str(count_dict), str(self.sticked_server_dict), str(self.disabled_server_dict))
+          print('count_dict = %s, sticked_server_dict = %s, disabled_server_dict = %s' % (str(count_dict), str(self.sticked_server_dict), str(self.disabled_server_dict)))
         max = -1
         min = len(self.sticked_server_dict) + 1
-        for addr,count in count_dict.items():
+        for addr,count in six.iteritems(count_dict):
           if count > max:
             max = count
             max_addr = addr
@@ -144,22 +147,22 @@ class Balancer:
         # If the max is significantly greater than the min, move some clients.
         if max > min + 1:
           num = max - min - 1
-          for key,value in self.sticked_server_dict.items():
+          for key,value in six.iteritems(self.sticked_server_dict):
             if value.addr == max_addr:
               if self.debug:
-                print "Moving %s from %s to %s" % (str(key), str(max_addr), str(min_addr))
+                print("Moving %s from %s to %s" % (str(key), str(max_addr), str(min_addr)))
               value.addr = min_addr
               num -= 1
               if num <= 0:
                 break
         # Enable old entries in disabled servers.
         enabled_server_list = []
-        for addr,ctime in self.disabled_server_dict.items():
+        for addr,ctime in six.iteritems(self.disabled_server_dict):
           if cur_time > ctime + 60 * 3:
             enabled_server_list.append(addr)
         for addr in enabled_server_list:
           if self.debug:
-            print 'Enabling %s again' % addr
+            print('Enabling %s again' % addr)
           del self.disabled_server_dict[addr]
       finally:
         self.lock.release()
@@ -241,7 +244,7 @@ class Balancer:
             try:
               self.lock.acquire()
               if self.debug:
-                print 'Disabling %s' % addr
+                print('Disabling %s' % addr)
               cur_time = time.time()
               self.disabled_server_dict[addr] = cur_time
             finally:
@@ -260,7 +263,7 @@ class Balancer:
         if index == start_index:
           # No way.
           if self.debug:
-            print 'No available server found.'
+            print('No available server found.')
           return
 
       # Register this client if possible.
@@ -268,7 +271,7 @@ class Balancer:
         try:
           self.lock.acquire()
           if self.debug:
-            print 'Registering %s with %s' % (signature, addr)
+            print('Registering %s with %s' % (signature, addr))
           cur_time = time.time()
           if signature in self.sticked_server_dict:
             info = self.sticked_server_dict[signature]
@@ -306,16 +309,16 @@ def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:], "hvb:t:T:dfps",
                                ["help", "version", "bind=", "connect-timeout=", "select-timeout=", "debug", "foreground", "packet-dump", "sticky"])
-  except getopt.GetoptError, msg:
-    print msg
-    print "Try ``sbalance --help'' for more information."
+  except getopt.GetoptError as msg:
+    print(msg)
+    print("Try ``sbalance --help'' for more information.")
     sys.exit(2)
   for o, a in opts:
     if o in ("-v", "--version"):
-      print "sbalance version %s" % SBALANCE_VERSION
+      print("sbalance version %s" % SBALANCE_VERSION)
       sys.exit()
     elif o in ("-h", "--help"):
-      print '''Usage: sbalace [OPTION...] PORT HOST:[PORT]...
+      print('''Usage: sbalace [OPTION...] PORT HOST:[PORT]...
 Balance TCP/IP loads with distributed servers.
 
     -h, --help                display this message and exit
@@ -331,7 +334,7 @@ Balance TCP/IP loads with distributed servers.
 PORT is the port number to listen to. You can specify any number of
 pairs of a host and a port.
 
-Report bugs to <yo@nexedi.com>.'''
+Report bugs to <yo@nexedi.com>.''')
       sys.exit()
     elif o in ("-b", "--bind"):
       kwd['bind'] = a
@@ -349,8 +352,8 @@ Report bugs to <yo@nexedi.com>.'''
       pass
 
   if len(args) < 2:
-    print "Too few arguments."
-    print "Try ``sbalance --help'' for more information."
+    print("Too few arguments.")
+    print("Try ``sbalance --help'' for more information.")
     sys.exit(2)
 
   port = int(args[0])
@@ -364,8 +367,8 @@ Report bugs to <yo@nexedi.com>.'''
       addr = server
     server_list.append(addr)
   if len(server_list) < 1:
-    print "No server is specified."
-    print "Try ``sbalance --help'' for more information."
+    print("No server is specified.")
+    print("Try ``sbalance --help'' for more information.")
     sys.exit(2)
 
   b = Balancer(port, server_list, **kwd)

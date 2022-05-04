@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 
 # Symbols that are used to represent groups of characters
@@ -117,29 +118,29 @@ if __name__ == '__main__':
     val = PatternChecker()
 
     # American long ZIP
-    print val.validate_value(['ddddd-dddd'], '34567-1298')
-    print val.validate_value(['ddddd-dddd'], '  34567-1298  \t  ')
+    print(val.validate_value(['ddddd-dddd'], '34567-1298'))
+    print(val.validate_value(['ddddd-dddd'], '  34567-1298  \t  '))
 
     # American phone number
-    print val.validate_value(['(ddd) ddd-dddd', 'ddd-ddd-dddd',
+    print(val.validate_value(['(ddd) ddd-dddd', 'ddd-ddd-dddd',
                               'ddd ddd-dddd'],
-                             '(345) 678-1298')
-    print val.validate_value(['(ddd) ddd-dddd', 'ddd-ddd-dddd',
+                             '(345) 678-1298'))
+    print(val.validate_value(['(ddd) ddd-dddd', 'ddd-ddd-dddd',
                               'ddd ddd-dddd'],
-                             '345-678-1298')
+                             '345-678-1298'))
 
     # American money
-    print val.validate_value(['$ d*.dd'], '$ 1345345.00')
+    print(val.validate_value(['$ d*.dd'], '$ 1345345.00'))
 
     # German money
-    print val.validate_value(['d*.dd DM'], '267.98 DM')
+    print(val.validate_value(['d*.dd DM'], '267.98 DM'))
 
     # German license plate
-    print val.validate_value(['eee ee-ddd'], 'OSL HR-683')
+    print(val.validate_value(['eee ee-ddd'], 'OSL HR-683'))
 
     # German phone number (international)
-    print val.validate_value(['+49 (d*) d*'], '+49 (3574) 7253')
-    print val.validate_value(['+49 (d*) d*'], '+49  (3574)  7253')
+    print(val.validate_value(['+49 (d*) d*'], '+49 (3574) 7253'))
+    print(val.validate_value(['+49 (d*) d*'], '+49  (3574)  7253'))
 
 
 

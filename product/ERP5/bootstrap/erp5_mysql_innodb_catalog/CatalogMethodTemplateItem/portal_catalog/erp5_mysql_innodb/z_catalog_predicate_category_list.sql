@@ -17,7 +17,7 @@ WHERE
 INSERT INTO predicate_category VALUES
     <dtml-in prefix="loop" expr="predicate_list">
       <dtml-if sequence-start><dtml-else>,</dtml-if>
-      <dtml-if "predicate_property_dict[loop_item].has_key('membership_criterion_category_list')">
+      <dtml-if "'membership_criterion_category_list' in predicate_property_dict[loop_item]">
         <dtml-let uid_list="portal_categories.CategoryTool_getPreferredPredicateCategoryParentUidItemList(predicate_property_dict[loop_item]['membership_criterion_category_list'], getObject[loop_item])">
           <dtml-if uid_list>
             <dtml-in "uid_list">

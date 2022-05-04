@@ -86,12 +86,17 @@
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
 __version__='$Revision: 1.20 $'[11:-2]
 
+import six
 import os
 import re
 import MySQLdb
 from MySQLdb import OperationalError, NotSupportedError, ProgrammingError, _mysql
 import warnings
-from contextlib import contextmanager, nested
+from contextlib import contextmanager
+if six.PY2:
+  from contextlib import nested
+else:
+  from contextlib import ExitStack as nested
 from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
 MySQLdb_version_required = (0,9,2)
 
@@ -106,6 +111,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
+from Products.ERP5Type.Utils import str2bytes
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -155,8 +161,8 @@ type_xlate = {
 
 def _mysql_timestamp_converter(s):
         s = s.ljust(14, '0')
-        parts = map(int, (s[:4],s[4:6],s[6:8],
-                          s[8:10],s[10:12],s[12:14]))
+        parts = [int(x) for x in (s[:4],s[4:6],s[6:8],
+                          s[8:10],s[10:12],s[12:14])]
         return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
 # DateTime(str) is slow. As the date format is part of the specifications,
@@ -198,7 +204,7 @@ def ord_or_None(s):
         return ord(s)
 
 match_select = re.compile(
-    r'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
+    br'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
     re.IGNORECASE | re.DOTALL,
 ).match
 
@@ -286,7 +292,8 @@ class DB(TM):
     _p_oid=_p_changed=_registered=None
 
     def __del__(self):
-      self.db.close()
+      if self.db is not None:
+        self.db.close()
 
     def _forceReconnection(self):
       db = self.db
@@ -344,7 +351,7 @@ class DB(TM):
                 if short_type not in ('set','enum'):
                     if ',' in size:
                         info['Scale'], info['Precision'] = \
-                                       map(int, size.split(',', 1))
+                                       [int(x) for x in size.split(',', 1)]
                     else:
                         info['Scale'] = int(size)
             else:
@@ -383,7 +390,7 @@ class DB(TM):
         """
         try:
             self.db.query(query)
-        except OperationalError, m:
+        except OperationalError as m:
             if m[0] in query_syntax_error:
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
@@ -402,7 +409,7 @@ class DB(TM):
           raise
         try:
           return self.db.store_result()
-        except OperationalError, m:
+        except OperationalError as m:
           if m[0] in query_timeout_error:
             raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
           else:
@@ -412,12 +419,14 @@ class DB(TM):
         """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None
+        if not isinstance(query_string, bytes):
+          query_string = str2bytes(query_string)
         # XXX deal with a typical mistake that the user appends
         # an unnecessary and rather harmful semicolon at the end.
         # Unfortunately, MySQLdb does not want to be graceful.
-        if query_string[-1:] == ';':
+        if query_string[-1:] == b';':
           query_string = query_string[:-1]
-        for qs in query_string.split('\0'):
+        for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
                 select_match = match_select(qs)
@@ -426,12 +435,12 @@ class DB(TM):
                     if query_timeout is not None:
                         statement, select = select_match.groups()
                         if statement:
-                            statement += ", max_statement_time=%f" % query_timeout
+                            statement += b", max_statement_time=%f" % query_timeout
                         else:
-                            statement = "max_statement_time=%f" % query_timeout
-                        qs = "SET STATEMENT %s FOR SELECT %s" % (statement, select)
+                            statement = b"max_statement_time=%f" % query_timeout
+                        qs = b"SET STATEMENT %s FOR SELECT %s" % (statement, select)
                     if max_rows:
-                        qs = "%s LIMIT %d" % (qs, max_rows)
+                        qs = b"%s LIMIT %d" % (qs, max_rows)
                 c = self._query(qs)
                 if c:
                     if desc is not None is not c.describe():
@@ -500,7 +509,7 @@ class DB(TM):
                 self._query("ROLLBACK")
             else:
                 LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
-        except OperationalError, m:
+        except OperationalError as m:
             LOG('ZMySQLDA', ERROR, "exception during _abort",
                 error=True)
             if m[0] not in hosed_connection:
@@ -554,7 +563,7 @@ class DB(TM):
         with (nested if src__ else self.lock)():
             try:
                 old_list, old_set, old_default = self._getTableSchema("`%s`" % name)
-            except ProgrammingError, e:
+            except ProgrammingError as e:
                 if e[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
                     raise
                 if not src__:
@@ -634,7 +643,7 @@ class DeferredDB(DB):
 
     def query(self, query_string, max_rows=1000):
         self._register()
-        for qs in query_string.split('\0'):
+        for qs in query_string.split(b'\0'):
             qs = qs.strip()
             if qs:
                 if match_select(qs):

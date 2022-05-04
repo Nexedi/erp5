@@ -15,6 +15,7 @@ DEPRECATION:
         dummy python: here.Base_checkUserCanViewERP5XHTMLStyleOrRaise();
         global_definitions_macros here/global_definitions/macros;
         subject_list subject_list | python:here.getProperty('subject_list', []) or [];
+        portal_status_level request/portal_status_level | string:;
       ">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
       <!DOCTYPE html>
@@ -65,8 +66,8 @@ DEPRECATION:
                     <div tal:content="structure here/acknowledgeable_message_render"/>
                   </div>
                 </tal:block>
-                <div tal:content="request/portal_status_message | nothing" id="transition_message"
-                     class="transition_message"/>
+                <div tal:content="request/portal_status_message | nothing"
+                     tal:attributes="class python:'transition_message' + (portal_status_level and ' transition_message_' + portal_status_level)" />
                 <tal:block tal:condition="request/field_errors | nothing">
                   <div id="information_area" class="information_area" i18n:translate="" i18n:domain="ui">
                     Input data has errors. Please look at the error messages below.

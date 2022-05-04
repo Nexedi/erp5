@@ -38,6 +38,9 @@ from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
+@zope.interface.implementer(IRule,
+                            IDivergenceController,
+                            IMovementCollectionUpdater,)
 class InvoiceTransactionSimulationRule(RuleMixin,
     MovementCollectionUpdaterMixin, PredicateMatrix):
   """
@@ -53,11 +56,6 @@ class InvoiceTransactionSimulationRule(RuleMixin,
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IRule,
-                            IDivergenceController,
-                            IMovementCollectionUpdater,)
 
   # Default Properties
   property_sheets = (
@@ -124,29 +122,35 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
                                       .getParentValue().getParentValue()
 
     kw = {'delivery': None, 'resource': resource, 'price': 1}
-
-    if resource is not None:
-      #set asset_price on movement when resource is different from price
-      #currency of the source/destination section
-      for arrow in 'destination', 'source':
-        section = input_movement.getDefaultAcquiredValue(arrow + '_section')
-        if section is not None:
-          try:
-            currency_url = section.getPriceCurrency()
-          except AttributeError:
-            currency_url = None
-          if currency_url not in (None, resource):
-            currency = portal.unrestrictedTraverse(currency_url)
-            exchange_ratio = currency.getPrice(
-              context=input_movement.asContext(
-                categories=('price_currency/' + currency_url,
-                            'resource/' + resource)))
-            if exchange_ratio is not None:
-              kw[arrow + '_total_asset_price'] = round(
-                exchange_ratio * input_movement.getQuantity(),
-                currency.getQuantityPrecision())
-
     return kw
+
+  def getGeneratedMovementList(self, movement_list=None, rounding=False):
+    movement_list = super(InvoiceTransactionRuleMovementGenerator, self).getGeneratedMovementList(movement_list=movement_list, rounding=rounding)
+    portal = self._applied_rule.getPortalObject()
+    for arrow in 'destination', 'source':
+      for movement in movement_list:
+        resource = movement.getResource()
+        if resource is not None:
+          section = movement.getDefaultAcquiredValue(arrow + '_section')
+          if section is not None:
+            try:
+              currency_url = section.getPriceCurrency()
+            except AttributeError:
+              currency_url = None
+            if currency_url not in (None, resource):
+              currency = portal.unrestrictedTraverse(currency_url)
+              exchange_ratio = currency.getPrice(
+                context=movement.asContext(
+                  categories=('price_currency/' + currency_url,
+                              'resource/' + resource)))
+              if exchange_ratio is not None:
+                if arrow == 'destination':
+                  sign = 1
+                else:
+                  sign = -1
+                movement.setProperty(arrow + '_total_asset_price', movement.getQuantity() * exchange_ratio * sign)
+
+    return movement_list
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()

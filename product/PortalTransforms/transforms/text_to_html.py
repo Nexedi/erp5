@@ -1,13 +1,12 @@
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from DocumentTemplate.DT_Util import html_quote
 
 __revision__ = '$Id: text_to_html.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
+@implementer(ITransform)
 class TextToHTML:
     """simple transform which wrap raw text in a verbatim environment"""
-
-    implements(ITransform)
 
     __name__ = "text_to_html"
     output = "text/html"

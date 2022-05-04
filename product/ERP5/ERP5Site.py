@@ -18,7 +18,8 @@ from __future__ import absolute_import
 
 from DateTime import DateTime
 from six.moves import map
-import thread, threading
+import six
+import _thread, threading
 from weakref import ref as weakref
 from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals
@@ -46,7 +47,6 @@ from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGene
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from zExceptions import BadRequest
-from string import join
 import os
 import warnings
 import transaction
@@ -371,7 +371,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   def _registerMissingTools(self):
     tool_id_list = ("portal_skins", "portal_types", "portal_membership",
                     "portal_url", "portal_workflow")
-    if (None in map(self.get, tool_id_list) or not
+    if (None in [self.get(tool_id) for tool_id in tool_id_list] or not
         TransactionalResource.registerOnce(__name__, 'site_manager', self.id)):
       return
     self._registerTools(tool_id_list + self._registry_tool_id_list)
@@ -467,7 +467,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
   def skinSuper(self, skin, id):
     if id[:1] != '_' and id[:3] != 'aq_':
-      skin_info = SKINDATA.get(thread.get_ident())
+      skin_info = SKINDATA.get(_thread.get_ident())
       if skin_info is not None:
         _, skin_selection_name, _, _ = skin_info
         skin_value = skinResolve(self, (skin_selection_name, skin), id)
@@ -679,7 +679,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
       Returns the absolute path of an object
     """
-    return join(self.getPhysicalPath(),'/')
+    return '/'.join(self.getPhysicalPath())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
   def getRelativeUrl(self):
@@ -704,7 +704,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       Search the content of a folder by calling
       the portal_catalog.
     """
-    if not kw.has_key('parent_uid'):
+    if 'parent_uid' not in kw:
       kw['parent_uid'] = self.uid
     return self.portal_catalog.searchResults(**kw)
 
@@ -714,7 +714,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       Count the content of a folder by calling
       the portal_catalog.
     """
-    if not kw.has_key('parent_uid'):
+    if 'parent_uid' not in kw:
       kw['parent_uid'] = self.uid
     return self.portal_catalog.countResults(**kw)
 
@@ -737,7 +737,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       action['disabled'] = 0
       workflow_title = action.get('workflow_title', None)
       if workflow_title is not None:
-        if not sorted_workflow_actions.has_key(workflow_title):
+        if workflow_title not in sorted_workflow_actions:
           sorted_workflow_actions[workflow_title] = [
             {'title':workflow_title,
              'disabled':1,
@@ -805,12 +805,12 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       parameter_dict = config.product_config.get(self.getPath(), {})
       if 'promise_path' in parameter_dict:
         promise_path = parameter_dict['promise_path']
-        import ConfigParser
-        configuration = ConfigParser.ConfigParser()
+        from six.moves import configparser
+        configuration = configparser.ConfigParser()
         configuration.read(promise_path)
         try:
           return configuration.get(section, option)
-        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+        except (configparser.NoOptionError, configparser.NoSectionError):
           pass
     return None
 
@@ -2269,7 +2269,7 @@ class ERP5Generator(PortalGenerator):
                      'business_template_installation_workflow']
     tool = p.portal_workflow
     try:
-      tool.manage_delObjects(filter(tool.hasObject, workflow_list))
+      tool.manage_delObjects([x for x in workflow_list if tool.hasObject(x) ])
     except BadRequest:
       pass
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
@@ -2441,7 +2441,7 @@ class ERP5Generator(PortalGenerator):
 
 
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
-AppInitializer_initialize = AppInitializer.initialize.__func__
+AppInitializer_initialize = six.get_unbound_function(AppInitializer.initialize)
 def initialize(self):
   AppInitializer.initialize = AppInitializer_initialize
   self.initialize()
@@ -2493,7 +2493,7 @@ def initialize(self):
             REQUEST.RESPONSE.unauthorized()
           newSecurityManager(None, user.__of__(uf))
           manage_addERP5Site(app.__of__(RequestContainer(REQUEST=REQUEST)),
-            **{k: kw.get(k, v) for k, v in default_kw.iteritems()
+            **{k: kw.get(k, v) for k, v in six.iteritems(default_kw)
                                if isinstance(v, str)})
           transaction.get().note('Created ' + meta_type)
           transaction.commit()

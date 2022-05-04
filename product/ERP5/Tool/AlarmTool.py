@@ -40,7 +40,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
 from DateTime import DateTime
-import urllib
+from six.moves import urllib
 
 last_tic = time.time()
 last_tic_lock = threading.Lock()
@@ -167,6 +167,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       # only start when we are the alarmNode
       alarmNode = self.getAlarmNode()
       current_node = getCurrentNode()
+      global _check_upgrade
       if alarmNode == '':
         self.setAlarmNode(current_node)
         alarmNode = current_node
@@ -179,7 +180,6 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       elif _check_upgrade and self.getServerAddress() == alarmNode:
         # BBB: check (once per run) if our node was alarm_node by address, and
         # migrate it.
-        global _check_upgrade
         _check_upgrade = False
         self.setAlarmNode(current_node)
     finally:
@@ -215,11 +215,11 @@ class AlarmTool(TimerServiceMixin, BaseTool):
             REQUEST.RESPONSE.redirect(
                 REQUEST.URL1 +
                 '/manageAlarmNode?manage_tabs_message=' +
-                urllib.quote("Distributing Node successfully changed."))
+                urllib.parse.quote("Distributing Node successfully changed."))
       else :
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(
                 REQUEST.URL1 +
                 '/manageAlarmNode?manage_tabs_message=' +
-                urllib.quote("Malformed Distributing Node."))
+                urllib.parse.quote("Malformed Distributing Node."))
 

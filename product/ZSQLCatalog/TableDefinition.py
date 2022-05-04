@@ -30,6 +30,8 @@
 # * collapse of parentheses around chains of inner-joins
 # * indentation on rendering
 
+import six
+
 SQL_LIST_SEPARATOR = ', '
 SQL_SELECT_ALIAS_FORMAT = '%s AS `%s`'
 
@@ -279,5 +281,5 @@ class LegacyTableDefinition(TableDefinition):
     table_alias_map = self.table_alias_map
     from_expression = SQL_LIST_SEPARATOR.join(
       from_expression_dict.get(alias, '`%s` AS `%s`' % (table, alias))
-      for alias, table in table_alias_map.iteritems())
+      for alias, table in six.iteritems(table_alias_map))
     return from_expression

@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 import sys, os
 from xml.dom import Node
 from xml.dom.ext import PrettyPrint
@@ -37,16 +38,16 @@ from xml.dom.ext.reader import PyExpat
 
 
 def usage():
-  print """   Usage : xml_beautifier file_to_beautify.xml
+  print("""   Usage : xml_beautifier file_to_beautify.xml
    Description : this script indent a messy xml file.
-"""
+""")
 
 
 
 def getFileContent(file_path):
   # Verify that the file exist
   if not os.path.isfile(file_path):
-    print "ERROR: " + file_path + " doesn't exist."
+    print("ERROR: " + file_path + " doesn't exist.")
     return None
 
   # Get file content

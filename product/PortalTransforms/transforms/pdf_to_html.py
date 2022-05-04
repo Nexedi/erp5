@@ -3,15 +3,15 @@ Uses the http://sf.net/projects/pdftohtml bin to do its handy work
 
 """
 from Products.PortalTransforms.interfaces import ITransform
-from zope.interface import implements
+from zope.interface import implementer
 from Products.PortalTransforms.libtransforms.utils import bin_search, \
   bodyfinder, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
 import os
 
+@implementer(ITransform)
 class popen_pdf_to_html(popentransform):
-    implements(ITransform)
 
     __version__ = '2004-07-02.01'
 
@@ -27,8 +27,8 @@ class popen_pdf_to_html(popentransform):
     def getData(self, couterr):
         return bodyfinder(couterr.read())
 
+@implementer(ITransform)
 class pdf_to_html(commandtransform):
-    implements(ITransform)
 
     __name__ = "pdf_to_html"
     inputs   = ('application/pdf',)

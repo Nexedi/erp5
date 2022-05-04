@@ -32,11 +32,18 @@
 """
 from __future__ import absolute_import
 from App.config import getConfiguration
-from .patches import python, pylint, globalrequest
+from .patches import python, globalrequest
+import six
+if six.PY2:
+  from .patches import pylint
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
-WITH_LEGACY_WORKFLOW = True # BBB
+if six.PY3:
+  # DCWorkflow python2-only
+  WITH_LEGACY_WORKFLOW = False
+else:
+  WITH_LEGACY_WORKFLOW = True
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
@@ -176,7 +183,9 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
     'Email_parseAddressHeader', 'guessEncodingFromText',
-    'isValidTALESExpression')
+    'isValidTALESExpression',
+    'ensure_list', 'bytes2str', 'str2bytes', 'unicode2str',
+)
 
 allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
@@ -191,9 +200,9 @@ ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeVa
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
 
 import zExceptions
-ModuleSecurityInfo('zExceptions').declarePublic(*filter(
-  lambda x: Exception in getattr(getattr(zExceptions, x), '__mro__', ()),
-  dir(zExceptions)))
+ModuleSecurityInfo('zExceptions').declarePublic(*[
+  x for x in dir(zExceptions)
+  if Exception in getattr(getattr(zExceptions, x), '__mro__', ())])
 
 # BBB : allow load of fomer Products.CMFDefault.MembershipTool
 # that has been replaced by Products.CMFCore.MembershipTool

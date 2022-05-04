@@ -6,15 +6,15 @@ import re
 import shutil
 from os.path import join, basename
 
-from zope.interface import implements
+from zope.interface import implementer
 
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext, getShortPathName
 from Products.PortalTransforms.interfaces import ITransform
 
+@implementer(ITransform)
 class commandtransform:
     """abstract class for external command based transform
     """
-    implements(ITransform)
 
     def __init__(self, name=None, binary=None, **kwargs):
         if name is not None:
@@ -55,12 +55,12 @@ class commandtransform:
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
 
+@implementer(ITransform)
 class popentransform:
     """abstract class for external command based transform
 
     Command must read from stdin and write to stdout
     """
-    implements(ITransform)
 
     binaryName = ""
     binaryArgs = ""
@@ -115,12 +115,12 @@ class popentransform:
 from subprocess import Popen, PIPE
 import shlex
 
+@implementer(ITransform)
 class subprocesstransform:
     """abstract class for subprocess command based transform
 
     Command must read from stdin and write to stdout
     """
-    implements(ITransform)
 
     binaryName = ""
     binaryArgs = ""

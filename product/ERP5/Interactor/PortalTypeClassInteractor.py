@@ -37,17 +37,19 @@ class PortalTypeClassInteractor(Interactor):
     and dynamic properties.
   """
   def install(self):
-    from Products.DCWorkflow.Transitions import Transitions
-    self.on(Transitions.addTransition).doAfter(self.resetDynamic)
-    self.on(Transitions.deleteTransitions).doAfter(self.resetDynamic)
-    from Products.DCWorkflow.Transitions import TransitionDefinition
-    self.on(TransitionDefinition.setProperties).doAfter(self.resetDynamic)
-    from Products.DCWorkflow.Variables import Variables
-    self.on(Variables.setStateVar).doAfter(self.resetDynamic)
+    from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+    if WITH_LEGACY_WORKFLOW:
+      from Products.DCWorkflow.Transitions import Transitions
+      self.on(Transitions, 'addTransition').doAfter(self.resetDynamic)
+      self.on(Transitions, 'deleteTransitions').doAfter(self.resetDynamic)
+      from Products.DCWorkflow.Transitions import TransitionDefinition
+      self.on(TransitionDefinition, 'setProperties').doAfter(self.resetDynamic)
+      from Products.DCWorkflow.Variables import Variables
+      self.on(Variables, 'setStateVar').doAfter(self.resetDynamic)
 
     from Products.Localizer.Localizer import Localizer
-    self.on(Localizer.add_language).doAfter(self.resetDynamic)
-    self.on(Localizer.del_language).doAfter(self.resetDynamic)
+    self.on(Localizer, 'add_language').doAfter(self.resetDynamic)
+    self.on(Localizer, 'del_language').doAfter(self.resetDynamic)
 
   def resetDynamic(self, method_call_object, *args, **kw):
     """

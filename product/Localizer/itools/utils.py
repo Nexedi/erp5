@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-# Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-# Copyright (C) 2008 Gautier Hayoun <gautier.hayoun@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2008-2010 J. David Ibáñez <jdavid.ibp@gmail.com>
+# Copyright (C) 2009 David Versmisse <versmisse@lil.univ-littoral.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,19 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from distutils import core
-from distutils.errors import DistutilsOptionError
-from distutils.command.build_py import build_py
-from distutils.command.register import register
-from distutils.command.upload import upload
-from getpass import getpass
-from mimetypes import MimeTypes
-from os import getcwd, open as os_open, devnull, dup2, O_RDWR
-from os.path import exists, join as join_path, sep, splitdrive
-from re import search
-from sys import _getframe, platform, exit, stdin, stdout, stderr
-from urllib2 import HTTPPasswordMgr
-import sys
+from os import getcwd
+from os.path import exists, join, sep, splitdrive
+from subprocess import Popen, PIPE
+from sys import _getframe, modules, getsizeof
+from gc import get_referents
+
 
 def get_abspath(local_path, mname=None):
     """Returns the absolute path to the required file.
@@ -39,19 +32,73 @@ def get_abspath(local_path, mname=None):
     if mname == '__main__' or mname == '__init__':
         mpath = getcwd()
     else:
-        module = sys.modules[mname]
+        module = modules[mname]
         if hasattr(module, '__path__'):
             mpath = module.__path__[0]
         elif '.' in mname:
-            mpath = sys.modules[mname[:mname.rfind('.')]].__path__[0]
+            mpath = modules[mname[:mname.rfind('.')]].__path__[0]
         else:
             mpath = mname
 
     drive, mpath = splitdrive(mpath)
-    mpath = drive + join_path(mpath, local_path)
+    mpath = drive + join(mpath, local_path)
 
     # Make it working with Windows. Internally we use always the "/".
     if sep == '\\':
         mpath = mpath.replace(sep, '/')
 
     return mpath
+
+
+
+def get_version(mname=None):
+    if mname is None:
+        mname = _getframe(1).f_globals.get('__name__')
+
+    path = get_abspath('version.txt', mname=mname)
+    if exists(path):
+        return open(path).read().strip()
+    return None
+
+
+
+def merge_dicts(d, *args, **kw):
+    """Merge two or more dictionaries into a new dictionary object.
+    """
+    new_d = d.copy()
+    for dic in args:
+        new_d.update(dic)
+    new_d.update(kw)
+    return new_d
+
+
+
+def get_sizeof(obj):
+    """Return the size of an object and all objects refered by it.
+    """
+    size = 0
+    done = set()
+    todo = {id(obj): obj}
+    while todo:
+        obj_id, obj = todo.popitem()
+        size += getsizeof(obj)
+        done.add(obj_id)
+        done.add(id(obj.__class__)) # Do not count the class
+        for obj in get_referents(obj):
+            obj_id = id(obj)
+            if obj_id not in done:
+                todo[obj_id] = obj
+
+    return size
+
+
+
+def get_pipe(command, cwd=None):
+    """Wrapper around 'subprocess.Popen'
+    """
+    popen = Popen(command, stdout=PIPE, stderr=PIPE, cwd=cwd)
+    stdoutdata, stderrdata = popen.communicate()
+    if popen.returncode != 0:
+        raise EnvironmentError(popen.returncode, stderrdata)
+    return stdoutdata
+

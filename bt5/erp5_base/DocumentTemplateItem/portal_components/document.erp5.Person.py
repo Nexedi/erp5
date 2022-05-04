@@ -60,6 +60,7 @@ class UserExistsError(
     super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
 
 
+@zope.interface.implementer(interfaces.INode)
 class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMixin):
   """
       An Person object holds the information about
@@ -80,8 +81,6 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
   meta_type = 'ERP5 Person'
   portal_type = 'Person'
   add_permission = Permissions.AddPortalContent
-
-  zope.interface.implements(interfaces.INode)
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -13,12 +13,7 @@ def _getGoogleClientIdAndSecretKey(portal, reference="default"):
 
   Internal function.
   """
-  result_list = portal.portal_catalog.unrestrictedSearchResults(
-    portal_type="Google Connector",
-    reference=reference,
-    validation_state="validated",
-    limit=2,
-  )
+  result_list = unrestrictedSearchGoogleConnector(portal, reference=reference)
   assert result_list, "Google Connector not found"
   if len(result_list) == 2:
     raise ValueError("Impossible to select one Google Connector")
@@ -51,10 +46,10 @@ def getAccessTokenFromCode(self, code, redirect_uri):
   credential_data = json.loads(credential.to_json())
   return credential_data
 
-def unrestrictedSearchGoogleConnector(self):
+def unrestrictedSearchGoogleConnector(self, reference="default"):
   return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
             portal_type="Google Connector",
-            reference="default",
+            reference=reference,
             validation_state="validated",
             limit=2)
 

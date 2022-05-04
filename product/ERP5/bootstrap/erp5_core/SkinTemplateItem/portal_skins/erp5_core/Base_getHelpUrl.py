@@ -1,4 +1,4 @@
-if context.REQUEST.has_key('workflow_action'): # We are on a workflow transition
+if 'workflow_action' in context.REQUEST: # We are on a workflow transition
   help_relative_url = '%s#%s' % (getattr(getattr(context, form_id), 'form_action'),context.REQUEST['workflow_action'])
 elif action is not None:
   help_relative_url = '%s#%s' % (context.getPortalTypeName(), action)

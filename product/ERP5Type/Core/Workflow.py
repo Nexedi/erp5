@@ -28,12 +28,15 @@
 ##############################################################################
 
 ## Used in Products.ERP5Type.patches.DCWorkflow so this needs to go first...
+from six import string_types as basestring
+from Products.ERP5Type.Utils import ensure_list
 from Acquisition import aq_parent, aq_inner
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from AccessControl import getSecurityManager
 from Products.PageTemplates.Expressions import getEngine
 from six import reraise
+import six
 
 def createExpressionContext(sci):
     '''
@@ -91,8 +94,6 @@ from Products.DCWorkflow.utils import Message as _
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Globals import PersistentMapping, InitializeClass
-from Products.ERP5Type.patches.WorkflowTool import (SECURITY_PARAMETER_ID,
-                                                    WORKLIST_METADATA_KEY)
 from Products.ERP5Type.Utils import convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.WorkflowTransition import (TRIGGER_AUTOMATIC,
@@ -303,11 +304,11 @@ class Workflow(XMLObject):
           for p in ob._subobject_permissions():
             permission_name=p[0]
             roles = p[1]
-            if not permission_roles_dict.has_key(permission_name):
+            if permission_name not in permission_roles_dict:
               permission_roles_dict[permission_name] = roles
         return permission_roles_dict
       inherited_permission_dict = ac_all_inherited_permissions_dict(ob)
-      for name, new_roles in new_permission_roles_dict.iteritems():
+      for name, new_roles in six.iteritems(new_permission_roles_dict):
         old_roles = inherited_permission_dict.get(name, ())
         p = Permission(name, old_roles, ob)
         old_roles = p.getRoles()
@@ -420,7 +421,8 @@ class Workflow(XMLObject):
     while 1:
       try:
         state = self._executeTransition(ob, transition, kwargs)
-      except ObjectMoved, moved_exc:
+      except ObjectMoved as e:
+        moved_exc = e
         ob = moved_exc.getNewObject()
         state = self._getWorkflowStateOf(ob)
         # Re-raise after all transitions.
@@ -509,6 +511,8 @@ class Workflow(XMLObject):
     security_manager = getSecurityManager()
     workflow_id = self.getId()
     workflow_title = self.getTitle()
+    from Products.ERP5Type.Tool.WorkflowTool import (SECURITY_PARAMETER_ID,
+                                                     WORKLIST_METADATA_KEY)
     for worklist_definition in worklist_value_list:
       action_box_name = worklist_definition.getActionName()
       guard_role_list = worklist_definition.getGuardRoleList()
@@ -536,7 +540,7 @@ class Workflow(XMLObject):
           variable_match.setdefault(SECURITY_PARAMETER_ID, guard_role_list)
           format_data._push({
               k: ('&%s:list=' % k).join(v)
-              for k, v in variable_match.iteritems()
+              for k, v in six.iteritems(variable_match)
           })
           worklist_id = worklist_definition.getReference()
           variable_match[WORKLIST_METADATA_KEY] = {
@@ -567,7 +571,7 @@ class Workflow(XMLObject):
       return default
     status = self.getCurrentStatusDict(ob)
     variable_default_expression = vdef.getVariableDefaultExpressionInstance()
-    if status is not None and status.has_key(name):
+    if status is not None and name in status:
       value = status[name]
 
     # Not set yet.  Use a default.
@@ -826,11 +830,13 @@ class Workflow(XMLObject):
           script = getattr(self, script.getId())
           try:
             script(sci)  # May throw an exception.
-          except ValidationFailed, validation_exc:
+          except ValidationFailed as e:
+            validation_exc = e
             before_script_success = False
             before_script_error_message = deepcopy(validation_exc.msg)
-            validation_exc_traceback = sys.exc_traceback
-          except ObjectMoved, moved_exc:
+            validation_exc_traceback = sys.exc_info()[2]
+          except ObjectMoved as e:
+            moved_exc = e
             ob = moved_exc.getNewObject()
             # Re-raise after transition
 
@@ -954,7 +960,7 @@ class Workflow(XMLObject):
     except ObjectDeleted:
       # Re-raise with a different result.
       raise ObjectDeleted(res)
-    except ObjectMoved, ex:
+    except ObjectMoved as ex:
       # Re-raise with a different result.
       raise ObjectMoved(ex.getNewObject(), res)
     return res
@@ -1262,13 +1268,13 @@ class Workflow(XMLObject):
 
     tdef_exprs = {}
     status = {}
-    for id_, vdef in self.getVariableValueDict().iteritems():
+    for id_, vdef in six.iteritems(self.getVariableValueDict()):
       if not vdef.getStatusIncluded():
         continue
       expr = None
-      if tdef_exprs.has_key(id_):
+      if id_ in tdef_exprs:
         expr = tdef_exprs[id_]
-      elif not vdef.getAutomaticUpdate() and former_status.has_key(id_):
+      elif not vdef.getAutomaticUpdate() and id_ in former_status:
         # Preserve former value
         value = former_status[id_]
       else:
@@ -1313,7 +1319,7 @@ class Workflow(XMLObject):
       if variable.getForCatalog():
         variable_id = variable.getReference()
         variable_default_expression = variable.getVariableDefaultExpressionInstance()
-        if status.has_key(variable_id):
+        if variable_id in status:
           value = status[variable_id]
         elif variable_default_expression is not None:
           ec = createExpressionContext(StateChangeInfo(ob, self, status))
@@ -1408,13 +1414,13 @@ if WITH_LEGACY_WORKFLOW:
         self[value.getId()] = value
         self[value.getReference()] = value
     def objectIds(self):
-      return self.keys()
+      return ensure_list(self.keys())
     def objectValues(self):
-      return self.values()
+      return ensure_list(self.values())
     def __getattr__(self, name):
       try:
         return self[name]
-      except KeyError, e:
+      except KeyError as e:
         raise AttributeError(e)
   allow_class(_ContainerTab)
 

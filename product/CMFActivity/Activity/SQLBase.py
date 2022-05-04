@@ -27,6 +27,9 @@ from __future__ import absolute_import
 #
 ##############################################################################
 
+from six import string_types as basestring
+from six.moves import xrange
+from Products.ERP5Type.Utils import ensure_list, str2bytes
 from collections import defaultdict
 from contextlib import contextmanager
 from itertools import product
@@ -48,6 +51,7 @@ from .Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ERP5Type import Timeout
 from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline
+import six
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
@@ -87,7 +91,10 @@ _IDENTITY = lambda x: x
 def render_datetime(x):
   return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
 
-_SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
+if six.PY2:
+  _SQLTEST_NO_QUOTE_TYPE_SET = int, float, long
+else:
+  _SQLTEST_NO_QUOTE_TYPE_SET = int, float
 _SQLTEST_NON_SEQUENCE_TYPE_SET = _SQLTEST_NO_QUOTE_TYPE_SET + (DateTime, basestring)
 
 @contextmanager
@@ -100,14 +107,20 @@ def SQLLock(db, lock_name, timeout):
   """
   lock_name = db.string_literal(lock_name)
   query = db.query
-  (_, ((acquired, ), )) = query('SELECT GET_LOCK(%s, %f)' % (lock_name, timeout))
+  (_, ((acquired, ), )) = query(
+    b'SELECT GET_LOCK(%s, %f)' % (lock_name, timeout),
+    max_rows=0,
+  )
   if acquired is None:
     raise ValueError('Error acquiring lock')
   try:
     yield acquired
   finally:
     if acquired:
-      query('SELECT RELEASE_LOCK(%s)' % (lock_name, ))
+      query(
+        b'SELECT RELEASE_LOCK(%s)' % (lock_name, ),
+        max_rows=0,
+      )
 # sqltest_dict ({'condition_name': <render_function>}) defines how to render
 # condition statements in the SQL query used by SQLBase.getMessageList
 def sqltest_dict():
@@ -115,23 +128,23 @@ def sqltest_dict():
   def _(name, column=None, op="="):
     if column is None:
       column = name
-    column_op = "%s %s " % (column, op)
+    column_op = str2bytes(("%s %s " % (column, op)))
     def render(value, render_string):
       if isinstance(value, _SQLTEST_NO_QUOTE_TYPE_SET):
-        return column_op + str(value)
+        return column_op + str2bytes(str(value))
       if isinstance(value, DateTime):
         value = render_datetime(value)
       if isinstance(value, basestring):
         return column_op + render_string(value)
       assert op == "=", value
       if value is None: # XXX: see comment in SQLBase._getMessageList
-        return column + " IS NULL"
+        return column + b" IS NULL"
       for x in value:
-        return "%s IN (%s)" % (column, ', '.join(map(
+        return b"%s IN (%s)" % (column, str2bytes(', '.join(map(
           str if isinstance(x, _SQLTEST_NO_QUOTE_TYPE_SET) else
           render_datetime if isinstance(x, DateTime) else
-          render_string, value)))
-      return "0"
+          render_string, value))))
+      return b"0"
     sqltest_dict[name] = render
   _('active_process_uid')
   _('group_method_id')
@@ -151,13 +164,13 @@ def sqltest_dict():
     assert isinstance(priority, _SQLTEST_NO_QUOTE_TYPE_SET)
     assert isinstance(uid, _SQLTEST_NO_QUOTE_TYPE_SET)
     return (
-        '(priority>%(priority)s OR (priority=%(priority)s AND '
-          '(date>%(date)s OR (date=%(date)s AND uid>%(uid)s))'
-        '))' % {
-        'priority': priority,
+        b'(priority>%(priority)d OR (priority=%(priority)d AND '
+        b'(date>%(date)s OR (date=%(date)s AND uid>%(uid)d))'
+        b'))' % {
+        b'priority': priority,
         # render_datetime raises if "date" lacks date API, so no need to check
-        'date': render_string(render_datetime(date)),
-        'uid': uid,
+        b'date': render_string(render_datetime(date)),
+        b'uid': uid,
       }
     )
   sqltest_dict['above_priority_date_uid'] = renderAbovePriorityDateUid
@@ -168,7 +181,7 @@ def _validate_after_path_and_method_id(value, render_string):
   path, method_id = value
   return (
     sqltest_dict['method_id'](method_id, render_string) +
-    ' AND ' +
+    b' AND ' +
     sqltest_dict['path'](path, render_string)
   )
 
@@ -176,7 +189,7 @@ def _validate_after_tag_and_method_id(value, render_string):
   tag, method_id = value
   return (
     sqltest_dict['method_id'](method_id, render_string) +
-    ' AND ' +
+    b' AND ' +
     sqltest_dict['tag'](tag, render_string)
   )
 
@@ -280,18 +293,18 @@ CREATE TABLE %s (
             % (self.sql_table, src))
     self._insert_max_payload = (db.getMaxAllowedPacket()
       + len(self._insert_separator)
-      - len(self._insert_template % (self.sql_table, '')))
+      - len(self._insert_template % (str2bytes(self.sql_table), b'')))
 
   def _initialize(self, db, column_list):
       LOG('CMFActivity', ERROR, "Non-empty %r table upgraded."
           " The following added columns could not be initialized: %s"
           % (self.sql_table, ", ".join(column_list)))
 
-  _insert_template = ("INSERT INTO %s (uid,"
-    " path, active_process_uid, date, method_id, processing_node,"
-    " priority, node, group_method_id, tag, serialization_tag,"
-    " message) VALUES\n(%s)")
-  _insert_separator = "),\n("
+  _insert_template = (b"INSERT INTO %s (uid,"
+    b" path, active_process_uid, date, method_id, processing_node,"
+    b" priority, node, group_method_id, tag, serialization_tag,"
+    b" message) VALUES\n(%s)")
+  _insert_separator = b"),\n("
 
   def _hasDependency(self, message):
     get = message.activity_kw.get
@@ -310,11 +323,11 @@ CREATE TABLE %s (
         if reset_uid:
           reset_uid = False
           # Overflow will result into IntegrityError.
-          db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
+          db.query(b"SET @uid := %d" % getrandbits(UID_SAFE_BITSIZE))
         try:
-          db.query(self._insert_template % (self.sql_table, values))
-        except MySQLdb.IntegrityError, (code, _):
-          if code != DUP_ENTRY:
+          db.query(self._insert_template % (str2bytes(self.sql_table), values))
+        except MySQLdb.IntegrityError as e:
+          if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
         else:
@@ -331,18 +344,18 @@ CREATE TABLE %s (
       if m.is_registered:
         active_process_uid = m.active_process_uid
         date = m.activity_kw.get('at_date')
-        row = ','.join((
-          '@uid+%s' % i,
+        row = b','.join((
+          b'@uid+%d' % i,
           quote('/'.join(m.object_path)),
-          'NULL' if active_process_uid is None else str(active_process_uid),
-          "UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
+          b'NULL' if active_process_uid is None else str2bytes(str(active_process_uid)),
+          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
-          '-1' if hasDependency(m) else '0',
-          str(m.activity_kw.get('priority', 1)),
-          str(m.activity_kw.get('node', 0)),
+          b'-1' if hasDependency(m) else b'0',
+          str2bytes(str(m.activity_kw.get('priority', 1))),
+          str2bytes(str(m.activity_kw.get('node', 0))),
           quote(m.getGroupId()),
-          quote(m.activity_kw.get('tag', '')),
-          quote(m.activity_kw.get('serialization_tag', '')),
+          quote(m.activity_kw.get('tag', b'')),
+          quote(m.activity_kw.get('serialization_tag', b'')),
           quote(Message.dump(m))))
         i += 1
         n = sep_len + len(row)
@@ -363,11 +376,11 @@ CREATE TABLE %s (
     #      value should be ignored, instead of trying to render them
     #      (with comparisons with NULL).
     q = db.string_literal
-    sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.iteritems())
-    sql = "SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
-      self.sql_table,
-      sql and '\nWHERE ' + sql,
-      '' if count is None else '\nLIMIT %d' % count,
+    sql = b'\n  AND '.join(sqltest_dict[k](v, q) for k, v in six.iteritems(kw))
+    sql = b"SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
+      str2bytes(self.sql_table),
+      sql and b'\nWHERE ' + sql,
+      b'' if count is None else b'\nLIMIT %d' % count,
     )
     return sql if src__ else Results(db.query(sql, max_rows=0))
 
@@ -386,23 +399,23 @@ CREATE TABLE %s (
   def countMessageSQL(self, quote, **kw):
     return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
       self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
-        sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v
+        sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v
         ) or "1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
-    where = [sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v]
+    where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
     if only_valid:
-      where.append('processing_node > %d' % INVOKE_ERROR_STATE)
+      where.append(b'processing_node > %d' % INVOKE_ERROR_STATE)
     if only_invalid:
-      where.append('processing_node <= %d' % INVOKE_ERROR_STATE)
-    return "SELECT 1 FROM %s WHERE %s LIMIT 1" % (
-      self.sql_table, " AND ".join(where) or "1")
+      where.append(b'processing_node <= %d' % INVOKE_ERROR_STATE)
+    return b"SELECT 1 FROM %s WHERE %s LIMIT 1" % (
+      str2bytes(self.sql_table), b" AND ".join(where) or b"1")
 
   def getPriority(self, activity_tool, processing_node, node_set=None):
     if node_set is None:
-      q = ("SELECT 3*priority, date FROM %s"
-        " WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
-        " ORDER BY priority, date LIMIT 1" % self.sql_table)
+      q = (b"SELECT 3*priority, date FROM %s"
+        b" WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        b" ORDER BY priority, date LIMIT 1" % str2bytes(self.sql_table))
     else:
       subquery = ("(SELECT 3*priority{} as effective_priority, date FROM %s"
         " WHERE {} AND processing_node=0 AND date <= UTC_TIMESTAMP(6)"
@@ -410,12 +423,12 @@ CREATE TABLE %s (
       node = 'node=%s' % processing_node
       # "ALL" on all but one, to incur deduplication cost only once.
       # "UNION ALL" between the two naturally distinct sets.
-      q = ("SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
-        " ORDER BY effective_priority, date LIMIT 1" % (
-          subquery(-1, node),
-          subquery('', 'node=0'),
-          subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
-          ' UNION ALL ' + subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set))) if node_set else '',
+      q = (b"SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
+        b" ORDER BY effective_priority, date LIMIT 1" % (
+          str2bytes(subquery(-1, node)),
+          str2bytes(subquery('', 'node=0')),
+          str2bytes(subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0')),
+          b' UNION ALL ' + str2bytes(subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set)))) if node_set else b'',
         ))
     result = activity_tool.getSQLConnection().query(q, 0)[1]
     if result:
@@ -469,7 +482,7 @@ CREATE TABLE %s (
       for (
         dependency_name,
         dependency_value,
-      ) in message.activity_kw.iteritems():
+      ) in six.iteritems(message.activity_kw):
         try:
           column_list, _, _ = dependency_tester_dict[dependency_name]
         except KeyError:
@@ -542,13 +555,13 @@ CREATE TABLE %s (
       dependency_name,
       dependency_value_dict,
     ) in sorted(
-      dependency_dict.iteritems(),
+      six.iteritems(dependency_dict),
       # Test first the condition with the most values.
       # XXX: after_path=('foo', 'bar') counts as 2 points for after_path
       # despite being a single activity. Is there a fairer (while cheap) way ?
       key=lambda dependency_dict_item: sum(
         len(message_set)
-        for message_set in dependency_dict_item[1].itervalues()
+        for message_set in six.itervalues(dependency_dict_item[1])
       ),
       reverse=True,
     ):
@@ -561,7 +574,7 @@ CREATE TABLE %s (
         for (
           message_dependency_name,
           message_dependency_value_list,
-        ) in message_dependency_dict[blocked_message].iteritems():
+        ) in six.iteritems(message_dependency_dict[blocked_message]):
           message_dependency_value_dict = dependency_dict[message_dependency_name]
           if not message_dependency_value_dict:
             # This dependency was already dropped or evaluated, nothing to
@@ -588,18 +601,18 @@ CREATE TABLE %s (
         if len(column_list) == 1 else
         _IDENTITY
       )
-      base_sql_suffix = ' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
+      base_sql_suffix = b' WHERE processing_node > %i AND (%%s) LIMIT 1)' % (
         min_processing_node,
       )
       sql_suffix_list = [
         base_sql_suffix % to_sql(dependency_value, quote)
         for dependency_value in dependency_value_dict
       ]
-      base_sql_prefix = '(SELECT %s FROM ' % (
-        ','.join(column_list),
+      base_sql_prefix = b'(SELECT %s FROM ' % (
+        b','.join([ str2bytes(c) for c in column_list ]),
       )
       subquery_list = [
-        base_sql_prefix + table_name + sql_suffix
+        base_sql_prefix + str2bytes(table_name) + sql_suffix
         for table_name in table_name_list
         for sql_suffix in sql_suffix_list
       ]
@@ -610,7 +623,7 @@ CREATE TABLE %s (
         # by the number of activty tables: it is also proportional to the
         # number of distinct values being looked for in the current column.
         for row in db.query(
-          ' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
+          b' UNION '.join(subquery_list[_MAX_DEPENDENCY_UNION_SUBQUERY_COUNT:]),
           max_rows=0,
         )[1]:
           # Each row is a value which blocks some activities.
@@ -653,7 +666,7 @@ CREATE TABLE %s (
           else:
             serialization_tag_dict.setdefault(serialization_tag,
                                               []).append(message)
-        for message_list in serialization_tag_dict.itervalues():
+        for message_list in six.itervalues(serialization_tag_dict):
           # Sort list of messages to validate the message with highest score
           message_list.sort(key=sort_message_key)
           distributable_uid_set.add(message_list[0].uid)
@@ -684,9 +697,9 @@ CREATE TABLE %s (
     assert limit
     quote = db.string_literal
     query = db.query
-    args = (self.sql_table, sqltest_dict['to_date'](date, quote),
-            ' AND group_method_id=' + quote(group_method_id)
-            if group_method_id else '' , limit)
+    args = (str2bytes(self.sql_table), sqltest_dict['to_date'](date, quote),
+            b' AND group_method_id=' + quote(group_method_id)
+            if group_method_id else b'' , limit)
 
     # Note: Not all write accesses to our table are protected by this lock.
     # This lock is not here for data consistency reasons, but to avoid wasting
@@ -715,25 +728,25 @@ CREATE TABLE %s (
       # time).
       if node_set is None:
         result = Results(query(
-          "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
-          " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
+          b"SELECT * FROM %s WHERE processing_node=0 AND %s%s"
+          b" ORDER BY priority, date LIMIT %d FOR UPDATE" % args, 0))
       else:
         # We'd like to write
         #   ORDER BY priority, IF(node, IF(node={node}, -1, 1), 0), date
         # but this makes indices inefficient.
-        subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
-          " WHERE {} AND processing_node=0 AND %s%s"
-          " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
-        node = 'node=%s' % processing_node
+        subquery = (b"(SELECT *, 3*priority%%s as effective_priority FROM %s"
+          b" WHERE %%s AND processing_node=0 AND %s%s"
+          b" ORDER BY priority, date LIMIT %d FOR UPDATE)" % args)
+        node = b'node=%d' % processing_node
         result = Results(query(
           # "ALL" on all but one, to incur deduplication cost only once.
           # "UNION ALL" between the two naturally distinct sets.
-          "SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
-          " ORDER BY effective_priority, date LIMIT %s"% (
-              subquery(-1, node),
-              subquery('', 'node=0'),
-              subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
-              ' UNION ALL ' + subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set))) if node_set else '',
+          b"SELECT * FROM (%s UNION ALL %s UNION %s%s) as t"
+          b" ORDER BY effective_priority, date LIMIT %d"% (
+              subquery % (b'-1', node),
+              subquery % (b'', b'node=0'),
+              subquery % (b'+IF(node, IF(%s, -1, 1), 0)' % node, b'node>=0'),
+              b' UNION ALL ' + subquery % (str2bytes(str(-1)), str2bytes('node IN (%s)' % ','.join(map(str, node_set)))) if node_set else b'',
               limit), 0))
       if result:
         # Reserve messages.
@@ -796,9 +809,9 @@ CREATE TABLE %s (
         # To minimize the probability of deadlocks, we also COMMIT so that a
         # new transaction starts on the first 'FOR UPDATE' query, which is all
         # the more important as the current on started with getPriority().
-        result = db.query("SELECT * FROM %s WHERE processing_node=%s"
-          " ORDER BY priority, date LIMIT 1\0COMMIT" % (
-          self.sql_table, processing_node), 0)
+        result = db.query(b"SELECT * FROM %s WHERE processing_node=%d"
+          b" ORDER BY priority, date LIMIT 1\0COMMIT" % (
+          str2bytes(self.sql_table), processing_node), 0)
         already_assigned = result[1]
         if already_assigned:
           result = Results(result)
@@ -827,10 +840,10 @@ CREATE TABLE %s (
             cost *= count
             # Retrieve objects which have the same group method.
             result = iter(already_assigned
-              and Results(db.query("SELECT * FROM %s"
-                " WHERE processing_node=%s AND group_method_id=%s"
-                " ORDER BY priority, date LIMIT %s" % (
-                self.sql_table, processing_node,
+              and Results(db.query(b"SELECT * FROM %s"
+                b" WHERE processing_node=%d AND group_method_id=%s"
+                b" ORDER BY priority, date LIMIT %d" % (
+                str2bytes(self.sql_table), processing_node,
                 db.string_literal(group_method_id), limit), 0))
                 # Do not optimize rare case: keep the code simple by not
                 # adding more results from getReservedMessageList if the
@@ -857,8 +870,8 @@ CREATE TABLE %s (
     except:
       self._log(WARNING, 'Exception while reserving messages.')
       if uid_to_duplicate_uid_list_dict:
-        to_free_uid_list = uid_to_duplicate_uid_list_dict.keys()
-        for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
+        to_free_uid_list = ensure_list(uid_to_duplicate_uid_list_dict.keys())
+        for uid_list in six.itervalues(uid_to_duplicate_uid_list_dict):
           to_free_uid_list += uid_list
         try:
           self.assignMessageList(db, 0, to_free_uid_list)

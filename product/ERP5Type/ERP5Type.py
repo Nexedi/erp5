@@ -22,6 +22,7 @@
 ##############################################################################
 
 from __future__ import absolute_import
+from six import string_types as basestring
 from functools import partial
 import zope.interface
 from Products.ERP5Type.Globals import InitializeClass
@@ -41,6 +42,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
     getAccessorHolderList
+import six
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -50,13 +52,12 @@ from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TR
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
+@zope.interface.implementer(interfaces.ILocalRoleAssignor)
 class LocalRoleAssignorMixIn(object):
     """Mixin class used by type informations to compute and update local roles
     """
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    zope.interface.implements(interfaces.ILocalRoleAssignor)
 
     security.declarePrivate('updateLocalRolesOnDocument')
     @UnrestrictedMethod
@@ -71,7 +72,7 @@ class LocalRoleAssignorMixIn(object):
         if owner:
           user_name = owner[1]
         else:
-          for user_name, role_list in (ob.__ac_local_roles__ or {}).iteritems():
+          for user_name, role_list in six.iteritems((ob.__ac_local_roles__ or {})):
             if 'Owner' in role_list:
               break
           else:
@@ -90,7 +91,7 @@ class LocalRoleAssignorMixIn(object):
             # so use their categories' reference
             local_roles_group_id = local_role_group.getReference() or local_role_group.getId()
         for group_id, role_list \
-                in role_generator.getLocalRolesFor(ob, user_name).iteritems():
+                in six.iteritems(role_generator.getLocalRolesFor(ob, user_name)):
           group_id_role_dict.setdefault(group_id, set()).update(role_list)
           if local_roles_group_id:
             for role in role_list:
@@ -100,7 +101,7 @@ class LocalRoleAssignorMixIn(object):
       ## Update role assignments to groups
       # Assign new roles
       ac_local_roles = {group: sorted(role_list)
-        for group, role_list in group_id_role_dict.iteritems()
+        for group, role_list in six.iteritems(group_id_role_dict)
         if role_list}
 
       if ac_local_roles != ob.__ac_local_roles__:
@@ -174,7 +175,7 @@ class LocalRoleAssignorMixIn(object):
       import erp5
       RoleInformation = getattr(erp5.portal_type, 'Role Information')
       role = RoleInformation(self.generateNewId())
-      for k, v in role_property_dict.iteritems():
+      for k, v in six.iteritems(role_property_dict):
         if k == 'condition':
           if isinstance(v, Expression):
             v = v.text
@@ -195,6 +196,7 @@ class LocalRoleAssignorMixIn(object):
 
 InitializeClass(LocalRoleAssignorMixIn)
 
+@zope.interface.implementer(interfaces.IActionContainer)
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
                           LocalRoleAssignorMixIn,
@@ -221,8 +223,6 @@ class ERP5TypeInformation(XMLObject,
 
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    zope.interface.implements(interfaces.IActionContainer)
 
     # Declarative properties
     property_sheets = ( PropertySheet.BaseType, )
@@ -684,7 +684,7 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
       search_source_list += self.getTypeWorkflowList()
-      return ' '.join(filter(None, search_source_list))
+      return ' '.join([_f for _f in search_source_list if _f])
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultViewFor')
@@ -855,7 +855,7 @@ class ERP5TypeInformation(XMLObject,
       old_action = old_action.__getstate__()
       action_type = old_action.pop('category', None)
       action = ActionInformation(self.generateNewId())
-      for k, v in old_action.iteritems():
+      for k, v in six.iteritems(old_action):
         if k in ('action', 'condition', 'icon'):
           if not v:
             continue
@@ -880,7 +880,7 @@ class ERP5TypeInformation(XMLObject,
         category=action.getActionType(),
         priority=action.getFloatIndex(),
         permissions=tuple(action.getActionPermissionList()))
-      for k, v in action.__dict__.iteritems():
+      for k, v in six.iteritems(action.__dict__):
         if k in ('action', 'condition', 'icon'):
           if not v:
             continue

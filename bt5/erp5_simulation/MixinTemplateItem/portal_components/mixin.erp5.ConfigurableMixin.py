@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import PersistentMapping
 from erp5.component.interface.IConfigurable import IConfigurable
 
+@zope.interface.implementer(IConfigurable,)
 class ConfigurableMixin:
   """
   This class provides a generic implementation of IConfigurable.
@@ -46,9 +47,6 @@ class ConfigurableMixin:
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(IConfigurable,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConfigurationProperty')

@@ -21,13 +21,12 @@ This is a hotfix, it dynamically applies several patches to Zope.
 # Import from the Standard Library
 import logging
 import os
+import six
 
 # Import from itools
 from .itools.i18n import AcceptLanguageType
 
 # Import from Zope
-# import Globals
-from ZPublisher import Publish
 from ZPublisher.HTTPRequest import HTTPRequest
 from zope.globalrequest import clearRequest, setRequest
 from zope.globalrequest import getRequest as get_request
@@ -68,16 +67,18 @@ def get_new_publish(zope_publish):
 
 
 if patch is False:
-    logger.info('Install "Globals.get_request".')
-
-    # Apply the patch
-    Publish.publish = get_new_publish(Publish.publish)
     patch = True
 
-    # Add to Globals for backwards compatibility 
-    # XXX-AUREL do we really care ?
-    # Globals.get_request = get_request
+    if six.PY2: # ZServer-specific patch
+      logger.info('Install "Globals.get_request".')
 
+      # Apply the patch
+      from ZPublisher import Publish
+      Publish.publish = get_new_publish(Publish.publish)
+
+      # Add to Globals for backwards compatibility 
+      import Globals
+      Globals.get_request = get_request
 
 
 # PATCH 2: Accept

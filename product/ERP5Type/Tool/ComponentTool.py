@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from six import string_types as basestring
 from types import ModuleType
 
 import transaction
@@ -41,6 +42,7 @@ from Products.ERP5Type.dynamic import aq_method_lock
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
+import six
 
 global_stream = None
 
@@ -149,7 +151,7 @@ class ComponentTool(BaseTool):
     from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
     with aq_method_lock:
       component_package_list = []
-      for package in erp5.component.__dict__.itervalues():
+      for package in six.itervalues(erp5.component.__dict__):
         if isinstance(package, ComponentDynamicPackage):
           package.reset()
           component_package_list.append(package.__name__)
@@ -283,7 +285,7 @@ class Test(ERP5TypeTestCase):
     debug=boolean        Invoke debugger on errors / failures.
     verbose=boolean      Display more information when running tests
     """
-    from StringIO import StringIO
+    from six import StringIO
     global global_stream
     global live_test_running
     self.serialize()

@@ -41,6 +41,7 @@ from Testing import ZopeTestCase
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import findContentChain
+import six
 
 
 class CodingStyleTestCase(ERP5TypeTestCase):
@@ -175,7 +176,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
                       os.path.join('bt5', path),
                   ))
               diff_line_list.append('\n')
-        for sub_path, sub_dcmp in dcmp.subdirs.iteritems():
+        for sub_path, sub_dcmp in six.iteritems(dcmp.subdirs):
           for diff in get_differences(sub_dcmp, os.path.join(base, sub_path)):
             yield diff
 
@@ -238,15 +239,15 @@ class CodingStyleTestCase(ERP5TypeTestCase):
         for content_portal_type in content_portal_type_list:
           document = document.newContent(portal_type=content_portal_type)
 
-        for action_category, action_list in self.portal.portal_actions.listFilteredActionsFor(
-            document).iteritems():
+        for action_category, action_list in six.iteritems(self.portal.portal_actions.listFilteredActionsFor(
+            document)):
           # We ignore duplicate actions in action categories used by OfficeJS
           # because OfficeJS only display actions referenced in the router
           # gadget configuration.
           if action_category in ('object_jio_view', 'object_jio_js_script'):
             continue
-          for action_name, action_count in collections.Counter(
-              [action['name'] for action in action_list]).iteritems():
+          for action_name, action_count in six.iteritems(collections.Counter(
+              [action['name'] for action in action_list])):
             if action_count > 1:
               duplicate_action_list.append({
                   'portal_type': portal_type,

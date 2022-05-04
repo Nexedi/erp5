@@ -32,6 +32,7 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import readOnlyTransactionCache
+import six
 
 
 class ContributionPredicate(Predicate, XMLObject):
@@ -73,9 +74,9 @@ class ContributionPredicate(Predicate, XMLObject):
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
-    for property_, value in self._identity_criterion.iteritems():
+    for property_, value in six.iteritems(self._identity_criterion):
       result = result and (context.getProperty(property_) in value)
-    for property_, (min_, max_) in self._range_criterion.iteritems():
+    for property_, (min_, max_) in six.iteritems(self._range_criterion):
       value = context.getProperty(property_)
       if min_ is not None:
         result = result and (value >= min_)

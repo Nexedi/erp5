@@ -1,4 +1,4 @@
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 
 portal = context.getPortalObject()
 kw = {}

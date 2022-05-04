@@ -4,8 +4,8 @@
 
 import errno, logging, os, re, socket, sys, threading, time, traceback
 from functools import partial
-from urlparse import urlsplit
-from StringIO import StringIO
+from six.moves.urllib.parse import urlsplit
+from six import StringIO
 
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
@@ -83,7 +83,7 @@ class TimerServer(threading.Thread):
             except socket.error:
                 time.sleep(5)
                 continue
-            s.send('GET / HTTP/1.1\r\n\r\n')
+            s.send(b'GET / HTTP/1.1\r\n\r\n')
             s.recv(4096) # blocks until a response is received
             break
         s.close()
@@ -145,7 +145,7 @@ class TimerResponse(BaseResponse):
                                               r')(?:(?:\s*;)|\Z)',
                                               re.IGNORECASE)):
         # Encode the Unicode data as requested
-        if self.headers.has_key('content-type'):
+        if 'content-type' in self.headers:
             match = charset_re.match(self.headers['content-type'])
             if match:
                 encoding = match.group(1)

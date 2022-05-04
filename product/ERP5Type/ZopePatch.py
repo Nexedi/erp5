@@ -19,6 +19,7 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
+import six
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 
@@ -61,16 +62,20 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-from Products.ERP5Type.patches import http_server
+if six.PY2:
+  # No more ZServer
+  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
-from Products.ERP5Type.patches import StateChangeInfoPatch
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
 from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
-from Products.ERP5Type.patches import ZopePageTemplateUtils
+if six.PY2:
+  from Products.ERP5Type.patches import ZopePageTemplateUtils
 from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem
 from Products.ERP5Type.patches import ExternalMethod
@@ -79,23 +84,32 @@ from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
 from Products.ERP5Type.patches import _transaction
 from Products.ERP5Type.patches import default_zpublisher_encoding
-from Products.ERP5Type.patches import DCWorkflowGraph
+if six.PY2:
+  # DCWorkflowGraph is dead since 2011, so no py3 version
+  from Products.ERP5Type.patches import DCWorkflowGraph
 from Products.ERP5Type.patches import SourceCodeEditorZMI
 from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
-from Products.ERP5Type.patches import WebDAV
+if six.PY2:
+  # No ZServer, so no webdav
+  from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-from Products.ERP5Type.patches import Publish
+if six.PY2:
+  # No ZServer
+  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
-from Products.ERP5Type.patches import urllib_opener
+if six.PY2:
+  # XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
+  from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
 from Products.ERP5Type.Core.Workflow import ValidationFailed
-from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches.DCWorkflow import ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base

@@ -19,6 +19,7 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
+import six
 from logging import getLogger
 import traceback
 logger = getLogger(__name__)
@@ -31,11 +32,11 @@ def PreferredCharsetResolver_resolve(context, text, expression):
     # faster than the original implementation, and it is compatible with
     # requests that do not contain Accept-Charset header.
     try:
-      result = unicode(text, 'utf-8')
-    except UnicodeDecodeError, e:
+      result = six.text_type(text, 'utf-8')
+    except UnicodeDecodeError as e:
       tb_info = ''.join(traceback.format_stack())
       logger.warn('UnicodeDecodeError(%s: %s): %s\ntext: %r\nat:\n%s' %
                   (e.start, e.end, e.reason, repr(text), tb_info))
-      result = unicode(text, 'utf-8', 'ignore')
+      result = six.text_type(text, 'utf-8', 'ignore')
     return result
 PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve

@@ -38,7 +38,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Globals import PersistentMapping
 from BTrees.OOBTree import OOBTree
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 
 redirect_path = '/login_form'
 def redirect(REQUEST, site_url, message):

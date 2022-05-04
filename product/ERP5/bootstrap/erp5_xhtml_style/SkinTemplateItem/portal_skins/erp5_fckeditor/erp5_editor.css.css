@@ -524,7 +524,7 @@ fieldset.bottom .field .input {
 /*   font-size: 90%; */
 }
 
-#transition_message {
+.transition_message {
   margin-left: 1em;
   color: #f00;
   background-color: inherit;

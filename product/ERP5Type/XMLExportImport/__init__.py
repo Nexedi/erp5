@@ -39,9 +39,8 @@
 ## The code below was initially in ERP5Type/XMLExportImport.py
 from Acquisition import aq_base, aq_inner
 from collections import OrderedDict
-from cStringIO import StringIO
+from io import BytesIO
 from zodbpickle.pickle import Pickler
-from types import DictionaryType
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
@@ -49,7 +48,15 @@ from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
 from base64 import standard_b64encode
 from hashlib import sha1
+from Products.ERP5Type.Utils import ensure_list
 #from zLOG import LOG
+
+import six
+
+try:
+  long_ = long
+except NameError: # six.PY3
+  long_ = int
 
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
@@ -65,15 +72,15 @@ class OrderedPickler(Pickler):
             self,
             OrderedDict(sorted(obj.items())))
 
-    dispatch[DictionaryType] = save_dict
-
+    dispatch[dict] = save_dict
 
 # ERP5 specific pickle function - produces ordered pickles
 def dumps(obj, protocol=None):
-    file = StringIO()
+    file = BytesIO()
     OrderedPickler(file, protocol).dump(obj)
     return file.getvalue()
 
+from six.moves import xrange
 def Base_asXML(object, root=None):
   """
       Generate an xml text corresponding to the content of this object
@@ -129,21 +136,21 @@ def Base_asXML(object, root=None):
             for word in value]
         sub_object.append(marshaller(value))
       elif prop_type in ('text', 'string',):
-        sub_object.text = unicode(escape(value), 'utf-8')
+        sub_object.text = six.text_type(escape(value), 'utf-8')
       elif prop_type != 'None':
         sub_object.text = str(value)
 
   # We have to describe the workflow history
   if getattr(self, 'workflow_history', None) is not None:
     workflow_list = self.workflow_history
-    workflow_list_keys = workflow_list.keys()
+    workflow_list_keys = ensure_list(workflow_list.keys())
     workflow_list_keys.sort() # Make sure it is sorted
 
     for workflow_id in workflow_list_keys:
       for workflow_action in workflow_list[workflow_id]:
         workflow_node = SubElement(object, 'workflow_action',
                                    attrib=dict(workflow_id=workflow_id))
-        workflow_variable_list = workflow_action.keys()
+        workflow_variable_list = ensure_list(workflow_action.keys())
         workflow_variable_list.sort()
         for workflow_variable in workflow_variable_list:
           variable_type = "string" # Somewhat bad, should find a better way
@@ -157,7 +164,7 @@ def Base_asXML(object, root=None):
                                      attrib=dict(type=variable_type))
           if variable_type != 'None':
             variable_node_text = str(workflow_action[workflow_variable])
-            variable_node.text = unicode(variable_node_text, 'utf-8')
+            variable_node.text = six.text_type(variable_node_text, 'utf-8')
 
             if workflow_variable == 'time':
               time = variable_node.text
@@ -174,7 +181,7 @@ def Base_asXML(object, root=None):
     #convert local_roles in string because marshaller can't do it
     role_list = []
     for role in user_role[1]:
-      if isinstance(role, unicode):
+      if isinstance(role, six.text_type):
         role = role.encode('utf-8')
       role_list.append(role)
     local_role_node.append(marshaller(tuple(role_list)))
@@ -217,6 +224,7 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
                         xml_declaration=xml_declaration, pretty_print=True)
 
 ## The code below was initially from OFS.XMLExportImport
+from six import string_types as basestring
 from base64 import encodestring
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile, export_end_marker
@@ -224,11 +232,10 @@ from ZODB.utils import p64
 from ZODB.utils import u64
 from functools import partial
 from inspect import getargspec
-from types import TupleType
 from OFS import ObjectManager
 from . import ppml
 
-magic='<?xm' # importXML(jar, file, clue)}
+magic=b'<?xm' # importXML(jar, file, clue)}
 
 def reorderPickle(jar, p):
     try:
@@ -244,12 +251,12 @@ def reorderPickle(jar, p):
 
     def persistent_load(ooid,
                         Ghost=Ghost,
-                        oids=oids, wrote_oid=oids.has_key,
+                        oids=oids, wrote_oid=oids.__contains__,
                         new_oid=storage.new_oid):
 
         "Remap a persistent id to an existing ID and create a ghost for it."
 
-        if type(ooid) is TupleType: ooid, klass = ooid
+        if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
 
         try:
@@ -260,11 +267,11 @@ def reorderPickle(jar, p):
         return Ghost
 
     # Reorder pickle by doing I/O
-    pfile = StringIO(p)
+    pfile = BytesIO(p)
     unpickler=Unpickler(pfile)
     unpickler.persistent_load=persistent_load
 
-    newp=StringIO()
+    newp=BytesIO()
     pickler=OrderedPickler(newp,1)
     pickler.persistent_id=persistent_id
 
@@ -279,14 +286,14 @@ def _mapOid(id_mapping, oid):
     idprefix = str(u64(oid))
     id = id_mapping[idprefix]
     old_aka = encodestring(oid)[:-1]
-    aka=encodestring(p64(long(id)))[:-1]  # Rebuild oid based on mapped id
+    aka=encodestring(p64(long_(id)))[:-1]  # Rebuild oid based on mapped id
     id_mapping.setConvertedAka(old_aka, aka)
     return idprefix+'.', id, aka
 
 def XMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
     q=ppml.ToXMLUnpickler
-    f=StringIO(p)
+    f=BytesIO(p)
     u=q(f)
     u.idprefix, id, aka = _mapOid(id_mapping, oid)
     p=u.load(id_mapping=id_mapping).__str__(4)
@@ -344,7 +351,7 @@ class zopedata:
     def __init__(self, parser, tag, attrs):
         self.file=parser.file
         write=self.file.write
-        write('ZEXP')
+        write(b'ZEXP')
 
     def append(self, data):
         file=self.file
@@ -369,9 +376,9 @@ def save_record(parser, tag, data):
     pos=file.tell()
     file.seek(pos)
     a=data[1]
-    if a.has_key('id'): oid=a['id']
+    if 'id' in a: oid=a['id']
     oid=p64(int(oid))
-    v=''
+    v=b''
     for x in data[2:]:
         v=v+x
     l=p64(len(v))
@@ -395,7 +402,8 @@ def importXML(jar, file, clue=''):
     # So we have to declare an encoding but not use unicode, so the unpickler
     # can deal with the utf-8 strings directly
     p=xml.parsers.expat.ParserCreate('utf-8')
-    p.returns_unicode = False
+    if six.PY2:
+      p.returns_unicode = False
     # </patch>
     p.CharacterDataHandler=F.handle_data
     p.StartElementHandler=F.unknown_starttag
@@ -403,3 +411,7 @@ def importXML(jar, file, clue=''):
     r=p.Parse(data)
     outfile.seek(0)
     return jar.importFile(outfile,clue)
+
+customImporters = {
+  magic: importXML
+}

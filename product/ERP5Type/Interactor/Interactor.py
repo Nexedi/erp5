@@ -71,8 +71,8 @@ class InteractorMethod(Method):
     self.after_action_list = []
     self.before_action_list = []
     self.method = method
-    self.__code__ = self.func_code = method.func_code
-    self.__defaults__ = self.func_defaults = method.func_defaults
+    self.__code__ = self.func_code = method.__code__
+    self.__defaults__ = self.func_defaults = method.__defaults__
     self.__name__ = method.__name__
 
   def registerBeforeAction(self, action, args, kw):
@@ -94,17 +94,18 @@ class InteractorSource:
   """
   """
 
-  def __init__(self, method):
+  def __init__(self, klass, method_name):
     """
       Register method
     """
-    self.method = method
+    self.klass = klass
+    self.method = getattr(self.klass, method_name)
 
   def doBefore(self, action, *args, **kw):
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.im_class
+      im_class = self.klass
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -116,7 +117,7 @@ class InteractorSource:
     """
     """
     if not isinstance(self.method, InteractorMethod):
-      im_class = self.method.im_class
+      im_class = self.klass
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -147,9 +148,9 @@ class Interactor:
     raise NotImplementedError
 
   # Interaction implementation
-  def on(self, method):
+  def on(self, *args):
     """
       Parameters may hold predicates ?
       no need - use InteractorMethodCall and decide on action
     """
-    return InteractorSource(method)
+    return InteractorSource(*args)

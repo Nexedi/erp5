@@ -114,7 +114,7 @@ for skin_folder_id in skin_id_list:
       form_id = form.getId()
       form_path = '%s/%s' % (skin_folder_id, form_id)
 
-      if modified_object_dict.has_key(form_path):
+      if form_path in modified_object_dict:
         # The form is a Field Library
         if modified_object_dict[form_path] == '4_delete_form':
           # As the form will be deleted, no need to manage its fields

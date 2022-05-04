@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import six
+
 from DateTime import DateTime
 
 """
@@ -80,7 +82,10 @@ def asLong(value):
     Return the value as a long or a type-specific default value if it fails.
   """
   try:
-    result = long(value)
+    if six.PY2:
+      result = long(value)
+    else:
+      result = int(value)
   except TypeError:
     result = type_definition['long']['default']
   return result
@@ -93,8 +98,10 @@ def asString(value):
     if value is None:
       result = ''
     else:
-      if isinstance(value, unicode):
+      if six.PY2 and isinstance(value, unicode):
         result = value.encode('utf-8')
+      elif six.PY3 and isinstance(value, bytes):
+        result = value.decode('utf-8')
       else:
         result = str(value)
   except TypeError:
@@ -104,6 +111,8 @@ def asString(value):
 def asList(value):
   """
     Return the value as a list or a type-specific default value if it fails.
+
+    XXX-zope4py3: bytes()?
   """
   if isinstance(value, (list, tuple)):
     result = list(value)
@@ -126,7 +135,7 @@ type_definition = {
                            },
     'long'               : { 'cast'    : asLong,
                              'null'    : ('', 'None', None,),
-                             'default' : 0L,
+                             'default' : 0,
                              'isList'  : 0,
                            },
     'date'               : { 'cast'    : asDate,

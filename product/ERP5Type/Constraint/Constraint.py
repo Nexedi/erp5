@@ -31,14 +31,14 @@
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.interfaces import IConstraint
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer( IConstraint,)
 class Constraint:
     """
       Default Constraint implementation
     """
     __allow_access_to_unprotected_subobjects__ = 1
-    implements( IConstraint, )
 
     _message_id_list = []
 

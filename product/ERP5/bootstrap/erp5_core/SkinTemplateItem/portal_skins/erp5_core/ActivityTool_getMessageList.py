@@ -1,4 +1,5 @@
-for k, v in kw.items():
+from Products.ERP5Type.Utils import ensure_list
+for k, v in ensure_list(kw.items()):
   if v:
     if k == "str_object_path":
       kw["path"] = v
@@ -13,7 +14,6 @@ for message in message_list:
   message.edit(
     str_object_path = '/'.join(message.object_path),
     uid_activity = str(message.uid) + ' ('+ message.activity[3:] +')',
-    arguments = str(message.args),
     delete = '[Delete]',
     restart = '[Restart]',
   )

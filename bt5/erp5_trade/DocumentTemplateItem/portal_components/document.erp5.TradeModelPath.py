@@ -39,6 +39,10 @@ from erp5.component.interface.IArrowBase import IArrowBase
 
 import zope.interface
 
+@zope.interface.implementer(interfaces.ICategoryAccessProvider,
+                            IArrowBase,
+                            ITradeModelPath,
+                            interfaces.IPredicate,)
 class TradeModelPath(Path):
   """
     The TradeModelPath class embeds all information related to
@@ -92,13 +96,6 @@ class TradeModelPath(Path):
                     , PropertySheet.Reference
                     , PropertySheet.PaymentCondition # XXX-JPS must be renames some day
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.ICategoryAccessProvider,
-                            IArrowBase,
-                            ITradeModelPath,
-                            interfaces.IPredicate,
-                            )
 
   # Helper Methods
   def _getExplanationRelatedSimulationMovementValueList(self, explanation):

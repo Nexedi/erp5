@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.AcceptSolver import AcceptSolver
 from erp5.component.interface.ISolver import ISolver
 
+@zope.interface.implementer(ISolver,)
 class UnifySolver(AcceptSolver):
   """
   """
@@ -52,9 +53,6 @@ class UnifySolver(AcceptSolver):
                     , PropertySheet.DublinCore
                     , PropertySheet.TargetSolver
                     )
-
-  # Declarative interfaces
-  zope.interface.implements(ISolver,)
 
   def _getActualTargetMovement(self, movement, solved_property):
     # The movement might not be the right place to correct the

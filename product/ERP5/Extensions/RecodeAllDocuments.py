@@ -1,3 +1,4 @@
+import six
 from Products.ERP5Type.Globals import get_request
 from Acquisition import aq_base
 from Products.ERP5Type.Base import Base
@@ -31,14 +32,15 @@ def recodeDocumentRecursively(document, dry_run=0):
       if type(value) == type(''):
         if len(value) > 0:
           message += 'Recoding %s of %s\n' % (id, document.getRelativeUrl())
-          if not dry_run: setattr(base, id, unicode(value, 'iso-8859-1').encode('utf-8'))
+          if not dry_run:
+            setattr(base, id, six.text_type(value, 'iso-8859-1').encode('utf-8'))
       elif type(value) in (type(()), type([])):
         if len(value) > 0:
           value_list = list(value)
           for i in range(len(value_list)):
             value = value_list[i]
-            if type(value) == type('') and len(value) > 0:
-              value_list[i] = unicode(value, 'iso-8859-1').encode('utf-8')
+            if isinstance(value, six.binary_type) and len(value) > 0:
+              value_list[i] = six.text_type(value, 'iso-8859-1').encode('utf-8')
           message += 'Recoding %s of %s\n' % (id, document.getRelativeUrl())
           if not dry_run: setattr(base, id, tuple(value_list))
       else:
