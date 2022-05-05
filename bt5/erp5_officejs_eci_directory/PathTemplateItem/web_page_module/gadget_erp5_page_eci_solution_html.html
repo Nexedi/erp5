@@ -1,0 +1,140 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story List</title>
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  <script src="gadget_erp5_page_eci_solution.js"></script>
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <ul class="grid-elements custom-software-profile">
+        <li>
+          {{#if logo_url}}
+            <div class="custom-software-profile-image-wrapper"><a href="{{website_url}}"><img src="{{logo_url}}"></a></div>
+          {{/if}}
+        </li>
+        <li>
+          <h1>{{title}}</h1>
+          {{#if wikipedia_description}}
+            <p>{{wikipedia_description}}</p>
+            <br/>
+          {{/if}}
+          {{#if wikipedia_url}}
+            <p><a href="{{wikipedia_url}}" class="">Read more on Wikipedia</a></p>
+          {{/if}}
+        </li>
+      </ul>
+
+      <section class="ui-content-header-plain ui-bar-c">
+        <h3>Solution Spec</h3>
+      </section>
+      <table class="custom-link-table">
+        <tbody>
+          <tr>
+            <td>Provider Site</td>
+            <td><a href="{{publisher_website}}">{{publisher}}</a></td>
+          </tr>
+          <tr>
+            <td>Product Site</td>
+            <td><a href="{{website_url}}">{{title}}</a></td>
+          </tr>
+          <tr>
+            <td>Source Code</td>
+            <td>
+              {{#if source_code_download}}
+                <a href="{{source_code_download}}">Download</a>
+              {{else}}
+                <a class="ui-disabled" href="">Download</a>
+              {{/if}}
+              /
+              {{#if source_code_profile}}
+                <a href="{{source_code_profile}}">Profile</a>
+              {{else}}
+                <a class="ui-disabled" href="">Profile</a>
+              {{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td>Commercial Support</td>
+            <td>
+              {{#if commercial_support_available}}
+                <a href="{{commercial_support_url}}"> Yes</a>
+                {{#if commercial_support_description}}
+                  <abbr title="{{commercial_support_description}}">(?)</abbr>
+                {{/if}}
+              {{else}}
+                No
+              {{/if}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      {{#if success_case_list}}
+        <section class="ui-content-header-plain ui-bar-c">
+          <h3>Success Stories</h3>
+        </section>
+        <ul class="grid-items custom-success-story-list">
+          {{#each success_case_list}}
+            <li>
+              {{#if image}}
+                <div class="custom-success-story-image-wrapper {{image_class}}"><a href="{{url}}"><img src="{{image}}" alt></a></div>
+              {{else}}
+                <div>&nbsp;</div>
+              {{/if}}
+              <p class="custom-success-story-title">{{title}}</a></p>
+              <p class="custom-success-story-description">{{description}} <a href="{{url}}">Read more</a></p>
+              <table class="custom-link-table">
+                <tbody>
+                  <tr>
+                    <td>Categories</td>
+                    <td>
+                    <ul class="custom-success-story-category-list">
+                      {{#each ../category_list}}
+                        <li>{{this}}</li>
+                      {{/each}}
+                    </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="custom-success-story-client">Customer</td>
+                    <td><b>{{customer}}</b></td>
+                  </tr>
+                  <tr>
+                    <td>Industry</td>
+                    <td>{{industry}}</td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td>{{country}}</td>
+                  </tr>
+                  <tr>
+                    <td>Language</td>
+                    <td>{{language}}</td>
+                  </tr>
+                  <tr>
+                    <td>Product Site</td>
+                    <td><a href="{{software_website}}">{{software}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Provider Site</td>
+                    <td><a href="{{publisher_website}}">{{publisher}}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </section>
+
+  </script>
+  </head>
+  <body>
+    <div class="display-widget"></div>
+  </body>
+</html>

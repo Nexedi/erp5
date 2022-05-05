@@ -1,0 +1,154 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publisher</title>
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="gadget_erp5_eci.css" />
+
+  <script src="gadget_erp5_page_eci_publisher.js"></script>
+
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <ul class="grid-elements custom-software-profile">
+        <li>
+        {{#if logo_url}}
+          <div class="custom-software-profile-image-wrapper"><a href="{{website_url}}"><img src="{{logo_url}}" alt></a></div>
+        {{/if}}
+        </li>
+        <li>
+          <h1>{{title}}</h1>
+          {{#if wikipedia_description}}
+            <p>{{wikipedia_description}}</p>
+          {{/if}}
+          <br/>
+          {{#if wikipedia_url}}
+            <p><a href="{{wikipedia_url}}" class="">Read more on Wikipedia</a></p>
+          {{/if}}
+          <ul>
+            <li>Founded: {{founded_year}}</li>
+            <li>Country: {{country}}</li>
+            <li>Website: <a href="{{website_url}}">{{website_url}}</a></li>
+            <li>Presence: {{#each presence}}{{this}}&nbsp;{{/each}}
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <section class="ui-content-header-plain ui-bar-c">
+        <h2>Solutions</h2>
+      </section>
+
+      <ul class="grid-items custom-software-list">
+        {{#each solution_list}}
+          <li>
+          <ul class="custom-software-profile">
+            <li>
+              {{#if logo_url}}
+                <div class="custom-software-profile-image-wrapper"><a href="{{website_url}}"><img src="{{logo_url}}" alt></a></div>
+              {{else}}
+                <div>&nbsp</div>
+              {{/if}}
+            </li>
+            <li>
+              <h1>{{title}}</h1>
+              {{#if wikipedia_description}}
+                <p>{{wikipedia_description}}</p>
+                <br/>
+              {{/if}}
+              {{#if wikipedia_url}}
+                <p><a href="{{wikipedia_url}}" class="">Read more on Wikipedia</a></p>
+                <br/>
+              {{/if}}
+                <div>
+                  <ul class="custom-success-story-category-list"><lh>Categories:</lh>
+                    {{#each category_list}}
+                      <li>{{this}}</li>
+                    {{/each}}
+                  </ul>
+                </div>
+                <table class="custom-link-table">
+                  <tbody>
+                    <tr>
+                      <td>Publisher Site</td>
+                      <td><a href="{{publisher_website}}">{{publisher}}</a></td>
+                    </tr>
+                    <tr>
+                      <td>Product Site</td>
+                      <td><a href="{{website_url}}">{{title}}</a></td>
+                    </tr>
+                    <tr>
+                      <td>Source Code</td>
+                      <td>
+                        {{#if source_code_download}}
+                          <a href="{{source_code_download}}">Download</a>
+                        {{else}}
+                          <a class="ui-disabled" href="">Download</a>
+                        {{/if}}
+                        /
+                        {{#if source_code_profile}}
+                          <a href="{{source_code_profile}}">Profile</a>
+                        {{else}}
+                          <a class="ui-disabled" href="">Profile</a>
+                        {{/if}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Solution Commercial Support</td>
+                      <td>
+                        {{#if commercial_support_available}}
+                          <a href="{{commercial_support_url}}"> Yes</a>
+                          {{#if commercial_support_description}}  
+                            <abbr title="{{commercial_support_description}}">(?)</abbr>
+                          {{/if}}
+                        {{else}}
+                          No 
+                        {{/if}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </li>
+            </ul>
+            <section class="ui-content-header-plain ui-bar-c">
+             <h3>Success Stories</h3>
+            </section>
+            {{#if success_case_list}}
+              <ul class="grid-items custom-success-story-list">
+                {{#each success_case_list}}
+                  <li>
+                    {{#if image}}
+                      <div class="custom-success-story-image-wrapper {{image_class}}"><a href="{{url}}"><img src="{{image}}" alt></a></div>
+                    {{else}}
+                      <div>&nbsp;</div>
+                    {{/if}}
+                    <p class="custom-success-story-title">{{title}}</a></p>
+                    <p class="custom-success-story-description">{{description}} <a href="{{url}}">Read more</a></p>
+                    <p>Industry: {{industry}}</p>
+                    <ul class="custom-success-story-category-list"><lh>Categories:</lh>
+                      {{#each ../category_list}}
+                        <li>{{this}}</li>
+                      {{/each}}
+                    </ul>
+                    <p class="custom-success-story-client">Customer: <span>{{customer}}</span></p>
+                    <p>Country: {{country}}</p>
+                    <p>Language: {{language}}</p>
+                  </li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </li>
+
+        {{/each}}
+      </ul>
+    </section>
+  </script>
+  </head>
+  <body>
+    <article class="display-widget ui-content"></article>
+  </body>
+</html>

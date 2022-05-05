@@ -1,0 +1,33 @@
+url_list = [
+  'gadget_erp5_eci_dygraph.html',
+  'gadget_erp5_eci_panel.html',
+  'gadget_erp5_eci_publisher_jio.html',
+  'gadget_erp5_eci_router.html',
+  'gadget_erp5_page_eci_directory.html',
+  'gadget_erp5_page_eci_export.html',
+  'gadget_erp5_page_eci_financial_list.html',
+  'gadget_erp5_page_eci_provider_list.html',
+  'gadget_erp5_page_eci_publisher.html',
+  'gadget_erp5_page_eci_solution.html',
+  'gadget_erp5_page_eci_solution_list.html',
+  'gadget_erp5_page_eci_success_case.html',
+  'gadget_erp5_page_eci_success_case_list.html',
+  'gadget_erp5_eci_dygraph.js',
+  'gadget_erp5_eci_panel.js',
+  'gadget_erp5_eci_publisher_jio.js',
+  'gadget_erp5_eci_publisher_storage.js',
+  'gadget_erp5_eci_router.js',
+  'gadget_erp5_page_eci_directory.js',
+  'gadget_erp5_page_eci_export.js',
+  'gadget_erp5_page_eci_financial_list.js',
+  'gadget_erp5_page_eci_provider_list.js',
+  'gadget_erp5_page_eci_publisher.js',
+  'gadget_erp5_page_eci_solution.js',
+  'gadget_erp5_page_eci_solution_list.js',
+  'gadget_erp5_page_eci_success_case.js',
+  'gadget_erp5_page_eci_success_case_list.js',
+  'gadget_erp5_eci.css',
+  'handlebars.js'
+]
+
+return url_list
