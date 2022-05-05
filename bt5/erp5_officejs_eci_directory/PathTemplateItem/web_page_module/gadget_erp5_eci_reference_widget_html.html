@@ -1,0 +1,49 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story</title>
+
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <link rel="stylesheet" href="css/flag-icons.css" type="text/css" />
+
+  <script src="gadget_erp5_eci_reference_widget.js"></script>
+
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <div class="reference_breadcrumb">
+        <a href="{{provider_url}}">{{publisher}}</a>
+        <span class="fi fi-{{country_code}}"></span>
+        <a href="{{country_search_url}}">{{selection_domain_country}}</a>
+        <a href="{{solution_url}}">{{title}}</a>
+      </div>
+      <div class="reference_similar_solution">
+        <span>Similar Solutions:</span>
+        {{#each similar_solution_list}}
+           <span>{{this.title}}</span>
+        {{/each}}
+      </div>
+
+      <div class="reference_content">
+      {{#each reference_list}}
+        <div class="single_reference">
+          <img src="{{this.logo_url}}" alt={{this.title}}></img>
+          <span>{{this.title}}</span>
+          <span class="fi fi-{{country_code}}"></span>
+          <a href="{{this.country_search_url}}">{{this.country}}</a>
+          <a href="{{this.industry_search_url}}">{{this.industry}}</a>
+        </div>
+      {{/each}}
+      </div>
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-widget-in-listbox"></div>
+  </body>
+</html>
