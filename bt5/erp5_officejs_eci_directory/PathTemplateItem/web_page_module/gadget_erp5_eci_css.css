@@ -1,0 +1,499 @@
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Dygraph -----------------------------------
+   -------------------------------------------------------------------------
+*/
+body .dygraph-legend {
+  left: 15%;
+  top: 5%;
+}
+body .dygraph-legend > span {
+  display: block;
+}
+
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Masonry -----------------------------------
+   -------------------------------------------------------------------------
+*/
+.ui-masonry-container {
+  margin-top: -5em;
+}
+.ui-masonry-container > ul {
+  margin: 1.5em 0;
+  padding: 0;
+  -ms-column-gap: 2.5em;
+  -moz-column-gap: 2.5em;
+  -webkit-column-gap: 2.5em;
+  column-gap: 2.5em;
+  list-style: none outside none;
+}
+.ui-masonry-container > ul li {
+  display: block;
+  width: 100%;
+  float: none;
+  break-inside: avoid;
+}
+.ui-masonry-container > ul ul li {
+  border-bottom: 1px solid #ededed;
+  padding: 2px 0;
+}
+.ui-masonry-container > ul li .ui-content-section {
+  padding: 1em 0;
+  margin: 0;
+}
+.ui-masonry-container > ul li .ui-content-section h1 {
+  padding: 0.5em 0 .5em 0;
+  text-align: center;
+  background: #f1f1f1;
+  margin: 0;
+  margin-bottom: .5em;
+  font-size: 1.1em;
+}
+
+@media (min-width: 32em) {
+  .ui-masonry-container.ui-responsive > ul {
+    -ms-column-count: 2;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
+}
+
+@media (min-width: 48em) {
+  .ui-masonry-container.ui-responsive > ul {
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    -ms-column-count: 3;
+    column-count: 3;
+  }
+}
+
+@media (min-width: 64em) {
+  .ui-masonry-container.ui-responsive > ul {
+    -moz-column-count: 4;
+    -webkit-column-count: 4;
+    -ms-column-count: 4;
+    column-count: 4;
+  }
+}
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Generic -----------------------------------
+   -------------------------------------------------------------------------
+*/
+.display-widget section {
+  margin-top: 1em;
+}
+.display-widget h1 {
+  font-size: 2em;
+  margin: .5em 0 .75em;
+  border-bottom: 1px solid #a1a1a1;
+  padding-bottom: .25em;
+}
+.display-widget h2 {
+  font-size: 2em;
+  margin: .25em 0 .5em;
+}
+.display-widget h3 {
+  font-size: 1.5em;
+  margin: .25em 0 .25em;
+}
+.display-widget h4 {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+@media (max-width: 40em) {
+  .display-widget h1,
+  .display-widget h2,
+  .display-widget h3 {
+    text-align: center;
+  }
+}
+.display-widget hr {
+  color: #a1a1a1;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  height: 1px;
+}
+/*
+   -------------------------------------------------------------------------
+   ---------------------------- SPECIFIC --------------------------------
+   -------------------------------------------------------------------------
+*/
+.custom-link-table td {
+  padding: .25em;
+}
+.custom-software-list > li {
+  border: 1px solid #a1a1a1;
+  padding: 1em;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 2em;
+}
+.custom-software-profile li {
+  display: inline-block;
+  vertical-align: top;
+}
+.custom-software-profile li:nth-child(1) {
+  width: 20%;
+}
+.custom-software-profile li:nth-child(2) {
+  width: 79%;
+}
+.custom-software-profile ul > li {
+  display: block;
+  width: 100%;
+}
+.custom-software-profile .custom-success-story-category-list li {
+  width: initial;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+}
+.custom-software-profile .custom-success-story-category-list li,
+.custom-software-profile .custom-success-story-category-list lh {
+  vertical-align: middle;
+}
+@media (max-width: 40em) {
+  .custom-software-profile li:nth-child(n),
+  .custom-software-profile .custom-success-story-category-list li:nth-child(n) {
+    display: block;
+    width: 100%;
+  }
+}
+.custom-software-profile-image-wrapper {
+  width: 12em;
+  height: 12em;
+  border: 1px solid #a1a1a1;
+  position: relative;
+}
+.custom-software-profile-image-wrapper img {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: .25em;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media (max-width: 40em) {
+  .custom-software-profile-image-wrapper {
+    margin: 0 auto;
+  }
+}
+
+.custom-success-story-list > li:nth-child(even) {
+    padding-right: 0;
+}
+.custom-success-story-list > li div {
+  text-align: center;
+}
+.custom-success-story-list > li {
+  display: inline-block;
+  max-width: 49%;
+  min-width: 49%;
+  vertical-align: top;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-right: .5em;
+}
+
+@media (max-width: 40em) {
+  .custom-success-story-list > li {
+    display: block;
+    max-width: none;
+    padding: 0;
+  }
+}
+
+.custom-success-story-image-wrapper {
+  height: 22em;
+  overflow: hidden;
+  margin: .25em 0 .25em;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #a1a1a1;
+  padding: .25em;
+  width: 100%;
+}
+.custom-success-story-image-wrapper a {
+  vertical-align: middle;
+  display: table-cell;
+  height: inherit;
+  width: 1%; /* don't ask, this centers the link */
+}
+.custom-success-story-image-wrapper img {
+  width: auto;
+  display: block;
+  margin: 0 auto;
+  max-height: 100%;
+}
+@media (max-width: 40em) {
+  .custom-success-story-image-wrapper {
+    width: 100%;
+    max-height: 12em;
+    height: 12em;
+  }
+}
+
+.custom-success-story-title,
+.custom-success-story-client span {
+  font-weight: bold;
+  padding: .5em 0;
+  text-align: center;
+  margin: 0;
+}
+.custom-success-story-description {
+  text-align: justify;
+  -moz-text-align-last: left;
+  text-align-last: left;
+  padding-bottom: .5em;
+  line-height: 1.5em;
+  min-height: 4.5em;
+}
+.custom-success-story-category-list {
+  padding-bottom: .5em;
+}
+.custom-success-story-category-list lh {
+  vertical-align: middle;
+}
+.custom-success-story-category-list li {
+  vertical-align: middle;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #a1a1a1;
+  padding: .5em;
+  display: inline-block;
+  margin: 0 .25em 1em;
+}
+.custom-success-story-list li {
+  margin: 0 .25em .25em;
+}
+@media (max-width: 40em) {
+  .custom-success-story-list > li:not(:nth-last-child(1)) .custom-success-story-client + p + p {
+    padding-bottom: 2em;
+  }
+}
+
+/*
+   -------------------------------------------------------------------------
+   -------------------------- UNSPLASH BANNER ------------------------------
+   -------------------------------------------------------------------------
+*/
+.ui-banner-section {
+  width: auto;
+  position: absolute;
+  height: 80vh;
+  margin: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.ui-banner-section + section {
+  padding-top: 80vh;
+}
+.ui-banner-section img {
+  /* max-height: 100%; */
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+}
+.ui-banner-section span {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: white;
+  font-size: small;
+  padding: 0 .5em .25em 0;
+}
+.ui-banner-section span a {
+  color: rgb(153, 153, 153);
+}
+.ui-banner-section h1 {
+  position: absolute;
+  color: white;
+  top: 33vh;
+  width: 47%;
+  text-align: center;
+  font-weight: bold;
+  right: 8%;
+  padding: 0 .5em 0 0;
+  font-size: 42px;
+  background: rgba(255,255,255,0.1);
+  border-radius: .05em;
+}
+@media only screen and (max-width: 45em) {
+  .ui-banner-section {
+    height: 40vh;
+  }
+  .ui-banner-section + section {
+    padding-top: 40vh;
+  }
+  .ui-banner-section img {
+    margin: 0 auto;
+  }
+  .ui-banner-section h1 {
+    top: 17vh;
+    font-size: 18px;
+  }
+  .ui-banner-section span {
+    font-size: xx-small;
+  }
+}
+
+/*
+   -------------------------------------------------------------------------
+   ---------------------------- OVERWRITES ---------------------------------
+   -------------------------------------------------------------------------
+*/
+.document_table table thead,
+div[data-gadget-scope='header'] .ui-header {
+  background-color: #444444;
+}
+/* tables overrides */
+.document_table table thead tr td,
+.document_table table thead tr th {
+  text-align: center;
+}
+.document_table table tbody tr td:not(:first-child),
+.document_table table tbody tr th:not(:first-child) {
+  text-align: right;
+}
+/* break lines... hacky */
+.financial_listbox .document_table tbody tr td:not(:first-of-type) a {
+  display: table-caption;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+@media (max-width: 45em) {
+  .financial_listbox .document_table tbody tr td:not(:first-of-type) a {
+    display: block;
+  }
+  .financial_listbox .document_table table tbody tr {
+    height: auto;
+  }
+  .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after, .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after, .document_table 
+table tbody tr td:first-child ~ td:not(:last-child) a:not(:empty):after, .document_table table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after, .document_table table tbody tr td:first-child ~ th:not(:last-child) label:not(:empty):after, .document_table table tbody tr th:first-child ~ th:not(:last-child) label:not(:empty):after, .document_table table tbody tr td:first-child ~ td:not(:last-child) label:not(:empty):after, .document_table table tbody tr th:first-child ~ td:not(:last-child) label:not(:empty):after {
+    content: none;
+  }
+  .document_table table tbody tr td:first-child ~ th, .document_table table tbody tr th:first-child ~ th, .document_table table tbody tr td:first-child ~ td, .document_table table tbody tr th:first-child ~ td {
+    display: inherit;
+  }
+  .financial_listbox tbody tr td:not(:first-child) {
+     margin-left: 5em;
+   }
+  .financial_listbox tbody tr td:nth-child(2):before {
+    content: "Staff";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(3):before {
+    content: "Assets";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(4):before {
+    content: "Revenues";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(5):before {
+    content: "Earnings";
+    position: absolute;
+    left: .5em;
+  }
+}
+/* align header and background colors */
+div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button, div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a,
+div[data-gadget-scope='header'] .ui-header h1 {
+  background-color: #444444;
+}
+
+/* center header text, remove hardcoded paddings by giving controlgroups same space */
+div[data-gadget-scope='header'] .ui-header h1 {
+  text-align: center;
+}
+div[data-gadget-scope='header'] .ui-header h1 > span {
+  padding: 0;
+}
+div[data-gadget-scope='header'] .ui-header .ui-controlgroup {
+  background: #444444;
+}
+@media only screen and (min-width: 45em) and (max-width: 85em) {
+  div[data-gadget-scope='header'] .ui-header .ui-controlgroup {
+    width: 8em;
+  }
+}
+@media not screen and (min-width: 45em) {
+  div[data-gadget-scope='header'] .ui-header .ui-controlgroup {
+    width: 3em;
+  }
+}
+
+
+/* keep panel hidden
+div[data-gadget-scope='panel'] {
+  left: -186pt;
+  background-color: transparent;
+  display: none;
+}
+@media not screen and (max-width: 85em) {
+  div[data-gadget-scope='header'] .ui-header {
+    margin-left: 0;
+  }
+}
+@media not screen and (max-width: 85em) {
+  .gadget-content {
+      margin-left: 0;
+  }
+}
+*/
+.ui-custom-content {
+   padding: 0 1em;
+    display: block;
+}
+.ui-custom-content a {
+  text-decoration: underline;
+  color: lightblue;
+}
+.ui-hidden-accessible {
+  position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px,1px,1px,1px);
+  visibility: hidden;
+}
+.ui-content-licence + a {
+  float: left;
+  padding-right: 1em;
+  padding-bottom: 2em;
+  margin-top: 1.75em;
+}
+
+
+
+
+
+

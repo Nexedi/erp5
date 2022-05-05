@@ -1,0 +1,84 @@
+/*globals window, RSVP, rJS*/
+/*jslint indent: 2, nomen: true, maxlen: 80*/
+
+(function (window, RSVP, rJS) {
+  "use strict";
+  rJS(window)
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .allowPublicAcquisition('updateHeader', function () {
+      return;
+    })
+    .allowPublicAcquisition('getUrlParameter', function (argument_list) {
+      return this.getUrlParameter(argument_list)
+        .push(function (result) {
+          if ((result === undefined) &&
+              (argument_list[0] === 'field_listbox_sort_list:json')) {
+            return [['title', 'ascending']];
+          }
+          return result;
+        });
+    })
+
+    .declareMethod("render", function () {
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.updateHeader({page_title: "Product List"}),
+            gadget.getDeclaredGadget("form_list")
+          ]);
+        })
+        .push(function (result_list) {
+          var form_gadget = result_list[1],
+            column_list = [
+              ['title', 'Title'],
+              ['publisher', 'Provider'],
+              ['category_list', 'Category']
+            ];
+
+          return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              "listbox": {
+                "column_list": column_list,
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 0,
+                "key": "field_listbox",
+                "lines": 20,
+                "list_method": "portal_catalog",
+                "query": 'urn:jio:allDocs?query=' + 'portal_type:' +
+                         '"solution"',
+                "portal_type": [],
+                "search_column_list": column_list,
+                "sort_column_list": column_list,
+                "title": "Documents",
+                "type": "ListBox"
+              }
+            }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }
+              },
+            form_definition: {
+              group_list: [
+                [
+                  "bottom",
+                  [["listbox"]]
+                ],
+                [
+                  "hidden",
+                  ["listbox_modification_date"]
+                ]
+              ]
+            }
+          });
+        });
+    });
+}(window, RSVP, rJS));
