@@ -130,7 +130,7 @@ Selenium.prototype.assertFloatValue = function(locator, text) {
  * Checks the portal status message.
  */
 Selenium.prototype.assertPortalStatusMessage = function(text) {
-    var psm_locator = "//div[@id='transition_message']";
+    var psm_locator = "//div[@class='transition_message']";
     var actualValue = getText(this.page().findElement(psm_locator));
     Assert.matches(text, actualValue);
 };
