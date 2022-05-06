@@ -34,6 +34,8 @@
         hidden: options.hidden,
         trim: options.trim || false,
         maxlength: options.maxlength,
+        min: options.min,
+        max: options.max,
         multiple: options.multiple,
         accept: options.accept,
         capture: options.capture,
@@ -92,6 +94,12 @@
         }
         if (this.state.maxlength) {
           textarea.setAttribute('maxlength', this.state.maxlength);
+        }
+        if (this.state.min !== "") {
+          textarea.setAttribute('min', this.state.min);
+        }
+        if (this.state.max !== "") {
+          textarea.setAttribute('max', this.state.max);
         }
 
         if (this.state.multiple) {
