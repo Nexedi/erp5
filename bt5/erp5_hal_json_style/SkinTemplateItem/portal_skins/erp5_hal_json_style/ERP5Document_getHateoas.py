@@ -555,6 +555,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       result.update({
         "maxlength": field.get_value("display_maxwidth"),
       })
+    if meta_type == "IntegerField":
+      result.update({
+        "min": field.get_value("start"),
+        "max": field.get_value("end"),
+      })
     if meta_type == "FloatField":
       result.update({
         "precision": field.get_value("precision"),
