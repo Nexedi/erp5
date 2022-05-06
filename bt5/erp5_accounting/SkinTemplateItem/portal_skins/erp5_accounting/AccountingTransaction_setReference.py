@@ -23,7 +23,7 @@ previous_id_getter = portal.portal_ids.getLastGeneratedId
 if context.getPortalType() == 'Sale Invoice Transaction':
   if not context.getReference():
     invoice_id_group = ('accounting', 'invoice', source_section)
-    invoice_reference = id_generator(id_generator='uid',
+    invoice_reference = id_generator(id_generator='document',
                                      id_group=invoice_id_group,
                                      default=previous_id_getter(invoice_id_group,
                                      default=0) + 1)
