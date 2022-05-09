@@ -1,5 +1,5 @@
 /*jslint indent: 2 */
-/*global window, rJS, RSVP, svgCanvas */
+/*global window, rJS, RSVP, svgCanvas, editor */
 (function (window, rJS, RSVP) {
   "use strict";
 
@@ -20,8 +20,9 @@
     })
     .declareMethod('getContent', function () {
       var form_data = {};
+      editor.escapeMode();
       form_data[this.state.key] = svgCanvas.getSvgString();
-      this.state.value = form_data[this.state.key]
+      this.state.value = form_data[this.state.key];
       return form_data;
     }, {mutex: 'statechange'});
 
