@@ -37,7 +37,7 @@ def dump_threads():
 
     Returns a string with the tracebacks.
     """
-    this_thread_id = thread.get_ident()
+    this_thread_id = _thread.get_ident()
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     res = ["Threads traceback dump at %s\n" % now]
     for thread_id, frame in six.iteritems(_current_frames()):
