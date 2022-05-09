@@ -34,7 +34,7 @@ from Acquisition import aq_parent
 # If the sort order below doesn't work, we cannot guarantee the sort key
 # used below will actually result in the activity connection being committed
 # after the ZODB and Catalog data.
-assert '\x00' < '-1' < '0' < '1' < '\xff', "Cannot guarantee commit of activities comes after the appropriate data"
+assert None < 0 < '' < (), "Cannot guarantee commit of activities comes after the appropriate data"
 
 manage_addActivityConnectionForm = HTMLFile('dtml/connectionAdd', globals())
 
@@ -66,4 +66,4 @@ InitializeClass(ActivityConnection)
 
 class ActivityDB(DB):
 
-    _sort_key = '\xff'
+    _sort_key = (0,)
