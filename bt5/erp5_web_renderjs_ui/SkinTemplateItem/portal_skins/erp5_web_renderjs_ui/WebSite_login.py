@@ -1,6 +1,5 @@
 REQUEST = context.REQUEST
 RESPONSE = REQUEST.RESPONSE
-from ZTUtils import make_query
 
 portal = context.getPortalObject()
 
