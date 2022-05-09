@@ -1,0 +1,79 @@
+<dtml-var manage_page_header>
+
+<dtml-var "manage_form_title(this(), _,
+           form_title='Add ZipFolder',
+           help_product='ZipFolder',
+           help_topic='ZipFolder_Add.stx'
+	   )">
+<P class="form-help">
+A Folder contains other objects. Use Folders to organize your
+web objects in to logical groups. ZIPFolders enable you to
+upload their content in one single zip file package.
+</P>
+
+<P class="form-help">
+The form below allows you to create
+a ZIPFolder. The Upload option enables you to upload a zip file
+containing the folder's content.</P>
+
+<FORM ACTION="manage_addZipFolder" METHOD="POST" enctype="multipart/form-data">
+<TABLE CELLSPACING="2">
+<TR>
+  <TD ALIGN="LEFT" VALIGN="TOP">
+  <STRONG>Id</STRONG>
+  </TD>
+  <TD ALIGN="LEFT" VALIGN="TOP">
+  <INPUT TYPE="TEXT" NAME="id" SIZE="40">
+  </TD>
+</TR>
+<dtml-if "_.SecurityCheckPermission('Add Documents, Images, and Files',this())">
+<TR>
+  <TD ALIGN="LEFT" VALIGN="CENTER">
+  Upload
+  <TD ALIGN="LEFT" VALIGN="CENTER">
+  <INPUT TYPE="FILE" NAME="file" SIZE="20">
+  </TD>
+</TR>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-text">
+    <input type="checkbox" name="subfolders:int" value="1" checked="1"
+     id="cbsubFolders"> 
+     <label for="cbsubFolders">Create subfolders if necessary</label>
+    </div>
+    </td>
+  </tr>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+<dtml-else>
+<TR><i>You are not allowed to add documents, images or files. You may, however,
+create an empty ZIPFolder.</i></TR>
+</dtml-if>
+
+
+<TR>
+<TD></TD>
+<TD>
+<BR><INPUT TYPE="SUBMIT" VALUE=" Add ">
+</TD>
+</TR>
+</TABLE>
+</FORM>
+<dtml-var manage_page_footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
