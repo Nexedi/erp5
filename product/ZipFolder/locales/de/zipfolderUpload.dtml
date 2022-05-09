@@ -1,0 +1,66 @@
+<dtml-var manage_page_header>
+<dtml-if manage_tabs><dtml-var "manage_tabs">
+<dtml-else>
+<dtml-var "manage_form_title(this(), _,
+           form_title='Neue ZIP-Datei hochladen',
+           help_product='ZipFolder',
+           help_topic='ZipFolder_Upload.stx'
+	   )">
+</dtml-if>
+
+<P class="form-help">
+Mit diesem Formular können Sie eine neue ZIP-Datei hochladen.  Beachten Sie
+bitte, das vor dem Hochladen alle bestehenden Dokumente, Bilder und Dateien aus
+dem Ordner gelöscht werden.
+</P>
+
+<FORM ACTION="manage_upload" METHOD="POST" enctype="multipart/form-data">
+<TABLE CELLSPACING="2">
+<TR>
+  <TD ALIGN="LEFT" VALIGN="TOP">
+  Die ZIP-Datei
+  <TD ALIGN="LEFT" VALIGN="TOP">
+  <INPUT TYPE="FILE" NAME="file" SIZE="20">
+  </TD>
+</TR>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-text">
+    <input type="checkbox" name="subfolders:int" value="1" checked="1"
+     id="cbsubFolders"> 
+     <label for="cbsubFolders">ggf. Unter-Ordner anlegen</label>
+    </div>
+    </td>
+  </tr>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-text">
+    <input type="checkbox" name="replace:int" value="1"
+     id="cbreplace"> 
+     <label for="cbreplace">Alle alten Inhalte des Ordners löschen</label>
+    </div>
+    </td>
+  </tr>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+
+
+<TR>
+<TD></TD>
+<TD>
+<BR><INPUT TYPE="SUBMIT" VALUE=" ZIP-Datei übertragen ">
+</TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>
+
+
+
+
