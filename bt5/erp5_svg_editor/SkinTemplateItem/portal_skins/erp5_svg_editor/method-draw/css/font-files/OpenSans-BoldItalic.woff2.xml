@@ -7,16 +7,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>anonymous_http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
-            <value> <string>fonts.css</string> </value>
+            <value> <string>OpenSans-BoldItalic.woff2</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -24,7 +20,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>1.11</string> </value>
         </item>
       </dictionary>
     </pickle>
