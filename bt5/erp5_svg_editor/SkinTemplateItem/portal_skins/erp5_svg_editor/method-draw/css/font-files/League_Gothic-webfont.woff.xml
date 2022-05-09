@@ -12,11 +12,11 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>fonts.css</string> </value>
+            <value> <string>League_Gothic-webfont.woff</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>application/font-woff</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
