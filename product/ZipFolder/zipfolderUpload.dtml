@@ -1,0 +1,63 @@
+<dtml-var manage_page_header>
+<dtml-if manage_tabs><dtml-var "manage_tabs">
+<dtml-else>
+<dtml-var "manage_form_title(this(), _,
+           form_title='Manage workflow',
+           help_product='ZipFolder',
+           help_topic='ZipFolder_Upload.stx'
+	   )">
+</dtml-if>
+
+<P class="form-help">
+The form below allows you to upload a ZIP file containg the folder's
+contents. All documents already in the folder will be removed before adding the
+contents of the zip file.
+</P>
+
+<FORM ACTION="manage_upload" METHOD="POST" enctype="multipart/form-data">
+<TABLE CELLSPACING="2">
+<TR>
+  <TD ALIGN="LEFT" VALIGN="CENTER">
+  <B>Upload</B>
+  <TD ALIGN="LEFT" VALIGN="CENTER">
+  <INPUT TYPE="FILE" NAME="file" SIZE="20">
+  </TD>
+</TR>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-text">
+    <input type="checkbox" name="subfolders:int" value="1" checked="1"
+     id="cbsubFolders"> 
+     <label for="cbsubFolders">Create subfolders</label>
+    </div>
+    </td>
+  </tr>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-text">
+    <input type="checkbox" name="replace:int" value="1"
+     id="cbreplace"> 
+     <label for="cbreplace">Replace folder contents (delete everything old)</label>
+    </div>
+    </td>
+  </tr>
+<TR><TD COLSPAN="2"><BR></TD></TR>
+
+
+<TR>
+<TD></TD>
+<TD>
+<BR><INPUT TYPE="SUBMIT" VALUE=" Update ">
+</TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>
+
