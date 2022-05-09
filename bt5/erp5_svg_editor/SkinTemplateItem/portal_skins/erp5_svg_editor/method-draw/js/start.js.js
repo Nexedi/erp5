@@ -32,7 +32,7 @@ const shapeLib = svgCanvas.addExtension.apply(this, ["shapes", MD.Shapelib]);
 const eyedropper = svgCanvas.addExtension.apply(this, ["eyedropper", MD.Eyedropper]);
 state.set("canvasId", t("Untitled"));
 state.set("canvasMode", state.get("canvasMode"));
-
+/*
 // load from param
 console.log(window.location.search)
 if (!window.location.search.includes("?load=")) {
@@ -56,7 +56,7 @@ else {
 }
 
 state.set("canvasTitle", svgCanvas.getDocumentTitle());
-
+*/
 //editor.paintBox.fill.setPaint(state.get("canvasFill"));
 //editor.paintBox.stroke.setPaint(state.get("canvasStroke"));
 //editor.paintBox.canvas.setPaint(state.get("canvasBackground"));
