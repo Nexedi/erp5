@@ -1,0 +1,16 @@
+MANIFEST
+README.txt
+refresh.txt
+version.txt
+HeadParser.py
+ZipFolder.py
+ZipFolder_icon.png
+ZipImporter.py
+__init__.py
+zipfile152.py
+zipfolderAdd.dtml
+zipfolderUpload.dtml
+help/ZipFolder_Add.stx
+help/ZipFolder_Upload.stx
+locales/de/zipfolderAdd.dtml
+locales/de/zipfolderUpload.dtml
