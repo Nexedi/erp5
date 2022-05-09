@@ -95,6 +95,7 @@ def string_build(self, data, modname='', path=None):
         raise AstroidBuildingException(exc)
     module = self._data_build(data, modname, path)
     module.file_bytes = data
+    module.source_code = data
     return self._post_build(module, encoding)
 AstroidBuilder.string_build = string_build
 
