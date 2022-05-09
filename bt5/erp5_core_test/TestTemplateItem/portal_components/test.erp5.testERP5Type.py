@@ -274,9 +274,25 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     o = portal.organisation_module.newContent(portal_type='Organisation',
                                               temp_object=1)
     self.assertEqual(o.isTempObject(), 1)
-    a = o.newContent(portal_type = 'Telephone')
+    guarded_getattr(o, 'edit')(title='temp object')
+    self.assertEqual(guarded_getattr(o, 'getTitle')(), 'temp object')
+
+    # a temp object which acquire local roles, in temp container
+    o.manage_permission('Modify portal content', [])
+    o.manage_permission('Add portal content', [])
+    a = o.newContent(portal_type='Telephone')
     self.assertEqual(a.isTempObject(), 1)
     self.assertEqual(a, guarded_getattr(o, a.getId()))
+    guarded_getattr(a, 'edit')(title='temp object')
+    self.assertEqual(guarded_getattr(a, 'getTitle')(), 'temp object')
+
+    # a temp object which does not acquire local roles, in a temp container
+    b = o.newContent(portal_type='Telephone')
+    self.assertEqual(b.isTempObject(), 1)
+    self.assertEqual(b, guarded_getattr(o, b.getId()))
+    guarded_getattr(b, 'edit')(title='temp object')
+    self.assertEqual(guarded_getattr(b, 'getTitle')(), 'temp object')
+
     self.logout()
     self.login()
 
