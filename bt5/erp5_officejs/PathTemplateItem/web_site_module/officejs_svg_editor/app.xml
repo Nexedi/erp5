@@ -412,6 +412,7 @@
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
             <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
+WebSection_getMethodDrawPrecacheManifestList\n
 WebSection_getSvgEditorPrecacheManifestList</string> </value>
         </item>
         <item>
@@ -677,7 +678,7 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>997.11689.44498.47257</string> </value>
+                      <value> <string>998.17699.36537.24439</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -695,7 +696,7 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1640885760.54</float>
+                              <float>1652094902.75</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
