@@ -22,11 +22,8 @@ MD.Text = function(){
   $('#font_family_dropdown').change(function() {
     var fam = this.options[this.selectedIndex].value;
     const isSystemFont = fam === "sans-serif" || fam === "serif" || fam === "monospace";
-    const font = isSystemFont ? {Bold: true, Italic: true, "BoldItalic": true} : fonts[fam];
+    const font = isSystemFont ? {axes: {}, Bold: true, Italic: true, "BoldItalic": true} : fonts[fam];
     if (!isSystemFont) fam = `'${fam}'`;
-
-
-    console.log(font.axes)
     
     $("#tool_bold")
       .removeClass("active")
