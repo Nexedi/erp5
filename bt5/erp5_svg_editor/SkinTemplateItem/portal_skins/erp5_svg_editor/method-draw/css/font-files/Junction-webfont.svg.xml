@@ -12,11 +12,11 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>fonts.css</string> </value>
+            <value> <string>Junction-webfont.svg</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>image/svg+xml</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
