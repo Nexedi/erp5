@@ -1,0 +1,17 @@
+ZipFolder - Add: Add a ZipFolder.
+
+  Description
+
+    This view allows you to create a new ZipFolder.
+
+    ZipFolder can be updated at once using zip archive files.
+
+  Controls
+
+    'Id' -- The id of the Folder.
+
+    'Upload' -- Select an optional zip file for upload.
+  
+    'Create subfolders' -- Create folders to hold objects, if the zip file contains folders
+
+    'Add' -- Creates a new Folder.
