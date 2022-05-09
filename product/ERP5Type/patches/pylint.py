@@ -272,18 +272,6 @@ def _getattr(self, name, *args, **kw):
         return [ast]
 Module.getattr = _getattr
 
-if sys.version_info < (2, 8):
-    from astroid.node_classes import From
-    def _absolute_import_activated(self):
-        if (self.name.startswith('checkPythonSourceCode') or
-            self.name.startswith('erp5')):
-            return True
-        for stmt in self.locals.get('absolute_import', ()):
-            if isinstance(stmt, From) and stmt.modname == '__future__':
-                return True
-        return False
-    from logilab.common.decorators import cachedproperty
-    Module._absolute_import_activated = cachedproperty(_absolute_import_activated)
 
 from astroid import register_module_extender
 def AccessControl_PermissionRole_transform():
