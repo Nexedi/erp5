@@ -126,7 +126,9 @@ class TimerResponse(BaseResponse):
         pass
 
     def redirect(self, *args, **kw):
-        pass
+        # redirects only make sense with a real HTTP client and does not
+        # make sense with timer service.
+        raise RuntimeError("redirect is not supported")
 
     def unauthorized(self):
         pass
