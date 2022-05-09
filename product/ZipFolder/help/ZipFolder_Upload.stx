@@ -1,0 +1,18 @@
+ZipFolder - Upload: Upload a new zip file.
+
+  Description
+
+    This view allows you to upload another zip file.
+
+    The contents of the zipfile will optionally replace all existing
+    Documents, images, files and folders in the folder.
+
+  Controls
+
+    'Upload' -- Select an optional zip file for upload.
+  
+    'Update' -- Add uploaded zip's contents to folder. To replace, check the "Replace folder contents" option.
+
+    'Create subfolders' -- Create folders to hold objects, if the zip file contains folders
+
+    'Replace folder contents' -- Remove all old objects before adding any new objects from the uploaded zip file
