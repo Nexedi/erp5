@@ -42,6 +42,7 @@ if _six.PY2:
 else:
   from io import StringIO as _StringIO
 
+
 def _addRestrictedPandasReadFunction(function_name):
   original_function = getattr(__import__('pandas'), function_name)
 
@@ -66,14 +67,18 @@ urls, etc. are prohibited or ignored.
   Pandas_read.__doc__ = original_function.__doc__ + disclaimer
   globals().update({function_name: Pandas_read})
 
-_pandas_read_function_to_restrict_tuple = (
-  "read_json",
-  # "read_html",  # needs installation of additional dependency: html5lib
-  "read_csv",
-  "read_fwf",
-  # "read_xml",  # only available for pandas version >= 1.3.0
-)
 
-for pandas_read_function_to_restrict in _pandas_read_function_to_restrict_tuple:
-  _addRestrictedPandasReadFunction(pandas_read_function_to_restrict)
+def _addRestrictedPandasReadFunctionTuple():
+  pandas_read_function_to_restrict_tuple = (
+    "read_json",
+    # "read_html",  # needs installation of additional dependency: html5lib
+    "read_csv",
+    "read_fwf",
+    # "read_xml",  # only available for pandas version >= 1.3.0
+  )
 
+  for pandas_read_function_to_restrict in pandas_read_function_to_restrict_tuple:
+    _addRestrictedPandasReadFunction(pandas_read_function_to_restrict)
+
+
+_addRestrictedPandasReadFunctionTuple()
