@@ -741,7 +741,7 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     test_file_path = ".testPandasReadJson.json"
     json_test_data = [1, 2, 3]
     with open(test_file_path, 'w') as json_file:
-      json_file.write(json.dumps(json_test_data))
+      json.dump(json_test_data)
     self.addCleanup(os.remove, test_file_path)
 
     # Ensure json creation was successful
