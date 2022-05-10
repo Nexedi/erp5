@@ -655,7 +655,7 @@ class ContributionTool(BaseTool):
       # Create a file name based on the URL and quote it
       filename = urllib.parse.urlsplit(url)[-3]
       filename = os.path.basename(filename)
-      filename = urllib.parse.quote(filename, safe='')
+      filename = urllib.parse.quote(filename, safe='') # pylint:disable=redundant-keyword-arg
       filename = filename.replace('%', '')
     content_type = header_info.gettype()
     return file_object, filename, content_type
