@@ -555,6 +555,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       result.update({
         "maxlength": field.get_value("display_maxwidth"),
       })
+    if meta_type == "IntegerField":
+      result.update({
+        "min": field.get_value("start"),
+        "max": field.get_value("end"),
+      })
     if meta_type == "FloatField":
       result.update({
         "precision": field.get_value("precision"),
@@ -2107,7 +2112,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # Include cell error text in case of form validation
           if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
             contents_item[select]['field_gadget_param']["error_text"] = \
-              field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text
+              Base_translateString(field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text)
 
 
         # Do not generate link for empty value, as it will not be clickable in UI

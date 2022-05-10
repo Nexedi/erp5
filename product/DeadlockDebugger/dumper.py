@@ -23,7 +23,7 @@ ZServer hook to dump a traceback of the running python threads.
 """
 
 import six
-import _thread
+from six.moves import _thread
 from sys import _current_frames
 from six.moves import cStringIO as StringIO
 import traceback
@@ -37,7 +37,7 @@ def dump_threads():
 
     Returns a string with the tracebacks.
     """
-    this_thread_id = thread.get_ident()
+    this_thread_id = _thread.get_ident()
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     res = ["Threads traceback dump at %s\n" % now]
     for thread_id, frame in six.iteritems(_current_frames()):
@@ -114,7 +114,7 @@ def match(self, request):
         return 1
     else:
         return 0
-import six
+
 if six.PY2:
   from ZServer.HTTPServer import zhttp_handler
   zhttp_handler.match = match

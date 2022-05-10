@@ -1,5 +1,5 @@
 portal_components/document.erp5.RoundingModel
-portal_components/document.erp5.RoundingTool
+portal_components/tool.erp5.RoundingTool
 portal_components/interface.erp5.IRoundingTool
 portal_introspections
 portal_memcached/persistent_memcached_plugin

@@ -21,6 +21,8 @@
           name: field_json.key,
           title: field_json.description,
           hidden: field_json.hidden,
+          min: field_json.min,
+          max: field_json.max,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
