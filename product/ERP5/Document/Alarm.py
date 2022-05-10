@@ -164,7 +164,13 @@ class Alarm(XMLObject, PeriodicityMixin):
           activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
-        func_code = method.__code__
+        try:
+          func_code = method.__code__
+        except AttributeError:
+          # Compatibility with not migrated python script
+          # See https://lab.nexedi.com/nexedi/erp5/commit/4115e4658f50a48d3cd4b10e0ae033a3aaa3e273
+          func_code = method.func_code
+
         try:
           has_kw = func_code.co_flags & CO_VARKEYWORDS
         except AttributeError:
