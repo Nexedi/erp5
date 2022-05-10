@@ -76,4 +76,4 @@ class ActivityBuffer(TM):
 
   def sortKey(self, *ignored):
     """Activities must be finished before databases commit transactions."""
-    return '-1'
+    return -1
