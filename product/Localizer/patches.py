@@ -41,6 +41,8 @@ logger = logging.getLogger('Localizer')
 
 # PATCH 1: Global Request
 #
+# This part is obsolete because, we now use zope.globalrequest
+#
 # The original purpose was to get the request object from places where the
 # acquisition was disabled (within the __of__ method for example). It was
 # inspired by the Tim McLaughlin's GlobalGetRequest proposal, see
@@ -53,8 +55,6 @@ logger = logging.getLogger('Localizer')
 # The request objects are stored in a dictionary in the Publish module,
 # whose keys are the thread id.
 #
-# Also, we keep the get_request method in the Globals module for backwards
-# compatibility (with TranslationService for example).
 
 def get_new_publish(zope_publish):
     def publish(request, *args, **kwargs):
@@ -70,15 +70,10 @@ if patch is False:
     patch = True
 
     if six.PY2: # ZServer-specific patch
-      logger.info('Install "Globals.get_request".')
 
-      # Apply the patch
+      # Apply the patch TODO: zope4py2 is this really needed ?
       from ZPublisher import Publish
       Publish.publish = get_new_publish(Publish.publish)
-
-      # Add to Globals for backwards compatibility 
-      import Globals
-      Globals.get_request = get_request
 
 
 # PATCH 2: Accept
