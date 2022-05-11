@@ -37,7 +37,6 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type.patches.Restricted import allow_class_attribute
 from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_black_list, series_black_list)
-from Products.ERP5Type.patches.Pandas import pandas_read_function_to_restrict_tuple
 from AccessControl import Unauthorized
 from AccessControl.ZopeGuards import Unauthorized as ZopeGuardsUnauthorized
 
@@ -649,7 +648,7 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     """
       Test if patched pandas read_* functions raise with any input which isn't a string.
     """
-    for pandas_read_function in pandas_read_function_to_restrict_tuple:
+    for pandas_read_function in ("read_json", "read_csv", "read_fwf"):
       for preparation, prohibited_input in (
         ('', 100),
         ('from StringIO import StringIO', 'StringIO("[1, 2, 3]")'),
