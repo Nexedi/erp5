@@ -71,7 +71,7 @@
   <td>ABCD</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
-<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Please fill all required fields to submit'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 </tbody>

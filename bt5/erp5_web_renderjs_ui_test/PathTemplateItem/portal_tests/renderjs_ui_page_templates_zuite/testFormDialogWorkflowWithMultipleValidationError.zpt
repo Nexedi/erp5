@@ -113,6 +113,90 @@
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Please fill all required fields to submit'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_your_first_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_your_second_failure" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_first_failure"]</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope="field_your_first_failure"]/div/span[contains(text(), "Please select a value that is no less than 1234")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_second_failure"]</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope="field_your_second_failure"]/div/span[contains(text(), "Please select a value that is no less than 1234")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_first_failure" and @class="is-invalid"]</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "Please select a value that is no less than 1234")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_your_second_failure" and @class="is-invalid"]</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "Please select a value that is no less than 1234")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_first_failure</td>
+  <td>1234</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_first_failure</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_second_failure</td>
+  <td>1234</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_second_failure</td>
+  <td>blur</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
@@ -138,16 +222,6 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//input[@name="field_your_first_failure" and @class="is-invalid"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//input[@name="field_your_second_failure" and @class="is-invalid"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
   <td>//input[@name="field_your_third_failure" and @class="is-invalid"]</td>
   <td></td>
 </tr>
@@ -164,76 +238,6 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//textarea[@name="field_your_fifth_failure" and @class="is-invalid"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name="field_your_first_failure" and @class="is-invalid"]</td>
-  <td>focus</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name="field_your_first_failure" and @class="is-invalid"]</td>
-  <td>blur</td>
-</tr>
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][1]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name="field_your_second_failure" and @class="is-invalid"]</td>
-  <td>focus</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name="field_your_second_failure" and @class="is-invalid"]</td>
-  <td>blur</td>
-</tr>
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_label_field.html"][2]/div/span[contains(text(), "The integer you entered was out of range.")]</td>
   <td></td>
 </tr>
 <tr>
@@ -410,30 +414,6 @@
   <td>assertElementNotPresent</td>
   <td>//select[@name="field_your_fourth_failure" and @class="is-invalid"]</td>
   <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
-<tr>
-  <td>type</td>
-  <td>field_your_first_failure</td>
-  <td>1234</td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>field_your_first_failure</td>
-  <td>blur</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>field_your_second_failure</td>
-  <td>1234</td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>field_your_second_failure</td>
-  <td>blur</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
