@@ -125,9 +125,6 @@ class TimerResponse(BaseResponse):
     def _finish(self):
         pass
 
-    def redirect(self, *args, **kw):
-        pass
-
     def unauthorized(self):
         pass
 
