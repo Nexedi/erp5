@@ -73,12 +73,15 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
     self.tic()
     return website
 
-  def runTestRedirect(self, source_path, expected_failure=None, use_moved_temporarily=None, **kw):
+  def runTestRedirect(self, source_path, expected_failure=None,
+                      use_moved_temporarily=None,
+                      configuration_service_worker_url=None, **kw):
     """
     Redirect to backend configuration redirect_domain
     """
     # create website and websection
-    website = self.setupWebSite(use_moved_temporarily=use_moved_temporarily)
+    website = self.setupWebSite(use_moved_temporarily=use_moved_temporarily,
+                                configuration_service_worker_url=configuration_service_worker_url)
 
     absolute_url = website.absolute_url()
 
@@ -119,8 +122,20 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
         url=url_to_check
       )
       response = connection.getresponse()
-      self.assertEquals(response.status, status_to_assert, '%s: %s' % (response.status, url_to_check))
-      self.assertEquals(response.getheader(LOCATION), redirect_location)
+      response_body = response.read()
+
+      if (source_path == configuration_service_worker_url):
+        # Test service worker URL
+        self.assertEquals(response.status, httplib.OK, '%s: %s' % (response.status, url_to_check))
+        self.assertEquals(response.getheader('Content-Type'), 'application/javascript')
+        self.assertTrue('self.registration.unregister()' in response_body,
+                        response_body)
+
+      else:
+        self.assertEquals(response.status, status_to_assert, '%s: %s' % (response.status, url_to_check))
+        self.assertEquals(response.getheader(LOCATION), redirect_location)
+        self.assertEquals(response.getheader('Content-Type'), 'text/plain; charset=utf-8')
+        self.assertEquals(response_body, redirect_location)
 
   ##############################################################################
 
@@ -191,6 +206,10 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
   def test_302queryStringRedirectFolderDeepNested(self):
     self.runTestRedirect("foo/bar/baz?baz=bam&cous=cous&amp;the=end", use_moved_temporarily=1)
 
+  def test_unregisterServiceWorker(self):
+    worker_url = 'worker.js'
+    self.runTestRedirect(worker_url,
+                         configuration_service_worker_url=worker_url)
 
 class TestStaticWebSectionRedirection(TestStaticWebSiteRedirection):
 
