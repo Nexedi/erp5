@@ -30,8 +30,8 @@ if (service_worker_to_unregister) and (source_path == service_worker_to_unregist
   response = REQUEST.RESPONSE
   response.setHeader('Content-Type', 'application/javascript')
   return """/*jslint indent: 2*/
-/*global self, Promise*/
-(function (self, Promise) {
+/*global self, Promise, caches*/
+(function (self, Promise, caches) {
   "use strict";
 
   self.addEventListener('install', function (event) {
@@ -40,7 +40,19 @@ if (service_worker_to_unregister) and (source_path == service_worker_to_unregist
 
   self.addEventListener('activate', function (event) {
     event.waitUntil(
-      self.registration.unregister()
+      caches
+        .keys()
+        .then(function (keys) {
+          return Promise.all(
+            keys
+              .map(function (key) {
+                return caches.delete(key);
+              })
+          );
+        })
+        .then(function () {
+          return self.registration.unregister();
+        })
         .then(function () {
           return self.clients.matchAll({type: 'window'});
         })
@@ -55,7 +67,7 @@ if (service_worker_to_unregister) and (source_path == service_worker_to_unregist
     );
   });
 
-}(self, Promise));
+}(self, Promise, caches));
 """
 
 if query_string:
