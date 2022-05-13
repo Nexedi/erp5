@@ -39,6 +39,7 @@ from .Utils import createFolder
 
 MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
+MAX_CP_RETRIES = 60
 
 class SlapOSControler(object):
 
@@ -348,7 +349,7 @@ class SlapOSControler(object):
 
   def runComputerPartition(self, config, environment,
                            stdout=None, stderr=None, cluster_configuration=None,
-                           max_quantity=MAX_PARTITIONS, **kw):
+                           max_quantity=MAX_CP_RETRIES, **kw):
     logger.debug("SlapOSControler.runComputerPartition with cluster_config: %r",
              cluster_configuration)
     for path in self.software_path_list:
