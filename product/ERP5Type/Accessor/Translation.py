@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from six import ensure_text
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
@@ -33,6 +34,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter, Method
 from Products.ERP5Type.Accessor import Accessor, AcquiredProperty
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
+from Products.ERP5Type.Utils import unicode2str
 
 
 TRANSLATION_DOMAIN_CONTENT_TRANSLATION = 'content_translation'
@@ -85,9 +87,8 @@ class TranslatedPropertyGetter(BaseGetter):
       localizer = instance.getPortalObject().Localizer
       message_catalog = getattr(localizer, domain, None)
       if message_catalog is not None:
-        return message_catalog.gettext(value, lang=self._language)
-      else:
-        return value
+        return unicode2str(message_catalog.gettext(six.ensure_text(value), lang=self._language))
+      return value
 
   psyco.bind(__call__)
 
