@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_DialogWithValidationErrorValidateFloatRange</string> </value>
+            <value> <string>Base_validateFloatRangeForDialogWithValidationError</string> </value>
         </item>
       </dictionary>
     </pickle>

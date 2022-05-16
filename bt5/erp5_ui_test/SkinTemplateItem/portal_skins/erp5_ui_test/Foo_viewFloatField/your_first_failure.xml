@@ -16,7 +16,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>The integer you entered was out of range.</string> </value>
                 </item>
                 <item>
                     <key> <string>integer_out_of_range</string> </key>
@@ -271,7 +271,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Base_floatFieldValidateFloatRange</string> </value>
+            <value> <string>Base_validateFloatRangeForFloatField</string> </value>
         </item>
       </dictionary>
     </pickle>
