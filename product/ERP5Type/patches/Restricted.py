@@ -456,10 +456,6 @@ except ImportError:
 else:
   allow_type(pd.Timestamp)
   allow_type(pd.DatetimeIndex)
-  # XXX: pd.DataFrame has its own security thus disable
-  #      until we can fully integrate it
-  #allow_type(pd.DataFrame)
-  #allow_type(pd.Series)
   allow_type(pd.MultiIndex)
   allow_type(pd.indexes.range.RangeIndex)
   allow_type(pd.indexes.numeric.Int64Index)
