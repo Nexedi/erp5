@@ -48,7 +48,7 @@ if 1: # For easy diff with original (ZSQLMethods 3.14)
                 else:
                     v = str(int(v))
             except Exception:
-                if not v and 'optional' in args and args['optional']:
+                if 'optional' in args and args['optional']:
                     return 'null'
                 err = 'Invalid integer value for <em>%s</em>' % name
                 raise ValueError(err)
@@ -63,7 +63,7 @@ if 1: # For easy diff with original (ZSQLMethods 3.14)
                     # floats (on python2 only)
                     v = repr(float(v))
             except Exception:
-                if not v and 'optional' in args and args['optional']:
+                if 'optional' in args and args['optional']:
                     return 'null'
                 err = 'Invalid floating-point value for <em>%s</em>' % name
                 raise ValueError(err)
@@ -85,7 +85,7 @@ if 1: # For easy diff with original (ZSQLMethods 3.14)
         else:
             if not isinstance(v, (str, StringTypes)):
                 v = str(v)
-            if not v and t == 'nb':
+            if t == 'nb':
                 if 'optional' in args and args['optional']:
                     return 'null'
                 else:
