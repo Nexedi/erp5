@@ -493,7 +493,6 @@ else:
   allow_type(pd.core.groupby.DataFrameGroupBy)
   allow_type(pd.core.groupby.SeriesGroupBy)
 
-  allow_class(pd.Series)
   allow_class(pd.DataFrame)
 
   # Note: These black_list methods are for pandas 0.19.2
