@@ -481,7 +481,7 @@ def restrictedMethod(s,name):
 
 
 try:
-  from Products.ERP5Type import Pandas as pd
+  import pandas as pd
 except ImportError:
   pass
 else:
