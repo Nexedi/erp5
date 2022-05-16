@@ -8,6 +8,9 @@ inventory_list_method_dict = {
 if section_category:
   kw['section_category'] = section_category
 
+if product_line:
+  kw['resource_category'] = product_line
+
 for brain in getattr(context.portal_simulation, inventory_list_method_dict[simulation_period])(
     node_category=node_category,
     group_by_resource=True,
