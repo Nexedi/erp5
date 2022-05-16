@@ -171,14 +171,7 @@ class Renderer(Filter):
       if self.display_method is not None:
         label = self.display_method(value)
       elif self.display_id is not None:
-        try:
-          label = value.getProperty(self.display_id)
-        except ConflictError:
-          raise
-        except:
-          LOG('CMFCategory', PROBLEM, 'Renderer was unable to call %s on %s'
-               % (self.display_id, value.getRelativeUrl()))
-          label = None
+        label = value.getProperty(self.display_id)
       else:
         label = None
       # Get the url.
