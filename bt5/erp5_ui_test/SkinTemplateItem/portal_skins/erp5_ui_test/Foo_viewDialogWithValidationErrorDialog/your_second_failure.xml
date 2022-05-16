@@ -16,7 +16,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>The integer you entered was out of range.</string> </value>
                 </item>
                 <item>
                     <key> <string>integer_out_of_range</string> </key>
@@ -221,11 +221,13 @@
                 </item>
                 <item>
                     <key> <string>end</string> </key>
-                    <value> <int>1235</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -245,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>start</string> </key>
-                    <value> <int>1234</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -257,6 +259,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Base_validateFloatRangeForDialogWithValidationError</string> </value>
         </item>
       </dictionary>
     </pickle>
