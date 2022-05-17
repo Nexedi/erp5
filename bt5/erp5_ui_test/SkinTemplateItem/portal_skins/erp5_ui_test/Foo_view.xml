@@ -109,6 +109,7 @@
                         <string>my_fake_category_title</string>
                         <string>my_foo_big_category_title</string>
                         <string>my_local_title</string>
+                        <string>your_range_failure</string>
                       </list>
                     </value>
                 </item>
