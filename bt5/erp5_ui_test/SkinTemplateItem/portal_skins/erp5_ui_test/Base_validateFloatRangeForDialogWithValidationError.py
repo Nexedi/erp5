@@ -1,3 +1,1 @@
-if value < 1234 or value >= 1235:
-  return False
-return True
+return value >= 1234 and value < 1235
