@@ -25,6 +25,36 @@
     <td>//input[@name="field_my_quantity"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name="field_your_range_failure"]</td>
+    <td></td></tr>
+<tr><td>assertValue</td>
+    <td>//input[@name="field_your_range_failure"]</td>
+    <td>1</td></tr>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_range_failure</td>
+  <td>focus</td>
+</tr>
+<tr><td>assertElementNotPresent</td>
+    <td>//input[@name="field_your_range_failure" and @class="is-invalid"]</td>
+    <td></td></tr>
+<tr>
+<tr>
+  <td>type</td>
+  <td>field_your_range_failure</td>
+  <td>3</td>
+</tr>
+<tr><td>assertElementPresent</td>
+    <td>//input[@name="field_your_range_failure" and @class="is-invalid"]</td>
+    <td></td></tr>
+<tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_range_failure</td>
+  <td>3</td>
+</tr>
+
 <tr><td>assertText</td>
     <td>//div[@data-gadget-scope="field_my_quantity_read_only"]//p</td>
     <td>0.0</td></tr>
