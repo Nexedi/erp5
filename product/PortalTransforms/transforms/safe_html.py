@@ -244,7 +244,7 @@ class StrippingParser(HTMLParser):
             from six.moves.html_entities import name2codepoint
             entitydefs = HTMLParser.entitydefs = {'apos':u"'"}
             for k, v in six.iteritems(name2codepoint):
-                entitydefs[k] = chr(v)
+                entitydefs[k] = unichr(v)
         # (end) copied from Python-2.6's HTMLParser.py
         if name in self.entitydefs:
             x = ';'
