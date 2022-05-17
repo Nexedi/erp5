@@ -48,6 +48,7 @@ Foo | view_formbox
 Foo | view_formbox_dialog
 Foo | view_formbox_fooline
 Foo | view_hidden_positive_only_quantity
+Foo | view_integer_field
 Foo | view_listbox
 Foo | view_multiple_listbox
 Foo | view_onlyjio
