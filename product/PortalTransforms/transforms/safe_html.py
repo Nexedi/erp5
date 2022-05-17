@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from six import unichr
 from zLOG import ERROR
-from six.moves.html_parser import HTMLParser
+from six.moves.html_parser import HTMLParser, HTMLParseError
 import re
 from cgi import escape
 import codecs
