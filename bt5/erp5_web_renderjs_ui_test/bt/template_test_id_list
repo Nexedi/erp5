@@ -1,4 +1,5 @@
 test.erp5.testFunctionalRJSLabelField
+test.erp5.testFunctionalRJSIntegerField
 test.erp5.testFunctionalRJSCore
 test.erp5.testFunctionalRJSCheckBoxField
 test.erp5.testFunctionalRJSFloatField
