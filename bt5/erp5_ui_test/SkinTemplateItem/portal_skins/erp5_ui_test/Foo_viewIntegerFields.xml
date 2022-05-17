@@ -95,6 +95,7 @@
                       <list>
                         <string>my_quantity</string>
                         <string>read_only_quantity</string>
+                        <string>your_range_failure</string>
                       </list>
                     </value>
                 </item>
