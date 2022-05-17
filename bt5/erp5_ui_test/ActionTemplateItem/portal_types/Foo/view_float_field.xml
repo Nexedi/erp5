@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A form with only only a float field</string> </value>
+            <value> <string>A form with only float fields</string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
