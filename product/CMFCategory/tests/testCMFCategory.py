@@ -1,3 +1,4 @@
+# coding:utf-8
 ##############################################################################
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,6 +27,7 @@
 #
 ##############################################################################
 
+import mock
 from collections import deque
 import unittest
 
@@ -755,6 +757,60 @@ class TestCMFCategory(ERP5TypeTestCase):
                              id='the_sub_id', title='The Sub Title')
     whitespace_number = self.portal.portal_preferences.getPreferredWhitespaceNumberForChildItemIndentation()
     self.assertEqual(NBSP_UTF8 * whitespace_number + 'The Sub Title', sub_cat.getIndentedTitle())
+
+  def test_getCategoryChildTranslatedXItemList(self):
+    base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
+    cat = base_cat.newContent(
+      portal_type='Category', id='the_id', title='The Title')
+    cat.newContent(
+      portal_type='Category', id='the_sub_id', title='The Sub Title')
+
+    default_gettext = self.portal.Localizer.erp5_content.gettext
+    def gettext(message, **kw):
+      if message == 'The Sub Title':
+        return u'The Süb Tïtle'
+      assert message != u'The Süb Tïtle'
+      return default_gettext(message, **kw)
+
+    with mock.patch.object(
+        self.portal.Localizer.erp5_content.__class__,
+        'gettext',
+      side_effect=gettext), \
+      mock.patch.object(
+        self.portal.portal_preferences.__class__,
+        'getPreferredWhitespaceNumberForChildItemIndentation',
+        return_value=2):
+
+      self.assertEqual(
+        base_cat.getCategoryChildIndentedTitleItemList(),
+          [['', ''],
+            ['The Title', 'the_id'],
+            ['\xc2\xa0\xc2\xa0The Sub Title', 'the_id/the_sub_id']],
+      )
+      self.assertEqual(
+        base_cat.getCategoryChildTranslatedIndentedTitleItemList(),
+          [['', ''],
+            ['The Title', 'the_id'],
+            ['\xc2\xa0\xc2\xa0The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+      )
+      self.assertEqual(
+        base_cat.getCategoryChildTranslatedCompactTitleItemList(),
+          [['', ''],
+            ['The Title', 'the_id'],
+            ['The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+      )
+      self.assertEqual(
+        base_cat.getCategoryChildTranslatedLogicalPathItemList(),
+          [['', ''],
+            ['The Title', 'the_id'],
+            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+      )
+      self.assertEqual(
+        base_cat.getCategoryChildTranslatedCompactLogicalPathItemList(),
+          [['', ''],
+            ['The Title', 'the_id'],
+            ['The Title/The S\xc3\xbcb T\xc3\xaftle', 'the_id/the_sub_id']],
+      )
 
   def test_CategoryChildTitleItemListFilterNodeFilterLeave(self):
     base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
