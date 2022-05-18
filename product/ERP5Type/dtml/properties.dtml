@@ -48,7 +48,7 @@ property values, edit the values and click &quot;Save Changes&quot;.
 </tr>
 
 <dtml-in propertyMap mapping>
-<dtml-let type="'type' not in _ and 'string' or type">
+<dtml-let type="not _.has_key('type') and 'string' or type">
 <tr>
   <td align="left" valign="top" width="16">
   <dtml-if "'d' in _['sequence-item'].get('mode', 'awd')">
@@ -105,7 +105,7 @@ property values, edit the values and click &quot;Save Changes&quot;.
       </dtml-in>
     </select>
     </div>
-    <dtml-elif "'select_variable' in _">
+    <dtml-elif "_.has_key('select_variable')">
     <div class="form-element">
     <select name="&dtml-id;:<dtml-var "REQUEST['management_page_charset_tag']">text">
       <dtml-in "_[select_variable]">
@@ -135,7 +135,7 @@ property values, edit the values and click &quot;Save Changes&quot;.
       </dtml-in>
     </select>
     </div>
-    <dtml-elif "'select_variable' in _">
+    <dtml-elif "_.has_key('select_variable')">
     <div class="form-element">
     <select name="&dtml-id;:<dtml-var "REQUEST['management_page_charset_tag']">list:string" multiple
       size="<dtml-var "_.min(7, _.len(_[select_variable]))">">

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, node_category=None, section_category=None, positive_stock=None, negative_stock=None, zero_stock=None, simulation_period="current", **kw</string> </value>
+            <value> <string>at_date=None, node_category=None, section_category=None, product_line=None, positive_stock=None, negative_stock=None, zero_stock=None, simulation_period="current", **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

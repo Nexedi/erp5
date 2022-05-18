@@ -75,7 +75,7 @@ class TestNode(object):
         rmtree(fpath)
       else:
         os.remove(fpath)
-  
+
   def getNodeTestSuite(self, reference):
     try:
       node_test_suite = self.node_test_suite_dict[reference]

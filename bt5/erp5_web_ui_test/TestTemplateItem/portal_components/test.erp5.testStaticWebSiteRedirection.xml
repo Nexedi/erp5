@@ -7,12 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_recorded_property_dict</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>testStaticWebSiteRedirection</string> </value>
         </item>
@@ -43,11 +37,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 91, 28: Unused variable \'api_path\' (unused-variable)</string>
-                <string>W: 91, 16: Unused variable \'api_netloc\' (unused-variable)</string>
-                <string>W: 91,  4: Unused variable \'api_scheme\' (unused-variable)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -57,7 +47,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -72,26 +62,11 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
               <dictionary>
                 <item>
                     <key> <string>component_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -100,7 +75,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>

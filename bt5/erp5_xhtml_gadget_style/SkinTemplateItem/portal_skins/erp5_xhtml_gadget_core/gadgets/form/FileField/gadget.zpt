@@ -1,5 +1,0 @@
-<tal:block tal:define="field_name request/field_name | options/field_name">
-  <input  type="file"
-          size="20"
-          tal:attributes="name field_name"/>
-</tal:block>

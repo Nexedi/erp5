@@ -95,6 +95,7 @@
                       <list>
                         <string>my_redirect_domain</string>
                         <string>my_use_moved_temporarily</string>
+                        <string>my_configuration_service_worker_url</string>
                       </list>
                     </value>
                 </item>

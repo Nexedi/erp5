@@ -39,6 +39,7 @@ from .Utils import createFolder
 
 MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
+MAX_CP_RETRIES = 60
 
 class SlapOSControler(object):
 
@@ -116,7 +117,7 @@ class SlapOSControler(object):
     reference : instance title
     software_url : software path/url
     software_type : scalability
-    software_configuration : dict { "_" : "{'toto' : 'titi'}" } 
+    software_configuration : dict { "_" : "{'toto' : 'titi'}" }
 
     Ex :
     my_controler._request('Instance16h34Ben',
@@ -170,22 +171,22 @@ class SlapOSControler(object):
         self.instance_config[reference]['software_configuration'],
         self.instance_config[reference]['computer_guid'],
         state=state
-    )    
-  
+    )
+
   def destroyInstance(self, reference):
     logger.debug('SlapOSControler : delete instance')
     try:
       self._requestSpecificState(reference, 'destroyed')
     except Exception:
       raise ValueError("Can't delete instance %r (instance not created?)" % reference)
-    
+
   def stopInstance(self, reference):
     logger.debug('SlapOSControler : stop instance')
     try:
       self._requestSpecificState(reference, 'stopped')
     except Exception:
       raise ValueError("Can't stop instance %r (instance not created?)" % reference)
-  
+
   def startInstance(self, reference):
     logger.debug('SlapOSControler : start instance')
     try:
@@ -242,7 +243,7 @@ class SlapOSControler(object):
       slapproxy_log_fp = open(slapproxy_log, 'w')
       kwargs['stdout'] = slapproxy_log_fp
       kwargs['stderr'] = slapproxy_log_fp
-    proxy = subprocess.Popen([config['slapos_binary'], 
+    proxy = subprocess.Popen([config['slapos_binary'],
       'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)
 
@@ -338,7 +339,7 @@ class SlapOSControler(object):
     # so be tolerant and run it a few times before giving up
     for _ in range(MAX_SR_RETRIES):
       status_dict = self.spawn(config['slapos_binary'],
-                 'node', 'software', '--all', 
+                 'node', 'software', '--all',
                  '--pidfile', os.path.join(self.software_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
@@ -348,7 +349,7 @@ class SlapOSControler(object):
 
   def runComputerPartition(self, config, environment,
                            stdout=None, stderr=None, cluster_configuration=None,
-                           max_quantity=MAX_PARTITIONS, **kw):
+                           max_quantity=MAX_CP_RETRIES, **kw):
     logger.debug("SlapOSControler.runComputerPartition with cluster_config: %r",
              cluster_configuration)
     for path in self.software_path_list:
@@ -361,11 +362,11 @@ class SlapOSControler(object):
         logger.exception("SlapOSControler.runComputerPartition")
         raise ValueError("Unable to registerOpenOrder")
 
-    # try to run for all partitions as one partition may in theory request another one 
+    # try to run for all partitions as one partition may in theory request another one
     # this not always is required but currently no way to know how "tree" of partitions
     # may "expand"
     for _ in range(max_quantity):
-      status_dict = self.spawn(config['slapos_binary'], 'node', 'instance', 
+      status_dict = self.spawn(config['slapos_binary'], 'node', 'instance',
                  '--pidfile', os.path.join(self.instance_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)

@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.4.73 (2022-05-13)
+-------------------
+
+  * testnode:
+    - retry ``slapos node instance`` more times before running test
+
 0.4.73 (2022-04-22)
 -------------------
 

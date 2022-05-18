@@ -90,7 +90,7 @@ class Updater(object):
     cwd = kw.pop("cwd", None)
     if cwd is None:
       cwd = self.getRepositoryPath()
-    return self.process_manager.spawn(*args, 
+    return self.process_manager.spawn(*args,
                                       log_prefix='git',
                                       cwd=cwd,
                                       **kw)
