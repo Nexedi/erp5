@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testManifest</string> </value>
+            <value> <string>testFunctionalManifest</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testManifest</string> </value>
+            <value> <string>test.erp5.testFunctionalManifest</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
