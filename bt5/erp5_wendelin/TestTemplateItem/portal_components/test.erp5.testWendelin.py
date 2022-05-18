@@ -163,7 +163,6 @@ class Test(ERP5TypeTestCase):
 
     self.tic()
 
-
   def test_02_Examples(self):
     """
       Test we can use python scientific libraries by using directly created
@@ -173,7 +172,7 @@ class Test(ERP5TypeTestCase):
     portal.game_of_life()
     portal.game_of_life_out_of_core()
     portal.game_of_life_out_of_core_activities()
-    
+
   def test_03_DataArray(self):
     """
       Test persistently saving a ZBig Array to a Data Array.
@@ -183,17 +182,17 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(None, data_array.getArray())
     data_array.initArray((3, 3), np.uint8)
     self.tic()
-    
+
     # test array stored and we return ZBig Array instance
     persistent_zbig_array = data_array.getArray()
     self.assertEqual(ZBigArray, persistent_zbig_array.__class__)
-    
+
     # try to resize its numpy "view" and check that persistent one is not saved
     # as these are differerent objects
     pure_numpy_array = persistent_zbig_array[:,:] # ZBigArray -> ndarray view of it
     pure_numpy_array = np.resize(pure_numpy_array, (4, 4))
     self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
-    
+
     # test copy numpy -> wendelin but first resize persistent one (add new one)
     data_array.initArray((4, 4), np.uint8)
     persistent_zbig_array = data_array.getArray()
@@ -342,8 +341,6 @@ class Test(ERP5TypeTestCase):
     predicted = reg.predict(np.array([[4, 10]]))
     self.assertEqual(predicted.all(),np.array([27.]).all())
 
-
-
   def test_09_IngestionFromFluentdStoreMsgpack(self, old_fluentd=False):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
@@ -410,3 +407,106 @@ class Test(ERP5TypeTestCase):
     # clean up
     data_stream.setData(None)
     self.tic()
+
+  def _removeDocument(self, document_to_remove):
+    path = document_to_remove.getRelativeUrl()
+    container, _, object_id = path.rpartition('/')
+    parent = self.portal.unrestrictedTraverse(container)
+    parent.manage_delObjects([object_id])
+    self.commit()
+
+  def _addDataIngestionToDataSupply(self, data_supply):
+    portal = self.portal
+
+    data_supply_line = data_supply.objectValues()[0]
+    data_ingestion = portal.data_ingestion_module.newContent(
+      portal_type="Data Ingestion",
+      title="TestDI_%s" % data_supply.getTitle(),
+      reference="Test_DI_%s" % data_supply.getTitle(),
+      specialise=data_supply.getRelativeUrl(),
+      source=data_supply.getSource(),
+      source_section=data_supply.getSourceSection(),
+      destination="organisation_module/test_wendelin_destination",
+      destination_section="organisation_module/test_wendelin_destination_section",
+      start_date=data_supply.getCreationDate())
+
+    self.addCleanup(self._removeDocument, data_ingestion)
+
+    data_ingestion.newContent(
+      portal_type="Data Ingestion Line",
+      title="Ingest Data",
+      reference="ingestion_operation",
+      aggregate=data_supply_line.getSource(),
+      resource="data_operation_module/wendelin_ingest_data",
+      int_index=1
+    )
+
+    data_ingestion.newContent(
+      portal_type="Data Ingestion Line",
+      title="test_wendelin_data_product",
+      reference="out_stream",
+      aggregate_list=[data_supply_line.getSource(), data_supply_line.getDestination()],
+      resource="data_product_module/test_wendelin_data_product",
+      use="use/big_data/ingestion/stream",
+      quantity=1,
+      int_index=2
+    )
+
+    data_ingestion.start()
+
+    return data_ingestion
+
+  def test_10_DataAnalysesCreation(self):
+    """
+    Test data ingestion and analyses execution.
+    """
+    portal = self.portal
+
+    # test DataSupply_viewAddRelatedDataIngestionActionDialog dialog
+    # this test code will create a Data Ingestion which itself will
+    # be used in later tests of ERP5Site_createDataAnalysisList
+    data_supply = portal.data_supply_module.test_10_DataAnalysesCreation_data_supply
+    data_ingestion = self._addDataIngestionToDataSupply(data_supply)
+
+    self.assertNotEqual(None, data_ingestion)
+    self.tic()
+
+    before_data_analysis_list = portal.portal_catalog(
+      portal_type = "Data Analysis",
+      simulation_state = "started")
+
+    # create DA from DI
+    portal.ERP5Site_createDataAnalysisList()
+    self.tic()
+
+    # check new three Data Arrays created
+    after_data_analysis_list = portal.portal_catalog(
+      portal_type = "Data Analysis",
+      simulation_state = "started")
+
+    before_data_analysis_list = set([x.getObject() for x in before_data_analysis_list])
+    after_data_analysis_list = set([x.getObject() for x in after_data_analysis_list])
+    self.assertEqual(1, len(after_data_analysis_list) - len(before_data_analysis_list))
+
+    # check properly created
+    to_delete_data_analysis = after_data_analysis_list - before_data_analysis_list
+
+    for data_analysis in list(to_delete_data_analysis):
+      if data_ingestion == data_analysis.getCausalityValue():
+        to_delete_data_analysis = data_analysis
+        break
+
+    self.addCleanup(self._removeDocument, to_delete_data_analysis)
+
+    data_transformation = portal.data_transformation_module.test_wendelin_data_transformation
+
+    self.assertEqual(data_ingestion, to_delete_data_analysis.getCausalityValue())
+    self.assertSameSet(
+      [data_supply, data_transformation],
+      to_delete_data_analysis.getSpecialiseValueList()
+    )
+    # all lines should be properly created
+    self.assertEqual(len(data_transformation.objectValues()),
+                     len(to_delete_data_analysis.objectValues()))
+    self.assertEqual("started", to_delete_data_analysis.getSimulationState())
+
