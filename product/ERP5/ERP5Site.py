@@ -1756,8 +1756,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """
     Returns Data Configuration types.
     """
-    return self._getPortalGroupedTypeList('data_configuration') or\
-           self._getPortalConfiguration('portal_data_configuration_type_list')
+    return self._getPortalGroupedTypeList('data_configuration')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
