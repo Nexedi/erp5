@@ -1751,6 +1751,14 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedTypeList('payment_request')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDataConfigurationTypeList')
+  def getPortalDataConfigurationTypeList(self):
+    """
+    Returns Data Configuration types.
+    """
+    return self._getPortalGroupedTypeList('data_configuration')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER, only_visible=False):
     """
