@@ -249,6 +249,16 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
+# BBB undo patch from DateTime 2.12 , which patches
+# copy_reg._reconstructor with a function that appears as
+# `DateTime.DateTime._dt_reconstructor` in pickles.
+# See https://github.com/zopefoundation/DateTime/blob/2.12.8/src/DateTime/DateTime.py#L1863-L1874
+# This patch is no longer needed once we are using DateTime >= 3 so
+# it is not needed on python3 (copy_reg does not exist on python3)
+import copy_reg
+copy_reg._reconstructor.__module__ = 'copy_reg'
+copy_reg._reconstructor.__name__ = '_reconstructor'
+
 if __name__ == '__main__':
   for i in ('2007/01/02 12:34:56.789',
             '2007/01/02 12:34:56.789 GMT+0200',
