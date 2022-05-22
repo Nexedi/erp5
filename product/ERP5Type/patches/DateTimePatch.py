@@ -249,6 +249,12 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
+# XXX fix name for new style classes pickles
+import copy_reg
+copy_reg._reconstructor.__module__ = 'copy_reg'
+copy_reg._reconstructor.__name__ = '_reconstructor'
+
+
 if __name__ == '__main__':
   for i in ('2007/01/02 12:34:56.789',
             '2007/01/02 12:34:56.789 GMT+0200',
