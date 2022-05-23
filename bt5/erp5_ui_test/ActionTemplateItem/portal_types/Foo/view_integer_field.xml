@@ -71,7 +71,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Foo_viewIntegerFields</string> </value>
+            <value> <string>string:${object_url}/Foo_viewIntegerField</string> </value>
         </item>
       </dictionary>
     </pickle>

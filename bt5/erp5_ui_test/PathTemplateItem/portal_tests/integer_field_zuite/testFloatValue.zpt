@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/0/Foo_viewIntegerFields</td>
+  <td>${base_url}/foo_module/0/Foo_viewIntegerField</td>
   <td></td>
 </tr>
 <tr>
