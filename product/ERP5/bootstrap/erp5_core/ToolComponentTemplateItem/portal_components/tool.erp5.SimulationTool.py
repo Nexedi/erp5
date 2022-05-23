@@ -319,12 +319,8 @@ class SimulationTool(BaseTool):
           output_simulation_state = [output_simulation_state]
         sql_kw['output_simulation_state'] = output_simulation_state
       # XXX In this case, we must not set sql_kw[input_simumlation_state] before
-      input_simulation_state = None
-      output_simulation_state = None
-      if 'input_simulation_state' in sql_kw:
-        input_simulation_state = sql_kw.get('input_simulation_state')
-      if 'output_simulation_state' in sql_kw:
-        output_simulation_state = sql_kw.get('output_simulation_state')
+      input_simulation_state = sql_kw.get('input_simulation_state')
+      output_simulation_state = sql_kw.get('output_simulation_state')
       if input_simulation_state is not None \
          or output_simulation_state is not None:
         sql_kw.pop('input_simulation_state',None)
@@ -2185,12 +2181,8 @@ class SimulationTool(BaseTool):
     new_kw['date_condition_in_join'] = not (new_kw.get('input') or new_kw.get('output'))
 
     # Pass simulation state to request
-    if next_item_simulation_state:
-      new_kw['simulation_state_list'] = next_item_simulation_state
-    elif 'item.simulation_state' in kw:
-      new_kw['simulation_state_list'] = kw['item.simulation_state']
-    else:
-      new_kw['simulation_state_list'] =  None
+    new_kw['simulation_state_list'] = next_item_simulation_state or \
+                                      kw.get('item.simulation_state')
 
     return self.Resource_zGetTrackingList(src__=src__,
                                           **new_kw)
