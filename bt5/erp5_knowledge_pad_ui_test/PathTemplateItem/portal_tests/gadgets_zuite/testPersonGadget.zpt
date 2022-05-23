@@ -62,12 +62,12 @@
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>transition_message</td>
+	<td>css=div.transition_message</td>
 	<td>regexp:knowledge_pad_module/.*</td>
 </tr>
 <tr>
 	<td>storeText</td>
-	<td>transition_message</td>
+	<td>css=div.transition_message</td>
 	<td>erp5_persons_url</td>
 </tr>
 <tr>
@@ -77,7 +77,7 @@
 </tr>
 <tr>
 	<td>storeText</td>
-	<td>transition_message</td>
+	<td>css=div.transition_message</td>
 	<td>erp5_persons_id</td>
 </tr>
 <tr>

@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>storeText</td>
-  <td>transition_message</td>
+  <td>css=div.transition_message</td>
   <td>erp5_rss_box_url</td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>storeText</td>
-  <td>transition_message</td>
+  <td>css=div.transition_message</td>
   <td>erp5_rss_box_id</td>
 </tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
