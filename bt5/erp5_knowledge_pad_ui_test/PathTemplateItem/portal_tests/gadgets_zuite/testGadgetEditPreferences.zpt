@@ -33,7 +33,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>storeText</td>
-  <td>transition_message</td>
+  <td>css=div.transition_message</td>
   <td>erp5_web_section_random_page_box_url</td>
 </tr>
 <tr>
@@ -43,7 +43,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>storeText</td>
-  <td>transition_message</td>
+  <td>css=div.transition_message</td>
   <td>erp5_web_section_random_page_box_id</td>
 </tr>
 
@@ -55,7 +55,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>storeText</td>
-  <td>transition_message</td>
+  <td>css=div.transition_message</td>
   <td>erp5_persons_box_url</td>
 </tr>
 <tr>
@@ -65,7 +65,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>storeText</td>
-  <td>transition_message</td>
+  <td>css=div.transition_message</td>
   <td>erp5_persons_box_id</td>
 </tr>
 

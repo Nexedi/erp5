@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import json
 import os.path
 import tempfile
 import textwrap
@@ -572,14 +573,6 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     )
 
   def testPandasIORead(self):
-    self.assertRaises(
-        Unauthorized,
-        self.createAndRunScript,
-        '''
-        import pandas as pd
-        pd.read_csv('testPandasIORead.csv')
-        ''')
-
     # Test the black_list configuration validity
     for read_method in pandas_black_list:
       self.assertRaises(
@@ -634,6 +627,148 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           write_method = df.{write_method}
           write_method('testPandasSeriesIOWrite.data')
           '''.format(write_method=write_method))
+
+  def _assertPandasRestrictedReadFunctionIsEqualTo(
+    self, read_function, read_argument, expected_data_frame_init
+  ):
+    self.createAndRunScript(
+      '''
+      import pandas as pd
+      expected_data_frame = pd.DataFrame({expected_data_frame_init})
+      return pd.{read_function}({read_argument}).equals(expected_data_frame)
+      '''.format(
+        expected_data_frame_init=expected_data_frame_init,
+        read_function=read_function,
+        read_argument=read_argument,
+      ),
+      expected=True
+    )
+
+  def testPandasRestrictedReadFunctionProhibitedInput(self):
+    """
+      Test if patched pandas read_* functions raise with any input which isn't a string.
+    """
+    for pandas_read_function in ("read_json", "read_csv", "read_fwf"):
+      for preparation, prohibited_input in (
+        ('', 100),
+        ('from StringIO import StringIO', 'StringIO("[1, 2, 3]")'),
+      ):
+        self.assertRaises(
+          ZopeGuardsUnauthorized,
+          self.createAndRunScript,
+          '''
+          import pandas as pd
+          {preparation}
+          pd.{pandas_read_function}({prohibited_input})
+          '''.format(
+            preparation=preparation,
+            pandas_read_function=pandas_read_function,
+            prohibited_input=prohibited_input,
+          )
+        )
+  def testPandasReadFwf(self):
+    read_function = "read_fwf"
+    # Normal input should be correctly handled
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function, r'"100\n200"', r"[[200]], columns=['100']",
+    )
+    # Ensure monkey patch parses keyword arguments to patched function
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function, r'"1020\n3040", widths=[2, 2]', r"[[30, 40]], columns=['10', '20']",
+    )
+    # A string containing an url or file path should be handled as if
+    # it would be a normal csv string entry
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function,
+       r'"file://path/to/fwf/file.fwf"',
+       r"[], columns=['file://path/to/fwf/file.fwf']",
+    )
+
+  def testPandasReadCSV(self):
+    read_function = "read_csv"
+    # Normal input should be correctly handled
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function,
+       r'"11,2,300\n50.5,99,hello"',
+       r"[[50.5, 99, 'hello']], columns='11 2 300'.split(' ')",
+    )
+    # Ensure monkey patch parses keyword arguments to patched function
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function, r'"a;b", sep=";"', r"[], columns=['a', 'b']",
+    )
+    # A string containing an url or file path should be handled as if
+    # it would be a normal csv string entry
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function,
+      r'"https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv"',
+      r"[], columns=['https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv']",
+    )
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function,
+      r'"file://path/to/csv/file.csv"',
+      r"[], columns=['file://path/to/csv/file.csv']",
+    )
+
+  def testPandasReadJsonParsesInput(self):
+    read_function = "read_json"
+    # Normal input should be correctly handled
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function, '"[1, 2, 3]"', "[1, 2, 3]"
+    )
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function,
+      '\'{"column_name": [1, 2, 3], "another_column": [3, 9.2, 100]}\'',
+      '{"column_name": [1, 2, 3], "another_column": [3, 9.2, 100]}',
+    )
+    # Ensure monkey patch parses keyword arguments to patched function
+    self._assertPandasRestrictedReadFunctionIsEqualTo(
+      read_function,
+      r'"[1, 2, 3]\n[4, 5, 6]", lines=True',
+      "[[1, 2, 3], [4, 5, 6]]",
+    )
+    # URLs, etc. should raise a ValueError
+    # (see testPandasReadJsonProhibitsMalicousString)
+
+  def testPandasReadJsonProhibitsMalicousString(self):
+    """
+      Test if file path, urls and other bad strings
+      raise value errors
+    """
+
+    # Create valid json file which could be read
+    # by a non-patched read_json function.
+    test_file_path = ".testPandasReadJson.json"
+    json_test_data = [1, 2, 3]
+    with open(test_file_path, 'w') as json_file:
+      json.dump(json_test_data, json_file)
+    self.addCleanup(os.remove, test_file_path)
+
+    # Ensure json creation was successful
+    self.assertTrue(os.path.isfile(test_file_path))
+    with open(test_file_path, "r") as json_file:
+      self.assertEqual(json_test_data, json.loads(json_file.read()))
+
+    for malicous_input in (
+      # If pandas would read this as an URL it should
+      # raise an URLError. But because it will try
+      # to read it as a json string, it will raise
+      # a ValueError.
+      "https://test-url.com/test-name.json",
+      "file://path/to/json/file.json",
+      # This shouldn't raise any error in case
+      # pandas read function wouldn't be patched.
+      test_file_path,
+      # Gibberish should also raise a ValueError
+      "Invalid-string"
+    ):
+      self.assertRaises(
+        ValueError,
+        self.createAndRunScript,
+        '''
+        import pandas as pd
+        pd.read_json("{}")
+        '''.format(malicous_input)
+      )
 
 
 def test_suite():

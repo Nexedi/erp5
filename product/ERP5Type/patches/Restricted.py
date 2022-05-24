@@ -434,6 +434,7 @@ MNAME_MAP = {
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
   'six': 'Products.ERP5Type.Six',
+  'pandas': 'Products.ERP5Type.Pandas',
 }
 for alias, real in six.iteritems(MNAME_MAP):
   assert '.' not in alias, alias # TODO: support this
@@ -532,23 +533,20 @@ def restrictedMethod(s,name):
     raise Unauthorized(name)
   return dummyMethod
 
+
 try:
   import pandas as pd
 except ImportError:
   pass
 else:
-  allow_module('pandas')
-  allow_type(pd.Series)
   allow_type(pd.Timestamp)
   allow_type(pd.DatetimeIndex)
-  # XXX: pd.DataFrame has its own security thus disable
-  #      until we can fully integrate it
-  #allow_type(pd.DataFrame)
   allow_type(pd.MultiIndex)
   allow_type(pd.indexes.range.RangeIndex)
   allow_type(pd.indexes.numeric.Int64Index)
   allow_type(pd.core.groupby.DataFrameGroupBy)
   allow_type(pd.core.groupby.SeriesGroupBy)
+
   allow_class(pd.DataFrame)
 
   # Note: These black_list methods are for pandas 0.19.2
@@ -557,10 +555,10 @@ else:
   ContainerAssertions[pd.Series] = _check_access_wrapper(
     pd.Series, dict.fromkeys(series_black_list, restrictedMethod))
 
-  pandas_black_list = ('read_csv', 'read_json', 'read_pickle', 'read_hdf',
-                       'read_fwf', 'read_excel', 'read_html', 'read_msgpack',
+  pandas_black_list = ('read_pickle', 'read_hdf',
+                       'read_excel', 'read_html', 'read_msgpack',
                        'read_gbq', 'read_sas', 'read_stata')
-  ModuleSecurityInfo('pandas').declarePrivate(*pandas_black_list)
+  ModuleSecurityInfo(MNAME_MAP['pandas']).declarePrivate(*pandas_black_list)
 
   dataframe_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
                           'to_excel', 'to_html', 'to_sql', 'to_msgpack',

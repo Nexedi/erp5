@@ -41,7 +41,7 @@ class Accessor(Method):
     def __getinitargs__(self):
       init = getattr(self, '__init__', None)
       if init is not None:
-        varnames = init.__code__.co_varnames
+        varnames = init.func_code.co_varnames
         args = []
         for name in varnames:
           if name == 'self':
