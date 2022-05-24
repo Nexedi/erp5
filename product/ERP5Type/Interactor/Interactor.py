@@ -71,8 +71,8 @@ class InteractorMethod(Method):
     self.after_action_list = []
     self.before_action_list = []
     self.method = method
-    self.__code__ = self.func_code = method.func_code
-    self.__defaults__ = self.func_defaults = method.func_defaults
+    self.__code__ = self.func_code = method.__code__
+    self.__defaults__ = self.func_defaults = method.__defaults__
     self.__name__ = method.__name__
 
   def registerBeforeAction(self, action, args, kw):
