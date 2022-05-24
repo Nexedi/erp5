@@ -234,7 +234,7 @@ def deprecated(message=''):
   @simple_decorator
   def _deprecated(wrapped):
     m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
-      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+      wrapped.__name__, wrapped.__module__, wrapped.__code__.co_firstlineno)
     def deprecated(*args, **kw):
       warnings.warn(m, DeprecationWarning, 2)
       return wrapped(*args, **kw)
