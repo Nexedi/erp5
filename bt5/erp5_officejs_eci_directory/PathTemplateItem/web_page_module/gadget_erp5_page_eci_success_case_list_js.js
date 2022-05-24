@@ -3,11 +3,8 @@
 (function (window, RSVP, rJS) {
   "use strict";
   rJS(window)
-    .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
@@ -35,7 +32,7 @@
         var column_list = [
           ['title', 'Title'],
           ['software', 'Software'],
-          ['publisher', 'Publisher'],
+          ['publisher', 'Provider'],
           ['industry', 'Industry'],
           ['category_list', 'Software Categories'],
           ['customer', 'Customer'],

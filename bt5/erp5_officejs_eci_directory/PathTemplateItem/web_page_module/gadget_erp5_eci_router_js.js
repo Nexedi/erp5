@@ -5,57 +5,6 @@
 
   rJS(window)
 
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-
-    /////////////////////////////////////////////////////////////////
-    // declared methods
-    /////////////////////////////////////////////////////////////////
-    .declareMethod('getCommandUrlForList', function (options_list) {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          var cmd_index = "index";
-          var result_list = options_list.map(function (opt) {
-            if (opt.command === cmd_index) {
-              return gadget.getUrlFor({command: "display", options: {
-                  jio_key: opt.options.jio_key,
-                  page: "eci_" + opt.options.query.split(":")[1].split('"')[1],
-                  view: "view"
-                }
-              });
-            }
-          }).filter(Boolean);
-          if (result_list.length) {
-            return RSVP.all(result_list);
-          }
-          return gadget.getDeclaredGadget("router")
-            .push(function (router) {
-              return router.getCommandUrlForList.apply(router, [options_list]);
-            });
-        });
-    })
-    .declareMethod('getCommandUrlFor', function () {
-      var argument_list = arguments,
-        dict = argument_list[0],
-        key,
-        portal;
-
-      // XXX better way than to extract from query like this?
-      if (dict.command === "index") {
-        //key = dict.options.jio_key;
-        //portal = dict.options.query.split(":")[1].split('"')[1];
-        //return "#/" + key + "?page=afs_" + portal + "&view=view";
-        return this.getUrlFor({command: "index", options: {
-          jio_key: dict.options.jio_key,
-          page: "afs_" + dict.options.query.split(":")[1].split('"')[1],
-          view: "view"
-        }});
-      }
-      return this.getDeclaredGadget("router")
-        .push(function (router) {
-          return router.getCommandUrlFor.apply(router, argument_list);
-        });
-    })
     .declareMethod('start', function () {
       var argument_list = arguments;
       return this.getDeclaredGadget("router")
@@ -88,6 +37,28 @@
       return this.getDeclaredGadget("router")
         .push(function (router) {
           return router.redirect.apply(router, argument_list);
+        });
+    })
+    .declareMethod('getCommandUrlFor', function () {
+      var argument_list = arguments;
+      return this.getDeclaredGadget("router")
+        .push(function (router) {
+          return router.getCommandUrlFor.apply(router, argument_list);
+        });
+    })
+    .declareMethod('getCommandUrlForList', function () {
+      var argument_list = arguments,
+        i;
+      for (i = 0; i < argument_list[0].length; i += 1) {
+        if (argument_list[0][i].hasOwnProperty('options')) {
+          if (! argument_list[0][i].options.hasOwnProperty('page') && argument_list[0][i].options.query) {
+            argument_list[0][i].options.page = "eci_" + argument_list[0][i].options.query.split(":")[1].split('"')[1];
+          }
+        }
+      }
+      return this.getDeclaredGadget("router")
+        .push(function (router) {
+          return router.getCommandUrlForList.apply(router, argument_list);
         });
     });
 

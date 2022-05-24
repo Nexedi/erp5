@@ -119,17 +119,7 @@
       event.initEvent('resize', true, true);
       window.dispatchEvent(event);
       return result;
-    })
-
-    .onEvent('blur', function (evt) {
-      // XXX Horrible hack to clear the search when focus is lost
-      // This does not follow renderJS design, as a gadget should not touch
-      // another gadget content
-      if (evt.target.type === 'search') {
-        evt.target.value = "";
-      }
-    }, true, false);
-
+    });
 }(document, window, rJS, Handlebars, RSVP, rJS.loopEventListener, Node));
 
 

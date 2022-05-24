@@ -9,7 +9,6 @@
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
     <script src="handlebars.js" type="text/javascript"></script>
-    <script src="gadget_global.js" type="text/javascript"></script>
 
     <script id="panel-template-header" type="text/x-handlebars-template">
       <div data-role="header" class="ui-bar-inherit">
@@ -34,9 +33,9 @@
         <ul data-role="listview" class="ui-listview" data-enhanced="true">
           <li class="ui-first-child"><a href="{{directory_href}}" class="ui-btn ui-btn-icon-left ui-icon-table" data-i18n="Directory" accesskey="d">Directory</a></li>
           <li><a href="{{provider_href}}" class="ui-btn ui-btn-icon-left ui-icon-university" data-i18n="Publishers" accesskey="a">Providers</a></li>
-          <li><a href="{{financial_href}}" class="ui-btn ui-btn-icon-left ui-icon-euro" data-i18n="Financial Data" accesskey="f">Financial Data</a></li>
           <li><a href="{{solution_href}}" class="ui-btn ui-btn-icon-left ui-icon-cube" data-i18n="Software Products" accesskey="p">Products</a></li>
           <li><a href="{{success_case_href}}" class="ui-btn ui-btn-icon-left ui-icon-book" data-i18n="Success Cases" accesskey="s">Success Cases</a></li>
+          <li><a href="{{financial_href}}" class="ui-btn ui-btn-icon-left ui-icon-euro" data-i18n="Financial Data" accesskey="f">Financial Data</a></li>
           <li class="ui-last-child"><a href="{{export_href}}" class="ui-btn ui-btn-icon-left ui-icon-download" data-i18n="Export" accesskey="e">Export</a></li>
           <!--div>
           {{#if language_list}}
@@ -70,14 +69,9 @@
       <p class="ui-custom-content">Stats by: <br/><a href ="https://www.openhub.net"><img src="https://www.openhub.net/images/badges/mini.gif" width="80" height="15" /></a></p>
       </div>
     </script>
-
-    <!-- custom script -->
     <script src="gadget_erp5_eci_panel.js" type="text/javascript"></script>
-
   </head>
   <body>
-
-  <div class="jqm-navmenu-panel"></div>
-
+    <div class="jqm-navmenu-panel"></div>
   </body>
 </html>

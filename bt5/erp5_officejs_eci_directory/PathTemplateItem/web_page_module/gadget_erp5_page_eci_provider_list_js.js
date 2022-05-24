@@ -4,11 +4,8 @@
 (function (window, RSVP, rJS) {
   "use strict";
   rJS(window)
-    .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
@@ -64,7 +61,6 @@
             }},
               "_links": {
                 "type": {
-                  // form_list display portal_type in header
                   name: ""
                 }
               }

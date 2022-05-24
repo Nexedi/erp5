@@ -1,0 +1,71 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story</title>
+
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+
+  <script src="gadget_erp5_page_eci_success_case.js"></script>
+
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <h1>{{title}}</h1>
+      {{#if image}}
+        <div class="custom-success-story-image-wrapper {{image_class}}"><a href="{{url}}"><img src="{{image}}" alt></a></div>
+      {{else}}
+        <div>&nbsp;</div>
+      {{/if}}
+      <p class="custom-success-story-description">{{description}} <a href="{{url}}">Read More</a></p>
+
+      <table class="custom-link-table">
+        <tbody>
+          <tr>
+            <td>Categories</td>
+            <td>
+            <ul class="custom-success-story-category-list">
+              {{#each category_list}}
+                <li>{{this}}</li>
+              {{/each}}
+            </ul>
+            </td>
+          </tr>
+          <tr>
+            <td class="custom-success-story-client">Customer</td>
+            <td><b>{{customer}}</b></td>
+          </tr>
+          <tr>
+            <td>Industry</td>
+            <td>{{industry}}</td>
+          </tr>
+          <tr>
+            <td>Country</td>
+            <td>{{country}}</td>
+          </tr>
+          <tr>
+            <td>Language</td>
+            <td>{{language}}</td>
+          </tr>
+          <tr>
+            <td>Product Site</td>
+            <td><a href="{{software_website}}">{{software}}</a></td>
+          </tr>
+          <tr>
+            <td>Provider Site</td>
+            <td><a href="{{publisher_website}}">{{publisher}}</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-widget"></div>
+  </body>
+</html>

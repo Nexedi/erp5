@@ -27,17 +27,18 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.updateHeader({page_title: "Product List"});
+          return RSVP.all([
+            gadget.updateHeader({page_title: "Product List"}),
+            gadget.getDeclaredGadget("form_list")
+          ]);
         })
-        .push(function () {
-          return gadget.getDeclaredGadget("form_list");
-        })
-        .push(function (form_gadget) {
-          var column_list = [
-            ['title', 'Title'],
-            ['publisher', 'Publisher'],
-            ['category_list', 'Category']
-          ];
+        .push(function (result_list) {
+          var form_gadget = result_list[1],
+            column_list = [
+              ['title', 'Title'],
+              ['publisher', 'Provider'],
+              ['category_list', 'Category']
+            ];
 
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {

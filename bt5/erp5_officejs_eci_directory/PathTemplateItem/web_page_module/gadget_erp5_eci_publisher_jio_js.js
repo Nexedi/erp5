@@ -43,7 +43,7 @@
   }
 
   function setKpi(key, kpi_list) {
-    if (key === undefined) {
+    if (key === undefined || kpi_list === "") {
       return "";
     }
     return kpi_list.map(function (kpi) {
@@ -65,7 +65,6 @@
     gadget.jio_put = gadget.state_parameter_dict.jio_storage.put;
 
     return gadget.jio_allDocs()
-
       /////////////////////////////////////////////////////////////////
       // Make Publisher datasheets
       /////////////////////////////////////////////////////////////////
@@ -112,10 +111,6 @@
           query: 'portal_type: "publisher"'
         });
       })
-
-      /////////////////////////////////////////////////////////////////
-      // Make Software datasheets
-      /////////////////////////////////////////////////////////////////
       .push(function (publisher_list) {
         var save_software_promise_list,
           publishers,
@@ -130,7 +125,6 @@
             software.portal_type = "solution";
             software.publisher = publisher;
             software.publisher_website = website;
-            software.software_url = software.software_url;
             software.uid = "software_" + software.title;
 
             return gadget.jio_put(software.uid, software);
@@ -151,12 +145,13 @@
         return gadget.jio_allDocs({
           select_list: [
             'title',
-            'website',
+            'publisher_website',
             'success_case_list',
             'publisher',
-            'category_list'
+            'category_list',
+            'website_url'
           ],
-          query: 'portal_type: "Solution"'
+          query: 'portal_type: "solution"'
         });
       })
       /////////////////////////////////////////////////////////////////
@@ -169,12 +164,13 @@
         function saveSuccessCaseListFromSoftware(softwareObject) {
           var software = softwareObject.value,
             publisher = softwareObject.value.publisher,
-            website = softwareObject.value.website,
+            website = softwareObject.value.publisher_website,
             success_case_list = softwareObject.value.success_case_list,
             save_success_case_promise_list;
 
           function isValid(success_case) {
             return (success_case !== "N/A" &&
+                    success_case !== "" &&
                     success_case.title !== "" &&
                     success_case.title !== "N/A");
           }
@@ -182,14 +178,13 @@
           function addProperties(success_case) {
             success_case.portal_type = "success_case";
             success_case.software = software.title;
-            success_case.software_website = software.website;
+            success_case.software_website = software.website_url;
             success_case.publisher = publisher;
             success_case.publisher_website = website;
             success_case.category_list = software.category_list;
             success_case.uid = "case_" + success_case.title;
             return gadget.jio_put(success_case.uid, success_case);
           }
-
           save_success_case_promise_list =
             success_case_list.filter(isValid)
                              .map(addProperties);
@@ -198,7 +193,10 @@
         }
 
         softwares = software_list.data.rows.filter(function (sw) {
-          return (sw.value.success_case_list !== "N/A");
+          return (sw.value.success_case_list !== "N/A" &&
+                  sw.value.success_case_list !== "" &&
+                  sw.value.success_case_list !== undefined
+                 );
         });
         promise_list = softwares.map(saveSuccessCaseListFromSoftware);
 
