@@ -57,17 +57,19 @@ function wrapPromise(promise) {
  *   <tr>
  *    <td>setFile</td>
  *    <td>field_my_file</td>
- *    <td>/data.jpg myfilename.jpg</td>
+ *    <td>/data.jpg myfilename.jpg image/jpg</td>
  *  </tr>
  *
  * @param {string} locator the selenium locator
- * @param {string} url_and_filename the URL and filename, separated by space
+ * @param {string} url_filename_mimetype the URL, filename and optionally mime type,
+ *  separated by spaces
  * @returns {() => boolean}
  */
-Selenium.prototype.doSetFile = function(locator, url_and_filename) {
-  var tmpArray = url_and_filename.split(' ', 2);
+Selenium.prototype.doSetFile = function(locator, url_filename_mimetype) {
+  var tmpArray = url_filename_mimetype.split(' ', 3);
   var url = tmpArray[0];
   var fileName = tmpArray[1];
+  var mimeType = tmpArray[2] || 'application/octet-stream';
 
   if (!fileName) {
     throw new Error('file name must not be empty.');
@@ -87,7 +89,7 @@ Selenium.prototype.doSetFile = function(locator, url_and_filename) {
           new ClipboardEvent('').clipboardData ||
           /* specs compliant (as of March 2018 only Chrome) */
           new DataTransfer();
-        dT.items.add(new File([blob], fileName));
+        dT.items.add(new File([blob], fileName, {type: mimeType}));
         fileField.files = dT.files;
       }));
 };
