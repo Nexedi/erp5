@@ -181,7 +181,7 @@ class Predicate(XMLObject):
           try:
             result = method(self)
           except TypeError:
-            if method.__code__.co_argcount != isinstance(method, MethodType):
+            if method.func_code.co_argcount != isinstance(method, MethodType):
               raise
             # backward compatibilty with script that takes no argument
             warn('Predicate %s uses an old-style method (%s) that does not'
