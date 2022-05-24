@@ -164,7 +164,7 @@ class Alarm(XMLObject, PeriodicityMixin):
           activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
-        func_code = method.__code__
+        func_code = method.func_code
         try:
           has_kw = func_code.co_flags & CO_VARKEYWORDS
         except AttributeError:
