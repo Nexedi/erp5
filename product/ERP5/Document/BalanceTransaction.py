@@ -355,7 +355,10 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
         # matching_diff are negated later
         if matching_diff:
-          matching_diff['quantity'] -= round(new_stock['quantity'], precision)
+          matching_diff['quantity'] = round(
+            matching_diff['quantity'] - new_stock['quantity'],
+            precision)
+
           # Matching_diff and new_stock must be consistent.
           # both with total price or none.
           if matching_diff['total_price'] and new_stock['total_price']:
