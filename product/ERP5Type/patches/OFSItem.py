@@ -44,7 +44,7 @@ def volatileCached(self, func):
     self._v_SimpleItem_Item_vCache = cache_dict = {}
   # Use whole func_code as a key, as it is the only reliable way to identify a
   # function.
-  key = func.func_code
+  key = func.__code__
   try:
     return cache_dict[key]
   except KeyError:
