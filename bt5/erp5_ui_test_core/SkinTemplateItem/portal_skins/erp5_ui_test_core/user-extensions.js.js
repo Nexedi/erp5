@@ -6,13 +6,13 @@
  * Wrap a promise to make it usable by selenium commands.
  *
  * If the promise is rejected, the command will fail with the promise rejection value.
- * If the promise is resovled, the resolved value is not used.
+ * If the promise is resolved, the resolved value is not used.
  *
  * The asynchronicity of do* method is as follow Selenium.prototype.doXXX
  * returns a function and this function will be called again and again until:
- *   * function returns true, which means step is successfull
+ *   * function returns true, which means step is successful
  *   * function returns false, which means step is not finished and function will be called again
- *   * an execption is raised, in that case the step is failed
+ *   * an exception is raised, in that case the step is failed
  *   * global timeout is reached.
  * we implement the state management with similar approach as what's discussed
  * https://stackoverflow.com/questions/30564053/how-can-i-synchronously-determine-a-javascript-promises-state
