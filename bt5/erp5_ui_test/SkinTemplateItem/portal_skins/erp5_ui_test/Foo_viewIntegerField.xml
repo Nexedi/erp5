@@ -95,6 +95,7 @@
                       <list>
                         <string>my_quantity</string>
                         <string>read_only_quantity</string>
+                        <string>your_range_failure</string>
                       </list>
                     </value>
                 </item>
@@ -109,7 +110,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Foo_viewIntegerFields</string> </value>
+            <value> <string>Foo_viewIntegerField</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
