@@ -112,7 +112,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     if (fixit or not self.getEnabled()) and not self.getPortalObject().portal_membership.checkPermission(Permissions.ManagePortal, self):
       raise Unauthorized('fixing problems or activating a disabled alarm is not allowed')
 
-    # Use UnrestrictedMethod, so that the behaviour would not
+    # Use UnrestrictedMethod, so that the behavior would not
     # change even if this method is invoked by random users.
     @UnrestrictedMethod
     def _activeSense():
@@ -150,7 +150,7 @@ class Alarm(XMLObject, PeriodicityMixin):
           #   administrator attention should already be attracted to the issue.
           # - and overall, alarm concurrency should be low enough that
           #   collision should stay extremely low: it should be extremely rare
-          #   for a notification-neabled alarm to run even 10 times in parallel
+          #   for a notification-enabled alarm to run even 10 times in parallel
           #   (as alarms can at most be spawned every minute), and even in such
           #   case the probability of a collision is about 2e-9 (10 / 2**32).
           #   Assuming 10 alarms spawned every second with a one-second duration
