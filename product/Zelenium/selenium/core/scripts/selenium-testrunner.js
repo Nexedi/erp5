@@ -523,11 +523,17 @@ objectExtend(HtmlTestCaseRow.prototype, {
           * @return {string}
            */
           function convertDocumentToDataUrl(doc){
-            return 'data:text/html;charset=utf-8;base64,' + b64EncodeUnicode(doc.body.innerHTML);
+            try {
+              return 'data:text/html;charset=utf-8;base64,' + b64EncodeUnicode(doc.body.innerHTML);
+            } catch (e) {
+              // Document might be empty (after goBack)
+              console.warn("Ignored error while converting document to data-url");
+              return e.toString();
+            }
           }
 
           /**
-          * converts all iframs to a base64 link containing the page content.
+          * converts all iframes to a base64 link containing the page content.
           * @param {Document} doc the document
           * @return {string}
            */
