@@ -44,18 +44,20 @@
             if (EMPTY.includes(solution.logo_url)) {
               solution.logo_url = "gadget_erp5_eci_camera.png?format=png";
             }
-            if (EMPTY.includes(solution.success_case_list) ||
-              EMPTY.includes(solution.success_case_list.length)
-            ) {
-              delete solution.success_case_list;
-            } else {
-              solution.success_case_list = solution.success_case_list
-                .filter(function (entry) {
-                  if (!EMPTY.includes(entry.title)) {
-                    return entry;
-                  }
-                });
-              solution.success_case_list = clean(solution.success_case_list);
+            if (solution.success_case_list) {
+              if (EMPTY.includes(solution.success_case_list) ||
+                EMPTY.includes(solution.success_case_list.length)
+              ) {
+                delete solution.success_case_list;
+              } else {
+                solution.success_case_list = solution.success_case_list
+                  .filter(function (entry) {
+                    if (!EMPTY.includes(entry.title)) {
+                      return entry;
+                    }
+                  });
+                solution.success_case_list = clean(solution.success_case_list);
+              }
             }
             if (EMPTY.includes(solution.wikipedia_url)) {
               delete solution.wikipedia_url;
