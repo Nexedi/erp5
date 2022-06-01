@@ -412,6 +412,7 @@ class Message(BaseMessage):
     else:
       message = "Activity failed"
     path = '/'.join(self.object_path)
+    user = self.user_object
     mail_text = """From: %s <%s>
 To: %s
 Subject: %s: %s/%s
@@ -424,9 +425,16 @@ Document: %s
 Method: %s
 Arguments: %r
 Named Parameters: %r
-""" % (email_from_name, activity_tool.email_from_address, user_email, message,
-       path, self.method_id, getCurrentNode(), fail_count,
-       self.user_name, self.line.uid, path, self.method_id, self.args, self.kw)
+""" % (
+      email_from_name, activity_tool.email_from_address, user_email, message,
+      path, self.method_id, getCurrentNode(), fail_count,
+      (
+        self.user_name
+        if user is None else
+        user.getIdOrUserName()
+      ),
+      self.line.uid, path, self.method_id, self.args, self.kw,
+    )
     if self.traceback:
       mail_text += '\nException:\n' + self.traceback
     if self.call_traceback:
