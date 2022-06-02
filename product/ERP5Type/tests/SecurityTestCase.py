@@ -76,7 +76,7 @@ class AssertPermissionMethod(object):
                       document.rolesOfPermission(self._permission_name)
                       if x['selected']]),
            pformat(document.get_local_roles()),
-           ', '.join(groups)))
+           ', '.join(sorted(groups))))
     finally:
       setSecurityManager(sm)
 
