@@ -158,7 +158,7 @@ def patch_linecache():
 
         return data.splitlines(True) if data is not None else ()
 
-      if basename(filename) == 'Script (Python)':
+      if basename(filename) in ('Script (Python)', 'ERP5 Python Script', 'ERP5 Workflow Script'):
         try:
           script = module_globals['script']
           if script._p_jar.opened:
