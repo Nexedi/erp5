@@ -722,3 +722,59 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 *,bar,Bar,SBar,,,3,desc
 *,foo,Foo,,Rfoo,CFoo,,
 """, csv_data)
+
+  def test_ERP5Site_reindexLatestIndexedObjects(self):
+    module = self.portal.newContent(portal_type='Folder', id='test_folder')
+    # simulate a state where we have:
+    #  - a document that has a more recent state in catalog
+    reindexed = module.newContent(portal_type='Folder', id='reindexed', title="zodb")
+    #  - a document that is only in catalog
+    only_in_catalog = module.newContent(portal_type='Folder', id='only_in_catalog')
+    #  - an old document that should not be touched
+    old = module.newContent(portal_type='Folder', id='old')
+    self.tic()
+    self.portal.erp5_sql_connection().query(
+      'update catalog set title="catalog" where uid=%s' % reindexed.getUid())
+    self.portal.erp5_sql_connection().query(
+      'update catalog set path="not/exist", indexation_timestamp=subdate(current_date, 1) where uid=%s'
+      % only_in_catalog.getUid())
+    self.portal.erp5_sql_connection().query(
+      'update catalog set indexation_timestamp=subdate(current_date, 5) where uid=%s'
+      % old.getUid())
+    self.tic()
+
+    # check we have correctly simulated the state
+    self.assertEqual(
+      [
+        b.title for b in self.portal.portal_catalog(
+          select_list=('title', ), uid=reindexed.getUid(),)
+      ], ['catalog'])
+    brain, = self.portal.portal_catalog(uid=only_in_catalog.getUid())
+    self.assertRaises(KeyError, brain.getObject)
+
+    old_indexation_timestamp, = [
+      b.indexation_timestamp for b in self.portal.portal_catalog(
+        select_list=('indexation_timestamp', ), uid=old.getUid(),)
+    ]
+    output = self.portal.ERP5Site_reindexLatestIndexedObjects()
+    self.assertIn(", 1 object unindexed", output)
+    self.tic()
+
+    # the document that has a more recent state in catalog now have
+    # the same state in zodb and catalog (the zodb state)
+    self.assertEqual(
+      [
+        b.title for b in self.portal.portal_catalog(
+          select_list=('title', ), uid=reindexed.getUid())
+      ], ['zodb'])
+    # the document that was only in catalog has been removed from catalog
+    self.assertFalse(
+      list(self.portal.portal_catalog(uid=only_in_catalog.getUid())))
+    # old was not reindexed
+    self.assertEqual(
+      [
+        b.indexation_timestamp for b in self.portal.portal_catalog(
+          select_list=('indexation_timestamp', ),
+          uid=old.getUid(),
+        )
+      ], [old_indexation_timestamp])
