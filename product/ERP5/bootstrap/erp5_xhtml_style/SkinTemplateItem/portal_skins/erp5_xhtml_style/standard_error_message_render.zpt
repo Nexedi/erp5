@@ -10,7 +10,7 @@
   <p i18n:translate="">An error was encountered while publishing this resource.</p>
   <p>
     <strong i18n:translate="">Error Type: <span tal:replace="options/error_type" i18n:name="error_type" /></strong><br />
-    <strong i18n:translate="">Error Value: <span tal:replace="options/error_value" i18n:name="error_value" /></strong><br />
+    <strong i18n:translate="">Error Value: <span tal:replace="string:options/error_value" i18n:name="error_value" /></strong><br />
   </p>
   <hr noshade="noshade" />
   <p i18n:translate="">Troubleshooting Suggestions</p>
