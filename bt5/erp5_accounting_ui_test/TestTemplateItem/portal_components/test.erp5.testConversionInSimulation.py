@@ -225,6 +225,7 @@ class TestConversionInSimulation(AccountingTestCase):
       # The ones we are creating are for Invoice Transaction Simulation Rule.
       trade_model_path._setCriterionPropertyList(('portal_type',))
       trade_model_path.setCriterion('portal_type', 'Simulation Movement')
+    business_process.validate()
     self.tic()
 
   def buildPackingLists(self):
