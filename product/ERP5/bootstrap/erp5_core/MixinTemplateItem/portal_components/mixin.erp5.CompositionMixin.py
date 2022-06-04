@@ -53,10 +53,11 @@ def _getEffectiveModel(self, start_date, stop_date):
   if not reference:
     return self
 
-  query_list = [Query(reference=reference),
-                Query(portal_type=self.getPortalType()),
-                Query(validation_state=('deleted', 'invalidated'),
-                      operator='NOT')]
+  query_list = [
+    Query(reference=reference),
+    Query(portal_type=self.getPortalType()),
+    Query(validation_state=('validated', )),
+  ]
   if start_date is not None:
     query_list.append(ComplexQuery(Query(effective_date=None),
                                    Query(effective_date=start_date,
@@ -68,16 +69,23 @@ def _getEffectiveModel(self, start_date, stop_date):
                                          range='>'),
                                    logical_operator='OR'))
 
-  # XXX What to do the catalog returns nothing (either because 'self' was just
-  #     created and not yet indexed, or because it was invalidated) ?
-  #     For the moment, we return self if self is invalidated and we raise otherwise.
-  #     This way, if this happens in activity it may succeed when activity is retried.
   model_list = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
       query=ComplexQuery(logical_operator='AND', *query_list),
       sort_on=(('version', 'descending'),))
   if not model_list:
-    if self.getValidationState() == 'invalidated':
-      return self
+    # If there is not other validated model applicable, but the model was referenced
+    # directly in the chain of specialise, use it anyway, as long as the
+    # dates match. This behaviour is mostly for backward compatibility.
+    if self.getValidationState() != 'deleted':
+      if (start_date is None \
+            or (self.getEffectiveDate() is None
+                or self.getEffectiveDate() <= start_date)) \
+          and (stop_date is None \
+            or (self.getExpirationDate() is None \
+                or self.getExpirationDate() > start_date)):
+        return self
+    # The raise below also make the activity retried for cases where the model would
+    # not be indexed yet.
     raise KeyError('No %s found with the reference %s between %s and %s' % \
             (self.getPortalType(), reference, start_date, stop_date))
   return model_list[0].getObject()
