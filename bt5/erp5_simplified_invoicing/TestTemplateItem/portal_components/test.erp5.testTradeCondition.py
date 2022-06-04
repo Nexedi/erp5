@@ -604,6 +604,44 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
         resource_value=self.resource,
         quantity=1).getPrice(), 3)
 
+  def test_supply_line_from_effective_trade_condition_apply_based_on_movement_date(self):
+    self.trade_condition.setReference(self.id())
+    self.trade_condition.setExpirationDate(DateTime(1999, 12, 31))
+    self.trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=2,
+    )
+
+    another_trade_condition = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      effective_date=DateTime(2000, 1, 1),
+      reference=self.id(),
+    )
+    another_trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=3,
+    )
+    another_trade_condition.validate()
+    self.tic()
+
+    self.order.setSpecialiseValue(self.trade_condition)
+
+    self.assertEqual(
+      self.order.newContent(
+        portal_type=self.order_line_type,
+        start_date=DateTime(1999, 1, 1),
+        resource_value=self.resource,
+        quantity=1).getPrice(), 2)
+
+    self.assertEqual(
+      self.order.newContent(
+        portal_type=self.order_line_type,
+        start_date=DateTime(2001, 1, 1),
+        resource_value=self.resource,
+        quantity=1).getPrice(), 3)
+
   # TODO: move to testSupplyLine ! (which does not exist yet)
   def test_supply_line_section(self):
     # if a supply lines defines a section, it has priority over supply lines

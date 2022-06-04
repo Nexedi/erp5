@@ -103,7 +103,10 @@ if explanation is not None:
     # if there are trade conditions containing supply lines related to that
     # order/invoice, we give high priority to those supply lines
     try:
-      composed_document = explanation.asComposedDocument()
+      composed_document = explanation.asContext(
+        start_date=context.getStartDate(),
+        stop_date=context.getStopDate(),
+      ).asComposedDocument()
     except KeyError:
       pass
     else:
