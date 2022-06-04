@@ -479,6 +479,37 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     # not using the supply line inside trade condition
     self.assertEqual(1, line.getPrice())
 
+  def test_supply_line_in_draft_trade_condition_with_reference_does_not_apply(self):
+    # Supply lines in draft trade condition should not apply. This is a
+    # non regression test for a bug happening when there's a validated trade condition
+    # with a reference containing supply lines, but also a draft trade condition with
+    # the same reference. This use to confuse the composition and prices from the
+    # validated trade condition did not apply.
+    self.trade_condition.setReference(self.id())
+    self.trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=2)
+
+    another_trade_condition = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      reference=self.id(),
+    )
+    another_trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=3,
+    )
+    self.tic()
+
+    self.order.setSpecialiseValue(self.trade_condition)
+    # using price from the validated trade condiion
+    self.assertEqual(
+      self.order.newContent(
+        portal_type=self.order_line_type,
+        resource_value=self.resource,
+        quantity=1).getPrice(), 2)
+
   def test_supply_line_in_other_trade_condition_does_not_apply(self):
     """Supply lines from trade condition not related to an order does not apply.
     """
@@ -497,6 +528,44 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                  quantity=1)
     # not using the supply line inside trade condition
     self.assertEqual(None, line.getPrice())
+
+  def test_supply_line_from_effective_trade_condition_apply_based_on_order_date(self):
+    self.trade_condition.setReference(self.id())
+    self.trade_condition.setExpirationDate(DateTime(1999, 12, 31))
+    self.trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=2,
+    )
+
+    another_trade_condition = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      effective_date=DateTime(2000, 1, 1),
+      reference=self.id(),
+    )
+    another_trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=3,
+    )
+    another_trade_condition.validate()
+    self.tic()
+
+    self.order.setSpecialiseValue(self.trade_condition)
+
+    self.order.setStartDate(DateTime(1999, 1, 1))
+    self.assertEqual(
+      self.order.newContent(
+        portal_type=self.order_line_type,
+        resource_value=self.resource,
+        quantity=1).getPrice(), 2)
+
+    self.order.setStartDate(DateTime(2001, 1, 1))
+    self.assertEqual(
+      self.order.newContent(
+        portal_type=self.order_line_type,
+        resource_value=self.resource,
+        quantity=1).getPrice(), 3)
 
   # TODO: move to testSupplyLine ! (which does not exist yet)
   def test_supply_line_section(self):
@@ -538,8 +607,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
   """Tests for getEffectiveModel
 
   XXX open questions:
-   - should getEffectiveModel take validation state into account ? if yes, how
-     to do it in generic/customizable way ?
    - would getEffectiveModel(at_date) be enough ?
   """
   def test_getEffectiveModel(self):
@@ -558,6 +625,13 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                             version='002')
     self.tic()
 
+    self.assertEqual(self.trade_condition,
+        self.trade_condition.getEffectiveModel(
+                    start_date=DateTime('2009/06/01'),
+                    stop_date=DateTime('2009/06/01')))
+
+    other_trade_condition.validate()
+    self.tic()
     self.assertEqual(other_trade_condition,
         self.trade_condition.getEffectiveModel(
                     start_date=DateTime('2009/06/01'),
@@ -619,7 +693,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.assertEqual(self.trade_condition,
         self.trade_condition.getEffectiveModel(start_date=DateTime(),
                                                stop_date=DateTime()))
-
 
 
 class TestWithSaleOrder:

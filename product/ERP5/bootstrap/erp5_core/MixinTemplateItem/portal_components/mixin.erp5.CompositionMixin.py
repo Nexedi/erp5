@@ -53,10 +53,11 @@ def _getEffectiveModel(self, start_date, stop_date):
   if not reference:
     return self
 
-  query_list = [Query(reference=reference),
-                Query(portal_type=self.getPortalType()),
-                Query(validation_state=('deleted', 'invalidated'),
-                      operator='NOT')]
+  query_list = [
+    Query(reference=reference),
+    Query(portal_type=self.getPortalType()),
+    Query(validation_state=('validated', )),
+  ]
   if start_date is not None:
     query_list.append(ComplexQuery(Query(effective_date=None),
                                    Query(effective_date=start_date,
