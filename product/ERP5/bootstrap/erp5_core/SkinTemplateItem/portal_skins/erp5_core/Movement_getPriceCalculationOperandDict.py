@@ -102,7 +102,11 @@ if explanation is not None:
                               context.getPortalOrderTypeList() + context.getPortalDeliveryTypeList():
     # if there are trade conditions containing supply lines related to that
     # order/invoice, we give high priority to those supply lines
-    for supply_line in explanation.asComposedDocument().objectValues(portal_type=context.getPortalSupplyPathTypeList()):
+    for supply_line in explanation.asContext(
+        start_date=context.getStartDate(),
+        stop_date=context.getStopDate(),
+    ).asComposedDocument().objectValues(
+        portal_type=context.getPortalSupplyPathTypeList()):
       supply_cell_list = supply_line.objectValues(
         portal_type=context.getPortalSupplyPathTypeList())
       if supply_cell_list:
