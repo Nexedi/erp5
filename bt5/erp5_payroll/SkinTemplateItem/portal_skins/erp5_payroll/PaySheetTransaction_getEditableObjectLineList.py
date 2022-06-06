@@ -7,7 +7,6 @@
 """
 
 from Products.ERP5Type.Utils import cartesianProduct
-import pprint
 from Products.ERP5Type.Message import translateString
 
 def sortByIntIndex(a, b):
@@ -24,7 +23,7 @@ model_line_list = [x.getObject() for x in model_line_list \
 
 line_list = []
 object_dict_list = []
-id = 0
+id_ = 0
 
 for model_line in model_line_list:
   base_category_list = model_line.getVariationBaseCategoryList()
@@ -33,24 +32,19 @@ for model_line in model_line_list:
   base_application_list = ', '.join(translated_base_application_list)
   list_of_list = []
   for base_category in base_category_list:
-    list = model_line.getVariationCategoryList(base_category_list=\
-        base_category)
-    list_of_list.append(list)
+    list_of_list.append(model_line.getVariationCategoryList(base_category_list=\
+        base_category))
   cartesian_product = cartesianProduct(list_of_list)
 
-  previous_share = None
   object_dict = {}
 
   if cartesian_product == [[]]: 
     share_dict = {}
-    if 0:
-      share_dict[cell.getContributionShare()+'_price'] = 0
-      share_dict[cell.getContributionShare()+'_quantity'] = 0
     continue
 
-  for tuple in cartesian_product:
+  for tuple_ in cartesian_product:
     share_dict = {}
-    cell = model_line.getCell(*tuple)
+    cell = model_line.getCell(*tuple_)
     if cell is None:
       continue
 
@@ -71,7 +65,7 @@ for model_line in model_line_list:
     share_dict[cell.getContributionShare()+'_quantity'] = quantity
 
     tuple_dict = {}
-    for item in tuple:
+    for item in tuple_:
       # the dict key is the base category and value is the category path
       tuple_dict[item.split('/')[0]]=context.portal_categories.restrictedTraverse(item).getTitle()
       tuple_dict[item.split('/')[0]+'_relative_url']=item
@@ -92,8 +86,8 @@ for model_line in model_line_list:
       if tuple_dict.has_key('salary_range'):
         salary_range_title = tuple_dict['salary_range']
         salary_range_relative_url = tuple_dict['salary_range_relative_url']
-      new_uid = "new_%s" % id
-      id += 1
+      new_uid = "new_%s" % id_
+      id_ += 1
       object_dict[salary_range]={
                     'uid':new_uid,
                     'salary_range_title':salary_range_title,
@@ -139,14 +133,14 @@ def sortByIntIndexDescending(x, y):
 sortByDefaultSortMethod = sortByIntIndexAscending
 
 if kw.has_key('sort_on'):
-  list = kw['sort_on']
-  if list[0][0] == 'title' and list[0][1]=='ascending':
+  sort_on = kw['sort_on']
+  if sort_on[0][0] == 'title' and sort_on[0][1]=='ascending':
     line_list.sort(sortByTitleAscending)
-  elif list[0][0] == 'title' and list[0][1]=='descending':
+  elif sort_on[0][0] == 'title' and sort_on[0][1]=='descending':
     line_list.sort(sortByTitleDescending)
-  elif list[0][0] == 'int_index' and list[0][1]=='ascending':
+  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='ascending':
     line_list.sort(sortByIntIndexAscending)
-  elif list[0][0] == 'int_index' and list[0][1]=='descending':
+  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='descending':
     line_list.sort(sortByIntIndexDescending)
   else:
     line_list.sort(sortByDefaultSortMethod)
