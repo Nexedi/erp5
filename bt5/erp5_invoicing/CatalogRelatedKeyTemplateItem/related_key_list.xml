@@ -1,5 +1,5 @@
 <key_list>
  <key>grand_grand_grand_parent_simulation_state | catalog,catalog,catalog,catalog/simulation_state/z_related_grand_grand_grand_parent</key>
- <key>grand_grand_parent_specialise_portal_type | category,catalog,catalog,catalog/portal_type/z_related_grand_grand_parent_specialise</key>
- <key>grand_grand_parent_specialise_reference | category,catalog,catalog,catalog/reference/z_related_grand_grand_parent_specialise</key>
+ <key>grand_grand_parent_specialise_portal_type | catalog,catalog,category,catalog/portal_type/z_related_grand_grand_parent_specialise</key>
+ <key>grand_grand_parent_specialise_reference | catalog,catalog,category,catalog/reference/z_related_grand_grand_parent_specialise</key>
 </key_list>
