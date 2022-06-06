@@ -11,11 +11,11 @@
             <value>
               <list>
                 <string>cell_portal_type</string>
+                <string>columns</string>
                 <string>editable_attributes</string>
+                <string>lines</string>
                 <string>title</string>
                 <string>update_cell_range</string>
-                <string>lines</string>
-                <string>columns</string>
               </list>
             </value>
         </item>
@@ -93,6 +93,12 @@
                     <value> <string>Pay Sheet Model Slice</string> </value>
                 </item>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_attributes</string> </key>
                     <value>
                       <list>
@@ -114,6 +120,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
