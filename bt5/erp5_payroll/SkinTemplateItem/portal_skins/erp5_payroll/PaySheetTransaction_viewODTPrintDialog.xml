@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>PaySheet_printAsODT</string> </value>
+            <value> <string>PaySheetTransaction_printAsODT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheet_viewODTPrintDialog</string> </value>
+            <value> <string>PaySheetTransaction_viewODTPrintDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
