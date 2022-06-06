@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>PaySheetModeLine_init</string> </value>
+            <value> <string>PaySheetModelLine_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
