@@ -8,16 +8,13 @@
       <dictionary>
         <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>table_0\n
 table_1\n
 table_2\n
-table_3\n
 RELATED_QUERY_SEPARATOR=" AND "\n
 query_table="catalog"</string> </value>
         </item>
@@ -27,11 +24,15 @@ query_table="catalog"</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -45,7 +46,7 @@ query_table="catalog"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_grand_grand_parent_specialise</string> </value>
+            <value> <string>z_related_grand_grand_parent_specialise_uid</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
