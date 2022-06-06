@@ -4,10 +4,10 @@
 portal = context.getObject()
 organisation_module = portal.getDefaultModuleValue("Organisation")
 
-def getObjectOrRaise(module, id):
-  obj = getattr(module, id, None)
+def getObjectOrRaise(module, object_id):
+  obj = getattr(module, object_id, None)
   if obj is None:
-    raise AttributeError("%s doesn't have sub-object with id %s" % (module, id))
+    raise AttributeError("%s doesn't have sub-object with id %s" % (module, object_id))
   else:
     return obj
 
