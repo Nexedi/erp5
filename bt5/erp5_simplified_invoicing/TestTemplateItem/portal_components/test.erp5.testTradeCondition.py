@@ -567,6 +567,43 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
         resource_value=self.resource,
         quantity=1).getPrice(), 3)
 
+  def test_supply_line_from_effective_specialised_trade_condition_apply(self):
+    # order -> self.trade_condition -> ~~invalidated_trade_condition~~   <- invalidated, not used
+    #                                    validated_trade_condition     <- validated, used instead
+    invalidated_trade_condition = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      reference=self.id(),
+    )
+    invalidated_trade_condition.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=2,
+    )
+    invalidated_trade_condition.validate()
+    invalidated_trade_condition.invalidate()
+
+    validated_trade_condiiton = self.trade_condition_module.newContent(
+      portal_type=self.trade_condition_type,
+      effective_date=DateTime(2000, 1, 1),
+      reference=self.id(),
+    )
+    validated_trade_condiiton.newContent(
+      portal_type=self.supply_line_type,
+      resource_value=self.resource,
+      base_price=3,
+    )
+    validated_trade_condiiton.validate()
+
+    self.trade_condition.setSpecialiseValue(invalidated_trade_condition)
+    self.order.setSpecialiseValue(self.trade_condition)
+    self.tic()
+
+    self.assertEqual(
+      self.order.newContent(
+        portal_type=self.order_line_type,
+        resource_value=self.resource,
+        quantity=1).getPrice(), 3)
+
   def test_supply_line_from_effective_trade_condition_apply_based_on_movement_date(self):
     self.trade_condition.setReference(self.id())
     self.trade_condition.setExpirationDate(DateTime(1999, 12, 31))
