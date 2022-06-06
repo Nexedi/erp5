@@ -50,34 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>guard</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
+            <value> <string>target_language=\'\', format=\'pdf\', **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetModeLine_init</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string>PaySheetTransaction_printAsODT</string> </value>
         </item>
       </dictionary>
     </pickle>
