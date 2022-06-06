@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>RatioSettings_view</string> </value>
+            <value> <string>PaySheetModelRatioLine_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

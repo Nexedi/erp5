@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>PaySheet_getODTStyleSheet</string> </value>
+            <value> <string>PaySheetTransaction_getODTStyleSheet</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
