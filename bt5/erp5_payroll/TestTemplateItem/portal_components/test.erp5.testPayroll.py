@@ -1628,6 +1628,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         reference='fabien_model_2009',
         effective_date=DateTime(2009, 1, 1),
         expiration_date=DateTime(2009, 06, 30))
+    model_1.validate()
 
     model_2 = self.getPortalObject().paysheet_model_module.newContent( \
         specialise_value=sequence.get('business_process'),
@@ -1636,6 +1637,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         reference='fabien_model_2009',
         effective_date=DateTime(2009, 07, 1),
         expiration_date=DateTime(2009, 12, 31))
+    model_2.validate()
 
     model_line_3 = self.createModelLine(model_1)
     model_line_3.edit(
@@ -1675,12 +1677,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     # calculate the pay sheet
     paysheet.applyTransformation()
     self.tic()
-    # XXX-Aurel Why it is one as the model should not apply since date are not in the range ??
     self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet, if it's model_2, the total_price
     # should be 30000.
-    # self.assertEqual(paysheet.contentValues()[0].getTotalPrice(), 30000)
+    self.assertEqual(paysheet.contentValues()[0].getTotalPrice(), 30000)
 
   def stepCheckModelVersioning(self, sequence=None, **kw):
     '''
