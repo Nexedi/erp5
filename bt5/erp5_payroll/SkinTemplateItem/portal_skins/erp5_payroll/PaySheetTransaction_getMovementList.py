@@ -7,10 +7,9 @@
 
 
 from Products.ERP5Type.Utils import cartesianProduct
-import pprint
 from Products.ERP5Type.Message import translateString
 
-portal = context.getPortalObject();
+portal = context.getPortalObject()
 paysheet_line_list = context.contentValues(portal_type=('Pay Sheet Line', 'Pay Sheet Model Line'))
 if context.getPriceCurrencyValue() is not None:
   precision = context.getPriceCurrencyValue().getQuantityPrecision()
@@ -35,13 +34,10 @@ for paysheet_line in paysheet_line_list:
 
   list_of_list = []
   for base_category in base_category_list:
-    list = paysheet_line.getVariationCategoryList(base_category_list=\
-        base_category)
-    list_of_list.append(list)
+    list_of_list.append(
+      paysheet_line.getVariationCategoryList(base_category_list=\
+        base_category))
   cartesian_product = cartesianProduct(list_of_list)
-
-  previous_share = None
-  indice = 0
 
   if cartesian_product == [[]] or cartesian_product == []:
     params = {
@@ -56,7 +52,6 @@ for paysheet_line in paysheet_line_list:
 
   object_dict = {}
   for product in cartesian_product:
-    indice += 1
     share_dict = {}
     cell = paysheet_line.getCell(base_id='movement', *product)
     if cell is None:
@@ -80,14 +75,14 @@ for paysheet_line in paysheet_line_list:
 
     # we want to display as lines as a paysheet line as slices
     # this is easier to read
-    slice = cell.getSalaryRange()
-    if slice is None:
-      slice = 'no_slice'
-    if not object_dict.has_key(slice):
+    salary_range_slice = cell.getSalaryRange()
+    if salary_range_slice is None:
+      salary_range_slice = 'no_slice'
+    if not object_dict.has_key(salary_range_slice):
       slice_title = None
       if tuple_dict.has_key('salary_range'):
         slice_title=tuple_dict['salary_range']
-      object_dict[slice]={
+      object_dict[salary_range_slice]={
                     'slice':slice_title,
                     'base_name':base_name,
                     'base':base,
@@ -96,9 +91,9 @@ for paysheet_line in paysheet_line_list:
                     'service': service is not None and\
                                         service.getId() or '',
                     'causality': causality,}
-      object_dict[slice].update(share_dict)
+      object_dict[salary_range_slice].update(share_dict)
     else:
-      object_dict[slice].update(**share_dict)
+      object_dict[salary_range_slice].update(**share_dict)
 
   if not object_dict:
     # when the variation categories are set, but no cells.
@@ -119,8 +114,6 @@ for paysheet_line in paysheet_line_list:
       'causality': causality,}
     line_list.append(paysheet_line.asContext(**params))
     continue
-
-#  print pprint.pformat(object_dict)
 
   for object_key in paysheet_line.getSalaryRangeList():
     line_list.append(paysheet_line.asContext(**object_dict[object_key]))
@@ -145,14 +138,14 @@ def sortByIntIndexDescending(x, y):
 sortByDefaultSortMethod = sortByIntIndexAscending
 
 if kw.has_key('sort_on'):
-  list = kw['sort_on']
-  if list[0][0] == 'title' and list[0][1]=='ascending':
+  sort_on = kw['sort_on']
+  if sort_on[0][0] == 'title' and sort_on[0][1]=='ascending':
     line_list.sort(sortByTitleAscending)
-  elif list[0][0] == 'title' and list[0][1]=='descending':
+  elif sort_on[0][0] == 'title' and sort_on[0][1]=='descending':
     line_list.sort(sortByTitleDescending)
-  elif list[0][0] == 'int_index' and list[0][1]=='ascending':
+  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='ascending':
     line_list.sort(sortByIntIndexAscending)
-  elif list[0][0] == 'int_index' and list[0][1]=='descending':
+  elif sort_on[0][0] == 'int_index' and sort_on[0][1]=='descending':
     line_list.sort(sortByIntIndexDescending)
   else:
     line_list.sort(sortByDefaultSortMethod)
