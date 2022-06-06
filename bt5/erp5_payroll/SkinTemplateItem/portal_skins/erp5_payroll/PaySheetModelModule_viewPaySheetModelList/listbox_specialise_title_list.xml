@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>display_width</string>
                 <string>default</string>
+                <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -79,6 +79,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
