@@ -10,12 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>css_class</string>
+                <string>display_width</string>
                 <string>editable</string>
                 <string>input_style</string>
-                <string>display_width</string>
                 <string>precision</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -93,6 +93,10 @@
                     <value> <string>figure</string> </value>
                 </item>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -107,6 +111,10 @@
                 <item>
                     <key> <string>input_style</string> </key>
                     <value> <string>-1 234.5</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
