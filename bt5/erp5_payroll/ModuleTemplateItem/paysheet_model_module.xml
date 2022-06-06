@@ -11,9 +11,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Add ERP5TioSafe Tools</name>
-  </permission>
-  <permission type='tuple'>
    <name>Add portal content</name>
    <role>Assignor</role>
    <role>Author</role>
