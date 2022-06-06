@@ -30,7 +30,6 @@ if not employer:
 if not quantity_unit:
   return redirect('The work duration unit must be defined')
 
-employer_obj = paysheet.getDestinationSectionValue()
 employee_obj = paysheet.getSourceSectionValue()
 
 if not employee_obj.getCareerGrade():
