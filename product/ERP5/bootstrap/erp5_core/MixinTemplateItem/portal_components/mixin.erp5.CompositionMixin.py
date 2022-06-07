@@ -76,7 +76,7 @@ def _getEffectiveModel(self, start_date, stop_date):
     # If there is not other validated model applicable, but the model was referenced
     # directly in the chain of specialise, use it anyway, as long as the
     # dates match. This behaviour is mostly for backward compatibility.
-    if self.getValidationState() != 'deleted':
+    if 0 and self.getValidationState() != 'deleted':
       if (start_date is None \
             or (self.getEffectiveDate() is None
                 or self.getEffectiveDate() <= start_date)) \
