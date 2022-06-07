@@ -34,10 +34,11 @@ import string
 import random
 import urllib
 
+
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
     for _ in xrange(32)])
-    
+
 def chunks(l, n):
   """Yield successive n-sized chunks from l."""
   for i in xrange(0, len(l), n):
@@ -510,3 +511,16 @@ class Test(ERP5TypeTestCase):
                      len(to_delete_data_analysis.objectValues()))
     self.assertEqual("started", to_delete_data_analysis.getSimulationState())
 
+  def test_11_temporaryDataArray(self):
+    """
+      Test if temporary Data Array is functional.
+    """
+    portal = self.portal
+    ndarray = np.array([[0, 1], [2, 3]])
+    temporary_data_array = portal.data_array_module.newContent(
+      portal_type='Data Array',
+      temp_object=True
+    )
+    zbigarray = temporary_data_array.initArray(shape=ndarray.shape, dtype=ndarray.dtype)
+    zbigarray.append(ndarray)
+    self.assertTrue(np.array_equal(zbigarray[2:], ndarray))
