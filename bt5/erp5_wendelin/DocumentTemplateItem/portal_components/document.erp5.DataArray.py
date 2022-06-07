@@ -31,6 +31,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.BigFile import BigFile
 from wendelin.bigarray.array_zodb import ZBigArray
 from erp5.component.document.File import _MARKER
+from wendelin.bigarray.array_ram import RAMArray
 from ZPublisher import HTTPRangeSupport
 from webdav.common import rfc1123_date
 from DateTime import DateTime
@@ -60,7 +61,10 @@ class DataArray(BigFile):
     """
     Initialise array.
     """
-    array = ZBigArray(shape, dtype)
+    if self.__module__ == "erp5.temp_portal_type":
+      array = RAMArray(shape, dtype)
+    else:
+      array = ZBigArray(shape, dtype)
     self._setArray(array)
     return array
 
