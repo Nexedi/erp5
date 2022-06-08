@@ -95,10 +95,10 @@
         if (this.state.maxlength) {
           textarea.setAttribute('maxlength', this.state.maxlength);
         }
-        if (this.state.min !== "") {
+        if (this.state.min && this.state.min !== "") {
           textarea.setAttribute('min', this.state.min);
         }
-        if (this.state.max !== "") {
+        if (this.state.max && this.state.max !== "") {
           textarea.setAttribute('max', this.state.max);
         }
 
