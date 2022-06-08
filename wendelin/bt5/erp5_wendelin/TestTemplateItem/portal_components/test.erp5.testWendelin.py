@@ -28,10 +28,12 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from wendelin.bigarray.array_zodb import ZBigArray
 from cStringIO import StringIO
+import binascii
 import msgpack
 import numpy as np
 import string
 import random
+import struct
 import urllib
 
 
@@ -524,3 +526,33 @@ class Test(ERP5TypeTestCase):
     zbigarray = temporary_data_array.initArray(shape=ndarray.shape, dtype=ndarray.dtype)
     zbigarray.append(ndarray)
     self.assertTrue(np.array_equal(zbigarray[2:], ndarray))
+
+  def test_12_numpyWendelinConversion(self):
+    """
+      Test if conversion from numpy arrays to wendelin data works.
+    """
+    portal = self.portal
+    ndarray = np.array([[0, 1], [2, 3]])
+    wendelin_data = portal.Base_numpyToWendelinData(ndarray)
+    reconverted_ndarray = portal.Base_wendelinDataToNumpy(wendelin_data)
+
+    self.assertIsInstance(wendelin_data, bytes)
+
+    # Check for header
+    self.assertEqual(wendelin_data[:4], b'\x92WEN')
+
+    # Test checksum
+    checksum = struct.unpack('<i', wendelin_data[6:10])[0]
+    self.assertEqual(checksum, binascii.crc32(wendelin_data[10:]))
+
+    # Test inverse conversion works
+    self.assertTrue(np.array_equal(ndarray, reconverted_ndarray))
+
+    self.assertTrue(
+      np.array_equal(
+        portal.Base_wendelinTextToNumpy(
+          "kldFTgABq96QqZNOVU1QWQEARgB7J2Rlc2NyJzogJzxmOCcsICdmb3J0cmFuX29yZGVyJzogRmFsc2UsICdzaGFwZSc6ICgwLCksIH0gICAgICAgICAgICAK="
+        ),
+        np.array([]),
+      )
+    )
