@@ -2,7 +2,6 @@
   this script is the conductor. All other scripts that permit to create a 
   paysheet are called here
 '''
-import pprint
 
 # Delete all objects in the paysheet
 id_list = []

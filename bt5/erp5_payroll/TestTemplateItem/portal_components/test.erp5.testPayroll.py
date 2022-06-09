@@ -28,7 +28,6 @@
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from erp5.component.test.testTradeModelLine import TestTradeModelLineMixin
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
@@ -147,13 +146,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       module.manage_delObjects(list(module.objectIds()))
 
     self.portal.business_process_module.manage_delObjects(list([x for x in self.portal.business_process_module.objectIds() if x != "erp5_default_business_process"]))
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('admin', '', ['Manager', 'Assignee', 'Assignor',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('admin').__of__(uf)
-    newSecurityManager(None, user)
 
   @reindex
   def createCategories(self):
@@ -328,10 +320,12 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     )
     sequence.edit(model = model)
 
-  def addSlice(self, model, slice, min_value, max_value, base_id='cell'):
+  def addSlice(self, model, paysheet_model_slice, min_value, max_value, base_id='cell'):
     '''add a new slice in the model'''
-    slice_value = model.newCell(slice, portal_type='Pay Sheet Model Slice',
-        base_id=base_id)
+    slice_value = model.newCell(
+      paysheet_model_slice,
+      portal_type='Pay Sheet Model Slice',
+      base_id=base_id)
     slice_value.setQuantityRangeMax(max_value)
     slice_value.setQuantityRangeMin(min_value)
     return slice_value
@@ -588,7 +582,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       expected_movement_to_delete_count, expected_movement_to_add_count):
     movement_dict = paysheet.updateAggregatedAmountList()
     movement_to_delete = movement_dict['movement_to_delete_list']
-    movement_to_add = movement_dict['movement_to_add_list']
+    # movement_to_add = movement_dict['movement_to_add_list']
     self.assertEqual(len(movement_to_delete),
         expected_movement_to_delete_count)
     #    self.assertEqual(len(movement_to_add), expected_movement_to_add_count)
@@ -1540,7 +1534,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     portal_type_list = ['Pay Sheet Model Line',]
 
     # if no reference, we don't care about dates
-    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
+    paysheet.getInheritedObjectValueList(portal_type_list)
 
     self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 0)
@@ -1606,8 +1600,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                   price_currency_value=eur)
     paysheet_with_date.PaySheetTransaction_applyModel()
     self.tic()
-
-    portal_type_list = ['Pay Sheet Model Line',]
 
     # check the paysheet contains no lines before calculation
     self.assertEqual(len(paysheet_with_date.contentValues(\
@@ -1954,9 +1946,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     form = getattr(here, report_section.getFormId())
     self.portal.REQUEST['here'] = here
     if form.has_field('listbox'):
-      result = form.listbox.get_value('default',
-                                      render_format='list',
-                                      REQUEST=self.portal.REQUEST)
+      form.listbox.get_value(
+        'default', render_format='list', REQUEST=self.portal.REQUEST)
       self.assertEqual(precision, self.portal.REQUEST.get('precision'))
     report_section.popReport(self.portal)
 

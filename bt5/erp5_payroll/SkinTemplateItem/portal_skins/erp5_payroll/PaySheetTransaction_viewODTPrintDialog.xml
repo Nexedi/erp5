@@ -35,11 +35,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>PaySheetTransaction_printAsODT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -47,7 +53,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -55,9 +61,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -66,28 +69,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
+                        <string>your_target_language</string>
+                        <string>your_international_form</string>
                       </list>
                     </value>
                 </item>
@@ -95,7 +81,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_quantity</string>
+                        <string>your_format</string>
                       </list>
                     </value>
                 </item>
@@ -104,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>RatioSettings_viewFieldLibrary</string> </value>
+            <value> <string>PaySheetTransaction_viewODTPrintDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -112,11 +98,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PaySheetTransaction_viewAnnotationLine</string> </value>
+            <value> <string>Base_viewODTPrintDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -128,7 +114,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Ratio Settings</string> </value>
+            <value> <string>Print Payslip</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -1,5 +1,4 @@
 translateString = context.Base_translateString
-specialise_value = context.getSpecialiseValue()
 
 
 def getFieldAsString(field):
@@ -11,14 +10,6 @@ def getFieldAsLineList(field):
   text = field.replace('\r', '')
   text_list = text.split('\n')
   return [x for x in text_list if x]
-
-def getProductAndLineDesc(prod_desc, line_desc):
-  line_list = []
-  if line_desc:
-    line_list.extend(getFieldAsLineList(line_desc))
-  elif prod_desc:
-    line_list.extend(getFieldAsLineList(prod_desc))
-  return line_list
 
 def getOneLineAddress(text, region):
   text_list = [getFieldAsString(text)]
@@ -117,7 +108,6 @@ def getSocialOrganisationValue():
 
 line_list = []
 total_price = 0.0
-total_vat = 0.0
 
 def unicodeDict(d):
   for k, v in d.items():
