@@ -33,8 +33,8 @@
         // hide some buttons that do not make sense for us 
         gadget.props.element.querySelector('#viewBookmark').hidden = true;
         gadget.props.element.querySelector('#documentProperties').hidden = true;
-        gadget.props.element.querySelector('#documentProperties').hidden = true;
         gadget.props.element.querySelector('#download').hidden = true;
+        gadget.props.element.querySelector('#openFile').hidden = true;
       })
     })
     .declareMethod("getContent", function () {
