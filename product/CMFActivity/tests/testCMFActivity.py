@@ -2835,3 +2835,44 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
     finally:
       setSecurityManager(initial_security_manager)
       del Organisation.checkUserGroupAndRole
+
+  @for_each_activity
+  def test_dummyGroupMethodUser(self, activity):
+    activity_tool = self.portal.portal_activities
+    user_folder = self.portal.acl_users
+    expected_user_list = [
+      PropertiedUser(id='user1', login='user1').__of__(user_folder),
+      PropertiedUser(id='user2', login='user2').__of__(user_folder),
+    ]
+    for index, user in enumerate(expected_user_list):
+      user._addGroups(groups=['role %i' % index])
+    context_list = [
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+      for _ in expected_user_list
+    ]
+    self.tic()
+    user_list = [None for _ in expected_user_list]
+    def doSomething(self, index):
+      user_list[index] = getSecurityManager().getUser()
+    Organisation.doSomething = doSomething
+    try:
+      initial_security_manager = getSecurityManager()
+      try:
+        for index, (context, user) in enumerate(zip(
+          context_list,
+          expected_user_list,
+        )):
+          newSecurityManager(None, user)
+          context.activate(
+            activity=activity,
+            group_method_id=None,
+          ).doSomething(index=index)
+      finally:
+        setSecurityManager(initial_security_manager)
+      self.tic()
+    finally:
+      del Organisation.doSomething
+    self.assertEqual(
+      [x.getRoles() for x in user_list],
+      [x.getRoles() for x in expected_user_list],
+    )

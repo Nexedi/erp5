@@ -1693,15 +1693,10 @@ class ActivityTool (BaseTool):
     class dummyGroupMethod(object):
       def __bobo_traverse__(self, REQUEST, method_id):
         def group_method(message_list):
-          user_name = None
           sm = getSecurityManager()
           try:
             for m in message_list:
-              message = m._message
-              message_user_id = message.getUserId()
-              if message.user_object or user_name != message.user_name:
-                user_name = message.user_name
-                message.changeUser(m.object)
+              m._message.changeUser(m.object, annotate_transaction=False)
               m.result = getattr(m.object, method_id)(*m.args, **m.kw)
           except Exception:
             m.raised()
