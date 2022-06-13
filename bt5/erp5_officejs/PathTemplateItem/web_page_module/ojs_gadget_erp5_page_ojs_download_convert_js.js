@@ -139,6 +139,7 @@
             },
             form_definition: {
               title: "Download",
+              action: "download",
               group_list: [[
                 "center",
                 [["my_format"]]
