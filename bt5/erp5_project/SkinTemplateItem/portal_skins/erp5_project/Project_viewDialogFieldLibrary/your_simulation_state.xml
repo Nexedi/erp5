@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:ERP5Site_getWorkflowStateItemList(portal_type=(\'Task\', \'Task Report\'), state_var=\'simulation_state\', display_none_category=False)</string> </value>
+            <value> <string>python: context.ERP5Site_getWorkflowStateItemList(portal_type=(\'Task\', \'Task Report\'), state_var=\'simulation_state\', display_none_category=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
