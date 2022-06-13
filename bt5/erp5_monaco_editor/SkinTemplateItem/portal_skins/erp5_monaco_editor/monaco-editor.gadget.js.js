@@ -145,6 +145,7 @@
                   // see http://json.schemastore.org/prettierrc for supported options.
                   singleQuote: true,
                   tabWidth: 2,
+                  trailingComma: 'none'
                 });
 
                 return [
