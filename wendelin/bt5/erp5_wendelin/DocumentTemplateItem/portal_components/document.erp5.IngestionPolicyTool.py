@@ -31,18 +31,6 @@ from Products.ERP5Type.Core.Folder import Folder
 from cStringIO import StringIO
 import msgpack
 
-class RestrictedUnpacker:
-  """
-  A lazy Unpacker which works in zopes restricted environment
-  """
-  def __init__(self, unpacker):
-    self.unpacker = unpacker
-    
-  def __iter__(self):
-    return self
-    
-  def next(self):
-    return self.unpacker.next()
 
 class IngestionPolicyTool(Folder):
   """
@@ -83,4 +71,4 @@ class IngestionPolicyTool(Folder):
       Setting use_list=False uses tuples instead of lists which is faster
     """
     data_file = StringIO(data)
-    return RestrictedUnpacker(msgpack.Unpacker(data_file, use_list=use_list))
+    return (x for x in msgpack.Unpacker(data_file, use_list=use_list))
