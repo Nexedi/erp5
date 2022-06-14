@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Core.Folder import Folder
 from cStringIO import StringIO
 import msgpack
+from warnings import warn
 
 
 class IngestionPolicyTool(Folder):
@@ -64,8 +65,15 @@ class IngestionPolicyTool(Folder):
     # we need pure primitive list so we avoid zope security in restricted 
     # script environment, but we loose lazyness
     return [x for x in msgpack_list]
-    
+
   def unpack_lazy(self, data, use_list=True):
+    warn(
+      "Method 'unpack_lazy' is deprecated. Please use 'unpackLazy' instead.",
+      DeprecationWarning
+    )
+    return self.unpack_lazy(data, use_list=use_list)
+
+  def unpackLazy(self, data, use_list=True):
     """
       Lazy unpack data, usable in restructed environment
       Setting use_list=False uses tuples instead of lists which is faster
