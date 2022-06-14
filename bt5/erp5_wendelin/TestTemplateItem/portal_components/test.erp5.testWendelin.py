@@ -25,8 +25,6 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from wendelin.bigarray.array_zodb import ZBigArray
 from cStringIO import StringIO
 import binascii
 import msgpack
@@ -34,7 +32,14 @@ import numpy as np
 import string
 import random
 import struct
+import textwrap
 import urllib
+import uuid
+from zExceptions import BadRequest
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
+from wendelin.bigarray.array_zodb import ZBigArray
 
 
 def getRandomString():
@@ -53,6 +58,16 @@ class Test(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Wendelin Test"
+
+  def createAndRunScript(self, code, expected):
+    # we do not care the script name for security test thus use uuid1
+    name = str(uuid.uuid1())
+    script_container = self.portal.portal_skins.custom
+    try:
+      createZODBPythonScript(script_container, name, '**kw', textwrap.dedent(code))
+      self.assertEqual(getattr(self.portal, name)(), expected)
+    finally:
+      removeZODBPythonScript(script_container, name)
 
   def test_01_IngestionFromFluentd(self, old_fluentd=False):
     """
@@ -556,3 +571,35 @@ class Test(ERP5TypeTestCase):
         np.array([]),
       )
     )
+
+  def test_13_unpackLazy(self):
+    """
+      Ensure unpackLazy is available and functional in restricted python
+    """
+    ingestion_policy_id = "test_13_unpackLazy_IngestionPolicy"
+    try:
+      ingestion_policy = self.getPortal().portal_ingestion_policies.newContent(
+        id=ingestion_policy_id,
+        title=ingestion_policy_id,
+        portal_type='Ingestion Policy',
+        reference=ingestion_policy_id,
+        version = '001',
+      )
+    # ingestion_policy still exists from previous failed test run
+    except BadRequest:
+      ingestion_policy = self.portal.get(ingestion_policy_id)
+
+    self.assertNotEqual(ingestion_policy, None)
+
+    self.commit()
+    self.tic()
+
+    self.addCleanup(self._removeDocument, ingestion_policy)
+
+    code = r"""
+ingestion_policy = context.portal_ingestion_policies.get("{}")
+result = [x for x in ingestion_policy.unpackLazy('b"\x93\x01\x02\x03"')]
+return result
+""".format(ingestion_policy_id)
+
+    self.createAndRunScript(code, [98, 34, [1, 2, 3], 34])
