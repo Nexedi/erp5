@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 import hashlib
 from BTrees.OOBTree import OOBTree
 from BTrees.LOBTree import LOBTree
@@ -34,6 +35,7 @@ from erp5.component.document.Document import Document
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.module.BTreeData import PersistentString
 from erp5.component.module.Log import log
+from AccessControl.ZopeGuards import ContainerAssertions
 
 
 class IndexSequence(object):
@@ -412,3 +414,18 @@ class DataBucketStream(Document):
     self.initIndexTree()
     for count, key in enumerate(self.getBucketKeySequenceByKey()):
       self._long_index_tree.insert(count, key)
+
+
+# Allow iteration over IndexSequence based classes
+# in restricted python.
+for index_class in (
+  IndexSequence,
+  IndexKeySequence,
+  IndexValueSequence,
+  IndexItemSequence,
+  IndexKeyItemSequence,
+):
+  ContainerAssertions[index_class] = 1
+
+# Cleanup
+del index_class
