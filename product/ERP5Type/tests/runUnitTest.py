@@ -152,7 +152,7 @@ Options:
                              This option only makes sense with --activity_node=
                              or when not specifying a test to run.
   --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
-                             Adresses can be given in the following syntaxs:
+                             Addresses can be given in the following syntaxs:
                                - HOST:PORT
                                - PORT in this case, host will be 127.0.0.1
                                - HOST in this case a free port will be assigned
@@ -502,7 +502,7 @@ _print = sys.stderr.write
 
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
-    _print("conflicting options: --zeo_client and --zeo_server")
+    _print("conflicting options: --zeo_client and --zeo_server\n")
     sys.exit(1)
   instance_home =  os.environ['INSTANCE_HOME']
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(log_directory, 'zLOG.log'))
@@ -653,7 +653,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       if not (dummy or load):
         _print('WARNING: either --save or --load should be used because static'
                ' files are only reloaded by the node installing business'
-               ' templates.')
+               ' templates.\n')
     else:
       if dummy:
         # Skip all tests and monkeypatch PortalTestCase to skip
