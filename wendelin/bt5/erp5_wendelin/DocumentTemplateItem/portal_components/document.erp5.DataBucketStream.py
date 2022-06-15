@@ -35,7 +35,8 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.module.BTreeData import PersistentString
 from erp5.component.module.Log import log
 
-class IndexSequence:
+
+class IndexSequence(object):
   """
   A Sequence base class for data bucket stream following the
   BTree.IReadSequence Interface
@@ -58,6 +59,7 @@ class IndexSequence:
     sub_index_sequence = self.index_sequence[index1:index2]
     return self.__class__(self.data_bucket_stream, sub_index_sequence)
 
+
 class IndexKeySequence(IndexSequence):
   """
   A Sequence class to get a value sequence for data bucket stream
@@ -68,7 +70,8 @@ class IndexKeySequence(IndexSequence):
     """
     bucket_index, bucket_key = self.index_sequence[index]
     return (bucket_index, bucket_key)
-    
+
+
 class IndexValueSequence(IndexSequence):
   """
   A Sequence class to get a value sequence for data bucket stream
@@ -79,7 +82,8 @@ class IndexValueSequence(IndexSequence):
     """
     bucket_key = self.index_sequence[index]
     return self.data_bucket_stream.getBucketByKey(bucket_key)
-  
+
+
 class IndexItemSequence(IndexSequence):
   """
   A Sequence class to get a index item sequence for data bucket stream
@@ -104,74 +108,6 @@ class IndexKeyItemSequence(IndexSequence):
     return (bucket_index, bucket_key,
             self.data_bucket_stream.getBucketByKey(bucket_key))
 
-class IndexSequence:
-  """
-  A Sequence base class for data bucket stream following the
-  BTree.IReadSequence Interface
-  """
-  def __init__(self, data_bucket_stream, index_sequence):
-    self.data_bucket_stream = data_bucket_stream
-    self.index_sequence = index_sequence
-
-  def __getitem__(self, index):
-    """Return the value at the given index.
-    An IndexError is raised if the index cannot be found.
-    """
-    raise NotImplementedError
-
-  def __getslice__(self, index1, index2):
-    """Return a subsequence from the original sequence.
-    The subsequence includes the items from index1 up to, but not
-    including, index2.
-    """
-    sub_index_sequence = self.index_sequence[index1:index2]
-    return self.__class__(self.data_bucket_stream, sub_index_sequence)
-
-class IndexKeySequence(IndexSequence):
-  """
-  A Sequence class to get a value sequence for data bucket stream
-  """
-  def __getitem__(self, index):
-    """Return the value at the given index.
-    An IndexError is raised if the index cannot be found.
-    """
-    bucket_index, bucket_key = self.index_sequence[index]
-    return (bucket_index, bucket_key)
-    
-class IndexValueSequence(IndexSequence):
-  """
-  A Sequence class to get a value sequence for data bucket stream
-  """
-  def __getitem__(self, index):
-    """Return the value at the given index.
-    An IndexError is raised if the index cannot be found.
-    """
-    bucket_key = self.index_sequence[index]
-    return self.data_bucket_stream.getBucketByKey(bucket_key)
-  
-class IndexItemSequence(IndexSequence):
-  """
-  A Sequence class to get a index item sequence for data bucket stream
-  """
-  def __getitem__(self, index):
-    """Return the value at the given index.
-    An IndexError is raised if the index cannot be found.
-    """
-    bucket_index, bucket_key = self.index_sequence[index]
-    return (bucket_index, self.data_bucket_stream.getBucketByKey(bucket_key))
-
-
-class IndexKeyItemSequence(IndexSequence):
-  """
-  A Sequence class to get a index key item sequence for data bucket stream
-  """
-  def __getitem__(self, index):
-    """Return the value at the given index.
-    An IndexError is raised if the index cannot be found.
-    """
-    bucket_index, bucket_key = self.index_sequence[index]
-    return (bucket_index, bucket_key,
-            self.data_bucket_stream.getBucketByKey(bucket_key))
 
 class DataBucketStream(Document):
   """
@@ -188,9 +124,10 @@ class DataBucketStream(Document):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.CategoryCore
-                    , PropertySheet.SortIndex
-                    )
+  property_sheets = (
+    PropertySheet.CategoryCore,
+    PropertySheet.SortIndex
+  )
 
   def __init__(self, id, **kw):
     self.initBucketTree()
@@ -392,32 +329,6 @@ class DataBucketStream(Document):
     log('DeprecationWarning: Please use getBucketKeyItemSequenceByKey')
     return self.getBucketKeyItemSequenceByKey(start_key=start_key, count=count,
                                            exclude_start_key=exclude_start_key)
-    
-  def getBucketIndexItemSequenceByIndex(self, start_index=None, stop_index=None,
-              count=None, exclude_start_index=False, exclude_stop_index=False):
-    """
-      Get a lazy sequence of bucket items
-    """
-    sequence = self._long_index_tree.items(min=start_index, max=stop_index,
-                                           excludemin=exclude_start_index,
-                                           excludemax=exclude_stop_index)
-    if count is not None:
-      sequence = sequence[:count]
-    return IndexItemSequence(self, sequence)
-
-  def getBucketIndexKeyItemSequenceByIndex(self, start_index=None,
-                                           stop_index=None, count=None,
-                                           exclude_start_index=False,
-                                           exclude_stop_index=False):
-    """
-      Get a lazy sequence of bucket items
-    """
-    sequence = self._long_index_tree.items(min=start_index, max=stop_index,
-                                      excludemin=exclude_start_index,
-                                      excludemax=exclude_stop_index)
-    if count is not None:
-      sequence = sequence[:count]
-    return IndexKeyItemSequence(self, sequence)
     
   def getBucketIndexItemSequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
