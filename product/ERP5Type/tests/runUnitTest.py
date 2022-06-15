@@ -557,8 +557,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # On recent Zope, ZopeTestCase does not have any logging facility.
   # So we must emulate the usual Zope startup code to catch log messages.
   from ZConfig.matcher import SectionValue
+  logging_format = '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s'
+  if os.environ.get('activity_node'):
+    logging_format = '%(process)d ' + logging_format
   section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
-                          'format': '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s',
+                          'format': logging_format,
                           'level': logging.INFO,
                           'path': os.environ['EVENT_LOG_FILE'],
                           'max_size': None,
