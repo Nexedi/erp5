@@ -141,6 +141,16 @@ Options:
                              activities.
   --zeo_server=[[HOST:]PORT] Bind the ZEO server to the given host/port.
   --zeo_client=[HOST:]PORT   Use specified ZEO server as storage.
+  --processing_node_loop=LOOP
+                             Make ZEO clients execute the given loop, one of:
+                               - processing_node: process activities only.
+                                 this is the default.
+                               - timerserver: start a timer server thread,
+                                 which will typically execute activities,
+                                 alarms and everything else registered on
+                                 timer service.
+                             This option only makes sense with --activity_node=
+                             or when not specifying a test to run.
   --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
                              Adresses can be given in the following syntaxs:
                                - HOST:PORT
@@ -638,7 +648,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     if zeo_server_pid == 0:
       suite = ZEOServerTestCase('asyncore_loop')
     elif node_pid_list is None or not test_list:
-      suite = ProcessingNodeTestCase('processing_node')
+      processing_node_loop = os.environ.get('processing_node_loop', 'processing_node')
+      suite = ProcessingNodeTestCase(processing_node_loop)
       if not (dummy or load):
         _print('WARNING: either --save or --load should be used because static'
                ' files are only reloaded by the node installing business'
@@ -763,6 +774,7 @@ def main(argument_list=None):
         "live_instance=",
         "zeo_client=",
         "zeo_server=",
+        "processing_node_loop=",
         "zserver=",
         "zserver_frontend_url=",
         "neo_storage",
@@ -878,6 +890,8 @@ def main(argument_list=None):
       os.environ["zeo_client"] = arg
     elif opt == "--zeo_server":
       os.environ["zeo_server"] = arg
+    elif opt == "--processing_node_loop":
+      os.environ["processing_node_loop"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
     elif opt == "--zserver_frontend_url":

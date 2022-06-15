@@ -390,3 +390,26 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
             LOG('Invoking Activity Tool', ERROR, '', error=True)
     except KeyboardInterrupt:
       pass
+
+  def timerserver(self):
+    """Main loop using timer server.
+    """
+    import Products.TimerService
+
+    timerserver_thread = None
+    try:
+      while not Lifetime._shutdown_phase:
+        time.sleep(.3)
+        transaction.begin()
+        try:
+          self.portal = self.app[self.app.test_portal_name]
+        except (AttributeError, KeyError):
+          continue
+        self._setUpDummyMailHost()
+        if not timerserver_thread:
+          timerserver_thread = Products.TimerService.timerserver.TimerServer.TimerServer(
+            module='Zope2',
+            interval=0.1,
+          )
+    except KeyboardInterrupt:
+      pass
