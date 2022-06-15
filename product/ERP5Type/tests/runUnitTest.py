@@ -682,7 +682,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         ERP5TypeTestLoader.filter_test_list = None
 
     if node_pid_list is None:
-      result = suite()
+      result = suite.debug()
     else:
       if not test_list:
         root_logger.handlers.append(loghandler.StreamHandler(sys.stderr))
