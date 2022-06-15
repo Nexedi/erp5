@@ -9,8 +9,9 @@ from Testing import ZopeTestCase
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
-  addUserToDeveloperRole, createZServer, parseListeningAddress
+  addUserToDeveloperRole, createZServer, DummyMailHostMixin, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
@@ -354,6 +355,23 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     self._registerNode(distributing=not cluster, processing=1)
     self.commit()
 
+  def _setUpDummyMailHost(self):
+    """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
+    """
+    cls = self.portal.MailHost.__class__
+    if not issubclass(cls, DummyMailHostMixin):
+      cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
+      pmc_init_of(cls)
+
+  def _restoreMailHost(self):
+    """Restore original Mail Host
+    """
+    if self.portal is not None:
+      cls = self.portal.MailHost.__class__
+      if cls.__bases__[0] is DummyMailHostMixin:
+        cls.__bases__ = cls.__bases__[1:]
+        pmc_init_of(cls)
+
   def processing_node(self):
     """Main loop for nodes that process activities"""
     try:
@@ -361,9 +379,10 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         time.sleep(.3)
         transaction.begin()
         try:
-          portal = self.app[self.app.test_portal_name]
+          portal = self.portal = self.app[self.app.test_portal_name]
         except (AttributeError, KeyError):
           continue
+        self._setUpDummyMailHost()
         if portal.portal_activities.isSubscribed():
           try:
             portal.portal_activities.process_timer(None, None)
