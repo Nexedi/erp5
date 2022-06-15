@@ -71,7 +71,7 @@ class IngestionPolicyTool(Folder):
       "Method 'unpack_lazy' is deprecated. Please use 'unpackLazy' instead.",
       DeprecationWarning
     )
-    return self.unpack_lazy(data, use_list=use_list)
+    return self.unpackLazy(data, use_list=use_list)
 
   def unpackLazy(self, data, use_list=True):
     """
