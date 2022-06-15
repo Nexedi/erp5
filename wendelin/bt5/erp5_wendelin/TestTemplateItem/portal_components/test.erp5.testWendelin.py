@@ -59,7 +59,7 @@ class Test(ERP5TypeTestCase):
   def getTitle(self):
     return "Wendelin Test"
 
-  def createAndRunScript(self, code, expected):
+  def createAndRunScript(self, code, expected=None):
     # we do not care the script name for security test thus use uuid1
     name = str(uuid.uuid1())
     script_container = self.portal.portal_skins.custom
@@ -603,3 +603,19 @@ return result
 """.format(ingestion_policy_id)
 
     self.createAndRunScript(code, [98, 34, [1, 2, 3], 34])
+
+  def test_14_IndexSequenceInRestrictedPython(self):
+    """
+      Ensure its possible to iterate over return values of DataBucketStream methods
+      in restricted python.
+    """
+
+    code = r"""
+data_bucket_stream = context.portal_catalog.data_stream_module.newContent(
+  portal_type='Data Bucket Stream'
+)
+data_bucket_stream.insertBucket(1,  "1" * 100000)
+result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
+"""
+
+    self.createAndRunScript(code)
