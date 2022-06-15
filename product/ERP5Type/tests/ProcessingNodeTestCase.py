@@ -335,7 +335,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     This aborts current transaction.
     """
-    for i in xrange(30):
+    for i in xrange(60):
       node_list = list(self.portal.portal_activities.getProcessingNodeList())
       if len(node_list) >= node_count:
         node_list.remove(getCurrentNode())
