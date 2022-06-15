@@ -1575,7 +1575,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       pass
 
   def tearDown(self):
-    self.zeo_server.close_server()
+    self.zeo_server.close()
 
 
 class lazy_func_prop(object):
