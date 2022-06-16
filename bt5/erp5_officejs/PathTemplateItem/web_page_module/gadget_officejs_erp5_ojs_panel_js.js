@@ -86,6 +86,7 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -127,7 +128,11 @@
             view_list: view_list,
             global: true,
             view_action_dict: options.view_action_dict || false,
-            editable: options.editable || editable || false
+            editable: options.editable || editable || false,
+            about_page: options.about_page,
+            // force render to refresh the menus
+            render_timestamp: new Date().getTime(),
+            first_render: true
           });
         });
     })
@@ -136,7 +141,8 @@
       var context = this,
         gadget = this,
         queue = new RSVP.Queue(),
-        tmp_element;
+        tmp_element,
+        about_page_setting;
 
       if (modification_dict.hasOwnProperty("visible")) {
         if (this.state.visible) {
@@ -153,6 +159,10 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
+            return gadget.getSetting('about_page');
+          })
+          .push(function (setting) {
+            about_page_setting = setting;
             // XXX: Customize panel header!
             return context.translateHtml(
               panel_template_header() +
@@ -182,30 +192,47 @@
           });
       }
 
-      if (modification_dict.hasOwnProperty("editable")) {
-        queue
-          // Update the global links
-          .push(function () {
-            return RSVP.all([
-              context.getUrlFor({command: 'display'}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}})
-            ]);
-          })
-          .push(function (result_list) {
-            return context.translateHtml(
-              panel_template_body_list({
-                "document_list_href": result_list[0],
-                "storage_href": result_list[1],
-                "sync_href": result_list[2]
-              })
-            );
-          })
-
-          .push(function (result) {
-            context.element.querySelector("ul").innerHTML = result;
-          });
+      var about_page;
+      if (modification_dict.hasOwnProperty("about_page") &&
+        modification_dict.about_page) {
+        about_page = modification_dict.about_page;
       }
+      if (!about_page) {
+        about_page = about_page_setting;
+      }
+      queue
+        // Update the global links
+        .push(function () {
+          return RSVP.all([
+            context.getUrlFor({command: 'display'}),
+            context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
+            context.getUrlFor({command: 'display', options: {page: about_page}}),
+            context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}})
+          ]);
+        })
+        .push(function (result_list) {
+          return context.translateHtml(
+            panel_template_body_list({
+              "document_list_href": result_list[0],
+              "storage_href": result_list[1],
+              "about_href": result_list[2],
+              "sync_href": result_list[3]
+            })
+          );
+        })
+
+        .push(function (result) {
+          context.element.querySelector("ul").innerHTML = result;
+        })
+        .push(function () {
+          if (!about_page) {
+            context.element.querySelector("#about_page_li")
+              .style.display = 'none';
+          } else {
+            context.element.querySelector("#about_page_li")
+              .style.display = 'block';
+          }
+        });
 
       if ((this.state.global === true) &&
           (modification_dict.hasOwnProperty("desktop") ||
@@ -285,9 +312,8 @@
             ]);
           })
           .push(function (view_action_list) {
-            var dl_element,
+            var dl_element = gadget.element.querySelector("dl"),
               dl_fragment = document.createDocumentFragment();
-            dl_element = gadget.element.querySelector("dl");
             while (dl_element.firstChild) {
               dl_element.removeChild(dl_element.firstChild);
             }
