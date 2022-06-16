@@ -189,6 +189,7 @@
             return RSVP.all([
               context.getUrlFor({command: 'display'}),
               context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojs_about"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}})
             ]);
           })
@@ -197,7 +198,8 @@
               panel_template_body_list({
                 "document_list_href": result_list[0],
                 "storage_href": result_list[1],
-                "sync_href": result_list[2]
+                "about_href": result_list[2],
+                "sync_href": result_list[3]
               })
             );
           })
