@@ -127,7 +127,8 @@
             view_list: view_list,
             global: true,
             view_action_dict: options.view_action_dict || false,
-            editable: options.editable || editable || false
+            editable: options.editable || editable || false,
+            about_page: options.about_page
           });
         });
     })
@@ -183,12 +184,18 @@
       }
 
       if (modification_dict.hasOwnProperty("editable")) {
+        var about_page;
+        if (modification_dict.hasOwnProperty("about_page") &&
+          modification_dict.about_page) {
+          about_page = modification_dict.about_page;
+        }
         queue
           // Update the global links
           .push(function () {
             return RSVP.all([
               context.getUrlFor({command: 'display'}),
               context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
+              context.getUrlFor({command: 'display', options: {page: about_page}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}})
             ]);
           })
@@ -197,13 +204,20 @@
               panel_template_body_list({
                 "document_list_href": result_list[0],
                 "storage_href": result_list[1],
-                "sync_href": result_list[2]
+                "about_href": result_list[2],
+                "sync_href": result_list[3]
               })
             );
           })
 
           .push(function (result) {
             context.element.querySelector("ul").innerHTML = result;
+          })
+          .push(function () {
+            if (!about_page) {
+              context.element.querySelector("#about_page_li")
+                .style.display = 'none';
+            }
           });
       }
 
@@ -285,9 +299,8 @@
             ]);
           })
           .push(function (view_action_list) {
-            var dl_element,
+            var dl_element = gadget.element.querySelector("dl"),
               dl_fragment = document.createDocumentFragment();
-            dl_element = gadget.element.querySelector("dl");
             while (dl_element.firstChild) {
               dl_element.removeChild(dl_element.firstChild);
             }
