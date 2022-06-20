@@ -39,31 +39,28 @@ Update a book report dialog with parameters manually entered
 
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
-  return context.Base_renderForm(
-    dialog_id,
-    keep_items = dict(
-      portal_status_message=translateString('Preview updated.'),
-      cancel_url=cancel_url,
-      portal_skin=portal_skin,
-      format=format,
-      document_save=document_save,
-      document_download=document_download,
-      document_language=document_language,
-      document_reference=document_reference,
-      document_version=document_version,
-      document_title=document_title,
-      display_milestone=display_milestone,
-      display_depth=display_depth,
-      display_detail=display_detail,
-      display_comment=display_comment,
-      display_header=display_header,
-      display_orphan=display_orphan,
-      start_date=start_date,
-      stop_date=stop_date,
-      report_name=report_name,
-      report_title=report_title,
-      override_source_organisation_title=override_source_organisation_title,
-      requirement_relative_url=requirement_relative_url,
-      **kw
-    )
-  )
+  request = container.REQUEST
+  request.form['portal_status_message']=translateString('Preview updated.')
+  request.form['cancel_url']=cancel_url
+  request.form['portal_skin']=portal_skin
+  request.form['format']=format
+  request.form['document_save']=document_save
+  request.form['document_download']=document_download
+  request.form['document_language']=document_language
+  request.form['document_reference']=document_reference
+  request.form['document_version']=document_version
+  request.form['document_title']=document_title
+  request.form['display_milestone']=display_milestone
+  request.form['display_depth']=display_depth
+  request.form['display_detail']=display_detail
+  request.form['display_comment']=display_comment
+  request.form['display_header']=display_header
+  request.form['display_orphan']=display_orphan
+  request.form['start_date']=start_date
+  request.form['stop_date']=stop_date
+  request.form['report_name']=report_name
+  request.form['report_title']=report_title
+  request.form['override_source_organisation_title']=override_source_organisation_title
+  request.form['requirement_relative_url']=requirement_relative_url
+
+  return context.Base_renderForm(dialog_id)
