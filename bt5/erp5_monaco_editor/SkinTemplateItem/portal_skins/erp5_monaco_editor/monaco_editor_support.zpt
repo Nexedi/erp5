@@ -103,10 +103,6 @@ $script.onload = function() {
     {
       value: $textarea.value,
       language: mode,
-
-      /* because Alt+Click is LeftClick on ChromeOS */
-      multiCursorModifier: "ctrlCmd",
-
       autoIndent: true
     }
   );

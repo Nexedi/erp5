@@ -29,8 +29,6 @@
       context.editor = editor = monaco.editor.create(
         this.element.querySelector('.monaco-container'),
         {
-          /* because Alt+Click is LeftClick on ChromeOS */
-          multiCursorModifier: 'ctrlCmd',
           autoIndent: true,
           automaticLayout: true,
         }
