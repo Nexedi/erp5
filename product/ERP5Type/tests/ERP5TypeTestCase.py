@@ -26,7 +26,6 @@ from cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
-from ExtensionClass import pmc_init_of
 from DateTime import DateTime
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
@@ -65,7 +64,7 @@ from zLOG import LOG, DEBUG
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
-from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress
+from Products.ERP5Type.tests.utils import parseListeningAddress
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -353,23 +352,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       # do nothing if the user already exists
       if not uf.getUserById(user_name):
         uf._doAddUser(user_name, self.newPassword(), ['Member'], [])
-
-    def _setUpDummyMailHost(self):
-      """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
-      """
-      cls = self.portal.MailHost.__class__
-      if not issubclass(cls, DummyMailHostMixin):
-        cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
-        pmc_init_of(cls)
-
-    def _restoreMailHost(self):
-      """Restore original Mail Host
-      """
-      if self.portal is not None:
-        cls = self.portal.MailHost.__class__
-        if cls.__bases__[0] is DummyMailHostMixin:
-          cls.__bases__ = cls.__bases__[1:]
-          pmc_init_of(cls)
 
     def pinDateTime(self, date_time):
       # pretend time has stopped at a certain date (i.e. the test runs
@@ -1593,7 +1575,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       pass
 
   def tearDown(self):
-    self.zeo_server.close_server()
+    self.zeo_server.close()
 
 
 class lazy_func_prop(object):
