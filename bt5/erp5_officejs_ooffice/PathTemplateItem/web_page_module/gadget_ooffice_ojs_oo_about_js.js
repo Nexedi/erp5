@@ -23,7 +23,7 @@
       return new RSVP.Queue()
         .push(function (url_list) {
           return gadget.updateHeader({
-            page_title: "About Page"
+            page_title: "About OfficeJS OnlyOffice editor"
           });
         });
     });
