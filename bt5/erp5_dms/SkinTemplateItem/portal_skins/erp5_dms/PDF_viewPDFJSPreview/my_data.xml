@@ -12,6 +12,7 @@
               <list>
                 <string>data_url</string>
                 <string>default</string>
+                <string>renderjs_extra</string>
               </list>
             </value>
         </item>
@@ -67,6 +68,12 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -90,6 +97,12 @@
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -104,7 +117,20 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.absolute_url()+\'/getData\'</string> </value>
+            <value> <string>python: context.absolute_url()+\'?format=\'</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: field.getTemplateField().get_value("renderjs_extra") + [(\'password\', context.getTypeBasedMethod(\'getContentPassword\')())]</string> </value>
         </item>
       </dictionary>
     </pickle>
