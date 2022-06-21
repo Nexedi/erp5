@@ -21,12 +21,6 @@
     .declareMethod("render", function (options) {
       var gadget = this;
       return new RSVP.Queue()
-        //TODO: get history previous link?
-        /*.push(function () {
-          return RSVP.all([
-            gadget.getUrlFor({command: 'display'})
-          ]);
-        })*/
         .push(function (url_list) {
           return gadget.updateHeader({
             page_title: "About Page"
