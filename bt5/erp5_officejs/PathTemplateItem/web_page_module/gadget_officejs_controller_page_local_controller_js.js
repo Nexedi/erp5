@@ -142,8 +142,12 @@
           });
         })
         .push(function () {
+          //TODO get about_page from app settings
+          //(gadget.getSettingList(["about_page")?)
+          var about_page = "ojs_about";
           return gadget.updatePanel({
-            view_action_dict: gadget.state.view_action_dict
+            view_action_dict: gadget.state.view_action_dict,
+            about_page: about_page
           });
         });
     })
