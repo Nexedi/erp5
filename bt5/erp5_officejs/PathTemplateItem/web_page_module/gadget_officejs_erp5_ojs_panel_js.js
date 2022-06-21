@@ -127,7 +127,8 @@
             view_list: view_list,
             global: true,
             view_action_dict: options.view_action_dict || false,
-            editable: options.editable || editable || false
+            editable: options.editable || editable || false,
+            about_page: options.about_page
           });
         });
     })
@@ -183,13 +184,15 @@
       }
 
       if (modification_dict.hasOwnProperty("editable")) {
+        var about_page = modification_dict.hasOwnProperty("about_page") ?
+          modification_dict.about_page : "ojs_about";
         queue
           // Update the global links
           .push(function () {
             return RSVP.all([
               context.getUrlFor({command: 'display'}),
               context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_about"}}),
+              context.getUrlFor({command: 'display', options: {page: about_page}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}})
             ]);
           })
@@ -287,9 +290,8 @@
             ]);
           })
           .push(function (view_action_list) {
-            var dl_element,
+            var dl_element = gadget.element.querySelector("dl"),
               dl_fragment = document.createDocumentFragment();
-            dl_element = gadget.element.querySelector("dl");
             while (dl_element.firstChild) {
               dl_element.removeChild(dl_element.firstChild);
             }
