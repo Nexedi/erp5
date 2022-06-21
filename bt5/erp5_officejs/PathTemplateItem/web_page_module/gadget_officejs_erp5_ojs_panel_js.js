@@ -184,8 +184,11 @@
       }
 
       if (modification_dict.hasOwnProperty("editable")) {
-        var about_page = modification_dict.hasOwnProperty("about_page") ?
-          modification_dict.about_page : "ojs_about";
+        var about_page;
+        if (modification_dict.hasOwnProperty("about_page") &&
+          modification_dict.about_page) {
+          about_page = modification_dict.about_page;
+        }
         queue
           // Update the global links
           .push(function () {
@@ -209,6 +212,12 @@
 
           .push(function (result) {
             context.element.querySelector("ul").innerHTML = result;
+          })
+          .push(function () {
+            if (!about_page) {
+              context.element.querySelector("#about_page_li")
+                .style.display = 'none';
+            }
           });
       }
 
