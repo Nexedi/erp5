@@ -20,7 +20,7 @@
             <url tal:repeat="item menu_item/subsection">
               <loc tal:content="item/url" />
               <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">
-                <metal:call use-macro="here/WebSection_viewSiteMapAsXML/macros/generateTree" />
+                <metal:call use-macro="here/WebSite_viewSiteMapAsXML/macros/generateTree" />
               </tal:recurse>
             </url>
           </tal:block>
