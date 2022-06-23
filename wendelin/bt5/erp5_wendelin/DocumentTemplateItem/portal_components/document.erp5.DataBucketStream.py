@@ -138,7 +138,17 @@ class DataBucketStream(Document):
 
   def __len__(self):
     return len(self._tree)
-    
+
+  # XXX: Workaround to fix errors during consistency checks.
+  # We should rename the "_tree" attribute add a migration
+  # script for existing instances. Then we can remove
+  # the following two methods.
+  def objectValues(self, *args, **kw):
+    return []
+
+  def objectIds(self, *args, **kw):
+    return []
+
   def initBucketTree(self):
     """
       Initialize the Bucket Tree
@@ -159,7 +169,7 @@ class DataBucketStream(Document):
       return self._tree.maxKey(key)
     except ValueError:
       return None
-      
+
   def getMaxIndex(self, index=None):
     """
     Return the maximum index
@@ -186,11 +196,10 @@ class DataBucketStream(Document):
       return self._long_index_tree.minKey(index)
     except ValueError:
       return None
-    
+
   def _getOb(self, id, *args, **kw):
     return None
 
-    
   def getBucketByKey(self, key=None):
     """
       Get one bucket
@@ -406,7 +415,7 @@ class DataBucketStream(Document):
     key = self._long_index_tree[index]
     del self._tree[key]
     del self._long_index_tree[index]
-        
+
   def rebuildIndexTreeByKeyOrder(self):
     """
         Clear and rebuild the index tree by order of keys
