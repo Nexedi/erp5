@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Drone simulator engine</title>
+
+    <!--Libraries-->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="jiodev.js" type="text/javascript"></script>
+    <script src ="renderjs.js"></script>
+
+    <script type="text/javascript" src="./js/libraries/split.min.js"></script>
+    <script type="text/javascript" src="./js/libraries/babylon.min.js"></script>
+    <script type="text/javascript" src="./js/libraries/babylon.gui.js"></script>
+    <script type="text/javascript" src="./js/libraries/require.js"></script>
+
+    <script src="./js/DroneAPI.js"></script>
+    <script src="./js/DroneManager.js"></script>
+    <script src="./js/GameManager.js"></script>
+    <script src="./js/MapManager.js"></script>
+    <script src="./js/ObstacleManager.js"></script>
+
+    <script src="drone_simulator_engine.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+  </head>
+
+  <body>
+    <div class="leftZone">
+      <canvas id="simCanvas"></canvas>
+      <div class='actionBar'>
+        <img id="simPlay" src="assets/UI/play.png">
+        <img id="simPause" src="assets/UI/pause.png">
+        <div id="messages" class="messages">Loading simulator...</div>
+        <div id="timingDisplay">00:00</div>
+      </div>
+    </div>
+  </body>
+
+</html>
