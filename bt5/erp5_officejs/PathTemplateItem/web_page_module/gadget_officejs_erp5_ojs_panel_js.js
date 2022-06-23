@@ -217,6 +217,9 @@
             if (!about_page) {
               context.element.querySelector("#about_page_li")
                 .style.display = 'none';
+            } else {
+              context.element.querySelector("#about_page_li")
+                .style.display = 'block';
             }
           });
       }
