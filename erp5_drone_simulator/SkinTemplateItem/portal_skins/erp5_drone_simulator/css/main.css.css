@@ -1,0 +1,59 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; }
+
+body {
+  display: flex;
+  font-family: Georgia 20; }
+
+.gutter {
+  background-color: #333;
+  border-left: 1px solid #eee; }
+  .gutter:hover {
+    cursor: col-resize; }
+
+/** Canvas and action bar */
+.leftZone {
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  /** The game canvas */
+  /** Action bar */ }
+  .leftZone #simCanvas {
+    width: 100%;
+    height: 85%;
+    background-color: black; }
+  .leftZone .result {
+    display: block;
+    position: fixed;}
+  .leftZone .actionBar {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: white;
+    height: 15%;
+    margin: 5px 0 0 10px; }
+    .leftZone .actionBar img {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: inline-block; }
+    .leftZone .actionBar #simPause {
+      display: none; }
+    .leftZone .actionBar #simStop, .leftZone .actionBar #simFullscreen/*, .leftZone .actionBar #simRestart*/ {
+      visibility: hidden; }
+    .leftZone .actionBar .messages {
+      display: inline-block;
+      vertical-align: top;
+      width: calc(100% - 320px);
+      height: calc(100% - 5px);
+      margin-left: 30px;
+      text-align: center; }
+    .leftZone .actionBar #timingDisplay {
+      float: right;
+      margin: 10px 30px 0 0;
+      color: black;
+      font-size: 28px; }
