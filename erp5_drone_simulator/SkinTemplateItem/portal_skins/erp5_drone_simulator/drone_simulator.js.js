@@ -26,7 +26,7 @@
       var state_dict = {
           value: options.value || "",
           maximize: options.maximize,
-          key: options.key, //id
+          key: options.key,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
@@ -67,11 +67,9 @@
       queue
         .push(function () {
           return gadget.declareGadget(
-            //TODO CHANGE instead of declare this, directly do a runGame job here
-            //(then drop drone_simulator_engine)
             "drone_simulator_engine.html",
             {
-              scope: 'editor',
+              scope: 'simulator',
               sandbox: 'iframe',
               element: div
             }
@@ -79,10 +77,10 @@
         });
       queue
         .push(function () {
-          return gadget.getDeclaredGadget('editor');
+          return gadget.getDeclaredGadget('simulator');
         })
-        .push(function (editor_gadget) {
-          return editor_gadget.render(gadget.state);
+        .push(function (simulator_gadget) {
+          return simulator_gadget.render(gadget.state);
         });
 
       if (modification_dict.maximize === "auto") {
@@ -98,8 +96,11 @@
     })
 
     .declareMethod('getContent', function () {
-      //TODO return simulator result (rename to getResult?)
-      return {};
+      var gadget = this;
+      return gadget.getDeclaredGadget('simulator')
+      .push(function (simulator_gadget) {
+        return simulator_gadget.getContent();
+      });
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
