@@ -27,7 +27,7 @@
             var blob = new Blob([GameManager.getLog()], {type: 'text/plain'}),
               a = document.createElement('a');
 
-            a.download = 'swarm_challenge_log.txt';
+            a.download = 'drone_log.txt';
             a.href = window.URL.createObjectURL(blob);
             a.dataset.downloadurl =  ['text/plain', a.download,
                                       a.href].join(':');

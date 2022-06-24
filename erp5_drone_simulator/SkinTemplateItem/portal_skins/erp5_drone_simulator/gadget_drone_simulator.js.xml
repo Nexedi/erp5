@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>drone_simulator.js</string> </value>
+            <value> <string>gadget_drone_simulator.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
