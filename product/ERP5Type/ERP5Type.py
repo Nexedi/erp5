@@ -52,6 +52,19 @@ from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TR
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
+def serializeRole(role_name, _roles={}):
+  assert isinstance(role_name, string_types)
+  return _roles.setdefault(role_name, role_name)
+
+def serializeRoles(roles, _roles_tuples={}, _role_lists={}):
+  role_type = type(roles)
+  role_list = sorted([serializeRole(role) for role in roles])
+  role_tuple = tuple(role_list)
+  if role_type is tuple:
+    return _roles_tuples.setdefault(role_tuple, role_tuple)
+  return _role_lists.setdefault(role_tuple, role_list)
+
+
 @zope.interface.implementer(interfaces.ILocalRoleAssignor)
 class LocalRoleAssignorMixIn(object):
     """Mixin class used by type informations to compute and update local roles
@@ -78,7 +91,7 @@ class LocalRoleAssignorMixIn(object):
           else:
             user_name = getSecurityManager().getUser().getId()
 
-      group_id_role_dict = {user_name: {'Owner'}}
+      group_id_role_dict = {user_name: {serializeRole('Owner')}}
       local_roles_group_id_group_id = {}
       # Merge results from applicable roles
       for role_generator in self.getFilteredRoleListFor(ob):
@@ -96,11 +109,11 @@ class LocalRoleAssignorMixIn(object):
           if local_roles_group_id:
             for role in role_list:
               # Feed local_roles_group_id_group_id with local roles assigned to a group
-              local_roles_group_id_group_id.setdefault(local_roles_group_id, set()).update(((group_id, role),))
+              local_roles_group_id_group_id.setdefault(local_roles_group_id, set()).update(((group_id, serializeRole(role)),))
 
       ## Update role assignments to groups
       # Assign new roles
-      ac_local_roles = {group: sorted(role_list)
+      ac_local_roles = {group: serializeRoles(role_list)
         for group, role_list in six.iteritems(group_id_role_dict)
         if role_list}
 
@@ -409,7 +422,7 @@ class ERP5TypeInformation(XMLObject,
           user_id = user.getId()
         else:
           user_id = 'Anonymous Owner'
-        ob.manage_setLocalRoles(user_id, ['Owner'])
+        ob.manage_setLocalRoles(user_id, [serializeRole('Owner')])
       else:
         if activate_kw is not None:
           ob.setDefaultActivateParameterDict(activate_kw)
