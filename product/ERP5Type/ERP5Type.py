@@ -424,7 +424,8 @@ class ERP5TypeInformation(XMLObject,
 
       # Portal type has to be set before setting other attributes
       # in order to initialize aq_dynamic
-      ob.portal_type = self.getId()
+      if getattr(base_ob, 'portal_type') != self.getId():
+        ob.portal_type = self.getId()
 
       if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
