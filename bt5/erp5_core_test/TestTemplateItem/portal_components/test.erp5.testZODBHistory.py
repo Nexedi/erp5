@@ -84,7 +84,6 @@ class TestZODBHistory(ERP5TypeTestCase):
     self.assertTrue(len(history_list) > 0)
     d = history_list[0]
     changes = d['changes']
-    self.assertEqual(changes['portal_type'], 'Organisation')
     self.assertEqual(changes['id'], 'org')
     self.assertTrue(changes['uid'] is not None)
 

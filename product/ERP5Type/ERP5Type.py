@@ -399,6 +399,7 @@ class ERP5TypeInformation(XMLObject,
           self.getId(),
           temp=temp_object)
       base_ob = klass(id)
+      assert base_ob.portal_type == self.getId()
       ob = base_ob.__of__(container)
 
       if temp_object:
@@ -421,10 +422,6 @@ class ERP5TypeInformation(XMLObject,
         # if no activity tool, the object has already an uid
         if getattr(base_ob, 'uid', None) is None:
           ob.uid = portal.portal_catalog.newUid()
-
-      # Portal type has to be set before setting other attributes
-      # in order to initialize aq_dynamic
-      ob.portal_type = self.getId()
 
       if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
