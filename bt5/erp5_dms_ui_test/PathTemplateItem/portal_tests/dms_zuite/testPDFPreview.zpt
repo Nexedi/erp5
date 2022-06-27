@@ -1,0 +1,42 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title_and_id"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title_and_id"></td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/document_module/test_ERP5_Logo_PDF</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Preview</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//body//div[@class='textLayer']/div[1]</td>
+  <td>This is a sample PDF with some text and an image</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

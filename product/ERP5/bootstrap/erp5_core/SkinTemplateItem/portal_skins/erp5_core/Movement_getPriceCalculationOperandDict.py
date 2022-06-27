@@ -102,14 +102,23 @@ if explanation is not None:
                               context.getPortalOrderTypeList() + context.getPortalDeliveryTypeList():
     # if there are trade conditions containing supply lines related to that
     # order/invoice, we give high priority to those supply lines
-    for supply_line in explanation.asComposedDocument().objectValues(portal_type=context.getPortalSupplyPathTypeList()):
-      supply_cell_list = supply_line.objectValues(
-        portal_type=context.getPortalSupplyPathTypeList())
-      if supply_cell_list:
-        high_priority_supply_line_list.extend(list(supply_cell_list))
-      else:
-        high_priority_supply_line_list.append(supply_line)
-      specialise_set.add(supply_line.getParentValue().getRelativeUrl())
+    try:
+      composed_document = explanation.asContext(
+        start_date=context.getStartDate(),
+        stop_date=context.getStopDate(),
+      ).asComposedDocument()
+    except KeyError:
+      pass
+    else:
+      for supply_line in composed_document.objectValues(
+          portal_type=context.getPortalSupplyPathTypeList()):
+        supply_cell_list = supply_line.objectValues(
+          portal_type=context.getPortalSupplyPathTypeList())
+        if supply_cell_list:
+          high_priority_supply_line_list.extend(list(supply_cell_list))
+        else:
+          high_priority_supply_line_list.append(supply_line)
+        specialise_set.add(supply_line.getParentValue().getRelativeUrl())
 
   # XXX FIXME: Hardcoded values
   if "Internal" in explanation_type:

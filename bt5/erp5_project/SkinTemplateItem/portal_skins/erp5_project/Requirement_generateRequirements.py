@@ -1,4 +1,5 @@
 context_obj = context.getObject()
+translateString = context.Base_translateString
 
 requirement_module_type   = 'Requirement Module'
 requirement_document_type = 'Requirement Document'
@@ -14,7 +15,11 @@ if context_obj.getPortalType() == requirement_module_type:
 elif context_obj.getPortalType() in (requirement_document_type, requirement_type):
   destination_obj = context_obj
 else:
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '/view?portal_status_message=Error:+bad+context.')
+  return context.Base_redirect(
+    form_id,
+    keep_items=dict(
+      portal_status_level='error',
+      portal_status_message=translateString('Error: bad context')))
 
 # this list contain all requirements items
 requirements_items = []
@@ -101,6 +106,5 @@ for key in clean_requirements_key_list:
                                                 , int_index   = sub_requirement_int_index
                                                 )
 # return to the requirement
-translateString = context.Base_translateString
 return context.Base_redirect(form_id,
  keep_items=dict(portal_status_message=translateString('Requirement document added.')))

@@ -141,8 +141,18 @@ Options:
                              activities.
   --zeo_server=[[HOST:]PORT] Bind the ZEO server to the given host/port.
   --zeo_client=[HOST:]PORT   Use specified ZEO server as storage.
+  --processing_node_loop=LOOP
+                             Make ZEO clients execute the given loop, one of:
+                               - processing_node: process activities only.
+                                 this is the default.
+                               - timerserver: start a timer server thread,
+                                 which will typically execute activities,
+                                 alarms and everything else registered on
+                                 timer service.
+                             This option only makes sense with --activity_node=
+                             or when not specifying a test to run.
   --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
-                             Adresses can be given in the following syntaxs:
+                             Addresses can be given in the following syntaxs:
                                - HOST:PORT
                                - PORT in this case, host will be 127.0.0.1
                                - HOST in this case a free port will be assigned
@@ -492,7 +502,7 @@ _print = sys.stderr.write
 
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
-    _print("conflicting options: --zeo_client and --zeo_server")
+    _print("conflicting options: --zeo_client and --zeo_server\n")
     sys.exit(1)
   instance_home =  os.environ['INSTANCE_HOME']
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(log_directory, 'zLOG.log'))
@@ -550,8 +560,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # On recent Zope, ZopeTestCase does not have any logging facility.
   # So we must emulate the usual Zope startup code to catch log messages.
   from ZConfig.matcher import SectionValue
+  logging_format = '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s'
+  if os.environ.get('activity_node'):
+    logging_format = '%(process)d ' + logging_format
   section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
-                          'format': '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s',
+                          'format': logging_format,
                           'level': logging.INFO,
                           'path': os.environ['EVENT_LOG_FILE'],
                           'max_size': None,
@@ -645,11 +658,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     if zeo_server_pid == 0:
       suite = ZEOServerTestCase('asyncore_loop')
     elif node_pid_list is None or not test_list:
-      suite = ProcessingNodeTestCase('processing_node')
+      processing_node_loop = os.environ.get('processing_node_loop', 'processing_node')
+      suite = ProcessingNodeTestCase(processing_node_loop)
       if not (dummy or load):
         _print('WARNING: either --save or --load should be used because static'
                ' files are only reloaded by the node installing business'
-               ' templates.')
+               ' templates.\n')
     else:
       if dummy:
         # Skip all tests and monkeypatch PortalTestCase to skip
@@ -675,7 +689,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         ERP5TypeTestLoader.filter_test_list = None
 
     if node_pid_list is None:
-      result = suite()
+      result = suite.debug()
     else:
       if not test_list:
         root_logger.handlers.append(loghandler.StreamHandler(sys.stderr))
@@ -770,6 +784,7 @@ def main(argument_list=None):
         "live_instance=",
         "zeo_client=",
         "zeo_server=",
+        "processing_node_loop=",
         "zserver=",
         "zserver_frontend_url=",
         "neo_storage",
@@ -885,6 +900,8 @@ def main(argument_list=None):
       os.environ["zeo_client"] = arg
     elif opt == "--zeo_server":
       os.environ["zeo_server"] = arg
+    elif opt == "--processing_node_loop":
+      os.environ["processing_node_loop"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
     elif opt == "--zserver_frontend_url":

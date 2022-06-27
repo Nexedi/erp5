@@ -29,8 +29,6 @@
       context.editor = editor = monaco.editor.create(
         this.element.querySelector('.monaco-container'),
         {
-          /* because Alt+Click is LeftClick on ChromeOS */
-          multiCursorModifier: 'ctrlCmd',
           autoIndent: true,
           automaticLayout: true,
         }
@@ -145,6 +143,7 @@
                   // see http://json.schemastore.org/prettierrc for supported options.
                   singleQuote: true,
                   tabWidth: 2,
+                  trailingComma: 'none'
                 });
 
                 return [

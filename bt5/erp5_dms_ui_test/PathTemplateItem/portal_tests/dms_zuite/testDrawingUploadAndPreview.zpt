@@ -1,0 +1,82 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+      <tr>
+        <td>openAndWait</td>
+        <td>${base_url}/document_module</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectAndWait</td>
+        <td>select_action</td>
+        <td>Add Drawing</td>
+      </tr>
+      <tr>
+        <td>setFile</td>
+        <td>field_my_file</td>
+        <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg
+          tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>Base_edit:method</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>store</td>
+        <td>javascript{selenium.browserbot.getCurrentWindow().location.href}</td>
+        <td>current_location</td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+      <tr>
+        <td>open</td>
+        <td>${current_location}</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>clickAndWait</td>
+        <td>link=Preview</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>//iframe[contains(@src, "pdfjs.gadget.html")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//body//div[@class='canvasWrapper']/canvas</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>selectFrame</td>
+        <td>relative=top</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>

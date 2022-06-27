@@ -65,7 +65,7 @@ class TimerServer(threading.Thread):
                         _module_name=module_name,
                         _request=request,
                         _response=response)
-                    server.add_task(self)
+                    server.task_dispatcher.add_task(self)
 
                 def cancel(self):
                     pass

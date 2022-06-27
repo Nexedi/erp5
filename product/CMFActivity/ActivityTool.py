@@ -311,7 +311,7 @@ class Message(BaseMessage):
         pass
     return 1
 
-  def changeUser(self, activity_tool):
+  def changeUser(self, activity_tool, annotate_transaction=True):
     """restore the security context for the calling user."""
     portal = activity_tool.getPortalObject()
     user = self.user_object
@@ -346,7 +346,8 @@ class Message(BaseMessage):
     if user is not None:
       user = user.__of__(user_folder)
       newSecurityManager(None, user)
-      transaction.get().setUser(user_name, '/'.join(user_folder.getPhysicalPath()))
+      if annotate_transaction:
+        transaction.get().setUser(user_name, '/'.join(user_folder.getPhysicalPath()))
     else :
       LOG("CMFActivity", WARNING,
           "Unable to find user %r in the portal" % user_name)
@@ -424,9 +425,12 @@ Document: %s
 Method: %s
 Arguments: %r
 Named Parameters: %r
-""" % (email_from_name, activity_tool.email_from_address, user_email, message,
-       path, self.method_id, getCurrentNode(), fail_count,
-       self.user_name, self.line.uid, path, self.method_id, self.args, self.kw)
+""" % (
+      email_from_name, activity_tool.email_from_address, user_email, message,
+      path, self.method_id, getCurrentNode(), fail_count,
+      self.getUserId(),
+      self.line.uid, path, self.method_id, self.args, self.kw,
+    )
     if self.traceback:
       mail_text += '\nException:\n' + self.traceback
     if self.call_traceback:
@@ -436,6 +440,14 @@ Named Parameters: %r
     except (socket.error, MailHostError) as message:
       LOG('ActivityTool.notifyUser', WARNING,
           'Mail containing failure information failed to be sent: %s' % message)
+
+  def getUserId(self):
+    user = self.user_object
+    return (
+      self.user_name
+      if user is None else
+      user.getIdOrUserName()
+    )
 
   def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
@@ -575,7 +587,7 @@ class Method(object):
     portal_activities.getActivityBuffer().deferredQueueMessage(
       portal_activities, activity_dict[self._activity], m)
     if portal_activities.activity_tracking and m.is_registered:
-      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
+      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.getUserId()))
 
 allow_class(Method)
 
@@ -1522,7 +1534,7 @@ class ActivityTool (BaseTool):
 
     def invoke(self, message):
       if self.activity_tracking:
-        activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%r, kw=%r, activity_kw=%r, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
+        activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%r, kw=%r, activity_kw=%r, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.getUserId()))
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
         base_chain = [aq_base(x) for x in self.aq_chain]
@@ -1681,14 +1693,10 @@ class ActivityTool (BaseTool):
     class dummyGroupMethod(object):
       def __bobo_traverse__(self, REQUEST, method_id):
         def group_method(message_list):
-          user_name = None
           sm = getSecurityManager()
           try:
             for m in message_list:
-              message = m._message
-              if user_name != message.user_name:
-                user_name = message.user_name
-                message.changeUser(m.object)
+              m._message.changeUser(m.object, annotate_transaction=False)
               m.result = getattr(m.object, method_id)(*m.args, **m.kw)
           except Exception:
             m.raised()

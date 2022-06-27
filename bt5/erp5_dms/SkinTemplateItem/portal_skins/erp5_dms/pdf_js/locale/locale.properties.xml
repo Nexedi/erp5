@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/octet-stream</string> </value>
+            <value> <string>text/plain</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>locale.properties</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -30,7 +30,7 @@ for permission in [
 
 print
 try:
-  print "User groups:\n", pformat(u.getGroups())
+  print "User groups:\n", pformat(sorted(u.getGroups()))
 except AttributeError:
   print 'no getGroups'
 

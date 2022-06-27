@@ -2,3 +2,5 @@ person_module/beginner/default_career
 person_module/slicea/default_career
 person_module/sliceb/default_career
 person_module/test_pay_sheet_transaction_user/default_career
+paysheet_model_module/paysheet_model
+paysheet_model_module/test_trainee

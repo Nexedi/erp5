@@ -542,6 +542,7 @@ else:
   allow_type(pd.Timestamp)
   allow_type(pd.DatetimeIndex)
   allow_type(pd.MultiIndex)
+  allow_type(pd.Index)
   allow_type(pd.indexes.range.RangeIndex)
   allow_type(pd.indexes.numeric.Int64Index)
   allow_type(pd.core.groupby.DataFrameGroupBy)

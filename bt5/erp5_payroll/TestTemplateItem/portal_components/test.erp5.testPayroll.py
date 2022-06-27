@@ -28,7 +28,6 @@
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from erp5.component.test.testTradeModelLine import TestTradeModelLineMixin
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
@@ -147,13 +146,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       module.manage_delObjects(list(module.objectIds()))
 
     self.portal.business_process_module.manage_delObjects(list([x for x in self.portal.business_process_module.objectIds() if x != "erp5_default_business_process"]))
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('admin', '', ['Manager', 'Assignee', 'Assignor',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('admin').__of__(uf)
-    newSecurityManager(None, user)
 
   @reindex
   def createCategories(self):
@@ -326,12 +318,15 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         version='001',
         reference='basic_model',
     )
+    model.validate()
     sequence.edit(model = model)
 
-  def addSlice(self, model, slice, min_value, max_value, base_id='cell'):
+  def addSlice(self, model, paysheet_model_slice, min_value, max_value, base_id='cell'):
     '''add a new slice in the model'''
-    slice_value = model.newCell(slice, portal_type='Pay Sheet Model Slice',
-        base_id=base_id)
+    slice_value = model.newCell(
+      paysheet_model_slice,
+      portal_type='Pay Sheet Model Slice',
+      base_id=base_id)
     slice_value.setQuantityRangeMax(max_value)
     slice_value.setQuantityRangeMin(min_value)
     return slice_value
@@ -588,7 +583,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
       expected_movement_to_delete_count, expected_movement_to_add_count):
     movement_dict = paysheet.updateAggregatedAmountList()
     movement_to_delete = movement_dict['movement_to_delete_list']
-    movement_to_add = movement_dict['movement_to_add_list']
+    # movement_to_add = movement_dict['movement_to_add_list']
     self.assertEqual(len(movement_to_delete),
         expected_movement_to_delete_count)
     #    self.assertEqual(len(movement_to_add), expected_movement_to_add_count)
@@ -1092,16 +1087,20 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     model_employee = self.createModel()
     model_employee.edit(title='Employee Model', reference='model_employee',
         variation_settings_category_list='salary_range/france')
+    model_employee.validate()
     model_company = self.createModel()
     model_company.edit(title='Company Model', reference='model_company',
         variation_settings_category_list='salary_range/france')
+    model_company.validate()
     model_company_alt = self.createModel()
     model_company_alt.edit(title='Second Company Model',
         reference='model_company_alt',
         variation_settings_category_list='salary_range/france')
+    model_company_alt.validate()
     model_country = self.createModel()
     model_country.edit(title='Country Model', reference='model_country',
         variation_settings_category_list='salary_range/france')
+    model_country.validate()
     # add some cells in the models
     slice1 = model_employee.newCell('salary_range/france/slice_a',
                             portal_type='Pay Sheet Model Slice',
@@ -1540,7 +1539,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     portal_type_list = ['Pay Sheet Model Line',]
 
     # if no reference, we don't care about dates
-    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
+    paysheet.getInheritedObjectValueList(portal_type_list)
 
     self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 0)
@@ -1576,6 +1575,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           'base_amount/payroll/report/salary/gross'],
         price=0.01,
         quantity=10000.0)
+    model_without_date.validate()
     self.tic()
 
     # create a paysheet without date
@@ -1607,8 +1607,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet_with_date.PaySheetTransaction_applyModel()
     self.tic()
 
-    portal_type_list = ['Pay Sheet Model Line',]
-
     # check the paysheet contains no lines before calculation
     self.assertEqual(len(paysheet_with_date.contentValues(\
         portal_type='Pay Sheet Line')), 0)
@@ -1636,6 +1634,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         reference='fabien_model_2009',
         effective_date=DateTime(2009, 1, 1),
         expiration_date=DateTime(2009, 06, 30))
+    model_1.validate()
 
     model_2 = self.getPortalObject().paysheet_model_module.newContent( \
         specialise_value=sequence.get('business_process'),
@@ -1644,6 +1643,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         reference='fabien_model_2009',
         effective_date=DateTime(2009, 07, 1),
         expiration_date=DateTime(2009, 12, 31))
+    model_2.validate()
 
     model_line_3 = self.createModelLine(model_1)
     model_line_3.edit(
@@ -1683,12 +1683,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     # calculate the pay sheet
     paysheet.applyTransformation()
     self.tic()
-    # XXX-Aurel Why it is one as the model should not apply since date are not in the range ??
     self.assertEqual(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet, if it's model_2, the total_price
     # should be 30000.
-    # self.assertEqual(paysheet.contentValues()[0].getTotalPrice(), 30000)
+    self.assertEqual(paysheet.contentValues()[0].getTotalPrice(), 30000)
 
   def stepCheckModelVersioning(self, sequence=None, **kw):
     '''
@@ -1705,6 +1704,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         effective_date=DateTime(2009, 01, 1),
         expiration_date=DateTime(2009, 02, 28),
         specialise_value=sequence.get('business_process'))
+    model_1.validate()
 
     # define two models with same references and same dates
     # but different version number
@@ -1716,8 +1716,9 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         expiration_date=DateTime(2009, 12, 31),
         version='002',
         specialise_value=sequence.get('business_process'))
+    model_2.validate()
 
-    self.getPortalObject().paysheet_model_module.newContent( \
+    model_2b = self.getPortalObject().paysheet_model_module.newContent( \
         portal_type='Pay Sheet Model',
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
@@ -1725,6 +1726,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         expiration_date=DateTime(2009, 12, 31),
         version='001',
         specialise_value=sequence.get('business_process'))
+    model_2b.validate()
     self.tic()
 
     # create the paysheet
@@ -1802,6 +1804,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=10000)
+    model_1.validate()
 
     # define two models with same references and same dates
     # but different version number
@@ -1818,6 +1821,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=20000)
+    model_2.validate()
 
     model_3 = paysheet_model_module.newContent( \
         portal_type='Pay Sheet Model',
@@ -1832,6 +1836,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=30000)
+    model_3.validate()
 
     # define two models with same references and same dates
     # but different version number
@@ -1848,6 +1853,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=40000)
+    model_4.validate()
 
     model_5 = paysheet_model_module.newContent( \
         portal_type='Pay Sheet Model',
@@ -1862,6 +1868,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=50000)
+    model_5.validate()
 
     # third level : define two models with same references and same dates
     # but different version number
@@ -1878,6 +1885,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=60000)
+    model_6.validate()
 
     model_7 = paysheet_model_module.newContent( \
         portal_type='Pay Sheet Model',
@@ -1892,6 +1900,16 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=70000)
+    model_7.validate()
+
+    # a draft model that should not be selected
+    paysheet_model_module.newContent(
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_level_3_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
 
     self.tic()
 
@@ -1954,9 +1972,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     form = getattr(here, report_section.getFormId())
     self.portal.REQUEST['here'] = here
     if form.has_field('listbox'):
-      result = form.listbox.get_value('default',
-                                      render_format='list',
-                                      REQUEST=self.portal.REQUEST)
+      form.listbox.get_value(
+        'default', render_format='list', REQUEST=self.portal.REQUEST)
       self.assertEqual(precision, self.portal.REQUEST.get('precision'))
     report_section.popReport(self.portal)
 

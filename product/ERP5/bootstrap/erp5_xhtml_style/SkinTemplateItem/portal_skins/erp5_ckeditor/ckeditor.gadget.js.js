@@ -99,7 +99,8 @@
                                 READONLY_CONFIGURATION,
         is_responsive: (options.configuration_mobile !== undefined) ||
                        (options.configuration === undefined),
-        is_mobile: MATCH_MEDIA.matches
+        is_mobile: MATCH_MEDIA.matches,
+        language: options.language
       });
     })
 
@@ -124,7 +125,8 @@
           modification_dict.hasOwnProperty('configuration_readonly') ||
           modification_dict.hasOwnProperty('is_responsive') ||
           modification_dict.hasOwnProperty('is_mobile') ||
-          modification_dict.hasOwnProperty('editable')) {
+          modification_dict.hasOwnProperty('editable') ||
+          modification_dict.hasOwnProperty('language')) {
         // Expected configuration changed.
         // Recreate ckeditor
         if (gadget.hasOwnProperty('ckeditor')) {
@@ -138,6 +140,10 @@
           configuration = gadget.state.configuration_mobile;
         } else {
           configuration = gadget.state.configuration;
+        }
+        if (CKEDITOR.lang.languages[gadget.state.language] !== undefined) {
+          configuration.language = gadget.state.language;
+          configuration.defaultLanguage = gadget.state.language;
         }
         gadget.on_change_listener = gadget.deferNotifyChange.bind(gadget);
         gadget.ckeditor = CKEDITOR.replace(

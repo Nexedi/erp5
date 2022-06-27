@@ -103,10 +103,6 @@ $script.onload = function() {
     {
       value: $textarea.value,
       language: mode,
-
-      /* because Alt+Click is LeftClick on ChromeOS */
-      multiCursorModifier: "ctrlCmd",
-
       autoIndent: true
     }
   );
@@ -153,7 +149,8 @@ $script.onload = function() {
         plugins: [prettierPlugins.babel],
         // see http://json.schemastore.org/prettierrc for supported options.
         singleQuote: true,
-        tabWidth: 2
+        tabWidth: 2,
+        trailingComma: 'none'
       });
 
       return [
