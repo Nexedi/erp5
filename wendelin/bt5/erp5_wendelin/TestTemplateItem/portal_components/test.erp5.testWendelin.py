@@ -619,3 +619,17 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
 """
 
     self.createAndRunScript(code)
+
+  def test_15_setArrayDtypeNames(self):
+    """
+      Test Data Array method "setArrayDtypeNames"
+    """
+    data_array = self.portal.data_array_module.newContent(
+      portal_type="Data Array"
+    )
+    self.addCleanup(self._removeDocument, data_array)
+    dtype_name0, dtype_name1 = "my_dtype_name", "my_new_dtype_name"
+    data_array.initArray((3,), np.dtype([(dtype_name0, np.float64)]))
+    self.assertEqual(data_array.getArrayDtypeNames(), (dtype_name0,))
+    data_array.setArrayDtypeNames((dtype_name1,))
+    self.assertEqual(data_array.getArrayDtypeNames(), (dtype_name1,))
