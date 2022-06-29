@@ -522,3 +522,12 @@ else:
     pd.MultiIndex,
     pd.Index,
   ), True))
+
+import ipaddress
+allow_module('ipaddress')
+allow_type(ipaddress.IPv4Address)
+allow_type(ipaddress.IPv6Address)
+allow_type(ipaddress.IPv4Network)
+allow_type(ipaddress.IPv6Network)
+allow_type(ipaddress.IPv4Interface)
+allow_type(ipaddress.IPv6Interface)
