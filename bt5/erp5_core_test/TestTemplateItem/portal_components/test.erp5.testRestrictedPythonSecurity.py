@@ -770,6 +770,25 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         '''.format(malicous_input)
       )
 
+  def testIpAddressModuleAllowance(self):
+    # Test ipaddress usability
+    self.createAndRunScript('import ipaddress')
+    self.createAndRunScript('''
+        from ipaddress import ip_address
+        return ip_address('90.4.85.17').is_global
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_network
+        return ip_network('90.4.0.0/16').is_private
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_address, ip_network
+        return ip_address('90.4.85.17') in ip_network('90.4.0.0/16')
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_interface
+        return ip_interface('90.4.85.17').with_prefixlen
+        ''')
 
 def test_suite():
   suite = unittest.TestSuite()
