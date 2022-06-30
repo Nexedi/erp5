@@ -770,6 +770,41 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         '''.format(malicous_input)
       )
 
+  def testIpAddressModuleAllowance(self):
+    # Test ipaddress usability
+    self.createAndRunScript('import ipaddress')
+    self.createAndRunScript('''
+        from ipaddress import ip_address
+        return ip_address(u'90.4.85.17').is_global
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_network
+        return ip_network(u'90.4.0.0/16').is_private
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_address, ip_network
+        return ip_address(u'90.4.85.17') in ip_network(u'90.4.0.0/16')
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_interface
+        return ip_interface(u'90.4.85.17').with_prefixlen
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_address
+        return ip_address(u'2a01:cb14:818:0:7312:e251:f251:ffbe').is_global
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_network
+        return ip_network(u'2a01:cb14:818:0:7312:e251:f251::/112').is_private
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_address, ip_network
+        return ip_address(u'2a01:cb14:818:0:7312:e251:f251:ffbe') in ip_network(u'2a01:cb14:818:0:7312:e251:f251::/112')
+        ''')
+    self.createAndRunScript('''
+        from ipaddress import ip_interface
+        return ip_interface(u'2a01:cb14:818:0:7312:e251:f251:ffbe').with_prefixlen
+        ''')
 
 def test_suite():
   suite = unittest.TestSuite()
