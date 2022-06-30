@@ -4,7 +4,7 @@ request = container.REQUEST
 portal = context.getPortalObject()
 
 # we use a different selection for dialog params, because we never want this
-# selection to be reseteted
+# selection to be reset
 dialog_selection_params = portal.portal_selections.getSelectionParamsFor(
                                'grouping_reference_fast_input_selection')
 
@@ -26,12 +26,21 @@ for column in portal.portal_selections.getSelectionSortOrder(
       continue
     sort_on.append((column_id, column[1]))
 
-section_category = request.get(
-  'section_category',
-  portal.portal_preferences.getPreferredAccountingTransactionSectionCategory())
-section_category_strict = request.get(
-  'section_category_strict',
-  portal.portal_preferences.getPreferredAccountingSectionCategoryStrict())
+# XXX ERP5JS does not call list method with selection parameters,
+# so we have to read in request.
+section_category = section_category \
+  or request.get('section_category') \
+  or dialog_selection_params.get('section_category') \
+  or portal.portal_preferences.getPreferredAccountingTransactionSectionCategory()
+for candidate in (
+    section_category_strict,
+    request.get('section_category_strict'),
+    dialog_selection_params.get('section_category_strict'),
+    portal.portal_preferences.getPreferredAccountingSectionCategoryStrict(),
+):
+  if candidate is not None:
+    section_category_strict = candidate
+    break
 
 section_uid = portal.Base_getSectionUidListForSectionCategory(
      section_category, section_category_strict)
