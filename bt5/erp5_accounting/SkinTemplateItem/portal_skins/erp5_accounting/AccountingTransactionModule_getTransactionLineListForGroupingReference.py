@@ -4,7 +4,7 @@ request = container.REQUEST
 portal = context.getPortalObject()
 
 # we use a different selection for dialog params, because we never want this
-# selection to be reseteted
+# selection to be reset
 dialog_selection_params = portal.portal_selections.getSelectionParamsFor(
                                'grouping_reference_fast_input_selection')
 
@@ -26,12 +26,6 @@ for column in portal.portal_selections.getSelectionSortOrder(
       continue
     sort_on.append((column_id, column[1]))
 
-section_category = request.get(
-  'section_category',
-  portal.portal_preferences.getPreferredAccountingTransactionSectionCategory())
-section_category_strict = request.get(
-  'section_category_strict',
-  portal.portal_preferences.getPreferredAccountingSectionCategoryStrict())
 
 section_uid = portal.Base_getSectionUidListForSectionCategory(
      section_category, section_category_strict)
