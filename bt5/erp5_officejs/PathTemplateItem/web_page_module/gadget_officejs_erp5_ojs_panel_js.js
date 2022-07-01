@@ -128,7 +128,10 @@
             global: true,
             view_action_dict: options.view_action_dict || false,
             editable: options.editable || editable || false,
-            about_page: options.about_page
+            about_page: options.about_page,
+            // force render to refresh the menus
+            render_timestamp: new Date().getTime(),
+            first_render: true
           });
         });
     })
