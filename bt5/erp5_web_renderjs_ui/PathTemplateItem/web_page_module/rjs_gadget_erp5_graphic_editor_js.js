@@ -10,7 +10,6 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("trigger", "trigger")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -28,11 +27,9 @@
         option_list = modification_dict.graphic_option_list,
         url_list = [],
         gadget = this;
-      console.log(modification_dict);
-      console.log(gadget.state);
       for (i = 0; i < option_list.length; i += 1) {
         url_list.push({
-          "command": "display_with_history",
+          "command": "store_and_change",
           "options": {
             "jio_key": gadget.state.jio_key,
             "graphic_type": option_list[i][0]
@@ -89,7 +86,12 @@
     .onEvent('click', function click(evt) {
       if (evt.target.classList.contains('close')) {
         evt.preventDefault();
-        return this.trigger();
+        // When we close, the button to change the graphic does not appears again.
+        // How to display the button to change the graphic again?
+        // XXX reload is probably too much.
+        return this.redirect({
+          command: 'reload'
+        });
       }
     }, false, false);
 
