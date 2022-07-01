@@ -67,6 +67,12 @@
         })
         .push(function (script) {
           options.script_content = script.text_content;
+          return gadget.jio_get(options.map);
+        })
+        .push(function (map_doc) {
+          options.json_map = JSON.parse(map_doc.text_content);
+          MAP_WIDTH = options.json_map.mapSize.width;
+          MAP_HEIGHT = options.json_map.mapSize.height;
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
@@ -113,13 +119,10 @@
               //console.log(Math.round(n_x * 1000), Math.round(n_y * 1000));
             }
           }
-          return gadget.jio_get(options.map);
-        })
-        .push(function (map_doc) {
-          options.json_map = JSON.parse(map_doc.text_content);
           return gadget.changeState({
             script_content: options.script_content,
-            json_map: options.json_map
+            json_map: options.json_map,
+            position_list: position_list
           });
         });
     })
