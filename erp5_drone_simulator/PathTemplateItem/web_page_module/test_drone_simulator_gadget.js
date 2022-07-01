@@ -4,11 +4,11 @@
   "use strict";
 
   var SIMULATION_SPEED = 100,
-    MAP_KEY = "rescue_swarm_map_module/middle_of_the_sea",
+    MAP_KEY = "rescue_swarm_map_module/medium_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
-    MAP_WIDTH = 100,
-    MAP_HEIGHT = 100;
+    MAP_WIDTH = 1000,
+    MAP_HEIGHT = 1000;
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -70,9 +70,9 @@
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var log_entry_list = [], line_list = log.text_content.split('\n'),
+          var position_list = [], line_list = log.text_content.split('\n'),
             i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
-            log_entry, log_entry_array, lat, lon, x, y;
+            log_entry, log_entry_array, lat, lon, x, y, pos_x, pos_y;
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -86,7 +86,8 @@
               //convert geo cordinates into 2D plane coordinates
               x = (MAP_WIDTH / 360.0) * (180 + lon);
               y = (MAP_HEIGHT / 180.0) * (90 - lat);
-              log_entry_list.push([x, y]);
+              position_list.push([x, y]);
+              //get min x and min y to normalize later
               if (x < min_x) {
                 min_x = x;
               }
@@ -101,12 +102,15 @@
               }
             }
           }
-          for (j = 0; j < log_entry_list.length; j += 1) {
-            if (log_entry_list[j]) {
+          for (j = 0; j < position_list.length; j += 1) {
+            if (position_list[j]) {
               //normalize coordinate values
-              n_x = (log_entry_list[j][0] - min_x) / (max_x - min_x);
-              n_y = (log_entry_list[j][1] - min_y) / (max_y - min_y);
-              console.log(Math.round(n_x * 1000), Math.round(n_y * 1000));
+              n_x = (position_list[j][0] - min_x) / (max_x - min_x);
+              n_y = (position_list[j][1] - min_y) / (max_y - min_y);
+              pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
+              pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
+              position_list[j] = [pos_x, pos_y];
+              //console.log(Math.round(n_x * 1000), Math.round(n_y * 1000));
             }
           }
           return gadget.jio_get(options.map);
