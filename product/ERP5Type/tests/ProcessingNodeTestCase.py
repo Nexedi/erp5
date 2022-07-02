@@ -6,11 +6,6 @@ from UserDict import IterableUserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase
-try:
-  from Testing.makerequest import _Z2HOST # XXX only on Zope4
-  from Testing import makerequest as utils
-except: # BBB Zope 2.12
-  from Testing.ZopeTestCase import utils
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -19,6 +14,7 @@ from Products.ERP5Type.tests.utils import \
   addUserToDeveloperRole, createZServer, DummyMailHostMixin, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
+_server_addr = None # (host, port) of the http server if it was started, None otherwise
 
 class DictPersistentWrapper(IterableUserDict, object):
 
@@ -154,7 +150,8 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
-    if utils._Z2HOST is None:
+    global _server_addr
+    if _server_addr is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
@@ -196,7 +193,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           logger.propagate = False
           hs = createServer(app_wrapper(webdav_ports=webdav_ports),
             logger, sockets=sockets)
-          utils._Z2HOST, utils._Z2PORT = hs.addr
+          _server_addr = hs.addr
           t = Thread(target=hs.run)
           t.setDaemon(1)
           t.start()
@@ -208,7 +205,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         except RuntimeError as e:
           ZopeTestCase._print(str(e))
         else:
-          utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
+          _server_addr = hs.server_name, hs.server_port
           _print(hs)
           try:
             _print(createZServer(log, zserver_type='webdav'))
@@ -224,7 +221,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         if ActivityTool.currentNode == ActivityTool._server_address:
           ActivityTool.currentNode = None
         ActivityTool._server_address = None
-    return utils._Z2HOST, utils._Z2PORT
+    return _server_addr
 
   def _registerNode(self, distributing, processing):
     """Register node to process and/or distribute activities"""
@@ -245,7 +242,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   @classmethod
   def unregisterNode(cls):
-    if utils._Z2HOST is not None:
+    if _server_addr is not None:
       self = cls('unregisterNode')
       self.app = self._app()
       self._registerNode(distributing=0, processing=0)
