@@ -544,7 +544,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         User password is the reference.
       """
       user = self.createUser(reference, person_kw=dict(title=title))
-      assignment = self.createUserAssignement(user, assignment_kw=dict(function=function))
+      assignment = self.createUserAssignment(user, assignment_kw=dict(function=function))
       return user
 
     def createUser(self, reference, password=None, person_kw=None):

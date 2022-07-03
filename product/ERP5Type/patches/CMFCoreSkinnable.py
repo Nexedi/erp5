@@ -201,7 +201,7 @@ class SkinDataCleanup:
     if skindata is not None:
       if self.hashSkinData(skindata) == self.skindata_id:
         try:
-          # Entry might have already disapeared. Ignore.
+          # Entry might have already disappeared. Ignore.
           del SKINDATA[tid]
         except KeyError:
           pass
