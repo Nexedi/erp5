@@ -135,6 +135,11 @@
                     "x": 0,
                     "y": 0,
                     "z": 0
+                  },
+                  "color": {
+                    "r": 0,
+                    "g": 255,
+                    "b": 0
                   }
                 };
                 path_point_list.push(path_point);
