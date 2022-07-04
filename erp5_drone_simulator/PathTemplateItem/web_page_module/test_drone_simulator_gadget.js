@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var SIMULATION_SPEED = 100,
+  var SIMULATION_SPEED = 300,
     MAP_KEY = "rescue_swarm_map_module/medium_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
@@ -72,11 +72,12 @@
         .push(function (map_doc) {
           options.json_map = JSON.parse(map_doc.text_content);
           MAP_WIDTH = options.json_map.mapSize.width;
-          MAP_HEIGHT = options.json_map.mapSize.height;
+          MAP_HEIGHT = options.json_map.mapSize.depth;
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var position_list = [], line_list = log.text_content.split('\n'),
+          var position_list = [], path_point_list = [],
+            line_list = log.text_content.split('\n'),
             i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
             log_entry, log_entry_array, lat, lon, x, y, pos_x, pos_y;
           for (i = 0; i < line_list.length; i += 1) {
@@ -108,6 +109,12 @@
               }
             }
           }
+          function distance(x1, y1, x2, y2) {
+            var a = x1 - x2,
+              b = y1 - y2;
+            return Math.sqrt(a * a + b * b);
+          }
+          var previous, starting_position;
           for (j = 0; j < position_list.length; j += 1) {
             if (position_list[j]) {
               //normalize coordinate values
@@ -115,14 +122,47 @@
               n_y = (position_list[j][1] - min_y) / (max_y - min_y);
               pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
               pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
-              position_list[j] = [pos_x, pos_y];
-              //console.log(Math.round(n_x * 1000), Math.round(n_y * 1000));
+              var dist = 0;
+              if (!previous) {
+                starting_position = [pos_x, pos_y];
+                previous = [pos_x, pos_y];
+              }
+              dist = distance(previous[0], previous[1], pos_x, pos_y);
+              if (dist > 15) {
+                previous = [pos_x, pos_y];
+                var path_point = {
+                  "type": "sphere",
+                  "position": {
+                    "x": pos_x,
+                    "y": pos_y,
+                    "z": 0.1
+                  },
+                  "scale": {
+                    "x": 3.5,
+                    "y": 3.5,
+                    "z": 3.5
+                  },
+                  "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                  },
+                  "color": {
+                    "r": 0,
+                    "g": 255,
+                    "b": 0
+                  }
+                };
+                path_point_list.push(path_point);
+              }
             }
           }
+          options.json_map.obstacles = path_point_list;
+          options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
+          options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
           return gadget.changeState({
             script_content: options.script_content,
-            json_map: options.json_map,
-            position_list: position_list
+            json_map: options.json_map
           });
         });
     })
