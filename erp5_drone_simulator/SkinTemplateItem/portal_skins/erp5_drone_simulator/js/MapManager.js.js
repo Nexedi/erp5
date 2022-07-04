@@ -116,6 +116,10 @@ var MapManager = /** @class */ (function () {
                 newObj.rotation = new BABYLON.Vector3(obs.rotation.x * convertion, obs.rotation.y * convertion, obs.rotation.z * convertion);
             if ("scale" in obs)
                 newObj.scaling = new BABYLON.Vector3(obs.scale.x, obs.scale.y, obs.scale.z);
+            var material = new BABYLON.StandardMaterial(scene);
+            material.alpha = 1;
+            material.diffuseColor = new BABYLON.Color3(0, 255, 0);
+            newObj.material = material;
             _this._obstacles.push(newObj);
         });
     }
