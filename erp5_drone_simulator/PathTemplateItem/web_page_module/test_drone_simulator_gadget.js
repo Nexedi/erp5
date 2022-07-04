@@ -76,7 +76,8 @@
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var position_list = [], line_list = log.text_content.split('\n'),
+          var position_list = [], path_point_list = [],
+            line_list = log.text_content.split('\n'),
             i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
             log_entry, log_entry_array, lat, lon, x, y, pos_x, pos_y;
           for (i = 0; i < line_list.length; i += 1) {
@@ -109,20 +110,43 @@
             }
           }
           for (j = 0; j < position_list.length; j += 1) {
-            if (position_list[j]) {
-              //normalize coordinate values
-              n_x = (position_list[j][0] - min_x) / (max_x - min_x);
-              n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-              pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
-              pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
-              position_list[j] = [pos_x, pos_y];
-              //console.log(Math.round(n_x * 1000), Math.round(n_y * 1000));
+            //TODO only draw points with a relevant distance from the previous
+            //avoid drawing points with almos the same (or the same) positions
+            if (j % 10 === 0) {
+              if (position_list[j]) {
+                //normalize coordinate values
+                n_x = (position_list[j][0] - min_x) / (max_x - min_x);
+                n_y = (position_list[j][1] - min_y) / (max_y - min_y);
+                pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
+                pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
+                var path_point = {
+                  "type": "sphere",
+                  "position": {
+                    "x": pos_x,
+                    "y": pos_y,
+                    "z": 0.1
+                  },
+                  "scale": {
+                    "x": 3.5,
+                    "y": 3.5,
+                    "z": 3.5
+                  },
+                  "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                  }
+                };
+                path_point_list.push(path_point);
+                //TODO check why some points are out of the map
+                console.log(pos_x, pos_y);
+              }
             }
           }
+          options.json_map.obstacles = path_point_list;
           return gadget.changeState({
             script_content: options.script_content,
-            json_map: options.json_map,
-            position_list: position_list
+            json_map: options.json_map
           });
         });
     })
