@@ -72,7 +72,7 @@
         .push(function (map_doc) {
           options.json_map = JSON.parse(map_doc.text_content);
           MAP_WIDTH = options.json_map.mapSize.width;
-          MAP_HEIGHT = options.json_map.mapSize.height;
+          MAP_HEIGHT = options.json_map.mapSize.depth;
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
@@ -153,8 +153,6 @@
                   }
                 };
                 path_point_list.push(path_point);
-                //TODO check why some points are out of the map
-                console.log(pos_x, pos_y);
               }
             }
           }
