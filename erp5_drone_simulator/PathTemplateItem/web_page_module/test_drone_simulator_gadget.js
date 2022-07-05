@@ -109,16 +109,26 @@
               }
             }
           }
+          function distance(x1, y1, x2, y2) {
+            var a = x1 - x2,
+              b = y1 - y2;
+            return Math.sqrt(a * a + b * b);
+          }
+          var previous;
           for (j = 0; j < position_list.length; j += 1) {
-            //TODO only draw points with a relevant distance from the previous
-            //avoid drawing points with almos the same (or the same) positions
-            if (j % 10 === 0) {
-              if (position_list[j]) {
-                //normalize coordinate values
-                n_x = (position_list[j][0] - min_x) / (max_x - min_x);
-                n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-                pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
-                pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
+            if (position_list[j]) {
+              //normalize coordinate values
+              n_x = (position_list[j][0] - min_x) / (max_x - min_x);
+              n_y = (position_list[j][1] - min_y) / (max_y - min_y);
+              pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
+              pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
+              var dist = 0;
+              if (!previous) {
+                previous = [pos_x, pos_y];
+              }
+              dist = distance(previous[0], previous[1], pos_x, pos_y);
+              if (dist > 15) {
+                previous = [pos_x, pos_y];
                 var path_point = {
                   "type": "sphere",
                   "position": {
