@@ -1,0 +1,213 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test List Navigation</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test List Navigation</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init"/>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/european_cloud_industry/</td>
+  <td></td>
+</tr>
+
+<!-- Basic Menu Navigation -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Providers']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Providers']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Provider List']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>Nexedi</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[text()='1 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='custom-software-profile-image-wrapper']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Products']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Products']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Product List']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>ERP5</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[text()='1 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='custom-software-profile-image-wrapper']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Success Cases']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Success Cases']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Success Story List']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>Airbus</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[text()='2 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[contains(@class, 'custom-success-story-description')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Financial Data']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(@class, 'ui-icon-euro')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'dygraph-title')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Aggregate Financial Performance</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
