@@ -52,8 +52,7 @@
             g.getUrlFor({command: 'display', options: {page: "eci_provider_list"}}),
             g.getUrlFor({command: 'display', options: {page: "eci_solution_list"}}),
             g.getUrlFor({command: 'display', options: {page: "eci_success_case_list"}}),
-            g.getUrlFor({command: 'display', options: {page: "eci_financial_list"}}),
-            g.getUrlFor({command: 'display', options: {page: "eci_export"}})
+            g.getUrlFor({command: 'display', options: {page: "eci_financial_list"}})
           ]);
         })
         .push(function (all_result) {
@@ -65,8 +64,7 @@
               "provider_href": all_result[1],
               "financial_href": all_result[4],
               "solution_href": all_result[2],
-              "success_case_href": all_result[3],
-              "export_href": all_result[5]
+              "success_case_href": all_result[3]
             });
           g.element.querySelector("div").innerHTML = tmp;
         });
