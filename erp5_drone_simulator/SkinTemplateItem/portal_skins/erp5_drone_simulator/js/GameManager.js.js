@@ -21,7 +21,7 @@ var GameManager = /** @class */ (function (console) {
       }
     };
     //*************************************************** CONSTRUCTOR **************************************************
-    function GameManager(script, map, simulation_speed) {
+    function GameManager(script, map, simulation_speed, print_drone_flight, log_drone_flight) {
         var _this = this;
         //*************************************************** MEMBERS ******************************************************
         // Base Babylon members
@@ -48,6 +48,8 @@ var GameManager = /** @class */ (function (console) {
         if (!simulation_speed) { simulation_speed = 5; }
         this._max_step_animation_frame = simulation_speed;
         this._last_position_print = null;
+        this._print_drone_flight = print_drone_flight;
+        this._log_drone_flight = log_drone_flight;
         // ----------------------------------- CODE ZONES AND PARAMS
         // JIO : AI
         // XXX
@@ -271,23 +273,26 @@ var GameManager = /** @class */ (function (console) {
         }
         var drone_position_x = this._teamLeft[0]._controlMesh.position.x,
           drone_position_y = this._teamLeft[0]._controlMesh.position.z;
-        //log drone info
-        console.log("LOG drone info:", this._game_duration, drone_position_x, drone_position_y);
+        if (this._log_drone_flight) {
+          console.log("LOG drone info:", this._game_duration, drone_position_x, drone_position_y);
+        }
+        if (this._print_drone_flight) {
         //print drone position every 2 seconds
-        if (seconds % 2 === 0) {
-          if (this._last_position_print !== seconds) {
-            this._last_position_print = seconds;
-            var position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" + seconds, {
-                'diameterX': 3.5,
-                'diameterY': 3.5,
-                'diameterZ': 3.5
-            }, this._scene);
-            position_obj.position = new BABYLON.Vector3(drone_position_x, 0.1, drone_position_y);
-            position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
-            var material = new BABYLON.StandardMaterial(this._scene);
-            material.alpha = 1;
-            material.diffuseColor = new BABYLON.Color3(255, 165, 0);
-            position_obj.material = material;
+          if (seconds % 2 === 0) {
+            if (this._last_position_print !== seconds) {
+              this._last_position_print = seconds;
+              var position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" + seconds, {
+                  'diameterX': 3.5,
+                  'diameterY': 3.5,
+                  'diameterZ': 3.5
+              }, this._scene);
+              position_obj.position = new BABYLON.Vector3(drone_position_x, 0.1, drone_position_y);
+              position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
+              var material = new BABYLON.StandardMaterial(this._scene);
+              material.alpha = 1;
+              material.diffuseColor = new BABYLON.Color3(255, 165, 0);
+              position_obj.material = material;
+            }
           }
         }
     };
