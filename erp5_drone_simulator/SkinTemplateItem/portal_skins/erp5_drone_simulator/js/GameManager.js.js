@@ -21,7 +21,7 @@ var GameManager = /** @class */ (function (console) {
       }
     };
     //*************************************************** CONSTRUCTOR **************************************************
-    function GameManager(script, map, simulation_speed, print_drone_flight, log_drone_flight) {
+    function GameManager(script, map, simulation_speed) {
         var _this = this;
         //*************************************************** MEMBERS ******************************************************
         // Base Babylon members
@@ -48,8 +48,6 @@ var GameManager = /** @class */ (function (console) {
         if (!simulation_speed) { simulation_speed = 5; }
         this._max_step_animation_frame = simulation_speed;
         this._last_position_print = null;
-        this._print_drone_flight = print_drone_flight;
-        this._log_drone_flight = log_drone_flight;
         // ----------------------------------- CODE ZONES AND PARAMS
         // JIO : AI
         // XXX
@@ -273,10 +271,11 @@ var GameManager = /** @class */ (function (console) {
         }
         var drone_position_x = this._teamLeft[0]._controlMesh.position.x,
           drone_position_y = this._teamLeft[0]._controlMesh.position.z;
-        if (this._log_drone_flight) {
+        if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.log) {
+          //TODO store
           console.log("LOG drone info:", this._game_duration, drone_position_x, drone_position_y);
         }
-        if (this._print_drone_flight) {
+        if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.print) {
         //print drone position every 2 seconds
           if (seconds % 2 === 0) {
             if (this._last_position_print !== seconds) {
