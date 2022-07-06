@@ -122,8 +122,8 @@
               //normalize coordinate values
               n_x = (position_list[j][0] - min_x) / (max_x - min_x);
               n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-              pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
-              pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
+              pos_x = n_x * 1000 - MAP_WIDTH / 2;
+              pos_y = n_y * 1000 - MAP_HEIGHT / 2;
               var dist = 0;
               if (!previous) {
                 starting_position = [pos_x, pos_y];
@@ -159,6 +159,16 @@
               }
             }
           }
+          options.json_map.logFlight = {
+            log: true,
+            print: true,
+            map_width: MAP_WIDTH,
+            map_height: MAP_HEIGHT,
+            min_x: min_x,
+            max_x: max_x,
+            min_y: min_y,
+            max_y: max_y
+          };
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
