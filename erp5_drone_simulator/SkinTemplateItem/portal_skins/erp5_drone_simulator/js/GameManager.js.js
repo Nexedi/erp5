@@ -273,7 +273,16 @@ var GameManager = /** @class */ (function (console) {
           drone_position_y = this._teamLeft[0]._controlMesh.position.z;
         if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.log) {
           //TODO store
-          console.log("LOG drone info:", this._game_duration, drone_position_x, drone_position_y);
+          //convert x-y coordinates into latitud-longitude
+          var lon = drone_position_x + GAMEPARAMETERS.logFlight.map_width / 2;
+          lon = lon / 1000;
+          lon = lon * (GAMEPARAMETERS.logFlight.max_x - GAMEPARAMETERS.logFlight.min_x) + GAMEPARAMETERS.logFlight.min_x;
+          lon = lon / (GAMEPARAMETERS.logFlight.map_width / 360.0) - 180;
+          var lat = drone_position_y + GAMEPARAMETERS.logFlight.map_height / 2;
+          lat = lat / 1000;
+          lat = lat * (GAMEPARAMETERS.logFlight.max_y - GAMEPARAMETERS.logFlight.min_y) + GAMEPARAMETERS.logFlight.min_y;
+          lat = 90 - lat / (GAMEPARAMETERS.logFlight.map_height / 180.0);
+          console.log("LOG drone info:", this._game_duration, lat, lon);
         }
         if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.print) {
         //print drone position every 2 seconds
