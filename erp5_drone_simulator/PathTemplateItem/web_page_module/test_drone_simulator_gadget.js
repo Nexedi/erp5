@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var SIMULATION_SPEED = 100,
+  var SIMULATION_SPEED = 300,
     MAP_KEY = "rescue_swarm_map_module/medium_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
@@ -114,7 +114,7 @@
               b = y1 - y2;
             return Math.sqrt(a * a + b * b);
           }
-          var previous;
+          var previous, starting_position;
           for (j = 0; j < position_list.length; j += 1) {
             if (position_list[j]) {
               //normalize coordinate values
@@ -124,6 +124,7 @@
               pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
               var dist = 0;
               if (!previous) {
+                starting_position = [pos_x, pos_y];
                 previous = [pos_x, pos_y];
               }
               dist = distance(previous[0], previous[1], pos_x, pos_y);
@@ -157,6 +158,8 @@
             }
           }
           options.json_map.obstacles = path_point_list;
+          options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
+          options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
           return gadget.changeState({
             script_content: options.script_content,
             json_map: options.json_map
