@@ -21,9 +21,7 @@
         gadget = this;
       if (value.autorun) {
         return (new GameManager(value.script, value.map,
-                                value.simulation_speed,
-                                value.print_drone_flight,
-                                value.log_drone_flight)).run()
+                                value.simulation_speed)).run()
         .push(function (result) {
           if (GameManager.getLog() !== '') {
             var blob = new Blob([GameManager.getLog()], {type: 'text/plain'}),
