@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var SIMULATION_SPEED = 300,
+  var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/medium_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
@@ -29,6 +29,8 @@
         map: gadget.state.json_map,
         autorun: true,
         script: gadget.state.script_content,
+        print_drone_flight: true,
+        log_drone_flight: true,
         simulation_speed: SIMULATION_SPEED
       });
       queue
