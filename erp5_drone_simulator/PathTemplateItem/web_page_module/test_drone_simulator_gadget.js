@@ -3,12 +3,12 @@
 (function () {
   "use strict";
 
-  var SIMULATION_SPEED = 300,
-    MAP_KEY = "rescue_swarm_map_module/medium_map",
+  var SIMULATION_SPEED = 100,
+    MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
-    MAP_WIDTH = 1000,
-    MAP_HEIGHT = 1000;
+    MAP_SIZE = 1000,
+    log_point_list = [];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -18,6 +18,32 @@
     .declareAcquiredMethod("jio_get", "jio_get")
 
     .declareJob('run', function () {
+      function frechetDistance(a, b) {
+        var dist = function (p1, p2) {
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2));
+        },
+          C = new Float32Array(a.length * b.length),
+          dim = a.length,
+          i, j;
+        C[0] = dist(a[0], b[0]);
+        for (j = 1; j < dim; j++) {
+          C[j] = Math.max(C[j - 1], dist(a[0], b[j]));
+        }
+        for (i = 1; i < dim; i++) {
+          C[i * dim] = Math.max(C[(i - 1) * dim], dist(a[i], b[0]));
+        }
+        for (i = 1; i < dim; i++) {
+          for (j = 1; j < dim; j++) {
+            C[i * dim + j] = Math.max(
+              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
+                       C[i * dim + j - 1]),
+              dist(a[i], b[j])
+            );
+          }
+        }
+        return C[C.length - 1];
+      }
       var gadget = this,
         queue = new RSVP.Queue(),
         game_value,
@@ -29,6 +55,8 @@
         map: gadget.state.json_map,
         autorun: true,
         script: gadget.state.script_content,
+        print_drone_flight: true,
+        log_drone_flight: true,
         simulation_speed: SIMULATION_SPEED
       });
       queue
@@ -51,6 +79,9 @@
           return game_editor.getContent();
         })
         .push(function (result) {
+          console.log("sim log:", result);
+          console.log("gt  log:", log_point_list);
+          console.log("distance:", frechetDistance(log_point_list, result));
           return result;
         });
       return queue;
@@ -71,15 +102,33 @@
         })
         .push(function (map_doc) {
           options.json_map = JSON.parse(map_doc.text_content);
-          MAP_WIDTH = options.json_map.mapSize.width;
-          MAP_HEIGHT = options.json_map.mapSize.depth;
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var position_list = [], path_point_list = [],
-            line_list = log.text_content.split('\n'),
-            i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
-            log_entry, log_entry_array, lat, lon, x, y, pos_x, pos_y;
+          var path_point_list = [], max_width, max_height,
+            line_list = log.text_content.split('\n'), log_entry_list = [],
+            i, min_x, min_y, max_x, max_y, n_x, n_y, start_time, end_time,
+            log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
+            min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
+            previous, start_position, dist = 0, path_point, average_speed = 0,
+            flight_time, log_interval_time, previous_log_time;
+          function distance(x1, y1, x2, y2) {
+            var a = x1 - x2,
+              b = y1 - y2;
+            return Math.sqrt(a * a + b * b);
+          }
+          function latLonDistance(c1, c2) {
+            var R = 6371e3,
+              q1 = c1[0] * Math.PI / 180,
+              q2 = c2[0] * Math.PI / 180,
+              dq = (c2[0] - c1[0]) * Math.PI / 180,
+              dl = (c2[1] - c1[1]) * Math.PI / 180,
+              a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+                Math.cos(q1) * Math.cos(q2) *
+                Math.sin(dl / 2) * Math.sin(dl / 2),
+              c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+          }
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -87,79 +136,116 @@
             }
             log_entry = line_list[i].trim();
             if (log_entry) {
-              log_entry_array = log_entry.split(";");
-              lat = parseFloat(log_entry_array[1]);
-              lon = parseFloat(log_entry_array[2]);
-              //convert geo cordinates into 2D plane coordinates
-              x = (MAP_WIDTH / 360.0) * (180 + lon);
-              y = (MAP_HEIGHT / 180.0) * (90 - lat);
-              position_list.push([x, y]);
-              //get min x and min y to normalize later
-              if (x < min_x) {
-                min_x = x;
+              log_entry_list.push(log_entry);
+              splitted_log_entry = log_entry.split(";");
+              lat = parseFloat(splitted_log_entry[1]);
+              lon = parseFloat(splitted_log_entry[2]);
+              //get min and max lat and lon
+              if (lon < min_lon) {
+                min_lon = lon;
               }
-              if (y < min_y) {
-                min_y = y;
+              if (lat < min_lat) {
+                min_lat = lat;
               }
-              if (x > max_x) {
-                max_x = x;
+              if (lon > max_lon) {
+                max_lon = lon;
               }
-              if (y > max_y) {
-                max_y = y;
+              if (lat > max_lat) {
+                max_lat = lat;
               }
             }
           }
-          function distance(x1, y1, x2, y2) {
-            var a = x1 - x2,
-              b = y1 - y2;
-            return Math.sqrt(a * a + b * b);
-          }
-          var previous, starting_position;
-          for (j = 0; j < position_list.length; j += 1) {
-            if (position_list[j]) {
-              //normalize coordinate values
-              n_x = (position_list[j][0] - min_x) / (max_x - min_x);
-              n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-              pos_x = Math.round(n_x * 1000) - MAP_WIDTH / 2;
-              pos_y = Math.round(n_y * 1000) - MAP_HEIGHT / 2;
-              var dist = 0;
-              if (!previous) {
-                starting_position = [pos_x, pos_y];
-                previous = [pos_x, pos_y];
-              }
-              dist = distance(previous[0], previous[1], pos_x, pos_y);
-              if (dist > 15) {
-                previous = [pos_x, pos_y];
-                var path_point = {
-                  "type": "sphere",
-                  "position": {
-                    "x": pos_x,
-                    "y": pos_y,
-                    "z": 0.1
-                  },
-                  "scale": {
-                    "x": 3.5,
-                    "y": 3.5,
-                    "z": 3.5
-                  },
-                  "rotation": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                  },
-                  "color": {
-                    "r": 0,
-                    "g": 255,
-                    "b": 0
-                  }
-                };
-                path_point_list.push(path_point);
-              }
+          //get map size from max distance
+          max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
+          max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
+          MAP_SIZE = Math.ceil(Math.max(max_width, max_height));
+          //convert geo cordinates into 2D plane coordinates
+          min_x = (MAP_SIZE / 360.0) * (180 + min_lon);
+          max_x = (MAP_SIZE / 360.0) * (180 + max_lon);
+          min_y = (MAP_SIZE / 180.0) * (90 - min_lat);
+          max_y = (MAP_SIZE / 180.0) * (90 - max_lat);
+          for (i = 0; i < log_entry_list.length; i += 1) {
+            splitted_log_entry = log_entry_list[i].split(";");
+            if (i === 0) {
+              log_interval_time = 0;
+              start_time = parseInt(splitted_log_entry[0]);
+            } else {
+              log_interval_time += parseInt(splitted_log_entry[0]) - previous_log_time;
             }
+            previous_log_time = parseInt(splitted_log_entry[0]);
+            if (i === log_entry_list.length - 1) {
+              end_time = parseInt(splitted_log_entry[0]);
+            }
+            average_speed += parseFloat(splitted_log_entry[8]);
+            lat = parseFloat(splitted_log_entry[1]);
+            lon = parseFloat(splitted_log_entry[2]);
+            x = (MAP_SIZE / 360.0) * (180 + lon);
+            y = (MAP_SIZE / 180.0) * (90 - lat);
+            //normalize coordinate values
+            n_x = (x - min_x) / (max_x - min_x);
+            n_y = (y - min_y) / (max_y - min_y);
+            pos_x = n_x * 1000 - MAP_SIZE / 2;
+            pos_y = n_y * 1000 - MAP_SIZE / 2;
+            if (!previous) {
+              start_position = [pos_x, pos_y];
+              previous = [pos_x, pos_y];
+            }
+            dist = distance(previous[0], previous[1], pos_x, pos_y);
+            if (dist > 15) {
+              previous = [pos_x, pos_y];
+              path_point = {
+                "type": "sphere",
+                "position": {
+                  "x": pos_x,
+                  "y": pos_y,
+                  "z": 0.1
+                },
+                "scale": {
+                  "x": 3.5,
+                  "y": 3.5,
+                  "z": 3.5
+                },
+                "rotation": {
+                  "x": 0,
+                  "y": 0,
+                  "z": 0
+                },
+                "color": {
+                  "r": 0,
+                  "g": 255,
+                  "b": 0
+                }
+              };
+              path_point_list.push(path_point);
+            }
+            log_point_list.push([parseFloat(splitted_log_entry[1]),
+                                parseFloat(splitted_log_entry[2])]);
           }
+          average_speed = average_speed / log_entry_list.length;
+          log_interval_time = log_interval_time / log_entry_list.length;
+          flight_time = end_time - start_time;
+          options.json_map.logFlight = {
+            log: true,
+            print: true,
+            map_width: MAP_SIZE,
+            map_height: MAP_SIZE,
+            min_x: min_x,
+            max_x: max_x,
+            min_y: min_y,
+            max_y: max_y,
+            flight_time: flight_time,
+            average_speed: average_speed,
+            log_interval_time: log_interval_time
+          };
+          options.json_map.drone.maxSpeed = average_speed * 1.01;
+          //TODO move obstacles to logFlight
           options.json_map.obstacles = path_point_list;
-          options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
-          options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
+          options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
+          options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
+          options.json_map.gameTime = flight_time;
+          //give map some margin from the flight
+          options.json_map.mapSize.width = MAP_SIZE * 1.10;
+          options.json_map.mapSize.depth = MAP_SIZE * 1.10;
           return gadget.changeState({
             script_content: options.script_content,
             json_map: options.json_map
