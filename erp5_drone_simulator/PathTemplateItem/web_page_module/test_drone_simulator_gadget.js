@@ -75,12 +75,12 @@
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var position_list = [], path_point_list = [], max_width, max_height,
+          var path_point_list = [], max_width, max_height,
             line_list = log.text_content.split('\n'), log_entry_list = [],
-            i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
+            i, min_x, min_y, max_x, max_y, n_x, n_y,
             log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
             min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
-            previous, starting_position;
+            previous, start_position, dist = 0, path_point;
           function distance(x1, y1, x2, y2) {
             var a = x1 - x2,
               b = y1 - y2;
@@ -144,15 +144,14 @@
             n_y = (y - min_y) / (max_y - min_y);
             pos_x = n_x * 1000 - MAP_SIZE / 2;
             pos_y = n_y * 1000 - MAP_SIZE / 2;
-            var dist = 0;
             if (!previous) {
-              starting_position = [pos_x, pos_y];
+              start_position = [pos_x, pos_y];
               previous = [pos_x, pos_y];
             }
             dist = distance(previous[0], previous[1], pos_x, pos_y);
             if (dist > 15) {
               previous = [pos_x, pos_y];
-              var path_point = {
+              path_point = {
                 "type": "sphere",
                 "position": {
                   "x": pos_x,
@@ -189,8 +188,8 @@
             max_y: max_y
           };
           options.json_map.obstacles = path_point_list;
-          options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
-          options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
+          options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
+          options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
@@ -203,9 +202,10 @@
     .onStateChange(function () {
       function frechetDistance(a, b) {
         var dist = function (p1, p2) {
-          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
-        };
-        var C = new Float32Array(a.length * b.length),
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2));
+        },
+          C = new Float32Array(a.length * b.length),
           dim = a.length,
           i, j;
         C[0] = dist(a[0], b[0]);
@@ -218,7 +218,8 @@
         for (i = 1; i < dim; i++) {
           for (j = 1; j < dim; j++) {
             C[i * dim + j] = Math.max(
-              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1], C[i * dim + j - 1]),
+              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
+                       C[i * dim + j - 1]),
               dist(a[i], b[j])
             );
           }
