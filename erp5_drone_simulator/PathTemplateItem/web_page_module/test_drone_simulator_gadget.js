@@ -75,12 +75,12 @@
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var position_list = [], path_point_list = [], max_width, max_height,
+          var path_point_list = [], max_width, max_height,
             line_list = log.text_content.split('\n'), log_entry_list = [],
-            i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
+            i, min_x, min_y, max_x, max_y, n_x, n_y,
             log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
             min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
-            previous, starting_position;
+            previous, start_position, dist = 0, path_point;
           function distance(x1, y1, x2, y2) {
             var a = x1 - x2,
               b = y1 - y2;
@@ -124,71 +124,57 @@
               }
             }
           }
+          //get map size from max distance
           max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
           max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
           MAP_SIZE = Math.ceil(Math.max(max_width, max_height));
+          //convert geo cordinates into 2D plane coordinates
+          min_x = (MAP_SIZE / 360.0) * (180 + min_lon);
+          max_x = (MAP_SIZE / 360.0) * (180 + max_lon);
+          min_y = (MAP_SIZE / 180.0) * (90 - min_lat);
+          max_y = (MAP_SIZE / 180.0) * (90 - max_lat);
           for (i = 0; i < log_entry_list.length; i += 1) {
             splitted_log_entry = log_entry_list[i].split(";");
             lat = parseFloat(splitted_log_entry[1]);
             lon = parseFloat(splitted_log_entry[2]);
-            //convert geo cordinates into 2D plane coordinates
             x = (MAP_SIZE / 360.0) * (180 + lon);
             y = (MAP_SIZE / 180.0) * (90 - lat);
-            position_list.push([x, y]);
-            //get min x and min y to normalize later
-            if (x < min_x) {
-              min_x = x;
+            //normalize coordinate values
+            n_x = (x - min_x) / (max_x - min_x);
+            n_y = (y - min_y) / (max_y - min_y);
+            pos_x = n_x * 1000 - MAP_SIZE / 2;
+            pos_y = n_y * 1000 - MAP_SIZE / 2;
+            if (!previous) {
+              start_position = [pos_x, pos_y];
+              previous = [pos_x, pos_y];
             }
-            if (y < min_y) {
-              min_y = y;
-            }
-            if (x > max_x) {
-              max_x = x;
-            }
-            if (y > max_y) {
-              max_y = y;
-            }
-          }
-          for (j = 0; j < position_list.length; j += 1) {
-            if (position_list[j]) {
-              //normalize coordinate values
-              n_x = (position_list[j][0] - min_x) / (max_x - min_x);
-              n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-              pos_x = n_x * 1000 - MAP_SIZE / 2;
-              pos_y = n_y * 1000 - MAP_SIZE / 2;
-              var dist = 0;
-              if (!previous) {
-                starting_position = [pos_x, pos_y];
-                previous = [pos_x, pos_y];
-              }
-              dist = distance(previous[0], previous[1], pos_x, pos_y);
-              if (dist > 15) {
-                previous = [pos_x, pos_y];
-                var path_point = {
-                  "type": "sphere",
-                  "position": {
-                    "x": pos_x,
-                    "y": pos_y,
-                    "z": 0.1
-                  },
-                  "scale": {
-                    "x": 3.5,
-                    "y": 3.5,
-                    "z": 3.5
-                  },
-                  "rotation": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                  },
-                  "color": {
-                    "r": 0,
-                    "g": 255,
-                    "b": 0
-                  }
-                };
-                path_point_list.push(path_point);
-              }
+            dist = distance(previous[0], previous[1], pos_x, pos_y);
+            if (dist > 15) {
+              previous = [pos_x, pos_y];
+              path_point = {
+                "type": "sphere",
+                "position": {
+                  "x": pos_x,
+                  "y": pos_y,
+                  "z": 0.1
+                },
+                "scale": {
+                  "x": 3.5,
+                  "y": 3.5,
+                  "z": 3.5
+                },
+                "rotation": {
+                  "x": 0,
+                  "y": 0,
+                  "z": 0
+                },
+                "color": {
+                  "r": 0,
+                  "g": 255,
+                  "b": 0
+                }
+              };
+              path_point_list.push(path_point);
             }
           }
           options.json_map.logFlight = {
@@ -202,8 +188,8 @@
             max_y: max_y
           };
           options.json_map.obstacles = path_point_list;
-          options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
-          options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
+          options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
+          options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
@@ -216,9 +202,10 @@
     .onStateChange(function () {
       function frechetDistance(a, b) {
         var dist = function (p1, p2) {
-          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
-        };
-        var C = new Float32Array(a.length * b.length),
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2));
+        },
+          C = new Float32Array(a.length * b.length),
           dim = a.length,
           i, j;
         C[0] = dist(a[0], b[0]);
@@ -231,7 +218,8 @@
         for (i = 1; i < dim; i++) {
           for (j = 1; j < dim; j++) {
             C[i * dim + j] = Math.max(
-              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1], C[i * dim + j - 1]),
+              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
+                       C[i * dim + j - 1]),
               dist(a[i], b[j])
             );
           }
