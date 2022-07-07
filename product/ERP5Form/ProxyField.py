@@ -36,7 +36,6 @@ from Acquisition import aq_base
 from MethodObject import Method
 from zLOG import LOG, WARNING
 
-from Products.CMFCore.Skinnable import SKINDATA
 
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -439,11 +438,8 @@ class ProxyField(ZMIField):
           # priority.
           # This should return no field if the skin folder name is defined in
           # form_id.
-          skin_info = SKINDATA.get(get_ident())
-
-          if skin_info is not None:
-            _, skin_selection_name, ignore, resolve = skin_info
-
+          skin_selection_name = object.getCurrentSkinName()
+          if skin_selection_name is not None:
             selection_dict = portal_skins._getSelections()
             candidate_folder_id_list = selection_dict[skin_selection_name].split(',')
 
