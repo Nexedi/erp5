@@ -82,6 +82,8 @@
             line_list = log.text_content.split('\n'),
             i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
             log_entry, log_entry_array, lat, lon, x, y, pos_x, pos_y;
+          //TODO set the map size based on log max-min distance (https://www.movable-type.co.uk/scripts/latlong.html)
+          //update coordinate conversion accordingly
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -90,6 +92,7 @@
             log_entry = line_list[i].trim();
             if (log_entry) {
               log_entry_array = log_entry.split(";");
+              //console.log(parseInt(log_entry_array[0]));
               lat = parseFloat(log_entry_array[1]);
               lon = parseFloat(log_entry_array[2]);
               //convert geo cordinates into 2D plane coordinates
@@ -179,6 +182,30 @@
         });
     })
     .onStateChange(function () {
+      function frechetDistance(a, b) {
+        var dist = function (p1, p2) {
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
+        };
+        var C = new Float32Array(a.length * b.length),
+          dim = a.length,
+          i, j;
+        C[0] = dist(a[0], b[0]);
+        for (j = 1; j < dim; j++) {
+          C[j] = Math.max(C[j - 1], dist(a[0], b[j]));
+        }
+        for (i = 1; i < dim; i++) {
+          C[i * dim] = Math.max(C[(i - 1) * dim], dist(a[i], b[0]));
+        }
+        for (i = 1; i < dim; i++) {
+          for (j = 1; j < dim; j++) {
+            C[i * dim + j] = Math.max(
+              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1], C[i * dim + j - 1]),
+              dist(a[i], b[j])
+            );
+          }
+        }
+        return C[C.length - 1];
+      }
       var gadget = this;
       return gadget.updateHeader({
         page_title: "Test drone gadget"
