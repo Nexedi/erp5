@@ -124,71 +124,58 @@
               }
             }
           }
+          //get map size from max distance
           max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
           max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
           MAP_SIZE = Math.ceil(Math.max(max_width, max_height));
+          //convert geo cordinates into 2D plane coordinates
+          min_x = (MAP_SIZE / 360.0) * (180 + min_lon);
+          max_x = (MAP_SIZE / 360.0) * (180 + max_lon);
+          min_y = (MAP_SIZE / 180.0) * (90 - min_lat);
+          max_y = (MAP_SIZE / 180.0) * (90 - max_lat);
           for (i = 0; i < log_entry_list.length; i += 1) {
             splitted_log_entry = log_entry_list[i].split(";");
             lat = parseFloat(splitted_log_entry[1]);
             lon = parseFloat(splitted_log_entry[2]);
-            //convert geo cordinates into 2D plane coordinates
             x = (MAP_SIZE / 360.0) * (180 + lon);
             y = (MAP_SIZE / 180.0) * (90 - lat);
-            position_list.push([x, y]);
-            //get min x and min y to normalize later
-            if (x < min_x) {
-              min_x = x;
+            //normalize coordinate values
+            n_x = (x - min_x) / (max_x - min_x);
+            n_y = (y - min_y) / (max_y - min_y);
+            pos_x = n_x * 1000 - MAP_SIZE / 2;
+            pos_y = n_y * 1000 - MAP_SIZE / 2;
+            var dist = 0;
+            if (!previous) {
+              starting_position = [pos_x, pos_y];
+              previous = [pos_x, pos_y];
             }
-            if (y < min_y) {
-              min_y = y;
-            }
-            if (x > max_x) {
-              max_x = x;
-            }
-            if (y > max_y) {
-              max_y = y;
-            }
-          }
-          for (j = 0; j < position_list.length; j += 1) {
-            if (position_list[j]) {
-              //normalize coordinate values
-              n_x = (position_list[j][0] - min_x) / (max_x - min_x);
-              n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-              pos_x = n_x * 1000 - MAP_SIZE / 2;
-              pos_y = n_y * 1000 - MAP_SIZE / 2;
-              var dist = 0;
-              if (!previous) {
-                starting_position = [pos_x, pos_y];
-                previous = [pos_x, pos_y];
-              }
-              dist = distance(previous[0], previous[1], pos_x, pos_y);
-              if (dist > 15) {
-                previous = [pos_x, pos_y];
-                var path_point = {
-                  "type": "sphere",
-                  "position": {
-                    "x": pos_x,
-                    "y": pos_y,
-                    "z": 0.1
-                  },
-                  "scale": {
-                    "x": 3.5,
-                    "y": 3.5,
-                    "z": 3.5
-                  },
-                  "rotation": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                  },
-                  "color": {
-                    "r": 0,
-                    "g": 255,
-                    "b": 0
-                  }
-                };
-                path_point_list.push(path_point);
-              }
+            dist = distance(previous[0], previous[1], pos_x, pos_y);
+            if (dist > 15) {
+              previous = [pos_x, pos_y];
+              var path_point = {
+                "type": "sphere",
+                "position": {
+                  "x": pos_x,
+                  "y": pos_y,
+                  "z": 0.1
+                },
+                "scale": {
+                  "x": 3.5,
+                  "y": 3.5,
+                  "z": 3.5
+                },
+                "rotation": {
+                  "x": 0,
+                  "y": 0,
+                  "z": 0
+                },
+                "color": {
+                  "r": 0,
+                  "g": 255,
+                  "b": 0
+                }
+              };
+              path_point_list.push(path_point);
             }
           }
           options.json_map.logFlight = {
