@@ -4,11 +4,10 @@
   "use strict";
 
   var SIMULATION_SPEED = 100,
-    MAP_KEY = "rescue_swarm_map_module/medium_map",
+    MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
-    MAP_WIDTH = 1000,
-    MAP_HEIGHT = 1000;
+    MAP_SIZE = 1000;
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -73,17 +72,32 @@
         })
         .push(function (map_doc) {
           options.json_map = JSON.parse(map_doc.text_content);
-          MAP_WIDTH = options.json_map.mapSize.width;
-          MAP_HEIGHT = options.json_map.mapSize.depth;
           return gadget.jio_get(options.log);
         })
         .push(function (log) {
-          var position_list = [], path_point_list = [],
-            line_list = log.text_content.split('\n'),
+          var position_list = [], path_point_list = [], max_width, max_height,
+            line_list = log.text_content.split('\n'), log_entry_list = [],
             i, j, min_x = 99999, min_y = 99999, max_x = 0, max_y = 0, n_x, n_y,
-            log_entry, log_entry_array, lat, lon, x, y, pos_x, pos_y;
-          //TODO set the map size based on log max-min distance (https://www.movable-type.co.uk/scripts/latlong.html)
-          //update coordinate conversion accordingly
+            log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
+            min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
+            previous, starting_position;
+          function distance(x1, y1, x2, y2) {
+            var a = x1 - x2,
+              b = y1 - y2;
+            return Math.sqrt(a * a + b * b);
+          }
+          function latLonDistance(c1, c2) {
+            var R = 6371e3,
+              q1 = c1[0] * Math.PI / 180,
+              q2 = c2[0] * Math.PI / 180,
+              dq = (c2[0] - c1[0]) * Math.PI / 180,
+              dl = (c2[1] - c1[1]) * Math.PI / 180,
+              a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+                Math.cos(q1) * Math.cos(q2) *
+                Math.sin(dl / 2) * Math.sin(dl / 2),
+              c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+          }
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -91,42 +105,57 @@
             }
             log_entry = line_list[i].trim();
             if (log_entry) {
-              log_entry_array = log_entry.split(";");
-              //console.log(parseInt(log_entry_array[0]));
-              lat = parseFloat(log_entry_array[1]);
-              lon = parseFloat(log_entry_array[2]);
-              //convert geo cordinates into 2D plane coordinates
-              x = (MAP_WIDTH / 360.0) * (180 + lon);
-              y = (MAP_HEIGHT / 180.0) * (90 - lat);
-              position_list.push([x, y]);
-              //get min x and min y to normalize later
-              if (x < min_x) {
-                min_x = x;
+              log_entry_list.push(log_entry);
+              splitted_log_entry = log_entry.split(";");
+              lat = parseFloat(splitted_log_entry[1]);
+              lon = parseFloat(splitted_log_entry[2]);
+              //get min and max lat and lon
+              if (lon < min_lon) {
+                min_lon = lon;
               }
-              if (y < min_y) {
-                min_y = y;
+              if (lat < min_lat) {
+                min_lat = lat;
               }
-              if (x > max_x) {
-                max_x = x;
+              if (lon > max_lon) {
+                max_lon = lon;
               }
-              if (y > max_y) {
-                max_y = y;
+              if (lat > max_lat) {
+                max_lat = lat;
               }
             }
           }
-          function distance(x1, y1, x2, y2) {
-            var a = x1 - x2,
-              b = y1 - y2;
-            return Math.sqrt(a * a + b * b);
+          max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
+          max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
+          MAP_SIZE = Math.ceil(Math.max(max_width, max_height));
+          for (i = 0; i < log_entry_list.length; i += 1) {
+            splitted_log_entry = log_entry_list[i].split(";");
+            lat = parseFloat(splitted_log_entry[1]);
+            lon = parseFloat(splitted_log_entry[2]);
+            //convert geo cordinates into 2D plane coordinates
+            x = (MAP_SIZE / 360.0) * (180 + lon);
+            y = (MAP_SIZE / 180.0) * (90 - lat);
+            position_list.push([x, y]);
+            //get min x and min y to normalize later
+            if (x < min_x) {
+              min_x = x;
+            }
+            if (y < min_y) {
+              min_y = y;
+            }
+            if (x > max_x) {
+              max_x = x;
+            }
+            if (y > max_y) {
+              max_y = y;
+            }
           }
-          var previous, starting_position;
           for (j = 0; j < position_list.length; j += 1) {
             if (position_list[j]) {
               //normalize coordinate values
               n_x = (position_list[j][0] - min_x) / (max_x - min_x);
               n_y = (position_list[j][1] - min_y) / (max_y - min_y);
-              pos_x = n_x * 1000 - MAP_WIDTH / 2;
-              pos_y = n_y * 1000 - MAP_HEIGHT / 2;
+              pos_x = n_x * 1000 - MAP_SIZE / 2;
+              pos_y = n_y * 1000 - MAP_SIZE / 2;
               var dist = 0;
               if (!previous) {
                 starting_position = [pos_x, pos_y];
@@ -165,8 +194,8 @@
           options.json_map.logFlight = {
             log: true,
             print: true,
-            map_width: MAP_WIDTH,
-            map_height: MAP_HEIGHT,
+            map_width: MAP_SIZE,
+            map_height: MAP_SIZE,
             min_x: min_x,
             max_x: max_x,
             min_y: min_y,
@@ -175,6 +204,9 @@
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = starting_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = starting_position[1];
+          //give map some margin from the flight
+          options.json_map.mapSize.width = MAP_SIZE * 1.10;
+          options.json_map.mapSize.depth = MAP_SIZE * 1.10;
           return gadget.changeState({
             script_content: options.script_content,
             json_map: options.json_map
