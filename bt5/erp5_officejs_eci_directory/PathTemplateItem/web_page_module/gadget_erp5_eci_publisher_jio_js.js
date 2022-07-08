@@ -53,7 +53,7 @@
           style: 'currency',
           currency: 'EUR',
           minimumFractionDigits: "0"
-        }).format(value);
+        }).format(value.replace(/[^\d.]/g, ''));
       }
       return kpi.year + ":" + (value || NA);
     }).join(" ");
