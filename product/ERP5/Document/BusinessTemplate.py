@@ -2037,6 +2037,11 @@ class SkinTemplateItem(ObjectTemplateItem):
       # Do not register skin which were explicitely ask not to be installed
       if not force and update_dict.get(relative_url)  == 'nothing':
         continue
+      # self._objects contains the skin folder and all skins, for this
+      # we want to process only the skin folder 
+      relative_url = relative_url.split('/')
+      if len(relative_url) != 2:
+        continue
       folder = self.unrestrictedResolveValue(p, relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method', 'ERP5 SQL Method')):
         fixZSQLMethod(p, obj)
