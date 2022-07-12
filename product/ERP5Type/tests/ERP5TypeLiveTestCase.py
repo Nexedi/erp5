@@ -32,6 +32,8 @@ import sys
 import imp
 import re
 
+from zope.site.hooks import setSite
+from Acquisition import aq_base
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
@@ -88,7 +90,9 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       # reconstruct the acquisition chain with an independent request.
       #   RequestContainer -> Application -> Site
       from Testing.ZopeTestCase.utils import makerequest
-      portal = getattr(makerequest(site.aq_parent), site.getId())
+      portal = getattr(
+        makerequest(aq_base(site.aq_parent)),
+        site.getId())
 
       # Make the various get_request patches return this request.
       # This is for ERP5TypeTestCase patch
@@ -106,6 +110,8 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         request['SERVER_URL'] = _request_server_url
         request._resetURLS()
 
+      portal.setupCurrentSkin(request)
+      setSite(portal)
       self.portal = portal
       return portal
 
@@ -129,6 +135,8 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       if getattr(self, "activity_tool_subscribed", False):
         self.portal.portal_activities.subscribe()
         self.commit()
+      if self.portal is not None:
+        self.portal.REQUEST.close()
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test
