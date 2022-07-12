@@ -89,12 +89,20 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       site = getSite()
       # reconstruct the acquistion chain with an independant request.
       #   RequestContainer -> Application -> Site
-      from Testing.ZopeTestCase.utils import makerequest
+      from Testing.makerequest import makerequest
+      environ = {}
+      if self._server_address:
+        host, port = self._server_address
+        environ={
+          'SERVER_NAME': host,
+          'SERVER_PORT': port,
+        }
       portal = getattr(
-        makerequest(aq_base(site.aq_parent)),
+        makerequest(aq_base(site.aq_parent), environ=environ),
         site.getId())
 
       # Make the various get_request patches return this request.
+      # TODO: check this is still needed
       # This is for ERP5TypeTestCase patch
       from Testing.ZopeTestCase.connections import registry
       if registry:

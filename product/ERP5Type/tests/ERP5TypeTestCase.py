@@ -57,7 +57,8 @@ getRequest.__code__ = (lambda: get_request()).__code__
 from zope.site.hooks import setSite
 
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase import PortalTestCase, user_name
+from Testing.makerequest import makerequest
+from Testing.ZopeTestCase import PortalTestCase, user_name, ZopeLite
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -1032,9 +1033,25 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     def _app(self):
       '''Opens a ZODB connection and returns the app object.
 
-      We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
-      unicode conflict resolver to work properly'''
-      app = PortalTestCase._app(self)
+      We override this method so that the request knows about the address of
+      our http server and also to set HTTP_ACCEPT_CHARSET set in REQUEST, to
+      get the zpt unicode conflict resolver to
+      work properly.
+
+      We reimplement PortalTestCase._app instead of calling it, because it
+      opens a ZODB connection and wrap the root object a request to
+      http://nohost, but we prefer to create directly a connection to the
+      app wrapped in a request to our web server.
+      '''
+      app = ZopeLite.app()
+      environ = {}
+      if self._server_address:
+        host, port = self._server_address
+        environ['SERVER_NAME'] = host
+        environ['SERVER_PORT'] = port
+
+      app = makerequest(app, environ=environ)
+      registry.register(app)
       app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
       return app
 
