@@ -1,0 +1,16 @@
+.about-page h1 {
+  font-family: "Roboto", Arial, sans-serif;
+  color: #0082b9;
+  font-size: 2em;
+  margin: 0.67em 0;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+.about-page p {
+  font-family: 'Heuristica', 'Helvetica', Times, serif;
+  font-size: 1.25em;
+  line-height: 1.58em;
+  letter-spacing: -.003em;
+}
+
