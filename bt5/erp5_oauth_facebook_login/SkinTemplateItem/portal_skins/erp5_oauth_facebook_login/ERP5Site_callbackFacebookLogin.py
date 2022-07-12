@@ -49,6 +49,10 @@ elif code is not None:
     # https://stackoverflow.com/questions/7131909/facebook-callback-appends-to-return-url/33257076#33257076
     # https://lab.nexedi.com/nexedi/erp5/merge_requests/417#note_64365
     came_from = request.get("came_from",  portal.absolute_url() + "#")
-    return response.redirect(came_from)
+    # Don't use response.redirect, as it normalize the URL (in Zope4) and remove the
+    # empty fragment - which is an equivalent URL, but for this special case we want to keep the #
+    response.setStatus(302, lock=True)
+    response.setHeader('Location', came_from)
+    return came_from
 
 return handleError('')
