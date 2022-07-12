@@ -80,14 +80,14 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
 
-      Rewrap the portal in an independant request for this test.
+      Rewrap the portal in an independent request for this test.
       """
       if self.portal is not None:
         return self.portal
 
       from Products.ERP5.ERP5Site import getSite
       site = getSite()
-      # reconstruct the acquistion chain with an independant request.
+      # reconstruct the acquisition chain with an independent request.
       #   RequestContainer -> Application -> Site
       from Testing.makerequest import makerequest
       environ = {}
