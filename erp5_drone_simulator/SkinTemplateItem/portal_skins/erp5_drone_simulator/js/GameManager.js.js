@@ -285,7 +285,7 @@ var GameManager = /** @class */ (function (console) {
             lat = lat / 1000;
             lat = lat * (GAMEPARAMETERS.logFlight.max_y - GAMEPARAMETERS.logFlight.min_y) + GAMEPARAMETERS.logFlight.min_y;
             lat = 90 - lat / (GAMEPARAMETERS.logFlight.map_height / 180.0);
-            this._flight_log.push([this._game_duration, lat, lon]);
+            this._flight_log.push([lat, lon]);
           }
         }
         if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.print) {
