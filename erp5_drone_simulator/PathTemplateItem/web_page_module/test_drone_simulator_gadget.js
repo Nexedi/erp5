@@ -6,7 +6,7 @@
   var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
-    LOG_KEY = "rescue_swarm_script_module/log_3",
+    LOG_KEY = "rescue_swarm_script_module/log_1",
     MAP_SIZE = 1000,
     log_point_list = [];
 
@@ -81,7 +81,7 @@
         .push(function (result) {
           console.log("sim log:", result);
           console.log("gt  log:", log_point_list);
-          //console.log("distance:", frechetDistance(log_point_list, result));
+          console.log("distance:", frechetDistance(log_point_list, result));
           return result;
         });
       return queue;
@@ -234,7 +234,7 @@
             min_y: min_y,
             max_y: max_y,
             flight_time: flight_time,
-            average_speed: 16,//average_speed,
+            average_speed: average_speed,
             log_interval_time: log_interval_time
           };
           options.json_map.drone.maxSpeed = average_speed * 1.01;
