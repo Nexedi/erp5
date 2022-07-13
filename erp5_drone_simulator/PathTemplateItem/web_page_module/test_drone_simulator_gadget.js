@@ -6,7 +6,7 @@
   var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
-    LOG_KEY = "rescue_swarm_script_module/log_1",
+    LOG_KEY = "rescue_swarm_script_module/log_3",
     MAP_SIZE = 1000,
     log_point_list = [];
 
@@ -18,6 +18,32 @@
     .declareAcquiredMethod("jio_get", "jio_get")
 
     .declareJob('run', function () {
+      function frechetDistance(a, b) {
+        var dist = function (p1, p2) {
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2));
+        },
+          C = new Float32Array(a.length * b.length),
+          dim = a.length,
+          i, j;
+        C[0] = dist(a[0], b[0]);
+        for (j = 1; j < dim; j++) {
+          C[j] = Math.max(C[j - 1], dist(a[0], b[j]));
+        }
+        for (i = 1; i < dim; i++) {
+          C[i * dim] = Math.max(C[(i - 1) * dim], dist(a[i], b[0]));
+        }
+        for (i = 1; i < dim; i++) {
+          for (j = 1; j < dim; j++) {
+            C[i * dim + j] = Math.max(
+              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
+                       C[i * dim + j - 1]),
+              dist(a[i], b[j])
+            );
+          }
+        }
+        return C[C.length - 1];
+      }
       var gadget = this,
         queue = new RSVP.Queue(),
         game_value,
@@ -55,7 +81,7 @@
         .push(function (result) {
           console.log("sim log:", result);
           console.log("gt  log:", log_point_list);
-          //TODO compare logs
+          //console.log("distance:", frechetDistance(log_point_list, result));
           return result;
         });
       return queue;
@@ -192,8 +218,7 @@
               };
               path_point_list.push(path_point);
             }
-            log_point_list.push([parseInt(splitted_log_entry[0]),
-                                parseFloat(splitted_log_entry[1]),
+            log_point_list.push([parseFloat(splitted_log_entry[1]),
                                 parseFloat(splitted_log_entry[2])]);
           }
           average_speed = average_speed / log_entry_list.length;
@@ -209,12 +234,9 @@
             min_y: min_y,
             max_y: max_y,
             flight_time: flight_time,
-            average_speed: average_speed,
+            average_speed: 16,//average_speed,
             log_interval_time: log_interval_time
           };
-          console.log("flight_time:", flight_time);
-          console.log("log_interval_time:", log_interval_time);
-          console.log("average_speed:", average_speed);
           options.json_map.drone.maxSpeed = average_speed * 1.01;
           //TODO move obstacles to logFlight
           options.json_map.obstacles = path_point_list;
@@ -231,32 +253,6 @@
         });
     })
     .onStateChange(function () {
-      function frechetDistance(a, b) {
-        var dist = function (p1, p2) {
-          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                           Math.pow(p1[1] - p2[1], 2));
-        },
-          C = new Float32Array(a.length * b.length),
-          dim = a.length,
-          i, j;
-        C[0] = dist(a[0], b[0]);
-        for (j = 1; j < dim; j++) {
-          C[j] = Math.max(C[j - 1], dist(a[0], b[j]));
-        }
-        for (i = 1; i < dim; i++) {
-          C[i * dim] = Math.max(C[(i - 1) * dim], dist(a[i], b[0]));
-        }
-        for (i = 1; i < dim; i++) {
-          for (j = 1; j < dim; j++) {
-            C[i * dim + j] = Math.max(
-              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
-                       C[i * dim + j - 1]),
-              dist(a[i], b[j])
-            );
-          }
-        }
-        return C[C.length - 1];
-      }
       var gadget = this;
       return gadget.updateHeader({
         page_title: "Test drone gadget"
