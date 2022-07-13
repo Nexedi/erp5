@@ -7,7 +7,8 @@
     MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
     LOG_KEY = "rescue_swarm_script_module/log_1",
-    MAP_SIZE = 1000;
+    MAP_SIZE = 1000,
+    log_point_list = [];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -52,7 +53,8 @@
           return game_editor.getContent();
         })
         .push(function (result) {
-          console.log("test result:", result);
+          console.log("sim log:", result);
+          console.log("gt  log:", log_point_list);
           //TODO compare logs
           return result;
         });
@@ -83,7 +85,7 @@
             log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
             min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
             previous, start_position, dist = 0, path_point, average_speed = 0,
-            log_interval_time, previous_log_time;
+            flight_time, log_interval_time, previous_log_time;
           function distance(x1, y1, x2, y2) {
             var a = x1 - x2,
               b = y1 - y2;
@@ -190,9 +192,13 @@
               };
               path_point_list.push(path_point);
             }
+            log_point_list.push([parseInt(splitted_log_entry[0]),
+                                parseFloat(splitted_log_entry[1]),
+                                parseFloat(splitted_log_entry[2])]);
           }
           average_speed = average_speed / log_entry_list.length;
           log_interval_time = log_interval_time / log_entry_list.length;
+          flight_time = end_time - start_time;
           options.json_map.logFlight = {
             log: true,
             print: true,
@@ -202,14 +208,19 @@
             max_x: max_x,
             min_y: min_y,
             max_y: max_y,
-            flight_time: end_time - start_time,
+            flight_time: flight_time,
             average_speed: average_speed,
             log_interval_time: log_interval_time
           };
-          options.json_map.drone.maxSpeed = average_speed;
+          console.log("flight_time:", flight_time);
+          console.log("log_interval_time:", log_interval_time);
+          console.log("average_speed:", average_speed);
+          options.json_map.drone.maxSpeed = average_speed * 1.01;
+          //TODO move obstacles to logFlight
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
+          options.json_map.gameTime = flight_time;
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
