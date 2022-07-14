@@ -146,7 +146,6 @@ class Test(ERP5TypeTestCase):
     data_stream.setData(None)
     self.tic()
 
-
   def test_01_1_IngestionFromOldFluentd(self):
     self.test_01_IngestionFromFluentd(True)
 
@@ -633,3 +632,131 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
     self.assertEqual(data_array.getArrayDtypeNames(), (dtype_name0,))
     data_array.setArrayDtypeNames((dtype_name1,))
     self.assertEqual(data_array.getArrayDtypeNames(), (dtype_name1,))
+
+  def test_16_createDataAnalysisFromDataTransformationWithoutResolution(self):
+    """
+      Ensure data analysis are created from data transformation without any specified
+      variation categories.
+    """
+    portal = self.portal
+    title_prefix = "Wendelin Test 16"
+
+    test_function_to_organisation = {}
+    for test_function in ("source", "destination"):
+      organisation = portal.organisation_module.newContent(
+        portal_typle="Organisation",
+        title="%s %s" % (title_prefix, test_function),
+      )
+      self.addCleanup(self._removeDocument, organisation)
+      organisation.validate()
+      test_function_to_organisation.update({test_function: organisation})
+
+    data_operation = portal.data_operation_module.newContent(
+      portal_typle="Data Operation",
+      title="%s Data Operation" % title_prefix,
+      script_id="DataAnalysisLine_testWendelinConvertAToB",
+    )
+    self.addCleanup(self._removeDocument, data_operation)
+    data_operation.validate()
+
+    resource = portal.data_product_module.newContent(
+      portal_type="Data Product",
+      title="%s Data Product" % title_prefix,
+      individual_variation_base_category_list=["resolution"],
+      quantity_unit="unit/piece"
+    )
+    self.addCleanup(self._removeDocument, resource)
+    resource.validate()
+    resource_resolution = resource.newContent(
+      portal_type="Product Individual Variation",
+      title="20S",
+    )
+
+    specialise_data_transformation = portal.data_transformation_module.newContent(
+      portal_type="Data Transformation",
+      title="%s Specialise Data Transformation" % title_prefix,
+      resource=resource.getRelativeUrl(),
+    )
+    self.addCleanup(self._removeDocument, specialise_data_transformation)
+    specialise_data_transformation.validate()
+
+    specialise_data_supply = portal.data_supply_module.newContent(
+      portal_type="Data Supply",
+      title="%s Specialise Data Supply" % title_prefix,
+    )
+    self.addCleanup(self._removeDocument, specialise_data_supply)
+    specialise_data_supply.validate()
+
+    initial_data_analysis = portal.data_analysis_module.newContent(
+      portal_type="Data Analysis",
+      title="%s Import Raw Data" % title_prefix,
+      reference="wendelin.test.16.initial.data.analysis",
+      resource=resource.getRelativeUrl(),
+      source=test_function_to_organisation['source'].getRelativeUrl(),
+      destination=test_function_to_organisation['destination'].getRelativeUrl(),
+      specialise_value_list=[
+        specialise_data_supply.getRelativeUrl(),
+        specialise_data_transformation.getRelativeUrl()
+      ],
+    )
+    self.addCleanup(self._removeDocument, initial_data_analysis)
+
+    initial_data_analysis.start()
+    initial_data_analysis.newContent(
+      portal_type="Data Analysis Line",
+      title="Raw Array",
+      reference="out_array",
+      resource=resource.getRelativeUrl(),
+      quantity=1,
+      quantity_unit="unit/piece",
+      variation_category_list=[
+        "resolution/%s" % resource_resolution.getRelativeUrl(),
+        "resource/%s" % resource.getRelativeUrl(),
+      ],
+      use= "use/big_data/ingestion/stream",
+    )
+    initial_data_analysis.newContent(
+      portal_type="Data Analysis Line",
+      title="Convert A to B",
+      reference="data_operation",
+      resource=data_operation.getRelativeUrl(),
+      quantity=1,
+      quantity_unit="unit/piece",
+    )
+
+    data_transformation = portal.data_transformation_module.newContent(
+      portal_type="Data Transformation",
+      title="%s Data Transformation" % title_prefix,
+      resource=resource.getRelativeUrl(),
+    )
+    self.addCleanup(self._removeDocument, data_transformation)
+    data_transformation.validate()
+    data_transformation.newContent(
+      portal_type="Data Transformation Operation Line",
+      title="Convert A to B",
+      reference="data_operation",
+      resource=data_operation.getRelativeUrl(),
+      quantity=1,
+      quantity_unit="unit/piece",
+    )
+
+    def getDataAnalysisByTitle(title):
+      return portal.portal_catalog.getResultValue(
+        portal_type="Data Analysis",
+        title=title
+      )
+
+    data_analysis_title_list = [specialise_data_transformation.getTitle(), data_transformation.getTitle()]
+    for data_analysis_title in data_analysis_title_list:
+      self.assertEqual(getDataAnalysisByTitle(data_analysis_title), None)
+
+    self.commit()
+    self.tic()
+
+    self.portal.portal_alarms.wendelin_handle_analysis.activeSense()
+    self.tic()
+
+    for data_analysis_title in data_analysis_title_list:
+      data_analysis = getDataAnalysisByTitle(data_analysis_title)
+      self.assertNotEqual(data_analysis, None)
+      self.addCleanup(self._removeDocument, data_analysis)
