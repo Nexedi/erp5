@@ -6,8 +6,11 @@
   var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
-    LOG_KEY = "rescue_swarm_script_module/log_1",
+    LOG_KEY = "rescue_swarm_script_module/log_2", //LP first log
+    //LOG_KEY = "rescue_swarm_script_module/log_3", //Roque custom log
     MAP_SIZE = 1000,
+    MIN_HEIGHT = 10,
+    MIN_X, MAX_X, MIN_Y, MAX_Y,
     log_point_list = [];
 
   rJS(window)
@@ -18,31 +21,53 @@
     .declareAcquiredMethod("jio_get", "jio_get")
 
     .declareJob('run', function () {
+      function distance(p1, p2) {
+        return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                         Math.pow(p1[1] - p2[1], 2));
+      }
       function frechetDistance(a, b) {
-        var dist = function (p1, p2) {
-          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                           Math.pow(p1[1] - p2[1], 2));
-        },
-          C = new Float32Array(a.length * b.length),
+        var C = new Float32Array(a.length * b.length),
           dim = a.length,
           i, j;
-        C[0] = dist(a[0], b[0]);
+        C[0] = distance(a[0], b[0]);
         for (j = 1; j < dim; j++) {
-          C[j] = Math.max(C[j - 1], dist(a[0], b[j]));
+          C[j] = Math.max(C[j - 1], distance(a[0], b[j]));
         }
         for (i = 1; i < dim; i++) {
-          C[i * dim] = Math.max(C[(i - 1) * dim], dist(a[i], b[0]));
+          C[i * dim] = Math.max(C[(i - 1) * dim], distance(a[i], b[0]));
         }
         for (i = 1; i < dim; i++) {
           for (j = 1; j < dim; j++) {
             C[i * dim + j] = Math.max(
               Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
                        C[i * dim + j - 1]),
-              dist(a[i], b[j])
+              distance(a[i], b[j])
             );
           }
         }
         return C[C.length - 1];
+      }
+      function averageDistance(a, b) {
+        var i, x, y, n_x, n_y, a_pos_x, a_pos_y, b_pos_x, b_pos_y, sum = 0;
+        for (i = 0; i < a.length; i++) {
+          //TODO create functions to re-use
+          x = (MAP_SIZE / 360.0) * (180 + a[i][0]);
+          y = (MAP_SIZE / 180.0) * (90 - a[i][1]);
+          n_x = (x - MIN_X) / (MAX_X - MIN_X);
+          n_y = (y - MIN_Y) / (MAX_Y - MIN_Y);
+          a_pos_x = n_x * 1000 - MAP_SIZE / 2;
+          a_pos_y = n_y * 1000 - MAP_SIZE / 2;
+          x = (MAP_SIZE / 360.0) * (180 + b[i][0]);
+          y = (MAP_SIZE / 180.0) * (90 - b[i][1]);
+          n_x = (x - MIN_X) / (MAX_X - MIN_X);
+          n_y = (y - MIN_Y) / (MAX_Y - MIN_Y);
+          b_pos_x = n_x * 1000 - MAP_SIZE / 2;
+          b_pos_y = n_y * 1000 - MAP_SIZE / 2;
+          /*console.log("distance:", distance(a[i], b[i]));
+          console.log("distance in meters:", distance([a_pos_x, a_pos_y], [b_pos_x, b_pos_y]));*/
+          sum += distance([a_pos_x, a_pos_y], [b_pos_x, b_pos_y]);
+        }
+        return sum / a.length;
       }
       var gadget = this,
         queue = new RSVP.Queue(),
@@ -79,9 +104,10 @@
           return game_editor.getContent();
         })
         .push(function (result) {
-          console.log("sim log:", result);
-          console.log("gt  log:", log_point_list);
-          console.log("distance:", frechetDistance(log_point_list, result));
+          console.log("simulation log:", result);
+          console.log("ground truth log:", log_point_list);
+          console.log("frechet distance:", frechetDistance(log_point_list, result));
+          console.log("average distance:", averageDistance(log_point_list, result));
           return result;
         });
       return queue;
@@ -111,7 +137,7 @@
             log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
             min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
             previous, start_position, dist = 0, path_point, average_speed = 0,
-            flight_time, log_interval_time, previous_log_time;
+            flight_time, log_interval_time, previous_log_time, height;
           function distance(x1, y1, x2, y2) {
             var a = x1 - x2,
               b = y1 - y2;
@@ -164,6 +190,10 @@
           max_x = (MAP_SIZE / 360.0) * (180 + max_lon);
           min_y = (MAP_SIZE / 180.0) * (90 - min_lat);
           max_y = (MAP_SIZE / 180.0) * (90 - max_lat);
+          MIN_X = min_x;
+          MAX_X = max_x;
+          MIN_Y = min_y;
+          MAX_Y = max_y;
           for (i = 0; i < log_entry_list.length; i += 1) {
             splitted_log_entry = log_entry_list[i].split(";");
             if (i === 0) {
@@ -179,6 +209,12 @@
             average_speed += parseFloat(splitted_log_entry[8]);
             lat = parseFloat(splitted_log_entry[1]);
             lon = parseFloat(splitted_log_entry[2]);
+            height = parseFloat(splitted_log_entry[4]);
+            if (height < 0) {
+              height = MIN_HEIGHT;
+            } else {
+              height = MIN_HEIGHT + height;
+            }
             x = (MAP_SIZE / 360.0) * (180 + lon);
             y = (MAP_SIZE / 180.0) * (90 - lat);
             //normalize coordinate values
@@ -198,7 +234,7 @@
                 "position": {
                   "x": pos_x,
                   "y": pos_y,
-                  "z": 0.1
+                  "z": height
                 },
                 "scale": {
                   "x": 3.5,
@@ -242,7 +278,7 @@
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
-          options.json_map.gameTime = flight_time;
+          options.json_map.gameTime = flight_time / 1000;
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
