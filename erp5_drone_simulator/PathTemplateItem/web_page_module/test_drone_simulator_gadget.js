@@ -6,8 +6,10 @@
   var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/compare_map",
     SCRIPT_KEY = "rescue_swarm_script_module/28",
-    LOG_KEY = "rescue_swarm_script_module/log_1",
+    LOG_KEY = "rescue_swarm_script_module/log_2", //LP first log
+    //LOG_KEY = "rescue_swarm_script_module/log_3", //Roque custom log
     MAP_SIZE = 1000,
+    MIN_HEIGHT = 10,
     log_point_list = [];
 
   rJS(window)
@@ -81,7 +83,7 @@
         .push(function (result) {
           console.log("sim log:", result);
           console.log("gt  log:", log_point_list);
-          console.log("distance:", frechetDistance(log_point_list, result));
+          //console.log("distance:", frechetDistance(log_point_list, result));
           return result;
         });
       return queue;
@@ -111,7 +113,7 @@
             log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
             min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
             previous, start_position, dist = 0, path_point, average_speed = 0,
-            flight_time, log_interval_time, previous_log_time;
+            flight_time, log_interval_time, previous_log_time, height;
           function distance(x1, y1, x2, y2) {
             var a = x1 - x2,
               b = y1 - y2;
@@ -179,6 +181,12 @@
             average_speed += parseFloat(splitted_log_entry[8]);
             lat = parseFloat(splitted_log_entry[1]);
             lon = parseFloat(splitted_log_entry[2]);
+            height = parseFloat(splitted_log_entry[4]);
+            if (height < 0) {
+              height = MIN_HEIGHT;
+            } else {
+              height = MIN_HEIGHT + height;
+            }
             x = (MAP_SIZE / 360.0) * (180 + lon);
             y = (MAP_SIZE / 180.0) * (90 - lat);
             //normalize coordinate values
@@ -198,7 +206,7 @@
                 "position": {
                   "x": pos_x,
                   "y": pos_y,
-                  "z": 0.1
+                  "z": height
                 },
                 "scale": {
                   "x": 3.5,
