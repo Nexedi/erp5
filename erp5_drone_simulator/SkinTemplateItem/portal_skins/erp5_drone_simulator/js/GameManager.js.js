@@ -272,6 +272,7 @@ var GameManager = /** @class */ (function (console) {
           this._timeDisplay.textContent = this._formatTimeToMinutesAndSeconds(this._game_duration);
         }
         var drone_position_x = this._teamLeft[0]._controlMesh.position.x,
+          drone_position_z = this._teamLeft[0]._controlMesh.position.y,
           drone_position_y = this._teamLeft[0]._controlMesh.position.z;
         if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.log) {
           if (this._log_count === 0 || this._game_duration / this._log_count > 1) {
@@ -286,6 +287,7 @@ var GameManager = /** @class */ (function (console) {
             lat = lat * (GAMEPARAMETERS.logFlight.max_y - GAMEPARAMETERS.logFlight.min_y) + GAMEPARAMETERS.logFlight.min_y;
             lat = 90 - lat / (GAMEPARAMETERS.logFlight.map_height / 180.0);
             this._flight_log.push([lat, lon]);
+            console.log([0,lat,lon,0,drone_position_z,0,0,0,0,0,0].join(';'));
           }
         }
         if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.print) {
@@ -297,7 +299,7 @@ var GameManager = /** @class */ (function (console) {
                 'diameterY': 3.5,
                 'diameterZ': 3.5
             }, this._scene);
-            position_obj.position = new BABYLON.Vector3(drone_position_x, 0.1, drone_position_y);
+            position_obj.position = new BABYLON.Vector3(drone_position_x, drone_position_z, drone_position_y);
             position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
             var material = new BABYLON.StandardMaterial(this._scene);
             material.alpha = 1;
@@ -589,7 +591,11 @@ var GameManager = /** @class */ (function (console) {
         }
         //cap camera distance to 1km
         if (radius > 800) radius = 800;
-        camera = new BABYLON.ArcRotateCamera("camera", x_rotation, 1.25, radius, new BABYLON.Vector3(vector_x, 0, vector_y), this._scene);
+        var target = new BABYLON.Vector3(vector_x, 0, vector_y);
+        if (GAMEPARAMETERS.logFlight) {
+          target = BABYLON.Vector3.Zero();
+        }
+        camera = new BABYLON.ArcRotateCamera("camera", x_rotation, 1.25, radius, target, this._scene);
         camera.wheelPrecision = 10;
         camera.attachControl(this._scene.getEngine().getRenderingCanvas());
         camera.maxz = 40000
