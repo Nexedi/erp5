@@ -286,7 +286,7 @@ var GameManager = /** @class */ (function (console) {
             lat = lat / 1000;
             lat = lat * (GAMEPARAMETERS.logFlight.max_y - GAMEPARAMETERS.logFlight.min_y) + GAMEPARAMETERS.logFlight.min_y;
             lat = 90 - lat / (GAMEPARAMETERS.logFlight.map_height / 180.0);
-            this._flight_log.push([lat, lon]);
+            this._flight_log.push([lat, lon, drone_position_z]);
             console.log([0,lat,lon,0,drone_position_z,0,0,0,0,0,0].join(';'));
           }
         }
