@@ -299,7 +299,7 @@ var GameManager = /** @class */ (function (console) {
                 'diameterY': 3.5,
                 'diameterZ': 3.5
             }, this._scene);
-            position_obj.position = new BABYLON.Vector3(drone_position_x, 0.1, drone_position_y);
+            position_obj.position = new BABYLON.Vector3(drone_position_x, drone_position_z, drone_position_y);
             position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
             var material = new BABYLON.StandardMaterial(this._scene);
             material.alpha = 1;
