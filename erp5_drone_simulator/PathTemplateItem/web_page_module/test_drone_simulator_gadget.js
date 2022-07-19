@@ -10,8 +10,39 @@
     //LOG_KEY = "rescue_swarm_script_module/log_3", //Roque custom log
     MAP_SIZE = 1000,
     MIN_HEIGHT = 10,
-    MIN_X, MAX_X, MIN_Y, MAX_Y,
+    MIN_X,
+    MAX_X,
+    MIN_Y,
+    MAX_Y,
     log_point_list = [];
+
+  function longitudToX(lon) {
+    return (MAP_SIZE / 360.0) * (180 + lon);
+  }
+  function latitudeToY(lat) {
+    return (MAP_SIZE / 180.0) * (90 - lat);
+  }
+  function normalizeToMap(x, y) {
+    var n_x = (x - MIN_X) / (MAX_X - MIN_X),
+      n_y = (y - MIN_Y) / (MAX_Y - MIN_Y);
+    return [n_x * 1000 - MAP_SIZE / 2, n_y * 1000 - MAP_SIZE / 2];
+  }
+  function latLonDistance(c1, c2) {
+    var R = 6371e3,
+      q1 = c1[0] * Math.PI / 180,
+      q2 = c2[0] * Math.PI / 180,
+      dq = (c2[0] - c1[0]) * Math.PI / 180,
+      dl = (c2[1] - c1[1]) * Math.PI / 180,
+      a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+        Math.cos(q1) * Math.cos(q2) *
+        Math.sin(dl / 2) * Math.sin(dl / 2),
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+  function distance(p1, p2) {
+    return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                     Math.pow(p1[1] - p2[1], 2));
+  }
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -21,14 +52,11 @@
     .declareAcquiredMethod("jio_get", "jio_get")
 
     .declareJob('run', function () {
-      function distance(p1, p2) {
-        return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                         Math.pow(p1[1] - p2[1], 2));
-      }
       function frechetDistance(a, b) {
         var C = new Float32Array(a.length * b.length),
           dim = a.length,
-          i, j;
+          i,
+          j;
         C[0] = distance(a[0], b[0]);
         for (j = 1; j < dim; j++) {
           C[j] = Math.max(C[j - 1], distance(a[0], b[j]));
@@ -48,24 +76,15 @@
         return C[C.length - 1];
       }
       function averageDistance(a, b) {
-        var i, x, y, n_x, n_y, a_pos_x, a_pos_y, b_pos_x, b_pos_y, sum = 0;
+        var i, x, y, pos_a, pos_b, sum = 0;
         for (i = 0; i < a.length; i++) {
-          //TODO create functions to re-use
-          x = (MAP_SIZE / 360.0) * (180 + a[i][0]);
-          y = (MAP_SIZE / 180.0) * (90 - a[i][1]);
-          n_x = (x - MIN_X) / (MAX_X - MIN_X);
-          n_y = (y - MIN_Y) / (MAX_Y - MIN_Y);
-          a_pos_x = n_x * 1000 - MAP_SIZE / 2;
-          a_pos_y = n_y * 1000 - MAP_SIZE / 2;
-          x = (MAP_SIZE / 360.0) * (180 + b[i][0]);
-          y = (MAP_SIZE / 180.0) * (90 - b[i][1]);
-          n_x = (x - MIN_X) / (MAX_X - MIN_X);
-          n_y = (y - MIN_Y) / (MAX_Y - MIN_Y);
-          b_pos_x = n_x * 1000 - MAP_SIZE / 2;
-          b_pos_y = n_y * 1000 - MAP_SIZE / 2;
-          /*console.log("distance:", distance(a[i], b[i]));
-          console.log("distance in meters:", distance([a_pos_x, a_pos_y], [b_pos_x, b_pos_y]));*/
-          sum += distance([a_pos_x, a_pos_y], [b_pos_x, b_pos_y]);
+          x = longitudToX(a[i][1]);
+          y = latitudeToY(a[i][0]);
+          pos_a = normalizeToMap(x, y);
+          x = longitudToX(b[i][1]);
+          y = latitudeToY(b[i][0]);
+          pos_b = normalizeToMap(x, y);
+          sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
         }
         return sum / a.length;
       }
@@ -106,8 +125,10 @@
         .push(function (result) {
           console.log("simulation log:", result);
           console.log("ground truth log:", log_point_list);
-          console.log("frechet distance:", frechetDistance(log_point_list, result));
-          console.log("average distance:", averageDistance(log_point_list, result));
+          console.log("frechet distance:",
+                      frechetDistance(log_point_list, result));
+          console.log("average distance:",
+                      averageDistance(log_point_list, result));
           return result;
         });
       return queue;
@@ -133,28 +154,11 @@
         .push(function (log) {
           var path_point_list = [], max_width, max_height,
             line_list = log.text_content.split('\n'), log_entry_list = [],
-            i, min_x, min_y, max_x, max_y, n_x, n_y, start_time, end_time,
-            log_entry, splitted_log_entry, lat, lon, x, y, pos_x, pos_y,
-            min_lon = 99999, min_lat = 99999, max_lon = 0, max_lat = 0,
-            previous, start_position, dist = 0, path_point, average_speed = 0,
-            flight_time, log_interval_time, previous_log_time, height;
-          function distance(x1, y1, x2, y2) {
-            var a = x1 - x2,
-              b = y1 - y2;
-            return Math.sqrt(a * a + b * b);
-          }
-          function latLonDistance(c1, c2) {
-            var R = 6371e3,
-              q1 = c1[0] * Math.PI / 180,
-              q2 = c2[0] * Math.PI / 180,
-              dq = (c2[0] - c1[0]) * Math.PI / 180,
-              dl = (c2[1] - c1[1]) * Math.PI / 180,
-              a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-                Math.cos(q1) * Math.cos(q2) *
-                Math.sin(dl / 2) * Math.sin(dl / 2),
-              c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-          }
+            i, start_time, end_time, log_entry, splitted_log_entry,
+            lat, lon, x, y, position, min_lon = 99999, min_lat = 99999,
+            max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
+            path_point, average_speed = 0, flight_time, log_interval_time,
+            previous_log_time, height;
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -185,26 +189,22 @@
           max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
           max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
           MAP_SIZE = Math.ceil(Math.max(max_width, max_height));
-          //convert geo cordinates into 2D plane coordinates
-          min_x = (MAP_SIZE / 360.0) * (180 + min_lon);
-          max_x = (MAP_SIZE / 360.0) * (180 + max_lon);
-          min_y = (MAP_SIZE / 180.0) * (90 - min_lat);
-          max_y = (MAP_SIZE / 180.0) * (90 - max_lat);
-          MIN_X = min_x;
-          MAX_X = max_x;
-          MIN_Y = min_y;
-          MAX_Y = max_y;
+          MIN_X = longitudToX(min_lon);
+          MAX_X = longitudToX(max_lon);
+          MIN_Y = latitudeToY(min_lat);
+          MAX_Y = latitudeToY(max_lat);
           for (i = 0; i < log_entry_list.length; i += 1) {
             splitted_log_entry = log_entry_list[i].split(";");
             if (i === 0) {
               log_interval_time = 0;
-              start_time = parseInt(splitted_log_entry[0]);
+              start_time = parseInt(splitted_log_entry[0], 10);
             } else {
-              log_interval_time += parseInt(splitted_log_entry[0]) - previous_log_time;
+              log_interval_time += parseInt(splitted_log_entry[0], 10) -
+                previous_log_time;
             }
-            previous_log_time = parseInt(splitted_log_entry[0]);
+            previous_log_time = parseInt(splitted_log_entry[0], 10);
             if (i === log_entry_list.length - 1) {
-              end_time = parseInt(splitted_log_entry[0]);
+              end_time = parseInt(splitted_log_entry[0], 10);
             }
             average_speed += parseFloat(splitted_log_entry[8]);
             lat = parseFloat(splitted_log_entry[1]);
@@ -215,25 +215,21 @@
             } else {
               height = MIN_HEIGHT + height;
             }
-            x = (MAP_SIZE / 360.0) * (180 + lon);
-            y = (MAP_SIZE / 180.0) * (90 - lat);
-            //normalize coordinate values
-            n_x = (x - min_x) / (max_x - min_x);
-            n_y = (y - min_y) / (max_y - min_y);
-            pos_x = n_x * 1000 - MAP_SIZE / 2;
-            pos_y = n_y * 1000 - MAP_SIZE / 2;
+            x = longitudToX(lon);
+            y = latitudeToY(lat);
+            position = normalizeToMap(x, y);
             if (!previous) {
-              start_position = [pos_x, pos_y];
-              previous = [pos_x, pos_y];
+              start_position = position;
+              previous = position;
             }
-            dist = distance(previous[0], previous[1], pos_x, pos_y);
+            dist = distance(previous, position);
             if (dist > 15) {
-              previous = [pos_x, pos_y];
+              previous = position;
               path_point = {
                 "type": "sphere",
                 "position": {
-                  "x": pos_x,
-                  "y": pos_y,
+                  "x": position[0],
+                  "y": position[1],
                   "z": height
                 },
                 "scale": {
@@ -265,10 +261,10 @@
             print: true,
             map_width: MAP_SIZE,
             map_height: MAP_SIZE,
-            min_x: min_x,
-            max_x: max_x,
-            min_y: min_y,
-            max_y: max_y,
+            min_x: MIN_X,
+            max_x: MAX_X,
+            min_y: MIN_Y,
+            max_y: MAX_Y,
             flight_time: flight_time,
             average_speed: average_speed,
             log_interval_time: log_interval_time
