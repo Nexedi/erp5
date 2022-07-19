@@ -75,7 +75,12 @@
         }
         return C[C.length - 1];
       }
-      function averageDistance(a, b) {
+      function averageDistance(a, b, z) {
+        function distance3D(p1, p2) {
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2) +
+                           Math.pow(p1[2] - p2[2], 2));
+        }
         var i, x, y, pos_a, pos_b, sum = 0;
         for (i = 0; i < a.length; i++) {
           x = longitudToX(a[i][1]);
@@ -84,7 +89,12 @@
           x = longitudToX(b[i][1]);
           y = latitudeToY(b[i][0]);
           pos_b = normalizeToMap(x, y);
-          sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
+          if (z) {
+            sum += distance3D([pos_a[0], pos_a[1], a[i][2]],
+                              [pos_b[0], pos_b[1], b[i][2]]);
+          } else {
+            sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
+          }
         }
         return sum / a.length;
       }
@@ -128,7 +138,9 @@
           console.log("frechet distance:",
                       frechetDistance(log_point_list, result));
           console.log("average distance:",
-                      averageDistance(log_point_list, result));
+                      averageDistance(log_point_list, result, false));
+          console.log("average distance with z:",
+                      averageDistance(log_point_list, result, true));
           return result;
         });
       return queue;
@@ -251,7 +263,8 @@
               path_point_list.push(path_point);
             }
             log_point_list.push([parseFloat(splitted_log_entry[1]),
-                                parseFloat(splitted_log_entry[2])]);
+                                parseFloat(splitted_log_entry[2]),
+                                height]);
           }
           average_speed = average_speed / log_entry_list.length;
           log_interval_time = log_interval_time / log_entry_list.length;
