@@ -276,7 +276,7 @@ var GameManager = /** @class */ (function (console) {
           drone_position_y = this._teamLeft[0]._controlMesh.position.z;
         if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.log) {
           if (this._log_count === 0 || this._game_duration / this._log_count > 1) {
-            this._log_count += GAMEPARAMETERS.logFlight.log_interval_time * 1000;
+            this._log_count += GAMEPARAMETERS.logFlight.log_interval_time;
             //convert x-y coordinates into latitud-longitude
             var lon = drone_position_x + GAMEPARAMETERS.logFlight.map_width / 2;
             lon = lon / 1000;
