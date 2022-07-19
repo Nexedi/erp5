@@ -5,11 +5,15 @@
 
   var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/compare_map",
-    SCRIPT_KEY = "rescue_swarm_script_module/28",
+    SCRIPT_KEY = "rescue_swarm_script_module/28", //roque participant script
+    //SCRIPT_KEY = "rescue_swarm_script_module/emulation_script",
+    //SCRIPT_KEY = "rescue_swarm_script_module/zigzag_script",
     LOG_KEY = "rescue_swarm_script_module/log_2", //LP first log
     //LOG_KEY = "rescue_swarm_script_module/log_3", //Roque custom log
     MAP_SIZE = 1000,
     MIN_HEIGHT = 10,
+    DESTINATION_LON = 14.25334942966329,
+    DESTINATION_LAT = 45.64492790560583,
     MIN_X,
     MAX_X,
     MIN_Y,
@@ -75,7 +79,12 @@
         }
         return C[C.length - 1];
       }
-      function averageDistance(a, b) {
+      function averageDistance(a, b, z) {
+        function distance3D(p1, p2) {
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2) +
+                           Math.pow(p1[2] - p2[2], 2));
+        }
         var i, x, y, pos_a, pos_b, sum = 0;
         for (i = 0; i < a.length; i++) {
           x = longitudToX(a[i][1]);
@@ -84,7 +93,12 @@
           x = longitudToX(b[i][1]);
           y = latitudeToY(b[i][0]);
           pos_b = normalizeToMap(x, y);
-          sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
+          if (z) {
+            sum += distance3D([pos_a[0], pos_a[1], a[i][2]],
+                              [pos_b[0], pos_b[1], b[i][2]]);
+          } else {
+            sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
+          }
         }
         return sum / a.length;
       }
@@ -125,10 +139,16 @@
         .push(function (result) {
           console.log("simulation log:", result);
           console.log("ground truth log:", log_point_list);
-          console.log("frechet distance:",
-                      frechetDistance(log_point_list, result));
-          console.log("average distance:",
-                      averageDistance(log_point_list, result));
+          try {
+            console.log("frechet distance:",
+                        frechetDistance(log_point_list, result));
+            console.log("average distance:",
+                        averageDistance(log_point_list, result, false));
+            console.log("average distance with z:",
+                        averageDistance(log_point_list, result, true));
+          } catch (ee) {
+            console.log("error calculating distance:", ee);
+          }
           return result;
         });
       return queue;
@@ -251,7 +271,8 @@
               path_point_list.push(path_point);
             }
             log_point_list.push([parseFloat(splitted_log_entry[1]),
-                                parseFloat(splitted_log_entry[2])]);
+                                parseFloat(splitted_log_entry[2]),
+                                height]);
           }
           average_speed = average_speed / log_entry_list.length;
           log_interval_time = log_interval_time / log_entry_list.length;
@@ -267,7 +288,8 @@
             max_y: MAX_Y,
             flight_time: flight_time,
             average_speed: average_speed,
-            log_interval_time: log_interval_time
+            log_interval_time: log_interval_time,
+            path: path_point_list
           };
           options.json_map.drone.maxSpeed = average_speed * 1.01;
           //TODO move obstacles to logFlight
@@ -278,6 +300,12 @@
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
+          //flight destination
+          var destination_x = longitudToX(DESTINATION_LON),
+            destination_y = latitudeToY(DESTINATION_LAT),
+            destination_pos = normalizeToMap(destination_x, destination_y);
+          options.json_map.randomSpawn.rightTeam.position.x = destination_pos[0];
+          options.json_map.randomSpawn.rightTeam.position.y = destination_pos[1];
           return gadget.changeState({
             script_content: options.script_content,
             json_map: options.json_map
