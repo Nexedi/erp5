@@ -13,6 +13,8 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("triggerListboxGraphicSelection", "triggerListboxGraphicSelection")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .allowPublicAcquisition("chartItemClick", function (params) {
       var gadget = this;
@@ -72,6 +74,9 @@
         });
       }
       return Query.objectToSearchText(query);
+    })
+    .onEvent("click", function (evt) {
+      return this.triggerListboxGraphicSelection();
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -257,6 +262,7 @@
         });
     })
     .onStateChange(function (modification_dict) {
+
       var i,
         gadget = this,
         query_list = modification_dict.query_list || [],
@@ -264,7 +270,7 @@
           gadget.declareGadget(modification_dict.graph_gadget, {
             scope: "graph",
             sandbox: "iframe",
-            element: gadget.element.querySelector(".wrap")
+            element: gadget.element.querySelector(".graph-section")
           })
         ];
 
@@ -276,7 +282,7 @@
       }
       return new RSVP.Queue(RSVP.all(queue_list))
         .push(function (result_list) {
-          var bar_chart = gadget.element.querySelector(".wrap"),
+          var bar_chart = gadget.element.querySelector(".graph-section"),
             loader = gadget.element.querySelector(".graph-spinner"),
             graph_gadget = result_list[0],
             data_mapping = {},
@@ -403,6 +409,10 @@
               domsugar("p", {"text": "No data"})
             ]);
           }
+          gadget.element.querySelector(
+            ".graph-button"
+          ).innerText = gadget.state.title;
+
           return graph_gadget.render({
             value: {
               data: data_list,

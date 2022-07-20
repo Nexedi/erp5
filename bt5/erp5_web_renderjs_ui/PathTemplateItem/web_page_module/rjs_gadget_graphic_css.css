@@ -19,6 +19,10 @@ div[data-gadget-url$="gadget_graphic.html"] .ui-field-contain .bottom .first-lin
   margin-bottom: 20px;
 }
 
-div[data-gadget-url$="gadget_graphic.html"] .wrap {
+div[data-gadget-url$="gadget_graphic.html"] .graph-section {
   height: 300px;
+}
+
+div[data-gadget-url$="gadget_graphic.html"] .graph-button {
+  font-size: 13pt;
 }
