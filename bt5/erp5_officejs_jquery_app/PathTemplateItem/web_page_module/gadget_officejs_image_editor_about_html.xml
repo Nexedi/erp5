@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,14 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -77,16 +72,8 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_image_editor_router.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_image_editor_about.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -96,29 +83,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_image_editor_officejs_router_html</string> </value>
+            <value> <string>gadget_officejs_image_editor_about_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
+              <none/>
             </value>
         </item>
         <item>
@@ -132,75 +102,14 @@
             </value>
         </item>
         <item>
-            <key> <string>temp_conversion_data</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>36486:1:formattxt</string> </key>
-                    <value>
-                      <dictionary>
-                        <item>
-                            <key> <string>content_md5</string> </key>
-                            <value>
-                              <none/>
-                            </value>
-                        </item>
-                        <item>
-                            <key> <string>conversion_md5</string> </key>
-                            <value> <string>68b329da9893e34099c7d8ad5cb9c940</string> </value>
-                        </item>
-                        <item>
-                            <key> <string>data</string> </key>
-                            <value> <string encoding="base64">Cg==</string> </value>
-                        </item>
-                        <item>
-                            <key> <string>date</string> </key>
-                            <value>
-                              <object>
-                                <klass> <reference id="1.1"/> </klass>
-                                <tuple>
-                                  <none/>
-                                </tuple>
-                                <state>
-                                  <tuple>
-                                    <float>1592599425.29</float>
-                                    <string>UTC</string>
-                                  </tuple>
-                                </state>
-                              </object>
-                            </value>
-                        </item>
-                        <item>
-                            <key> <string>mime</string> </key>
-                            <value> <string>text/plain</string> </value>
-                        </item>
-                        <item>
-                            <key> <string>size</string> </key>
-                            <value> <int>1</int> </value>
-                        </item>
-                      </dictionary>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Image Editor router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS Image Editor About Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -258,7 +167,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -284,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486630142.13</float>
+                              <float>1658328843.86</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -293,7 +202,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -333,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1000.61481.3626.18739</string> </value>
+                      <value> <string>1001.47530.51432.31334</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -351,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658328766.8</float>
+                              <float>1658329782.27</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -412,7 +321,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486568881.97</float>
+                              <float>1658328827.76</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
