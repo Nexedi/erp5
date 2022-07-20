@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -70,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer_router.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_pdf_viewer_about.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,11 +83,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer_router.html</string> </value>
+            <value> <string>ojs_gadget_erp5_page_ojs_pdf_viewer_about_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -97,73 +102,14 @@
             </value>
         </item>
         <item>
-            <key> <string>temp_conversion_data</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>17929:1:formattxt</string> </key>
-                    <value>
-                      <dictionary>
-                        <item>
-                            <key> <string>content_md5</string> </key>
-                            <value>
-                              <none/>
-                            </value>
-                        </item>
-                        <item>
-                            <key> <string>conversion_md5</string> </key>
-                            <value> <string>68b329da9893e34099c7d8ad5cb9c940</string> </value>
-                        </item>
-                        <item>
-                            <key> <string>data</string> </key>
-                            <value> <string encoding="base64">Cg==</string> </value>
-                        </item>
-                        <item>
-                            <key> <string>date</string> </key>
-                            <value>
-                              <object>
-                                <klass>
-                                  <global name="DateTime" module="DateTime.DateTime"/>
-                                </klass>
-                                <tuple>
-                                  <none/>
-                                </tuple>
-                                <state>
-                                  <tuple>
-                                    <float>1592599439.19</float>
-                                    <string>UTC</string>
-                                  </tuple>
-                                </state>
-                              </object>
-                            </value>
-                        </item>
-                        <item>
-                            <key> <string>mime</string> </key>
-                            <value> <string>text/plain</string> </value>
-                        </item>
-                        <item>
-                            <key> <string>size</string> </key>
-                            <value> <int>1</int> </value>
-                        </item>
-                      </dictionary>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Web PDF Viewer Router</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS PDF Viewer About Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -221,7 +167,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -247,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486721456.73</float>
+                              <float>1658331665.03</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -256,7 +202,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -296,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>999.57642.21478.16725</string> </value>
+                      <value> <string>1001.47577.29175.62037</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -314,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658331596.65</float>
+                              <float>1658332708.11</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -375,7 +321,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486718983.88</float>
+                              <float>1658331614.6</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
