@@ -10,12 +10,13 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("trigger", "trigger")
+
 
     //////////////////////////////////////////////
     // initialize the gadget content
     //////////////////////////////////////////////
     .declareMethod('render', function render(options) {
-      console.log(options);
       return this.changeState({
         "jio_key": options.jio_key,
         "graphic_option_list": options.graphic_option_list
@@ -86,12 +87,7 @@
     .onEvent('click', function click(evt) {
       if (evt.target.classList.contains('close')) {
         evt.preventDefault();
-        // When we close, the button to change the graphic does not appears again.
-        // How to display the button to change the graphic again?
-        // XXX reload is probably too much.
-        return this.redirect({
-          command: 'reload'
-        });
+        this.trigger();
       }
     }, false, false);
 
