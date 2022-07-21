@@ -274,8 +274,8 @@
             command: "display",
             options: {
               jio_key: gadget.state.jio_key,
-              //graphic_type: gadget.state.graphic_type,
-              //extended_search: gadget.state.extended_search,
+              graphic_type: gadget.state.graphic_type,
+              extended_search: gadget.state.extended_search,
               only_graphic: Boolean(false)
             }
           });
