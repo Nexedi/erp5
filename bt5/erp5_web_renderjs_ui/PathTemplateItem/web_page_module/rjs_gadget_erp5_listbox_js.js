@@ -603,7 +603,7 @@
                 // graphic
                 enable_graphic: options.enable_graphic,
                 graphic_type: parameter_list[0] || getDefaultGraphicType(option_list),
-                only_graphic: parameter_list[1]
+                only_graphic: parameter_list[1] === undefined ? true : parameter_list[1] === "true"
               });
             });
         });
@@ -937,7 +937,7 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-            if (gadget.state.extended_search && !gadget.state.only_graphic) {
+             if (!gadget.state.only_graphic) {
               domsugar(container, [
                 domsugar('div', {
                   "class": 'ui-table-header ui-header'
@@ -1207,7 +1207,7 @@
                 }
                 // XXX if is duplicated. Look at line 1222
                 if (gadget.state.enable_graphic && ((
-                    gadget.state.graphic_type && !gadget.state.extended_search
+                    gadget.state.graphic_type && !gadget.state.extended_search && gadget.state.only_graphic
                   ) || (gadget.state.graphic_type && gadget.state.extended_search &&
                         gadget.state.only_graphic))) {
                   domsugar(gadget.element.querySelector(".graphic_section"), [
@@ -1216,9 +1216,8 @@
                 }
               });
           });
-
         if (gadget.state.enable_graphic && ((
-            gadget.state.graphic_type && !gadget.state.extended_search
+            gadget.state.graphic_type && !gadget.state.extended_search && gadget.state.only_graphic
           ) || (
             gadget.state.graphic_type && gadget.state.extended_search && gadget.state.only_graphic
           ))) {

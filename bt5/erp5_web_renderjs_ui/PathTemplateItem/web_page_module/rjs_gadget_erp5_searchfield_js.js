@@ -34,17 +34,18 @@
     .declareMethod('render', function (options) {
       var gadget = this,
         state_dict = {
-          // XXX probably get from url
           extended_search: options.extended_search || "",
-          // XXX probably get from url
-          enable_graphic: options.enable_graphic || false,
-          // XXX probably get from url
           graphic_type: options.graphic_type,
           jio_key: options.jio_key
         };
+
       return gadget.getUrlParameter("only_graphic")
         .push(function (only_graphic) {
-          state_dict.only_graphic = only_graphic || false;
+          if (only_graphic === undefined) {
+            state_dict.only_graphic = true;
+          } else {
+            state_dict.only_graphic = only_graphic;
+          }
           return gadget.changeState(state_dict);
         });
     })
@@ -54,9 +55,10 @@
       var gadget = this,
         i,
         len,
+        only_graphic = gadget.state.only_graphic,
         button_container = gadget.element.querySelector('div.search_parsed_value'),
-        button_graphic = gadget.element.querySelector(".graphic-button"),
-        change_button_graphic = gadget.element.querySelector(".change-graphic-button"),
+        switch_graph_button = gadget.element.querySelector(".switch-graph"),
+        switch_listbox_button = gadget.element.querySelector(".switch-listbox"),
         graphic_css_class = "ui-screen-hidden",
         operator = 'AND',
         jio_query_list = [],
@@ -67,13 +69,18 @@
         parsed_value = '',
         input_value = '',
         continue_full_text_query_search = true;
+      if (typeof only_graphic === "string") {
+        only_graphic = only_graphic === "true";
+      } else if (only_graphic === undefined) {
+        only_graphic = true;
+      }
+      if (!only_graphic) {
+        switch_graph_button.classList.remove(graphic_css_class);
+      } else if (only_graphic) {
+        switch_listbox_button.classList.remove(graphic_css_class);
+      }
 
       if (gadget.state.extended_search) {
-        if (modification_dict.graphic_type && !modification_dict.only_graphic) {
-          button_graphic.classList.remove(graphic_css_class);
-        } else if (modification_dict.only_graphic) {
-          change_button_graphic.classList.remove(graphic_css_class);
-        }
 
         // Parse the raw query
         try {
@@ -134,7 +141,7 @@
       } else if (modification_dict.enable_graphic &&
                  modification_dict.graphic_type &&
                  !modification_dict.extended_search) {
-        change_button_graphic.classList.remove(graphic_css_class);
+        switch_listbox_button.classList.remove(graphic_css_class);
       }
 
       button_container.innerHTML = '';
@@ -261,25 +268,29 @@
           evt.preventDefault();
           return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
         }
-        if (evt.target.classList.contains("graphic-button")) {
+        if (evt.target.classList.contains("switch-listbox")) {
           evt.target.classList.add("ui-screen-hidden");
-          gadget.element.querySelector(
-            ".change-graphic-button"
-          ).classList.remove("ui-screen-hidden");
-
           return gadget.redirect({
-            command: "display_with_history",
+            command: "display",
+            options: {
+              jio_key: gadget.state.jio_key,
+              //graphic_type: gadget.state.graphic_type,
+              //extended_search: gadget.state.extended_search,
+              only_graphic: Boolean(false)
+            }
+          });
+        }
+        if (evt.target.classList.contains("switch-graph")) {
+          evt.target.classList.add("ui-screen-hidden");
+          return gadget.redirect({
+            command: "display",
             options: {
               jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type,
               extended_search: gadget.state.extended_search,
-              only_graphic: true
+              only_graphic: Boolean(true)
             }
           });
-        }
-        if (evt.target.classList.contains("change-graphic-button")) {
-          evt.target.classList.add("ui-screen-hidden");
-          return gadget.triggerListboxGraphicSelection();
         }
       }
     }, false, false);
