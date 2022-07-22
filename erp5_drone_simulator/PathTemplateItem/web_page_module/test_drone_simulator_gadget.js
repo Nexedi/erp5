@@ -5,11 +5,15 @@
 
   var SIMULATION_SPEED = 100,
     MAP_KEY = "rescue_swarm_map_module/compare_map",
-    SCRIPT_KEY = "rescue_swarm_script_module/28",
+    SCRIPT_KEY = "rescue_swarm_script_module/28", //roque participant script
+    //SCRIPT_KEY = "rescue_swarm_script_module/emulation_script",
+    //SCRIPT_KEY = "rescue_swarm_script_module/zigzag_script",
     LOG_KEY = "rescue_swarm_script_module/log_2", //LP first log
     //LOG_KEY = "rescue_swarm_script_module/log_3", //Roque custom log
     MAP_SIZE = 1000,
     MIN_HEIGHT = 10,
+    DESTINATION_LON = 14.25334942966329,
+    DESTINATION_LAT = 45.64492790560583,
     MIN_X,
     MAX_X,
     MIN_Y,
@@ -135,12 +139,16 @@
         .push(function (result) {
           console.log("simulation log:", result);
           console.log("ground truth log:", log_point_list);
-          console.log("frechet distance:",
-                      frechetDistance(log_point_list, result));
-          console.log("average distance:",
-                      averageDistance(log_point_list, result, false));
-          console.log("average distance with z:",
-                      averageDistance(log_point_list, result, true));
+          try {
+            console.log("frechet distance:",
+                        frechetDistance(log_point_list, result));
+            console.log("average distance:",
+                        averageDistance(log_point_list, result, false));
+            console.log("average distance with z:",
+                        averageDistance(log_point_list, result, true));
+          } catch (ee) {
+            console.log("error calculating distance:", ee);
+          }
           return result;
         });
       return queue;
@@ -280,7 +288,8 @@
             max_y: MAX_Y,
             flight_time: flight_time,
             average_speed: average_speed,
-            log_interval_time: log_interval_time
+            log_interval_time: log_interval_time,
+            path: path_point_list
           };
           options.json_map.drone.maxSpeed = average_speed * 1.01;
           //TODO move obstacles to logFlight
@@ -291,6 +300,12 @@
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
+          //flight destination
+          var destination_x = longitudToX(DESTINATION_LON),
+            destination_y = latitudeToY(DESTINATION_LAT),
+            destination_pos = normalizeToMap(destination_x, destination_y);
+          options.json_map.randomSpawn.rightTeam.position.x = destination_pos[0];
+          options.json_map.randomSpawn.rightTeam.position.y = destination_pos[1];
           return gadget.changeState({
             script_content: options.script_content,
             json_map: options.json_map
