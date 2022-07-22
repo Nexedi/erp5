@@ -148,12 +148,17 @@ me.onUpdate = function () {\n
     }\n
     return;\n
   }\n
+  if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
+    me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+    return;\n
+  }\n
   var next_point = me.loiter_coordinates[me.last_point_reached+1];\n
   me.setTargetCoordinates(next_point[0], next_point[1], me.position.z);\n
   if (distance([me.position.x, me.position.y], next_point) < 1) {\n
     me.last_point_reached += 1;\n
     if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
-      console.log("circle done! at elapsed:", elapsed);\n
+      console.log("loiter done! at elapsed:", elapsed);\n
+      return;\n
     }\n
     next_point = me.loiter_coordinates[me.last_point_reached+1];\n
     me.setTargetCoordinates(next_point[0], next_point[1], me.position.z);\n
@@ -291,7 +296,7 @@ me.onUpdate = function () {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.50362.20079.31163</string> </value>
+                      <value> <string>1001.50362.39766.23603</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -309,7 +314,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658499516.4</float>
+                              <float>1658500589.65</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
