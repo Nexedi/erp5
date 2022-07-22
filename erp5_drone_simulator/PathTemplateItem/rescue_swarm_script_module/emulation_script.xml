@@ -113,15 +113,18 @@ me.onStart = function() {\n
   function toRadians (angle) {\n
     return angle * (Math.PI / 180);\n
   }\n
-  for (var angle = 0; angle <360; angle+=8){\n
-    x = LOITER_DISTANCE * Math.cos(toRadians(angle)) + DESTINATION.x;\n
-    y = LOITER_DISTANCE * Math.sin(toRadians(angle)) + DESTINATION.y;\n
-    me.loiter_coordinates.push([x,y]);\n
+  for (var i = 1; i > 0; i-=0.25){\n
+    for (var angle = 0; angle <360; angle+=8){\n
+      x = LOITER_DISTANCE * Math.cos(toRadians(angle)) + DESTINATION.x;\n
+      y = LOITER_DISTANCE * Math.sin(toRadians(angle)) + DESTINATION.y;\n
+      me.loiter_coordinates.push([x,y,me.stableHeight*i]);\n
+    }\n
   }\n
 };\n
 \n
 me.onUpdate = function () {\n
   var elapsed = new Date() - me.startTime;\n
+  //take off\n
   if (!me.takeOffDone) {\n
     var dist = me.stableHeight - me.position.z;\n
     dist = Math.sqrt(dist * dist);\n
@@ -139,6 +142,7 @@ me.onUpdate = function () {\n
       me.takeOffDone = true;\n
     }\n
   }\n
+  //reach destination\n
   if (!me.destinationLoiter) {\n
     me.setTargetCoordinates(me.destination.x, me.destination.y, me.stableHeight);\n
     var distt = distance([me.destination.x, me.destination.y], [me.position.x, me.position.y]);\n
@@ -148,12 +152,14 @@ me.onUpdate = function () {\n
     }\n
     return;\n
   }\n
+  //stop\n
   if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
     me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
     return;\n
   }\n
+  //loiter\n
   var next_point = me.loiter_coordinates[me.last_point_reached+1];\n
-  me.setTargetCoordinates(next_point[0], next_point[1], me.position.z);\n
+  me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
   if (distance([me.position.x, me.position.y], next_point) < 1) {\n
     me.last_point_reached += 1;\n
     if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
@@ -161,7 +167,7 @@ me.onUpdate = function () {\n
       return;\n
     }\n
     next_point = me.loiter_coordinates[me.last_point_reached+1];\n
-    me.setTargetCoordinates(next_point[0], next_point[1], me.position.z);\n
+    me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
   }\n
 };
 
@@ -296,7 +302,7 @@ me.onUpdate = function () {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.50362.39766.23603</string> </value>
+                      <value> <string>1001.50380.32392.4881</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -314,7 +320,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658500589.65</float>
+                              <float>1658502346.99</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
