@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Rescue Swarm Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>emulation_script</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Rescue Swarm Script</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+function distance(p1, p2) {\n
+  var a = p1[0] - p2[0],\n
+    b = p1[1] - p2[1];\n
+  return Math.sqrt(a * a + b * b);\n
+}\n
+\n
+formatTimeToMinutesAndSeconds = function (time) {\n
+  var seconds = Math.floor(time / 1000),\n
+    minutes = Math.floor(seconds / 60),\n
+    sminutes = "00",\n
+    sseconds = "00";\n
+  sminutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();\n
+  seconds -= (minutes * 60);\n
+  sseconds = (seconds < 10) ? "0" + seconds.toString() : sseconds = seconds.toString();\n
+  return sminutes + ":" + sseconds;\n
+};\n
+\n
+var TAKEOFF_TIME = 52, //seconds\n
+  LOITER_DISTANCE = 100,\n
+  DESTINATION = {x:-466,y:295};\n
+\n
+me.onStart = function() {\n
+  me.stableHeight = 114;\n
+  me.stableHeightReached = false;\n
+  me.startTime = new Date();\n
+  me.destination = DESTINATION;\n
+  me.destinationLoiter = false;\n
+  me.setAcceleration(10);\n
+  me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+  me.loiter_coordinates = [];\n
+  me.last_point_reached = -1;\n
+  var x, y;\n
+  function toRadians (angle) {\n
+    return angle * (Math.PI / 180);\n
+  }\n
+  for (var i = 1; i > 0; i-=0.25){\n
+    for (var angle = 0; angle <360; angle+=8){ //counter-clockwise\n
+    //for (var angle = 360; angle > 0; angle-=8){ //clockwise\n
+      x = LOITER_DISTANCE * Math.cos(toRadians(angle)) + DESTINATION.x;\n
+      y = LOITER_DISTANCE * Math.sin(toRadians(angle)) + DESTINATION.y;\n
+      me.loiter_coordinates.push([x,y,me.stableHeight*i]);\n
+    }\n
+  }\n
+};\n
+\n
+me.onUpdate = function () {\n
+  var elapsed = new Date() - me.startTime;\n
+  //take off\n
+  if (!me.takeOffDone) {\n
+    var dist = me.stableHeight - me.position.z;\n
+    dist = Math.sqrt(dist * dist);\n
+    if (dist < 0.5) {\n
+      me.stableHeightReached = true;\n
+    }\n
+    if (me.stableHeightReached) {\n
+      me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+    }\n
+    //emulate take off time\n
+    if (new Date() - me.startTime < TAKEOFF_TIME * 1000) {\n
+      return;\n
+    } else {\n
+      console.log("takeoff done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+      me.takeOffDone = true;\n
+    }\n
+  }\n
+  //reach destination\n
+  if (!me.destinationLoiter) {\n
+    me.setTargetCoordinates(me.destination.x, me.destination.y, me.stableHeight);\n
+    var distt = distance([me.destination.x, me.destination.y], [me.position.x, me.position.y]);\n
+    if (distt < LOITER_DISTANCE) {\n
+      me.destinationLoiter = true;\n
+      console.log("stable flight done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+    }\n
+    return;\n
+  }\n
+  //stop\n
+  if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
+    me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);\n
+    return;\n
+  }\n
+  //loiter\n
+  var next_point = me.loiter_coordinates[me.last_point_reached+1];\n
+  me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
+  if (distance([me.position.x, me.position.y], next_point) < 1) {\n
+    me.last_point_reached += 1;\n
+    if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
+      console.log("loiter done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+      return;\n
+    }\n
+    next_point = me.loiter_coordinates[me.last_point_reached+1];\n
+    me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
+  }\n
+};
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>emulation script</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish_alive</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1658430347.43</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1001.50453.20659.61030</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1658505357.51</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
