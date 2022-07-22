@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Rescue Swarm Map" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>medium_map</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Map based on medium size map, use to compare simulated and real drone flights.\n
+It has 2 drones: one for that simulates the real flight from a script (DroneAaileFixeAPI - id:0) and one that moves according to the log values (DroneLogAPI id:1)\n
+Being run on (WIP) web_page_module/test_drone_simulator_gadget page, the log drone flight will be drawn on the map.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>compare_map</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Rescue Swarm Map</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+  "distances": {\n
+    "communication": 99999,\n
+    "control": 1500,\n
+    "information": 5\n
+  },\n
+  "drone": {\n
+    "maxAcceleration": 1,\n
+    "maxSpeed": 16.666667,\n
+    "collisionSector": 0.25,\n
+    "broadcastingTime": 1000,\n
+    "viewAngle": 60\n
+  },\n
+  "meteo": 0.5,\n
+  "derive": {\n
+    "speed": 0.1,\n
+    "direction": {\n
+      "x": 1,\n
+      "y": 0.5\n
+    }\n
+  },\n
+  "gameTime": 1800,\n
+  "goalDiameter": 7,\n
+  "goalPositionLeftTeam": {\n
+    "x": 0,\n
+    "y": 0,\n
+    "z": 0.6\n
+  },\n
+  "goalPositionRightTeam": {\n
+    "x": 0,\n
+    "y": 0,\n
+    "z": 0.6\n
+  },\n
+  "latency": {\n
+    "information": 0,\n
+    "communication": 0\n
+  },\n
+  "mapSize": {\n
+    "depth": 1000,\n
+    "height": 100,\n
+    "width": 1000\n
+  },\n
+  "obstacles": [],\n
+  "spawnPositions": [],\n
+  "initialHumanAreaPosition": {\n
+    "x": -400,\n
+    "y": 400,\n
+    "z": 0\n
+  },\n
+  "randomSpawn": {\n
+    "leftTeam": {\n
+      "position": {\n
+        "x": 0,\n
+        "y": 0,\n
+        "z": 20\n
+      },\n
+      "dispertion": {\n
+        "x": 8,\n
+        "y": 8,\n
+        "z": 6\n
+      },\n
+      "types": [\n
+        "DroneAaileFixeAPI",\n
+        "DroneLogAPI",\n
+        "DroneAPI"\n
+      ]\n
+    },\n
+    "rightTeam": {\n
+      "position": {\n
+        "x": -400,\n
+        "y": 400,\n
+        "z": 0\n
+      },\n
+      "dispertion": {\n
+        "x": 100,\n
+        "y": 100,\n
+        "z": 0.1\n
+      }\n
+    }\n
+  },\n
+  "teamSize": 2\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Compare map</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>publish_alive</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1657219036.22</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1002.12601.25029.46114</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1660228730.09</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
