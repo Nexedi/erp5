@@ -1,5 +1,8 @@
 /// <reference path="./typings/babylon.3.1.d.ts" />
 /// <reference path="./DroneAPI.ts" />
+/// <reference path="./DroneLogAPI.ts" />
+/// <reference path="./DroneAaileFixeAPI.ts" />
+
 var DroneManager = /** @class */ (function () {
     //*************************************************** CONSTRUCTOR **************************************************
     function DroneManager(scene, id, team, API) {
@@ -159,7 +162,7 @@ var DroneManager = /** @class */ (function () {
             this._maxSpeed = 0;
           }
         } else {
-          this._maxSpeed = GAMEPARAMETERS.drone.maxSpeed;
+          this._maxSpeed = this._API.getMaxSpeed();
         }
         this._canPlay = true;
         this._canCommunicate = true;
@@ -428,13 +431,28 @@ var DroneManager = /** @class */ (function () {
     //#endregion
     //#region -- Game informations
     /**
-     * Get other drone infos
-     * @param id If no id, return all drones infos
+     * Get drone max height
      */
-    DroneManager.prototype.getDroneInfos = function (id) {
-        if (!this._canCommunicate)
-            return;
-        return this._API.getDroneInfos(this.infosMesh.position, id, this._id);
+    DroneManager.prototype.getMaxHeight = function () {
+        return this._API.getMaxHeight();
+    };
+    /**
+     * Get drone min height
+     */
+    DroneManager.prototype.getMinHeight = function () {
+        return this._API.getMinHeight();
+    };
+    /**
+     * Get drone initial altitude
+     */
+    DroneManager.prototype.getInitialAltitude = function () {
+        return this._API.getInitialAltitude();
+    };
+    /**
+     * Get drone absolute altitude
+     */
+    DroneManager.prototype.getAltitudeAbs = function () {
+        return this._API.getAltitudeAbs();
     };
     /**
      * Get a game parameter by name
@@ -444,14 +462,6 @@ var DroneManager = /** @class */ (function () {
         if (!this._canCommunicate)
             return;
         return this._API.getGameParameter(name);
-    };
-    /**
-     * Get the map
-     */
-    DroneManager.prototype.getMapInfos = function () {
-        if (!this._canCommunicate)
-            return;
-        return this._API.getMapInfos();
     };
     /**
      * get if drone detects the human position
@@ -474,11 +484,26 @@ var DroneManager = /** @class */ (function () {
         return null;
     };
     /**
+     * Set the drone altitude
+     * @param altitude information to be set
+     */
+    DroneManager.prototype.setAltitude = function (altitude) {
+        this._API.setAltitude(altitude);
+    };
+    /**
      * Set the reported human position
      * @param position information to be set
      */
     DroneManager.prototype.reportHumanPosition = function (position) {
         this._API._gameManager.reportHumanPosition(position);
+    };
+    /**
+     * get log flight parameters
+     */
+    DroneManager.prototype.getLogFlightParameters = function () {
+        if (this._API.getLogFlightParameters)
+          return this._API.getLogFlightParameters();
+        return null;
     };
     //#endregion
     //#endregion
