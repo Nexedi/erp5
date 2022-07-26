@@ -3,7 +3,10 @@
 /// <reference path="./DroneManager.ts" />
 /// <reference path="./MapManager.ts" />
 /// <reference path="./typings/babylon.gui.d.ts" />
-var GAMEPARAMETERS = {};
+var GAMEPARAMETERS = {},
+  MIN_HEIGHT = 9,
+  MAX_HEIGHT = 120;
+
 var GameManager = /** @class */ (function (console) {
     var browser_console = console,
       console_output = '';
@@ -47,6 +50,19 @@ var GameManager = /** @class */ (function (console) {
         this.finish_deferred = null;
         if (!simulation_speed) { simulation_speed = 5; }
         this._max_step_animation_frame = simulation_speed;
+        this._last_position_print = [];
+        this._log_count = [];
+        this._flight_log = [];
+        for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+          this._flight_log[count] = [];
+          this._log_count[count] = 0;
+          this._last_position_print[count] = null;
+        }
+        this._colors = [
+          new BABYLON.Color3(255, 165, 0),
+          new BABYLON.Color3(0, 0, 255),
+          new BABYLON.Color3(255, 0, 0)
+        ];
         // ----------------------------------- CODE ZONES AND PARAMS
         // JIO : AI
         // XXX
@@ -78,7 +94,7 @@ var GameManager = /** @class */ (function (console) {
           return gadget._init();
         })
         .push(function () {
-          return gadget._final_score;
+          return gadget._flight_log;
         });
     };
 
@@ -268,6 +284,46 @@ var GameManager = /** @class */ (function (console) {
         if (update_dom) {
           this._timeDisplay.textContent = this._formatTimeToMinutesAndSeconds(this._game_duration);
         }
+        for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+          if (this._teamLeft[count]._controlMesh) {
+            var drone_position_x = this._teamLeft[count]._controlMesh.position.x,
+              drone_position_z = this._teamLeft[count]._controlMesh.position.y,
+              drone_position_y = this._teamLeft[count]._controlMesh.position.z;
+            if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.log) {
+              if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
+                this._log_count[count] += GAMEPARAMETERS.logFlight.log_interval_time;
+                //convert x-y coordinates into latitud-longitude
+                var lon = drone_position_x + GAMEPARAMETERS.logFlight.map_width / 2;
+                lon = lon / 1000;
+                lon = lon * (GAMEPARAMETERS.logFlight.max_x - GAMEPARAMETERS.logFlight.min_x) + GAMEPARAMETERS.logFlight.min_x;
+                lon = lon / (GAMEPARAMETERS.logFlight.map_width / 360.0) - 180;
+                var lat = drone_position_y + GAMEPARAMETERS.logFlight.map_height / 2;
+                lat = lat / 1000;
+                lat = lat * (GAMEPARAMETERS.logFlight.max_y - GAMEPARAMETERS.logFlight.min_y) + GAMEPARAMETERS.logFlight.min_y;
+                lat = 90 - lat / (GAMEPARAMETERS.logFlight.map_height / 180.0);
+                this._flight_log[count].push([lat, lon, drone_position_z]);
+                //console.log([0,lat,lon,0,drone_position_z,0,0,0,0,0,0].join(';'));
+              }
+            }
+            if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.print) {
+            //print drone position every second
+              if (this._last_position_print[count] !== seconds) {
+                this._last_position_print[count] = seconds;
+                var position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" + seconds, {
+                    'diameterX': 3.5,
+                    'diameterY': 3.5,
+                    'diameterZ': 3.5
+                }, this._scene);
+                position_obj.position = new BABYLON.Vector3(drone_position_x, drone_position_z, drone_position_y);
+                position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
+                var material = new BABYLON.StandardMaterial(this._scene);
+                material.alpha = 1;
+                material.diffuseColor = this._colors[count];
+                position_obj.material = material;
+              }
+            }
+          }
+        }
     };
     /**
      * Function used to check collision between 2 drones
@@ -275,6 +331,9 @@ var GameManager = /** @class */ (function (console) {
      * @param drone2
      */
     GameManager.prototype._checkCollision = function (drone, other) {
+        //TODO add a flag in GAMEPARAMETERS.logFlight to enable/disable this
+        //ignore drone collision
+        return;
         if (drone.colliderMesh && other.colliderMesh
             && drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
             var angle = Math.acos(BABYLON.Vector3.Dot(drone.worldDirection, other.worldDirection) / (drone.worldDirection.length() * other.worldDirection.length()));
@@ -326,6 +385,9 @@ var GameManager = /** @class */ (function (console) {
      * @param obstacle
      */
     GameManager.prototype._checkCollisionWithObstacle = function (drone, obstacle) {
+        //TODO if path is set in flightLog config, no need to do this ignore HACK
+        //ignore obstacles
+        return;
         if (obstacle.obsType === "boat") {
             return this._checkCollisionWithSpecialObstacle(drone, obstacle);
         }
@@ -360,7 +422,7 @@ var GameManager = /** @class */ (function (console) {
      */
     GameManager.prototype._checkCollisionWithFloor = function (drone) {
         if (drone.infosMesh) {
-            if (drone.position.z < 9) {
+            if (drone.position.z < MIN_HEIGHT) {
                 return true;
             }
         }
@@ -372,7 +434,7 @@ var GameManager = /** @class */ (function (console) {
      */
     GameManager.prototype._checkDroneOut = function (drone) {
         if (drone.position !== null) {
-            if (drone.position.z > 100) {
+            if (drone.position.z > MAX_HEIGHT) {
               return true;
             }
             return BABYLON.Vector3.Distance(drone.position, BABYLON.Vector3.Zero()) > GAMEPARAMETERS.distances.control;
@@ -552,7 +614,11 @@ var GameManager = /** @class */ (function (console) {
         }
         //cap camera distance to 1km
         if (radius > 800) radius = 800;
-        camera = new BABYLON.ArcRotateCamera("camera", x_rotation, 1.25, radius, new BABYLON.Vector3(vector_x, 0, vector_y), this._scene);
+        var target = new BABYLON.Vector3(vector_x, 0, vector_y);
+        if (GAMEPARAMETERS.logFlight) {
+          target = BABYLON.Vector3.Zero();
+        }
+        camera = new BABYLON.ArcRotateCamera("camera", x_rotation, 1.25, radius, target, this._scene);
         camera.wheelPrecision = 10;
         camera.attachControl(this._scene.getEngine().getRenderingCanvas());
         camera.maxz = 40000
