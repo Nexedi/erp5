@@ -7,12 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>must_revalidate_http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
-            <value> <string>split.min.js</string> </value>
+            <value> <string>DroneLogAPI.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
