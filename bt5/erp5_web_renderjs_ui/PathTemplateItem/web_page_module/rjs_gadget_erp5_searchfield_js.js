@@ -36,12 +36,15 @@
         state_dict = {
           extended_search: options.extended_search || "",
           graphic_type: options.graphic_type,
+          enable_graphic: options.enable_graphic,
           jio_key: options.jio_key
         };
 
       return gadget.getUrlParameter("only_graphic")
         .push(function (only_graphic) {
-          if (only_graphic === undefined) {
+          if (typeof only_graphic === "string") {
+            state_dict.only_graphic = only_graphic === "true";
+          } else if (only_graphic === undefined) {
             state_dict.only_graphic = true;
           } else {
             state_dict.only_graphic = only_graphic;
@@ -55,11 +58,14 @@
       var gadget = this,
         i,
         len,
+        switch_graph_button,
+        switch_listbox_button,
+        listbox_button_class,
+        graphic_button_class,
         only_graphic = gadget.state.only_graphic,
         button_container = gadget.element.querySelector('div.search_parsed_value'),
-        switch_graph_button = gadget.element.querySelector(".switch-graph"),
-        switch_listbox_button = gadget.element.querySelector(".switch-listbox"),
-        graphic_css_class = "ui-screen-hidden",
+        graphic_container = gadget.element.querySelector(".graphic-button-section"),
+        hide_button_class = "ui-screen-hidden",
         operator = 'AND',
         jio_query_list = [],
         query_text_list = [],
@@ -69,16 +75,30 @@
         parsed_value = '',
         input_value = '',
         continue_full_text_query_search = true;
-      if (typeof only_graphic === "string") {
-        only_graphic = only_graphic === "true";
-      } else if (only_graphic === undefined) {
-        only_graphic = true;
+
+      if (gadget.state.enable_graphic) {
+        listbox_button_class = "ui-btn-icon-notext ui-icon-list-alt switch-listbox";
+        graphic_button_class = "ui-btn-icon-notext ui-icon-bar-chart-o switch-graph";
+
+        if (!only_graphic) {
+          listbox_button_class = listbox_button_class + " " + hide_button_class;
+        } else if (only_graphic) {
+          graphic_button_class = graphic_button_class + " " + hide_button_class;
+        }
+
+        domsugar(graphic_container, [
+          domsugar("button", {
+            "class": listbox_button_class,
+            "type": "button"
+          }),
+          domsugar("button", {
+            "class": graphic_button_class,
+            "type": "button"
+          })
+        ]);
       }
-      if (!only_graphic) {
-        switch_graph_button.classList.remove(graphic_css_class);
-      } else if (only_graphic) {
-        switch_listbox_button.classList.remove(graphic_css_class);
-      }
+      switch_graph_button = graphic_container.querySelector(".switch-graph");
+      switch_listbox_button = graphic_container.querySelector(".switch-listbox");
 
       if (gadget.state.extended_search) {
 
@@ -140,8 +160,9 @@
         }
       } else if (modification_dict.enable_graphic &&
                  modification_dict.graphic_type &&
-                 !modification_dict.extended_search) {
-        switch_listbox_button.classList.remove(graphic_css_class);
+                 !modification_dict.extended_search &&
+                 switch_listbox_button) {
+        switch_listbox_button.classList.remove(hide_button_class);
       }
 
       button_container.innerHTML = '';
@@ -276,7 +297,7 @@
               jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type,
               extended_search: gadget.state.extended_search,
-              only_graphic: Boolean(false)
+              only_graphic: false
             }
           });
         }
@@ -288,7 +309,7 @@
               jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type,
               extended_search: gadget.state.extended_search,
-              only_graphic: Boolean(true)
+              only_graphic: true
             }
           });
         }

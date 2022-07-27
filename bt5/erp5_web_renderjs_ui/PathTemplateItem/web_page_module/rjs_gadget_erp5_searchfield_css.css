@@ -3,3 +3,7 @@ div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section > b
   margin-right: 6pt;
   border-radius: 0.325em;
 }
+
+.graphic-button-section {
+  float: left;
+}
