@@ -29,7 +29,6 @@
         parent_portal_type,
         default_view,
         app_action_list,
-        about_page,
         form_definition,
         current_version,
         index;
@@ -41,14 +40,12 @@
                                     "app_view_reference",
                                     "parent_portal_type",
                                     'default_view_reference',
-                                    'app_actions',
-                                    'about_page'])
+                                    'app_actions'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
           default_view = setting_list[3];
           app_action_list = setting_list[4];
-          about_page = setting_list[5];
           if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
             return gadget.redirect({
@@ -104,8 +101,7 @@
             form_definition: form_definition,
             form_type: form_definition.form_type,
             view: options.view || app_view,
-            view_action_dict: view_action_dict,
-            about_page: about_page
+            view_action_dict: view_action_dict
           });
         }, function (error) {
           // jio not found error
@@ -147,8 +143,7 @@
         })
         .push(function () {
           return gadget.updatePanel({
-            view_action_dict: gadget.state.view_action_dict,
-            about_page: gadget.state.about_page
+            view_action_dict: gadget.state.view_action_dict
           });
         });
     })
