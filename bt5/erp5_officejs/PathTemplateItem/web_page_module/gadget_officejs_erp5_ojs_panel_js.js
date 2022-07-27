@@ -156,13 +156,17 @@
         }
       }
 
+      queue
+        .push(function () {
+          return gadget.getSetting('about_page');
+        })
+        .push(function (setting) {
+          about_page_setting = setting;
+        });
+
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return gadget.getSetting('about_page');
-          })
-          .push(function (setting) {
-            about_page_setting = setting;
             // XXX: Customize panel header!
             return context.translateHtml(
               panel_template_header() +
@@ -193,16 +197,16 @@
       }
 
       var about_page;
-      if (modification_dict.hasOwnProperty("about_page") &&
-        modification_dict.about_page) {
-        about_page = modification_dict.about_page;
-      }
-      if (!about_page) {
-        about_page = about_page_setting;
-      }
       queue
         // Update the global links
         .push(function () {
+          if (modification_dict.hasOwnProperty("about_page") &&
+            modification_dict.about_page) {
+            about_page = modification_dict.about_page;
+          }
+          if (!about_page) {
+            about_page = about_page_setting;
+          }
           return RSVP.all([
             context.getUrlFor({command: 'display'}),
             context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
