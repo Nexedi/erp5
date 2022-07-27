@@ -54,12 +54,10 @@
     })
     .declareAcquiredMethod("triggerListboxGraphicSelection",
                            "triggerListboxGraphicSelection")
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this,
         i,
         len,
-        switch_graph_button,
-        switch_listbox_button,
         listbox_button_class,
         graphic_button_class,
         only_graphic = gadget.state.only_graphic,
@@ -97,8 +95,6 @@
           })
         ]);
       }
-      switch_graph_button = graphic_container.querySelector(".switch-graph");
-      switch_listbox_button = graphic_container.querySelector(".switch-listbox");
 
       if (gadget.state.extended_search) {
 
@@ -158,11 +154,6 @@
             }));
           }
         }
-      } else if (modification_dict.enable_graphic &&
-                 modification_dict.graphic_type &&
-                 !modification_dict.extended_search &&
-                 switch_listbox_button) {
-        switch_listbox_button.classList.remove(hide_button_class);
       }
 
       button_container.innerHTML = '';
