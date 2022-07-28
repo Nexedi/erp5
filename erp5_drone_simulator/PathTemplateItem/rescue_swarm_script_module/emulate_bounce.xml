@@ -95,10 +95,21 @@ function distance(p1, p2) {\n
   return Math.sqrt(a * a + b * b);\n
 }\n
 \n
+formatTimeToMinutesAndSeconds = function (time) {\n
+  var seconds = Math.floor(time / 1000),\n
+    minutes = Math.floor(seconds / 60),\n
+    sminutes = "00",\n
+    sseconds = "00";\n
+  sminutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();\n
+  seconds -= (minutes * 60);\n
+  sseconds = (seconds < 10) ? "0" + seconds.toString() : sseconds = seconds.toString();\n
+  return sminutes + ":" + sseconds;\n
+};\n
+\n
 var TAKEOFF_TIME = 52; //seconds\n
 \n
 me.onStart = function() {\n
-  var map_size = me.getGameParameter("mapSize"),\n
+  /*var map_size = me.getGameParameter("mapSize"),\n
     start_x = me.position.x,\n
     start_y = me.position.y,\n
     max_x = map_size.width / 2,\n
@@ -111,22 +122,69 @@ me.onStart = function() {\n
       [max_x, start_y + y_check*3],\n
       [-max_x, start_y + y_check*4 - 100],\n
       [0, max_y]\n
-    ];\n
-  me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.position.z);\n
+    ];*/\n
+  me.startTime = new Date();\n
+  me.land = false;\n
+  me.stableHeight = 114;\n
+  me.stableHeightReached = false;\n
+  me.checkpoint_list = [\n
+    [me.position.x, me.position.y],\n
+    [-553.7169811316272, -1017.1443298971542],\n
+    [-1048.811320754609, -739.3659793815376],\n
+    [-1048.811320754609, -243.9484536084036],\n
+    [-920.5094339631283, -81.06185567011119],\n
+    [-71.45283018865211, -414.0515463915964],\n
+    [-1037.490566038303, -929.5154639179189],\n
+    [-958.2452830198672, -1017.1443298971542],\n
+    [-71.45283018865211, -254.25773195895943],\n
+    [-316.73584905673886, -68.69072164944419],\n
+    [-807.301886792912, -1017.1443298971542],\n
+    [-1048.811320754609, -398.5876288662515],\n
+    [-658.6226415100766, -68.69072164944419],\n
+    [-294.09433962269554, -1017.1443298971542],\n
+    [-71.45283018865211, -862.5051546393063],\n
+    [-491.07547169815643, -68.69072164944419],\n
+    [-1035.9811320760334, -511.9896907218762]\n
+  ];\n
+  me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.stableHeight);\n
   me.last_checkpoint_reached = -1;\n
   me.setAcceleration(10);\n
 };\n
 \n
 me.onUpdate = function () {\n
-  var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];\n
-  if (distance([me.position.x, me.position.y], next_checkpoint) < 10) {\n
-    me.last_checkpoint_reached += 1;\n
-    if (me.last_checkpoint_reached === me.checkpoint_list.length - 1) {\n
-      //end the game\n
-      me.reportHumanPosition(me.getCurrentPosition());\n
+  var elapsed = new Date() - me.startTime;\n
+  //take off\n
+  if (!me.takeOffDone) {\n
+    var dist = me.stableHeight - me.position.z;\n
+    dist = Math.sqrt(dist * dist);\n
+    if (dist < 0.5) {\n
+      me.stableHeightReached = true;\n
     }\n
-    next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];\n
-    me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], me.position.z);\n
+    if (me.stableHeightReached) {\n
+      me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+    }\n
+    //emulate take off time\n
+    if (new Date() - me.startTime < TAKEOFF_TIME * 1000) {\n
+      return;\n
+    } else {\n
+      console.log("takeoff done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+      me.takeOffDone = true;\n
+    }\n
+  }\n
+  if (!me.land) {\n
+    var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];\n
+    if (distance([me.position.x, me.position.y], next_checkpoint) < 10) {\n
+      me.last_checkpoint_reached += 1;\n
+      if (me.last_checkpoint_reached === me.checkpoint_list.length - 1) {\n
+        me.land = true;\n
+        console.log("stable flight done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+        return;\n
+      }\n
+      next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];\n
+      me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], me.position.z);\n
+    }\n
+  } else {\n
+    me.setTargetCoordinates(me.position.x, me.position.y, 100);\n
   }\n
 };
 
@@ -261,7 +319,7 @@ me.onUpdate = function () {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.59040.21516.51165</string> </value>
+                      <value> <string>1001.59054.5634.58828</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -279,7 +337,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1659021005.16</float>
+                              <float>1659029987.43</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
