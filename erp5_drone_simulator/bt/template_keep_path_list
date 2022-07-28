@@ -1,2 +1,2 @@
-rescue_swarm_script_module/emulation
-rescue_swarm_script_module/checkpoints
+rescue_swarm_script_module/emulate_bounce
+rescue_swarm_script_module/emulate_loiter
