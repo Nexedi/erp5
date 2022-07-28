@@ -4,12 +4,12 @@
   "use strict";
 
   var SIMULATION_SPEED = 100,
-    MAP_KEY = "rescue_swarm_map_module/compare_map",
-    SCRIPT_KEY = "rescue_swarm_script_module/28", //roque participant script
-    //SCRIPT_KEY = "rescue_swarm_script_module/emulation_script",
-    //SCRIPT_KEY = "rescue_swarm_script_module/zigzag_script",
-    LOG_KEY = "rescue_swarm_script_module/log_2", //LP first log
-    //LOG_KEY = "rescue_swarm_script_module/log_3", //Roque custom log
+    MAP_KEY = "compare_map",
+    SCRIPT_KEY = "28", //roque participant script
+    //SCRIPT_KEY = "emulation",
+    //SCRIPT_KEY = "checkpoints",
+    //LOG_KEY = "lp_first", //LP first log
+    LOG_KEY = "lp_bounce", //LP bounce log
     MAP_SIZE = 1000,
     MIN_HEIGHT = 10,
     DESTINATION_LON = 14.25334942966329,
@@ -156,9 +156,18 @@
 
     .declareMethod('render', function (options) {
       var gadget = this;
-      options.map = MAP_KEY;
-      options.script = SCRIPT_KEY;
-      options.log = LOG_KEY;
+      if (!options.map) {
+        options.map = MAP_KEY;
+      }
+      options.map = "rescue_swarm_map_module/" + options.map;
+      if (!options.script) {
+        options.script = SCRIPT_KEY;
+      }
+      options.script = "rescue_swarm_script_module/" + options.script;
+      if (!options.log) {
+        options.log = LOG_KEY;
+      }
+      options.log = "rescue_swarm_script_module/" + options.log;
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_get(options.script);
