@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>zigzag_script</string> </value>
+            <value> <string>emulation</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,38 +95,91 @@ function distance(p1, p2) {\n
   return Math.sqrt(a * a + b * b);\n
 }\n
 \n
-var TAKEOFF_TIME = 52; //seconds\n
+formatTimeToMinutesAndSeconds = function (time) {\n
+  var seconds = Math.floor(time / 1000),\n
+    minutes = Math.floor(seconds / 60),\n
+    sminutes = "00",\n
+    sseconds = "00";\n
+  sminutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();\n
+  seconds -= (minutes * 60);\n
+  sseconds = (seconds < 10) ? "0" + seconds.toString() : sseconds = seconds.toString();\n
+  return sminutes + ":" + sseconds;\n
+};\n
+\n
+var TAKEOFF_TIME = 52, //seconds\n
+  LOITER_DISTANCE = 100,\n
+  DESTINATION = {x:-466,y:295};\n
 \n
 me.onStart = function() {\n
-  var map_size = me.getGameParameter("mapSize"),\n
-    start_x = me.position.x,\n
-    start_y = me.position.y,\n
-    max_x = map_size.width / 2,\n
-    max_y = map_size.depth / 2,\n
-    dist_y = max_y - start_y,\n
-    y_check = dist_y / 4;\n
-  me.checkpoint_list = [\n
-      [max_x, start_y + y_check],\n
-      [-max_x, start_y + y_check*2],\n
-      [max_x, start_y + y_check*3],\n
-      [-max_x, start_y + y_check*4 - 100],\n
-      [0, max_y]\n
-    ];\n
-  me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.position.z);\n
-  me.last_checkpoint_reached = -1;\n
+  me.stableHeight = 114;\n
+  me.stableHeightReached = false;\n
+  me.startTime = new Date();\n
+  me.destination = DESTINATION;\n
+  me.destinationLoiter = false;\n
   me.setAcceleration(10);\n
+  me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+  me.loiter_coordinates = [];\n
+  me.last_point_reached = -1;\n
+  var x, y;\n
+  function toRadians (angle) {\n
+    return angle * (Math.PI / 180);\n
+  }\n
+  for (var i = 1; i > 0; i-=0.25){\n
+    for (var angle = 0; angle <360; angle+=8){ //counter-clockwise\n
+    //for (var angle = 360; angle > 0; angle-=8){ //clockwise\n
+      x = LOITER_DISTANCE * Math.cos(toRadians(angle)) + DESTINATION.x;\n
+      y = LOITER_DISTANCE * Math.sin(toRadians(angle)) + DESTINATION.y;\n
+      me.loiter_coordinates.push([x,y,me.stableHeight*i]);\n
+    }\n
+  }\n
 };\n
 \n
 me.onUpdate = function () {\n
-  var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];\n
-  if (distance([me.position.x, me.position.y], next_checkpoint) < 10) {\n
-    me.last_checkpoint_reached += 1;\n
-    if (me.last_checkpoint_reached === me.checkpoint_list.length - 1) {\n
-      //end the game\n
-      me.reportHumanPosition(me.getCurrentPosition());\n
+  var elapsed = new Date() - me.startTime;\n
+  //take off\n
+  if (!me.takeOffDone) {\n
+    var dist = me.stableHeight - me.position.z;\n
+    dist = Math.sqrt(dist * dist);\n
+    if (dist < 0.5) {\n
+      me.stableHeightReached = true;\n
     }\n
-    next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];\n
-    me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], me.position.z);\n
+    if (me.stableHeightReached) {\n
+      me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+    }\n
+    //emulate take off time\n
+    if (new Date() - me.startTime < TAKEOFF_TIME * 1000) {\n
+      return;\n
+    } else {\n
+      console.log("takeoff done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+      me.takeOffDone = true;\n
+    }\n
+  }\n
+  //reach destination\n
+  if (!me.destinationLoiter) {\n
+    me.setTargetCoordinates(me.destination.x, me.destination.y, me.stableHeight);\n
+    var distt = distance([me.destination.x, me.destination.y], [me.position.x, me.position.y]);\n
+    if (distt < LOITER_DISTANCE) {\n
+      me.destinationLoiter = true;\n
+      console.log("stable flight done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+    }\n
+    return;\n
+  }\n
+  //stop\n
+  if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
+    me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);\n
+    return;\n
+  }\n
+  //loiter\n
+  var next_point = me.loiter_coordinates[me.last_point_reached+1];\n
+  me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
+  if (distance([me.position.x, me.position.y], next_point) < 1) {\n
+    me.last_point_reached += 1;\n
+    if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
+      console.log("loiter done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+      return;\n
+    }\n
+    next_point = me.loiter_coordinates[me.last_point_reached+1];\n
+    me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
   }\n
 };
 
@@ -134,7 +187,7 @@ me.onUpdate = function () {\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>zigzag script</string> </value>
+            <value> <string>emulation</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -212,7 +265,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658430523.14</float>
+                              <float>1658430347.43</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -261,7 +314,7 @@ me.onUpdate = function () {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.49211.37455.11912</string> </value>
+                      <value> <string>1001.50459.62824.63573</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -279,7 +332,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658430516.35</float>
+                              <float>1659020192.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
