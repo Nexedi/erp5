@@ -25,6 +25,7 @@
         .push(function (result_list) {
           var options = {
             extended_search: result_list[0],
+            only_graphic: false,
             jio_key: gadget.state.jio_key
           };
           if (result_list[1]) {
