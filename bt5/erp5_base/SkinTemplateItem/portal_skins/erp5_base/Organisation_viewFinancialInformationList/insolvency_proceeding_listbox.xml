@@ -14,6 +14,7 @@
                 <string>columns</string>
                 <string>enabled</string>
                 <string>list_method</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
                 <string>sort_columns</string>
                 <string>title</string>
@@ -165,6 +166,17 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Insolvency Proceeding</string>
+                          <string>Insolvency Proceeding</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
