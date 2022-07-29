@@ -601,7 +601,7 @@
                 show_clipboard_action: false,
 
                 // graphic
-                enable_graphic: options.enable_graphic,
+                enable_graphic: field_json.domain_root_list.length > 0 && options.enable_graphic,
                 graphic_type: parameter_list[0] || getDefaultGraphicType(option_list),
                 only_graphic: parameter_list[1] === undefined ? true : parameter_list[1] === "true"
               });
@@ -937,7 +937,7 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-             if (!gadget.state.only_graphic) {
+             if (!gadget.state.only_graphic || !gadget.state.enable_graphic) {
               domsugar(container, [
                 domsugar('div', {
                   "class": 'ui-table-header ui-header'

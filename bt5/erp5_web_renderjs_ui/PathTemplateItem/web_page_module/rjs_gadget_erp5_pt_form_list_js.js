@@ -125,8 +125,8 @@
       ]))
         .push(function (result_list) {
           var form_options = form_gadget.state.erp5_form;
-          graphic_type = result_list[1];
           erp5_form = result_list[0];
+          graphic_type = result_list[1];
 
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
@@ -144,12 +144,11 @@
           }
 
           form_options.enable_graphic = false;
-          if (graphic_type || (
-              !form_gadget.state.extended_search && !graphic_type
-            )) {
+          if (
+            graphic_type || (!form_gadget.state.extended_search && !graphic_type)
+          ) {
             form_options.enable_graphic = true;
           }
-
           return erp5_form.render(form_options);
         })
 
@@ -168,9 +167,9 @@
             search_options.extended_search = form_gadget.state.extended_search;
           }
           search_options.enable_graphic = false;
-          if (graphic_type ||
-              (!form_gadget.state.extended_search && !graphic_type)
-              ) {
+          if (
+            graphic_type || (!form_gadget.state.extended_search && !graphic_type)
+          ) {
             search_options.enable_graphic = true;
           }
 
@@ -194,7 +193,6 @@
                               form_gadget.state.view,
                               form_gadget.state.erp5_document, true);
         });
-
     })
 
     .declareMethod('triggerSubmit', function triggerSubmit(options) {
