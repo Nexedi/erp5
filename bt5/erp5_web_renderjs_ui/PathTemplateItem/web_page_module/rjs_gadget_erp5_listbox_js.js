@@ -426,6 +426,7 @@
     .declareMethod('render', function render(options) {
       var gadget = this,
         field_json = options.field_json,
+        option_list = field_json.domain_root_list || [],
         sort_column_list = [],
         search_column_list = [],
         query_string,
@@ -496,7 +497,6 @@
             column_id,
             column_title,
             not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])],
-            option_list = field_json.domain_root_list || [],
             key_list = [];
 
           // Calculate the list of all displayable columns
@@ -572,7 +572,7 @@
                 list_method_template: field_json.list_method_template,
 
                 option_list: option_list,
-                domain_list_json: JSON.stringify(field_json.domain_root_list || []),
+                domain_list_json: JSON.stringify(option_list),
                 domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
 
                 column_list_json: JSON.stringify(displayed_column_item_list),
@@ -601,7 +601,7 @@
                 show_clipboard_action: false,
 
                 // graphic
-                enable_graphic: field_json.domain_root_list.length > 0 && options.enable_graphic,
+                enable_graphic: option_list.length > 0 && options.enable_graphic,
                 graphic_type: parameter_list[0] || getDefaultGraphicType(option_list),
                 only_graphic: parameter_list[1] === undefined ? true : parameter_list[1] === "true"
               });
