@@ -1,0 +1,11 @@
+<property_sheet_list>
+ <portal_type id="Stripe Connector">
+  <item>Login</item>
+  <item>Reference</item>
+  <item>Url</item>
+ </portal_type>
+ <portal_type id="Stripe Payment Session">
+  <item>DublinCore</item>
+  <item>Reference</item>
+ </portal_type>
+</property_sheet_list>
