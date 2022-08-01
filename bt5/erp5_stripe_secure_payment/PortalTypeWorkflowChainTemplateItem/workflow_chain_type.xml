@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Stripe Payment Session</type>
+  <workflow>edit_workflow, stripe_payment_session_workflow</workflow>
+ </chain>
+</workflow_chain>
