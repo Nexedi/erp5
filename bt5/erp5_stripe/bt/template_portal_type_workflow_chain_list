@@ -1,0 +1,4 @@
+Stripe Connector | edit_workflow
+Stripe Connector | validation_workflow
+Stripe Payment Session | edit_workflow
+Stripe Payment Session | stripe_payment_session_workflow
