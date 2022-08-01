@@ -6,10 +6,10 @@
   var SIMULATION_SPEED = 100,
     MAP_KEY = "compare_map",
     SCRIPT_KEY = "28", //roque participant script
-    //SCRIPT_KEY = "emulation",
-    //SCRIPT_KEY = "checkpoints",
-    //LOG_KEY = "lp_first", //LP first log
-    LOG_KEY = "lp_bounce", //LP bounce log
+    //SCRIPT_KEY = "emulate_loiter",
+    //SCRIPT_KEY = "emulate_bounce",
+    LOG_KEY = "lp_loiter", //LP first log
+    //LOG_KEY = "lp_bounce", //LP bounce log
     MAP_SIZE = 1000,
     MIN_HEIGHT = 10,
     DESTINATION_LON = 14.25334942966329,
@@ -139,15 +139,19 @@
         .push(function (result) {
           console.log("simulation log:", result);
           console.log("ground truth log:", log_point_list);
-          try {
-            console.log("frechet distance:",
-                        frechetDistance(log_point_list, result));
-            console.log("average distance:",
-                        averageDistance(log_point_list, result, false));
-            console.log("average distance with z:",
-                        averageDistance(log_point_list, result, true));
-          } catch (ee) {
-            console.log("error calculating distance:", ee);
+          console.log("COMPARISON:");
+          for (var i = 0; i < result.length; i += 1) {
+            try {
+              console.log("frechet distance:",
+                          frechetDistance(log_point_list, result[i]));
+              console.log("average distance:",
+                          averageDistance(log_point_list, result[i], false));
+              console.log("average distance with z:",
+                          averageDistance(log_point_list, result[i], true));
+              console.log("------------------------------------------------");
+            } catch (ee) {
+              console.log("error calculating distance:", ee);
+            }
           }
           return result;
         });
