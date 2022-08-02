@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,12 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -76,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet_router.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_text_editor_about.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -86,11 +83,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet_router_html</string> </value>
+            <value> <string>ojs_gadget_erp5_page_ojs_text_editor_about_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -104,17 +103,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Spreadsheet OnlyOffice Router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS Text Editor About Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -172,7 +167,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -198,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486990307.95</float>
+                              <float>1655410520.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -207,7 +202,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -247,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1000.58270.63145.51524</string> </value>
+                      <value> <string>1001.36251.24672.47342</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -265,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1655831591.17</float>
+                              <float>1657652848.69</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -292,7 +287,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -308,7 +305,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -326,7 +323,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1486990001.36</float>
+                              <float>1655410424.42</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
