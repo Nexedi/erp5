@@ -3,6 +3,9 @@ url_list = [
   "only_office_document_view.js",
   "gadget_officejs_liberator.html",
   "gadget_officejs_liberator.js",
+  "gadget_erp5_page_ojs_oo_about.html",
+  "gadget_erp5_page_ojs_oo_about.js",
+  "gadget_erp5_page_ojs_oo_about.css",
 
   #cloudooo
   "gadget_ojs_cloudooo.html",
