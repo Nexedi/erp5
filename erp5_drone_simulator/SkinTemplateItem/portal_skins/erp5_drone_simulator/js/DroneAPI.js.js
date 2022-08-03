@@ -123,5 +123,11 @@ var DroneAPI = /** @class */ (function () {
         }, 2000);
       }
     };
+    DroneAPI.prototype.getDroneAI = function () {
+      return null;
+    };
+    DroneAPI.prototype.getMaxSpeed = function () {
+      return GAMEPARAMETERS.drone.maxSpeed;
+    };
     return DroneAPI;
 }());

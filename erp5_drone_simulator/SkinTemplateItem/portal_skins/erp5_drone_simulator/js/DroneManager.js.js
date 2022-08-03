@@ -1,5 +1,7 @@
 /// <reference path="./typings/babylon.3.1.d.ts" />
 /// <reference path="./DroneAPI.ts" />
+/// <reference path="./DroneAaileFixeAPI.ts" />
+
 var DroneManager = /** @class */ (function () {
     //*************************************************** CONSTRUCTOR **************************************************
     function DroneManager(scene, id, team, API) {
@@ -159,7 +161,8 @@ var DroneManager = /** @class */ (function () {
             this._maxSpeed = 0;
           }
         } else {
-          this._maxSpeed = GAMEPARAMETERS.drone.maxSpeed;
+          this._maxSpeed = this._API.getMaxSpeed();
+          console.log("API max speed:", this._maxSpeed);
         }
         this._canPlay = true;
         this._canCommunicate = true;
@@ -479,6 +482,14 @@ var DroneManager = /** @class */ (function () {
      */
     DroneManager.prototype.reportHumanPosition = function (position) {
         this._API._gameManager.reportHumanPosition(position);
+    };
+    /**
+     * get log flight parameters
+     */
+    DroneManager.prototype.getLogFlightParameters = function () {
+        if (this._API.getLogFlightParameters)
+          return this._API.getLogFlightParameters();
+        return null;
     };
     //#endregion
     //#endregion
