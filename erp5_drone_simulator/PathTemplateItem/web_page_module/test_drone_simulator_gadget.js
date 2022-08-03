@@ -11,9 +11,7 @@
     LOG_KEY = "lp_loiter", //LP first log
     //LOG_KEY = "lp_bounce", //LP bounce log
     MAP_SIZE = 1000,
-    MIN_HEIGHT = 10,
-    DESTINATION_LON = 14.25334942966329,
-    DESTINATION_LAT = 45.64492790560583,
+    MIN_HEIGHT = 15,
     MIN_X,
     MAX_X,
     MIN_Y,
@@ -192,7 +190,8 @@
             lat, lon, x, y, position, min_lon = 99999, min_lat = 99999,
             max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
             path_point, average_speed = 0, flight_time, log_interval_time,
-            previous_log_time, height, timestamp;
+            previous_log_time, height, timestamp, destination_lon,
+            destination_lat;
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -238,17 +237,19 @@
                 previous_log_time;
             }
             previous_log_time = parseInt(splitted_log_entry[0], 10);
-            if (i === log_entry_list.length - 1) {
-              end_time = timestamp;
-            }
             average_speed += parseFloat(splitted_log_entry[8]);
             lat = parseFloat(splitted_log_entry[1]);
             lon = parseFloat(splitted_log_entry[2]);
+            if (i === log_entry_list.length - 1) {
+              destination_lon = lon;
+              destination_lat = lat;
+              end_time = timestamp;
+            }
             height = parseFloat(splitted_log_entry[4]);
-            if (height < 0) {
+            if (height < MIN_HEIGHT) {
               height = MIN_HEIGHT;
             } else {
-              height = MIN_HEIGHT + height;
+              height = height;
             }
             x = longitudToX(lon);
             y = latitudeToY(lat);
@@ -322,8 +323,8 @@
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
           //flight destination
-          var destination_x = longitudToX(DESTINATION_LON),
-            destination_y = latitudeToY(DESTINATION_LAT),
+          var destination_x = longitudToX(destination_lon),
+            destination_y = latitudeToY(destination_lat),
             destination_pos = normalizeToMap(destination_x, destination_y);
           options.json_map.randomSpawn.rightTeam.position.x = destination_pos[0];
           options.json_map.randomSpawn.rightTeam.position.y = destination_pos[1];
