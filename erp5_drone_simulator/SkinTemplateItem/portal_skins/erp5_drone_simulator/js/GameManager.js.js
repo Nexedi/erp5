@@ -4,9 +4,7 @@
 /// <reference path="./MapManager.ts" />
 /// <reference path="./typings/babylon.gui.d.ts" />
 
-var GAMEPARAMETERS = {},
-  MIN_HEIGHT = 9,
-  MAX_HEIGHT = 220;
+var GAMEPARAMETERS = {};
 
 var GameManager = /** @class */ (function (console) {
     var browser_console = console,
@@ -427,7 +425,7 @@ var GameManager = /** @class */ (function (console) {
      */
     GameManager.prototype._checkCollisionWithFloor = function (drone) {
         if (drone.infosMesh) {
-            if (drone.position.z < MIN_HEIGHT) {
+            if (drone.position.z < drone.getMinHeight()) {
                 return true;
             }
         }
@@ -439,7 +437,7 @@ var GameManager = /** @class */ (function (console) {
      */
     GameManager.prototype._checkDroneOut = function (drone) {
         if (drone.position !== null) {
-            if (drone.position.z > MAX_HEIGHT) {
+            if (drone.position.z > drone.getMaxHeight()) {
               return true;
             }
             return BABYLON.Vector3.Distance(drone.position, BABYLON.Vector3.Zero()) > GAMEPARAMETERS.distances.control;

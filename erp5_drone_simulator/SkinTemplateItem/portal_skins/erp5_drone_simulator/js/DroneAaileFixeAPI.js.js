@@ -163,6 +163,12 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
       return 9999;
     };
+    DroneAaileFixeAPI.prototype.getMinHeight = function () {
+      return 9;
+    };
+    DroneAaileFixeAPI.prototype.getMaxHeight = function () {
+      return 220;
+    };
     DroneAaileFixeAPI.prototype.getLogFlightParameters = function () {
       return this._log_flight_parameters;
     };

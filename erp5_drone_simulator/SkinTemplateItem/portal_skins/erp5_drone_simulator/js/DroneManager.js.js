@@ -431,6 +431,18 @@ var DroneManager = /** @class */ (function () {
     //#endregion
     //#region -- Game informations
     /**
+     * Get drone max height
+     */
+    DroneManager.prototype.getMaxHeight = function () {
+        return this._API.getMaxHeight();
+    };
+    /**
+     * Get drone min height
+     */
+    DroneManager.prototype.getMinHeight = function () {
+        return this._API.getMinHeight();
+    };
+    /**
      * Get other drone infos
      * @param id If no id, return all drones infos
      */

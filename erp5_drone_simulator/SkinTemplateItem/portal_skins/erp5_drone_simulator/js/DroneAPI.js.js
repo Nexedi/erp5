@@ -123,6 +123,12 @@ var DroneAPI = /** @class */ (function () {
         }, 2000);
       }
     };
+    DroneAPI.prototype.getMinHeight = function () {
+      return 9;
+    };
+    DroneAPI.prototype.getMaxHeight = function () {
+      return 220;
+    };
     DroneAPI.prototype.getDroneAI = function () {
       return null;
     };
