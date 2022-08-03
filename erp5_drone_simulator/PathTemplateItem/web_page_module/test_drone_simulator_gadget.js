@@ -18,7 +18,8 @@
     MAX_X,
     MIN_Y,
     MAX_Y,
-    log_point_list = [];
+    log_point_list = [],
+    converted_log_point_list = [];
 
   function longitudToX(lon) {
     return (MAP_SIZE / 360.0) * (180 + lon);
@@ -191,7 +192,7 @@
             lat, lon, x, y, position, min_lon = 99999, min_lat = 99999,
             max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
             path_point, average_speed = 0, flight_time, log_interval_time,
-            previous_log_time, height;
+            previous_log_time, height, timestamp;
           for (i = 0; i < line_list.length; i += 1) {
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
@@ -228,16 +229,17 @@
           MAX_Y = latitudeToY(max_lat);
           for (i = 0; i < log_entry_list.length; i += 1) {
             splitted_log_entry = log_entry_list[i].split(";");
+            timestamp = parseInt(splitted_log_entry[0], 10);
             if (i === 0) {
               log_interval_time = 0;
-              start_time = parseInt(splitted_log_entry[0], 10);
+              start_time = timestamp;
             } else {
               log_interval_time += parseInt(splitted_log_entry[0], 10) -
                 previous_log_time;
             }
             previous_log_time = parseInt(splitted_log_entry[0], 10);
             if (i === log_entry_list.length - 1) {
-              end_time = parseInt(splitted_log_entry[0], 10);
+              end_time = timestamp;
             }
             average_speed += parseFloat(splitted_log_entry[8]);
             lat = parseFloat(splitted_log_entry[1]);
@@ -279,13 +281,17 @@
                   "r": 0,
                   "g": 255,
                   "b": 0
-                }
+                },
+                "timestamp": timestamp
               };
               path_point_list.push(path_point);
             }
+            converted_log_point_list.push([position[0],
+                                          position[1],
+                                          height, timestamp]);
             log_point_list.push([parseFloat(splitted_log_entry[1]),
                                 parseFloat(splitted_log_entry[2]),
-                                height]);
+                                height, timestamp]);
           }
           average_speed = average_speed / log_entry_list.length;
           log_interval_time = log_interval_time / log_entry_list.length;
@@ -302,7 +308,9 @@
             flight_time: flight_time,
             average_speed: average_speed,
             log_interval_time: log_interval_time,
-            path: path_point_list
+            path: path_point_list,
+            full_log: log_point_list,
+            converted_log_point_list: converted_log_point_list
           };
           options.json_map.drone.maxSpeed = average_speed * 1.01;
           //TODO move obstacles to logFlight
