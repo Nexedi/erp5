@@ -59,13 +59,6 @@ var DroneAPI = /** @class */ (function () {
         if (["gameTime", "mapSize", "teamSize", "derive", "meteo", "initialHumanAreaPosition"].includes(name))
           return this._gameManager.gameParameter[name];
     };
-    DroneAPI.prototype.getMapInfos = function () {
-      return {
-        width: GAMEPARAMETERS.mapSize.width,
-        depth: GAMEPARAMETERS.mapSize.depth,
-        height: GAMEPARAMETERS.mapSize.height
-      };
-    };
     DroneAPI.prototype._isWithinDroneView = function (drone_position, element_position) {
         // Check if element is under the drone cone-view
         var angle = GAMEPARAMETERS.drone.viewAngle ? GAMEPARAMETERS.drone.viewAngle : 60,

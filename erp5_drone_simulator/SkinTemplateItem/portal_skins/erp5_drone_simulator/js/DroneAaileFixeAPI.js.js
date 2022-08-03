@@ -60,13 +60,6 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         if (["gameTime", "mapSize", "teamSize", "derive", "meteo", "initialHumanAreaPosition"].includes(name))
           return this._gameManager.gameParameter[name];
     };
-    DroneAaileFixeAPI.prototype.getMapInfos = function () {
-      return {
-        width: GAMEPARAMETERS.mapSize.width,
-        depth: GAMEPARAMETERS.mapSize.depth,
-        height: GAMEPARAMETERS.mapSize.height
-      };
-    };
     DroneAaileFixeAPI.prototype._isWithinDroneView = function (drone_position, element_position) {
         // Check if element is under the drone cone-view
         var angle = GAMEPARAMETERS.drone.viewAngle ? GAMEPARAMETERS.drone.viewAngle : 60,

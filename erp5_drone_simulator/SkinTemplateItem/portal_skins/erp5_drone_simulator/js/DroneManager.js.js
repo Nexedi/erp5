@@ -443,15 +443,6 @@ var DroneManager = /** @class */ (function () {
         return this._API.getMinHeight();
     };
     /**
-     * Get other drone infos
-     * @param id If no id, return all drones infos
-     */
-    DroneManager.prototype.getDroneInfos = function (id) {
-        if (!this._canCommunicate)
-            return;
-        return this._API.getDroneInfos(this.infosMesh.position, id, this._id);
-    };
-    /**
      * Get a game parameter by name
      * @param name Name of the parameter to retrieve
      */
@@ -459,14 +450,6 @@ var DroneManager = /** @class */ (function () {
         if (!this._canCommunicate)
             return;
         return this._API.getGameParameter(name);
-    };
-    /**
-     * Get the map
-     */
-    DroneManager.prototype.getMapInfos = function () {
-        if (!this._canCommunicate)
-            return;
-        return this._API.getMapInfos();
     };
     /**
      * get if drone detects the human position
