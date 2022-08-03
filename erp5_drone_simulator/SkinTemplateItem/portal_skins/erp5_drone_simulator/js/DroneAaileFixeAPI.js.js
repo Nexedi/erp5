@@ -136,7 +136,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         '};' +
         'me.onUpdate = function () {' +
         'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
-        'if (distance([me.position.x, me.position.y], next_checkpoint) < 10) {' +
+        'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
         'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
         'time_elapsed = new Date() - me.startTime;' +
         'if (time_elapsed < log_elapsed) {' +
@@ -150,6 +150,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         'me.last_checkpoint_reached += 1;' +
         'next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
         'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+        '} else {' +
+        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
         '}' +
         '};';
     };
@@ -157,7 +159,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       return 9999;
     };
     DroneAaileFixeAPI.prototype.getMinHeight = function () {
-      return 9;
+      return 0;
     };
     DroneAaileFixeAPI.prototype.getMaxHeight = function () {
       return 220;
