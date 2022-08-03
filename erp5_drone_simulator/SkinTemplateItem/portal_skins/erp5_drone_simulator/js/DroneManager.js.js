@@ -162,7 +162,6 @@ var DroneManager = /** @class */ (function () {
           }
         } else {
           this._maxSpeed = this._API.getMaxSpeed();
-          console.log("API max speed:", this._maxSpeed);
         }
         this._canPlay = true;
         this._canCommunicate = true;
