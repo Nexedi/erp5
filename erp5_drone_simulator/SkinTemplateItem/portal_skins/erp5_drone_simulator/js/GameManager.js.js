@@ -3,9 +3,8 @@
 /// <reference path="./DroneManager.ts" />
 /// <reference path="./MapManager.ts" />
 /// <reference path="./typings/babylon.gui.d.ts" />
-var GAMEPARAMETERS = {},
-  MIN_HEIGHT = 9,
-  MAX_HEIGHT = 120;
+
+var GAMEPARAMETERS = {};
 
 var GameManager = /** @class */ (function (console) {
     var browser_console = console,
@@ -63,6 +62,10 @@ var GameManager = /** @class */ (function (console) {
           new BABYLON.Color3(0, 0, 255),
           new BABYLON.Color3(255, 0, 0)
         ];
+        this.APIs_dict = {
+          DroneAaileFixeAPI: DroneAaileFixeAPI,
+          DroneAPI: DroneAPI
+        };
         // ----------------------------------- CODE ZONES AND PARAMS
         // JIO : AI
         // XXX
@@ -422,7 +425,7 @@ var GameManager = /** @class */ (function (console) {
      */
     GameManager.prototype._checkCollisionWithFloor = function (drone) {
         if (drone.infosMesh) {
-            if (drone.position.z < MIN_HEIGHT) {
+            if (drone.position.z < drone.getMinHeight()) {
                 return true;
             }
         }
@@ -434,7 +437,7 @@ var GameManager = /** @class */ (function (console) {
      */
     GameManager.prototype._checkDroneOut = function (drone) {
         if (drone.position !== null) {
-            if (drone.position.z > MAX_HEIGHT) {
+            if (drone.position.z > drone.getMaxHeight()) {
               return true;
             }
             return BABYLON.Vector3.Distance(drone.position, BABYLON.Vector3.Zero()) > GAMEPARAMETERS.distances.control;
@@ -471,9 +474,13 @@ var GameManager = /** @class */ (function (console) {
         return parameter;
     };
     GameManager.prototype._setSpawnDrone = function (x, y, z, index, api, code, team) {
+        var default_drone_AI = api.getDroneAI();
+        if (default_drone_AI) {
+          code = default_drone_AI;
+        }
         var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, "
             + index + ', "' + team + '", api);'
-            + "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, BABYLON, GAMEPARAMETERS) {"
+            + "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {"
             + "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();"
             + "Date.now = function () {return start_time + drone._tick * 1000/60;}; "
             + "function Date() {if (!(this instanceof Date)) {throw new Error('Missing new operator');} "
@@ -487,7 +494,6 @@ var GameManager = /** @class */ (function (console) {
         }
         base = code_eval;
         code_eval += code + "}; droneMe(Date, drone, Math, {});";
-        //code_eval += code + "}; droneMe(drone, Math, {});";
         if (team == "R") {
             base += "};ctx._teamRight.push(drone)";
             code_eval += "ctx._teamRight.push(drone)";
@@ -546,7 +552,13 @@ var GameManager = /** @class */ (function (console) {
                   }
                   else {
                       position_list.push(position);
-                      this._setSpawnDrone(position.x, position.y, position.z, i, api, code, team);
+                      var lAPI = api;
+                      if (randomSpawn.types) {
+                        if (randomSpawn.types[i] in this.APIs_dict) {
+                          lAPI = new this.APIs_dict[randomSpawn.types[i]](this, "L", GAMEPARAMETERS.logFlight);
+                        }
+                      }
+                      this._setSpawnDrone(position.x, position.y, position.z, i, lAPI, code, team);
                   }
                 }
             }
