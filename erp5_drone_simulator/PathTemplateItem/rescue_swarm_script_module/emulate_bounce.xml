@@ -109,20 +109,6 @@ formatTimeToMinutesAndSeconds = function (time) {\n
 var TAKEOFF_TIME = 52; //seconds\n
 \n
 me.onStart = function() {\n
-  /*var map_size = me.getGameParameter("mapSize"),\n
-    start_x = me.position.x,\n
-    start_y = me.position.y,\n
-    max_x = map_size.width / 2,\n
-    max_y = map_size.depth / 2,\n
-    dist_y = max_y - start_y,\n
-    y_check = dist_y / 4;\n
-  me.checkpoint_list = [\n
-      [max_x, start_y + y_check],\n
-      [-max_x, start_y + y_check*2],\n
-      [max_x, start_y + y_check*3],\n
-      [-max_x, start_y + y_check*4 - 100],\n
-      [0, max_y]\n
-    ];*/\n
   me.startTime = new Date();\n
   me.land = false;\n
   me.stableHeight = 114;\n
@@ -319,7 +305,7 @@ me.onUpdate = function () {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.59054.5634.58828</string> </value>
+                      <value> <string>1002.5064.32215.45499</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -337,7 +323,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1659029987.43</float>
+                              <float>1659716398.23</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
