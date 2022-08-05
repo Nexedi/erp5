@@ -256,6 +256,7 @@
             position = normalizeToMap(x, y);
             if (!previous) {
               start_position = position;
+              start_position.push(height);
               previous = position;
             }
             dist = distance(previous, position);
@@ -313,11 +314,12 @@
             full_log: log_point_list,
             converted_log_point_list: converted_log_point_list
           };
-          options.json_map.drone.maxSpeed = average_speed * 1.01;
+          options.json_map.drone.maxSpeed = average_speed;
           //TODO move obstacles to logFlight
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
+          options.json_map.randomSpawn.leftTeam.position.z = start_position[2];
           options.json_map.gameTime = flight_time / 1000;
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
@@ -325,9 +327,9 @@
           //flight destination
           var destination_x = longitudToX(destination_lon),
             destination_y = latitudeToY(destination_lat),
-            destination_pos = normalizeToMap(destination_x, destination_y);
-          options.json_map.randomSpawn.rightTeam.position.x = destination_pos[0];
-          options.json_map.randomSpawn.rightTeam.position.y = destination_pos[1];
+            destination = normalizeToMap(destination_x, destination_y);
+          options.json_map.randomSpawn.rightTeam.position.x = destination[0];
+          options.json_map.randomSpawn.rightTeam.position.y = destination[1];
           return gadget.changeState({
             script_content: options.script_content,
             json_map: options.json_map
