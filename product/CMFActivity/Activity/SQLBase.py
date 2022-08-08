@@ -415,31 +415,31 @@ CREATE TABLE %s (
     query = activity_tool.getSQLConnection().query
     if node_set is None:
       result = query(
-        b"SELECT 3*priority, date "
-        b"FROM %s "
-        b"WHERE "
-          b"processing_node=0 AND "
-          b"date <= UTC_TIMESTAMP(6) "
-        b"ORDER BY priority, date "
-        b"LIMIT 1" % str2bytes(self.sql_table),
+        b"SELECT 3*priority, date"
+        b" FROM %s"
+        b" WHERE"
+        b"  processing_node=0 AND"
+        b"  date <= UTC_TIMESTAMP(6)"
+        b" ORDER BY priority, date"
+        b" LIMIT 1" % str2bytes(self.sql_table),
         0,
       )[1]
     else:
       subquery = (b"("
-        b"SELECT 3*priority{} AS effective_priority, date "
-        b"FROM %s "
-        b"WHERE "
-          b"{} AND "
-          b"processing_node=0 AND "
-          b"date <= UTC_TIMESTAMP(6) "
-        b"ORDER BY priority, date "
-        b"LIMIT 1"
+        b"SELECT 3*priority{} AS effective_priority, date"
+        b" FROM %s"
+        b" WHERE"
+        b"  {} AND"
+        b"  processing_node=0 AND"
+        b"  date <= UTC_TIMESTAMP(6)"
+        b" ORDER BY priority, date"
+        b" LIMIT 1"
       b")" % self.sql_table).format
       result = query(
-        b"SELECT * "
-        b"FROM (%s) AS t "
-        b"ORDER BY effective_priority, date "
-        b"LIMIT 1" % (
+        b"SELECT *"
+        b" FROM (%s) AS t"
+        b" ORDER BY effective_priority, date"
+        b" LIMIT 1" % (
           b" UNION ALL ".join(
             chain(
               (
@@ -769,33 +769,33 @@ CREATE TABLE %s (
       # time).
       if node_set is None:
         result = Results(query(
-          b"SELECT * "
-          b"FROM %s "
-          b"WHERE "
-            b"processing_node=0 AND "
-            b"%s%s "
-          b"ORDER BY priority, date "
-          b"LIMIT %i "
-          b"FOR UPDATE" % args,
+          b"SELECT *"
+          b" FROM %s"
+          b" WHERE"
+          b"  processing_node=0 AND"
+          b"  %s%s"
+          b" ORDER BY priority, date"
+          b" LIMIT %i"
+          b" FOR UPDATE" % args,
           0,
         ))
       else:
         subquery = (b"("
-          b"SELECT *, 3*priority{} AS effective_priority "
-          b"FROM %s "
-          b"WHERE "
-            b"{} AND "
-            b"processing_node=0 AND "
-            b"%s%s "
-          b"ORDER BY priority, date "
-          b"LIMIT %i "
-          b"FOR UPDATE"
+          b"SELECT *, 3*priority{} AS effective_priority"
+          b" FROM %s"
+          b" WHERE"
+          b"  {} AND"
+          b"  processing_node=0 AND"
+          b"  %s%s"
+          b" ORDER BY priority, date"
+          b" LIMIT %i"
+          b" FOR UPDATE"
         b")" % args).format
         result = Results(query(
-          b"SELECT * "
-          b"FROM (%s) AS t "
-          b"ORDER BY effective_priority, date "
-          b"LIMIT %i" % (
+          b"SELECT *"
+          b" FROM (%s) AS t"
+          b" ORDER BY effective_priority, date"
+          b" LIMIT %i" % (
             b" UNION ALL ".join(
               chain(
                 (
