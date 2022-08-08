@@ -1,4 +1,6 @@
 url_list = [
+  "leaflet.js",
+  "leaflet.css",
   "dygraph.js",
   "dygraph.css",
   "gadget_erp5_eci_dygraph.html",
@@ -42,6 +44,7 @@ url_list = [
   "gadget_erp5_page_eci_solution_list.js",
   "gadget_erp5_page_eci_success_case_list.js",
   "gadget_erp5_eci.css",
+  "css/flag-icons.css",
   "flags/4x3/ac.svg",
   "flags/4x3/ad.svg",
   "flags/4x3/ae.svg",
