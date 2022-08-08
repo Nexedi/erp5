@@ -49,13 +49,13 @@ var GameManager = /** @class */ (function (console) {
         this.finish_deferred = null;
         if (!simulation_speed) { simulation_speed = 5; }
         this._max_step_animation_frame = simulation_speed;
-        this._last_position_print = [];
+        this._last_position_drawn = [];
         this._log_count = [];
         this._flight_log = [];
         for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
           this._flight_log[count] = [];
           this._log_count[count] = 0;
-          this._last_position_print[count] = null;
+          this._last_position_drawn[count] = null;
         }
         this._colors = [
           new BABYLON.Color3(255, 165, 0),
@@ -292,26 +292,26 @@ var GameManager = /** @class */ (function (console) {
             var drone_position_x = this._teamLeft[count]._controlMesh.position.x,
               drone_position_z = this._teamLeft[count]._controlMesh.position.y,
               drone_position_y = this._teamLeft[count]._controlMesh.position.z;
-            if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.log) {
+            if (GAMEPARAMETERS.compareFlights && GAMEPARAMETERS.compareFlights.log) {
               if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
-                this._log_count[count] += GAMEPARAMETERS.logFlight.log_interval_time;
+                this._log_count[count] += GAMEPARAMETERS.compareFlights.log_interval_time;
                 //convert x-y coordinates into latitud-longitude
-                var lon = drone_position_x + GAMEPARAMETERS.logFlight.map_width / 2;
+                var lon = drone_position_x + GAMEPARAMETERS.compareFlights.map_width / 2;
                 lon = lon / 1000;
-                lon = lon * (GAMEPARAMETERS.logFlight.max_x - GAMEPARAMETERS.logFlight.min_x) + GAMEPARAMETERS.logFlight.min_x;
-                lon = lon / (GAMEPARAMETERS.logFlight.map_width / 360.0) - 180;
-                var lat = drone_position_y + GAMEPARAMETERS.logFlight.map_height / 2;
+                lon = lon * (GAMEPARAMETERS.compareFlights.max_x - GAMEPARAMETERS.compareFlights.min_x) + GAMEPARAMETERS.compareFlights.min_x;
+                lon = lon / (GAMEPARAMETERS.compareFlights.map_width / 360.0) - 180;
+                var lat = drone_position_y + GAMEPARAMETERS.compareFlights.map_height / 2;
                 lat = lat / 1000;
-                lat = lat * (GAMEPARAMETERS.logFlight.max_y - GAMEPARAMETERS.logFlight.min_y) + GAMEPARAMETERS.logFlight.min_y;
-                lat = 90 - lat / (GAMEPARAMETERS.logFlight.map_height / 180.0);
+                lat = lat * (GAMEPARAMETERS.compareFlights.max_y - GAMEPARAMETERS.compareFlights.min_y) + GAMEPARAMETERS.compareFlights.min_y;
+                lat = 90 - lat / (GAMEPARAMETERS.compareFlights.map_height / 180.0);
                 this._flight_log[count].push([lat, lon, drone_position_z]);
                 //console.log([0,lat,lon,0,drone_position_z,0,0,0,0,0,0].join(';'));
               }
             }
-            if (GAMEPARAMETERS.logFlight && GAMEPARAMETERS.logFlight.print) {
-            //print drone position every second
-              if (this._last_position_print[count] !== seconds) {
-                this._last_position_print[count] = seconds;
+            if (GAMEPARAMETERS.compareFlights && GAMEPARAMETERS.compareFlights.draw) {
+            //draw drone position every second
+              if (this._last_position_drawn[count] !== seconds) {
+                this._last_position_drawn[count] = seconds;
                 var position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" + seconds, {
                     'diameterX': 3.5,
                     'diameterY': 3.5,
@@ -334,7 +334,7 @@ var GameManager = /** @class */ (function (console) {
      * @param drone2
      */
     GameManager.prototype._checkCollision = function (drone, other) {
-        //TODO add a flag in GAMEPARAMETERS.logFlight to enable/disable this
+        //TODO add a flag in GAMEPARAMETERS.compareFlights to enable/disable this
         //ignore drone collision
         return;
         if (drone.colliderMesh && other.colliderMesh
@@ -555,7 +555,7 @@ var GameManager = /** @class */ (function (console) {
                       var lAPI = api;
                       if (randomSpawn.types) {
                         if (randomSpawn.types[i] in this.APIs_dict) {
-                          lAPI = new this.APIs_dict[randomSpawn.types[i]](this, "L", GAMEPARAMETERS.logFlight);
+                          lAPI = new this.APIs_dict[randomSpawn.types[i]](this, "L", GAMEPARAMETERS.compareFlights);
                         }
                       }
                       this._setSpawnDrone(position.x, position.y, position.z, i, lAPI, code, team);
@@ -627,7 +627,7 @@ var GameManager = /** @class */ (function (console) {
         //cap camera distance to 1km
         if (radius > 800) radius = 800;
         var target = new BABYLON.Vector3(vector_x, 0, vector_y);
-        if (GAMEPARAMETERS.logFlight) {
+        if (GAMEPARAMETERS.compareFlights) {
           target = BABYLON.Vector3.Zero();
         }
         camera = new BABYLON.ArcRotateCamera("camera", x_rotation, 1.25, radius, target, this._scene);
