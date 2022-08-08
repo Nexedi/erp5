@@ -417,9 +417,8 @@ CREATE TABLE %s (
       result = query(
         b"SELECT 3*priority, date"
         b" FROM %s"
-        b" WHERE"
-        b"  processing_node=0 AND"
-        b"  date <= UTC_TIMESTAMP(6)"
+        b" WHERE processing_node=0"
+        b"   AND date <= UTC_TIMESTAMP(6)"
         b" ORDER BY priority, date"
         b" LIMIT 1" % str2bytes(self.sql_table),
         0,
@@ -428,10 +427,9 @@ CREATE TABLE %s (
       subquery = (b"("
         b"SELECT 3*priority{} AS effective_priority, date"
         b" FROM %s"
-        b" WHERE"
-        b"  {} AND"
-        b"  processing_node=0 AND"
-        b"  date <= UTC_TIMESTAMP(6)"
+        b" WHERE {}"
+        b"   AND processing_node=0"
+        b"   AND date <= UTC_TIMESTAMP(6)"
         b" ORDER BY priority, date"
         b" LIMIT 1"
       b")" % self.sql_table).format
@@ -771,9 +769,8 @@ CREATE TABLE %s (
         result = Results(query(
           b"SELECT *"
           b" FROM %s"
-          b" WHERE"
-          b"  processing_node=0 AND"
-          b"  %s%s"
+          b" WHERE processing_node=0"
+          b"   AND %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
           b" FOR UPDATE" % args,
@@ -783,10 +780,9 @@ CREATE TABLE %s (
         subquery = (b"("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
-          b" WHERE"
-          b"  {} AND"
-          b"  processing_node=0 AND"
-          b"  %s%s"
+          b" WHERE {}"
+          b"   AND processing_node=0"
+          b"   AND %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
           b" FOR UPDATE"
