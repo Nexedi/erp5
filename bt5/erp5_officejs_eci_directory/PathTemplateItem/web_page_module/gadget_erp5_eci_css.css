@@ -949,7 +949,7 @@ div[data-gadget-scope='header'] .ui-header {
 	.financial_listbox tbody tr td:not(:first-child) {
 		margin-left: 5em;
 	}
-
+	/*
 	.financial_listbox tbody tr td:nth-child(2):before {
 		content: "Staff";
 		position: absolute;
@@ -973,6 +973,7 @@ div[data-gadget-scope='header'] .ui-header {
 		position: absolute;
 		left: .5em;
 	}
+	*/
 }
 
 /* align header and background colors */
@@ -2041,4 +2042,70 @@ div[data-gadget-scope='header'] .ui-header > .ui-btn-right button.ui-icon-warnin
 div[data-gadget-scope='header'] .ui-header > .ui-btn-right a.ui-icon-warning {
   background-color: #167297;
   color: #ffffff;
+}
+.document_table .financial-table > tbody > tr {
+	border-bottom: 1px solid #d1d1d1;
+}
+@media not screen and (min-width: 45em) {
+	.document_table .financial-table > tbody > tr > td:first-of-type {
+		padding: 0.5em 0 0.5em 0;
+	    text-align: center;
+	    background: #f1f1f1;
+	    margin: 0;
+	    font-size: 12pt;
+	}
+	.document_table .financial-table > tbody > tr > td:not(:first-of-type) {
+		padding: 0;
+		margin: 0;
+	}
+	.display-financial-widget-in-listbox table {
+		width: 100%;
+		table-layout: fixed;
+	}
+	.display-financial-widget-in-listbox .ui-grid-container .ui-content-header-plain.ui-bar-c {
+		margin: 0;
+		padding: 0;
+	}
+	/*
+	.display-financial-widget-in-listbox table tbody tr td:first-of-type {
+		width: 100%;
+		background: red;
+	}
+	*/
+	.display-financial-widget-in-listbox table {
+		table-layout: fixed;
+	}
+	.display-financial-widget-in-listbox table tbody tr:first-child {
+		/* display: table-row; */
+	}
+	.display-financial-widget-in-listbox table tbody tr:first-child th,
+	.display-financial-widget-in-listbox table tbody tr td {
+		display: table-cell !important;
+		font-size: 9pt;
+	}
+	.display-financial-widget-in-listbox table tbody tr td,
+	.display-financial-widget-in-listbox table tbody tr th {
+		width: 10vw !important;
+		max-width: 10vw;
+		positon: relative;
+	}
+	.display-financial-widget-in-listbox table {
+		table-layout: fixed;
+		width: 100vw;
+	}
+	.display-financial-widget-in-listbox table tbody tr:not(:nth-child(2)) td:not(:first-of-type) {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow:
+		ellipsis;
+		padding-right: 6px;
+		position: relative !important;
+	}
+	.display-financial-widget-in-listbox table tbody tr:not(:nth-child(2)) td:not(:first-of-type):after {
+		content: "kâ‚¬";
+		background: #ffffff;
+		position: absolute;
+		left: 0;
+		margin-left: 17pt;
+	}
 }
