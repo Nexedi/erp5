@@ -251,7 +251,7 @@
                 query: query
               })
                 .push(function (result) {
-                  container.querySelector('a[data-value="' + data + '"]').textContent = data + '(' + result.data.total_rows + ')';
+                  container.querySelector('a[data-value="' + data + '"]').textContent = data + ' (' + result.data.total_rows + ')';
                   return RSVP.delay(10);
                 });
             }
