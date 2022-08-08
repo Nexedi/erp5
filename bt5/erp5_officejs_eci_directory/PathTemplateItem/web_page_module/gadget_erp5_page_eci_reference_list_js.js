@@ -103,7 +103,8 @@
               'selection_domain_reference_country',
               'selection_domain_publisher',
               'selection_domain_similar_solution',
-              'selection_domain_country'
+              'selection_domain_country',
+              'selection_domain_category'
             ],
             query: 'portal_type:"solution"'
           });
@@ -119,7 +120,8 @@
               country = getUniqueArray(result.data.rows, 'selection_domain_reference_country'),
               publisher = getUniqueArray(result.data.rows, 'selection_domain_publisher'),
               similar_solution = getUniqueArray(result.data.rows, 'selection_domain_similar_solution'),
-              solution_country = getUniqueArray(result.data.rows, 'selection_domain_country');
+              solution_country = getUniqueArray(result.data.rows, 'selection_domain_country'),
+              category = getUniqueArray(result.data.rows, 'selection_domain_category');
 
 
           gadget.domain_root_list = [
@@ -127,14 +129,16 @@
             ['reference_country', 'Country'],
             ['publisher', 'Provider'],
             ['similar_solution', 'Similar solution'],
-            ['country', 'Provider Country']
+            ['country', 'Provider Country'],
+            ['category', 'Category']
           ];
           gadget.domain_dict = {
             reference_industry: industry.map(data => [data, data]),
             reference_country: country.map(data => [data, data]),
             publisher: publisher.map(data => [data, data]),
             similar_solution: similar_solution.map(data => [data, data]),
-            country: solution_country.map(data => [data, data])
+            country: solution_country.map(data => [data, data]),
+            category: category.map(data => [data, data])
           };
           return RSVP.all([
             gadget.updateHeader({
