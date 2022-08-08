@@ -112,8 +112,6 @@
         map: gadget.state.json_map,
         autorun: true,
         script: gadget.state.script_content,
-        print_drone_flight: true,
-        log_drone_flight: true,
         simulation_speed: SIMULATION_SPEED
       });
       queue
@@ -263,7 +261,7 @@
             if (dist > 15) {
               previous = position;
               path_point = {
-                "type": "sphere",
+                "type": "box",
                 "position": {
                   "x": position[0],
                   "y": position[1],
@@ -298,9 +296,9 @@
           average_speed = average_speed / log_entry_list.length;
           log_interval_time = log_interval_time / log_entry_list.length;
           flight_time = end_time - start_time;
-          options.json_map.logFlight = {
+          options.json_map.compareFlights = {
             log: true,
-            print: true,
+            draw: true,
             map_width: MAP_SIZE,
             map_height: MAP_SIZE,
             min_x: MIN_X,
