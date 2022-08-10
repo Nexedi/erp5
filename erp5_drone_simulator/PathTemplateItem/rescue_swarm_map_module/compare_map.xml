@@ -150,6 +150,7 @@
       },\n
       "types": [\n
         "DroneAPI",\n
+        "DroneLogAPI",\n
         "DroneAaileFixeAPI"\n
       ]\n
     },\n
@@ -298,7 +299,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.64805.11322.37819</string> </value>
+                      <value> <string>1001.64959.34903.30924</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -316,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1659375331.95</float>
+                              <float>1660143472.05</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
