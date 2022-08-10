@@ -1,5 +1,6 @@
 /// <reference path="./typings/babylon.3.1.d.ts" />
 /// <reference path="./DroneAPI.ts" />
+/// <reference path="./DroneLogAPI.ts" />
 /// <reference path="./DroneAaileFixeAPI.ts" />
 
 var DroneManager = /** @class */ (function () {
@@ -442,6 +443,18 @@ var DroneManager = /** @class */ (function () {
         return this._API.getMinHeight();
     };
     /**
+     * Get drone initial altitude
+     */
+    DroneManager.prototype.getInitialAltitude = function () {
+        return this._API.getInitialAltitude();
+    };
+    /**
+     * Get drone absolute altitude
+     */
+    DroneManager.prototype.getAltitudeAbs = function () {
+        return this._API.getAltitudeAbs();
+    };
+    /**
      * Get a game parameter by name
      * @param name Name of the parameter to retrieve
      */
@@ -469,6 +482,13 @@ var DroneManager = /** @class */ (function () {
             z:this._controlMesh.position.y
           };
         return null;
+    };
+    /**
+     * Set the drone altitude
+     * @param altitude information to be set
+     */
+    DroneManager.prototype.setAltitude = function (altitude) {
+        this._API.setAltitude(altitude);
     };
     /**
      * Set the reported human position

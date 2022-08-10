@@ -116,6 +116,16 @@ var DroneAPI = /** @class */ (function () {
         }, 2000);
       }
     };
+    DroneAPI.prototype.setAltitude = function (altitude) {
+      //TODO
+      return;
+    };
+    DroneAPI.prototype.getInitialAltitude = function () {
+      return 0;
+    };
+    DroneAPI.prototype.getAltitudeAbs = function () {
+      return 0;
+    };
     DroneAPI.prototype.getMinHeight = function () {
       return 9;
     };
