@@ -189,8 +189,13 @@
             max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
             path_point, average_speed = 0, flight_time, log_interval_time,
             previous_log_time, height, timestamp, destination_lon,
-            destination_lat;
+            destination_lat, log_header_found, time_offset = 1;
           for (i = 0; i < line_list.length; i += 1) {
+            if (!log_header_found && !line_list[i].includes("timestamp;")) {
+              continue;
+            } else {
+              log_header_found = true;
+            }
             if (line_list[i].indexOf("AMSL") >= 0 ||
                 !line_list[i].includes(";")) {
               continue;
@@ -224,6 +229,15 @@
           MAX_X = longitudToX(max_lon);
           MIN_Y = latitudeToY(min_lat);
           MAX_Y = latitudeToY(max_lat);
+          if (log_entry_list[0] && log_entry_list[1]) {
+            var entry_1 = log_entry_list[0].split(";"),
+              entry_2 = log_entry_list[1].split(";"),
+              interval = parseInt(entry_2[0], 10) - parseInt(entry_1[0], 10);
+            //if interval > 1' then timestamp is in microseconds
+            if (Math.floor(interval / 1000) > 60) {
+              time_offset = 1000;
+            }
+          }
           for (i = 0; i < log_entry_list.length; i += 1) {
             splitted_log_entry = log_entry_list[i].split(";");
             timestamp = parseInt(splitted_log_entry[0], 10);
@@ -231,8 +245,8 @@
               log_interval_time = 0;
               start_time = timestamp;
             } else {
-              log_interval_time += parseInt(splitted_log_entry[0], 10) -
-                previous_log_time;
+              log_interval_time += (parseInt(splitted_log_entry[0], 10) -
+                previous_log_time);
             }
             previous_log_time = parseInt(splitted_log_entry[0], 10);
             average_speed += parseFloat(splitted_log_entry[8]);
@@ -288,14 +302,14 @@
             }
             converted_log_point_list.push([position[0],
                                           position[1],
-                                          height, timestamp]);
+                                          height, timestamp / time_offset]);
             log_point_list.push([parseFloat(splitted_log_entry[1]),
                                 parseFloat(splitted_log_entry[2]),
                                 height, timestamp]);
           }
           average_speed = average_speed / log_entry_list.length;
-          log_interval_time = log_interval_time / log_entry_list.length;
-          flight_time = end_time - start_time;
+          log_interval_time = log_interval_time / log_entry_list.length / time_offset;
+          flight_time = (end_time - start_time) / 1000 / time_offset;
           options.json_map.compareFlights = {
             log: true,
             draw: true,
@@ -313,12 +327,11 @@
             converted_log_point_list: converted_log_point_list
           };
           options.json_map.drone.maxSpeed = average_speed;
-          //TODO move obstacles to logFlight
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
           options.json_map.randomSpawn.leftTeam.position.z = start_position[2];
-          options.json_map.gameTime = flight_time / 1000;
+          options.json_map.gameTime = flight_time;
           //give map some margin from the flight
           options.json_map.mapSize.width = MAP_SIZE * 1.10;
           options.json_map.mapSize.depth = MAP_SIZE * 1.10;
