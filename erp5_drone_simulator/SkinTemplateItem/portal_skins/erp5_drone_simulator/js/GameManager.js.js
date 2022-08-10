@@ -61,7 +61,8 @@ var GameManager = /** @class */ (function (console) {
           this._colors = [
             new BABYLON.Color3(255, 165, 0),
             new BABYLON.Color3(0, 0, 255),
-            new BABYLON.Color3(255, 0, 0)
+            new BABYLON.Color3(255, 0, 0),
+            new BABYLON.Color3(0, 255, 0)
           ];
         }
         this.APIs_dict = {
