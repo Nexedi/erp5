@@ -395,15 +395,15 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
         if (!this._canPlay)
             return;
-        if(isNaN(x) || isNaN(y) || isNaN(z)){
-          throw new Error('Target coordinates must be numbers');
-        }
-        x -= this._controlMesh.position.x;
-        y -= this._controlMesh.position.z;
-        z -= this._controlMesh.position.y;
+        var drone_position = {
+          x: this._controlMesh.position.x,
+          y: this._controlMesh.position.z,
+          z: this._controlMesh.position.y
+        };
+        var direction = this._API.getDirectionFromCoordinates(x, y, z, drone_position);
         if (this.team == "R")
-            y = -y;
-        this.setDirection(x, y, z);
+            direction.y = -y;
+        this.setDirection(direction.x, direction.y, direction.z);
         this.setAcceleration(this._maxAcceleration);
     };
     //#endregion

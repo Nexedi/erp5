@@ -116,6 +116,21 @@ var DroneAPI = /** @class */ (function () {
         }, 2000);
       }
     };
+    DroneAPI.prototype.getDirectionFromCoordinates = function (x, y, z, drone_position) {
+      if(isNaN(x) || isNaN(y) || isNaN(z)){
+        throw new Error('Target coordinates must be numbers');
+      }
+      x -= drone_position.x;
+      y -= drone_position.y;
+      z -= drone_position.z;
+      if (this._team == "R")
+        y = -y;
+      return {
+        x: x,
+        y: y,
+        z: z
+      };
+    };
     DroneAPI.prototype.setAltitude = function (altitude) {
       //TODO
       return;

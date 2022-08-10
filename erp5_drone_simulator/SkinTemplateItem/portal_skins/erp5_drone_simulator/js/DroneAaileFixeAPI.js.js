@@ -117,6 +117,22 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         }, 2000);
       }
     };
+    DroneAaileFixeAPI.prototype.getDirectionFromCoordinates = function (x, y, z, drone_position) {
+      console.log("target coordinates in DroneAaileFixe");
+      if(isNaN(x) || isNaN(y) || isNaN(z)){
+        throw new Error('Target coordinates must be numbers');
+      }
+      x -= drone_position.x;
+      y -= drone_position.y;
+      z -= drone_position.z;
+      if (this._team == "R")
+        y = -y;
+      return {
+        x: x,
+        y: y,
+        z: z
+      };
+    };
     DroneAaileFixeAPI.prototype.getDroneAI = function () {
       return null;
     };
