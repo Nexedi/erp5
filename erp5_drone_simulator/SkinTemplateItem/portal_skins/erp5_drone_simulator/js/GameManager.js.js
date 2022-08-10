@@ -67,6 +67,7 @@ var GameManager = /** @class */ (function (console) {
         }
         this.APIs_dict = {
           DroneAaileFixeAPI: DroneAaileFixeAPI,
+          DroneLogAPI: DroneLogAPI,
           DroneAPI: DroneAPI
         };
         // ----------------------------------- CODE ZONES AND PARAMS
@@ -491,7 +492,7 @@ var GameManager = /** @class */ (function (console) {
         }
         var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, "
             + index + ', "' + team + '", api);'
-            + "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {"
+            + "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {"
             + "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();"
             + "Date.now = function () {return start_time + drone._tick * 1000/60;}; "
             + "function Date() {if (!(this instanceof Date)) {throw new Error('Missing new operator');} "

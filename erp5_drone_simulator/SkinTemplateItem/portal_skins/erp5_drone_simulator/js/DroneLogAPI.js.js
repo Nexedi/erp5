@@ -1,13 +1,13 @@
 /// <reference path="./GameManager.ts" />
 
-var DroneAaileFixeAPI = /** @class */ (function () {
+var DroneLogAPI = /** @class */ (function () {
     //*************************************************** CONSTRUCTOR **************************************************
-    function DroneAaileFixeAPI(gameManager, team, log_flight_parameters) {
+    function DroneLogAPI(gameManager, team, log_flight_parameters) {
         this._gameManager = gameManager;
         this._team = team;
         this._log_flight_parameters = log_flight_parameters;
     }
-    Object.defineProperty(DroneAaileFixeAPI.prototype, "team", {
+    Object.defineProperty(DroneLogAPI.prototype, "team", {
         //*************************************************** ACCESSOR *****************************************************
         get: function () {
             if (this._team == "L")
@@ -20,7 +20,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     });
     //*************************************************** FUNCTIONS ****************************************************
     //#region ------------------ Internal
-    DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
+    DroneLogAPI.prototype.internal_sendMsg = function (msg, to) {
         var _this = this;
         _this._gameManager.delay(function () {
             if (to < 0) {
@@ -53,14 +53,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     };
     //#endregion
     //#region ------------------ Accessible from AI
-    DroneAaileFixeAPI.prototype.log = function (msg) {
+    DroneLogAPI.prototype.log = function (msg) {
         console.log("API say : " + msg);
     };
-    DroneAaileFixeAPI.prototype.getGameParameter = function (name) {
+    DroneLogAPI.prototype.getGameParameter = function (name) {
         if (["gameTime", "mapSize", "teamSize", "derive", "meteo", "initialHumanAreaPosition"].includes(name))
           return this._gameManager.gameParameter[name];
     };
-    DroneAaileFixeAPI.prototype._isWithinDroneView = function (drone_position, element_position) {
+    DroneLogAPI.prototype._isWithinDroneView = function (drone_position, element_position) {
         // Check if element is under the drone cone-view
         var angle = GAMEPARAMETERS.drone.viewAngle ? GAMEPARAMETERS.drone.viewAngle : 60,
           radius = drone_position.z * Math.tan(angle/2 * Math.PI/180),
@@ -70,13 +70,13 @@ var DroneAaileFixeAPI = /** @class */ (function () {
           return true;
         return false;
     };
-    DroneAaileFixeAPI.prototype._getProbabilityOfDetection = function (drone_position) {
+    DroneLogAPI.prototype._getProbabilityOfDetection = function (drone_position) {
         var h = drone_position.z,
           km = GAMEPARAMETERS.meteo;
           prob = 20 * (1 + (110-h)/25) * km;
         return prob;
     };
-    DroneAaileFixeAPI.prototype.isHumanPositionSpottedCalculation = function (drone) {
+    DroneLogAPI.prototype.isHumanPositionSpottedCalculation = function (drone) {
       var context = this,
         result = false,
         drone_position = drone.infosMesh.position;
@@ -96,7 +96,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       });
       return result;
     };
-    DroneAaileFixeAPI.prototype.isHumanPositionSpotted = function (drone) {
+    DroneLogAPI.prototype.isHumanPositionSpotted = function (drone) {
       var context = this,
         human_detected;
 
@@ -117,30 +117,65 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         }, 2000);
       }
     };
-    DroneAaileFixeAPI.prototype.getDroneAI = function () {
-      return null;
+    DroneLogAPI.prototype.getDroneAI = function () {
+      return 'function distance(p1, p2) {' +
+        'var a = p1[0] - p2[0],' +
+        'b = p1[1] - p2[1];' +
+        'return Math.sqrt(a * a + b * b);' +
+        '}' +
+        'me.onStart = function() {' +
+        'if (!me.getLogFlightParameters())' +
+        'throw "DroneAaileFixe API must implement getLogFlightParameters";' +
+        'me.logFlightParameters = me.getLogFlightParameters();' +
+        'me.checkpoint_list = me.logFlightParameters.converted_log_point_list;' +
+        'me.startTime = new Date();' +
+        'me.initTimestamp = me.logFlightParameters.converted_log_point_list[0][3];' +
+        'me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
+        'me.last_checkpoint_reached = -1;' +
+        'me.setAcceleration(10);' +
+        '};' +
+        'me.onUpdate = function () {' +
+        'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
+        'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
+        'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
+        'time_elapsed = new Date() - me.startTime;' +
+        'if (time_elapsed < log_elapsed) {' +
+        'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
+        'return;' +
+        '}' +
+        'if (me.last_checkpoint_reached + 1 === me.checkpoint_list.length - 1) {' +
+        'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
+        'return;' +
+        '}' +
+        'me.last_checkpoint_reached += 1;' +
+        'next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
+        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+        '} else {' +
+        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+        '}' +
+        '};';
     };
-    DroneAaileFixeAPI.prototype.setAltitude = function (altitude) {
+    DroneLogAPI.prototype.setAltitude = function (altitude) {
       //TODO
       return;
     };
-    DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
+    DroneLogAPI.prototype.getMaxSpeed = function () {
       return 3000;
     };
-    DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
+    DroneLogAPI.prototype.getInitialAltitude = function () {
       return 0;
     };
-    DroneAaileFixeAPI.prototype.getAltitudeAbs = function () {
+    DroneLogAPI.prototype.getAltitudeAbs = function () {
       return 0;
     };
-    DroneAaileFixeAPI.prototype.getMinHeight = function () {
+    DroneLogAPI.prototype.getMinHeight = function () {
       return 0;
     };
-    DroneAaileFixeAPI.prototype.getMaxHeight = function () {
+    DroneLogAPI.prototype.getMaxHeight = function () {
       return 220;
     };
-    DroneAaileFixeAPI.prototype.getLogFlightParameters = function () {
+    DroneLogAPI.prototype.getLogFlightParameters = function () {
       return this._log_flight_parameters;
     };
-    return DroneAaileFixeAPI;
+    return DroneLogAPI;
 }());
