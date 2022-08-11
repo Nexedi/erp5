@@ -23,6 +23,7 @@ var DroneManager = /** @class */ (function () {
         this._scene = scene;
         this._canUpdate = true;
         this._id = id;
+        this._leader_id = 0;
         this._team = team;
         this._API = API; // var API created on AI evel
         // Create the control mesh
@@ -90,6 +91,12 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype._swapAxe = function (vector) {
         return new BABYLON.Vector3(vector.x, vector.z, vector.y);
     };
+    Object.defineProperty(DroneManager.prototype, "leader_id", {
+        //*************************************************** ACCESSOR *****************************************************
+        get: function () { return this._leader_id; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DroneManager.prototype, "id", {
         //*************************************************** ACCESSOR *****************************************************
         get: function () { return this._id; },
@@ -392,19 +399,22 @@ var DroneManager = /** @class */ (function () {
     /**
      * Set a target point to move
      */
-    DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
-        if (!this._canPlay)
-            return;
-        var drone_position = {
-          x: this._controlMesh.position.x,
-          y: this._controlMesh.position.z,
-          z: this._controlMesh.position.y
-        };
-        var direction = this._API.getDirectionFromCoordinates(x, y, z, drone_position);
-        if (this.team == "R")
-            direction.y = -y;
-        this.setDirection(direction.x, direction.y, direction.z);
-        this.setAcceleration(this._maxAcceleration);
+    DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
+      if (!this._canPlay)
+        return;
+      var coordinates = this._API.processCoordinates(x, y, z, r);
+      //HACK to ignore checkpoints high altitudes //TODO fix altitude issue
+      if (z > 500) {
+        coordinates.z = this._controlMesh.position.y;
+      }
+      coordinates.x -= this._controlMesh.position.x;
+      coordinates.y -= this._controlMesh.position.z;
+      coordinates.z -= this._controlMesh.position.y;
+      if (this.team == "R")
+        coordinates.y = -coordinates.y;
+      this.setDirection(coordinates.x, coordinates.y, coordinates.z);
+      this.setAcceleration(this._maxAcceleration);
+      return;
     };
     //#endregion
     //#region -- Messaging
@@ -452,7 +462,11 @@ var DroneManager = /** @class */ (function () {
      * Get drone absolute altitude
      */
     DroneManager.prototype.getAltitudeAbs = function () {
-        return this._API.getAltitudeAbs();
+        if (this._controlMesh) {
+          var altitude = this._controlMesh.position.y;
+          return this._API.getAltitudeAbs(altitude);
+        }
+        return null;
     };
     /**
      * Get a game parameter by name
@@ -476,11 +490,11 @@ var DroneManager = /** @class */ (function () {
      */
     DroneManager.prototype.getCurrentPosition = function () {
         if (this._controlMesh)
-          return {
-            x:this._controlMesh.position.x,
-            y:this._controlMesh.position.z,
-            z:this._controlMesh.position.y
-          };
+          return this._API.processCurrentPosition(
+            this._controlMesh.position.x,
+            this._controlMesh.position.z,
+            this._controlMesh.position.y
+          );
         return null;
     };
     /**
@@ -488,7 +502,12 @@ var DroneManager = /** @class */ (function () {
      * @param altitude information to be set
      */
     DroneManager.prototype.setAltitude = function (altitude) {
-        this._API.setAltitude(altitude);
+        if (!this._canPlay)
+          return;
+        altitude = this._API.setAltitude(altitude);
+        altitude -= this._controlMesh.position.y;
+        this.setDirection(this._direction.x, this._direction.y, altitude);
+        this.setAcceleration(this._maxAcceleration);
     };
     /**
      * Set the reported human position
@@ -500,9 +519,39 @@ var DroneManager = /** @class */ (function () {
     /**
      * get log flight parameters
      */
-    DroneManager.prototype.getLogFlightParameters = function () {
-        if (this._API.getLogFlightParameters)
-          return this._API.getLogFlightParameters();
+    DroneManager.prototype.getFlightParameters = function () {
+        if (this._API.getFlightParameters)
+          return this._API.getFlightParameters();
+        return null;
+    };
+    /**
+     * get yaw flight parameters
+     */
+    DroneManager.prototype.getYaw = function () {
+        //TODO
+        return 0;
+    };
+    /**
+     * do parachute
+     */
+    DroneManager.prototype.doParachute = function () {
+        //TODO
+        return null;
+    };
+    /**
+     * exit
+     */
+    DroneManager.prototype.exit = function () {
+        //TODO
+        this.setDirection(0, 0, 0);
+        return null;
+    };
+    /**
+     * Set the drone last checkpoint reached
+     * @param checkpoint to be set
+     */
+    DroneManager.prototype.setCheckpoint = function (checkpoint) {
+        //TODO
         return null;
     };
     //#endregion
