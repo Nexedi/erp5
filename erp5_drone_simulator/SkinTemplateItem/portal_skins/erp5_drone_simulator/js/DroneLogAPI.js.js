@@ -6,6 +6,28 @@ var DroneLogAPI = /** @class */ (function () {
         this._gameManager = gameManager;
         this._team = team;
         this._log_flight_parameters = log_flight_parameters;
+        this._convertPosition = function (lon, lat, z) {
+          var logFlightParameters = this.getLogFlightParameters();
+          function longitudToX(lon, logFlightParameters) {
+            return (logFlightParameters.MAP_SIZE / 360.0) * (180 + lon);
+          }
+          function latitudeToY(lat, logFlightParameters) {
+            return (logFlightParameters.MAP_SIZE / 180.0) * (90 - lat);
+          }
+          function normalizeToMap(x, y, logFlightParameters) {
+            var n_x = (x - logFlightParameters.MIN_X) / (logFlightParameters.MAX_X - logFlightParameters.MIN_X),
+              n_y = (y - logFlightParameters.MIN_Y) / (logFlightParameters.MAX_Y - logFlightParameters.MIN_Y);
+            return [n_x * 1000 - logFlightParameters.MAP_SIZE / 2, n_y * 1000 - logFlightParameters.MAP_SIZE / 2];
+          }
+          var x = longitudToX(lon, logFlightParameters),
+            y = latitudeToY(lat, logFlightParameters),
+            position = normalizeToMap(x, y, logFlightParameters);
+          return {
+            x: position[0],
+            y: position[1],
+            z: z
+          };
+        };
     }
     Object.defineProperty(DroneLogAPI.prototype, "team", {
         //*************************************************** ACCESSOR *****************************************************
@@ -50,28 +72,6 @@ var DroneLogAPI = /** @class */ (function () {
                 }
             }
         }, GAMEPARAMETERS.latency.communication);
-    };
-    DroneLogAPI.prototype._convertPosition = function (lon, lat, z) {
-      var logFlightParameters = this.getLogFlightParameters();
-      function longitudToX(lon, logFlightParameters) {
-        return (logFlightParameters.MAP_SIZE / 360.0) * (180 + lon);
-      }
-      function latitudeToY(lat, logFlightParameters) {
-        return (logFlightParameters.MAP_SIZE / 180.0) * (90 - lat);
-      }
-      function normalizeToMap(x, y, logFlightParameters) {
-        var n_x = (x - logFlightParameters.MIN_X) / (logFlightParameters.MAX_X - logFlightParameters.MIN_X),
-          n_y = (y - logFlightParameters.MIN_Y) / (logFlightParameters.MAX_Y - logFlightParameters.MIN_Y);
-        return [n_x * 1000 - logFlightParameters.MAP_SIZE / 2, n_y * 1000 - logFlightParameters.MAP_SIZE / 2];
-      }
-      var x = longitudToX(lon, logFlightParameters),
-        y = latitudeToY(lat, logFlightParameters),
-        position = normalizeToMap(x, y, logFlightParameters);
-      return {
-        x: position[0],
-        y: position[1],
-        z: z
-      };
     };
     //#endregion
     //#region ------------------ Accessible from AI
@@ -143,7 +143,7 @@ var DroneLogAPI = /** @class */ (function () {
       if(isNaN(x) || isNaN(y) || isNaN(z)){
         throw new Error('Target coordinates must be numbers');
       }
-      /*var converted_position = _convertPosition(x, y, z);
+      /*var converted_position = this._convertPosition(x, y, z);
       x = converted_position.x;
       y = converted_position.y;
       z = converted_position.z;*/
@@ -197,8 +197,7 @@ var DroneLogAPI = /** @class */ (function () {
         '};';
     };
     DroneLogAPI.prototype.setAltitude = function (altitude) {
-      //TODO
-      return;
+      return altitude;
     };
     DroneLogAPI.prototype.getMaxSpeed = function () {
       return 3000;
