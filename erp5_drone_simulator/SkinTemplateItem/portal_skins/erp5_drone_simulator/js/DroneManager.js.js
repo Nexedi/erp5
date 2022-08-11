@@ -23,6 +23,7 @@ var DroneManager = /** @class */ (function () {
         this._scene = scene;
         this._canUpdate = true;
         this._id = id;
+        this._leader_id = 0;
         this._team = team;
         this._API = API; // var API created on AI evel
         // Create the control mesh
@@ -90,6 +91,12 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype._swapAxe = function (vector) {
         return new BABYLON.Vector3(vector.x, vector.z, vector.y);
     };
+    Object.defineProperty(DroneManager.prototype, "leader_id", {
+        //*************************************************** ACCESSOR *****************************************************
+        get: function () { return this._leader_id; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DroneManager.prototype, "id", {
         //*************************************************** ACCESSOR *****************************************************
         get: function () { return this._id; },
@@ -452,7 +459,11 @@ var DroneManager = /** @class */ (function () {
      * Get drone absolute altitude
      */
     DroneManager.prototype.getAltitudeAbs = function () {
-        return this._API.getAltitudeAbs();
+        if (this._controlMesh) {
+          var altitude = this._controlMesh.position.y;
+          return this._API.getAltitudeAbs(altitude);
+        }
+        return null;
     };
     /**
      * Get a game parameter by name
@@ -488,7 +499,12 @@ var DroneManager = /** @class */ (function () {
      * @param altitude information to be set
      */
     DroneManager.prototype.setAltitude = function (altitude) {
-        this._API.setAltitude(altitude);
+        if (!this._canPlay)
+          return;
+        altitude = this._API.setAltitude(altitude);
+        altitude -= this._controlMesh.position.y;
+        this.setDirection(this._direction.x, this._direction.y, altitude);
+        this.setAcceleration(this._maxAcceleration);
     };
     /**
      * Set the reported human position
