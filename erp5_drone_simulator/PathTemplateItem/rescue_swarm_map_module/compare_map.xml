@@ -67,9 +67,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Map based on medium size map, use to compare simulated and real drone flights.\n
+It has 2 drones: one for that simulates the real flight from a script (DroneAaileFixeAPI - id:0) and one that moves according to the log values (DroneLogAPI id:1)\n
+Being run on (WIP) web_page_module/test_drone_simulator_gadget page, the log drone flight will be drawn on the map.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -149,9 +149,9 @@
         "z": 6\n
       },\n
       "types": [\n
-        "DroneAPI",\n
+        "DroneAaileFixeAPI",\n
         "DroneLogAPI",\n
-        "DroneAaileFixeAPI"\n
+        "DroneAPI"\n
       ]\n
     },\n
     "rightTeam": {\n
@@ -299,7 +299,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.64959.34903.30924</string> </value>
+                      <value> <string>1002.12601.25029.46114</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -317,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1660143472.05</float>
+                              <float>1660228730.09</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
