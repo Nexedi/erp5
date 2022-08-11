@@ -2,32 +2,10 @@
 
 var DroneAaileFixeAPI = /** @class */ (function () {
     //*************************************************** CONSTRUCTOR **************************************************
-    function DroneAaileFixeAPI(gameManager, team, log_flight_parameters) {
+    function DroneAaileFixeAPI(gameManager, team, flight_parameters) {
         this._gameManager = gameManager;
         this._team = team;
-        this._log_flight_parameters = log_flight_parameters;
-        this._convertPosition = function (lon, lat, z) {
-          var logFlightParameters = this.getLogFlightParameters();
-          function longitudToX(lon, logFlightParameters) {
-            return (logFlightParameters.MAP_SIZE / 360.0) * (180 + lon);
-          }
-          function latitudeToY(lat, logFlightParameters) {
-            return (logFlightParameters.MAP_SIZE / 180.0) * (90 - lat);
-          }
-          function normalizeToMap(x, y, logFlightParameters) {
-            var n_x = (x - logFlightParameters.MIN_X) / (logFlightParameters.MAX_X - logFlightParameters.MIN_X),
-              n_y = (y - logFlightParameters.MIN_Y) / (logFlightParameters.MAX_Y - logFlightParameters.MIN_Y);
-            return [n_x * 1000 - logFlightParameters.MAP_SIZE / 2, n_y * 1000 - logFlightParameters.MAP_SIZE / 2];
-          }
-          var x = longitudToX(lon, logFlightParameters),
-            y = latitudeToY(lat, logFlightParameters),
-            position = normalizeToMap(x, y, logFlightParameters);
-          return {
-            x: position[0],
-            y: position[1],
-            z: z
-          };
-        };
+        this._flight_parameters = flight_parameters;
     }
     Object.defineProperty(DroneAaileFixeAPI.prototype, "team", {
         //*************************************************** ACCESSOR *****************************************************
@@ -139,23 +117,45 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         }, 2000);
       }
     };
-    DroneAaileFixeAPI.prototype.getDirectionFromCoordinates = function (x, y, z, drone_position) {
-      if(isNaN(x) || isNaN(y) || isNaN(z)){
+    DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z) {
+      if(isNaN(lat) || isNaN(lon) || isNaN(z)){
         throw new Error('Target coordinates must be numbers');
       }
-      var converted_position = this._convertPosition(y, x, z);
-      x = converted_position.x;
-      y = converted_position.y;
-      z = converted_position.z;
-
-      x -= drone_position.x;
-      y -= drone_position.y;
-      z -= drone_position.z;
-      if (this._team == "R")
-        y = -y;
+      var flightParameters = this.getFlightParameters();
+      function longitudToX(lon, flightParameters) {
+        return (flightParameters.MAP_SIZE / 360.0) * (180 + lon);
+      }
+      function latitudeToY(lat, flightParameters) {
+        return (flightParameters.MAP_SIZE / 180.0) * (90 - lat);
+      }
+      function normalizeToMap(x, y, flightParameters) {
+        var n_x = (x - flightParameters.MIN_X) / (flightParameters.MAX_X - flightParameters.MIN_X),
+          n_y = (y - flightParameters.MIN_Y) / (flightParameters.MAX_Y - flightParameters.MIN_Y);
+        return [n_x * 1000 - flightParameters.MAP_SIZE / 2, n_y * 1000 - flightParameters.MAP_SIZE / 2];
+      }
+      var x = longitudToX(lon, flightParameters),
+        y = latitudeToY(lat, flightParameters),
+        position = normalizeToMap(x, y, flightParameters);
       return {
-        x: x,
-        y: y,
+        x: position[0],
+        y: position[1],
+        z: z
+      };
+    };
+    DroneAaileFixeAPI.prototype.processCurrentPosition = function (x, y, z) {
+      //convert x-y coordinates into latitud-longitude
+      var flightParameters = this.getFlightParameters();
+      var lon = x + flightParameters.map_width / 2;
+      lon = lon / 1000;
+      lon = lon * (flightParameters.MAX_X - flightParameters.MIN_X) + flightParameters.MIN_X;
+      lon = lon / (flightParameters.map_width / 360.0) - 180;
+      var lat = y + flightParameters.map_height / 2;
+      lat = lat / 1000;
+      lat = lat * (flightParameters.MAX_Y - flightParameters.MIN_Y) + flightParameters.MIN_Y;
+      lat = 90 - lat / (flightParameters.map_height / 180.0);
+      return {
+        x: lat,
+        y: lon,
         z: z
       };
     };
@@ -180,8 +180,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     DroneAaileFixeAPI.prototype.getMaxHeight = function () {
       return 800;
     };
-    DroneAaileFixeAPI.prototype.getLogFlightParameters = function () {
-      return this._log_flight_parameters;
+    DroneAaileFixeAPI.prototype.getFlightParameters = function () {
+      return this._flight_parameters;
     };
     return DroneAaileFixeAPI;
 }());
