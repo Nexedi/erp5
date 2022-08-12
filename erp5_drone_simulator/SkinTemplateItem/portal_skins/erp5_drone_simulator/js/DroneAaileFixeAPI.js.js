@@ -166,7 +166,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       return altitude;
     };
     DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
-      return 3000;
+      return GAMEPARAMETERS.drone.maxSpeed;
     };
     DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
       return 0;

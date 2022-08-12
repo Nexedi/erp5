@@ -403,7 +403,7 @@ var DroneManager = /** @class */ (function () {
       if (!this._canPlay)
         return;
       var coordinates = this._API.processCoordinates(x, y, z);
-      //HACK to ignore checkpoints high altitudes
+      //HACK to ignore checkpoints high altitudes //TODO fix altitude issue
       if (z > 500) {
         coordinates.z = this._controlMesh.position.y;
       }
@@ -544,6 +544,14 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype.exit = function () {
         //TODO
         this.setDirection(0, 0, 0);
+        return null;
+    };
+    /**
+     * Set the drone last checkpoint reached
+     * @param checkpoint to be set
+     */
+    DroneManager.prototype.setCheckpoint = function (checkpoint) {
+        //TODO
         return null;
     };
     //#endregion
