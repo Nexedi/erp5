@@ -81,8 +81,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>SOAP queries\n
-Look for proper category by reference (XXX: codification ? destination_reference ? source_reference ?)</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -81,7 +81,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>HTTP notification messages</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
