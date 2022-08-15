@@ -33,6 +33,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 
+TIMEOUT = 10 # 10 seconds
+
 class StripeConnector(XMLObject):
   """
     Holds an Stripe connection to a remote Stripe API.
@@ -96,8 +98,8 @@ class StripeConnector(XMLObject):
       url_string,
       headers=header_dict,
       data=urllib.urlencode(request_data),
-      auth=((self.getDescription() or "").strip(), '')
-    )
+      auth=((self.getDescription() or "").strip(), ''),
+      timeout=TIMEOUT)
     return response.json()
 
   def retrieveSession(self, session_id, **kw):
@@ -113,5 +115,6 @@ class StripeConnector(XMLObject):
       headers={
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      auth=((self.getDescription() or "").strip(), ''))
+      auth=((self.getDescription() or "").strip(), ''),
+      timeout=TIMEOUT)
     return response.json()
