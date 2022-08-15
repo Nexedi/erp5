@@ -2936,8 +2936,9 @@ class Base(
   def immediateReindexObject(self, *args, **kw):
     if self.isAncestryIndexable():
       with super_user():
-        PortalContent.reindexObject(self, *args, **kw)
+        self._immediateReindexObject(*args, **kw)
   _reindexOnCreation = immediateReindexObject
+  _immediateReindexObject = PortalContent.reindexObject
 
   security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):
