@@ -264,7 +264,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.tic()
       self._document_to_delete_list.append(first_stripe_payment_session)
       self._document_to_delete_list.append(second_stripe_payment_session)
-      self.publish('/%s/Base_receiveWebHook' % self.portal.getId(),
+      self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
         request_method='POST'
       )
       self.tic()
