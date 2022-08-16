@@ -25,6 +25,7 @@ var DroneManager = /** @class */ (function () {
         this._id = id;
         this._leader_id = 0;
         this._team = team;
+        this._start_wait = 0;
         this._API = API; // var API created on AI evel
         // Create the control mesh
         this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
@@ -224,13 +225,18 @@ var DroneManager = /** @class */ (function () {
                 context._canUpdate = false;
                 return new RSVP.Queue()
                   .push(function () {
-                    return context.onUpdate();
+                    return context.onUpdate(context._API._gameManager._game_duration);
                   })
                   .push(function () {
                     context._canUpdate = true;
                   }, function (err) {
                     console.warn('Drone crashed on update due to error:', err);
                     context._internal_crash();
+                  })
+                  .push(function () {
+                    if (context._start_wait > 0) {
+                      context._API.wait(context, context._wait);
+                    }
                   });
             }
             return;
@@ -510,6 +516,18 @@ var DroneManager = /** @class */ (function () {
         this.setAcceleration(this._maxAcceleration);
     };
     /**
+     * Make the drone wait
+     * @param time to wait
+     */
+    DroneManager.prototype.wait = function (time) {
+        if (!this._canPlay)
+          return;
+        if (this._start_wait === 0) {
+          this._start_wait = this._API._gameManager._game_duration;
+        }
+        this._wait = time;
+    };
+    /**
      * Set the reported human position
      * @param position information to be set
      */
@@ -567,7 +585,7 @@ var DroneManager = /** @class */ (function () {
     /**
      * Function called on game update
      */
-    DroneManager.prototype.onUpdate = function () { };
+    DroneManager.prototype.onUpdate = function (timestamp) { };
     ;
     /**
      * Function called when drone die (crash or collision)

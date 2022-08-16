@@ -163,6 +163,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         z: z
       };
     };
+    DroneAaileFixeAPI.prototype.wait = function (drone, time) {
+      if (this._gameManager._game_duration - drone._start_wait < time) {
+        //TODO loiter instead of wait
+        drone.setDirection(0, 0, 0);
+      } else {
+        drone._start_wait = 0;
+      }
+    };
     DroneAaileFixeAPI.prototype.getDroneAI = function () {
       return null;
     };
