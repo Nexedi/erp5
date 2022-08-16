@@ -25,6 +25,7 @@ var DroneManager = /** @class */ (function () {
         this._id = id;
         this._leader_id = 0;
         this._team = team;
+        this._must_wait = 0;
         this._API = API; // var API created on AI evel
         // Create the control mesh
         this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
@@ -100,6 +101,12 @@ var DroneManager = /** @class */ (function () {
     Object.defineProperty(DroneManager.prototype, "id", {
         //*************************************************** ACCESSOR *****************************************************
         get: function () { return this._id; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "must_wait", {
+        //*************************************************** ACCESSOR *****************************************************
+        get: function () { return this._must_wait; },
         enumerable: true,
         configurable: true
     });
@@ -231,6 +238,11 @@ var DroneManager = /** @class */ (function () {
                   }, function (err) {
                     console.warn('Drone crashed on update due to error:', err);
                     context._internal_crash();
+                  })
+                  .push(function () {
+                    if (context._must_wait) {
+                      console.log("drone must wait! call corresponding API method...");
+                    }
                   });
             }
             return;
@@ -395,6 +407,17 @@ var DroneManager = /** @class */ (function () {
         if (!this._canPlay)
             return;
         this._rotationTarget = new BABYLON.Vector3(this.rotation.x + x, this.rotation.y + z, this.rotation.z + y);
+    };
+    /**
+     * Set the drone must wait
+     */
+    DroneManager.prototype.setMustWait = function (time) {
+        if (!this._canPlay)
+            return;
+        if(isNaN(time)){
+          throw new Error('Must wait time must be a number');
+        }
+        this._must_wait = time;
     };
     /**
      * Set a target point to move
