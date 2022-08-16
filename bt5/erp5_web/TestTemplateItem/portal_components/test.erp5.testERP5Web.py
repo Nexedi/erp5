@@ -1579,6 +1579,67 @@ Hé Hé Hé!""", page.asText().strip())
     check(document2, date2)
     check(document2, date3)
 
+  def test_translatable_path(self):
+    portal = self.portal
+    website = self.setupWebSite(
+      static_language_selection=1,
+    )
+    section1 = self.setupWebSection(
+      id='aaa',
+    )
+    page1 = portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='page1',
+      language='en',
+      text_content='page1 in English',
+    )
+    page1.publish()
+    page1_fr = portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='page1',
+      language='fr',
+      text_content='page1 in French',
+    )
+    page1_fr.publish()
+    section1.setAggregateValue(page1)
+    section2 = self.setupWebSection(
+      id='bbb',
+    )
+    page2 = portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='page2',
+      language='en',
+      text_content='page2',
+    )
+    page2.publish()
+    page2_fr = portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='page2',
+      language='fr',
+      text_content='page2 in French',
+    )
+    page2_fr.publish()
+    section2.setAggregateValue(page2)
+    section2.setFrTranslatedTranslatableId('aaa')
+    # Only setting /fr/aaa => /bbb will conflict with /aaa having no translated path yet.
+    self.assertRaises(ValueError, self.commit)
+    # After setting /fr/ccc => /aaa as well, we have no conflict.
+    section1.setFrTranslatedTranslatableId('ccc')
+    self.tic()
+    website_path = website.absolute_url_path()
+    # /fr/ccc/ is /aaa/
+    response = self.publish(website_path + '/fr/ccc/')
+    self.assertEqual(response.status, 200)
+    self.assertIn('page1 in French', response.getBody())
+    # /fr/aaa/ is /bbb/
+    response = self.publish(website_path + '/fr/aaa/')
+    self.assertEqual(response.status, 200)
+    self.assertIn('page2 in French', response.getBody())
+    # /fr/bbb/ should be redirected to /fr/aaa/
+    response = self.publish(website_path + '/fr/bbb/')
+    self.assertEqual(response.status, 301)
+    self.assertEqual(response.getHeader('Location'), website.absolute_url() + '/fr/aaa/')
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
