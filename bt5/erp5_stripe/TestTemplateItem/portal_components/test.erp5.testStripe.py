@@ -25,9 +25,8 @@
 #
 ##############################################################################
 
-import mock
 import json
-import requests
+import responses
 from urlparse import parse_qs
 from DateTime import DateTime
 from Products.ERP5Type.Globals import get_request
@@ -39,6 +38,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     self._document_to_delete_list = []
     self.connector_reference = "abc"
     self.method_id = 'Alarm_getStripeConnectorReference'
+    self.session_url = "https://mock:8080/checkout/sessions"
     self.data = {
       "success_url": "http://success",
       "cancel_url": "http://cancel",
@@ -147,48 +147,45 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.portal.portal_workflow.isTransitionPossible(stripe_payment_session, "complete")
     )
 
+  def _response_callback(self, session_id, status="open"):
+    """Callback for responses
+    """
+    def _callback(request):
+      self.assertEqual(
+        'application/x-www-form-urlencoded',
+        request.headers['Content-Type'], request.headers)
+      body = parse_qs(request.body)
+      self.assertIn("line_items[0][price_data][unit_amount]", body)
+      self.assertIn("line_items[1][price_data][unit_amount]", body)
+      return (200, {'content-type': 'application/json'}, json.dumps({
+        "id": session_id,
+        "status": status,
+        "object": "checkout.session"
+      }))
+    return _callback
+
   def test_api_create_session(self):
     connector = self._create_connector()
 
-    def post(url, data, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      self.assertEqual("https://mock:8080/checkout/sessions", url)
-      self.assertIn("line_items[0][price_data][unit_amount]", parse_qs(data))
-      return MockResponse({
-        "id": 123
-      }, 200)
-  
-    with mock.patch.object(requests, "post", side_effect=post):
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback("123")
+      )
       response = connector.createSession(data=self.data.copy())
-      self.assertEqual(response["id"], 123)
+      self.assertEqual(response["id"], "123")
 
   def test_create_stripe_payment_session_open(self):
     connector = self._create_connector()
 
-    def post(url, data, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      self.assertEqual("https://mock:8080/checkout/sessions", url)
-      self.assertIn("line_items[0][price_data][unit_amount]", parse_qs(data))
-      return MockResponse({
-        "id": "abc123"
-      }, 200)
-
     module = self.portal.stripe_payment_session_module
-    with mock.patch.object(requests, "post", side_effect=post):
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback("abc123")
+      )
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector,
         self.data.copy(),
@@ -214,68 +211,67 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     connector = self._create_connector()
     data = self.data.copy()
 
-    def post(url, data, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      parse_qs_data = parse_qs(data)
-      self.assertEqual("https://mock:8080/checkout/sessions", url)
-      self.assertIn("line_items[0][price_data][unit_amount]", parse_qs_data)
-
-      if "http://completed" in parse_qs_data["success_url"]:
-        mock_response = {
-          "id": "abc321_completed"
-        }
-      if "http://expired" in parse_qs_data["success_url"]:
-        mock_response = {
-          "id": "abc321_expired"
-        }
-      return MockResponse(mock_response, 200)
-
-    def get(url, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      if "abc321_completed" in url:
-        return MockResponse({
-          "id": "abc321_completed",
-          "status": "complete",
-          "object": "checkout.session"
-        }, 200)
-      if "abc321_expired" in url:
-        return MockResponse({
-          "id": "abc321_expired",
-          "status": "expired",
-          "object": "checkout.session"
-        }, 200)
-      return RuntimeError("Unexpected %s" % url)
+    def _get_response_callback(session_id):
+      """Callback for responses
+      """
+      def _callback(request):
+        self.assertEqual(
+          'application/x-www-form-urlencoded',
+          request.headers['Content-Type'], request.headers)
+        url = request.url
+        if session_id == "abc321_completed":
+          return (200, {'content-type': 'application/json'}, json.dumps({
+            "id": "abc321_completed",
+            "status": "complete",
+            "object": "checkout.session"
+          }))
+        if session_id == "abc321_expired":
+          return (200, {'content-type': 'application/json'}, json.dumps({
+            "id": "abc321_expired",
+            "status": "expired",
+            "object": "checkout.session"
+          }))
+        return RuntimeError("Unexpected %s" % url)
+      return _callback
 
     module = self.portal.stripe_payment_session_module
-    with mock.patch.object(requests, "post", side_effect=post), \
-          mock.patch.object(requests, "get", side_effect=get):
-
-      data["success_url"] = "http://expired"
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback("abc321_expired")
+      )
       first_stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector, data, module.getRelativeUrl(), batch_mode=True)
       first_stripe_payment_session.setExpirationDate(DateTime() - 1)
-      data["success_url"] = "http://completed"
+      self.tic()
 
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback("abc321_completed")
+      )
       second_stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector, data, module.getRelativeUrl(), batch_mode=True)
       second_stripe_payment_session.setExpirationDate(DateTime() - 1)
       self.tic()
-      self._document_to_delete_list.append(first_stripe_payment_session)
-      self._document_to_delete_list.append(second_stripe_payment_session)
+
+    self._document_to_delete_list.append(first_stripe_payment_session)
+    self._document_to_delete_list.append(second_stripe_payment_session)
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.GET,
+        "https://mock:8080/checkout/sessions/abc321_expired",
+        _get_response_callback("abc321_expired")
+      )
+      rsps.add_callback(
+        responses.GET,
+        "https://mock:8080/checkout/sessions/abc321_completed",
+        _get_response_callback("abc321_completed")
+      )
+
       self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
         request_method='POST'
       )
@@ -287,44 +283,43 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     connector = self._create_connector()
     data = self.data.copy()
 
-    def post(url, data, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      return MockResponse({
-        "id": "test_update_expiration_date"
-      }, 200)
-
-    def get(url, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      return MockResponse({
-        "id": "test_update_expiration_date",
-        "status": "open",
-        "object": "checkout.session"
-      }, 200)
+    def _get_response_callback(session_id):
+      """Callback for responses
+      """
+      def _callback(request):
+        self.assertEqual(
+          'application/x-www-form-urlencoded',
+          request.headers['Content-Type'], request.headers)
+        url = request.url
+        if session_id == "test_update_expiration_date":
+          return (200, {'content-type': 'application/json'}, json.dumps({
+            "id": "test_update_expiration_date",
+            "status": "open",
+            "object": "checkout.session"
+          }))
+        return RuntimeError("Unexpected %s" % url)
+      return _callback
 
     module = self.portal.stripe_payment_session_module
-    with mock.patch.object(requests, "post", side_effect=post), \
-          mock.patch.object(requests, "get", side_effect=get):
-
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback("test_update_expiration_date")
+      )
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector, data, module.getRelativeUrl(), batch_mode=True)
       stripe_payment_session.setExpirationDate(DateTime() - 1)
       self.tic()
-      first_expiration_date = stripe_payment_session.getExpirationDate()
-      self._document_to_delete_list.append(stripe_payment_session)
+
+    self._document_to_delete_list.append(stripe_payment_session)
+    first_expiration_date = stripe_payment_session.getExpirationDate()
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.GET,
+        "https://mock:8080/checkout/sessions/test_update_expiration_date",
+        _get_response_callback("test_update_expiration_date")
+      )
       self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
         request_method='POST'
       )
@@ -342,39 +337,28 @@ class TestStripePaymentSession(ERP5TypeTestCase):
   def test_retrieve_stripe_payment_session_status(self):
     connector = self._create_connector()
     session_id = "abc321"
-    mock_response = {
-      "id": session_id
-    }
 
-    def post(url, data, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      self.assertEqual("https://mock:8080/checkout/sessions", url)
-      self.assertIn("line_items[0][price_data][unit_amount]", parse_qs(data))
-      return MockResponse(mock_response, 200)
-
-    def get(url, headers, *args, **kw):
-      class MockResponse(object):
-        def __init__(self, json_data, status_code):
-          self.json_data = json_data
-          self.status_code = status_code
-
-        def json(self):
-          return self.json_data
-
-      self.assertEqual("https://mock:8080/checkout/sessions/%s" % session_id, url)
-      mock_response["status"] = "expired"
-      return MockResponse(mock_response, 200)
+    def _get_response_callback(session_id):
+      """Callback for responses
+      """
+      def _callback(request):
+        self.assertEqual(
+          'application/x-www-form-urlencoded',
+          request.headers['Content-Type'], request.headers)
+        return (200, {'content-type': 'application/json'}, json.dumps({
+          "id": session_id,
+          "status": "expired",
+          "object": "checkout.session"
+        }))
+      return _callback
 
     module = self.portal.stripe_payment_session_module
-    with mock.patch.object(requests, "post", side_effect=post), \
-          mock.patch.object(requests, "get", side_effect=get):
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback(session_id)
+      )
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector,
         self.data.copy(),
@@ -383,6 +367,13 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       self.tic()
       self._document_to_delete_list.append(stripe_payment_session)
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.GET,
+        "https://mock:8080/checkout/sessions/%s" % session_id,
+        _get_response_callback(session_id)
+      )
       http_exchange = stripe_payment_session.StripePaymentSession_retrieveSession(
         connector, batch_mode=1
       )
