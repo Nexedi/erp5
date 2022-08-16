@@ -32,10 +32,11 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Domain import Domain
 from Products.ERP5.Document.WebSection import WebSectionTraversalHook
 from erp5.component.mixin.DocumentExtensibleTraversableMixin import DocumentExtensibleTraversableMixin
-from Acquisition import aq_base, aq_inner
+from Acquisition import aq_base, aq_inner, aq_parent
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
 from OFS.Traversable import NotFound
+from OFS.ObjectManager import checkValidId
 from ZPublisher import BeforeTraverse
 from Products.CMFCore.utils import _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 
@@ -45,6 +46,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 WEBSECTION_KEY = 'web_section_value'
 MARKER = []
 WEB_SECTION_PORTAL_TYPE_TUPLE = ('Web Section', 'Web Site')
+INTERNAL_TRANSLATED_PATH_DICT_NAME = '__translated_path_dict'
 
 class WebSection(Domain, DocumentExtensibleTraversableMixin):
   """
@@ -102,6 +104,18 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         If no subobject is found through Folder API
         then try to lookup the object by invoking getDocumentValue
     """
+    # Check translated path.
+    is_static_language_selection = self.isStaticLanguageSelection()
+    if is_static_language_selection:
+      language = self.getPortalObject().Localizer.get_selected_language()
+      if language:
+        translated_path_dict = self._getTranslatedPathDict()
+        try:
+          section = self[translated_path_dict[(name, language)]]
+        except KeyError:
+          pass
+        else:
+          return section.asContext(id=name).__of__(self)
     # Register current web site physical path for later URL generation
     if request.get(self.web_section_key, MARKER) is MARKER:
       request[self.web_section_key] = self.getPhysicalPath()
@@ -128,7 +142,50 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         # if no document found, fallback on default page template
         document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request,
           '404.error.page')
+    portal_type = getattr(document, 'getPortalType', lambda: None)()
+    # Redirect /lang/original_id/* to /lang/translated_id/* if request is GET.
+    if is_static_language_selection and portal_type == 'Web Section' and self.REQUEST.get('method') == 'GET':
+      translated_id = document.getTranslatedTranslatableId()
+      if translated_id and document.getId() != translated_id:
+        actual_url = self.REQUEST.get('ACTUAL_URL', '').strip()
+        section_url = document.absolute_url()
+        translated_section_url = '/'.join([
+            document.aq_parent.absolute_url(),
+            translated_id,
+        ])
+        re.sub(re.escape(r'^' + section_url) + r'(/|$)', translated_section_url + r'\1', actual_url)
+        translated_url = actual_url.replace(section_url, translated_section_url, 1)
+        if actual_url != translated_url:
+          query_string = self.REQUEST.get('QUERY_STRING', '')
+          if query_string:
+            translated_url += '?' + query_string
+          self.REQUEST.RESPONSE.redirect(translated_url, status=301)
     return document
+
+  def _getTranslatedPathDict(self):
+    return getattr(self, INTERNAL_TRANSLATED_PATH_DICT_NAME, {})
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateTranslatedWebSectionList')
+  def updateTranslatedPathDict(self, recursive=False):
+    translated_path_dict = {}
+    available_language_list = self.getAvailableLanguageList()
+    for section in self.objectValues(portal_type='Web Section'):
+      section_id = section.getId()
+      translated_section_id_dict = dict((k[1], v[1]) for k, v in section._getTranslationDict().items() \
+                                        if k[0] == 'translatable_id' and v[0] == section_id)
+      for language in available_language_list:
+        translated_section_id = translated_section_id_dict.get(language, section_id)
+        checkValidId(self, translated_section_id, allow_dup=True)
+        key = (translated_section_id, language)
+        if key in translated_path_dict:
+          raise ValueError, '%r is used in several sections : %r' % (key, (translated_path_dict[key], section_id))
+        translated_path_dict[key] = section_id
+    if translated_path_dict != self._getTranslatedPathDict():
+      setattr(self, INTERNAL_TRANSLATED_PATH_DICT_NAME, translated_path_dict)
+      self._p_changed = True
+    if recursive:
+      for section in self.objectValues(portal_type='Web Section'):
+        section.updateTranslatedPathDict(recursive=recursive)
 
   security.declarePrivate( 'manage_beforeDelete' )
   def manage_beforeDelete(self, item, container):
@@ -396,6 +453,16 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       cache[key] = result
 
     return result
+
+  security.declarePublic('absolute_translated_url')
+  def absolute_translated_url(self, relative=0):
+    """Return the absolute translated URL of the object."""
+    parent = aq_parent(aq_inner(self))
+    parent_url = getattr(parent, 'absolute_translated_url', parent.absolute_url)(relative=relative)
+    original_document = self.getOriginalDocument()
+    return self._add_trailing_slash(
+      self._add_trailing_slash(parent_url) + \
+      getattr(original_document, 'getTranslatedTranslatableId', original_document.getId)())
 
   security.declareProtected(Permissions.View, 'getSiteMapTree')
   def getSiteMapTree(self, **kw):

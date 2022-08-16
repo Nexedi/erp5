@@ -13,6 +13,7 @@
  </portal_type>
  <portal_type id="Web Section">
   <item>SortIndex</item>
+  <item>TranslatablePath</item>
   <item>WebSectionUpgradeConstraint</item>
  </portal_type>
  <portal_type id="Web Site">
