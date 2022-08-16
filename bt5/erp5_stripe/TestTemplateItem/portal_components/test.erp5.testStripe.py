@@ -147,6 +147,41 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.portal.portal_workflow.isTransitionPossible(stripe_payment_session, "complete")
     )
 
+  def _get_response_callback(self, session_id):
+    """Callback for responses
+    """
+    def _callback(request):
+      self.assertEqual(
+        'application/x-www-form-urlencoded',
+        request.headers['Content-Type'], request.headers)
+      url = request.url
+      if session_id == "abc321_completed":
+        return (200, {'content-type': 'application/json'}, json.dumps({
+          "id": session_id,
+          "status": "complete",
+          "object": "checkout.session"
+        }))
+      if session_id == "abc321_expired":
+        return (200, {'content-type': 'application/json'}, json.dumps({
+          "id": session_id,
+          "status": "expired",
+          "object": "checkout.session"
+        }))
+      if session_id == "test_update_expiration_date":
+        return (200, {'content-type': 'application/json'}, json.dumps({
+          "id": session_id,
+          "status": "open",
+          "object": "checkout.session"
+        }))
+      if session_id == "abc321":
+        return (200, {'content-type': 'application/json'}, json.dumps({
+          "id": session_id,
+          "status": "expired",
+          "object": "checkout.session"
+        }))
+      return RuntimeError("Unexpected %s" % url)
+    return _callback
+
   def _response_callback(self, session_id, status="open"):
     """Callback for responses
     """
@@ -211,29 +246,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     connector = self._create_connector()
     data = self.data.copy()
 
-    def _get_response_callback(session_id):
-      """Callback for responses
-      """
-      def _callback(request):
-        self.assertEqual(
-          'application/x-www-form-urlencoded',
-          request.headers['Content-Type'], request.headers)
-        url = request.url
-        if session_id == "abc321_completed":
-          return (200, {'content-type': 'application/json'}, json.dumps({
-            "id": "abc321_completed",
-            "status": "complete",
-            "object": "checkout.session"
-          }))
-        if session_id == "abc321_expired":
-          return (200, {'content-type': 'application/json'}, json.dumps({
-            "id": "abc321_expired",
-            "status": "expired",
-            "object": "checkout.session"
-          }))
-        return RuntimeError("Unexpected %s" % url)
-      return _callback
-
     module = self.portal.stripe_payment_session_module
     with responses.RequestsMock() as rsps:
       rsps.add_callback(
@@ -264,12 +276,12 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       rsps.add_callback(
         responses.GET,
         "https://mock:8080/checkout/sessions/abc321_expired",
-        _get_response_callback("abc321_expired")
+        self._get_response_callback("abc321_expired")
       )
       rsps.add_callback(
         responses.GET,
         "https://mock:8080/checkout/sessions/abc321_completed",
-        _get_response_callback("abc321_completed")
+        self._get_response_callback("abc321_completed")
       )
 
       self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
@@ -282,23 +294,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
   def test_update_expiration_date(self):
     connector = self._create_connector()
     data = self.data.copy()
-
-    def _get_response_callback(session_id):
-      """Callback for responses
-      """
-      def _callback(request):
-        self.assertEqual(
-          'application/x-www-form-urlencoded',
-          request.headers['Content-Type'], request.headers)
-        url = request.url
-        if session_id == "test_update_expiration_date":
-          return (200, {'content-type': 'application/json'}, json.dumps({
-            "id": "test_update_expiration_date",
-            "status": "open",
-            "object": "checkout.session"
-          }))
-        return RuntimeError("Unexpected %s" % url)
-      return _callback
 
     module = self.portal.stripe_payment_session_module
     with responses.RequestsMock() as rsps:
@@ -318,7 +313,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       rsps.add_callback(
         responses.GET,
         "https://mock:8080/checkout/sessions/test_update_expiration_date",
-        _get_response_callback("test_update_expiration_date")
+        self._get_response_callback("test_update_expiration_date")
       )
       self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
         request_method='POST'
@@ -337,20 +332,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
   def test_retrieve_stripe_payment_session_status(self):
     connector = self._create_connector()
     session_id = "abc321"
-
-    def _get_response_callback(session_id):
-      """Callback for responses
-      """
-      def _callback(request):
-        self.assertEqual(
-          'application/x-www-form-urlencoded',
-          request.headers['Content-Type'], request.headers)
-        return (200, {'content-type': 'application/json'}, json.dumps({
-          "id": session_id,
-          "status": "expired",
-          "object": "checkout.session"
-        }))
-      return _callback
 
     module = self.portal.stripe_payment_session_module
     with responses.RequestsMock() as rsps:
@@ -372,7 +353,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       rsps.add_callback(
         responses.GET,
         "https://mock:8080/checkout/sessions/%s" % session_id,
-        _get_response_callback(session_id)
+        self._get_response_callback(session_id)
       )
       http_exchange = stripe_payment_session.StripePaymentSession_retrieveSession(
         connector, batch_mode=1
