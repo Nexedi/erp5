@@ -6,6 +6,7 @@
  <portal_type id="Static Web Site">
   <item>WebSectionUpgradeConstraint</item>
   <item>WebSitePreference</item>
+</portal_type>
  <portal_type id="Web JSON">
   <item>TextDocument</item>
  </portal_type>
