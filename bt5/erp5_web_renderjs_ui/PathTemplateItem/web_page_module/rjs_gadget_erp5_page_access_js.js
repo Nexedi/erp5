@@ -77,7 +77,12 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('triggerSubmit', function () {
-      return;
+      var argument_list = arguments;
+      return loadChildGadget(this, "gadget_erp5_page_form.html",
+                             false,
+                             function (form_gadget) {
+          return form_gadget.triggerSubmit.call(form_gadget, argument_list);
+        });
     })
 
     .allowPublicAcquisition('updateHeader', function () {
