@@ -246,6 +246,7 @@
         .push(function () {
           // Set the dialog button
           if (modification_dict.hasOwnProperty('has_update_action') ||
+              modification_dict.hasOwnProperty('has_action') ||
               modification_dict.hasOwnProperty('update_action_title')) {
 
             return form_gadget.getTranslationList(['Update', 'Proceed', 'Cancel'])
