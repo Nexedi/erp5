@@ -64,8 +64,15 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     }
 
     custom_skin = self.portal.portal_skins.custom
-    if self.method_id in custom_skin.objectIds():
-      custom_skin.manage_delObjects([self.method_id])
+    if not getattr(custom_skin, self.method_id, None):
+      custom_skin.manage_addProduct['PythonScripts'].manage_addPythonScript(
+        id=self.method_id
+      )
+
+    custom_skin[self.method_id].ZPythonScript_edit(
+      '',
+      'return "%s"' % self.connector_reference
+    )
 
     for doc in self.portal.portal_catalog(
       portal_type="Stripe Connector",
@@ -91,6 +98,11 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     self.login('ERP5TypeTestCase')
     for doc in self._document_to_delete_list:
       doc.getParentValue().manage_delObjects(ids=[doc.getId(),])
+
+    custom_skin = self.portal.portal_skins.custom
+    if self.method_id in custom_skin.objectIds():
+      custom_skin.manage_delObjects([self.method_id])
+
     self.tic()
 
   def test_create_stripe_payment_session_and_assign_http_exchange(self):
@@ -313,21 +325,19 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.tic()
       first_expiration_date = stripe_payment_session.getExpirationDate()
       self._document_to_delete_list.append(stripe_payment_session)
-      self.publish('/%s/Base_receiveWebHook' % self.portal.getId(),
+      self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
         request_method='POST'
       )
       self.tic()
       second_expiration_date = stripe_payment_session.getExpirationDate()
       self.assertNotEqual(first_expiration_date, second_expiration_date)
       self.assertEqual("open", stripe_payment_session.getValidationState())
-      self.publish('/%s/Base_receiveWebHook' % self.portal.getId(),
+      self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
         request_method='POST'
       )
       self.tic()
       third_expiration_date = stripe_payment_session.getExpirationDate()
       self.assertEqual(third_expiration_date, second_expiration_date)
-  
-
 
   def test_retrieve_stripe_payment_session_status(self):
     connector = self._create_connector()
