@@ -399,10 +399,10 @@ var DroneManager = /** @class */ (function () {
     /**
      * Set a target point to move
      */
-    DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
+    DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
       if (!this._canPlay)
         return;
-      var coordinates = this._API.processCoordinates(x, y, z);
+      var coordinates = this._API.processCoordinates(x, y, z, r);
       //HACK to ignore checkpoints high altitudes //TODO fix altitude issue
       if (z > 500) {
         coordinates.z = this._controlMesh.position.y;

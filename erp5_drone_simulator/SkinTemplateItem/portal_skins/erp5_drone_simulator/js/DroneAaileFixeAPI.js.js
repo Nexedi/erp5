@@ -6,6 +6,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         this._gameManager = gameManager;
         this._team = team;
         this._flight_parameters = flight_parameters;
+        this._loiter_radius = 0;
     }
     Object.defineProperty(DroneAaileFixeAPI.prototype, "team", {
         //*************************************************** ACCESSOR *****************************************************
@@ -117,7 +118,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         }, 2000);
       }
     };
-    DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z) {
+    DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z, r) {
+      if (r && r > 30) {
+        this._loiter_radius = r;
+      }
       if(isNaN(lat) || isNaN(lon) || isNaN(z)){
         throw new Error('Target coordinates must be numbers');
       }
