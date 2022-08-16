@@ -119,6 +119,19 @@ class WebSite(WebSection):
       raise Redirect(redirect_url)
     return super(WebSite, self).__before_publishing_traverse__(self2, request)
 
+  security.declarePublic('absolute_translated_url')
+  def absolute_translated_url(self, relative=0):
+    """Return the absolute translated URL of the object."""
+    language = self.getPortalObject().Localizer.get_selected_language()
+    language_list = self.getAvailableLanguageList()
+    if language in language_list and self.isStaticLanguageSelection():
+      url = self.getOriginalDocument().absolute_url(relative=relative)
+      if language != self.getDefaultAvailableLanguage():
+        return '/'.join([url, language])
+      else:
+        return url
+    return self.absolute_url(relative=relative)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
   def getPermanentURLList(self, document):
     """

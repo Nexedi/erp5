@@ -5,6 +5,7 @@ Static Web Site | WebSitePreference
 Web Page | Reference
 Web Page | SortIndex
 Web Section | SortIndex
+Web Section | TranslatablePath
 Web Section | WebSectionUpgradeConstraint
 Web Site | WebSectionUpgradeConstraint
 Web Site | WebSitePreference
