@@ -150,6 +150,7 @@ ServiceConfiguratorItem
 SimpleItem
 Simulation
 SitePropertyConfiguratorItem
+SocketClient
 SolverSelection
 SolverType
 SortIndex
