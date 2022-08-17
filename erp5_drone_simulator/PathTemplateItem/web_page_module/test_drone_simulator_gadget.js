@@ -189,7 +189,7 @@
             max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
             path_point, average_speed = 0, flight_time, log_interval_time,
             previous_log_time, height, timestamp, destination_lon,
-            destination_lat, log_header_found, time_offset = 1;
+            destination_lat, log_header_found, time_offset = 1, flight_dist = 0;
           for (i = 0; i < line_list.length; i += 1) {
             if (!log_header_found && !line_list[i].includes("timestamp;")) {
               continue;
@@ -224,7 +224,7 @@
           //get map size from max distance
           max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
           max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
-          MAP_SIZE = Math.ceil(Math.max(max_width, max_height));
+          MAP_SIZE = Math.ceil(Math.max(max_width, max_height)) * 0.6;
           MIN_X = longitudToX(min_lon);
           MAX_X = longitudToX(max_lon);
           MIN_Y = latitudeToY(min_lat);
@@ -272,6 +272,7 @@
               previous = position;
             }
             dist = distance(previous, position);
+            flight_dist += dist;
             if (dist > 15) {
               previous = position;
               path_point = {
@@ -327,7 +328,7 @@
             full_log: log_point_list,
             converted_log_point_list: converted_log_point_list
           };
-          options.json_map.drone.maxSpeed = average_speed;
+          options.json_map.drone.maxSpeed = flight_dist / flight_time;
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
