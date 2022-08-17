@@ -3,6 +3,7 @@
   <item>FTPConnector</item>
   <item>Login</item>
   <item>Reference</item>
+  <item>SocketClient</item>
   <item>Url</item>
  </portal_type>
 </property_sheet_list>
