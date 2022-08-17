@@ -565,6 +565,13 @@ var DroneManager = /** @class */ (function () {
         return null;
     };
     /**
+     * landed
+     */
+    DroneManager.prototype.landed = function () {
+        //TODO
+        return true;
+    };
+    /**
      * Set the drone last checkpoint reached
      * @param checkpoint to be set
      */
