@@ -84,7 +84,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     connector = self.portal.portal_web_services.newContent(
       portal_type="Stripe Connector",
       url_string="https://mock:8080",
-      description="secret_key",
+      password="secret_key",
       reference=self.connector_reference,
     )
     connector.validate()

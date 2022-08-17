@@ -98,8 +98,8 @@ class StripeConnector(XMLObject):
       url_string,
       headers=header_dict,
       data=urllib.urlencode(request_data),
-      auth=((self.getDescription() or "").strip(), ''),
-      timeout=TIMEOUT)
+      auth=((self.getPassword() or "").strip(), ''),
+      timeout=self.getTimeout() or TIMEOUT)
     return response.json()
 
   def retrieveSession(self, session_id, **kw):
@@ -115,6 +115,6 @@ class StripeConnector(XMLObject):
       headers={
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      auth=((self.getDescription() or "").strip(), ''),
-      timeout=TIMEOUT)
+      auth=((self.getPassword() or "").strip(), ''),
+      timeout=self.getTimeout() or TIMEOUT)
     return response.json()
