@@ -140,6 +140,9 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       var x = longitudToX(lon, flightParameters),
         y = latitudeToY(lat, flightParameters),
         position = normalizeToMap(x, y, flightParameters);
+      if (z > flightParameters.start_AMSL) {
+        z -= flightParameters.start_AMSL;
+      }
       return {
         x: position[0],
         y: position[1],
