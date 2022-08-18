@@ -28,6 +28,7 @@
 ##############################################################################
 
 import re
+import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Domain import Domain
@@ -166,14 +167,14 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
   def _getTranslatedPathDict(self):
     return getattr(self, INTERNAL_TRANSLATED_PATH_DICT_NAME, {})
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateTranslatedWebSectionList')
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateTranslatedPathDict')
   def updateTranslatedPathDict(self, recursive=False):
     translated_path_dict = {}
     available_language_list = self.getAvailableLanguageList()
     for section in self.objectValues(portal_type='Web Section'):
       section_id = section.getId()
-      translated_section_id_dict = dict((k[1], v[1]) for k, v in section._getTranslationDict().items() \
-                                        if k[0] == 'translatable_id' and v[0] == section_id)
+      translated_section_id_dict = {k[1]: v[1] for k, v in six.iteritems(section._getTranslationDict()) \
+                                    if k[0] == 'translatable_id' and v[0] == section_id}
       for language in available_language_list:
         translated_section_id = translated_section_id_dict.get(language, section_id)
         checkValidId(self, translated_section_id, allow_dup=True)
