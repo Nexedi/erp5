@@ -262,7 +262,7 @@ redirect_url_kw = dict(
     editable_mode=editable_mode,
     portal_status_message=message
     )
-if selection_index:
+if selection_name:
   redirect_url_kw.update(
     selection_index=selection_index,
     selection_name=selection_name
