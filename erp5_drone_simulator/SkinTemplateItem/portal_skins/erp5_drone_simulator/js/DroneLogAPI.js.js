@@ -150,7 +150,7 @@ var DroneLogAPI = /** @class */ (function () {
         'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
         'time_elapsed = new Date() - me.startTime;' +
         'if (time_elapsed < log_elapsed) {' +
-        'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
+        'me.setDirection(0, 0, 0);' +
         'return;' +
         '}' +
         'if (me.last_checkpoint_reached + 1 === me.checkpoint_list.length - 1) {' +
