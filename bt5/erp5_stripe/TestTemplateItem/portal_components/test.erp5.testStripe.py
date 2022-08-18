@@ -395,11 +395,11 @@ class TestStripePaymentSession(ERP5TypeTestCase):
 
       self.tic(stop_condition=stop_condition)
       activity_tool = self.portal.portal_activities
-      self.assertEqual([(
+      self.assertIn((
         stripe_payment_session.getPath(),
         'StripePaymentSession_checkStripeSessionOpen',
         -2
-      )], [
+      ), [
         ("/".join(m.object_path), m.method_id, m.processing_node)
         for m in activity_tool.getMessageList()
       ])
