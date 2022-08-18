@@ -49,6 +49,7 @@ from Acquisition import aq_base, aq_self, aq_inner
 import Acquisition
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
+from ZTUtils import make_query
 
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
@@ -2149,22 +2150,24 @@ class ListBoxRendererLine:
     except AttributeError:
       return None
 
-    params = []
+    params = {}
     selection_name = renderer.getSelectionName()
     if int(request.get(
       'ignore_layout',
       0 if request.get('is_web_mode') else 1)):
-      params.append('ignore_layout:int=1')
+      params['ignore_layout'] = 1
     if int(request.get('editable_mode', 0)):
-      params.append('editable_mode:int=1')
+      params['editable_mode'] = 1
     if selection_name:
-      params.extend(('selection_name=%s' % selection_name,
-                      'selection_index=%s' % self.index,
-                      'reset:int=1'))
+      params.update({
+        'selection_name': selection_name,
+        'selection_index': self.index,
+        'reset': 1,
+      })
       if renderer.getSelectionTool().isAnonymous():
-        params.append('selection_key=%s' % renderer.getSelection().getAnonymousSelectionKey())
+        params['selection_key'] = renderer.getSelection().getAnonymousSelectionKey()
     if params:
-      url = '%s?%s' % (url, '&amp;'.join(params))
+      url = '%s?%s' % (url, make_query(params))
     return url
 
   def isSummary(self):
