@@ -66,10 +66,12 @@
             <value> <string>application/javascript</string> </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>emulate_loiter</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Loiter demo script: https://lab.nexedi.com/lpgeneau/flight-scripts/blob/update_loop/demo.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -89,99 +91,240 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-function distance(p1, p2) {\n
-  var a = p1[0] - p2[0],\n
-    b = p1[1] - p2[1];\n
-  return Math.sqrt(a * a + b * b);\n
+const ALTITUDE_DIFF = 30,\n
+  FLIGH_ALTITUDE = 100,\n
+  PARACHUTE_ALTITUDE = 35,\n
+  EPSILON = 105,\n
+  EPSILON_YAW = 6,\n
+  EPSILON_ALTITUDE = 5,\n
+  TARGET_YAW = 0,\n
+  checkpoint_list = [\n
+    {\n
+      "latitude": 45.64492790560583,\n
+      "longitude": 14.25334942966329,\n
+      "altitude": 585.1806861589965\n
+    },\n
+    {\n
+      "latitude": 45.64316335436476,\n
+      "longitude": 14.26332880184475,\n
+      "altitude": 589.8802607573035\n
+    },\n
+    {\n
+      "latitude": 45.64911917196595,\n
+      "longitude": 14.26214792790128,\n
+      "altitude": 608.6648153348965\n
+    },\n
+    {\n
+      "latitude": 45.64122685351364,\n
+      "longitude": 14.26590493128597,\n
+      "altitude": 606.1448368129072\n
+    },\n
+    {\n
+      "latitude": 45.64543355564817,\n
+      "longitude": 14.27242391207985,\n
+      "altitude": 630.0829598206344\n
+    },\n
+    {\n
+      "latitude": 45.6372792927328,\n
+      "longitude": 14.27533492411138,\n
+      "altitude": 616.1839898415284\n
+    },\n
+    {\n
+      "latitude": 45.64061299543953,\n
+      "longitude": 14.26161958465814,\n
+      "altitude": 598.0603137354178\n
+    },\n
+    {\n
+      "latitude": 45.64032340702919,\n
+      "longitude": 14.2682896662383,\n
+      "altitude": 607.1243119862851\n
+    }\n
+  ],\n
+  landing_point = [\n
+    {\n
+      "latitude": 45.6398451,\n
+      "longitude": 14.2699217\n
+    }\n
+  ],\n
+  LEADER_ID = 0,\n
+  IS_LEADER = me.id === LEADER_ID;\n
+\n
+function altitudeReached(altitude, target_altitude) {\n
+  console.log(`[DEMO] Waiting for altitude... (${altitude} , ${target_altitude})`);\n
+  return Math.abs(altitude - target_altitude) < EPSILON_ALTITUDE;\n
 }\n
 \n
-formatTimeToMinutesAndSeconds = function (time) {\n
-  var seconds = Math.floor(time / 1000),\n
-    minutes = Math.floor(seconds / 60),\n
-    sminutes = "00",\n
-    sseconds = "00";\n
-  sminutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();\n
-  seconds -= (minutes * 60);\n
-  sseconds = (seconds < 10) ? "0" + seconds.toString() : sseconds = seconds.toString();\n
-  return sminutes + ":" + sseconds;\n
-};\n
+function distance(lat1, lon1, lat2, lon2) {\n
+  const R = 6371e3, // meters\n
+    la1 = lat1 * Math.PI/180, // la, lo in radians\n
+    la2 = lat2 * Math.PI/180,\n
+    lo1 = lon1 * Math.PI/180,\n
+    lo2 = lon2 * Math.PI/180;\n
 \n
-var TAKEOFF_TIME = 52, //seconds\n
-  LOITER_DISTANCE = 100,\n
-  DESTINATION = {x:-466,y:295};\n
+  //haversine formula\n
+  const sin_lat = Math.sin((la2 - la1)/2),\n
+    sin_lon = Math.sin((lo2 - lo1)/2),\n
+    h = sin_lat*sin_lat + Math.cos(la1)*Math.cos(la2)*sin_lon*sin_lon;\n
+  return 2*R*Math.asin(Math.sqrt(h));\n
+}\n
+\n
+function exit_on_fail(ret, msg) {\n
+  if (ret) {\n
+    console.log(msg);\n
+    me.exit(1);\n
+  }\n
+}\n
+\n
+function mustWait(timestamp) {\n
+  if(me.timestamp === 0) {\n
+    me.timestamp = timestamp;\n
+  }\n
+  return timestamp - me.timestamp < me.must_wait;\n
+}\n
 \n
 me.onStart = function() {\n
-  me.stableHeight = 114;\n
-  me.stableHeightReached = false;\n
-  me.startTime = new Date();\n
-  me.destination = DESTINATION;\n
-  me.destinationLoiter = false;\n
-  me.setAcceleration(10);\n
-  me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
-  me.loiter_coordinates = [];\n
-  me.last_point_reached = -1;\n
-  var x, y;\n
-  function toRadians (angle) {\n
-    return angle * (Math.PI / 180);\n
+  me.direction_set = false;\n
+  me.init_alt_reached = false;\n
+  me.landing = false;\n
+  me.landing_alt_reached = false;\n
+  me.must_wait = 3000;\n
+  me.next_checkpoint = 0;\n
+  me.parachute_triggered = false;\n
+  me.start_altitude = me.getInitialAltitude() + FLIGH_ALTITUDE;\n
+  me.timestamp = 0;\n
+\n
+  if (!IS_LEADER) {\n
+    me.follow_leader = true;\n
+    me.leader_init_alt_reached = false;\n
+    me.start_altitude += ALTITUDE_DIFF;\n
+    me.must_wait = 0;\n
   }\n
-  for (var i = 1; i > 0; i-=0.25){\n
-    for (var angle = 0; angle <360; angle+=8){ //counter-clockwise\n
-    //for (var angle = 360; angle > 0; angle-=8){ //clockwise\n
-      x = LOITER_DISTANCE * Math.cos(toRadians(angle)) + DESTINATION.x;\n
-      y = LOITER_DISTANCE * Math.sin(toRadians(angle)) + DESTINATION.y;\n
-      me.loiter_coordinates.push([x,y,me.stableHeight*i]);\n
-    }\n
-  }\n
+  exit_on_fail(\n
+    me.setAltitude(me.start_altitude + 1),\n
+    "Failed to set start altitude");\n
 };\n
 \n
-me.onUpdate = function () {\n
-  var elapsed = new Date() - me.startTime;\n
-  //take off\n
-  if (!me.takeOffDone) {\n
-    var dist = me.stableHeight - me.position.z;\n
-    dist = Math.sqrt(dist * dist);\n
-    if (dist < 0.5) {\n
-      me.stableHeightReached = true;\n
+me.onUpdate = function(timestamp) {\n
+  if (!me.init_alt_reached) {\n
+    me.init_alt_reached = altitudeReached(me.getAltitudeAbs(), me.start_altitude);\n
+    return;\n
+  }\n
+\n
+  if (me.must_wait > 0) {\n
+    if (!mustWait(timestamp)) {\n
+      me.must_wait = 0;\n
+      me.timestamp = 0;\n
     }\n
-    if (me.stableHeightReached) {\n
-      me.setTargetCoordinates(me.position.x, me.position.y, me.stableHeight);\n
+    return;\n
+  }\n
+\n
+  if (!IS_LEADER && me.follow_leader) {\n
+    if (me.drone_dict[LEADER_ID].altitudeAbs === 0) {\n
+      return console.log("[DEMO] Waiting for leader to send its altitude");\n
     }\n
-    //emulate take off time\n
-    if (new Date() - me.startTime < TAKEOFF_TIME * 1000) {\n
-      return;\n
+\n
+    if (!me.leader_init_alt_reached) {\n
+      me.leader_init_alt_reached = me.drone_dict[LEADER_ID].altitudeAbs >= me.start_altitude - ALTITUDE_DIFF;\n
+      return console.log(`[DEMO] Waiting for leader to reach altitude ${me.start_altitude - ALTITUDE_DIFF} (currently ${me.drone_dict[LEADER_ID].altitudeAbs})`);\n
+    }\n
+\n
+    if (me.drone_dict[LEADER_ID].altitudeRel > PARACHUTE_ALTITUDE) {\n
+      exit_on_fail(\n
+        me.setTargetCoordinates(\n
+          me.drone_dict[LEADER_ID].latitude,\n
+          me.drone_dict[LEADER_ID].longitude,\n
+          me.drone_dict[LEADER_ID].altitudeAbs + ALTITUDE_DIFF,\n
+          30.001\n
+        ),\n
+        "Failed to follow leader");\n
     } else {\n
-      console.log("takeoff done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
-      me.takeOffDone = true;\n
-    }\n
-  }\n
-  //reach destination\n
-  if (!me.destinationLoiter) {\n
-    me.setTargetCoordinates(me.destination.x, me.destination.y, me.stableHeight);\n
-    var distt = distance([me.destination.x, me.destination.y], [me.position.x, me.position.y]);\n
-    if (distt < LOITER_DISTANCE) {\n
-      me.destinationLoiter = true;\n
-      console.log("stable flight done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
+      me.follow_leader = false;\n
+      me.next_checkpoint = me.drone_dict[LEADER_ID].lastCheckpoint + 1;\n
+      console.log("[DEMO] Stop following...\\n");\n
     }\n
     return;\n
   }\n
-  //stop\n
-  if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
-    me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);\n
+\n
+  if (!me.direction_set) {\n
+    if (me.next_checkpoint < checkpoint_list.length) {\n
+      exit_on_fail(\n
+        me.setTargetCoordinates(\n
+          checkpoint_list[me.next_checkpoint].latitude,\n
+          checkpoint_list[me.next_checkpoint].longitude,\n
+          checkpoint_list[me.next_checkpoint].altitude + FLIGH_ALTITUDE,\n
+          100\n
+        ),\n
+        "Failed to set checkpoint coordinates");\n
+      console.log(`[DEMO] Going to Checkpoint ${me.next_checkpoint}\\n`)\n
+    } else {\n
+      console.log("[DEMO] Setting landing coordinates...\\n");\n
+      me.landing_altitude = me.getAltitudeAbs() - me.getCurrentPosition().z + PARACHUTE_ALTITUDE;\n
+      exit_on_fail(\n
+        me.setTargetCoordinates(\n
+          checkpoint_list[checkpoint_list.length - 1].latitude,\n
+          checkpoint_list[checkpoint_list.length - 1].longitude,\n
+          me.landing_altitude,\n
+          100\n
+        ),\n
+        "Failed to set landing coordinates");\n
+    }\n
+    me.direction_set = true;\n
     return;\n
   }\n
-  //loiter\n
-  var next_point = me.loiter_coordinates[me.last_point_reached+1];\n
-  me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
-  if (distance([me.position.x, me.position.y], next_point) < 1) {\n
-    me.last_point_reached += 1;\n
-    if (me.last_point_reached === me.loiter_coordinates.length - 1) {\n
-      console.log("loiter done! time elapsed:", formatTimeToMinutesAndSeconds(elapsed));\n
-      return;\n
+\n
+  if (me.next_checkpoint < checkpoint_list.length) {\n
+    me.current_position = me.getCurrentPosition();\n
+    me.distance = distance(me.current_position.x, me.current_position.y,\n
+                           checkpoint_list[me.next_checkpoint].latitude,\n
+                           checkpoint_list[me.next_checkpoint].longitude);\n
+    if (me.distance > EPSILON) {\n
+      console.log(`Waiting for drone to get to destination (${me.distance} m)`);\n
+    } else {\n
+      console.log(`[DEMO] Reached Checkpoint ${me.next_checkpoint}\\n`);\n
+      exit_on_fail(\n
+        me.setCheckpoint(me.next_checkpoint),\n
+        "Failed to set checkpoint");\n
+      me.next_checkpoint += 1;\n
+      me.direction_set = false;\n
+      me.must_wait = 30000;\n
+      me.wait(me.must_wait);\n
     }\n
-    next_point = me.loiter_coordinates[me.last_point_reached+1];\n
-    me.setTargetCoordinates(next_point[0], next_point[1], next_point[2]);\n
+    return;\n
   }\n
-};
+\n
+  if (!me.landing_alt_reached) {\n
+    me.landing_alt_reached = altitudeReached(me.getAltitudeAbs(), me.landing_altitude);\n
+    return;\n
+  }\n
+\n
+  if (!me.landing) {\n
+    me.current_position = me.getCurrentPosition();\n
+    me.distance = distance(me.current_position.x, me.current_position.y,\n
+                           landing_point.latitude, landing_point.longitude);\n
+    if (me.distance > 20) {\n
+      console.log(`[DEMO] Waiting to reach landing point (current distance is ${me.distance})`);\n
+    } else {\n
+      console.log("[DEMO] Landing...\\n");\n
+      me.landing = true;\n
+    }\n
+    return;\n
+  }\n
+\n
+  if (!me.parachute_triggered) {\n
+    if (Math.abs(me.getYaw() - TARGET_YAW) < EPSILON_YAW) {\n
+      console.log("[DEMO] Deploying parachute...");\n
+      exit_on_fail(me.doParachute(2), "Failed to deploy parachute");\n
+      me.parachute_triggered = true;\n
+    } else {\n
+      return console.log(`[DEMO] Waiting for yaw...`);\n
+    }\n
+  }\n
+\n
+  if (me.landed()) {\n
+    me.exit(0);\n
+  }\n
+};\n
+
 
 ]]></string> </value>
         </item>
@@ -265,7 +408,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1658430347.43</float>
+                              <float>1660314641.15</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -314,7 +457,7 @@ me.onUpdate = function () {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1001.59040.35912.18107</string> </value>
+                      <value> <string>1002.23821.51224.50841</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -332,7 +475,7 @@ me.onUpdate = function () {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1659020997.73</float>
+                              <float>1660839236.53</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

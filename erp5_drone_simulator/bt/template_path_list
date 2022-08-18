@@ -1,4 +1,6 @@
 rescue_swarm_map_module/compare_map
 rescue_swarm_script_module/emulate_bounce
 rescue_swarm_script_module/emulate_loiter
+rescue_swarm_script_module/log_bounce
+rescue_swarm_script_module/log_loiter
 web_page_module/test_drone_simulator_gadget
