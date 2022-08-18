@@ -409,10 +409,6 @@ var DroneManager = /** @class */ (function () {
       if (!this._canPlay)
         return;
       var coordinates = this._API.processCoordinates(x, y, z, r);
-      //HACK to ignore checkpoints high altitudes //TODO fix altitude issue
-      if (z > 500) {
-        coordinates.z = this._controlMesh.position.y;
-      }
       coordinates.x -= this._controlMesh.position.x;
       coordinates.y -= this._controlMesh.position.z;
       coordinates.z -= this._controlMesh.position.y;
