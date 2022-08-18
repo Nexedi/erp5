@@ -26,9 +26,13 @@ if dialog_id not in ('', None):
 # editing it by calling the Base_edit script with correct
 # parameters directly.
 if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify portal content', context) :
-  msg = Base_translateString("You do not have the permissions to edit the object.")
-  redirect_url = '%s/%s?selection_index=%s&selection_name=%s&%s' % (context.absolute_url(), form_id, selection_index, selection_name, 'portal_status_message=%s' % msg)
-  return request['RESPONSE'].redirect(redirect_url)
+  redirect_kw = {
+    'portal_status_message': Base_translateString("You do not have the permissions to edit the object.")
+  }
+  if selection_name:
+    redirect_kw['selection_name'] = selection_name
+    redirect_kw['selection_index'] = selection_index
+  return request['RESPONSE'].redirect('%s/%s?%s' % (context.absolute_url(), form_id, make_query(redirect_kw)))
 
 # Get the form
 form = getattr(context,form_id)
