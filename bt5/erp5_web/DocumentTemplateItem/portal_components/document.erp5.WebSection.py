@@ -461,9 +461,10 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     parent = aq_parent(aq_inner(self))
     parent_url = getattr(parent, 'absolute_translated_url', parent.absolute_url)(relative=relative)
     original_document = self.getOriginalDocument()
-    return self._add_trailing_slash(
-      self._add_trailing_slash(parent_url) + \
-      getattr(original_document, 'getTranslatedTranslatableId', original_document.getId)())
+    return '/'.join([
+      parent_url,
+      getattr(original_document, 'getTranslatedTranslatableId', original_document.getId)()
+    ])
 
   security.declareProtected(Permissions.View, 'getSiteMapTree')
   def getSiteMapTree(self, **kw):

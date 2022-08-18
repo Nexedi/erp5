@@ -1626,6 +1626,7 @@ Hé Hé Hé!""", page.asText().strip())
     # After setting /fr/ccc => /aaa as well, we have no conflict.
     section1.setFrTranslatedTranslatableId('ccc')
     self.tic()
+    website_absolute_url = website.absolute_url()
     website_path = website.absolute_url_path()
     # /fr/ccc/ is /aaa/
     response = self.publish(website_path + '/fr/ccc/')
@@ -1638,7 +1639,12 @@ Hé Hé Hé!""", page.asText().strip())
     # /fr/bbb/ should be redirected to /fr/aaa/
     response = self.publish(website_path + '/fr/bbb/')
     self.assertEqual(MOVED_TEMPORARILY, response.status)
-    self.assertEqual(website.absolute_url() + '/fr/aaa/', response.getHeader('Location'))
+    self.assertEqual(website_absolute_url + '/fr/aaa/', response.getHeader('Location'))
+    # check absolute_translated_url()
+    with self.portal.Localizer.translationContext('fr'):
+      self.assertEqual(website_absolute_url + '/fr', website.absolute_translated_url())
+      self.assertEqual(website_absolute_url + '/fr/ccc', website['aaa'].absolute_translated_url())
+      self.assertEqual(website_absolute_url + '/fr/aaa', website['bbb'].absolute_translated_url())
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
