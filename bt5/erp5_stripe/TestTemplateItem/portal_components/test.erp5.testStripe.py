@@ -179,6 +179,13 @@ class TestStripePaymentSession(ERP5TypeTestCase):
           "status": "expired",
           "object": "checkout.session"
         }))
+      if session_id == "not_found":
+        return (404, {'content-type': 'application/json'}, json.dumps({
+          "error": {
+            "message": "Invalid checkout.session id: not_found",
+            "type": "invalid_request_error"
+          }
+        }))
       return RuntimeError("Unexpected %s" % url)
     return _callback
 
@@ -329,6 +336,119 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       third_expiration_date = stripe_payment_session.getExpirationDate()
       self.assertEqual(third_expiration_date, second_expiration_date)
 
+  def test_invalid_request_error(self):
+    connector = self._create_connector()
+    session_id = "not_found"
+
+    module = self.portal.stripe_payment_session_module
+    for session in module.objectValues():
+      if session.getValidationState() == "open":
+        session.expire()
+    self.tic()
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback(session_id)
+      )
+      stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
+        connector,
+        self.data.copy(),
+        module.getRelativeUrl(),
+        batch_mode=True
+      )
+      self.tic()
+      self._document_to_delete_list.append(stripe_payment_session)
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.GET,
+        "https://mock:8080/checkout/sessions/%s" % session_id,
+        self._get_response_callback(session_id)
+      )
+      http_exchange = stripe_payment_session.StripePaymentSession_retrieveSession(
+        connector, batch_mode=1
+      )
+      self.tic()
+      self._document_to_delete_list.append(http_exchange)
+
+      self.assertEqual("HTTP Exchange", http_exchange.getPortalType())
+      self.assertEqual({
+        'message': 'Invalid checkout.session id: not_found',
+        'type': 'invalid_request_error'
+      }, json.loads(http_exchange.getResponse())["error"])
+      stripe_payment_session.setExpirationDate(DateTime() - 1)
+      self.tic()
+
+      self.assertRaises(
+        ValueError,
+        stripe_payment_session.StripePaymentSession_checkStripeSessionOpen,
+        connector.getRelativeUrl())
+
+      self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
+        request_method='POST'
+      )
+
+      def stop_condition(message_list):
+        return any([x.processing_node == -2 for x in message_list])
+
+      self.tic(stop_condition=stop_condition)
+      activity_tool = self.portal.portal_activities
+      self.assertEqual([(
+        stripe_payment_session.getPath(),
+        'StripePaymentSession_checkStripeSessionOpen',
+        -2
+      )], [
+        ("/".join(m.object_path), m.method_id, m.processing_node)
+        for m in activity_tool.getMessageList()
+      ])
+      self.assertEqual(0, self.portal.portal_activities.countMessage(
+        method_id="activeSense"))
+
+      self.publish('/%s/ERP5Site_receiveStripeWebHook' % self.portal.getId(),
+        request_method='POST'
+      )
+      self.commit()
+      self.assertEqual(1, activity_tool.countMessage(
+        method_id="activeSense"))
+
+      activity_tool.manageInvoke(
+        object_path=self.portal.portal_alarms["check_stripe_payment_session"].getPath(),
+        method_id='activeSense'
+      )
+      self.commit()
+      self.assertEqual(1, self.portal.portal_activities.countMessage(
+        path=stripe_payment_session.getPath(),
+        method_id="StripePaymentSession_checkStripeSessionOpen"))
+      self.assertEqual(0, self.portal.portal_activities.countMessage(
+        method_id="activeSense"))
+      self.assertEqual(1, self.portal.portal_activities.countMessage(
+        method_id="Alarm_checkStripePaymentSession"))
+
+      activity_tool.manageInvoke(
+        object_path=self.portal.portal_alarms["check_stripe_payment_session"].getPath(),
+        method_id='Alarm_checkStripePaymentSession'
+      )
+      self.commit()
+
+
+      self.assertEqual(1, self.portal.portal_activities.countMessage(
+        path=stripe_payment_session.getPath(),
+        method_id="StripePaymentSession_checkStripeSessionOpen"))
+      self.assertEqual(0, self.portal.portal_activities.countMessage(
+        method_id="activeSense"))
+      self.assertEqual(0, self.portal.portal_activities.countMessage(
+        method_id="Alarm_checkStripePaymentSession"))
+
+      for message in activity_tool.getMessageList():
+        if message.method_id == "StripePaymentSession_checkStripeSessionOpen":
+          activity_tool.manageDelete(message.uid, message.activity)
+        self.commit()
+
+      self.assertEqual(0, self.portal.portal_activities.countMessage(
+        method_id="StripePaymentSession_checkStripeSessionOpen"))
+
   def test_retrieve_stripe_payment_session_status(self):
     connector = self._create_connector()
     session_id = "abc321"
@@ -360,3 +480,5 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       self.assertEqual("HTTP Exchange", http_exchange.getPortalType())
       self.assertEqual("expired", json.loads(http_exchange.getResponse())["status"])
+      self.tic()
+      self._document_to_delete_list.append(http_exchange)

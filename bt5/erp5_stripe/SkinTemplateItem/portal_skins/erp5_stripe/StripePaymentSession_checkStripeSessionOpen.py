@@ -22,12 +22,9 @@ http_exchange = context.StripePaymentSession_retrieveSession(
 )
 
 response = json.loads(http_exchange.getResponse())
-if "error" in response:
-  if response["error"]["type"] == "invalid_request_error":
-    context.expire()
-    return
-  else:
-    raise ValueError("Unexpected type in %s" % response)
+
+if "error" in response and response["error"]["type"] == "invalid_request_error":
+  raise ValueError("Error to check %s" % context.getRelativeUrl())
 
 assert response["object"] == "checkout.session", "Unexpected Stripe Object"
 assert response["id"] == context.getReference(), "Unexpected Stripe ID"
