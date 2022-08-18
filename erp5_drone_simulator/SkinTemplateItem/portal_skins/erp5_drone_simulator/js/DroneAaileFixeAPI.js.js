@@ -7,6 +7,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         this._team = team;
         this._flight_parameters = flight_parameters;
         this._loiter_radius = 0;
+        this._loiter_center = [0, 0, 0];
     }
     Object.defineProperty(DroneAaileFixeAPI.prototype, "team", {
         //*************************************************** ACCESSOR *****************************************************
@@ -119,9 +120,6 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       }
     };
     DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z, r) {
-      if (r && r > 30) {
-        this._loiter_radius = r;
-      }
       if(isNaN(lat) || isNaN(lon) || isNaN(z)){
         throw new Error('Target coordinates must be numbers');
       }
@@ -142,6 +140,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         position = normalizeToMap(x, y, flightParameters);
       if (z > flightParameters.start_AMSL) {
         z -= flightParameters.start_AMSL;
+      }
+      if (r && r > 30) {
+        this._loiter_radius = r;
+        this._loiter_center = [position[0], position[1], z];
       }
       return {
         x: position[0],
@@ -166,13 +168,20 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         z: z
       };
     };
-    DroneAaileFixeAPI.prototype.wait = function (drone, time) {
+    /*DroneAaileFixeAPI.prototype.wait = function (drone, time) {
       if (this._gameManager._game_duration - drone._start_wait < time) {
-        //TODO loiter instead of wait
         drone.setDirection(0, 0, 0);
       } else {
         drone._start_wait = 0;
       }
+    };*/
+    DroneAaileFixeAPI.prototype.loiter = function (drone) {
+      //TODO loiter instead of wait
+      /*if (this._loiter_radius > 30) {
+        this._loiter_radius;
+        this._loiter_center;
+      }*/
+      drone.setDirection(0, 0, 0);
     };
     DroneAaileFixeAPI.prototype.getDroneAI = function () {
       return null;
