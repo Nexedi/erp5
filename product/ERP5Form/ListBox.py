@@ -2132,6 +2132,41 @@ class ListBoxRendererLine:
     """
     return self.getBrain().getUrl()
 
+  @lazyMethod
+  def getDefaultAbsoluteURL(self):
+    """Compute the default link for this line.
+    """
+    renderer = self.renderer
+    request = renderer.request
+
+    # brain.absolute_url() is slow because it invokes
+    # _aq_dynamic() every time to get brain.REQUEST,
+    # so we call request.physicalPathToURL() directly
+    # instead of brain.absolute_url().
+    try:
+      url = request.physicalPathToURL(
+        self.getBrain().getPath())
+    except AttributeError:
+      return None
+
+    params = []
+    selection_name = renderer.getSelectionName()
+    if int(request.get(
+      'ignore_layout',
+      0 if request.get('is_web_mode') else 1)):
+      params.append('ignore_layout:int=1')
+    if int(request.get('editable_mode', 0)):
+      params.append('editable_mode:int=1')
+    if selection_name:
+      params.extend(('selection_name=%s' % selection_name,
+                      'selection_index=%s' % self.index,
+                      'reset:int=1'))
+      if renderer.getSelectionTool().isAnonymous():
+        params.append('selection_key=%s' % renderer.getSelection().getAnonymousSelectionKey())
+    if params:
+      url = '%s?%s' % (url, '&amp;'.join(params))
+    return url
+
   def isSummary(self):
     """Return whether this line is a summary or not.
     """
@@ -2339,9 +2374,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     url_column_dict = dict(renderer.getUrlColumnList())
     selection = renderer.getSelection()
     selection_name = renderer.getSelectionName()
-    ignore_layout = int(request.get('ignore_layout',
-                        0 if request.get('is_web_mode') else 1))
-    editable_mode = int(request.get('editable_mode', 0))
     ui_domain = 'erp5_ui'
     # We need a way to pass the current line object (ie. brain) to the
     # field which is being displayed. Since the render_view API did not
@@ -2404,28 +2436,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             LOG('ListBox', WARNING, 'could not evaluate the url method getListItemUrl with %r' % (brain,),
                 error = sys.exc_info())
         else:
-          try:
-            # brain.absolute_url() is slow because it invokes
-            # _aq_dynamic() every time to get brain.REQUEST,
-            # so we call request.physicalPathToURL() directly
-            # instead of brain.absolute_url().
-            url = request.physicalPathToURL(brain.getPath())
-            params = []
-            if ignore_layout:
-              params.append('ignore_layout:int=1')
-            if editable_mode:
-              params.append('editable_mode:int=1')
-            if selection_name:
-              params.extend(('selection_name=%s' % selection_name,
-                             'selection_index=%s' % self.index,
-                             'reset:int=1'))
-              selection_tool = self.getObject().getPortalObject().portal_selections
-              if selection_tool.isAnonymous():
-                params.append('selection_key=%s' % selection.getAnonymousSelectionKey())
-            if params:
-              url = '%s?%s' % (url, '&amp;'.join(params))
-          except AttributeError:
-            pass
+          url = self.getDefaultAbsoluteURL()
 
       if isinstance(url, six.binary_type):
         url = six.text_type(url, encoding)
