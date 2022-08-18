@@ -189,7 +189,8 @@
             max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
             path_point, average_speed = 0, flight_time, log_interval_time,
             previous_log_time, height, timestamp, destination_lon,
-            destination_lat, log_header_found, time_offset = 1, flight_dist = 0;
+            destination_lat, log_header_found, time_offset = 1,
+            flight_dist = 0, start_AMSL = 0;
           for (i = 0; i < line_list.length; i += 1) {
             if (!log_header_found && !line_list[i].includes("timestamp;")) {
               continue;
@@ -267,6 +268,7 @@
             y = latitudeToY(lat);
             position = normalizeToMap(x, y);
             if (!previous) {
+              start_AMSL = parseFloat(splitted_log_entry[3]);
               start_position = position;
               start_position.push(height);
               previous = position;
@@ -321,6 +323,7 @@
             MAX_X: MAX_X,
             MIN_Y: MIN_Y,
             MAX_Y: MAX_Y,
+            start_AMSL: start_AMSL,
             flight_time: flight_time,
             average_speed: average_speed,
             log_interval_time: log_interval_time,
@@ -328,7 +331,7 @@
             full_log: log_point_list,
             converted_log_point_list: converted_log_point_list
           };
-          options.json_map.drone.maxSpeed = flight_dist / flight_time;
+          options.json_map.drone.maxSpeed = (flight_dist / flight_time) * 0.75;
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
