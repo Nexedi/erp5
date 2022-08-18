@@ -1629,16 +1629,16 @@ Hé Hé Hé!""", page.asText().strip())
     website_path = website.absolute_url_path()
     # /fr/ccc/ is /aaa/
     response = self.publish(website_path + '/fr/ccc/')
-    self.assertEqual(response.status, 200)
+    self.assertEqual(HTTP_OK, response.status)
     self.assertIn('page1 in French', response.getBody())
     # /fr/aaa/ is /bbb/
     response = self.publish(website_path + '/fr/aaa/')
-    self.assertEqual(response.status, 200)
+    self.assertEqual(HTTP_OK, response.status)
     self.assertIn('page2 in French', response.getBody())
     # /fr/bbb/ should be redirected to /fr/aaa/
     response = self.publish(website_path + '/fr/bbb/')
-    self.assertEqual(response.status, 301)
-    self.assertEqual(response.getHeader('Location'), website.absolute_url() + '/fr/aaa/')
+    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    self.assertEqual(website.absolute_url() + '/fr/aaa/', response.getHeader('Location'))
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """

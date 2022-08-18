@@ -160,7 +160,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
           query_string = self.REQUEST.get('QUERY_STRING', '')
           if query_string:
             translated_url += '?' + query_string
-          self.REQUEST.RESPONSE.redirect(translated_url, status=301)
+          self.REQUEST.RESPONSE.redirect(translated_url)
     return document
 
   def _getTranslatedPathDict(self):
@@ -179,7 +179,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         checkValidId(self, translated_section_id, allow_dup=True)
         key = (translated_section_id, language)
         if key in translated_path_dict:
-          raise ValueError, '%r is used in several sections : %r' % (key, (translated_path_dict[key], section_id))
+          raise ValueError('%r is used in several sections : %r' % (key, (translated_path_dict[key], section_id)))
         translated_path_dict[key] = section_id
     if translated_path_dict != self._getTranslatedPathDict():
       setattr(self, INTERNAL_TRANSLATED_PATH_DICT_NAME, translated_path_dict)
