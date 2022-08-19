@@ -84,9 +84,9 @@ class Inventory(Delivery):
     category_list.extend(value_list)
 
 
-  def immediateReindexObject(self, temp_constructor=None, **kw):
+  def _immediateReindexObject(self, temp_constructor=None, **kw):
     """
-    Rewrite reindexObject so that we can insert lines in stock table
+    Rewrite indexation method so that we can insert lines in stock table
     which will be equal to the difference between stock values for
     resource in the inventory and the one before the date of this inventory
 
