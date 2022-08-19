@@ -408,12 +408,11 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
       if (!this._canPlay)
         return;
-      var coordinates = {x: x, y: y, z: z};
       //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
       if (r !== -1) {
         this._start_loiter = 0;
-        coordinates = this._API.processCoordinates(x, y, z, r);
       }
+      var coordinates = this._API.processCoordinates(x, y, z, r);
       coordinates.x -= this._controlMesh.position.x;
       coordinates.y -= this._controlMesh.position.z;
       coordinates.z -= this._controlMesh.position.y;
@@ -516,17 +515,6 @@ var DroneManager = /** @class */ (function () {
         this.setDirection(this._direction.x, this._direction.y, altitude);
         this.setAcceleration(this._maxAcceleration);
     };
-    /**
-     * Make the drone wait
-     * @param time to wait
-    DroneManager.prototype.wait = function (time) {
-        if (!this._canPlay)
-          return;
-        if (this._start_wait === 0) {
-          this._start_wait = this._API._gameManager._game_duration;
-        }
-        this._wait = time;
-    };*/
     /**
      * Make the drone loiter
      */

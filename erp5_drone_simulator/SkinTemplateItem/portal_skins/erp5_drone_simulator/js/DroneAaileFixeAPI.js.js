@@ -9,7 +9,6 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         this._team = team;
         this._flight_parameters = flight_parameters;
         this._loiter_radius = 0;
-        this._loiter_center = [0, 0, 0];
         this._last_point_reached = -1;
     }
     Object.defineProperty(DroneAaileFixeAPI.prototype, "team", {
@@ -150,8 +149,9 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         z: z
       };
       if (r && r > LOITER_LIMIT) {
-        this._loiter_radius = r;
+        this._loiter_radius = r * 0.6;
         this._loiter_center = processed_coordinates;
+        //this._loiter_center_lat_lon = {x:lat, y:lon};
         this._loiter_coordinates = [];
         this._last_point_reached = -1;
         var x1, y1;
@@ -160,7 +160,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
           for (var angle = 360; angle > 0; angle-=8){ //clockwise
             x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
             y1 = this._loiter_radius * Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
-            this._loiter_coordinates.push([x1, y1, this._loiter_center.z]);
+            this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, z));
+            //this._loiter_coordinates.push([x1, y1, this._loiter_center.z]);
           }
         }
       }
@@ -184,25 +185,32 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       };
     };
     DroneAaileFixeAPI.prototype.loiter = function (drone) {
-      function distance(p1, p2) {
-        var a = p1[0] - p2[0],
-          b = p1[1] - p2[1];
-        return Math.sqrt(a * a + b * b);
+      function distance(c1, c2) {
+        var R = 6371e3,
+          q1 = c1[0] * Math.PI / 180,
+          q2 = c2[0] * Math.PI / 180,
+          dq = (c2[0] - c1[0]) * Math.PI / 180,
+          dl = (c2[1] - c1[1]) * Math.PI / 180,
+          a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+            Math.cos(q1) * Math.cos(q2) *
+            Math.sin(dl / 2) * Math.sin(dl / 2),
+          c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
       }
       if (this._loiter_radius > LOITER_LIMIT) {
+        var drone_pos = drone.getCurrentPosition();
         //shift loiter circle to nearest point
         if (this._last_point_reached === -1) {
           if (!this.shifted) {
             var min = 9999;
             var min_i;
             for (var i = 0; i < this._loiter_coordinates.length; i++){
-              var d = distance([drone.position.x, drone.position.y], this._loiter_coordinates[i]);
+              var d = distance([drone_pos.x, drone_pos.y], [this._loiter_coordinates[i].x, this._loiter_coordinates[i].y]);
               if (d < min) {
                 min = d;
                 min_i = i;
               }
             }
-            //a.push(a.shift())
             this._loiter_coordinates = this._loiter_coordinates.concat(this._loiter_coordinates.splice(0,min_i));
             this.shifted = true;
           }
@@ -216,14 +224,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         }
         //loiter
         var next_point = this._loiter_coordinates[this._last_point_reached + 1];
-        drone.setTargetCoordinates(next_point[0], next_point[1], next_point[2], -1);
-        if (distance([drone.position.x, drone.position.y], next_point) < 1) {
+        drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
+        if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
           this._last_point_reached += 1;
           if (this._last_point_reached === this._loiter_coordinates.length - 1) {
             return;
           }
           next_point = this._loiter_coordinates[this._last_point_reached + 1];
-          drone.setTargetCoordinates(next_point[0], next_point[1], next_point[2], -1);
+          drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
         }
       }
     };
