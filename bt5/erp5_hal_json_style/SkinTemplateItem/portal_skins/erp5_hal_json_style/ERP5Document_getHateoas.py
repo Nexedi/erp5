@@ -91,6 +91,8 @@ def toBasicTypes(obj):
     return tuple(toBasicTypes(x) for x in obj)
   if isinstance(obj, Message):
     return obj.translate()
+  if isinstance(obj, DateTime):
+    return obj.rfc822()
   try:
     return {toBasicTypes(key): toBasicTypes(obj[key]) for key in obj}
   except Exception:
@@ -691,7 +693,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
       "sandbox": field.get_value("js_sandbox")
     })
     try:
-      result["renderjs_extra"] = json.dumps(dict(field.get_value("renderjs_extra")))
+      result["renderjs_extra"] = json.dumps(toBasicTypes(dict(field.get_value("renderjs_extra"))))
     except KeyError:
       # Ensure compatibility if the products are not yet up to date
       result["renderjs_extra"] = json.dumps({})
