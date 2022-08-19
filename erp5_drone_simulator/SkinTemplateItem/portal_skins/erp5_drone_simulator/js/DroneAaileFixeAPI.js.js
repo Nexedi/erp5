@@ -1,5 +1,7 @@
 /// <reference path="./GameManager.ts" />
 
+LOITER_LIMIT = 30;
+
 var DroneAaileFixeAPI = /** @class */ (function () {
     //*************************************************** CONSTRUCTOR **************************************************
     function DroneAaileFixeAPI(gameManager, team, flight_parameters) {
@@ -147,10 +149,11 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         y: position[1],
         z: z
       };
-      if (r && r > 30) {
+      if (r && r > LOITER_LIMIT) {
         this._loiter_radius = r;
         this._loiter_center = processed_coordinates;
         this._loiter_coordinates = [];
+        this._last_point_reached = -1;
         var x1, y1;
         for (var i = 1; i > 0; i-=0.25){
           //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
@@ -186,7 +189,26 @@ var DroneAaileFixeAPI = /** @class */ (function () {
           b = p1[1] - p2[1];
         return Math.sqrt(a * a + b * b);
       }
-      if (this._loiter_radius > 30) {
+      if (this._loiter_radius > LOITER_LIMIT) {
+        //shift loiter circle to nearest point
+        if (this._last_point_reached === -1) {
+          if (!this.shifted) {
+            var min = 9999;
+            var min_i;
+            for (var i = 0; i < this._loiter_coordinates.length; i++){
+              var d = distance([drone.position.x, drone.position.y], this._loiter_coordinates[i]);
+              if (d < min) {
+                min = d;
+                min_i = i;
+              }
+            }
+            //a.push(a.shift())
+            this._loiter_coordinates = this._loiter_coordinates.concat(this._loiter_coordinates.splice(0,min_i));
+            this.shifted = true;
+          }
+        } else {
+          this.shifted = false;
+        }
         //stop
         if (this._last_point_reached === this._loiter_coordinates.length - 1) {
           drone.setDirection(0, 0, 0);
