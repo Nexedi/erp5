@@ -408,8 +408,12 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
       if (!this._canPlay)
         return;
-      this._start_loiter = 0;
-      var coordinates = this._API.processCoordinates(x, y, z, r);
+      var coordinates = {x: x, y: y, z: z};
+      //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
+      if (r !== -1) {
+        this._start_loiter = 0;
+        coordinates = this._API.processCoordinates(x, y, z, r);
+      }
       coordinates.x -= this._controlMesh.position.x;
       coordinates.y -= this._controlMesh.position.z;
       coordinates.z -= this._controlMesh.position.y;
