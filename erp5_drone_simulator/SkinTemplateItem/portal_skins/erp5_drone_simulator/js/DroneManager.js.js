@@ -26,6 +26,7 @@ var DroneManager = /** @class */ (function () {
         this._leader_id = 0;
         this._team = team;
         this._start_loiter = 0;
+        this._start_altitude = 0;
         this._API = API; // var API created on AI evel
         // Create the control mesh
         this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
@@ -181,6 +182,19 @@ var DroneManager = /** @class */ (function () {
           this._internal_crash();
         }
     };
+    /**
+     * Set a target point to move
+     */
+    DroneManager.prototype.internal_setTargetCoordinates = function (x, y, z) {
+      if (!this._canPlay)
+        return;
+      x -= this._controlMesh.position.x;
+      y -= this._controlMesh.position.z;
+      z -= this._controlMesh.position.y;
+      this.setDirection(x, y, z);
+      this.setAcceleration(this._maxAcceleration);
+      return;
+    };
     DroneManager.prototype.internal_update = function (delta_time) {
         var context = this;
         if (this._controlMesh) {
@@ -236,6 +250,9 @@ var DroneManager = /** @class */ (function () {
                   .push(function () {
                     if (context._start_loiter > 0) {
                       context._API.loiter(context);
+                    }
+                    if (context._start_altitude > 0) {
+                      context._API.reachAltitude(context);
                     }
                   });
             }
@@ -408,7 +425,12 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
       if (!this._canPlay)
         return;
-      this._start_loiter = 0;
+      //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
+      if (r !== -1) {
+        this._start_loiter = 0;
+        this._maxSpeed = this._API.getMaxSpeed();
+      }
+      this._start_altitude = 0;
       var coordinates = this._API.processCoordinates(x, y, z, r);
       coordinates.x -= this._controlMesh.position.x;
       coordinates.y -= this._controlMesh.position.z;
@@ -504,25 +526,15 @@ var DroneManager = /** @class */ (function () {
      * Set the drone altitude
      * @param altitude information to be set
      */
-    DroneManager.prototype.setAltitude = function (altitude) {
+    DroneManager.prototype.setAltitude = function (altitude, skip_loiter) {
         if (!this._canPlay)
           return;
-        altitude = this._API.setAltitude(altitude);
-        altitude -= this._controlMesh.position.y;
-        this.setDirection(this._direction.x, this._direction.y, altitude);
-        this.setAcceleration(this._maxAcceleration);
-    };
-    /**
-     * Make the drone wait
-     * @param time to wait
-    DroneManager.prototype.wait = function (time) {
-        if (!this._canPlay)
-          return;
-        if (this._start_wait === 0) {
-          this._start_wait = this._API._gameManager._game_duration;
+        if (this._start_altitude === 0) {
+          this._start_altitude = 1;
         }
-        this._wait = time;
-    };*/
+        altitude = this._API.setAltitude(altitude, this, skip_loiter);
+        return;
+    };
     /**
      * Make the drone loiter
      */
@@ -559,8 +571,7 @@ var DroneManager = /** @class */ (function () {
      * do parachute
      */
     DroneManager.prototype.doParachute = function () {
-        //TODO
-        return null;
+        return this._API.doParachute(this);
     };
     /**
      * exit
