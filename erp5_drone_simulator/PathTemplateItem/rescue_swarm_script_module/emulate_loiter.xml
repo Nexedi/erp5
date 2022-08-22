@@ -287,7 +287,7 @@ me.onUpdate = function(timestamp) {\n
       me.next_checkpoint += 1;\n
       me.direction_set = false;\n
       me.must_wait = 30000;\n
-      me.wait(me.must_wait);\n
+      me.loiter();\n
     }\n
     return;\n
   }\n
@@ -457,7 +457,7 @@ me.onUpdate = function(timestamp) {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.23821.51224.50841</string> </value>
+                      <value> <string>1002.23821.61752.61952</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -475,7 +475,7 @@ me.onUpdate = function(timestamp) {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1660839236.53</float>
+                              <float>1661191882.28</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
