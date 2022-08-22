@@ -16,6 +16,7 @@
     MAX_X,
     MIN_Y,
     MAX_Y,
+    SPEED_FACTOR = 0.75,
     log_point_list = [],
     converted_log_point_list = [];
 
@@ -331,7 +332,7 @@
             full_log: log_point_list,
             converted_log_point_list: converted_log_point_list
           };
-          options.json_map.drone.maxSpeed = (flight_dist / flight_time) * 0.75;
+          options.json_map.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
           options.json_map.obstacles = path_point_list;
           options.json_map.randomSpawn.leftTeam.position.x = start_position[0];
           options.json_map.randomSpawn.leftTeam.position.y = start_position[1];
