@@ -307,6 +307,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
       return GAMEPARAMETERS.drone.maxSpeed;
     };
+    DroneAaileFixeAPI.prototype.doParachute = function (drone) {
+      //TODO what to do here?
+      drone.setDirection(0, 0, 0);
+    };
     DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
       return 0;
     };
