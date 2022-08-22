@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Image" module="OFS.Image"/>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,20 +15,12 @@
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>height</string> </key>
-            <value> <int>15</int> </value>
-        </item>
-        <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>width</string> </key>
-            <value> <int>22</int> </value>
         </item>
       </dictionary>
     </pickle>

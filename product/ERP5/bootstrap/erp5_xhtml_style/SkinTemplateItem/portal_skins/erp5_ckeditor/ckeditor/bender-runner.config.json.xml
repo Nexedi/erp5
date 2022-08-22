@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>wsc.css</string> </value>
+            <value> <string>bender-runner.config.json</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>application/json</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
