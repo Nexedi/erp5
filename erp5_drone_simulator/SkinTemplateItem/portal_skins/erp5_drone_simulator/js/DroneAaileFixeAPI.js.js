@@ -256,8 +256,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         total_points = 360/CIRCLE_ANGLE*LOOPS,
         initial_altitude = drone.getAltitudeAbs(),
         center = {
-          x: drone._controlMesh.position.x + TAKEOFF_RADIUS,
-          y: drone._controlMesh.position.z + TAKEOFF_RADIUS,
+          x: drone._controlMesh.position.x,
+          y: drone._controlMesh.position.z,
           z: drone._controlMesh.position.y
         };
       for (var l = 0; l <= LOOPS; l+=1){
