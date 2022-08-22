@@ -411,6 +411,7 @@ var DroneManager = /** @class */ (function () {
       //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
       if (r !== -1) {
         this._start_loiter = 0;
+        this._maxSpeed = this._API.getMaxSpeed();
       }
       var coordinates = this._API.processCoordinates(x, y, z, r);
       coordinates.x -= this._controlMesh.position.x;
