@@ -315,7 +315,8 @@ url_list = [
   "image_module/eci_fdl_logo_png",
   "image_module/eci_logo_png",
   "image_module/marker-icon",
-  "image_module/marker-shadow"
+  "image_module/marker-shadow",
+  "image_module/gadget_erp5_eci_camera_png"
 ]
 
 return url_list
