@@ -2,3 +2,22 @@ div[data-gadget-url$="gadget_editor.html"] > textarea,
 div[data-gadget-url$="gadget_editor.html"] > pre code {
   font-family: "Courier New", Courier, monospace;
 }
+
+/*
+ * xhtml: make editors in bottom group use full height
+ */
+.main_form,
+.main_form .master,
+.main_form .master .document,
+.main_form .master .document .content,
+.main_form fieldset.bottom,
+.main_form fieldset.bottom > .field,
+.main_form fieldset.bottom > .field > .input,
+.main_form fieldset.bottom > .field > .input > div[data-gadget-url$="gadget_editor.html"],
+.main_form fieldset.bottom > .field > .input > div[data-gadget-url$="gadget_editor.html"] div[data-gadget-scope="editor"],
+.main_form fieldset.bottom > .field > .input > div[data-gadget-url$="gadget_editor.html"] iframe {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
