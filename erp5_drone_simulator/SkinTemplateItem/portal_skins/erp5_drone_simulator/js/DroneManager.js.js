@@ -534,9 +534,9 @@ var DroneManager = /** @class */ (function () {
         }
         altitude = this._API.setAltitude(altitude, this);
         return;
-        altitude -= this._controlMesh.position.y;
+        /*altitude -= this._controlMesh.position.y;
         this.setDirection(this._direction.x, this._direction.y, altitude);
-        this.setAcceleration(this._maxAcceleration);
+        this.setAcceleration(this._maxAcceleration);*/
     };
     /**
      * Make the drone loiter
@@ -574,8 +574,7 @@ var DroneManager = /** @class */ (function () {
      * do parachute
      */
     DroneManager.prototype.doParachute = function () {
-        //TODO
-        return null;
+        return this._API.doParachute(this);
     };
     /**
      * exit
