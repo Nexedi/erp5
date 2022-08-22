@@ -1,6 +1,8 @@
 /// <reference path="./GameManager.ts" />
 
 LOITER_LIMIT = 30;
+LOITER_RADIUS_FACTOR = 0.60;
+LOITER_SPEED_FACTOR = 1.5;
 
 var DroneAaileFixeAPI = /** @class */ (function () {
     //*************************************************** CONSTRUCTOR **************************************************
@@ -149,13 +151,13 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         z: z
       };
       if (r && r > LOITER_LIMIT) {
-        this._loiter_radius = r * 0.6;
+        this._loiter_radius = r * LOITER_RADIUS_FACTOR;
         this._loiter_center = processed_coordinates;
         //this._loiter_center_lat_lon = {x:lat, y:lon};
         this._loiter_coordinates = [];
         this._last_point_reached = -1;
         var x1, y1;
-        for (var i = 1; i > 0; i-=0.25){
+        //for (var i = 1; i > 0; i-=0.25){
           //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
           for (var angle = 360; angle > 0; angle-=8){ //clockwise
             x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
@@ -163,7 +165,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
             this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, z));
             //this._loiter_coordinates.push([x1, y1, this._loiter_center.z]);
           }
-        }
+        //}
       }
       return processed_coordinates;
     };
@@ -202,8 +204,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         //shift loiter circle to nearest point
         if (this._last_point_reached === -1) {
           if (!this.shifted) {
-            var min = 9999;
-            var min_i;
+            drone._maxSpeed = drone._maxSpeed * LOITER_SPEED_FACTOR;
+            var min = 9999, min_i;
             for (var i = 0; i < this._loiter_coordinates.length; i++){
               var d = distance([drone_pos.x, drone_pos.y], [this._loiter_coordinates[i].x, this._loiter_coordinates[i].y]);
               if (d < min) {
@@ -219,6 +221,9 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         }
         //stop
         if (this._last_point_reached === this._loiter_coordinates.length - 1) {
+          if (drone._maxSpeed !== this.getMaxSpeed()) {
+            drone._maxSpeed = this.getMaxSpeed();
+          }
           drone.setDirection(0, 0, 0);
           return;
         }
