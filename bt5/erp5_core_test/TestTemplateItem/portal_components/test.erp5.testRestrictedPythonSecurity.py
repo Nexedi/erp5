@@ -806,68 +806,70 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         return ip_interface(u'2a01:cb14:818:0:7312:e251:f251:ffbe').with_prefixlen
         ''')
 
+
+def add_tests(suite, module):
+  if hasattr(module, 'test_suite'):
+    return suite.addTest(module.test_suite())
+  for obj in vars(module).values():
+    if isinstance(obj, type) and issubclass(obj, unittest.TestCase):
+      suite.addTest(unittest.makeSuite(obj))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
 
   # Also run original tests of RestrictedPython, to confirm that our patches did not break
   # original functionality
-  import RestrictedPython.tests.testCompile
-  suite.addTest(RestrictedPython.tests.testCompile.test_suite())
-  import RestrictedPython.tests.testUtiliities
-  suite.addTest(RestrictedPython.tests.testUtiliities.test_suite())
-  import RestrictedPython.tests.testREADME
-  suite.addTest(RestrictedPython.tests.testREADME.test_suite())
-  import RestrictedPython.tests.testRestrictions
-  suite.addTest(RestrictedPython.tests.testRestrictions.test_suite())
+  try:
+    import RestrictedPython.tests
+  except ImportError:
+    # https://github.com/zopefoundation/RestrictedPython/issues/231
+    pass
+  else:
+    import RestrictedPython.tests.testCompile
+    add_tests(suite, RestrictedPython.tests.testCompile)
+    import RestrictedPython.tests.testUtiliities
+    add_tests(suite, RestrictedPython.tests.testUtiliities)
+    import RestrictedPython.tests.testREADME
+    add_tests(suite, RestrictedPython.tests.testREADME)
+    import RestrictedPython.tests.testRestrictions
+    add_tests(suite, RestrictedPython.tests.testRestrictions)
 
   import AccessControl.tests.test_requestmethod
-  suite.addTest(AccessControl.tests.test_requestmethod.test_suite())
+  add_tests(suite, AccessControl.tests.test_requestmethod)
   import AccessControl.tests.test_safeiter
-  suite.addTest(AccessControl.tests.test_safeiter.test_suite())
+  add_tests(suite, AccessControl.tests.test_safeiter)
   import AccessControl.tests.test_tainted
-  suite.addTest(AccessControl.tests.test_tainted.test_suite())
-  import AccessControl.tests.test_formatter
-  suite.addTest(unittest.makeSuite(AccessControl.tests.test_formatter.FormatterTest))
+  add_tests(suite, AccessControl.tests.test_tainted)
+  import AccessControl.tests.test_safe_formatter
+  add_tests(suite, AccessControl.tests.test_safe_formatter)
   import AccessControl.tests.test_userfolder
-  suite.addTest(AccessControl.tests.test_userfolder.test_suite())
+  add_tests(suite, AccessControl.tests.test_userfolder)
   import AccessControl.tests.test_users
-  suite.addTest(AccessControl.tests.test_users.test_suite())
+  add_tests(suite, AccessControl.tests.test_users)
   import AccessControl.tests.testClassSecurityInfo
-  suite.addTest(AccessControl.tests.testClassSecurityInfo.test_suite())
+  add_tests(suite, AccessControl.tests.testClassSecurityInfo)
   import AccessControl.tests.testImplementation
-  suite.addTest(AccessControl.tests.testImplementation.test_suite())
+  add_tests(suite, AccessControl.tests.testImplementation)
   import AccessControl.tests.testModuleSecurity
   # we allow part of os module, so adjust this test for another not allowed module
   def test_unprotected_module(self):
     self.assertUnauth('subprocess', ())
   AccessControl.tests.testModuleSecurity.ModuleSecurityTests.test_unprotected_module = test_unprotected_module
-  suite.addTest(AccessControl.tests.testModuleSecurity.test_suite())
+  add_tests(suite, AccessControl.tests.testModuleSecurity)
   import AccessControl.tests.testOwned
-  suite.addTest(AccessControl.tests.testOwned.test_suite())
-  import AccessControl.tests.testPasswordDigest
-  # Disable crypt scheme, we don't want to use CRYPT and it fails on debian 11.
-  # This is also disabled in github.com/zopefoundation/AuthEncoding commit
-  # fbbdcf3 (Allow the CRYPT test to fail as it is the case on GHA., 2021-04-08)
-  import AccessControl.AuthEncoding
-  def setUp(self):
-    self._original_AuthEncoding_schemes = AccessControl.AuthEncoding._schemes[::]
-    AccessControl.AuthEncoding._schemes = [s for s in AccessControl.AuthEncoding._schemes if s[0] != 'CRYPT']
-  AccessControl.tests.testPasswordDigest.PasswordDigestTests.setUp = setUp
-  def tearDown(self):
-    AccessControl.AuthEncoding._schemes = self._original_AuthEncoding_schemes
-  AccessControl.tests.testPasswordDigest.PasswordDigestTests.tearDown = tearDown
-  suite.addTest(AccessControl.tests.testPasswordDigest.test_suite())
+  add_tests(suite, AccessControl.tests.testOwned)
   import AccessControl.tests.testPermissionMapping
-  suite.addTest(AccessControl.tests.testPermissionMapping.test_suite())
+  add_tests(suite, AccessControl.tests.testPermissionMapping)
   import AccessControl.tests.testPermissionRole
-  suite.addTest(AccessControl.tests.testPermissionRole.test_suite())
+  add_tests(suite, AccessControl.tests.testPermissionRole)
   import AccessControl.tests.testRole
-  suite.addTest(AccessControl.tests.testRole.test_suite())
+  add_tests(suite, AccessControl.tests.testRole)
   import AccessControl.tests.testSecurityManager
-  suite.addTest(AccessControl.tests.testSecurityManager.test_suite())
+  add_tests(suite, AccessControl.tests.testSecurityManager)
   import AccessControl.tests.testZCML
-  suite.addTest(AccessControl.tests.testZCML.test_suite())
+  add_tests(suite, AccessControl.tests.testZCML)
   import AccessControl.tests.testZopeGuards
 
   # patch so that AccessControl.tests.testZopeGuards.TestActualPython.testPython
@@ -894,9 +896,9 @@ def test_suite():
           return TestActualPython_compile(self, outfile.name)
     return TestActualPython_compile(self, fname)
   AccessControl.tests.testZopeGuards.TestActualPython._compile = _compile
-  suite.addTest(AccessControl.tests.testZopeGuards.test_suite())
+  add_tests(suite, AccessControl.tests.testZopeGuards)
 
   import AccessControl.tests.testZopeSecurityPolicy
-  suite.addTest(AccessControl.tests.testZopeSecurityPolicy.test_suite())
+  add_tests(suite, AccessControl.tests.testZopeSecurityPolicy)
 
   return suite
