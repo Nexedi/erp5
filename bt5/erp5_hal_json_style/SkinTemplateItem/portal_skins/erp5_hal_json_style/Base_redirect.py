@@ -16,18 +16,6 @@ request_form = context.ERP5Site_filterParameterList(request_form)
 request_form.update(keep_items)
 
 
-# XXX Allow CORS
-response = context.REQUEST.RESPONSE
-context.Base_prepareCorsResponse(RESPONSE=response)
-# http://en.wikipedia.org/wiki/Post/Redirect/Get
-response.setStatus(201, lock=True)
-response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
-# be explicit with the reponse content type because in case of reports - they
-# can be in text/plain, application/pdf ... so the RJS form needs to know what
-# is going exactly on. ERP5Document_getHateoas returns application/hal+json
-# therefor we don't need to be afraid of clashes
-response.setHeader("Content-type", "application/json; charset=utf-8")
-
 portal_status_level = keep_items.pop("portal_status_level", "success")
 if portal_status_level in ("warning", "error", "fatal"):
   portal_status_level = "error"
@@ -70,8 +58,20 @@ if (form_id not in [None, 'Base_viewFakePythonScriptActionForm', 'Base_viewFakeJ
     )
   }
 
+# XXX Allow CORS
+response = context.REQUEST.RESPONSE
+context.Base_prepareCorsResponse(RESPONSE=response)
+
+response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
+# be explicit with the reponse content type because in case of reports - they
+# can be in text/plain, application/pdf ... so the RJS form needs to know what
+# is going exactly on. ERP5Document_getHateoas returns application/hal+json
+# therefor we don't need to be afraid of clashes
+response.setHeader("Content-type", "application/json; charset=utf-8")
 
 result = json.dumps(result_dict, indent=2)
+# http://en.wikipedia.org/wiki/Post/Redirect/Get
+response.setStatus(201, lock=True)
 if abort_transaction:
   response.setBody(result, lock=True)
   raise Redirect('')
