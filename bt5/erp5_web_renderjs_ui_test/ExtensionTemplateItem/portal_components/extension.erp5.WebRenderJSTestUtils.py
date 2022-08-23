@@ -1,21 +1,10 @@
-from erp5.component.module.DateUtils import timeZoneContext
-
-current_timezone_contexts = []
+import os, time
+from DateTime import DateTime
 
 def setTimezone(timezone):
-  """Change the default timezone to `timezone`.
-  """
-  if current_timezone_contexts:
-    resetTimeZone()
-
-  tzc = timeZoneContext(timezone)
-  tzc.__enter__()
-  current_timezone_contexts.append(tzc)
-
+  # timezone must be for example GMT-7
+  os.environ['TZ'] = timezone
+  time.tzset()
+  DateTime._isDST = False
+  DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = timezone
   return "Timezone Updated"
-
-
-def resetTimeZone():
-  """Reset the timezone that might have been set by `setTimezone`
-  """
-  current_timezone_contexts.pop().__exit__(None, None, None)
