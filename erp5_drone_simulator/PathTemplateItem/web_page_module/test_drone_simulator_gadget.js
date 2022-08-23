@@ -57,27 +57,32 @@
 
     .declareJob('run', function () {
       function frechetDistance(a, b) {
-        var C = new Float32Array(a.length * b.length),
-          dim = a.length,
-          i,
-          j;
-        C[0] = distance(a[0], b[0]);
-        for (j = 1; j < dim; j++) {
-          C[j] = Math.max(C[j - 1], distance(a[0], b[j]));
-        }
-        for (i = 1; i < dim; i++) {
-          C[i * dim] = Math.max(C[(i - 1) * dim], distance(a[i], b[0]));
-        }
-        for (i = 1; i < dim; i++) {
+        try {
+          var C = new Float32Array(a.length * b.length),
+            dim = a.length,
+            i,
+            j;
+          C[0] = distance(a[0], b[0]);
           for (j = 1; j < dim; j++) {
-            C[i * dim + j] = Math.max(
-              Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
-                       C[i * dim + j - 1]),
-              distance(a[i], b[j])
-            );
+            C[j] = Math.max(C[j - 1], distance(a[0], b[j]));
           }
+          for (i = 1; i < dim; i++) {
+            C[i * dim] = Math.max(C[(i - 1) * dim], distance(a[i], b[0]));
+          }
+          for (i = 1; i < dim; i++) {
+            for (j = 1; j < dim; j++) {
+              C[i * dim + j] = Math.max(
+                Math.min(C[(i - 1) * dim + j], C[(i - 1) * dim + j - 1],
+                         C[i * dim + j - 1]),
+                distance(a[i], b[j])
+              );
+            }
+          }
+          return C[C.length - 1];
+        } catch (ee) {
+          console.log("error calculating frechet distance:", ee);
+          return 0;
         }
-        return C[C.length - 1];
       }
       function averageDistance(a, b, z) {
         function distance3D(p1, p2) {
@@ -87,17 +92,22 @@
         }
         var i, x, y, pos_a, pos_b, sum = 0;
         for (i = 0; i < a.length; i++) {
-          x = longitudToX(a[i][1]);
-          y = latitudeToY(a[i][0]);
-          pos_a = normalizeToMap(x, y);
-          x = longitudToX(b[i][1]);
-          y = latitudeToY(b[i][0]);
-          pos_b = normalizeToMap(x, y);
-          if (z) {
-            sum += distance3D([pos_a[0], pos_a[1], a[i][2]],
-                              [pos_b[0], pos_b[1], b[i][2]]);
+          if (b[i]) {
+            x = longitudToX(a[i][1]);
+            y = latitudeToY(a[i][0]);
+            pos_a = normalizeToMap(x, y);
+            x = longitudToX(b[i][1]);
+            y = latitudeToY(b[i][0]);
+            pos_b = normalizeToMap(x, y);
+            if (z) {
+              sum += distance3D([pos_a[0], pos_a[1], a[i][2]],
+                                [pos_b[0], pos_b[1], b[i][2]]);
+            } else {
+              sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
+            }
           } else {
-            sum += distance([pos_a[0], pos_a[1]], [pos_b[0], pos_b[1]]);
+            //penalize shorter flights
+            sum += 100;
           }
         }
         return sum / a.length;
