@@ -89,32 +89,6 @@ add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              super=super, type=type)
 
 
-def guarded_next(iterator, default=_marker):
-    """next(iterator[, default])
-
-    Return the next item from the iterator. If default is given
-    and the iterator is exhausted, it is returned instead of
-    raising StopIteration.
-    """
-    try:
-        iternext = guarded_getattr(iterator, 'next').__call__
-        # this way an AttributeError while executing next() isn't hidden
-        # (2.6 does this too)
-    except AttributeError:
-        raise TypeError("%s object is not an iterator"
-                        % type(iterator).__name__)
-    try:
-        return iternext()
-    except StopIteration:
-        if default is _marker:
-            raise
-        return default
-# TODO: zope4py2 clean up this
-#if "next" not in safe_builtins: # BBB
-# override the default next if exists
-safe_builtins.update(next=guarded_next)
-#    add_builtins()
-
 _safe_class_attribute_dict = {}
 import inspect
 def allow_class_attribute(klass, access=1):
