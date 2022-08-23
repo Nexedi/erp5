@@ -3285,10 +3285,10 @@ def test_suite():
   add_tests(suite, ZPublisher.tests.testHTTPRequest)
 
   import ZPublisher.tests.testHTTPResponse
-  # TODO: why is this failing ? it seems testHTTPResponse is loaded as latin1, even though it
-  # uses coding: utf-8.
-  testHTTPResponse_encode_words = ZPublisher.tests.testHTTPResponse.encode_words
-  ZPublisher.tests.testHTTPResponse.encode_words = unittest.expectedFailure(testHTTPResponse_encode_words)
+  testHTTPResponse_TestHeaderEncodingRegistry_test_encode_words = \
+      ZPublisher.tests.testHTTPResponse.TestHeaderEncodingRegistry.test_encode_words
+  ZPublisher.tests.testHTTPResponse.TestHeaderEncodingRegistry.test_encode_words = \
+      unittest.expectedFailure(testHTTPResponse_TestHeaderEncodingRegistry_test_encode_words)
   add_tests(suite, ZPublisher.tests.testHTTPResponse)
 
   import ZPublisher.tests.testIterators
@@ -3300,23 +3300,13 @@ def test_suite():
   import ZPublisher.tests.test_Converters
   add_tests(suite, ZPublisher.tests.test_Converters)
 
-  # XXX don't run test_WSGIPublisher for now because too many failures
-  # import ZPublisher.tests.test_WSGIPublisher
-  # suite.addTest(ZPublisher.tests.test_WSGIPublisher.test_suite())
+  import ZPublisher.tests.test_WSGIPublisher
+  add_tests(suite, ZPublisher.tests.test_WSGIPublisher)
 
   import ZPublisher.tests.test_mapply
   add_tests(suite, ZPublisher.tests.test_mapply)
 
   import ZPublisher.tests.test_pubevents
-  TestGlobalRequestPubEventsAndExceptionUpgrading_afterSetUp = ZPublisher.tests.test_pubevents.TestGlobalRequestPubEventsAndExceptionUpgrading.afterSetUp
-  def afterSetUp(self):
-    TestGlobalRequestPubEventsAndExceptionUpgrading_afterSetUp(self)
-    # restore default server name, because some tests from test_pubevents have assertions
-    # assuming that it will be `nohost`
-    self.app.REQUEST['SERVER_NAME'] = 'nohost'
-    self.app.REQUEST['SERVER_PORT'] = 80
-  ZPublisher.tests.test_pubevents.TestGlobalRequestPubEventsAndExceptionUpgrading.afterSetUp = afterSetUp
-
   add_tests(suite, ZPublisher.tests.test_pubevents)
 
   import ZPublisher.tests.test_utils

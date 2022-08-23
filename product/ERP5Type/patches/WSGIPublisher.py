@@ -47,63 +47,39 @@ from zope.globalrequest import setRequest
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.management import endInteraction
 from zope.security.management import newInteraction
-from ZPublisher import pubevents, Retry
-from ZPublisher.HTTPResponse import HTTPResponse
-from ZPublisher.HTTPRequest import HTTPRequest
+from ZPublisher import pubevents
+from ZPublisher.HTTPRequest import WSGIRequest
+from ZPublisher.HTTPResponse import WSGIResponse
 from ZPublisher.Iterators import IStreamIterator, IUnboundStreamIterator
 from ZPublisher.mapply import mapply
-from ZPublisher.WSGIPublisher import call_object
-from ZPublisher.WSGIPublisher import missing_name, WSGIResponse
+from ZPublisher.utils import recordMetaData
+from ZPublisher.WSGIPublisher import (
+    _FILE_TYPES,
+    _DEFAULT_DEBUG_EXCEPTIONS,
+    _DEFAULT_DEBUG_MODE,
+    _DEFAULT_REALM,
+    _MODULE_LOCK,
+    _MODULES,
+    _WEBDAV_SOURCE_PORT,
+    call_object,
+    dont_publish_class,
+    missing_name,
+    validate_user,
+    set_default_debug_exceptions,
+    set_webdav_source_port,
+    get_debug_exceptions,
+    set_default_debug_mode,
+    set_default_authentication_realm,
+    get_module_info,
+    _exc_view_created_response,
+    transaction_pubevents,
+    publish as _original_publish,
+    load_app,
+    publish_module
+)
 
-try:
-    from ZServer.ZPublisher import Publish
-    isZope4 = True
-except ImportError:
-    isZope4 = False
-    
-if sys.version_info >= (3, ):
-    _FILE_TYPES = (IOBase, )
-else:
-    _FILE_TYPES = (IOBase, file)  # NOQA
-
-_DEFAULT_DEBUG_MODE = False
-_DEFAULT_REALM = None
-_MODULE_LOCK = allocate_lock()
-_MODULES = {}
-
-
-AC_LOGGER = logging.getLogger('event.AccessControl')
 
 if 1: # upstream moved WSGIResponse to HTTPResponse.py
-
-    def setBody(self, body, title='', is_error=False, lock=None):
-        # allow locking of the body in the same way as the status
-        if self._locked_body:
-            return
-
-        if isinstance(body, IOBase):
-            body.seek(0, 2)
-            length = body.tell()
-            body.seek(0)
-            self.setHeader('Content-Length', '%d' % length)
-            self.body = body
-        elif IStreamIterator.providedBy(body):
-            self.body = body
-            HTTPResponse.setBody(self, b'', title, is_error)
-        elif IUnboundStreamIterator.providedBy(body):
-            self.body = body
-            self._streaming = 1
-            HTTPResponse.setBody(self, b'', title, is_error)
-        else:
-            HTTPResponse.setBody(self, body, title, is_error)
-
-        # Have to apply the lock at the end in case the super class setBody
-        # is called, which will observe the lock and do nothing
-        if lock:
-            self._locked_body = 1
-
-    if not isZope4:
-        WSGIResponse.setBody = setBody
 
     def write(self, data):
         if not self._streaming:
@@ -169,361 +145,9 @@ if 1: # upstream moved WSGIResponse to HTTPResponse.py
     WSGIResponse.finalize = finalize
 
 
-# From ZPublisher.utils
-def recordMetaData(object, request):
-    if hasattr(object, 'getPhysicalPath'):
-        path = '/'.join(object.getPhysicalPath())
-    else:
-        # Try hard to get the physical path of the object,
-        # but there are many circumstances where that's not possible.
-        to_append = ()
-
-        if hasattr(object, '__self__') and hasattr(object, '__name__'):
-            # object is a Python method.
-            to_append = (object.__name__,)
-            object = object.__self__
-
-        while object is not None and not hasattr(object, 'getPhysicalPath'):
-            if getattr(object, '__name__', None) is None:
-                object = None
-                break
-            to_append = (object.__name__,) + to_append
-            object = aq_parent(aq_inner(object))
-
-        if object is not None:
-            path = '/'.join(object.getPhysicalPath() + to_append)
-        else:
-            # As Jim would say, "Waaaaaaaa!"
-            # This may cause problems with virtual hosts
-            # since the physical path is different from the path
-            # used to retrieve the object.
-            path = request.get('PATH_INFO')
-
-    T = transaction.get()
-    T.note(safe_unicode(path))
-    auth_user = request.get('AUTHENTICATED_USER', None)
-    if auth_user:
-        auth_folder = aq_parent(auth_user)
-        if auth_folder is None:
-            AC_LOGGER.warning(
-                'A user object of type %s has no aq_parent.',
-                type(auth_user))
-            auth_path = request.get('AUTHENTICATION_PATH')
-        else:
-            auth_path = '/'.join(auth_folder.getPhysicalPath()[1:-1])
-        user_id = auth_user.getId()
-        user_id = safe_unicode(user_id) if user_id else u'None'
-        T.setUser(user_id, safe_unicode(auth_path))
-
-
-def safe_unicode(value):
-    if isinstance(value, text_type):
-        return value
-    elif isinstance(value, binary_type):
-        try:
-            value = text_type(value, 'utf-8')
-        except UnicodeDecodeError:
-            value = value.decode('utf-8', 'replace')
-    return value
-
-
-def dont_publish_class(klass, request):
-    request.response.forbiddenError("class %s" % klass.__name__)
-
-
-def validate_user(request, user):
-    newSecurityManager(request, user)
-
-
-def get_module_info(module_name='Zope2'):
-    global _MODULES
-    info = _MODULES.get(module_name)
-    if info is not None:
-        return info
-
-    with _MODULE_LOCK:
-        module = __import__(module_name)
-        app = getattr(module, 'bobo_application', module)
-        realm = _DEFAULT_REALM if _DEFAULT_REALM is not None else module_name
-        error_hook = getattr(module,'zpublisher_exception_hook', None)
-        validated_hook = getattr(module,'zpublisher_validated_hook', validate_user)
-        _MODULES[module_name] = info = (app, realm, _DEFAULT_DEBUG_MODE, validated_hook, error_hook)
-    return info
-
-
-def _exc_view_created_response(exc, request, response):
-    view = queryMultiAdapter((exc, request), name=u'index.html')
-    parents = request.get('PARENTS')
-
-    if view is None and parents:
-        # Try a fallback based on the old standard_error_message
-        # DTML Method in the ZODB
-        view = queryMultiAdapter((exc, request),
-                                 name=u'standard_error_message')
-        root_parent = parents[0]
-        try:
-            aq_acquire(root_parent, 'standard_error_message')
-        except (AttributeError, KeyError):
-            view = None
-
-    if view is not None:
-        # Wrap the view in the context in which the exception happened.
-        if parents:
-            view.__parent__ = parents[0]
-
-        # Set status and headers from the exception on the response,
-        # which would usually happen while calling the exception
-        # with the (environ, start_response) WSGI tuple.
-        response.setStatus(exc.__class__)
-        if hasattr(exc, 'headers'):
-            for key, value in exc.headers.items():
-                response.setHeader(key, value)
-
-        # Set the response body to the result of calling the view.
-        response.setBody(view())
-        return True
-
-    return False
-
-
-@contextmanager
-def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
-    try:
-        setDefaultSkin(request)
-        newInteraction()
-        tm.begin()
-        notify(pubevents.PubStart(request))
-
-        yield
-
-        notify(pubevents.PubBeforeCommit(request))
-        if tm.isDoomed():
-            tm.abort()
-        else:
-            tm.commit()
-        notify(pubevents.PubSuccess(request))
-    except Exception as exc:
-        # Normalize HTTP exceptions
-        # (For example turn zope.publisher NotFound into zExceptions NotFound)
-        exc_type, _ = upgradeException(exc.__class__, None)
-        if not isinstance(exc, exc_type):
-            exc = exc_type(str(exc))
-
-        # Create new exc_info with the upgraded exception.
-        exc_info = (exc_type, exc, sys.exc_info()[2])
-
-        try:
-            retry = False
-            unauth = False
-            debug_exc = getattr(response, 'debug_exceptions', False)
-
-            try:
-                # Raise exception from app if handle-errors is False
-                # (set by zope.testbrowser in some cases)
-                if request.environ.get('x-wsgiorg.throw_errors', False):
-                    reraise(*exc_info)
-
-                if err_hook is not None:
-                    parents = request.get('PARENTS')
-                    if parents:
-                        parents = parents[0]
-                    try:
-                        try:
-                            r = err_hook(parents, request, *exc_info)
-                            assert r is response
-                            exc_view_created = True
-                        except Retry:
-                            if request.supports_retry():
-                                retry = True
-                            else:
-                                r = err_hook(parents, request, *sys.exc_info())
-                                assert r is response
-                                exc_view_created = True
-                    except (Redirect, Unauthorized):
-                        response.exception()
-                        exc_view_created = True
-                    except BaseException as e:
-                        if e is not exc:
-                            raise
-                        exc_view_created = True
-                else:
-                    # Handle exception view. Make sure an exception view that
-                    # blows up doesn't leave the user e.g. unable to log in.
-                    try:
-                        exc_view_created = _exc_view_created_response(
-                            exc, request, response)
-                    except Exception:
-                        exc_view_created = False
-                    # _unauthorized modifies the response in-place. If this hook
-                    # is used, an exception view for Unauthorized has to merge
-                    # the state of the response and the exception instance.
-                    if isinstance(exc, Unauthorized):
-                        unauth = True
-                        exc.setRealm(response.realm)
-                        response._unauthorized()
-                        response.setStatus(exc.getStatus())
-
-                    retry = isinstance(exc, TransientError) and request.supports_retry()
-            finally:
-                notify(pubevents.PubBeforeAbort(request, exc_info, retry))
-                tm.abort()
-                notify(pubevents.PubFailure(request, exc_info, retry))
-
-            if retry or \
-               (not unauth and (debug_exc or not exc_view_created)):
-                reraise(*exc_info)
-        finally:
-            # Avoid traceback / exception reference cycle.
-            del exc, exc_info
-    finally:
-        endInteraction()
-
-
 def publish(request, module_info):
     with getPublisherDeadlineValue(request):
-        obj, realm, debug_mode, validated_hook = module_info
+        return _original_publish(request, module_info)
 
-        request.processInputs()
-        response = request.response
-
-        # TODO: here is different
-        if debug_mode:
-            response.debug_mode = debug_mode
-
-        if realm and not request.get('REMOTE_USER', None):
-            response.realm = realm
-
-        noSecurityManager()
-
-        # Get the path list.
-        # According to RFC1738 a trailing space in the path is valid.
-        path = request.get('PATH_INFO')
-        request['PARENTS'] = [obj]
-
-        obj = request.traverse(path, validated_hook=validated_hook)
-        notify(pubevents.PubAfterTraversal(request))
-        recordMetaData(obj, request)
-
-        result = mapply(obj,
-                        request.args,
-                        request,
-                        call_object,
-                        1,
-                        missing_name,
-                        dont_publish_class,
-                        request,
-                        bind=1)
-        if result is not response:
-            response.setBody(result)
-
-        return response
-
-
-@contextmanager
-def load_app(module_info):
-    app_wrapper, realm, debug_mode, validated_hook = module_info
-    # Loads the 'OFS.Application' from ZODB.
-    app = app_wrapper()
-
-    try:
-        yield (app, realm, debug_mode, validated_hook)
-    finally:
-        if isZope4:
-            if transaction.manager.manager._txn is not None:
-                # Only abort a transaction, if one exists. Otherwise the
-                # abort creates a new transaction just to abort it.
-                transaction.abort()
-        else:
-            if getattr(transaction.manager, '_txn', None) is not None:
-                # Only abort a transaction, if one exists. Otherwise the
-                # abort creates a new transaction just to abort it.
-                transaction.abort()
-    
-        app._p_jar.close()
-
-
-def publish_module(environ, start_response,
-                   _publish=publish,  # only for testing
-                   _response=None,
-                   _response_factory=WSGIResponse,
-                   _request=None,
-                   _request_factory=HTTPRequest,
-                   _module_name='Zope2'):
-    module_info = get_module_info(_module_name)
-    module_info, err_hook = module_info[:4], module_info[4]
-    result = ()
-
-    path_info = environ.get('PATH_INFO')
-    if path_info and PY3:
-        # The WSGI server automatically treats the PATH_INFO as latin-1 encoded
-        # bytestrings. Typically this is a false assumption as the browser
-        # delivers utf-8 encoded PATH_INFO. We, therefore, need to encode it
-        # again with latin-1 to get a utf-8 encoded bytestring.
-        path_info = path_info.encode('latin-1')
-        # But in Python 3 we need text here, so we decode the bytestring.
-        path_info = path_info.decode('utf-8')
-
-        environ['PATH_INFO'] = path_info
-    with closing(BytesIO()) as stdout, closing(BytesIO()) as stderr:
-        new_response = (
-            _response
-            if _response is not None
-            else _response_factory(stdout=stdout, stderr=stderr))
-        new_response._http_version = environ['SERVER_PROTOCOL'].split('/')[1]
-        new_response._server_version = environ.get('SERVER_SOFTWARE')
-
-        new_request = (
-            _request
-            if _request is not None
-            else _request_factory(environ['wsgi.input'],
-                                  environ,
-                                  new_response))
-
-        for i in range(getattr(new_request, 'retry_max_count', 3) + 1):
-            request = new_request
-            response = new_response
-            setRequest(request)
-            try:
-                with load_app(module_info) as new_mod_info:
-                    with transaction_pubevents(request, response, err_hook):
-                        response = _publish(request, new_mod_info)
-                        # TODO: outside of load_app, because this cause
-                        # "should not load state when connection is closed"
-                        # if used in original place (eg. erp5_web_renderjs_ui_test:testFunctionalRJSDeveloperMode)
-                        user = getSecurityManager().getUser()
-                        if user is not None and user.getUserName() != 'Anonymous User':
-                            environ['REMOTE_USER'] = user.getUserName()
-                break
-            except TransientError:
-                if request.supports_retry():
-                    new_request = request.retry()
-                    new_response = new_request.response
-                else:
-                    raise
-            finally:
-                request.close()
-                clearRequest()
-
-        # Start the WSGI server response
-        status, headers = response.finalize()
-        start_response(status, headers)
-
-        # TODO: this part is slightly different
-        result = response.body
-        if isinstance(result, _FILE_TYPES):
-            if response.stdout.getvalue():
-                raise ValueError(
-                    'Cannot both return a file type and write to response.',
-                )
-        elif IUnboundStreamIterator.providedBy(result):
-            result = itertools.chain(result, (response.stdout.getvalue(), ))
-        else:
-            result = (result, response.stdout.getvalue())
-
-        for func in response.after_list:
-            func()
-
-    # Return the result body iterable.
-    return result
 
 sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
