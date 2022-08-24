@@ -88,7 +88,7 @@ add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              property=property, staticmethod=staticmethod,
              super=super, type=type)
 
-
+# XXX: backport of https://github.com/zopefoundation/AccessControl/pull/131
 def guarded_next(iterator, default=_marker):
     if default is _marker:
         ob = next(iterator)
@@ -97,8 +97,6 @@ def guarded_next(iterator, default=_marker):
     if not isinstance(iterator, SafeIter):
         guard(ob, ob)
     return ob
-
-# TODO: https://github.com/zopefoundation/AccessControl/pull/131
 safe_builtins.update(next=guarded_next)
 
 _safe_class_attribute_dict = {}
