@@ -89,6 +89,18 @@ add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              super=super, type=type)
 
 
+def guarded_next(iterator, default=_marker):
+    if default is _marker:
+        ob = next(iterator)
+    else:
+        ob = next(iterator, default)
+    if not isinstance(iterator, SafeIter):
+        guard(ob, ob)
+    return ob
+
+# TODO: https://github.com/zopefoundation/AccessControl/pull/131
+safe_builtins.update(next=guarded_next)
+
 _safe_class_attribute_dict = {}
 import inspect
 def allow_class_attribute(klass, access=1):
