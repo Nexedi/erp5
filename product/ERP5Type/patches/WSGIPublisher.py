@@ -150,4 +150,8 @@ def publish(request, module_info):
         return _original_publish(request, module_info)
 
 
+assert publish_module.__defaults__[0] is _original_publish
+publish_module.__defaults__ = (publish, ) + publish_module.__defaults__[1:]
+
+
 sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
