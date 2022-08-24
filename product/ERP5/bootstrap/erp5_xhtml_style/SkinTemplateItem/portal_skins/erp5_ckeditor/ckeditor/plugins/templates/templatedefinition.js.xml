@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>outputforflash.fla</string> </value>
+            <value> <string>templatedefinition.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/octet-stream</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
