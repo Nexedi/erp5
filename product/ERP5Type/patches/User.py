@@ -60,3 +60,33 @@ def getRoles(self, _transactional_variable_pool=local()):
   return role_tuple + extra_role_tuple
 
 SimpleUser.getRoles = getRoles
+
+def getRolesInContext(self, object):
+  """
+  Return the list of roles assigned to the user, including local roles
+  assigned in context of the passed in object.
+  """
+  userid = self.getId()
+  result = set()
+  object = aq_inner(object)
+  while 1:
+    local_role_dict = getattr(object, '__ac_local_roles__', None)
+    if local_role_dict:
+      if callable(local_role_dict):
+        local_role_dict = local_role_dict() or {}
+      result.update(local_role_dict.get(userid, ()))
+    parent = aq_parent(aq_inner(object))
+    if parent is not None:
+      object = parent
+      continue
+    new = getattr(object, '__self__', None)
+    if new is not None:
+      object = aq_inner(new)
+      continue
+    break
+  # Patched: Developer role should never be available as local role
+  result.discard(DEVELOPER_ROLE_ID)
+  result.update(self.getRoles())
+  return list(result)
+
+SimpleUser.getRolesInContext = getRolesInContext
