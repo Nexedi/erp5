@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>wsc.js</string> </value>
+            <value> <string>translationstatus.txt</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <value> <string>text/plain</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

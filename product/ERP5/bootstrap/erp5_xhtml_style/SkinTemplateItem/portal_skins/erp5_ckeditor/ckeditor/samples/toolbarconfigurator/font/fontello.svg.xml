@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Image" module="OFS.Image"/>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
