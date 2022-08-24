@@ -87,31 +87,16 @@ add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
              property=property, staticmethod=staticmethod,
              super=super, type=type)
 
-
+# XXX: backport of https://github.com/zopefoundation/AccessControl/pull/131
 def guarded_next(iterator, default=_marker):
-    """next(iterator[, default])
-
-    Return the next item from the iterator. If default is given
-    and the iterator is exhausted, it is returned instead of
-    raising StopIteration.
-    """
-    try:
-        iternext = guarded_getattr(iterator, 'next').__call__
-        # this way an AttributeError while executing next() isn't hidden
-        # (2.6 does this too)
-    except AttributeError:
-        raise TypeError("%s object is not an iterator"
-                        % type(iterator).__name__)
-    try:
-        return iternext()
-    except StopIteration:
-        if default is _marker:
-            raise
-        return default
-#if "next" not in safe_builtins: # BBB
-# override the default next if exists
+    if default is _marker:
+        ob = next(iterator)
+    else:
+        ob = next(iterator, default)
+    if not isinstance(iterator, SafeIter):
+        guard(ob, ob)
+    return ob
 safe_builtins.update(next=guarded_next)
-#    add_builtins()
 
 _safe_class_attribute_dict = {}
 import inspect
