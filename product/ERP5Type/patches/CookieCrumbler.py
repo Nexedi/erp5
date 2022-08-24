@@ -117,7 +117,7 @@ def modifyRequest(self, req, resp):
   cookie login is disabled for this request, raises
   CookieCrumblerDisabled.
   """
-  enabled = (req.__class__ is HTTPRequest
+  enabled = (isinstance(req, HTTPRequest)
       and req['REQUEST_METHOD'] in ('HEAD', 'GET', 'PUT', 'POST')
       and 'WEBDAV_SOURCE_PORT' not in req.environ)
   if enabled:
