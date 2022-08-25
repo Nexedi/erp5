@@ -260,12 +260,13 @@ me.onUpdate = function(timestamp) {\n
       console.log("[DEMO] Setting landing coordinates...\\n");\n
       me.landing_altitude = me.getAltitudeAbs() - me.getCurrentPosition().z + PARACHUTE_ALTITUDE;\n
       exit_on_fail(\n
-        me.setTargetCoordinates(\n
+        /*me.setTargetCoordinates(\n
           checkpoint_list[checkpoint_list.length - 1].latitude,\n
           checkpoint_list[checkpoint_list.length - 1].longitude,\n
           me.landing_altitude,\n
           100\n
-        ),\n
+        ),*/\n
+        me.setAltitude(me.landing_altitude),\n
         "Failed to set landing coordinates");\n
     }\n
     me.direction_set = true;\n
@@ -457,7 +458,7 @@ me.onUpdate = function(timestamp) {\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.23821.61752.61952</string> </value>
+                      <value> <string>1002.29699.24339.25053</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -475,7 +476,7 @@ me.onUpdate = function(timestamp) {\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1661191882.28</float>
+                              <float>1661272768.61</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
