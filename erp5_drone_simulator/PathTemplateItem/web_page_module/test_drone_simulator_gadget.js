@@ -80,8 +80,8 @@
           }
           return C[C.length - 1];
         } catch (ee) {
-          console.log("error calculating frechet distance:", ee);
-          return 0;
+          console.warn("error calculating frechet distance");
+          return -1;
         }
       }
       function averageDistance(a, b, z) {
