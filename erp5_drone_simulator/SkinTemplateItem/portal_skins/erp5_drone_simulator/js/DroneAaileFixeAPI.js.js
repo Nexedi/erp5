@@ -155,19 +155,15 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       if (r && r > LOITER_LIMIT) {
         this._loiter_radius = r * LOITER_RADIUS_FACTOR;
         this._loiter_center = processed_coordinates;
-        //this._loiter_center_lat_lon = {x:lat, y:lon};
         this._loiter_coordinates = [];
         this._last_loiter_point_reached = -1;
         var x1, y1;
-        //for (var i = 1; i > 0; i-=0.25){
-          //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
-          for (var angle = 360; angle > 0; angle-=8){ //clockwise
-            x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
-            y1 = this._loiter_radius * Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
-            this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, z));
-            //this._loiter_coordinates.push([x1, y1, this._loiter_center.z]);
-          }
-        //}
+        //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
+        for (var angle = 360; angle > 0; angle-=8){ //clockwise
+          x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
+          y1 = this._loiter_radius * Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
+          this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, z));
+        }
       }
       this._last_altitude_point_reached = -1;
       this.takeoff_path = [];
@@ -247,8 +243,13 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     DroneAaileFixeAPI.prototype.getDroneAI = function () {
       return null;
     };
-    DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone) {
+    DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone, skip_loiter) {
       this.takeoff_path = [];
+      if (skip_loiter) {
+        var drone_pos = drone.getCurrentPosition();
+        drone.setTargetCoordinates(drone_pos.x, drone_pos.y, altitude);
+        return;
+      }
       var x1, y1,
         LOOPS = 1,
         CIRCLE_ANGLE = 8,
