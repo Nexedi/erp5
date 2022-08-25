@@ -306,11 +306,11 @@ var GameManager = /** @class */ (function (console) {
                   //convert x-y coordinates into latitud-longitude
                   var lon = drone_position_x + GAMEPARAMETERS.compareFlights.map_width / 2;
                   lon = lon / 1000;
-                  lon = lon * (GAMEPARAMETERS.compareFlights.max_x - GAMEPARAMETERS.compareFlights.min_x) + GAMEPARAMETERS.compareFlights.min_x;
+                  lon = lon * (GAMEPARAMETERS.compareFlights.MAX_X - GAMEPARAMETERS.compareFlights.MIN_X) + GAMEPARAMETERS.compareFlights.MIN_X;
                   lon = lon / (GAMEPARAMETERS.compareFlights.map_width / 360.0) - 180;
                   var lat = drone_position_y + GAMEPARAMETERS.compareFlights.map_height / 2;
                   lat = lat / 1000;
-                  lat = lat * (GAMEPARAMETERS.compareFlights.max_y - GAMEPARAMETERS.compareFlights.min_y) + GAMEPARAMETERS.compareFlights.min_y;
+                  lat = lat * (GAMEPARAMETERS.compareFlights.MAX_Y - GAMEPARAMETERS.compareFlights.MIN_Y) + GAMEPARAMETERS.compareFlights.MIN_Y;
                   lat = 90 - lat / (GAMEPARAMETERS.compareFlights.map_height / 180.0);
                   this._flight_log[count].push([lat, lon, drone_position_z]);
                 }
