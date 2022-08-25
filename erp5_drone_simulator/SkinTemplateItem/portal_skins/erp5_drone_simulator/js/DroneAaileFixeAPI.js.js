@@ -246,9 +246,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone, skip_loiter) {
       this.takeoff_path = [];
       if (skip_loiter) {
-        drone.internal_setTargetCoordinates(drone._controlMesh.position.x, drone._controlMesh.position.z, altitude);
-        drone.setAcceleration(drone._maxAcceleration);
-        drone._start_altitude = 0;
+        var drone_pos = drone.getCurrentPosition();
+        drone.setTargetCoordinates(drone_pos.x, drone_pos.y, altitude);
         return;
       }
       var x1, y1,
