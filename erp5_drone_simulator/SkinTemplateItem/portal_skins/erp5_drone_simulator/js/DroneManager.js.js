@@ -526,17 +526,14 @@ var DroneManager = /** @class */ (function () {
      * Set the drone altitude
      * @param altitude information to be set
      */
-    DroneManager.prototype.setAltitude = function (altitude) {
+    DroneManager.prototype.setAltitude = function (altitude, skip_loiter) {
         if (!this._canPlay)
           return;
         if (this._start_altitude === 0) {
           this._start_altitude = 1;
         }
-        altitude = this._API.setAltitude(altitude, this);
+        altitude = this._API.setAltitude(altitude, this, skip_loiter);
         return;
-        /*altitude -= this._controlMesh.position.y;
-        this.setDirection(this._direction.x, this._direction.y, altitude);
-        this.setAcceleration(this._maxAcceleration);*/
     };
     /**
      * Make the drone loiter
