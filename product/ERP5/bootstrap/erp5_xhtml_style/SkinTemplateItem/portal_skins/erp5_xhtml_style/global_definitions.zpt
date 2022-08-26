@@ -16,7 +16,7 @@
            global current_action   python: portal.ERP5Site_getCurrentAction(current_url, actions);
            cancel_url       request/cancel_url | current_url;
            dummy            python: local_parameter_list.update({'cancel_url': cancel_url});
-           dummy       python: request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8');
+           dummy       python: request.RESPONSE.getHeader('Content-Type') or request.RESPONSE.setHeader('Content-Type', 'text/html;; charset=utf-8');
            dummy  python: request.set('here', here);
            global css_list  css_list | python:[];
            dummy       python:css_list.extend(['%s/%s' % (portal_path, x) for x in portal.ERP5Site_getCssRelativeUrlList()]);
