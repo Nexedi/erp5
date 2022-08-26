@@ -88,5 +88,5 @@ if (form_id not in [None, 'Base_viewFakePythonScriptActionForm', 'Base_viewFakeJ
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
   response.setBody(result, lock=True)
-  raise Redirect
+  raise Redirect('')
 return result
