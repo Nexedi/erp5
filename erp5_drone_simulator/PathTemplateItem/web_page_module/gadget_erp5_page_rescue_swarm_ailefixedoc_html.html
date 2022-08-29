@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+
+  <head>
+      <link rel="stylesheet" type="text/css" href="../css/documentation.css">
+      <script src="gadget_erp5_page_rescue_swarm_documentation.js"></script>
+      <title>Drone A Aile Fixe API Documentation</title>
+  </head>
+
+  <body>
+
+    <div class="documentation">
+
+      <h1>Drone a Aile Fixe API</h1>
+
+      <h3>API functions</h3>
+
+        <!-- Start -->
+        <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
+        <p class="item-descr">Function called one time on drone start.</p>
+        <h5 class="item-param-1">Example</h5>
+        <p class="item-example">me.onStart = function() {<br>
+          &nbsp;&nbsp;//one time execution code<br>
+          }
+        </p>
+        <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+        <!-- Update -->
+        <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
+        <p class="item-descr">Function called on game update, 60 times / second. <br></p>
+        <div>
+          <h5 class="item-param-1">Param</h5>
+          <h5 class="item-param-2">Description</h5>
+        </div>
+        <div>
+          <p class="item-param-1">timestamp: Integer</p>
+          <p class="item-param-2">timestamp in milliseconds from UNIX epoch</p>
+        </div>
+        <h5 class="item-param-1">Example</h5>
+        <p class="item-example">me.onUpdate = function(timestamp) {<br>
+          &nbsp;&nbsp;//code executed 60 times per second<br>
+          }
+        </p>
+        <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      
+        <p class="item-example">
+          * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
+this document must list the functions, explain why they are needed
+this document must list the parameters type and return type. And explain why such type has been decided
+for now, we mostly followed the work previsouly done by Leo Paul I suppose
+but before working with us, he was discussing a lot with Thomas and JP to decide what should be the API, type of coordinate, etc
+so, I would like first to have a first version of this document explaining the current status, so that we could add Thomas in the loop after to decide what should be changed
+maybe Leo Paul already has something like this, no idea
+so, better wait for him to know where to start
+        </p>
+      
+        </div>
+      </div>
+
+  </body>
+</html>
