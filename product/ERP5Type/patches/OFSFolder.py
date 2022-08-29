@@ -74,6 +74,7 @@ security.declarePublic('zope_quick_start')
 Folder.security = security
 InitializeClass(Folder)
 
+# TODO: not needed on Zope4 ?
 # restore __repr__ after persistent > 4.4
 # https://github.com/zopefoundation/Zope/issues/379
 Folder.__repr__ = Item.__repr__
