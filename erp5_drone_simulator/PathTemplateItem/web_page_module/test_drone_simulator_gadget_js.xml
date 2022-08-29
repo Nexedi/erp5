@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_drone_simulator_gadget</string> </value>
+            <value> <string>test_drone_simulator_gadget_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1661445994.59</float>
+                              <float>1661792178.61</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
