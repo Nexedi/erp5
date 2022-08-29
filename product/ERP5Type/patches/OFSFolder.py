@@ -60,8 +60,17 @@ def Folder_isERP5SitePresent(self):
 
 Folder.isERP5SitePresent = Folder_isERP5SitePresent
 
+def Folder_zope_quick_start(self):
+  """Compatibility for old `zope_quick_start` that is referenced in
+  /index_html (at the root)
+  """
+  return 'OK'
+
+Folder.zope_quick_start = zope_quick_start
+
 security = ClassSecurityInfo()
 security.declareProtected(Permissions.ManagePortal, 'isERP5SitePresent')
+security.declarePublic('zope_quick_start')
 Folder.security = security
 InitializeClass(Folder)
 
