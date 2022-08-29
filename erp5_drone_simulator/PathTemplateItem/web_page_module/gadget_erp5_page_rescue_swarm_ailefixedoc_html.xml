@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,13 +69,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_rescue_swarm_test_drone_simulator.js</string> </value>
+            <value> <string>gadget_erp5_page_rescue_swarm_ailefixedoc.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_drone_simulator_gadget</string> </value>
+            <value> <string>gadget_erp5_page_rescue_swarm_ailefixedoc_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -104,8 +102,12 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>setAltitude</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Test Drone Simulator Gadget JS</string> </value>
+            <value> <string>Drone A Aile Fixe Documentation Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1656005096.23</float>
+                              <float>1661781763.91</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.33934.19747.2833</string> </value>
+                      <value> <string>1002.49611.17524.61696</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1661445994.59</float>
+                              <float>1662386620.86</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -323,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1656004944.42</float>
+                              <float>1661781542.21</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
