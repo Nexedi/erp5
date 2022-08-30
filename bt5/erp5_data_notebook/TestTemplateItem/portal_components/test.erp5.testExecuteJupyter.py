@@ -31,6 +31,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPyth
 
 import time
 import json
+import jupyter_client
 import base64
 import random
 import string
@@ -1054,3 +1055,15 @@ print os.path
     ]
     imported_egg_list = [egg for egg in egg_list if self.checkEgg(egg)]
     self.assertEqual(set(egg_list), set(imported_egg_list))
+
+  def testERP5hasAccessToERP5Kernel(self):
+    '''
+      Test whether the erp5 specific jupyter kernel is accessible from within erp5.
+    '''
+    try:
+      jupyter_client.kernelspec.KernelSpecManager().get_kernel_spec('erp5')
+    except jupyter_client.kernelspec.NoSuchKernel:
+      has_access_to_erp5_kernel = False
+    else:
+      has_access_to_erp5_kernel = True
+    self.assertTrue(has_access_to_erp5_kernel)
