@@ -66,7 +66,7 @@ def Folder_zope_quick_start(self):
   """
   return 'OK'
 
-Folder.zope_quick_start = zope_quick_start
+Folder.zope_quick_start = Folder_zope_quick_start
 
 security = ClassSecurityInfo()
 security.declareProtected(Permissions.ManagePortal, 'isERP5SitePresent')
