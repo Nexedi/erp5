@@ -73,7 +73,7 @@
         <p class="item-param-2">The message to send.</p>
       </div>
       <div>
-        <p class="item-param-1">id ?: Number</p>
+        <p class="item-param-1">id ?: Integer</p>
         <p class="item-param-2">ID of the recipient. Leave empty to send to all team drones.</p>
       </div>
       <h5 class="item-param-1">Example</h5>
@@ -103,35 +103,37 @@
       <!-- setTargetCoordinates -->
       <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: dictionary</span></h4>
       <p class="item-descr">
-        Set a target point expressed in coordinates (in meters). The drone will move straight to this point. Coordinates here are world relative: (0,0) is the center of the map.
+        Set a target point expressed in geo coordinates. The drone will move straight to this point.
       </p>
       <div>
         <h5 class="item-param-1">Param</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
       <div>
-        <p class="item-param-1">X: Number</p>
-        <p class="item-param-2">X value - depth.</p>
+        <p class="item-param-1">X: Integer</p>
+        <p class="item-param-2">X value - latitude.</p>
       </div>
       <div>
-        <p class="item-param-1">Y: Number</p>
-        <p class="item-param-2">Y value - width.</p>
+        <p class="item-param-1">Y: Integer</p>
+        <p class="item-param-2">Y value - longitude.</p>
       </div>
       <div>
-        <p class="item-param-1">Z: Number</p>
-        <p class="item-param-2">Z value - height.</p>
+        <p class="item-param-1">Z: Integer</p>
+        <p class="item-param-2">Z value - altitude in meters.</p>
+      </div>
+      <div>
+        <p class="item-param-1">loiter ratio ?: Integer</p>
+        <p class="item-param-2">Loiter ratio in meters. If less than 30, loiter is skipped</p>
       </div>
       <h5 class="item-param-1">Example</h5>
       <p class="item-example">
-        pos = me.initialHumanAreaPosition()<br>
-        me.setTargetCoordinates(pos.x, pos.y, pos.z);<br>
-        //Another example, move the drone to the center of the map:<br>
-        me.setTargetCoordinates(0, 0, height);<br>
+        me.setTargetCoordinates(lat, lon, altitude);<br>
+        me.setTargetCoordinates(lat, lon, altitude, 100);<br>
       </p>
       <div class="line"></div> <!-- ----------------------------------------------------------- -->
       
       
-      <b>TODO: setAltitude, drone_dict property (leader, lat, lon, altitudeAbs, </b>
+      <b>TODO: setAltitude(), drone_dict property (leader, lat, lon, altitudeAbs), loiter(), doParachute(), landed(), exit() </b>
       
         <p class="item-example">
           * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
