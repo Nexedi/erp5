@@ -25,7 +25,8 @@ http_exchange = portal.system_event_module.newContent(
 )
 
 http_exchange.confirm()
-http_exchange.acknowledge()
+stripe_payment_session.StripePaymentSession_acknowledgeHTTPExchange(http_exchange)
+
 stripe_payment_session.open()
 
 if batch_mode:

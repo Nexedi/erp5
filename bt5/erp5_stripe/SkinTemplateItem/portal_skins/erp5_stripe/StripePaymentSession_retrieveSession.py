@@ -13,7 +13,7 @@ http_exchange = portal.system_event_module.newContent(
 )
 
 http_exchange.confirm()
-http_exchange.acknowledge()
+context.StripePaymentSession_acknowledgeHTTPExchange(http_exchange)
 
 if batch_mode:
   return http_exchange
