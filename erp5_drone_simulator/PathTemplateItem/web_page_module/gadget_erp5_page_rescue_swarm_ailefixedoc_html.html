@@ -15,34 +15,123 @@
 
       <h3>API functions</h3>
 
-        <!-- Start -->
-        <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
-        <p class="item-descr">Function called one time on drone start.</p>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">me.onStart = function() {<br>
-          &nbsp;&nbsp;//one time execution code<br>
-          }
-        </p>
-        <div class="line"></div> <!-- ----------------------------------------------------------- -->
+      <!-- Start -->
+      <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
+      <p class="item-descr">Function called one time on drone start.</p>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">me.onStart = function() {<br>
+        &nbsp;&nbsp;//one time execution code<br>
+        }
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
 
-        <!-- Update -->
-        <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
-        <p class="item-descr">Function called on game update, 60 times / second. <br></p>
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
-        <div>
-          <p class="item-param-1">timestamp: Integer</p>
-          <p class="item-param-2">timestamp in milliseconds from UNIX epoch</p>
-        </div>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">me.onUpdate = function(timestamp) {<br>
-          &nbsp;&nbsp;//code executed 60 times per second<br>
-          }
-        </p>
-        <div class="line"></div> <!-- ----------------------------------------------------------- -->
+      <!-- Update -->
+      <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
+      <p class="item-descr">Function called on game update, 60 times / second. <br></p>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+      <div>
+        <p class="item-param-1">timestamp: Integer</p>
+        <p class="item-param-2">timestamp in milliseconds from UNIX epoch</p>
+      </div>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">me.onUpdate = function(timestamp) {<br>
+        &nbsp;&nbsp;//code executed 60 times per second<br>
+        }
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
 
+      <!-- GetMsg -->
+      <h4 class="item-name" id="getMsg"><span>onGetMsg</span><span>: void</span></h4>
+      <p class="item-descr">Function called when drone receives a message.</p>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+      <div>
+        <p class="item-param-1">msg: String</p>
+        <p class="item-param-2">Content of the message</p>
+      </div>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">me.onGetMsg = function (msg) {<br>
+        &nbsp;&nbsp; //process msg
+        <br> }
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- sendMsg -->
+      <h4 class="item-name" id="sendMsg"><span>sendMsg</span><span>: void</span></h4>
+      <p class="item-descr">Send a message to another drone (or to all team drones).<br></p>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+      <div>
+        <p class="item-param-1">msg: String</p>
+        <p class="item-param-2">The message to send.</p>
+      </div>
+      <div>
+        <p class="item-param-1">id ?: Number</p>
+        <p class="item-param-2">ID of the recipient. Leave empty to send to all team drones.</p>
+      </div>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        me.sendMsg("My broadcast message");<br>
+        me.sendMsg("To my friend 0", 0);
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- getCurrentPosition -->
+      <h4 class="item-name" id="getCurrentPosition"><span>getCurrentPosition</span><span>: dictionary</span></h4>
+      <p class="item-descr">
+        Get drone current position geo-coordinates.<br>
+        {<br>
+        &nbsp;&nbsp;x: number, //latitude<br>
+        &nbsp;&nbsp;y: number, //longitude<br>
+        &nbsp;&nbsp;z: number&nbsp;&nbsp;//meters<br>
+        }<br>
+      </p>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        var current_position = me.getCurrentPosition();<br>
+        console.log(current_position);<br>
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- setTargetCoordinates -->
+      <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: dictionary</span></h4>
+      <p class="item-descr">
+        Set a target point expressed in coordinates (in meters). The drone will move straight to this point. Coordinates here are world relative: (0,0) is the center of the map.
+      </p>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+      <div>
+        <p class="item-param-1">X: Number</p>
+        <p class="item-param-2">X value - depth.</p>
+      </div>
+      <div>
+        <p class="item-param-1">Y: Number</p>
+        <p class="item-param-2">Y value - width.</p>
+      </div>
+      <div>
+        <p class="item-param-1">Z: Number</p>
+        <p class="item-param-2">Z value - height.</p>
+      </div>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        pos = me.initialHumanAreaPosition()<br>
+        me.setTargetCoordinates(pos.x, pos.y, pos.z);<br>
+        //Another example, move the drone to the center of the map:<br>
+        me.setTargetCoordinates(0, 0, height);<br>
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
+      
+      
+      <b>TODO: setAltitude, drone_dict property (leader, lat, lon, altitudeAbs, </b>
       
         <p class="item-example">
           * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
@@ -55,8 +144,7 @@ maybe Leo Paul already has something like this, no idea
 so, better wait for him to know where to start
         </p>
       
-        </div>
-      </div>
+    </div>
 
   </body>
 </html>
