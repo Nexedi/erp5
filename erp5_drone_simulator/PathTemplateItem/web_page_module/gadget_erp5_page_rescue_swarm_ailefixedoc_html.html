@@ -13,18 +13,38 @@
 
       <h1>Drone a Aile Fixe API</h1>
 
-      <h3>Sub-title</h3>
+      <h3>API functions</h3>
 
         <!-- Start -->
-        <h4 class="item-name" id="start"><span>h4 span</span><span>: h4</span></h4>
-        <p class="item-descr">paragraph</p>
+        <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
+        <p class="item-descr">Function called one time on drone start.</p>
+        <h5 class="item-param-1">Example</h5>
+        <p class="item-example">me.onStart = function() {<br>
+          &nbsp;&nbsp;//one time execution code<br>
+          }
+        </p>
+        <div class="line"></div> <!-- ----------------------------------------------------------- -->
 
+        <!-- Update -->
+        <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
+        <p class="item-descr">Function called on game update, 60 times / second. <br></p>
         <div>
-        <h5 class="item-param-1">h5</h5>
+          <h5 class="item-param-1">Param</h5>
+          <h5 class="item-param-2">Description</h5>
         </div>
-
         <div>
-        <p class="item-param-1">
+          <p class="item-param-1">timestamp: Integer</p>
+          <p class="item-param-2">timestamp in milliseconds from UNIX epoch</p>
+        </div>
+        <h5 class="item-param-1">Example</h5>
+        <p class="item-example">me.onUpdate = function(timestamp) {<br>
+          &nbsp;&nbsp;//code executed 60 times per second<br>
+          }
+        </p>
+        <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      
+        <p class="item-example">
           * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
 this document must list the functions, explain why they are needed
 this document must list the parameters type and return type. And explain why such type has been decided
@@ -34,6 +54,7 @@ so, I would like first to have a first version of this document explaining the c
 maybe Leo Paul already has something like this, no idea
 so, better wait for him to know where to start
         </p>
+      
         </div>
       </div>
 
