@@ -281,16 +281,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell</string> </value>
+            <value> <string>python: \'%s\' % cell</string> </value>
         </item>
       </dictionary>
     </pickle>
