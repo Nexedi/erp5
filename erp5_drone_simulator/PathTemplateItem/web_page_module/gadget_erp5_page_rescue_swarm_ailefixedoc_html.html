@@ -122,7 +122,7 @@
         <p class="item-param-2">Z value - altitude in meters.</p>
       </div>
       <div>
-        <p class="item-param-1">loiter ratio ?: Integer</p>
+        <p class="item-param-1">loiter_ratio ?: Integer</p>
         <p class="item-param-2">Loiter ratio in meters. If less than 30, loiter is skipped</p>
       </div>
       <h5 class="item-param-1">Example</h5>
@@ -153,9 +153,44 @@
         me.setAltitude(100)<br>
       </p>
       <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- loiter -->
+      <h4 class="item-name" id="loiter"><span>loiter</span><span>: void</span></h4>
+      <p class="item-descr">
+        Set the drone to loiter mode, it will loiter around last target coordinates set, if the set loiter_ratio is greater than 30.
+      </p>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        me.loiter();
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- doParachute -->
+      <h4 class="item-name" id="doParachute"><span>doParachute</span><span>: void</span><b>- TODO!</b></h4>
+      <p class="item-descr">
+        Indicates the drone to delploy the parachute to finish the landing.
+      </p>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        me.doParachute()<br>
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- landed -->
+      <h4 class="item-name" id="landed"><span>landed</span><span>: Boolean</span><b>- TODO!</b></h4>
+      <p class="item-descr">
+        Indicates if the drone has landed (reached the floor altitude).
+      </p>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        if (me.landed()) {<br>
+        &nbsp;&nbsp;//do something<br>
+        }<br>
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
       
       
-      <b>TODO: (), drone_dict property (leader, lat, lon, altitudeAbs), loiter(), doParachute(), landed(), exit() </b>
+      <b>TODO: (), drone_dict property (leader, lat, lon, altitudeAbs), (), (), (), exit() </b>
       
         <p class="item-example">
           * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
