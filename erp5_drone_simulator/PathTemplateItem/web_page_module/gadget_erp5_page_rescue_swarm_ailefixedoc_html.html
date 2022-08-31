@@ -207,9 +207,26 @@
         me.exit(0)<br>
       </p>
       <div class="line"></div> <!-- ----------------------------------------------------------- -->
-      
-      
-      <b>TODO: (), drone_dict property (leader, lat, lon, altitudeAbs) </b>
+
+      <!-- drone_dict property -->
+      <h4 class="item-name" id="drone_dict"><span>drone_dict</span><span>: dictionary</span><b>- TODO!</b>  </h4>
+      <p class="item-descr">
+        Access drones information dictionary. It contains one entry per drone:<br>
+        key-id: value-drone_dict<br>
+        {<br>
+        &nbsp;&nbsp;latitude: number, //latitude<br>
+        &nbsp;&nbsp;longitude: number, //longitude<br>
+        &nbsp;&nbsp;altitudeAbs: number&nbsp;&nbsp;//altitude in meters<br>
+        }<br>
+      </p>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        var leader = me.drone_dict[LEADER_ID];<br>
+        console.log("leader latitude:", leader.latitude);<br>
+        console.log("leader longitude:", leader.longitude);<br>
+        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
       
         <p class="item-example">
           * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
