@@ -29,7 +29,7 @@
       <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
       <p class="item-descr">Function called on game update, 60 times / second. <br></p>
       <div>
-        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-1">Parameter</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
       <div>
@@ -47,7 +47,7 @@
       <h4 class="item-name" id="getMsg"><span>onGetMsg</span><span>: void</span></h4>
       <p class="item-descr">Function called when drone receives a message.</p>
       <div>
-        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-1">Parameter</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
       <div>
@@ -65,7 +65,7 @@
       <h4 class="item-name" id="sendMsg"><span>sendMsg</span><span>: void</span></h4>
       <p class="item-descr">Send a message to another drone (or to all team drones).<br></p>
       <div>
-        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-1">Parameter</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
       <div>
@@ -106,7 +106,7 @@
         Set a target point expressed in geo coordinates. The drone will move straight to this point.
       </p>
       <div>
-        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-1">Parameter</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
       <div>
@@ -137,7 +137,7 @@
       <p class="item-descr">Set the drone altitude in meters. The drone will move to reach the given value.</p>
       <p class="item-descr">Drone movement will be straight or loiter depending on skip_loiter parameter.</p>
       <div>
-        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-1">Parameter</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
       <div>
@@ -194,9 +194,17 @@
       <p class="item-descr">
         Finishes the drone flight.
       </p>
+      <div>
+        <h5 class="item-param-1">Parameter</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+      <div>
+        <p class="item-param-1">exit_code: Integer</p>
+        <p class="item-param-2">Code to indicate exit status.</p>
+      </div>
       <h5 class="item-param-1">Example</h5>
       <p class="item-example">
-        me.exit()<br>
+        me.exit(0)<br>
       </p>
       <div class="line"></div> <!-- ----------------------------------------------------------- -->
       
