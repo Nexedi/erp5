@@ -131,9 +131,31 @@
         me.setTargetCoordinates(lat, lon, altitude, 100);<br>
       </p>
       <div class="line"></div> <!-- ----------------------------------------------------------- -->
+
+      <!-- setAltitude -->
+      <h4 class="item-name" id="setAltitude"><span>setAltitude</span><span>: void</span></h4>
+      <p class="item-descr">Set the drone altitude in meters. The drone will move to reach the given value.</p>
+      <p class="item-descr">Drone movement will be straight or loiter depending on skip_loiter parameter.</p>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+      <div>
+        <p class="item-param-1">altitude: Integer</p>
+        <p class="item-param-2">Altitude value</p>
+      </div>
+      <div>
+        <p class="item-param-1">skip_loiter ?: Boolean</p>
+        <p class="item-param-2">By default the drone will loiter while changing the altitude. If this parameter is true, it will move straight to the given altitude.</p>
+      </div>
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">me.setAltitude(me.start_altitude, true) //or<br>
+        me.setAltitude(100)<br>
+      </p>
+      <div class="line"></div> <!-- ----------------------------------------------------------- -->
       
       
-      <b>TODO: setAltitude(), drone_dict property (leader, lat, lon, altitudeAbs), loiter(), doParachute(), landed(), exit() </b>
+      <b>TODO: (), drone_dict property (leader, lat, lon, altitudeAbs), loiter(), doParachute(), landed(), exit() </b>
       
         <p class="item-example">
           * Leo Paul and you must have a beautiful web page on Nexedi ERP5 explaining the "drone a aile fixe" API
