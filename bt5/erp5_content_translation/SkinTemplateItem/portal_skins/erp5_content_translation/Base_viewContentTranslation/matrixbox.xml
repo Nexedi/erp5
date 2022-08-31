@@ -317,7 +317,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getContentTranslationPropertyValueAndLabelList(pretty=True)</string> </value>
+            <value> <string>python: here.Base_getContentTranslationPropertyValueAndLabelList()</string> </value>
         </item>
       </dictionary>
     </pickle>
