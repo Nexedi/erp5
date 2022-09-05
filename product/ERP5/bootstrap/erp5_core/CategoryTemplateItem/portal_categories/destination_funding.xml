@@ -118,7 +118,9 @@
         <item>
             <key> <string>category_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>destination_arrow</string>
+              </tuple>
             </value>
         </item>
         <item>

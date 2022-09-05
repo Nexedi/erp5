@@ -939,6 +939,22 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     return self._getPortalGroupedCategoryList('sub_variation')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalSourceArrowBaseCategoryList')
+  def getPortalSourceArrowBaseCategoryList(self):
+    """
+      Return source arrow base categories.
+    """
+    return self._getPortalGroupedCategoryList('source_arrow')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDestinationArrowBaseCategoryList')
+  def getPortalDestinationArrowBaseCategoryList(self):
+    """
+      Return destination arrow base categories.
+    """
+    return self._getPortalGroupedCategoryList('destination_arrow')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalVariationTypeList')
   def getPortalVariationTypeList(self):
     """
