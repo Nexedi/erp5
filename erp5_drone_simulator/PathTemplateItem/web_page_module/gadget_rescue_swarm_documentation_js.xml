@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,11 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_rescue_swarm_ailefixedoc.html</string> </value>
+            <value> <string>gadget_erp5_page_rescue_swarm_documentation.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_rescue_swarm_ailefixedoc_html</string> </value>
+            <value> <string>gadget_rescue_swarm_documentation_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +95,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -102,12 +104,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>setAltitude</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone A Aile Fixe Documentation Page</string> </value>
+            <value> <string>Rescue Swarm Documentation Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1661781763.91</float>
+                              <float>1630607813.04</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.49611.17524.61696</string> </value>
+                      <value> <string>995.36671.42039.36505</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662386620.86</float>
+                              <float>1634603509.54</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -291,7 +289,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -307,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -325,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1661781542.21</float>
+                              <float>1630607776.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
