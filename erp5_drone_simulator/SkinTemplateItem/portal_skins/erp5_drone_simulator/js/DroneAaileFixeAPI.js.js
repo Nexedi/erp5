@@ -312,6 +312,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       //TODO what to do here?
       drone.setDirection(0, 0, 0);
     };
+    DroneAaileFixeAPI.prototype.landed = function (drone) {
+      var drone_pos = drone.getCurrentPosition();
+      return Math.floor(drone_pos.z) === 0;
+    };
+    DroneAaileFixeAPI.prototype.exit = function (drone) {
+      //TODO what to do here?
+      drone.setDirection(0, 0, 0);
+    };
     DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
       return 0;
     };
