@@ -1,0 +1,95 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test JS Style No Style</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test JS Style No Style</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=nostyle</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Web Site created.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_contentpage/erp5_web_js_style_test_frontpage</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//head/link[@rel='prerender']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//head/link[@rel='alternate' and @type='application/rss+xml' and @href='feed.rss']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//nav[@id='sitemap']/a[text()='No Style']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//nav[@id='language']//a[@hreflang='en']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//aside[@id='document_list']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='input']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//main//h2[text()='Unexpected URL']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//main//p[text()='The URL path only accept a single document reference.']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
