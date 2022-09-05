@@ -577,16 +577,13 @@ var DroneManager = /** @class */ (function () {
      * exit
      */
     DroneManager.prototype.exit = function () {
-        //TODO
-        this.setDirection(0, 0, 0);
-        return null;
+        return this._API.exit(this);
     };
     /**
      * landed
      */
     DroneManager.prototype.landed = function () {
-        //TODO
-        return true;
+        return this._API.landed(this);
     };
     /**
      * Set the drone last checkpoint reached
