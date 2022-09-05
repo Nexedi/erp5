@@ -102,6 +102,10 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>setAltitude</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Drone A Aile Fixe Documentation Page</string> </value>
         </item>
@@ -242,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.42497.13662.47274</string> </value>
+                      <value> <string>1002.49611.17524.61696</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1661959762.85</float>
+                              <float>1662386620.86</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
