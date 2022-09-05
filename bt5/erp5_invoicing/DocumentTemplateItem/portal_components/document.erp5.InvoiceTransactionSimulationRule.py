@@ -124,11 +124,18 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
     kw = {'delivery': None, 'resource': resource, 'price': 1}
     return kw
 
-  def getGeneratedMovementList(self, movement_list=None, rounding=False):
-    movement_list = super(InvoiceTransactionRuleMovementGenerator, self).getGeneratedMovementList(movement_list=movement_list, rounding=rounding)
+  def _updateGeneratedMovementList(self, input_movement, generated_movement_list):
     portal = self._applied_rule.getPortalObject()
-    for arrow in 'destination', 'source':
-      for movement in movement_list:
+    generated_movement_list = super(
+      InvoiceTransactionRuleMovementGenerator,
+      self,
+    )._updateGeneratedMovementList(
+      input_movement,
+      generated_movement_list,
+    )
+
+    for arrow, sign in ('destination', 1), ('source', -1):
+      for movement in generated_movement_list:
         resource = movement.getResource()
         if resource is not None:
           section = movement.getDefaultAcquiredValue(arrow + '_section')
@@ -144,13 +151,8 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
                   categories=('price_currency/' + currency_url,
                               'resource/' + resource)))
               if exchange_ratio is not None:
-                if arrow == 'destination':
-                  sign = 1
-                else:
-                  sign = -1
                 movement.setProperty(arrow + '_total_asset_price', movement.getQuantity() * exchange_ratio * sign)
-
-    return movement_list
+    return generated_movement_list
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
