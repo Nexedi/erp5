@@ -51,6 +51,7 @@
             <value>
               <tuple>
                 <string>set.*TranslatedTranslatableId</string>
+                <string>setId</string>
               </tuple>
             </value>
         </item>

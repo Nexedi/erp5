@@ -1620,26 +1620,41 @@ Hé Hé Hé!""", page.asText().strip())
     )
     page2_fr.publish()
     section2.setAggregateValue(page2)
-    section2.setFrTranslatedTranslatableId('aaa')
+
     # Only setting /fr/aaa => /bbb will conflict with /aaa having no translated path yet.
-    self.assertRaises(ValueError, self.commit)
+    section2.setFrTranslatedTranslatableId('aaa')
+    self.tic()
+    error_list = section2.checkConsistency(filter={'constraint_type': 'default'})
+    self.assertEqual(1, len(error_list))
+    self.assertEqual(
+      '"aaa" for French is already used in "aaa"',
+      str(error_list[0].getMessage()),
+    )
+
     # After setting /fr/ccc => /aaa as well, we have no conflict.
     section1.setFrTranslatedTranslatableId('ccc')
     self.tic()
+    error_list = section2.checkConsistency(filter={'constraint_type': 'default'})
+    self.assertEqual(0, len(error_list))
+
     website_absolute_url = website.absolute_url()
     website_path = website.absolute_url_path()
+
     # /fr/ccc/ is /aaa/
     response = self.publish(website_path + '/fr/ccc/')
     self.assertEqual(HTTP_OK, response.status)
     self.assertIn('page1 in French', response.getBody())
+
     # /fr/aaa/ is /bbb/
     response = self.publish(website_path + '/fr/aaa/')
     self.assertEqual(HTTP_OK, response.status)
     self.assertIn('page2 in French', response.getBody())
+
     # /fr/bbb/ should be redirected to /fr/aaa/
     response = self.publish(website_path + '/fr/bbb/')
     self.assertEqual(MOVED_TEMPORARILY, response.status)
     self.assertEqual(website_absolute_url + '/fr/aaa/', response.getHeader('Location'))
+
     # check absolute_translated_url()
     with self.portal.Localizer.translationContext('fr'):
       self.assertEqual(website_absolute_url + '/fr', website.absolute_translated_url())

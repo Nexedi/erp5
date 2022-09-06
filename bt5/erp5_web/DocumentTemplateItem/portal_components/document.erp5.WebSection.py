@@ -41,6 +41,7 @@ from OFS.Traversable import NotFound
 from OFS.ObjectManager import checkValidId
 from ZPublisher import BeforeTraverse
 from Products.CMFCore.utils import _checkConditionalGET, _setCacheHeaders, _ViewEmulator
+from zExceptions import BadRequest
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
@@ -113,11 +114,13 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       if language:
         translated_path_dict = self._getTranslatedPathDict()
         try:
-          section = self[translated_path_dict[(name, language)]]
+          section_id = translated_path_dict[(name, language)]
+          section = self[section_id]
         except KeyError:
           pass
         else:
-          return section.asContext(id=name).__of__(self)
+          if section_id != name:
+            return section.asContext(id=name).__of__(self)
     # Register current web site physical path for later URL generation
     if request.get(self.web_section_key, MARKER) is MARKER:
       request[self.web_section_key] = self.getPhysicalPath()
@@ -177,17 +180,50 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
                                     if k[0] == 'translatable_id' and v[0] == section_id}
       for language in available_language_list:
         translated_section_id = translated_section_id_dict.get(language, section_id)
-        checkValidId(self, translated_section_id, allow_dup=True)
+        try:
+          checkValidId(self, translated_section_id, allow_dup=True)
+        except BadRequest:
+          continue
         key = (translated_section_id, language)
-        if key in translated_path_dict:
-          raise ValueError('%r is used in several sections : %r' % (key, (translated_path_dict[key], section_id)))
-        translated_path_dict[key] = section_id
+        if key not in translated_path_dict:
+          translated_path_dict[key] = section_id
     if translated_path_dict != self._getTranslatedPathDict():
       setattr(self, INTERNAL_TRANSLATED_PATH_DICT_NAME, translated_path_dict)
-      self._p_changed = True
     if recursive:
       for section in self.objectValues(portal_type='Web Section'):
         section.updateTranslatedPathDict(recursive=recursive)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'checkTranslatablePathConsistency')
+  def checkTranslatablePathConsistency(self, fixit=False):
+    error_list = []
+    translated_path_dict = getattr(self.getParentValue(), '_getTranslatedPathDict', lambda: {})()
+    id_ = self.getId()
+    available_language_list = self.getAvailableLanguageList()
+    translated_section_id_dict = {k[1]: v[1] for k, v in six.iteritems(self._getTranslationDict()) \
+                                  if k[0] == 'translatable_id' and v[0] == id_}
+    for language in available_language_list:
+      translated_section_id = translated_section_id_dict.get(language, id_)
+      try:
+        checkValidId(self, translated_section_id, allow_dup=True)
+      except BadRequest:
+        error_list.append(
+          (
+            '"${translated_path}" is not valid.',
+            {'translated_path': translated_section_id},
+          )
+        )
+        continue
+      key = (translated_section_id, language)
+      if translated_path_dict.get(key, id_) != id_:
+        error_list.append(
+          (
+            '"${translated_path}" for ${language} is already used in "${section}"',
+            {'translated_path': key[0],
+             'language': self.Localizer.get_language_name(key[1]),
+             'section': translated_path_dict[key]},
+          )
+        )
+    return error_list
 
   security.declarePrivate( 'manage_beforeDelete' )
   def manage_beforeDelete(self, item, container):
