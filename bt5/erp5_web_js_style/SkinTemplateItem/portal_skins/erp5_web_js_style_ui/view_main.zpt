@@ -10,7 +10,7 @@
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
       is_unexpected_reference_access python: '/' in here.getRelativeUrl()[len(web_section.getRelativeUrl()) + 1:];
-      is_unexpected_acquisition_access python: web_section.getParentValue().getRelativeUrl() != web_section.aq_parent.getRelativeUrl();
+      is_unexpected_acquisition_access python: (web_section.getParentValue().getRelativeUrl() != web_section.aq_parent.getRelativeUrl()) or (web_site.getParentValue().getRelativeUrl() != web_site.aq_parent.getRelativeUrl());
       relative_url_prefix python: web_section.WebSection_generateRelativeUrlPrefix();
       no_style_gadget_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_style_gadget_url');
       no_style_css_url python: relative_url_prefix + 'jsstyle.css';
