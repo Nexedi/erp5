@@ -9,6 +9,8 @@
       dummy python: request.set('editable_mode', False);
       web_site python: here.getWebSiteValue();
       web_section python: here.getWebSectionValue();
+      is_unexpected_reference_access python: '/' in here.getRelativeUrl()[len(web_section.getRelativeUrl()) + 1:];
+      is_unexpected_acquisition_access python: (web_section.getParentValue().getRelativeUrl() != web_section.aq_parent.getRelativeUrl()) or (web_site.getParentValue().getRelativeUrl() != web_site.aq_parent.getRelativeUrl());
       relative_url_prefix python: web_section.WebSection_generateRelativeUrlPrefix();
       no_style_gadget_url python: web_section.WebSection_generateLayoutPropertyUrl('configuration_style_gadget_url');
       no_style_css_url python: relative_url_prefix + 'jsstyle.css';
@@ -23,6 +25,24 @@
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
       global_definitions_macros here/global_definitions/macros;
       include_document python: web_section.isSiteMapDocumentParent() and ((here.getRelativeUrl() == web_section.getRelativeUrl()) or request.get('is_web_section_default_document', False));">
+  <tal:block tal:condition="python: is_unexpected_reference_access">
+    <tal:block metal:use-macro="context/error_main/macros/master">
+      <metal:slot metal:fill-slot="main" i18n:domain="erp5_ui">
+        <h2 i18n:translate="" tal:define="dummy python: request.response.setStatus(404);">Unexpected URL</h2>
+        <p i18n:translate="">The URL path only accept a single document reference.</p>
+      </metal:slot>
+    </tal:block>
+  </tal:block>
+  <tal:block tal:condition="python: is_unexpected_acquisition_access">
+    <tal:block metal:use-macro="context/error_main/macros/master">
+      <metal:slot metal:fill-slot="main" i18n:domain="erp5_ui">
+        <h2 i18n:translate="" tal:define="dummy python: request.response.setStatus(404);">Unexpected URL</h2>
+        <p i18n:translate="">The URL should not rely on ID acquisition.</p>
+      </metal:slot>
+    </tal:block>
+  </tal:block>
+  <tal:block tal:condition="python: not (is_unexpected_reference_access or is_unexpected_acquisition_access)">
+
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <!DOCTYPE html>
 <html tal:attributes="lang current_language">
@@ -90,4 +110,5 @@
     </tal:block>
   </tal:block>
 
+</tal:block>
 </tal:block>
