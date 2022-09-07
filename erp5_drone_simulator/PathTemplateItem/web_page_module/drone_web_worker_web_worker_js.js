@@ -16,13 +16,12 @@
       console.log('Worker: Message received from main script', evt.data);
 
       importScripts('babylon.js',
-                    'GameManager.js',
+                    //'GameManager.js',
                     'DroneManager.js',
                     'MapManager.js',
                     'DroneAaileFixeAPI.js',
                     'DroneLogAPI.js',
                     'DroneAPI.js',
-                    //'jiodev.js',
                     evt.data.logic_url);
       runGame(evt.data.canvas, evt.data.script, evt.data.map, evt.data.log);
       return worker.postMessage({'type': 'started'});
