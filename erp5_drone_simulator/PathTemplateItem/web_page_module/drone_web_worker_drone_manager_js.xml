@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,11 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_game.html</string> </value>
+            <value> <string>DroneManager.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_web_worker_page_html</string> </value>
+            <value> <string>drone_web_worker_drone_manager_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +95,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone in WebWorker Page</string> </value>
+            <value> <string>Drone Manager JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -193,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477489.54</float>
+                              <float>1662556210.06</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -242,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.51488.47400.14882</string> </value>
+                      <value> <string>1002.52438.11015.62293</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662499250.39</float>
+                              <float>1662556248.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -287,7 +289,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -303,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -321,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477148.79</float>
+                              <float>1662555985.78</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

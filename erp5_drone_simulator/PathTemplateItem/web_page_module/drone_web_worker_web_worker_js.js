@@ -3,21 +3,47 @@
          Worker, importScripts,
          DroneGameManager*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
+// game.js
+
+(function (worker) {
+  //"use strict";
+  importScripts('babylon.js', 'babylon.gui.js');
+}(this));
+
+var window = {
+  addEventListener: function () {}
+};
 
 // game.js
 (function (worker) {
-  "use strict";
-  var window = {};
+  //"use strict";
+  //var window = {};
   console.log('worker loading');
   worker.onmessage = function (evt) {
     //console.log('Worker: Message received from main script', evt.data);
     var type = evt.data.type;
     if (type === 'start') {
       console.log('Worker: Message received from main script', evt.data);
-
-      importScripts('babylon.js', evt.data.logic_url);
-      runGame(evt.data.canvas);
-      return worker.postMessage({'type': 'started'});
+      //TODO evt.data.logic_url should contain the list of scripts
+      importScripts(
+                    'rsvp.js',
+                    'GameManager.js',
+                    'DroneManager.js',
+                    'MapManager.js',
+                    'ObstacleManager.js',
+                    'DroneAaileFixeAPI.js',
+                    'DroneLogAPI.js',
+                    'DroneAPI.js',
+                    evt.data.logic_url);
+      RSVP = window.RSVP;
+      window = undefined;
+      return new RSVP.Queue()
+        .push(function () {
+          return runGame(evt.data.canvas, evt.data.script, evt.data.map, evt.data.log);
+        })
+        .push(function () {
+          return worker.postMessage({'type': 'started'});
+        });
     }
     if (type === 'update') {
       var i;
