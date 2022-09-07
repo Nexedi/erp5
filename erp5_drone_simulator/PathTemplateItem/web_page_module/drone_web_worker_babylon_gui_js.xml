@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_game.js</string> </value>
+            <value> <string>babylon.gui.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_web_worker_page_js</string> </value>
+            <value> <string>drone_web_worker_babylon_gui_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone in WebWorker Page JS</string> </value>
+            <value> <string>Babylon Gui JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477484.97</float>
+                              <float>1662735315.78</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.65511.19503.26214</string> </value>
+                      <value> <string>1002.61149.33084.18500</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1663352569.02</float>
+                              <float>1663092330.73</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -323,7 +323,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477154.74</float>
+                              <float>1662735269.07</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

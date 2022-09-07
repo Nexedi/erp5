@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_game.js</string> </value>
+            <value> <string>DroneAPI.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_web_worker_page_js</string> </value>
+            <value> <string>drone_web_worker_drone_api_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone in WebWorker Page JS</string> </value>
+            <value> <string>Drone API JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477484.97</float>
+                              <float>1662556207.86</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.65511.19503.26214</string> </value>
+                      <value> <string>1002.52438.8605.21913</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1663352569.02</float>
+                              <float>1662556286.54</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -289,7 +289,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -305,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -323,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477154.74</float>
+                              <float>1662555993.71</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
