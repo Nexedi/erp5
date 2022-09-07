@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Play Drone in WebWorker JS</string> </value>
+            <value> <string>Drone in WebWorker Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.51485.29446.12083</string> </value>
+                      <value> <string>1002.64394.26560.16520</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662499048.26</float>
+                              <float>1663273624.88</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
