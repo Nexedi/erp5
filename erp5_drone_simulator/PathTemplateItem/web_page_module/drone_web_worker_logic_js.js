@@ -11,9 +11,17 @@ var runGame;
   console.log('game logic');
 
 
-  runGame = function (canvas) {
-
-    console.log('runGame', canvas);
+  runGame = function (canvas, script, map, log) {
+    //ROQUE
+    console.log("creating GM");
+    var gm = new GameManager(canvas, script, map, 5).run();
+    console.log("GM created.");
+    
+    
+    
+    
+    //ROQUE/
+    /*console.log('runGame', canvas);
     // Create the Babylon engine
     var engine = new BABYLON.Engine(canvas, true);
     engine.enableOfflineSupport = false;
@@ -31,7 +39,7 @@ var runGame;
     //camera.attachControl(scene.getEngine().getRenderingCanvas());
     camera.maxz = 40000
 
-    scene.render();
+    scene.render();*/
   };
 
 /*
