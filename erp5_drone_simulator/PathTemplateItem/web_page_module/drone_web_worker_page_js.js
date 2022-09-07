@@ -9,6 +9,48 @@
   "use strict";
   console.log('game');
 
+	// Events props to send to worker
+	const mouseEventFields = new Set([
+		'altKey',
+		'bubbles',
+		'button',
+		'buttons',
+		'cancelBubble',
+		'cancelable',
+		'clientX',
+		'clientY',
+		'composed',
+		'ctrlKey',
+		'defaultPrevented',
+		'detail',
+		'eventPhase',
+		'fromElement',
+		'isTrusted',
+		'layerX',
+		'layerY',
+		'metaKey',
+		'movementX',
+		'movementY',
+		'offsetX',
+		'offsetY',
+		'pageX',
+		'pageY',
+		'relatedTarget',
+		'returnValue',
+		'screenX',
+		'screenY',
+		'shiftKey',
+		'timeStamp',
+		'type',
+		'which',
+		'x',
+		'y',
+		'deltaX',
+		'deltaY',
+		'deltaZ',
+		'deltaMode',
+	]);
+
   //////////////////////////////////////////
   // Webworker
   //////////////////////////////////////////
@@ -121,13 +163,18 @@
         loop_promise,
         handleWorker('gadget_erp5_page_game_worker.js', function (worker) {
 
+          /*window.addEventListener("mousewheel", (evt) => {
+            worker.postMessage({
+              type: 'mousewheel'
+            });
+          });*/
+
           var message_error_handler_defer = RSVP.defer(),
             update_defer = null;
 
           function step() {
             context.loop_promise
               .push(function () {
-                console.log('loop step');
                 worker.postMessage({
                   type: 'update'
                 });
@@ -142,26 +189,91 @@
               });
           }
 
-          console.log('got worker ', worker, options);
+          function bindEvent(data) {
+            console.log("bindEvent. data:", data);
+            let target;
+            switch (data.targetName) {
+              case 'window':
+                target = window;
+                break;
+              case 'canvas':
+                target = options.canvas_original;
+                break;
+              case 'document':
+                target = document;
+                break;
+            }
+            if (!target) {
+              console.error('Unknown target: ' + data.targetName);
+              return;
+            }
+            target.addEventListener(data.eventName, function (e) {
+              // We can`t pass original event to the worker
+              const eventClone = cloneEvent(e);
+              if (eventClone.type === "pointerout") {
+                console.log("ignoring pointerout event");
+                console.log("eventClone:", eventClone);
+                console.log("eventClone.relatedTarget:", eventClone.relatedTarget);
+                return;
+              }
+              worker.postMessage({
+                type: 'event',
+                targetName: data.targetName,
+                eventName: data.eventName,
+                eventClone: eventClone,
+              });
+            }, data.opt);
+          }
+
+          function cloneEvent(event) {
+            event.preventDefault();
+            const eventClone = {};
+            for (let field of mouseEventFields) {
+              eventClone[field] = event[field];
+            }
+            return eventClone;
+          }
+
+          console.log('GAME: got worker ', worker, options);
 
           worker.onmessage = function (evt) {
             //console.log('Message received from worker', evt.data);
             var type = evt.data.type;
             if (type === 'loaded') {
-              console.log('loaded');
+              console.log('GAME: loaded');
               return worker.postMessage({
                 type: 'start',
                 logic_url: options.logic_url,
-                canvas: options.canvas
+                canvas: options.canvas,
+                width: options.width,
+                height: options.height,
+                script: options.script,
+                game_parameters_json: options.game_parameters_json,
+                log: options.log
               }, [options.canvas]);
             }
             if (type === 'started') {
-              console.log('started');
+              console.log('GAME: started');
               context.unpause();
               return step();
             }
             if (type === 'updated') {
               return update_defer.resolve('updated');
+            }
+            if (type === 'event') {
+              console.log("TODO handle event. evt.data:", evt.data);
+              bindEvent(evt.data);
+              return;
+            }
+            if (type === 'canvasMethod') {
+              console.log("TODO handle event canvasMethod. msg.data.method:", evt.data.method);
+              options.canvas_original[evt.data.method](...evt.data.args);
+              return;
+            }
+            if (type === 'canvasStyle') {
+              console.log("TODO handle event canvasStyle. evt.data.name:", evt.data.name);
+              options.canvas_original.style[evt.data.name] = evt.data.value;
+              return;
             }
             message_error_handler_defer.reject(
               new Error('Unsupported message ' + JSON.stringify(evt.data))
@@ -202,6 +314,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("jio_get", "jio_get")
 
     .declareMethod('render', function renderHeader() {
       var gadget = this,
@@ -211,21 +324,46 @@
         canvas = domsugar('canvas'),
         offscreen;
       domsugar(gadget.element, [canvas]);
-/*
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-*/
+
+      //TODO fix hardcoded
+      canvas.width = 680;//canvas.clientWidth; <-- this is 0
+      canvas.height = 340;//canvas.clientHeight; <-- this is 0
+
       offscreen = canvas.transferControlToOffscreen();
 
-      gadget.runGame({
-        logic_url: parameter_gamelogic,
-        canvas: offscreen
-      });
+      //TODO this should be in game logic BUT gadget can't be accessed from WW
+      var script_content, game_parameters_json, log_content;
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.jio_get("rescue_swarm_script_module/" + "web_worker");
+        })
+        .push(function (script) {
+          script_content = script.text_content;
+          return gadget.jio_get("rescue_swarm_map_module/" + "compare_map");
+        })
+        .push(function (parameters_doc) {
+          game_parameters_json = JSON.parse(parameters_doc.text_content);
+          return gadget.jio_get("rescue_swarm_script_module/" + "lp_loiter");
+        })
+        .push(function (log) {
+          log_content = log.text_content;
 
-      return gadget.updateHeader({
-        page_title: 'Game',
-        page_icon: 'puzzle-piece'
-      });
+          gadget.runGame({
+            logic_url: parameter_gamelogic,
+            canvas: offscreen,
+            canvas_original: canvas,
+            width: canvas.width,
+            height: canvas.height,
+            script: script_content,
+            game_parameters_json: game_parameters_json,
+            log: log_content
+          });
+
+          return gadget.updateHeader({
+            page_title: 'Game',
+            page_icon: 'puzzle-piece'
+          });
+        });
     })
 
     .declareJob('runGame', function runGame(options) {
