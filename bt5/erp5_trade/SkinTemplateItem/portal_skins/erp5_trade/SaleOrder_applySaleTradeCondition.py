@@ -8,9 +8,10 @@ trade_condition_portal_type = 'Sale Trade Condition'
 trade_condition_list = order.getSpecialiseValueList(
     portal_type=trade_condition_portal_type)
 
+all_category_list = ('source_section', 'source', 'source_project',
+                     'destination_section', 'destination', 'destination_project')
 tested_base_category_list = [ ]
-for base_category in ('source_section', 'source', 'source_project',
-                      'destination_section', 'destination', 'destination_project'):
+for base_category in all_category_list:
   if context.getProperty(base_category):
     tested_base_category_list.append(base_category)
 
@@ -56,11 +57,25 @@ def rank_method(trade_condition):
 def sort_method(a, b):
   return -cmp(rank_method(a), rank_method(b))
 
+def filter_method(trade_condition_list):
+  # Reject trade condition which has a non different value than the order
+  filtered_trade_condition_list = []
+  for trade_condition in trade_condition_list:
+    matching = True
+    for base_category in all_category_list:
+      if trade_condition.getProperty(base_category):
+        if trade_condition.getProperty(base_category) != order.getProperty(base_category):
+          matching = False
+    if matching:
+      filtered_trade_condition_list.append(trade_condition)
+  return filtered_trade_condition_list
+
 while count > 0 and len(trade_condition_list) == 0:
   count -= 1
   trade_condition_list = context.portal_domains.searchPredicateList(
       predicate_context, portal_type=trade_condition_portal_type,
       tested_base_category_list=tested_base_category_list[:count],
+      filter_method=filter_method,
       sort_method=sort_method)
 
 keep_items = {}
