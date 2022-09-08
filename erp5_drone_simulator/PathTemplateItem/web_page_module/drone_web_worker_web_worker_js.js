@@ -19,6 +19,7 @@
                     'GameManager.js',
                     'DroneManager.js',
                     'MapManager.js',
+                    'ObstacleManager.js',
                     'DroneAaileFixeAPI.js',
                     'DroneLogAPI.js',
                     'DroneAPI.js',
