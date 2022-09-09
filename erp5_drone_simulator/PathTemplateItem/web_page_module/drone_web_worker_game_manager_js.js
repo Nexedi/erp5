@@ -93,10 +93,110 @@ var GameManager = /** @class */ (function () {
     //this._engine.runRenderLoop(function () {
     _this._scene.render();
     //});
-    _this._load3DModel(_this._on3DmodelsReady);
+    //_this._load3DModel(_this._on3DmodelsReady);
+    
+    // ----------------------------------- SIMULATION - Prepare API, Map and Teams
+    var on3DmodelsReady = function (ctx) {
+      console.log("on3DmodelsReady!");
+      // Get the game parameters
+      //TODO getParameters
+      /*if (!ctx._map_swapped) {
+          GAMEPARAMETERS = ctx._getGameParameter();
+          ctx._map_swapped = true;
+      }*/
+      // Create the API
+      var lAPI = new DroneAPI(ctx, "L");
+      var rAPI = new DroneAPI(ctx, "R");
+      console.log("APIs created");
+      // Set the AI code into drones
+      var AIcodeEval, AIcodeRight, AIcodeLeft;
+      AIcodeLeft = ctx._script;
+      //set AI for the target (derive or do nothing)
+      if (GAMEPARAMETERS.derive) {
+        AIcodeRight = `me.onStart = function() { me.setHumanAcceleration(99999); me.setDirection(${GAMEPARAMETERS.derive.direction.x},${GAMEPARAMETERS.derive.direction.y},0); }`;
+      } else {
+        AIcodeRight = "me.onStart = function() { me.setAcceleration(0); me.setDirection(0,0,0); }";
+      }
+      // Init the map
+      _this._mapManager = new MapManager(ctx._scene);
+      console.log("Map manager instantiated");
+      //TODO spawn drones
+      /*if (GAMEPARAMETERS.randomSpawn) {
+        ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.leftTeam, GAMEPARAMETERS.teamSize, lAPI, AIcodeLeft, "L");
+        ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.rightTeam, GAMEPARAMETERS.teamSize, rAPI, AIcodeRight, "R");
+      }*/
+      // Hide the drone prefab
+      DroneManager.Prefab.isVisible = false;
+      //GUI for drones ID display
+      console.log("advanced texture skipped");
+      return ctx;
+      var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+      for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+          var controlMeshBlue = ctx._teamLeft[count].infosMesh;
+          //set only one drone for right team (the target)
+          if (count === 0) {
+              var controlMeshRed = ctx._teamRight[count].infosMesh;
+              var ellipse = new BABYLON.GUI.Ellipse();
+              ellipse.height = "10px";
+              ellipse.width = "15px";
+              ellipse.thickness = 4;
+              ellipse.color = "red";
+              ellipse.linkOffsetY = 0;
+              advancedTexture.addControl(ellipse);
+              ellipse.linkWithMesh(controlMeshRed);
+          }
+          var rectBlue = new BABYLON.GUI.Rectangle();
+          if (count < 100)
+              rectBlue.width = "10px";
+          else
+              rectBlue.width = "14px";
+          rectBlue.height = "10px";
+          rectBlue.cornerRadius = 20;
+          rectBlue.color = "white";
+          rectBlue.thickness = 0.5;
+          rectBlue.background = "blue";
+          advancedTexture.addControl(rectBlue);
+          var labelBlue = new BABYLON.GUI.TextBlock();
+          labelBlue.text = count.toString();
+          labelBlue.fontSize = 7;
+          rectBlue.addControl(labelBlue);
+          rectBlue.linkWithMesh(controlMeshBlue);
+          rectBlue.linkOffsetY = 0;
+      }
+      return ctx;
+    };
+    // ----------------------------------- SIMULATION - Load 3D models
+    return new RSVP.Queue()
+      .push(function () {
+        return new RSVP.Promise(function (resolve) {
+          return _this._load3DModel(resolve);
+        });
+      })
+      .push(function () {
+        on3DmodelsReady(_this);
+        // 3,2,1,GO before start. To animate.
+        var result = new RSVP.Queue(),
+          i;
+        function countdown (count) {
+          return function () {
+            //_this._displayMsg(count + " ...");
+            console.log(count + " ...");
+            return RSVP.delay(200);
+          };
+        }
+        for (i = 5; 0 <= i; i -= 1) {
+          result.push(countdown(i));
+        }
+        return result.push(_this._start.bind(_this));
+      });
+  };
+
+  GameManager.prototype._start = function () {
+    console.log("game manager start!!");
   };
 
   GameManager.prototype._load3DModel = function (callback) {
+    console.log("_load3DModel!");
     var _this = this, droneTask, mapTask, obstacleTask,
       assetManager = new BABYLON.AssetsManager(this._scene);
     assetManager.useDefaultLoadingScreen = true;
@@ -138,82 +238,10 @@ var GameManager = /** @class */ (function () {
         console.log("Error loading 3D model for Obstacle");
     };
     assetManager.onFinish = function () {
-      return callback(_this); //on3DmodelsReady(_this);
+      return callback();
     };
     assetManager.load();
-  };
-
-  GameManager.prototype._on3DmodelsReady = function (ctx) {
-    console.log("_on3DmodelsReady called as callback");
-    // Get the game parameters //TODO
-    /*if (!ctx._map_swapped) {
-      GAMEPARAMETERS = ctx._getGameParameter();
-      ctx._map_swapped = true;
-    }*/
-    // Create the API
-    var lAPI = new DroneAPI(ctx, "L");
-    var rAPI = new DroneAPI(ctx, "R");
-    // Set the AI code into drones
-    var AIcodeEval, AIcodeRight, AIcodeLeft;
-    AIcodeLeft = ctx._script;
-    //set AI for the target (derive or do nothing)
-    if (GAMEPARAMETERS.derive) {
-      AIcodeRight = `me.onStart = function() { me.setHumanAcceleration(99999); me.setDirection(${GAMEPARAMETERS.derive.direction.x},${GAMEPARAMETERS.derive.direction.y},0); }`;
-    } else {
-      AIcodeRight = "me.onStart = function() { me.setAcceleration(0); me.setDirection(0,0,0); }";
-    }
-    // Init the map
-    //_this._mapManager = new MapManager(ctx._scene);
-    ctx._mapManager = new MapManager(ctx._scene);
-    // If positions are defined in GameParameter
-    /*if (GAMEPARAMETERS.randomSpawn) {
-        //TODO _setRandomSpawnPosition
-        ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.leftTeam, GAMEPARAMETERS.teamSize, lAPI, AIcodeLeft, "L");
-        ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.rightTeam, GAMEPARAMETERS.teamSize, rAPI, AIcodeRight, "R");
-    }*/
-    // Hide the drone prefab
-    DroneManager.Prefab.isVisible = false;
-    //GUI for drones ID display
-    //TODO
-    console.log("onload3dmodel drones advancedTexture skipped");
-    return ctx;
-    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
-      if (ctx._teamLeft[count]) {
-        var controlMeshBlue = ctx._teamLeft[count].infosMesh;
-        //set only one drone for right team (the target)
-        if (count === 0) {
-            var controlMeshRed = ctx._teamRight[count].infosMesh;
-            var ellipse = new BABYLON.GUI.Ellipse();
-            ellipse.height = "10px";
-            ellipse.width = "15px";
-            ellipse.thickness = 4;
-            ellipse.color = "red";
-            ellipse.linkOffsetY = 0;
-            advancedTexture.addControl(ellipse);
-            ellipse.linkWithMesh(controlMeshRed);
-        }
-        var rectBlue = new BABYLON.GUI.Rectangle();
-        if (count < 100)
-            rectBlue.width = "10px";
-        else
-            rectBlue.width = "14px";
-        rectBlue.height = "10px";
-        rectBlue.cornerRadius = 20;
-        rectBlue.color = "white";
-        rectBlue.thickness = 0.5;
-        rectBlue.background = "blue";
-        advancedTexture.addControl(rectBlue);
-        var labelBlue = new BABYLON.GUI.TextBlock();
-        labelBlue.text = count.toString();
-        labelBlue.fontSize = 7;
-        rectBlue.addControl(labelBlue);
-        rectBlue.linkWithMesh(controlMeshBlue);
-        rectBlue.linkOffsetY = 0;
-      }
-    }
-    console.log("onload3dmodel finished");
-    return ctx;
+    console.log("asset manager loaded (tasks for map, drones and obstacles)");
   };
 
   return GameManager;
