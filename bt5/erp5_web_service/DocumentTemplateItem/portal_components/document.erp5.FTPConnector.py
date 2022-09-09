@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import posixpath
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -102,15 +104,24 @@ class FTPConnector(XMLObject):
   def putFile(self, filename, data, remotepath='.', confirm=True):
     """ Send file to the remote server """
     conn = self.getConnection()
+    # This API is misleading, and in reality filename often contains a path.
+    # So let's use python posixpath API to try to reconstruct the path in a
+    # robust way (ie: what if remotepath is './a' and filename is 'b/c.txt' ?),
+    # and recompute the correct remotepath and filename
+    remotepath, filename = posixpath.split(
+      posixpath.join(remotepath, filename)
+    )
     try:
       if self.isUseTemporaryFileOnWrite():
         temp_filename = '_%s.tmp' % filename
         # Simulation transaction system
         conn.writeFile(remotepath, temp_filename, data, confirm=confirm)
-        self.activate(activity='SQLQueue').renameFile('%s/%s' % (remotepath, temp_filename),
-                                                      '%s/%s' % (remotepath, filename))
+        self.activate(activity='SQLQueue').renameFile(
+          posixpath.join(remotepath, temp_filename),
+          posixpath.join(remotepath, filename)
+        )
       else:
-        conn.writeFile(remotepath, '%s' % filename, data, confirm=confirm)
+        conn.writeFile(remotepath, filename, data, confirm=confirm)
     finally:
       conn.logout()
 
