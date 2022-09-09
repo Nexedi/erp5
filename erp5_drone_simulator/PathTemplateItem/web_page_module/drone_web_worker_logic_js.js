@@ -12,8 +12,7 @@ var runGame, game_manager_instance;
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script, map, 5);
     }
-    game_manager_instance.run();
-    return;
+    return game_manager_instance.run();
   };
 
 /*
