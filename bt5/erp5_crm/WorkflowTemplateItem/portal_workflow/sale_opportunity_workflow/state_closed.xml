@@ -13,12 +13,26 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>Sale Opportunity converted into Sale</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_sold</string> </value>
+            <value> <string>state_closed</string> </value>
         </item>
         <item>
             <key> <string>index</string> </key>
@@ -44,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sold</string> </value>
+            <value> <string>Closed</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -85,11 +99,11 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
+                        <string>Associate</string>
                       </tuple>
                     </value>
                 </item>
@@ -105,11 +119,11 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
+                        <string>Associate</string>
                       </tuple>
                     </value>
                 </item>

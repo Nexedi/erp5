@@ -309,38 +309,29 @@ class TestCRM(BaseTestCRM):
     self.assertEqual(None, pers3.getDestinationRelatedValue(
                                 portal_type='Mail Message'))
 
-  def test_SaleOpportunitySold(self):
+  def test_SaleOpportunityClosed(self):
     # test the workflow of sale opportunities, when the sale opportunity is
-    # finaly sold
+    # finaly closed
     so = self.portal.sale_opportunity_module.newContent(
                               portal_type='Sale Opportunity')
     self.assertEqual('draft', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'submit_action')
-    self.assertEqual('submitted', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'validate_action')
-    self.assertEqual('contacted', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'enquire_action')
-    self.assertEqual('enquired', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'offer_action')
-    self.assertEqual('offered', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'sell_action')
-    self.assertEqual('sold', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'open_action')
+    self.assertEqual('open', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'suspend_action')
+    self.assertEqual('suspended', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'open_action')
+    self.assertEqual('open', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'close_action')
+    self.assertEqual('closed', so.getSimulationState())
 
-  def test_SaleOpportunityRejected(self):
-    # test the workflow of sale opportunities, when the sale opportunity is
-    # finaly rejected.
-    # Uses different transitions than test_SaleOpportunitySold
+
+  def test_SaleOpportunityDeleted(self):
+    # test the workflow of sale opportunities, cancel it
     so = self.portal.sale_opportunity_module.newContent(
                               portal_type='Sale Opportunity')
     self.assertEqual('draft', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'validate_action')
-    self.assertEqual('contacted', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'enquire_action')
-    self.assertEqual('enquired', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'offer_action')
-    self.assertEqual('offered', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'reject_action')
-    self.assertEqual('rejected', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'delete_action')
+    self.assertEqual('deleted', so.getSimulationState())
 
   def test_SaleOpportunityExpired(self):
     # test the workflow of sale opportunities, when the sale opportunity
@@ -348,8 +339,8 @@ class TestCRM(BaseTestCRM):
     so = self.portal.sale_opportunity_module.newContent(
                               portal_type='Sale Opportunity')
     self.assertEqual('draft', so.getSimulationState())
-    self.portal.portal_workflow.doActionFor(so, 'validate_action')
-    self.assertEqual('contacted', so.getSimulationState())
+    self.portal.portal_workflow.doActionFor(so, 'open_action')
+    self.assertEqual('open', so.getSimulationState())
     self.portal.portal_workflow.doActionFor(so, 'expire_action')
     self.assertEqual('expired', so.getSimulationState())
 

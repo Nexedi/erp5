@@ -8,25 +8,24 @@
       <dictionary>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=sell_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=suspend_action</string> </value>
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value> <string>Sell</string> </value>
+            <value> <string>Suspend Sale Opportunity</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>before_script/portal_workflow/sale_opportunity_workflow/script_SaleOpportunity_checkConsistency</string>
-                <string>after_script/portal_workflow/sale_opportunity_workflow/transition_sell</string>
+                <string>after_script/portal_workflow/sale_opportunity_workflow/transition_suspend</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Will set the sale opportunity state as sold. This means that the sale opportunity is successful and that the customer has accepted the offer that has been made to him/her</string> </value>
+            <value> <string>Marks a sale opportunity as qualified and asks for an offer to be sent to the prospect</string> </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
@@ -57,7 +56,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_sell_action</string> </value>
+            <value> <string>transition_suspend_action</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -65,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sell Action</string> </value>
+            <value> <string>Suspend Sale Opportunity Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -8,28 +8,27 @@
       <dictionary>
         <item>
             <key> <string>action</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=open_action</string> </value>
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Open Sale Opportunity</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>destination/portal_workflow/sale_opportunity_workflow/state_offered</string>
+                <string>after_script/portal_workflow/sale_opportunity_workflow/transition_open</string>
+                <string>before_script/portal_workflow/sale_opportunity_workflow/script_SaleOpportunity_checkConsistency</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sends an offer to the prospect and waits for the decision</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
@@ -40,15 +39,17 @@
         <item>
             <key> <string>guard_permission</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>guard_role</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -59,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_offer</string> </value>
+            <value> <string>transition_open_action</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -67,11 +68,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Send Offer</string> </value>
+            <value> <string>Open Sale Opportunity Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>2</int> </value>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
