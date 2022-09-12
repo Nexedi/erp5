@@ -127,7 +127,7 @@
           function step() {
             context.loop_promise
               .push(function () {
-                console.log('loop step');
+                console.log('GAME: loop step');
                 worker.postMessage({
                   type: 'update'
                 });
@@ -142,13 +142,13 @@
               });
           }
 
-          console.log('got worker ', worker, options);
+          console.log('GAME: got worker ', worker, options);
 
           worker.onmessage = function (evt) {
             //console.log('Message received from worker', evt.data);
             var type = evt.data.type;
             if (type === 'loaded') {
-              console.log('loaded');
+              console.log('GAME: loaded');
               return worker.postMessage({
                 type: 'start',
                 logic_url: options.logic_url,
@@ -159,7 +159,7 @@
               }, [options.canvas]);
             }
             if (type === 'started') {
-              console.log('started');
+              console.log('GAME: started');
               context.unpause();
               return step();
             }
@@ -215,13 +215,14 @@
         canvas = domsugar('canvas'),
         offscreen;
       domsugar(gadget.element, [canvas]);
-/*
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-*/
+
+      //TODO fix hardcoded
+      canvas.width = 680;//canvas.clientWidth;
+      canvas.height = 340;//canvas.clientHeight;
+
       offscreen = canvas.transferControlToOffscreen();
 
-      //ROQUE
+      //TODO move this to game logic
       var script_content, map_content, log_content;
       return new RSVP.Queue()
         .push(function () {
