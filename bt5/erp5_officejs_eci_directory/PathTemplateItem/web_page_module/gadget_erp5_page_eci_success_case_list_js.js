@@ -93,7 +93,8 @@
             ['country', 'Country'],
             ['publisher', 'Provider'],
             ['similar_solution', 'Similar solution'],
-            ['publisher_country', 'Provider Country']
+            ['publisher_country', 'Provider Country'],
+            ['floss_software','Open Source']
           ];
           gadget.domain_dict = {
             category: category.map(data => [data, data]),
@@ -101,6 +102,7 @@
             country: country.map(data => [data, data]),
             publisher: publisher.map(data => [data, data]),
             similar_solution: similar_solution.map(data => [data, data]),
+            floss_software: [['Yes','Yes'], ['No', 'No']],
             publisher_country: publisher_country.map(data => [data, data])
           };
           return RSVP.all([
