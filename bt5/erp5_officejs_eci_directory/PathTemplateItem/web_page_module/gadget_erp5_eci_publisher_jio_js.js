@@ -299,6 +299,7 @@
             'publisher_id',
             'selection_domain_similar_solution',
             'selection_domain_country',
+            'selection_domain_floss_software',
             'modification_date',
             'success_case_list',
             'reference_list'
@@ -327,6 +328,7 @@
             success_case.selection_domain_publisher_country = software.selection_domain_country;
             success_case.publisher_id = software.publisher_id;
             success_case.selection_domain_category = software.selection_domain_category;
+            success_case.selection_domain_floss_software = software.selection_domain_floss_software;
             success_case.selection_domain_industry = [success_case.industry]
             success_case.selection_domain_country = [success_case.country]
             success_case.selection_domain_publisher = [software.publisher];
