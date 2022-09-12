@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>babylon.min.js</string> </value>
+            <value> <string>babylon.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

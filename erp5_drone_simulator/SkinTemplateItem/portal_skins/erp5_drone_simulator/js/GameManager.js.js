@@ -71,15 +71,6 @@ var GameManager = /** @class */ (function (console) {
           DroneAPI: DroneAPI
         };
         // ----------------------------------- CODE ZONES AND PARAMS
-        // JIO : AI
-        // XXX
-        DroneManager.jIOstorage = jIO.createJIO({
-            "type": "query",
-            "sub_storage": {
-                "type": "indexeddb",
-                "database": "Drones_infos_storage"
-            }
-        });
 
         // Timing display
         this._timeDisplay = document.getElementById("timingDisplay");
@@ -89,17 +80,7 @@ var GameManager = /** @class */ (function (console) {
 
     GameManager.prototype.run = function() {
       var gadget = this;
-      return DroneManager.jIOstorage.allDocs()
-        .push(function (result) {
-          var promise_list = [], i;
-          for (i = 0; i < result.data.total_rows; i += 1) {
-              promise_list.push(DroneManager.jIOstorage.remove(result.data.rows[i].id));
-          }
-          return RSVP.all(promise_list);
-        })
-        .push(function () {
-          return gadget._init();
-        })
+      return gadget._init()
         .push(function () {
           if (GAMEPARAMETERS.compareFlights) {
             return gadget._flight_log;

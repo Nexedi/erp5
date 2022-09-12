@@ -86,9 +86,6 @@ var DroneManager = /** @class */ (function () {
                 }
             }
         });
-        // jIO auto save
-        // TO DO : Faire ça avec un vrai timer, puisque le setInterval est cassé si on met en pause
-        this._internal_jIO_save();
     }
     DroneManager.prototype._swapAxe = function (vector) {
         return new BABYLON.Vector3(vector.x, vector.z, vector.y);
@@ -313,33 +310,6 @@ var DroneManager = /** @class */ (function () {
     };
     DroneManager.prototype.can_play = function () {
         return this._canPlay;
-    };
-    DroneManager.prototype._internal_jIO_save = function () {
-        if (this._controlMesh) {
-            var timestamp = Date.now();
-            return DroneManager.jIOstorage.put(this._id + "_" + this._team + "_" + timestamp, {
-                type: "state",
-                id: this._id,
-                team: this._team,
-                timestamp: timestamp,
-                direction: {
-                    x: this._direction.x,
-                    y: this._direction.z,
-                    z: this._direction.y
-                },
-                position: {
-                    x: this._controlMesh.position.x,
-                    y: this._controlMesh.position.z,
-                    z: this._controlMesh.position.y
-                },
-                rotation: {
-                    x: this._controlMesh.rotation.x,
-                    y: this._controlMesh.rotation.z,
-                    z: this._controlMesh.rotation.y
-                },
-                speed: this._speed
-            });
-        }
     };
     //#endregion
     //#region ------------------ Accessible from AI
