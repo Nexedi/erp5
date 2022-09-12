@@ -13,8 +13,22 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>The Sale Opportunity is Cancelled.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -85,10 +99,10 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
                       </tuple>
                     </value>
                 </item>
@@ -104,10 +118,10 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
                       </tuple>
                     </value>
                 </item>

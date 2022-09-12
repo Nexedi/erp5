@@ -25,7 +25,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cancel a Sale Opportunity</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>

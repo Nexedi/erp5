@@ -23,13 +23,15 @@
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>destination/portal_workflow/sale_opportunity_workflow/state_offered</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/state_open</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sends an offer to the prospect and waits for the decision</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
@@ -59,7 +61,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_offer</string> </value>
+            <value> <string>transition_open</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -67,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Send Offer</string> </value>
+            <value> <string>Open Sale Opportunity</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
