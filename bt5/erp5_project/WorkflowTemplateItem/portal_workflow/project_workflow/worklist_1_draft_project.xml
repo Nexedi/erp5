@@ -53,6 +53,12 @@ project_module?validation_state=draft&portal_type=%(portal_type)s&local_roles=%(
             <value> <string>Project to Open</string> </value>
         </item>
         <item>
+            <key> <string>guard_expression</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>guard_group</string> </key>
             <value>
               <tuple/>
@@ -100,25 +106,27 @@ project_module?validation_state=draft&portal_type=%(portal_type)s&local_roles=%(
                 <item>
                     <key> <string>local_roles</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Owner</string>
-                      </tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Project</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>validation_state</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>draft</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
