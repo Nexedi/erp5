@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The cancel logical transition sets the ticket state to cancelled.</string> </value>
+            <value> <string>The delete logical transition sets the document state to deleted.</string> </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
