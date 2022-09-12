@@ -90,9 +90,9 @@ var GameManager = /** @class */ (function () {
     camera.attachControl(this._scene.getEngine().getRenderingCanvas());
     camera.maxz = 40000;
     // Render loop
-    //this._engine.runRenderLoop(function () {
-    _this._scene.render();
-    //});
+    this._engine.runRenderLoop(function () {
+      _this._scene.render();
+    });
     //_this._load3DModel(_this._on3DmodelsReady);
     
     // ----------------------------------- SIMULATION - Prepare API, Map and Teams
@@ -128,9 +128,9 @@ var GameManager = /** @class */ (function () {
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //GUI for drones ID display
-      console.log("advanced texture skipped");
-      return ctx;
       var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+      console.log("drone textures NOT skipped");
+      return ctx;
       for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
           var controlMeshBlue = ctx._teamLeft[count].infosMesh;
           //set only one drone for right team (the target)
