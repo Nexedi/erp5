@@ -7,7 +7,7 @@
 
 (function (worker) {
   //"use strict";
-  importScripts('babylon.js');
+  importScripts('babylon.js', 'babylon.gui.js');
 }(this));
 
 var window = {
