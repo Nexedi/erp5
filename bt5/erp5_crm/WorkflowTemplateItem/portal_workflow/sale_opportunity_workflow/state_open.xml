@@ -16,20 +16,30 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/sale_opportunity_workflow/transition_cancel</string>
-                <string>destination/portal_workflow/sale_opportunity_workflow/transition_cancel_action</string>
-                <string>destination/portal_workflow/sale_opportunity_workflow/transition_validate</string>
-                <string>destination/portal_workflow/sale_opportunity_workflow/transition_validate_action</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_close</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_close_action</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_expire</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_expire_action</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_suspend</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_suspend_action</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>Tickets in this state are waiting for approval from the Ticket manager before being further processed.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_submitted</string> </value>
+            <value> <string>state_open</string> </value>
         </item>
         <item>
             <key> <string>index</string> </key>
@@ -55,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Submitted</string> </value>
+            <value> <string>Open</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -96,10 +106,12 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Associate</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,6 +120,7 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -116,10 +129,12 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Associate</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
