@@ -19,12 +19,86 @@
   <td></td>
 </tr>
 
-<!-- Basic Menu Navigation -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>waitForTextPresent</td>
+  <td>European Technology Directory</td>
   <td></td>
 </tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[text()="Solutions"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-value='Application']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//h1[text()="Success cases"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-value='Education']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//h1[text()="Providers"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-value='Austria']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//h1[text()="Similar solutions"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-value='ABot']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="map_container"]//div[@id='mapid']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-value='Application']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Solution List']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
@@ -32,14 +106,67 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Providers']</td>
+  <td>//a[@data-i18n='Directory']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Providers']</td>
+  <td>//a[@data-i18n='Directory']</td>
   <td></td>
 </tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-value='Education']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-value='Education']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Success case list']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Directory']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Directory']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-value='Austria']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-value='Austria']</td>
+  <td></td>
+</tr>
+
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//span[@data-i18n='Provider List']</td>
@@ -47,47 +174,7 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Products']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Products']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//span[@data-i18n='Product List']</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Success Cases']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Success Cases']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//span[@data-i18n='Success Story List']</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
@@ -103,11 +190,28 @@
   <td>//a[@data-i18n='Directory']</td>
   <td></td>
 </tr>
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//span[@data-i18n='European Cloud Technology Directory']</td>
+  <td>//a[@data-value='ABot']</td>
   <td></td>
 </tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-value='ABot']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Solution List']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+
 
 
 </tbody></table>
