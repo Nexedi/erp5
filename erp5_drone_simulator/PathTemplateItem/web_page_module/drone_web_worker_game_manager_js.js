@@ -1,5 +1,16 @@
 var GAMEPARAMETERS = {};
 
+function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
+  var u = Math.random(), v = Math.random(),
+    rx = Math.random() * rx0, ry = Math.random() * ry0,
+    rz = Math.random() * rz0, theta = 2 * Math.PI * u,
+    phi = Math.acos(2 * v - 1),
+    x = x0 + (rx * Math.sin(phi) * Math.cos(theta)),
+    y = y0 + (ry * Math.sin(phi) * Math.sin(theta)),
+    z = z0 + (rz * Math.cos(phi));
+  return new BABYLON.Vector3(x, y, z);
+}
+
 var GameManager = /** @class */ (function () {
   // *** CONSTRUCTOR ***
   function GameManager(canvas, script, map, simulation_speed) {
@@ -11,6 +22,11 @@ var GameManager = /** @class */ (function () {
     this._teamLeft = [];
     this._teamRight = [];
     Object.assign(GAMEPARAMETERS, map);
+    this.APIs_dict = {
+      DroneAaileFixeAPI: DroneAaileFixeAPI,
+      DroneLogAPI: DroneLogAPI,
+      DroneAPI: DroneAPI
+    };
   }
 
   GameManager.prototype.run = function () {
@@ -25,16 +41,6 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._init = function () {
-    function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
-      var u = Math.random(), v = Math.random(),
-        rx = Math.random() * rx0, ry = Math.random() * ry0,
-        rz = Math.random() * rz0, theta = 2 * Math.PI * u,
-        phi = Math.acos(2 * v - 1),
-        x = x0 + (rx * Math.sin(phi) * Math.cos(theta)),
-        y = y0 + (ry * Math.sin(phi) * Math.sin(theta)),
-        z = z0 + (rz * Math.cos(phi));
-      return new BABYLON.Vector3(x, y, z);
-    }
     var _this = this,
       center = GAMEPARAMETERS.randomSpawn.rightTeam.position,
       dispertion = GAMEPARAMETERS.randomSpawn.rightTeam.dispertion;
@@ -93,9 +99,7 @@ var GameManager = /** @class */ (function () {
     this._engine.runRenderLoop(function () {
       _this._scene.render();
     });
-    //_this._load3DModel(_this._on3DmodelsReady);
-    
-    // ----------------------------------- SIMULATION - Prepare API, Map and Teams
+    // -------------------------------- SIMULATION - Prepare API, Map and Teams
     var on3DmodelsReady = function (ctx) {
       console.log("on3DmodelsReady!");
       // Get the game parameters
@@ -120,49 +124,51 @@ var GameManager = /** @class */ (function () {
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       console.log("Map manager instantiated");
-      //TODO spawn drones
-      /*if (GAMEPARAMETERS.randomSpawn) {
+      if (GAMEPARAMETERS.randomSpawn) {
         ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.leftTeam, GAMEPARAMETERS.teamSize, lAPI, AIcodeLeft, "L");
         ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.rightTeam, GAMEPARAMETERS.teamSize, rAPI, AIcodeRight, "R");
-      }*/
+      }
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //GUI for drones ID display
-      var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-      console.log("drone textures NOT skipped");
-      return ctx;
+      //Hack to make advanced texture work
+      const documentTmp = document;
+      document = undefined;
+      var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI", true, ctx._scene);
+      document = documentTmp;
       for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
-          var controlMeshBlue = ctx._teamLeft[count].infosMesh;
-          //set only one drone for right team (the target)
-          if (count === 0) {
-              var controlMeshRed = ctx._teamRight[count].infosMesh;
-              var ellipse = new BABYLON.GUI.Ellipse();
-              ellipse.height = "10px";
-              ellipse.width = "15px";
-              ellipse.thickness = 4;
-              ellipse.color = "red";
-              ellipse.linkOffsetY = 0;
-              advancedTexture.addControl(ellipse);
-              ellipse.linkWithMesh(controlMeshRed);
-          }
-          var rectBlue = new BABYLON.GUI.Rectangle();
-          if (count < 100)
-              rectBlue.width = "10px";
-          else
-              rectBlue.width = "14px";
-          rectBlue.height = "10px";
-          rectBlue.cornerRadius = 20;
-          rectBlue.color = "white";
-          rectBlue.thickness = 0.5;
-          rectBlue.background = "blue";
-          advancedTexture.addControl(rectBlue);
-          var labelBlue = new BABYLON.GUI.TextBlock();
-          labelBlue.text = count.toString();
-          labelBlue.fontSize = 7;
-          rectBlue.addControl(labelBlue);
-          rectBlue.linkWithMesh(controlMeshBlue);
-          rectBlue.linkOffsetY = 0;
+        var controlMeshBlue = ctx._teamLeft[count].infosMesh;
+        //set only one drone for right team (the target)
+        if (count === 0) {
+          var controlMeshRed = ctx._teamRight[count].infosMesh;
+          var ellipse = new BABYLON.GUI.Ellipse();
+          ellipse.height = "10px";
+          ellipse.width = "15px";
+          ellipse.thickness = 4;
+          ellipse.color = "red";
+          ellipse.linkOffsetY = 0;
+          advancedTexture.addControl(ellipse);
+          ellipse.linkWithMesh(controlMeshRed);
+        }
+        var rectBlue = new BABYLON.GUI.Rectangle();
+        if (count < 100)
+          rectBlue.width = "10px";
+        else
+          rectBlue.width = "14px";
+        rectBlue.height = "10px";
+        rectBlue.cornerRadius = 20;
+        rectBlue.color = "white";
+        rectBlue.thickness = 0.5;
+        rectBlue.background = "blue";
+        advancedTexture.addControl(rectBlue);
+        var labelBlue = new BABYLON.GUI.TextBlock();
+        labelBlue.text = count.toString();
+        labelBlue.fontSize = 7;
+        rectBlue.addControl(labelBlue);
+        rectBlue.linkWithMesh(controlMeshBlue);
+        rectBlue.linkOffsetY = 0;
       }
+      console.log("advaced textures added");
       return ctx;
     };
     // ----------------------------------- SIMULATION - Load 3D models
@@ -242,6 +248,86 @@ var GameManager = /** @class */ (function () {
     };
     assetManager.load();
     console.log("asset manager loaded (tasks for map, drones and obstacles)");
+  };
+
+  GameManager.prototype._setRandomSpawnPosition = function (randomSpawn, team_size, api, code, team) {
+      var position, i, position_list = [], center = randomSpawn.position, max_collision = randomSpawn.maxCollision || 10 * team_size, collision_nb = 0;
+      function checkCollision(position, list) {
+        var i;
+        for (i = 0; i < list.length; i += 1) {
+          if (position.equalsWithEpsilon(list[i], 0.5)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      for (i = 0; i < team_size; i += 1) {
+        //set only one element for right team (the human)
+        if (team === "L" || i === 0) {
+          if (GAMEPARAMETERS.randomSpawn.rightTeam.dispersed) {
+            position = randomSpherePoint(center.x + i, center.y + i, center.z + i, 0, 0, 0);
+          } else {
+            position = randomSpherePoint(center.x, center.y, center.z, randomSpawn.dispertion.x, randomSpawn.dispertion.y, randomSpawn.dispertion.z);
+          }
+          if (team === "R") {
+            this._setSpawnDrone(this._ground_truth_target.x, this._ground_truth_target.y, this._ground_truth_target.z, i, api, code, team);
+          } else {
+            if (checkCollision(position, position_list) || position.z < 0.05) {
+              collision_nb += 1;
+              if (collision_nb < max_collision) {
+                i -= 1;
+              }
+            }
+            else {
+              position_list.push(position);
+              var lAPI = api;
+              if (randomSpawn.types) {
+                if (randomSpawn.types[i] in this.APIs_dict) {
+                  lAPI = new this.APIs_dict[randomSpawn.types[i]](this, "L", GAMEPARAMETERS.compareFlights);
+                }
+              }
+              this._setSpawnDrone(position.x, position.y, position.z, i, lAPI, code, team);
+            }
+          }
+        }
+      }
+  };
+
+  GameManager.prototype._setSpawnDrone = function (x, y, z, index, api, code, team) {
+      var default_drone_AI = api.getDroneAI();
+      if (default_drone_AI) {
+        code = default_drone_AI;
+      }
+      var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, "
+          + index + ', "' + team + '", api);'
+          + "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {"
+          + "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();"
+          + "Date.now = function () {return start_time + drone._tick * 1000/60;}; "
+          + "function Date() {if (!(this instanceof Date)) {throw new Error('Missing new operator');} "
+          + "if (arguments.length === 0) {return new NativeDate(Date.now());} else {return new NativeDate(...arguments);}}";
+      // Simple desactivation of direct access of all globals
+      // It is still accessible in reality, but it will me more visible
+      // if people really access them
+      if (x !== null && y !== null && z !== null) {
+          code_eval += "me.setStartingPosition("
+              + x + ", " + y + ", " + z + ");";
+      }
+      base = code_eval;
+      code_eval += code + "}; droneMe(Date, drone, Math, {});";
+      if (team == "R") {
+          base += "};ctx._teamRight.push(drone)";
+          code_eval += "ctx._teamRight.push(drone)";
+      }
+      else {
+          base += "};ctx._teamLeft.push(drone)";
+          code_eval += "ctx._teamLeft.push(drone)";
+      }
+      try {
+          eval(code_eval);
+      }
+      catch (error) {
+          eval(base);
+      }
   };
 
   return GameManager;
