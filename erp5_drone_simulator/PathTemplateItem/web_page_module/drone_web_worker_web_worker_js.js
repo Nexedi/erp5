@@ -5,8 +5,12 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 // game.js
 
+var document = {
+  addEventListener: function () {},
+  createElement: function () {}
+};
+
 (function (worker) {
-  //"use strict";
   importScripts('babylon.js', 'babylon.gui.js');
 }(this));
 
@@ -16,14 +20,18 @@ var window = {
 
 // game.js
 (function (worker) {
-  //"use strict";
-  //var window = {};
   console.log('worker loading');
   worker.onmessage = function (evt) {
     //console.log('Worker: Message received from main script', evt.data);
     var type = evt.data.type;
     if (type === 'start') {
       console.log('Worker: Message received from main script', evt.data);
+      //override createElement as it is needed by babylon to create a canvas
+      document.createElement = function (type) {
+        if (type === 'canvas') {
+          return evt.data.canvas;
+        }
+      }
       //TODO evt.data.logic_url should contain the list of scripts
       importScripts(
                     'rsvp.js',
