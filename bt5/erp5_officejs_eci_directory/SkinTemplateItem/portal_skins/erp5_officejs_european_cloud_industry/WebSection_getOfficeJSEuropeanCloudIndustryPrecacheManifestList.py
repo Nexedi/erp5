@@ -316,7 +316,23 @@ url_list = [
   "image_module/eci_logo_png",
   "image_module/marker-icon",
   "image_module/marker-shadow",
-  "image_module/gadget_erp5_eci_camera_png"
+  "image_module/gadget_erp5_eci_camera_png",
+  "lato/lato-bold.eot",
+  "lato/lato-bold.ttf",
+  "lato/lato-bold.woff",
+  "lato/lato-bold.woff2",
+  "lato/lato-italic.eot",
+  "lato/lato-italic.ttf",
+  "lato/lato-italic.woff",
+  "lato/lato-italic.woff2",
+  "lato/lato-light.eot",
+  "lato/lato-light.ttf",
+  "lato/lato-light.woff",
+  "lato/lato-light.woff2",
+  "lato/lato-regular.eot",
+  "lato/lato-regular.ttf",
+  "lato/lato-regular.woff",
+  "lato/lato-regular.woff2"
 ]
 
 return url_list
