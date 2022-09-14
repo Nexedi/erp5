@@ -134,7 +134,9 @@ var DroneLogAPI = /** @class */ (function () {
         'return Math.sqrt(a * a + b * b);' +
         '}' +
         'me.onStart = function() {' +
-        'console.log("DRONE LOG START! - TODO: set flight parameters with log path");' +
+        'console.log("DRONE LOG START! - TODO: set flight parameters with log path. Direction set!");' +
+        'me.setDirection(1, 1, 0);' +
+        'me.setAcceleration(10);' +
         'return;' +
         'if (!me.getFlightParameters())' +
         'throw "DroneLog API must implement getFlightParameters";' +
@@ -147,6 +149,8 @@ var DroneLogAPI = /** @class */ (function () {
         'me.setAcceleration(10);' +
         '};' +
         'me.onUpdate = function () {' +
+        'console.log("DRONE LOG UPDATE! - TODO: set flight parameters with log path");' +
+        'return;' +
         'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
         'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
         'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +

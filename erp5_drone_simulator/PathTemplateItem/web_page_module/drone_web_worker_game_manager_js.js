@@ -21,6 +21,9 @@ var GameManager = /** @class */ (function () {
     this._engine = null;
     this._teamLeft = [];
     this._teamRight = [];
+    this._canUpdate = false;
+    if (!simulation_speed) { simulation_speed = 5; }
+    this._max_step_animation_frame = simulation_speed;
     Object.assign(GAMEPARAMETERS, map);
     this.APIs_dict = {
       DroneAaileFixeAPI: DroneAaileFixeAPI,
@@ -38,6 +41,67 @@ var GameManager = /** @class */ (function () {
     console.log("GAME MANAGER update. canvas:", this._canvas);
   };
 
+  GameManager.prototype.delay = function (callback, millisecond) {
+    this._delayed_defer_list.push([callback, millisecond]);
+  };
+
+  GameManager.prototype._update = function (delta_time, update_dom) {
+    var _this = this,
+      queue = new RSVP.Queue(),
+      i;
+    //TODO
+    //this._updateTiming(delta_time, update_dom);
+
+    // trigger all deferred calls if it is time
+    for (i = _this._delayed_defer_list.length - 1; 0 <= i; i -= 1) {
+      _this._delayed_defer_list[i][1] = _this._delayed_defer_list[i][1] - delta_time;
+      if (_this._delayed_defer_list[i][1] <= 0) {
+        queue.push(_this._delayed_defer_list[i][0]);
+        _this._delayed_defer_list.splice(i, 1);
+      }
+    }
+
+    function updateDrone(drone) {
+      var msg = '';
+      drone._tick += 1;
+      if (drone.can_play()) {
+        //TODO check collisions
+      }
+      return drone.internal_update(delta_time);
+    }
+
+    function updateHuman(human) {
+      var result = human.internal_update(delta_time);
+      _this._ground_truth_target = {
+        x: human.position.x,
+        y: human.position.y,
+        z: human.position.z
+      };
+      return result;
+    }
+    // Check collisions -- Drone swarm
+    this._teamLeft.forEach(function (drone) {
+      queue.push(function () {
+        return updateDrone(drone);
+      });
+    });
+
+    // Update position -- Human
+    this._teamRight.forEach(function (human) {
+      queue.push(function () {
+        return updateHuman(human);
+      });
+    });
+
+    return queue
+      //TODO finish
+      /*.push(function () {
+        if (_this._allDroneAreOut()) {
+          return _this._finish();
+        }
+      })*/;
+  };
+
   GameManager.prototype._dispose = function () {
     if (this._scene) {
       this._scene.dispose();
@@ -53,6 +117,7 @@ var GameManager = /** @class */ (function () {
     this._ground_truth_target =
       randomSpherePoint(center.x, center.y, center.z,
                         dispertion.x, dispertion.y, dispertion.z);
+    this._delayed_defer_list = [];
     this._dispose();
     var canvas = this._canvas;
     // Create the Babylon engine
@@ -209,7 +274,7 @@ var GameManager = /** @class */ (function () {
     console.log("Simulation started.");
     // Timing
     this._game_duration = 0;
-    //this._totalTime = GAMEPARAMETERS.gameTime;
+    this._totalTime = GAMEPARAMETERS.gameTime;
     this._canUpdate = true;
 
     return new RSVP.Queue()
@@ -229,7 +294,28 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         console.log("promise drones-start finished");
         _this._scene.registerBeforeRender(function () {
-          console.log("function called before every frame render");
+          // To increase the game speed, increase this value
+          //_this._max_step_animation_frame = 10,
+            // time delta means that drone are updated every virtual second
+            // This is fixed and must not be modified
+            // otherwise, it will lead to different scenario results
+            // (as drone calculations may be triggered less often)
+          var TIME_DELTA = 1000 / 60, i;
+          // init the value on the first step
+          waiting_update_count = _this._max_step_animation_frame;
+          function triggerUpdateIfPossible() {
+            if ((_this._canUpdate) && (ongoing_update_promise === null) && (0 < waiting_update_count)) {
+              ongoing_update_promise = _this._update(TIME_DELTA, (waiting_update_count === 1))
+                .push(function () {
+                  waiting_update_count -= 1;
+                  ongoing_update_promise = null;
+                  triggerUpdateIfPossible();
+                })
+                .push(undefined, _this.finish_deferred.reject.bind(_this.finish_deferred));
+            }
+          }
+          triggerUpdateIfPossible();
+
         });
         return _this.finish_deferred.promise;
       });
