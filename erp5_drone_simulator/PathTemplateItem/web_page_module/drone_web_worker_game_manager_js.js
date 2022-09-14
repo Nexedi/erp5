@@ -34,6 +34,10 @@ var GameManager = /** @class */ (function () {
     return gadget._init();
   };
 
+  GameManager.prototype.update = function () {
+    console.log("GAME MANAGER update. canvas:", this._canvas);
+  };
+
   GameManager.prototype._dispose = function () {
     if (this._scene) {
       this._scene.dispose();
@@ -198,7 +202,37 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._start = function () {
-    console.log("game manager start!!");
+    var _this = this,
+      waiting_update_count,
+      ongoing_update_promise = null;
+    _this.finish_deferred = RSVP.defer();
+    console.log("Simulation started.");
+    // Timing
+    this._game_duration = 0;
+    //this._totalTime = GAMEPARAMETERS.gameTime;
+    this._canUpdate = true;
+
+    return new RSVP.Queue()
+      .push(function () {
+        promise_list = [];
+        _this._teamLeft.forEach(function (drone) {
+          drone._tick = 0;
+          promise_list.push(drone.internal_start());
+        });
+        _this._teamRight.forEach(function (drone) {
+          drone._tick = 0;
+          promise_list.push(drone.internal_start());
+        });
+        console.log("starting all drones...");
+        return RSVP.all(promise_list);
+      })
+      .push(function () {
+        console.log("promise drones-start finished");
+        _this._scene.registerBeforeRender(function () {
+          console.log("function called before every frame render");
+        });
+        return _this.finish_deferred.promise;
+      });
   };
 
   GameManager.prototype._load3DModel = function (callback) {
