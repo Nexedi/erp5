@@ -81,6 +81,21 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow._executeTransition(doc, transition1)
     self.assertEqual('state2', workflow._getWorkflowStateOf(doc, id_only=1))
 
+    # check getFutureStateSet
+    self.assertEqual({'state1', 'state2'}, workflow.getFutureStateSet('state1'))
+    self.assertEqual({'state2'}, workflow.getFutureStateSet('state2'))
+    state3 = workflow.newContent(portal_type='Workflow State',
+                             title='State 3')
+    state3.setReference('state3')
+    self.assertEqual({'state1', 'state2'}, workflow.getFutureStateSet('state1'))
+    self.assertEqual({'state2'}, workflow.getFutureStateSet('state2'))
+    transition2 = workflow.newContent(portal_type='Workflow Transition',
+                             title='Transition 1')
+    transition2.setReference('transition2')
+    transition2.setDestinationValue(state3)
+    state1.setDestinationValueList([transition1, transition2])
+    self.assertEqual({'state1', 'state2', 'state3'}, workflow.getFutureStateSet('state1'))
+    self.assertEqual({'state2'}, workflow.getFutureStateSet('state2'))
 
   def test_getAvailableTransitionList(self):
     workflow = self.workflow_module.newContent(portal_type='Workflow')
