@@ -134,6 +134,8 @@ var DroneLogAPI = /** @class */ (function () {
         'return Math.sqrt(a * a + b * b);' +
         '}' +
         'me.onStart = function() {' +
+        'console.log("DRONE LOG START! - TODO: set flight parameters with log path");' +
+        'return;' +
         'if (!me.getFlightParameters())' +
         'throw "DroneLog API must implement getFlightParameters";' +
         'me.flightParameters = me.getFlightParameters();' +
