@@ -775,8 +775,7 @@ CREATE TABLE %s (
           b"  processing_node=0 AND"
           b"  %s%s"
           b" ORDER BY priority, date"
-          b" LIMIT %i"
-          b" FOR UPDATE" % args,
+          b" LIMIT %i" % args,
           0,
         ))
       else:
@@ -789,7 +788,6 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE"
         b")" % args).format
         result = Results(query(
           b"SELECT *"
