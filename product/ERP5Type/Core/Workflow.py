@@ -663,6 +663,29 @@ class Workflow(XMLObject):
             for state in self.objectValues(portal_type="Workflow State")]
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getFutureStateSet')
+  def getFutureStateSet(self, state, ignore=(),
+                        _future_state_set=None):
+    """Return the states that can be reached from a given state, directly or not.
+
+    This method returns a set of ids of all states that can be reached in any
+    number of transitions, starting from the state specified by the 'state'
+    parameter. 'ignore' parameter is a list of states to ignore, as if there was
+    no transition to them.
+    """
+    if _future_state_set is None:
+      _future_state_set = set()
+    _future_state_set.add(state)
+    state_object = self.getStateValueByReference(state)
+    for transition in state_object.getDestinationValueList():
+      state_value = transition.getDestinationValue()
+      if state_value is not None:
+        state = state_value.getReference()
+        if state and state not in _future_state_set and state not in ignore:
+          self.getFutureStateSet(state, ignore, _future_state_set)
+    return _future_state_set
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getWorklistValueList')
   def getWorklistValueList(self):
     return self.objectValues(portal_type="Worklist")
