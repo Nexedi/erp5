@@ -29,6 +29,7 @@
 
 from __future__ import absolute_import
 from six import string_types as basestring
+import json
 from mimetypes import guess_extension
 from OFS.Image import File
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
@@ -425,9 +426,7 @@ class OOoTemplate(ZopePageTemplate):
     for office_include in xml_doc.xpath('//office:include', namespaces=xml_doc.nsmap):
       marshal_list = office_include.xpath('./marshal')
       if marshal_list:
-        from xml.marshal.generic import loads
-        arg_dict = loads(etree.tostring(marshal_list[0], encoding='utf-8',
-                                        xml_declaration=True, pretty_print=False))
+        arg_dict = json.loads(marshal_list[0].get('argument-dict-json'))
         extra_context.update(arg_dict)
         request.other.update(arg_dict)
       path = office_include.attrib['path']
