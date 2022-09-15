@@ -40,7 +40,7 @@ from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5Type.Utils import _setSuperSecurityManager
 from App.config import getConfiguration
 from Products.ERP5Type.Cache import CachingMethod
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 
 import logging
 
@@ -257,14 +257,14 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     Tail the Event Log.
     """
-    return escape(self._tailFile(self.__getEventLogPath(), 500))
+    return html_quote(self._tailFile(self.__getEventLogPath(), 500))
 
   security.declareProtected(Permissions.ManagePortal, 'tailAccessLog')
   def tailAccessLog(self):
     """
     Tail the Event Log.
     """
-    return escape(self._tailFile(self.__getAccessLogPath(), 50))
+    return html_quote(self._tailFile(self.__getAccessLogPath(), 50))
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
   def getAccessLog(self, compressed=1, REQUEST=None):
