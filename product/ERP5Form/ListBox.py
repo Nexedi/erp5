@@ -53,9 +53,9 @@ from ZTUtils import make_query
 
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
+from Products.PythonScripts.standard import html_quote
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
-import cgi
 import six
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
@@ -2475,7 +2475,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # If error on current field, we should display message
           if key in error_dict:
             error_text = error_dict[key].error_text
-            error_text = cgi.escape(error_text)
+            error_text = html_quote(error_text)
             if isinstance(error_text, str):
               error_mapping = getattr(error_dict[key], 'error_mapping', None)
               if error_mapping is not None:
@@ -2521,7 +2521,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             html += u' <span class="error">%s</span>' % error_message
       else:
         # If not editable, show a static text with a link, if enabled.
-        html = cgi.escape(processed_value)
+        html = html_quote(processed_value)
         if url is not None:
           # JPS-XXX - I think we should not display a URL for objects
           # which do not have the View permission

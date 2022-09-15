@@ -34,7 +34,6 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.CMFActivity.Errors import ActivityPendingError
 
-from cgi import escape
 import sys
 
 _marker = object()

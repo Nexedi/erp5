@@ -1,5 +1,5 @@
 import re
-import cgi
+from Products.PythonScripts.standard import html_quote
 from Acquisition import aq_base
 from AccessControl import Unauthorized
 from Products.CMFCore.utils import _checkPermission
@@ -73,8 +73,8 @@ def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1, first_occurence=0):
   html_element_list = [doctype, html, head, '<body>' '<p>']
   result_list = []
   for url, path, line in result:
-    path = cgi.escape(path)
-    line = cgi.escape(line)
+    path = html_quote(path)
+    line = html_quote(line)
     if highlight:
       line = rx.sub('<span class="highlight">\g<0></span>', line)
     if ExternalEditor is None:

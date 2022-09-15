@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import six
 
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 from lxml import etree
 from lxml.etree import Element, SubElement, CDATA
 from lxml.builder import E
@@ -21,7 +21,7 @@ def formToXML(form, prologue=1):
         else:
           value = 'false'
       sub_element = SubElement(form_as_xml, id)
-      sub_element.text = escape(str(value)).decode(encoding)
+      sub_element.text = html_quote(str(value)).decode(encoding)
     groups = SubElement(form_as_xml, 'groups')
     # export form groups
     for group in form.get_groups(include_empty=1):
@@ -58,7 +58,7 @@ def formToXML(form, prologue=1):
             if not isinstance(value, six.string_types):
               value = str(value)
             value_element = SubElement(values_element, key)
-          value_element.text = escape(str(value)).decode(encoding)
+          value_element.text = html_quote(str(value)).decode(encoding)
 
         tales_element = SubElement(field_element, 'tales')
         items = field.tales.items()
