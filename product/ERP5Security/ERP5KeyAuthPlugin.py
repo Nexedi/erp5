@@ -46,6 +46,7 @@ from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHel
 
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
                                                   _AuthenticationFailure
 from Products import ERP5Security
@@ -64,7 +65,7 @@ class AESCipher:
   def encrypt(self, login):
     iv = Random.new().read(AES.block_size)
     encryptor = AES.new(self.encryption_key, self.mode, IV=iv)
-    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust(((len(login)-1)/16+1)*16)))
+    return urlsafe_b64encode(iv + encryptor.encrypt(login.ljust(((len(login)-1)//16+1)*16)))
 
   def decrypt(self, crypted_login):
     decoded_crypted_login = urlsafe_b64decode(crypted_login)
@@ -217,13 +218,13 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   def encrypt(self, login):
     """Encrypt the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
-    return cipher.encrypt(login)
+    return bytes2str(cipher.encrypt(login))
 
   security.declarePrivate('decrypt')
   def decrypt(self, crypted_login):
     """Decrypt string and return the login"""
     cipher = globals()['%sCipher' % self._getCipher()](self.encryption_key)
-    return cipher.decrypt(crypted_login)
+    return bytes2str(cipher.decrypt(crypted_login))
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#

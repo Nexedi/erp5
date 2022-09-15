@@ -39,7 +39,9 @@ from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import ensure_list
 import six
+from six.moves import xrange
 
 class MatchList(list):
   def __repr__(self):
@@ -99,7 +101,7 @@ class ReferenceQuery:
       else:
         self.args.append(arg)
     if len(kw) == 1:
-      self.column, value = kw.items()[0]
+      self.column, value = ensure_list(kw.items())[0]
       if not isinstance(value, MatchList):
         value = MatchList([value])
       self.value = value
