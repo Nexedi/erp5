@@ -50,8 +50,12 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
 import six
+if six.PY2:
+  FileIO = file
+else:
+  from io import FileIO
 
-class FileUpload(file):
+class FileUpload(FileIO):
   """Act as an uploaded file.
   """
   __allow_access_to_unprotected_subobjects__ = 1

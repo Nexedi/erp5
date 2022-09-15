@@ -9,7 +9,7 @@ __version__ = '0.3.0'
 
 import base64
 import errno
-import httplib
+from six.moves import http_client
 import os
 import random
 import re
@@ -19,12 +19,12 @@ import sys
 import time
 import traceback
 import urllib
-import ConfigParser
+from six.moves import configparser
 from contextlib import contextmanager
 from io import BytesIO
 from functools import partial
 from six.moves.urllib.parse import unquote_to_bytes
-from cPickle import dumps
+from six.moves.cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
@@ -34,7 +34,10 @@ import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
 # XXX make sure that get_request works.
-from new import function
+try: # six.PY2
+  from new import function
+except ImportError:
+  from types import FunctionType as function
 from zope.globalrequest import getRequest
 import six
 original_get_request = function(getRequest.__code__, getRequest.__globals__)
@@ -181,7 +184,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   cloudooo_url_list = _getConversionServerUrlList()
 
-  promise_config = ConfigParser.RawConfigParser()
+  promise_config = configparser.RawConfigParser()
   promise_config.add_section('external_service')
   promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
