@@ -34,6 +34,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Errors import SimulationError
+from Products.ERP5Type.Utils import ensure_list
 
 class SimulableMixin(Base):
   security = ClassSecurityInfo()
@@ -75,7 +76,7 @@ class SimulableMixin(Base):
         ignore.update(kw)
         tv[ignore_key] = ignore
       transaction.get().addBeforeCommitHook(before_commit)
-    for k, v in item_list:
+    for k, v in ensure_list(item_list):
       if not v:
         ignore.add(k)
       elif k not in ignore:
