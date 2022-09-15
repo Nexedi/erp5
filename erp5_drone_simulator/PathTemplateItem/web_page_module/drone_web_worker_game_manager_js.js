@@ -27,6 +27,7 @@ var GameManager = /** @class */ (function () {
     Object.assign(GAMEPARAMETERS, map);
     this._map = map;
     this._map_swapped = false;
+    this._script = script;
     this.APIs_dict = {
       DroneAaileFixeAPI: DroneAaileFixeAPI,
       DroneLogAPI: DroneLogAPI,
@@ -48,7 +49,28 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype.update = function () {
-    console.log("GAME MANAGER update. canvas:", this._canvas);
+    var _this = this;
+    // To increase the game speed, increase this value
+    _this._max_step_animation_frame = 10;
+      // time delta means that drone are updated every virtual second
+      // This is fixed and must not be modified
+      // otherwise, it will lead to different scenario results
+      // (as drone calculations may be triggered less often)
+    var TIME_DELTA = 1000 / 60, i;
+    // init the value on the first step
+    _this.waiting_update_count = _this._max_step_animation_frame;
+    function triggerUpdateIfPossible() {
+      if ((_this._canUpdate) && (_this.ongoing_update_promise === null) && (0 < _this.waiting_update_count)) {
+        _this.ongoing_update_promise = _this._update(TIME_DELTA, (_this.waiting_update_count === 1))
+          .push(function () {
+            _this.waiting_update_count -= 1;
+            _this.ongoing_update_promise = null;
+            triggerUpdateIfPossible();
+          })
+          .push(undefined, _this.finish_deferred.reject.bind(_this.finish_deferred));
+      }
+    }
+    triggerUpdateIfPossible();
   };
 
   GameManager.prototype.delay = function (callback, millisecond) {
@@ -263,7 +285,6 @@ var GameManager = /** @class */ (function () {
           i;
         function countdown (count) {
           return function () {
-            //_this._displayMsg(count + " ...");
             console.log(count + " ...");
             return RSVP.delay(200);
           };
@@ -276,9 +297,9 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._start = function () {
-    var _this = this,
-      waiting_update_count,
-      ongoing_update_promise = null;
+    var _this = this;
+    _this.waiting_update_count = 0;
+    _this.ongoing_update_promise = null;
     _this.finish_deferred = RSVP.defer();
     console.log("Simulation started.");
     // Timing
@@ -297,27 +318,26 @@ var GameManager = /** @class */ (function () {
           drone._tick = 0;
           promise_list.push(drone.internal_start());
         });
-        console.log("starting all drones...");
         return RSVP.all(promise_list);
       })
       .push(function () {
-        console.log("promise drones-start finished");
-        _this._scene.registerBeforeRender(function () {
+        //The loop is handle from the outside (webworker)
+        /*_this._scene.registerBeforeRender(function () {
           // To increase the game speed, increase this value
-          //_this._max_step_animation_frame = 10,
+          _this._max_step_animation_frame = 10;
             // time delta means that drone are updated every virtual second
             // This is fixed and must not be modified
             // otherwise, it will lead to different scenario results
             // (as drone calculations may be triggered less often)
           var TIME_DELTA = 1000 / 60, i;
           // init the value on the first step
-          waiting_update_count = _this._max_step_animation_frame;
+          _this.waiting_update_count = _this._max_step_animation_frame;
           function triggerUpdateIfPossible() {
-            if ((_this._canUpdate) && (ongoing_update_promise === null) && (0 < waiting_update_count)) {
-              ongoing_update_promise = _this._update(TIME_DELTA, (waiting_update_count === 1))
+            if ((_this._canUpdate) && (_this.ongoing_update_promise === null) && (0 < _this.waiting_update_count)) {
+              _this.ongoing_update_promise = _this._update(TIME_DELTA, (_this.waiting_update_count === 1))
                 .push(function () {
-                  waiting_update_count -= 1;
-                  ongoing_update_promise = null;
+                  _this.waiting_update_count -= 1;
+                  _this.ongoing_update_promise = null;
                   triggerUpdateIfPossible();
                 })
                 .push(undefined, _this.finish_deferred.reject.bind(_this.finish_deferred));
@@ -325,7 +345,9 @@ var GameManager = /** @class */ (function () {
           }
           triggerUpdateIfPossible();
 
-        });
+        });*/
+        //TODO solving promise so game-start finishes and web worker can update
+        _this.finish_deferred.resolve();
         return _this.finish_deferred.promise;
       });
   };

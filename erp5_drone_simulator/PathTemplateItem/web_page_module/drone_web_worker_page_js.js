@@ -127,7 +127,6 @@
           function step() {
             context.loop_promise
               .push(function () {
-                console.log('GAME: loop step');
                 worker.postMessage({
                   type: 'update'
                 });
@@ -226,7 +225,7 @@
       var script_content, map_content, log_content;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.jio_get("rescue_swarm_script_module/" + "28");
+          return gadget.jio_get("rescue_swarm_script_module/" + "web_worker");
         })
         .push(function (script) {
           script_content = script.text_content;

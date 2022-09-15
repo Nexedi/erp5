@@ -149,7 +149,6 @@ var DroneLogAPI = /** @class */ (function () {
         'me.setAcceleration(10);' +
         '};' +
         'me.onUpdate = function () {' +
-        'console.log("DRONE LOG UPDATE! - TODO: set flight parameters with log path");' +
         'return;' +
         'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
         'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +

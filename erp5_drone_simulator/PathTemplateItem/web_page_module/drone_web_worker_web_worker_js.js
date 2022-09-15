@@ -61,11 +61,6 @@ var window = {
         .push(function () {
           return worker.postMessage({'type': 'updated'});
         });
-      /*var i;
-      for (i = 0; i < 100000000; i += 1) {
-        1+1;
-      }
-      return worker.postMessage({'type': 'updated'});*/
     }
     throw new Error('Unsupported message ' + JSON.stringify(evt.data));
     //self.postMessage('nutnut', evt);
