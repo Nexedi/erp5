@@ -18,6 +18,7 @@ import string
 import sys
 import time
 import traceback
+import urllib
 from six.moves import configparser
 from contextlib import contextmanager
 from io import BytesIO
