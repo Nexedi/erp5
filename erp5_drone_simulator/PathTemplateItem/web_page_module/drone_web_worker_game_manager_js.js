@@ -25,12 +25,22 @@ var GameManager = /** @class */ (function () {
     if (!simulation_speed) { simulation_speed = 5; }
     this._max_step_animation_frame = simulation_speed;
     Object.assign(GAMEPARAMETERS, map);
+    this._map = map;
+    this._map_swapped = false;
     this.APIs_dict = {
       DroneAaileFixeAPI: DroneAaileFixeAPI,
       DroneLogAPI: DroneLogAPI,
       DroneAPI: DroneAPI
     };
   }
+
+  Object.defineProperty(GameManager.prototype, "gameParameter", {
+    get: function () {
+      return this._gameParameter;
+    },
+    enumerable: true,
+    configurable: true
+  });
 
   GameManager.prototype.run = function () {
     var gadget = this;
@@ -172,11 +182,10 @@ var GameManager = /** @class */ (function () {
     var on3DmodelsReady = function (ctx) {
       console.log("on3DmodelsReady!");
       // Get the game parameters
-      //TODO getParameters
-      /*if (!ctx._map_swapped) {
-          GAMEPARAMETERS = ctx._getGameParameter();
-          ctx._map_swapped = true;
-      }*/
+      if (!ctx._map_swapped) {
+        GAMEPARAMETERS = ctx._getGameParameter();
+        ctx._map_swapped = true;
+      }
       // Create the API
       var lAPI = new DroneAPI(ctx, "L");
       var rAPI = new DroneAPI(ctx, "R");
@@ -370,6 +379,31 @@ var GameManager = /** @class */ (function () {
     console.log("asset manager loaded (tasks for map, drones and obstacles)");
   };
 
+  GameManager.prototype._getGameParameter = function () {
+    var parameter = {}, i,
+      swap = function (pos) {
+        return {
+          x: pos.x,
+          y: pos.z,
+          z: pos.y
+        };
+      };
+    Object.assign(parameter, this._map);
+    this._gameParameter = {};
+    Object.assign(this._gameParameter, this._map);
+    //TODO obstacle is kept as real flight log uses for path draw. Refactor this
+    for (i = 0; i < parameter.obstacles.length; i += 1) {
+      parameter.obstacles[i].position = swap(parameter.obstacles[i].position);
+      if (parameter.obstacles[i].scale) {
+        parameter.obstacles[i].scale = swap(parameter.obstacles[i].scale);
+      }
+      if (parameter.obstacles[i].rotation) {
+        parameter.obstacles[i].rotation = swap(parameter.obstacles[i].rotation);
+      }
+    }
+    return parameter;
+  };
+
   GameManager.prototype._setRandomSpawnPosition = function (randomSpawn, team_size, api, code, team) {
       var position, i, position_list = [], center = randomSpawn.position, max_collision = randomSpawn.maxCollision || 10 * team_size, collision_nb = 0;
       function checkCollision(position, list) {
@@ -418,35 +452,34 @@ var GameManager = /** @class */ (function () {
       if (default_drone_AI) {
         code = default_drone_AI;
       }
-      var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, "
-          + index + ', "' + team + '", api);'
-          + "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {"
-          + "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();"
-          + "Date.now = function () {return start_time + drone._tick * 1000/60;}; "
-          + "function Date() {if (!(this instanceof Date)) {throw new Error('Missing new operator');} "
-          + "if (arguments.length === 0) {return new NativeDate(Date.now());} else {return new NativeDate(...arguments);}}";
+      var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, " +
+          index + ', "' + team + '", api);' +
+          "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {" +
+          "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
+          "Date.now = function () {return start_time + drone._tick * 1000/60;}; " +
+          "function Date() {if (!(this instanceof Date)) {throw new Error('Missing new operator');} " +
+          "if (arguments.length === 0) {return new NativeDate(Date.now());} else {return new NativeDate(...arguments);}}";
       // Simple desactivation of direct access of all globals
       // It is still accessible in reality, but it will me more visible
       // if people really access them
       if (x !== null && y !== null && z !== null) {
-          code_eval += "me.setStartingPosition("
-              + x + ", " + y + ", " + z + ");";
+        code_eval += "me.setStartingPosition(" + x + ", " + y + ", " + z + ");";
       }
       base = code_eval;
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
       if (team == "R") {
-          base += "};ctx._teamRight.push(drone)";
-          code_eval += "ctx._teamRight.push(drone)";
+        base += "};ctx._teamRight.push(drone)";
+        code_eval += "ctx._teamRight.push(drone)";
       }
       else {
-          base += "};ctx._teamLeft.push(drone)";
-          code_eval += "ctx._teamLeft.push(drone)";
+        base += "};ctx._teamLeft.push(drone)";
+        code_eval += "ctx._teamLeft.push(drone)";
       }
       try {
-          eval(code_eval);
+        eval(code_eval);
       }
       catch (error) {
-          eval(base);
+        eval(base);
       }
   };
 
