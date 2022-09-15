@@ -1066,7 +1066,7 @@ class TemplateTool (BaseTool):
                               installed_revision=installed_revision,
                               repository=repository,
                               **property_dict)
-        obj.setUid(uid)
+        obj.setUid(bytes2str(uid))
         result_list.append(obj)
       result_list.sort(key=lambda x: x.getTitle())
       return result_list
