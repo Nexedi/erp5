@@ -34,9 +34,11 @@ import mock
 import itertools
 import transaction
 import unittest
-import urlparse
+import six
+from six.moves.urllib.parse import urlparse, parse_qs
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Utils import bytes2str
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl import SpecialUsers
@@ -57,8 +59,10 @@ class UserManagementTestCase(ERP5TypeTestCase):
   """TestCase for user manement, with utilities to create users and helpers
   assertion methods.
   """
-  _login_generator = itertools.count().next
-
+  if six.PY2:
+    _login_generator = itertools.count().next
+  else:
+    _login_generator = itertools.count().__next__
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
@@ -742,12 +746,12 @@ class TestPreferences(UserManagementTestCase):
       current_password='bad' + password,
       new_password=new_password,
     )
-    parsed_url = urlparse.urlparse(result)
+    parsed_url = urlparse(result)
     self.assertEqual(
         parsed_url.path.split('/')[-2:],
         ['portal_preferences', 'PreferenceTool_viewChangePasswordDialog'])
     self.assertEqual(
-        urlparse.parse_qs(parsed_url.query),
+        parse_qs(parsed_url.query),
         {'portal_status_message': ['Current password is wrong.'], 'portal_status_level': ['error']})
 
     self.login()
@@ -1202,8 +1206,8 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     # view front page we should be logged in if we use authentication key
     response = self.publish(base_url, env={self.user_id_key.replace('-', '_').upper(): login})
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn('Logged In', response.getBody())
-    self.assertIn(login, response.getBody())
+    self.assertIn('Logged In', bytes2str(response.getBody()))
+    self.assertIn(login, bytes2str(response.getBody()))
 
 
 class _TestLocalRoleManagementMixIn(object):
@@ -1543,7 +1547,7 @@ class _TestKeyAuthenticationMixIn(object):
     # view front page we should be logged in if we use authentication key
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn(reference, response.getBody())
+    self.assertIn(reference, bytes2str(response.getBody()))
 
     # check if key authentication works other page than front page
     person_module = portal.person_module
@@ -1554,7 +1558,7 @@ class _TestKeyAuthenticationMixIn(object):
     self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn(reference, response.getBody())
+    self.assertIn(reference, bytes2str(response.getBody()))
 
     # check if key authentication works with web_mode too
     web_site = portal.web_site_module.newContent(portal_type='Web Site')

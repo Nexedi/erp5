@@ -40,6 +40,7 @@ from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import ensure_list
 import six
 from AccessControl.ZopeGuards import guarded_getattr
 
@@ -101,7 +102,7 @@ class ReferenceQuery:
       else:
         self.args.append(arg)
     if len(kw) == 1:
-      self.column, value = kw.items()[0]
+      self.column, value = ensure_list(kw.items())[0]
       if not isinstance(value, MatchList):
         value = MatchList([value])
       self.value = value
@@ -120,7 +121,7 @@ class ReferenceQuery:
         return False
       other_query_list = other.query_list[:]
       for subquery in self.args:
-        for other_query_id in xrange(len(other_query_list)):
+        for other_query_id in range(len(other_query_list)):
           other_query = other_query_list[other_query_id]
           if subquery == other_query:
             other_query_list.pop(other_query_id)
