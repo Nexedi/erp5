@@ -131,7 +131,7 @@ class Message(Persistent):
     if self.domain is None:
       # Map the translated string with given parameters
       if type(self.mapping) is dict:
-        if isinstance(message, six.text_type) :
+        if six.PY2 and isinstance(message, six.text_type) :
           message = message.encode('utf-8')
         message = Template(message).substitute(self.mapping)
     else:
@@ -141,7 +141,7 @@ class Message(Persistent):
       if self.mapping:
         unicode_mapping = {}
         for k, v in six.iteritems(self.mapping):
-          if isinstance(v, str):
+          if six.PY2 and isinstance(v, str):
             v = v.decode('utf-8')
           unicode_mapping[k] = v
       else:
@@ -156,9 +156,9 @@ class Message(Persistent):
         message = translated_message
 
     if isinstance(self.message, str):
-      if isinstance(message, six.text_type):
+      if six.PY2 and isinstance(message, six.text_type):
         message = message.encode('utf-8')
-    elif isinstance(message, str):
+    elif six.PY2 and isinstance(message, str):
       message = message.decode('utf-8')
 
     return message
@@ -171,7 +171,7 @@ class Message(Persistent):
     Return the translated message as a string object.
     """
     message = self.translate()
-    if isinstance(message, six.text_type):
+    if six.PY2 and isinstance(message, six.text_type):
       message = message.encode('utf-8')
     return message
 
@@ -180,7 +180,7 @@ class Message(Persistent):
     Return the translated message as a unicode object.
     """
     message = self.translate()
-    if isinstance(message, str):
+    if six.PY2 and isinstance(message, str):
       message = message.decode('utf-8')
     return message
 

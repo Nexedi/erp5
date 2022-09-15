@@ -2,8 +2,10 @@
 import errno, logging, os, socket, time
 import itertools
 from threading import Thread
-from UserDict import IterableUserDict
-import Lifetime
+try: # six.PY2
+  from UserDict import IterableUserDict as UserDict
+except ImportError:
+  from collections import UserDict
 import transaction
 from Testing import ZopeTestCase
 from ZODB.POSException import ConflictError
@@ -15,7 +17,7 @@ from Products.ERP5Type.tests.utils import \
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
-class DictPersistentWrapper(IterableUserDict, object):
+class DictPersistentWrapper(UserDict, object):
 
   def __metaclass__(name, base, d):
     def wrap(attr):
