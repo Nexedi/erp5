@@ -436,6 +436,9 @@ def synchronizeDynamicModules(context, force=False):
 
   import erp5
   with aq_method_lock:
+    # bootstrap the site and perform some "critical" migrations that can not be
+    # performed using upgrader, because the migrations are required to run upgrader.
+    #  
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.
@@ -464,7 +467,7 @@ def synchronizeDynamicModules(context, force=False):
           if tool is None:
             if tool_class == ERP5CatalogTool:
               # Wait till we find that SQL Catalog Tool is installed
-              # Simpy said, we don't want  ERP5 Catalog Tool to be installed
+              # Simply said, we don't want ERP5 Catalog Tool to be installed
               # from here. So, we come to 2 cases:
               # 1. Running ERP5Site with sql catalog_tool : In that case, we end up
               # running _bootstrap from here, leading to migration.
