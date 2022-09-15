@@ -18,7 +18,7 @@ Close properly the <input /> tag
 
 import ZTUtils.Zope
 from ZTUtils.Zope import complex_marshal
-import cgi
+from Products.PythonScripts.standard import html_quote
 from Products.ERP5Type.Utils import ensure_list
 
 def make_hidden_input(*args, **kwargs):
@@ -39,7 +39,7 @@ def make_hidden_input(*args, **kwargs):
       d.update(arg)
   d.update(kwargs)
 
-  hq = lambda x:cgi.escape(x, quote=True)
+  hq = lambda x: html_quote(x)
   qlist = complex_marshal(ensure_list(d.items()))
   for i in range(len(qlist)):
       k, m, v = qlist[i]

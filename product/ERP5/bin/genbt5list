@@ -220,8 +220,8 @@ def generateInformation(dir, info=id, err=None):
       if str is not bytes:
         k = k.encode()
       for v in (v,) if type(v) is bytes else v:
-        xml.write(b'    <%s>%s</%s>\n' % (k, escape(v) if str is bytes else
-                                             escape(v.decode()).encode(), k))
+        xml.write(b'    <%s>%s</%s>\n' % (k, escape(v, quote=False) if str is bytes else
+                                             escape(v.decode(), quote=False).encode(), k))
     xml.write(b'  </template>\n')
     info('done\n')
   xml.write(b'</repository>\n')
