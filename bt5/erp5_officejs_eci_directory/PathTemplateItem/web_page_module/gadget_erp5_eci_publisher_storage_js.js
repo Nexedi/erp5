@@ -7,18 +7,19 @@
 
 
   function populatePublisherStorage() {
+    var resource_url = "https://lab.nexedi.com/Fonds-de-Dotation-du-Libre/european-cloud-industry/";
     return new RSVP.Queue()
      .push(function () {
-        return jIO.util.ajax({"type": "GET", "url": "https://api.github.com/repos/Fonds-de-Dotation-du-Libre/european-cloud-industry/contents/?ref=master"});
+        return jIO.util.ajax({"type": "GET", "url": resource_url + "files/master?format=json"});
       })
       .push(function (data) {
         var data_list = JSON.parse(
           data.target.response || data.target.responseText
         );
         var result_list = data_list.map(function (entry) {
-          if (entry.path.endsWith(".json")) {
+          if (entry.split('/')[0].endsWith(".json")) {
             return {
-              id: entry.download_url
+              id: resource_url + "raw/master/" + entry
             };
           }
         }).filter(Boolean);
