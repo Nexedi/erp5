@@ -54,10 +54,7 @@ def hashPdataObject(pdata_object):
   while pdata_object is not None:
     chunk = pdata_object.aq_base
     md5_hash.update(chunk.data)
-    if six.PY2:
-      pdata_object = chunk.next
-    else:
-      pdata_object = chunk.__next__
+    pdata_object = chunk.next
     chunk._p_deactivate()
   return md5_hash.hexdigest()
 
