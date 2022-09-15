@@ -32,6 +32,7 @@
 """
 
 from OFS.SimpleItem import SimpleItem
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from AccessControl import ClassSecurityInfo
 from ZTUtils import make_query
@@ -434,7 +435,7 @@ class SelectionTool( BaseTool, SimpleItem ):
             selection_uid_dict[int(uid)] = 1
           except (ValueError, TypeError):
             selection_uid_dict[uid] = 1
-        self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+        self.setSelectionCheckedUidsFor(list_selection_name, ensure_list(selection_uid_dict.keys()), REQUEST=REQUEST)
       if REQUEST is not None:
         return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
                                             query_string=query_string, no_reset=True)

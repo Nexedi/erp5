@@ -203,7 +203,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     security=getSecurityManager()
     security.addContext(self)
     try:
-        query = str2bytes(self.template(p, **argdata))
+        query = self.template(p, **argdata)
     except TypeError as msg:
         msg = str(msg)
         if 'client' in msg:
@@ -216,12 +216,12 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     if src__: return query
 
     if self.cache_time_ > 0 and self.max_cache_ > 0:
-        result=self._cached_result(DB__, query, self.max_rows_, c)
+        result=self._cached_result(DB__, str2bytes(query), self.max_rows_, c)
     else:
       try:
 #         if 'portal_ids' in query:
 #           LOG("DA query", INFO, "query = %s" %(query,))
-        result=DB__.query(query, self.max_rows_)
+        result=DB__.query(str2bytes(query), self.max_rows_)
       except:
         LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=True)
         raise

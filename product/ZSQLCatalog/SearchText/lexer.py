@@ -58,7 +58,10 @@ class lexer(object):
                             write_tables=False)
     sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
     # Emit all logs with regular Zope logging
-    for line in output.getvalue().split('\n'):
+    value = output.getvalue()
+    if six.PY3:
+      value = value.decode()
+    for line in value.split('\n'):
       if len(line):
         LOG('lexer', 0, line)
 
