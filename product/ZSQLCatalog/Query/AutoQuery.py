@@ -76,17 +76,17 @@ class AutoQuery(Query):
       # Recreate value as a dict and pass it to buildSingleQuery.
       range = kw.pop('range')
       assert len(kw) == 1, repr(kw)
-      key, value = kw.items()[0]
+      key, value = list(kw.items())[0]
       query = sql_catalog.buildSingleQuery(key, {'query': value,
                                                  'range': range})
     elif operator == 'in':
       # 'in' is a *comparison* operator, not a logical operator.
       # Transform kw into the proper form.
       assert len(kw) == 1, repr(kw)
-      key, value = kw.items()[0]
+      key, value = list(kw.items())[0]
       query = sql_catalog.buildSingleQuery(key, {'query': value,
                                                  'operator': operator})
-    elif len(kw) == 1 and isinstance(kw.values()[0], (tuple, list)) and \
+    elif len(kw) == 1 and isinstance(list(kw.values())[0], (tuple, list)) and \
        operator in ('and', 'or'):
       # If there is only one parameter, and operator was given and is a
       # known logical operator, then operator will apply to it.
@@ -94,7 +94,7 @@ class AutoQuery(Query):
       #  kw = {'portal_type': ['!=a', '!=b'], 'operator': 'AND'}
       #  In such case, expected result is
       #  "portal_type!='a' AND portal_type!='b'"
-      key, value = kw.items()[0]
+      key, value = list(kw.items())[0]
       query = sql_catalog.buildSingleQuery(key, value, logical_operator=operator)
     else:
       # Otherwise, the operator will apply to the relationship between
@@ -102,7 +102,7 @@ class AutoQuery(Query):
       if operator is None:
         operator = 'and'
       if self.search_key is not None:
-        key, value = kw.items()[0]
+        key, value = list(kw.items())[0]
         kw = {key: {'query': value, 'key': self.search_key}}
       query = sql_catalog.buildQuery(kw, operator=operator, ignore_empty_string=self.ignore_empty_string)
     if self.table_alias_list is not None:
