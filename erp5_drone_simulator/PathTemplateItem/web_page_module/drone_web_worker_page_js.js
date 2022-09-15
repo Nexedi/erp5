@@ -221,7 +221,7 @@
 
       offscreen = canvas.transferControlToOffscreen();
 
-      //TODO move this to game logic
+      //TODO this should be in game logic BUT gadget can't be accessed from WW
       var script_content, map_content, log_content;
       return new RSVP.Queue()
         .push(function () {
