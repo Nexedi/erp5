@@ -67,8 +67,12 @@ def canonical_html(html):
     method="c14n",
   ).decode('utf-8')
 
+if six.PY2:
+  FileIO = file
+else:
+  from io import FileIO
 
-class FileUpload(file):
+class FileUpload(FileIO):
   """Act as an uploaded file.
   """
   __allow_access_to_unprotected_subobjects__ = 1
