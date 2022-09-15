@@ -7,7 +7,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test ECI Basic Navigation</td></tr>
+<tr><td rowspan="1" colspan="3">Test ECI Financial Data</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
@@ -51,14 +51,14 @@
 <tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//tbody//tr[1]//div[@class="editable_div"]//div[contains(@data-gadget-url, "gadget_erp5_eci_financial_widget.html")]</td>
   <td></td>
 </tr>
 
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//div[contains(@data-gadget-url, "gadget_erp5_eci_dygraph.html")]</td>
   <td></td>
 </tr>
