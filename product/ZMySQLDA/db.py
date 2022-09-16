@@ -460,6 +460,8 @@ class DB(TM):
         return items, result
 
     def string_literal(self, s):
+        if six.PY3 and isinstance(s, six.text_type):
+            s = s.encode()
         return self.db.string_literal(s)
 
     def _begin(self, *ignored):
