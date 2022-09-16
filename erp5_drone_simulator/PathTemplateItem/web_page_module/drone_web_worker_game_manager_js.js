@@ -28,6 +28,22 @@ var GameManager = /** @class */ (function () {
     this._game_parameters_json = game_parameters_json;
     this._map_swapped = false;
     this._script = script;
+    this._last_position_drawn = [];
+    this._log_count = [];
+    this._flight_log = [];
+    if (GAMEPARAMETERS.compareFlights) {
+      for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+        this._flight_log[count] = [];
+        this._log_count[count] = 0;
+        this._last_position_drawn[count] = null;
+      }
+      this._colors = [
+        new BABYLON.Color3(255, 165, 0),
+        new BABYLON.Color3(0, 0, 255),
+        new BABYLON.Color3(255, 0, 0),
+        new BABYLON.Color3(0, 255, 0)
+      ];
+    }
     this.APIs_dict = {
       DroneAaileFixeAPI: DroneAaileFixeAPI,
       DroneLogAPI: DroneLogAPI,
@@ -77,12 +93,67 @@ var GameManager = /** @class */ (function () {
     this._delayed_defer_list.push([callback, millisecond]);
   };
 
+  GameManager.prototype._updateDisplayedInfo = function (delta_time, update_dom) {
+    this._game_duration += delta_time;
+    var seconds = Math.floor(this._game_duration / 1000);
+    //TODO Timing display?
+    /*if (update_dom) {
+      this._timeDisplay.textContent = this._formatTimeToMinutesAndSeconds(this._game_duration);
+    }*/
+    if (GAMEPARAMETERS.compareFlights) {
+      for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+        if (this._teamLeft[count]._controlMesh) {
+          var drone_position_x = this._teamLeft[count]._controlMesh.position.x,
+            drone_position_z = this._teamLeft[count]._controlMesh.position.y,
+            drone_position_y = this._teamLeft[count]._controlMesh.position.z;
+          console.log("GAMEPARAMETERS.compareFlights.log?:", GAMEPARAMETERS.compareFlights.log);
+          if (GAMEPARAMETERS.compareFlights.log) {
+            if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
+              this._log_count[count] += GAMEPARAMETERS.compareFlights.log_interval_time;
+              //convert x-y coordinates into latitud-longitude
+              var lon = drone_position_x + GAMEPARAMETERS.compareFlights.map_width / 2;
+              lon = lon / 1000;
+              lon = lon * (GAMEPARAMETERS.compareFlights.MAX_X - GAMEPARAMETERS.compareFlights.MIN_X) + GAMEPARAMETERS.compareFlights.MIN_X;
+              lon = lon / (GAMEPARAMETERS.compareFlights.map_width / 360.0) - 180;
+              var lat = drone_position_y + GAMEPARAMETERS.compareFlights.map_height / 2;
+              lat = lat / 1000;
+              lat = lat * (GAMEPARAMETERS.compareFlights.MAX_Y - GAMEPARAMETERS.compareFlights.MIN_Y) + GAMEPARAMETERS.compareFlights.MIN_Y;
+              lat = 90 - lat / (GAMEPARAMETERS.compareFlights.map_height / 180.0);
+              this._flight_log[count].push([lat, lon, drone_position_z]);
+            }
+          }
+          console.log("GAMEPARAMETERS.compareFlights.draw?:", GAMEPARAMETERS.compareFlights.draw);
+          if (GAMEPARAMETERS.compareFlights.draw) {
+            //draw drone position every second
+            if (this._last_position_drawn[count] !== seconds) {
+              this._last_position_drawn[count] = seconds;
+              var position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" + seconds, {
+                  'diameterX': 3.5,
+                  'diameterY': 3.5,
+                  'diameterZ': 3.5
+              }, this._scene);
+              position_obj.position = new BABYLON.Vector3(drone_position_x, drone_position_z, drone_position_y);
+              position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
+              var material = new BABYLON.StandardMaterial(this._scene);
+              material.alpha = 1;
+              var color = new BABYLON.Color3(255, 0, 0);
+              if (this._colors[count]) {
+                color = this._colors[count];
+              }
+              material.diffuseColor = color;
+              position_obj.material = material;
+            }
+          }
+        }
+      }
+    }
+};
+
   GameManager.prototype._update = function (delta_time, update_dom) {
     var _this = this,
       queue = new RSVP.Queue(),
       i;
-    //TODO
-    //this._updateTiming(delta_time, update_dom);
+    this._updateDisplayedInfo(delta_time, update_dom);
 
     // trigger all deferred calls if it is time
     for (i = _this._delayed_defer_list.length - 1; 0 <= i; i -= 1) {
