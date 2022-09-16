@@ -53,16 +53,8 @@
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Author</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_receiveStripeWebHook</string> </value>
+            <value> <string>HTTPExchange_getFollowUpForWebHook</string> </value>
         </item>
       </dictionary>
     </pickle>
