@@ -49,7 +49,6 @@ from inspect import CO_VARKEYWORDS
 from functools import wraps
 import time
 from six.moves import urllib
-import string
 import pprint
 import re
 import warnings
@@ -1216,7 +1215,7 @@ class Catalog(Folder,
 
     words = 0
     obj = REQUEST.PARENTS[1]
-    path = string.join(obj.getPhysicalPath(), '/')
+    path = '/'.join(obj.getPhysicalPath())
 
     results = self.aq_parent.ZopeFindAndApply(obj,
                     obj_metatypes=obj_metatypes,
