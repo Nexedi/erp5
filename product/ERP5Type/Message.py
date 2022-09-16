@@ -171,8 +171,10 @@ class Message(Persistent):
     Return the translated message as a string object.
     """
     message = self.translate()
-    if isinstance(message, six.text_type):
+    if six.PY2 and isinstance(message, six.text_type):
       message = message.encode('utf-8')
+    elif six.PY3 and isinstance(message, six.binary_type):
+      message = message.decode('utf-8')
     return message
 
   def __unicode__(self):
