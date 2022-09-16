@@ -29,8 +29,9 @@
 import unittest
 import pickle
 import re
-import xml.parsers.pyexpat
+import xml.sax
 from StringIO import StringIO
+
 from Products.ERP5Type.XMLExportImport import ppml
 
 
@@ -67,12 +68,11 @@ class TestXMLPickle(unittest.TestCase):
     F.file = output
     F.binary = 1
 
-    p=xml.parsers.pyexpat.ParserCreate()
-    p.CharacterDataHandler=F.handle_data
-    p.StartElementHandler=F.unknown_starttag
-    p.EndElementHandler=F.unknown_endtag
-
-    p.Parse(xmldata)
+    content_handler = xml.sax.handler.ContentHandler()
+    content_handler.startElement = F.unknown_starttag
+    content_handler.endElement = F.unknown_endtag
+    content_handler.characters = F.handle_data
+    xml.sax.parseString(xmldata, content_handler)
 
     reconstructed_pickled_data = F._stack[0][0]
     reconstructed_obj = pickle.loads(reconstructed_pickled_data)
@@ -84,6 +84,3 @@ class TestXMLPickle(unittest.TestCase):
     self.assert_(reconstructed_obj.data[2] is reconstructed_obj.data)
     self.assert_(type(reconstructed_obj.data[3]) is type(pattern))
     self.assertEqual(reconstructed_obj.data[3].pattern, 'WAA')
-
-if __name__ == '__main__':
-  unittest.main()

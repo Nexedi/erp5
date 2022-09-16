@@ -13,12 +13,33 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_close</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_close_action</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_expire</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_expire_action</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_open</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/transition_open_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>The Sale Opportunity is Cancelled.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_cancelled</string> </value>
+            <value> <string>state_suspended</string> </value>
         </item>
         <item>
             <key> <string>index</string> </key>
@@ -44,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancelled</string> </value>
+            <value> <string>Suspended</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -85,10 +106,11 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
+                        <string>Associate</string>
                       </tuple>
                     </value>
                 </item>
@@ -96,6 +118,8 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -104,10 +128,11 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Assignee</string>
                         <string>Manager</string>
+                        <string>Auditor</string>
+                        <string>Associate</string>
                       </tuple>
                     </value>
                 </item>
