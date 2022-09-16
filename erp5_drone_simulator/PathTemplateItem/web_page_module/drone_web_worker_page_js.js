@@ -153,7 +153,7 @@
                 logic_url: options.logic_url,
                 canvas: options.canvas,
                 script: options.script,
-                map: options.map,
+                game_parameters_json: options.game_parameters_json,
                 log: options.log
               }, [options.canvas]);
             }
@@ -222,7 +222,7 @@
       offscreen = canvas.transferControlToOffscreen();
 
       //TODO this should be in game logic BUT gadget can't be accessed from WW
-      var script_content, map_content, log_content;
+      var script_content, game_parameters_json, log_content;
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_get("rescue_swarm_script_module/" + "web_worker");
@@ -231,8 +231,8 @@
           script_content = script.text_content;
           return gadget.jio_get("rescue_swarm_map_module/" + "compare_map");
         })
-        .push(function (map_doc) {
-          map_content = JSON.parse(map_doc.text_content);
+        .push(function (parameters_doc) {
+          game_parameters_json = JSON.parse(parameters_doc.text_content);
           return gadget.jio_get("rescue_swarm_script_module/" + "lp_loiter");
         })
         .push(function (log) {
@@ -242,7 +242,7 @@
             logic_url: parameter_gamelogic,
             canvas: offscreen,
             script: script_content,
-            map: map_content,
+            game_parameters_json: game_parameters_json,
             log: log_content
           });
 

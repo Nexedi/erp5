@@ -13,7 +13,7 @@ function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
 
 var GameManager = /** @class */ (function () {
   // *** CONSTRUCTOR ***
-  function GameManager(canvas, script, map, simulation_speed) {
+  function GameManager(canvas, script, game_parameters_json, simulation_speed) {
     var _this = this;
     this._canvas = canvas;
     this._scene = null;
@@ -24,8 +24,8 @@ var GameManager = /** @class */ (function () {
     this._canUpdate = false;
     if (!simulation_speed) { simulation_speed = 5; }
     this._max_step_animation_frame = simulation_speed;
-    Object.assign(GAMEPARAMETERS, map);
-    this._map = map;
+    Object.assign(GAMEPARAMETERS, game_parameters_json);
+    this._game_parameters_json = game_parameters_json;
     this._map_swapped = false;
     this._script = script;
     this.APIs_dict = {
@@ -410,9 +410,9 @@ var GameManager = /** @class */ (function () {
           z: pos.y
         };
       };
-    Object.assign(parameter, this._map);
+    Object.assign(parameter, this._game_parameters_json);
     this._gameParameter = {};
-    Object.assign(this._gameParameter, this._map);
+    Object.assign(this._gameParameter, this._game_parameters_json);
     //TODO obstacle is kept as real flight log uses for path draw. Refactor this
     for (i = 0; i < parameter.obstacles.length; i += 1) {
       parameter.obstacles[i].position = swap(parameter.obstacles[i].position);

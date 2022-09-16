@@ -47,7 +47,8 @@ var window = {
       window = undefined;
       return new RSVP.Queue()
         .push(function () {
-          return runGame(evt.data.canvas, evt.data.script, evt.data.map, evt.data.log);
+          return runGame(evt.data.canvas, evt.data.script,
+                         evt.data.game_parameters_json, evt.data.log);
         })
         .push(function () {
           return worker.postMessage({'type': 'started'});

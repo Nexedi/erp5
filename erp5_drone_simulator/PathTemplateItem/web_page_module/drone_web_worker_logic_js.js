@@ -7,9 +7,9 @@ var runGame, updateGame, game_manager_instance;
   "use strict";
   console.log('game logic');
 
-  runGame = function (canvas, script, map, log) {
+  runGame = function (canvas, script, game_parameters_json, log) {
 
-    function processLog(map, log) {
+    function processLog(game_parameters_json, log) {
       var MAP_SIZE = 1000,
         MIN_HEIGHT = 15,
         MIN_X,
@@ -177,7 +177,7 @@ var runGame, updateGame, game_manager_instance;
       average_speed = average_speed / log_entry_list.length;
       log_interval_time = log_interval_time / log_entry_list.length / time_offset;
       flight_time = (end_time - start_time) / 1000 / time_offset;
-      map.compareFlights = {
+      game_parameters_json.compareFlights = {
         log: true,
         draw: true,
         map_width: MAP_SIZE,
@@ -195,28 +195,29 @@ var runGame, updateGame, game_manager_instance;
         full_log: log_point_list,
         converted_log_point_list: converted_log_point_list
       };
-      map.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
-      map.obstacles = path_point_list;
-      map.randomSpawn.leftTeam.position.x = start_position[0];
-      map.randomSpawn.leftTeam.position.y = start_position[1];
-      map.randomSpawn.leftTeam.position.z = start_position[2];
-      map.gameTime = flight_time;
+      game_parameters_json.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
+      game_parameters_json.obstacles = path_point_list;
+      game_parameters_json.randomSpawn.leftTeam.position.x = start_position[0];
+      game_parameters_json.randomSpawn.leftTeam.position.y = start_position[1];
+      game_parameters_json.randomSpawn.leftTeam.position.z = start_position[2];
+      game_parameters_json.gameTime = flight_time;
       //give map some margin from the flight
-      map.mapSize.width = MAP_SIZE * 1.10;
-      map.mapSize.depth = MAP_SIZE * 1.10;
+      game_parameters_json.mapSize.width = MAP_SIZE * 1.10;
+      game_parameters_json.mapSize.depth = MAP_SIZE * 1.10;
       //flight destination
       var destination_x = longitudToX(destination_lon),
         destination_y = latitudeToY(destination_lat),
         destination = normalizeToMap(destination_x, destination_y);
-      map.randomSpawn.rightTeam.position.x = destination[0];
-      map.randomSpawn.rightTeam.position.y = destination[1];
-      return map;
+      game_parameters_json.randomSpawn.rightTeam.position.x = destination[0];
+      game_parameters_json.randomSpawn.rightTeam.position.y = destination[1];
+      return game_parameters_json;
     }
 
     console.log('runGame', canvas);
-    map = processLog(map, log);
+    game_parameters_json = processLog(game_parameters_json, log);
     if (!game_manager_instance) {
-      game_manager_instance = new GameManager(canvas, script, map, 5);
+      game_manager_instance = new GameManager(canvas, script,
+                                              game_parameters_json, 5);
     }
     return game_manager_instance.run();
   };
