@@ -121,6 +121,12 @@
         loop_promise,
         handleWorker('gadget_erp5_page_game_worker.js', function (worker) {
 
+          window.addEventListener("mousewheel", (evt) => {
+            worker.postMessage({
+              type: 'mousewheel'
+            });
+          });
+
           var message_error_handler_defer = RSVP.defer(),
             update_defer = null;
 

@@ -106,7 +106,6 @@ var GameManager = /** @class */ (function () {
           var drone_position_x = this._teamLeft[count]._controlMesh.position.x,
             drone_position_z = this._teamLeft[count]._controlMesh.position.y,
             drone_position_y = this._teamLeft[count]._controlMesh.position.z;
-          console.log("GAMEPARAMETERS.compareFlights.log?:", GAMEPARAMETERS.compareFlights.log);
           if (GAMEPARAMETERS.compareFlights.log) {
             if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
               this._log_count[count] += GAMEPARAMETERS.compareFlights.log_interval_time;
@@ -122,7 +121,6 @@ var GameManager = /** @class */ (function () {
               this._flight_log[count].push([lat, lon, drone_position_z]);
             }
           }
-          console.log("GAMEPARAMETERS.compareFlights.draw?:", GAMEPARAMETERS.compareFlights.draw);
           if (GAMEPARAMETERS.compareFlights.draw) {
             //draw drone position every second
             if (this._last_position_drawn[count] !== seconds) {

@@ -21,11 +21,13 @@ var window = {
 // game.js
 (function (worker) {
   console.log('worker loading');
+  var offscreen_canvas;
   worker.onmessage = function (evt) {
     //console.log('Worker: Message received from main script', evt.data);
     var type = evt.data.type;
     if (type === 'start') {
       console.log('Worker: Message received from main script', evt.data);
+      offscreen_canvas = evt.data.canvas;
       //override createElement as it is needed by babylon to create a canvas
       document.createElement = function (type) {
         if (type === 'canvas') {
@@ -62,6 +64,11 @@ var window = {
         .push(function () {
           return worker.postMessage({'type': 'updated'});
         });
+    }
+    if (type === 'mousewheel') {
+      console.log("[TODO] mousewheel event in WW!!");
+      //offscreen_canvas.trigger("mousewheel");
+      return;
     }
     throw new Error('Unsupported message ' + JSON.stringify(evt.data));
     //self.postMessage('nutnut', evt);
