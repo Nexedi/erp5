@@ -36,7 +36,7 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
 with context.defaultActivateParameterDict({'after_tag': activity_tag}, placeless=True):
   if response["status"] == "expired":
     context.expire()
-  elif response["status"] == "complete":
+  elif response["status"] == "complete" and response["payment_status"] == "paid":
     context.complete()
   else:
     context.setExpirationDate(
