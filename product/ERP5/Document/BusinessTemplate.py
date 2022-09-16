@@ -825,7 +825,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             obj = obj._getCopy(context)
             data = getattr(aq_base(obj), record_id, None)
             if unicode_data:
-              if not isinstance(data, six.text_type):
+              if not (six.PY2 and isinstance(data, six.text_type)):
                 break
               try:
                 data = data.encode(aq_base(obj).output_encoding)
@@ -3487,7 +3487,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     path = self.__class__.__name__
     for key in self._objects:
       xml_data = self.generateXml(key)
-      if isinstance(xml_data, six.text_type):
+      if six.PY2 and isinstance(xml_data, six.text_type):
         xml_data = xml_data.encode('utf-8')
       name = key.split('/', 1)[1]
       bta.addObject(xml_data, name=name, path=path)
@@ -3501,7 +3501,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     xml_type_roles_list = xml.findall('role')
     for role in xml_type_roles_list:
       id = role.get('id')
-      if isinstance(id, six.text_type):
+      if six.PY2 and isinstance(id, six.text_type):
         id = id.encode('utf_8', 'backslashreplace')
       type_role_property_dict = {'id': id}
       # uniq
@@ -3510,7 +3510,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property_node.get('id')
         if property_node.text:
           value = property_node.text
-          if isinstance(value, six.text_type):
+          if six.PY2 and isinstance(value, six.text_type):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict[property_id] = value
       # multi
@@ -3519,7 +3519,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         property_id = property_node.get('id')
         if property_node.text:
           value = property_node.text
-          if isinstance(value, six.text_type):
+          if six.PY2 and isinstance(value, six.text_type):
             value = value.encode('utf_8', 'backslashreplace')
           type_role_property_dict.setdefault(property_id, []).append(value)
       type_roles_list.append(type_role_property_dict)
@@ -4924,7 +4924,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       xml_data += '\n </local_role_group_ids>'
 
     xml_data += '\n</local_roles_item>'
-    if isinstance(xml_data, six.text_type):
+    if six.PY2 and isinstance(xml_data, six.text_type):
       xml_data = xml_data.encode('utf8')
     return xml_data
 
