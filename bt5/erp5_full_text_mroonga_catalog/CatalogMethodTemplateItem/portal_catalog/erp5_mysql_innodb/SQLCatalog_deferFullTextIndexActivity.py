@@ -1,6 +1,7 @@
 from Products.ERP5Type.Utils import UpperCase
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
+import six
 
 method = context.z_catalog_fulltext_list
 property_list = method.arguments_src.split()
@@ -24,7 +25,7 @@ for group_object in object_list:
   except Exception:
     group_object.raised()
   else:
-    for property, value in tmp_dict.iteritems():
+    for property, value in six.iteritems(tmp_dict):
       parameter_dict[property].append(value)
     group_object.result = None
 
