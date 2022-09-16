@@ -15,7 +15,6 @@ Original code from active state recipe
 """
 __revision__ = '$Id: python.py 3661 2005-02-23 17:05:31Z tiran $'
 
-import string
 import keyword, token, tokenize
 from six.moves import cStringIO as StringIO
 
@@ -35,7 +34,7 @@ class Parser:
     def __init__(self, raw, tags, out):
         """ Store the source text.
         """
-        self.raw = string.strip(string.expandtabs(raw))
+        self.raw = raw.expandtabs().strip()
         self.out = out
         self.tags = tags
 
@@ -46,7 +45,7 @@ class Parser:
         self.lines = [0, 0]
         pos = 0
         while 1:
-            pos = string.find(self.raw, '\n', pos) + 1
+            pos = self.raw.find('\n', pos) + 1
             if not pos: break
             self.lines.append(pos)
         self.lines.append(len(self.raw))
