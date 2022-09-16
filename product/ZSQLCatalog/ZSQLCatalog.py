@@ -35,7 +35,7 @@ from AccessControl import ClassSecurityInfo
 from DocumentTemplate.security import RestrictedDTML
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import clearCache
-import string, sys
+import sys
 import time
 from ZODB.POSException import ConflictError
 
@@ -532,7 +532,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   def manage_edit(self, RESPONSE, URL1, threshold=1000, REQUEST=None):
     """ edit the catalog """
     if type(threshold) is not type(1):
-      threshold=string.atoi(threshold)
+      threshold=int(threshold)
     self.threshold = threshold
 
     RESPONSE.redirect(URL1 + '/manage_main?manage_tabs_message=Catalog%20Changed')
@@ -616,7 +616,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     words = 0
     obj = REQUEST.PARENTS[1]
-    path = string.join(obj.getPhysicalPath(), '/')
+    path = '/'.join(obj.getPhysicalPath())
 
 
     results = self.ZopeFindAndApply(obj,
@@ -1012,7 +1012,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
       Return the attribute names as a single string
     """
-    return string.join(self.names(sql_catalog_id=sql_catalog_id).get(column, ('',)),' ')
+    return ' '.join(self.names(sql_catalog_id=sql_catalog_id).get(column, ('',)))
 
   def _searchable_arguments(self, sql_catalog_id=None):
     catalog = self.getSQLCatalog(sql_catalog_id)
@@ -1178,7 +1178,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         and
         (not obj_searchterm or
          (hasattr(ob, 'PrincipiaSearchSource') and
-          string.find(ob.PrincipiaSearchSource(), obj_searchterm) >= 0
+          ob.PrincipiaSearchSource().find(obj_searchterm) >= 0
           ))
         and
         (not obj_expr or expr_match(ob, obj_expr))
@@ -1217,7 +1217,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     No exceptions are raised.
     """
     script=REQUEST.script
-    if string.find(path, script) != 0:
+    if path.find(script) != 0:
       path='%s/%s' % (script, path)
     try:
       return REQUEST.resolve_url(path)
@@ -1267,7 +1267,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           if ob is None:
             removed.append(path)
             continue
-        ppath = string.join(ob.getPhysicalPath(), '/')
+        ppath = '/'.join(ob.getPhysicalPath())
         if path != ppath:
           fixed.append((path, ppath))
         else:

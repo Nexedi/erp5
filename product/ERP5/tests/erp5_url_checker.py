@@ -89,7 +89,7 @@ class URLOpener(FancyURLopener):
             urltype, rest = splittype(selector)
             url = rest
             user_passwd = None
-            if string.lower(urltype) != 'http':
+            if urltype.lower() != 'http':
                 realhost = None
             else:
                 realhost, rest = splithost(rest)
@@ -101,7 +101,7 @@ class URLOpener(FancyURLopener):
         if not host: raise IOError('http error', 'no host given')
         if user_passwd:
             import base64
-            auth = string.strip(base64.encodestring(user_passwd))
+            auth = base64.encodestring(user_passwd).strip()
         else:
             auth = None
         h = httplib.HTTP(host)
