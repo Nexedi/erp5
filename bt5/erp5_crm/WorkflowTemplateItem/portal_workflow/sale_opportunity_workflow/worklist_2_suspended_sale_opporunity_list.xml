@@ -22,13 +22,13 @@
             <key> <string>action</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_opportunity_module?reset:int=1&simulation_state=contacted&local_roles:list=Assignee&local_roles:list=Assignor
+sale_opportunity_module?reset:int=1&simulation_state=suspended&local_roles=Assignor
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value> <string>Sale Opportunities to Qualify (%(count)s)</string> </value>
+            <value> <string>Suspended Sale Opportunities  (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -42,14 +42,20 @@ sale_opportunity_module?reset:int=1&simulation_state=contacted&local_roles:list=
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>portal_type</string>
                 <string>simulation_state</string>
                 <string>local_roles</string>
+                <string>portal_type</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
             <value>
               <none/>
             </value>
@@ -74,7 +80,7 @@ sale_opportunity_module?reset:int=1&simulation_state=contacted&local_roles:list=
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>worklist_2_initial_contact_list</string> </value>
+            <value> <string>worklist_2_suspended_sale_opporunity_list</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -102,26 +108,25 @@ sale_opportunity_module?reset:int=1&simulation_state=contacted&local_roles:list=
                 <item>
                     <key> <string>local_roles</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
+                      <list>
                         <string>Assignor</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Sale Opportunity</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
-                      <tuple>
-                        <string>contacted</string>
-                      </tuple>
+                      <list>
+                        <string>suspended</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

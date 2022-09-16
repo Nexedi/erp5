@@ -8,25 +8,28 @@
       <dictionary>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=validate_action</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value> <string>Get Contacted by Prospect</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>before_script/portal_workflow/sale_opportunity_workflow/script_SaleOpportunity_checkConsistency</string>
-                <string>after_script/portal_workflow/sale_opportunity_workflow/transition_validate</string>
+                <string>destination/portal_workflow/sale_opportunity_workflow/state_closed</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Validate a Sale Opportunity and start the opportunity processing.</string> </value>
+            <value> <string>The delete logical transition sets the document state to deleted.</string> </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>
@@ -37,15 +40,15 @@
         <item>
             <key> <string>guard_permission</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Modify portal content</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>guard_role</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -56,7 +59,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_validate_action</string> </value>
+            <value> <string>transition_close</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -64,11 +67,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get Contacted Action</string> </value>
+            <value> <string>Close Sale Opportunity</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
