@@ -114,8 +114,10 @@ roundLine(resource, 'getQuantity', 'setQuantity', 1)
 # Round source asset price
 if source_exchange_ratio:
   source_section_price_currency = context.getSourceSectionValue().getPriceCurrency()
-  roundLine(source_section_price_currency, 'getSourceTotalAssetPrice', 'setSourceTotalAssetPrice', source_exchange_ratio)
+  if source_section_price_currency is not None:
+    roundLine(source_section_price_currency, 'getSourceTotalAssetPrice', 'setSourceTotalAssetPrice', source_exchange_ratio)
 # Round destination asset price
 if destination_exchange_ratio:
   destination_section_price_currency = context.getDestinationSectionValue().getPriceCurrency()
-  roundLine(destination_section_price_currency, 'getDestinationTotalAssetPrice', 'setDestinationTotalAssetPrice', destination_exchange_ratio)
+  if destination_section_price_currency is not None:
+    roundLine(destination_section_price_currency, 'getDestinationTotalAssetPrice', 'setDestinationTotalAssetPrice', destination_exchange_ratio)
