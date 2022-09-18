@@ -29,7 +29,7 @@
 
 import six
 from six import string_types as basestring
-from Products.ERP5Type.Utils import ensure_list, bytes2str
+from Products.ERP5Type.Utils import ensure_list, bytes2str, str2bytes
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
@@ -359,6 +359,8 @@ class BusinessTemplateArchive(object):
       self._writeString(obj, path)
     else:
       if isinstance(obj, str):
+        obj = str2bytes(obj)
+      if isinstance(obj, bytes):
         self.revision.hash(path, obj)
         obj = BytesIO(obj)
       else:
