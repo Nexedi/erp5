@@ -36,11 +36,10 @@ else:
   modified_object_list = getModifiedObjectList(bt1, bt2)
 
 keys = modified_object_list.keys()
-keys.sort()
 
 i = 0
 object_list = []
-for object_id in keys:    
+for object_id in sorted(keys):
   object_state, object_class = modified_object_list[object_id]
   line = newTempBase(context, 'tmp_install_%s' %(str(i)))
   line.edit(object_id=object_id, object_state=object_state, object_class=object_class, bt1=bt1.getId(), bt2=bt2.getId())

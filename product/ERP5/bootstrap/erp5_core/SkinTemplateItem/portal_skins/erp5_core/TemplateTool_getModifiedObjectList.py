@@ -46,8 +46,7 @@ save_and_remove_title = Base_translateString('Backup And Remove')
 for bt in bt_id_list:
   bt_title, modified_object_list = bt_object_dict[bt]
   keys = modified_object_list.keys()
-  keys.sort()
-  for i, object_id in enumerate(keys):    
+  for i, object_id in enumerate(sorted(keys)):
     object_state, object_class = modified_object_list[object_id]
     object_id = bt+'|'+object_id
     line = newTempBase(context, 'tmp_install_%s' % i)
