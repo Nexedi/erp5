@@ -121,7 +121,7 @@ class URLOpener(FancyURLopener):
         if data is not None:
             h.send(data + '\r\n')
         errcode, errmsg, headers = h.getreply()
-        if headers and headers.has_key('set-cookie'):
+        if headers and 'set-cookie' in headers:
             cookies = headers.getallmatchingheaders('set-cookie')
             for cookie in cookies: self.cookies.load(cookie)
 
@@ -147,13 +147,15 @@ class Checker(URLOpener):
       while thread.isAlive():
         sleep(0.5)
       print "Connection to %s went fine" % url
-    except IOError, (errno, strerror):
+    except IOError as err:
+      (errno, strerror) = err.args
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
   def SearchUrl(self, url=None):
     try:
       conn = self.open_http(url)
-    except IOError, (errno, strerror):
+    except IOError as err:
+      (errno, strerror) = err.args
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
 

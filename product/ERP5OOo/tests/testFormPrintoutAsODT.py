@@ -484,7 +484,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     last_row = odf_table_rows[-1]
     last_row_columns = last_row.getchildren()
     span_attribute = "{%s}number-columns-spanned" % content.nsmap['table']
-    self.assertFalse(first_row_columns[0].attrib.has_key(span_attribute))
+    self.assertFalse(span_attribute in first_row_columns[0].attrib)
     self.assertEqual(int(last_row_columns[0].attrib[span_attribute]), 2)
     self._validate(odf_document)
 
@@ -637,7 +637,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     first_row_columns = first_row.getchildren()
     date_column = first_row_columns[3]
     date_value_attrib = "{%s}date-value" % content.nsmap['office']
-    self.assertTrue(date_column.attrib.has_key(date_value_attrib))
+    self.assertTrue(date_value_attrib in date_column.attrib)
     self.assertEqual(date_column.attrib[date_value_attrib], '2009-04-20')
     self._validate(odf_document)
 

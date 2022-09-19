@@ -65,17 +65,17 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     gender_bc = self.gender_base_cat_id
     if gender_bc not in portal_categories.objectIds():
       portal_categories.newContent(portal_type='Base Category', id=gender_bc)
-    if not portal_categories[gender_bc].has_key('male'):
+    if 'male' not in portal_categories[gender_bc]:
       portal_categories[gender_bc].newContent(id='male', portal_type='Category', title='Male')
-    if not portal_categories[gender_bc].has_key('female'):
+    if 'female' not in portal_categories[gender_bc]:
       portal_categories[gender_bc].newContent(id='female', portal_type='Category', title='Female')
 
     function_bc = self.function_base_cat_id
     if function_bc not in portal_categories.objectIds():
       portal_categories.newContent(portal_type='Base Category', id=function_bc)
-    if not portal_categories[function_bc].has_key('director'):
+    if 'director' not in portal_categories[function_bc]:
       portal_categories[function_bc].newContent(id='director', portal_type='Category', title='Director')
-    if not portal_categories[function_bc].has_key('manager'):
+    if 'manager' not in portal_categories[function_bc]:
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
 
     self.portal.portal_caches.clearCache()
@@ -821,7 +821,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       # 'france' is the duplicate ID in this spreadsheet
       self.assertTrue('france' in str(error), str(error))
     else:
@@ -850,7 +850,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       # 'wrong_hierarchy' is the ID of the category where the problem happens
       self.assertTrue('wrong_hierarchy' in str(error), str(error))
     else:
@@ -864,7 +864,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       self.assertTrue('More that one path is defined' in str(error), str(error))
     else:
       self.fail('ValueError not raised')

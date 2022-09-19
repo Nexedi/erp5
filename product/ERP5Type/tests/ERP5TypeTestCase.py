@@ -21,7 +21,7 @@ import traceback
 import urllib
 import ConfigParser
 from contextlib import contextmanager
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from cPickle import dumps
 from glob import glob
 from hashlib import md5
@@ -1558,7 +1558,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
