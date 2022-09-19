@@ -29,7 +29,7 @@ if 1: # For easy diff with original
             else:
                 v=expr(md)
         except (KeyError, NameError):
-            if args.has_key('optional') and args['optional']:
+            if 'optional' in args and args['optional']:
                 return ''
             raise ValueError('Missing input variable, <em>%s</em>' % name)
 
@@ -80,7 +80,7 @@ if 1: # For easy diff with original
             vs.append(v)
 
         if not vs and t=='nb':
-            if args.has_key('optional') and args['optional']:
+            if 'optional' in args and args['optional']:
                 return ''
             else:
                 raise ValueError(

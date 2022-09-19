@@ -30,7 +30,7 @@
 import os, sys
 import unittest
 from subprocess import check_output, CalledProcessError
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from lib2to3.main import main
 

@@ -141,7 +141,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
                   # worklists and they are not merged
-                  if not dict.has_key('portal_type'):
+                  if 'portal_type' not in dict:
                     dict['portal_type'] = portal_type_list
                   # Patch for ERP5 by JP Smets in order
                   # to implement worklists and search of local roles
@@ -255,11 +255,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         try:
             #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
             script(sci)  # May throw an exception.
-        except ValidationFailed, validation_exc:
+        except ValidationFailed as validation_exc:
             before_script_success = 0
             before_script_error_message = deepcopy(validation_exc.msg)
             validation_exc_traceback = sys.exc_traceback
-        except ObjectMoved, moved_exc:
+        except ObjectMoved as moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
 
@@ -274,11 +274,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         if not vdef.for_status:
             continue
         expr = None
-        if state_values.has_key(id):
+        if id in state_values:
             value = state_values[id]
-        elif tdef_exprs.has_key(id):
+        elif id in tdef_exprs:
             expr = tdef_exprs[id]
-        elif not vdef.update_always and former_status.has_key(id):
+        elif not vdef.update_always and id in former_status:
             # Preserve former value
             value = former_status[id]
         else:
@@ -387,11 +387,11 @@ def _executeMetaTransition(self, ob, new_state_id):
     if not vdef.for_status:
       continue
     expr = None
-    if state_values.has_key(id):
+    if id in state_values:
       value = state_values[id]
-    elif tdef_exprs.has_key(id):
+    elif id in tdef_exprs:
       expr = tdef_exprs[id]
-    elif not vdef.update_always and former_status.has_key(id):
+    elif not vdef.update_always and id in former_status:
       # Preserve former value
       value = former_status[id]
     else:

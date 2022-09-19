@@ -787,7 +787,7 @@ def main(argument_list=None):
         "log_directory=",
         "with_wendelin_core"
         ])
-  except getopt.GetoptError, msg:
+  except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
     sys.exit(2)
 

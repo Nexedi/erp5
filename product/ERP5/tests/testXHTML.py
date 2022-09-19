@@ -128,7 +128,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
               yield field
           except Exception:
             yield field
-    except AttributeError, e:
+    except AttributeError as e:
       ZopeTestCase._print("%s is broken: %s" % (form_path, e))
 
   def test_deadProxyFields(self):
@@ -245,7 +245,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
       try:
         stdout, stderr = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
                                close_fds=True).communicate(body)
-      except OSError, e:
+      except OSError as e:
         e.strerror += '\n%r' % os.environ
         raise
       if stdout:

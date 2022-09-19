@@ -211,14 +211,14 @@ class SerializeTestCase(unittest.TestCase):
         try:
             form.validate_all(request)
             self.fail('form should fail in validation')
-        except FormValidationError, e:
+        except FormValidationError as e:
             self.assertEqual(1, len(e.errors))
             text1 = e.errors[0].error_text
 
         try:
             form2.validate_all(request)
             self.fail('form2 should fail in validation')
-        except FormValidationError, e:
+        except FormValidationError as e:
             self.assertEqual(1, len(e.errors))
             text2 = e.errors[0].error_text
 
@@ -344,7 +344,7 @@ class SerializeTestCase(unittest.TestCase):
                              })
             empty_field.manage_edit(REQUEST=request)
 
-        except ValidationError, e:
+        except ValidationError as e:
             self.fail('error when editing field %s; error message: %s' %
                        (e.field_id, e.error_text) )
 
@@ -400,14 +400,14 @@ class SerializeTestCase(unittest.TestCase):
         request['field_empty_field'] = ''
         try:
             result1 = form.validate_all(request)
-        except FormValidationError, e:
+        except FormValidationError as e:
             # XXX only render first error ...
             self.fail('error when editing form1, field %s; error message: %s' %
                        (e.errors[0].field_id, e.errors[0].error_text) )
 
         try:
             result2 = form2.validate_all(request)
-        except FormValidationError, e:
+        except FormValidationError as e:
             # XXX only render first error ...
             self.fail('error when editing form1, field %s; error message: %s' %
                        (e.errors[0].field_id, e.errors[0].error_text) )
