@@ -47,6 +47,32 @@
         <td>2</td>
       </tr>
 
+      <!-- regression: numbers larger than MAX_SAFE_INTEGER should not be truncated. -->
+      <tr>
+        <td>assertEval</td>
+        <td>
+          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'editor.action.smartSelect.expand');
+          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'editor.action.deleteLines');
+          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'type', {'text': 'select 9007199254740992123'});
+        </td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//button[@name="Query"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForText</td>
+        <td>xpath=(//div[contains(@class, "handsontable")]//th//span[@class="colHeader"])[2]</td>
+        <td>9007199254740992123</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//div[contains(@class, "handsontable")]//tbody/tr/td</td>
+        <td>9007199254740992123</td>
+      </tr>
+
     </tbody>
   </table>
 </body>
