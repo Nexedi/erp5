@@ -64,6 +64,16 @@ var GameManager = /** @class */ (function () {
     return gadget._init();
   };
 
+  GameManager.prototype.event = function () {
+    var _this = this;
+    var camera = this._scene.cameras[0];
+    console.log("GM EVENT! camera:", camera);
+    console.log("GM EVENT! camera.inputs:", camera.inputs);
+    console.log("GM EVENT! camera.inputs.attached:", camera.inputs.attached);
+    console.log("GM EVENT! camera.inputs.attached.mouse:", camera.inputs.attached.mouse);
+    camera.inputs.attached.mousewheel._wheel(15);
+  };
+
   GameManager.prototype.update = function () {
     var _this = this;
     // To increase the game speed, increase this value

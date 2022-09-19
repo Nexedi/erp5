@@ -18,6 +18,31 @@ var window = {
   addEventListener: function () {}
 };
 
+
+// tricky polyfill
+/*
+console.log("using tricky polyfill");
+var document = {
+    fullscreen: false,
+    mozPointerLockElement: false,
+    addEventListener: (e, func) => {},
+    createElement: (dom) => {
+        return {
+            onwheel: () => {}
+        }
+    }
+}
+
+var window = {
+    AudioContext: undefined,
+    addEventListener: (e, func) => {},
+    setTimeout: (func, time) => {
+        setTimeout(func, time)
+    }
+}
+
+var HTMLElement = () => {}*/
+
 // game.js
 (function (worker) {
   console.log('worker loading');
@@ -68,6 +93,7 @@ var window = {
     if (type === 'mousewheel') {
       console.log("[TODO] mousewheel event in WW!!");
       //offscreen_canvas.trigger("mousewheel");
+      return eventGame();
       return;
     }
     throw new Error('Unsupported message ' + JSON.stringify(evt.data));

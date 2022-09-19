@@ -1,7 +1,7 @@
 /*global GameManager, console*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 
-var runGame, updateGame, game_manager_instance;
+var runGame, updateGame, eventGame, game_manager_instance;
 // game.js
 (function () {
   "use strict";
@@ -224,6 +224,10 @@ var runGame, updateGame, game_manager_instance;
 
   updateGame = function () {
     return game_manager_instance.update();
+  };
+
+  eventGame = function () {
+    return game_manager_instance.event();
   };
 
   /*// Resize canvas on window resize
