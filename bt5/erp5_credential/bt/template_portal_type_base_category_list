@@ -1,7 +1,6 @@
 Credential Recovery Module | business_application
 Credential Request Module | business_application
 Credential Request | activity
-Credential Request | destination_decision
 Credential Request | function
 Credential Request | gender
 Credential Request | group
