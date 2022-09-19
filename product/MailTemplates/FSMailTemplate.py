@@ -36,8 +36,7 @@ class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
         obj.content_type = self.content_type
         if self._properties:
             keys = self._properties.keys()
-            keys.sort()
-            for id in keys:
+            for id in sorted(keys):
                 if id not in ('mailhost','content_type'):
                     obj.manage_addProperty(id,self._properties[id],'string')
         return obj

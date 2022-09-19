@@ -19,10 +19,9 @@ if hasattr(request, listbox_id):
   # initialize the listbox 
   listbox=request[listbox_id]
 
-  keys_list = listbox.keys()
+  keys_list = sorted(listbox.keys(), key=int)
 
   if keys_list != []:
-    keys_list.sort(key=int)
     first_empty_line_id = int(keys_list[-1])+1
 
   for i in keys_list:

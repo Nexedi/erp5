@@ -118,9 +118,8 @@ class BaseMailTemplate:
         # we want to have it stored in ERP5, for mail threading
         headers['Message-ID'] = make_msgid()
         # turn headers into an ordered list for predictable header order
-        keys = ensure_list(headers.keys())
-        keys.sort()
-        return msg,values,[(key,headers[key]) for key in keys]
+        keys = headers.keys()
+        return msg,values,[(key,headers[key]) for key in sorted(keys)]
 
     security.declarePrivate('_send')
     def _send(self,mfrom,mto,msg):

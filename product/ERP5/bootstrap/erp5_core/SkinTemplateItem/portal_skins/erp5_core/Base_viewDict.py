@@ -14,9 +14,8 @@ from pprint import pformat
 ret = '<html><body><table width=100%>\n'
 
 property_dict = context.showDict().items()
-property_dict.sort()
 i = 0
-for k,v in property_dict:
+for k,v in sorted(property_dict):
   if (i % 2) == 0:
     c = '#88dddd'
   else:

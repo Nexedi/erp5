@@ -143,16 +143,14 @@ def Base_asXML(object, root=None):
   # We have to describe the workflow history
   if getattr(self, 'workflow_history', None) is not None:
     workflow_list = self.workflow_history
-    workflow_list_keys = ensure_list(workflow_list.keys())
-    workflow_list_keys.sort() # Make sure it is sorted
+    workflow_list_keys = workflow_list.keys()
 
-    for workflow_id in workflow_list_keys:
+    for workflow_id in sorted(workflow_list_keys):  # Make sure it is sorted
       for workflow_action in workflow_list[workflow_id]:
         workflow_node = SubElement(object, 'workflow_action',
                                    attrib=dict(workflow_id=workflow_id))
-        workflow_variable_list = ensure_list(workflow_action.keys())
-        workflow_variable_list.sort()
-        for workflow_variable in workflow_variable_list:
+        workflow_variable_list = workflow_action.keys()
+        for workflow_variable in sorted(workflow_variable_list):
           variable_type = "string" # Somewhat bad, should find a better way
           if workflow_variable.find('time') >= 0:
             variable_type = "date"

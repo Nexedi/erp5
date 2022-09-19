@@ -691,8 +691,7 @@ def getValidCriterionDict(worklist_match_dict, sql_catalog,
 def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criterion_dict):
   worklist_set_dict_key = valid_criterion_dict.keys()
   if len(worklist_set_dict_key):
-    worklist_set_dict_key.sort()
-    worklist_set_dict_key = tuple(worklist_set_dict_key)
+    worklist_set_dict_key = tuple(sorted(worklist_set_dict_key))
     if worklist_set_dict_key not in worklist_set_dict:
       worklist_set_dict[worklist_set_dict_key] = {}
     worklist_set_dict[worklist_set_dict_key]\

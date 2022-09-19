@@ -1193,9 +1193,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def _getObjectKeyList(self):
     # sort to add objects before their subobjects
-    keys = ensure_list(self._objects.keys())
-    keys.sort()
-    return keys
+    return sorted(ensure_list(self._objects.keys()))
 
   def unindexBrokenObject(self, item_path):
     """
@@ -1673,11 +1671,9 @@ class PathTemplateItem(ObjectTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      object_keys = ensure_list(self._path_archive.keys())
-    object_keys.sort()
-    object_keys.reverse()
+      object_keys = self._path_archive.keys()
     p = context.getPortalObject()
-    for path in object_keys:
+    for path in sorted(object_keys, reverse=True):
       try:
         path_list = self._resolvePath(p, [], path.split('/'))
       except AttributeError:
@@ -1728,9 +1724,8 @@ class PathTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    keys = ensure_list(self._path_archive.keys())
-    keys.sort()
-    for path in keys:
+    keys = self._path_archive.keys()
+    for path in sorted(keys):
       include_subobjects = 0
       if path.endswith("**"):
         include_subobjects = 1
@@ -2081,9 +2076,8 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<registered_skin_selection>'
-    keys = ensure_list(self._objects.keys())
-    keys.sort()
-    for key in keys:
+    keys = self._objects.keys()
+    for key in sorted(keys):
       skin_selection_list = self._objects[key]
       xml_data += '\n <skin_folder_selection>'
       xml_data += '\n  <skin_folder>%s</skin_folder>' % key
@@ -2459,7 +2453,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
   def _getObjectKeyList(self):
     # Sort portal types to install according to their dependencies
-    object_key_list = ensure_list(self._objects.keys())
+    object_key_list = self._objects.keys()
     path_dict = dict(x.split('/')[1:] + [x] for x in object_key_list)
     cache = {}
     def solveDependency(path):
@@ -2480,8 +2474,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           return 0, path
         cache[path] = score = depend and 1 + solveDependency(depend)[0] or 0
       return score, path
-    object_key_list.sort(key=solveDependency)
-    return object_key_list
+    return sorted(object_key_list, key=solveDependency)
 
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
@@ -2561,9 +2554,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<workflow_chain>'
-    key_list = ensure_list(self._objects.keys())
-    key_list.sort()
-    for key in key_list:
+    key_list = self._objects.keys()
+    for key in sorted(key_list):
       workflow_list = self._objects[key]
       xml_data += '\n <chain>'
       xml_data += '\n  <type>%s</type>' %(key,)
@@ -2778,9 +2770,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<%s>' %(self.xml_tag,)
-    key_list = ensure_list(self._objects.keys())
-    key_list.sort()
-    for key in key_list:
+    key_list = self._objects.keys()
+    for key in sorted(key_list):
       id_value = key.replace('%s/' % self.class_property, '')
       allowed_item_list = sorted(self._objects[key])
       xml_data += '\n <portal_type id="%s">' % (id_value)
@@ -3668,9 +3659,8 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     xml_data = '<site_property>'
-    keys = ensure_list(self._objects.keys())
-    keys.sort()
-    for path in keys:
+    keys = self._objects.keys()
+    for path in sorted(keys):
       xml_data += self.generateXml(path)
     xml_data += '\n</site_property>'
     bta.addObject(xml_data, name='properties', path=self.__class__.__name__)
@@ -3736,9 +3726,8 @@ class ModuleTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     path = self.__class__.__name__
-    keys = ensure_list(self._objects.keys())
-    keys.sort()
-    for key in keys:
+    keys = self._objects.keys()
+    for key in sorted(keys):
       # export modules one by one
       xml_data = self.generateXml(path=key)
       bta.addObject(xml_data, name=key, path=path)
