@@ -3,6 +3,7 @@
   <item>CredentialQuestion</item>
  </portal_type>
  <portal_type id="Credential Request">
+  <item>Arrow</item>
   <item>CredentialOrganisationProperties</item>
   <item>CredentialRequest</item>
  </portal_type>
