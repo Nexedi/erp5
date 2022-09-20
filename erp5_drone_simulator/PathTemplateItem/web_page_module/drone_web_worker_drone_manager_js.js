@@ -420,7 +420,6 @@ var DroneManager = /** @class */ (function () {
      */
     DroneManager.prototype.sendMsg = function (msg, id) {
         //TODO
-        console.log("TODO sendMsg!");
         return;
         var _this = this;
         if (!this._canCommunicate)
