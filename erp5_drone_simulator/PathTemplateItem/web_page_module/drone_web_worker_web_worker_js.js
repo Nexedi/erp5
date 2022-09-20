@@ -40,9 +40,7 @@ document = {
 function bindHandler(targetName, eventName, fn, opt) {
   console.log("bindHandler. eventName:", eventName);
 	const handlerId = targetName + eventName;
-
 	handlers.set(handlerId, fn);
-
 	postMessage({
 		type: 'event',
 		targetName: targetName,
@@ -52,35 +50,28 @@ function bindHandler(targetName, eventName, fn, opt) {
 }
 
 function prepareCanvas(data) {
-
 	const canvas = data.canvas;
 	//self.canvas = canvas;
-
 	canvas.clientWidth = data.width;
 	canvas.clientHeight = data.height;
-
 	canvas.width = data.width;
 	canvas.height = data.height;
-
 	/*rect.right = rect.width = data.width;
 	rect.bottom = rect.height = data.height;*/
-
-	canvas.setAttribute = function (name, value) {
+  //makes the canvas dissapear
+	/*canvas.setAttribute = function (name, value) {
 		postMessage({
 			type: 'canvasMethod',
 			method: 'setAttribute',
 			args: [name, value],
 		})
-	};
-
+	};*/
 	canvas.addEventListener = function (event, fn, opt) {
 		bindHandler('canvas', event, fn, opt);
 	};
-
 	/*canvas.getBoundingClientRect = function () {
 		return rect;
 	};*/
-
 	canvas.focus = function () {
 		postMessage({
 			type: 'canvasMethod',
@@ -88,9 +79,8 @@ function prepareCanvas(data) {
 			args: [],
 		})
 	};
-
 	// noinspection JSUnusedGlobalSymbols
-	/*const style = {
+	const style = {
 		set touchAction(value) {
 			postMessage({
 				type: 'canvasStyle',
@@ -99,8 +89,7 @@ function prepareCanvas(data) {
 			})
 		}
 	};
-	Object.defineProperty(canvas, 'style', {get() {return style}});*/
-
+	Object.defineProperty(canvas, 'style', {get() {return style}});
 	return canvas;
 }
 
@@ -113,8 +102,8 @@ function prepareCanvas(data) {
     var type = evt.data.type;
     if (type === 'start') {
       console.log('Worker: Message received from main script', evt.data);
-      offscreen_canvas = evt.data.canvas;
-      //offscreen_canvas = prepareCanvas(evt.data);
+      //offscreen_canvas = evt.data.canvas;
+      offscreen_canvas = prepareCanvas(evt.data);
       console.log("offscreen_canvas:", offscreen_canvas);
       /*offscreen_canvas.addEventListener = function (event, fn, opt) {
         bindHandler('canvas', event, fn, opt);

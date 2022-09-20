@@ -232,8 +232,8 @@
       domsugar(gadget.element, [canvas]);
 
       //TODO fix hardcoded
-      canvas.width = 680;//canvas.clientWidth;
-      canvas.height = 340;//canvas.clientHeight;
+      canvas.width = 680;//canvas.clientWidth; <-- this is 0
+      canvas.height = 340;//canvas.clientHeight; <-- this is 0
 
       offscreen = canvas.transferControlToOffscreen();
 
@@ -257,8 +257,8 @@
           gadget.runGame({
             logic_url: parameter_gamelogic,
             canvas: offscreen,
-            width: canvas.clientWidth,
-            height: canvas.clientHeight,
+            width: canvas.width,
+            height: canvas.height,
             script: script_content,
             game_parameters_json: game_parameters_json,
             log: log_content
