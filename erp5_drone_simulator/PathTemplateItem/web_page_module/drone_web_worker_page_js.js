@@ -181,6 +181,10 @@
               console.log("TODO handle event canvasMethod");
               return;
             }
+            if (type === 'canvasStyle') {
+              console.log("TODO handle event canvasStyle");
+              return;
+            }
             message_error_handler_defer.reject(
               new Error('Unsupported message ' + JSON.stringify(evt.data))
             );

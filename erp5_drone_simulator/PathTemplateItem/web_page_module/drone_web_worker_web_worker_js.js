@@ -56,22 +56,22 @@ function prepareCanvas(data) {
 	canvas.clientHeight = data.height;
 	canvas.width = data.width;
 	canvas.height = data.height;
+  //This seems to be needed for resize
 	/*rect.right = rect.width = data.width;
-	rect.bottom = rect.height = data.height;*/
-  //makes the canvas dissapear
-	/*canvas.setAttribute = function (name, value) {
+	rect.bottom = rect.height = data.height;
+  canvas.getBoundingClientRect = function () {
+		return rect;
+	};*/
+	canvas.setAttribute = function (name, value) {
 		postMessage({
 			type: 'canvasMethod',
 			method: 'setAttribute',
 			args: [name, value],
 		})
-	};*/
+	};
 	canvas.addEventListener = function (event, fn, opt) {
 		bindHandler('canvas', event, fn, opt);
 	};
-	/*canvas.getBoundingClientRect = function () {
-		return rect;
-	};*/
 	canvas.focus = function () {
 		postMessage({
 			type: 'canvasMethod',
