@@ -5,8 +5,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 // game.js
 
-var handlers = new Map();
-
 var document = {
   addEventListener: function () {},
   createElement: function () {}
@@ -37,6 +35,29 @@ document = {
   defaultView: window
 };
 
+// Not works without it
+class HTMLElement {}
+
+var handlers = new Map();
+
+//var onmessage = onMainMessage;
+
+function onMainMessage(msg) {
+  //TODO drop onMainMessage and directly do case in worker.onmessage = function
+  console.log("onMainMessage!");
+	switch (msg.data.type) {
+		case 'event':
+			handleEvent(msg.data);
+			break;
+		case 'resize':
+			onResize(msg.data.rect);
+			break;
+		case 'init':
+			init(msg.data);
+			break;
+	}
+}
+
 function bindHandler(targetName, eventName, fn, opt) {
   console.log("bindHandler. eventName:", eventName);
 	const handlerId = targetName + eventName;
@@ -47,6 +68,20 @@ function bindHandler(targetName, eventName, fn, opt) {
 		eventName: eventName,
 		opt: opt,
 	})
+}
+
+function handleEvent(event) {
+	const handlerId = event.targetName + event.eventName;
+  console.log("handleEvent. handlerId:", handlerId);
+	event.eventClone.preventDefault = noop;
+	// Cameras/Inputs/freeCameraMouseInput.ts:79
+	event.eventClone.target = self.canvas;
+	// Just in case
+	if (!handlers.has(handlerId)) {
+		throw new Error('Unknown handlerId: ' + handlerId);
+	}
+	handlers.get(handlerId)(event.eventClone);
+
 }
 
 function prepareCanvas(data) {
@@ -92,6 +127,8 @@ function prepareCanvas(data) {
 	Object.defineProperty(canvas, 'style', {get() {return style}});
 	return canvas;
 }
+
+function noop() { console.log("noop!");}
 
 // game.js
 (function (worker) {
@@ -151,6 +188,12 @@ function prepareCanvas(data) {
       //console.log("[TODO] mousewheel event in WW!!");
       //offscreen_canvas.trigger("mousewheel");
       return eventGame();
+      return;
+    }
+    if (type === 'event') {
+      console.log("WW event!");
+      //offscreen_canvas.trigger("mousewheel");
+      onMainMessage(evt);
       return;
     }
     throw new Error('Unsupported message ' + JSON.stringify(evt.data));

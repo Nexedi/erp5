@@ -9,6 +9,48 @@
   "use strict";
   console.log('game');
 
+	// Events props to send to worker
+	const mouseEventFields = new Set([
+		'altKey',
+		'bubbles',
+		'button',
+		'buttons',
+		'cancelBubble',
+		'cancelable',
+		'clientX',
+		'clientY',
+		'composed',
+		'ctrlKey',
+		'defaultPrevented',
+		'detail',
+		'eventPhase',
+		'fromElement',
+		'isTrusted',
+		'layerX',
+		'layerY',
+		'metaKey',
+		'movementX',
+		'movementY',
+		'offsetX',
+		'offsetY',
+		'pageX',
+		'pageY',
+		'relatedTarget',
+		'returnValue',
+		'screenX',
+		'screenY',
+		'shiftKey',
+		'timeStamp',
+		'type',
+		'which',
+		'x',
+		'y',
+		'deltaX',
+		'deltaY',
+		'deltaZ',
+		'deltaMode',
+	]);
+
   //////////////////////////////////////////
   // Webworker
   //////////////////////////////////////////
@@ -147,6 +189,51 @@
               });
           }
 
+          function bindEvent(data) {
+            console.log("bindEvent. data:", data);
+            let target;
+            switch (data.targetName) {
+              case 'window':
+                target = window;
+                break;
+              case 'canvas':
+                target = options.canvas_original;
+                break;
+              case 'document':
+                target = document;
+                break;
+            }
+            if (!target) {
+              console.error('Unknown target: ' + data.targetName);
+              return;
+            }
+            target.addEventListener(data.eventName, function (e) {
+              // We can`t pass original event to the worker
+              const eventClone = cloneEvent(e);
+              if (eventClone.type === "pointerout") {
+                console.log("ignoring pointerout event");
+                console.log("eventClone:", eventClone);
+                console.log("eventClone.relatedTarget:", eventClone.relatedTarget);
+                return;
+              }
+              worker.postMessage({
+                type: 'event',
+                targetName: data.targetName,
+                eventName: data.eventName,
+                eventClone: eventClone,
+              });
+            }, data.opt);
+          }
+
+          function cloneEvent(event) {
+            event.preventDefault();
+            const eventClone = {};
+            for (let field of mouseEventFields) {
+              eventClone[field] = event[field];
+            }
+            return eventClone;
+          }
+
           console.log('GAME: got worker ', worker, options);
 
           worker.onmessage = function (evt) {
@@ -174,15 +261,18 @@
               return update_defer.resolve('updated');
             }
             if (type === 'event') {
-              console.log("TODO handle event");
+              console.log("TODO handle event. evt.data:", evt.data);
+              bindEvent(evt.data);
               return;
             }
             if (type === 'canvasMethod') {
-              console.log("TODO handle event canvasMethod");
+              console.log("TODO handle event canvasMethod. msg.data.method:", evt.data.method);
+              options.canvas_original[evt.data.method](...evt.data.args);
               return;
             }
             if (type === 'canvasStyle') {
-              console.log("TODO handle event canvasStyle");
+              console.log("TODO handle event canvasStyle. evt.data.name:", evt.data.name);
+              options.canvas_original.style[evt.data.name] = evt.data.value;
               return;
             }
             message_error_handler_defer.reject(
@@ -261,6 +351,7 @@
           gadget.runGame({
             logic_url: parameter_gamelogic,
             canvas: offscreen,
+            canvas_original: canvas,
             width: canvas.width,
             height: canvas.height,
             script: script_content,
