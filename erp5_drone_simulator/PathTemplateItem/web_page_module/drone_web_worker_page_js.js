@@ -121,11 +121,11 @@
         loop_promise,
         handleWorker('gadget_erp5_page_game_worker.js', function (worker) {
 
-          window.addEventListener("mousewheel", (evt) => {
+          /*window.addEventListener("mousewheel", (evt) => {
             worker.postMessage({
               type: 'mousewheel'
             });
-          });
+          });*/
 
           var message_error_handler_defer = RSVP.defer(),
             update_defer = null;
@@ -158,6 +158,8 @@
                 type: 'start',
                 logic_url: options.logic_url,
                 canvas: options.canvas,
+                width: options.width,
+                height: options.height,
                 script: options.script,
                 game_parameters_json: options.game_parameters_json,
                 log: options.log
@@ -170,6 +172,14 @@
             }
             if (type === 'updated') {
               return update_defer.resolve('updated');
+            }
+            if (type === 'event') {
+              console.log("TODO handle event");
+              return;
+            }
+            if (type === 'canvasMethod') {
+              console.log("TODO handle event canvasMethod");
+              return;
             }
             message_error_handler_defer.reject(
               new Error('Unsupported message ' + JSON.stringify(evt.data))
@@ -247,6 +257,8 @@
           gadget.runGame({
             logic_url: parameter_gamelogic,
             canvas: offscreen,
+            width: canvas.clientWidth,
+            height: canvas.clientHeight,
             script: script_content,
             game_parameters_json: game_parameters_json,
             log: log_content
