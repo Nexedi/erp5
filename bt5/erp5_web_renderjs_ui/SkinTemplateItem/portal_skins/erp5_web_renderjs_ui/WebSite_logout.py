@@ -12,7 +12,7 @@ if username is not None:
     )
   )
 REQUEST = portal.REQUEST
-if REQUEST.has_key('portal_skin'):
+if 'portal_skin' in REQUEST:
   portal.portal_skins.clearSkinCookie()
 REQUEST.RESPONSE.expireCookie('__ac', path='/')
 

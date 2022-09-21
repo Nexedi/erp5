@@ -25,6 +25,6 @@ else:
     membership_criterion_category = membership_criterion_category_list[0]
     assert membership_criterion_category.startswith('source_project/')
     project_relative_url = membership_criterion_category[len('source_project/'):]
-    if returned_object.has_key(project_relative_url):
+    if project_relative_url in returned_object:
       result_list.append(returned_object[project_relative_url])
 return result_list

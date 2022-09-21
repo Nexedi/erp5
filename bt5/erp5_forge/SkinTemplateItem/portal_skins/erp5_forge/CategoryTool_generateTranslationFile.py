@@ -37,12 +37,12 @@ for category_list in category_list_mapping.values():
     #Take only needed attributes
     for attribute in translated_attributes_list:
       #Test attribute exist
-      if category.has_key(attribute) and category.has_key(translation_prefix+attribute):
+      if attribute in category and translation_prefix+attribute in category:
         initial_value = category.get(attribute,'').strip().replace('"',"'")
         if initial_value != '':
           translate_value = category.get(translation_prefix+attribute,'').strip().replace('"',"'")
           if translate_value != '':
-            if translation_dict.has_key(initial_value):
+            if initial_value in translation_dict:
               #Test any duplicate  translation ('car' can't be translated to 'voiture' and 'auto', 
               #user should be choice 'voiture' or 'car')
               if translation_dict[initial_value] != translate_value: 

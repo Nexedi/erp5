@@ -47,9 +47,9 @@ def iterate(document, skin_path):
           form_id = field.get_value('form_id')
           field_id = field.get_value('field_id')
           key = "%s.%s" % (form_id, field_id)
-          if to_rename_dict.has_key(key):
+          if key in to_rename_dict:
             field_path =  "%s/%s/%s" % (skin_path, sub_object.id, field.id)
-            if selected_dict.has_key(field_path):
+            if field_path in selected_dict:
               unproxify_dict[field.id] = None
               proxify_dict[field.id] = to_rename_dict[key]
             next_preview_listbox.append(
@@ -83,7 +83,7 @@ if update:
   extra_kw = {}
   for line in next_preview_listbox:
     line["preview_listbox_key"] = "%03i" % count
-    line["selected"] = selected_dict.has_key(line["hidden_field_path"]) or preview_listbox is None
+    line["selected"] = line["hidden_field_path"] in selected_dict or preview_listbox is None
     extra_kw["field_preview_listbox_hidden_field_path_new_%03i" % count] = line["hidden_field_path"]
     extra_kw["field_preview_listbox_selected_new_%03i" % count] = line["selected"]
     count += 1

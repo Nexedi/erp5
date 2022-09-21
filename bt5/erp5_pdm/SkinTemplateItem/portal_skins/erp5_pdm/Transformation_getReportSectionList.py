@@ -14,7 +14,7 @@ result = []
 variation_category_dict = {}
 for variation_category in reference_variation_category_list:
   base_category = variation_category.split('/',1)[0]
-  if variation_category_dict.has_key( base_category ):
+  if base_category in variation_category_dict:
     variation_category_dict[base_category].append( variation_category )
   else:
     variation_category_dict[base_category] = [variation_category]

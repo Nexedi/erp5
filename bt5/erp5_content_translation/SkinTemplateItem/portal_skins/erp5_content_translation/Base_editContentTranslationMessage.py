@@ -36,7 +36,7 @@ except FormValidationError, validation_errors:
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)

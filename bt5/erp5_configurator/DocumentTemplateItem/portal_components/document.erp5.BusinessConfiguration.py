@@ -74,7 +74,7 @@ def getWorkflowHistory(state, document, remove_undo=0, remove_not_displayed=0):
   else:
     result = []
     for x in wh:
-      if x.has_key('undo') and x['undo'] == 1:
+      if 'undo' in x and x['undo'] == 1:
         result.pop()
       else:
         result.append(x.copy())
@@ -95,7 +95,7 @@ def _updateWorkflowHistory(workflow, document, status_dict):
 
   # Add an entry for the workflow in the history
   workflow_key = workflow.getReference()
-  if not document.workflow_history.has_key(workflow_key):
+  if workflow_key not in document.workflow_history:
     document.workflow_history[workflow_key] = ()
 
   # Update history

@@ -35,7 +35,7 @@ for ss in source_section_list:
   else:
     uid = 'UID' 
 
-  if not pl_dict.has_key(uid):
+  if uid not in pl_dict:
     pl_dict[uid] = module.newContent(**pl_property_dict)
     pl_dict[uid].setSourceSectionValue(ss)
 

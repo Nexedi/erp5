@@ -21,7 +21,7 @@ if dialog.has_field('your_item_extra_property_list'):
 
 for line in kw.get('listbox'):
 
-  if line.has_key('listbox_key'):
+  if 'listbox_key' in line:
     item_reference = line.get('reference')
     if item_reference:
       item = context.portal_catalog.getResultValue(

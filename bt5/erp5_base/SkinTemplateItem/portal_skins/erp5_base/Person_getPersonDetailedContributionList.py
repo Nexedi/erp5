@@ -58,7 +58,7 @@ result_list = context.portal_catalog.countResults(select_dict={'date': 'DATE_FOR
 # build result dict per portal_type then period
 portal_type_count_dict = {}
 for result in result_list:
-  if portal_type_count_dict.has_key(result[2]):
+  if result[2] in portal_type_count_dict:
     portal_type_count_dict[result[2]][result[1]] = result[0]
   else:
     portal_type_count_dict[result[2]] = {result[1]:result[0]}
@@ -68,7 +68,7 @@ line_list = []
 append = line_list.append
 period_count_dict = {}
 for portal_type in portal_type_list:
-  if portal_type_count_dict.has_key(portal_type):
+  if portal_type in portal_type_count_dict:
     period_count = portal_type_count_dict[portal_type]
     obj = Object(uid="new_")
     obj["document_type"] = context.Base_translateString(portal_type)
@@ -76,10 +76,10 @@ for portal_type in portal_type_list:
     continue
   line_counter = 0
   for period in period_list:
-    if period_count.has_key(period):
+    if period in period_count:
       obj[period] = period_count[period]
       line_counter += period_count[period]
-      if period_count_dict.has_key(period):
+      if period in period_count_dict:
         period_count_dict[period] = period_count_dict[period] + period_count[period]
       else:
         period_count_dict[period] = period_count[period]
@@ -99,7 +99,7 @@ obj = Object(uid="new_")
 obj["document_type"] = 'Total'
 line_counter = 0
 for period in period_list:
-  if period_count_dict.has_key(period):
+  if period in period_count_dict:
     obj[period] = period_count_dict[period]
     line_counter += period_count_dict[period]
   else:

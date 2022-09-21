@@ -4,15 +4,15 @@ source_project_uid_list = [x.uid for x in context.portal_catalog(
 from Products.ZSQLCatalog.SQLCatalog import Query
 
 sql_kw = {}
-if kw.has_key('from_date') and kw['from_date'] is not None:
+if 'from_date' in kw and kw['from_date'] is not None:
   query_kw = {'delivery.start_date' : kw['from_date'],
               'range' : 'min'}
   sql_kw['delivery.start_date'] = Query(**query_kw)
-if kw.has_key('at_date') and kw['at_date'] is not None:
+if 'at_date' in kw and kw['at_date'] is not None:
   query_kw = {'delivery.stop_date' : kw['at_date'],
               'range' : 'ngt'}
   sql_kw['delivery.stop_date'] = Query(**query_kw)
-if kw.has_key('simulation_state') and len(kw['simulation_state']) > 0 :
+if 'simulation_state' in kw and len(kw['simulation_state']) > 0 :
   sql_kw['simulation_state'] = kw['simulation_state']
 
 task_list = [x.getObject() for x in \

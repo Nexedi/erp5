@@ -70,16 +70,16 @@ class TestERP5Category(ERP5TypeTestCase):
     bc = self.base_cat
     if bc not in portal_categories.objectIds():
       portal_categories.newContent(portal_type='Base Category', id=bc)
-    if not portal_categories[bc].has_key('1'):
+    if '1' not in portal_categories[bc]:
       portal_categories[bc].newContent(id='1', portal_type='Category')
     self.cat1 = portal_categories[bc]['1']
-    if not self.cat1.has_key('1'):
+    if '1' not in self.cat1:
       self.cat1.newContent(id='1', portal_type='Category')
     self.deep_cat1 = self.cat1['1']
-    if not portal_categories[bc].has_key('2'):
+    if '2' not in portal_categories[bc]:
       portal_categories[bc].newContent(id='2', portal_type='Category')
     self.cat2 = portal_categories[bc]['2']
-    if not self.cat2.has_key('1'):
+    if '1' not in self.cat2:
       self.cat2.newContent(id='1', portal_type='Category')
     self.deep_cat2 = self.cat2['1']
 
@@ -90,35 +90,35 @@ class TestERP5Category(ERP5TypeTestCase):
     self.commit()
 
     organisation_module = self.getOrganisationModule()
-    if not organisation_module.has_key('1'):
+    if '1' not in organisation_module:
       organisation_module.newContent(id='1', portal_type='Organisation')
     self.organisation = organisation_module['1']
-    if not self.organisation.has_key('1'):
+    if '1' not in self.organisation:
       self.organisation.newContent(id='1', portal_type='Telephone')
     self.telephone = self.organisation['1']
-    if not organisation_module.has_key('2'):
+    if '2' not in organisation_module:
       organisation_module.newContent(id='2', portal_type='Organisation')
     self.organisation2 = organisation_module['2']
-    if not self.organisation2.has_key('1'):
+    if '1' not in self.organisation2:
       self.organisation2.newContent(id='1', portal_type='Telephone')
     self.telephone2 = self.organisation2['1']
-    if not person_module.has_key('1'):
+    if '1' not in person_module:
       person_module.newContent(id='1', portal_type = 'Person')
     self.person = person_module['1']
 
     bc2 = self.base_cat2
     if bc2 not in portal_categories.objectIds():
       portal_categories.newContent(portal_type='Base Category', id=bc2)
-    if not portal_categories[bc2].has_key('1'):
+    if '1' not in portal_categories[bc2]:
       portal_categories[bc2].newContent(id='1', portal_type='Category')
     self.efg_l1 = portal_categories[bc2]['1']
-    if not self.efg_l1.has_key('11'):
+    if '11' not in self.efg_l1:
       self.efg_l1.newContent(id='11', portal_type='Category')
     self.efg_l2 = self.efg_l1['11']
-    if not self.efg_l2.has_key('111'):
+    if '111' not in self.efg_l2:
       self.efg_l2.newContent(id='111', portal_type='Category')
     self.efg_l3 = self.efg_l2['111']
-    if not self.efg_l3.has_key('1111'):
+    if '1111' not in self.efg_l3:
       self.efg_l3.newContent(id='1111',portal_type='Category')
     self.efg_l4 = self.efg_l3['1111']
 
@@ -128,7 +128,7 @@ class TestERP5Category(ERP5TypeTestCase):
     content_type_set = set(module_type.getTypeAllowedContentTypeList())
     content_type_set.add('Mapped Value')
     module_type._setTypeAllowedContentTypeList(tuple(content_type_set))
-    if not organisation_module.has_key('predicate'):
+    if 'predicate' not in organisation_module:
       organisation_module.newContent(id='predicate', portal_type='Mapped Value')
     predicate = organisation_module['predicate']
     predicate.setCriterion('quantity', identity=None, min=None, max=None)
@@ -139,7 +139,7 @@ class TestERP5Category(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     portal_categories = self.getCategoryTool()
-    if portal_categories[self.base_cat].has_key('3'):
+    if '3' in portal_categories[self.base_cat]:
       portal_categories[self.base_cat].manage_delObjects('3')
       self.commitAndTic()
 
@@ -149,7 +149,7 @@ class TestERP5Category(ERP5TypeTestCase):
       self.commitAndTic()
 
     organisation_module = self.getOrganisationModule()
-    if organisation_module.has_key('new_id'):
+    if 'new_id' in organisation_module:
       organisation_module.manage_delObjects('new_id')
 
     self.commitAndTic()

@@ -12,7 +12,7 @@ else:
 if discussion == None:
   return []
 
-if kw.has_key("portal_type") == False:
+if ("portal_type" in kw) == False:
   kw['portal_type'] = "Discussion Post"
 
 return discussion.searchFolder(**kw)

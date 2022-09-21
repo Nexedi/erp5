@@ -112,7 +112,7 @@ class SyncMLSubscription(XMLObject):
     activate_kw : activity parameters to pass to activate call
     kw : any parameter getAndActivate can required if it calls itself
     """
-    if kw.has_key("packet_size"):
+    if "packet_size" in kw:
       search_kw = dict(kw)
       packet_size = search_kw.pop('packet_size', 30)
       limit = packet_size * search_kw.pop('activity_count', 100)
@@ -277,7 +277,7 @@ class SyncMLSubscription(XMLObject):
     syncml_logger.debug("--> calling getAndActivate packet size = %s, limit = %s",
                         packet_size, limit)
     # We must know if we have a lower limit or not to propagate
-    if not kw.has_key("strict_min_gid"):
+    if "strict_min_gid" not in kw:
       first_call = True
     else:
       first_call = False

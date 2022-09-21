@@ -4,11 +4,11 @@ if web_page_context:
   no_web_page = False
   form_id = 'view'
 else:
-  no_web_page = not request.has_key('web_page') or request['web_page'] is None or not request['web_page']
+  no_web_page = 'web_page' not in request or request['web_page'] is None or not request['web_page']
   form_id = 'Zuite_viewRunZeleniumTestDialog'
 
-no_reference = not request.has_key('web_page_reference') or request['web_page_reference'] is None or not request['web_page_reference']
-no_url = not request.has_key('url') or request['url'] is None or not request['url']
+no_reference = 'web_page_reference' not in request or request['web_page_reference'] is None or not request['web_page_reference']
+no_url = 'url' not in request or request['url'] is None or not request['url']
 
 if no_web_page and no_url and no_reference:
   if validator:

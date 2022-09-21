@@ -941,7 +941,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       'form_view'
     )
 
-    self.assertFalse(result_dict['_embedded']['_view'].has_key('_actions'))
+    self.assertFalse('_actions' in result_dict['_embedded']['_view'])
 
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
