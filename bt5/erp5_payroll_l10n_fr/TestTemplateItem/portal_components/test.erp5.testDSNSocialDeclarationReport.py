@@ -46,7 +46,7 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     """
     self.dsn_module = self.portal.getDefaultModuleValue("DSN Monthly Report")
     self.setTimeZoneToUTC()
-    self.pinDateTime(DateTime(2015, 12, 01))
+    self.pinDateTime(DateTime(2015, 12, 1))
     # Create the id_group 'dsn_event_counter'
     self.portal.portal_ids.generateNewId(id_group='dsn_event_counter', id_generator='continuous_integer_increasing')
 

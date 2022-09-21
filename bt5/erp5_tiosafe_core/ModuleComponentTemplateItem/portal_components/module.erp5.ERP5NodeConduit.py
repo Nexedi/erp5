@@ -61,7 +61,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
                                                                           destination=object.getRelativeUrl(),
                                                                           destination_decision=object.getRelativeUrl(),
                                                                           destination_administration=object.getRelativeUrl(),
-                                                                          version=001)
+                                                                          version=0o01)
     stc.validate()
 
   def _updateSaleTradeCondition(self, object, **kw): # pylint: disable=redefined-builtin
