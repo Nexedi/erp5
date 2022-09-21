@@ -1,3 +1,5 @@
+# proxy role: Author and Auditor
+# Proxy roles are used to create HTTP Exchange (Author) and call getPath (Auditor)
 import json
 
 response = container.REQUEST.RESPONSE
@@ -8,6 +10,7 @@ if context.REQUEST["method"] == "POST":
   portal = context.getPortalObject()
   data = json.loads(container.REQUEST.get("BODY") or "{}")
   system_event = portal.system_event_module.newContent(
+    title="WebHook Response",
     portal_type="HTTP Exchange",
     response=json.dumps(data, indent=2),
     resource="http_exchange_resource/stripe/webhook",
