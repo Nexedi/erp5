@@ -1,4 +1,5 @@
 import json
+portal = context.getPortalObject()
 response = json.loads(context.getResponse())
 assert response["object"] == "event", "Unexpected %s" % response
 assert "data" in response
@@ -10,3 +11,9 @@ stripe_payment_session, = context.getPortalObject().portal_catalog(
   limit=2)
 
 context.setFollowUpValue(stripe_payment_session.getObject())
+alarm = portal.portal_alarms.check_stripe_payment_session
+alarm.activate(
+  after_path_and_method_id=(
+    (context.getPath(),), ("immediateReindexObject",)
+  )
+).activeSense()
