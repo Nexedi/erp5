@@ -11,7 +11,7 @@ if image_caption in [None, ""]:
   image_caption = chapter_title
 
 session = context.ERP5Site_acquireRunMyDocsSession()
-if session.has_key('listbox') and len(session['listbox']) > 0:
+if 'listbox' in session and len(session['listbox']) > 0:
   listbox = session['listbox']
   int_index = listbox[-1].int_index + 1
 else:

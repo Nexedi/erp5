@@ -167,7 +167,7 @@ class TestInvoiceMixin(TestPackingListMixin):
                   'product_line/apparel'))
       account_module = portal.account_module
       for account_id, account_gap, account_type in self.account_definition_list:
-        if not account_module.has_key(account_id):
+        if account_id not in account_module:
           account = account_module.newContent(account_id, gap=account_gap,
                                               account_type=account_type)
           account.validate()

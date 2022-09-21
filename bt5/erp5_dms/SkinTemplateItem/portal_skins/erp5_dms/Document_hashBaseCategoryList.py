@@ -31,7 +31,7 @@ default_sub_field_property_dict['field_type'] = 'ListField'
 default_sub_field_property_dict['size'] = 1
 
 for base_category in item_list:
-  if not sub_field_dict.has_key(base_category):
+  if base_category not in sub_field_dict:
     basecatobject = context.portal_categories.resolveCategory(base_category)
     sub_field_property_dict = default_sub_field_property_dict.copy()
     sub_field_property_dict['key'] = base_category

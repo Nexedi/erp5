@@ -108,7 +108,7 @@ else:
 
       portal_type, property = portal_type_property.split('.', 1)
 
-      if not mapping.has_key(spreadsheet_name):
+      if spreadsheet_name not in mapping:
         mapping[spreadsheet_name] = (portal_type, {})
       mapping[spreadsheet_name][1][column_name] = property
 
@@ -147,7 +147,7 @@ else:
       imported_line_property_dict = {}
 
       for line_property_index in range(len(line)):
-        if column_mapping.has_key(line_property_index):
+        if line_property_index in column_mapping:
           property_value = line[line_property_index]
           if property_value:
             # Create a new property value

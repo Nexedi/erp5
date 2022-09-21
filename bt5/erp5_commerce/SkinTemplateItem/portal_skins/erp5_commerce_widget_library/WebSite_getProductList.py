@@ -5,7 +5,7 @@ from random import choice
 
 web_site = context.getWebSiteValue() or context.REQUEST.get('current_web_site')
 
-if not kw.has_key('portal_type'):	 	 
+if 'portal_type' not in kw:	 	 
   kw['portal_type'] = 'Product'
 
 # Getting all the products from all the visible Web Section.

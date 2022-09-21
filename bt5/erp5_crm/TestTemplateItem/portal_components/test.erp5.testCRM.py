@@ -2007,7 +2007,7 @@ class TestCRMMailSend(BaseTestCRM):
       method_id='MailMessage_sendByActivity')
     self.commit()
     message_list = [i for i in portal_activities.getMessageList() \
-                    if i.kw.has_key("event_relative_url")]
+                    if "event_relative_url" in i.kw]
     try:
       # 5 recipients -> 5 activities
       self.assertEqual(5, len(message_list))

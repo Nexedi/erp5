@@ -104,7 +104,7 @@ if newest not in BOOLEAN_MARKER:
 search_mode = kw.get('search_mode', request.get('search_mode', None))
 search_mode_map={'in_boolean_mode':'boolean',
                  'with_query_expansion':'expanded'}
-if search_mode not in MARKER and search_mode_map.has_key(search_mode):
+if search_mode not in MARKER and search_mode in search_mode_map:
   search_string += ' mode:%s' % search_mode_map[search_mode]
 
 return search_string

@@ -13,7 +13,7 @@
   Type-based.
 """
 # convert language to lowercase
-if property_dict.has_key('language'):
+if 'language' in property_dict:
   property_dict['language'] = property_dict['language'].lower()
 
 language = property_dict.get('language', 'en')

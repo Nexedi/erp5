@@ -62,18 +62,18 @@ class TestProject(ERP5TypeTestCase):
         rule.validate()
 
     # create organisations
-    if not self.portal.organisation_module.has_key('Organisation_1'):
+    if 'Organisation_1' not in self.portal.organisation_module:
       self.portal.organisation_module.newContent(
                               title='Organisation_1',
                               id='Organisation_1')
 
     # create organisations
-    if not self.portal.organisation_module.has_key('Organisation_2'):
+    if 'Organisation_2' not in self.portal.organisation_module:
       self.portal.organisation_module.newContent(
                               title='Organisation_2',
                               id='Organisation_2')
     # create project
-    if not self.portal.project_module.has_key('Project_1'):
+    if 'Project_1' not in self.portal.project_module:
       self.portal.project_module.newContent(
                               portal_type='Project',
                               reference='Project_1',
@@ -82,7 +82,7 @@ class TestProject(ERP5TypeTestCase):
 
     # Create resources
     module = self.portal.product_module
-    if not module.has_key('development'):
+    if 'development' not in module:
       module.newContent(
           portal_type='Product',
           id='development',

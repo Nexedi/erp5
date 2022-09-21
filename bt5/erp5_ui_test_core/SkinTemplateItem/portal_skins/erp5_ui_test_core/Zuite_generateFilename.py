@@ -8,7 +8,7 @@ if session_id is None or not session_id.startswith("erp5zuite"):
   request.RESPONSE.setCookie('erp5_session_id', session_id, expires=(now +expire_timeout_days).fCommon(), path='/')
   
 session = context.portal_sessions[session_id]
-if not session.has_key('tempfolder') or session['tempfolder'] == '':
+if 'tempfolder' not in session or session['tempfolder'] == '':
   session['tempfolder'] = context.Zuite_createTempFolder() + '/'
 
 return session['tempfolder'] + str(context.portal_ids.generateNewId(id_generator='zuite', id_group=context.getId(), default=1)) + '.png'

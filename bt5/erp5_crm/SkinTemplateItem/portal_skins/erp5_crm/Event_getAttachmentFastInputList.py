@@ -6,7 +6,7 @@ for attachment in context.getAttachmentInformationList():
   # Attachments
   if attachment['uid'] not in ['part_1', 'part_0']:
     filename  = context.getTitle()
-    if attachment.has_key("file_name"):
+    if "file_name" in attachment:
       filename=attachment["file_name"]
     pt = "File"
     temp_base_id = 'index_'.join([attachment["uid"], str(attachment["index"])])

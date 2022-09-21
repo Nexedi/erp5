@@ -1428,16 +1428,16 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     self.assertEqual(len(model_reference_dict), 3) # there is 4 model but two
                                                     # models have the same
                                                     # reference.
-    self.assertEqual(model_reference_dict.has_key(model_employee_url), True)
+    self.assertEqual(model_employee_url in model_reference_dict, True)
     self.assertEqual(model_reference_dict[model_employee_url],
         ['over_time_duration'])
-    self.assertEqual(model_reference_dict.has_key(model_company_url), True)
+    self.assertEqual(model_company_url in model_reference_dict, True)
     self.assertEqual(model_reference_dict[model_company_url],
         ['worked_time_duration'])
-    self.assertEqual(model_reference_dict.has_key(model_company_alt_url), True)
+    self.assertEqual(model_company_alt_url in model_reference_dict, True)
     self.assertEqual(model_reference_dict[model_company_alt_url],
         ['social_insurance'])
-    self.assertNotEquals(model_reference_dict.has_key(model_country_url), True)
+    self.assertNotEquals(model_country_url in model_reference_dict, True)
 
     # check the object list :
     object_list = paysheet.getInheritedObjectValueList(portal_type_list=\

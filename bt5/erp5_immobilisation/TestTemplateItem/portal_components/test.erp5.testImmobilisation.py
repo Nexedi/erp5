@@ -1092,7 +1092,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       for key in e_period.keys():
         e_value = e_period[key]
         #LOG('testing c_period %s "%s" value' % (e_period_cursor-1, key), 0, '')
-        self.assertTrue(c_period.has_key(key))
+        self.assertTrue(key in c_period)
         c_value = c_period[key]
         is_float = 0
         try:

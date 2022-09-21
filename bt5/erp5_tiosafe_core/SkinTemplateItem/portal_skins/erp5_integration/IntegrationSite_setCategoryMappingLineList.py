@@ -25,7 +25,7 @@ def createCategory(object_mapping=None, category=""):
 mapping_dict = {}
 destination_list = []
 for line in listbox:
-  if line.has_key('listbox_key'):
+  if 'listbox_key' in line:
     line_id = line['listbox_key']
     mapping_dict[line_id] = line
     if line["destination_reference_text"] != "":

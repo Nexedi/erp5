@@ -21,7 +21,7 @@ kw = worklist.getIdentityCriterionDict()
 portal_type_list = workflow.getPortalTypeListForWorkflow()
 if not portal_type_list:
   return {} # If no portal type uses the workflow, ignore it
-if not kw.has_key('portal_type'):
+if 'portal_type' not in kw:
   # Set portal types which use the workflow
   kw['portal_type'] = portal_type_list
     

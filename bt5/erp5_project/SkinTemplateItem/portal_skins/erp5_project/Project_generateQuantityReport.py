@@ -37,7 +37,7 @@ def getTotalQuantity(line,worker):
     for child in child_list:
       child_quantity = getTotalQuantity(child,worker)
       for key,value in child_quantity.items():
-        if not quantity.has_key(key):
+        if key not in quantity:
           quantity[key] = 0
         quantity[key] = quantity[key] + value
   else:
@@ -73,7 +73,7 @@ for year,month in month_list:
   listbox_line['month'] = month
   for worker in worker_list:
     quantity = 0
-    if worker_quantity[worker].has_key((year,month)):
+    if (year,month) in worker_quantity[worker]:
       quantity = worker_quantity[worker][(year,month)]
     worker_title = 'unknown'
     if worker is not None:

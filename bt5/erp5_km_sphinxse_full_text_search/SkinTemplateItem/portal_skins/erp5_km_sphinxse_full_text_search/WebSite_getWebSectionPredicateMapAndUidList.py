@@ -28,7 +28,7 @@ def getWebSectionPredicateValueList():
       # remove leading 'follow_up' from category
       if category.startswith('follow_up/'):
         category = category.replace('follow_up/', '', 1)
-      if not category_map.has_key(category):
+      if category not in category_map:
         category_map[category] = []
       category_map[category].append({'uid': section['uid'], 'relative_url':section['relative_url']})
     # get base_categories we care for

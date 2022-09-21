@@ -6,7 +6,7 @@
 
 website = context.getWebSiteValue()
 REQUEST = context.REQUEST
-if REQUEST.has_key('portal_skin'):
+if 'portal_skin' in REQUEST:
    context.portal_skins.clearSkinCookie()
 
 #XXX get cookie name from key authentication plugin

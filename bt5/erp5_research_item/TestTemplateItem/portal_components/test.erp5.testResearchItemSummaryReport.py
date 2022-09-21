@@ -42,16 +42,16 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     super(TestResearchItemSummaryReport, self).afterSetUp()
     ledger_base_category = self.portal.portal_categories.ledger
     for category_id in ("operation", "research"):
-      if not ledger_base_category.has_key(category_id):
+      if category_id not in ledger_base_category:
         ledger_base_category.newContent(
              portal_type='Category', title=category_id.title(),
              reference=category_id, id=category_id)
 
     # create items
-    if not self.portal.research_item_module.has_key('Item_1'):
+    if 'Item_1' not in self.portal.research_item_module:
       self.portal.research_item_module.newContent(title="Item_1",
            id="Item_1", portal_type="Research Item")
-    if not self.portal.research_item_module.has_key('Item_2'):
+    if 'Item_2' not in self.portal.research_item_module:
       self.portal.research_item_module.newContent(title="Item_2",
            id="Item_2", portal_type="Research Item")
 

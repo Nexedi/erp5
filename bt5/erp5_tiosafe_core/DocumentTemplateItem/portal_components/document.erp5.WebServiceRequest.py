@@ -111,11 +111,11 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     if REQUEST is not None:
       return self.view()
     #LOG("_call__", 300, kw)
-    if kw.has_key("id"):
+    if "id" in kw:
       kw[self.getIDParameterName()] = str(kw.pop("id"))
 
     sub_id = None
-    if kw.has_key(self.getIDParameterName()) and ID_SEPARATOR in kw[self.getIDParameterName()]:
+    if self.getIDParameterName() in kw and ID_SEPARATOR in kw[self.getIDParameterName()]:
       kw[self.getIDParameterName()], sub_id = kw[self.getIDParameterName()].split(ID_SEPARATOR)
 
     object_list = []

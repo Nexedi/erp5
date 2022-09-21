@@ -80,10 +80,10 @@ for model_line in model_line_list:
       salary_range = 'no_slice'
 
     # check that another share on the same slice have not been already add
-    if not object_dict.has_key(salary_range):
+    if salary_range not in object_dict:
       salary_range_title = None
       salary_range_relative_url = None
-      if tuple_dict.has_key('salary_range'):
+      if 'salary_range' in tuple_dict:
         salary_range_title = tuple_dict['salary_range']
         salary_range_relative_url = tuple_dict['salary_range_relative_url']
       new_uid = "new_%s" % id_
@@ -108,7 +108,7 @@ for model_line in model_line_list:
 
   for object_key in model_line.getSalaryRangeList():
     line_list.append(model_line.asContext(**object_dict[object_key]))
-  if object_dict.has_key('no_slice'):
+  if 'no_slice' in object_dict:
     line_list.append(model_line.asContext(**object_dict['no_slice']))
 
 
@@ -132,7 +132,7 @@ def sortByIntIndexDescending(x, y):
 
 sortByDefaultSortMethod = sortByIntIndexAscending
 
-if kw.has_key('sort_on'):
+if 'sort_on' in kw:
   sort_on = kw['sort_on']
   if sort_on[0][0] == 'title' and sort_on[0][1]=='ascending':
     line_list.sort(sortByTitleAscending)

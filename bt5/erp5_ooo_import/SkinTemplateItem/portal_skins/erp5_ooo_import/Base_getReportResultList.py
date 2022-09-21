@@ -7,7 +7,7 @@ result_listbox = []
 
 # context.log(str(kw))
 if active_process_path is None:
-  if kw.has_key('active_process') and kw['active_process'] not in ('', None):
+  if 'active_process' in kw and kw['active_process'] not in ('', None):
     active_process_path = kw['active_process']
 #else:
 #  if context.REQUEST.get('active_process', None) not in ('None', None):

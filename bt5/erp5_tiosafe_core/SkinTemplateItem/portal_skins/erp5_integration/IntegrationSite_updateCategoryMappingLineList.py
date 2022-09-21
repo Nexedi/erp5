@@ -14,14 +14,14 @@ def getMappingChildUid(mapping):
 
 def resetListBox(listbox, uid_list):
   for line in listbox:
-    if line.has_key('listbox_key'):
+    if 'listbox_key' in line:
       line_id = line['listbox_key']
       if line_id in uid_list:
         line['destination_reference'] = ""
   return listbox
 
 for line in listbox:
-  if line.has_key('listbox_key'):
+  if 'listbox_key' in line:
     line_id = line['listbox_key']
     mapping_dict[line_id] = line
     if line["destination_reference_text"] != "":

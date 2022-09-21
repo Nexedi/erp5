@@ -444,7 +444,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     context_movement = self.createMovement()
     self.assertEqual(None, business_path.getSourceValue())
-    self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
+    self.assertFalse('source' in business_path.getArrowCategoryDict(context=context_movement))
 
   def test_BusinessPathDynamicCategoryAccessProviderReplaceCategory(self):
     business_path = self.createTradeModelPath()

@@ -78,9 +78,9 @@ for paysheet_line in paysheet_line_list:
     salary_range_slice = cell.getSalaryRange()
     if salary_range_slice is None:
       salary_range_slice = 'no_slice'
-    if not object_dict.has_key(salary_range_slice):
+    if salary_range_slice not in object_dict:
       slice_title = None
-      if tuple_dict.has_key('salary_range'):
+      if 'salary_range' in tuple_dict:
         slice_title=tuple_dict['salary_range']
       object_dict[salary_range_slice]={
                     'slice':slice_title,
@@ -117,7 +117,7 @@ for paysheet_line in paysheet_line_list:
 
   for object_key in paysheet_line.getSalaryRangeList():
     line_list.append(paysheet_line.asContext(**object_dict[object_key]))
-  if object_dict.has_key('no_slice'):
+  if 'no_slice' in object_dict:
     line_list.append(paysheet_line.asContext(**object_dict['no_slice']))
 
 
@@ -137,7 +137,7 @@ def sortByIntIndexDescending(x, y):
 
 sortByDefaultSortMethod = sortByIntIndexAscending
 
-if kw.has_key('sort_on'):
+if 'sort_on' in kw:
   sort_on = kw['sort_on']
   if sort_on[0][0] == 'title' and sort_on[0][1]=='ascending':
     line_list.sort(sortByTitleAscending)
