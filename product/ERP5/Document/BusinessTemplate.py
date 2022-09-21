@@ -1193,7 +1193,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def _getObjectKeyList(self):
     # sort to add objects before their subobjects
-    return sorted(ensure_list(self._objects.keys()))
+    return sorted(self._objects.keys())
 
   def unindexBrokenObject(self, item_path):
     """
@@ -1724,8 +1724,7 @@ class PathTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    keys = self._path_archive.keys()
-    for path in sorted(keys):
+    for path in sorted(self._path_archive.keys()):
       include_subobjects = 0
       if path.endswith("**"):
         include_subobjects = 1
@@ -2076,13 +2075,11 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<registered_skin_selection>'
-    keys = self._objects.keys()
-    for key in sorted(keys):
-      skin_selection_list = self._objects[key]
+    for key in sorted(self._objects.keys()):
       xml_data += '\n <skin_folder_selection>'
       xml_data += '\n  <skin_folder>%s</skin_folder>' % key
       xml_data += '\n  <skin_selection>%s</skin_selection>' \
-                      % ','.join(sorted(skin_selection_list))
+                      % ','.join(sorted(self._objects[key]))
       xml_data += '\n </skin_folder_selection>'
     xml_data += '\n</registered_skin_selection>'
     return xml_data
@@ -2554,13 +2551,11 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<workflow_chain>'
-    key_list = self._objects.keys()
-    for key in sorted(key_list):
-      workflow_list = self._objects[key]
+    for key in sorted(self._objects.keys()):
       xml_data += '\n <chain>'
       xml_data += '\n  <type>%s</type>' %(key,)
       xml_data += '\n  <workflow>%s</workflow>' %(
-        self._chain_string_separator.join(sorted(workflow_list)))
+        self._chain_string_separator.join(sorted(self._objects[key])))
       xml_data += '\n </chain>'
     xml_data += '\n</workflow_chain>'
     return xml_data
@@ -2770,8 +2765,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<%s>' %(self.xml_tag,)
-    key_list = self._objects.keys()
-    for key in sorted(key_list):
+    for key in sorted(self._objects.keys()):
       id_value = key.replace('%s/' % self.class_property, '')
       allowed_item_list = sorted(self._objects[key])
       xml_data += '\n <portal_type id="%s">' % (id_value)
@@ -3659,8 +3653,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     xml_data = '<site_property>'
-    keys = self._objects.keys()
-    for path in sorted(keys):
+    for path in sorted(self._objects.keys()):
       xml_data += self.generateXml(path)
     xml_data += '\n</site_property>'
     bta.addObject(xml_data, name='properties', path=self.__class__.__name__)
@@ -3726,8 +3719,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     path = self.__class__.__name__
-    keys = self._objects.keys()
-    for key in sorted(keys):
+    for key in sorted(self._objects.keys()):
       # export modules one by one
       xml_data = self.generateXml(path=key)
       bta.addObject(xml_data, name=key, path=path)
