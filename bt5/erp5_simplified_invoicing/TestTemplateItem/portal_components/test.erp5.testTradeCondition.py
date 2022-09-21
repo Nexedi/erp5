@@ -162,10 +162,10 @@ class TestApplyTradeCondition(TradeConditionTestCase):
 
   def test_apply_trade_condition_with_payment_conditions(self):
     self.trade_condition.setPaymentConditionTradeDate('custom')
-    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 01, 01))
+    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 1, 1))
     self.order.setSpecialiseValue(self.trade_condition)
     self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
-    self.assertEqual(DateTime(2001, 01, 01),
+    self.assertEqual(DateTime(2001, 1, 1),
                       self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
 
   def test_apply_trade_condition_with_payment_conditions_with_hierarchy(self):
@@ -174,12 +174,12 @@ class TestApplyTradeCondition(TradeConditionTestCase):
                             title='Other Trade Condition')
     other_trade_condition.setPaymentConditionTradeDate('custom')
     other_trade_condition.setPaymentConditionPaymentDate(
-                                              DateTime(2001, 01, 01))
+                                              DateTime(2001, 1, 1))
 
     self.trade_condition.setSpecialiseValue(other_trade_condition)
     self.order.setSpecialiseValue(self.trade_condition)
     self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
-    self.assertEqual(DateTime(2001, 01, 01),
+    self.assertEqual(DateTime(2001, 1, 1),
                       self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
 
   def test_apply_trade_condition_twice_update_order(self):
@@ -189,7 +189,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.trade_condition.setDestinationValue(self.client)
     self.trade_condition.setPriceCurrencyValue(self.currency)
     self.trade_condition.setPaymentConditionTradeDate('custom')
-    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 01, 01))
+    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 1, 1))
     self.order.setSpecialiseValue(self.trade_condition)
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
@@ -201,7 +201,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEqual(self.client, self.order.getDestinationValue())
     self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
     self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
-    self.assertEqual(DateTime(2001, 01, 01),
+    self.assertEqual(DateTime(2001, 1, 1),
                       self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
 
     new_vendor = self.portal.organisation_module.newContent(
@@ -221,7 +221,7 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEqual(self.client, self.order.getDestinationValue())
     self.assertEqual(self.currency, self.order.getPriceCurrencyValue())
     self.assertEqual('custom', self.order.asComposedDocument().getProperty('payment_condition_trade_date'))
-    self.assertEqual(DateTime(2002, 02, 02),
+    self.assertEqual(DateTime(2002, 2, 2),
                       self.order.asComposedDocument().getProperty('payment_condition_payment_date'))
 
 

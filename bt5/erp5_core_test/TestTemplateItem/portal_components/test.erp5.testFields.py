@@ -384,7 +384,7 @@ class TestDateTimeField(ERP5TypeTestCase):
              .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0])
 
   def test_render_odt_variable(self):
-    value = DateTime(2010, 12, 06, 10, 23, 32, 'GMT+5')
+    value = DateTime(2010, 12, 6, 10, 23, 32, 'GMT+5')
     self.field.values['default'] = value
     node = self.field.render_odt_variable(as_string=False)
     self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'date')
