@@ -81,6 +81,9 @@ class Python3StyleTest(ERP5TypeTestCase):
   def test_importFixApplied(self):
     self._testFixer('import')
 
+  def test_numliteralsFixApplied(self):
+    self._testFixer('numliterals')
+
 
 def test_suite():
   suite = unittest.TestSuite()
