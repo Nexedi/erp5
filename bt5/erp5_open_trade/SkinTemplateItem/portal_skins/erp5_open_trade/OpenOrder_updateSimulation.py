@@ -1,3 +1,7 @@
+if context.checkConsistency():
+  # Skip if open order is not consistency
+  return
+
 subscription_item_set = set()
 
 for open_order_line in context.objectValues():
