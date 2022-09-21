@@ -9,6 +9,9 @@ response.setHeader("Content-type", "application/json; charset=utf-8")
 if context.REQUEST["method"] == "POST":
   portal = context.getPortalObject()
   data = json.loads(container.REQUEST.get("BODY") or "{}")
+  assert data, "BODY should not be empty"
+  assert "id" in data, "ID is missing"
+  assert data["object"] == "event", "Unexpected object"
   system_event = portal.system_event_module.newContent(
     title="WebHook Response",
     portal_type="HTTP Exchange",
