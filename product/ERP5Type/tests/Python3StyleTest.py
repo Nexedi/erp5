@@ -84,6 +84,10 @@ class Python3StyleTest(ERP5TypeTestCase):
   def test_hasKeyFixApplied(self):
     self._testFixer('has_key')
 
+  def test_numliteralsFixApplied(self):
+    self._testFixer('numliterals')
+
+
 def test_suite():
   suite = unittest.TestSuite()
   tested_product = os.environ['TESTED_PRODUCT']
