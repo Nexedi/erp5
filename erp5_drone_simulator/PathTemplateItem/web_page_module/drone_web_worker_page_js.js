@@ -45,6 +45,9 @@
 		'which',
 		'x',
 		'y',
+		'wheelDelta',
+		'wheelDeltaX',
+		'wheelDeltaY',
 		'deltaX',
 		'deltaY',
 		'deltaZ',
@@ -163,9 +166,23 @@
         loop_promise,
         handleWorker('gadget_erp5_page_game_worker.js', function (worker) {
 
-          /*window.addEventListener("mousewheel", (evt) => {
+          options.canvas_original.addEventListener("mousewheel", (evt) => {
+            console.log("[MAIN] canvas mousewheel. event:", evt);
+            const eventClone = cloneEvent(evt);
             worker.postMessage({
-              type: 'mousewheel'
+              type: 'mousewheel',
+              eventClone: eventClone
+            });
+          });
+          /*options.canvas_original.addEventListener("mousewheel", (e) => {
+            const eventClone = cloneEvent(e);
+            console.log("mousewheel event! clone and send to worker");
+            console.log("[MAIN][mousewheel] messaging worker with mousewheel event(cloned)-target:");
+            worker.postMessage({
+              type: 'event',
+              targetName: "canvas",
+              eventName: "mousewheel",
+              eventClone: eventClone,
             });
           });*/
 
@@ -190,7 +207,7 @@
           }
 
           function bindEvent(data) {
-            console.log("bindEvent. data:", data);
+            console.log("[MAIN] bindEvent. data:", data);
             let target;
             switch (data.targetName) {
               case 'window':
@@ -212,10 +229,9 @@
               const eventClone = cloneEvent(e);
               if (eventClone.type === "pointerout") {
                 console.log("ignoring pointerout event");
-                console.log("eventClone:", eventClone);
-                console.log("eventClone.relatedTarget:", eventClone.relatedTarget);
                 return;
               }
+              console.log("[MAIN][LISTENER] event(cloned)-target:", data.eventName, data.targetName);
               worker.postMessage({
                 type: 'event',
                 targetName: data.targetName,
@@ -234,7 +250,7 @@
             return eventClone;
           }
 
-          console.log('GAME: got worker ', worker, options);
+          //console.log('GAME: got worker ', worker, options);
 
           worker.onmessage = function (evt) {
             //console.log('Message received from worker', evt.data);
@@ -261,17 +277,17 @@
               return update_defer.resolve('updated');
             }
             if (type === 'event') {
-              console.log("TODO handle event. evt.data:", evt.data);
+              console.log("[MAIN] worker.onmessage - type=event. evt.data:", evt.data);
               bindEvent(evt.data);
               return;
             }
             if (type === 'canvasMethod') {
-              console.log("TODO handle event canvasMethod. msg.data.method:", evt.data.method);
+              console.log("[MAIN] worker.onmessage - type=canvasMethod. evt.data:", evt.data);
               options.canvas_original[evt.data.method](...evt.data.args);
               return;
             }
             if (type === 'canvasStyle') {
-              console.log("TODO handle event canvasStyle. evt.data.name:", evt.data.name);
+              console.log("[MAIN] worker.onmessage - type=canvasStyle. evt.data:", evt.data);
               options.canvas_original.style[evt.data.name] = evt.data.value;
               return;
             }
@@ -302,7 +318,7 @@
 // droneaailefixe.js
 (function () {
   "use strict";
-  console.log('droneaailefixe');
+  //console.log('droneaailefixe');
 }());
 
 // page gadget.js
