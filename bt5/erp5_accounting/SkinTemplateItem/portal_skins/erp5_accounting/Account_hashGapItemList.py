@@ -20,7 +20,7 @@ def getSubFieldDict():
       item_key = '/'.join(item_split[:split_depth])
 
       # Create a new subfield if necessary
-      if not sub_field_dict.has_key(item_key):
+      if item_key not in sub_field_dict:
         # Create property dict (key are field parameters)
         sub_field_property_dict = default_sub_field_property_dict.copy()
         sub_field_property_dict['key'] = item_key
@@ -57,7 +57,7 @@ for item_value in value_list:
     item_split = item_value.split('/')
     item_key = '/'.join(item_split[:split_depth])
     
-    if not sub_field_dict.has_key(item_key):
+    if item_key not in sub_field_dict:
       # This can only happens if an accounting plan have been uninstalled
       sub_field_property_dict = default_sub_field_property_dict.copy()
       sub_field_property_dict['key'] = item_key

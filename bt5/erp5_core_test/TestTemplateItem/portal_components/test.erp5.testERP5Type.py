@@ -1758,7 +1758,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person')
     self.assertFalse(person.hasTitle())
-    self.assertFalse(person.__dict__.has_key('title'))
+    self.assertFalse('title' in person.__dict__)
 
   def test_24_relatedValueAccessor(self):
     """

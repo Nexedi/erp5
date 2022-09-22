@@ -30,7 +30,7 @@
 import os, sys
 import unittest
 from subprocess import check_output, CalledProcessError
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from lib2to3.main import main
 
@@ -80,6 +80,12 @@ class Python3StyleTest(ERP5TypeTestCase):
 
   def test_importFixApplied(self):
     self._testFixer('import')
+
+  def test_hasKeyFixApplied(self):
+    self._testFixer('has_key')
+
+  def test_numliteralsFixApplied(self):
+    self._testFixer('numliterals')
 
 
 def test_suite():

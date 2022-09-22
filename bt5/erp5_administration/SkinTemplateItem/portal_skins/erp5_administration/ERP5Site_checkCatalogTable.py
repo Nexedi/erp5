@@ -142,7 +142,7 @@ else:
       reference_dict = getattr(context, property_override_method_id)(instance=actual_object)
     do_reindex = False
     for attribute_id in attribute_id_list:
-      if not reference_dict.has_key(attribute_id):
+      if attribute_id not in reference_dict:
         reference_value = actual_object.getProperty(attribute_id)
       else:
         reference_value = reference_dict[attribute_id]

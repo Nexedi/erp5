@@ -474,7 +474,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     error = []
     try:
       iframe = self.runner.test(debug=debug)
-    except TimeoutError, e:
+    except TimeoutError as e:
       error.append(repr(e))
     try:
       self.tic()

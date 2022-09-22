@@ -319,7 +319,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()
-          except AssertionError, e:
+          except AssertionError as e:
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages

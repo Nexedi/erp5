@@ -281,16 +281,16 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(other_resource,
             invoice_movement.getResourceValue())
 
-    order_line.setStartDate(DateTime(2001, 02, 03))
+    order_line.setStartDate(DateTime(2001, 2, 3))
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEqual(DateTime(2001, 02, 03),
+    self.assertEqual(DateTime(2001, 2, 3),
                  invoice_movement.getStartDate())
 
-    order_line.setStopDate(DateTime(2002, 03, 04))
+    order_line.setStopDate(DateTime(2002, 3, 4))
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEqual(DateTime(2002, 03, 04),
+    self.assertEqual(DateTime(2002, 3, 4),
                  invoice_movement.getStopDate())
 
   @newSimulationExpectedFailure
@@ -478,20 +478,20 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(456,
             invoice_transaction_movement.getQuantity())
 
-    order_line.setStartDate(DateTime(2001, 02, 03))
+    order_line.setStartDate(DateTime(2001, 2, 3))
     self.tic()
     self.assertEqual(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEqual(DateTime(2001, 02, 03),
+    self.assertEqual(DateTime(2001, 2, 3),
                  invoice_transaction_movement.getStartDate())
 
-    order_line.setStopDate(DateTime(2002, 03, 04))
+    order_line.setStopDate(DateTime(2002, 3, 4))
     self.tic()
     self.assertEqual(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEqual(DateTime(2002, 03, 04),
+    self.assertEqual(DateTime(2002, 3, 4),
                  invoice_transaction_movement.getStopDate())
 
   def test_Invoice_viewAsODT(self):

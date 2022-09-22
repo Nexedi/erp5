@@ -280,7 +280,7 @@ class TestPreferences(PropertySheetTestCase):
     portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
     self.assertEqual(person1.getPreferenceState(),    'enabled')
-    person1.setPreferredAccountingTransactionAtDate(DateTime(2005, 01, 01))
+    person1.setPreferredAccountingTransactionAtDate(DateTime(2005, 1, 1))
     pref_tool.setPreference(
       'preferred_accounting_transaction_at_date', DateTime(2004, 12, 31))
     self.tic()
@@ -320,7 +320,7 @@ class TestPreferences(PropertySheetTestCase):
     # create a pref for user_b
     user_b_1 = portal_preferences.newContent(
         id='user_b_1', portal_type='Preference')
-    user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 02, 02))
+    user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 2, 2))
     self.tic()
 
     # enable this preference

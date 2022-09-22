@@ -799,7 +799,7 @@ class TestERP5Base(ERP5TypeTestCase):
     """Tests dates on Person objects.
     """
     pers = self.getPersonModule().newContent(portal_type='Person')
-    birthday = DateTime(1999, 01, 01)
+    birthday = DateTime(1999, 1, 1)
     now = DateTime()
     pers.edit(birthday = birthday)
     self.assertEqual(birthday, pers.getBirthday())
@@ -814,7 +814,7 @@ class TestERP5Base(ERP5TypeTestCase):
     """Tests dates on Organisation objects.
     """
     org = self.getOrganisationModule().newContent(portal_type='Organisation')
-    start_date = DateTime(1999, 01, 01)
+    start_date = DateTime(1999, 1, 1)
     now = DateTime()
     org.edit(start_date = start_date)
     self.assertEqual(start_date, org.getStartDate())
@@ -964,7 +964,7 @@ class TestERP5Base(ERP5TypeTestCase):
                               subordination_value=first_organisation,
                               start_date=DateTime(1996, 9, 9))
     another_cancelled_career.cancel()
-    self.assertEqual(DateTime(2001, 01, 01),
+    self.assertEqual(DateTime(2001, 1, 1),
          person.Person_getCareerStartDate(
             subordination_relative_url=first_organisation.getRelativeUrl()))
 

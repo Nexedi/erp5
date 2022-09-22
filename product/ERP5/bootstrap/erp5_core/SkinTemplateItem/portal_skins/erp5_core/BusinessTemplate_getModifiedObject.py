@@ -22,7 +22,6 @@ getModifiedObjectList = CachingMethod(getModifiedObjectList,
 
 modified_object_list = getModifiedObjectList(context)
 keys = ensure_list(modified_object_list.keys())
-keys.sort()
 
 no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document',
                   'PropertySheet', 'Extension', 'Test', 'Product', 'Role',
@@ -43,7 +42,7 @@ save_and_remove_title = Base_translateString('Backup And Remove')
 
 i = 0
 object_list = []
-for object_id in keys:
+for object_id in sorted(keys):
   object_state, object_class = modified_object_list[object_id]
   line = newTempBase(context, 'tmp_install_%s' %(str(i)))
   if object_state == 'New':

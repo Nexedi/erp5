@@ -26,7 +26,7 @@ requirements_items = []
 
 # get the user information
 for requirement_line in listbox:
-  if requirement_line.has_key('listbox_key'):
+  if 'listbox_key' in requirement_line:
     requirement_line_id = int(requirement_line['listbox_key'])
     requirement = {}
     requirement['id'] = requirement_line_id
@@ -76,7 +76,7 @@ for requirement_item in requirements_items:
     new_1st_level_requirement.append(new_2nd_level_feat)
 
   if has_1st_level_requirement:
-    if clean_requirements.has_key(new_1st_level_requirement_title):
+    if new_1st_level_requirement_title in clean_requirements:
       new_1st_level_requirement = clean_requirements[new_1st_level_requirement_title] + new_1st_level_requirement
     clean_requirements[new_1st_level_requirement_title] = new_1st_level_requirement
     clean_requirements_key_list.append(new_1st_level_requirement_title)

@@ -33,14 +33,15 @@
       body {font-family: Verdana;}
       .c3-line {stroke-width: 3px;}
       .c3 circle {stroke: white;}
-      .c3 text { font-size: 12px;}
-      .c3 text { font-size: 12px;}
+      .c3 text {font-size: 12px;}
+      .c3 text {font-size: 12px;}
       .tick line {stroke: white;}
     </style>
   </head>
 
   <body>
     <script type="text/javascript">
+    var monaco_editor;
     $(function() {
         var editor,
             ht = new Handsontable(document.getElementById('table_container'), { data: [[0]], rowHeaders: true, colHeaders: true}),
@@ -98,7 +99,7 @@
         $(function() {
           
           let editor_backup = document.querySelector("textarea[name='editor_backup']");
-          editor = monaco.editor.create(
+          editor = monaco_editor = monaco.editor.create(
             document.querySelector('#query'),
             {
               automaticLayout: true,
@@ -135,6 +136,7 @@
           $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(
             function(schema) {
               monaco.languages.registerCompletionItemProvider('sql', new SQLCompletionProvider(schema));
+              document.querySelector('#query').classList.add('initialized');
             });
 
           $('button[name="Query"]').click(redraw);

@@ -1096,7 +1096,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
                                               selection_params=selection_params,
                                               request_field=not use_relation_form_page_template,
                                               form_relative_url=form_relative_url)
-        if field_errors.has_key(field.id):
+        if field.id in field_errors:
           response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
         # Do not crash if field configuration is wrong.
@@ -2110,7 +2110,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             value=default_field_value,
             key='field_%s_%s' % (editable_field.id, brain_uid))
           # Include cell error text in case of form validation
-          if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
+          if '%s_%s' % (editable_field.id, brain_uid) in field_errors:
             contents_item[select]['field_gadget_param']["error_text"] = \
               Base_translateString(field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text)
 

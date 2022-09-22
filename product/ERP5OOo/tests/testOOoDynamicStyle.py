@@ -29,7 +29,7 @@
 
 import os
 import unittest
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

@@ -125,7 +125,7 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
-  def createDirectory(self, path, mode=0777):
+  def createDirectory(self, path, mode=0o777):
     """Create a directory `path`, with file mode `mode`.
 
     The directory is created immediatly, even if transaction is aborted.

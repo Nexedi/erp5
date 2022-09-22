@@ -47,7 +47,7 @@ except FormValidationError as validation_errors:
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)
@@ -179,11 +179,11 @@ def editMatrixBox(matrixbox_field, matrixbox):
       return "Could not create cell %s" % str(cell_index_tuple)
 
     cell.edit(edit_order=edit_order, **gv)  # First update globals which include the def. of property_list
-    if cell_value_dict.has_key('variated_property'):
+    if 'variated_property' in cell_value_dict:
       # For Variated Properties
       value = cell_value_dict['variated_property']
       del cell_value_dict['variated_property']
-      if gv.has_key('mapped_value_property_list'):
+      if 'mapped_value_property_list' in gv:
         # Change the property which is defined by the
         # first element of mapped_value_property_list
         # XXX Kato: What? Why?

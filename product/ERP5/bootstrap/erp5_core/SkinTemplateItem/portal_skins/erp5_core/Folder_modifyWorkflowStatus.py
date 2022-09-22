@@ -45,8 +45,7 @@ for form in (real_form, target_form):
     listbox_line_list = []
     listbox = getattr(request,'listbox',None) # XXX: hardcoded field name
     listbox_keys = listbox.keys()
-    listbox_keys.sort()
-    for key in listbox_keys:
+    for key in sorted(listbox_keys):
       listbox_line = listbox[key]
       listbox_line['listbox_key'] = key
       listbox_line_list.append(listbox[key])

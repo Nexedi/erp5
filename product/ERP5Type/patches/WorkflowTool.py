@@ -141,7 +141,7 @@ class WorkflowMethod( Method ):
             # No workflow tool found.
             try:
                 res = self._m(instance, *args, **kw)
-            except ObjectDeleted, ex:
+            except ObjectDeleted as ex:
                 res = ex.getResult()
             else:
                 if hasattr(aq_base(instance), 'reindexObject'):

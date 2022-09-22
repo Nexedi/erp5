@@ -50,7 +50,7 @@ fast_input_lines = []
 
 # get the fast input form datas
 for inputline in listbox:
-  if inputline.has_key('listbox_key'):
+  if 'listbox_key' in inputline:
     line = {}
     line['id'] = int(inputline['listbox_key'])
     for data_name in input_data_names:

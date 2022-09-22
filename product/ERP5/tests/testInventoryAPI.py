@@ -1968,94 +1968,94 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def test_FromDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+    for date in [DateTime(2006, 1, day) for day in range(1, 4)]:
       self._makeMovement(quantity=100,
                          start_date=date,
                          stop_date=date+1)
     # from_date takes all movements >=
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 2)
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 02),
+                        from_date=DateTime(2006, 1, 2),
                         section_uid=self.mirror_section.getUid())), 2)
 
   def test_AtDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+    for date in [DateTime(2006, 1, day) for day in range(1, 4)]:
       self._makeMovement(quantity=100,
                          start_date=date,
                          stop_date=date+1)
     # at_date takes all movements <=
     self.assertEqual(len(getMovementHistoryList(
-                        at_date=DateTime(2006, 01, 03),
+                        at_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 2)
     self.assertEqual(len(getMovementHistoryList(
-                        at_date=DateTime(2006, 01, 02),
+                        at_date=DateTime(2006, 1, 2),
                         section_uid=self.mirror_section.getUid())), 2)
 
   def test_ToDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+    for date in [DateTime(2006, 1, day) for day in range(1, 4)]:
       self._makeMovement(quantity=100,
                          start_date=date,
                          stop_date=date+1)
     # to_date takes all movements <
     self.assertEqual(len(getMovementHistoryList(
-                        to_date=DateTime(2006, 01, 03),
+                        to_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 1)
     self.assertEqual(len(getMovementHistoryList(
-                        to_date=DateTime(2006, 01, 02),
+                        to_date=DateTime(2006, 1, 2),
                         section_uid=self.mirror_section.getUid())), 1)
 
   def test_FromDateAtDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+    for date in [DateTime(2006, 1, day) for day in range(1, 4)]:
       self._makeMovement(quantity=100,
                          start_date=date,
                          stop_date=date+1)
     # both from_date and at_date
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 03),
-                        at_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 3),
+                        at_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 1)
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 02),
-                        at_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 2),
+                        at_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 2)
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2005, 01, 02),
-                        at_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2005, 1, 2),
+                        at_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 2)
     # from other side
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 02),
-                        at_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 2),
+                        at_date=DateTime(2006, 1, 3),
                         section_uid=self.mirror_section.getUid())), 2)
 
   def test_FromDateToDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    for date in [DateTime(2006, 01, day) for day in range(1, 4)]:
+    for date in [DateTime(2006, 1, day) for day in range(1, 4)]:
       self._makeMovement(quantity=100,
                          start_date=date,
                          stop_date=date+1)
     # both from_date and to_date
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 03),
-                        to_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 3),
+                        to_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 0)
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 02),
-                        to_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 2),
+                        to_date=DateTime(2006, 1, 3),
                         section_uid=self.section.getUid())), 1)
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2005, 01, 02),
-                        to_date=DateTime(2007, 01, 02),
+                        from_date=DateTime(2005, 1, 2),
+                        to_date=DateTime(2007, 1, 2),
                         section_uid=self.section.getUid())), 3)
     # from other side
     self.assertEqual(len(getMovementHistoryList(
-                        from_date=DateTime(2006, 01, 02),
-                        to_date=DateTime(2006, 01, 03),
+                        from_date=DateTime(2006, 1, 2),
+                        to_date=DateTime(2006, 1, 3),
                         section_uid=self.mirror_section.getUid())), 1)
 
 
@@ -2093,7 +2093,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
   def test_SortOnDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    date_list = [DateTime(2006, 01, day) for day in range(1, 10)]
+    date_list = [DateTime(2006, 1, day) for day in range(1, 10)]
     reverse_date_list = date_list[:]
     reverse_date_list.reverse()
 
@@ -2202,7 +2202,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     """Test that a running_total_quantity attribute is set on brains
     """
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    date_and_qty_list = [(DateTime(2006, 01, day), day) for day in range(1, 10)]
+    date_and_qty_list = [(DateTime(2006, 1, day), day) for day in range(1, 10)]
     for date, quantity in date_and_qty_list:
       self._makeMovement(stop_date=date, quantity=quantity)
     movement_history_list = getMovementHistoryList(
@@ -2221,7 +2221,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     """Test that a running_total_price attribute is set on brains
     """
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    date_and_price_list = [(DateTime(2006, 01, day), day) for day in range(1, 10)]
+    date_and_price_list = [(DateTime(2006, 1, day), day) for day in range(1, 10)]
     for date, price in date_and_price_list:
       self._makeMovement(stop_date=date, quantity=1, price=price)
     movement_history_list = getMovementHistoryList(
@@ -2241,7 +2241,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     value.
     """
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
-    date_and_qty_list = [(DateTime(2006, 01, day), day) for day in range(1, 10)]
+    date_and_qty_list = [(DateTime(2006, 1, day), day) for day in range(1, 10)]
     for date, quantity in date_and_qty_list:
       self._makeMovement(stop_date=date, price=quantity, quantity=quantity)
     initial_running_total_price=100

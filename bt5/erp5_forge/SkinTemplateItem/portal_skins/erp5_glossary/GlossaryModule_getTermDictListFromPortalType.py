@@ -36,7 +36,7 @@ for portal_type in portal_type_list:
       for x in remove_suffix_list:
         if property_id.endswith(x):
           property_id = property_id[:-len(x)]
-      if id_dict.has_key(property_id) or property_id in skip_id_list:
+      if property_id in id_dict or property_id in skip_id_list:
         continue
       result.append({'reference':property_id,
                      'language':language,

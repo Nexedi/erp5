@@ -78,7 +78,7 @@ class TestTradeReports(ERP5ReportTestCase):
       ('demo_site_A', 'DEMO-SITE-A'),
       ('demo_site_B', 'DEMO-SITE-B'),
     ):
-      if not self.portal_categories['site'].has_key(site_id):
+      if site_id not in self.portal_categories['site']:
         self.portal_categories.site.newContent(
                                   portal_type='Category',
                                   title=site_id,
@@ -87,7 +87,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                   id=site_id)
     # Colour categories
     for colour_id in ('colour1', 'colour2',):
-      if not self.portal_categories['colour'].has_key(colour_id):
+      if colour_id not in self.portal_categories['colour']:
         self.portal_categories.colour.newContent(
                                   portal_type='Category',
                                   title=colour_id,
@@ -96,7 +96,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     # create group categories
     for group_id in ('g1', 'g2', 'g3'):
-      if not self.portal_categories['group'].has_key(group_id):
+      if group_id not in self.portal_categories['group']:
         self.portal_categories.group.newContent(
                                   portal_type='Category',
                                   title=group_id,
@@ -105,7 +105,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     # create use categories
     for use_id in ('u1', 'u2'):
-      if not self.portal_categories['use'].has_key(use_id):
+      if use_id not in self.portal_categories['use']:
         self.portal_categories.use.newContent(
             portal_type='Category',
             title=use_id,
@@ -113,7 +113,7 @@ class TestTradeReports(ERP5ReportTestCase):
             id=use_id)
 
     # currencies
-    if not self.portal.currency_module.has_key('EUR'):
+    if 'EUR' not in self.portal.currency_module:
       self.portal.currency_module.newContent(
         portal_type='Currency',
         id='EUR',
@@ -122,7 +122,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     # product line
     for product_line in ('product_line_a','product_line_b'):
-      if not self.portal_categories.product_line.has_key(product_line):
+      if product_line not in self.portal_categories.product_line:
         self.portal_categories.product_line.newContent(
           portal_type='Category',
           title=product_line,
@@ -131,7 +131,7 @@ class TestTradeReports(ERP5ReportTestCase):
         )
 
     # create organisations (with no organisation member of g3)
-    if not self.organisation_module.has_key('Organisation_1'):
+    if 'Organisation_1' not in self.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
@@ -145,7 +145,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               default_address_street_address='1 Organisation Street',
                               default_address_zip_code='111',
                               default_address_city='City', )
-    if not self.organisation_module.has_key('Organisation_2'):
+    if 'Organisation_2' not in self.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
@@ -154,7 +154,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               group='g2',
                               site='demo_site_B')
     # no group no site
-    if not self.organisation_module.has_key('Organisation_3'):
+    if 'Organisation_3' not in self.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_3',
@@ -162,12 +162,12 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_3',)
 
     # create unit categories
-    if not self.portal_categories.quantity_unit.has_key('mass'):
+    if 'mass' not in self.portal_categories.quantity_unit:
       self.portal_categories.quantity_unit.newContent(
           portal_type='Category',
           id='mass')
     for unit_id in ('kg', 'g',):
-      if not self.portal_categories.quantity_unit.mass.has_key(unit_id):
+      if unit_id not in self.portal_categories.quantity_unit.mass:
         self.portal_categories.quantity_unit.mass.newContent(
                                   portal_type='Category',
                                   title=unit_id.title(),
@@ -175,7 +175,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                   id=unit_id)
 
     # and corresponding unit conversion group
-    if not self.portal.quantity_unit_conversion_module.has_key('mass_conversion_group'):
+    if 'mass_conversion_group' not in self.portal.quantity_unit_conversion_module:
       self.portal.quantity_unit_conversion_module.newContent(
           portal_type='Quantity Unit Conversion Group',
           id='mass_conversion_group',
@@ -216,7 +216,7 @@ class TestTradeReports(ERP5ReportTestCase):
         variation_base_category_list=['colour'],
         colour_list=['colour1', 'colour2'],
     )
-    if not self.portal.service_module.has_key('service_a'):
+    if 'service_a' not in self.portal.service_module:
       self.portal.service_module.newContent(
           portal_type='Service',
           id='service_a',
