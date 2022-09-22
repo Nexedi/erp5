@@ -64,9 +64,11 @@ var GameManager = /** @class */ (function () {
     return gadget._init();
   };
 
-  GameManager.prototype.event = function () {
+  GameManager.prototype.event = function (event) {
     var _this = this;
     //TODO
+    console.log("[GM] Event. this._camera:", this._camera);
+    console.log("[GM] Event. event:", event);
   };
 
   GameManager.prototype.update = function () {
@@ -270,6 +272,7 @@ var GameManager = /** @class */ (function () {
     camera.wheelPrecision = 10;
     camera.attachControl(this._scene.getEngine().getRenderingCanvas());
     camera.maxz = 40000;
+    this._camera = camera;
     // Render loop
     this._engine.runRenderLoop(function () {
       _this._scene.render();

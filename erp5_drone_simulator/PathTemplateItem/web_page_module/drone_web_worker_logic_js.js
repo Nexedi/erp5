@@ -226,8 +226,8 @@ var runGame, updateGame, eventGame, game_manager_instance;
     return game_manager_instance.update();
   };
 
-  eventGame = function () {
-    return game_manager_instance.event();
+  eventGame = function (event) {
+    return game_manager_instance.event(event);
   };
 
   /*// Resize canvas on window resize

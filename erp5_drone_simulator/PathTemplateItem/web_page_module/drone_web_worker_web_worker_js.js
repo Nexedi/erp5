@@ -39,12 +39,13 @@ document = {
 class HTMLElement {}
 
 var handlers = new Map();
+var original_canvas;
 
 //var onmessage = onMainMessage;
 
 function onMainMessage(msg) {
   //TODO drop onMainMessage and directly do case in worker.onmessage = function
-  console.log("onMainMessage!");
+  console.log("[WEBWORKER] got an event! of type:", msg.data.type);
 	switch (msg.data.type) {
 		case 'event':
 			handleEvent(msg.data);
@@ -72,20 +73,21 @@ function bindHandler(targetName, eventName, fn, opt) {
 
 function handleEvent(event) {
 	const handlerId = event.targetName + event.eventName;
-  console.log("handleEvent. handlerId:", handlerId);
+  console.log("[WEBWORKER] handleEvent. targer-event:", handlerId);
+  console.log("[WEBWORKER] handlers:", handlers);
 	event.eventClone.preventDefault = noop;
 	// Cameras/Inputs/freeCameraMouseInput.ts:79
-	event.eventClone.target = self.canvas;
+	event.eventClone.target = original_canvas;
 	// Just in case
 	if (!handlers.has(handlerId)) {
 		throw new Error('Unknown handlerId: ' + handlerId);
 	}
 	handlers.get(handlerId)(event.eventClone);
-
 }
 
 function prepareCanvas(data) {
 	const canvas = data.canvas;
+  original_canvas = canvas;
 	//self.canvas = canvas;
 	canvas.clientWidth = data.width;
 	canvas.clientHeight = data.height;
@@ -141,7 +143,6 @@ function noop() { console.log("noop!");}
       console.log('Worker: Message received from main script', evt.data);
       //offscreen_canvas = evt.data.canvas;
       offscreen_canvas = prepareCanvas(evt.data);
-      console.log("offscreen_canvas:", offscreen_canvas);
       /*offscreen_canvas.addEventListener = function (event, fn, opt) {
         bindHandler('canvas', event, fn, opt);
       };*/
@@ -187,11 +188,10 @@ function noop() { console.log("noop!");}
     if (type === 'mousewheel') {
       //console.log("[TODO] mousewheel event in WW!!");
       //offscreen_canvas.trigger("mousewheel");
-      return eventGame();
+      return eventGame(evt.data.eventClone);
       return;
     }
     if (type === 'event') {
-      console.log("WW event!");
       //offscreen_canvas.trigger("mousewheel");
       onMainMessage(evt);
       return;
