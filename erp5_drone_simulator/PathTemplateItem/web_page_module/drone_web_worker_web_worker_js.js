@@ -4,6 +4,89 @@
          DroneGameManager*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 
+
+
+
+
+/*************************************************************************/
+/**************************** ROQUE WW EVENTS ****************************/
+/*************************************************************************/
+
+console.log("WITH EVENTS");
+
+
+self.window = {
+	addEventListener: function (event, fn, opt) {
+		bindHandler('window', event, fn, opt);
+	},
+	setTimeout: self.setTimeout.bind(self),
+	PointerEvent: true
+};
+
+self.document = {
+	addEventListener: function (event, fn, opt) {
+		bindHandler('document', event, fn, opt);
+	},
+	// Uses to detect wheel event like at src/Inputs/scene.inputManager.ts:797
+	createElement: function () {
+		return {onwheel: true};
+	},
+	defaultView: self.window,
+};
+
+importScripts('babylon.js', 'babylon.gui.js');
+importScripts('rsvp.js',
+              'GameManager.js',
+              'DroneManager.js',
+              'MapManager.js',
+              'ObstacleManager.js',
+              'DroneAaileFixeAPI.js',
+              'DroneLogAPI.js',
+              'DroneAPI.js',
+              'gadget_erp5_page_game_logic.js');
+
+function mainToWorker(evt) {
+  switch (evt.data.type) {
+    case 'start':
+      var offscreen_canvas = prepareCanvas(evt.data);
+      RSVP = window.RSVP;
+      return new RSVP.Queue()
+        .push(function () {
+          return runGame(offscreen_canvas, evt.data.script,
+                         evt.data.game_parameters_json, evt.data.log);
+        })
+        .push(function () {
+          return postMessage({'type': 'started'});
+        });
+      break;
+    case 'update':
+      return new RSVP.Queue()
+        .push(function () {
+          return updateGame();
+        })
+        .push(function () {
+          return postMessage({'type': 'updated'});
+        });
+      break;
+    case 'event':
+      handleEvent(evt.data);
+      break;
+    default:
+      throw new Error('Unsupported message ' + JSON.stringify(evt.data));
+  }
+};
+
+/*****************************************************************************/
+
+
+
+/************************************************************************/
+/***************************** WORKING GAME *****************************/
+/************************************************************************/
+
+
+/*console.log("WORKING GAME WITH NO EVENTS");
+
 var document = {
   addEventListener: function () {},
   createElement: function () {}
@@ -79,7 +162,11 @@ function mainToWorker(evt) {
     default:
       throw new Error('Unsupported message ' + JSON.stringify(evt.data));
   }
-};
+};*/
+
+/*****************************************************************************/
+
+
 
 // Doesn't work without it
 class HTMLElement {}
