@@ -54,7 +54,11 @@
         language_list,
         document_list,
         child_list,
-        i;
+        i,
+        web_page_element,
+        element_list,
+        element,
+        feed_url;
 
       if (modification_dict.hasOwnProperty('page_title')) {
         document.title = gadget.state.page_title;
@@ -72,10 +76,29 @@
             html: gadget.state.form_html_content
           });
         } else {
+
           // Try to find the Web Page content only
+          web_page_element = domsugar('div', {html: gadget.state.html_content})
+                                     .querySelector('div.input').firstChild;
+
+    // Improve img rendering by default to reduce size
+    element_list = web_page_element.querySelectorAll('img');
+    for (i = 0; i < element_list.length; i += 1) {
+      element = element_list[i];
+      if (!element.getAttribute('loading')) {
+        element.loading = 'lazy';
+      }
+      feed_url = element.getAttribute('src');
+      if ((feed_url) &&
+          (feed_url.indexOf('/') === -1)) {
+        feed_url = feed_url.split('?')[0] +
+                   '?format=jpg&display=small&quality=90';
+        element.src = feed_url;
+      }
+    }
+
           domsugar(gadget.element.querySelector('main'), {
-            html: domsugar('div', {html: gadget.state.html_content})
-                    .querySelector('div.input').firstChild.innerHTML
+            html: web_page_element.innerHTML
           });
         }
       }
