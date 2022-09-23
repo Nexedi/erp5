@@ -3,7 +3,6 @@
          Worker, importScripts,
          DroneGameManager*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-// game.js
 
 var document = {
   addEventListener: function () {},
@@ -14,9 +13,6 @@ var document = {
   importScripts('babylon.js', 'babylon.gui.js');
 }(this));
 
-/*var window = {
-  addEventListener: function () {}
-};*/
 var window = {
   addEventListener: function (event, fn, opt) {
     bindHandler('window', event, fn, opt);
@@ -28,40 +24,84 @@ document = {
   addEventListener: function (event, fn, opt) {
     bindHandler('document', event, fn, opt);
   },
-	// Uses to detect wheel event like at src/Inputs/scene.inputManager.ts:797
   createElement: function () {
     return {onwheel: true};
   },
   defaultView: window
 };
 
-// Not works without it
+function mainToWorker(evt) {
+  switch (evt.data.type) {
+    case 'start':
+      var offscreen_canvas = prepareCanvas(evt.data);
+      //override createElement as it is needed by babylon to create a canvas
+      document.createElement = function (type) {
+        if (type === 'canvas') { return offscreen_canvas; }
+        return { onwheel: true };
+      }
+      //TODO evt.data.logic_url should contain the list of scripts
+      importScripts(
+                    'rsvp.js',
+                    'GameManager.js',
+                    'DroneManager.js',
+                    'MapManager.js',
+                    'ObstacleManager.js',
+                    'DroneAaileFixeAPI.js',
+                    'DroneLogAPI.js',
+                    'DroneAPI.js',
+                    evt.data.logic_url);
+      RSVP = window.RSVP;
+      window = undefined;
+      return new RSVP.Queue()
+        .push(function () {
+          return runGame(offscreen_canvas, evt.data.script,
+                         evt.data.game_parameters_json, evt.data.log);
+        })
+        .push(function () {
+          return postMessage({'type': 'started'});
+        });
+      break;
+    case 'update':
+      return new RSVP.Queue()
+        .push(function () {
+          return updateGame();
+        })
+        .push(function () {
+          return postMessage({'type': 'updated'});
+        });
+      break;
+    case 'event':
+      handleEvent(evt.data);
+      break;
+    //case 'mousewheel':
+    //  eventGame(evt.data.eventClone);
+    //  break;
+    default:
+      throw new Error('Unsupported message ' + JSON.stringify(evt.data));
+  }
+};
+
+// Doesn't work without it
 class HTMLElement {}
 
-var handlers = new Map();
-var original_canvas;
+self.handlers = new Map();
+self.canvas = null;
 
-//var onmessage = onMainMessage;
-
-function onMainMessage(msg) {
-  //TODO drop onMainMessage and directly do case in worker.onmessage = function
-  console.log("[WEBWORKER] got an event! of type:", msg.data.type);
-	switch (msg.data.type) {
-		case 'event':
-			handleEvent(msg.data);
-			break;
-		case 'resize':
-			onResize(msg.data.rect);
-			break;
-		case 'init':
-			init(msg.data);
-			break;
-	}
-}
+// getBoundingInfo()
+const rect = {
+	top: 0,
+	left: 0,
+	right: 0,
+	bottom: 0,
+	x: 0,
+	y: 0,
+	height: 0,
+	width: 0,
+};
 
 function bindHandler(targetName, eventName, fn, opt) {
-  console.log("bindHandler. eventName:", eventName);
 	const handlerId = targetName + eventName;
+  console.log("[WEBWORKER] bindHandler. handlerId:", handlerId);
 	handlers.set(handlerId, fn);
 	postMessage({
 		type: 'event',
@@ -73,12 +113,9 @@ function bindHandler(targetName, eventName, fn, opt) {
 
 function handleEvent(event) {
 	const handlerId = event.targetName + event.eventName;
-  console.log("[WEBWORKER] handleEvent. targer-event:", handlerId);
-  console.log("[WEBWORKER] handlers:", handlers);
+  console.log("[WEBWORKER] handlerId:", handlerId);
 	event.eventClone.preventDefault = noop;
-	// Cameras/Inputs/freeCameraMouseInput.ts:79
-	event.eventClone.target = original_canvas;
-	// Just in case
+	event.eventClone.target = self.canvas;
 	if (!handlers.has(handlerId)) {
 		throw new Error('Unknown handlerId: ' + handlerId);
 	}
@@ -87,18 +124,13 @@ function handleEvent(event) {
 
 function prepareCanvas(data) {
 	const canvas = data.canvas;
-  original_canvas = canvas;
-	//self.canvas = canvas;
+  self.canvas = canvas;
 	canvas.clientWidth = data.width;
 	canvas.clientHeight = data.height;
 	canvas.width = data.width;
 	canvas.height = data.height;
-  //This seems to be needed for resize
-	/*rect.right = rect.width = data.width;
+	rect.right = rect.width = data.width;
 	rect.bottom = rect.height = data.height;
-  canvas.getBoundingClientRect = function () {
-		return rect;
-	};*/
 	canvas.setAttribute = function (name, value) {
 		postMessage({
 			type: 'canvasMethod',
@@ -108,6 +140,9 @@ function prepareCanvas(data) {
 	};
 	canvas.addEventListener = function (event, fn, opt) {
 		bindHandler('canvas', event, fn, opt);
+	};
+  canvas.getBoundingClientRect = function () {
+		return rect;
 	};
 	canvas.focus = function () {
 		postMessage({
@@ -130,77 +165,11 @@ function prepareCanvas(data) {
 	return canvas;
 }
 
-function noop() { console.log("noop!");}
+function noop() { console.log("noop!"); }
 
-// game.js
 (function (worker) {
-  console.log('worker loading');
-  var offscreen_canvas;
-  worker.onmessage = function (evt) {
-    //console.log('Worker: Message received from main script', evt.data);
-    var type = evt.data.type;
-    if (type === 'start') {
-      console.log('Worker: Message received from main script', evt.data);
-      //offscreen_canvas = evt.data.canvas;
-      offscreen_canvas = prepareCanvas(evt.data);
-      /*offscreen_canvas.addEventListener = function (event, fn, opt) {
-        bindHandler('canvas', event, fn, opt);
-      };*/
-      //override createElement as it is needed by babylon to create a canvas
-      document.createElement = function (type) {
-        if (type === 'canvas') {
-          return offscreen_canvas;//evt.data.canvas;
-        }
-        return {onwheel: true};
-      }
-      //TODO evt.data.logic_url should contain the list of scripts
-      importScripts(
-                    'rsvp.js',
-                    'GameManager.js',
-                    'DroneManager.js',
-                    'MapManager.js',
-                    'ObstacleManager.js',
-                    'DroneAaileFixeAPI.js',
-                    'DroneLogAPI.js',
-                    'DroneAPI.js',
-                    evt.data.logic_url);
-      RSVP = window.RSVP;
-      window = undefined;
-      return new RSVP.Queue()
-        .push(function () {
-          //return runGame(evt.data.canvas, evt.data.script,
-          return runGame(offscreen_canvas, evt.data.script,
-                         evt.data.game_parameters_json, evt.data.log);
-        })
-        .push(function () {
-          return worker.postMessage({'type': 'started'});
-        });
-    }
-    if (type === 'update') {
-      return new RSVP.Queue()
-        .push(function () {
-          return updateGame();
-        })
-        .push(function () {
-          return worker.postMessage({'type': 'updated'});
-        });
-    }
-    if (type === 'mousewheel') {
-      //console.log("[TODO] mousewheel event in WW!!");
-      //offscreen_canvas.trigger("mousewheel");
-      return eventGame(evt.data.eventClone);
-      return;
-    }
-    if (type === 'event') {
-      //offscreen_canvas.trigger("mousewheel");
-      onMainMessage(evt);
-      return;
-    }
-    throw new Error('Unsupported message ' + JSON.stringify(evt.data));
-    //self.postMessage('nutnut', evt);
-  };
+  worker.onmessage = mainToWorker;
   worker.postMessage({
     'type': 'loaded'
   });
-  //throw new Error('argh');
 }(this));
