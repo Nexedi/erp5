@@ -27,7 +27,7 @@ class TestField:
 class ValidatorTestCase(unittest.TestCase):
     def assertValidatorRaises(self, exception, error_key, f, *args, **kw):
         try:
-            apply(f, args, kw)
+            f(*args, **kw)
         except exception as e:
             if hasattr(e, 'error_key') and e.error_key != error_key:
                 self.fail('Got wrong error. Expected %s received %s' %

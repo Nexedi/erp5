@@ -75,18 +75,20 @@ class Python3StyleTest(ERP5TypeTestCase):
     if error:
         self.fail(error)
 
-  def test_raiseFixApplied(self):
-    self._testFixer('raise')
-
-  def test_importFixApplied(self):
-    self._testFixer('import')
+  def test_applyFixApplied(self):
+    self._testFixer('apply')
 
   def test_hasKeyFixApplied(self):
     self._testFixer('has_key')
 
+  def test_importFixApplied(self):
+    self._testFixer('import')
+
   def test_numliteralsFixApplied(self):
     self._testFixer('numliterals')
 
+  def test_raiseFixApplied(self):
+    self._testFixer('raise')
 
 def test_suite():
   suite = unittest.TestSuite()
