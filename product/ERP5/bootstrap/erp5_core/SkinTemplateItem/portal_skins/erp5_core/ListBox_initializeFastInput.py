@@ -19,7 +19,7 @@ if hasattr(request, listbox_id):
   # initialize the listbox 
   listbox=request[listbox_id]
 
-  keys_list = sorted(listbox.keys(), key=int)
+  keys_list = sorted(listbox, key=int)
 
   if keys_list != []:
     first_empty_line_id = int(keys_list[-1])+1

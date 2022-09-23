@@ -536,7 +536,7 @@ class BaseTemplateItem(Implicit, Persistent):
     # if you choose remove, the object and all its subobjects will be removed
     # even if you choose backup or keep for subobjects
     # it is same behaviour for backup_and_remove, all we be save
-    for path in sorted(self._objects.keys()):
+    for path in sorted(self._objects):
       if path in remove_dict:
         action = remove_dict[path]
         if action == 'save_and_remove':
@@ -1193,7 +1193,7 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def _getObjectKeyList(self):
     # sort to add objects before their subobjects
-    return sorted(self._objects.keys())
+    return sorted(self._objects)
 
   def unindexBrokenObject(self, item_path):
     """
@@ -1446,7 +1446,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               #remove previous owners
               local_role_dict = obj.__ac_local_roles__
               removable_role_key_list = []
-              for key, value in local_role_dict.items():
+              for key, value in six.iteritems(local_role_dict):
                 if 'Owner' in value:
                   value.remove('Owner')
                 if len(value) == 0:
@@ -1985,7 +1985,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
     # as PathTemplateItem.install
     kw['object_to_update'] = {
         path: action
-        for (path, action) in ensure_list(kw['object_to_update'].items())
+        for (path, action) in six.iteritems(kw['object_to_update'])
         if path.split('/')[:-1] == ['portal_categories'] or path in self._objects
     }
     return super(CategoryTemplateItem, self).install(context, trashbin, **kw)
@@ -2075,11 +2075,11 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<registered_skin_selection>'
-    for key in sorted(self._objects.keys()):
+    for key, value in sorted(six.iteritems(self._objects)):
       xml_data += '\n <skin_folder_selection>'
       xml_data += '\n  <skin_folder>%s</skin_folder>' % key
       xml_data += '\n  <skin_selection>%s</skin_selection>' \
-                      % ','.join(sorted(self._objects[key]))
+                      % ','.join(sorted(value))
       xml_data += '\n </skin_folder_selection>'
     xml_data += '\n</registered_skin_selection>'
     return xml_data
@@ -2551,11 +2551,11 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<workflow_chain>'
-    for key in sorted(self._objects.keys()):
+    for key, value in sorted(six.iteritems(self._objects)):
       xml_data += '\n <chain>'
       xml_data += '\n  <type>%s</type>' %(key,)
       xml_data += '\n  <workflow>%s</workflow>' %(
-        self._chain_string_separator.join(sorted(self._objects[key])))
+        self._chain_string_separator.join(sorted(value)))
       xml_data += '\n </chain>'
     xml_data += '\n</workflow_chain>'
     return xml_data
@@ -2765,11 +2765,10 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<%s>' %(self.xml_tag,)
-    for key in sorted(self._objects.keys()):
+    for key, value in sorted(six.iteritems(self._objects)):
       id_value = key.replace('%s/' % self.class_property, '')
-      allowed_item_list = sorted(self._objects[key])
       xml_data += '\n <portal_type id="%s">' % (id_value)
-      for allowed_item in allowed_item_list:
+      for allowed_item in sorted(value):
         xml_data += '\n  <item>%s</item>' %(allowed_item,)
       xml_data += '\n </portal_type>'
     xml_data += '\n</%s>' %(self.xml_tag,)
@@ -2996,7 +2995,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     method_id = obj.id
     xml_data = '<catalog_method>'
     if method_id in self._method_properties:
-      for method_property, value in self._method_properties[method_id].items():
+      for method_property, value in six.iteritems(self._method_properties[method_id]):
         xml_data += '\n <item key="%s" type="int">' %(method_property,)
         xml_data += '\n  <value>%s</value>' %(value,)
         xml_data += '\n </item>'
@@ -3047,9 +3046,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       script_class = getattr(erp5.portal_type, 'Python Script')
 
       portal = self.getPortalObject()
-      # Will be modifying dict, so better to use .items()
-      # XXX: In python3 it should be .copy.items().
-      for path, obj in ensure_list(self._objects.items()):
+      for path, obj in six.iteritems(self._objects):
         method = self.unrestrictedResolveValue(portal, path)
         method_id = path.split('/')[-1]
         if method.meta_type == 'Z SQL Method':
@@ -3060,7 +3057,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         self._objects[path] = new_obj
 
     if force: # get all objects
-      values = ensure_list(self._objects.values())
+      values = six.itervalues(self._objects)
     else: # get only selected object
       for key, value in six.iteritems(self._objects):
         if key in update_dict or force:
@@ -3153,7 +3150,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     object_path = kw.get('object_path', None)
     # get required values
     if object_path is None:
-      values = ensure_list(self._objects.values())
+      values = six.itervalues(self._objects)
     else:
       try:
         value = self._objects[object_path]
@@ -3653,7 +3650,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     xml_data = '<site_property>'
-    for path in sorted(self._objects.keys()):
+    for path in sorted(self._objects):
       xml_data += self.generateXml(path)
     xml_data += '\n</site_property>'
     bta.addObject(xml_data, name='properties', path=self.__class__.__name__)
@@ -3677,12 +3674,11 @@ class ModuleTemplateItem(BaseTemplateItem):
   def generateXml(self, path=None):
     mapping = self._objects[path]
     xml_data = ['<module>']
-    for key in sorted(mapping):
+    for key, value in sorted(six.iteritems(mapping)):
       if key == 'permission_list':
         # separe permission dict into xml
         xml_data.append(' <%s>' % (key, ))
-        permission_list = mapping[key]
-        for perm in permission_list:
+        for perm in value:
           # the type of the permission defined if we use acquired or not
           if isinstance(perm[1], list):
             ptype = "list"
@@ -3703,7 +3699,7 @@ class ModuleTemplateItem(BaseTemplateItem):
           xml_data.append('  </permission>')
         xml_data.append(' </%s>' % (key, ))
       elif key == 'category_list':
-        category_list = mapping[key]
+        category_list = value
         if not category_list:
           continue
         xml_data.append(' <%s>' % (key, ))
@@ -3719,7 +3715,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     if len(self._objects) == 0:
       return
     path = self.__class__.__name__
-    for key in sorted(self._objects.keys()):
+    for key in sorted(self._objects):
       # export modules one by one
       xml_data = self.generateXml(path=key)
       bta.addObject(xml_data, name=key, path=path)
@@ -4629,7 +4625,7 @@ class CatalogUniqueKeyTemplateItemBase(CatalogKeyTemplateItemBase):
                 for key in key_list)
 
   def _getListFromKeyMap(self, key_map):
-    return [" | ".join(item) for item in sorted(key_map.items())]
+    return [" | ".join(item) for item in sorted(six.iteritems(key_map))]
 
   def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
     # treat key lists as dictionaries, parse and update:
@@ -4784,7 +4780,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       localizer = context.getPortalObject().Localizer
     update_dict = kw.get('object_to_update', {})
     force = kw.get('force')
-    for key in sorted(self._objects.keys()):
+    for key, value in sorted(six.iteritems(self._objects)):
       if key in update_dict or force:
         if not force:
           action = update_dict[key]
@@ -4793,7 +4789,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         lang, catalog = self._splitKey(key)
 
         if catalog is None:
-          name = self._objects[key]
+          name = value
           for lang_dict in localizer.get_all_languages():
             if lang_dict['code'] == lang:
               # When the Localizer has the language as a user-defined
@@ -4810,7 +4806,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
           if lang not in localizer.get_languages():
             localizer.manage_addLanguage(lang)
         else:
-          po = self._objects[key]
+          po = value
           if lang not in localizer.get_languages():
             localizer.manage_addLanguage(lang)
           self._importCatalogLanguage(localizer, catalog, lang, po)
@@ -4904,7 +4900,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     xml_data = '<local_roles_item>'
     # local roles
     xml_data += '\n <local_roles>'
-    for user_id, role_list in sorted(local_roles_dict.items()):
+    for user_id, role_list in sorted(six.iteritems(local_roles_dict)):
       if 'Owner' in role_list:
         # We don't export Owner role as it set automatically when installing business template.
         role_list.remove('Owner')
@@ -4919,7 +4915,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       # local roles group id dict (not included by default to be stable with
       # old bts)
       xml_data += '\n <local_role_group_ids>'
-      for local_role_group_id, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
+      for local_role_group_id, local_roles_group_id_list in sorted(six.iteritems(local_roles_group_id_dict)):
         xml_data += "\n  <local_role_group_id id='%s'>" % escape(local_role_group_id)
         for principal, role in sorted(local_roles_group_id_list):
           xml_data += "\n    <principal id='%s'>%s</principal>" % \
@@ -4984,7 +4980,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
         # We ignore the owner defined in local_roles_dict and set it to the user installing that business template.
         local_roles_dict = deepcopy(local_roles_dict)
-        for user_id, group_list in list(local_roles_dict.items()):
+        for user_id, group_list in ensure_list(local_roles_dict.items()):
           if group_list == ["Owner"]:
             del local_roles_dict[user_id]
         current_user = getSecurityManager().getUser()
