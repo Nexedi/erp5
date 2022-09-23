@@ -229,33 +229,18 @@
       url_attribute_list = ['src', 'href', 'srcset', 'action'],
       url_attribute,
       feed_url = null,
-      new_element;
+      new_element,
+      new_element_2;
 
-    //body_element = body_element.content.cloneNode(true);
-    // Improve img rendering by default to reduce size
-    element_list = body_element.querySelectorAll('noscript');
-    for (i = 0; i < element_list.length; i += 1) {
-      element = element_list[i];
-      new_element = document.createElement('div');
-      new_element.innerHTML = element.textContent;
-      element.parentNode.replaceChild(new_element, element);
+    // Move the content of the noscript tag
+    element = body_element.querySelector('main > noscript');
+    new_element = document.createElement('div');
+    new_element.innerHTML = element.textContent;
+    new_element_2 = document.createDocumentFragment();
+    while (new_element.firstChild) {
+      new_element_2.appendChild(new_element.firstChild);
     }
-
-    // Improve img rendering by default to reduce size
-    element_list = body_element.querySelectorAll('img');
-    for (i = 0; i < element_list.length; i += 1) {
-      element = element_list[i];
-      if (!element.getAttribute('loading')) {
-        element.loading = 'lazy';
-      }
-      feed_url = element.getAttribute('src');
-      if ((feed_url) &&
-          (feed_url.indexOf('/') === -1)) {
-        feed_url = feed_url.split('?')[0] +
-                   '?format=jpg&display=small&quality=90';
-        element.src = feed_url;
-      }
-    }
+    element.parentNode.replaceChild(new_element_2, element);
 
     if (base_uri !== undefined) {
       // Rewrite relative url (copied from renderjs)
