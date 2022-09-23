@@ -229,7 +229,11 @@ var GameManager = /** @class */ (function () {
     this._dispose();
     var canvas = this._canvas;
     // Create the Babylon engine
-    this._engine = new BABYLON.Engine(canvas, true);
+    this._engine = new BABYLON.Engine(canvas, true, {
+      stencil: true,
+      disableWebGL2Support: false,
+      audioEngine: false
+    });
     this._engine.enableOfflineSupport = false;
     this._scene = new BABYLON.Scene(this._engine);
     this._scene.clearColor = new BABYLON.Color4(88/255,171/255,217/255,255/255);
@@ -399,6 +403,7 @@ var GameManager = /** @class */ (function () {
       })
       .push(function () {
         //The loop is handle from the outside (webworker)
+        //_this._scene.registerBeforeRender(function () { console.log("loop"); });
         /*_this._scene.registerBeforeRender(function () {
           // To increase the game speed, increase this value
           _this._max_step_animation_frame = 10;
