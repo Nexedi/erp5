@@ -1,6 +1,7 @@
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import ensure_list
+import six
 Base_translateString = context.Base_translateString
 
 def getModifiedObjectList(context):
@@ -21,7 +22,6 @@ getModifiedObjectList = CachingMethod(getModifiedObjectList,
                               cache_id_generator=cache_id_generator)
 
 modified_object_list = getModifiedObjectList(context)
-keys = ensure_list(modified_object_list.keys())
 
 no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document',
                   'PropertySheet', 'Extension', 'Test', 'Product', 'Role',
@@ -40,10 +40,9 @@ backup_title = Base_translateString('Backup And Upgrade')
 remove_title = Base_translateString('Remove')
 save_and_remove_title = Base_translateString('Backup And Remove')
 
-i = 0
 object_list = []
-for object_id in sorted(keys):
-  object_state, object_class = modified_object_list[object_id]
+for enumerate, (object_id, value) in enumerate(sorted(six.iteritems(modified_object_list))):
+  object_state, object_class = value
   line = newTempBase(context, 'tmp_install_%s' %(str(i)))
   if object_state == 'New':
     choice_item_list=[[install_title, 'install']]
@@ -66,7 +65,6 @@ for object_id in sorted(keys):
                 choice_item_list=choice_item_list)
   line.setUid('new_%s' % str(object_id))
   object_list.append(line)
-  i += 1                                  
 
 object_list.sort(key=lambda x:(x.object_class, x.object_state))
 return object_list

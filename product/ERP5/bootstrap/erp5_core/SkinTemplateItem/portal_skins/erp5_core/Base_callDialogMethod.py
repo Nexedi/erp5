@@ -2,6 +2,7 @@
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
 """
+import six
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
@@ -131,9 +132,8 @@ if len(listbox_id_list):
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
-    listbox_keys = listbox.keys()
-    for key in sorted(listbox_keys):
-      listbox_line = listbox[key]
+    for key, value in sorted(six.iteritems(listbox)):
+      listbox_line = value
       listbox_line['listbox_key'] = key
       listbox_line_list.append(listbox_line)
     listbox_line_list = tuple(listbox_line_list)

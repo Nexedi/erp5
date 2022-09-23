@@ -644,10 +644,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             return x
 
         # Generate sorted msgids to simplify diffs
-        dkeys = d.keys()
-        for k in sorted(dkeys):
+        for k, v in sorted(six.iteritems(d)):
             r.append('msgid "%s"' % backslashescape(k))
-            v = d[k]
             r.append('msgstr "%s"' % backslashescape(v))
             r.append('')
 

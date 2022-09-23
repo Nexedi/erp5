@@ -35,16 +35,12 @@ if p.portal_templates.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:
 else:
   modified_object_list = getModifiedObjectList(bt1, bt2)
 
-keys = modified_object_list.keys()
-
-i = 0
 object_list = []
-for object_id in sorted(keys):
-  object_state, object_class = modified_object_list[object_id]
+for i, (object_id, value) in enumerate(sorted(six.iteritems(modified_object_list))):
+  object_state, object_class = value
   line = newTempBase(context, 'tmp_install_%s' %(str(i)))
   line.edit(object_id=object_id, object_state=object_state, object_class=object_class, bt1=bt1.getId(), bt2=bt2.getId())
   line.setUid('new_%s' % object_id)
   object_list.append(line)
-  i += 1                                  
 
 return object_list
