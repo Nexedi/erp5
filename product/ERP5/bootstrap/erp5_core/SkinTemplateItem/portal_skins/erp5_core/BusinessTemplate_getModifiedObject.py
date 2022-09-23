@@ -41,7 +41,7 @@ remove_title = Base_translateString('Remove')
 save_and_remove_title = Base_translateString('Backup And Remove')
 
 object_list = []
-for enumerate, (object_id, value) in enumerate(sorted(six.iteritems(modified_object_list))):
+for i, (object_id, value) in enumerate(sorted(six.iteritems(modified_object_list))):
   object_state, object_class = value
   line = newTempBase(context, 'tmp_install_%s' %(str(i)))
   if object_state == 'New':

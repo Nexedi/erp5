@@ -1826,7 +1826,7 @@ class ToolTemplateItem(PathTemplateItem):
     object_dict = super(ToolTemplateItem, self).preinstall(context, installed_item, **kw)
     portal_base = aq_base(context.getPortalObject())
 
-    for path, (action, type_name) in six.iteritems(object_dict):
+    for path, (action, type_name) in ensure_list(object_dict.items()):
       obj = getattr(portal_base, path, None)
       if obj is not None and path in self._legacy_tool_id_list:
         if action == 'New':
@@ -4980,7 +4980,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
         # We ignore the owner defined in local_roles_dict and set it to the user installing that business template.
         local_roles_dict = deepcopy(local_roles_dict)
-        for user_id, group_list in six.iteritems(local_roles_dict):
+        for user_id, group_list in ensure_list(local_roles_dict.items()):
           if group_list == ["Owner"]:
             del local_roles_dict[user_id]
         current_user = getSecurityManager().getUser()
