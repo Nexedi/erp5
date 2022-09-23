@@ -166,28 +166,61 @@
         loop_promise,
         handleWorker('gadget_erp5_page_game_worker.js', function (worker) {
 
-          options.canvas_original.addEventListener("mousewheel", (evt) => {
+          var message_error_handler_defer = RSVP.defer(),
+            update_defer = null;
+
+          worker.onmessage = workerToMain;
+          // Always quit the game when the worker callback usage is over
+          // to prevent trying to call pause
+          //context.quit();
+          return message_error_handler_defer.promise;
+
+          /*options.canvas_original.addEventListener("mousewheel", (evt) => {
             console.log("[MAIN] canvas mousewheel. event:", evt);
             const eventClone = cloneEvent(evt);
             worker.postMessage({
               type: 'mousewheel',
               eventClone: eventClone
             });
-          });
-          /*options.canvas_original.addEventListener("mousewheel", (e) => {
-            const eventClone = cloneEvent(e);
-            console.log("mousewheel event! clone and send to worker");
-            console.log("[MAIN][mousewheel] messaging worker with mousewheel event(cloned)-target:");
-            worker.postMessage({
-              type: 'event',
-              targetName: "canvas",
-              eventName: "mousewheel",
-              eventClone: eventClone,
-            });
           });*/
 
-          var message_error_handler_defer = RSVP.defer(),
-            update_defer = null;
+          function workerToMain(evt) {
+            switch (evt.data.type) {
+              case 'loaded':
+                return worker.postMessage({
+                  type: 'start',
+                  logic_url: options.logic_url,
+                  canvas: options.canvas,
+                  width: options.width,
+                  height: options.height,
+                  script: options.script,
+                  game_parameters_json: options.game_parameters_json,
+                  log: options.log
+                }, [options.canvas]);
+                break;
+              case 'started':
+                console.log('GAME: started');
+                context.unpause();
+                return step();
+                break;
+              case 'updated':
+                return update_defer.resolve('updated');
+                break;
+              case 'event':
+                bindEvent(evt.data);
+                break;
+              case 'canvasMethod':
+                options.canvas_original[evt.data.method](...evt.data.args);
+                break;
+              case 'canvasStyle':
+                options.canvas_original.style[evt.data.name] = evt.data.value;
+                break;
+              default:
+                message_error_handler_defer.reject(
+                  new Error('Unsupported message ' + JSON.stringify(evt.data))
+                );
+            }
+          };
 
           function step() {
             context.loop_promise
@@ -207,7 +240,6 @@
           }
 
           function bindEvent(data) {
-            console.log("[MAIN] bindEvent. data:", data);
             let target;
             switch (data.targetName) {
               case 'window':
@@ -249,56 +281,6 @@
             }
             return eventClone;
           }
-
-          //console.log('GAME: got worker ', worker, options);
-
-          worker.onmessage = function (evt) {
-            //console.log('Message received from worker', evt.data);
-            var type = evt.data.type;
-            if (type === 'loaded') {
-              console.log('GAME: loaded');
-              return worker.postMessage({
-                type: 'start',
-                logic_url: options.logic_url,
-                canvas: options.canvas,
-                width: options.width,
-                height: options.height,
-                script: options.script,
-                game_parameters_json: options.game_parameters_json,
-                log: options.log
-              }, [options.canvas]);
-            }
-            if (type === 'started') {
-              console.log('GAME: started');
-              context.unpause();
-              return step();
-            }
-            if (type === 'updated') {
-              return update_defer.resolve('updated');
-            }
-            if (type === 'event') {
-              console.log("[MAIN] worker.onmessage - type=event. evt.data:", evt.data);
-              bindEvent(evt.data);
-              return;
-            }
-            if (type === 'canvasMethod') {
-              console.log("[MAIN] worker.onmessage - type=canvasMethod. evt.data:", evt.data);
-              options.canvas_original[evt.data.method](...evt.data.args);
-              return;
-            }
-            if (type === 'canvasStyle') {
-              console.log("[MAIN] worker.onmessage - type=canvasStyle. evt.data:", evt.data);
-              options.canvas_original.style[evt.data.name] = evt.data.value;
-              return;
-            }
-            message_error_handler_defer.reject(
-              new Error('Unsupported message ' + JSON.stringify(evt.data))
-            );
-          };
-          // Always quit the game when the worker callback usage is over
-          // to prevent trying to call pause
-          //context.quit();
-          return message_error_handler_defer.promise;
         })
       ]))
         .push(undefined, function (error) {
@@ -314,6 +296,8 @@
 
   window.DroneGameManager = DroneGameManager;
 }(RSVP, requestAnimationFrame, cancelAnimationFrame));
+
+/*********************************************************************************************/
 
 // droneaailefixe.js
 (function () {
