@@ -228,21 +228,32 @@
       j,
       url_attribute_list = ['src', 'href', 'srcset', 'action'],
       url_attribute,
-      feed_url = null;
+      feed_url = null,
+      new_element;
+
+    //body_element = body_element.content.cloneNode(true);
+    // Improve img rendering by default to reduce size
+    element_list = body_element.querySelectorAll('noscript');
+    for (i = 0; i < element_list.length; i += 1) {
+      element = element_list[i];
+      new_element = document.createElement('div');
+      new_element.innerHTML = element.textContent;
+      element.parentNode.replaceChild(new_element, element);
+    }
 
     // Improve img rendering by default to reduce size
     element_list = body_element.querySelectorAll('img');
     for (i = 0; i < element_list.length; i += 1) {
       element = element_list[i];
       if (!element.getAttribute('loading')) {
-        element.setAttribute('loading', 'lazy');
+        element.loading = 'lazy';
       }
       feed_url = element.getAttribute('src');
       if ((feed_url) &&
           (feed_url.indexOf('/') === -1)) {
         feed_url = feed_url.split('?')[0] +
                    '?format=jpg&display=small&quality=90';
-        element.setAttribute('src', feed_url);
+        element.src = feed_url;
       }
     }
 
@@ -410,6 +421,7 @@
       var gadget = this,
         style_gadget,
         body = gadget.element,
+        new_parent,
         style_gadget_url = body.getAttribute("data-nostyle-gadget-url"),
         style_css_url = body.getAttribute("data-nostyle-css-url"),
         parsed_content;
@@ -418,6 +430,15 @@
         // No style configured, use backend only rendering
         return rJS.declareCSS(style_css_url, document.head);
       }
+
+      // XXX detach the element from the DOM, to prevent auto loading of image
+      // Clear the DOM
+    /*
+      new_parent = document.createElement('template');
+      while (body.firstChild) {
+        new_parent.appendChild(body.firstChild);
+      }
+      */
 
       parsed_content = parsePageContent(
         gadget.element,
@@ -432,6 +453,7 @@
       while (body.firstChild) {
         body.firstChild.remove();
       }
+
       return gadget.declareGadget(style_gadget_url, {scope: 'renderer'})
         .push(function (result) {
           style_gadget = result;
