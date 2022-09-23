@@ -230,6 +230,22 @@
       url_attribute,
       feed_url = null;
 
+    // Improve img rendering by default to reduce size
+    element_list = body_element.querySelectorAll('img');
+    for (i = 0; i < element_list.length; i += 1) {
+      element = element_list[i];
+      if (!element.getAttribute('loading')) {
+        element.setAttribute('loading', 'lazy');
+      }
+      feed_url = element.getAttribute('src');
+      if ((feed_url) &&
+          (feed_url.indexOf('/') === -1)) {
+        feed_url = feed_url.split('?')[0] +
+                   '?format=jpg&display=small&quality=90';
+        element.setAttribute('src', feed_url);
+      }
+    }
+
     if (base_uri !== undefined) {
       // Rewrite relative url (copied from renderjs)
       for (j = 0; j < url_attribute_list.length; j += 1) {
