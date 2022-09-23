@@ -233,14 +233,18 @@
       new_element_2;
 
     // Move the content of the noscript tag
-    element = body_element.querySelector('main > noscript');
+    element = body_element.querySelector('main > template');
+    console.log(body_element);
+    console.log(element);
+/*
     new_element = document.createElement('div');
     new_element.innerHTML = element.textContent;
     new_element_2 = document.createDocumentFragment();
     while (new_element.firstChild) {
       new_element_2.appendChild(new_element.firstChild);
     }
-    element.parentNode.replaceChild(new_element_2, element);
+*/
+    element.parentNode.replaceChild(element.content.cloneNode(true), element);
 
     if (base_uri !== undefined) {
       // Rewrite relative url (copied from renderjs)
