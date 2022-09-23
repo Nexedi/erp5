@@ -37,6 +37,9 @@ web_page_content_zh_id = "erp5_web_js_style_test_contentpage_zh"
 web_page_xss_content_en_id = "erp5_web_js_style_test_xss_contentpage_en"
 web_page_xss_content_reference = '<script>alert("xss reference")</script>'
 
+web_page_image_content_en_id = "erp5_web_js_style_test_image_contentpage_en"
+web_page_image_content_reference = 'erp5_web_js_style_test_image_contentpage'
+
 publicate_date = DateTime('2011/12/13 11:22:33 GMT+5')
 
 ### English web page
@@ -167,6 +170,23 @@ web_page = module.newContent(
   version="001",
   text_content="""
 <script>alert("xss content")</script>
+"""
+)
+portal.portal_workflow.doActionFor(web_page, 'publish_action')
+
+### English image web page
+module = portal.getDefaultModule(web_page_portal_type)
+if getattr(module, web_page_image_content_en_id, None) is not None:
+  module.manage_delObjects([web_page_image_content_en_id])
+web_page = module.newContent(
+  portal_type=web_page_portal_type,
+  id=web_page_image_content_en_id,
+  reference=web_page_image_content_reference,
+  contributor_value=contributor,
+  language="en",
+  version="001",
+  text_content="""
+<img loading="lazy" src="erp5_web_js_style_test_big_image?format="></img>
 """
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
