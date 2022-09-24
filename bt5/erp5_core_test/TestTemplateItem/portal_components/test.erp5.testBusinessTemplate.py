@@ -224,7 +224,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
     if os.path.exists(file_path):
       os.remove(file_path)
-    f = file(file_path, 'w')
+    f = open(file_path, 'w')
     f.write(test_data)
     f.close()
     self.assertTrue(os.path.exists(file_path))
@@ -2371,7 +2371,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     file_path = os.path.join(cfg.instancehome, 'PropertySheet', ps_title+'.py')
     if os.path.exists(file_path):
       os.remove(file_path)
-    f = file(file_path, 'w')
+    f = open(file_path, 'w')
     f.write(ps_data)
     f.close()
     self.assertTrue(os.path.exists(file_path))
@@ -2463,7 +2463,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     file_path = os.path.join(cfg.instancehome, 'PropertySheet', ps_title+'.py')
     if os.path.exists(file_path):
       os.remove(file_path)
-    f = file(file_path, 'w')
+    f = open(file_path, 'w')
     f.write(ps_data)
     f.close()
     self.assertTrue(os.path.exists(file_path))
@@ -8036,7 +8036,7 @@ class _LocalTemplateItemMixin:
     file_path = os.path.join(self.document_base_path, self.document_title+'.py')
     if os.path.exists(file_path):
       os.remove(file_path)
-    f = file(file_path, 'w')
+    f = open(file_path, 'w')
     f.write(self.document_data)
     f.close()
     self.assertTrue(os.path.exists(file_path))
@@ -8048,7 +8048,7 @@ class _LocalTemplateItemMixin:
     file_path = os.path.join(self.document_base_path, self.document_title+'.py')
     if os.path.exists(file_path):
       os.remove(file_path)
-    f = file(file_path, 'w')
+    f = open(file_path, 'w')
     f.write(self.document_data_updated)
     f.close()
     self.assertTrue(os.path.exists(file_path))
@@ -8070,12 +8070,12 @@ class _LocalTemplateItemMixin:
 
   def stepCheckDocumentExists(self, sequence=None, **kw):
     self.assertFalse(not os.path.exists(sequence['document_path']))
-    self.assertEqual(file(sequence['document_path']).read(),
+    self.assertEqual(open(sequence['document_path']).read(),
         sequence['document_data'])
 
   def stepCheckUpdatedDocumentExists(self, sequence=None, **kw):
     self.assertFalse(not os.path.exists(sequence['document_path']))
-    self.assertEqual(file(sequence['document_path']).read(),
+    self.assertEqual(open(sequence['document_path']).read(),
         sequence['document_data_updated'])
 
   def stepCheckDocumentRemoved(self, sequence=None, **kw):

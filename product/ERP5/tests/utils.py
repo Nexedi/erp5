@@ -186,4 +186,4 @@ class BusinessTemplateInfoDir(BusinessTemplateInfoBase):
     return fileinfo
 
   def readFileInfo(self, fileinfo):
-    return file(fileinfo).read()
+    return open(fileinfo).read()

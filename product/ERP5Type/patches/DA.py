@@ -35,7 +35,7 @@ def DA_fromFile(self, filename):
   """
     Read the file and update self
   """
-  f = file(filename)
+  f = open(filename)
   s = f.read()
   f.close()
   self.fromText(s)

@@ -262,7 +262,7 @@ class SynchronizationTool(BaseTool):
         filename = from_url[len('file:'):]
         xml = None
         try:
-          stream = file(filename, 'r')
+          stream = open(filename, 'r')
         except IOError:
           # XXX-Aurel : Why raising here make unit tests to fail ?
           # raise ValueError("Impossible to read file %s, error is %s"

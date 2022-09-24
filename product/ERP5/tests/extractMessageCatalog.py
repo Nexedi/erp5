@@ -63,7 +63,7 @@ class ExtractMessageCatalog(TestXHTML):
       messages = dict(getattr(self.portal.Localizer, i)._messages)
       result[i].update(messages)
 
-      f = file('%s.pot' % i, 'w')
+      f = open('%s.pot' % i, 'w')
       for msgid in result[i].keys():
         f.write('msgid "%s"\nmsgstr ""\n\n' % msgid)
 

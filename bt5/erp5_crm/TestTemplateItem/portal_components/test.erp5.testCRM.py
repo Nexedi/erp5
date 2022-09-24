@@ -693,7 +693,7 @@ class TestCRMMailIngestion(BaseTestCRM):
 
   def _readTestData(self, filename):
     """read test data from data directory."""
-    return file(makeFilePath(filename)).read()
+    return open(makeFilePath(filename)).read()
 
   def _ingestMail(self, filename=None, data=None):
     """ingest an email from the mail in data dir named `filename`"""
