@@ -212,8 +212,6 @@ var runGame, updateGame, eventGame, game_manager_instance;
       game_parameters_json.randomSpawn.rightTeam.position.y = destination[1];
       return game_parameters_json;
     }
-
-    console.log('runGame', canvas);
     game_parameters_json = processLog(game_parameters_json, log);
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
@@ -223,11 +221,9 @@ var runGame, updateGame, eventGame, game_manager_instance;
   };
 
   updateGame = function () {
-    return game_manager_instance.update();
-  };
-
-  eventGame = function (event) {
-    return game_manager_instance.event(event);
+    if (game_manager_instance) {
+      return game_manager_instance.update();
+    }
   };
 
   /*// Resize canvas on window resize
