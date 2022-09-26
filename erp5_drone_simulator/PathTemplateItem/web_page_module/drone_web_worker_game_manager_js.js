@@ -230,14 +230,17 @@ var GameManager = /** @class */ (function () {
     var canvas = this._canvas;
     // Create the Babylon engine
     this._engine = new BABYLON.Engine(canvas, true, {
+      //options for event handling
       stencil: true,
       disableWebGL2Support: false,
       audioEngine: false
     });
-    this._engine.enableOfflineSupport = false;
+    //removed for event handling
+    //this._engine.enableOfflineSupport = false;
     this._scene = new BABYLON.Scene(this._engine);
     this._scene.clearColor = new BABYLON.Color4(88/255,171/255,217/255,255/255);
-    this._scene.collisionsEnabled = true;
+    //removed for event handling
+    //this._scene.collisionsEnabled = true;
     // Lights
     var hemi_north = new BABYLON.HemisphericLight(
       "hemiN", new BABYLON.Vector3(1, -1, 1), this._scene);
@@ -274,9 +277,12 @@ var GameManager = /** @class */ (function () {
     camera = new BABYLON.ArcRotateCamera("camera", x_rotation, 1.25, radius,
                                          target, this._scene);
     camera.wheelPrecision = 10;
-    camera.attachControl(this._scene.getEngine().getRenderingCanvas());
+    //changed for event handling
+    //camera.attachControl(this._scene.getEngine().getRenderingCanvas()); //original
+    camera.attachControl(canvas, true);
     camera.maxz = 40000;
     this._camera = camera;
+
     // Render loop
     this._engine.runRenderLoop(function () {
       _this._scene.render();

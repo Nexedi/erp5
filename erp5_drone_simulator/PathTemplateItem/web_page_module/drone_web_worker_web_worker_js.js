@@ -12,9 +12,8 @@
 /**************************** ROQUE WW EVENTS ****************************/
 /*************************************************************************/
 
-/*console.log("WITH EVENTS BUT GAME FAILS");
+console.log("WITH EVENTS");
 
-importScripts('babylon.js', 'babylon.gui.js');
 
 self.window = {
 	addEventListener: function (event, fn, opt) {
@@ -23,16 +22,6 @@ self.window = {
 	setTimeout: self.setTimeout.bind(self),
 	PointerEvent: true
 };
-
-importScripts('rsvp.js',
-              'GameManager.js',
-              'DroneManager.js',
-              'MapManager.js',
-              'ObstacleManager.js',
-              'DroneAaileFixeAPI.js',
-              'DroneLogAPI.js',
-              'DroneAPI.js',
-              'gadget_erp5_page_game_logic.js');
 
 self.document = {
 	addEventListener: function (event, fn, opt) {
@@ -44,6 +33,17 @@ self.document = {
 	},
 	defaultView: self.window,
 };
+
+importScripts('babylon.js', 'babylon.gui.js');
+importScripts('rsvp.js',
+              'GameManager.js',
+              'DroneManager.js',
+              'MapManager.js',
+              'ObstacleManager.js',
+              'DroneAaileFixeAPI.js',
+              'DroneLogAPI.js',
+              'DroneAPI.js',
+              'gadget_erp5_page_game_logic.js');
 
 function mainToWorker(evt) {
   switch (evt.data.type) {
@@ -74,7 +74,7 @@ function mainToWorker(evt) {
     default:
       throw new Error('Unsupported message ' + JSON.stringify(evt.data));
   }
-};*/
+};
 
 /*****************************************************************************/
 
@@ -85,7 +85,7 @@ function mainToWorker(evt) {
 /************************************************************************/
 
 
-console.log("WORKING GAME WITH NO EVENTS");
+/*console.log("WORKING GAME WITH NO EVENTS");
 
 var document = {
   addEventListener: function () {},
@@ -162,7 +162,7 @@ function mainToWorker(evt) {
     default:
       throw new Error('Unsupported message ' + JSON.stringify(evt.data));
   }
-};
+};*/
 
 /*****************************************************************************/
 
