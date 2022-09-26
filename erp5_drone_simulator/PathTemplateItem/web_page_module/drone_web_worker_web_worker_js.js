@@ -12,7 +12,7 @@
 /**************************** ROQUE WW EVENTS ****************************/
 /*************************************************************************/
 
-console.log("WITH EVENTS");
+console.log("WITH EVENTS HANDLING");
 
 
 self.window = {
@@ -200,7 +200,6 @@ function bindHandler(targetName, eventName, fn, opt) {
 
 function handleEvent(event) {
 	const handlerId = event.targetName + event.eventName;
-  console.log("[WEBWORKER] handlerId:", handlerId);
 	event.eventClone.preventDefault = noop;
 	event.eventClone.target = self.canvas;
 	if (!handlers.has(handlerId)) {
@@ -252,7 +251,7 @@ function prepareCanvas(data) {
 	return canvas;
 }
 
-function noop() { console.log("noop!"); }
+function noop() {}
 
 (function (worker) {
   worker.onmessage = mainToWorker;
