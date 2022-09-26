@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -52,11 +49,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -169,7 +163,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
+                      <value> <string>hide</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -195,7 +189,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662555757.05</float>
+                              <float>1664290777.68</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -204,7 +198,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
+                      <value> <string>hidden</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -244,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1003.14332.42567.56439</string> </value>
+                      <value> <string>1003.15811.41174.17766</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1664202073.56</float>
+                              <float>1664291563.2</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
