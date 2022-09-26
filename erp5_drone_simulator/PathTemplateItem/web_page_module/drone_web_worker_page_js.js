@@ -136,7 +136,6 @@
           worker.onmessage = workerToMain;
           // Always quit the game when the worker callback usage is over
           // to prevent trying to call pause
-          //context.quit();
           return message_error_handler_defer.promise;
 
           function workerToMain(evt) {
@@ -160,6 +159,10 @@
                 break;
               case 'updated':
                 return update_defer.resolve('updated');
+                break;
+              case 'finished':
+                console.log('GAME: finished');
+                return context.quit();
                 break;
               case 'event':
                 bindEvent(evt.data);
