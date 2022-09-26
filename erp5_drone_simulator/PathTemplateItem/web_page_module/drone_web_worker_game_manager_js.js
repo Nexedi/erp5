@@ -61,7 +61,12 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype.run = function () {
     var gadget = this;
-    return gadget._init();
+    return gadget._init()
+      .push(function () {
+        //TODO return result
+        gadget._final_score = "fake-result 000";
+        return gadget._final_score;
+      });
   };
 
   /*GameManager.prototype.event = function (event) {
@@ -97,7 +102,6 @@ var GameManager = /** @class */ (function () {
       }
     }
     triggerUpdateIfPossible();
-    console.log("after triggerUpdateIfPossible call");
   };
 
   GameManager.prototype.delay = function (callback, millisecond) {
@@ -206,12 +210,23 @@ var GameManager = /** @class */ (function () {
     });
 
     return queue
-      //TODO finish
-      /*.push(function () {
-        if (_this._allDroneAreOut()) {
+      .push(function () {
+        if (_this._timeOut()) {
+          console.log("TIMEOUT!");
           return _this._finish();
         }
-      })*/;
+      });
+  };
+
+  GameManager.prototype._timeOut = function () {
+    var seconds = Math.floor(this._game_duration / 1000);
+    return this._totalTime - seconds <= 0;
+  };
+
+  GameManager.prototype._finish = function () {
+    console.log("Simulation finished");
+    this._canUpdate = false;
+    return this.finish_deferred.resolve();
   };
 
   GameManager.prototype._dispose = function () {
@@ -396,7 +411,6 @@ var GameManager = /** @class */ (function () {
     // Timing
     this._game_duration = 0;
     this._totalTime = GAMEPARAMETERS.gameTime;
-    this._canUpdate = true;
 
     return new RSVP.Queue()
       .push(function () {
@@ -412,9 +426,7 @@ var GameManager = /** @class */ (function () {
         return RSVP.all(promise_list);
       })
       .push(function () {
-        //TODO refactor this as start promise
-        //solving promise so game-start finishes and web worker can update
-        _this.finish_deferred.resolve();
+        _this._canUpdate = true;
         return _this.finish_deferred.promise;
       });
   };

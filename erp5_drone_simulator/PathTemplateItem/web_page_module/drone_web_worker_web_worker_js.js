@@ -12,9 +12,6 @@
 /**************************** ROQUE WW EVENTS ****************************/
 /*************************************************************************/
 
-console.log("WITH EVENTS HANDLING");
-
-
 self.window = {
 	addEventListener: function (event, fn, opt) {
 		bindHandler('window', event, fn, opt);
@@ -52,11 +49,12 @@ function mainToWorker(evt) {
       RSVP = window.RSVP;
       return new RSVP.Queue()
         .push(function () {
+          postMessage({'type': 'started'});
           return runGame(offscreen_canvas, evt.data.script,
                          evt.data.game_parameters_json, evt.data.log);
         })
-        .push(function () {
-          return postMessage({'type': 'started'});
+        .push(function (result) {
+          return postMessage({'type': 'finished', 'result': result});
         });
       break;
     case 'update':
