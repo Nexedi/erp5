@@ -85,6 +85,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>listbox_content</string>
                         <string>listbox</string>
                       </list>
                     </value>
