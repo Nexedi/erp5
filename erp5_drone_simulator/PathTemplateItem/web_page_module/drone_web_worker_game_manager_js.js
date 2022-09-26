@@ -64,12 +64,11 @@ var GameManager = /** @class */ (function () {
     return gadget._init();
   };
 
-  GameManager.prototype.event = function (event) {
+  /*GameManager.prototype.event = function (event) {
     var _this = this;
-    //TODO
     console.log("[GM] Event. this._camera:", this._camera);
     console.log("[GM] Event. event:", event);
-  };
+  };*/
 
   GameManager.prototype.update = function () {
     var _this = this;
@@ -90,10 +89,15 @@ var GameManager = /** @class */ (function () {
             _this.ongoing_update_promise = null;
             triggerUpdateIfPossible();
           })
-          .push(undefined, _this.finish_deferred.reject.bind(_this.finish_deferred));
+          .push(undefined, function(error) {
+            console.log("ERROR on update:", error);
+            console.log("rejecting finish_deferred promise...");
+            _this.finish_deferred.reject.bind(_this.finish_deferred);
+          });
       }
     }
     triggerUpdateIfPossible();
+    console.log("after triggerUpdateIfPossible call");
   };
 
   GameManager.prototype.delay = function (callback, millisecond) {
@@ -408,33 +412,8 @@ var GameManager = /** @class */ (function () {
         return RSVP.all(promise_list);
       })
       .push(function () {
-        //The loop is handle from the outside (webworker)
-        //_this._scene.registerBeforeRender(function () { console.log("loop"); });
-        /*_this._scene.registerBeforeRender(function () {
-          // To increase the game speed, increase this value
-          _this._max_step_animation_frame = 10;
-            // time delta means that drone are updated every virtual second
-            // This is fixed and must not be modified
-            // otherwise, it will lead to different scenario results
-            // (as drone calculations may be triggered less often)
-          var TIME_DELTA = 1000 / 60, i;
-          // init the value on the first step
-          _this.waiting_update_count = _this._max_step_animation_frame;
-          function triggerUpdateIfPossible() {
-            if ((_this._canUpdate) && (_this.ongoing_update_promise === null) && (0 < _this.waiting_update_count)) {
-              _this.ongoing_update_promise = _this._update(TIME_DELTA, (_this.waiting_update_count === 1))
-                .push(function () {
-                  _this.waiting_update_count -= 1;
-                  _this.ongoing_update_promise = null;
-                  triggerUpdateIfPossible();
-                })
-                .push(undefined, _this.finish_deferred.reject.bind(_this.finish_deferred));
-            }
-          }
-          triggerUpdateIfPossible();
-
-        });*/
-        //TODO solving promise so game-start finishes and web worker can update
+        //TODO refactor this as start promise
+        //solving promise so game-start finishes and web worker can update
         _this.finish_deferred.resolve();
         return _this.finish_deferred.promise;
       });
