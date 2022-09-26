@@ -7,51 +7,15 @@
 // game.js
 (function (RSVP, requestAnimationFrame, cancelAnimationFrame) {
   "use strict";
-  console.log('game');
 
 	// Events props to send to worker
-	const mouseEventFields = new Set([
-		'altKey',
-		'bubbles',
-		'button',
-		'buttons',
-		'cancelBubble',
-		'cancelable',
-		'clientX',
-		'clientY',
-		'composed',
-		'ctrlKey',
-		'defaultPrevented',
-		'detail',
-		'eventPhase',
-		'fromElement',
-		'isTrusted',
-		'layerX',
-		'layerY',
-		'metaKey',
-		'movementX',
-		'movementY',
-		'offsetX',
-		'offsetY',
-		'pageX',
-		'pageY',
-		'relatedTarget',
-		'returnValue',
-		'screenX',
-		'screenY',
-		'shiftKey',
-		'timeStamp',
-		'type',
-		'which',
-		'x',
-		'y',
-		'wheelDelta',
-		'wheelDeltaX',
-		'wheelDeltaY',
-		'deltaX',
-		'deltaY',
-		'deltaZ',
-		'deltaMode',
+	const mouseEventFields = new Set(['altKey', 'bubbles', 'button', 'buttons',
+		'cancelBubble', 'cancelable', 'clientX', 'clientY', 'composed', 'ctrlKey',
+		'defaultPrevented', 'detail', 'eventPhase', 'fromElement', 'isTrusted',
+		'layerX', 'layerY', 'metaKey', 'movementX', 'movementY', 'offsetX', 'pageX',
+		'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
+		'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
+		'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode',
 	]);
 
   //////////////////////////////////////////
@@ -172,17 +136,7 @@
           worker.onmessage = workerToMain;
           // Always quit the game when the worker callback usage is over
           // to prevent trying to call pause
-          //context.quit();
           return message_error_handler_defer.promise;
-
-          /*options.canvas_original.addEventListener("mousewheel", (evt) => {
-            console.log("[MAIN] canvas mousewheel. event:", evt);
-            const eventClone = cloneEvent(evt);
-            worker.postMessage({
-              type: 'mousewheel',
-              eventClone: eventClone
-            });
-          });*/
 
           function workerToMain(evt) {
             switch (evt.data.type) {
@@ -206,6 +160,10 @@
               case 'updated':
                 return update_defer.resolve('updated');
                 break;
+              case 'finished':
+                console.log('GAME: finished');
+                return context.quit();
+                break;
               case 'event':
                 bindEvent(evt.data);
                 break;
@@ -214,6 +172,9 @@
                 break;
               case 'canvasStyle':
                 options.canvas_original.style[evt.data.name] = evt.data.value;
+                break;
+              case 'error':
+                message_error_handler_defer.reject(evt.data.error);
                 break;
               default:
                 message_error_handler_defer.reject(
@@ -260,10 +221,8 @@
               // We can`t pass original event to the worker
               const eventClone = cloneEvent(e);
               if (eventClone.type === "pointerout") {
-                console.log("ignoring pointerout event");
                 return;
               }
-              console.log("[MAIN][LISTENER] event(cloned)-target:", data.eventName, data.targetName);
               worker.postMessage({
                 type: 'event',
                 targetName: data.targetName,
@@ -302,7 +261,6 @@
 // droneaailefixe.js
 (function () {
   "use strict";
-  //console.log('droneaailefixe');
 }());
 
 // page gadget.js
@@ -343,7 +301,7 @@
         })
         .push(function (parameters_doc) {
           game_parameters_json = JSON.parse(parameters_doc.text_content);
-          return gadget.jio_get("rescue_swarm_script_module/" + "lp_loiter");
+          return gadget.jio_get("rescue_swarm_script_module/" + "log_loiter");
         })
         .push(function (log) {
           log_content = log.text_content;
