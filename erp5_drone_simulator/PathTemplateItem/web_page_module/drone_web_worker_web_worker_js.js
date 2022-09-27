@@ -4,14 +4,6 @@
          DroneGameManager*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 
-
-
-
-
-/*************************************************************************/
-/**************************** ROQUE WW EVENTS ****************************/
-/*************************************************************************/
-
 self.window = {
 	addEventListener: function (event, fn, opt) {
 		bindHandler('window', event, fn, opt);
@@ -33,13 +25,6 @@ self.document = {
 
 importScripts('babylon.js', 'babylon.gui.js');
 importScripts('rsvp.js',
-              'GameManager.js',
-              'DroneManager.js',
-              'MapManager.js',
-              'ObstacleManager.js',
-              'DroneAaileFixeAPI.js',
-              'DroneLogAPI.js',
-              'DroneAPI.js',
               'gadget_erp5_page_game_logic.js');
 
 function mainToWorker(evt) {
