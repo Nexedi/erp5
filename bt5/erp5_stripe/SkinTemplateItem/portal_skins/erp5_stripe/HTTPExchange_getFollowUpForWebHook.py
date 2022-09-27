@@ -12,8 +12,4 @@ stripe_payment_session, = context.getPortalObject().portal_catalog(
 
 context.setFollowUpValue(stripe_payment_session.getObject())
 alarm = portal.portal_alarms.check_stripe_payment_session
-alarm.activate(
-  after_path_and_method_id=(
-    (context.getPath(),), ("immediateReindexObject",)
-  )
-).activeSense()
+alarm.activeSense()
