@@ -55,6 +55,8 @@ function mainToWorker(evt) {
         })
         .push(function (result) {
           return postMessage({'type': 'finished', 'result': result});
+        }, function(error) {
+          console.log("ERROR:", error);
         });
       break;
     case 'update':
