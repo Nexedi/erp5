@@ -6,7 +6,7 @@ response = container.REQUEST.RESPONSE
 response.setHeader("Content-type", "application/json; charset=utf-8")
 
 # Stripe will only POST here
-if context.REQUEST["method"] == "POST":
+if context.REQUEST["REQUEST_METHOD"] == "POST":
   portal = context.getPortalObject()
   data = json.loads(container.REQUEST.get("BODY") or "{}")
   assert data, "BODY should not be empty"
@@ -19,7 +19,6 @@ if context.REQUEST["method"] == "POST":
     resource="http_exchange_resource/stripe/webhook",
   )
   system_event.confirm()
-  
   portal = context.getPortalObject()
   alarm = portal.portal_alarms.handle_confirmed_http_exchanges
   tag = "handle_confirmed_http_exchanges_webhook"

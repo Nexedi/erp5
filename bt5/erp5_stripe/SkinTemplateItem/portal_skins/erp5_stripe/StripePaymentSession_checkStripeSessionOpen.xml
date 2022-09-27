@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>connector_url, **kw</string> </value>
+            <value> <string>connector_url, bypass_uid=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
