@@ -310,7 +310,7 @@ class HBTreeFolder2Base (Persistent):
         formatted = [listtext0 % pref_rows]
         for optID in islice(self.objectIds(), b_start - 1, b_end):
             optID = html_quote(optID)
-            formatted.append(listtext1 % (html_quote(optID, quote=1), optID))
+            formatted.append(listtext1 % (html_quote(optID), optID))
         formatted.append(listtext2)
         return {'b_start': b_start, 'b_end': b_end,
                 'prev_batch_url': prev_url,

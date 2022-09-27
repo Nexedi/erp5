@@ -66,11 +66,11 @@ def formToXML(form, prologue=1):
         for key, value in items:
           if value:
             tale_element = SubElement(tales_element, key)
-            tale_element.text = escape(str(value._text)).decode(encoding)
+            tale_element.text = html_quote(str(value._text)).decode(encoding)
         messages = SubElement(field_element, 'messages')
         for message_key in field.get_error_names():
           message_element = SubElement(messages, 'message', name=message_key)
-          message_element.text = escape(field.get_error_message(message_key)).decode(encoding)
+          message_element.text = html_quote(field.get_error_message(message_key)).decode(encoding)
         # Special attribute for ProxyFields *delegated_list*
         delegated_list = getattr(field, 'delegated_list', [])
         if delegated_list:
