@@ -29,7 +29,6 @@ importScripts('rsvp.js',
               'MapManager.js',
               'ObstacleManager.js',
               'DroneAaileFixeAPI.js',
-              'DroneLogAPI.js',
               'gadget_erp5_page_game_logic.js');
 
 function mainToWorker(evt) {
