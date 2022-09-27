@@ -173,6 +173,9 @@
               case 'canvasStyle':
                 options.canvas_original.style[evt.data.name] = evt.data.value;
                 break;
+              case 'error':
+                message_error_handler_defer.reject(evt.data.error);
+                break;
               default:
                 message_error_handler_defer.reject(
                   new Error('Unsupported message ' + JSON.stringify(evt.data))
