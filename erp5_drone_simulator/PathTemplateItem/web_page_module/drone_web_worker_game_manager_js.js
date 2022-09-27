@@ -69,12 +69,6 @@ var GameManager = /** @class */ (function () {
       });
   };
 
-  /*GameManager.prototype.event = function (event) {
-    var _this = this;
-    console.log("[GM] Event. this._camera:", this._camera);
-    console.log("[GM] Event. event:", event);
-  };*/
-
   GameManager.prototype.update = function () {
     var _this = this;
     // To increase the game speed, increase this value

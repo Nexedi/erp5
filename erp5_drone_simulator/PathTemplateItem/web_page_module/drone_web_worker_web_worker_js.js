@@ -57,6 +57,7 @@ function mainToWorker(evt) {
           return postMessage({'type': 'finished', 'result': result});
         }, function(error) {
           console.log("ERROR:", error);
+          return postMessage({'type': 'error', 'error': error});
         });
       break;
     case 'update':
@@ -75,98 +76,6 @@ function mainToWorker(evt) {
       throw new Error('Unsupported message ' + JSON.stringify(evt.data));
   }
 };
-
-/*****************************************************************************/
-
-
-
-/************************************************************************/
-/***************************** WORKING GAME *****************************/
-/************************************************************************/
-
-
-/*console.log("WORKING GAME WITH NO EVENTS");
-
-var document = {
-  addEventListener: function () {},
-  createElement: function () {}
-};
-
-(function (worker) {
-  importScripts('babylon.js', 'babylon.gui.js');
-}(this));
-
-var window = {
-  addEventListener: function (event, fn, opt) {
-    bindHandler('window', event, fn, opt);
-  },
-  PointerEvent: true
-};
-
-document = {
-  addEventListener: function (event, fn, opt) {
-    bindHandler('document', event, fn, opt);
-  },
-  createElement: function () {
-    return {onwheel: true};
-  },
-  defaultView: window
-};
-
-function mainToWorker(evt) {
-  switch (evt.data.type) {
-    case 'start':
-      var offscreen_canvas = prepareCanvas(evt.data);
-      //override createElement as it is needed by babylon to create a canvas
-      document.createElement = function (type) {
-        if (type === 'canvas') { return offscreen_canvas; }
-        return { onwheel: true };
-      }
-      //TODO evt.data.logic_url should contain the list of scripts
-      importScripts(
-                    'rsvp.js',
-                    'GameManager.js',
-                    'DroneManager.js',
-                    'MapManager.js',
-                    'ObstacleManager.js',
-                    'DroneAaileFixeAPI.js',
-                    'DroneLogAPI.js',
-                    'DroneAPI.js',
-                    evt.data.logic_url);
-      RSVP = window.RSVP;
-      window = undefined;
-      return new RSVP.Queue()
-        .push(function () {
-          return runGame(offscreen_canvas, evt.data.script,
-                         evt.data.game_parameters_json, evt.data.log);
-        })
-        .push(function () {
-          return postMessage({'type': 'started'});
-        });
-      break;
-    case 'update':
-      return new RSVP.Queue()
-        .push(function () {
-          return updateGame();
-        })
-        .push(function () {
-          return postMessage({'type': 'updated'});
-        });
-      break;
-    case 'event':
-      handleEvent(evt.data);
-      break;
-    //case 'mousewheel':
-    //  eventGame(evt.data.eventClone);
-    //  break;
-    default:
-      throw new Error('Unsupported message ' + JSON.stringify(evt.data));
-  }
-};*/
-
-/*****************************************************************************/
-
-
 
 // Doesn't work without it
 class HTMLElement {}
