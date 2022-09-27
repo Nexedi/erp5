@@ -27,6 +27,7 @@
 ##############################################################################
 from functools import partial
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from AccessControl import ClassSecurityInfo
 from AccessControl.AuthEncoding import pw_validate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -132,7 +133,11 @@ class ERP5LoginUserManager(BasePlugin):
           or login_password is None
           or not pw_validate(login_password, password)):
         if is_authentication_policy_enabled:
-          login_value.notifyLoginFailure()
+          tv = getTransactionalVariable()
+          login_failure_key = 'notified_login_failure_' + login_value.getRelativeUrl()
+          if tv.get(login_failure_key) is None:
+            login_value.notifyLoginFailure()
+            tv[login_failure_key] = 1
         return
     if is_authentication_policy_enabled:
       if login_value.isPasswordExpired():
