@@ -498,13 +498,11 @@ var GameManager = /** @class */ (function () {
         ctx._map_swapped = true;
       }
       console.log("APIs created");
-      // Set the AI code into drones
-      var AIcodeEval, AIcodeLeft; //TODO rename all left/team/'L'
-      AIcodeLeft = ctx._script;
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       console.log("Map manager instantiated");
-      ctx._spawnDrones(GAMEPARAMETERS.dronesPosition, GAMEPARAMETERS.droneList, AIcodeLeft);
+      ctx._spawnDrones(GAMEPARAMETERS.dronesPosition,
+                       GAMEPARAMETERS.droneList, ctx._script);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -667,29 +665,13 @@ var GameManager = /** @class */ (function () {
       }
       return false;
     }
-    for (i = 0; i < drone_list.length; i += 1) {
-      position = randomSpherePoint(center.x + i, center.y + i, center.z + i, 0, 0, 0);
-      if (checkCollision(position, position_list) || position.z < 0.05) {
-        collision_nb += 1;
-        if (collision_nb < max_collision) {
-          i -= 1;
-        }
-      }
-      else {
-        position_list.push(position);
-        var api = new this.APIs_dict[drone_list[i]](this, "L", GAMEPARAMETERS.compareFlights); //TODO drip L team in DroneAPI
-        this._setSpawnDrone(position.x, position.y, position.z, i, api, code);
-      }
-    }
-  };
-
-  GameManager.prototype._setSpawnDrone = function (x, y, z, index, api, code) {
+    function spawnDrone(x, y, z, index, api, code, ctx) {
       var default_drone_AI = api.getDroneAI();
       if (default_drone_AI) {
         code = default_drone_AI;
       }
       var team = "L"; //TODO DROP TEAM
-      var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, " +
+      var base, code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', "' + team + '", api);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {" +
           "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
@@ -712,6 +694,21 @@ var GameManager = /** @class */ (function () {
       catch (error) {
         eval(base);
       }
+    }
+    for (i = 0; i < drone_list.length; i += 1) {
+      position = randomSpherePoint(center.x + i, center.y + i, center.z + i, 0, 0, 0);
+      if (checkCollision(position, position_list) || position.z < 0.05) {
+        collision_nb += 1;
+        if (collision_nb < max_collision) {
+          i -= 1;
+        }
+      }
+      else {
+        position_list.push(position);
+        var api = new this.APIs_dict[drone_list[i]](this, "L", GAMEPARAMETERS.compareFlights); //TODO drip L team in DroneAPI
+        spawnDrone(position.x, position.y, position.z, i, api, code, this);
+      }
+    }
   };
 
   return GameManager;
