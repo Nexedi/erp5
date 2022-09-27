@@ -201,9 +201,12 @@ var runGame, updateGame, eventGame, game_manager_instance;
       };
       game_parameters_json.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
       game_parameters_json.obstacles = path_point_list;
-      game_parameters_json.randomSpawn.leftTeam.position.x = start_position[0];
+      /*game_parameters_json.randomSpawn.leftTeam.position.x = start_position[0];
       game_parameters_json.randomSpawn.leftTeam.position.y = start_position[1];
-      game_parameters_json.randomSpawn.leftTeam.position.z = start_position[2];
+      game_parameters_json.randomSpawn.leftTeam.position.z = start_position[2];*/
+      game_parameters_json.dronesPosition.x = start_position[0];
+      game_parameters_json.dronesPosition.y = start_position[1];
+      game_parameters_json.dronesPosition.z = start_position[2];
       game_parameters_json.gameTime = flight_time;
       //give map some margin from the flight
       game_parameters_json.mapSize.width = MAP_SIZE * 1.10;
@@ -274,8 +277,11 @@ var GameManager = /** @class */ (function () {
     this._last_position_drawn = [];
     this._log_count = [];
     this._flight_log = [];
+    //TODO drop the use of RS map and use a JSON instead. drop randomspawn and similar names //rename all
+    //TODO do this in above, in game logic game_parameters_json
+    //move this to JSON dict
     if (GAMEPARAMETERS.compareFlights) {
-      for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+      for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
         this._flight_log[count] = [];
         this._log_count[count] = 0;
         this._last_position_drawn[count] = null;
@@ -289,8 +295,7 @@ var GameManager = /** @class */ (function () {
     }
     this.APIs_dict = {
       DroneAaileFixeAPI: DroneAaileFixeAPI,
-      DroneLogAPI: DroneLogAPI,
-      DroneAPI: DroneAPI
+      DroneLogAPI: DroneLogAPI
     };
   }
 
@@ -349,7 +354,7 @@ var GameManager = /** @class */ (function () {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000);
     if (GAMEPARAMETERS.compareFlights) {
-      for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) {
+      for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
         if (this._teamLeft[count]._controlMesh) {
           var drone_position_x = this._teamLeft[count]._controlMesh.position.x,
             drone_position_z = this._teamLeft[count]._controlMesh.position.y,
@@ -369,7 +374,7 @@ var GameManager = /** @class */ (function () {
               this._flight_log[count].push([lat, lon, drone_position_z]);
             }
           }
-          if (GAMEPARAMETERS.compareFlights.draw) {
+          if (GAMEPARAMETERS.compareFlights.draw) { //TODO review this in JSON dict
             //draw drone position every second
             if (this._last_position_drawn[count] !== seconds) {
               this._last_position_drawn[count] = seconds;
@@ -492,18 +497,14 @@ var GameManager = /** @class */ (function () {
         GAMEPARAMETERS = ctx._getGameParameter();
         ctx._map_swapped = true;
       }
-      // Create the API
-      var lAPI = new DroneAPI(ctx, "L"); //TODO rename all left/team
       console.log("APIs created");
       // Set the AI code into drones
-      var AIcodeEval, AIcodeLeft;
+      var AIcodeEval, AIcodeLeft; //TODO rename all left/team/'L'
       AIcodeLeft = ctx._script;
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       console.log("Map manager instantiated");
-      if (GAMEPARAMETERS.randomSpawn) { //TODO drop the use of RS map and use JSON instead. drop randomspawn and similar names //rename all
-        ctx._setRandomSpawnPosition(GAMEPARAMETERS.randomSpawn.leftTeam, GAMEPARAMETERS.teamSize, lAPI, AIcodeLeft, "L");
-      }
+      ctx._spawnDrones(GAMEPARAMETERS.dronesPosition, GAMEPARAMETERS.droneList, AIcodeLeft);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -654,48 +655,43 @@ var GameManager = /** @class */ (function () {
     return parameter;
   };
 
-  GameManager.prototype._setRandomSpawnPosition = function (randomSpawn, team_size, api, code, team) {
-      var position, i, position_list = [], center = randomSpawn.position, max_collision = randomSpawn.maxCollision || 10 * team_size, collision_nb = 0;
-      function checkCollision(position, list) {
-        var i;
-        for (i = 0; i < list.length; i += 1) {
-          if (position.equalsWithEpsilon(list[i], 0.5)) {
-            return true;
-          }
-        }
-        return false;
-      }
-      for (i = 0; i < team_size; i += 1) {
-        if (team === "L" || i === 0) { //TODO refactor as 'R' is dropped
-          position = randomSpherePoint(center.x + i, center.y + i, center.z + i, 0, 0, 0);
-          if (checkCollision(position, position_list) || position.z < 0.05) {
-            collision_nb += 1;
-            if (collision_nb < max_collision) {
-              i -= 1;
-            }
-          }
-          else {
-            position_list.push(position);
-            var lAPI = api;
-            if (randomSpawn.types) {
-              if (randomSpawn.types[i] in this.APIs_dict) {
-                lAPI = new this.APIs_dict[randomSpawn.types[i]](this, "L", GAMEPARAMETERS.compareFlights);
-              }
-            }
-            this._setSpawnDrone(position.x, position.y, position.z, i, lAPI, code, team);
-          }
+  GameManager.prototype._spawnDrones = function (center, drone_list, code) {
+    var position, i, position_list = [], max_collision = 10 * drone_list.length,
+      collision_nb = 0;
+    function checkCollision(position, list) {
+      var i;
+      for (i = 0; i < list.length; i += 1) {
+        if (position.equalsWithEpsilon(list[i], 0.5)) {
+          return true;
         }
       }
+      return false;
+    }
+    for (i = 0; i < drone_list.length; i += 1) {
+      position = randomSpherePoint(center.x + i, center.y + i, center.z + i, 0, 0, 0);
+      if (checkCollision(position, position_list) || position.z < 0.05) {
+        collision_nb += 1;
+        if (collision_nb < max_collision) {
+          i -= 1;
+        }
+      }
+      else {
+        position_list.push(position);
+        var api = new this.APIs_dict[drone_list[i]](this, "L", GAMEPARAMETERS.compareFlights); //TODO drip L team in DroneAPI
+        this._setSpawnDrone(position.x, position.y, position.z, i, api, code);
+      }
+    }
   };
 
-  GameManager.prototype._setSpawnDrone = function (x, y, z, index, api, code, team) {
+  GameManager.prototype._setSpawnDrone = function (x, y, z, index, api, code) {
       var default_drone_AI = api.getDroneAI();
       if (default_drone_AI) {
         code = default_drone_AI;
       }
+      var team = "L"; //TODO DROP TEAM
       var ctx = this, base, code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', "' + team + '", api);' +
-          "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneAPI, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {" +
+          "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {" +
           "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
           "Date.now = function () {return start_time + drone._tick * 1000/60;}; " +
           "function Date() {if (!(this instanceof Date)) {throw new Error('Missing new operator');} " +
