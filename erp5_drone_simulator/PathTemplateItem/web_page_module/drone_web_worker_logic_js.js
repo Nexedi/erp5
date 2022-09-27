@@ -266,7 +266,7 @@ var GameManager = /** @class */ (function () {
     this._canvas = canvas;
     this._scene = null;
     this._engine = null;
-    this._teamLeft = []; //TODO rename as drone list or something
+    this._droneList = [];
     this._canUpdate = false;
     if (!simulation_speed) { simulation_speed = 5; }
     this._max_step_animation_frame = simulation_speed;
@@ -355,10 +355,10 @@ var GameManager = /** @class */ (function () {
     var seconds = Math.floor(this._game_duration / 1000);
     if (GAMEPARAMETERS.compareFlights) {
       for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
-        if (this._teamLeft[count]._controlMesh) {
-          var drone_position_x = this._teamLeft[count]._controlMesh.position.x,
-            drone_position_z = this._teamLeft[count]._controlMesh.position.y,
-            drone_position_y = this._teamLeft[count]._controlMesh.position.z;
+        if (this._droneList[count]._controlMesh) {
+          var drone_position_x = this._droneList[count]._controlMesh.position.x,
+            drone_position_z = this._droneList[count]._controlMesh.position.y,
+            drone_position_y = this._droneList[count]._controlMesh.position.z;
           if (GAMEPARAMETERS.compareFlights.log) {
             if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
               this._log_count[count] += GAMEPARAMETERS.compareFlights.log_interval_time;
@@ -420,7 +420,7 @@ var GameManager = /** @class */ (function () {
       return drone.internal_update(delta_time);
     }
 
-    this._teamLeft.forEach(function (drone) {
+    this._droneList.forEach(function (drone) {
       queue.push(function () {
         return updateDrone(drone);
       });
@@ -510,8 +510,8 @@ var GameManager = /** @class */ (function () {
       document = undefined;
       var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI", true, ctx._scene);
       document = documentTmp;
-      for (var count = 0; count < GAMEPARAMETERS.teamSize; count++) { //TODO use one color per drone
-        var controlMeshBlue = ctx._teamLeft[count].infosMesh;
+      for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) { //TODO use one color per drone
+        var controlMeshBlue = ctx._droneList[count].infosMesh;
         var rectBlue = new BABYLON.GUI.Rectangle();
         rectBlue.width = "10px";
         rectBlue.height = "10px";
@@ -567,7 +567,7 @@ var GameManager = /** @class */ (function () {
     return new RSVP.Queue()
       .push(function () {
         promise_list = [];
-        _this._teamLeft.forEach(function (drone) {
+        _this._droneList.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start());
         });
@@ -670,7 +670,7 @@ var GameManager = /** @class */ (function () {
       if (default_drone_AI) {
         code = default_drone_AI;
       }
-      var team = "L"; //TODO DROP TEAM
+      var team = "L"; //TODO DROP TEAM in DroneManager
       var base, code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', "' + team + '", api);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {" +
@@ -686,8 +686,8 @@ var GameManager = /** @class */ (function () {
       }
       base = code_eval;
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
-        base += "};ctx._teamLeft.push(drone)";
-        code_eval += "ctx._teamLeft.push(drone)";
+        base += "};ctx._droneList.push(drone)";
+        code_eval += "ctx._droneList.push(drone)";
       try {
         eval(code_eval);
       }
@@ -705,7 +705,7 @@ var GameManager = /** @class */ (function () {
       }
       else {
         position_list.push(position);
-        var api = new this.APIs_dict[drone_list[i]](this, "L", GAMEPARAMETERS.compareFlights); //TODO drip L team in DroneAPI
+        var api = new this.APIs_dict[drone_list[i]](this, GAMEPARAMETERS.compareFlights);
         spawnDrone(position.x, position.y, position.z, i, api, code, this);
       }
     }
@@ -714,3 +714,123 @@ var GameManager = /** @class */ (function () {
   return GameManager;
 }());
 
+var DroneLogAPI = /** @class */ (function () {
+    //*************************************************** CONSTRUCTOR **************************************************
+    function DroneLogAPI(gameManager, flight_parameters) {
+      this._gameManager = gameManager;
+      this._flight_parameters = flight_parameters;
+    }
+    //*************************************************** FUNCTIONS ****************************************************
+    //TODO test sendMsg (what is iterable _this.team??) (latency.communication?)(GM.delay?)
+    DroneLogAPI.prototype.internal_sendMsg = function (msg, to) {
+      var _this = this;
+      _this._gameManager.delay(function () {
+        if (to < 0) {
+          // Send to all drones
+          _this.team.forEach(function (drone) {
+            if (drone.infosMesh) {
+              try {
+                drone.onGetMsg(msg);
+              }
+              catch (error) {
+                console.warn('Drone crashed on sendMsg due to error:', error);
+                drone._internal_crash();
+              }
+            }
+          });
+        }
+        else {
+          // Send to specific drone
+          if (drone.infosMesh) {
+            try {
+              _this.team[to].onGetMsg(msg);
+            }
+            catch (error) {
+              console.warn('Drone crashed on sendMsg due to error:', error);
+              _this.team[to]._internal_crash();
+            }
+          }
+        }
+      }, GAMEPARAMETERS.latency.communication);
+    };
+    //#region ------------------ Accessible from AI
+    DroneLogAPI.prototype.log = function (msg) {
+      console.log("API say : " + msg);
+    };
+    DroneLogAPI.prototype.getGameParameter = function (name) {
+      if (["gameTime", "mapSize", "teamSize", "derive", "meteo", "initialHumanAreaPosition"].includes(name))
+        return this._gameManager.gameParameter[name];
+    };
+    DroneLogAPI.prototype.processCoordinates = function (x, y, z) {
+      if(isNaN(x) || isNaN(y) || isNaN(z)){
+        throw new Error('Target coordinates must be numbers');
+      }
+      return {
+        x: x,
+        y: y,
+        z: z
+      };
+    };
+    //Internal AI: drone follows the flight log points
+    DroneLogAPI.prototype.getDroneAI = function () {
+      return 'function distance(p1, p2) {' +
+        'var a = p1[0] - p2[0],' +
+        'b = p1[1] - p2[1];' +
+        'return Math.sqrt(a * a + b * b);' +
+        '}' +
+        'me.onStart = function() {' +
+        'console.log("DRONE LOG START!");' +
+        'if (!me.getFlightParameters())' +
+        'throw "DroneLog API must implement getFlightParameters";' +
+        'me.flightParameters = me.getFlightParameters();' +
+        'me.checkpoint_list = me.flightParameters.converted_log_point_list;' +
+        'me.startTime = new Date();' +
+        'me.initTimestamp = me.flightParameters.converted_log_point_list[0][3];' +
+        'me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
+        'me.last_checkpoint_reached = -1;' +
+        'me.setAcceleration(10);' +
+        '};' +
+        'me.onUpdate = function () {' +
+        'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
+        'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
+        'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
+        'time_elapsed = new Date() - me.startTime;' +
+        'if (time_elapsed < log_elapsed) {' +
+        'me.setDirection(0, 0, 0);' +
+        'return;' +
+        '}' +
+        'if (me.last_checkpoint_reached + 1 === me.checkpoint_list.length - 1) {' +
+        'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
+        'return;' +
+        '}' +
+        'me.last_checkpoint_reached += 1;' +
+        'next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
+        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+        '} else {' +
+        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+        '}' +
+        '};';
+    };
+    DroneLogAPI.prototype.setAltitude = function (altitude) {
+      return altitude;
+    };
+    DroneLogAPI.prototype.getMaxSpeed = function () {
+      return 3000;
+    };
+    DroneLogAPI.prototype.getInitialAltitude = function () {
+      return 0;
+    };
+    DroneLogAPI.prototype.getAltitudeAbs = function () {
+      return 0;
+    };
+    DroneLogAPI.prototype.getMinHeight = function () {
+      return 0;
+    };
+    DroneLogAPI.prototype.getMaxHeight = function () {
+      return 220;
+    };
+    DroneLogAPI.prototype.getFlightParameters = function () {
+      return this._flight_parameters;
+    };
+    return DroneLogAPI;
+}());
