@@ -12,4 +12,8 @@ stripe_payment_session, = context.getPortalObject().portal_catalog(
 
 context.setFollowUpValue(stripe_payment_session.getObject())
 alarm = portal.portal_alarms.check_stripe_payment_session
-alarm.activeSense()
+alarm.activeSense(
+  params={
+    "bypass_uid": stripe_payment_session.getUid()
+  }
+)

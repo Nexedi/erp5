@@ -1,7 +1,6 @@
 portal = context.getPortalObject()
 
 active_process = context.newActiveProcess().getRelativeUrl()
-
 connector_url, = [o.getRelativeUrl() for o in portal.portal_catalog(
   portal_type="Stripe Connector",
   reference=context.getTypeBasedMethod('getStripeConnectorReference')(),
@@ -27,11 +26,16 @@ if not uid_list:
 
 kw["uid"] = uid_list
 
+method_kw = {
+  "active_process": active_process,
+  "connector_url": connector_url,
+}
+
+if params and "bypass_uid" in params:
+  method_kw["bypass_uid"] = params["bypass_uid"]
+
 portal.portal_catalog.searchAndActivate(
   method_id=method_id,
-  method_kw={
-    "active_process": active_process,
-    "connector_url": connector_url
-  },
+  method_kw=method_kw,
   **kw
 )

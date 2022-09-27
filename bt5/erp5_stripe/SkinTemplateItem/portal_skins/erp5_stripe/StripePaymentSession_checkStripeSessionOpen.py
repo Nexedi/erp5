@@ -1,8 +1,10 @@
 import json
 
 # ignore if SPS is not open or not expired yet
-if context.getValidationState() != "open" or \
-    context.getExpirationDate() > DateTime():
+if context.getValidationState() != "open" or (
+     context.getExpirationDate() > DateTime() and (
+       not bypass_uid or (context.getUid() != bypass_uid)
+     )):
   return
 
 assert connector_url not in (None, ""), connector_url
