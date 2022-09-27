@@ -1,0 +1,72 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story</title>
+
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <link rel="stylesheet" href="css/flag-icons.css" type="text/css" />
+
+  <script src="gadget_erp5_eci_success_case_widget.js"></script>
+
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <div class="success_case_breadcrumb">
+        <a href="{{provider_url}}">{{publisher}}</a>
+        <span class="fi fi-{{publisher_country_code}}"></span>
+        <a href="{{publisher_country_search_url}}">{{selection_domain_publisher_country}}</a>
+        <a href="{{solution_url}}">{{software}}</a>
+      </div>
+      <div class="success_case_similar_solution">
+        <span>Similar Solutions:</span>
+        {{#each selection_domain_similar_solution}}
+           <span>{{this}}</span>
+        {{/each}}
+      </div>
+
+      <div class="success_case_content">
+        <div class="image">
+         <img src={{image_url}}></img>
+        </div>
+        <div class="customer_country">
+          <span>{{customer}}</span>
+          {{#each country_with_url_list}}
+             <span class="fi fi-{{country_code}}"></span>
+             <span>{{this.title}}</span>
+          {{/each}}
+       </div>
+       <div class="industry">
+        <span>Industry</span>
+        {{#each industry_with_url_list}}
+           <a href={{this.url}}>{{this.title}}</a>
+        {{/each}}
+       </div>
+       <div class="category">
+         <span>Category</span>
+        {{#each category_with_url_list}}
+           <a href={{this.url}}>{{this.title}}</a>
+        {{/each}}
+       </div>
+
+       <div class="full_story">
+          <a href={{success_case_url}} target="_blank">Read full success story</a>
+       </div>
+       <div class="title">
+         <h1>{{title}}</h1>
+       </div>
+       <div class="description">
+         <p>{{description}}</p>
+       </div>
+      </div>
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-widget-in-listbox"></div>
+  </body>
+</html>

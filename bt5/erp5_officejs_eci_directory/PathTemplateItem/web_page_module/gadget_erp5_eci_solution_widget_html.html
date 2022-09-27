@@ -1,0 +1,60 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  <script src="gadget_erp5_eci_solution_widget.js"></script>
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <ul class="grid-elements custom-software-profile">
+        <li>
+          {{#if logo_url}}
+            <div class="custom-software-profile-image-wrapper"><a href="{{website_url}}" target="_blank"><img src="{{logo_url}}"></a></div>
+          {{/if}}
+        </li>
+        <li>
+          <div class="widget-header">
+            <span>{{publisher}}</span> <span class="fi fi-{{country_code}}"></span> <a href="{{country_search_url}}">{{selection_domain_country}}</a> <h1 style="padding: 3px;">{{title}}</h1><a class="category" href="{{website_url}}" target="_blank">Product site</a>
+         </div>
+          {{#if description}}
+            <p>{{description}}</p>
+            <br/>
+          {{/if}}
+           <p><span>Open Source:</span>
+             {{#if floss_software}}
+               <span>Yes</span>
+            {{else}}
+              <span>No</span>
+             {{/if}}
+           </p>
+           <p><span> Support:</span>
+             {{#if commercial_support_available}}
+               <span>Yes</span>
+             {{else}}
+               <span>No</span>
+             {{/if}}
+           </p>
+           <br>
+          {{#each category_with_url_list}}
+              <a class="category" href={{this.url}}>{{this.title}}</a>
+          {{/each}}
+          <a href="{{entry_url}}" class="full_profile">View full profile</a>
+          <span>Similar solutions:</span>
+          {{#each similar_solution_list}}
+            <span>{{this.title}}</span>
+          {{/each}}
+        </li>
+      </ul>
+
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-widget-in-listbox"></div>
+  </body>
+</html>
