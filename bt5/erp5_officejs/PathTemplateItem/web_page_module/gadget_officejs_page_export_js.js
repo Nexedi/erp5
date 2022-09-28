@@ -79,6 +79,12 @@
         "cache": precache_manifest,
         "no_installer": true
       },
+      "European Cloud Industry": {
+        "url": "european_cloud_industry/",
+        "storage_type": "precache",
+        "cache": precache_manifest,
+        "no_installer": true
+      },
       "Jabber Client": {
         "url": "jabber_client/",
         "cache": "gadget_jabberclient.appcache",

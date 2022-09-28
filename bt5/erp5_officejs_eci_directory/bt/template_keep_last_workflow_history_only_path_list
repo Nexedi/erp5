@@ -1,0 +1,12 @@
+web_page_module/gadget_erp5_eci*
+web_page_module/gadget_erp5_page_eci*
+web_page_module/rjs_leaflet_css
+web_page_module/rjs_leaflet_js
+web_site_module/european_cloud_industry
+web_site_module/european_cloud_industry/**
+image_module/gadget_erp5_eci_camera_png
+image_module/marker-icon
+image_module/marker-shadow
+image_module/eci_logo_png
+image_module/eci_fdl_logo_png
+image_module/eci_dge_logo_png
