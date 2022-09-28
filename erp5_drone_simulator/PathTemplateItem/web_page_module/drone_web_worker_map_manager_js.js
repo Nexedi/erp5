@@ -59,7 +59,7 @@ var MapManager = /** @class */ (function () {
         this._lGoal.material = lGoalMat;
         this._lGoal.computeWorldMatrix(true);
         //base is now a boat (special object)
-        ObstacleManager.Prefab.rotation = new BABYLON.Vector3(20.4, 0, 0);
+        /*ObstacleManager.Prefab.rotation = new BABYLON.Vector3(20.4, 0, 0);
         ObstacleManager.Prefab.scaling = new BABYLON.Vector3(15, 15, 15);
         goalPart1 = new ObstacleManager("goal_1", scene);
         goalPart1.setStartingPosition(goal_x, goal_y, goal_z);
@@ -74,7 +74,7 @@ var MapManager = /** @class */ (function () {
                     }, scene);
         goalPart3.position = new BABYLON.Vector3(goal_x + 2.5, goal_y + 1.5, goal_z + 1.5);
         goalPart3.rotation = new BABYLON.Vector3(0, 0, 0);
-        goalPart3.scaling = new BABYLON.Vector3(1.5, 3.5, 1.5);
+        goalPart3.scaling = new BABYLON.Vector3(1.5, 3.5, 1.5);*/
 
         // Obstacles
         var count = 0;
@@ -99,12 +99,12 @@ var MapManager = /** @class */ (function () {
                         'diameterZ': obs.scale.z
                     }, scene);
                     break;
-                case "boat":
+                /*case "boat":
                     ObstacleManager.Prefab.rotation = new BABYLON.Vector3(obs.rotation.x, obs.rotation.y, obs.rotation.z);
                     ObstacleManager.Prefab.scaling = new BABYLON.Vector3(obs.scale.x * 2, obs.scale.y * 2, obs.scale.z * 2);
                     newObj = new ObstacleManager("obs_" + count, scene);
                     newObj.setStartingPosition(obs.position.x, obs.position.y, obs.position.z);
-                    break;
+                    break;*/
                 default:
                     return;
             }

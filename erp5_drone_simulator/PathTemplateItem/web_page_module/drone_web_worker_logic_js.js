@@ -157,11 +157,6 @@ var runGame, updateGame, eventGame, game_manager_instance;
               "y": 3.5,
               "z": 3.5
             },
-            "rotation": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            },
             "color": {
               "r": 0,
               "g": 255,
@@ -240,6 +235,7 @@ var runGame, updateGame, eventGame, game_manager_instance;
 
 
 }(this));
+
 /******************************************************************************/
 
 
@@ -609,18 +605,6 @@ var GameManager = /** @class */ (function () {
     mapTask.onError = function () {
         console.log("Error loading 3D model for Map");
     };
-    // OBSTACLE
-    obstacleTask = assetManager.addMeshTask("loadingObstacle", "", "assets/obstacle/", "boat.babylon");
-    obstacleTask.onSuccess = function (task) {
-        task.loadedMeshes.forEach(function (mesh) {
-            mesh.isPickable = false;
-            mesh.isVisible = false;
-        });
-        ObstacleManager.Prefab = _this._scene.getMeshByName("car"); //TODO DELETE this is the boat
-    };
-    obstacleTask.onError = function () {
-        console.log("Error loading 3D model for Obstacle");
-    };
     assetManager.onFinish = function () {
       return callback();
     };
@@ -646,9 +630,6 @@ var GameManager = /** @class */ (function () {
       if (parameter.obstacles[i].scale) {
         parameter.obstacles[i].scale = swap(parameter.obstacles[i].scale);
       }
-      if (parameter.obstacles[i].rotation) {
-        parameter.obstacles[i].rotation = swap(parameter.obstacles[i].rotation);
-      }
     }
     return parameter;
   };
@@ -670,9 +651,8 @@ var GameManager = /** @class */ (function () {
       if (default_drone_AI) {
         code = default_drone_AI;
       }
-      var team = "L"; //TODO DROP TEAM in DroneManager
       var base, code_eval = "let drone = new DroneManager(ctx._scene, " +
-          index + ', "' + team + '", api);' +
+          index + ', api);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager, GameManager, DroneLogAPI, DroneAaileFixeAPI, BABYLON, GAMEPARAMETERS) {" +
           "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
           "Date.now = function () {return start_time + drone._tick * 1000/60;}; " +
@@ -1108,4 +1088,356 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       return this._flight_parameters;
     };
     return DroneAaileFixeAPI;
+}());
+
+/******************************************************************************/
+
+
+
+/******************************* DRONE MANAGER ********************************/
+
+var DroneManager = /** @class */ (function () {
+    //** CONSTRUCTOR
+    function DroneManager(scene, id, API) {
+      var _this = this;
+      // Mesh
+      this._mesh = null;
+      this._controlMesh = null;
+      this._colliderBackMesh = null; //TODO drop?
+      this._canPlay = false;
+      this._canCommunicate = false;
+      this._maxAcceleration = 0;
+      this._maxSpeed = 0;
+      this._speed = 0;
+      this._acceleration = 0;
+      this._direction = BABYLON.Vector3.Zero();
+      this._maxOrientation = Math.PI / 4;
+      this._scene = scene;
+      this._canUpdate = true;
+      this._id = id;
+      this._leader_id = 0;
+      this._start_loiter = 0;
+      this._start_altitude = 0;
+      this._API = API; // var API created on AI evel
+      // Create the control mesh
+      this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
+      this._controlMesh.isVisible = false;
+      this._controlMesh.computeWorldMatrix(true);
+      // Create the mesh from the drone prefab
+      this._mesh = DroneManager.Prefab.clone("drone_" + id, this._controlMesh);
+      this._mesh.position = BABYLON.Vector3.Zero();
+      this._mesh.isVisible = false;
+      this._mesh.computeWorldMatrix(true);
+      // Get the back collider
+      this._mesh.getChildMeshes().forEach(function (mesh) {
+        if (mesh.name.substring(mesh.name.length - 13) == "Dummy_arriere") {
+          _this._colliderBackMesh = mesh;
+          _this._colliderBackMesh.isVisible = false;
+        }
+        else {
+          mesh.isVisible = true;
+        }
+      });
+      if (!DroneManager.PrefabBlueMat) {
+        DroneManager.PrefabBlueMat = new BABYLON.StandardMaterial("blueTeamMat", scene);
+        DroneManager.PrefabBlueMat.diffuseTexture = new BABYLON.Texture("assets/drone/drone_bleu.jpg", scene);
+      }
+    }
+    DroneManager.prototype._swapAxe = function (vector) {
+      return new BABYLON.Vector3(vector.x, vector.z, vector.y);
+    };
+    Object.defineProperty(DroneManager.prototype, "leader_id", {
+      get: function () { return this._leader_id; },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "id", {
+      get: function () { return this._id; },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "colliderMesh", {
+      get: function () { return this._mesh; },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "colliderBackMesh", {
+      get: function () { return this._colliderBackMesh; },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "infosMesh", {
+      get: function () { return this._controlMesh; },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "position", {
+      get: function () {
+        if (this._controlMesh !== null) {
+          return this._swapAxe(this._controlMesh.position);
+        }
+        return null;
+      },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "speed", {
+      get: function () { return this._speed; },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "direction", {
+      get: function () { return this._swapAxe(this._direction); },
+      enumerable: true,
+      configurable: true
+    });
+    Object.defineProperty(DroneManager.prototype, "worldDirection", {
+      get: function () {
+        return new BABYLON.Vector3(this._direction.x, this._direction.y, this._direction.z);
+      },
+      enumerable: true,
+      configurable: true
+    });
+    DroneManager.prototype.internal_start = function () {
+        this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
+        this._maxSpeed = this._API.getMaxSpeed();
+        this._canPlay = true;
+        this._canCommunicate = true;
+        try {
+          return this.onStart();
+        } catch (error) {
+          console.warn('Drone crashed on start due to error:', error);
+          this._internal_crash();
+        }
+    };
+    DroneManager.prototype.internal_setTargetCoordinates = function (x, y, z) {
+      if (!this._canPlay)
+        return;
+      x -= this._controlMesh.position.x;
+      y -= this._controlMesh.position.z;
+      z -= this._controlMesh.position.y;
+      this.setDirection(x, y, z);
+      this.setAcceleration(this._maxAcceleration);
+      return;
+    };
+    DroneManager.prototype.internal_update = function (delta_time) {
+      var context = this;
+      if (this._controlMesh) {
+        context._speed += context._acceleration * delta_time / 1000;
+        if (context._speed > context._maxSpeed)
+          context._speed = context._maxSpeed;
+        if (context._speed < -context._maxSpeed)
+          context._speed = -context._maxSpeed;
+        var updateSpeed = context._speed * delta_time / 1000;
+        if (context._direction.x != 0
+          || context._direction.y != 0
+          || context._direction.z != 0) {
+          context._controlMesh.position.addInPlace(new BABYLON.Vector3(context._direction.x * updateSpeed, context._direction.y * updateSpeed, context._direction.z * updateSpeed));
+        }
+        var orientationValue = context._maxOrientation * (context._speed / context._maxSpeed);
+        context._controlMesh.computeWorldMatrix(true);
+        context._mesh.computeWorldMatrix(true);
+        if (context._canUpdate) {
+          context._canUpdate = false;
+          return new RSVP.Queue()
+            .push(function () {
+              return context.onUpdate(context._API._gameManager._game_duration);
+            })
+            .push(function () {
+              context._canUpdate = true;
+            }, function (err) {
+              console.warn('Drone crashed on update due to error:', err);
+              context._internal_crash();
+            })
+            .push(function () {
+              if (context._start_loiter > 0) {
+                context._API.loiter(context);
+              }
+              if (context._start_altitude > 0) {
+                context._API.reachAltitude(context);
+              }
+            });
+        }
+        return;
+      }
+      return;
+    };
+    DroneManager.prototype._internal_crash = function () {
+      this._canCommunicate = false;
+      this._controlMesh = null;
+      this._mesh = null;
+      this._canPlay = false;
+      this.onTouched();
+    };
+    DroneManager.prototype.setStartingPosition = function (x, y, z) {
+      if(isNaN(x) || isNaN(y) || isNaN(z)){
+        throw new Error('Position coordinates must be numbers');
+      }
+      if (!this._canPlay) {
+        if (z <= 0.05)
+          z = 0.05;
+        this._controlMesh.position = new BABYLON.Vector3(x, z, y);
+      }
+      this._controlMesh.computeWorldMatrix(true);
+      this._mesh.computeWorldMatrix(true);
+    };
+    DroneManager.prototype.setAcceleration = function (factor) {
+      if (!this._canPlay)
+        return;
+      if (isNaN(factor)){
+        throw new Error('Acceleration must be a number');
+      }
+      if (factor > this._maxAcceleration)
+        factor = this._maxAcceleration;
+      this._acceleration = factor;
+    };
+    DroneManager.prototype.setDirection = function (x, y, z) {
+      if (!this._canPlay)
+        return;
+      if(isNaN(x) || isNaN(y) || isNaN(z)){
+        throw new Error('Direction coordinates must be numbers');
+      }
+      this._direction = new BABYLON.Vector3(x, z, y).normalize();
+    };
+    /**
+     * Set a target point to move
+     */
+    DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
+      if (!this._canPlay)
+        return;
+      //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
+      if (r !== -1) {
+        this._start_loiter = 0;
+        this._maxSpeed = this._API.getMaxSpeed();
+      }
+      this._start_altitude = 0;
+      var coordinates = this._API.processCoordinates(x, y, z, r);
+      coordinates.x -= this._controlMesh.position.x;
+      coordinates.y -= this._controlMesh.position.z;
+      coordinates.z -= this._controlMesh.position.y;
+      this.setDirection(coordinates.x, coordinates.y, coordinates.z);
+      this.setAcceleration(this._maxAcceleration);
+      return;
+    };
+    /**
+     * Send a message to team drones
+     * @param msg The message to send
+     * @param id The targeted drone. -1 or nothing to broadcast
+     */
+    DroneManager.prototype.sendMsg = function (msg, id) {
+      //TODO
+      return;
+      var _this = this;
+      if (!this._canCommunicate)
+        return;
+      if (id >= 0) { }
+      else
+        id = -1;
+      if (_this.infosMesh) {
+        return _this._API.internal_sendMsg(JSON.parse(JSON.stringify(msg)), id);
+      }
+    };
+    /** Perform a console.log with drone id + the message */
+    DroneManager.prototype.log = function (msg) { };
+    DroneManager.prototype.getMaxHeight = function () {
+      return this._API.getMaxHeight();
+    };
+    DroneManager.prototype.getMinHeight = function () {
+      return this._API.getMinHeight();
+    };
+    DroneManager.prototype.getInitialAltitude = function () {
+        return this._API.getInitialAltitude();
+    };
+    DroneManager.prototype.getAltitudeAbs = function () {
+      if (this._controlMesh) {
+        var altitude = this._controlMesh.position.y;
+        return this._API.getAltitudeAbs(altitude);
+      }
+      return null;
+    };
+    /**
+     * Get a game parameter by name
+     * @param name Name of the parameter to retrieve
+     */
+    DroneManager.prototype.getGameParameter = function (name) {
+      if (!this._canCommunicate)
+        return;
+      return this._API.getGameParameter(name);
+    };
+    DroneManager.prototype.getCurrentPosition = function () {
+      if (this._controlMesh)
+        return this._API.processCurrentPosition(
+          this._controlMesh.position.x,
+          this._controlMesh.position.z,
+          this._controlMesh.position.y
+        );
+      return null;
+    };
+    DroneManager.prototype.setAltitude = function (altitude, skip_loiter) {
+      if (!this._canPlay)
+        return;
+      if (this._start_altitude === 0) {
+        this._start_altitude = 1;
+      }
+      altitude = this._API.setAltitude(altitude, this, skip_loiter);
+      return;
+    };
+    /**
+     * Make the drone loiter (circle with a set radius)
+     */
+    DroneManager.prototype.loiter = function () {
+      if (!this._canPlay)
+        return;
+      if (this._start_loiter === 0) {
+        this._start_loiter = 1;
+      }
+    };
+    DroneManager.prototype.getFlightParameters = function () {
+      if (this._API.getFlightParameters)
+        return this._API.getFlightParameters();
+      return null;
+    };
+    DroneManager.prototype.getYaw = function () {
+      //TODO
+      return 0;
+    };
+    DroneManager.prototype.doParachute = function () {
+      return this._API.doParachute(this);
+    };
+    DroneManager.prototype.exit = function () {
+      return this._API.exit(this);
+    };
+    DroneManager.prototype.landed = function () {
+      return this._API.landed(this);
+    };
+    /**
+     * Set the drone last checkpoint reached
+     * @param checkpoint to be set
+     */
+    DroneManager.prototype.setCheckpoint = function (checkpoint) {
+      //TODO
+      return null;
+    };
+    /**
+     * Function called on game start
+     */
+    DroneManager.prototype.onStart = function () { };
+    ;
+    /**
+     * Function called on game update
+     */
+    DroneManager.prototype.onUpdate = function (timestamp) { };
+    ;
+    /**
+     * Function called when drone crashes
+     */
+    DroneManager.prototype.onTouched = function () { };
+    ;
+    /**
+     * Function called when a message is received
+     * @param msg The message
+     */
+    DroneManager.prototype.onGetMsg = function (msg) { };
+    ;
+    return DroneManager;
 }());

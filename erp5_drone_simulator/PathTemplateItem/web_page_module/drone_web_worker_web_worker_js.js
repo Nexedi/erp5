@@ -25,7 +25,6 @@ self.document = {
 
 importScripts('babylon.js', 'babylon.gui.js');
 importScripts('rsvp.js',
-              'DroneManager.js',
               'MapManager.js',
               'ObstacleManager.js',
               'gadget_erp5_page_game_logic.js');
