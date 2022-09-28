@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from xml.dom.minidom import parse, parseString, Node
-from xml.sax.saxutils import unescape
 # an extremely simple system for loading in XML into objects
 
 class Object:
@@ -41,7 +40,7 @@ def attributeToObject(parent, node):
 
 def textToObject(parent, node):
     # add this text to parents text content
-    parent.text += unescape(node.data)
+    parent.text += node.data
 
 def processingInstructionToObject(parent, node):
     # don't do anything with these
