@@ -700,122 +700,122 @@ var GameManager = /** @class */ (function () {
 /******************************* DRONE LOG API ********************************/
 
 var DroneLogAPI = /** @class */ (function () {
-    //** CONSTRUCTOR
-    function DroneLogAPI(gameManager, flight_parameters) {
-      this._gameManager = gameManager;
-      this._flight_parameters = flight_parameters;
-    }
-    //TODO test sendMsg (what is iterable _this.team??) (latency.communication?)(GM.delay?)
-    DroneLogAPI.prototype.internal_sendMsg = function (msg, to) {
-      var _this = this;
-      _this._gameManager.delay(function () {
-        if (to < 0) {
-          // Send to all drones
-          _this.team.forEach(function (drone) {
-            if (drone.infosMesh) {
-              try {
-                drone.onGetMsg(msg);
-              }
-              catch (error) {
-                console.warn('Drone crashed on sendMsg due to error:', error);
-                drone._internal_crash();
-              }
-            }
-          });
-        }
-        else {
-          // Send to specific drone
+  //** CONSTRUCTOR
+  function DroneLogAPI(gameManager, flight_parameters) {
+    this._gameManager = gameManager;
+    this._flight_parameters = flight_parameters;
+  }
+  //TODO test sendMsg (what is iterable _this.team??) (latency.communication?)(GM.delay?)
+  DroneLogAPI.prototype.internal_sendMsg = function (msg, to) {
+    var _this = this;
+    _this._gameManager.delay(function () {
+      if (to < 0) {
+        // Send to all drones
+        _this.team.forEach(function (drone) {
           if (drone.infosMesh) {
             try {
-              _this.team[to].onGetMsg(msg);
+              drone.onGetMsg(msg);
             }
             catch (error) {
               console.warn('Drone crashed on sendMsg due to error:', error);
-              _this.team[to]._internal_crash();
+              drone._internal_crash();
             }
           }
-        }
-      }, GAMEPARAMETERS.latency.communication);
-    };
-    DroneLogAPI.prototype.log = function (msg) {
-      console.log("API say : " + msg);
-    };
-    DroneLogAPI.prototype.getGameParameter = function (name) {
-      if (["gameTime", "mapSize", "teamSize", "derive", "meteo"].includes(name))
-        return this._gameManager.gameParameter[name];
-    };
-    DroneLogAPI.prototype.processCoordinates = function (x, y, z) {
-      if(isNaN(x) || isNaN(y) || isNaN(z)){
-        throw new Error('Target coordinates must be numbers');
+        });
       }
-      return {
-        x: x,
-        y: y,
-        z: z
-      };
+      else {
+        // Send to specific drone
+        if (drone.infosMesh) {
+          try {
+            _this.team[to].onGetMsg(msg);
+          }
+          catch (error) {
+            console.warn('Drone crashed on sendMsg due to error:', error);
+            _this.team[to]._internal_crash();
+          }
+        }
+      }
+    }, GAMEPARAMETERS.latency.communication);
+  };
+  DroneLogAPI.prototype.log = function (msg) {
+    console.log("API say : " + msg);
+  };
+  DroneLogAPI.prototype.getGameParameter = function (name) {
+    if (["gameTime", "mapSize", "teamSize", "derive", "meteo"].includes(name))
+      return this._gameManager.gameParameter[name];
+  };
+  DroneLogAPI.prototype.processCoordinates = function (x, y, z) {
+    if(isNaN(x) || isNaN(y) || isNaN(z)){
+      throw new Error('Target coordinates must be numbers');
+    }
+    return {
+      x: x,
+      y: y,
+      z: z
     };
-    //Internal AI: drone follows the flight log points
-    DroneLogAPI.prototype.getDroneAI = function () {
-      return 'function distance(p1, p2) {' +
-        'var a = p1[0] - p2[0],' +
-        'b = p1[1] - p2[1];' +
-        'return Math.sqrt(a * a + b * b);' +
-        '}' +
-        'me.onStart = function() {' +
-        'console.log("DRONE LOG START!");' +
-        'if (!me.getFlightParameters())' +
-        'throw "DroneLog API must implement getFlightParameters";' +
-        'me.flightParameters = me.getFlightParameters();' +
-        'me.checkpoint_list = me.flightParameters.converted_log_point_list;' +
-        'me.startTime = new Date();' +
-        'me.initTimestamp = me.flightParameters.converted_log_point_list[0][3];' +
-        'me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
-        'me.last_checkpoint_reached = -1;' +
-        'me.setAcceleration(10);' +
-        '};' +
-        'me.onUpdate = function () {' +
-        'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
-        'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
-        'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
-        'time_elapsed = new Date() - me.startTime;' +
-        'if (time_elapsed < log_elapsed) {' +
-        'me.setDirection(0, 0, 0);' +
-        'return;' +
-        '}' +
-        'if (me.last_checkpoint_reached + 1 === me.checkpoint_list.length - 1) {' +
-        'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
-        'return;' +
-        '}' +
-        'me.last_checkpoint_reached += 1;' +
-        'next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
-        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
-        '} else {' +
-        'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
-        '}' +
-        '};';
-    };
-    DroneLogAPI.prototype.setAltitude = function (altitude) {
-      return altitude;
-    };
-    DroneLogAPI.prototype.getMaxSpeed = function () {
-      return 3000;
-    };
-    DroneLogAPI.prototype.getInitialAltitude = function () {
-      return 0;
-    };
-    DroneLogAPI.prototype.getAltitudeAbs = function () {
-      return 0;
-    };
-    DroneLogAPI.prototype.getMinHeight = function () {
-      return 0;
-    };
-    DroneLogAPI.prototype.getMaxHeight = function () {
-      return 220;
-    };
-    DroneLogAPI.prototype.getFlightParameters = function () {
-      return this._flight_parameters;
-    };
-    return DroneLogAPI;
+  };
+  //Internal AI: drone follows the flight log points
+  DroneLogAPI.prototype.getDroneAI = function () {
+    return 'function distance(p1, p2) {' +
+      'var a = p1[0] - p2[0],' +
+      'b = p1[1] - p2[1];' +
+      'return Math.sqrt(a * a + b * b);' +
+      '}' +
+      'me.onStart = function() {' +
+      'console.log("DRONE LOG START!");' +
+      'if (!me.getFlightParameters())' +
+      'throw "DroneLog API must implement getFlightParameters";' +
+      'me.flightParameters = me.getFlightParameters();' +
+      'me.checkpoint_list = me.flightParameters.converted_log_point_list;' +
+      'me.startTime = new Date();' +
+      'me.initTimestamp = me.flightParameters.converted_log_point_list[0][3];' +
+      'me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
+      'me.last_checkpoint_reached = -1;' +
+      'me.setAcceleration(10);' +
+      '};' +
+      'me.onUpdate = function () {' +
+      'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
+      'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
+      'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
+      'time_elapsed = new Date() - me.startTime;' +
+      'if (time_elapsed < log_elapsed) {' +
+      'me.setDirection(0, 0, 0);' +
+      'return;' +
+      '}' +
+      'if (me.last_checkpoint_reached + 1 === me.checkpoint_list.length - 1) {' +
+      'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
+      'return;' +
+      '}' +
+      'me.last_checkpoint_reached += 1;' +
+      'next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
+      'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+      '} else {' +
+      'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+      '}' +
+      '};';
+  };
+  DroneLogAPI.prototype.setAltitude = function (altitude) {
+    return altitude;
+  };
+  DroneLogAPI.prototype.getMaxSpeed = function () {
+    return 3000;
+  };
+  DroneLogAPI.prototype.getInitialAltitude = function () {
+    return 0;
+  };
+  DroneLogAPI.prototype.getAltitudeAbs = function () {
+    return 0;
+  };
+  DroneLogAPI.prototype.getMinHeight = function () {
+    return 0;
+  };
+  DroneLogAPI.prototype.getMaxHeight = function () {
+    return 220;
+  };
+  DroneLogAPI.prototype.getFlightParameters = function () {
+    return this._flight_parameters;
+  };
+  return DroneLogAPI;
 }());
 
 
@@ -830,263 +830,263 @@ LOITER_RADIUS_FACTOR = 0.60;
 LOITER_SPEED_FACTOR = 1.5;
 
 var DroneAaileFixeAPI = /** @class */ (function () {
-    //** CONSTRUCTOR
-    function DroneAaileFixeAPI(gameManager, flight_parameters) {
-        this._gameManager = gameManager;
-        this._flight_parameters = flight_parameters;
-        this._loiter_radius = 0;
-        this._last_loiter_point_reached = -1;
-        this._last_altitude_point_reached = -1;
-    }
-    DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
-      var _this = this;
-      _this._gameManager.delay(function () {
-        if (to < 0) {
-          // Send to all drones
-          _this.team.forEach(function (drone) {
-            if (drone.infosMesh) {
-              try {
-                drone.onGetMsg(msg);
-              }
-              catch (error) {
-                console.warn('Drone crashed on sendMsg due to error:', error);
-                drone._internal_crash();
-              }
-            }
-          });
-        }
-        else {
-          // Send to specific drone
+  //** CONSTRUCTOR
+  function DroneAaileFixeAPI(gameManager, flight_parameters) {
+      this._gameManager = gameManager;
+      this._flight_parameters = flight_parameters;
+      this._loiter_radius = 0;
+      this._last_loiter_point_reached = -1;
+      this._last_altitude_point_reached = -1;
+  }
+  DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
+    var _this = this;
+    _this._gameManager.delay(function () {
+      if (to < 0) {
+        // Send to all drones
+        _this.team.forEach(function (drone) {
           if (drone.infosMesh) {
             try {
-              _this.team[to].onGetMsg(msg);
+              drone.onGetMsg(msg);
             }
             catch (error) {
               console.warn('Drone crashed on sendMsg due to error:', error);
-              _this.team[to]._internal_crash();
+              drone._internal_crash();
             }
           }
-        }
-      }, GAMEPARAMETERS.latency.communication);
-    };
-    DroneAaileFixeAPI.prototype.log = function (msg) {
-        console.log("API say : " + msg);
-    };
-    DroneAaileFixeAPI.prototype.getGameParameter = function (name) {
-        if (["gameTime", "mapSize", "teamSize", "derive", "meteo"].includes(name))
-          return this._gameManager.gameParameter[name];
-    };
-    DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z, r) {
-      if(isNaN(lat) || isNaN(lon) || isNaN(z)){
-        throw new Error('Target coordinates must be numbers');
+        });
       }
-      var flightParameters = this.getFlightParameters();
-      function longitudToX(lon, flightParameters) {
-        return (flightParameters.MAP_SIZE / 360.0) * (180 + lon);
-      }
-      function latitudeToY(lat, flightParameters) {
-        return (flightParameters.MAP_SIZE / 180.0) * (90 - lat);
-      }
-      function normalizeToMap(x, y, flightParameters) {
-        var n_x = (x - flightParameters.MIN_X) / (flightParameters.MAX_X - flightParameters.MIN_X),
-          n_y = (y - flightParameters.MIN_Y) / (flightParameters.MAX_Y - flightParameters.MIN_Y);
-        return [n_x * 1000 - flightParameters.MAP_SIZE / 2, n_y * 1000 - flightParameters.MAP_SIZE / 2];
-      }
-      var x = longitudToX(lon, flightParameters),
-        y = latitudeToY(lat, flightParameters),
-        position = normalizeToMap(x, y, flightParameters);
-      if (z > flightParameters.start_AMSL) {
-        z -= flightParameters.start_AMSL;
-      }
-      var processed_coordinates = {
-        x: position[0],
-        y: position[1],
-        z: z
-      };
-      if (r && r > LOITER_LIMIT) {
-        this._loiter_radius = r * LOITER_RADIUS_FACTOR;
-        this._loiter_center = processed_coordinates;
-        this._loiter_coordinates = [];
-        this._last_loiter_point_reached = -1;
-        var x1, y1;
-        //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
-        for (var angle = 360; angle > 0; angle-=8){ //clockwise
-          x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
-          y1 = this._loiter_radius * Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
-          this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, z));
+      else {
+        // Send to specific drone
+        if (drone.infosMesh) {
+          try {
+            _this.team[to].onGetMsg(msg);
+          }
+          catch (error) {
+            console.warn('Drone crashed on sendMsg due to error:', error);
+            _this.team[to]._internal_crash();
+          }
         }
       }
-      this._last_altitude_point_reached = -1;
-      this.takeoff_path = [];
-      return processed_coordinates;
+    }, GAMEPARAMETERS.latency.communication);
+  };
+  DroneAaileFixeAPI.prototype.log = function (msg) {
+      console.log("API say : " + msg);
+  };
+  DroneAaileFixeAPI.prototype.getGameParameter = function (name) {
+      if (["gameTime", "mapSize", "teamSize", "derive", "meteo"].includes(name))
+        return this._gameManager.gameParameter[name];
+  };
+  DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z, r) {
+    if(isNaN(lat) || isNaN(lon) || isNaN(z)){
+      throw new Error('Target coordinates must be numbers');
+    }
+    var flightParameters = this.getFlightParameters();
+    function longitudToX(lon, flightParameters) {
+      return (flightParameters.MAP_SIZE / 360.0) * (180 + lon);
+    }
+    function latitudeToY(lat, flightParameters) {
+      return (flightParameters.MAP_SIZE / 180.0) * (90 - lat);
+    }
+    function normalizeToMap(x, y, flightParameters) {
+      var n_x = (x - flightParameters.MIN_X) / (flightParameters.MAX_X - flightParameters.MIN_X),
+        n_y = (y - flightParameters.MIN_Y) / (flightParameters.MAX_Y - flightParameters.MIN_Y);
+      return [n_x * 1000 - flightParameters.MAP_SIZE / 2, n_y * 1000 - flightParameters.MAP_SIZE / 2];
+    }
+    var x = longitudToX(lon, flightParameters),
+      y = latitudeToY(lat, flightParameters),
+      position = normalizeToMap(x, y, flightParameters);
+    if (z > flightParameters.start_AMSL) {
+      z -= flightParameters.start_AMSL;
+    }
+    var processed_coordinates = {
+      x: position[0],
+      y: position[1],
+      z: z
     };
-    DroneAaileFixeAPI.prototype.processCurrentPosition = function (x, y, z) {
-      //convert x-y coordinates into latitud-longitude
-      var flightParameters = this.getFlightParameters();
-      var lon = x + flightParameters.map_width / 2;
-      lon = lon / 1000;
-      lon = lon * (flightParameters.MAX_X - flightParameters.MIN_X) + flightParameters.MIN_X;
-      lon = lon / (flightParameters.map_width / 360.0) - 180;
-      var lat = y + flightParameters.map_height / 2;
-      lat = lat / 1000;
-      lat = lat * (flightParameters.MAX_Y - flightParameters.MIN_Y) + flightParameters.MIN_Y;
-      lat = 90 - lat / (flightParameters.map_height / 180.0);
-      return {
-        x: lat,
-        y: lon,
-        z: z
-      };
-    };
-    DroneAaileFixeAPI.prototype.loiter = function (drone) {
-      function distance(c1, c2) {
-        var R = 6371e3,
-          q1 = c1[0] * Math.PI / 180,
-          q2 = c2[0] * Math.PI / 180,
-          dq = (c2[0] - c1[0]) * Math.PI / 180,
-          dl = (c2[1] - c1[1]) * Math.PI / 180,
-          a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-            Math.cos(q1) * Math.cos(q2) *
-            Math.sin(dl / 2) * Math.sin(dl / 2),
-          c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+    if (r && r > LOITER_LIMIT) {
+      this._loiter_radius = r * LOITER_RADIUS_FACTOR;
+      this._loiter_center = processed_coordinates;
+      this._loiter_coordinates = [];
+      this._last_loiter_point_reached = -1;
+      var x1, y1;
+      //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
+      for (var angle = 360; angle > 0; angle-=8){ //clockwise
+        x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
+        y1 = this._loiter_radius * Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
+        this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, z));
       }
-      if (this._loiter_radius > LOITER_LIMIT) {
-        var drone_pos = drone.getCurrentPosition();
-        //shift loiter circle to nearest point
-        if (this._last_loiter_point_reached === -1) {
-          if (!this.shifted) {
-            drone._maxSpeed = drone._maxSpeed * LOITER_SPEED_FACTOR;
-            var min = 9999, min_i;
-            for (var i = 0; i < this._loiter_coordinates.length; i++){
-              var d = distance([drone_pos.x, drone_pos.y], [this._loiter_coordinates[i].x, this._loiter_coordinates[i].y]);
-              if (d < min) {
-                min = d;
-                min_i = i;
-              }
+    }
+    this._last_altitude_point_reached = -1;
+    this.takeoff_path = [];
+    return processed_coordinates;
+  };
+  DroneAaileFixeAPI.prototype.processCurrentPosition = function (x, y, z) {
+    //convert x-y coordinates into latitud-longitude
+    var flightParameters = this.getFlightParameters();
+    var lon = x + flightParameters.map_width / 2;
+    lon = lon / 1000;
+    lon = lon * (flightParameters.MAX_X - flightParameters.MIN_X) + flightParameters.MIN_X;
+    lon = lon / (flightParameters.map_width / 360.0) - 180;
+    var lat = y + flightParameters.map_height / 2;
+    lat = lat / 1000;
+    lat = lat * (flightParameters.MAX_Y - flightParameters.MIN_Y) + flightParameters.MIN_Y;
+    lat = 90 - lat / (flightParameters.map_height / 180.0);
+    return {
+      x: lat,
+      y: lon,
+      z: z
+    };
+  };
+  DroneAaileFixeAPI.prototype.loiter = function (drone) {
+    function distance(c1, c2) {
+      var R = 6371e3,
+        q1 = c1[0] * Math.PI / 180,
+        q2 = c2[0] * Math.PI / 180,
+        dq = (c2[0] - c1[0]) * Math.PI / 180,
+        dl = (c2[1] - c1[1]) * Math.PI / 180,
+        a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+          Math.cos(q1) * Math.cos(q2) *
+          Math.sin(dl / 2) * Math.sin(dl / 2),
+        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+    if (this._loiter_radius > LOITER_LIMIT) {
+      var drone_pos = drone.getCurrentPosition();
+      //shift loiter circle to nearest point
+      if (this._last_loiter_point_reached === -1) {
+        if (!this.shifted) {
+          drone._maxSpeed = drone._maxSpeed * LOITER_SPEED_FACTOR;
+          var min = 9999, min_i;
+          for (var i = 0; i < this._loiter_coordinates.length; i++){
+            var d = distance([drone_pos.x, drone_pos.y], [this._loiter_coordinates[i].x, this._loiter_coordinates[i].y]);
+            if (d < min) {
+              min = d;
+              min_i = i;
             }
-            this._loiter_coordinates = this._loiter_coordinates.concat(this._loiter_coordinates.splice(0,min_i));
-            this.shifted = true;
           }
-        } else {
-          this.shifted = false;
+          this._loiter_coordinates = this._loiter_coordinates.concat(this._loiter_coordinates.splice(0,min_i));
+          this.shifted = true;
         }
-        //stop
-        if (this._last_loiter_point_reached === this._loiter_coordinates.length - 1) {
-          if (drone._maxSpeed !== this.getMaxSpeed()) {
-            drone._maxSpeed = this.getMaxSpeed();
-          }
-          drone.setDirection(0, 0, 0);
-          return;
-        }
-        //loiter
-        var next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
-        drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
-        if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
-          this._last_loiter_point_reached += 1;
-          if (this._last_loiter_point_reached === this._loiter_coordinates.length - 1) {
-            return;
-          }
-          next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
-          drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
-        }
-      }
-    };
-    DroneAaileFixeAPI.prototype.getDroneAI = function () {
-      return null;
-    };
-    DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone, skip_loiter) {
-      this.takeoff_path = [];
-      if (skip_loiter) {
-        var drone_pos = drone.getCurrentPosition();
-        drone.setTargetCoordinates(drone_pos.x, drone_pos.y, altitude);
-        return;
-      }
-      var x1, y1,
-        LOOPS = 1,
-        CIRCLE_ANGLE = 8,
-        current_point = 0,
-        total_points = 360/CIRCLE_ANGLE*LOOPS,
-        initial_altitude = drone.getAltitudeAbs(),
-        center = {
-          x: drone._controlMesh.position.x,
-          y: drone._controlMesh.position.z,
-          z: drone._controlMesh.position.y
-        };
-      for (var l = 0; l <= LOOPS; l+=1){
-        for (var angle = 360; angle > 0; angle-=CIRCLE_ANGLE){ //clockwise sense
-          current_point++;
-          x1 = TAKEOFF_RADIUS * Math.cos(angle * (Math.PI / 180)) + center.x;
-          y1 = TAKEOFF_RADIUS * Math.sin(angle * (Math.PI / 180)) + center.y;
-          if (current_point < total_points/3) {
-            var FACTOR = 0.5;
-            x1 = center.x*FACTOR + x1*(1-FACTOR);
-            y1 = center.y*FACTOR + y1*(1-FACTOR);
-          }
-          this.takeoff_path.push({x: x1, y: y1, z: initial_altitude + current_point * (altitude-initial_altitude)/total_points});
-        }
-      }
-    };
-    DroneAaileFixeAPI.prototype.reachAltitude = function (drone) {
-      function distance(p1, p2) {
-        return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                         Math.pow(p1[1] - p2[1], 2));
+      } else {
+        this.shifted = false;
       }
       //stop
-      if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
-        this._last_altitude_point_reached = -1;
-        this.takeoff_path = [];
-        drone._start_altitude = 0;
+      if (this._last_loiter_point_reached === this._loiter_coordinates.length - 1) {
+        if (drone._maxSpeed !== this.getMaxSpeed()) {
+          drone._maxSpeed = this.getMaxSpeed();
+        }
         drone.setDirection(0, 0, 0);
         return;
       }
       //loiter
-      var drone_pos = {
-          x: drone._controlMesh.position.x,
-          y: drone._controlMesh.position.z,
-          z: drone._controlMesh.position.y
-        };
-      var next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-      drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
+      var next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
+      drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
       if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
-        this._last_altitude_point_reached += 1;
-        if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
+        this._last_loiter_point_reached += 1;
+        if (this._last_loiter_point_reached === this._loiter_coordinates.length - 1) {
           return;
         }
-        next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-        drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
+        next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
+        drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
       }
-    };
-    DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
-      return GAMEPARAMETERS.drone.maxSpeed;
-    };
-    DroneAaileFixeAPI.prototype.doParachute = function (drone) {
-      //TODO what to do here?
-      drone.setDirection(0, 0, 0);
-    };
-    DroneAaileFixeAPI.prototype.landed = function (drone) {
+    }
+  };
+  DroneAaileFixeAPI.prototype.getDroneAI = function () {
+    return null;
+  };
+  DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone, skip_loiter) {
+    this.takeoff_path = [];
+    if (skip_loiter) {
       var drone_pos = drone.getCurrentPosition();
-      return Math.floor(drone_pos.z) === 0;
-    };
-    DroneAaileFixeAPI.prototype.exit = function (drone) {
-      //TODO what to do here?
+      drone.setTargetCoordinates(drone_pos.x, drone_pos.y, altitude);
+      return;
+    }
+    var x1, y1,
+      LOOPS = 1,
+      CIRCLE_ANGLE = 8,
+      current_point = 0,
+      total_points = 360/CIRCLE_ANGLE*LOOPS,
+      initial_altitude = drone.getAltitudeAbs(),
+      center = {
+        x: drone._controlMesh.position.x,
+        y: drone._controlMesh.position.z,
+        z: drone._controlMesh.position.y
+      };
+    for (var l = 0; l <= LOOPS; l+=1){
+      for (var angle = 360; angle > 0; angle-=CIRCLE_ANGLE){ //clockwise sense
+        current_point++;
+        x1 = TAKEOFF_RADIUS * Math.cos(angle * (Math.PI / 180)) + center.x;
+        y1 = TAKEOFF_RADIUS * Math.sin(angle * (Math.PI / 180)) + center.y;
+        if (current_point < total_points/3) {
+          var FACTOR = 0.5;
+          x1 = center.x*FACTOR + x1*(1-FACTOR);
+          y1 = center.y*FACTOR + y1*(1-FACTOR);
+        }
+        this.takeoff_path.push({x: x1, y: y1, z: initial_altitude + current_point * (altitude-initial_altitude)/total_points});
+      }
+    }
+  };
+  DroneAaileFixeAPI.prototype.reachAltitude = function (drone) {
+    function distance(p1, p2) {
+      return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                       Math.pow(p1[1] - p2[1], 2));
+    }
+    //stop
+    if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
+      this._last_altitude_point_reached = -1;
+      this.takeoff_path = [];
+      drone._start_altitude = 0;
       drone.setDirection(0, 0, 0);
-    };
-    DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
-      return 0;
-    };
-    DroneAaileFixeAPI.prototype.getAltitudeAbs = function (altitude) {
-      return altitude;
-    };
-    DroneAaileFixeAPI.prototype.getMinHeight = function () {
-      return 0;
-    };
-    DroneAaileFixeAPI.prototype.getMaxHeight = function () {
-      return 800;
-    };
-    DroneAaileFixeAPI.prototype.getFlightParameters = function () {
-      return this._flight_parameters;
-    };
-    return DroneAaileFixeAPI;
+      return;
+    }
+    //loiter
+    var drone_pos = {
+        x: drone._controlMesh.position.x,
+        y: drone._controlMesh.position.z,
+        z: drone._controlMesh.position.y
+      };
+    var next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
+    drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
+    if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
+      this._last_altitude_point_reached += 1;
+      if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
+        return;
+      }
+      next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
+      drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
+    }
+  };
+  DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
+    return GAMEPARAMETERS.drone.maxSpeed;
+  };
+  DroneAaileFixeAPI.prototype.doParachute = function (drone) {
+    //TODO what to do here?
+    drone.setDirection(0, 0, 0);
+  };
+  DroneAaileFixeAPI.prototype.landed = function (drone) {
+    var drone_pos = drone.getCurrentPosition();
+    return Math.floor(drone_pos.z) === 0;
+  };
+  DroneAaileFixeAPI.prototype.exit = function (drone) {
+    //TODO what to do here?
+    drone.setDirection(0, 0, 0);
+  };
+  DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
+    return 0;
+  };
+  DroneAaileFixeAPI.prototype.getAltitudeAbs = function (altitude) {
+    return altitude;
+  };
+  DroneAaileFixeAPI.prototype.getMinHeight = function () {
+    return 0;
+  };
+  DroneAaileFixeAPI.prototype.getMaxHeight = function () {
+    return 800;
+  };
+  DroneAaileFixeAPI.prototype.getFlightParameters = function () {
+    return this._flight_parameters;
+  };
+  return DroneAaileFixeAPI;
 }());
 
 /******************************************************************************/
@@ -1096,349 +1096,349 @@ var DroneAaileFixeAPI = /** @class */ (function () {
 /******************************* DRONE MANAGER ********************************/
 
 var DroneManager = /** @class */ (function () {
-    //** CONSTRUCTOR
-    function DroneManager(scene, id, API) {
-      var _this = this;
-      // Mesh
-      this._mesh = null;
-      this._controlMesh = null;
-      this._colliderBackMesh = null; //TODO drop?
-      this._canPlay = false;
-      this._canCommunicate = false;
-      this._maxAcceleration = 0;
-      this._maxSpeed = 0;
-      this._speed = 0;
-      this._acceleration = 0;
-      this._direction = BABYLON.Vector3.Zero();
-      this._maxOrientation = Math.PI / 4;
-      this._scene = scene;
-      this._canUpdate = true;
-      this._id = id;
-      this._leader_id = 0;
-      this._start_loiter = 0;
-      this._start_altitude = 0;
-      this._API = API; // var API created on AI evel
-      // Create the control mesh
-      this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
-      this._controlMesh.isVisible = false;
-      this._controlMesh.computeWorldMatrix(true);
-      // Create the mesh from the drone prefab
-      this._mesh = DroneManager.Prefab.clone("drone_" + id, this._controlMesh);
-      this._mesh.position = BABYLON.Vector3.Zero();
-      this._mesh.isVisible = false;
-      this._mesh.computeWorldMatrix(true);
-      // Get the back collider
-      this._mesh.getChildMeshes().forEach(function (mesh) {
-        if (mesh.name.substring(mesh.name.length - 13) == "Dummy_arriere") {
-          _this._colliderBackMesh = mesh;
-          _this._colliderBackMesh.isVisible = false;
-        }
-        else {
-          mesh.isVisible = true;
-        }
-      });
-      if (!DroneManager.PrefabBlueMat) {
-        DroneManager.PrefabBlueMat = new BABYLON.StandardMaterial("blueTeamMat", scene);
-        DroneManager.PrefabBlueMat.diffuseTexture = new BABYLON.Texture("assets/drone/drone_bleu.jpg", scene);
+  //** CONSTRUCTOR
+  function DroneManager(scene, id, API) {
+    var _this = this;
+    // Mesh
+    this._mesh = null;
+    this._controlMesh = null;
+    this._colliderBackMesh = null; //TODO drop?
+    this._canPlay = false;
+    this._canCommunicate = false;
+    this._maxAcceleration = 0;
+    this._maxSpeed = 0;
+    this._speed = 0;
+    this._acceleration = 0;
+    this._direction = BABYLON.Vector3.Zero();
+    this._maxOrientation = Math.PI / 4;
+    this._scene = scene;
+    this._canUpdate = true;
+    this._id = id;
+    this._leader_id = 0;
+    this._start_loiter = 0;
+    this._start_altitude = 0;
+    this._API = API; // var API created on AI evel
+    // Create the control mesh
+    this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
+    this._controlMesh.isVisible = false;
+    this._controlMesh.computeWorldMatrix(true);
+    // Create the mesh from the drone prefab
+    this._mesh = DroneManager.Prefab.clone("drone_" + id, this._controlMesh);
+    this._mesh.position = BABYLON.Vector3.Zero();
+    this._mesh.isVisible = false;
+    this._mesh.computeWorldMatrix(true);
+    // Get the back collider
+    this._mesh.getChildMeshes().forEach(function (mesh) {
+      if (mesh.name.substring(mesh.name.length - 13) == "Dummy_arriere") {
+        _this._colliderBackMesh = mesh;
+        _this._colliderBackMesh.isVisible = false;
       }
+      else {
+        mesh.isVisible = true;
+      }
+    });
+    if (!DroneManager.PrefabBlueMat) {
+      DroneManager.PrefabBlueMat = new BABYLON.StandardMaterial("blueTeamMat", scene);
+      DroneManager.PrefabBlueMat.diffuseTexture = new BABYLON.Texture("assets/drone/drone_bleu.jpg", scene);
     }
-    DroneManager.prototype._swapAxe = function (vector) {
-      return new BABYLON.Vector3(vector.x, vector.z, vector.y);
-    };
-    Object.defineProperty(DroneManager.prototype, "leader_id", {
-      get: function () { return this._leader_id; },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "id", {
-      get: function () { return this._id; },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "colliderMesh", {
-      get: function () { return this._mesh; },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "colliderBackMesh", {
-      get: function () { return this._colliderBackMesh; },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "infosMesh", {
-      get: function () { return this._controlMesh; },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "position", {
-      get: function () {
-        if (this._controlMesh !== null) {
-          return this._swapAxe(this._controlMesh.position);
-        }
-        return null;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "speed", {
-      get: function () { return this._speed; },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "direction", {
-      get: function () { return this._swapAxe(this._direction); },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(DroneManager.prototype, "worldDirection", {
-      get: function () {
-        return new BABYLON.Vector3(this._direction.x, this._direction.y, this._direction.z);
-      },
-      enumerable: true,
-      configurable: true
-    });
-    DroneManager.prototype.internal_start = function () {
-        this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
-        this._maxSpeed = this._API.getMaxSpeed();
-        this._canPlay = true;
-        this._canCommunicate = true;
-        try {
-          return this.onStart();
-        } catch (error) {
-          console.warn('Drone crashed on start due to error:', error);
-          this._internal_crash();
-        }
-    };
-    DroneManager.prototype.internal_setTargetCoordinates = function (x, y, z) {
-      if (!this._canPlay)
-        return;
-      x -= this._controlMesh.position.x;
-      y -= this._controlMesh.position.z;
-      z -= this._controlMesh.position.y;
-      this.setDirection(x, y, z);
-      this.setAcceleration(this._maxAcceleration);
-      return;
-    };
-    DroneManager.prototype.internal_update = function (delta_time) {
-      var context = this;
-      if (this._controlMesh) {
-        context._speed += context._acceleration * delta_time / 1000;
-        if (context._speed > context._maxSpeed)
-          context._speed = context._maxSpeed;
-        if (context._speed < -context._maxSpeed)
-          context._speed = -context._maxSpeed;
-        var updateSpeed = context._speed * delta_time / 1000;
-        if (context._direction.x != 0
-          || context._direction.y != 0
-          || context._direction.z != 0) {
-          context._controlMesh.position.addInPlace(new BABYLON.Vector3(context._direction.x * updateSpeed, context._direction.y * updateSpeed, context._direction.z * updateSpeed));
-        }
-        var orientationValue = context._maxOrientation * (context._speed / context._maxSpeed);
-        context._controlMesh.computeWorldMatrix(true);
-        context._mesh.computeWorldMatrix(true);
-        if (context._canUpdate) {
-          context._canUpdate = false;
-          return new RSVP.Queue()
-            .push(function () {
-              return context.onUpdate(context._API._gameManager._game_duration);
-            })
-            .push(function () {
-              context._canUpdate = true;
-            }, function (err) {
-              console.warn('Drone crashed on update due to error:', err);
-              context._internal_crash();
-            })
-            .push(function () {
-              if (context._start_loiter > 0) {
-                context._API.loiter(context);
-              }
-              if (context._start_altitude > 0) {
-                context._API.reachAltitude(context);
-              }
-            });
-        }
-        return;
-      }
-      return;
-    };
-    DroneManager.prototype._internal_crash = function () {
-      this._canCommunicate = false;
-      this._controlMesh = null;
-      this._mesh = null;
-      this._canPlay = false;
-      this.onTouched();
-    };
-    DroneManager.prototype.setStartingPosition = function (x, y, z) {
-      if(isNaN(x) || isNaN(y) || isNaN(z)){
-        throw new Error('Position coordinates must be numbers');
-      }
-      if (!this._canPlay) {
-        if (z <= 0.05)
-          z = 0.05;
-        this._controlMesh.position = new BABYLON.Vector3(x, z, y);
-      }
-      this._controlMesh.computeWorldMatrix(true);
-      this._mesh.computeWorldMatrix(true);
-    };
-    DroneManager.prototype.setAcceleration = function (factor) {
-      if (!this._canPlay)
-        return;
-      if (isNaN(factor)){
-        throw new Error('Acceleration must be a number');
-      }
-      if (factor > this._maxAcceleration)
-        factor = this._maxAcceleration;
-      this._acceleration = factor;
-    };
-    DroneManager.prototype.setDirection = function (x, y, z) {
-      if (!this._canPlay)
-        return;
-      if(isNaN(x) || isNaN(y) || isNaN(z)){
-        throw new Error('Direction coordinates must be numbers');
-      }
-      this._direction = new BABYLON.Vector3(x, z, y).normalize();
-    };
-    /**
-     * Set a target point to move
-     */
-    DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
-      if (!this._canPlay)
-        return;
-      //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
-      if (r !== -1) {
-        this._start_loiter = 0;
-        this._maxSpeed = this._API.getMaxSpeed();
-      }
-      this._start_altitude = 0;
-      var coordinates = this._API.processCoordinates(x, y, z, r);
-      coordinates.x -= this._controlMesh.position.x;
-      coordinates.y -= this._controlMesh.position.z;
-      coordinates.z -= this._controlMesh.position.y;
-      this.setDirection(coordinates.x, coordinates.y, coordinates.z);
-      this.setAcceleration(this._maxAcceleration);
-      return;
-    };
-    /**
-     * Send a message to team drones
-     * @param msg The message to send
-     * @param id The targeted drone. -1 or nothing to broadcast
-     */
-    DroneManager.prototype.sendMsg = function (msg, id) {
-      //TODO
-      return;
-      var _this = this;
-      if (!this._canCommunicate)
-        return;
-      if (id >= 0) { }
-      else
-        id = -1;
-      if (_this.infosMesh) {
-        return _this._API.internal_sendMsg(JSON.parse(JSON.stringify(msg)), id);
-      }
-    };
-    /** Perform a console.log with drone id + the message */
-    DroneManager.prototype.log = function (msg) { };
-    DroneManager.prototype.getMaxHeight = function () {
-      return this._API.getMaxHeight();
-    };
-    DroneManager.prototype.getMinHeight = function () {
-      return this._API.getMinHeight();
-    };
-    DroneManager.prototype.getInitialAltitude = function () {
-        return this._API.getInitialAltitude();
-    };
-    DroneManager.prototype.getAltitudeAbs = function () {
-      if (this._controlMesh) {
-        var altitude = this._controlMesh.position.y;
-        return this._API.getAltitudeAbs(altitude);
+  }
+  DroneManager.prototype._swapAxe = function (vector) {
+    return new BABYLON.Vector3(vector.x, vector.z, vector.y);
+  };
+  Object.defineProperty(DroneManager.prototype, "leader_id", {
+    get: function () { return this._leader_id; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "id", {
+    get: function () { return this._id; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "colliderMesh", {
+    get: function () { return this._mesh; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "colliderBackMesh", {
+    get: function () { return this._colliderBackMesh; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "infosMesh", {
+    get: function () { return this._controlMesh; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "position", {
+    get: function () {
+      if (this._controlMesh !== null) {
+        return this._swapAxe(this._controlMesh.position);
       }
       return null;
-    };
-    /**
-     * Get a game parameter by name
-     * @param name Name of the parameter to retrieve
-     */
-    DroneManager.prototype.getGameParameter = function (name) {
-      if (!this._canCommunicate)
-        return;
-      return this._API.getGameParameter(name);
-    };
-    DroneManager.prototype.getCurrentPosition = function () {
-      if (this._controlMesh)
-        return this._API.processCurrentPosition(
-          this._controlMesh.position.x,
-          this._controlMesh.position.z,
-          this._controlMesh.position.y
-        );
-      return null;
-    };
-    DroneManager.prototype.setAltitude = function (altitude, skip_loiter) {
-      if (!this._canPlay)
-        return;
-      if (this._start_altitude === 0) {
-        this._start_altitude = 1;
+    },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "speed", {
+    get: function () { return this._speed; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "direction", {
+    get: function () { return this._swapAxe(this._direction); },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "worldDirection", {
+    get: function () {
+      return new BABYLON.Vector3(this._direction.x, this._direction.y, this._direction.z);
+    },
+    enumerable: true,
+    configurable: true
+  });
+  DroneManager.prototype.internal_start = function () {
+      this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
+      this._maxSpeed = this._API.getMaxSpeed();
+      this._canPlay = true;
+      this._canCommunicate = true;
+      try {
+        return this.onStart();
+      } catch (error) {
+        console.warn('Drone crashed on start due to error:', error);
+        this._internal_crash();
       }
-      altitude = this._API.setAltitude(altitude, this, skip_loiter);
+  };
+  DroneManager.prototype.internal_setTargetCoordinates = function (x, y, z) {
+    if (!this._canPlay)
       return;
-    };
-    /**
-     * Make the drone loiter (circle with a set radius)
-     */
-    DroneManager.prototype.loiter = function () {
-      if (!this._canPlay)
-        return;
-      if (this._start_loiter === 0) {
-        this._start_loiter = 1;
+    x -= this._controlMesh.position.x;
+    y -= this._controlMesh.position.z;
+    z -= this._controlMesh.position.y;
+    this.setDirection(x, y, z);
+    this.setAcceleration(this._maxAcceleration);
+    return;
+  };
+  DroneManager.prototype.internal_update = function (delta_time) {
+    var context = this;
+    if (this._controlMesh) {
+      context._speed += context._acceleration * delta_time / 1000;
+      if (context._speed > context._maxSpeed)
+        context._speed = context._maxSpeed;
+      if (context._speed < -context._maxSpeed)
+        context._speed = -context._maxSpeed;
+      var updateSpeed = context._speed * delta_time / 1000;
+      if (context._direction.x != 0
+        || context._direction.y != 0
+        || context._direction.z != 0) {
+        context._controlMesh.position.addInPlace(new BABYLON.Vector3(context._direction.x * updateSpeed, context._direction.y * updateSpeed, context._direction.z * updateSpeed));
       }
-    };
-    DroneManager.prototype.getFlightParameters = function () {
-      if (this._API.getFlightParameters)
-        return this._API.getFlightParameters();
-      return null;
-    };
-    DroneManager.prototype.getYaw = function () {
-      //TODO
-      return 0;
-    };
-    DroneManager.prototype.doParachute = function () {
-      return this._API.doParachute(this);
-    };
-    DroneManager.prototype.exit = function () {
-      return this._API.exit(this);
-    };
-    DroneManager.prototype.landed = function () {
-      return this._API.landed(this);
-    };
-    /**
-     * Set the drone last checkpoint reached
-     * @param checkpoint to be set
-     */
-    DroneManager.prototype.setCheckpoint = function (checkpoint) {
-      //TODO
-      return null;
-    };
-    /**
-     * Function called on game start
-     */
-    DroneManager.prototype.onStart = function () { };
-    ;
-    /**
-     * Function called on game update
-     */
-    DroneManager.prototype.onUpdate = function (timestamp) { };
-    ;
-    /**
-     * Function called when drone crashes
-     */
-    DroneManager.prototype.onTouched = function () { };
-    ;
-    /**
-     * Function called when a message is received
-     * @param msg The message
-     */
-    DroneManager.prototype.onGetMsg = function (msg) { };
-    ;
-    return DroneManager;
+      var orientationValue = context._maxOrientation * (context._speed / context._maxSpeed);
+      context._controlMesh.computeWorldMatrix(true);
+      context._mesh.computeWorldMatrix(true);
+      if (context._canUpdate) {
+        context._canUpdate = false;
+        return new RSVP.Queue()
+          .push(function () {
+            return context.onUpdate(context._API._gameManager._game_duration);
+          })
+          .push(function () {
+            context._canUpdate = true;
+          }, function (err) {
+            console.warn('Drone crashed on update due to error:', err);
+            context._internal_crash();
+          })
+          .push(function () {
+            if (context._start_loiter > 0) {
+              context._API.loiter(context);
+            }
+            if (context._start_altitude > 0) {
+              context._API.reachAltitude(context);
+            }
+          });
+      }
+      return;
+    }
+    return;
+  };
+  DroneManager.prototype._internal_crash = function () {
+    this._canCommunicate = false;
+    this._controlMesh = null;
+    this._mesh = null;
+    this._canPlay = false;
+    this.onTouched();
+  };
+  DroneManager.prototype.setStartingPosition = function (x, y, z) {
+    if(isNaN(x) || isNaN(y) || isNaN(z)){
+      throw new Error('Position coordinates must be numbers');
+    }
+    if (!this._canPlay) {
+      if (z <= 0.05)
+        z = 0.05;
+      this._controlMesh.position = new BABYLON.Vector3(x, z, y);
+    }
+    this._controlMesh.computeWorldMatrix(true);
+    this._mesh.computeWorldMatrix(true);
+  };
+  DroneManager.prototype.setAcceleration = function (factor) {
+    if (!this._canPlay)
+      return;
+    if (isNaN(factor)){
+      throw new Error('Acceleration must be a number');
+    }
+    if (factor > this._maxAcceleration)
+      factor = this._maxAcceleration;
+    this._acceleration = factor;
+  };
+  DroneManager.prototype.setDirection = function (x, y, z) {
+    if (!this._canPlay)
+      return;
+    if(isNaN(x) || isNaN(y) || isNaN(z)){
+      throw new Error('Direction coordinates must be numbers');
+    }
+    this._direction = new BABYLON.Vector3(x, z, y).normalize();
+  };
+  /**
+   * Set a target point to move
+   */
+  DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
+    if (!this._canPlay)
+      return;
+    //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
+    if (r !== -1) {
+      this._start_loiter = 0;
+      this._maxSpeed = this._API.getMaxSpeed();
+    }
+    this._start_altitude = 0;
+    var coordinates = this._API.processCoordinates(x, y, z, r);
+    coordinates.x -= this._controlMesh.position.x;
+    coordinates.y -= this._controlMesh.position.z;
+    coordinates.z -= this._controlMesh.position.y;
+    this.setDirection(coordinates.x, coordinates.y, coordinates.z);
+    this.setAcceleration(this._maxAcceleration);
+    return;
+  };
+  /**
+   * Send a message to team drones
+   * @param msg The message to send
+   * @param id The targeted drone. -1 or nothing to broadcast
+   */
+  DroneManager.prototype.sendMsg = function (msg, id) {
+    //TODO
+    return;
+    var _this = this;
+    if (!this._canCommunicate)
+      return;
+    if (id >= 0) { }
+    else
+      id = -1;
+    if (_this.infosMesh) {
+      return _this._API.internal_sendMsg(JSON.parse(JSON.stringify(msg)), id);
+    }
+  };
+  /** Perform a console.log with drone id + the message */
+  DroneManager.prototype.log = function (msg) { };
+  DroneManager.prototype.getMaxHeight = function () {
+    return this._API.getMaxHeight();
+  };
+  DroneManager.prototype.getMinHeight = function () {
+    return this._API.getMinHeight();
+  };
+  DroneManager.prototype.getInitialAltitude = function () {
+      return this._API.getInitialAltitude();
+  };
+  DroneManager.prototype.getAltitudeAbs = function () {
+    if (this._controlMesh) {
+      var altitude = this._controlMesh.position.y;
+      return this._API.getAltitudeAbs(altitude);
+    }
+    return null;
+  };
+  /**
+   * Get a game parameter by name
+   * @param name Name of the parameter to retrieve
+   */
+  DroneManager.prototype.getGameParameter = function (name) {
+    if (!this._canCommunicate)
+      return;
+    return this._API.getGameParameter(name);
+  };
+  DroneManager.prototype.getCurrentPosition = function () {
+    if (this._controlMesh)
+      return this._API.processCurrentPosition(
+        this._controlMesh.position.x,
+        this._controlMesh.position.z,
+        this._controlMesh.position.y
+      );
+    return null;
+  };
+  DroneManager.prototype.setAltitude = function (altitude, skip_loiter) {
+    if (!this._canPlay)
+      return;
+    if (this._start_altitude === 0) {
+      this._start_altitude = 1;
+    }
+    altitude = this._API.setAltitude(altitude, this, skip_loiter);
+    return;
+  };
+  /**
+   * Make the drone loiter (circle with a set radius)
+   */
+  DroneManager.prototype.loiter = function () {
+    if (!this._canPlay)
+      return;
+    if (this._start_loiter === 0) {
+      this._start_loiter = 1;
+    }
+  };
+  DroneManager.prototype.getFlightParameters = function () {
+    if (this._API.getFlightParameters)
+      return this._API.getFlightParameters();
+    return null;
+  };
+  DroneManager.prototype.getYaw = function () {
+    //TODO
+    return 0;
+  };
+  DroneManager.prototype.doParachute = function () {
+    return this._API.doParachute(this);
+  };
+  DroneManager.prototype.exit = function () {
+    return this._API.exit(this);
+  };
+  DroneManager.prototype.landed = function () {
+    return this._API.landed(this);
+  };
+  /**
+   * Set the drone last checkpoint reached
+   * @param checkpoint to be set
+   */
+  DroneManager.prototype.setCheckpoint = function (checkpoint) {
+    //TODO
+    return null;
+  };
+  /**
+   * Function called on game start
+   */
+  DroneManager.prototype.onStart = function () { };
+  ;
+  /**
+   * Function called on game update
+   */
+  DroneManager.prototype.onUpdate = function (timestamp) { };
+  ;
+  /**
+   * Function called when drone crashes
+   */
+  DroneManager.prototype.onTouched = function () { };
+  ;
+  /**
+   * Function called when a message is received
+   * @param msg The message
+   */
+  DroneManager.prototype.onGetMsg = function (msg) { };
+  ;
+  return DroneManager;
 }());
 
 /******************************************************************************/
