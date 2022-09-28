@@ -1,6 +1,5 @@
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Utils import ensure_list
 import six
 Base_translateString = context.Base_translateString
 
