@@ -301,7 +301,7 @@
         })
         .push(function (parameters_doc) {
           game_parameters_json = JSON.parse(parameters_doc.text_content);
-          return gadget.jio_get("rescue_swarm_script_module/" + "lp_loiter");
+          return gadget.jio_get("rescue_swarm_script_module/" + "log_loiter");
         })
         .push(function (log) {
           log_content = log.text_content;
