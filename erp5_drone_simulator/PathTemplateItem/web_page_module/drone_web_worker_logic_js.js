@@ -195,7 +195,7 @@ var runGame, updateGame, eventGame, game_manager_instance;
         converted_log_point_list: converted_log_point_list
       };
       game_parameters_json.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
-      game_parameters_json.obstacles = path_point_list;
+      game_parameters_json.flight_path_point_list = path_point_list;
       /*game_parameters_json.randomSpawn.leftTeam.position.x = start_position[0];
       game_parameters_json.randomSpawn.leftTeam.position.y = start_position[1];
       game_parameters_json.randomSpawn.leftTeam.position.z = start_position[2];*/
@@ -576,7 +576,6 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._load3DModel = function (callback) {
-    console.log("_load3DModel!");
     var _this = this, droneTask, mapTask, obstacleTask,
       assetManager = new BABYLON.AssetsManager(this._scene);
     assetManager.useDefaultLoadingScreen = true;
@@ -609,7 +608,6 @@ var GameManager = /** @class */ (function () {
       return callback();
     };
     assetManager.load();
-    console.log("asset manager loaded (tasks for map, drones and obstacles)");
   };
 
   GameManager.prototype._getGameParameter = function () {
@@ -624,11 +622,12 @@ var GameManager = /** @class */ (function () {
     Object.assign(parameter, this._game_parameters_json);
     this._gameParameter = {};
     Object.assign(this._gameParameter, this._game_parameters_json);
-    //TODO obstacle is kept as real flight log uses for path draw. Refactor this
-    for (i = 0; i < parameter.obstacles.length; i += 1) {
-      parameter.obstacles[i].position = swap(parameter.obstacles[i].position);
-      if (parameter.obstacles[i].scale) {
-        parameter.obstacles[i].scale = swap(parameter.obstacles[i].scale);
+    for (i = 0; i < parameter.flight_path_point_list.length; i += 1) {
+      parameter.flight_path_point_list[i].position =
+        swap(parameter.flight_path_point_list[i].position);
+      if (parameter.flight_path_point_list[i].scale) {
+        parameter.flight_path_point_list[i].scale =
+          swap(parameter.flight_path_point_list[i].scale);
       }
     }
     return parameter;
@@ -1440,4 +1439,97 @@ var DroneManager = /** @class */ (function () {
     DroneManager.prototype.onGetMsg = function (msg) { };
     ;
     return DroneManager;
+}());
+
+/******************************************************************************/
+
+
+
+/******************************** MAP MANAGER *********************************/
+
+var MapManager = /** @class */ (function () {
+  //** CONSTRUCTOR
+  function MapManager(scene) {
+    var _this = this;
+    var max = GAMEPARAMETERS.mapSize.width;
+    if (GAMEPARAMETERS.mapSize.depth > max)
+        max = GAMEPARAMETERS.mapSize.depth;
+    if (GAMEPARAMETERS.mapSize.height > max)
+        max = GAMEPARAMETERS.mapSize.height;
+    max = max < GAMEPARAMETERS.mapSize.depth ? GAMEPARAMETERS.mapSize.depth : max;
+    // Skybox
+    var max_sky = (max * 10 < 20000) ? max * 10 : 20000,
+      skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
+    skybox.infiniteDistance = true;
+    skybox.renderingGroupId = 0;
+    var skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
+    skyboxMat.backFaceCulling = false;
+    skyboxMat.disableLighting = true;
+    skyboxMat.reflectionTexture = new BABYLON.CubeTexture("./assets/skybox/sky", scene);
+    skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMat.infiniteDistance = true;
+    skybox.material = skyboxMat;
+    // Plane from bottom
+    var largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat", scene);
+    largeGroundMat.specularColor = BABYLON.Color3.Black();
+    largeGroundMat.alpha = 0.4;
+    var largeGroundBottom = BABYLON.Mesh.CreatePlane("largeGroundBottom", max * 11, scene);
+    largeGroundBottom.position.y = -0.01;
+    largeGroundBottom.rotation.x = -Math.PI / 2;
+    largeGroundBottom.rotation.y = Math.PI;
+    largeGroundBottom.material = largeGroundMat;
+    // Camera
+    scene.activeCamera.upperRadiusLimit = max * 4;
+    // Terrain
+    var width = GAMEPARAMETERS.mapSize.width,
+      depth = GAMEPARAMETERS.mapSize.depth,
+      height = GAMEPARAMETERS.mapSize.height,
+      terrain = scene.getMeshByName("terrain001");
+    terrain.isVisible = true;
+    terrain.position = BABYLON.Vector3.Zero();
+    terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000, width / 50000);
+    // Flight path point list
+    var count = 0;
+    this._flight_path_point_list = [];
+    GAMEPARAMETERS.flight_path_point_list.forEach(function (obs) {
+      var newObj;
+      switch (obs.type) {
+        case "box":
+          newObj = BABYLON.MeshBuilder.CreateBox("obs_" + count, { 'size': 1 }, scene);
+          break;
+        case "cylinder":
+          newObj = BABYLON.MeshBuilder.CreateCylinder("obs_" + count, {
+            'diameterBottom': obs.diameterBottom,
+            'diameterTop': obs.diameterTop,
+            'height': 1
+          }, scene);
+          break;
+        case "sphere":
+          newObj = BABYLON.MeshBuilder.CreateSphere("obs_" + count, {
+            'diameterX': obs.scale.x,
+            'diameterY': obs.scale.y,
+            'diameterZ': obs.scale.z
+          }, scene);
+          break;
+        default:
+          return;
+      }
+      newObj.obsType = obs.type;
+      var convertion = Math.PI / 180;
+      if ("position" in obs)
+        newObj.position = new BABYLON.Vector3(obs.position.x, obs.position.y, obs.position.z);
+      if ("rotation" in obs)
+        newObj.rotation = new BABYLON.Vector3(obs.rotation.x * convertion, obs.rotation.y * convertion, obs.rotation.z * convertion);
+      if ("scale" in obs)
+        newObj.scaling = new BABYLON.Vector3(obs.scale.x, obs.scale.y, obs.scale.z);
+      if ("color" in obs) {
+        var material = new BABYLON.StandardMaterial(scene);
+        material.alpha = 1;
+        material.diffuseColor = new BABYLON.Color3(obs.color.r, obs.color.g, obs.color.b);
+        newObj.material = material;
+      }
+      _this._flight_path_point_list.push(newObj);
+    });
+  }
+  return MapManager;
 }());
