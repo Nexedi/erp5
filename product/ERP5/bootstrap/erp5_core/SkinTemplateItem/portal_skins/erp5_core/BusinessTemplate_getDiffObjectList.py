@@ -1,6 +1,7 @@
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
+import six
 
 # get selected business templates
 p = context.getPortalObject()
