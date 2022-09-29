@@ -14,7 +14,7 @@ for item in item_list:
   
   # Hash key from item_value
   item_split = item_value.split('/')
-  item_key = '/'.join(item_split[:split_depth] , '/' )
+  item_key = '/'.join(item_split[:split_depth])
 
   if item_key not in sub_field_dict:
     # Create property dict
