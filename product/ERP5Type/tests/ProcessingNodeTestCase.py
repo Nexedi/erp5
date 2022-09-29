@@ -3,7 +3,6 @@ import errno, logging, mock, os, socket, time
 import itertools
 from threading import Thread
 from UserDict import IterableUserDict
-import Lifetime
 import transaction
 from Testing import ZopeTestCase
 from zope.globalrequest import setRequest
@@ -142,14 +141,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   should be processed.
   """
   _server_address = None # (host, port) of the http server if it was started, None otherwise
-
-  @staticmethod
-  def asyncore_loop():
-    try:
-      Lifetime.lifetime_loop()
-    except KeyboardInterrupt:
-      pass
-    Lifetime.graceful_shutdown_loop()
 
   @staticmethod
   def startHTTPServer(verbose=False):
@@ -307,9 +298,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
         portal_activities.process_timer(None, None)
-        if Lifetime._shutdown_phase:
-          # XXX CMFActivity contains bare excepts
-          raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
         if time.time() >= deadline or message_count and any(x.processing_node == -2
@@ -378,7 +366,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     """Main loop for nodes that process activities"""
     setRequest(self.app.REQUEST)
     try:
-      while not Lifetime._shutdown_phase:
+      while True:
         time.sleep(.3)
         transaction.begin()
         try:
@@ -409,7 +397,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
       timerserver_thread = None
       try:
-        while not Lifetime._shutdown_phase:
+        while True:
           time.sleep(.3)
           transaction.begin()
           try:
