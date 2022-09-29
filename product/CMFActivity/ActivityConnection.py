@@ -34,7 +34,8 @@ from Acquisition import aq_parent
 # If the sort order below doesn't work, we cannot guarantee the sort key
 # used below will actually result in the activity connection being committed
 # after the ZODB and Catalog data.
-assert None < 0 < '' < (), "Cannot guarantee commit of activities comes after the appropriate data"
+# XXX TODO PY3
+#assert None < 0 < '' < (), "Cannot guarantee commit of activities comes after the appropriate data"
 
 manage_addActivityConnectionForm = HTMLFile('dtml/connectionAdd', globals())
 
