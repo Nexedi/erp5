@@ -1,0 +1,256 @@
+const ALTITUDE_DIFF = 30,
+  FLIGH_ALTITUDE = 100,
+  PARACHUTE_ALTITUDE = 35,
+  EPSILON = 105,
+  EPSILON_YAW = 6,
+  EPSILON_ALTITUDE = 5,
+  TARGET_YAW = 0,
+  checkpoint_list = [
+    {
+      "latitude": 45.64492790560583,
+      "longitude": 14.25334942966329,
+      "altitude": 585.1806861589965
+    },
+    {
+      "latitude": 45.64316335436476,
+      "longitude": 14.26332880184475,
+      "altitude": 589.8802607573035
+    },
+    {
+      "latitude": 45.64911917196595,
+      "longitude": 14.26214792790128,
+      "altitude": 608.6648153348965
+    },
+    {
+      "latitude": 45.64122685351364,
+      "longitude": 14.26590493128597,
+      "altitude": 606.1448368129072
+    },
+    {
+      "latitude": 45.64543355564817,
+      "longitude": 14.27242391207985,
+      "altitude": 630.0829598206344
+    },
+    {
+      "latitude": 45.6372792927328,
+      "longitude": 14.27533492411138,
+      "altitude": 616.1839898415284
+    },
+    {
+      "latitude": 45.64061299543953,
+      "longitude": 14.26161958465814,
+      "altitude": 598.0603137354178
+    },
+    {
+      "latitude": 45.64032340702919,
+      "longitude": 14.2682896662383,
+      "altitude": 607.1243119862851
+    }
+  ],
+  landing_point = [
+    {
+      "latitude": 45.6398451,
+      "longitude": 14.2699217
+    }
+  ],
+  LEADER_ID = 0,
+  IS_LEADER = me.id === LEADER_ID;
+
+function altitudeReached(altitude, target_altitude) {
+  //console.log(`[DEMO] Waiting for altitude... (${altitude} , ${target_altitude})`);
+  return Math.abs(altitude - target_altitude) < EPSILON_ALTITUDE;
+}
+
+function distance(lat1, lon1, lat2, lon2) {
+  const R = 6371e3, // meters
+    la1 = lat1 * Math.PI/180, // la, lo in radians
+    la2 = lat2 * Math.PI/180,
+    lo1 = lon1 * Math.PI/180,
+    lo2 = lon2 * Math.PI/180;
+
+  //haversine formula
+  const sin_lat = Math.sin((la2 - la1)/2),
+    sin_lon = Math.sin((lo2 - lo1)/2),
+    h = sin_lat*sin_lat + Math.cos(la1)*Math.cos(la2)*sin_lon*sin_lon;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+
+function exit_on_fail(ret, msg) {
+  if (ret) {
+    console.log(msg);
+    me.exit(1);
+  }
+}
+
+function mustWait(timestamp) {
+  if(me.timestamp === 0) {
+    me.timestamp = timestamp;
+  }
+  return timestamp - me.timestamp < me.must_wait;
+}
+
+me.onStart = function() {
+  console.log("[WEB SCRIPT] WEB WORKER DRONE START!");
+  /*console.log("distance from 1st point at start:", distance(me.getCurrentPosition().x, me.getCurrentPosition().y,
+                           checkpoint_list[0].latitude,
+                           checkpoint_list[0].longitude));*/
+  me.direction_set = false;
+  me.init_alt_reached = false;
+  me.landing = false;
+  me.landing_alt_reached = false;
+  me.must_wait = 3000;
+  me.next_checkpoint = 0;
+  me.parachute_triggered = false;
+  me.start_altitude = me.getInitialAltitude() + FLIGH_ALTITUDE;
+  me.timestamp = 0;
+
+  if (!IS_LEADER) {
+    me.follow_leader = true;
+    me.leader_init_alt_reached = false;
+    me.start_altitude += ALTITUDE_DIFF;
+    me.must_wait = 0;
+  }
+  exit_on_fail(
+    me.setAltitude(me.start_altitude + 1, true),
+    "Failed to set start altitude");
+};
+
+me.onUpdate = function(timestamp) {
+  if (!me.init_alt_reached) {
+    me.init_alt_reached = altitudeReached(me.getAltitudeAbs(), me.start_altitude);
+    return;
+  }
+
+  if (me.must_wait > 0) {
+    if (!mustWait(timestamp)) {
+      me.must_wait = 0;
+      me.timestamp = 0;
+    }
+    return;
+  }
+
+  if (!IS_LEADER && me.follow_leader) {
+    if (me.drone_dict[LEADER_ID].altitudeAbs === 0) {
+      return console.log("[DEMO] Waiting for leader to send its altitude");
+    }
+
+    if (!me.leader_init_alt_reached) {
+      me.leader_init_alt_reached = me.drone_dict[LEADER_ID].altitudeAbs >= me.start_altitude - ALTITUDE_DIFF;
+      return console.log(`[DEMO] Waiting for leader to reach altitude ${me.start_altitude - ALTITUDE_DIFF} (currently ${me.drone_dict[LEADER_ID].altitudeAbs})`);
+    }
+
+    if (me.drone_dict[LEADER_ID].altitudeRel > PARACHUTE_ALTITUDE) {
+      exit_on_fail(
+        me.setTargetCoordinates(
+          me.drone_dict[LEADER_ID].latitude,
+          me.drone_dict[LEADER_ID].longitude,
+          me.drone_dict[LEADER_ID].altitudeAbs + ALTITUDE_DIFF,
+          30.001
+        ),
+        "Failed to follow leader");
+    } else {
+      me.follow_leader = false;
+      me.next_checkpoint = me.drone_dict[LEADER_ID].lastCheckpoint + 1;
+      console.log("[DEMO] Stop following...\n");
+    }
+    return;
+  }
+
+  if (!me.direction_set) {
+    if (me.next_checkpoint < checkpoint_list.length) {
+      var current_position = me.getCurrentPosition();
+      var dist = distance(current_position.x, current_position.y,
+                             checkpoint_list[me.next_checkpoint].latitude,
+                             checkpoint_list[me.next_checkpoint].longitude);
+      /*console.log("---------------------------------------------");
+      console.log("[SCRIPT] current_position:", current_position);
+      console.log("[SCRIPT] next_checkpoint:", checkpoint_list[me.next_checkpoint]);
+      console.log("[SCRIPT] distance:", dist);*/
+      exit_on_fail(
+        me.setTargetCoordinates(
+          checkpoint_list[me.next_checkpoint].latitude,
+          checkpoint_list[me.next_checkpoint].longitude,
+          checkpoint_list[me.next_checkpoint].altitude + FLIGH_ALTITUDE,
+          100
+        ),
+        "Failed to set checkpoint coordinates");
+      //console.log(`[DEMO] Going to Checkpoint ${me.next_checkpoint}\n`)
+    } else {
+      console.log("[DEMO] Setting landing coordinates...\n");
+      me.landing_altitude = me.getAltitudeAbs() - me.getCurrentPosition().z + PARACHUTE_ALTITUDE;
+      exit_on_fail(
+        /*me.setTargetCoordinates(
+          checkpoint_list[checkpoint_list.length - 1].latitude,
+          checkpoint_list[checkpoint_list.length - 1].longitude,
+          me.landing_altitude,
+          100
+        ),*/
+        me.setAltitude(me.landing_altitude, true),
+        "Failed to set landing coordinates");
+    }
+    me.direction_set = true;
+    return;
+  }
+
+  if (me.next_checkpoint < checkpoint_list.length) {
+    me.current_position = me.getCurrentPosition();
+    me.distance = distance(me.current_position.x, me.current_position.y,
+                           checkpoint_list[me.next_checkpoint].latitude,
+                           checkpoint_list[me.next_checkpoint].longitude);
+    if (me.distance > EPSILON) {
+      //console.log(`Waiting for drone to get to destination (${me.distance} m)`);
+    } else {
+      /*console.log(`[DEMO] Reached Checkpoint ${me.next_checkpoint}\n`);
+      console.log("[SCRIPT] current_position:", me.current_position);*/
+      var loiter_center = checkpoint_list[me.next_checkpoint];
+      /*console.log("[SCRIPT] next_checkpoint:", checkpoint_list[me.next_checkpoint]);
+      console.log("[SCRIPT] drone-checkpoint distance:", me.distance);*/
+      me.next_checkpoint += 1;
+      me.sendMsg(JSON.stringify({ next_checkpoint: me.next_checkpoint }));
+      me.direction_set = false;
+      me.must_wait = 30000;
+      me.loiter();
+    }
+    return;
+  }
+
+  if (!me.landing_alt_reached) {
+    me.landing_alt_reached = altitudeReached(me.getAltitudeAbs(), me.landing_altitude);
+    return;
+  }
+
+  if (!me.landing) {
+    me.current_position = me.getCurrentPosition();
+    me.distance = distance(me.current_position.x, me.current_position.y,
+                           landing_point.latitude, landing_point.longitude);
+    if (me.distance > 20) {
+      //console.log(`[DEMO] Waiting to reach landing point (current distance is ${me.distance})`);
+    } else {
+      console.log("[DEMO] Landing...\n");
+      me.landing = true;
+    }
+    return;
+  }
+
+  if (!me.parachute_triggered) {
+    if (Math.abs(me.getYaw() - TARGET_YAW) < EPSILON_YAW) {
+      console.log("[DEMO] Deploying parachute...");
+      exit_on_fail(me.doParachute(2), "Failed to deploy parachute");
+      me.parachute_triggered = true;
+    } else {
+      return console.log(`[DEMO] Waiting for yaw...`);
+    }
+  }
+
+  if (me.landed()) {
+    console.log("calling me.exit(0) when me.landed");
+    me.exit(0);
+  }
+};
+
+me.onGetMsg = function(msg) {
+  me.msgDict = JSON.parse(msg);
+  if (me.follow_leader && me.msgDict.hasOwnProperty("next_checkpoint")) {
+    me.next_checkpoint = me.msgDict.next_checkpoint;
+  }
+};
