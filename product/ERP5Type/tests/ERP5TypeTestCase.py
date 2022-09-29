@@ -35,6 +35,8 @@ from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 import six
+if six.PY3:
+  StandardError = Exception
 
 from zope.component.hooks import setSite
 
