@@ -273,6 +273,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function renderHeader() {
       var gadget = this,
@@ -293,10 +294,11 @@
       var script_content, game_parameters_json, log_content;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.jio_get("rescue_swarm_script_module/" + "web_worker");
+          var query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
+          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
-        .push(function (script) {
-          script_content = script.text_content;
+        .push(function (result) {
+          script_content = result.data.rows[0].value.text_content;
           return gadget.jio_get("rescue_swarm_map_module/" + "compare_map");
         })
         .push(function (parameters_doc) {
