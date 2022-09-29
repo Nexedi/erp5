@@ -148,7 +148,6 @@
                   width: options.width,
                   height: options.height,
                   script: options.script,
-                  game_parameters_json: options.game_parameters_json,
                   log: options.log
                 }, [options.canvas]);
                 break;
@@ -291,7 +290,7 @@
       offscreen = canvas.transferControlToOffscreen();
 
       //TODO this should be in game logic BUT gadget can't be accessed from WW
-      var script_content, game_parameters_json, log_content;
+      var script_content, log_content;
       return new RSVP.Queue()
         .push(function () {
           var query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
@@ -299,10 +298,6 @@
         })
         .push(function (result) {
           script_content = result.data.rows[0].value.text_content;
-          return gadget.jio_get("rescue_swarm_map_module/" + "compare_map");
-        })
-        .push(function (parameters_doc) {
-          game_parameters_json = JSON.parse(parameters_doc.text_content);
           var query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
@@ -316,7 +311,6 @@
             width: canvas.width,
             height: canvas.height,
             script: script_content,
-            game_parameters_json: game_parameters_json,
             log: log_content
           });
 
