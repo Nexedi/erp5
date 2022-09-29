@@ -106,14 +106,12 @@ instancehome = getConfiguration().instancehome
 if instancehome is not None:
   log_directory = os.path.join(instancehome, 'log')
   if os.path.isdir(log_directory):
-    from Signals import Signals
     from ZConfig.components.logger.loghandler import FileHandler
     log_file_handler = FileHandler(os.path.join(log_directory, 'CMFActivity.log'))
     # Default zope log format string borrowed from
     # ZConfig/components/logger/factory.xml, but without the extra "------"
     # line separating entries.
     log_file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s", "%Y-%m-%dT%H:%M:%S"))
-    Signals.registerZopeSignals([log_file_handler])
     activity_logger.addHandler(log_file_handler)
     activity_logger.propagate = 0
 
