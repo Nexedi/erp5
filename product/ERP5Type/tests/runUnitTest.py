@@ -16,6 +16,7 @@ try:
   from coverage import coverage
 except ImportError:
   coverage = None
+import six
 
 WIN = os.name == 'nt'
 
@@ -290,6 +291,14 @@ class ERP5TypeTestLoader(unittest.TestLoader):
   testMethodPrefix = property(
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
+
+  if six.PY3:
+    def __init__(self):
+      # super(ERP5TypeTestLoader, self).__init__()
+      self.errors = []
+      # Tracks packages which we have called into via load_tests, to
+      # avoid infinite re-entrancy.
+      self._loading_packages = set()
 
   def _importZodbTestComponent(self, name):
     import erp5.component.test
