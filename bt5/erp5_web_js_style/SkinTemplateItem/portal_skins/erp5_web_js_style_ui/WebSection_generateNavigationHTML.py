@@ -1,15 +1,11 @@
-import cgi
+from Products.PythonScripts.standard import html_quote
 import re
 
 web_section = context
 web_site = web_section.getWebSiteValue()
 
 def _(string_to_escape):
-  return cgi.escape("%s" % string_to_escape, quote=False)
-
-
-def __(string_to_escape):
-  return cgi.escape("%s" % string_to_escape, quote=True)
+  return html_quote("%s" % string_to_escape)
 
 
 def generateSectionListHTML(result_list, section_list):
@@ -18,7 +14,7 @@ def generateSectionListHTML(result_list, section_list):
     for section in section_list:
       # Add missing / suffix to get correct relative url generation
       # XXX Fix WebSection_getSiteMapTree instead, but no idea what would be the site effects
-      result_list.append('<li><a href="%s">%s</a>' % (__(section['url'] + '/'), _(section['translated_title'])))
+      result_list.append('<li><a href="%s">%s</a>' % (_(section['url'] + '/'), _(section['translated_title'])))
       generateSectionListHTML(result_list, section['subsection'])
       result_list.append('</li>')
     result_list.append('</ul>')
@@ -41,8 +37,8 @@ def generateDocumentListHTML(result_list, document_list):
   _(section['translated_title']),
   ('<p class="p-summary">%s</p>' % _(section['description'])) if section.get('description') else '',
   ('<p class="p-author h-card">%s</p>' % _(section['document'].Document_getContributorTitleList()[0])),
-  __(section['url']),
-  __(publication_date.HTML4()),
+  _(section['url']),
+  _(publication_date.HTML4()),
   _(publication_date.rfc822())
 ))
     result_list.append('</ul></aside>')
@@ -65,12 +61,12 @@ for language in available_language_set:
     website_url_set[language] = re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_site.absolute_url())
 
 for language, url in website_url_set.items():
-  result_list += '<li><a href="%s" hreflang="%s"><abbr lang="%s">%s</abbr></a></li>' % (__(url), __(language), __(language), _(language))
+  result_list += '<li><a href="%s" hreflang="%s"><abbr lang="%s">%s</abbr></a></li>' % (_(url), _(language), _(language), _(language))
 result_list.append('</ul></nav>')
 
 # Sitemap
 result_list.append('<nav id="sitemap">')
-result_list.append('<a href="%s">%s</a>' % (__(web_site.absolute_url()), _(web_site.getTranslatedTitle())))
+result_list.append('<a href="%s">%s</a>' % (_(web_site.absolute_url()), _(web_site.getTranslatedTitle())))
 generateSectionListHTML(result_list, web_site.WebSection_getSiteMapTree(include_document=False, depth=99))
 result_list.append('</nav>')
 

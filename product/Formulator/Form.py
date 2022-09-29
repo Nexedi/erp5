@@ -14,7 +14,6 @@ from OFS.SimpleItem import Item
 import Acquisition
 from six.moves.urllib.parse import quote
 import os
-import string
 from six import StringIO
 
 from .Errors import ValidationError, FormValidationError, FieldDisabledError
@@ -744,7 +743,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         fieldname -- the name of the field (meta_type) to add
         Result    -- empty string
         """
-        title = string.strip(title)
+        title = title.strip()
         if not title:
             title = id # title is always required, use id if not provided
         # get the field class we want to add
@@ -786,9 +785,9 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         try:
             result = self.settings_form.validate_all(REQUEST)
         except FormValidationError as e:
-            message = "Validation error(s).<br />" + string.join(
+            message = "Validation error(s).<br />" + "<br />".join(
                 ["%s: %s" % (error.field.get_value('title'),
-                                              error.error_text) for error in e.errors], "<br />")
+                                              error.error_text) for error in e.errors])
             return self.formSettings(self, REQUEST,
                                      manage_tabs_message=message)
         # if we need to switch encoding, get xml representation before setting
@@ -906,7 +905,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         field_ids = self._get_field_ids(group, REQUEST)
         if (to_group != 'Move to:' and
             self.move_field_group(field_ids, group, to_group)):
-            fields = string.join(field_ids, ", ")
+            fields = ", ".join(field_ids)
             message = "Fields %s transferred from %s to %s." % (fields,
                                                                 group,
                                                                 to_group)
@@ -920,7 +919,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
     def manage_add_group(self, new_group, REQUEST):
         """Adds a new group.
         """
-        group = string.strip(new_group)
+        group = new_group.strip()
         if (group and group != 'Select group' and
             self.add_group(group)):
             message = "Group %s created." % (group)
@@ -947,7 +946,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """Renames group.
         """
         if 'new_name' in REQUEST:
-            new_name = string.strip(REQUEST['new_name'])
+            new_name = REQUEST['new_name'].strip()
             if self.rename_group(group, new_name):
                 message = "Group %s renamed to %s." % (group, new_name)
             else:
