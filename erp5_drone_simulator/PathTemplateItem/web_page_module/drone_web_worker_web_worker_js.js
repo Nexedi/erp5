@@ -23,8 +23,7 @@ self.document = {
 	defaultView: self.window,
 };
 
-importScripts('babylon.js', 'babylon.gui.js');
-importScripts('rsvp.js',
+importScripts('babylon.js', 'babylon.gui.js', 'rsvp.js',
               'gadget_erp5_page_game_logic.js');
 
 function mainToWorker(evt) {
