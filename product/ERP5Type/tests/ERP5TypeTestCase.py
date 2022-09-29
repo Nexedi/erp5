@@ -35,6 +35,8 @@ from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 from new import function
 from zope.globalrequest import getRequest
 import six
+if six.PY3:
+  StandardError = Exception
 original_get_request = function(getRequest.__code__, getRequest.__globals__)
 
 from Testing.ZopeTestCase.connections import registry
