@@ -61,9 +61,6 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-if six.PY2:
-  # No more ZServer
-  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
@@ -94,9 +91,6 @@ from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-if six.PY2:
-  # No ZServer
-  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 if six.PY2:
   # XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
