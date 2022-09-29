@@ -24,29 +24,14 @@
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
 
-      //TODO this should be in game logic BUT gadget can't be accessed from WW
-      var script_content, log_content;
       return new RSVP.Queue()
         .push(function () {
-          var query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
-          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
-        .push(function (result) {
-          script_content = result.data.rows[0].value.text_content;
-          var query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
-          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
-        .push(function (result) {
-          log_content = result.data.rows[0].value.text_content;
-
           gadget.runGame({
             logic_url: parameter_gamelogic,
             canvas: offscreen,
             canvas_original: canvas,
             width: canvas.width,
-            height: canvas.height,
-            script: script_content,
-            log: log_content
+            height: canvas.height
           });
 
           return gadget.updateHeader({
