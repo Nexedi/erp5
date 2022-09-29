@@ -21,7 +21,7 @@ if context.getExternalProcessingState() not in ('converted', 'empty'):
     message = 'Problem: %s' % (repr(e) or 'undefined.')
   # reach here, then exception was raised, message must be logged in workflow
   # do not simply raise but rather change external processing state
-  # so user will see something is wrong 
+  # so user will see something is wrong
   context.conversionFailed(comment=message)
   log('%s %s' %(context.getRelativeUrl(), message))
 return message

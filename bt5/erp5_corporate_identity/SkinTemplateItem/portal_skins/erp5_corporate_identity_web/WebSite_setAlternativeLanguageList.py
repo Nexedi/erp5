@@ -23,7 +23,7 @@ def generateAlternativeTags(my_loop_language, my_visible_language, my_url=None):
     visible_path_snippet = '/' + my_visible_language + '/'
     updated_path_snippet = '/'
   else:
-    
+
     # no language indicator in path
     if my_visible_language == default_language:
       visible_path_snippet = website_url
@@ -36,21 +36,21 @@ def generateAlternativeTags(my_loop_language, my_visible_language, my_url=None):
     my_loop_language,
     my_url.replace(visible_path_snippet, updated_path_snippet)
   )
-  
+
 def generateAlternativeLanguageListForDocument(webpage):
   webpage_url = webpage.getAbsoluteUrl()
   reference = webpage.getProperty("reference")
   visible_language = webpage.getProperty("language")
-  
+
   available_version_list = webpage.getDocumentValueList(
     reference=reference,
     all_languages=True,
     portal_type='Web Page',
     validation_state='published_alive'
   )
-  
+
   if (reference is not None
-    and visible_language is not None 
+    and visible_language is not None
     and language_displayed_in_path == 1
   ):
     result = []

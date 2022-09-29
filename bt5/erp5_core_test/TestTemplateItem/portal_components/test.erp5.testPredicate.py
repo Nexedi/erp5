@@ -654,7 +654,7 @@ class TestPredicates(TestPredicateMixIn):
     self.assertFalse(getattr(predicate, '_identity_criterion', None) is None)
     self.assertFalse(getattr(predicate, '_range_criterion', None) is None)
 
-    
+
   def test_predicateIndexation(self):
     predicate = self.createPredicate(
       membership_criterion_base_category_list = ['region'],

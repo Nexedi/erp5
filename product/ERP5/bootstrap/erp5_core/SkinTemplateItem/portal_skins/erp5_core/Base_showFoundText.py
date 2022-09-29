@@ -1,7 +1,7 @@
 """
   This script is used in listbox allowing when switching 'table' --> 'search' mode.
-  It will try to generate parts of the document's text 
-  containing searched words as well highlighting the searched 
+  It will try to generate parts of the document's text
+  containing searched words as well highlighting the searched
   words in the text itself.
 """
 import six
@@ -40,7 +40,7 @@ if search_string != '':
   search_string = search_argument_list.get('searchabletext', '')
 
 if search_string == '':
-  # the searched words are empty (e.g. because we used only parameters 
+  # the searched words are empty (e.g. because we used only parameters
   # without pure searchable text)
   return getRandomDocumentTextExcerpt(document_text)
 else:

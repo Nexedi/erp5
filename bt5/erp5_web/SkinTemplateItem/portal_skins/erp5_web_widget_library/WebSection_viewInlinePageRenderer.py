@@ -14,7 +14,7 @@ def getInlinePage(reference, language):
 
 from Products.ERP5Type.Cache import CachingMethod
 web_site_url = context.getWebSectionValue().absolute_url()
-getInlinePage = CachingMethod(getInlinePage, 
+getInlinePage = CachingMethod(getInlinePage,
                  id=('WebSection_getInlinePageRenderer', web_site_url))
 language = context.Localizer.get_selected_language()
 return getInlinePage(reference, language)

@@ -23,21 +23,21 @@ variation_key_list = cartesianProduct( variation_category_dict.values() )
 
 
 for variation_key in variation_key_list:
-  params =  { 
+  params =  {
     'reference_variation_category_list' : variation_key,
   }
 
   result.append(
     # Context is report form
-    ReportSection(path=context.getPhysicalPath(), 
-                  title='Resource variation',   
+    ReportSection(path=context.getPhysicalPath(),
+                  title='Resource variation',
                   level=1,
                   form_id='Transformation_viewExpanded',
                   selection_name='transformation_expanded_selection',
                   selection_params=params,
 #                  selection_columns="Id",
                   listbox_display_mode='FlatListMode'
-    )             
+    )
   )
 
 return result

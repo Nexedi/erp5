@@ -46,5 +46,5 @@ listbox.append(newTempBase(context.getPortalObject(),
                  ))
 
 session['listbox'] = listbox
-return context.Base_redirect('TestPageModule_viewChapterCreationWizardDialog', 
+return context.Base_redirect('TestPageModule_viewChapterCreationWizardDialog',
                              keep_items = dict(portal_status_message=portal_status_message))

@@ -19,12 +19,12 @@ elif not (no_url or no_web_page) or not (no_reference or no_web_page):
   if validator:
     return 0
   elif web_page_context:
-    return dict(result=False, 
-                form_id=form_id, 
+    return dict(result=False,
+                form_id=form_id,
                 portal_status_message=context.Base_translateString("url, web_page and web_page_reference don't need to be set in Web Page context."))
   else:
-    return dict(result=False, 
-                form_id=form_id, 
+    return dict(result=False,
+                form_id=form_id,
                 portal_status_message=context.Base_translateString("You have to choose between External Url (url), ERP5 Web Page Path (web_page) and ERP5 Web Page Reference (web_page_reference). Only ONE of them must be set."))
 
 if validator:

@@ -863,7 +863,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         f = BytesIO()
         exportXML(obj._p_jar, obj._p_oid, f)
         bta.addObject(f, key, path=path)
-        
+
       if catalog_method_template_item:
         # add all datas specific to catalog inside one file
         xml_data = self.generateXml(key)
@@ -931,7 +931,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       # already exist, therefore BaseTemplateItem.__init__() is called which
       # does not set _archive with portal_components/ like
       # ObjectTemplateItem.__init__()
-      # XXX - the above comment is a bit unclear, 
+      # XXX - the above comment is a bit unclear,
       # still not sure if this is handled correctly
       if file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components':
         self._archive[obj_key] = None
@@ -2032,7 +2032,7 @@ class SkinTemplateItem(ObjectTemplateItem):
       if not force and update_dict.get(relative_url)  == 'nothing':
         continue
       # self._objects contains the skin folder and all skins, for this
-      # we want to process only the skin folder 
+      # we want to process only the skin folder
       relative_url = relative_url.split('/')
       if len(relative_url) != 2:
         continue
@@ -4339,14 +4339,14 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
     action for developers
     """
     return path.startswith(self._tool_id + '/')
-  
+
   # XXX temporary should be eliminated from here
   def _importFile(self, file_name, file_obj):
     ObjectTemplateItem._importFile(self, file_name, file_obj)
-  
+
   # XXX temporary should be eliminated from here
   def export(self, context, bta, **kw):
-    ObjectTemplateItem.export(self, context, bta, **kw)  
+    ObjectTemplateItem.export(self, context, bta, **kw)
 
   def getTemplateIdList(self):
     """

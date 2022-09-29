@@ -23,7 +23,7 @@ for old_category_name, new_category_name in upgrade_list:
 
   sensitive_portal_type_list = []
   new_base_category_id = new_category_name.split('/')[0]
-  
+
   # We gather portal types having the new category defined as a property
   for portal_type in portal.portal_types.listTypeInfo():
     if new_base_category_id in portal_type.getInstancePropertyAndBaseCategoryList():

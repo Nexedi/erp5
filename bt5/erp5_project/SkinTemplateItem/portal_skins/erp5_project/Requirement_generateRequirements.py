@@ -54,10 +54,10 @@ for requirement_item in requirements_items:
     new_1st_level_requirement_title = requirement_item['title']
   else:
     has_1st_level_requirement = False
-  
+
   if has_1st_level_requirement:
     description_dict[new_1st_level_requirement_title] = ''
-  
+
   # the item has a second level requirement, built it
   if requirement_item['sub_title'] not in ('', None):
     has_2nd_level_requirement = True

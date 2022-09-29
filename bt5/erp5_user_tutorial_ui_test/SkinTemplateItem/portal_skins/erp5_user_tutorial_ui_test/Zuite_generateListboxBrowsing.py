@@ -17,7 +17,7 @@ for selection in listbox_selection:
 </tr>
 """ % (selection[0], selection[1])
 
-  
+
 selenium_code += \
 """\
 <tr>

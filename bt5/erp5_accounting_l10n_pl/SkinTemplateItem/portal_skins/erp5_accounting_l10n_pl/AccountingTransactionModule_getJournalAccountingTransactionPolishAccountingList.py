@@ -4,14 +4,14 @@ Journal entries, for use with AccountingTransactionModule_viewJournal
 changed by BG to make a simple list of purchases / sales
 ("rejestr zakupów" i "rejestr sprzedaży")
 
-return a list of dictionnaries like that : 
-  
+return a list of dictionnaries like that :
+
 {
   'date' : Date
   'description' : String
   'reference':String
   'lines' : {
-     'debtor' : Bool, 
+     'debtor' : Bool,
      'account_gap_id' : String
      'account_name' : String # with extra-description (ie. bank name if a bank, organisation name if an other party)
      'amount' : Float

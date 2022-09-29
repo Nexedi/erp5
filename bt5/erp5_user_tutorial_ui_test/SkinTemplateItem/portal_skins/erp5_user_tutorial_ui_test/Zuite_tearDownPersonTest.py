@@ -2,7 +2,7 @@ portal = context.getPortalObject()
 howto_dict = context.Zuite_getHowToInfo()
 
 # remove the person of the test if existing
-person_list = context.portal_catalog(portal_type='Person', 
+person_list = context.portal_catalog(portal_type='Person',
                                      title=(howto_dict['person_howto_title'], howto_dict['person_howto_title2'],))
 if person_list is not None:
   portal.person_module.deleteContent([x.getId() for x in person_list])

@@ -1,6 +1,6 @@
 """
 ================================================================================
-Create A Webbook Layout Based on Websection Predicate and keywords 
+Create A Webbook Layout Based on Websection Predicate and keywords
 ================================================================================
 """
 from Products.PythonScripts.standard import html_quote
@@ -38,14 +38,14 @@ if len(web_section_document_list) > 0:
     for page in web_section_document_list:
       page_subject_list = page.getSubjectList() or []
       if len(page_subject_list) > 0:
-    
+
         # find out which section keyword a page belongs to
         page_subject_in_section_subject = None
         for subject in page_subject_list:
           if subject in web_section_keyword_list:
             page_subject_in_section_subject = subject
         page_subject_in_section_subject = page_subject_in_section_subject or "ungrouped"
-        
+
         page_dict = {}
         page_dict["title"] = html_quote(page.getTitle())
         page_dict["short_title"] = html_quote(page.getShortTitle())
@@ -53,7 +53,7 @@ if len(web_section_document_list) > 0:
         page_dict["subject_list"] = page_subject_list
         page_dict["reference"] = html_quote(page.getReference())
         page_dict["text_content"] = page.getTextContent()
-        
+
         # now add all keywords and the page to this group
         web_section_keyword_dict[page_subject_in_section_subject].append(page_dict)
 
@@ -61,7 +61,7 @@ if len(web_section_document_list) > 0:
     group_count = 0
     for group in web_section_keyword_dict:
       group_count += 1
-    
+
     for group in web_section_keyword_dict:
       has_entry = None
       group_page_list = web_section_keyword_dict[group]
@@ -106,13 +106,13 @@ if len(web_section_document_list) > 0:
           for page in group_page_list:
             if keyword in page.get("subject_list"):
               book_content.append(page.get("text_content"))
-        
+
         if has_entry is not None:
           book_toc.append(section_close)
-  
+
   return web_section_default_document_content + ''.join(book_toc) + ''.join(book_content)
 
-return web_section_default_document_content  
+return web_section_default_document_content
 
 
 #===============================================================================
@@ -130,7 +130,7 @@ return web_section_default_document_content
 #          for header in header_list:
 #            header_tag = re.findall("<(h[1-6]>)", header)[0] #h2>
 #            header_key = header_tag[1]
-#            new_header = header.replace(header_tag, pushDown(int(header_key) + my_downgrade)) 
+#            new_header = header.replace(header_tag, pushDown(int(header_key) + my_downgrade))
 #            my_content = my_content.replace(header, new_header)
 #
 #          return my_content or ""
@@ -206,18 +206,18 @@ return web_section_default_document_content
 #
 #            if len(web_section_keyword_list) == 0:
 #              web_section_keyword_dict["ungrouped"].append(page_dict)
-#            else:             
+#            else:
 #              if len(page_subject_list) > 0:
 #                for subject in page_subject_list:
 #                  if web_section_keyword_dict.get(subject) is not None:
 #                    #page_matched_to_websection_keyword = True
 #                    web_section_keyword_dict[subject].append(page_dict)
-#              
+#
 #              # no keywords set on page or keyword not matching websection keyword
 #              #if len(page_subject_list) == 0 or page_matched_to_websection_keyword is None:
 #              #  web_section_keyword_dict["ungrouped"].append(page_dict)
 #
-#            
+#
 #          # all pages allocated to web section keywords, now split by page keyword
 #          # override for JP and split into rule recommendation and crime
 #          for group in web_section_keyword_dict:
@@ -245,7 +245,7 @@ return web_section_default_document_content
 #                group_has_header = True
 #              else:
 #                book_toc.append(section_placeholder)
-#              
+#
 #              book_toc.append(section_start)
 #
 #              # build list of keywords per group, exclude web section keywords
@@ -278,17 +278,17 @@ return web_section_default_document_content
 #                  page_reference = page.get("reference")
 #                  page_anchor = group_anchor + "-" + page_reference.replace(" ", "_")
 #                  page_url = "../" + page_reference
-#                 
+#
 #                  if keyword in page.get("subject_list"):
 #                    keyword_page_count += 1
 #                    book_keyword_toc.append(keyword_entry % {
-#                      "reference": "reference-" + page_anchor, 
+#                      "reference": "reference-" + page_anchor,
 #                      "title": page.get("short_title"),
 #                      "description": page.get("description"),
 #                      "url": page_url
 #                    })
 #                    book_keyword_content.append(
-#                      '<a name="reference-' + page_anchor + '"></a>' + 
+#                      '<a name="reference-' + page_anchor + '"></a>' +
 #                      downgradeHeader(page.get("text_content"), 3 if group_has_header else 2)
 #                    )
 #                group_title_dict["count"] = keyword_page_count
@@ -300,7 +300,7 @@ return web_section_default_document_content
 #          document_content = document_content.replace(
 #           '${predicate_view_as_book}',
 #            book_anchor + ''.join(book_toc) + '<br/><br/>' + ''.join(book_content)
-#          )  
+#          )
 
 #===============================================================================
 
@@ -308,7 +308,7 @@ return web_section_default_document_content
 #def generateBookByKeyword(complete_keyword_dict):
 #  keyword_list = complete_keyword_dict.keys()
 #  keyword_list.sort()
-#  
+#
 #  return_value_list = []
 #  for keyword in keyword_list:
 #    return_value_list.append(list_start % (keyword.title()))
@@ -340,7 +340,7 @@ return web_section_default_document_content
 #
 #if len(web_section_document_list) > 0:
 #  book_content = []
-#  
+#
 #  # First grouping order is by web_section keywords
 #  web_section_keyword_list = web_section.getSubjectList() or []
 #  if len(web_section_keyword_list) > 0:
@@ -355,7 +355,7 @@ return web_section_default_document_content
 #    for page in web_section_document_list:
 #      page_subject_list = page.getSubjectList() or []
 #      if len(page_subject_list) > 0:
-#        
+#
 #        # find correct section keyword to add page to
 #        for subject in page_subject_list:
 #          if subject in web_section_keyword_list:
@@ -375,15 +375,15 @@ return web_section_default_document_content
 #                page_list.append(page)
 #        book_content.append(section_start % (group.title()))
 #        book_content.append(generateBookByKeyword(keyword_dict))
-#    
+#
 #    book_content = ''.join(book_content)
-#  
-#  return web_section_default_document_content + book_content  
+#
+#  return web_section_default_document_content + book_content
 #
 #  keyword_dict = {}
 #  for page in web_section_document_list:
 #    page_subject_list = page.getSubjectList() or []
-#  
+#
 #    if len(page_subject_list):
 #      for subject in page_subject_list:
 #        key = subject
@@ -392,5 +392,5 @@ return web_section_default_document_content
 #        page_list.append(page)
 #
 #  book_content = generateBookByKeyword(keyword_dict)
-#  
+#
 #  return web_section_default_document_content + book_content

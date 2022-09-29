@@ -7,13 +7,13 @@ To use, write your own method (probably External Method, since it is most likely
 to use re) that would analyze text content of the doc
 and return a dictionary of properties.
 """
-#Proxify to allow discover of metadata when publishing document 
+#Proxify to allow discover of metadata when publishing document
 
 information = context.getContentInformation()
 
 result = {}
 property_id_list = context.propertyIds()
-for k, v in information.items():  
+for k, v in information.items():
   key = k.lower()
   if v:
     if isinstance(v, unicode): v = v.encode('utf-8')

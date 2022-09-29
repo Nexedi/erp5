@@ -11,7 +11,7 @@ split_depth = 1
 for item in item_list:
   # Get value of the item
   item_value = item[int(not is_right_display)]
-  
+
   # Hash key from item_value
   item_split = item_value.split('/')
   item_key = '/'.join(item_split[:split_depth])

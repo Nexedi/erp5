@@ -17,7 +17,7 @@ follow_up_ticket_title = portal_workflow.getInfoFor(event,
 
 if follow_up_ticket_type not in ["", None] and \
      follow_up_ticket_title not in ["", None]:
-  return 
+  return
 
 if not event.getFollowUp():
   raise ValidationFailed(translateString('Follow up must be set to acknowledge an Event.'))

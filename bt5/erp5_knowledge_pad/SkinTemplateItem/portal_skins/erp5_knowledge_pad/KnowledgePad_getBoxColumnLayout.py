@@ -3,7 +3,7 @@ if real_context is None:
 layout = []
 added_box_ids = []
 all_box_ids = []
-boxes = context.contentValues(portal_type = 'Knowledge Box', 
+boxes = context.contentValues(portal_type = 'Knowledge Box',
                               checked_permission = 'View')
 isAnon = context.portal_membership.isAnonymousUser()
 validation_state_map = {1: ('public',),

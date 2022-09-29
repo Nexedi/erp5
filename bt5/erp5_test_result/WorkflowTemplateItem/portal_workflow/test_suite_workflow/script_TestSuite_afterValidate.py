@@ -18,7 +18,7 @@ if test_suite.getReference() is None:
   test_suite.setReference(int2letter(new_id))
 
 def generateRandomString(size):
-  tab = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"  
+  tab = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
   my_string = ''
   for _ in range(size):
     my_string = my_string + choice(tab)

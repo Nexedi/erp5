@@ -75,7 +75,7 @@ else:
     if predecessor_default_page is not None:
       predecessor_document = context.restrictedTraverse(predecessor_default_page)
       discussion_thread.setPredecessorValueList([predecessor_document])
-  
+
   # set predecessor on document
   if predecessor_portal_type == 'Web Page':
     discussion_thread.setPredecessorValueList([predecessor_object])

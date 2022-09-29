@@ -156,8 +156,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   def callWithNewRequestAcceptLanguage(self, *args, **kw):
     """
-    Call 'doSomething' with '*args' and '**kw' after setting 
-    'REQUEST["AcceptLanguage"]' to '"*"' and finally restores it to its 
+    Call 'doSomething' with '*args' and '**kw' after setting
+    'REQUEST["AcceptLanguage"]' to '"*"' and finally restores it to its
     original value.
     """
     has_original_accept_language = "AcceptLanguage" in self.app.REQUEST

@@ -7,7 +7,7 @@ def getCategoryUrl(category_mapping=None):
 
 def createCategory(object_mapping=None, category=""):
   if object_mapping is None or category=="":
-    return 
+    return
   category_url = getCategoryUrl(object_mapping.getParentValue())
   category_object = context.restrictedTraverse(category_url)
   if category_object is not None:
@@ -21,7 +21,7 @@ def createCategory(object_mapping=None, category=""):
       return category_object.newContent(portal_type=portal_type,
                                  id=category.replace(" ","_").lower(),
                                  title=category)
-    
+
 mapping_dict = {}
 destination_list = []
 for line in listbox:
@@ -41,7 +41,7 @@ for destination in destination_list:
     bad_destination_list.append(destination)
 
 request= context.REQUEST
-integration_site = context   
+integration_site = context
 
 if len(bad_destination_list) > 0:
   status_message = "Impossible to create mapping because of %s redundancie(s), use update button before defining mapping" % len({}.fromkeys(bad_destination_list).keys())
@@ -59,7 +59,7 @@ if len_line_list!=0:
     your_destination_reference = your_mapping["destination_reference"]
     your_destination_reference_text = your_mapping["destination_reference_text"]
     if your_destination_reference_text != '':
-      destination_category = createCategory(line, your_destination_reference_text)  
+      destination_category = createCategory(line, your_destination_reference_text)
       if destination_category is not None:
         line.edit(destination_reference=destination_category.getRelativeUrl())
     elif your_destination_reference != '':
@@ -68,7 +68,7 @@ if len_line_list!=0:
       line.edit(destination_reference=your_destination_reference)
       #raise "Mapping Error", "missing mapping for %s" % line.getTitle()
 
-form_id = "view"     
+form_id = "view"
 
 message = "Category Mapping defined"
 

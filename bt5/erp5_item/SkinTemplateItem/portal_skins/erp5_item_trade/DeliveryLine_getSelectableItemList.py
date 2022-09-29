@@ -22,7 +22,7 @@ result_list = []
 for tracking_brain in portal.portal_simulation.getCurrentTrackingList(
                             **tracking_parameters):
   item = tracking_brain.getObject()
-  
+
   # XXX can this be done in SQL ?
   # it could, by computing all variation texts, but I don't think this is
   # really necessary.
@@ -30,7 +30,7 @@ for tracking_brain in portal.portal_simulation.getCurrentTrackingList(
       item.Item_getVariationCategoryList(at_date=context.getStartDate())\
       not in acceptable_variation_category_list:
     continue
-  
+
   result_list.append(item)
 
 return result_list

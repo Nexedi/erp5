@@ -1390,7 +1390,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     self.assertEqual([], packing_list.getDivergenceList())
     self.assertEqual('solved', packing_list.getCausalityState())
-  
+
   def test_merge_accounting_invoice(
                 self, quiet=quiet):
     sequence_list = SequenceList()

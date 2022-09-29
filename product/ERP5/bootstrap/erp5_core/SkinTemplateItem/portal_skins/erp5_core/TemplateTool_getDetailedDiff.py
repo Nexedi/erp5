@@ -1,11 +1,11 @@
 ZMI_OBJECT_CLASS_LIST = ["Skin"]
 ERP5_OBJECT_CLASS_LIST = ["Path", "Category", "PortalType", "Module"]
-PORTAL_TYPE_OBJECT_LIST = ["PortalTypePropertySheet", "PortalTypeBaseCategory", 
+PORTAL_TYPE_OBJECT_LIST = ["PortalTypePropertySheet", "PortalTypeBaseCategory",
                            "PortalTypeBaseCategory", "PortalTypeAllowedContentType"]
 WORKFLOW_OBJECT_CLASS_LIST = ['PortalTypeWorkflowChain']
 
-color_dict = { 'Modified' : '#FDE406', 
-               'New' : '#B5FFB5', 
+color_dict = { 'Modified' : '#FDE406',
+               'New' : '#B5FFB5',
                'Removed' : '#FFA4A4' }
 link = 0
 request = context.REQUEST
@@ -31,7 +31,7 @@ for diff_object in context.BusinessTemplate_getDiffObjectList():
     print('<a href="portal_workflow/manage_main">')
     link = 1
   print('%s' % (diff_object.object_id))
-  if link == 1: 
+  if link == 1:
     print('</a>')
   print('</div>')
   if diff_object.object_state.startswith('Modified'):

@@ -24,7 +24,7 @@ if (has_source and has_destination) or\
     else:
       account = source_account
       base_category = 'destination'
-    
+
     mirror_account = account.getDefaultDestination()
     if mirror_account:
       movement.setProperty(base_category, mirror_account)

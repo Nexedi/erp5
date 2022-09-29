@@ -5,7 +5,7 @@ the categories from the current content and associates
 it to a given base_category. It is useful in the
 following cases:
 
-- calculate a security group based current object 
+- calculate a security group based current object
   in the context of a base category (ex. source_project).
   This is used for example in ERP5 DMS to calculate
   project security.

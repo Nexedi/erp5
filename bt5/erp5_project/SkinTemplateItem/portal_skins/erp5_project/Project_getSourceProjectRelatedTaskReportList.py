@@ -24,13 +24,13 @@ else:
   task_report_simulation_state = ""
 
 task_list = [x.getObject() for x in \
-  context.portal_catalog(selection_report=selection_report, 
+  context.portal_catalog(selection_report=selection_report,
                          portal_type='Task',
                          source_project_uid = source_project_uid_list,
                          simulation_state = task_simulation_state,
                          **sql_kw)]
 task_list.extend([x.getObject() for x in \
-  context.portal_catalog(selection_report=selection_report, 
+  context.portal_catalog(selection_report=selection_report,
                          portal_type='Task Report',
                          source_project_uid = source_project_uid_list,
                          simulation_state = task_report_simulation_state,

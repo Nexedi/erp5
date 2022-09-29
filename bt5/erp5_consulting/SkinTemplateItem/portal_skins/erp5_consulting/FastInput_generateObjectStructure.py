@@ -14,7 +14,7 @@ input_data_names = []
 for level_rule in transformation_rules:
   for data_item in level_rule['data']:
     input_data_names.append(data_item['input_data_name'])
-    
+
 #NOTUSED yet # get a level-ordered list of primary key
 # primary_keys = []
 # for level_rule in transformation_rules:
@@ -27,12 +27,12 @@ for level_rule in transformation_rules:
   for data_item in level_rule['data']:
     new_io_names_level.append([data_item['input_data_name'], data_item['output_property']])
   io_names.append(new_io_names_level)
-  
+
 # get a level-ordered list of portal_types
 level_portal_types = []
 for level_rule in transformation_rules:
   level_portal_types.append(level_rule['portal_type'])
-  
+
 # get a level-ordered list of required fields
 # TODO : auto;atically add the primary_key
 required_field = []
@@ -43,8 +43,8 @@ for level_rule in transformation_rules:
       new_required_level.append(data_item['input_data_name'])
   required_field.append(new_required_level)
 
-  
-    
+
+
 # this list contain all fast input lines
 fast_input_lines = []
 
@@ -68,9 +68,9 @@ ordered_levels = []
 
 # scan every fast input line to create a structured and comprehensive list of items
 for line in fast_input_lines:
-  
+
   # the list of covered level of the line
-  line_levels = []    
+  line_levels = []
 
   # test every level to know if they are OK
   level_depth = -1
@@ -93,7 +93,7 @@ for line in fast_input_lines:
 
   # exclude empty line
   if len(line_levels) > 0:
-    # put data of the line to a structured list  
+    # put data of the line to a structured list
     line_data = []
     for level in line_levels:
       new_level_data = {}
@@ -107,7 +107,7 @@ for line in fast_input_lines:
     ordered_levels += line_levels
 
 
-        
+
 # the clean ordered list of data
 clean_data = []
 
@@ -119,15 +119,15 @@ for i in range(len(ordered_items)):
   current_item_level = ordered_levels[i]
   current_item_data = ordered_items[i]
   item_ok = False
-  
+
   # handle the "root" item case (must be a 0-level)
   if current_item_level == 0:
     item_ok = True
-      
+
   # to compare with previous items, some must be alredy processed
   if len(processed_level) > 0 and item_ok == False:
     prev_item_level = ordered_levels[i-1]
-    
+
     # the current item and the previous one are follower
     if current_item_level == prev_item_level+1 or current_item_level == prev_item_level:
       item_ok = True
@@ -135,14 +135,14 @@ for i in range(len(ordered_items)):
       # the current item must be in the processed level list to be accepted as sub object
       if current_item_level in processed_level:
         item_ok = True
-      
-  # item is level-coherent, so keep it    
+
+  # item is level-coherent, so keep it
   if item_ok == True:
     # add to the clean list
     clean_data.append(current_item_data.values()[0])
     # add to the processed list of level
     processed_level.append(current_item_level)
-    
+
 clean_levels = processed_level
 
 
@@ -156,21 +156,21 @@ new_serie = []
 for i in range(len(clean_levels)):
   current_item_level = clean_levels[i]
   current_item_data = clean_data[i]
-  
+
   # handle the "root" item case (must be a 0-level)
-  if current_item_level == 0:    
+  if current_item_level == 0:
     if len(new_serie) > 0:
       series_list.append(new_serie)
     new_serie = [(i, current_item_level)]
   else:
-    prev_item_level = clean_levels[i-1]    
+    prev_item_level = clean_levels[i-1]
     # the current item and the previous one are of the same serie
     if current_item_level > prev_item_level:
-      new_serie.append((i, current_item_level))  
+      new_serie.append((i, current_item_level))
     elif current_item_level == prev_item_level:
       series_list.append(new_serie)
       new_serie = [(i, current_item_level)]
-      
+
 # the last element must be saved
 series_list.append(new_serie)
 
@@ -202,36 +202,36 @@ for serie in series_list:
 data_groups.append(new_group)
 
 print data_groups
- 
+
 
 # [
-# 
+#
 #  [
-#   [(0, 0, [(1, 1, [])])], 
-#   [(2, 1, [])], 
+#   [(0, 0, [(1, 1, [])])],
+#   [(2, 1, [])],
 #   [(3, 1, [])]
-#  ], 
-# 
+#  ],
+#
 #  [
-#   [(4, 0, [(5, 1, [])])], 
+#   [(4, 0, [(5, 1, [])])],
 #   [(6, 1, [])]
 #  ]
-# 
+#
 # ]
-# 
-# 
+#
+#
 # [[(0, 0, [(1, 1, [])])], [(2, 1, [])]] -->  [(0, 0, [(1, 1, []), (2, 1, [])])]
 
 def getLastSubList(current_list):
   return current_list[-1][2]
-  
+
 def setLastSubList(current_list, last_sub_list_value):
   current_list[-1][2] = last_sub_list_value
   return current_list
-  
+
 def getListLevel(current_list):
   return current_list[-1][1]
-      
+
 def aggregate(big_list, item_to_add):
   if big_list == []:
     return []
@@ -246,7 +246,7 @@ def aggregate(big_list, item_to_add):
     print "big_list " + big_list
     return None #setLastSubList(big_list, new_big_list_sub_level)
 
-  
+
 for group in data_groups:
   collapsed_group = group[0]
   for serie_group in group[1:]:
@@ -254,15 +254,15 @@ for group in data_groups:
     collapsed_group = aggregate(collapsed_group, serie_group)
 
   print collapsed_group
-      
-    
+
+
 #     if
 #     collapsed_group.append()
-    
 
-  
+
+
 # for simple_struct in simple_structures:
 #   if simple_struct
 
-    
+
 return printed

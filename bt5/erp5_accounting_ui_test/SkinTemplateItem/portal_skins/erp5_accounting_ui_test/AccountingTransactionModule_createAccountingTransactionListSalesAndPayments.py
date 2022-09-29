@@ -21,7 +21,7 @@ if accounting_module.getProperty('current_content_script',
 if 1:
   accounting_module.manage_delObjects(list(accounting_module.objectIds()))
 
-# XXX copy & paste 
+# XXX copy & paste
 def getAccountByTitle(title):
   account_list = [x.getObject().getRelativeUrl() for x in
     portal.portal_catalog(portal_type='Account',

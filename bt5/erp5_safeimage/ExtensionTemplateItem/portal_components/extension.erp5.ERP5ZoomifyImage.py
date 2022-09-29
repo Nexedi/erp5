@@ -1,16 +1,16 @@
 ##############################################################################
 # Copyright (C) 2005  Adam Smith  asmith@agile-software.com
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,7 +27,7 @@ import PIL.Image as PIL_Image
 import thread
 import random
 import base64
-from OFS.Folder import Folder 
+from OFS.Folder import Folder
 
 class ZoomifyBase:
 
@@ -40,7 +40,7 @@ class ZoomifyBase:
   _v_tileGroupMappings = {}
   qualitySetting = 80
   tileSize = 256
-  my_file = StringIO() 
+  my_file = StringIO()
 
   def openImage(self):
     """ load the image data """
@@ -128,8 +128,8 @@ class ZoomifyBase:
     return
 
   def getNumberOfTiles(self):
-    """ get the number of tiles generated 
-        Should this be implemented as a safeguard, or just use the count of 
+    """ get the number of tiles generated
+        Should this be implemented as a safeguard, or just use the count of
         tiles gotten from processing? (This would make subclassing a little
         easier.) """
 
@@ -181,7 +181,7 @@ class ZoomifyBase:
                                                         'JPEG', quality=100)
       print "os path exist : %r" % os.path.exists(os.path.join(
                                         tempfile.gettempdir(), saveFilename))
-      if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)): 
+      if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)):
         self.processRowImage(tier=tier, row=row)
       row += 1
 
@@ -193,7 +193,7 @@ class ZoomifyBase:
     rowsForTier = tierHeight/self.tileSize
     if tierHeight % self.tileSize > 0:
       rowsForTier +=1
-    root, ext = os.path.splitext(self._v_imageFilename)  
+    root, ext = os.path.splitext(self._v_imageFilename)
     if not root:
       root = self._v_imageFilename
     ext = '.jpg'
@@ -201,7 +201,7 @@ class ZoomifyBase:
     if tier == (len(self._v_scaleInfo) -1):
       firstTierRowFile = root + str(tier) + '-' + str(row) + ext
       if os.path.exists(os.path.join(tempfile.gettempdir(),firstTierRowFile)):
-        imageRow = PIL_Image.open(os.path.join(tempfile.gettempdir(), 
+        imageRow = PIL_Image.open(os.path.join(tempfile.gettempdir(),
                                                     firstTierRowFile))
     else:
       # create this row from previous tier's rows
@@ -337,7 +337,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
     """ add the default Zoomify viewer to the Zoomify metadata """
 
     # also, add the default zoomifyViewer here if a zoomify viewer is acquirable
-    # (could this be done a better way, like using the 'web methods' 
+    # (could this be done a better way, like using the 'web methods'
     # approach that points to ZMI screens that are DTML or ZPT files
     # in the product package)?
     if not hasattr(self._v_saveFolderObject, 'default_ZoomifyViewer'):
@@ -345,8 +345,8 @@ class ZoomifyZopeProcessor(ZoomifyBase):
                                                   'zoomifyViewer.swf')
       if os.path.isfile(defaultViewerPath):
         fileContent = open(defaultViewerPath).read()
-        self._v_saveFolderObject._setObject('default_ZoomifyViewer', 
-                               File('default_ZoomifyViewer', '', fileContent, 
+        self._v_saveFolderObject._setObject('default_ZoomifyViewer',
+                               File('default_ZoomifyViewer', '', fileContent,
                                     'application/x-shockwave-flash', ''))
     transaction.savepoint()
     return
@@ -368,7 +368,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
     return
 
   def createTileContainer(self, tileContainerName=None):
-    """ create a container for the next group of tiles within the data container """ 
+    """ create a container for the next group of tiles within the data container """
 
     if hasattr(self._v_saveFolderObject, tileContainerName):
       # allow for tiles to be updated from a changed image
@@ -381,8 +381,8 @@ class ZoomifyZopeProcessor(ZoomifyBase):
     return
 
   def getNumberOfTiles(self):
-    """ get the number of tiles generated 
-        Should this be implemented as a safeguard, or just use the count of 
+    """ get the number of tiles generated
+        Should this be implemented as a safeguard, or just use the count of
         tiles gotten from processing? (This would make subclassing a little
         easier.) """
     return self.numberOfTiles
@@ -393,8 +393,8 @@ class ZoomifyZopeProcessor(ZoomifyBase):
     if hasattr(self._v_saveFolderObject, 'ImageProperties.xml'):
       # allow file to be updated from a changed image, regenerated tiles
       self._v_saveFolderObject._delObject('ImageProperties.xml')
-    self._v_saveFolderObject._setObject('ImageProperties.xml', 
-                        File('ImageProperties.xml', '', self.getXMLOutput(), 
+    self._v_saveFolderObject._setObject('ImageProperties.xml',
+                        File('ImageProperties.xml', '', self.getXMLOutput(),
                              'text/xml', ''))
     transaction.savepoint()
     return
@@ -416,7 +416,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
         if hasattr(tileFolder, tileFileName):
           tileFolder._delObject(tileFileName)
         # finally, save the image data as a Zope Image object
-        tileFolder._setObject(tileFileName, Image(tileFileName, '', 
+        tileFolder._setObject(tileFileName, Image(tileFileName, '',
                                               '', 'image/jpeg', ''))
         tileFolder._getOb(tileFileName).manage_upload(tileImageData)
       self._v_transactionCount += 1
@@ -435,7 +435,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
       #   IVcoded  = EncodeIV()
       #   cipher = AES.new(key,AES.MODE_CFB,iv)
       #   msg  = EncodeAES(cipher,key)
-      #   return msg    
+      #   return msg
       pass
     else:
       pass
@@ -483,15 +483,15 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
   def __init__(self, document,transformed=None):
      self.document = document
      self.transformed = transformed
-     self.count = 0 
+     self.count = 0
 
   def createTileContainer(self, tileContainerName=None):
     """ create each TileGroup """
 
-    self.document.newContent(portal_type="Image Tile Group", 
-                   title=tileContainerName, id=tileContainerName, 
+    self.document.newContent(portal_type="Image Tile Group",
+                   title=tileContainerName, id=tileContainerName,
                    filename=tileContainerName)
-    return 
+    return
 
   def createDefaultViewer(self):
     """ add the default Zoomify viewer to the Zoomify metadata """
@@ -506,7 +506,7 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
   def _updateTransformedFile(self,tile_group_id,tile_title):
     """create and save the transform file"""
     num = random.choice([0,1])
-    while num >= 0: 
+    while num >= 0:
       algorithm = random.choice(['sepia','brightness','noise','lighten',
                                   'posterize','edge','none'])
       if algorithm == 'lighten':
@@ -523,7 +523,7 @@ class ERP5ZoomifyZopeProcessor(ZoomifyZopeProcessor):
       else:
         param1 = 0
         param2 = 0
-      my_text = '%s %s %s %s %s %s \n' %(tile_group_id, tile_title, 
+      my_text = '%s %s %s %s %s %s \n' %(tile_group_id, tile_title,
                                     algorithm, param1, param2, num)
       self.my_file.write(my_text)
       num = num - 1

@@ -930,7 +930,7 @@ class ActivityTool (BaseTool):
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
         BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
-    
+
     security.declarePrivate('manage_afterAdd')
     def manage_afterAdd(self, item, container):
         self.subscribe()

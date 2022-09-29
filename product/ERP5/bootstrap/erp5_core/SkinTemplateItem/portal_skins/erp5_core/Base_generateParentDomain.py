@@ -16,7 +16,7 @@ if listbox is not None:
 if depth == 0:
   parent_obj = request['here']
   parent_url = parent_obj.getRelativeUrl()
-  
+
 else:
   parent_url = parent.getProperty('parent_url')
   parent_obj = context.restrictedTraverse(parent_url)

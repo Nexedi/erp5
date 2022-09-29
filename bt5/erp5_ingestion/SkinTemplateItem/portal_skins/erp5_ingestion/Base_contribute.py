@@ -63,7 +63,7 @@ if url is not None:
     # portal contributions could not upload it
     if cancel_url is not None:
       # we can assume we can redirect
-      redirect_url= '%s?%s' %(cancel_url, 
+      redirect_url= '%s?%s' %(cancel_url,
                             make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))
       return context.REQUEST.RESPONSE.redirect(redirect_url)
 else:
@@ -104,7 +104,7 @@ if redirect_to_context or redirect_to_document or redirect_url is not None:
                                   'editable_mode': editable_mode})
   elif redirect_url is not None:
     # redirect URL has been supplied by caller
-    redirect_url= '%s?%s' %(redirect_url, 
+    redirect_url= '%s?%s' %(redirect_url,
                             make_query(dict(portal_status_message=message)))
     return context.REQUEST.RESPONSE.redirect(redirect_url)
   elif redirect_to_context:

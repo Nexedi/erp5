@@ -1,4 +1,4 @@
-""" 
+"""
   Delete Box from Pad.
   This script is called by drag and drop javascript framework
   when user click on 'Close' button.

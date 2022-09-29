@@ -29,5 +29,5 @@ if result_count < limit:
                    severity=0,
                    detail="Point fixe check ended at %r" % (DateTime().strftime("%d/%m/%Y %H:%M"),))
   sub.activate(active_process=method_kw["active_process"],
-              activity='SQLQueue', 
+              activity='SQLQueue',
               priority=2,).ERP5Site_saveCheckCatalogTableResult(active_result)

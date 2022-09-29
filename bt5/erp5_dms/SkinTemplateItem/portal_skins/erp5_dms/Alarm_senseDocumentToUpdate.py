@@ -24,7 +24,7 @@ for frequency in context.portal_categories.update_frequency.contentValues():
 for frequency_reference, creation_date in date_dict.items():
   sql_kw = {'creation_date_index':creation_date, 'frequency_index':frequency_reference, 'limit':None}
   documents_to_update = len(context.portal_catalog(**sql_kw))
-  max_in_activities = 1000 
+  max_in_activities = 1000
   offset = 0
   loop = documents_to_update / max_in_activities
   for _ in range(loop):

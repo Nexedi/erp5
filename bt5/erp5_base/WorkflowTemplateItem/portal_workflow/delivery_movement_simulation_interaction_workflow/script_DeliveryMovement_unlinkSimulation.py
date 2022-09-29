@@ -2,7 +2,7 @@
 This way when a delivery movement is deleted, corresponding simulation movement
 will again be candidates for building in another delivery.
 
-XXX: security (future) bug: this requires that the system is configured in a way where 
+XXX: security (future) bug: this requires that the system is configured in a way where
 simulation movement can be accessed in restrictred mode. For now this script has a proxy
 role, but someday we'll have to move this to unrestricted environment.
 """

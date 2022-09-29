@@ -11,5 +11,5 @@ for section_info in context.TaxReturn_getSectionInformationList():
       form_id='TaxReturn_viewSummaryReportSection',
       selection_name='tax_return_summary_report_section_selection',
       selection_params=selection_params))
-  
+
 return report_section_list

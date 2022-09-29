@@ -58,7 +58,7 @@ def getIdFromString(string):
   #string = string.lower()
   string = string.strip()
   # oocalc inserts some strange chars when you press - key in a text cell.
-  # Following line is a workaround for this, 
+  # Following line is a workaround for this,
   # because \u2013 does not exist in latin1
   string = string.replace(u'\u2013', '-')
   for char in string.encode('utf-8'):#('iso8859_1'):
@@ -112,7 +112,7 @@ def convert(self, filename, data=None):
       # Analyse every cells of the line
       cell_index = 0
       for cell in line:
-        # Ignore empty cells, do the test on the generated id 
+        # Ignore empty cells, do the test on the generated id
         # because getIdFromString() is more restrictive
         cell_id = getIdFromString(cell)
         if cell_id not in ('', None):

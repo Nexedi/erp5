@@ -76,7 +76,7 @@ max_priority = 0
 action_list = type_information.contentValues(portal_type='Action Information')
 if action_list:
   max_priority = max([ai.getFloatIndex() or 0 for ai in action_list])
-  
+
 type_information.addAction(
     action_id,
     report_name,

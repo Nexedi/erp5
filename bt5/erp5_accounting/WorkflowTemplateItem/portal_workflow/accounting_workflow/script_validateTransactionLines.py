@@ -35,19 +35,19 @@ for line in transaction_lines:
       raise ValidationFailed(translateString(
           "Account ${account_title} is not validated.",
            mapping=dict(account_title=account.Account_getFormattedTitle())))
-      
+
     if third_party is not None and\
         third_party.getValidationState() in invalid_state_list:
       raise ValidationFailed(translateString(
           "Third party ${third_party_name} is invalid.",
            mapping=dict(third_party_name=third_party.getTitle())))
-      
+
     if bank_account is not None:
       if bank_account.getValidationState() in invalid_state_list:
         raise ValidationFailed(translateString(
             "Bank Account ${bank_account_reference} is invalid.",
              mapping=dict(bank_account_reference=bank_account.getReference())))
-      
+
       if account is not None and account.isMemberOf('account_type/asset/cash/bank'):
         # also check that currencies are consistent if we use this quantity for
         # accounting.

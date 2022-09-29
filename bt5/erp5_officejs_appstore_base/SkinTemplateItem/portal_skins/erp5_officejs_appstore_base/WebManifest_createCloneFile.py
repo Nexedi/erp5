@@ -50,7 +50,7 @@ for document_brain in document_list:
     new_document.getParentValue().manage_delObjects([new_id])
   new_document.setId(new_id)
   path_list.append(new_document.getRelativeUrl())
-  # version should not be set by this script but by alarm 
+  # version should not be set by this script but by alarm
   # new_document.setVersion(base_id + "dev")
   new_document.setFollowUp(software_product_rurl)
 

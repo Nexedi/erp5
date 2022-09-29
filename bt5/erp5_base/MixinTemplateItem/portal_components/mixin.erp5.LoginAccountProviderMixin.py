@@ -88,7 +88,7 @@ class LoginAccountProviderMixin:
     Is password valid?
     """
     return not len(self.analyzePassword(password, **kw))
-    
+
   security.declareProtected(Permissions.SetOwnPassword, 'analyzePassword')
   def analyzePassword(self, password, **kw):
     """

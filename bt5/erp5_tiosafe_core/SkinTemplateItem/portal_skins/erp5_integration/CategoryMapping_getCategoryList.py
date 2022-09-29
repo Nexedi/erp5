@@ -27,7 +27,7 @@ if context.getPortalType() == "Integration Category Mapping":
     category_url = request.form["field_listbox_destination_reference_new_%s" % uid]
   except:
     category_url = context.getParentValue().getDestinationReference()
-  if category_url is not None and category_url != "":    
+  if category_url is not None and category_url != "":
     container = context.restrictedTraverse("portal_categories/%s" % category_url)
   try:
     uid = "_".join(context.getParentValue().getRelativeUrl().split("/")[2:])
@@ -35,7 +35,7 @@ if context.getPortalType() == "Integration Category Mapping":
     if new_destination_reference == "":
       value = request.form["field_listbox_destination_reference_new_%s" % context.getId()]
       return [(value,value)]
-    else:         
+    else:
       value = request.form["field_listbox_destination_reference_new_%s" % context.getId()]
       container = context.restrictedTraverse("portal_categories/%s" % new_destination_reference)
       category_child_list = container.getCategoryChildItemList(base=1, checked_permission='View', display_method=display, sort_method=sort)

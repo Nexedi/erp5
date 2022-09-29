@@ -15,7 +15,7 @@ role_uid = [portal.portal_categories.resolveCategory(role).getUid()
               for role in role_list]
 
 result = container.REQUEST.other[script.id] = [('', '')] + [
-      (x.getTitle(), x.getRelativeUrl()) for x in 
+      (x.getTitle(), x.getRelativeUrl()) for x in
             context.portal_catalog.searchResults(
                portal_type=portal_type,
                default_role_uid=role_uid,

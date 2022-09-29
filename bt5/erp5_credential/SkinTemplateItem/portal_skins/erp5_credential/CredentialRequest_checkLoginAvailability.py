@@ -40,7 +40,7 @@ if context.getPortalType() == "Credential Request":
       return True
 
 #check no pending credential request with this user name
-#Don't take in case the current credential 
+#Don't take in case the current credential
 module = context.getDefaultModule("Credential Request")
 credential_request_count_result = module.countFolder(reference=value,
                                                      uid="NOT %s" % context.getUid(),

@@ -28,7 +28,7 @@ ticket_list = portal.portal_catalog.searchResults(portal_type=allowed_content_ty
                                                   source_section_uid=section_uid,
                                                   **query_dict)
 # Get every result object
-for r_ticket in ticket_list: 
+for r_ticket in ticket_list:
   ticket=r_ticket.getObject()
   #show follow-up events
   event_list=portal.portal_catalog.searchResults(portal_type=portal.getPortalEventTypeList(),
