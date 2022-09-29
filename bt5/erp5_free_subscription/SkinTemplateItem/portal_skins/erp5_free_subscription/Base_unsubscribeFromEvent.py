@@ -1,4 +1,4 @@
-"""This script is indented to be used in email as a link for people to 
+"""This script is indented to be used in email as a link for people to
 unsubscribe from a mailling
 """
 portal = context.getPortalObject()
@@ -15,10 +15,10 @@ if user is None:
     if portal.Base_getHMACHexdigest(portal.Base_getEventHMACKey(), event_id) != request["hash"]:
       from zExceptions import Unauthorized
       raise Unauthorized()
-    
+
     portal.portal_activities.activate(
       activity="SQLQueue").Base_createFreeSubscriptionRequest(
-          event_id=request['id'], 
+          event_id=request['id'],
           hmac=request["hash"])
 
 # serve the web-page that will display a "Sucessfully unsubscribe" message

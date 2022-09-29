@@ -36,7 +36,7 @@ def getObjectStringList(xml_string, element_to_find='object'):
   """
     this function splits an ERP5 XML string into object
     string list, each object string is converted
-    into utf-8 encoding and html entities are 
+    into utf-8 encoding and html entities are
     translated into corresponding unicode code
   """
   rss_doc = etree.fromstring(xml_string)

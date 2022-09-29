@@ -95,7 +95,7 @@ if not skip_period_validation :
       raise ValidationFailed(translateString("Date is not in a started Accounting Period "
                                              "for source section."))
 
-  # do the same for destination section 
+  # do the same for destination section
   if destination_section is not None:
     # if we don't have any accounts on this side, we don't enforce date checks
     valid_date = False

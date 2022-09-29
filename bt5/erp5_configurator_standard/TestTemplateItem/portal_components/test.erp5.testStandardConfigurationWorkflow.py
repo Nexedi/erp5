@@ -147,7 +147,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                   configuration_price_currency='EUR;0.01;Euro',
                   organisation_default_address_city='LILLE',
                   organisation_default_address_region='europe/western_europe/france')
-                  
+
   def stepSetGermanyCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
     sequence.edit(configuration_currency_reference='EUR',
@@ -264,7 +264,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   def stepCheckSocialTitleCategory(self, sequence=None,sequence_list=None, **kw):
     """Check that the social title category is configured.
     """
-    self.assertNotEquals(0, 
+    self.assertNotEquals(0,
        len(self.portal.portal_categories.social_title.contentValues()))
 
   def stepCheckValidOrganisationList(self, sequence=None, sequence_list=None, **kw):
@@ -314,7 +314,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                portal_type="Business Configuration",
                                title=self.getTitle())
     next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
+    sequence.edit(business_configuration=business_configuration,
                   next_dict=next_dict)
 
   def stepCheckValidCurrencyList(self, sequence=None, sequence_list=None, **kw):
@@ -2465,7 +2465,7 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
     sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='France')
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-    
+
   def test_standard_workflow_germany(self):
     """ Test the standard workflow with german configuration"""
     sequence_list = SequenceList()

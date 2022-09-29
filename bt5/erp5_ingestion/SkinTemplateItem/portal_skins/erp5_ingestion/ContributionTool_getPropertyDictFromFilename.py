@@ -2,9 +2,9 @@
   Called by portal_contributions.getPropertyDictFromFilename
 
   Receives file name and a dict of properties found in file name by
-  using regular expression defined in preferences. 
+  using regular expression defined in preferences.
 
-  Uses provided arguments to generate document's reference, language, 
+  Uses provided arguments to generate document's reference, language,
   title, follow_up and/or source_conference.
 
   If necessary can do additional things (like mapping
@@ -26,7 +26,7 @@ group_reference_path = property_dict.get('group_reference_path', None)
 source_conference_reference = property_dict.get('source_conference_reference', None)
 follow_up_reference = property_dict.get('follow_up_reference', None)
 
-new_dict = dict(language = language, 
+new_dict = dict(language = language,
                 version = version)
 
 if reference:
@@ -78,14 +78,14 @@ elif group_reference_path:
   group_reference_list = group_reference_path.split('-')
   if group_reference_list:
     group_id = group_reference_list[0]
-    category = context.portal_catalog.getResultValue(reference = group_id, 
+    category = context.portal_catalog.getResultValue(reference = group_id,
                                                      portal_type = 'Category')
     if category is not None and category.getBaseCategory().getId()=='group':
       for group_id in group_reference_list[1:]:
-        category = context.portal_catalog.getResultValue(reference = group_id, 
+        category = context.portal_catalog.getResultValue(reference = group_id,
                                                          parent_uid = category.getUid(),
                                                          portal_type = 'Category')
-        if category is None: 
+        if category is None:
           break
   if category is not None:
     new_dict['group'] = '/'.join(category.getRelativeUrl().split('/')[1:])

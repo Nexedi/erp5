@@ -39,7 +39,7 @@ def log(description, content=marker_, level=INFO):
     """Deprecated method
 
     Use erp5.component.module.Log instead.
-    
+
     Kept for compatbility to allow instance upgrade.
     """
     if content is marker_: # allow for content only while keeping interface

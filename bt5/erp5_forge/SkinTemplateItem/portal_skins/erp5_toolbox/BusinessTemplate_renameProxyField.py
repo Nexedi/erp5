@@ -91,7 +91,7 @@ if update:
   # order to handle data stored in REQUEST.form
   for key, value in extra_kw.items():
     context.REQUEST.form[key] = value
-  context.Base_updateDialogForm(listbox=listbox, 
+  context.Base_updateDialogForm(listbox=listbox,
       preview_listbox=next_preview_listbox)
   return context.BusinessTemplate_renameProxyFieldDialog(**kw)
 else:

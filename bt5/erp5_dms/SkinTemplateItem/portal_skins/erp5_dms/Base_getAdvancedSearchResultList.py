@@ -18,7 +18,7 @@ date_format = '%Y-%m-%d'
 if searchabletext is None:
   # searchabletext can be supplied in request (fallback)
   searchabletext = context.REQUEST.get('searchabletext')
-  
+
 if searchabletext is None:
   # or in selection
   selection_id = 'search_advanced_dialog_selection'
@@ -36,13 +36,13 @@ portal_type = parsed_search_string.get('portal_type', None)
 if portal_type is None or not len(portal_type):
   query_kw['portal_type'] = portal.getPortalDocumentTypeList()
 else:
-  # safe to add passed portal_type, 
+  # safe to add passed portal_type,
   # as multiple values exists split them by ','
   query_kw['portal_type'] = portal_type.split(',')
 
 # ZSQLCatalog wants table.key to avoid ambiguity
 parsed_searchabletext = parsed_search_string.get('searchabletext', None)
-if parsed_searchabletext is not None: 
+if parsed_searchabletext is not None:
   query_kw['full_text.SearchableText'] =  parsed_searchabletext
 
 for key in ('reference', 'version', 'language',):

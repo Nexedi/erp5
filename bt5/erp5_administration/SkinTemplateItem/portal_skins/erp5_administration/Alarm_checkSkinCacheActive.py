@@ -49,8 +49,8 @@ def execute(skin):
 
 for skin in context.portal_skins.objectValues():
   execute(skin)
-  
+
 if incorrect_file_absolute_url_list != []:
   return ActiveResult(severity=100, detail="There is no cache set for:\n" + "\n".join(incorrect_file_absolute_url_list))
-  
+
 return ActiveResult(severity=0, detail="OK")

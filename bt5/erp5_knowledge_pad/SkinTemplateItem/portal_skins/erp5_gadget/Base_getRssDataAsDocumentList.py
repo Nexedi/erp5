@@ -23,7 +23,7 @@ feed_url = str(preferences.get('preferred_rss_feed',''))
 username = str(preferences.get('preferred_username',''))
 password = str(preferences.get('preferred_password',''))
 
-Base_getRssDataAsDict = CachingMethod(context.Base_getRssDataAsDict, 
+Base_getRssDataAsDict = CachingMethod(context.Base_getRssDataAsDict,
                                      (feed_url, username, password), cache_factory='erp5_ui_short')
 results = Base_getRssDataAsDict(context, url = feed_url, username = username, password = password)
 

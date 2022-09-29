@@ -21,5 +21,5 @@ if enable_alarm:
 
 form_id = context.REQUEST.get("form_id", "")
 
-return context.Base_redirect(form_id, 
+return context.Base_redirect(form_id,
                 keep_items=dict(portal_status_message=portal_status_message))

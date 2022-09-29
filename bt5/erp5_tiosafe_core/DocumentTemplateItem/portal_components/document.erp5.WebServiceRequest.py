@@ -147,7 +147,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     if site.getStopDate():
       kw['stop_date'] = site.getStopDate()
 
-      
+
     # Render page template content
     if self.hasData():
       #LOG("passing options %s to self %s" %(kw, self.getPath()), 300, "CALL")
@@ -180,7 +180,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     # cached_callRequest = CachingMethod(callRequest,
     #                                    id="WebServiceRequest_callRequest",
     #                                    cache_factory="erp5_content_short")
-    
+
     # Call the method
     try:
       url, xml = callRequest(self, method_name, *args, **kw)

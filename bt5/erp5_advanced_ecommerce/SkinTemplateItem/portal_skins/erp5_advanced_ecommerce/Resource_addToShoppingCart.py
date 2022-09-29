@@ -46,7 +46,7 @@ if session_id in [None, '']:
   now = DateTime()
   session_id = context.Base_generateSessionID(max_long=20)
   expire_timeout_days = 90
-  request.RESPONSE.setCookie('session_id', session_id, 
+  request.RESPONSE.setCookie('session_id', session_id,
                              expires=(now + expire_timeout_days).rfc822(), path='/')
   request.set('session_id', session_id)
 
@@ -94,7 +94,7 @@ context.getPortalObject().portal_sessions[session_id].update(shopping_cart=shopp
 if checkout:
   website = context.getWebSiteValue()
   if website is not None:
-    return website.cart.Base_redirect("", 
+    return website.cart.Base_redirect("",
        keep_items={'portal_status_message':context.Base_translateString("Added to cart.")})
 
 keep_items = {

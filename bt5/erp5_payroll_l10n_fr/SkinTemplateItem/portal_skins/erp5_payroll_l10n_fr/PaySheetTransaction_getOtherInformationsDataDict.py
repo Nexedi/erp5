@@ -212,7 +212,7 @@ data_dict = {
   'year_to_date_taxable_net_salary': year_to_date_taxable_net_salary,
   'worked_hour_count': worked_hour_count,
   'bonus_worked_hour_count': bonus_worked_hour_count,
-  'absence_hour_count': 0, #XXX currently absence hour are not take into 
+  'absence_hour_count': 0, #XXX currently absence hour are not take into
                            # account in payroll
   'salaire_net_imposable': getTaxableNetPayId(salaire_net_imposable),
   'salaire_net_imposable_float': salaire_net_imposable,

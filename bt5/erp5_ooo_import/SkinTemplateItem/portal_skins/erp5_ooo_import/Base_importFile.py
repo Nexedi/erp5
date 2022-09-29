@@ -153,8 +153,8 @@ else:
             # Create a new property value
             property_id = column_mapping[line_property_index]
             imported_line_property_dict[property_id] = property_value.encode('UTF-8')
-      
-       
+
+
       # If the line is not empty, activate an activity for it
       if imported_line_property_dict not in [{}, None]:
         tag = "OOo_import_%s" % active_process_value.getId()
@@ -163,7 +163,7 @@ else:
                          priority=1,
                          activity="SQLQueue",
                          active_process=active_process_path)
- 
+
         if getattr(context, import_file_line_script, None) is None:
           raise AttributeError('specified script "%s" does not exists' % import_file_line_script)
 

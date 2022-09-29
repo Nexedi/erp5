@@ -1,6 +1,6 @@
 #
 #  This method is used by the invoice_transaction_builder
-# delivery builder to select the Invoice Transaction 
+# delivery builder to select the Invoice Transaction
 # in which creating new Invoice Transaction Lines.
 #
 

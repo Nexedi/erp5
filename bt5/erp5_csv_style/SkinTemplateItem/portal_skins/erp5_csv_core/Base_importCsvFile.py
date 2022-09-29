@@ -44,7 +44,7 @@ for line in iter(import_file.readline, ""):
   # XXX Currently, if the file is too big, there is too many
   # activities created in only one transaction
   # We need to reduce the number of activities
-  # Ex: create 1 activity which manages 100 lines, by created itself 100 
+  # Ex: create 1 activity which manages 100 lines, by created itself 100
   # others activities
   i += 1
   line = line.replace('\n', '')

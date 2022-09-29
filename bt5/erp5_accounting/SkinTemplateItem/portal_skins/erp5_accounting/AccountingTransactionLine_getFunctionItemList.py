@@ -9,6 +9,6 @@ if function_base_category:
                         'getCategoryChildCompactLogicalPathItemList'))(
                               local_sort_id=('int_index', 'translated_title'),
                               checked_permission='View',
-                              base=True) 
+                              base=True)
 
 return ()

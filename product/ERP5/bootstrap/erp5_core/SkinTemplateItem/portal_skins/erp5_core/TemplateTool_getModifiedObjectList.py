@@ -17,7 +17,7 @@ from Products.ERP5Type.Cache import CachingMethod
 def getModifiedObjectList(bt):
   return bt.preinstall(check_dependencies = check_dependencies)
 
-getModifiedObjectList = CachingMethod(getModifiedObjectList, 
+getModifiedObjectList = CachingMethod(getModifiedObjectList,
                                       id='BusinessTemplate_getModifiedObjectList',
                                       cache_factory='erp5_ui_medium')
 
@@ -28,11 +28,11 @@ for bt_id in bt_id_list:
   bt_object_dict[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]
 
 object_list = []
-no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document', 
-                 'PropertySheet', 'Extension', 'Test', 'Product', 
-                 'Role', 'CatalogResultKey', 'CatalogRelatedKey', 
-                 'CatalogResultTable', 'MessageTranslation', 'LocalRoles', 
-                 'PortalTypeAllowedContentType', 'PortalTypeHiddenContentType', 
+no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document',
+                 'PropertySheet', 'Extension', 'Test', 'Product',
+                 'Role', 'CatalogResultKey', 'CatalogRelatedKey',
+                 'CatalogResultTable', 'MessageTranslation', 'LocalRoles',
+                 'PortalTypeAllowedContentType', 'PortalTypeHiddenContentType',
                  'PortalTypePropertySheet', 'PortalTypeBaseCategory']
 no_backup_dict = {}
 for i in no_backup_list:
@@ -65,9 +65,9 @@ for bt in bt_id_list:
       choice_item_list = [[install_title, 'install']]
 
     line.edit(object_id=object_id,
-              bt_title = bt_title, 
-              object_state=object_state, 
-              object_class=object_class, 
+              bt_title = bt_title,
+              object_state=object_state,
+              object_class=object_class,
               choice_item_list=choice_item_list)
     line.setUid('new_%s' % object_id)
     object_list.append(line)

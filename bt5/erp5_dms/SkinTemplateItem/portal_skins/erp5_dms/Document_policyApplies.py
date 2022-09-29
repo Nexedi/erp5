@@ -1,6 +1,6 @@
 """
 Implementation of a highly sophisticated security system. Context has a security classification
-like "personal/project", "collaborative/public" etc and we check if a given policy or a set of 
+like "personal/project", "collaborative/public" etc and we check if a given policy or a set of
 policies (defined with wildcard, like "personal/*" or "*/project") applies to the context.
 
 Classification has to have two levels, and first level is translated into a selected second-level

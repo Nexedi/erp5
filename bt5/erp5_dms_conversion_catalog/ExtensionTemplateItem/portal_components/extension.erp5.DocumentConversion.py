@@ -7,5 +7,5 @@ def Base_extractImageUrlList(self, text_content=None):
   if text_content is None:
     text_content = self.getTextContent()
   if text_content is not None:
-    return re.findall('src=[\"\'](.[^\"\']+)[\"\']', text_content, re.I) 
+    return re.findall('src=[\"\'](.[^\"\']+)[\"\']', text_content, re.I)
   return []

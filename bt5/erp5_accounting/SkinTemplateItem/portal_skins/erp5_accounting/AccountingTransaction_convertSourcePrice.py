@@ -1,5 +1,5 @@
 """
-Script to convert the prices used in the transaction to the 
+Script to convert the prices used in the transaction to the
 currency of the source section
 """
 portal = context.getPortalObject()

@@ -29,5 +29,5 @@ if response_dict['ACK'] != 'Success':
 
 #Payment is ok. Set shopping cart is payed
 context.SaleOrder_setShoppingCartBuyer()
-  
+
 return context.SaleOrder_finalizeShopping()

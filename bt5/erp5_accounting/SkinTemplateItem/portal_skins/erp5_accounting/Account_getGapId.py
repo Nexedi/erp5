@@ -14,7 +14,7 @@ if number_method == 'account_reference' and not gap_root:
 ## elif number_method == 'gap_id':
 # GAP id is the default rendering
 current_gap = gap_root or preference_tool.getPreferredAccountingTransactionGap() or ''
-for gap in context.getGapValueList(): 
-  if current_gap in gap.getPath(): 
+for gap in context.getGapValueList():
+  if current_gap in gap.getPath():
     return gap.getReference() or gap.getId()
 return ''

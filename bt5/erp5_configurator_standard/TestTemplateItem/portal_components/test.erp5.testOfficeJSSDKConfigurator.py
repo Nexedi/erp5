@@ -96,7 +96,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
   def launchConfigurator(self):
     self.logMessage('OfficeJS Development launchConfigurator')
     self.login()
-    # Create new Configuration 
+    # Create new Configuration
     business_configuration  = self.getBusinessConfiguration()
 
     response_dict = {}
@@ -104,7 +104,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
 
-    self.tic() 
+    self.tic()
     self.portal.portal_configurator.startInstallation(
                  business_configuration,REQUEST=self.portal.REQUEST)
 

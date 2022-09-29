@@ -1,5 +1,5 @@
 """ Get the partner count for a person.
- * valid_social_contract_type_list an optional list of type of social contract list to 
+ * valid_social_contract_type_list an optional list of type of social contract list to
 take into account, if not specified, all type of social contract are valid.
 """
 if at_date is None :

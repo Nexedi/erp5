@@ -12,7 +12,7 @@ category_list = context.portal_categories.getCategoryValue(url).contentValues()
 for category in category_list:
   domain = parent.generateTempDomain(id = category.getId())
   domain.edit(title = category.getTitle(),
-              membership_criterion_base_category = ('foo_category',), 
+              membership_criterion_base_category = ('foo_category',),
               membership_criterion_category = (category.getRelativeUrl(),),
               domain_generator_method_id = script.id,
               uid = category.getUid())

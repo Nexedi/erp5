@@ -10,7 +10,7 @@ def makeVCSLink(repository_url, revision):
   if 'lab.nexedi' in repository_url and repository_url.endswith('.git'):
     repository_url = repository_url[:-len('.git')]
   if '@' in repository_url: # remove credentials
-    scheme = repository_url.split(':')[0] 
+    scheme = repository_url.split(':')[0]
     url = '%s://%s/commit/%s' % (scheme, repository_url.split('@')[1], revision )
   else:
     url = '%s/commit/%s' % (repository_url, revision )
@@ -21,14 +21,14 @@ def makeVCSLink(repository_url, revision):
 
   def getListItemUrl(*args, **kw):
     return url
-  
+
   return Object(
     uid='new_',
     getUid=lambda: 'new_',
     getListItemUrl=getListItemUrl,
     repository=repository_url,
     revision=revision)
-  
+
 for repository in test_suite_data['repository_dict'].values():
   result_list.append(
     makeVCSLink(

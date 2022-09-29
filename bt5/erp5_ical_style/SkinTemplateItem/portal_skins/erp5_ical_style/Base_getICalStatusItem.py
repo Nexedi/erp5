@@ -3,7 +3,7 @@
   Return a tuple of (status, percent_complete).
   For todo status is one of: 'needs-action', 'in-process', 'completed' and 'cancelled' or nothing,
   then we'll assume it is 'needs-action'.
-  For event status is one of: 'cancelled', 'confirmed', 'tentative' or nothing, 
+  For event status is one of: 'cancelled', 'confirmed', 'tentative' or nothing,
   then we'll assume it is 'tentative'.
 """
 status = ''

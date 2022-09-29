@@ -2,10 +2,10 @@
 #  this script is called on the Invoice Transaction
 # after the invoice_transaction_builder delivery builder
 # created accounting lines in the invoice
-# 
+#
 
-# Accounting specific: 
-#  if every lines have the same resource, then copy the resource 
+# Accounting specific:
+#  if every lines have the same resource, then copy the resource
 # on the Transaction and delete resource on the lines.
 # TODO: this is a Property Assignment Movement Group
 

@@ -23,8 +23,8 @@ if not user_login:
 metadata = {}
 if group_list: metadata['group_list'] = group_list
 if function_list: metadata['function_list'] = function_list
-if site_list: metadata['site_list'] = site_list 
-if classification: metadata['classification'] = classification 
+if site_list: metadata['site_list'] = site_list
+if classification: metadata['classification'] = classification
 if publication_section_list: metadata['publication_section_list'] = publication_section_list
 
 contribution_tool = context.getPortalObject().portal_contributions

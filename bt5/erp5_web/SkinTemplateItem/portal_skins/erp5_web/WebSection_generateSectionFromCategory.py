@@ -124,7 +124,7 @@ if update_existing:
     category_url = category
   else:
     # use the base category as a category to select all
-    category_url = '%s/%s' % (category, category) 
+    category_url = '%s/%s' % (category, category)
   section_value.edit(membership_criterion_base_category = (base_category_id,),
                      membership_criterion_category = (category_url,),
                      criterion_property_list = ['portal_type'])

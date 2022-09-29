@@ -10,12 +10,12 @@ def getOrganisationForSectionCategory(section_category):
                            checked_permission='Access contents information')
   if mapping is not None:
     return mapping.getRelativeUrl()
-  
+
   organisation_list = section.getGroupRelatedValueList(portal_type='Organisation',
                               strict_membership=1,
                               checked_permission='Access contents information') + \
                       section.getGroupRelatedValueList(portal_type='Organisation',
-                              checked_permission='Access contents information') 
+                              checked_permission='Access contents information')
 
   for organisation in organisation_list:
     if organisation.getProperty('validation_state', 'unset') not in ('deleted', 'cancelled'):

@@ -3,7 +3,7 @@
    page from a script. It should probably be extended, reviewed and documented
    so that less code is copied and pasted in dialog scripts.
 
-   TODO: improve API and extensively document. ERP5Site_redirect may 
+   TODO: improve API and extensively document. ERP5Site_redirect may
    be redundant.
 """
 # BBB: originally, form_id was the first positional argument

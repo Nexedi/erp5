@@ -18,7 +18,7 @@ portal_type = context.getPortalType()
 
 # create
 if web_form_id in MARKER:
-  web_form_id = '%s_view%sAsWeb' % (portal_type.replace(' ', ''), 
+  web_form_id = '%s_view%sAsWeb' % (portal_type.replace(' ', ''),
                                     web_view_title.replace(" ", ""))
 
 skin_folder.manage_addProduct['ERP5Form'].addERP5Form(web_form_id)
@@ -40,5 +40,5 @@ action.edit(reference="%s_view_as_web" % (web_view_title.lower().replace(" ", "_
             priority=priority,
             action_permission="View")
 
-return context.Base_redirect(web_form_id, 
+return context.Base_redirect(web_form_id,
                              keep_items=dict(portal_status_message="Web View Successfuly created"))

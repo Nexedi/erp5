@@ -16,16 +16,16 @@ def getNestedSection(content):
 
 def removeSlidesWithoutDetailsFromNotes(content):
   slide_list = getSlideList(content)
-  
+
   # empty slide if no <detail>
   for slide in slide_list:
     if getNestedSection(slide) is False:
       content = content.replace(slide, '')
-  
+
   # remove empty slides
   content = content.replace('<section></section>','')
   content = re.sub(r'<section class="[^"]*"></section>', '', content)
-  
+
   # remove empty slides with class
   return content
 
@@ -37,24 +37,24 @@ def getThemeFromFirstFollowUpProduct(reference):
   osoe_match_string = "osoe"
   product_match_string = "product"
   software_match_string = " Software"
-  
+
   portal = context.getPortalObject()
-  
+
   # theme: try via followUpValue (most likely restricted)
   follow_up_list = context.getFollowUpValueList(
     portal_type="Product",
     checked_permission='View'
   )
-  
+
   if len(follow_up_list) > 0:
     for follow_up in follow_up_list:
       follow_up_title = follow_up.getTitle()
       if follow_up_title.find(software_match_string) > 1:
         theme = follow_up_title.split(software_match_string)[0].lower()
-  
+
   # theme: then try via category
   category_list = context.getCategoryList()
-  
+
   if len(category_list) > 0:
     for category in category_list:
       if category.find(product_match_string) > 1:
@@ -64,19 +64,19 @@ def getThemeFromFirstFollowUpProduct(reference):
           category_title = category_object[0]
           category_title = category_title.getTitle()
           theme = category_title.split(software_match_string)[0].lower()
-  
+
       # OSOE extra handle
       # XXX this should be relative to the website the presentation is being
       # viewed from. from OSOE => osoe theme, from ERP5 => erp5 theme
       if category.find(osoe_match_string) > 1:
         theme = osoe_match_string
-  
+
   # theme: fallback to Nexedi
   if theme is None:
     theme = "nexedi"
 
   return theme
-  
+
 document = context
 
 # wkhtmltopdf
@@ -97,8 +97,8 @@ document_claim = document_theme_logo.getDescription()
 #document_contributor_list = ', '.join(document.getContributorTitleList())
 document_contributor_list = ""
 
-# backwards compatability with old slideshow 
-# requires to wrap content of slides that contain <details> into nested 
+# backwards compatability with old slideshow
+# requires to wrap content of slides that contain <details> into nested
 # <section> tags. this is done here
 has_details = getDetails(document_content)
 if has_details is True:
@@ -111,7 +111,7 @@ if has_details is True:
       updated = slide.replace(cleaned, wrapped)
       document_content = document_content.replace(slide, updated)
 
-# wkhtmltopdf 
+# wkhtmltopdf
 if document_output_type == "footer":
   return """
   <!Doctype html>
@@ -181,7 +181,7 @@ if document_output_type == "cover":
       <link rel="stylesheet" href="css/custom.css?portal_skin=CI_slideshow" />
       <link rel="stylesheet" href="lib/css/zenburn.css?portal_skin=CI_slideshow" />
       <link rel="stylesheet" href="css/custom_pdf.css?portal_skin=CI_slideshow" />
-      
+
       <!-- logo-box and slogan -->
       <style type="text/css">
         html .ci-presentation-intro.present:before {
@@ -227,9 +227,9 @@ if document_output_type == "content":
       <link rel="stylesheet" href="css/custom.css?portal_skin=CI_slideshow" />
       <link rel="stylesheet" href="lib/css/zenburn.css?portal_skin=CI_slideshow" />
       <link rel="stylesheet" href="css/custom_pdf.css?portal_skin=CI_slideshow" />
-      
+
   	</head>
-  
+
   	<body class="ci-presentation">
   		<!-- <div class="reveal">
   			<div class="slides"> -->
@@ -312,7 +312,7 @@ return """
       }
     </style>
 
-		<!-- print/pdf 
+		<!-- print/pdf
 		<script>
 			var link = document.createElement( 'link' );
 			link.rel = 'stylesheet';
@@ -330,7 +330,7 @@ return """
 
 			<!-- section elements inside this container are displayed as slides -->
 			<div class="slides">
-			  
+			
 			  <!-- intro slide -->
 			  <section class="ci-presentation-intro">
 			    <h2>%(document_title)s</h2>
@@ -381,5 +381,5 @@ return """
   'document_content': document_content,
   'document_description': document_description,
   'document_creation_year': document_creation_year,
-  'document_contributor_list': document_contributor_list 
+  'document_contributor_list': document_contributor_list
 }

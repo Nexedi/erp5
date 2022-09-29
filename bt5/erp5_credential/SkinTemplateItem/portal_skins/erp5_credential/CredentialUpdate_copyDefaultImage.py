@@ -27,7 +27,7 @@ if new_default_image is not None:
   default_image = updated_item.getDefaultImageValue()
   if default_image is None:
     default_image = updated_item.newContent(portal_type="Embedded File",id="default_image")
-  
+
   image_mapping = (
     # (credential image, item image)
     ('source_reference', 'source_reference'),

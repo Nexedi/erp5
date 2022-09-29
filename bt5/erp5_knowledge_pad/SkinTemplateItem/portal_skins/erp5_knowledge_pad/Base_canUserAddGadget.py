@@ -1,5 +1,5 @@
 """
-  Can user add a gadget on context. 
+  Can user add a gadget on context.
   This script is useful to determine if respective "Add gadget" link should be show.
 """
 request = context.REQUEST

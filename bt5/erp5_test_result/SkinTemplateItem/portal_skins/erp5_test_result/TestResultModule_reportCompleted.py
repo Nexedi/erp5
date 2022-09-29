@@ -43,7 +43,7 @@ for test_id, test_result in all_test_results.items():
             cmdline=log_files.get('cmdline'),
             stdout=log_files.get('stdout'),
             stderr=log_files.get('stderr'),)
-    
+
 
 test_report.edit(string_index=form.get('result'),
                  all_tests=all_tests,

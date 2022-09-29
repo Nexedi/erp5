@@ -10,7 +10,7 @@ if form_id is not None:
   form = getattr(context, form_id, None)
   quantity = int(request.get('field_your_buy_quantity'))
   # FIXME:
-  # this handling of validation errors should be automatically handled by the 
+  # this handling of validation errors should be automatically handled by the
   # button itself
   try:
     params = form.validate_all_to_request(request)

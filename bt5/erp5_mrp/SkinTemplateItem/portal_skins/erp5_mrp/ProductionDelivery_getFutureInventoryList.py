@@ -8,7 +8,7 @@ empty = True
 for movement in movement_list:
   if movement.getResource() not in (None, ''):
     empty = False
-    break           
+    break
 if empty:
   return []
 

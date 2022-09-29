@@ -8,7 +8,7 @@ selection_name = request.get('selection_name')
 params = portal.portal_selections.getSelectionParamsFor(selection_name, request)
 
 bound_start = DateTime(params.get('bound_start', DateTime()))
-bound_start = DateTime(bound_start.year() , bound_start.month() , bound_start.day()) 
+bound_start = DateTime(bound_start.year() , bound_start.month() , bound_start.day())
 
 bound_start = bound_start + params.get('bound_variation', 0)
 bound_stop = bound_start + 1
@@ -47,7 +47,7 @@ if depth == 0:
     o.setProperty('tooltip', tp)
 
     category_list.append(o)
-    
+
     current_date  = current_date + 0.125
 
 else:
@@ -56,11 +56,11 @@ else:
 for category in category_list:
   domain = parent.generateTempDomain(id = 'sub' + category.getProperty('id'))
   domain.edit(title = category.getTitle(),
-              membership_criterion_base_category = ('parent', ), 
+              membership_criterion_base_category = ('parent', ),
               membership_criterion_category = (category,),
               domain_generator_method_id = script.id,
               uid = category.getUid())
-                
+
   domain_list.append(domain)
 
 return domain_list

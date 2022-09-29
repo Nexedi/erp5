@@ -9,7 +9,7 @@ parameter_dict = {}
 failed_path_list = []
 restrictedTraverse = context.getPortalObject().restrictedTraverse
 for path in path_list:
-  if not path: # should happen in tricky testERP5Catalog tests only 
+  if not path: # should happen in tricky testERP5Catalog tests only
     continue
   obj = restrictedTraverse(path, None)
   if obj is None:
@@ -24,7 +24,7 @@ for path in path_list:
       tmp_dict[property] = value
   except ConflictError:
     raise
-  except Unauthorized: # should happen in tricky testERP5Catalog tests only 
+  except Unauthorized: # should happen in tricky testERP5Catalog tests only
     continue
   except Exception, e:
     exception = e

@@ -226,7 +226,7 @@ try:
     if(field_meta_type == 'MatrixBox'):
       editMatrixBox(field, request.get(field.id))
 
-  # Return parsed values 
+  # Return parsed values
   if silent_mode:
     return (edit_kwargs, encapsulated_editor_list), 'edit'
 

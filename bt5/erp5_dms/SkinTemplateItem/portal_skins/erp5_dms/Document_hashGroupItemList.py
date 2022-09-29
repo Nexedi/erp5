@@ -27,7 +27,7 @@ for _ in range(1):
 
 # WARNING This code is very dangerous and ad hoc
 # But it was the only way to make parallel list field
-# work in this case 
+# work in this case
 section_list = context.aq_parent.aq_parent.getGroupList()
 section_list.reverse()
 for value in section_list:

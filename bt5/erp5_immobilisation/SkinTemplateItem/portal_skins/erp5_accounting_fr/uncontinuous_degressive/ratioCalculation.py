@@ -7,7 +7,7 @@ if not degressive_coef:
   context.log('Error in uncontinuous degressive ratioCalculation :',
             'initial_degressive_coefficient (%s) is None or 0' % degressive_coef)
   return None
-  
+
 
 # Calculate the ratio for each annuity
 annuity_ratio_list = []

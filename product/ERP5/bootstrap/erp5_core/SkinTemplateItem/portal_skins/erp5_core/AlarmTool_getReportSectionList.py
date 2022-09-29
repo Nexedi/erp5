@@ -1,8 +1,8 @@
 """
-  Returns a list of all alarms in 
+  Returns a list of all alarms in
   the form of report sections.
 
-  TODO: cache this result in RAM 
+  TODO: cache this result in RAM
   on a per transaction level.
 """
 REQUEST = context.REQUEST

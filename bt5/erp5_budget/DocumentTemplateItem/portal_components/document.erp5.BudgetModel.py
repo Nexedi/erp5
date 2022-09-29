@@ -56,7 +56,7 @@ class BudgetModel(Predicate):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCellRangeForBudgetLine')
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
@@ -162,7 +162,7 @@ class BudgetModel(Predicate):
       if key:
         cell_key += (key,)
     return cell_key
-    
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asBudgetPredicate')
   def asBudgetPredicate(self):

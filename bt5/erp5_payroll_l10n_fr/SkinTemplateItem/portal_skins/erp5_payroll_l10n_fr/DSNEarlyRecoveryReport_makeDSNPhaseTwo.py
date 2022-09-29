@@ -20,7 +20,7 @@ def getDSNReport(leave_period, dsn_order):
   dsn_report.append(getDSNblockDict(block_id='S10.G00.01', target=organisation))
   dsn_report.append(getDSNblockDict(block_id='S10.G00.02', target=organisation_contact))
   dsn_report.append(getDSNblockDict(block_id='S10.G00.03', target=organisation))
-  
+
   # Early Recovery DSN : identification data
   dsn_report.append(getEventDSNblockDict(block_id='S20.G00.05', dsn_type='05', order=dsn_order))
   dsn_report.append(getEventDSNblockDict(block_id='S20.G00.07', target=organisation_contact))
@@ -28,7 +28,7 @@ def getDSNReport(leave_period, dsn_order):
   dsn_report.append(getEventDSNblockDict(block_id='S21.G00.11', target=employee.getDefaultCareerValue().getDestinationValue()))
   dsn_report.append(getEventDSNblockDict(block_id='S21.G00.30', target=employee))
   dsn_report.append(getEventDSNblockDict(block_id='S21.G00.40', target=employee.getDefaultCareerValue()))
-  
+
   # Make the leave block, containing information about the early recovery
   leave_block = {'S21.G00.60.001': leave_period.getResourceValue().getCodification(),
                  'S21.G00.60.002': formatDate(leave_period.getStartDate()),

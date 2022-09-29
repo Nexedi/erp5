@@ -2,7 +2,7 @@ from Products.ERP5Type.Utils import getMessageIdWithContext
 message_dict = {}
 
 def add_message(message, comment):
-  
+
   if not message:
     return
   message = message.decode('utf-8')
@@ -106,7 +106,7 @@ for i in page_template_list:
 #
 for i in context.portal_workflow.objectValues():
   add_message(i.title_or_id(), portal_url.getRelativeContentURL(i))
-  
+
   state_value_list = i.getStateValueList()
   if not state_value_list:
     continue
@@ -117,7 +117,7 @@ for i in context.portal_workflow.objectValues():
       add_message(msg_id, portal_url.getRelativeContentURL(s))
       # also use state title as msg_id for compatibility
       add_message(s.getTitle(), portal_url.getRelativeContentURL(s))
-  
+
   transition_value_list = i.getTransitionValueList()
   if not transition_value_list:
     continue

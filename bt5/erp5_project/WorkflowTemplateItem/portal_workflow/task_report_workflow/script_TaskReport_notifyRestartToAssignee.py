@@ -19,7 +19,7 @@ Restarted task has been assigned to you by %(assignor)s.
 
 This task is named: %(title)s
 
-Description: 
+Description:
 %(comment)s
 
 Start Date: %(start_date)s

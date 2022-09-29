@@ -103,5 +103,5 @@ for chapter in listbox[1:]:
 
 test_page.setTextContent(text_content)
 
-return test_page.Base_redirect('view', 
+return test_page.Base_redirect('view',
                                keep_items = dict(portal_status_message=portal_status_message))

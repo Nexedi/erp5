@@ -21,7 +21,7 @@ def formatDate(datetime):
 
 def formatFloat(number):
   return "{:.02f}".format(float(number))
-  
+
 def getLastDateOfMonth(date):
   return DateTime(date.year(), date.month(), getNumberOfDayInMonth(date))
 
@@ -195,7 +195,7 @@ if block_id == 'S21.G00.40':
   rubric_value_dict["S21.G00.40.016"] = enrollment_record.getLocalScheme()
   rubric_value_dict["S21.G00.40.017"] = target.getCollectiveAgreementTitle()
   rubric_value_dict["S21.G00.40.018"] = enrollment_record.getMedicalScheme()
-  rubric_value_dict["S21.G00.40.019"] = '' 
+  rubric_value_dict["S21.G00.40.019"] = ''
   rubric_value_dict["S21.G00.40.020"] = enrollment_record.getRetirementScheme()
   rubric_value_dict["S21.G00.40.021"] = ''
   rubric_value_dict["S21.G00.40.022"] = ''
@@ -303,5 +303,5 @@ if block_id == 'S21.G00.81':
 if block_id == 'S90.G00.90':
   rubric_value_dict['S90.G00.90.001'] = int(kw['length']) + 2
   rubric_value_dict['S90.G00.90.002'] = kw['dsn_record_counter']
-  
+
 return rubric_value_dict

@@ -95,7 +95,7 @@ for paysheet_id in paysheet_list:
   normal_working_time = float(enrollment_record.getStandardWorkingUnit())
   relative_minimum_salary = minimum_salary * (worked_time / normal_working_time)
   gross_salary = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/payroll/report/salary/gross")
-  
+
   for paysheet_line in paysheet_line_list:
     # we only want paysheet lines contributing to a social service related to DSN
     social_contribution_set = set(paysheet_line.getResourceValue().getUseValueList()) \
@@ -141,7 +141,7 @@ for paysheet_id in paysheet_list:
 
 def getFeeFromDate(ctp_code, date):
   '''
-  Return a list of the previous contributions for 
+  Return a list of the previous contributions for
   a specific CTP code in the older DSN
   '''
   amount_list = []
@@ -187,7 +187,7 @@ def getFeeBlocAsDict(ctp, ctp_dict):
   else:
     bloc["S21.G00.23.004"] = "%.02f" % round(ctp_dict[ctp])
 
-  # The CTP 900T needs this specific rubric 
+  # The CTP 900T needs this specific rubric
   if ctp == '900T':
     bloc["S21.G00.23.006"] = INSEE_CODE
   return bloc

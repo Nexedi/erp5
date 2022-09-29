@@ -5,5 +5,5 @@ if contract_reference:
   else:
     result = context.WebSection_getDocumentValue(contract_reference)
     if result:
-      result = result.getRelativeUrl()      
+      result = result.getRelativeUrl()
   return '<iframe width="95%%" height="400px" src="%s/asStrippedHTML"></iframe>' % result

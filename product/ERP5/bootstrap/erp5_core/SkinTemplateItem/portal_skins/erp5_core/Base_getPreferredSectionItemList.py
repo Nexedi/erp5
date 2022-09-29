@@ -18,7 +18,7 @@ def getPreferredSectionItemList(portal_type, validation_state):
     return [('', '')]
 
   group_uid = portal.portal_categories.getCategoryUid(section_category)
-  return [('', '')] + [(x.getTitle(), x.getRelativeUrl()) for x in 
+  return [('', '')] + [(x.getTitle(), x.getRelativeUrl()) for x in
                       portal.portal_catalog(portal_type=portal_type,
                                             validation_state=validation_state,
                                             default_group_uid=group_uid,

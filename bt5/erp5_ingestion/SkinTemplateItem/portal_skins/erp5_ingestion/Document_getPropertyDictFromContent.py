@@ -11,7 +11,7 @@ information = context.getContentInformation()
 
 result = {}
 property_id_list = context.propertyIds()
-for k, v in information.items():  
+for k, v in information.items():
   key = k.lower()
   if v:
     if isinstance(v, unicode): v = v.encode('utf-8')

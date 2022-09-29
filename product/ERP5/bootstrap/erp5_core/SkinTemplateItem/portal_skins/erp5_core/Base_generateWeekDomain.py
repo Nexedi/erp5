@@ -44,7 +44,7 @@ if depth == 0:
     o.setProperty('stop', current_date+1)
     o.setProperty('relative_position', int(current_date))
 
-    # Seting delimiter 
+    # Seting delimiter
     if current_date.day() == 1:
       o.setProperty('delimiter_type', 2)
     elif current_date.day() == 15:
@@ -74,11 +74,11 @@ else:
 for category in category_list:
   domain = parent.generateTempDomain(id = 'sub' + category.getProperty('id'))
   domain.edit(title = category.getTitle(),
-              membership_criterion_base_category = ('parent', ), 
+              membership_criterion_base_category = ('parent', ),
               membership_criterion_category = (category,),
               domain_generator_method_id = script.id,
               uid = category.getUid())
-                
+
   domain_list.append(domain)
 
 return domain_list

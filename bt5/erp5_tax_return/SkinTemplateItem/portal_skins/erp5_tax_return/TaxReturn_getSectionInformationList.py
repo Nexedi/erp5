@@ -9,7 +9,7 @@ section_list = []
 for tax_return_line in tax_type_definition.contentValues(
       portal_type='Tax Return Line',
       sort_on=('float_index',),):
-  section_list.append(  
+  section_list.append(
     dict(section_title=tax_return_line.getTitle(),
          selection_params=dict(
            base_contribution_list=tax_return_line.getBaseContributionList(base=1),

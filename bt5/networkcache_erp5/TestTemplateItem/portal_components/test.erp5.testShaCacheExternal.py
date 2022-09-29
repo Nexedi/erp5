@@ -124,7 +124,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     """
     self.test_external_get(annonymous=True)
 
-  @expectedFailure 
+  @expectedFailure
   def test_external_post_anonymous(self):
     """
       Anonymous should not be able to POST a file.
