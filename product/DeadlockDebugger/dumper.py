@@ -114,7 +114,3 @@ def match(self, request):
         return 1
     else:
         return 0
-
-if six.PY2:
-  from ZServer.HTTPServer import zhttp_handler
-  zhttp_handler.match = match

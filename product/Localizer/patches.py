@@ -69,18 +69,6 @@ def get_new_publish(zope_publish):
 if patch is False:
     patch = True
 
-    if six.PY2: # ZServer-specific patch
-      logger.info('Install "Globals.get_request".')
-
-      # Apply the patch
-      from ZPublisher import Publish
-      Publish.publish = get_new_publish(Publish.publish)
-
-      # Add to Globals for backwards compatibility 
-      import Globals
-      Globals.get_request = get_request
-
-
 # PATCH 2: Accept
 #
 # Adds the variable AcceptLanguage to the REQUEST.  It provides a higher
