@@ -142,21 +142,13 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   """
   _server_address = None # (host, port) of the http server if it was started, None otherwise
 
-  @staticmethod
-  def asyncore_loop():
-    try:
-      Lifetime.lifetime_loop()
-    except KeyboardInterrupt:
-      pass
-    Lifetime.graceful_shutdown_loop()
-
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
     if self._server_address is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
-      if int(os.environ.get('erp5_wsgi', 0)):
+      if True:
         from Products.ERP5.bin.zopewsgi import app_wrapper, createServer
         sockets = []
         server_type = 'HTTP'
@@ -196,23 +188,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
             logger, sockets=sockets)
           ProcessingNodeTestCase._server_address = hs.addr
           t = Thread(target=hs.run)
-          t.setDaemon(1)
-          t.start()
-      else:
-        _print = lambda hs: verbose and ZopeTestCase._print(
-          message % (hs.server_protocol, hs.server_name, hs.server_port))
-        try:
-          hs = createZServer(log)
-        except RuntimeError as e:
-          ZopeTestCase._print(str(e))
-        else:
-          ProcessingNodeTestCase._server_address = hs.server_name, hs.server_port
-          _print(hs)
-          try:
-            _print(createZServer(log, zserver_type='webdav'))
-          except RuntimeError as e:
-            ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
-          t = Thread(target=Lifetime.loop)
           t.setDaemon(1)
           t.start()
       from Products.CMFActivity import ActivityTool
@@ -307,9 +282,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
         portal_activities.process_timer(None, None)
-        if Lifetime._shutdown_phase:
-          # XXX CMFActivity contains bare excepts
-          raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
         if time.time() >= deadline or message_count and any(x.processing_node == -2
@@ -377,7 +349,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   def processing_node(self):
     """Main loop for nodes that process activities"""
     try:
-      while not Lifetime._shutdown_phase:
+      while True:
         time.sleep(.3)
         transaction.begin()
         try:
@@ -400,7 +372,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     timerserver_thread = None
     try:
-      while not Lifetime._shutdown_phase:
+      while True:
         time.sleep(.3)
         transaction.begin()
         try:
