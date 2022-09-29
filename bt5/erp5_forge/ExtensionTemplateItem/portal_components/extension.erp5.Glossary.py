@@ -16,7 +16,7 @@ def getPropertySheetAttributeList(self, name):
     return []
 
   result = []
-  # We don't want Acquired Property nor Category TALES Expression  
+  # We don't want Acquired Property nor Category TALES Expression
   for property_obj in property_sheet_obj.contentValues(portal_type=('Category Property',
                                                                     'Standard Property')):
     reference = property_obj.getReference('')
@@ -131,7 +131,7 @@ from zope.tal.dummyengine import DummyEngine
 class MyDummyEngine(DummyEngine):
 
   def evaluate(self, expression):
-    return [] 
+    return []
 
 
 class MyDummyTALInterpreter(TALInterpreter):

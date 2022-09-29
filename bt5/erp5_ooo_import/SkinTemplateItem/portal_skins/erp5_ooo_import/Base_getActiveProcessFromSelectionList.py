@@ -1,5 +1,5 @@
 '''
-get the list of active process from the selection 
+get the list of active process from the selection
 '''
 
 user_name = context.portal_membership.getAuthenticatedMember().getId()

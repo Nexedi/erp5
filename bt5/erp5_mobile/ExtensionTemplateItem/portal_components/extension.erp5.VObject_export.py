@@ -25,7 +25,7 @@ def Person_viewPersonAsvCard(self, REQUEST=None):
   # formatted name
   vcard.add('fn')
   vcard.fn.value = decode(self.getTitle())
-  
+
   # organisation
   if self.getSubordination():
     vcard.add('org')
@@ -37,7 +37,7 @@ def Person_viewPersonAsvCard(self, REQUEST=None):
     vcard.add('email')
     vcard.email.value = email.getUrlString()
     vcard.email.type_param = 'PREF'
-  
+
   # alt. emails
   for addr in self.contentValues(filter=dict(portal_type=['Email'])):
     if addr.getId() not in ('default_email', ):
@@ -73,14 +73,14 @@ def Person_viewPersonAsvCard(self, REQUEST=None):
     vcard.add('tel')
     vcard.tel.value = decode(tel.asText())
     vcard.tel.type_param = 'PREF'
-  
+
   # default fax
   default_fax = self.getDefaultFaxValue()
   if default_fax is not None:
     fax = vcard.add('tel')
     fax.value = decode(default_fax.asText())
     fax.type_param = 'FAX'
-  
+
   # alt. telephones
   for tel in self.contentValues(filter=dict(
                          portal_type=['Telephone', 'Fax'])):
@@ -99,7 +99,7 @@ def Person_viewPersonAsvCard(self, REQUEST=None):
   if REQUEST:
     REQUEST.RESPONSE.setHeader('Content-type', 'text/x-vcard')
   return vcard.serialize().encode('utf8')
-  
+
 def PersonModule_importvCard(self):
   """Import persons from a vCard file.
   """

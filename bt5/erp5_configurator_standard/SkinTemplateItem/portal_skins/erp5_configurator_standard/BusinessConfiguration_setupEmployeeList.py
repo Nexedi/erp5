@@ -14,7 +14,7 @@ if company_employees_number==1:
   for key in ('configuration_save_url', 'transition', 'client_id', 'password_confirm'):
     kw.pop(key, None)
   function = kw.pop('function', None)
-  configuration_save.addConfigurationItem("Person Configurator Item", 
+  configuration_save.addConfigurationItem("Person Configurator Item",
                                            organisation_id = organisation_id,
                                            function = function,
                                            group_id = group_id,
@@ -29,7 +29,7 @@ else:
     # add an emlpoyee
     function = employee_kw.pop('function', None)
     employee_kw.pop('password_confirm', None)
-    configuration_save.addConfigurationItem("Person Configurator Item", 
+    configuration_save.addConfigurationItem("Person Configurator Item",
                                             organisation_id = organisation_id,
                                             function = function,
                                             group_id = group_id,

@@ -25,7 +25,7 @@ for method in amortisation_method_list:
     if getattr(action, "id", None) == action_id:
       print "already exists"
       exists = 1
-  
+
   if not exists:
     capitalized_id = "".join([capitalize(o) for o in id.split("_")])
     action_action = view_action_basis % (region, capitalized_id)

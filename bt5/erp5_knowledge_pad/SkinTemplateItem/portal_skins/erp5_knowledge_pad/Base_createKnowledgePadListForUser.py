@@ -7,8 +7,8 @@
 portal = context.getPortalObject()
 
 # ERP5 front
-context.ERP5Site_createDefaultKnowledgePadListForUser(default_pad_group=None, 
-                                                      mode='erp5_front', 
+context.ERP5Site_createDefaultKnowledgePadListForUser(default_pad_group=None,
+                                                      mode='erp5_front',
                                                       owner=owner)
 web_site = None
 # Customize this to respective needs
@@ -18,14 +18,14 @@ if default_website_id is not None:
 
 if web_site is not None:
   # Web front
-  web_site.ERP5Site_createDefaultKnowledgePadListForUser(default_pad_group=None, 
-                                                         mode='web_front', 
+  web_site.ERP5Site_createDefaultKnowledgePadListForUser(default_pad_group=None,
+                                                         mode='web_front',
                                                          owner=owner)
   # web section
   web_site.ERP5Site_createDefaultKnowledgePadListForUser(default_pad_group='default_section_pad',
-                                                         mode='web_section', 
+                                                         mode='web_section',
                                                          owner=owner)
   # web section content
   web_site.ERP5Site_createDefaultKnowledgePadListForUser(default_pad_group='default_content_pad',
-                                                         mode='web_section', 
+                                                         mode='web_section',
                                                          owner=owner)

@@ -1,6 +1,6 @@
 """Get-or-Create Foo Line inside context (Foo object).
 
-This script is used from Foo_viewFormBoxFooLine from a FormBox and thus 
+This script is used from Foo_viewFormBoxFooLine from a FormBox and thus
 can receive 'field' and 'REQUEST' kwargs.
 """
 

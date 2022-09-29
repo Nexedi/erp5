@@ -42,7 +42,7 @@ if workflow_action:
   )
 
 message = translateString(
-  "Created and associated a new ${portal_type} to the ticket.", 
+  "Created and associated a new ${portal_type} to the ticket.",
   mapping=dict(portal_type = translateString(portal_type)))
 
 if event_workflow_action == 'send':

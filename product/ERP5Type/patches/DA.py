@@ -21,7 +21,7 @@ from Shared.DC.ZRDB.DA import DA, DatabaseError, SQLMethodTracebackSupplement
 from Shared.DC.ZRDB import RDB
 from Shared.DC.ZRDB.Results import Results
 from App.Extensions import getBrain
-from AccessControl import ClassSecurityInfo, getSecurityManager 
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR

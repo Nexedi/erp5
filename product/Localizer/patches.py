@@ -76,7 +76,7 @@ if patch is False:
       from ZPublisher import Publish
       Publish.publish = get_new_publish(Publish.publish)
 
-      # Add to Globals for backwards compatibility 
+      # Add to Globals for backwards compatibility
       import Globals
       Globals.get_request = get_request
 

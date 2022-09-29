@@ -22,5 +22,5 @@ task = context.task_module.newContent(
                                      )
 translateString = context.Base_translateString
 portal_status_message = translateString("Object created.")
-return task.Base_redirect('view', 
+return task.Base_redirect('view',
           keep_items = dict(portal_status_message=portal_status_message),)

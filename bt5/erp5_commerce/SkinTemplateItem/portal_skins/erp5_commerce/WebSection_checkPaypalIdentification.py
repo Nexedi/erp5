@@ -12,7 +12,7 @@ if parameter_dict['PAYERID'] != payer_id:
   return "Identification failed.2 : %s" % parameter_dict['PAYERID']
 
 #redirect user to the checkout section
-website = context.getWebSiteValue() 
+website = context.getWebSiteValue()
 section_url = website.getLayoutProperty('ecommerce_checkout_section_id',"checkout")
 website.Base_redirect(section_url, \
                        keep_items={'portal_status_message':translateString("The payment procedure went well on Paypal."),

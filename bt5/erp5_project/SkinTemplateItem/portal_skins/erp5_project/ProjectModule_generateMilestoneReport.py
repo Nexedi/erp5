@@ -34,7 +34,7 @@ if hasColumn is not None:
 if len(project_uid_list):
   milestone_list = [x for x in portal.portal_catalog(parent_uid=project_uid_list,
                        portal_type='Project Milestone', select_dict=select_dict, **sql_kw)]
-                
+
 milestone_list.sort(key = lambda x: (x.parent_title, getattr(x, 'stop_date', None), x.title))
 
 for milestone in milestone_list:

@@ -19,7 +19,7 @@ data_text = data_uri.read()
 data = data_text.decode('base64')
 
 image.edit(data=data,
-           filename=str(image_reference) + '.png', 
+           filename=str(image_reference) + '.png',
            content_type = 'image/png')
 
 context.Zuite_updateImage(image)

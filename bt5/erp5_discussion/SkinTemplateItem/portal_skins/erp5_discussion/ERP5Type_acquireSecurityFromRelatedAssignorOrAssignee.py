@@ -24,5 +24,5 @@ for base_category in base_category_list:
 
 # By returning a dict, we force force ERP5Type
 # to interprete the result as a mapping from
-# roles to existing security groups 
+# roles to existing security groups
 return category_dict

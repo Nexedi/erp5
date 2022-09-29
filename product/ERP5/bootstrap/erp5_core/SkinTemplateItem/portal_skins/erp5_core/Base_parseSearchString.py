@@ -1,18 +1,18 @@
 """
   Make SQLCatalog parse given search string and generate an Abstract Syntax Tree.
   Then, walk this tree and categorize criterion by type (and their alias, see code).
-  
+
   Example:
   * input:
   word_to_search_for "exact_phrase" +containing_all_the_words -without_word created:1w reference:nxd-test version:001 language:en contributor_title:John mine:yes newest:yes
 
   * output
-   {'newest': 'yes', 
-   'reference': 'nxd-test', 
-   'language': 'en', 
-   'mine': 'yes', 
-   'searchabletext': 'word_to_search_for exact_phrase +containing_all_the_words -without_word John', 
-   'version': '001', 
+   {'newest': 'yes',
+   'reference': 'nxd-test',
+   'language': 'en',
+   'mine': 'yes',
+   'searchabletext': 'word_to_search_for exact_phrase +containing_all_the_words -without_word John',
+   'version': '001',
    'creation_from': DateTime('2010/02/23 13:11:11.698 GMT+2')}
 """
 from DateTime import DateTime
@@ -81,7 +81,7 @@ criterion_alias_dict = {
   'mine':             (True, None),
   # indicates user search only the newest versions
   'newest':           (True, None),
-  # indicates user search for documents by contributor title  
+  # indicates user search for documents by contributor title
   'contributor_title':(True, None),
   # indicates user search mode (boolean or with with query expansion)
   'mode':             (True, None),

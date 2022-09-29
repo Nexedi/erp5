@@ -9,8 +9,8 @@ session_id = request.get('session_id', None)
 if session_id is None:
   ## first call so generate session_id and send back via cookie
   session_id = 'erp5runmydocs_' + context.REQUEST.other['AUTHENTICATED_USER'].getIdOrUserName()
-  request.RESPONSE.setCookie('erp5_session_id', 
-                             session_id, 
+  request.RESPONSE.setCookie('erp5_session_id',
+                             session_id,
                              expires=(now +expire_timeout_days).fCommon(), path='/')
 
 if attribute is None or not attribute:

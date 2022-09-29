@@ -41,26 +41,26 @@ if sql_expression not in MARKER:
   listbox_list_method_id = '%s_zGet%sList' %(form_action_portal_type, erp5_report_form_id)
   skin_folder.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
                         listbox_list_method_id,
-                        listbox_list_method_id, 
-                        'erp5_sql_connection', 
+                        listbox_list_method_id,
+                        'erp5_sql_connection',
                         '',
                         sql_expression)
   zsql_method = getattr(skin_folder, listbox_list_method_id)
-  zsql_method.manage_advanced(max_rows=1000, 
-                              max_cache=100, 
+  zsql_method.manage_advanced(max_rows=1000,
+                              max_cache=100,
                               cache_time=0,
-                              class_name='ZSQLBrain', 
-                              class_file='ZSQLCatalog.zsqlbrain', 
+                              class_name='ZSQLBrain',
+                              class_file='ZSQLCatalog.zsqlbrain',
                               direct=None,
                               REQUEST=None)
 
 if python_expression not in MARKER:
   # create Python method
-  listbox_list_method_id = '%s_get%sList' %(form_action_portal_type, erp5_report_form_id)  
+  listbox_list_method_id = '%s_get%sList' %(form_action_portal_type, erp5_report_form_id)
   skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=listbox_list_method_id)
   script = getattr(skin_folder, listbox_list_method_id)
   script.ZPythonScript_edit('**kw', python_expression)
- 
+
 # add report form
 skin_folder.manage_addProduct['ERP5Form'].addERP5Form(form_id)
 form_object = getattr(skin_folder, form_id)
@@ -71,8 +71,8 @@ context.editForm(form_object,
 # create real ERP5 Form and configure it ..
 listbox_id = 'listbox'
 form_object.manage_addProduct['Formulator'].manage_addField(
-              id=listbox_id, 
-              fieldname='ListBox', 
+              id=listbox_id,
+              fieldname='ListBox',
               title='Listbox')
 # listbox is in bottom group
 form_object.move_field_group(listbox_id, 'left', 'bottom')
@@ -81,7 +81,7 @@ listbox.manage_edit_xmlrpc({'selection_name': form_id,
                             'columns': [[x, x] for x in listbox_column_id_list],
                             'list_method': context.getMethodObject(listbox_list_method_id)
                             })
-  
+
 if dialog_form_id is not None:
   form_id = dialog_form_id
 if portal_type_action:

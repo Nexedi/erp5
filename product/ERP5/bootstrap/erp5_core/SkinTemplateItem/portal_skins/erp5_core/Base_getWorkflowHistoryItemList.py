@@ -84,7 +84,7 @@ for workflow_item in workflow_item_list:
     if value is marker:
       value = 'Does not exist'
     o.setProperty(key, value)
- 
+
   # record current serial as "next serial" for the previous revision
   if next_serial is not None and can_view_history:
     previous_obj.setProperty('next_serial', o.serial)

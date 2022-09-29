@@ -16,7 +16,7 @@ if 'simulation_state' in kw and len(kw['simulation_state']) > 0 :
   sql_kw['simulation_state'] = kw['simulation_state']
 
 task_list = [x.getObject() for x in \
-  context.portal_catalog(selection_report=selection_report, 
+  context.portal_catalog(selection_report=selection_report,
           portal_type='Task',
           source_project_uid = source_project_uid_list,
           **sql_kw)]

@@ -40,7 +40,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     return "Test Certificate Authority"
 
   def afterSetUp(self):
-    if getattr(self.portal.portal_types.Person, 
+    if getattr(self.portal.portal_types.Person,
         'user_can_see_himself', None) is None:
       self.portal.portal_types.Person.newContent(
             id="user_can_see_himself",
@@ -79,7 +79,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     certificate_login = certificate_login_list[0]
     self.assertEquals(certificate_login.getReference(), user_id)
     self.assertEquals(certificate_login.getValidationState(), "validated")
-    
+
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
 
   def test_person_duplicated_login(self):
@@ -183,7 +183,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.assertRaises(Unauthorized, person.getCertificate)
 
   def test_person_duplicated_login_from_another_user(self):
-    user_id, login = self._createPerson()    
+    user_id, login = self._createPerson()
     person = self.portal.person_module.newContent(portal_type='Person',
       reference=str(random.random()), password=login)
     person.newContent(portal_type='Assignment').open()
@@ -198,7 +198,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     certificate_login_list = [ i for i in person.objectValues(
       portal_type="Certificate Login"
     ) if i.getValidationState() == "validated"]
-    
+
     self.assertEquals(len(certificate_login_list), 0)
 
   def test_person_revoke_certificate_for_another(self):

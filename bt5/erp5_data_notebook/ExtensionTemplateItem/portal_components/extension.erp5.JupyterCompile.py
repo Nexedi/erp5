@@ -46,14 +46,14 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   # Check if implementation is enabled
   if not self.getPortalObject().ERP5Site_isDataNotebookEnabled():
     return "The synchronous and unrestricted implementation is not enabled on the server"
-  # Check permissions for current user and display message to non-authorized user 
+  # Check permissions for current user and display message to non-authorized user
   if not self.Base_checkPermission('portal_components', 'Manage Portal'):
     return "You are not authorized to access the script"
-  
+
   # Convert the request_reference argument string to their respeced boolean values
   request_reference = {'True': True, \
                        'False': False}.get(request_reference, False)
-  
+
   # Return python dictionary with title and reference of all notebooks
   # for request_reference=True
   if request_reference:
@@ -61,20 +61,20 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     notebook_detail_list = [{'reference': obj.getReference(), \
                              'title': obj.getTitle()} for obj in data_notebook_list]
     return notebook_detail_list
-  
+
   if not reference:
     message = "Please set or use reference for the notebook you want to use"
     return message
-  
+
   # Take python_expression as '' for empty code from jupyter frontend
   if not python_expression:
     python_expression = ''
-  
+
   # Get Data Notebook with the specific reference
   data_notebook = self.portal_catalog.getResultValue(
                          portal_type='Data Notebook',
                          reference=reference)
-  
+
   # Create new Data Notebook if reference doesn't match with any from existing ones
   if not data_notebook:
     notebook_module = self.getDefaultModule(portal_type='Data Notebook')
@@ -91,18 +91,18 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
                                        notebook_code=python_expression,
                                        batch_mode=True)
-  
+
   # Gets the context associated to the data notebook being used
   old_notebook_context = data_notebook.getNotebookContext()
   if not old_notebook_context:
     old_notebook_context = self.Base_createNotebookContext()
-  
+
   # Pass all to code Base_runJupyter external function which would execute the code
   # and returns a dict of result
   final_result = displayDataWrapper(lambda:Base_runJupyterCode(self, python_expression, old_notebook_context))
-    
+
   new_notebook_context = final_result['notebook_context']
-  
+
   result = {
     u'code_result': final_result['result_string'],
     u'print_result': final_result['print_result'],
@@ -114,11 +114,11 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     u'mime_type': final_result['mime_type'],
     u'extra_data_list': final_result['extra_data_list'],
   }
-  
-  # Updates the context in the notebook with the resulting context of code 
+
+  # Updates the context in the notebook with the resulting context of code
   # execution.
   data_notebook.setNotebookContext(new_notebook_context)
-  
+
   # We try to commit, but the notebook context property may have variables that
   # cannot be serialized into the ZODB and couldn't be captured by our code yet.
   # In this case we abort the transaction and warn the user about it. Unforunately,
@@ -131,7 +131,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     exception_dict = getErrorMessageForException(self, e, new_notebook_context)
     result.update(exception_dict)
     return json.dumps(result)
-  
+
   # Catch exception while seriaizing the result to be passed to jupyter frontend
   # and in case of error put code_result as None and status as 'error' which would
   # be shown by Jupyter frontend
@@ -153,8 +153,8 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     data_notebook_line.edit(
       notebook_code_result = result['code_result'],
       mime_type = result['mime_type'])
-  
-  return serialized_result  
+
+  return serialized_result
 
 
 def mergeTracebackListIntoResultDict(result_dict, error_result_dict_list):
@@ -230,7 +230,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     Function to execute jupyter code and update the context dictionary.
     Code execution depends on 'interactivity', a.k.a , if the ast.node object has
     ast.Expr instance (valid for expressions) or not.
-    
+
     old_notebook_context should contain both variables dict and setup functions.
     Here, setup dict is {key: value} pair of setup function names and another dict,
     which contains the function's alias and code, as string. These functions
@@ -270,7 +270,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   mime_type = 'text/plain'
   status = u'ok'
   ename, evalue, tb_list = None, None, None
-  
+
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- user_context = globals(); user_context['context'] = self;
@@ -292,17 +292,17 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     try:
       ast_node = ast.parse(jupyter_code)
     except Exception as e:
-      # It's not necessary to abort the current transaction here 'cause the 
+      # It's not necessary to abort the current transaction here 'cause the
       # user's code wasn't executed at all yet.
       return getErrorMessageForException(self, e, notebook_context)
-    
+
     # Fixing "normal" imports and detecting environment object usage
     import_fixer = ImportFixer()
     print_fixer = PrintFixer()
     environment_collector = EnvironmentParser()
     ast_node = import_fixer.visit(ast_node)
-    
-    # Whenever we have new imports we need to warn the user about the 
+
+    # Whenever we have new imports we need to warn the user about the
     # environment
     if (import_fixer.warning_module_names != []):
       warning = ("print '"
@@ -310,14 +310,14 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
                  "using the environment object, which is not recomended. "
                  "Your import was automatically converted to use such method. "
                  "The setup functions were named as *module*_setup. "
-                 "'") % (', '.join(import_fixer.warning_module_names))               
+                 "'") % (', '.join(import_fixer.warning_module_names))
       tree = ast.parse(warning)
       tree.body[0].lineno = ast_node.body[-1].lineno+5
-      ast_node.body.append(tree.body[0])    
+      ast_node.body.append(tree.body[0])
 
     ast_node = print_fixer.visit(ast_node)
     ast.fix_missing_locations(ast_node)
-    
+
     # The collector also raises errors when environment.define and undefine
     # calls are made incorrectly, so we need to capture them to propagate
     # to Jupyter for rendering.
@@ -326,7 +326,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     except (EnvironmentDefinitionError, EnvironmentUndefineError) as e:
       transaction.abort()
       return getErrorMessageForException(self, e, notebook_context)
-    
+
     # Get the node list from the parsed tree
     nodelist = ast_node.body
 
@@ -345,13 +345,13 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         to_run_exec, to_run_interactive = nodelist, []
       elif interactivity == 'last':
         to_run_exec, to_run_interactive = nodelist[:-1], nodelist[-1:]
-      
+
       # Variables used at the display hook to get the proper form to display
       # the last returning variable of any code cell.
-      display_data = {'result': '', 
+      display_data = {'result': '',
                       'mime_type': None}
-      
-      # This is where one part of the  display magic happens. We create an 
+
+      # This is where one part of the  display magic happens. We create an
       # instance of ProcessorList and add each of the built-in processors.
       # The classes which each of them are responsiblefor rendering are defined
       # in the classes themselves.
@@ -362,7 +362,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       processor_list.addProcessor(MatplotlibFigureProcessor)
       processor_list.addProcessor(ERP5ImageProcessor)
       processor_list.addProcessor(IPythonDisplayObjectProcessor)
-      
+
       # Putting necessary variables in the `exec` calls context and storing
       inject_variable_dict = {
         'context': self,
@@ -373,7 +373,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         '_print': CustomPrint()}
       user_context.update(inject_variable_dict)
       user_context.update(notebook_context['variables'])
-      
+
       # Getting the environment setup defined in the current code cell
       current_setup_dict = environment_collector.getEnvironmentSetupDict()
       current_var_dict = environment_collector.getEnvironmentVarDict()
@@ -417,7 +417,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         keys = notebook_context ['setup'].keys()
         for key in keys:
           del notebook_context['setup'][key]
-      
+
       # Running all the setup functions that we got
       failed_setup_key_list = []
       for key, value in notebook_context['setup'].iteritems():
@@ -460,10 +460,10 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           'func_name': variable,
           'code': setup_string}
         user_context['_volatile_variable_list'] += variable
-        
+
       if environment_collector.showEnvironmentSetup():
         inject_variable_dict['_print'].write("%s\n" % str(notebook_context['setup']))
-    
+
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
         mod = ast.Module([node])
@@ -507,17 +507,17 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           message = (
             "Cannot serialize the variable named %s whose value is %s, "
             "thus it will not be stored in the context. "
-            "You should move it's definition to a function and " 
+            "You should move it's definition to a function and "
             "use the environment object to load it.\n"
           ) % (key, val)
           inject_variable_dict['_print'].write(message)
-    
-    # Deleting from the variable storage the keys that are not in the user 
+
+    # Deleting from the variable storage the keys that are not in the user
     # context anymore (i.e., variables that are deleted by the user).
     for key in notebook_context['variables'].keys():
       if not key in user_context:
         del notebook_context['variables'][key]
-    
+
     if inject_variable_dict.get('_print') is not None:
       output = inject_variable_dict['_print'].getCapturedOutputString()
 
@@ -585,56 +585,56 @@ def canSerialize(obj):
   else:
     # If cannot serialize object with ZODB.serialize, try with cPickle
     # Only a dump of the object is not enough. Dumping and trying to
-    # load it will properly raise errors in all possible situations, 
-    # for example: if the user defines a dict with an object of a class 
-    # that he created the dump will stil work, but the load will fail. 
+    # load it will properly raise errors in all possible situations,
+    # for example: if the user defines a dict with an object of a class
+    # that he created the dump will stil work, but the load will fail.
     try:
       cPickle.loads(cPickle.dumps(obj))
     # By unknowing reasons, trying to catch cPickle.PicklingError in the "normal"
-    # way isn't working. This issue might be related to some weirdness in 
+    # way isn't working. This issue might be related to some weirdness in
     # pickle/cPickle that is reported in this issue: http://bugs.python.org/issue1457119.
     #
     # So, as a temporary fix, we're investigating the exception's class name as
     # string to be able to identify them.
-    # 
-    # Even though the issue seems complicated, this quickfix should be 
+    #
+    # Even though the issue seems complicated, this quickfix should be
     # properly rewritten in a better way as soon as possible.
     except (cPickle.PicklingError, TypeError, NameError, AttributeError):
       return False
     else:
       return True
-  
-  
+
+
 class CustomPrint(object):
-  
+
   def __init__(self):
     self.captured_output_list = []
-    
+
   def write(self, *args):
     self.captured_output_list += args
-    
+
   def getCapturedOutputString(self):
     return ''.join(self.captured_output_list)
-    
+
 
 class PrintFixer(ast.NodeTransformer):
-    
+
   def visit_Print(self, node):
     _print_name_node = ast.Name(id="_print", ctx=ast.Load())
     node.dest = _print_name_node
     return node
-  
+
 
 class EnvironmentParser(ast.NodeTransformer):
   """
     EnvironmentParser class is an AST transformer that walks in the abstract
     code syntax tree to find calls to `define` and `undefine`  on a variable
     named `environment`.
-    
+
     The `define` call should receive a function, which will have it's code
-    stored as string in `self.environment_setup_dict`. If only kw args are 
+    stored as string in `self.environment_setup_dict`. If only kw args are
     provided, the variables definition will be stored in self.environment_var_dict.
-    
+
     The `undefine` call will removed keys in self.environment_setup_dict.
   """
 
@@ -656,8 +656,8 @@ class EnvironmentParser(ast.NodeTransformer):
 
   def visit_Expr(self, node):
     """
-      Visits expressions and check if they are in the form of either 
-      `environment.define` or `environment.undefine` properly stores the 
+      Visits expressions and check if they are in the form of either
+      `environment.define` or `environment.undefine` properly stores the
       arguments definition as string.
     """
     value = node.value
@@ -670,19 +670,19 @@ class EnvironmentParser(ast.NodeTransformer):
           if name == 'environment' and function.attr == 'define' and not value.keywords:
             if not len(value.args) == 2:
               raise EnvironmentDefinitionError('environment.define calls receive 2 arguments')
-              
+
             self._ensureType(
-              obj=value.args[0], 
-              klass=ast.Name, 
+              obj=value.args[0],
+              klass=ast.Name,
               error_message='Type mismatch. environment.define receives a function as first argument.'
             )
-            
+
             self._ensureType(
-              obj=value.args[1], 
-              klass=ast.Str, 
+              obj=value.args[1],
+              klass=ast.Str,
               error_message='Type mismatch. environment.define receives a string as second argument.'
             )
-            
+
             func_name = value.args[0].id
             func_alias = value.args[1].s
             function_node = self.function_dict[func_name]
@@ -695,8 +695,8 @@ class EnvironmentParser(ast.NodeTransformer):
             for keyword in value.keywords:
               arg_name = keyword.arg
               arg_value_node = keyword.value
-              
-              # The value can be a number, string or name. We need to handle 
+
+              # The value can be a number, string or name. We need to handle
               # them separatedly. This dict trick was used to avoid the very
               # ugly if.
               node_value_dict = {
@@ -708,12 +708,12 @@ class EnvironmentParser(ast.NodeTransformer):
               self.environment_var_dict[arg_name] = arg_value
           elif name == 'environment' and function.attr == 'undefine':
             self._ensureType(
-              obj=value.args[0], 
-              klass=ast.Str, 
+              obj=value.args[0],
+              klass=ast.Str,
               call_type='undefine',
               error_message='Type mismatch. environment.undefine receives only a string as argument.'
             )
-            
+
             func_alias = value.args[0].s
             self.environment_remove_list.append(func_alias)
           elif name == 'environment' and function.attr == 'clearAll':
@@ -721,7 +721,7 @@ class EnvironmentParser(ast.NodeTransformer):
           elif name == 'environment'and function.attr == 'showSetup':
             self.show_environment_setup = True
     return node
-    
+
   def _ensureType(self, obj=None, klass=None, error_message=None, call_type='define'):
     if not isinstance(obj, klass):
       if call_type == 'define':
@@ -729,19 +729,19 @@ class EnvironmentParser(ast.NodeTransformer):
       elif call_type == 'undefine':
         error_class = EnvironmentUndefineError
       raise error_class(error_message)
-    
+
   def clearAll(self):
     return self.environment_clear_all
-    
+
   def showEnvironmentSetup(self):
     return self.show_environment_setup
 
   def getEnvironmentSetupDict(self):
     return self.environment_setup_dict
-    
+
   def getEnvironmentVarDict(self):
     return self.environment_var_dict
-    
+
   def getEnvironmentRemoveList(self):
     return self.environment_remove_list
 
@@ -751,36 +751,36 @@ class Environment(object):
    Dumb object used to receive call on an object named `environment` inside
    user context. These calls will be tracked by the EnvironmentParser calls.
   """
-  
+
   def define(self, *args, **kwargs):
     pass
-  
+
   def undefine(self, name):
     pass
-        
+
   def clearAll(self):
     pass
-    
+
   def showSetup(self):
     pass
-  
+
 
 class ImportFixer(ast.NodeTransformer):
   """
    The ImportFixer class is responsivle for fixing "normal" imports that users
    might try to execute.
-   
+
    It will automatically replace them with the proper usage of the environment
    object using AST manipulation.
   """
-  
+
   def __init__(self):
     self.import_func_dict = {}
     self.warning_module_names = []
-  
+
   def visit_FunctionDef(self, node):
     """
-      Processes funcion definition nodes. We want to store a list of all the 
+      Processes funcion definition nodes. We want to store a list of all the
       import that are inside functions, because they do not affect the outter
       user context, thus do not imply in any un-pickleable variable being added
       there.
@@ -792,9 +792,9 @@ class ImportFixer(ast.NodeTransformer):
             import_name = alias.asname
           else:
             import_name = alias.name
-          self.import_func_dict[import_name] = node.name  
+          self.import_func_dict[import_name] = node.name
     return self.generic_visit(node)
-    
+
   def visit_ImportFrom(self, node):
     """
      Fixes `import x from y` statements in the same way `import y` is fixed.
@@ -897,7 +897,7 @@ class ImportFixer(ast.NodeTransformer):
           dotless_result_name = dotless_result_name + '_dot_'
         else:
           dotless_result_name = dotless_result_name + character
-      
+
       empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
       return_dict = self.newReturnDict(final_module_names)
 
@@ -948,12 +948,12 @@ class ImportFixer(ast.NodeTransformer):
     """
     self.warning_module_names.append(module_name)
 
-  
+
 def renderAsHtml(self, renderable_object):
   '''
-    renderAsHtml will render its parameter as HTML by using the matching 
+    renderAsHtml will render its parameter as HTML by using the matching
     display processor for that class. Some processors can be found in this
-    file. 
+    file.
   '''
   # Ugly frame hack to access the processor list defined in the body of the
   # kernel's code, where `exec` is called.
@@ -965,7 +965,7 @@ def renderAsHtml(self, renderable_object):
   #   3. exec call to run the user's code
   #   2. ExternalMethod Patch call through `context.Base_renderAsHtml` in the notebook
   #   1. renderAsHtml frame (where the function is)
-  # 
+  #
   # So sys._getframe(3) is enough to get us up into the frame we want.
   #
   compile_jupyter_frame = sys._getframe(3)
@@ -1008,21 +1008,21 @@ class ObjectProcessor(object):
   '''
   TARGET_CLASSES=None
   TARGET_MODULES=None
-  
+
   @classmethod
   def getTargetClasses(cls):
     return cls.TARGET_CLASSES
-    
+
   @classmethod
   def getTargetModules(cls):
     return cls.TARGET_MODULES
-    
+
   def __init__(self, something):
     self.subject = something
 
 class MatplotlibFigureProcessor(ObjectProcessor):
   '''
-    MatplotlibFigureProcessor handles the rich display of 
+    MatplotlibFigureProcessor handles the rich display of
     matplotlib.figure.Figure objects. It displays them using an img tag with
     the inline png image encoded as base64.
   '''
@@ -1034,10 +1034,10 @@ class MatplotlibFigureProcessor(ObjectProcessor):
     self.subject.savefig(image_io, format='png')
     image_io.seek(0)
     return self._getImageHtml(image_io), 'text/html'
-  
+
   def _getImageHtml(self, image_io):
     return '<img src="data:image/png;base64,%s" /><br />' % base64.b64encode(image_io.getvalue())
-    
+
 class ERP5ImageProcessor(ObjectProcessor):
   '''
    ERP5ImageProcessor handles the rich display of ERP5's image_module object.
@@ -1045,7 +1045,7 @@ class ERP5ImageProcessor(ObjectProcessor):
    tag.
   '''
   TARGET_CLASSES=[Image,]
-  
+
   def process(self):
     from base64 import b64encode
     figure_data = b64encode(self.subject.getData())
@@ -1055,26 +1055,26 @@ class ERP5ImageProcessor(ObjectProcessor):
 class IPythonDisplayObjectProcessor(ObjectProcessor):
   '''
     IPythonDisplayObjectProcessor handles the display of all objects from the
-    IPython.display module, including: Audio, IFrame, YouTubeVideo, VimeoVideo, 
-    ScribdDocument, FileLink, and FileLinks. 
-    
+    IPython.display module, including: Audio, IFrame, YouTubeVideo, VimeoVideo,
+    ScribdDocument, FileLink, and FileLinks.
+
     All these objects have the `_repr_html_` method, which is used by the class
     to render them.
   '''
   TARGET_CLASSES=[DisplayObject, IFrame]
-  
+
   def process(self):
     html_repr = self.subject._repr_html_()
-    return html_repr + '<br />', 'text/html' 
+    return html_repr + '<br />', 'text/html'
 
 class GenericProcessor(ObjectProcessor):
   '''
     Generic processor to render objects as string.
   '''
-  
+
   def process(self):
     return str(self.subject), 'text/plain'
-    
+
 class ProcessorList(object):
   '''
     ProcessorList is responsible to store all the processors in a dict using
@@ -1082,31 +1082,31 @@ class ProcessorList(object):
     the same processor of the eigen class. This means that the order of adding
     processors is important, as some classes' processors may be overwritten in
     some situations.
-    
-    The `getProcessorFor` method uses `something.__class__' and not 
-    `type(something)` because using the later onobjects returned by portal 
-    catalog queries will return an AcquisitionWrapper type instead of the 
+
+    The `getProcessorFor` method uses `something.__class__' and not
+    `type(something)` because using the later onobjects returned by portal
+    catalog queries will return an AcquisitionWrapper type instead of the
     object's real class.
   '''
-  
+
   def __init__(self, default=GenericProcessor):
     self.processors = {}
     self.default_processor = GenericProcessor
-  
+
   def addProcessor(self, processor):
     classes = processor.getTargetClasses()
     modules = processor.getTargetModules()
-    
+
     if classes and not len(classes) == 0:
       for klass in classes:
         self.processors[klass] = processor
         for subclass in klass.__subclasses__():
           self.processors[subclass] = processor
-      
+
     if modules and not len(modules) == 0:
       for module in modules:
         self.processors[module] = processor
-        
+
   def getProcessorFor(self, something):
     if not isinstance(something, ModuleType):
       return self.processors.get(something.__class__, self.default_processor)
@@ -1119,8 +1119,8 @@ def storeIFrame(self, html, key):
   return True
 
 
-# WARNING! 
-# 
+# WARNING!
+#
 # This is a highly experimental PivotTableJs integration which does not follow
 # ERP5 Javascrpt standards and it will be refactored to use JIO and RenderJS.
 #
@@ -1196,7 +1196,7 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
-  
+
 def Base_checkExistingReference(self, reference):
   existing_notebook = self.portal_catalog.getResultValue(
                          owner=self.portal_membership.getAuthenticatedMember().getUserName(),

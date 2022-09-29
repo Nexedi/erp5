@@ -41,7 +41,7 @@ manage_addERP5ExternalAuthenticationPluginForm = PageTemplateFile(
   'www/ERP5Security_addERP5ExternalAuthenticationPlugin', globals(),
   __name__='manage_addERP5ExternalAuthenticationPluginForm')
 
-def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key='', 
+def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key='',
                  login_portal_type_list=None, REQUEST=None):
   """ Add a ERP5ExternalAuthenticationPlugin to a Pluggable Auth Service. """
 
@@ -81,7 +81,7 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
                    'mode':'w',
                    'label': 'List of Login Portal Types to search'
                    },
-                  
+
                   )
                  + BasePlugin._properties[:]
                  )

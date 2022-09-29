@@ -13,8 +13,8 @@ def getFormItemList():
       result.append((context.Localizer.erp5_ui.gettext(form.title) or form_id, form_id))
   return result
 
-getFormItemList = CachingMethod(getFormItemList, 
+getFormItemList = CachingMethod(getFormItemList,
       id=('Ticket_getFormItemList', context.Localizer.get_selected_language()),
       cache_factory='erp5_ui_long')
-                                 
+
 return getFormItemList()

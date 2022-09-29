@@ -29,7 +29,7 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
     {
       'download_link': '%s/%s?format=%s' % (url_base , report_url, format),
       'name': report_name
-    } for  (report_name, report_url) in report_item_list 
+    } for  (report_name, report_url) in report_item_list
   ]
   message_html = newline_to_br(html_quote(message))
 

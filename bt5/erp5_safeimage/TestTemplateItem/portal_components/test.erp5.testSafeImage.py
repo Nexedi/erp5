@@ -79,7 +79,7 @@ class TestSafeImage(ERP5TypeTestCase):
     self.assertTrue(image.hasData())
     transaction.commit()
     self.tic()
-    self.assertNotEqual(image,None) 
+    self.assertNotEqual(image,None)
 
   def test_02_CreateTileImage(self):
      """"
@@ -107,8 +107,8 @@ class TestSafeImage(ERP5TypeTestCase):
                        set([x.getId() for x in splitted_image_list]))
      for x in splitted_image_list:
         self.assertTrue(x.hasData())
-     self.assertEqual(123,image_group['0-0-0'].getHeight()) 
-     self.assertEqual(165,image_group['0-0-0'].getWidth()) 
+     self.assertEqual(123,image_group['0-0-0'].getHeight())
+     self.assertEqual(165,image_group['0-0-0'].getWidth())
 
   def test_03_CreateTileImageTransformed(self):
      """"
@@ -141,7 +141,7 @@ class TestSafeImage(ERP5TypeTestCase):
                        set([x.getId() for x in splitted_image_list]))
      for x in splitted_image_list:
         self.assertTrue(x.hasData())
-     self.assertEqual(123,image_group['0-0-0'].getHeight()) 
+     self.assertEqual(123,image_group['0-0-0'].getHeight())
      self.assertEqual(165,image_group['0-0-0'].getWidth())
      if getattr(self.image_module,'testTileTransformed',None) is not None:
       self.image_module.manage_delObjects(ids=['testTileTransformed'])

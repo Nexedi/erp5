@@ -1,5 +1,5 @@
 """
-  Puts all the arguments from advanced search dialog form together as 
+  Puts all the arguments from advanced search dialog form together as
   a parseable search string. Set it in the selection so it can be used
   in search form.
 """

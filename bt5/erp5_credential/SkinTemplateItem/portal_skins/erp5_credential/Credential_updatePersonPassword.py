@@ -1,4 +1,4 @@
-"""Use script with Proxy Role Manager to update password of related person. 
+"""Use script with Proxy Role Manager to update password of related person.
 Clear 'erp5_content_short' cache too."""
 
 person = context.getDestinationDecisionValue(portal_type="Person")

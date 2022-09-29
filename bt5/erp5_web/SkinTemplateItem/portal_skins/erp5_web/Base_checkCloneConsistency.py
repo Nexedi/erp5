@@ -1,7 +1,7 @@
 """
   Currently it is not possible to change it to checkConsistency.
-  If it added similar constraints at Documents will break archive 
-  behaviour. 
+  If it added similar constraints at Documents will break archive
+  behaviour.
 """
 form_data = context.REQUEST.form
 translateString =  context.Base_translateString

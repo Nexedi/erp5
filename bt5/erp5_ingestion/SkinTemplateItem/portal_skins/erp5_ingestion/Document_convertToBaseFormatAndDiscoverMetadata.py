@@ -1,6 +1,6 @@
 """
   This is a convenient method to call both convertToBaseFormat and
-  discoverMetadata in good order in the same transaction. 
+  discoverMetadata in good order in the same transaction.
   This method guarantees order of calling methods.
 """
 

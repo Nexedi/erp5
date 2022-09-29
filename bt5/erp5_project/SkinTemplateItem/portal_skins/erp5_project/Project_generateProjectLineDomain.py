@@ -23,7 +23,7 @@ i=0
 for category in category_list:
   domain = parent.generateTempDomain(id = '%s_%s' % (depth, i))
   domain.edit(title = category.getTitle(),
-              membership_criterion_base_category = ('source_project', ), 
+              membership_criterion_base_category = ('source_project', ),
               membership_criterion_category = (category.getRelativeUrl(), ),
               domain_generator_method_id = script.id,
               uid = category.getUid())

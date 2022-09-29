@@ -5,7 +5,7 @@
 
 line_dict_list = context.PaySheetTransaction_getLineListAsDict()
 
-title_list = ['Designation\t\t', 'Base', 'Employer Rate', 'Employer Share', 
+title_list = ['Designation\t\t', 'Base', 'Employer Rate', 'Employer Share',
     'Employee Rate', 'Employee Share']
 
 print '\t\t'.join(title_list)

@@ -1,7 +1,7 @@
 """
 This script builds a dictionary from the worklist definition.
 It includes some copy / paste of code from DCWorkflow. Refactoring
-needed through DCWorkflow API extension. 
+needed through DCWorkflow API extension.
 """
 
 # Try to access the workflow defined by the action
@@ -24,7 +24,7 @@ if not portal_type_list:
 if 'portal_type' not in kw:
   # Set portal types which use the workflow
   kw['portal_type'] = portal_type_list
-    
+
 # Automatically add local role constraint
 # XXX TO BE DONE
 # Automatically add local role constraint

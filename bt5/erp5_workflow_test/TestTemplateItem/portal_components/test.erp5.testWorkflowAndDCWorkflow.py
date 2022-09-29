@@ -417,7 +417,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     print 'text_document3_permission: %r' % (text_document3_permission, )
     self.assertEqual(tuple(getattr(text_document3, permission_key)),
                      ('Assignee', 'Assignor', 'Auditor', 'Author'))
- 
+
   def test_15_testGuardsAreNotMessingUpBase_viewDict(self):
     # check Base_viewDict is available on workflow's transition
     self.workflow.transition_delete_action.Base_viewDict()

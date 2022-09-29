@@ -15,7 +15,7 @@ if import_filename=='':
 
 def addReportLine(error, category, message):
   report_line = newTempBase(context, 'item')
-  report_line.edit(field_type=error, field_category=category, field_message=message)    
+  report_line.edit(field_type=error, field_category=category, field_message=message)
   detailed_report_append(report_line)
 
 def invalid_category_spreadsheet_handler(message):
@@ -43,16 +43,16 @@ for category_list in category_list_mapping.values():
           translate_value = category.get(translation_prefix+attribute,'').strip().replace('"',"'")
           if translate_value != '':
             if initial_value in translation_dict:
-              #Test any duplicate  translation ('car' can't be translated to 'voiture' and 'auto', 
+              #Test any duplicate  translation ('car' can't be translated to 'voiture' and 'auto',
               #user should be choice 'voiture' or 'car')
-              if translation_dict[initial_value] != translate_value: 
+              if translation_dict[initial_value] != translate_value:
                 message = "'%s' can't be translated by '%s'. It's already translated by '%s'" % (initial_value, translate_value, translation_dict[initial_value])
                 addReportLine(error="Duplicate",category=category['path'], message=message)
             else:
               translation_dict[initial_value] = translate_value
           else:
             message = "No translation for attribute " + attribute
-            addReportLine(error="No translation",category=category['path'], message=message)  
+            addReportLine(error="No translation",category=category['path'], message=message)
 
 if len(translation_dict) == 0:
   message = "Empty File"

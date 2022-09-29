@@ -2015,7 +2015,7 @@ def foo(*args, **kwargs):
 
     # Create a new Component which uses a specific version of the previously
     # created Component
-    reference = self._generateReference('TestImportVersionedComponentOnly') 
+    reference = self._generateReference('TestImportVersionedComponentOnly')
     component_import = self._newComponent(
       reference,
       self._getValidSourceCode(reference) + """

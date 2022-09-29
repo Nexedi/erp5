@@ -42,5 +42,5 @@ if len(diff_list):
                      severity=severity,
                      detail='\n'.join(diff_list))
   subscription.activate(active_process=active_process,
-            activity='SQLQueue', 
+            activity='SQLQueue',
             priority=2,).ERP5Site_saveCheckCatalogTableResult(active_result)

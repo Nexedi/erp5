@@ -13,9 +13,9 @@ error_message = "No error."
 if setup_activity_tool:
   context.ERP5Site_setUpActivityTool()
 
-if user_quantity is None: 
-  return json.dumps({"status_code" : 1, 
-                     "error_message": "Parameter 'user_quantity' is required.", 
+if user_quantity is None:
+  return json.dumps({"status_code" : 1,
+                     "error_message": "Parameter 'user_quantity' is required.",
                      "password" : None })
 
 password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
@@ -24,7 +24,7 @@ password = ''.join(random.choice(string.digits + string.letters) for i in xrange
 configurator = portal.business_configuration_module.default_standard_configuration
 if configurator == None or not configurator.contentValues(portal_type='Configuration Save'):
   error_message = "Could not find the scalability business configuration object. Be sure to have erp5_scalability_test business template installed."
-  return json.dumps({"status_code" : 1, 
+  return json.dumps({"status_code" : 1,
                      "error_message": error_message })
 
 # install configurator if not intalled
@@ -37,7 +37,7 @@ if configurator.getSimulationState() == "draft":
     except Exception as e:
       status_code = 1
       error_message = "Error during installation: " + str(e)
-      return json.dumps({"status_code" : 1, 
+      return json.dumps({"status_code" : 1,
                          "error_message": error_message })
 
 # create users if installation is done
@@ -46,17 +46,17 @@ try:
     context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
                                        'immediateReindexObject')
                                        ).ERP5Site_createTestData(user_quantity, password)
-  if set_id_generator:                                       
+  if set_id_generator:
     context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
                                        'immediateReindexObject')
                                        ).ERP5Site_setIdGenerator()
 except Exception as e:
   status_code = 1
   error_message = "Error calling ERP5Site_createTestData script: " + str(e)
-  return json.dumps({"status_code" : 1, 
+  return json.dumps({"status_code" : 1,
                      "error_message": error_message })
 
-return json.dumps({"status_code" : status_code, 
-                   "error_message": error_message, 
-                   "password" : password, 
+return json.dumps({"status_code" : status_code,
+                   "error_message": error_message,
+                   "password" : password,
                    "quantity" : user_quantity })

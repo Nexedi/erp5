@@ -56,7 +56,7 @@ def getResourceSalePriceSortKeyMethod(high_priority_supply_line_list):
 
 def getOptimisedPriceCalculationOperandDict(default=None, context=None, **kw):
   """
-   Price Method optimised by the preference 
+   Price Method optimised by the preference
   """
   movement_portal_type = context.portal_type
   preferences = context.portal_preferences

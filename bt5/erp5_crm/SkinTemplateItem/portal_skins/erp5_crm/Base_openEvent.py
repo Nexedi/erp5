@@ -18,9 +18,9 @@ if user is None:
     if portal.Base_getHMACHexdigest(portal.Base_getEventHMACKey(), event_id) != request["hash"]:
       from zExceptions import Unauthorized
       raise Unauthorized()
-    
+
     portal.portal_activities.activate(
-      activity="SQLQueue").Base_markEventAsReceived(event_id=request['id'], 
+      activity="SQLQueue").Base_markEventAsReceived(event_id=request['id'],
                                                     hmac=request["hash"])
 
 # serve the image

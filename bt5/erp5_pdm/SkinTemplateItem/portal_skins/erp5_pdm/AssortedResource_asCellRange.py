@@ -47,7 +47,7 @@ if len(base_category) > 0:
   # Then make a cartesian product
   # to calculate all possible combinations
   clist = cartesianProduct(base_category)
-  
+
   # XXX is it possible to remove repr ?
   for c in clist:
     if matrixbox == 1:
@@ -59,7 +59,7 @@ if len(base_category) > 0:
 # Try fill line first, then column, and after tab
 for _ in range(2):
   if line == []:
-    tmp = line 
+    tmp = line
     line = column
     column = tmp
     tmp = None

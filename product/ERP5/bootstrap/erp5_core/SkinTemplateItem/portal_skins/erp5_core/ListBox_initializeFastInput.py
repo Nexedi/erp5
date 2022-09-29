@@ -16,7 +16,7 @@ int_len = 3
 
 if hasattr(request, listbox_id):
   listbox_key = "%s_key" % listbox_id
-  # initialize the listbox 
+  # initialize the listbox
   listbox=request[listbox_id]
 
   keys_list = sorted(listbox, key=int)
@@ -42,7 +42,7 @@ if hasattr(request, listbox_id):
 
     if not is_empty:
       l.append(o)
-    
+
 # add empty lines
 if not('field_errors' in request):
   for i in range(first_empty_line_id,first_empty_line_id+empty_line_number):

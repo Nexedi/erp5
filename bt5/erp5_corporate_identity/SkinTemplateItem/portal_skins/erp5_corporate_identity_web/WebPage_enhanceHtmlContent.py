@@ -15,7 +15,7 @@ if len(document_header_list) > 0:
   header_current = 1
   header_initial = None
   table_of_content = ''
-  
+
   for header in document_header_list:
     header_level = header[2]
     header_initial = header_initial or header_level
@@ -43,7 +43,7 @@ if len(document_header_list) > 0:
       '>',
       '<a name="', html_quote(header_reference_prefix), '"></a>',
       header_reference,
-      '<a class="custom-para" href="', document_url, '#', header_reference_prefix, '"><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a>' 
+      '<a class="custom-para" href="', document_url, '#', header_reference_prefix, '"><span style="font-size:.75em;line-height:1em;padding-left:.5em;">&para;</span></a>'
     ])
     document_content = document_content.replace(snippet, named_snippet)
 
@@ -58,7 +58,7 @@ if len(document_header_list) > 0:
 
   closer = int(header_current) * '</ul>'
   insert = ''.join(['<p class="custom-table-of-contents">Table of Contents</p>', table_of_content, closer])
-  
+
   document_content = document_content.replace('${table_of_content}', insert)
 
 return document_content

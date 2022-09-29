@@ -6,7 +6,7 @@ for i in catalog(portal_type='Glossary Term',
                  language_id='en'):
 
   english_term = i.getObject()
-  
+
   reference = english_term.getReference()
   business_field = english_term.getBusinessField()
 

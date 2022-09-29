@@ -10,7 +10,7 @@ def generic_sort(a,b):
         return -result
       else:
         return result
-  return result 
+  return result
 
 unordered_list = [x.getObject() for x in unordered_list]
 unordered_list.sort(generic_sort)

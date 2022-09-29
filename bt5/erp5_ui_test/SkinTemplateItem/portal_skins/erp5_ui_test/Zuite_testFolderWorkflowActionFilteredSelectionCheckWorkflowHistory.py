@@ -18,12 +18,12 @@ def assertEquals(a, b, msg=''):
       error_list.append('%r != %r' % (a, b))
 
 foo_2 = foo_module['2']
-assertEquals(foo_2.getSimulationState(), 'draft', 
+assertEquals(foo_2.getSimulationState(), 'draft',
              'Foo 2 state is %s' % foo_2.getSimulationState())
 
 
 foo_3 = foo_module['3']
-assertEquals(foo_3.getSimulationState(), 'validated', 
+assertEquals(foo_3.getSimulationState(), 'validated',
              'Foo 3 state is %s' % foo_3.getSimulationState())
 if not error_list:
   assertEquals(

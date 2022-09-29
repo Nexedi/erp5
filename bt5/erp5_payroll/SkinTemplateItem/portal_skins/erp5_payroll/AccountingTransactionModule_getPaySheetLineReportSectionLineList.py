@@ -172,7 +172,7 @@ if sorted_inventory_list:
            base=intermediate_base_total,
            employee=intermediate_employee_total,
            employer=intermediate_employer_total))
-     
+
   return new_inventory_list
 
 

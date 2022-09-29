@@ -15,7 +15,7 @@ query_dict = {}
 if request_start_date:
   query_dict['delivery.start_date'] = dict(range='min', query=request_start_date)
 if request_stop_date:
-  query_dict['delivery.stop_date'] = dict(range='ngt', 
+  query_dict['delivery.stop_date'] = dict(range='ngt',
                                      query=request_stop_date.latestTime())
 if request_simulation_state:
   query_dict['simulation_state'] = request_simulation_state

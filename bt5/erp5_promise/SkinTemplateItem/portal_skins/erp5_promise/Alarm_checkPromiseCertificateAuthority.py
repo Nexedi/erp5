@@ -26,7 +26,7 @@ else:
 
 active_result = ActiveResult()
 active_result.edit(
-  summary=summary, 
+  summary=summary,
   severity=severity,
   detail=detail)
 

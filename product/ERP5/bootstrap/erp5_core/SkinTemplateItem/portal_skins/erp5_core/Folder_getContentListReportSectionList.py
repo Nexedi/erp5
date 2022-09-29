@@ -22,7 +22,7 @@ def getReportSectionForObject(doc):
             if getFormIdFromAction(ai) != 'Base_viewPrintDialog']
     if valid_print_dialog_list:
       action = valid_print_dialog_list[0]
-    
+
   form_id = getFormIdFromAction(action)
   return ReportSection(path=doc.getPath(), form_id=form_id, title=doc.getTitleOrId())
 

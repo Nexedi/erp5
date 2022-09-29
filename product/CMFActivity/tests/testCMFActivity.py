@@ -450,11 +450,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     active_process = activity_tool.newActiveProcess()
     self.assertEqual(self.title1,organisation.getTitle())
 
-    # Post SQLjoblib tasks with explicit signature 
+    # Post SQLjoblib tasks with explicit signature
     organisation.activate(activity=activity,active_process=active_process, signature=1).getTitle()
     organisation.activate(activity=activity,active_process=active_process, signature=2).getTitle()
     organisation.activate(activity=activity,active_process=active_process, signature=3).getTitle()
-    
+
     self.commit()
     activity_tool.distribute()
     activity_tool.tic()
@@ -2470,7 +2470,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = self.portal.MailHost._message_list
     del message_list[:]
     activity_tool = self.portal.portal_activities
-        
+
     kw = {}
     self._catch_log_errors(subsystem='CMFActivity')
     try:

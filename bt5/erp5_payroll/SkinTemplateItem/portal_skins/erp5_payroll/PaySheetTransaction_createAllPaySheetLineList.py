@@ -1,5 +1,5 @@
 '''
-  this script is the conductor. All other scripts that permit to create a 
+  this script is the conductor. All other scripts that permit to create a
   paysheet are called here
 '''
 

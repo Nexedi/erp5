@@ -16,7 +16,7 @@ if not mission_account:
 
 transaction =  portal.accounting_module.newContent(
   portal_type="Purchase Invoice Transaction",
-  title="""Frais %s""" % (context.getReference()), 
+  title="""Frais %s""" % (context.getReference()),
   source_section=context.getDestinationDecision(),
   destination_project=context.getSourceProject(),
   destination_section=context.getSourceSection(),

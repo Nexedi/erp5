@@ -9,7 +9,7 @@ for career_step in all_career_step_list :
      career_step.getStartDate() and \
      career_step.getValidationState() not in ('cancelled', 'deleted'):
     career_step_list.append(career_step)
-    
+
 # sort them by start date
 career_step_list.sort(key=lambda x: x.getStartDate())
 for career_step in career_step_list :

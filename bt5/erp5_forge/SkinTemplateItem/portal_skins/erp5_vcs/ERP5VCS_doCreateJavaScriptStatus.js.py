@@ -73,7 +73,7 @@ return '''
       tree.loadXML('tree.xml?bt_id=%(btId)s&do_extract:int=' + do_extract, hideObject);
       tree.setOnClickHandler(showMenu);
     }
-        
+
     function expandCollapse(){
       if(! is_expanded){
         tree.openAllItems(0);
@@ -91,7 +91,7 @@ return '''
       tree.loadXML('tree.xml?bt_id=%(btId)s&do_extract:int=0&show_unmodified:int='+ is_showing_unmodified, hideObject);
       tree.refreshItem(0);
     }
-        
+
     function commit(popup, form){
       nbModified=0;
       nbAdded=0;

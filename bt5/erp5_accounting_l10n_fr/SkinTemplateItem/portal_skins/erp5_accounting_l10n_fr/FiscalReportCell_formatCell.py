@@ -1,9 +1,9 @@
 """ display value in the cell according to (french) fiscality rules """
 context.log(cell_name, cell_value)
 
-if same_type(cell_value, 0) or same_type(cell_value, 0.0) : 
+if same_type(cell_value, 0) or same_type(cell_value, 0.0) :
   number = cell_value
-  if number == 0 : 
+  if number == 0 :
     return ""
 
   negative = number < 0

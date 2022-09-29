@@ -534,12 +534,12 @@ class TemplateTool (BaseTool):
 
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
-        
+
       if len(repository_list) == 0 and REQUEST:
         ret_url = self.absolute_url()
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                   % (ret_url, 'No repository was defined'))
-                                    
+
       for repository in repository_list:
         repository = repository.rstrip('\n')
         repository = repository.rstrip('\r')
