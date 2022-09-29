@@ -148,7 +148,6 @@
                   width: options.width,
                   height: options.height,
                   script: options.script,
-                  game_parameters_json: options.game_parameters_json,
                   log: options.log
                 }, [options.canvas]);
                 break;
@@ -273,6 +272,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function renderHeader() {
       var gadget = this,
@@ -290,21 +290,19 @@
       offscreen = canvas.transferControlToOffscreen();
 
       //TODO this should be in game logic BUT gadget can't be accessed from WW
-      var script_content, game_parameters_json, log_content;
+      var script_content, log_content;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.jio_get("rescue_swarm_script_module/" + "web_worker");
+          var query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
+          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
-        .push(function (script) {
-          script_content = script.text_content;
-          return gadget.jio_get("rescue_swarm_map_module/" + "compare_map");
+        .push(function (result) {
+          script_content = result.data.rows[0].value.text_content;
+          var query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
+          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
-        .push(function (parameters_doc) {
-          game_parameters_json = JSON.parse(parameters_doc.text_content);
-          return gadget.jio_get("rescue_swarm_script_module/" + "log_loiter");
-        })
-        .push(function (log) {
-          log_content = log.text_content;
+        .push(function (result) {
+          log_content = result.data.rows[0].value.text_content;
 
           gadget.runGame({
             logic_url: parameter_gamelogic,
@@ -313,7 +311,6 @@
             width: canvas.width,
             height: canvas.height,
             script: script_content,
-            game_parameters_json: game_parameters_json,
             log: log_content
           });
 

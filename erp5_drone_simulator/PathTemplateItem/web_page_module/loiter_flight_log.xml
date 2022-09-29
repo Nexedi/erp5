@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Rescue Swarm Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,23 +62,24 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>log_loiter</string> </value>
+            <value> <string>loiter_flight_log</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Loiter flight log. Corresponds to the flight for the script https://lab.nexedi.com/lpgeneau/flight-scripts/blob/update_loop/demo.js\n
-\n
-"demo flight" (where the drone is the leader so the code referring to the follower is not executed) using an API similar to the one used in the simulator.\n
-The SR is at https://lab.nexedi.com/lpgeneau/slapos/tree/update_loop/software/js-drone (especially the modified worker.js).</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>log_loiter</string> </value>
+            <value> <string>loiter_flight_log</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -88,7 +89,13 @@ The SR is at https://lab.nexedi.com/lpgeneau/slapos/tree/update_loop/software/js
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Rescue Swarm Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>text_content</string> </key>
@@ -530,7 +537,13 @@ Taking off...\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>log_loiter</string> </value>
+            <value> <string>Loiter flight log</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -561,6 +574,12 @@ Taking off...\n
                     <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -608,7 +627,7 @@ Taking off...\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1660134705.82</float>
+                              <float>1664461702.56</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -657,7 +676,7 @@ Taking off...\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1002.23821.16502.25531</string> </value>
+                      <value> <string>1003.18664.31618.1314</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -675,7 +694,70 @@ Taking off...\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1660839203.68</float>
+                              <float>1664461961.24</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>empty</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1664461675.47</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

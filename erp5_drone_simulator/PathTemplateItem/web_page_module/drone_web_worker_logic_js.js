@@ -11,7 +11,95 @@ var runGame, updateGame, eventGame, game_manager_instance;
   "use strict";
   console.log('game logic');
 
-  runGame = function (canvas, script, game_parameters_json, log) {
+  runGame = function (canvas, script, log) {
+
+    var game_parameters_json = {
+      "distances": {
+        "communication": 99999,
+        "control": 1500,
+        "information": 5
+      },
+      "drone": {
+        "maxAcceleration": 1,
+        "maxSpeed": 16.666667,
+        "collisionSector": 0.25,
+        "broadcastingTime": 1000,
+        "viewAngle": 60
+      },
+      "meteo": 0.5,
+      "derive": {
+        "speed": 0.1,
+        "direction": {
+          "x": 1,
+          "y": 0.5
+        }
+      },
+      "gameTime": 1800,
+      "goalDiameter": 7,
+      "goalPositionLeftTeam": {
+        "x": 0,
+        "y": 0,
+        "z": 0.6
+      },
+      "goalPositionRightTeam": {
+        "x": 0,
+        "y": 0,
+        "z": 0.6
+      },
+      "latency": {
+        "information": 0,
+        "communication": 0
+      },
+      "mapSize": {
+        "depth": 1000,
+        "height": 100,
+        "width": 1000
+      },
+      "obstacles": [],
+      "initialHumanAreaPosition": {
+        "x": -400,
+        "y": 400,
+        "z": 0
+      },
+      "randomSpawn": {
+        "leftTeam": {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 20
+          },
+          "dispertion": {
+            "x": 8,
+            "y": 8,
+            "z": 6
+          },
+          "types": [
+            "DroneAaileFixeAPI",
+            "DroneLogAPI",
+            "DroneAPI"
+          ]
+        },
+        "rightTeam": {
+          "position": {
+            "x": -400,
+            "y": 400,
+            "z": 0
+          },
+          "dispertion": {
+            "x": 100,
+            "y": 100,
+            "z": 0.1
+          }
+        }
+      },
+      "teamSize": 2,
+      "dronesPosition": {
+        "x": 0,
+        "y": 0,
+        "z": 20
+      },
+      "droneList": ["DroneAaileFixeAPI", "DroneLogAPI"]
+    };
 
     function processLog(game_parameters_json, log) {
       var MAP_SIZE = 1000,
@@ -196,9 +284,6 @@ var runGame, updateGame, eventGame, game_manager_instance;
       };
       game_parameters_json.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
       game_parameters_json.flight_path_point_list = path_point_list;
-      /*game_parameters_json.randomSpawn.leftTeam.position.x = start_position[0];
-      game_parameters_json.randomSpawn.leftTeam.position.y = start_position[1];
-      game_parameters_json.randomSpawn.leftTeam.position.z = start_position[2];*/
       game_parameters_json.dronesPosition.x = start_position[0];
       game_parameters_json.dronesPosition.y = start_position[1];
       game_parameters_json.dronesPosition.z = start_position[2];
@@ -214,7 +299,9 @@ var runGame, updateGame, eventGame, game_manager_instance;
       game_parameters_json.randomSpawn.rightTeam.position.y = destination[1];
       return game_parameters_json;
     }
+
     game_parameters_json = processLog(game_parameters_json, log);
+
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
                                               game_parameters_json, 5);
