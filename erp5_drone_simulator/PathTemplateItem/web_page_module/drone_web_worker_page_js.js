@@ -303,10 +303,11 @@
         })
         .push(function (parameters_doc) {
           game_parameters_json = JSON.parse(parameters_doc.text_content);
-          return gadget.jio_get("rescue_swarm_script_module/" + "log_loiter");
+          var query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
+          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
-        .push(function (log) {
-          log_content = log.text_content;
+        .push(function (result) {
+          log_content = result.data.rows[0].value.text_content;
 
           gadget.runGame({
             logic_url: parameter_gamelogic,
