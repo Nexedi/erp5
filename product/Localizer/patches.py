@@ -69,13 +69,6 @@ def get_new_publish(zope_publish):
 if patch is False:
     patch = True
 
-    if six.PY2: # ZServer-specific patch
-
-      # Apply the patch TODO: zope4py2 is this really needed ?
-      from ZPublisher import Publish
-      Publish.publish = get_new_publish(Publish.publish)
-
-
 # PATCH 2: Accept
 #
 # Adds the variable AcceptLanguage to the REQUEST.  It provides a higher
