@@ -1171,12 +1171,12 @@ def erp5PivotTableUI(self, df):
             $("<a>", {target:"_blank", href:""})
               .text("[pop out]").prependTo($("body"));
 
-          $("#output").pivotUI( 
-            $.csv.toArrays($("#output").text()), 
-            { 
+          $("#output").pivotUI(
+            $.csv.toArrays($("#output").text()),
+            {
               renderers: $.extend(
-                $.pivotUtilities.renderers, 
-                $.pivotUtilities.c3_renderers, 
+                $.pivotUtilities.renderers,
+                $.pivotUtilities.c3_renderers,
                 $.pivotUtilities.d3_renderers,
                 $.pivotUtilities.export_renderers
                 ),

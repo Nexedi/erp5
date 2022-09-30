@@ -757,9 +757,9 @@ context.Base_renderAsHtml(iframe)
     
     # The big hash in this string was previous calculated using the expect hash
     # of the pivot table page's html.
-    pivottable_frame_display_path = 'Base_displayPivotTableFrame?key=853524757258b19805d13beb8c6bd284a7af4a974a96a3e5a4847885df069a74d3c8c1843f2bcc4d4bb3c7089194b57c90c14fe8dd0c776d84ce0868e19ac411'
-    
-    self.assertTrue(pivottable_frame_display_path in json_result['code_result'])
+    pivottable_frame_display_path = 'Base_displayPivotTableFrame?key=58498be478377296776617d058c67b94ef7259fd519f5274ea9837b136c380fb12d009f5f84af95b309d19803863a3ccdc75f64f912fd7095c0cff77a311c945'
+
+    self.assertIn(pivottable_frame_display_path, json_result['code_result'])
 
   def testConsecutiveImports(self):
     '''
