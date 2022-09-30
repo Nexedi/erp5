@@ -29,7 +29,7 @@ from __future__ import absolute_import
 
 from six import string_types as basestring
 from six.moves import xrange
-from Products.ERP5Type.Utils import ensure_list, str2bytes
+from Products.ERP5Type.Utils import bytes2str, ensure_list, str2bytes
 from collections import defaultdict
 from contextlib import contextmanager
 from itertools import product, chain
@@ -397,10 +397,10 @@ CREATE TABLE %s (
       for line in result]
 
   def countMessageSQL(self, quote, **kw):
-    return "SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
-      self.sql_table, DEPENDENCY_IGNORED_ERROR_STATE, " AND ".join(
+    return b"SELECT count(*) FROM %s WHERE processing_node > %d AND %s" % (
+      str2bytes(self.sql_table), DEPENDENCY_IGNORED_ERROR_STATE, b" AND ".join(
         sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v
-        ) or "1")
+        ) or b"1")
 
   def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
     where = [sqltest_dict[k](v, quote) for (k, v) in six.iteritems(kw) if v]
@@ -425,7 +425,7 @@ CREATE TABLE %s (
         0,
       )[1]
     else:
-      subquery = (b"("
+      subquery = lambda *a, **k: str2bytes(bytes2str(b"("
         b"SELECT 3*priority{} AS effective_priority, date"
         b" FROM %s"
         b" WHERE"
@@ -434,7 +434,7 @@ CREATE TABLE %s (
         b"  date <= UTC_TIMESTAMP(6)"
         b" ORDER BY priority, date"
         b" LIMIT 1"
-      b")" % self.sql_table).format
+      b")" % str2bytes(self.sql_table)).format(*a, **k))
       result = query(
         b"SELECT *"
         b" FROM (%s) AS t"
@@ -443,11 +443,11 @@ CREATE TABLE %s (
           b" UNION ALL ".join(
             chain(
               (
-                subquery(b'-1', b'node = %i' % processing_node),
-                subquery(b'', b'node=0'),
+                subquery('-1', 'node = %i' % processing_node),
+                subquery('', 'node=0'),
               ),
               (
-                subquery(b'-1', b'node = %i' % x)
+                subquery('-1', 'node = %i' % x)
                 for x in node_set
               ),
             ),
@@ -464,7 +464,7 @@ CREATE TABLE %s (
         # sorted set to filter negative node values.
         # This is why this query is only executed when the previous one
         # did not find anything.
-        result = query(subquery(b'+1', b'node>0'), 0)[1]
+        result = query(subquery('+1', 'node>0'), 0)[1]
     if result:
       return result[0]
     return Queue.getPriority(self, activity_tool, processing_node, node_set)
@@ -779,7 +779,7 @@ CREATE TABLE %s (
           0,
         ))
       else:
-        subquery = (b"("
+        subquery = lambda *a, **k: str2bytes(bytes2str(b"("
           b"SELECT *, 3*priority{} AS effective_priority"
           b" FROM %s"
           b" WHERE"
@@ -788,8 +788,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-          b" FOR UPDATE"
-        b")" % args).format
+        b")" % args).format(*a, *k))
         result = Results(query(
           b"SELECT *"
           b" FROM (%s) AS t"
@@ -798,11 +797,11 @@ CREATE TABLE %s (
             b" UNION ALL ".join(
               chain(
                 (
-                  subquery(b'-1', b'node = %i' % processing_node),
-                  subquery(b'', b'node=0'),
+                  subquery('-1', 'node = %i' % processing_node),
+                  subquery('', 'node=0'),
                 ),
                 (
-                  subquery(b'-1', b'node = %i' % x)
+                  subquery('-1', 'node = %i' % x)
                   for x in node_set
                 ),
               ),
@@ -820,7 +819,7 @@ CREATE TABLE %s (
           # sorted set to filter negative node values.
           # This is why this query is only executed when the previous one
           # did not find anything.
-          result = Results(query(subquery(b'+1', b'node>0'), 0))
+          result = Results(query(subquery('+1', 'node>0'), 0))
       if result:
         # Reserve messages.
         uid_list = [x.uid for x in result]
