@@ -11,6 +11,7 @@ import shutil
 import errno
 import random
 import transaction
+import six
 from glob import glob
 try:
   from coverage import coverage
@@ -290,6 +291,15 @@ class ERP5TypeTestLoader(unittest.TestLoader):
   testMethodPrefix = property(
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
+
+  if six.PY3:
+    def __init__(self):
+        # override without call super() to avoid RecursionError in Python 3.
+        # super().__init__()
+        self.errors = []
+        # Tracks packages which we have called into via load_tests, to
+        # avoid infinite re-entrancy.
+        self._loading_packages = set()
 
   def _importZodbTestComponent(self, name):
     import erp5.component.test
