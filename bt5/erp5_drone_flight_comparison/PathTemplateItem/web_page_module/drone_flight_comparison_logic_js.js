@@ -1,11 +1,10 @@
 /*global GameManager, console*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 
-
-
 /*********************** DRONE SIMULATOR LOGIC ********************************/
 
 var runGame, updateGame, game_manager_instance;
+var SIMULATION_SPEED = 10;
 
 (function () {
   "use strict";
@@ -223,8 +222,6 @@ var runGame, updateGame, game_manager_instance;
         "height": 100,
         "width": MAP_SIZE
       }
-      /*game_parameters_json.mapSize.width = MAP_SIZE * 1.10;
-      game_parameters_json.mapSize.depth = MAP_SIZE * 1.10;*/
       return game_parameters_json;
     }
 
@@ -232,7 +229,9 @@ var runGame, updateGame, game_manager_instance;
 
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
-                                              game_parameters_json, 5);
+                                              game_parameters_json,
+                                              SIMULATION_SPEED
+                                             );
     }
     return game_manager_instance.run();
   };
@@ -327,12 +326,10 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype.update = function () {
     var _this = this;
-    // To increase the game speed, increase this value
-    _this._max_step_animation_frame = 10;
-      // time delta means that drone are updated every virtual second
-      // This is fixed and must not be modified
-      // otherwise, it will lead to different scenario results
-      // (as drone calculations may be triggered less often)
+    // time delta means that drone are updated every virtual second
+    // This is fixed and must not be modified
+    // otherwise, it will lead to different scenario results
+    // (as drone calculations may be triggered less often)
     var TIME_DELTA = 1000 / 60, i;
     // init the value on the first step
     _this.waiting_update_count = _this._max_step_animation_frame;
@@ -499,16 +496,13 @@ var GameManager = /** @class */ (function () {
     });
     // -------------------------------- SIMULATION - Prepare API, Map and Teams
     var on3DmodelsReady = function (ctx) {
-      console.log("on3DmodelsReady!");
       // Get the game parameters
       if (!ctx._map_swapped) {
         GAMEPARAMETERS = ctx._getGameParameter();
         ctx._map_swapped = true;
       }
-      console.log("APIs created");
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      console.log("Map manager instantiated");
       ctx._spawnDrones(GAMEPARAMETERS.initialPosition,
                        GAMEPARAMETERS.droneList, ctx._script);
       // Hide the drone prefab
@@ -535,7 +529,7 @@ var GameManager = /** @class */ (function () {
         rectBlue.linkWithMesh(controlMeshBlue);
         rectBlue.linkOffsetY = 0;
       }
-      console.log("advaced textures added");
+      console.log("on3DmodelsReady - advaced textures added");
       return ctx;
     };
     // ----------------------------------- SIMULATION - Load 3D models
@@ -547,18 +541,7 @@ var GameManager = /** @class */ (function () {
       })
       .push(function () {
         on3DmodelsReady(_this);
-        // 3,2,1,GO before start. To animate. //TODO DROP this countdown
-        var result = new RSVP.Queue(),
-          i;
-        function countdown (count) {
-          return function () {
-            console.log(count + " ...");
-            return RSVP.delay(200);
-          };
-        }
-        for (i = 5; 0 <= i; i -= 1) {
-          result.push(countdown(i));
-        }
+        var result = new RSVP.Queue();
         return result.push(_this._start.bind(_this));
       });
   };
