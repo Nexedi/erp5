@@ -4,7 +4,7 @@
   on, at maximum, bundle_object_count objects.
 
   bundle_object_count
-    Maximum number of objects to deal with in one transaction. 
+    Maximum number of objects to deal with in one transaction.
     An activity is started after each successfull execution which
     found bundle_object_count to work on.
   property_override_method_id
@@ -177,7 +177,7 @@ else:
                      severity=severity,
                      detail='\n'.join(result_list))
   activate(active_process=active_process,
-            activity='SQLQueue', 
+            activity='SQLQueue',
             priority=2,
             tag=tag).ERP5Site_saveCheckCatalogTableResult(active_result)
 

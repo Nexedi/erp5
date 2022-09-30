@@ -74,7 +74,7 @@ redirect_url = '%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_me
   editable_mode,
   message)
 
-result = request['RESPONSE'].redirect(redirect_url) 
+result = request['RESPONSE'].redirect(redirect_url)
 
 if silent_mode:
   return result, 'redirect'

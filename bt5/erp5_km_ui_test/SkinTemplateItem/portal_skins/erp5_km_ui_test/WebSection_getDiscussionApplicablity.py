@@ -7,7 +7,7 @@ portal_type = document.getPortalType()
 
 if portal_type == 'Web Page':
   return context.getReference()
-  
+
 if portal_type == 'Web Section':
   default_page = document.getAggregate()
   if default_page is not None:

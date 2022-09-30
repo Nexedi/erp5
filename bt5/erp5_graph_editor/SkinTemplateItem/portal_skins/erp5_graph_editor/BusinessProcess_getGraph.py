@@ -64,7 +64,7 @@ class_definition = {
     'properties': {
       'name': {'type': 'string', 'name': str(translateString('Name'))},
       'trade_phase': {'type': 'string', 'name': str(translateString('Trade Phase')), 'enum': [''] + [
-          trade_phase.getId() for trade_phase in portal.portal_categories.trade_phase.getCategoryChildValueList(local_sort_on=('int_index', 'title'))]}, 
+          trade_phase.getId() for trade_phase in portal.portal_categories.trade_phase.getCategoryChildValueList(local_sort_on=('int_index', 'title'))]},
     }
   }
 }

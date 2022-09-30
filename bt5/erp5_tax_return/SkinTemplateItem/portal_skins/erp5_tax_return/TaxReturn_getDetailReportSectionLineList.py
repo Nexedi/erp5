@@ -37,7 +37,7 @@ for brain in context.portal_simulation.getMovementHistoryList(**inventory_kw):
 
   quantity = (brain.total_quantity or 0) * sign or 0
   price = (brain.total_price or 0) * sign or 0
-  
+
   total_quantity += quantity
   total_price += price
 

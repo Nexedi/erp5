@@ -46,7 +46,7 @@ else:
   portal_status_message = "Credential Update Created."
 
   # if we are changing password for current logged in user then do it
-  # within same transaction and update client side credentials cookie 
+  # within same transaction and update client side credentials cookie
   if password:
     # The password is updated synchronously and the the rest of the credential Update is done later
     login_reference = credential_update.Credential_updatePersonPassword()

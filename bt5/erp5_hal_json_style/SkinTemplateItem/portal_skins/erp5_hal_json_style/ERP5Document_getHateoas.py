@@ -827,7 +827,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
 #       for property, title in columns:
 #         prop = document.getProperty(property)
 #         if same_type(prop, DateTime()):
-#           prop = "XXX Serialize DateTime"  
+#           prop = "XXX Serialize DateTime"
 #         line[title] = prop
 #         line["_relative_url"] = document.getRelativeUrl()
 #       line_list.append(line)
@@ -1595,10 +1595,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # XXX Custom slapos code
     ##############
     if is_site_root:
-  
+
       result_dict['default_view'] = 'view'
       REQUEST.set("X-HATEOAS-CACHE", 1)
-  
+
       # Global action users for the jIO plugin
       # XXX Would be better to not hardcode them but put them as portal type
       # "actions" (search could be on portal_catalog document, traverse on all
@@ -1639,19 +1639,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'method': 'POST',
         'name': 'Bulk'
       }
-  
+
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
       if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": person.getRelativeUrl(), 
+            "relative_url": person.getRelativeUrl(),
             "script_id": script.id
           },
   #         '_relative_url': person.getRelativeUrl()
         }
-  
+
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
@@ -2318,7 +2318,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         "script_id": script.id
       })
     return ''
-  
+
   elif mode == 'bulk':
     #################################################
     # Return multiple documents in one request
@@ -2327,7 +2327,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setStatus(405)
       return ""
     result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in byteify(json.loads(bulk_list))]
-  
+
   elif mode == 'worklist':
     #################################################
     # Return all worklist jio urls
@@ -2380,7 +2380,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
-  
+
   return result_dict
 
 

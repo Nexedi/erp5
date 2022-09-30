@@ -27,7 +27,7 @@ if strict_check_mode and max_count is not None:
     if len(result_list) == 0:
       return None
     else:
-      return result_list    
+      return result_list
   else:
     raise RuntimeError('The catalog return more item that you ask.')
 

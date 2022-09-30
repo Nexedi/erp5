@@ -67,7 +67,7 @@ for line in kw.get('listbox'):
                                              *line_variation_category_list)
         movement_to_update.edit(mapped_value_property_list=('quantity', 'price'),
                                 variation_category_list=line_variation_category_list)
- 
+
     else:
       # no variation, we'll update the line itself
       movement_to_update = context

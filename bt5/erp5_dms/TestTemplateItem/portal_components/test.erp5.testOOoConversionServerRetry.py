@@ -41,13 +41,13 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
                             'erp5_web',
                             'erp5_dms']
     return business_template_list
-  
+
   def clearDocumentModule(self):
     self.abort()
     doc_module = self.portal.document_module
     doc_module.manage_delObjects(list(doc_module.objectIds()))
     self.tic()
-  
+
   def beforeTearDown(self):
     self.abort()
     activity_tool = self.portal.portal_activities
@@ -61,7 +61,7 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
   def afterSetUp(self):
     self.portal.portal_caches.clearAllCache()
     self.retry_count = 2
-  
+
   def getDefaultSystemPreference(self):
     id_ = 'default_system_preference'
     tool = self.getPreferenceTool()
@@ -78,7 +78,7 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     system_pref = self.getDefaultSystemPreference()
     system_pref.setPreferredDocumentConversionServerRetry(self.retry_count)
     self.tic()
-    
+
     filename = 'monochrome_sample.tiff'
     file_ = makeFileUpload(filename)
     document = self.portal.document_module.newContent(portal_type='Text')
@@ -86,7 +86,7 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     message = document.Document_tryToConvertToBaseFormat()
     self.assertEqual(message.count('Error converting document to base format'), 1)
 
-    
+
 
   def test_02_retry_for_network_issue(self):
     system_pref = self.getDefaultSystemPreference()
@@ -97,9 +97,9 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     filename = 'TEST-en-002.doc'
     file_ = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_)
-    
+
     message = document.Document_tryToConvertToBaseFormat()
-    self.assertEqual(message.count('broken.url: Connection refused'), self.retry_count + 1) 
+    self.assertEqual(message.count('broken.url: Connection refused'), self.retry_count + 1)
     system_pref.setPreferredDocumentConversionServerUrlList(saved_server_list)
     self.commit()
 

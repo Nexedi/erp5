@@ -11,10 +11,10 @@ split_depth = 1
 for item in item_list:
   # Get value of the item
   item_value = item[int(not is_right_display)]
-  
+
   # Hash key from item_value
   item_split = item_value.split('/')
-  item_key = '/'.join(item_split[:split_depth] , '/' )
+  item_key = '/'.join(item_split[:split_depth])
 
   if item_key not in sub_field_dict:
     # Create property dict

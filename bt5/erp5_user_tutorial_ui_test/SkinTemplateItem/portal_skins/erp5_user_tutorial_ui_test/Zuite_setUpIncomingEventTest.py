@@ -2,12 +2,12 @@ if clean:
   context.Zuite_tearDownIncomingEventTest()
 
 portal = context.getPortalObject()
-howto_dict = context.Zuite_getHowToInfo() 
+howto_dict = context.Zuite_getHowToInfo()
 isTransitionPossible = portal.portal_workflow.isTransitionPossible
 
 # in testExpressUserDocumentationIncomingEvent we relly that loged in user is an ERP5 Person
 logged_in_user = str(context.portal_membership.getAuthenticatedMember())
-current_person = context.portal_catalog.getResultValue(portal_type='Person', 
+current_person = context.portal_catalog.getResultValue(portal_type='Person',
                                                        reference=logged_in_user)
 if current_person is None:
   pass

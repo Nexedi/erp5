@@ -93,7 +93,7 @@ class RefManager(dict):
     simulate new Requests in Unit Tests for example.
     """
     super(RefManager, self).clear()
-  
+
 class ComponentPackageType(PackageType):
   """
   Package for ZODB Component keeping reference to ZODB Component module.

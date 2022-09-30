@@ -33,7 +33,7 @@ for ss in source_section_list:
   if ss is not None:
     uid = str(ss.getUid())
   else:
-    uid = 'UID' 
+    uid = 'UID'
 
   if uid not in pl_dict:
     pl_dict[uid] = module.newContent(**pl_property_dict)
@@ -49,12 +49,12 @@ for item in object_list:
   else:
     pl_value =  pl_dict['UID']
 
-  source = item.Item_getCurrentSiteValue() 
+  source = item.Item_getCurrentSiteValue()
   resource = item.Item_getResourceValue()
 
   pl_line_dict = {}
   pl_line_dict['portal_type'] = line_portal_type
-  
+
   pl_line_dict['title']= item.getReference()
   pl_line_dict['quantity'] = item.getQuantity()
   pl_line_dict['quantity_unit'] = item.getQuantityUnit()

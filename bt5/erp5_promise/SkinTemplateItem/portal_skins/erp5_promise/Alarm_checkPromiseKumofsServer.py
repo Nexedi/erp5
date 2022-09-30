@@ -22,8 +22,8 @@ else:
   summary = "Nothing to do."
 
 active_result.edit(
-  summary=summary, 
-  severity=severity, 
+  summary=summary,
+  severity=severity,
   detail="Expect %s\nGot %s" % (promise_url, url))
 
 context.newActiveProcess().postResult(active_result)

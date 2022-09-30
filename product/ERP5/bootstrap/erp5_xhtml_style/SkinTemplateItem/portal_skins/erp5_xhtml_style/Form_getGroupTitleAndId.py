@@ -3,12 +3,12 @@
     * a group id,
     * a group title.
 
-  The group should be named based on the following pattern: "group id (Group Title)" 
+  The group should be named based on the following pattern: "group id (Group Title)"
 
   This script is a hack to let us merge two informations (id and title) into one (id) to get
     over Formulator limitations. This script should disappear with Formulator's refactoring.
 
-  Features: 
+  Features:
     * Multiple parenthesis allowed;
     * Group id can continue after the title definition.
 

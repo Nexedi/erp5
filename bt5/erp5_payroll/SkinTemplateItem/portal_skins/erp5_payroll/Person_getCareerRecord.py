@@ -22,7 +22,7 @@ career_step_list = [career for career in career_step_list if career.getValidatio
 if len(career_step_list) <= 0:
   raise ValueError("No open Career for employee %s" % context.getRelativeUrl())
 else:
-  # For the moment, only the case of 1 open Career step per Person 
+  # For the moment, only the case of 1 open Career step per Person
   # and Organisation is taken into account
   career_step = career_step_list[0]
 

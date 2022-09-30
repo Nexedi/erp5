@@ -1,5 +1,5 @@
 '''
-If all product have no Weight, it don't need to be sheep. 
+If all product have no Weight, it don't need to be sheep.
 '''
 return False
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList()

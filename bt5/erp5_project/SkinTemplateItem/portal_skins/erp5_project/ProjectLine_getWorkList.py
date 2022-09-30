@@ -1,4 +1,4 @@
-# Returns the list of work, ordered by workers. 
+# Returns the list of work, ordered by workers.
 # A work is a line without childs
 
 def getWorkLineList(line,worker):

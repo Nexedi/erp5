@@ -13,7 +13,7 @@ kw = {
 
 if not at_date and context.getStopDate():
   at_date = context.getStopDate().latestTime()
-  
+
 if at_date:
   kw['at_date'] = at_date
   kw['reconciliation_query'] = SimpleQuery(
@@ -22,13 +22,13 @@ if at_date:
 if portal.REQUEST.get('reconciled_uid_list'):
   # This is to take into account lines we just reconciled.
   # We sum all reconciled lines execpt those we just reconciled + those we just
-  # reconciled without applying the criterion on reconcilation 
+  # reconciled without applying the criterion on reconcilation
   kw['workaround_catalog_lag_query'] = NegatedQuery(SimpleQuery(uid=portal.REQUEST['reconciled_uid_list']))
   previously_reconciled = portal.portal_simulation.getInventory(**kw)
-  
+
   kw.pop('workaround_catalog_lag_query')
   kw.pop('reconciliation_query')
   kw['uid'] = portal.REQUEST['reconciled_uid_list']
   return previously_reconciled + portal.portal_simulation.getInventory(**kw)
-  
+
 return context.portal_simulation.getInventory(**kw)

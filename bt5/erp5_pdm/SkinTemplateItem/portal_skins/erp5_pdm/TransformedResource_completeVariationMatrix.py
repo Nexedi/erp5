@@ -1,7 +1,7 @@
 cell_key_list = context.getCellKeyList( base_id = 'variation')
 
 for cell_key in cell_key_list:
-  
+
   # If cell exists, do not modify it
   if not context.hasCell(base_id='variation', *cell_key ):
 

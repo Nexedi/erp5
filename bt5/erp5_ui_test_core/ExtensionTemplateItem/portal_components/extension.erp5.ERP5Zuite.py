@@ -38,13 +38,13 @@ def urlread(url, safe_return=0):
     return urllib.urlopen(url).read()
   except IOError, e:
     if safe_return:
-      # Return an Selenium test code that will obviously fail. This 
+      # Return an Selenium test code that will obviously fail. This
       # prevent zelenium test run get Stalled.
       return """<html><body><table><tr><td>assertTextPresent</td>
                 <td>An error occurred when dowload %s : %s </td>
                 <td></td><tr></body></html>""" % (url , e)
     raise IOError(e)
- 
+
 
 def editZPT(zpt, text):
   zpt.pt_edit(text, 'text/html')

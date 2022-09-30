@@ -1,6 +1,6 @@
 """
-  Returns the section this document is part. 
-  When selecting the section we return the highest 
+  Returns the section this document is part.
+  When selecting the section we return the highest
   possible root section the current document belongs to.
   So if  we have:
     - 'WebSite/S1/S2/S3/Document1'
@@ -12,7 +12,7 @@ site = context.getWebSiteValue()
 section = context.getWebSectionValue()
 
 # document isn't part of section but accessed from the root of the site
-if section is site: 
+if section is site:
   return None
 
 # This document is part of a section. Look for all parents and

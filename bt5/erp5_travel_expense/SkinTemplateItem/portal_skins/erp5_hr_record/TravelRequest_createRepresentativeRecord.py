@@ -24,7 +24,7 @@ new_record.edit(
   resource=context.getResource(),
   resource_title=context.getResourceTitle(),
   comment=context.getDescription(),
-  
+
   )
 new_record.stop()
 new_record.setTransitionComment(context.Ticket_generateTransitionAndCommentList(listbox_view=False))

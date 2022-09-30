@@ -33,7 +33,7 @@ else:
     budget = budget.getObject()
     if budget.isMemberOf(defined_group, strict_membership=strict_section_membership):
       group_filtered_budget_list.append(budget)
-  
+
   if from_date or at_date:
     for budget in group_filtered_budget_list:
       if from_date and budget.getStartDateRangeMax() < from_date:
@@ -87,7 +87,7 @@ for budget in budget_list:
                budget.getStartDateRangeMin()))
     if not conversion_ratio:
       conversion_ratio = 1
- 
+
   line_list.append(dict(is_budget=True,
                         title=budget.getTitle().decode('utf8'),
                         target_currency_title=target_currency_title,
@@ -105,7 +105,7 @@ for budget in budget_list:
     total_level_1_engaged_budget = 0
     total_level_1_consumed_budget = 0
     total_level_1_available_budget = 0
-    
+
     level_1_line_list = []
 
     if at_date and from_date:
@@ -127,7 +127,7 @@ for budget in budget_list:
     budget_line_cell_range = budget_line.BudgetLine_asCellRange('engaged')
     budget_line_as_cell_range_matrixbox =\
           budget_line.BudgetLine_asCellRange('engaged', matrixbox=1)
-    
+
     dependant_dimension_dict = budget_line.BudgetLine_getSummaryDimensionKeyDict()
 
     if len(budget_line_cell_range) == 0:
@@ -214,7 +214,7 @@ for budget in budget_list:
             cell_key = (level_3_category, level_2_category)
           else:
             cell_key = (level_4_category, level_3_category, level_2_category)
-          
+
           if not isVisibleCell(cell_key):
             continue
 
@@ -240,7 +240,7 @@ for budget in budget_list:
           current_budget = initial_budget #cell.getCurrentBalance() * sign
 
 
-          # XXX stupid optimisation that may not always be true: 
+          # XXX stupid optimisation that may not always be true:
           # if there's no engaged budget, there's no consumed budget
           if engaged_budget:
             # XXX calculate manually getAvailableBudget, because it calls
@@ -249,7 +249,7 @@ for budget in budget_list:
             available_budget = (current_budget or 0) - engaged_budget
           else:
             available_budget = current_budget
-          
+
           if initial_budget:
             total_level_3_initial_budget += initial_budget
           if current_budget:
@@ -331,7 +331,7 @@ for budget in budget_list:
                             available_budget=total_level_1_available_budget,
                             consumed_ratio=consumed_ratio))
       line_list.extend(level_1_line_list)
-     
+
 line_count = 0
 for line in line_list:
   if same_type(line, []):

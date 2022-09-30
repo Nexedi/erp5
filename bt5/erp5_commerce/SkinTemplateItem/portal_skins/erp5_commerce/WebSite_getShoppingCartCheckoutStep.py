@@ -1,4 +1,4 @@
-""" 
+"""
   Return the current step for checkout procedure that will be displayed on Shopping Cart page.
 """
 web_site = context.getWebSiteValue()

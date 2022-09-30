@@ -36,7 +36,7 @@ for assignment in person_object.contentValues(filter={'portal_type': 'Assignment
         else:
           raise RuntimeError("Error: '%s' property is required in order to update person security group"  % base_category)
       category_list.append(category_dict)
-      # if not strict, we go up the hierarchy (because if you work in group/a/b/c, chances are you 
+      # if not strict, we go up the hierarchy (because if you work in group/a/b/c, chances are you
       # are working in group/a/b, too :)
       if not strict:
         grouplist = category_value.split('/')

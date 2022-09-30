@@ -48,7 +48,7 @@ def getLastDateOfMonth(date):
 # Define DSN type record as a tree :
 # A DSN Report is basically a header and a footer encapsulating
 # a kind of report.
-# 
+#
 # Here is the basic structure of a DSN, using a python tuple-tree representation
 # dsn_record = (
 # ("S10.G00.00", "1", (
@@ -174,7 +174,7 @@ for paysheet_id in paysheet_id_list:
 
   if employee in leave_period_dict:
     for leave_period in leave_period_dict[employee]:
-      leave_bloc = {rubric: leave_period.get(rubric, None) 
+      leave_bloc = {rubric: leave_period.get(rubric, None)
                       for rubric in ('S21.G00.60.001',
                                      'S21.G00.60.002',
                                      'S21.G00.60.003',
@@ -182,23 +182,23 @@ for paysheet_id in paysheet_id_list:
                                      'S21.G00.60.011',
                                      'S21.G00.60.012')}
       dsn_file.append(leave_bloc)
-  
+
   last_date_of_month = getLastDateOfMonth(context.getEffectiveDate())
   first_date_of_month = DateTime(context.getEffectiveDate().year(),
                                  context.getEffectiveDate().month(),
                                  1)
-  
+
   if enrollment_record.getCareerStopDate() != None and \
      first_date_of_month <= enrollment_record.getCareerStopDate() <= last_date_of_month:
     dsn_file.append(getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record))
 
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.70', target=employee, enrollment_record=enrollment_record))
-  
+
   for date in sorted(employee_change_block_dict.get('S21.G00.72', ())):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.72', change_bloc=employee_change_block_dict['S21.G00.72'][date], change_date=date))
-  
+
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.71', enrollment_record=enrollment_record))
-  
+
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.50', target=paysheet))
 
   for remuneration in getEmployeeRemunerationList(paysheet_id=paysheet_id, enrollment_record=enrollment_record):

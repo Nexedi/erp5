@@ -29,7 +29,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class Test(ERP5TypeTestCase):
   """
-  Test joblib usecases with CMFActivity 
+  Test joblib usecases with CMFActivity
   """
 
   def getTitle(self):

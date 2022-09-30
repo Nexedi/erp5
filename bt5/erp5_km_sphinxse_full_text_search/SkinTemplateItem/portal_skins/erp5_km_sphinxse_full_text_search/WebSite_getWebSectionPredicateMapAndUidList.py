@@ -1,7 +1,7 @@
 """
   Examine Web Site's Web Sections and return mapping between sections' uid and respective
   category used in sections' predicate.
-  This script is used in "No ZODB" approach to get fast search results (including list of 
+  This script is used in "No ZODB" approach to get fast search results (including list of
   sections a object belongs to).
 """
 from Products.ERP5Type.Cache import CachingMethod
@@ -23,7 +23,7 @@ def getWebSectionPredicateValueList():
   base_category_uid_list = []
   portal_categories = context.portal_categories
   for section in getWebSectionList(website):
-    # calc category_path : section map 
+    # calc category_path : section map
     for category in section['membership_category_list']:
       # remove leading 'follow_up' from category
       if category.startswith('follow_up/'):

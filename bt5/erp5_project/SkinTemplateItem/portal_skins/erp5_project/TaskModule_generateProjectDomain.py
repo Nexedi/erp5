@@ -22,13 +22,13 @@ def Task_getRelatedSourceProject(depth, parent_relative_url=None):
     key = x.uid
     if key not in project_dict:
       project_dict[key] = None
-      category_dict = {'relative_url':x.relative_url, 
+      category_dict = {'relative_url':x.relative_url,
                        'portal_type':x.portal_type,
                        'id':x.id,
                        'title':x.title,
                        'uid':x.uid}
       append(category_dict)
-    
+
   return project_list
 
 def Task_getRelatedSourceProjectCategory(depth):
@@ -49,7 +49,7 @@ def Task_getRelatedSourceProjectCategory(depth):
       # XXX here we need to get the project line object to get the explanation value
       project_line_value = restrictedTraverse(project['relative_url'])
       explanation_value = project_line_value.getExplanationValue()
-      category = {'relative_url':explanation_value.getRelativeUrl(), 
+      category = {'relative_url':explanation_value.getRelativeUrl(),
                   'portal_type':explanation_value.getPortalType(),
                   'id':explanation_value.getId(),
                   'title':explanation_value.getTitle(),
@@ -66,10 +66,10 @@ category_list = Task_getRelatedSourceProjectCategory(depth)
 for category in category_list:
   domain = parent.generateTempDomain(id = 'sub' + category['id'] )
   domain.edit(title = category['title'],
-              membership_criterion_base_category = ('source_project', ), 
+              membership_criterion_base_category = ('source_project', ),
               membership_criterion_category = (category['relative_url'],),
               domain_generator_method_id = script.id,
               uid = category['uid'])
-                
+
   domain_list.append(domain)
 return domain_list

@@ -10,7 +10,7 @@ if section_category:
   currency = portal.Base_getCurrencyForSectionCategory(section_category, section_category_strict)
   precision = portal.account_module.getQuantityPrecisionFromResource(currency)
   portal.REQUEST.set('precision', precision)
-  
+
 # rewrite payment_mode_relative_url to uid
 payment_mode_relative_url = params.pop('payment_mode_relative_url', None)
 if payment_mode_relative_url:
@@ -51,7 +51,7 @@ if not params.get('operation_date'):
       params['operation_date'] = dict(
                   query=(to_date, ),
                   range='ngt')
-  
+
 amount = params.pop('amount', '')
 if amount not in (None, ''):
   params['accounting_transaction_line_total_price'] = amount

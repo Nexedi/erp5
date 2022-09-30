@@ -1,6 +1,6 @@
 """Use information given in the method mailPasswordResetRequest of Password Tool
-to build a substitution mapping dict. 
-Parameters: 
+to build a substitution mapping dict.
+Parameters:
   instance_name -- Current erp5 portal title
   reset_password_link -- Url to reset the password
   expiration_date -- Expiration Datetime of the link

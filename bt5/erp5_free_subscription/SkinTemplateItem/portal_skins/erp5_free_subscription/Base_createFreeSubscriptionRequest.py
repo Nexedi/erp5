@@ -13,7 +13,7 @@ request = portal.free_subscription_request_module.newContent(
   free_subscription_request_type="unsubscription",
   causality_value=event,
   )
-  
+
 free_subscription_list = portal.portal_catalog(portal_type="Free Subscription",
   default_resource_uid=event.getResourceUid(),
   default_source_uid=event.getSourceUid(),

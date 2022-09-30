@@ -1,5 +1,5 @@
 portal = context.getPortalObject()
-howto_dict = context.Zuite_getHowToInfo() 
+howto_dict = context.Zuite_getHowToInfo()
 
 # remove the currency if it was created by us before
 currency = context.portal_catalog.getResultValue(portal_type='Currency',

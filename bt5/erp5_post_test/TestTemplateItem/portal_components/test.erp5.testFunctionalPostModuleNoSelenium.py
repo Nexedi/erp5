@@ -44,7 +44,7 @@ class TestHTMLPostLogic(ERP5TypeTestCase):
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
-    
+
     # here, you can create the categories and objects your test will depend on
     """
     pass

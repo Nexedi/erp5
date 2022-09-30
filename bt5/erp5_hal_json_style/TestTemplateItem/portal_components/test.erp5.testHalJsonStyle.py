@@ -170,7 +170,7 @@ class ERP5HALJSONStyleSkinsMixin(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     transaction.abort()
-    
+
   def generateNewId(self):
     return "%sö" % self.portal.portal_ids.generateNewId(
                                      id_group=('erp5_hal_json_style_test'))
@@ -183,7 +183,7 @@ class ERP5HALJSONStyleSkinsMixin(ERP5TypeTestCase):
       reference="live_test_%s" % new_id
     )
     return foo
-  
+
 class TestBase_getRequestHeader(ERP5HALJSONStyleSkinsMixin):
   @changeSkin('Hal')
   def test_getRequestHeader_REQUEST_disallowed(self):

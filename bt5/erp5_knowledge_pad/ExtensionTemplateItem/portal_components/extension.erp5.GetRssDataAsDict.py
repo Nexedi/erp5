@@ -7,7 +7,7 @@ def getRssDataAsDict(context, url, username=None, password=None):
   if url in ('', None, 'None',):
     # no URL
     return {'status':-1}
-    
+
   # use authentication or not?
   handlers = []
   if username is not None and password is not None:
@@ -16,7 +16,7 @@ def getRssDataAsDict(context, url, username=None, password=None):
     auth_handler = urllib2.HTTPBasicAuthHandler(passman)
     handlers.append(auth_handler)
 
-  # set shorter timeouts and revert default at enf of read  
+  # set shorter timeouts and revert default at enf of read
   default_timeout = socket.getdefaulttimeout()
   socket.setdefaulttimeout(60.0)
   try:

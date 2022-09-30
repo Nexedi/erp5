@@ -29,14 +29,14 @@ editable_absolute_url = getattr(context, 'editable_absolute_url', absolute_url)
 
 # action title based on security
 
-editable_mode = int(request.form.get('editable_mode', 
+editable_mode = int(request.form.get('editable_mode',
                                      request.get('editable_mode', 0)))
 edit_permission = context.portal_membership.checkPermission('Modify portal content', context)
 
 # Append a button to edit the content of the current document for Web Page
 if not editable_mode and edit_permission and portal_type == 'Web Page':
   result.append(dict(
-    url = "%s/WebPage_viewEditor?editable_mode:int=1&%s" 
+    url = "%s/WebPage_viewEditor?editable_mode:int=1&%s"
             %(editable_absolute_url, http_parameters),
     icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or 'file_icon.gif'),
     title = translateString("Edit ${portal_type} content",
@@ -52,21 +52,21 @@ if not editable_mode:
     edit_title = translateString("Access ${portal_type} details",
                                  mapping=dict(portal_type=translated_portal_type))
   result.append(dict(
-    url = "%s/view?editable_mode:int=1&%s" 
+    url = "%s/view?editable_mode:int=1&%s"
             %(editable_absolute_url, http_parameters),
     icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or 'file_icon.gif'),
     title = edit_title,
     label = ""))
-else: 
+else:
   result.append(dict(
     url = "%s/view?editable_mode:int=0&%s" % (absolute_url, http_parameters),
     icon = "%s/%s" % (portal_url, context.getIcon(relative_to_portal=True) or 'file_icon.gif'),
-    title = translateString("View ${portal_type}", 
+    title = translateString("View ${portal_type}",
                             mapping=dict(portal_type=translated_portal_type)),
                             label = ""))
 
 # Append a button to edit the parent section
-if portal_type not in ('Web Section', 'Web Site'): 
+if portal_type not in ('Web Section', 'Web Site'):
   result.append(dict(
     url = "%s/view?editable_mode=1" % current_web_section.absolute_url(),
     icon = "%s/%s" % (portal_url, current_web_section.getIcon(relative_to_portal=True)),

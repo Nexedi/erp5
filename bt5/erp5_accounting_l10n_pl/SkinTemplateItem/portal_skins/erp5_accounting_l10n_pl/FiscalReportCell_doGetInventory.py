@@ -1,18 +1,18 @@
 """
   This scripts add the balance of every gap account in the list 'accounts'
-  it use portal_simulation.getInventory. 
-  The following REQUEST keys are mandatory : 
+  it use portal_simulation.getInventory.
+  The following REQUEST keys are mandatory :
       at_date
 
-  those are optional : 
+  those are optional :
       gap_base
       simulation_state
       resource
       section_category
 
-  those are ignored from the request and should explicitely passed as keywords args to this script : 
+  those are ignored from the request and should explicitely passed as keywords args to this script :
       from_date
-  
+
   parameters keywords to this script overrides REQUEST keys
 
 """
@@ -33,7 +33,7 @@ sum = 0
 for account in accounts :
   kw['node_category']= context.shortAccountNumberToFullGapCategory(account, **kw)
   #context.log('KW for getInventory',kw)
-  try : 
+  try :
     #val = (context.portal_simulation.getInventory(**kw) or 0)
     val = (context.portal_simulation.getInventoryAssetPrice(**kw) or 0)
     sum += val

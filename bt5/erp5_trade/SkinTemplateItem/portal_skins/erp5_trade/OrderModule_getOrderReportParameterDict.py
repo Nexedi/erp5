@@ -53,7 +53,7 @@ if from_date is None:
   if result_list:
     from_date = DateTime(result_list[0].start_date)
 
- 
+
 # get period list between given date
 interval_list_dict = getIntervalListBetweenDates(from_date=from_date, to_date=to_date,
                                             keys={'year':aggregation_level=="year",
@@ -90,7 +90,7 @@ selection_columns.extend(total_column_list)
 params=dict(period_list=interval_list, report_type=report_type,
             doc_portal_type=doc_portal_type, line_portal_type=line_portal_type,
             simulation_state=simulation_state)
-            
+
 stat_columns = stat_columns + interval_column_list + total_stat_list
-      
+
 return params, stat_columns, selection_columns

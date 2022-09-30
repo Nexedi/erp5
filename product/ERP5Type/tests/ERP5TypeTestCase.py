@@ -176,7 +176,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
 
   if bt5_repository_path_list is not None:
     promise_config.add_section('portal_templates')
-    promise_config.set('portal_templates', 'repository', 
+    promise_config.set('portal_templates', 'repository',
                                    ' '.join(bt5_repository_path_list))
 
   if os.environ.get('TEST_CA_PATH') is not None:
@@ -1083,7 +1083,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def loadPromise(self, searchable_business_template_list=None):
       """ Create promise configuration file and load it into configuration
-          
+
       """
       bt5_repository_path_list = self._getBusinessRepositoryPathList(
                                         searchable_business_template_list)

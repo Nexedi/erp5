@@ -64,21 +64,21 @@ for brain in portal.portal_simulation.getMovementHistoryList(
 
   debit = max(brain.total_price, 0) or 0
   credit = max(-(brain.total_price or 0), 0) or 0
- 
+
   mvt = brain.getObject()
   if payment_mode and not \
         mvt.getPaymentMode('').startswith(payment_mode):
     continue
-  
+
   total_debit += debit
   total_credit += credit
-  
+
   transaction = mvt.getParentValue()
   is_source = 0
   if transaction.getSourceSection():
     is_source = brain.section_relative_url.startswith(
                   transaction.getSourceSection())
-  
+
   if is_source:
     mirror_section_title = mvt.getDestinationSectionTitle()
   else:

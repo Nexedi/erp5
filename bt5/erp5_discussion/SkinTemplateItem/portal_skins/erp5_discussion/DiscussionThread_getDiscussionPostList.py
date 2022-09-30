@@ -1,6 +1,6 @@
 """
-  This script gets list of Discussion Posts for a Discussion Thread 
-  using catalog. 
+  This script gets list of Discussion Posts for a Discussion Thread
+  using catalog.
   Due to asynchronous nature of catalog it can use
   passed from REQUEST not index yet posts.
 """

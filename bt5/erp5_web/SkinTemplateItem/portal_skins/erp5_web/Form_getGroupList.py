@@ -134,7 +134,7 @@ for criterion in group_by_criterion:
 for group_details in layout_form.Form_getGroupTitleAndId():                   # Rule (5)
                                                                               # Rule (2)
   group_css_classes = group_details['gid']
-  
+
   # Do not display hidden group
   if group_css_classes == 'hidden':
     continue

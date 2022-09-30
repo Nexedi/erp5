@@ -12,7 +12,7 @@ test_suite = context.newContent(
                     test_suite = config['test_suite'],
                     int_index = config['int_index'],
                     vcs_repository = test_suite_repository
-                    ) 
+                    )
 
 if batch_mode:
   return test_suite

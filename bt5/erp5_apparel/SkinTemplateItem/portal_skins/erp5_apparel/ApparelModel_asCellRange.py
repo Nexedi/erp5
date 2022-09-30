@@ -26,7 +26,7 @@ predicate_list = context.contentValues(
 pred_ids = []
 if predicate_list != []:
   if matrixbox == 1:
-    pred_ids = list(map(lambda x: (x.getRelativeUrl(), x.getTitle()), 
+    pred_ids = list(map(lambda x: (x.getRelativeUrl(), x.getTitle()),
                                    predicate_list))
   else:
     pred_ids = list(map(lambda x: x.getRelativeUrl(), predicate_list))

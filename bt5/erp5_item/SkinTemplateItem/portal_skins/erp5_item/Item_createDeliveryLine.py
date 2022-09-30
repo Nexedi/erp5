@@ -11,7 +11,7 @@ delivery = module.newContent(title=title,
                              source_value=source,
                              source_section_value=source_section,
                              portal_type=portal_type)
-                          
+
 delivery_line = delivery.newContent(
                     portal_type=line_portal_type,
                     title=context.getReference(),

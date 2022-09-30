@@ -1031,7 +1031,7 @@ class TestMigration(UserManagementTestCase):
             self.portal.person_module.newContent,
             portal_type='Person',)
       self.abort()
-  
+
       self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
       def stop_condition(message_list):
         if any(m.method_id != 'immediateReindexObject' for m in message_list):

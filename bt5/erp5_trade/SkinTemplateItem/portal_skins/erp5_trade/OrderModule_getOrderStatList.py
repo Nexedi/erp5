@@ -41,14 +41,14 @@ if active_process_path:
     detail = loads(result.detail)
     if detail['type'] == "result":
       result_product_dict = detail['product_dict']
-      result_client_dict = detail["client_dict"]  
+      result_client_dict = detail["client_dict"]
     else:
       continue
     if not len(client_dict) and len(result_client_dict):
       client_dict = result_client_dict.copy()
     else:
       _addDict(client_dict, result_client_dict, only_amount=True)
-    
+
     if not len(product_dict) and len(result_product_dict):
       product_dict = result_product_dict.copy()
     else:
@@ -115,12 +115,12 @@ if len(client_dict):
                                                              line_product_dict[product_title][period]['amount']
               else:
                 period_counter_dict['Amount %s' %(period)] = line_product_dict[product_title][period]['amount']
-              
+
             else:
               obj['Amount %s' %(period)] = 0
               obj['Quantity %s' %(period)] = 0
               obj['Quantity Unit %s' %(period)] = ""
-          
+
           obj['total quantity'] = line_total_quantity
           obj['total amount'] = round(line_total_amount, 2)
           # total for stat line
@@ -140,7 +140,7 @@ else:
       obj = Object(uid="new_")
       obj['product'] = product_title
       line_total_amount = 0
-      line_total_quantity = 0    
+      line_total_quantity = 0
       for period in period_list:
         if period in product_dict[product_title]:
           obj['Amount %s' %(period)] = round(product_dict[product_title][period]['amount'],2)

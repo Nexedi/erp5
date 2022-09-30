@@ -27,7 +27,7 @@ activate_kw = {"tag": tag}
 for inventory in node_inventory_list:
   # Do only one inventory per node
   if inventory.node_relative_url not in node_inventory_dict:
-    
+
     inv = inventory_module.newContent(portal_type="Archive Inventory",
                                       destination=inventory.node_relative_url,
                                       start_date = date,
@@ -87,7 +87,7 @@ for inventory in node_inventory_list:
 
 
 # deliver all inventory
-for inv in node_inventory_dict.values():  
+for inv in node_inventory_dict.values():
   inv.setDefaultActivateParameterDict(activate_kw)
   inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))
   inv.deliver()
@@ -100,7 +100,7 @@ payment_inventory_dict = {}
 for inventory in payment_inventory_list:
   # Do only one inventory per payment
   if inventory.payment_uid not in payment_inventory_dict:
-    
+
     inv = inventory_module.newContent(portal_type="Archive Inventory",
                                       destination=inventory.node_relative_url,
                                       destination_payment_uid=inventory.payment_uid,
@@ -127,7 +127,7 @@ for inventory in payment_inventory_list:
 
 
 # deliver all inventory
-for inv in payment_inventory_dict.values():  
+for inv in payment_inventory_dict.values():
   inv.setDefaultActivateParameterDict(activate_kw)
   inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))
   inv.deliver()

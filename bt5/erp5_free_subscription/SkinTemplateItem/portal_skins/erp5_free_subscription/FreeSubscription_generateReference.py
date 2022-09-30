@@ -7,6 +7,6 @@ if context.getSource():
       id_generator="uid",
       id_group='.'.join((generator_base, 'reference', group_reference)),
       default=1)
-    
+
   source_reference = '%s-%s-%05d' % (reference_base, group_reference, counter)
   context.setReference(source_reference)

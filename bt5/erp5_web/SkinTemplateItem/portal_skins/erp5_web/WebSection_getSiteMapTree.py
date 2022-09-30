@@ -3,7 +3,7 @@
   the different lists and trees which are used in a Web Site. This includes
   lists of subsections, lists of pages, site maps, navigation menus.
 
-  If a mapping is provided, the tree structure is mapped 
+  If a mapping is provided, the tree structure is mapped
   with object properties defined in the mapping and the result
   can be cached. If no mapping is provided, ZODB documents are provided
   in the tree structure and the result can not be cached.
@@ -31,7 +31,7 @@
                       'section'  : <some subsection>,
                       'document' : None,
                       'subsection' : (),
-                    }, 
+                    },
                    ),
   }
 """
@@ -50,7 +50,7 @@ def mapObject(property_dict):
   result['document'] = property_dict.get('document', None)
   return result
 
-def getSiteMapItemTree(section, depth=0, level=None):   
+def getSiteMapItemTree(section, depth=0, level=None):
   result = []
   if not depth: return result
   if level is None: level = 1

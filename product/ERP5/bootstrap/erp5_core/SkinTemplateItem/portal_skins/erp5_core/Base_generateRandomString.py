@@ -1,6 +1,6 @@
 """
   Generic random string generator.
-  
+
 """
 from random import choice
 from string import letters, digits

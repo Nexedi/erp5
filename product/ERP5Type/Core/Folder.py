@@ -794,7 +794,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
     Tell if we are a BTree
     """
     return self._folder_handler in (BTREE_HANDLER, _BROKEN_BTREE_HANDLER)
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'isHBTree')
   def isHBTree(self):
     """

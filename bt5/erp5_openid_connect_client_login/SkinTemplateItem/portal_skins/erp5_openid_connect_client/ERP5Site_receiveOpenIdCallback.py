@@ -38,7 +38,7 @@ elif code is not None:
   )
   if response_dict is not None:
     """
-    Here is an example of correct response dict: 
+    Here is an example of correct response dict:
     {
       'access_token': u'XXXX0koYI5hASXZaExeYsGlqz1bSIcGyEg',
       'token_type': u'Bearer',

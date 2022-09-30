@@ -35,6 +35,6 @@ def getCategoryMappingChildValueList(category_mapping, sort_on=None, sort_order=
   return sortValueList(value_list, sort_on, sort_order, **kw)
 
 
-return getCategoryMappingChildValueList(context, sort_on=sort_on, sort_order=sort_order, 
-                                        local_sort_method=local_sort_method, 
+return getCategoryMappingChildValueList(context, sort_on=sort_on, sort_order=sort_order,
+                                        local_sort_method=local_sort_method,
                                         local_sort_id=local_sort_id, **kw)

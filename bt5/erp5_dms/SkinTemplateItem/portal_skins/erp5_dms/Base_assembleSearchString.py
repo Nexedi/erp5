@@ -1,27 +1,27 @@
 """
-  This script receives a request from advanced search form and 
+  This script receives a request from advanced search form and
   puts together a search string in a search syntax, depending on
-  parameters received. 
+  parameters received.
   It is the reverse of Base_parseSearchString script.
 """
 MARKER = ['', None]
 BOOLEAN_MARKER = MARKER + [0]
 request = context.REQUEST
 
-# one can specify a direct search string, 
+# one can specify a direct search string,
 # in this case simply returning it is expected
-searchabletext = kw.get('searchabletext', 
+searchabletext = kw.get('searchabletext',
                         request.get('searchabletext', None))
 if searchabletext not in MARKER:
   return searchabletext
 
 # words to search in 'any of the words' form - left intact
-searchabletext_any = kw.get('searchabletext_any', 
+searchabletext_any = kw.get('searchabletext_any',
                             request.get('searchabletext_any', ''))
 search_string = searchabletext_any
 
 # exact phrase to search for double-quoted
-searchabletext_phrase = kw.get('searchabletext_phrase', 
+searchabletext_phrase = kw.get('searchabletext_phrase',
                                request.get('searchabletext_phrase', None))
 if searchabletext_phrase not in MARKER:
   search_string += ' \"%s\"' %searchabletext_phrase
@@ -44,7 +44,7 @@ if created_within not in MARKER:
   search_string += ' created:%s' %created_within
 
 # only given portal_types - add "type:Type" or type:(Type1,Type2...)
-portal_type_list = kw.get('search_portal_type', 
+portal_type_list = kw.get('search_portal_type',
                           request.get('search_portal_type'))
 if portal_type_list == 'all':
   portal_type_list=None

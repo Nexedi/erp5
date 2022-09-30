@@ -84,7 +84,7 @@ for i in xrange(0, path_list_len, batch_size):
 # something is happening in the background
 context.activate(after_tag=tag).getTitle()
 
-# reset selection checked uids 
+# reset selection checked uids
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])
 
 return context.Base_redirect(form_id,

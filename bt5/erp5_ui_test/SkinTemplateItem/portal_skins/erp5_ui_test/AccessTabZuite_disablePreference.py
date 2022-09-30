@@ -8,5 +8,5 @@ if preference is not None:
   if erp5_ui_test_preference is not None and \
        erp5_ui_test_preference.getPreferenceState() in ('draft', 'disabled'):
     erp5_ui_test_preference.enable()
-  
+
 return 'Disabled Preference Successfully.'

@@ -46,7 +46,7 @@ data_dict = context.Delivery_getODTDataDict(reference_method, getSubLineList)
 bank_account = context.getDestinationPaymentValue(portal_type='Bank Account')
 if context.getPortalType() == 'Sale Invoice Transaction':
   bank_account = context.getSourcePaymentValue(portal_type='Bank Account')
-  
+
 if bank_account is not None:
   data_dict.update(
             bank_name=bank_account.getSourceTitle() or bank_account.getTitle(),
