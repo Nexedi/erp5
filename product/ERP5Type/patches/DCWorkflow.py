@@ -198,10 +198,10 @@ DCWorkflowDefinition.listObjectActions = ERP5Workflow.__dict__['listObjectAction
 from Products.DCWorkflow.Expression import Expression
 
 DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
-DCWorkflowDefinition.getWorklistVariableMatchDict = ERP5Workflow.getWorklistVariableMatchDict.im_func
+DCWorkflowDefinition.getWorklistVariableMatchDict = ERP5Workflow.getWorklistVariableMatchDict.__func__
 
 DCWorkflowDefinition.security.declarePrivate('isWorkflowMethodSupported')
-DCWorkflowDefinition.isWorkflowMethodSupported = ERP5Workflow.isWorkflowMethodSupported.im_func
+DCWorkflowDefinition.isWorkflowMethodSupported = ERP5Workflow.isWorkflowMethodSupported.__func__
 
 TransitionDefinition__init__orig = TransitionDefinition.__init__
 def TransitionDefinition__init__(self, *args, **kw):
@@ -421,7 +421,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
 DCWorkflowDefinition._executeMetaTransition = _executeMetaTransition
 
-DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.im_func
+DCWorkflowDefinition.wrapWorkflowMethod = ERP5Workflow.wrapWorkflowMethod.__func__
 
 def StateDefinition_getStatePermissionRoleListDict(self):
   if self.permission_roles is None:
@@ -878,7 +878,7 @@ def method_getGuardExpressionInstance(self):
   return self.guard.expr
 
 def method_checkGuard(self, *args, **kwargs):
-  return ERP5Guardable.checkGuard.im_func(self, *args, **kwargs)
+  return ERP5Guardable.checkGuard.__func__(self, *args, **kwargs)
 
 def method_getAction(self):
   return self.actbox_url
@@ -1207,9 +1207,9 @@ DCWorkflowDefinition.getTitle = method_getTitle
 DCWorkflowDefinition.getDescription = method_getDescription
 DCWorkflowDefinition.isManagerBypass = lambda self: self.manager_bypass
 DCWorkflowDefinition.getSourceValue = DCWorkflowDefinition_getSourceValue
-DCWorkflowDefinition.notifyWorkflowMethod = ERP5Workflow.notifyWorkflowMethod.im_func
-DCWorkflowDefinition.notifyBefore = ERP5Workflow.notifyBefore.im_func
-DCWorkflowDefinition.notifySuccess = ERP5Workflow.notifySuccess.im_func
+DCWorkflowDefinition.notifyWorkflowMethod = ERP5Workflow.notifyWorkflowMethod.__func__
+DCWorkflowDefinition.notifyBefore = ERP5Workflow.notifyBefore.__func__
+DCWorkflowDefinition.notifySuccess = ERP5Workflow.notifySuccess.__func__
 DCWorkflowDefinition.getVariableValueDict = DCWorkflowDefinition_getVariableValueDict
 DCWorkflowDefinition.getVariableValueByReference = DCWorkflowDefinition_getVariableValueByReference
 DCWorkflowDefinition.getStateValueByReference = DCWorkflowDefinition_getStateValueByReference
