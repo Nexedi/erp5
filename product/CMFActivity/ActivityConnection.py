@@ -66,4 +66,4 @@ InitializeClass(ActivityConnection)
 
 class ActivityDB(DB):
 
-    _sort_key = (0,)
+    _sort_key = chr(2)

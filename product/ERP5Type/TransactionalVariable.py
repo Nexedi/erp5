@@ -70,7 +70,7 @@ class TransactionalVariable(dict):
   _unregistered = True
 
   def sortKey(self):
-    return None
+    return chr(0)
 
   commit = tpc_vote = tpc_begin = tpc_abort = lambda self, transaction: None
 
@@ -127,7 +127,7 @@ class TransactionalResource(object):
     return not (args in tv or tv.add(args))
 
   def sortKey(self):
-    return 1
+    return chr(1)
 
   abort = commit = tpc_vote = tpc_begin = tpc_finish = tpc_abort = \
     lambda self, transaction: None
