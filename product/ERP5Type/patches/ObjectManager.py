@@ -32,7 +32,7 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id
     if verify: self._verifyObjectPaste(ob, validate_src=0)
     if id is None:
       id=ob.id
-    if hasattr(id, 'im_func'): id=id()
+    if hasattr(id, '__func__'): id=id()
 
     self._setObject(id, ob, set_owner=set_owner, suppress_events=suppress_events)
 
