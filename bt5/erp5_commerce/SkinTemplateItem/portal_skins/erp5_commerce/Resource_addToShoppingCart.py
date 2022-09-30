@@ -14,7 +14,7 @@ if form_id is not None:
   # button itself
   try:
     params = form.validate_all_to_request(request)
-  except FormValidationError, validation_errors:
+  except FormValidationError as validation_errors:
     # Pack errors into the request
     field_errors = form.ErrorFields(validation_errors)
     request.set('field_errors', field_errors)

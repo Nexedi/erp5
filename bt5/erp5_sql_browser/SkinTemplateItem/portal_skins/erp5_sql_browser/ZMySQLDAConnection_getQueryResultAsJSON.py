@@ -8,7 +8,7 @@ response = container.REQUEST.RESPONSE
 start = time.time()
 try:
   results = context.manage_test(query)
-except Exception, e:
+except Exception as e:
   response.setStatus(500)
   try:
     response.write(str(e[1]))

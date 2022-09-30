@@ -269,7 +269,7 @@ class WorkingCopy(Implicit):
     try:
       with open(os.path.join(self.working_copy, path), 'rU') as f:
         text = f.read()
-    except IOError, e:
+    except IOError as e:
       if e.errno == errno.EISDIR:
         return '%s<hr/>%r is a folder!' % (head, path)
       if e.errno != errno.ENOENT:
@@ -369,7 +369,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     try:
       try:
         file_obj = open(path, 'r+b')
-      except IOError, e:
+      except IOError as e:
         if e.errno == errno.EISDIR:
           shutil.rmtree(path, ignore_errors=True)
         elif e.errno != errno.ENOENT:

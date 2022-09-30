@@ -36,7 +36,7 @@ def urlread(url, safe_return=0):
   import urllib
   try:
     return urllib.urlopen(url).read()
-  except IOError, e:
+  except IOError as e:
     if safe_return:
       # Return an Selenium test code that will obviously fail. This
       # prevent zelenium test run get Stalled.

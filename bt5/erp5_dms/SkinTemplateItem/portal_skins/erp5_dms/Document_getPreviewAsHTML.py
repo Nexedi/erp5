@@ -8,7 +8,7 @@ try:
     return result
   if not context.hasBaseData():
     error_message = context.Base_translateString("This document is not converted yet.")
-except Exception, e:
+except Exception as e:
   from erp5.component.module.Log import log
   log("asStrippedHTML", str(e))
   error_message = "%s %s" % (context.Base_translateString("Preview Error:"),

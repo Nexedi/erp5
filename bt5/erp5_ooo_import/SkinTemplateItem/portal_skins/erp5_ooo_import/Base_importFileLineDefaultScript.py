@@ -57,7 +57,7 @@ else:
                                       **imported_line_property_dict)
   except ConflictError:
     raise
-  except Exception, error:
+  except Exception as error:
     translated_msg = Message('erp5_ui',
                      'An error Occurred while creating object: ${error}',
                      mapping=dict(error=Message('erp5_ui',
@@ -75,7 +75,7 @@ else:
         new_object.edit(**category_dict)
       except ConflictError:
         raise
-      except Exception, error:
+      except Exception as error:
         #context.log('category: %s' %category)
         translated_msg = Message(
                      'erp5_ui',

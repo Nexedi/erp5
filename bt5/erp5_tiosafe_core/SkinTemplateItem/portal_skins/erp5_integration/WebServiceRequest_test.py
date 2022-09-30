@@ -20,7 +20,7 @@ if context.getLastRequestError() is None:
   for obj in object_list:
     try:
       xml = obj.asXML(debug=True)
-    except (ValueError, NotImplementedError), msg:
+    except (ValueError, NotImplementedError) as msg:
       error = msg
       continue
     if not xml:
