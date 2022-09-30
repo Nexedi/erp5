@@ -375,7 +375,7 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
    result = localizer.erp5_ui.gettext(msg_id_context, default='')
    if result == '':
      result = localizer.erp5_ui.gettext(msg_id)
-   return result.encode('utf8')
+   return unicode2str(result)
 
 def Email_parseAddressHeader(text):
   """
