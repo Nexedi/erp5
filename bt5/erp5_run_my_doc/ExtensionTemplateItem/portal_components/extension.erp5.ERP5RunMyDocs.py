@@ -77,7 +77,7 @@ def extractTest(text):
           testcode += row[0].text
         else:
           testcode += lxml.html.tostring(row)
-  return testcode
+  return testcode.strip()
 
 """
   HTML5 Presentation validador
