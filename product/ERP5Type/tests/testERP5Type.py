@@ -285,8 +285,8 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
     def test_objectValues(self):
       person = self.portal.person_module.newContent(portal_type='Person')
-      createZODBPythonScript(person, 'script', '', '')
-      script = person['script']
+      createZODBPythonScript(person, 'test_script', '', '')
+      script = person['test_script']
       self.assertIn(script, person.objectValues())
       self.assertNotIn(script, person.objectValues(portal_type='Person'))
 
