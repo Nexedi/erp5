@@ -49,7 +49,7 @@
           });
 
           return gadget.updateHeader({
-            page_title: 'Drone Simulator',
+            page_title: 'Drone Simulator - Flight comparison',
             page_icon: 'puzzle-piece'
           });
         });
