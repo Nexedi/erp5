@@ -3461,8 +3461,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-  
-  
+
+
   def stepCreateNotVariatedThirdResource(self,sequence=None,
                                           sequence_list=None,
                                           **kw):
@@ -3481,8 +3481,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     resource_list = sequence.get('resource_list',default=[])
     resource_list.append(resource)
     sequence.edit( resource_list = resource_list )
-  
-  
+
+
   def stepCreatePackingList(self, sequence=None,
                                       sequence_list=None, **kw):
     """
@@ -3499,13 +3499,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       mirror_node = sequence.get('mirror_node')
     if mirror_section is None:
       mirror_section = sequence.get('mirror_section')
-    
+
     packing_list_portal_type = kw.get('packing_list', self.packing_list_portal_type)
     packing_list_module = self.getPortal().getDefaultModule(
                               portal_type=packing_list_portal_type)
     packing_list = packing_list_module.newContent(
                               portal_type=packing_list_portal_type)
- 
+
     if kw.get('at_date', None) is not None:
       start_date = stop_date = kw['at_date']
     else:
@@ -3520,7 +3520,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                       stop_date = stop_date,
                       price_currency = self.price_currency
                      )
-    
+
     packing_list_line_portal_type = packing_list_portal_type + ' Line'
     packing_list_line = packing_list.newContent(
                   portal_type = packing_list_line_portal_type)
@@ -3530,14 +3530,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                           )
     sequence.edit(packing_list=packing_list)
 
-  
+
   def stepCreateSalePackingListToSectionNodeForFirstResource(self, sequence=None,
                                                     sequence_list=None,
                                                     **kw):
     section = sequence.get('section')
     node = sequence.get('node')
     resource = sequence.get('resource')
-      
+
     self.stepCreatePackingList(sequence=sequence,
                                sequence_list=sequence_list,
                                section = section,
@@ -3546,12 +3546,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                quantity = 100,
                                packing_list= 'Sale Packing List')
 
-  
+
   def stepCreateSalePackingListToOtherSectionNodeForFirstResource(self, sequence=None,sequence_list=None,**kw):
     section = sequence.get('other_section')
     node = sequence.get('node')
     resource = sequence.get('resource')
-      
+
     self.stepCreatePackingList(sequence=sequence,
                                sequence_list=sequence_list,
                                section = section,
@@ -3559,15 +3559,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                resource = resource,
                                quantity = 200,
                                packing_list = 'Sale Packing List')
-                                          
-  
+
+
   def stepCreatePurchasePackingListForSectionOtherNodeForSecondResource(self, sequence=None,
                                                     sequence_list=None,
                                                     **kw):
     section = sequence.get('section')
     node = sequence.get('other_node')
     resource = sequence.get('second_resource')
-      
+
     self.stepCreatePackingList(sequence=sequence,
                                sequence_list=sequence_list,
                                section = section,
@@ -3575,15 +3575,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                resource = resource,
                                quantity = 50,
                                packing_list = 'Purchase Packing List')
-                                          
-  
+
+
   def stepCreatePurchasePackingListForOtherSectionOtherNodeForThirdResource(self, sequence=None,
                                                     sequence_list=None,
                                                     **kw):
     section = sequence.get('other_section')
     node = sequence.get('other_node')
     resource = sequence.get('third_resource')
-      
+
     self.stepCreatePackingList(sequence=sequence,
                                sequence_list=sequence_list,
                                section = section,
@@ -3591,17 +3591,17 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                resource = resource,
                                quantity = 30,
                                packing_list = 'Purchase Packing List')
-      
+
   def stepTestMultipleOwnerNode(self, sequence=None, sequence_list=None, **kw):
     first_resource_value = sequence.get('resource')
     second_resource_value = sequence.get('second_resource')
     third_resource_value = sequence.get('third_resource')
-    
+
     node_value = sequence.get('node')
     other_node_value = sequence.get('other_node')
     section_value = sequence.get('section')
     other_section_value = sequence.get('other_section')
-    
+
     self._testGetInventory(expected=100,
                            section_uid=section_value.getUid(),
                            node_uid=node_value.getUid(),
@@ -3634,7 +3634,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
      getInventory(section=B, node=D, resource=Z) should return 30
     """
     if not run: return
-  
+
     sequence_list = SequenceList()
     sequence_string = 'CreateOrganisationsForModule \
                        CreateNotVariatedResource \
@@ -3670,7 +3670,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     X = sequence.get('node')
     mirror_section = sequence.get('mirror_section')
     mirror_node = sequence.get('mirror_node')
-   
+
     self.stepCreatePackingList(sequence=sequence,
                                  sequence_list=sequence_list,
                                  section = A,
@@ -3688,7 +3688,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     Y = sequence.get('other_node')
     resource = sequence.get('resource')
     at_date = DateTime('2013/02/11 00:00:00 GMT+9')
-    
+
     self.stepCreatePackingList(sequence=sequence,
                                  sequence_list=sequence_list,
                                  section = A,
@@ -3706,7 +3706,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     Y = sequence.get('other_node')
     resource = sequence.get('resource')
     at_date = DateTime('2013/02/11 02:00:00 GMT+9')
-    
+
     self.stepCreatePackingList(sequence=sequence,
                                  sequence_list=sequence_list,
                                  section = A,
@@ -3724,7 +3724,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     Y = sequence.get('other_node')
     resource = sequence.get('resource')
     at_date = DateTime('2013/02/13 04:00:00 GMT+9')
-    
+
     self.stepCreatePackingList(sequence=sequence,
                                  sequence_list=sequence_list,
                                  section = A,
@@ -3742,7 +3742,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     Y = sequence.get('other_node')
     resource = sequence.get('resource')
     at_date = DateTime('2013/02/14 05:00:00 GMT+9')
-    
+
     self.stepCreatePackingList(sequence=sequence,
                                  sequence_list=sequence_list,
                                  section = A,
@@ -3753,7 +3753,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                  quantity = 30,
                                  at_date = at_date,
                                  packing_list = 'Internal Packing List')
-    
+
   def stepCreateSPLFromAWarehouseXToBWarehouseYWithQuantity30(self, sequence=None,
                                       sequence_list=None, **kw):
     A = sequence.get('section')
@@ -3792,7 +3792,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                  quantity = 10,
                                  at_date = at_date,
                                  packing_list = 'Purchase Packing List')
-  
+
   def stepCancelSPLFromAWarehouseXToBWarehouseYWithQuantity30(self, sequence=None,
                                       sequence_list=None, **kw):
     A = sequence.get('section')
@@ -3812,7 +3812,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                  quantity = 30,
                                  at_date = at_date,
                                  packing_list = 'Sale Packing List')
-  
+
 
 
   def stepCreateProductionPFromAFactoryZToAWarehouseXWithQuantity10(self, sequence=None,
@@ -3873,12 +3873,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                  quantity = 5,
                                  at_date = at_date,
                                  packing_list = 'Purchase Packing List')
-                                 
-                               
+
+
   def stepCreateIPLFromAWarehouseXToAWarehouseYWithQuantity33(self, sequence=None, sequence_list=None, **kw):
     A = sequence.get('section')
     X = sequence.get('node')
-  
+
     Y = sequence.get('other_node')
     resource = sequence.get('resource')
     at_date = DateTime('2013/02/25 01:00:00 GMT+9')
@@ -3892,8 +3892,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                  resource = resource,
                                  at_date = at_date,
                                  quantity = 33,
-                                 packing_list = 'Internal Packing List')  
-                                 
+                                 packing_list = 'Internal Packing List')
+
 
   def stepCancelPPLForCWarehouseXFromBWarehouseYWithQuantity5(self, sequence=None, sequence_list=None, **kw):
     C = sequence.get('one_more_section')
@@ -3984,7 +3984,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section_uid=A.getUid(),
       node_uid=Y.getUid(),
       resource_uid=resource_value.getUid())
-      
+
     self._testGetInventory(
       expected=43,
       section_uid=A.getUid(),
@@ -4002,7 +4002,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       section_uid=C.getUid(),
       node_uid=X.getUid(),
       resource_uid=resource_value.getUid())
-    
+
     at_date = DateTime('2013/02/15 00:00:00 GMT+9')
 
     self._testGetInventory(
@@ -4011,7 +4011,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       node_uid=Y.getUid(),
       at_date = at_date,
       resource_uid=resource_value.getUid())
-      
+
     self._testGetInventory(
       expected=100,
       section_uid=A.getUid(),
@@ -4032,7 +4032,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       node_uid=X.getUid(),
       at_date = at_date,
       resource_uid=resource_value.getUid())
-      
+
     at_date = DateTime('2013/02/25 00:00:00 GMT+9')
 
     self._testGetInventory(
@@ -4041,7 +4041,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       node_uid=Y.getUid(),
       at_date = at_date,
       resource_uid=resource_value.getUid())
-      
+
     self._testGetInventory(
       expected=76,
       section_uid=A.getUid(),
@@ -4063,48 +4063,48 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       at_date = at_date,
       resource_uid=resource_value.getUid())
 
-  
+
   def test_20_InventoryWhenCancelPackingList(self, quite=0, run=run_all_test):
     """
     initial 2013/02/10 00:00:00 GMT+9:
     A warehouse X, has product: Notvariated 100
-    
+
     2013/02/11 00:00:00 GMT+9
     IPL 1: A warehouse X ----> A warehouse Y, quantity: 3
-    
+
     2013/02/11 02:00:00 GMT+9
     cancel IPL1
-    
+
     2013/02/13 04:00:00 GMT+9
     IPL 2: A warehouse X ----> A warehouse Y, quantity: 30
-    
+
     2013/02/14 04:00:00 GMT+9
     SPL 1: A warehouse X ----> B warehouse Y, quantity: 30
-    
+
     2013/02/14 05:00:00 GMT+9
     cancel IPL2
-    
+
     2013/02/11 04:00:00 GMT+9
     PPL 1: A warehouse X ----> C warehouse X, quantity: 10
-    
+
     2013/02/14 06:00:00 GMT+9
     cancel SPL1
-    
+
     2013/02/14 08:00:00 GMT+9
     Production PL: A factory Z  ---> A warehouse X, quantity: 10
-    
+
     2013/02/16 00:00:00 GMT+9
     SPL 2: A warehouse X ----> B warehouse Y, quantity: 24
-    
+
     2013/02/24 00:00:00 GMT+9
     PPL 2: B warehouse Y ----> C warehouse X, quantity: 5
-    
+
     2013/02/25 01:00:00 GMT+9
     IPL 3: A warehouse X ----> A warehouse Y, quantity: 33
 
-    2013/02/25 02:00:00 GMT+9    
+    2013/02/25 02:00:00 GMT+9
     cancel PPL 2
-    
+
     2013/02/26 00:00:00 GMT+9
     PPL 3: B warehouse Y ----> C warehouse X, quantity: 10
 
@@ -4176,8 +4176,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-  
- 
+
+
 
 def test_suite():
   suite = unittest.TestSuite()

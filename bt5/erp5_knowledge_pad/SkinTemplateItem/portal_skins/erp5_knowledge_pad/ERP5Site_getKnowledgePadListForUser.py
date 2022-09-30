@@ -9,7 +9,7 @@ elif mode == 'web_section':
   # Web Sections, Web Pages can "reuse" tabs
   filter_pad = lambda x: real_context_url in x.getPublicationSectionList() or x.getGroup() == default_pad_group
 elif mode == 'erp5_front':
-  # leave only those not having a publication_section as 
+  # leave only those not having a publication_section as
   # this means belonging to root
   filter_pad = lambda x: x.getPublicationSection() is None and x.getGroup() is None
 else:
@@ -41,7 +41,7 @@ if not results:
     # try getting default knowledge pads for user from global site preference
     user_pref = context.Base_getActiveGlobalKnowledgePadPreference()
     if user_pref is not None:
-      # use template from user's preferences 
+      # use template from user's preferences
       search(user_pref, 'public')
     if results:
       # set a REQUEST variable (this can be used in HTML views)

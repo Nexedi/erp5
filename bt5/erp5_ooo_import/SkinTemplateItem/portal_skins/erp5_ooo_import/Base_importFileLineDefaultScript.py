@@ -1,15 +1,15 @@
 #                                   Mohamadou Mbengue <mmbengue@gmail.com>
 #
-#  This is the Default script used by import module to create spreadshett line's as object 
+#  This is the Default script used by import module to create spreadshett line's as object
 #  With manager role, it's possible to use another script and add specifics changes.
-#  In this script the line to create is given as a parameter and is created in an activity 
+#  In this script the line to create is given as a parameter and is created in an activity
 #  witch returns the results of the processing (success=1 if the sstep passes or 0 if not).
-#  The result must be be of this format : 
+#  The result must be be of this format :
 #   {
 #    'message': translated_msg, ## The translated message of the active process result
 #    'object_url': new_object.getRelativeUrl(), ## The url of the object if creation is successfull
 #    'object': imported_line, ## Object propeties value's
-#    'success': success ## The result of the 
+#    'success': success ## The result of the
 #   }
 #  The script must have proxy role manager
 #####################################################################################################
@@ -43,7 +43,7 @@ else:
 
   # Get portal type objects
   base_category_list = portal_type_object.getInstanceBaseCategoryList()
-  
+
   # Separate categories from properties
   imported_line_category_dict = {}
   for prop_key in imported_line_property_dict.keys():

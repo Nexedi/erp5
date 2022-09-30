@@ -131,7 +131,7 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     # Check Gadgets
     for gadget in self.portal.portal_gadgets.searchFolder():
       self.assertEqual('public', gadget.getValidationState(),
-                        "%s is not public but %s" % (gadget.getRelativeUrl(), 
+                        "%s is not public but %s" % (gadget.getRelativeUrl(),
                                                      gadget.getValidationState()))
       gadget.Base_checkConsistency()
 
@@ -142,7 +142,7 @@ class TestMaxmaDemoConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertNotEquals(user.Person_getAvailableAssignmentValueList(), [])
     self.assertEqual(user.getTitle(), "Jack Vale")
     self.assertEqual(user.getValidationState(), "validated")
-    self.assertEqual(user.getSubordination(), 
+    self.assertEqual(user.getSubordination(),
                           'organisation_module/myorganisation')
     self.assertEqual(user.getSubordinationTitle(), "Maxma Co")
 

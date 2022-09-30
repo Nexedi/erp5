@@ -30,14 +30,14 @@ def check(node_uid, section_uid, mirror_section_uid):
          detail='%s has wrong grouping (%s)' % (context.getRelativeUrl(), total),
          result='',
          severity=100))
-         
+
   # XXX we could check this as well
   """
   max_date = max([l.date for l in line_list])
   for line in line_list:
     assert line.getGroupingDate() in (max_date, None)
   """
-  
+
 node_uid = context.getSourceUid(portal_type='Account')
 section_uid = None
 section = context.getSourceSectionValue(portal_type='Organisation')
@@ -46,7 +46,7 @@ if section is not None:
   section_uid = section.getUid()
   precision_by_section_uid[section_uid] = context.getQuantityPrecisionFromResource(
     section.getPriceCurrency())
-    
+
 mirror_section_uid = context.getDestinationSectionUid()
 
 if node_uid and section_uid:

@@ -10,7 +10,7 @@ l = []
 # function to create a new fast input line
 def createInputLine(d_message, new_id):
   int_len = 3
-  
+
   o = newTempBase( portal_object
                  , str(new_id)
                  , uid ='new_%s' % zfill(new_id, int_len)
@@ -20,13 +20,13 @@ def createInputLine(d_message, new_id):
                  ,  prevision_value = d_message.getProperty('prevision_value')
                  ,  decision_value = d_message.getProperty('decision_value')
                  , solver_script_list = d_message.getProperty('solver_script_list'))
-  
+
   l.append(o)
 
 # generate all lines for the fast input form
 for i, d_message in enumerate(divergence_messages_list):
   createInputLine(d_message, i)
-  
+
 # return the list of fast input lines
 
 return l

@@ -6,7 +6,7 @@ if selection_name is not None:
       temp_object=True,
       quantity=1.0,
       variation_category_list=reference_variation_category_list,
-      resource=context.getRelativeUrl()) 
+      resource=context.getRelativeUrl())
   aal = context.getAggregatedAmountList(tmp_context)
   result = aal.getTotalDuration()
   return result

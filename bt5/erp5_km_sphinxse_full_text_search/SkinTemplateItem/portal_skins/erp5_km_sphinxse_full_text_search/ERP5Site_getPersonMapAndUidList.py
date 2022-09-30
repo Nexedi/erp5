@@ -11,7 +11,7 @@ def getPersonMapAndUidList():
   person_list = context.portal_catalog(**kw)
   for person in person_list:
     person = person.getObject()
-    result_dict[person.getReference()] = {'title': person.getTitle(), 
+    result_dict[person.getReference()] = {'title': person.getTitle(),
                                         'path': person.getPath()}
   return result_dict
 

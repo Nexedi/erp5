@@ -15,7 +15,7 @@ if (portal.portal_membership.isAnonymousUser()):
 
   is_user_account_blocked = REQUEST.get('is_user_account_blocked', False)
   is_user_account_password_expired = REQUEST.get('is_user_account_password_expired', False)
-  
+
   if is_user_account_blocked:
     message = context.Base_translateString('Account is blocked.')
   elif is_user_account_password_expired:
@@ -33,7 +33,7 @@ else:
   # XXX How to warn user that password will expire?
   # is_user_account_password_expired_expire_date = REQUEST.get('is_user_account_password_expired_expire_date', 0)
 
-  came_from = context.WebSection_renderCameFromURITemplate(came_from)  
+  came_from = context.WebSection_renderCameFromURITemplate(came_from)
   # RESPONSE.redirect(came_from or context.getPermanentURL(context));
   RESPONSE.setHeader('Location', came_from or context.getPermanentURL(context))
   RESPONSE.setStatus(303)

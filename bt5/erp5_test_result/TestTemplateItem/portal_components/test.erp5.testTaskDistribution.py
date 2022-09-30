@@ -1,6 +1,6 @@
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import json 
+import json
 from time import sleep
 from DateTime import DateTime
 import responses
@@ -75,7 +75,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
     original_class = self.distributor.__class__
     original_scalability_class = self.scalability_distributor.__class__
     original_performance_class = self.performance_distributor.__class__
-    
+
     original_class._getTestNodeModule = self._original_getTestNodeModule
     original_class._getTestSuiteModule = self._original_getTestSuiteModule
     original_scalability_class._getTestNodeModule = self._original_getTestNodeModule
@@ -861,7 +861,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
 
     Is this really useful and used ?
     """
-    self._checkCreateTestResultAndAllowRestart()    
+    self._checkCreateTestResultAndAllowRestart()
 
   def test_09b_checkCreateTestResultAndAllowRestartWithTic(self):
     """
@@ -916,7 +916,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     check = self._checkTestSuiteAggregateList
     check([test_node_one, ["one"]],
           [test_node_two, ["two"]])
-    # first test suite is invalidated, so it should be removed from nodes, 
+    # first test suite is invalidated, so it should be removed from nodes,
     # but this should not change assignment of second test suite
     test_suite_one.invalidate()
     check([test_node_one, []],
@@ -1042,7 +1042,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.tool.TestTaskDistribution.setMaxTestSuite(10)
     self._callOptimizeAlarm()
     self.assertEqual(5, len(set(test_node.getAggregateList())))
-    self.assertEqual(set(test_node.getAggregateList()), 
+    self.assertEqual(set(test_node.getAggregateList()),
                      set([x.getRelativeUrl() for x in test_suite_list]))
 
   def test_12_checkCloudPerformanceOptimizationIsStable(self):
@@ -1062,7 +1062,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     check = self._checkTestSuiteAggregateList
     check([test_node_one, ["one", "two"]],
           [test_node_two, ["one", "two"]])
-    # first test suite is invalidated, so it should be removed from nodes, 
+    # first test suite is invalidated, so it should be removed from nodes,
     # but this should not change assignment of second test suite
     test_suite_one.invalidate()
     check([test_node_one, ["two"]],
@@ -1130,7 +1130,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     Check test node subscription.
     """
     test_node_module = self.test_node_module
-    
+
     # Generate informations for nodes to subscribe
     nodes = dict([("COMP%d-Scalability-Node_test14" %i, "COMP-%d" %i) for i in range(0,5)])
     # Subscribe nodes
@@ -1153,7 +1153,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
      - Check the master election
     """
     test_node_module = self.test_node_module
-    
+
     ## 1 (check election, classic)
     # Subscribe nodes
     self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
@@ -1178,10 +1178,10 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.assertEquals(1, len(master_test_node_list))
     # -Others test node must not be the matser
     self.assertEquals(3, len(slave_test_node_list))
-    
-    # Get the current master test node 
+
+    # Get the current master test node
     current_master_test_node_1 = master_test_node_list[0]
-    
+
     ## 2 (check election, with adding new nodes)
     # Add new nodes
     self.scalability_distributor.subscribeNode("COMP5-Scalability-Node5", computer_guid="COMP-5")
@@ -1210,12 +1210,12 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # -Others test node must not be the matser
     self.assertEquals(4, len(slave_test_node_list))
 
-    # Get the current master test node 
+    # Get the current master test node
     current_master_test_node_3 = master_test_node_list[0]
     # Master test node must be an other test node than previously
-    self.assertNotEquals(current_master_test_node_2.getTitle(), 
+    self.assertNotEquals(current_master_test_node_2.getTitle(),
                          current_master_test_node_3.getTitle())
-    
+
 
   def test_16_startTestSuiteERP5ScalabilityDistributor(self):
     """
@@ -1231,12 +1231,12 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")
     # Create test suite
     self._createTestSuite(quantity=1,priority=1, reference_correction=0,
-                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")  
+                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")
     self.tic()
     self._callOptimizeAlarm()
     # Get current master test node
     master_test_nodes = [x for x in test_node_module.searchFolder()\
-                         if (x.getMaster() == True and x.getValidationState() == "validated")]     
+                         if (x.getMaster() == True and x.getValidationState() == "validated")]
     current_master_test_node = master_test_nodes[0]
     self.tic()
     # Each node run startTestSuite
@@ -1296,7 +1296,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Optimize configuration
     self.scalability_distributor.optimizeConfiguration()
     self.tic()
-    # Get test nodes 
+    # Get test nodes
     master_test_nodes = [x for x in test_node_module.searchFolder()
                          if (x.getMaster() == True and x.getValidationState() == 'validated')]
     slave_test_nodes = [x for x in test_node_module.searchFolder()
@@ -1330,7 +1330,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
         partition_dict += ' "instance-count": {{ count }},\n'
         partition_dict += ' "family": "%s",\n' %family_name
         partition_dict += ' "computer_guid": "%s"\n' %node_list[j][0]
-        partition_dict += '}' 
+        partition_dict += '}'
         if j != i-1:
           partition_dict += ',\n'
         else:
@@ -1363,9 +1363,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
 #        break
 #    # Get configuration list generated from test suite
 ##    configuration_list = self.scalability_distributor.generateConfiguration(test_suite_title)
-#   
+#
 #    # logs
-##    log(configuration_list)    
+##    log(configuration_list)
 
   def test_19_testMultiDistributor(self):
     pass

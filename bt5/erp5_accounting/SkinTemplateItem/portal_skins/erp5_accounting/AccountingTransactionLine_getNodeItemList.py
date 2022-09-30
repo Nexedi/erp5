@@ -66,7 +66,7 @@ def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,
   if simulation_state not in ('delivered', 'stopped',
                               'cancelled', 'no_simulation_state'):
     filter_dict['validation_state'] = ('draft', 'validated')
-  
+
   item_list = cat.getCategoryMemberItemList(
                               portal_type='Account',
                               base=0,
@@ -94,8 +94,8 @@ item_list = getItemList( category=category,
                     user_name=getSecurityManager().getUser().getIdOrUserName(),
                     simulation_state=simulation_state)
 
-# make sure that the current value is included in this list, this is 
-# mostly for compatibility with old versions. XXX This is slow. 
+# make sure that the current value is included in this list, this is
+# mostly for compatibility with old versions. XXX This is slow.
 if omit_filter:
   return item_list
 

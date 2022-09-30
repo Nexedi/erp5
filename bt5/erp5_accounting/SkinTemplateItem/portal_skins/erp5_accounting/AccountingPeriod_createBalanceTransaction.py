@@ -108,12 +108,12 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
     for section in section_list:
       section_uid = section.getUid()
       balance_transaction = None
-  
+
       group_by_node_node_category_list = []
       group_by_mirror_section_node_category_list = []
       group_by_payment_node_category_list = []
       profit_and_loss_node_category_list = []
-  
+
       node_category_list = portal.portal_categories\
                   .account_type.getCategoryChildValueList()
       for node_category in node_category_list:
@@ -130,14 +130,14 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
           profit_and_loss_node_category_list.append(node_category_url)
         else:
           group_by_node_node_category_list.append(node_category_url)
-  
+
       inventory_param_dict = dict(section_uid=section_uid,
                                   simulation_state=('delivered',),
                                   precision=section_currency_precision,
                                   portal_type=portal.getPortalAccountingMovementTypeList(),
                                   at_date=at_date.latestTime(),
                                   ledger_uid=ledger_uid)
-    
+
       # Calculate the sum of profit and loss accounts balances for that period.
       # This must match the difference between assets, liability and equity accounts.
       profit_and_loss_accounts_balance = portal.portal_simulation.getInventoryAssetPrice(
@@ -148,29 +148,29 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
         node=profit_and_loss_account,
         resource=section_currency,
         **inventory_param_dict)
-  
+
       section_currency_uid = context.getParentValue().getPriceCurrencyUid()
-  
+
       profit_and_loss_quantity = 0
       line_count = 0
-  
+
       for inventory in getInventoryList(
               node_category_strict_membership=group_by_node_node_category_list,
               group_by_node=1,
               group_by_resource=1,
               **inventory_param_dict):
-  
+
         total_price = roundCurrency(inventory.total_price or 0, section_currency)
         quantity = roundCurrency(inventory.total_quantity or 0,
                                  inventory.resource_relative_url)
-  
+
         if not total_price and not quantity:
           continue
-  
+
         line_count += 1
         if inventory.resource_uid != section_currency_uid:
           profit_and_loss_quantity += total_price
-  
+
           if balance_transaction is None:
             balance_transaction = createBalanceTransaction(section, ledger_url)
           balance_transaction.newContent(
@@ -186,7 +186,7 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
             # consistency
             raise ValueError('Different price: %s != %s ' % (
                               total_price, quantity))
-  
+
           if inventory.node_relative_url != profit_and_loss_account:
             profit_and_loss_quantity += total_price
             if balance_transaction is None:
@@ -196,24 +196,24 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
               portal_type='Balance Transaction Line',
               destination=inventory.node_relative_url,
               quantity=total_price)
-  
-  
+
+
       for inventory in getInventoryList(
               node_category_strict_membership=group_by_mirror_section_node_category_list,
               group_by_node=1,
               group_by_mirror_section=1,
               group_by_resource=1,
               **inventory_param_dict):
-  
+
         total_price = roundCurrency(inventory.total_price or 0, section_currency)
         quantity = roundCurrency(inventory.total_quantity or 0,
                                  inventory.resource_relative_url)
-  
+
         if not total_price and not quantity:
           continue
         profit_and_loss_quantity += total_price
         line_count += 1
-  
+
         if inventory.resource_uid != section_currency_uid:
           if balance_transaction is None:
             balance_transaction = createBalanceTransaction(section, ledger_url)
@@ -237,25 +237,25 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
             destination=inventory.node_relative_url,
             source_section_uid=inventory.mirror_section_uid,
             quantity=total_price)
-  
-  
+
+
       for inventory in getInventoryList(
               node_category_strict_membership=group_by_payment_node_category_list,
               group_by_node=1,
               group_by_payment=1,
               group_by_resource=1,
               **inventory_param_dict):
-  
+
         total_price = roundCurrency(inventory.total_price or 0, section_currency)
         quantity = roundCurrency(inventory.total_quantity or 0,
                                  inventory.resource_relative_url)
-  
+
         if not total_price and not quantity:
           continue
         profit_and_loss_quantity += total_price
-  
+
         line_count += 1
-  
+
         if inventory.resource_uid != section_currency_uid:
           if balance_transaction is None:
             balance_transaction = createBalanceTransaction(section, ledger_url)
@@ -279,14 +279,14 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
             destination=inventory.node_relative_url,
             destination_payment_uid=inventory.payment_uid,
             quantity=total_price)
-  
+
       if balance_transaction is None:
         # we did not have any transaction for this section
-  
+
         # One possible corner case is that we have only transactions that brings
         # the balance of all balance sheets accounts to 0. In this case we want to
         # create a balance transaction that notes that the current balance of profit
-        # and loss account is 0, so that the delta gets indexed. 
+        # and loss account is 0, so that the delta gets indexed.
         if profit_and_loss_accounts_balance:
           balance_transaction = createBalanceTransaction(section, ledger_url)
           balance_transaction.newContent(
@@ -296,7 +296,7 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
           balance_transaction.stop()
           balance_transaction.deliver()
         continue
-  
+
       assert roundCurrency(profit_and_loss_accounts_balance, section_currency) == roundCurrency(
            - roundCurrency(selected_profit_and_loss_account_balance, section_currency)
            - roundCurrency(profit_and_loss_quantity, section_currency), section_currency)
@@ -310,7 +310,7 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
                   portal_type='Balance Transaction Line',
                   destination=profit_and_loss_account,
                   quantity=-profit_and_loss_quantity)
-    
+
         # and go to delivered state directly (the user is not supposed to edit this document)
         balance_transaction.stop()
         balance_transaction.deliver()

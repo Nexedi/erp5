@@ -1,5 +1,5 @@
 """
-    Reset all datas 
+    Reset all datas
 """
 module = context.getPortalObject().foo_module
 

@@ -1,10 +1,10 @@
 """
-  Update shopping cart by change items quantity and setting preferred 
+  Update shopping cart by change items quantity and setting preferred
   shipping.
 """
 
 request = context.REQUEST
-translateString = context.Base_translateString 
+translateString = context.Base_translateString
 quantity = field_my_buy_quantity
 shipping_method =  field_my_shipping_method
 shopping_cart_items = context.SaleOrder_getShoppingCartItemList(include_shipping=True)
@@ -13,7 +13,7 @@ shopping_cart = context.SaleOrder_getShoppingCart()
 
 # handle change in quantity for shopping items
 if quantity is not None:
-  # when we have one item in shoppping cart we get 
+  # when we have one item in shoppping cart we get
   # quantity as a string rather as a list
   if isinstance(quantity, str):
     quantity = [quantity]

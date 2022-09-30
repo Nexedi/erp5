@@ -1,7 +1,7 @@
 import json
 
 # Get result lines
-test_result_lines = context.objectValues(portal_type="Test Result Line", 
+test_result_lines = context.objectValues(portal_type="Test Result Line",
                                          sort_on="int_index")
 
 # Create a dict containing stats for each test
@@ -24,7 +24,7 @@ for tl in test_result_lines:
         # initial init
         if test_name not in results.keys():
           results[test_name] = []
-        results[test_name].append({'created_docs': test_documents_created,  
+        results[test_name].append({'created_docs': test_documents_created,
                                    'duration':3600})
 
 test_suite = context.getPortalObject().test_suite_module.searchFolder(title=context.getTitle())[0]
@@ -35,5 +35,5 @@ xs = map(int, test_suite.getGraphCoordinate())
 # viewer shows only one graph thus return only one test
 tests = results[test_suite_name]
 
-return json.dumps({"test": tests, 
+return json.dumps({"test": tests,
                    "xs": xs})

@@ -1,5 +1,5 @@
 """
-This script returns only the quantity unit of the resource 
+This script returns only the quantity unit of the resource
 entered on the fast input
 """
 request = context.REQUEST

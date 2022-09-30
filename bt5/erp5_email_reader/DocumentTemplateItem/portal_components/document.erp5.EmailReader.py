@@ -64,7 +64,7 @@ class MailServer(TM):
 
 class IMAPSServer(MailServer):
   """
-    Implements a transactional IMAP SSL server 
+    Implements a transactional IMAP SSL server
     connector. In case of transaction failure, connections
     are closed and logged out.
 
@@ -76,7 +76,7 @@ class IMAPSServer(MailServer):
 
   def __init__(self, host, user, password, port=993):
     """
-      Instanciate a new IMAPS server 
+      Instanciate a new IMAPS server
       and keep track of all parameters
     """
     self.host = host
@@ -142,7 +142,7 @@ class IMAPSServer(MailServer):
         LOG('server.select folder %s' % message_folder, INFO, "Count: %s" % self.message_count)
       else:
         raise ValueError(message_count[0]) # Use a better exception here XXX
-    return self.message_count 
+    return self.message_count
 
   def getMessageUIDList(self, message_folder=None):
     """
@@ -187,8 +187,8 @@ class IMAPSServer(MailServer):
 
       message_folder -- the name of the folder to ingest messages from
     """
-    self._selectMessageFolder(message_folder) 
-    response, message = self.server.uid('fetch', uid, '(RFC822)') # XXX - reponse not taken into account 
+    self._selectMessageFolder(message_folder)
+    response, message = self.server.uid('fetch', uid, '(RFC822)') # XXX - reponse not taken into account
     if response != 'OK':
       LOG('getMessageData', INFO,
                         "Unable to fetch the message with UID %s in folder %s \n"\
@@ -208,7 +208,7 @@ class IMAPSServer(MailServer):
 
 class IMAPServer(IMAPSServer):
   """
-    Implements a transactional IMAP server 
+    Implements a transactional IMAP server
     connector. In case of transaction failure, connections
     are closed and logged out.
   """
@@ -217,7 +217,7 @@ class IMAPServer(IMAPSServer):
 
 class POPSServer(MailServer):
   """
-    Implements a transactional POP SSL server 
+    Implements a transactional POP SSL server
     connector. In case of transaction failure, connections
     are closed and logged out.
   """
@@ -233,7 +233,7 @@ class EmailReader(ExternalSource):
     This class implements an IMAP reader. It crawls email
     content in specific folders (defined by the user) and:
       - invokes message processors on every message
-      
+
     Message processors can for example:
       - copy folder name as subject
       - move a message to another folder
@@ -311,7 +311,7 @@ class EmailReader(ExternalSource):
   def crawlMessageFolderList(self, message_folder_list):
     """
       Take the first folder in the message_folder_list and start
-      ingesting messages. Then postpone ingestion for the rest of 
+      ingesting messages. Then postpone ingestion for the rest of
       folders.
 
       XXX - TODO: crawl 10 folders at once
@@ -343,7 +343,7 @@ class EmailReader(ExternalSource):
     # Do not retrieve existing messages - XXX maybe there is a faster way to compute this
     # This should probably be handled within ingestMessageList and splitted among
     # activities
-    message_uid_list = filter(lambda uid: 
+    message_uid_list = filter(lambda uid:
       not self.hasContent(self.getMessageID(uid, message_folder)), message_uid_list)
     self.activate(after_tag=message_activity_tag, priority=2, activity='SQLQueue',
                   tag=list_activity_tag).ingestMessageList(message_uid_list,
@@ -365,7 +365,7 @@ class EmailReader(ExternalSource):
     """
     if not self.hasContent(self.getMessageID(uid, message_folder)):
       # Only ingest new messages (ie. messages which have not been ingested previously)
-      # XXX - double check whether this is consistent with 
+      # XXX - double check whether this is consistent with
       # IMAP (ie. read-only ?)
       message_data = self._getMailServer().getMessageData(uid, message_folder=message_folder)
       if message_data is None:
@@ -376,11 +376,11 @@ class EmailReader(ExternalSource):
       # messages
       message_id = self.getMessageID(uid, message_folder)
       file_name = '%s.eml' % message_id
-      contribution_tool.newContent(container=self, data=message_data, 
-                                   filename=file_name, id=message_id, 
+      contribution_tool.newContent(container=self, data=message_data,
+                                   filename=file_name, id=message_id,
                                    portal_type='Email Thread') # It would be good to make this implicit
       LOG('ingestMessage in folder: %s' % message_folder, INFO, str(uid))
-     
+
   security.declareProtected(Permissions.ModifyPortalContent, 'ingestMessageList')
   def ingestMessageList(self, uid_list, message_folder=None):
     """
@@ -405,7 +405,7 @@ class EmailReader(ExternalSource):
       #if not self.hasContent(self.getMessageID(uid, message_folder)):
         # Only ingest new messages
         #self.activate(activity='SQLQueue', tag=message_activity_tag,
-        #              priority=2).ingestMessage(uid, 
+        #              priority=2).ingestMessage(uid,
         #                               message_folder=message_folder)
       self.ingestMessage(uid, message_folder=message_folder)
 
@@ -415,7 +415,7 @@ class EmailReader(ExternalSource):
       # We invoke ingestMessageList once all individual messages have been ingested
       self.activate(after_tag=message_activity_tag, priority=2, activity='SQLQueue',
                     tag=list_activity_tag).ingestMessageList(
-                uid_list[self.MAX_UID_LIST_SIZE:], message_folder=message_folder)      
+                uid_list[self.MAX_UID_LIST_SIZE:], message_folder=message_folder)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'resetMessageIngestionCache')
   def resetMessageIngestionCache(self):
@@ -426,7 +426,7 @@ class EmailReader(ExternalSource):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMessageID')
   def getMessageID(self, uid, message_folder=None):
-    """ 
+    """
       Returns the ID of a message based on the UID and
       on the message_folder name
     """

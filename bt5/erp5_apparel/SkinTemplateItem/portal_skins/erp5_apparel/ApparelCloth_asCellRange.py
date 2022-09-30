@@ -6,7 +6,7 @@ selected_base_category_list = context.getVariationBaseCategoryList()
 # Generate cell range
 for base_category in selected_base_category_list:
   if matrixbox==1:
-    # XXX matrixbox is right_display (not as listfield) 
+    # XXX matrixbox is right_display (not as listfield)
     # => invert display and value in item
     cell_range.append(map(lambda x: (x[1], x[0]),
                           context.getVariationCategoryItemList(

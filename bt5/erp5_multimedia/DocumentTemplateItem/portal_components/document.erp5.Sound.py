@@ -71,7 +71,7 @@ class Sound(File):
       end = total_length
     if start is not None:
       data = data[start:end-1]
-    
+
     RESPONSE.setHeader('Content-Length', len(data))
     RESPONSE.setHeader('Content-Type', mime)
     filename = self.getStandardFilename(format=format)

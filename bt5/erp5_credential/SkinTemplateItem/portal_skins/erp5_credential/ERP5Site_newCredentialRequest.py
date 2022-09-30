@@ -11,7 +11,7 @@ category_list = portal_preferences.getPreferredSubscriptionAssignmentCategoryLis
 if not context.CredentialRequest_checkLoginAvailability(reference):
   message_str = "Selected login is already in use, please choose different one."
   return portal.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
- 
+
 credential_request = module.newContent(
                 portal_type="Credential Request",
                 first_name=first_name,
@@ -67,7 +67,7 @@ else:
     # no email verification is needed
     credential_request.submit("Automatic submit")
     message_str = "Credential Request Created."
-    
 
-return portal.Base_redirect(form_id='login_form', 
+
+return portal.Base_redirect(form_id='login_form',
                      keep_items = dict(portal_status_message=context.Base_translateString(message_str)))

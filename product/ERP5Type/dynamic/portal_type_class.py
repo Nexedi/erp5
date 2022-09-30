@@ -438,7 +438,7 @@ def synchronizeDynamicModules(context, force=False):
   with aq_method_lock:
     # bootstrap the site and perform some "critical" migrations that can not be
     # performed using upgrader, because the migrations are required to run upgrader.
-    #  
+    #
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.

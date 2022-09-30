@@ -1,7 +1,7 @@
 """
   This script is called during the metadata discovery process
   for each document which has been ingested through the email interface
-  by portal contributions. It tries to analyse the text content 
+  by portal contributions. It tries to analyse the text content
   to define the different event parameters.
 
   This version provides only early support.

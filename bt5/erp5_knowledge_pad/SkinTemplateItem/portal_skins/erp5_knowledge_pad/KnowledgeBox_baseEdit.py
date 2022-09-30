@@ -59,9 +59,9 @@ if not synchronous_mode:
 
 # determine redirect URL as passed from gadget preference form
 if gadget_redirect_url is None:
-  # taking URL1 as the base of the original URL. 
+  # taking URL1 as the base of the original URL.
   # it works for both synchronous and  asynchronous gadgets
   gadget_redirect_url = request['URL1']
 request.RESPONSE.redirect('%s?portal_status_message=%s'
-                           %(gadget_redirect_url, 
+                           %(gadget_redirect_url,
                              context.Base_translateString('Preference updated.')))

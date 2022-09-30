@@ -1416,21 +1416,21 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(list(related), [person.getRelativeUrl()])
     person._setTest1Value(a)
     self.assertEqual(list(related), [])
-    
+
   def test_Category_setCategoryValue(self):
     # Test all case of setting categories values
     region_value = self.portal.portal_categories.resolveCategory('region/europe')
     region_value2 = self.portal.portal_categories.resolveCategory('region/europe/west')
     self.assertNotEqual(None,region_value)
     self.assertNotEqual(None,region_value2)
-    
+
     newPerson = self.getPersonModule().newContent
     person = newPerson()
     person.setRegionValue(region_value)
     person2 = newPerson(region_value=region_value2)
-    
+
     self.tic()
-    
+
     self.assertEqual(person.getRegion(), 'europe')
     self.assertTrue('region/europe' in person.getCategoryList())
     self.assertEqual(person2.getRegion(), 'europe/west')

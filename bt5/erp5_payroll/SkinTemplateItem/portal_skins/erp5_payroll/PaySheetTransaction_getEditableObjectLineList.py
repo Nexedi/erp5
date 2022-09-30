@@ -38,7 +38,7 @@ for model_line in model_line_list:
 
   object_dict = {}
 
-  if cartesian_product == [[]]: 
+  if cartesian_product == [[]]:
     share_dict = {}
     continue
 

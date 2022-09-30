@@ -30,5 +30,5 @@ else:
 
 # XXX handle workflow edition here.
 
-return context.Base_redirect(form_id, 
+return context.Base_redirect(form_id,
                              keep_items={'portal_status_message': translateString("Data updated.")})

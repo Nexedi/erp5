@@ -10,7 +10,7 @@ model = context.getParentValue().getPortalType()=='Pay Sheet Model' and\
 
 def framing(cell, name):
   '''
-    this function return a string corresponding to the framing of the slice 
+    this function return a string corresponding to the framing of the slice
     with the min and max value of the cell.
     e.g. : '2682.0 <= Tranche B < 10728'
   '''
@@ -65,7 +65,7 @@ else:
       for variation in variation_list:
         # We split at the sublevel of base_application/base_amount/payroll/XXX
         base_variation = '/'.join(variation.split('/')[:4])
-        base_application_variation_dict.setdefault(base_variation, []) 
+        base_application_variation_dict.setdefault(base_variation, [])
         base_application_variation_dict[base_variation].append(variation)
 
       for v in base_application_variation_dict.values():

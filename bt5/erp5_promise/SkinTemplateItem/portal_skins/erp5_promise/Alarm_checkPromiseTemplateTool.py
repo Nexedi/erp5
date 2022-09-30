@@ -27,7 +27,7 @@ else:
   detail = ""
 
 active_result.edit(
-  summary=summary, 
+  summary=summary,
   severity=severity,
   detail=detail)
 

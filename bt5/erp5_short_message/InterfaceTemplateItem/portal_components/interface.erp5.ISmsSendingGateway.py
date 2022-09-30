@@ -35,7 +35,7 @@ class ISmsSendingGateway(Interface):
 
   def send(text, recipient, sender):
     """Send a message.
-    
+
     * text: the message as an utf-8 encoded string
     * recipient: relative URL of recipient person or organisation. Recipient must have a defaut mobile phone
     * sender: relative URL of sender person or organisation.

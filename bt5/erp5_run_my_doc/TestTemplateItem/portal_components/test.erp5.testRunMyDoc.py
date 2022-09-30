@@ -34,7 +34,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
   """
    Basic Test for internal implementation of RunMyDocs
   """
-
+  maxDiff = None
   def getTitle(self):
     return "Run My Doc"
 
@@ -141,37 +141,37 @@ class TestRunMyDoc(ERP5TypeTestCase):
       Test the script that extracts Selenium Test from HTML body.
     """
     test_page_html = """<section><h1>TITLE</h1><details>DETAILS<details>
-    <test><table class="test" style="display: none;"> <tbody> </tbody></table> </test> 
-    </section> 
+    <test><table class="test" style="display: none;"> <tbody> </tbody></table> </test>
+    </section>
     <section><h1>TITLE</h1><details>DETAILS<details><test>
       <table class="test" style="display: none;">
-        <tbody> 
-          <tr> 
-            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;</td> 
-          </tr> 
-          <tr> 
-            <td>selectAndWait</td> 
-            <td>name=select_module</td> 
-            <td>label=Test Pages</td> 
-          </tr> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br /> </td> 
-          </tr> 
-          <tr style="opacity: 1;"> 
-            <td>clickAndWait</td> 
-            <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br /> </td> 
-          </tr> </tbody></table> </test> 
-    </section> 
+        <tbody>
+          <tr>
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;</td>
+          </tr>
+          <tr>
+            <td>selectAndWait</td>
+            <td>name=select_module</td>
+            <td>label=Test Pages</td>
+          </tr>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br /> </td>
+          </tr>
+          <tr style="opacity: 1;">
+            <td>clickAndWait</td>
+            <td>css=a.fast_input &gt; span.image</td>
+            <td> <br /> </td>
+          </tr> </tbody></table> </test>
+    </section>
     <section><h1>TITLE</h1><details>DETAILS<details><test>
-      <table class="test" style="display: none;"> <tbody> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br /> </td> 
-          </tr> </tbody></table> </test> 
+      <table class="test" style="display: none;"> <tbody>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br /> </td>
+          </tr> </tbody></table> </test>
     </section>"""
 
     expected_test_html = u"""<html>
@@ -198,25 +198,25 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_password</td>
          </tr>
-        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr> 
-            <td>selectAndWait</td> 
-            <td>name=select_module</td> 
-            <td>label=Test Pages</td> 
-          </tr> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
-          <tr style="opacity: 1;"> 
-            <td>clickAndWait</td> 
-            <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br> </td> 
-          </tr> <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr>
+            <td>selectAndWait</td>
+            <td>name=select_module</td>
+            <td>label=Test Pages</td>
+          </tr>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
+          <tr style="opacity: 1;">
+            <td>clickAndWait</td>
+            <td>css=a.fast_input &gt; span.image</td>
+            <td> <br> </td>
+          </tr> <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
       </tbody>
     </table>
   </body>
@@ -270,25 +270,25 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_password</td>
          </tr>
-        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr> 
-            <td>selectAndWait</td> 
-            <td>name=select_module</td> 
-            <td>label=Test Pages</td> 
-          </tr> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
-          <tr style="opacity: 1;"> 
-            <td>clickAndWait</td> 
-            <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br> </td> 
-          </tr> <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr>
+            <td>selectAndWait</td>
+            <td>name=select_module</td>
+            <td>label=Test Pages</td>
+          </tr>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
+          <tr style="opacity: 1;">
+            <td>clickAndWait</td>
+            <td>css=a.fast_input &gt; span.image</td>
+            <td> <br> </td>
+          </tr> <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
       </tbody>
     </table>
   </body>

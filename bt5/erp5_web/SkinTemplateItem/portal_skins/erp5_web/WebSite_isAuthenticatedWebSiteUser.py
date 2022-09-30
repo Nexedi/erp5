@@ -1,4 +1,4 @@
-""" 
+"""
   Decide if current user is a Web Site User or Web Site Administrator.
   This check is typically useful for showing/hiding different
   parts of Web Site like Admin Toolbox or determining the appropriate

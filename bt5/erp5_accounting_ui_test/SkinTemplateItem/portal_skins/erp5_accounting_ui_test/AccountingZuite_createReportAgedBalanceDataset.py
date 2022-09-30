@@ -30,7 +30,7 @@ def get_object_by_title(portal_type, title):
 bank1 = get_object_by_title(portal_type='Bank Account', title='Bank1')
 if bank1 is None:
   bank1 = portal.AccountingTransactionModule_createAccountingTestDocument(
-    portal_type='Bank Account', title='Bank1', simulation_state='validated', 
+    portal_type='Bank Account', title='Bank1', simulation_state='validated',
     parent=organisation_module.my_organisation)
 
 purchase1 = portal.AccountingTransactionModule_createAccountingTestDocument(

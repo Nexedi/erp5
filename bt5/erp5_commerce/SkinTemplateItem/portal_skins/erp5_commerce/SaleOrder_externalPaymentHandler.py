@@ -1,4 +1,4 @@
-""" 
+"""
   This script is called by external payment system.
   Here you can check if payment was successfull or not.
 """

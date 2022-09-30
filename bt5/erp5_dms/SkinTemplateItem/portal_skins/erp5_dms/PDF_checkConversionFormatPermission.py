@@ -3,7 +3,7 @@
 from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
 
 if format in VALID_IMAGE_FORMAT_LIST:
-  # we do not have any data so we can allow conversion to proceed and lead to a 
+  # we do not have any data so we can allow conversion to proceed and lead to a
   # different conversion errorrather than raise Unautorized
   if not context.hasData():
     return True

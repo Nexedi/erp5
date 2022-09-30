@@ -1973,7 +1973,7 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar_period.setPeriodicityMonthList((2, ))
     group_calendar_period.setPeriodicityWeekDayList(['Friday'])
     self.assertEqual(
-        [m.getStartDate() for m in assignment.asMovementList()], 
+        [m.getStartDate() for m in assignment.asMovementList()],
         [DateTime('2003/02/28 09:00:00 UTC'),
          DateTime('2004/02/27 09:00:00 UTC'),
          DateTime('2008/02/29 09:00:00 UTC'),

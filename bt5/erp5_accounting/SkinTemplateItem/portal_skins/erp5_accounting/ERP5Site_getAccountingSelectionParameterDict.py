@@ -48,7 +48,7 @@ if section_category:
   params['section_uid'] = context.Base_getSectionUidListForSectionCategory(section_category,
                               preference.isPreferredAccountingSectionCategoryStrict())
   currency = context.Base_getCurrencyForSection(section_category)
-  # getQuantityPrecisionFromResource is defined on Base, but the portal is not 
+  # getQuantityPrecisionFromResource is defined on Base, but the portal is not
   # an instance of Base, so we call it on portal_simulation because it is
   # accessible to everyone.
   params['precision'] = context.portal_simulation\
@@ -64,7 +64,7 @@ if section_category:
               section_category=section_category, date=from_date or at_date)
   if period_start_date:
     params['period_start_date'] = period_start_date
-    
+
 # if we have a section uid, it haves priority
 section_uid = selection_params.get('section_uid', None)
 if section_uid:
@@ -77,7 +77,7 @@ if precision is not None:
   params['precision'] = precision
 
 # Some reports, such as general ledger, uses different forms with different report
-# parameters, we don't want to accidentally fill the cache with mirror_section_uid 
+# parameters, we don't want to accidentally fill the cache with mirror_section_uid
 # or payment_uid.
 if not selection_params.get('no_mirror_section_uid_cache', 0):
   mirror_section_uid = selection_params.get('mirror_section_uid', None)
@@ -88,7 +88,7 @@ if not selection_params.get('no_mirror_section_uid_cache', 0):
   if payment_uid:
     params['payment_uid'] = payment_uid
 
-# Detailed Beginning Balance, from Account Statement 
+# Detailed Beginning Balance, from Account Statement
 detailed_from_date_summary = selection_params.get('detailed_from_date_summary', None)
 if detailed_from_date_summary is not None:
   params['detailed_from_date_summary'] = detailed_from_date_summary

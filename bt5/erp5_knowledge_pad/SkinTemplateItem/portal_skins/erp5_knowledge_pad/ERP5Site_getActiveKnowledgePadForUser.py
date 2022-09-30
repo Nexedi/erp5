@@ -17,7 +17,7 @@ for knowledge_pad in visible_pads:
       # some Web Section can have a customized EXPLICILY "sticked" Pad
       return knowledge_pad, knowledge_pads
   elif not publication_section_list and not default_pad_group:
-    # ERP5 Site front gadget 
+    # ERP5 Site front gadget
     return knowledge_pad, knowledge_pads
 
 # no customized version found for this context so

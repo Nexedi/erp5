@@ -41,7 +41,7 @@ task_items.sort(key=lambda x: x['id'])
 
 
 for item in task_items:
-   
+
   if item['title'] != '':
     task = task_module.newContent( portal_type = document_type
                                      , title = item['title']
@@ -58,10 +58,10 @@ for item in task_items:
                                      , destination_section = item['destination_section']
                                      , destination = item['destination']
                                      )
-      
+
     if item['reference'] == '':
       task.setReference('T-' + str(task.getId()))
-      
+
     if item['requirement'] is not None:
       if isinstance(item['requirement'],str):
         task.setTaskLineRequirement(item['requirement'])

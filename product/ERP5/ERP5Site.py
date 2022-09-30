@@ -1735,7 +1735,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
                             'getPortalDataSinkTypeList')
   def getPortalDataSinkTypeList(self):
     """
-    Returns Data Sink types.    
+    Returns Data Sink types.
     """
     return self._getPortalGroupedTypeList('data_sink') or\
            self._getPortalConfiguration('portal_data_sink_type_list')

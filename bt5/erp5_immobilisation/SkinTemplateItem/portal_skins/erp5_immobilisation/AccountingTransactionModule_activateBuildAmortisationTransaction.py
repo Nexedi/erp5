@@ -7,7 +7,7 @@ context.accounting_module.activate(
          ).AccountingTransactionModule_buildAmortisationTransaction(item_uid_list=item_uid_list,at_date=at_date)
 
 
-url_params = make_query(form_id=form_id, 
+url_params = make_query(form_id=form_id,
                         portal_status_message=message)
 redirect_url = '%s/%s?%s' % (context.absolute_url(), form_id, url_params)
 context.REQUEST[ 'RESPONSE' ].redirect(redirect_url)

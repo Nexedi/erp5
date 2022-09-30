@@ -20,7 +20,7 @@ else:
   raise NotImplementedError('Unknown line type %s' % line_portal_type)
 
 
-# update selected uids 
+# update selected uids
 selection_tool.updateSelectionCheckedUidList(
     list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=None)
 uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)
@@ -111,6 +111,6 @@ if update_quantity:
           movement.setQuantityUnit(item.getQuantityUnit())
       quantity += item.getQuantity()
     movement.setQuantity(quantity)
-  
+
 return context.Base_redirect(form_id, keep_items=dict(
        portal_status_message=translateString('Items aggregated')))

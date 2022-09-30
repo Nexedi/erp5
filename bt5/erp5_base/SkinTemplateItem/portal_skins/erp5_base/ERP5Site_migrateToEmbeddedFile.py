@@ -1,5 +1,5 @@
 """
-  This script when triggered will migrate all embedded "File" and "Image" 
+  This script when triggered will migrate all embedded "File" and "Image"
   objects to an unified "Embedded File".
 """
 active_process = context.getPortalObject().portal_activities.newActiveProcess()

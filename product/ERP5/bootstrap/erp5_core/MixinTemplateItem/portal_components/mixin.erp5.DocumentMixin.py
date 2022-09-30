@@ -81,7 +81,7 @@ class DocumentMixin:
     if LOCK_PERMISSION_KEY in transaction_variable:
       del transaction_variable[LOCK_PERMISSION_KEY]
     return result
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getFailsafeConversion')
   def getFailsafeConversion(self, **kw):
     """

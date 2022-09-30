@@ -28,7 +28,7 @@
 
 import unittest
 
-from zope.interface.verify import verifyObject 
+from zope.interface.verify import verifyObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 

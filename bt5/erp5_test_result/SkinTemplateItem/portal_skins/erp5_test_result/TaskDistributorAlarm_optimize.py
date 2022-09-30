@@ -1,7 +1,7 @@
 from DateTime import DateTime
 now = DateTime()
 #Clean-up invalidated Test Nodes and
-# invalidate inactive ones 
+# invalidate inactive ones
 list_node = context.portal_catalog(
        portal_type="Test Node",
        )
@@ -30,7 +30,7 @@ for test_node in list_node:
 portal = context.getPortalObject()
 
 distributor_list = portal.portal_task_distribution.objectValues()
-for distributor in distributor_list: 
+for distributor in distributor_list:
   distributor.activate(tag=tag).optimizeConfiguration()
 
 context.activate(after_tag=tag).getId()

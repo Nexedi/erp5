@@ -9,7 +9,7 @@ for item in item_list:
     continue
   # Get value of the item
   item_value = item[int(not is_right_display)]
-  
+
   # Hash key from item_value
   item_split = string.split(item_value, '/')
   item_key = string.join(item_split[:split_depth] , '/' )

@@ -17,7 +17,7 @@ if len(uids):
     gadget = context.portal_catalog(uid=uid)[0]
     multiple_instances_allowed = getattr(gadget,'multiple_instances_allowed', 0)
     # check if exists already such box specialising this gadget
-    if multiple_instances_allowed or not knowledge_pad.searchFolder(portal_type = 'Knowledge Box', 
+    if multiple_instances_allowed or not knowledge_pad.searchFolder(portal_type = 'Knowledge Box',
                                       validation_state = "!=deleted",
                                       specialise_uid = uid):
       # add as user has not added this gadget already

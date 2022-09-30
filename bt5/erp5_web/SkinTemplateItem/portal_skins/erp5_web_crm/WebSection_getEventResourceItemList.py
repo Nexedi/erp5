@@ -13,8 +13,8 @@ sql_kw = {'portal_type': portal.getPortalResourceTypeList(),
 def getResourceItemList():
   return [('', '')] + [(result.getTitle(), result.getRelativeUrl()) for result in portal.portal_catalog(**sql_kw)]
 
-getResourceItemList = CachingMethod(getResourceItemList, 
-      id=(script.id, context.Localizer.get_selected_language()), 
+getResourceItemList = CachingMethod(getResourceItemList,
+      id=(script.id, context.Localizer.get_selected_language()),
       cache_factory='erp5_ui_long')
 
 return getResourceItemList()

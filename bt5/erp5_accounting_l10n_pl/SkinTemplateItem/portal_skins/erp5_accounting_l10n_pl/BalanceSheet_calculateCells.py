@@ -6,7 +6,7 @@ getCredit=context.getCredit
 # pobiera stan kont po stronie debit
 getDebit=context.getDebit
 
-# pobiera różnicę dla kont po obu stronach 
+# pobiera różnicę dla kont po obu stronach
 getBalance=context.getBalance
 
 class Bil:pass

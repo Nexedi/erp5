@@ -214,7 +214,7 @@ data_dict = {
   'source_address': getOneLineAddress(
           context.getSource() and
               context.getSourceValue().getDefaultAddressText() or '',
-          context.getSource() and 
+          context.getSource() and
               context.getSourceValue().getDefaultAddressRegionTitle() or ''),
   'source_telfax': getPhoneAndFax(context.getSource() and \
                         context.getSourceValue().getTelephoneText() or '',
@@ -237,7 +237,7 @@ data_dict = {
           and context.getSourceDecisionValue(portal_type='Organisation').getDefaultImageHeight() \
               * inch_cm_ratio or '',
   'source_decision_address':getOneLineAddress(
-          context.getSourceDecision() and 
+          context.getSourceDecision() and
               context.getSourceDecisionValue().getDefaultAddressText() or '',
           context.getSourceDecision() and \
               context.getSourceDecisionValue().getDefaultAddressRegionTitle() or ''),

@@ -12,7 +12,7 @@
 #
 # This program is Free Software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 
+# as published by the Free Software Foundation; either version
 # of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -377,7 +377,7 @@ class TestUpgrader(ERP5TypeTestCase):
     constraint_id = "PersonModulePostUpgraderConstraint"
     propery_sheet_list = person_type.getTypePropertySheetList()
     if constraint_id in propery_sheet_list:
-      propery_sheet_list.remove(constraint_id)      
+      propery_sheet_list.remove(constraint_id)
       person_type.setTypePropertySheetList(propery_sheet_list)
 
     person_module_type = types_tool["Person Module"]
@@ -595,7 +595,7 @@ class TestUpgrader(ERP5TypeTestCase):
     sequence_list.play(self)
 
   def test_upgrade_in_one_transaction(self):
-    """Check that all constraints with contraint_type equal upgrade run in the 
+    """Check that all constraints with contraint_type equal upgrade run in the
     same transaction"""
     sequence_list = SequenceList()
     sequence_string = """
@@ -637,7 +637,7 @@ class TestUpgrader(ERP5TypeTestCase):
 
   def test_post_upgrade_with_bt5_that_not_exists_in_repository(self):
     """
-      One Business Template installed that not exists in repository, 
+      One Business Template installed that not exists in repository,
       should not block checkConsistency in portal_templates
     """
     sequence_list = SequenceList()

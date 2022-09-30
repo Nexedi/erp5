@@ -41,7 +41,7 @@ if pref.owner_info()['id'] != context.REQUEST.AUTHENTICATED_USER.getId():
   cb = ptool.manage_copyObjects(['accounting_zuite_preference'])
   pasted, = ptool.manage_pasteObjects(cb)
   pref = ptool[pasted['new_id']]
-  
+
 pref.edit(preferred_accounting_transaction_at_date=None)
 pref.edit(preferred_accounting_transaction_from_date=None)
 pref.edit(preferred_account_number_method=None)

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import getToolByName 
+from Products.CMFCore.utils import getToolByName
 from Products import PluggableAuthService
 
 PluggableAuthServiceTool = PluggableAuthService.PluggableAuthService.PluggableAuthService
@@ -37,9 +37,9 @@ ZODBUserManager = PluggableAuthService.plugins.ZODBUserManager.ZODBUserManager
 
 def isLocalLoginAvailable(self, login):
   """
-  Check for login avaibility. 
+  Check for login avaibility.
   Use activated user enumeration plugin which are ERP5 or ZODB user manager
-  Returned Values : 
+  Returned Values :
   True : Login is available
   False : Login is already used
   None : No founded PluggableAuthServiceTool with id 'acl_users'

@@ -9,7 +9,7 @@ if resource is not None:
       for variation in variation_list:
         # We split at the sublevel of base_application/base_amount/payroll/XXX
         base_variation = '/'.join(variation.split('/')[:4])
-        base_application_variation_dict.setdefault(base_variation, []) 
+        base_application_variation_dict.setdefault(base_variation, [])
         base_application_variation_dict[base_variation].append(variation)
 
       for v in base_application_variation_dict.values():
