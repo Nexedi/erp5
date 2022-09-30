@@ -248,7 +248,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     def newPassword(self):
       """ Generate a password """
-      return ''.join(random.SystemRandom().sample(string.letters + string.digits, 20))
+      return ''.join(random.SystemRandom().sample(string.ascii_letters + string.digits, 20))
 
     def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
