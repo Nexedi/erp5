@@ -624,9 +624,9 @@ class TemplateTool (BaseTool):
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
-        parsed_url = urlparse(url)
+        parsed_url = urlparse(repository)
         urltype = parsed_url.scheme
-        path = parsed_url.path
+        url = parsed_url.path
         if WIN and urltype and '\\' in url:
           urltype = None
           url = repository
