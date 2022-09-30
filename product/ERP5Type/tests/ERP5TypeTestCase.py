@@ -48,7 +48,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
+from Products.ERP5Type.Utils import convertToUpperCase, bytes2str, str2bytes
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
@@ -1564,7 +1564,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent
