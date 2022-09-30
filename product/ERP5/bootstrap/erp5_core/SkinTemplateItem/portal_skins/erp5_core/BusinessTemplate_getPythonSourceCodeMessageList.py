@@ -81,8 +81,16 @@ def checkComponent(component_instance):
   code = component_instance.getTextContent()
   if six.PY2:
     code = unicode(code, 'utf8')
-  for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
-        {'code': code}))['annotations']:
+  data = {'code': code}
+  try:
+    check_result_json = portal.ERP5Site_checkPythonSourceCodeAsJSON(data)
+  except Exception:
+    # pylint sometimes raises on the first attempt at importing modules, but
+    # may succeed on the second try (probably because of incomplete cleanup
+    # of partially imported moduled). We are not interested in pylint issues,
+    # we are interested in our code's issues, so give it one more try.
+    check_result_json = portal.ERP5Site_checkPythonSourceCodeAsJSON(data)
+  for annotation in json.loads(check_result_json)['annotations']:
     annotation['component_path'] = component_relative_url
     line_list.append(
       Message(

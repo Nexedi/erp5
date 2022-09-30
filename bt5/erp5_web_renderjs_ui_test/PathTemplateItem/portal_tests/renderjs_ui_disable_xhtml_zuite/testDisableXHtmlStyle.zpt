@@ -300,7 +300,8 @@
 
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}</td>
+  <!-- Access some publicly-accessible document from a context expexted to trigger erp5_xthtml_style rendering -->
+  <td>${base_url}/portal_categories</td>
   <td></td>
 </tr>
 
