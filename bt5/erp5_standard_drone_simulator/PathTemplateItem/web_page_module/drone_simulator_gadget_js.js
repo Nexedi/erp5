@@ -6,8 +6,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function renderHeader() {
       var gadget = this,
@@ -35,7 +33,7 @@
           });
 
           return gadget.updateHeader({
-            page_title: 'Drone Simulator',
+            page_title: 'BabylonJS Canvas In Web Worker',
             page_icon: 'puzzle-piece'
           });
         });
