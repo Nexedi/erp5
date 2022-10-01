@@ -3295,6 +3295,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Tests the Title of the Template Tool."""
     self.assertEqual('Business Templates', self.getTemplateTool().Title())
 
+  def test_business_template_properties_sorted(self):
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template')
+    bt.edit(template_path_list=['b', 'c', 'a'])
+    self.assertEqual(bt.getTemplatePathList(), ['a', 'b', 'c'])
+
   def test_01_checkNewSite(self):
     """Test Check New Site"""
     sequence_list = SequenceList()

@@ -5578,185 +5578,36 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                                download=1)
       return export_string
 
-    def _getOrderedList(self, id):
+    def _edit(self, *args, **kw):
+      """Make sure UI stores list properties as sorted.
       """
-        We have to set this method because we want an
-        ordered list
-      """
-      method_id = '_baseGet%sList' % convertToUpperCase(id)
-      result = getattr(self, method_id)(())
-      if result is None: result = ()
-      if result != ():
-        result = list(result)
-        result.sort()
-        # XXX Why do we need to return a tuple ?
-        result = tuple(result)
-      return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateCatalogMethodIdList')
-    def getTemplateCatalogMethodIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_catalog_method_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateBaseCategoryList')
-    def getTemplateBaseCategoryList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_base_category')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateWorkflowIdList')
-    def getTemplateWorkflowIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_workflow_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeIdList')
-    def getTemplatePortalTypeIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeWorkflowChainList')
-    def getTemplatePortalTypeWorkflowChainList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_workflow_chain')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePathList')
-    def getTemplatePathList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_path')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePreferenceList')
-    def getTemplatePreferenceList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_preference')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeAllowedContentTypeList')
-    def getTemplatePortalTypeAllowedContentTypeList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_allowed_content_type')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeHiddenContentTypeList')
-    def getTemplatePortalTypeHiddenContentTypeList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_hidden_content_type')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypePropertySheetList')
-    def getTemplatePortalTypePropertySheetList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_property_sheet')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeBaseCategoryList')
-    def getTemplatePortalTypeBaseCategoryList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_base_category')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateActionPathList')
-    def getTemplateActionPathList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_action_path')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeRoleList')
-    def getTemplatePortalTypeRoleList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_role')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateLocalRoleList')
-    def getTemplateLocalRoleList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_local_role')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateSkinIdList')
-    def getTemplateSkinIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_skin_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRegisteredSkinSelectionList')
-    def getTemplateRegisteredSkinSelectionList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_registered_skin_selection')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRegisteredVersionPrioritySelectionList')
-    def getTemplateRegisteredVersionPrioritySelectionList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      try:
-        return self._getOrderedList('template_registered_version_priority_selection')
-      # This property may not be defined if erp5_property_sheets has not been
-      # upgraded yet
-      except AttributeError:
-        return ()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateModuleIdList')
-    def getTemplateModuleIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_module_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateMessageTranslationList')
-    def getTemplateMessageTranslationList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_message_translation')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateToolIdList')
-    def getTemplateToolIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_tool_id')
+      edit_kw = {}
+      for k, v in six.iteritems(kw):
+        if v and k in (
+          'template_action_path_list',
+          'template_base_category_list',
+          'template_catalog_method_id_list',
+          'template_local_role_list',
+          'template_message_translation_list',
+          'template_module_id_list',
+          'template_path_list',
+          'template_portal_type_allowed_content_type_list',
+          'template_portal_type_base_category_list',
+          'template_portal_type_hidden_content_type_list',
+          'template_portal_type_id_list',
+          'template_portal_type_property_sheet_list',
+          'template_portal_type_role_list',
+          'template_portal_type_workflow_chain_list',
+          'template_preference_list',
+          'template_registered_skin_selection_list',
+          'template_registered_version_priority_selection_list',
+          'template_skin_id_list',
+          'template_tool_id_list',
+          'template_workflow_id_list',
+        ):
+          v = sorted(v)
+        edit_kw[k] = v
+      return super(BusinessTemplate, self)._edit(*args, **edit_kw)
 
     def _isInKeepList(self, keep_list, path):
       for keep_path in keep_list:
