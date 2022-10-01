@@ -2494,7 +2494,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     while import_id in template_tool.objectIds():
       n = n + 1
       import_id = "%s_%s" %(import_id, n)
-    template_tool.download(url='file:'+template_path, id=import_id)
+    template_tool.download(url='file://'+template_path, id=import_id)
     import_bt = template_tool._getOb(id=import_id)
     self.assertFalse(import_bt is None)
     self.assertEqual(import_bt.getPortalType(), 'Business Template')
@@ -5052,7 +5052,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       bt.export(path=export_dir, local=True)
       self.tic()
       self.portal.portal_templates.updateBusinessTemplateFromUrl(
-          download_url='file:/%s' % export_dir)
+          download_url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
@@ -5072,7 +5072,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       bt.export(path=export_dir, local=True)
       self.tic()
       new_bt = self.portal.portal_templates.updateBusinessTemplateFromUrl(
-          download_url='file:/%s' % export_dir)
+          download_url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
@@ -6379,7 +6379,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
             [os.path.basename(f) for f in
               glob.glob('%s/%s/*' % (export_dir, template_item))])
       new_bt = self.portal.portal_templates.download(
-                        url='file:/%s' % export_dir)
+                        url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
@@ -6457,7 +6457,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       bt.export(path=export_dir, local=True)
       self.tic()
       new_bt = self.portal.portal_templates.download(
-                        url='file:/%s' % export_dir)
+                        url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
@@ -6489,7 +6489,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       bt.export(path=export_dir, local=True)
       self.tic()
       new_bt = self.portal.portal_templates.download(
-                        url='file:/%s' % export_dir)
+                        url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
@@ -6526,7 +6526,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
             [os.path.basename(f) for f in
               glob.glob('%s/ActionTemplateItem/portal_types/*' % (export_dir, ))])
       new_bt = self.portal.portal_templates.download(
-                        url='file:/%s' % export_dir)
+                        url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
@@ -6568,7 +6568,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       bt.export(path=export_dir, local=True)
       self.tic()
       new_bt = self.portal.portal_templates.download(
-                        url='file:/%s' % export_dir)
+                        url='file://%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
