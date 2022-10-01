@@ -172,15 +172,15 @@ class ZoomifyBase:
         lr_y = ul_y + self.tileSize
       else:
         lr_y = self.originalHeight
-      print "Going to open image"
+      print("Going to open image")
       imageRow = image.crop([0, ul_y, self.originalWidth, lr_y])
       saveFilename = root + str(tier) + '-' + str(row) +  ext
       if imageRow.mode != 'RGB':
         imageRow = imageRow.convert('RGB')
       imageRow.save(os.path.join(tempfile.gettempdir(), saveFilename),
                                                         'JPEG', quality=100)
-      print "os path exist : %r" % os.path.exists(os.path.join(
-                                        tempfile.gettempdir(), saveFilename))
+      print("os path exist : %r" % os.path.exists(os.path.join(
+                                        tempfile.gettempdir(), saveFilename)))
       if os.path.exists(os.path.join(tempfile.gettempdir(), saveFilename)):
         self.processRowImage(tier=tier, row=row)
       row += 1
@@ -188,7 +188,7 @@ class ZoomifyBase:
   def processRowImage(self, tier=0, row=0):
     """ for an image, create and save tiles """
 
-    print '*** processing tier: ' + str(tier) + ' row: ' + str(row)
+    print('*** processing tier: ' + str(tier) + ' row: ' + str(row))
     tierWidth, tierHeight = self._v_scaleInfo[tier]
     rowsForTier = tierHeight/self.tileSize
     if tierHeight % self.tileSize > 0:

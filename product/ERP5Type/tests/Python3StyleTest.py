@@ -96,8 +96,11 @@ class Python3StyleTest(ERP5TypeTestCase):
   def test_numliteralsFixApplied(self):
     self._testFixer('numliterals')
 
-  def test_numliteralsFixApplied(self):
+  def test_parenFixApplied(self):
     self._testFixer('paren')
+
+  def test_printFixApplied(self):
+    self._testFixer('print')
 
   def test_raiseFixApplied(self):
     self._testFixer('raise')

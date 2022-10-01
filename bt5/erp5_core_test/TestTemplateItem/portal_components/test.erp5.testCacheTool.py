@@ -227,9 +227,9 @@ return result
 
   def _cacheFactoryInstanceTest(self, my_cache, cf_name, clear_allowed):
     portal = self.portal
-    print
-    print "="*40
-    print "TESTING:", cf_name
+    print()
+    print("="*40)
+    print("TESTING:", cf_name)
 
     result = 'a short value'
     #portal.portal_caches.clearCacheFactory(cf_name)
@@ -249,12 +249,12 @@ return result
                              result=result)
     ## 1st call
     calculation_time = callCache(real_calculation=True)
-    print "\n\tCalculation time (1st call)", calculation_time
+    print("\n\tCalculation time (1st call)", calculation_time)
     self.commit()
 
     ## 2nd call - should be cached now
     calculation_time = callCache(real_calculation=False)
-    print "\n\tCalculation time (2nd call)", calculation_time
+    print("\n\tCalculation time (2nd call)", calculation_time)
     self.commit()
 
     ## OK so far let's clear cache
@@ -263,10 +263,10 @@ return result
 
       ## 1st call
       calculation_time = callCache(real_calculation=True)
-      print "\n\tCalculation time (after cache clear)", calculation_time
+      print("\n\tCalculation time (after cache clear)", calculation_time)
 
     # Test delete method on CachingMethod
-    print "\n\tCalculation time (3rd call)", calculation_time
+    print("\n\tCalculation time (3rd call)", calculation_time)
     # make sure cache id filled
     calculation_time = callCache(real_calculation=False)
 
@@ -275,7 +275,7 @@ return result
 
     # Check that result is computed
     calculation_time = callCache(real_calculation=True)
-    print "\n\tCalculation time (4th call)", calculation_time
+    print("\n\tCalculation time (4th call)", calculation_time)
     self.commit()
 
   def test_03_cachePersistentObjects(self):
@@ -296,9 +296,9 @@ return result
   def test_04_CheckConcurrentRamCacheDict(self):
     """Check that all RamCache doesn't clear the same cache_dict
     """
-    print
-    print "="*40
-    print "TESTING: Concurrent RamCache"
+    print()
+    print("="*40)
+    print("TESTING: Concurrent RamCache")
     portal = self.portal
     result = 'Something short'
 
@@ -317,7 +317,7 @@ return result
                                result=result)
     end = time.time()
     calculation_time = end-start
-    print "\n\tCalculation time (1st call)", calculation_time
+    print("\n\tCalculation time (1st call)", calculation_time)
     self.assertEqual(cached, result)
     self.commit()
 
@@ -328,7 +328,7 @@ return result
                                result=result)
     end = time.time()
     calculation_time = end-start
-    print "\n\tCalculation time (2nd call)", calculation_time
+    print("\n\tCalculation time (2nd call)", calculation_time)
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEqual(cached, result)
     self.commit()
@@ -342,7 +342,7 @@ return result
                                result=result)
     end = time.time()
     calculation_time = end-start
-    print "\n\tCalculation time (3rd call)", calculation_time
+    print("\n\tCalculation time (3rd call)", calculation_time)
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEqual(cached, result)
     self.commit()
@@ -351,9 +351,9 @@ return result
     """Check that persistent distributed Cache Plugin can handle keys
     more than 250 bytes and values more than 1024 bytes.
     """
-    print
-    print '=' * 40
-    print 'TESTING: Long Keys and Large values'
+    print()
+    print('=' * 40)
+    print('TESTING: Long Keys and Large values')
     portal = self.portal
     # import the local and clear it
     from Products.ERP5Type.CachePlugins.DistributedRamCache import\
@@ -410,7 +410,7 @@ return 'a' * 1024 * 1024 * 25
                            long_parameter=long_parameter)
     end = time.time()
     calculation_time = end-start
-    print "\n\tCalculation time (1st call)", calculation_time
+    print("\n\tCalculation time (1st call)", calculation_time)
     self.assertEqual(cached, result)
     self.commit()
 
@@ -423,7 +423,7 @@ return 'a' * 1024 * 1024 * 25
                            long_parameter=long_parameter)
     end = time.time()
     calculation_time = end-start
-    print "\n\tCalculation time (2nd call)", calculation_time
+    print("\n\tCalculation time (2nd call)", calculation_time)
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEqual(cached, result)
     self.commit()
@@ -431,37 +431,37 @@ return 'a' * 1024 * 1024 * 25
   def test_06_CheckCacheExpiration(self):
     """Check that expiracy is well handle by Cache Plugins
     """
-    print
-    print "="*40
-    print "TESTING: Cache Expiration Time"
+    print()
+    print("="*40)
+    print("TESTING: Cache Expiration Time")
 
     py_script_obj = getattr(self.portal, self.python_script_id)
 
     cache_factory_list = ('ram_cache_factory', 'distributed_ram_cache_factory',
                           'distributed_persistent_cache_factory')
     for cache_factory in cache_factory_list:
-      print '\n\t==> %s' % cache_factory
+      print('\n\t==> %s' % cache_factory)
       my_cache = CachingMethod(py_script_obj,
                                'py_script_obj',
                                cache_factory=cache_factory)
 
       # First call, fill the cache
       calculation_time = self._callCache(my_cache, real_calculation=True)
-      print "\n\tCalculation time (1st call)", calculation_time
+      print("\n\tCalculation time (1st call)", calculation_time)
 
       ## 2nd call - should be cached now
       calculation_time = self._callCache(my_cache, real_calculation=False)
-      print "\n\tCalculation time (2nd call)", calculation_time
+      print("\n\tCalculation time (2nd call)", calculation_time)
 
       # Wait expiration period then check that value is computed
       # .1 is an additional epsilon delay to work around time precision issues
       time_left_to_wait = .1 + self.cache_duration
-      print "\n\tSleep %.2f seconds to wait expiration time" % time_left_to_wait
+      print("\n\tSleep %.2f seconds to wait expiration time" % time_left_to_wait)
       time.sleep(time_left_to_wait)
 
       # Call conversion for ram_cache_factory
       calculation_time = self._callCache(my_cache, real_calculation=True)
-      print "\n\tCalculation time (3rd call)", calculation_time
+      print("\n\tCalculation time (3rd call)", calculation_time)
 
   def test_06_CheckCacheBag(self):
     """

@@ -15,6 +15,6 @@ if recipient_list:
                                            mail_from='nobody@svn.erp5.org',
                                            include_link=include_link,
                                            include_diff=True)
-  print 'Successfully sent to: ', recipient_list
-print 'OK'
+  print('Successfully sent to: ', recipient_list)
+print('OK')
 return printed

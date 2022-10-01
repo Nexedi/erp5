@@ -304,8 +304,8 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       after_time = time()
       amount_of_time = after_time - before_time
       min_time, max_time = self._getMinMaxTime(target)
-      print "\n%s took %.4f (%.4f < %.4f < %.4f)" \
-              % (target, amount_of_time, min_time, amount_of_time, max_time)
+      print("\n%s took %.4f (%.4f < %.4f < %.4f)" \
+              % (target, amount_of_time, min_time, amount_of_time, max_time))
       # Reset the target to make sure that the same target is not
       # measured again.
       sequence.edit(measure_target=None)
@@ -792,13 +792,13 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     if measurable:
       result = sequence.get('result')
       if result:
-        print ''
+        print('')
         failure_list = []
         for target, min_time, real_time, max_time in result:
           condition = (min_time < real_time < max_time)
-          print '%s%s: %.4f < %.4f < %.4f' \
+          print('%s%s: %.4f < %.4f < %.4f' \
                   % (condition and ' ' or '!',
-                          target, min_time, real_time, max_time)
+                          target, min_time, real_time, max_time))
           if not condition:
             failure_list.append(target)
         self.assertTrue(not failure_list,

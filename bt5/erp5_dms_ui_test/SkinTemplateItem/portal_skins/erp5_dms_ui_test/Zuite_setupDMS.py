@@ -42,5 +42,5 @@ tiolive_logo_image = context.portal_catalog.getResultValue(
 if tiolive_logo_image is not None and tiolive_logo_image.getValidationState() == 'published':
   tiolive_logo_image.reject()
 
-print "Done"
+print("Done")
 return printed

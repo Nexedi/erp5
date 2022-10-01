@@ -24,5 +24,5 @@ for candidate in candidate_list:
     obj.reindexObject()
     reindex_count += 1
 
-print('%s object reindexed, %s object unindexed' % (reindex_count, unindex_count))
+print(('%s object reindexed, %s object unindexed' % (reindex_count, unindex_count)))
 return printed

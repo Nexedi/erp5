@@ -238,10 +238,10 @@ class WechatService(XMLObject):
               </xml>
               '''
         else:
-          print(u"{0}:{1}".format(params.get("err_code"), params.get("err_code_des")))
+          print((u"{0}:{1}".format(params.get("err_code"), params.get("err_code_des"))))
     else:
       # Error information
-      print(params.get("return_msg").encode("utf-8"))
+      print((params.get("return_msg").encode("utf-8")))
 
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""

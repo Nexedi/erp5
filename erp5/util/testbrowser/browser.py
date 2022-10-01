@@ -96,14 +96,14 @@ def measurementMetaClass(prefix):
         @type method: function
         """
         wrapper_method = timeInSecondDecorator(method)
-        wrapper_method.func_name = method.func_name
+        wrapper_method.__name__ = method.__name__
         wrapper_method.__doc__ = method.__doc__
 
         # In order to avoid re-wrapping the method when looking at the bases
         # for example
         wrapper_method.__is_wrapper__ = True
 
-        dictionary[method.func_name] = wrapper_method
+        dictionary[method.__name__] = wrapper_method
 
       # Only wrap methods prefixed by the given prefix
       for attribute_name, attribute in dictionary.items():
