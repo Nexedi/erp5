@@ -99,9 +99,11 @@ type_information.addAction(
 # Associate the dialog with type information in business template meta data
 if context.getPortalType() == 'Business Template' and \
      context.getInstallationState() != 'installed':
-  context.setTemplateActionPathList(context.getTemplateActionPathList() +
+  context.setTemplateActionPathList(
+    sorted(
+      tuple(context.getTemplateActionPathList()) +
       ('%s | %s' % (portal_type, action_id),
-       '%s | %s' % (portal_type, action_id.replace('_report', '_export')), ))
+       '%s | %s' % (portal_type, action_id.replace('_report', '_export')))))
 
 # Create the report
 skin_folder.manage_addProduct['ERP5Form'].addERP5Report(report_form_name, report_name)
