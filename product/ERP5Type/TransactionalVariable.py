@@ -70,7 +70,7 @@ class TransactionalVariable(dict):
   _unregistered = True
 
   def sortKey(self):
-    return chr(0)
+    return ''
 
   commit = tpc_vote = tpc_begin = tpc_abort = lambda self, transaction: None
 
