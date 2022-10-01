@@ -94,14 +94,14 @@ class SFTPConnection:
         raise SFTPError("No password or private_key defined")
       # Connect
       self.conn = SFTPClient.from_transport(self.transport)
-    except (gaierror, error), msg:
+    except (gaierror, error) as msg:
       raise SFTPError(str(msg) + ' while establishing connection to %s' % (self.url,))
     # Go to specified directory
     try:
       schema.path.rstrip('/')
       if len(schema.path):
         self.conn.chdir(schema.path)
-    except IOError, msg:
+    except IOError as msg:
       raise SFTPError(str(msg) + ' while changing to dir -%r-' % (schema.path,))
     return self
 
@@ -113,7 +113,7 @@ class SFTPConnection:
     serialized_data = Binary(str(data))
     try:
       self.conn.putfo(StringIO(str(serialized_data)), filepath, confirm=confirm)
-    except error, msg:
+    except error as msg:
       raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path))
 
   def _getFile(self, filepath):
@@ -125,7 +125,7 @@ class SFTPConnection:
       tmp_file = self.conn.file(filepath, 'rb')
       tmp_file.seek(0)
       return tmp_file.read()
-    except error, msg:
+    except error as msg:
       raise SFTPError(str(msg) + ' while retrieving file %s from %s' % (filepath, self.url))
 
   def readBinaryFile(self, filepath):
@@ -149,7 +149,7 @@ class SFTPConnection:
       if sort_on:
         return [x.filename for x in sorted(self.conn.listdir_attr(path), key=operator.attrgetter(sort_on))]
       return self.conn.listdir(path)
-    except (EOFError, error), msg:
+    except (EOFError, error) as msg:
       raise SFTPError(str(msg) + ' while trying to list %s on %s' % (path, self.url))
 
   def getDirectoryFileList(self, path):
@@ -160,14 +160,14 @@ class SFTPConnection:
     """Delete the file"""
     try:
       self.conn.unlink(filepath)
-    except error, msg:
+    except error as msg:
       raise SFTPError(str(msg) + 'while trying to delete %s on %s' % (filepath, self.url))
 
   def renameFile(self, old_path, new_path):
     """Rename a file"""
     try:
       self.conn.rename(old_path, new_path)
-    except error, msg:
+    except error as msg:
       raise SFTPError('%s while trying to rename "%s" to "%s" on %s.' % \
                      (str(msg), old_path, new_path, self.url))
 

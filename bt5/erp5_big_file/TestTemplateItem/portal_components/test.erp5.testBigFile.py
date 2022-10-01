@@ -296,7 +296,7 @@ class TestBigFile(ERP5TypeTestCase):
     # NOTE this change is automatically reverted back in calling helper
     self.assertIsInstance(f._baseGetData._default, str)
     self.assertEqual(f._baseGetData._default, '')
-    f._baseGetData.im_func._default = None  # NOTE not possible to do on just f._baseGetData
+    f._baseGetData.__func__._default = None  # NOTE not possible to do on just f._baseGetData
     self.assertIs(f._baseGetData._default, None)
     self.assertIs(f._baseGetData(), None)   # <- oops
 
@@ -330,7 +330,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(_, '')
 
     # NOTE obtaining getter is not possible via BigFile._baseGetData
-    g = f._baseGetData.im_func
+    g = f._baseGetData.__func__
     self.assertIsInstance(g._default, str)
     self.assertEqual(g._default, '')
 

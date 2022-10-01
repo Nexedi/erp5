@@ -330,7 +330,7 @@ class EmailReader(ExternalSource):
     # This is very sequential and could be improved probably
     try:
       message_uid_list = self._getMailServer().getMessageUIDList(message_folder=message_folder)
-    except ValueError, error_message:  # Use a better exception here XXX
+    except ValueError as error_message:  # Use a better exception here XXX
       message_uid_list = []
     # Reduce list size based on asumption of growing sequence of uids
     latest_uid = self._latest_uid.get(message_folder, 0)

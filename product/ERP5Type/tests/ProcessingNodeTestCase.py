@@ -75,7 +75,7 @@ def patchActivityTool():
     def __init__(self, ob):
       self._ob = ob
     def __getattr__(self, attr):
-      m = getattr(self._ob, attr).im_func
+      m = getattr(self._ob, attr).__func__
       return lambda *args, **kw: m(self, *args, **kw)
   @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):

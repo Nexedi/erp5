@@ -78,11 +78,17 @@ class Python3StyleTest(ERP5TypeTestCase):
   def test_applyFixApplied(self):
     self._testFixer('apply')
 
+  def test_exceptFixApplied(self):
+    self._testFixer('except')
+
   def test_hasKeyFixApplied(self):
     self._testFixer('has_key')
 
   def test_importFixApplied(self):
     self._testFixer('import')
+
+  def test_methodattrsFixApplied(self):
+    self._testFixer('methodattrs')
 
   def test_numliteralsFixApplied(self):
     self._testFixer('numliterals')

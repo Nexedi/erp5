@@ -55,10 +55,7 @@ from Products.ERP5 import _dtmldir
 from six.moves import xrange
 from six.moves import cStringIO as StringIO
 from six.moves.urllib.request import pathname2url, urlopen, urlretrieve
-try:
-  from urllib import splittype
-except ImportError: # six.PY3
-  from urllib.parse import splittype
+from six.moves.urllib.parse import urlparse
 from six.moves import urllib
 import re
 from xml.dom.minidom import parse
@@ -385,7 +382,9 @@ class TemplateTool (BaseTool):
       if id is None:
         id = self.generateNewId()
 
-      urltype, path = splittype(url)
+      parsed_url = urlparse(url)
+      urltype = parsed_url.scheme
+      path = parsed_url.path
       if WIN and urltype and '\\' in path:
         urltype = None
         path = url
@@ -625,7 +624,9 @@ class TemplateTool (BaseTool):
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
-        urltype, url = splittype(repository)
+        parsed_url = urlparse(repository)
+        urltype = parsed_url.scheme
+        url = parsed_url.path
         if WIN and urltype and '\\' in url:
           urltype = None
           url = repository

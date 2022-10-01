@@ -985,7 +985,7 @@ class TestInvoiceMixin(TestPackingListMixin):
     """
     try:
       self.tic()
-    except RuntimeError, exc:
+    except RuntimeError as exc:
       invoice = sequence.get('invoice')
       # check which activities are failing
       self.assertTrue(str(exc).startswith('tic is looping forever.'),

@@ -27,11 +27,13 @@
 #
 ##############################################################################
 
+import binascii
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Node import Node
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from erp5.component.mixin.ERP5UserMixin import ERP5UserMixin
@@ -143,9 +145,9 @@ class Person(EncryptedPasswordMixin, Node, LoginAccountProviderMixin, ERP5UserMi
     # Encode reference to hex to prevent uppercase/lowercase conflict in
     # activity table (when calling countMessageWithTag)
     if user_id:
-      tag = 'set_userid_' + user_id.encode('hex')
+      tag = 'set_userid_' + bytes2str(binascii.hexlify(str2bytes(user_id)))
     else:
-      tag = 'set_login_' + login.encode('hex')
+      tag = 'set_userid_' + bytes2str(binascii.hexlify(str2bytes(login)))
     # Check that there no existing user
     acl_users = getattr(self, 'acl_users', None)
     if PluggableAuthService is not None and isinstance(acl_users,

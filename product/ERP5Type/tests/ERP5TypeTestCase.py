@@ -64,7 +64,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
@@ -251,7 +251,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     def newPassword(self):
       """ Generate a password """
-      return ''.join(random.SystemRandom().sample(string.letters + string.digits, 20))
+      return ''.join(random.SystemRandom().sample(string.ascii_letters + string.digits, 20))
 
     def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
@@ -596,17 +596,18 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
 
       def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
-        if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
+        parsed_url = six.moves.urllib.parse.urlparse(path + '/' + template)
+        if parsed_url.scheme == 'http':
+          user = parsed_url.username
+          password = parsed_url.password
+          host = parsed_url.hostname
+          selector = parsed_url.path
+          h = http_client.HTTP(host)
           h.putrequest('HEAD', selector)
           h.putheader('Host', host)
-          if user_passwd:
+          if user and passwd:
             h.putheader('Authorization',
-                        'Basic %s' % base64.b64encode(user_passwd).strip())
+                        'Basic %s' % base64.b64encode(str2bytes('%s:%s' % (user, passwd))).strip())
           h.endheaders()
           errcode, errmsg, headers = h.getreply()
           if errcode == 200:
@@ -1354,7 +1355,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               sql = kw.get('erp5_sql_connection_string')
               if sql:
                 app[portal_name]._setProperty('erp5_site_global_id',
-                                              base64.standard_b64encode(sql))
+                                              base64.standard_b64encode(str2bytes(sql)))
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks

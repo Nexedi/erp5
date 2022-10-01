@@ -536,7 +536,7 @@ class TestCommerce(ERP5TypeTestCase):
     id_string = self.getPortal().Base_generateSessionID()
     self.assertEqual(10, len(id_string))
     for caracter in id_string:
-      self.assertTrue(caracter in string.letters)
+      self.assertTrue(caracter in string.ascii_letters)
 
     id_string = self.getPortal().Base_generateSessionID(max_long=20)
     self.assertEqual(20, len(id_string))

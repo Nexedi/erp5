@@ -184,7 +184,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     # Call the method
     try:
       url, xml = callRequest(self, method_name, *args, **kw)
-    except ConnectionError, msg:
+    except ConnectionError as msg:
       if test_mode:
         error = msg
         url = connection.url

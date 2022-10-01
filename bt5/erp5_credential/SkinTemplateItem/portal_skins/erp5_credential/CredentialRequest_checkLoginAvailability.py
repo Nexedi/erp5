@@ -2,14 +2,16 @@
 Parameters:
 value -- field value (string)
 REQUEST -- standard REQUEST variable"""
+import binascii
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 portal = context.getPortalObject()
 
 if value:
   # Same tag is used as in ERP5 Login _setReference, in order to protect against
   # concurrency between Credential Request and ERP5 Login object too
   #
-  # XXX: value.encode('hex') may exceed 'tag' column length (255)...
-  if context.getPortalObject().portal_activities.countMessageWithTag('set_login_' + value.encode('hex')):
+  # XXX: hex encoded value may exceed 'tag' column length (255)...
+  if context.getPortalObject().portal_activities.countMessageWithTag('set_login_' + bytes2str(binascii.hexlify(str2bytes(value)))):
     return False
 
 def getRealContext():
