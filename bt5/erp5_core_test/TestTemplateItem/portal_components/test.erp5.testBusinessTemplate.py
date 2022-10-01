@@ -3300,6 +3300,10 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         portal_type='Business Template')
     bt.edit(template_path_list=['b', 'c', 'a'])
     self.assertEqual(bt.getTemplatePathList(), ['a', 'b', 'c'])
+    bt.edit(template_keep_workflow_path_list=['b', 'c', 'a'])
+    self.assertEqual(bt.getTemplateKeepWorkflowPathList(), ['a', 'b', 'c'])
+    bt.edit(template_keep_last_workflow_history_only_path_list=['b', 'c', 'a'])
+    self.assertEqual(bt.getTemplateKeepLastWorkflowHistoryOnlyPathList(), ['a', 'b', 'c'])
 
   def test_01_checkNewSite(self):
     """Test Check New Site"""
