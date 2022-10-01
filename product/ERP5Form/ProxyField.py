@@ -68,7 +68,7 @@ class WidgetDelegatedMethod(Method):
       try:
         return proxied_method(field, *args, **kw)
       finally:
-        self.func_code = getattr(proxied_method, 'func_code', None)
+        self.__code__ = getattr(proxied_method, 'func_code', None)
     return self._default
 
 

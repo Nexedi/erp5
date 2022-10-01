@@ -69,7 +69,7 @@ def request_function(method_name):
       environ = {}
     environ.setdefault('REQUEST_METHOD', method_name)
     return makerequest(environ, stdin)
-  method_func.func_name = method_name
+  method_func.__name__ = method_name
   return method_func
 
 # requests

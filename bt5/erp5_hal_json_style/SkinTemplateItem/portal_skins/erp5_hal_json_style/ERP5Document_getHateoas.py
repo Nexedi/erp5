@@ -250,7 +250,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
     func_param_list = func.func_args
     if len(func_param_list) > 0 and func_param_list[0] == "self":
       func_param_list = func_param_list[1:]
-    func_default_list = func.func_defaults
+    func_default_list = func.__defaults__
     func_param_list = [(func_param, func_default_list[i]) if len(func_default_list) >= (i + 1) else (func_param, )
                         for i, func_param in enumerate(func_param_list)]
 

@@ -82,7 +82,7 @@ class _(PatchClass(ExternalMethod)):
                 return _f
         except AttributeError:
             pass
-        code = f.func_code
+        code = f.__code__
         argument_object = getargs(code)
         # reconstruct back the original names
         arg_list = argument_object.args[:]
@@ -97,7 +97,7 @@ class _(PatchClass(ExternalMethod)):
         i += has_self
         if i:
             code = FuncCode(ff, i)
-        self._v_f = _f = (f, f.func_defaults, code, has_self, arg_list)
+        self._v_f = _f = (f, f.__defaults__, code, has_self, arg_list)
         return _f
 
     def __call__(self, *args, **kw):

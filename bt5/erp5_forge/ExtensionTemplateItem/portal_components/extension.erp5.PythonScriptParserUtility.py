@@ -6,16 +6,16 @@ import compiler.visitor
 class Visitor(compiler.visitor.ASTVisitor):
 
   def __init__(self, func_name):
-    self.func_name = func_name
+    self.__name__ = func_name
     compiler.visitor.ASTVisitor.__init__(self)
     self.result = []
 
   def visitCallFunc(self, node, *args):
     if ((isinstance(node.node, compiler.ast.Name) and
-         node.node.name==self.func_name)
+         node.node.name==self.__name__)
         or
         (isinstance(node.node, compiler.ast.Getattr) and
-         node.node.attrname==self.func_name)
+         node.node.attrname==self.__name__)
         ):
       arg = node.args[0]
       value = None

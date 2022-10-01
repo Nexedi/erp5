@@ -1622,9 +1622,9 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   # Python Scripts are exported without those 2 attributes:
-  PythonScript.func_code = lazy_func_prop('func_code', None)
+  PythonScript.__code__ = lazy_func_prop('func_code', None)
   PythonScript.__code__ = lazy_func_prop('__code__', None)
-  PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
+  PythonScript.__defaults__ = lazy_func_prop('func_defaults', None)
   PythonScript.__defaults__ = lazy_func_prop('__defaults__', None)
 
   def _compile(self):
@@ -1636,7 +1636,7 @@ def optimize():
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    self.func_code # trigger compilation if needed
+    self.__code__ # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent

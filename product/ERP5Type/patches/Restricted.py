@@ -237,7 +237,7 @@ from AccessControl.ZopeGuards import _dict_white_list
 # (closure) directly to ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+full_write_guard.__closure__[1].cell_contents.__self__[defaultdict] = True
 
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
@@ -467,7 +467,7 @@ allow_type(type(np.dtype('int16')))
 # (and pandas DataFrame below).
 
 from RestrictedPython.Guards import full_write_guard
-safetype = full_write_guard.func_closure[1].cell_contents.__self__
+safetype = full_write_guard.__closure__[1].cell_contents.__self__
 safetype.update(dict.fromkeys((
   np.ndarray,
   np.core.records.recarray,
