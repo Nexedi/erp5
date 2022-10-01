@@ -41,7 +41,7 @@ credential_request = module.newContent(
 credential_request.setCategoryList(category_list)
 # Same tag is used as in ERP5 Login._setReference, in order to protect against
 # concurrency between Credential Request and Person object too
-tag = 'set_login_%s' % bytes2str(binascii.hexlify(str2bytes2(reference)))
+tag = 'set_login_%s' % bytes2str(binascii.hexlify(str2bytes(reference)))
 credential_request.reindexObject(activate_kw={'tag': tag})
 
 #We attach the current user to the credential request if not anonymous

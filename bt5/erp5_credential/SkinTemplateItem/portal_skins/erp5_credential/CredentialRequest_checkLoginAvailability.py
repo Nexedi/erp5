@@ -11,7 +11,7 @@ if value:
   # concurrency between Credential Request and ERP5 Login object too
   #
   # XXX: hex encoded value may exceed 'tag' column length (255)...
-  if context.getPortalObject().portal_activities.countMessageWithTag('set_login_' + bytes2str(binascii.hexlify(str2bytes2(value)))):
+  if context.getPortalObject().portal_activities.countMessageWithTag('set_login_' + bytes2str(binascii.hexlify(str2bytes(value)))):
     return False
 
 def getRealContext():
