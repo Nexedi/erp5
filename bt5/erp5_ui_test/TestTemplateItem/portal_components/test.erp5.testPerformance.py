@@ -219,8 +219,8 @@ class TestPerformance(TestPerformanceMixin):
       bar.Bar_viewPerformance()
     after_view = time()
     req_time = (after_view - before_view)/100.
-    print "%s time to view object form %.4f < %.4f < %.4f\n" % \
-            (prefix, min_, req_time, max_)
+    print("%s time to view object form %.4f < %.4f < %.4f\n" % \
+            (prefix, min_, req_time, max_))
     if PROFILE:
       self.profile(bar.Bar_viewPerformance)
     if DO_TEST:
@@ -291,10 +291,10 @@ class TestPerformance(TestPerformanceMixin):
       add_value = add_result[key]
       min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
       max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
-      print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
-      print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
-      print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
-      print
+      print("nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
+      print("\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC))
+      print("\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view))
+      print()
       i += 1
     # then check results
     if DO_TEST:
@@ -337,10 +337,10 @@ class TestPerformance(TestPerformanceMixin):
     after_view = time()
     req_time = (after_view - before_view)/100.
 
-    print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
+    print("time to view proxyfield form %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_PROXYFIELD_VIEW,
                 req_time,
-                MAX_OBJECT_PROXYFIELD_VIEW )
+                MAX_OBJECT_PROXYFIELD_VIEW ))
     if PROFILE:
       self.profile(foo.Foo_viewProxyField)
     if DO_TEST:
@@ -368,10 +368,10 @@ class TestPerformance(TestPerformanceMixin):
     after_view = time()
     req_time = (after_view - before_view)/100.
 
-    print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
+    print("time to view object form with many lines %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_MANY_LINES_VIEW,
                 req_time,
-                MAX_OBJECT_MANY_LINES_VIEW )
+                MAX_OBJECT_MANY_LINES_VIEW ))
     if PROFILE:
       self.profile(foo.Foo_viewPerformance)
     if DO_TEST:
@@ -407,12 +407,12 @@ class TestPropertyPerformance(TestPerformanceMixin):
       after = time()
       total_time = (after - before) / 100.
 
-      print ("time %s.%s %.4f < %.4f < %.4f\n" % \
+      print(("time %s.%s %.4f < %.4f < %.4f\n" % \
               ( self.id(),
                 f.__doc__ or f.__name__,
                 min_time,
                 total_time,
-                max_time ))
+                max_time )))
       if PROFILE:
         self.profile(f, args=(i, ))
       if DO_TEST:

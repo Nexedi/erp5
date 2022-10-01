@@ -37,16 +37,16 @@ document_list = portal.portal_catalog(
 
 path_list = [software_product_rurl]
 
-print "    Processing File List \r===============================\r"
+print("    Processing File List \r===============================\r")
 for document_brain in document_list:
   document = document_brain.getObject()
   if document.getFollowUp():
     continue
-  print document.getId()
+  print(document.getId())
   new_document = document.Base_createCloneDocument(batch_mode=True)
   new_id = base_id + new_document.getReference().replace('.', '_')
   if new_id in new_document.getParentValue():
-    print "  deleting %s" % new_id
+    print("  deleting %s" % new_id)
     new_document.getParentValue().manage_delObjects([new_id])
   new_document.setId(new_id)
   path_list.append(new_document.getRelativeUrl())
@@ -54,8 +54,8 @@ for document_brain in document_list:
   # new_document.setVersion(base_id + "dev")
   new_document.setFollowUp(software_product_rurl)
 
-print "\r\r    Here is your path list\r===============================\r\r"
-print '\r'.join(path_list)
-print "\r\r===============================\r\r"
-print "    Done"
+print("\r\r    Here is your path list\r===============================\r\r")
+print('\r'.join(path_list))
+print("\r\r===============================\r\r")
+print("    Done")
 return printed

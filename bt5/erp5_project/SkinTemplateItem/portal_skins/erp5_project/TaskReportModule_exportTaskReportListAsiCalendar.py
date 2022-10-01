@@ -24,7 +24,7 @@ def foldContent(s):
   return s
 
 def printTask(task) :
-  print """BEGIN:VTODO
+  print("""BEGIN:VTODO
 DCREATED:%(creation_date)s
 UID:%(uid)s
 SEQUENCE:1
@@ -38,31 +38,31 @@ PRIORITY:%(priority)s""" % ( {
         'modification_date': formatDate(task.getModificationDate()),
         'status': task.getSimulationState() == 'delivered' and 'COMPLETED' or 'NEEDS_ACTION',
         'priority': task.getProperty('int_index', 3),
-  } )
+  } ))
   if task.hasComment():
-    print "DESCRIPTION:" + foldContent(task.getComment())
+    print("DESCRIPTION:" + foldContent(task.getComment()))
   if task.hasStartDate():
-    print "DTSTART;VALUE=DATE:" + formatDate(task.getStartDate())
+    print("DTSTART;VALUE=DATE:" + formatDate(task.getStartDate()))
   if task.hasStopDate():
-    print "DUE;VALUE=DATE:" + formatDate(task.getStopDate())
+    print("DUE;VALUE=DATE:" + formatDate(task.getStopDate()))
   organizer = task.getDestinationValue(portal_type='Person')
   if organizer:
-    print "ORGANIZER;CN=%s:MAILTO:%s" % (organizer.getTitle(), organizer.getDefaultEmailText())
-    print "X-ORGANIZER:MAILTO:%s" % (organizer.getDefaultEmailText())
+    print("ORGANIZER;CN=%s:MAILTO:%s" % (organizer.getTitle(), organizer.getDefaultEmailText()))
+    print("X-ORGANIZER:MAILTO:%s" % (organizer.getDefaultEmailText()))
   for attendee in task.getSourceValueList( portal_type = 'Person') :
-    print "ATTENDEE;CN=%s:MAILTO:%s" % (attendee.getTitle(), attendee.getDefaultEmailText())
-  print "ATTACH;FMTTYPE=text/html:%s/%s/view" % (context.ERP5Site_getAbsoluteUrl(), task.getRelativeUrl())
+    print("ATTENDEE;CN=%s:MAILTO:%s" % (attendee.getTitle(), attendee.getDefaultEmailText()))
+  print("ATTACH;FMTTYPE=text/html:%s/%s/view" % (context.ERP5Site_getAbsoluteUrl(), task.getRelativeUrl()))
 
-  print "END:VTODO"
+  print("END:VTODO")
   return printed
 
-print """BEGIN:VCALENDAR
+print("""BEGIN:VCALENDAR
 PRODID:-//ERP5//NONSGML Task Report Module//EN
-VERSION:2.0"""
+VERSION:2.0""")
 obj_list = context.getPortalObject().portal_selections.callSelectionFor("task_report_module_selection")
 for obj in obj_list :
-  print printTask(obj.getObject())
-print "END:VCALENDAR"
+  print(printTask(obj.getObject()))
+print("END:VCALENDAR")
 
 context.REQUEST.RESPONSE.setHeader('Content-Type', 'text/calendar')
 context.REQUEST.RESPONSE.setHeader('Content-disposition',  'attachment; filename=ERP5.ics')

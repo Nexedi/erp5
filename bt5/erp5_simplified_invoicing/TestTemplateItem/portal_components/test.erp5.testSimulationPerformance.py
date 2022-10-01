@@ -57,7 +57,7 @@ class TestSimulationPerformance(TestTradeModelLineSale):
     self.test_01_OrderWithSimpleTaxedAndDiscountedLines()
     self.__class__._order = self['order'].getRelativeUrl()
     self.runAlarms()
-    print "\n%s pystones/second" % pystone.pystones()[1]
+    print("\n%s pystones/second" % pystone.pystones()[1])
 
   def perf_01_invoiceSimpleOrder(self, order_count=1):
     start = time()
@@ -118,8 +118,8 @@ class TestSimulationPerformance(TestTradeModelLineSale):
 
     self.runAlarms()
     end = time()
-    print "\n%s took %.4gs (%s order(s))" % (self._testMethodName,
-                                             end - start, order_count)
+    print("\n%s took %.4gs (%s order(s))" % (self._testMethodName,
+                                             end - start, order_count))
 
   def perf_02_invoiceManySimpleOrders(self):
     self.perf_01_invoiceSimpleOrder(10)

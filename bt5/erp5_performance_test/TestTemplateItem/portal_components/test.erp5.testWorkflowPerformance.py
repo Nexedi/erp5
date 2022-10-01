@@ -72,10 +72,10 @@ class TestWorkflowPerformance(TestPerformanceMixin):
 
     end = time()
 
-    print "\n%s pystones/second" % pystone.pystones()[1]
+    print("\n%s pystones/second" % pystone.pystones()[1])
     message = "\n%s took %.4gs (%s foo(s))" % (self._testMethodName,
                                              end - start, foo_count)
-    print message
+    print(message)
     ZopeTestCase._print(message)
 
     # some checking to make sure we tested something relevant

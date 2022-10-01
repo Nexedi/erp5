@@ -131,12 +131,12 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     match_string1 = 'data-gadget-editable="field_%s"' % field_id
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) == -1:
-      print html_text
-      print match_string1
+      print(html_text)
+      print(match_string1)
       return False
     if html_text.find(match_string2) == -1:
-      print html_text
-      print match_string2
+      print(html_text)
+      print(match_string2)
       return False
     return True
 
@@ -156,13 +156,13 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     match_string1 = 'data-gadget-editable="field_%s"' % field_id
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) == -1:
-      print html_text
-      print match_string1
+      print(html_text)
+      print(match_string1)
       import pdb; pdb.set_trace()
       return False
     if html_text.find(match_string2) == -1:
-      print html_text
-      print match_string2
+      print(html_text)
+      print(match_string2)
       import pdb; pdb.set_trace()
       return False
     return True
@@ -182,12 +182,12 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     match_string1 = "data-gadget-editable="
     match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) != -1:
-      print html_text
-      print match_string1
+      print(html_text)
+      print(match_string1)
       return False
     if html_text.find(match_string2) == -1:
-      print html_text
-      print match_string2
+      print(html_text)
+      print(match_string2)
       return False
     return True
 

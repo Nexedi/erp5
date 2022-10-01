@@ -6,5 +6,5 @@ if test_zuite_relative_url is not None:
 # remove test results from previous test runs
 portal_tests.manage_delObjects([x.getId() \
           for x in portal_tests.objectValues('Zuite Results')])
-print "OK"
+print("OK")
 return printed

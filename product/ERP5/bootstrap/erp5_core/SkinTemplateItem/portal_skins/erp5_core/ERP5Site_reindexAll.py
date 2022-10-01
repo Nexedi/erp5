@@ -53,28 +53,28 @@ if person_module is not None:
   )
 print("#### Indexing translations ####")
 portal.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)
-print(reindex(
+print((reindex(
   [portal.portal_categories],
   tag=category_tag,
   after_tag=user_tag,
-))
-print(reindex(
+)))
+print((reindex(
   [portal.portal_alarms, portal.portal_activities],
   tag=document_tag,
   after_tag=(user_tag, category_tag),
-))
-print(reindex(
+)))
+print((reindex(
   [portal.portal_preferences],
   tag=preference_tag,
   after_tag=(user_tag, category_tag),
-))
+)))
 # Simulation is needed to calculate tests (ie. related quantity)
-print(reindex(
+print((reindex(
   [portal.portal_simulation],
   tag=simulation_tag,
   after_tag=(user_tag, category_tag, document_tag, preference_tag),
-))
-print(reindex(
+)))
+print((reindex(
   [
     x for x in portal.objectValues()
     if x.getUid != portal.getUid and
@@ -90,7 +90,7 @@ print(reindex(
   ],
   tag=document_tag,
   after_tag=(user_tag, category_tag, preference_tag),
-))
+)))
 # Then we index ERP5 Python Scripts and ERP5 Form - this is fundamentally broken and will go away, do not depend on it !
 skin_activate_kw = {
   'tag': document_tag,
@@ -100,14 +100,14 @@ skin_activate_kw = {
 for _, obj in portal.portal_skins.ZopeFind(portal.portal_skins, obj_metatypes=('ERP5 Python Script', 'ERP5 Form', 'ERP5 Report'), search_sub=1):
   obj.recursiveReindexObject(activate_kw=skin_activate_kw,
                              sql_catalog_id=sql_catalog_id)
-print(reindex(
+print((reindex(
   [
     x for x in portal.objectValues(("ERP5 Folder", ))
     if 'inventory' in x.id
   ],
   tag=inventory_tag,
   after_tag=(user_tag, category_tag, document_tag, preference_tag),
-))
+)))
 
 portal.portal_activities.activate(
   after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag),

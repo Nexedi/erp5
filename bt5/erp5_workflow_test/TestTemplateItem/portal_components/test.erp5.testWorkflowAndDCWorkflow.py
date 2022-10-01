@@ -412,9 +412,9 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     text_document3 = self.getTestObject()
     text_document3_permission = getattr(text_document3, permission_key, None)
 
-    print 'text_document1_permission: %r' % (text_document1_permission, )
-    print 'text_document2_permission: %r' % (text_document2_permission, )
-    print 'text_document3_permission: %r' % (text_document3_permission, )
+    print('text_document1_permission: %r' % (text_document1_permission, ))
+    print('text_document2_permission: %r' % (text_document2_permission, ))
+    print('text_document3_permission: %r' % (text_document3_permission, ))
     self.assertEqual(tuple(getattr(text_document3, permission_key)),
                      ('Assignee', 'Assignor', 'Auditor', 'Author'))
 
