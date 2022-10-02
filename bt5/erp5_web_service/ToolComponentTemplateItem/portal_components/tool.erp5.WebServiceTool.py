@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+import six
 
 class ConnectionError(Exception):
   pass
@@ -55,7 +56,7 @@ handler_module_dict = {
   'sql' : "SQLConnection",
   'document' : "DocumentConnection",
 }
-for handler_id, module_id in handler_module_dict.iteritems():
+for handler_id, module_id in six.iteritems(handler_module_dict):
   # Ignore non-functionnal plugins.
   # This is done to avoid adding strict dependencies.
   # Code relying on the presence of a plugin will fail upon
