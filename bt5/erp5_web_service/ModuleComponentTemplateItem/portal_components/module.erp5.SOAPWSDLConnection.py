@@ -26,8 +26,11 @@
 #
 ##############################################################################
 
-import SOAPpy
-from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
+try:
+  import SOAPpy
+  from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
+except ImportError:
+  SOAPpy = None
 from AccessControl.SecurityInfo import allow_class
 import threading
 
@@ -174,7 +177,9 @@ def WSDL___del__(self):
       unlink()
     except AttributeError:
       pass
-SOAPpy.wstools.WSDLTools.WSDL.__del__ = WSDL___del__
+
+if SOAPpy is not None:
+  SOAPpy.wstools.WSDLTools.WSDL.__del__ = WSDL___del__
 
 class SOAPWSDLConnection:
   """

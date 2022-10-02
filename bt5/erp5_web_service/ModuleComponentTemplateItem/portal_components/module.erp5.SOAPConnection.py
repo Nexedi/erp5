@@ -26,7 +26,10 @@
 #
 ##############################################################################
 
-import SOAPpy
+try:
+  import SOAPpy
+except ImportError:
+  SOAPpy = None
 
 class SOAPConnection:
   """
