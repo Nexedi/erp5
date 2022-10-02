@@ -41,6 +41,7 @@ from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5Type.Utils import simple_decorator
+from six import string_types as basestring
 
 @simple_decorator
 def selfcached(func):
