@@ -34,7 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
-
+from six import string_types as basestring
 
 @zope.interface.implementer(IConfiguratorItem)
 class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
