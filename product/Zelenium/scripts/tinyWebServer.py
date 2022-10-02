@@ -62,12 +62,12 @@ if __name__ == '__main__':
     server_address = ('', port)
     httpd = BaseHTTPServer.HTTPServer(server_address, HTTPHandler)
 
-    print "serving at port", port
-    print "To run the entire JsUnit test suite, open"
+    print("serving at port", port)
+    print("To run the entire JsUnit test suite, open")
     print ("  http://localhost:8000/jsunit/testRunner.html?testPage="
            "http://localhost:8000/tests/JsUnitSuite.html&autoRun=true")
-    print "To run the acceptance test suite, open"
-    print "  http://localhost:8000/TestRunner.html"
+    print("To run the acceptance test suite, open")
+    print("  http://localhost:8000/TestRunner.html")
 
     while not HTTPHandler.quitRequestReceived :
         httpd.handle_request()
