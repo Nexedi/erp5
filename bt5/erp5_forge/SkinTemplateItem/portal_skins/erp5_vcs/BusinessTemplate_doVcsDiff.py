@@ -8,6 +8,7 @@ else:
 print('<div style="color: black">')
 
 # XXX: ERP5VCS_doCreateJavaScriptStatus should send lists
+from six import string_types as basestring
 if isinstance(added, basestring):
   added = added != 'none' and filter(None, added.split(',')) or ()
 if isinstance(modified, basestring):

@@ -38,6 +38,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Timeout import Deadline, TimeoutReachedError
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from zLOG import LOG, ERROR
+from six import string_types as basestring
 
 def isJson(header_dict):
   return header_dict.get('content-type', '').split(';', 1)[0] == 'application/json'
