@@ -29,10 +29,10 @@
 
 import os, socket
 import operator
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 from socket import gaierror, error, socket, getaddrinfo, AF_UNSPEC, SOCK_STREAM
-from xmlrpclib import Binary
-from cStringIO import StringIO
+from six.moves.xmlrpc_client import Binary
+from six.moves import cStringIO as StringIO
 from paramiko import Transport, RSAKey, SFTPClient
 from paramiko.util import retry_on_signal
 
