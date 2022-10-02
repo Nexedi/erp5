@@ -361,7 +361,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
       for key, value in six.iteritems(request_info_dict):
         if value is None:
           continue
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
           raise TypeError((key, repr(value)))
         new_request_info_dict[key] = value
       inner_response = HTTPResponse(stdout=None, stderr=None)
@@ -857,7 +857,7 @@ def _callEndpoint(endpoint, self, REQUEST):
     request_body = urllib.urlencode([
       (x, y)
       for x, y in six.iteritems(REQUEST.form)
-      if isinstance(y, basestring)
+      if isinstance(y, six.string_types)
     ])
   uri = other.get('URL', '')
   query_string = environ.get('QUERY_STRING')
