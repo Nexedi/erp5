@@ -22,7 +22,7 @@ result = connection.getresponse()
 path = result.getheader("X-Document-Location")
 result.close()
 path = '/%s' % '/'.join(path.split('/')[3:])
-print path
+print(path)
 
 ######################################
 # Upload chunks
