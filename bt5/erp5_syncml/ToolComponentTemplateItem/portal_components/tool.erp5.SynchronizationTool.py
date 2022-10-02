@@ -27,6 +27,7 @@
 
 from os import path
 from logging import getLogger, Formatter
+from six import string_types as basestring
 
 from AccessControl import ClassSecurityInfo
 
