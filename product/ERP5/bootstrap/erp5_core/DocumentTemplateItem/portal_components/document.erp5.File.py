@@ -195,10 +195,11 @@ class File(Document, OFS_File):
     OFS_File.PUT(self, REQUEST, RESPONSE)
     self.reindexObject()
 
-  security.declareProtected(Permissions.FTPAccess, 'manage_FTPstat',
-                                                   'manage_FTPlist')
-  manage_FTPlist = OFS_File.manage_FTPlist
-  manage_FTPstat = OFS_File.manage_FTPstat
+  if hasattr(OFS_File, 'manage_FTPlist'):
+    security.declareProtected(Permissions.FTPAccess, 'manage_FTPstat',
+                                                    'manage_FTPlist')
+    manage_FTPlist = OFS_File.manage_FTPlist
+    manage_FTPstat = OFS_File.manage_FTPstat
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
   def getMimeTypeAndContent(self):
