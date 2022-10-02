@@ -53,7 +53,7 @@ def main():
       threads[len(threads)-1].start()
       request_number += 1
       i+=1
-      print "thread: %i request: %i url: %s" % (i,request_number,url)
+      print("thread: %i request: %i url: %s" % (i,request_number,url))
     else:
       for t in range(0,max_thread):
         if threads[t].isAlive() == 0:
@@ -63,7 +63,7 @@ def main():
           threads[t].start()
           i+=1
           request_number += 1
-          print "thread: %i request: %i url: %s" % (i,request_number,url)
+          print("thread: %i request: %i url: %s" % (i,request_number,url))
           break
 
 
@@ -146,17 +146,17 @@ class Checker(URLOpener):
       thread.start()
       while thread.isAlive():
         sleep(0.5)
-      print "Connection to %s went fine" % url
+      print("Connection to %s went fine" % url)
     except IOError as err:
       (errno, strerror) = err.args
-      print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
+      print("Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror))
 
   def SearchUrl(self, url=None):
     try:
       conn = self.open_http(url)
     except IOError as err:
       (errno, strerror) = err.args
-      print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
+      print("Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror))
 
 
   def raise_error(self, error_key, field):

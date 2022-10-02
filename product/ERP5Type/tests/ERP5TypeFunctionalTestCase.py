@@ -435,10 +435,10 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
   def _verboseErrorLog(self, size=10):
     for entry in self.portal.error_log.getLogEntries()[:size]:
-      print "="*20
-      print "ERROR ID : %s" % entry["id"]
-      print "TRACEBACK :"
-      print entry["tb_text"]
+      print(("="*20))
+      print(("ERROR ID : %s" % entry["id"]))
+      print("TRACEBACK :")
+      print((entry["tb_text"]))
 
   def testFunctionalTestRunner(self):
     # Check the zuite page templates can be rendered, because selenium test
