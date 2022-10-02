@@ -1,4 +1,5 @@
 import json
+from six import string_types as basestring
 
 commit_dict = json.loads(commit_json) if commit_json is not None else {
   'added': (),
