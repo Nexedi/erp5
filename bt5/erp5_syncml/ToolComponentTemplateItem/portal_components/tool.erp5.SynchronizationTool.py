@@ -26,6 +26,7 @@
 ##############################################################################
 
 from logging import getLogger
+from six import string_types as basestring
 
 from AccessControl import ClassSecurityInfo
 
