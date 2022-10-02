@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-import xmlrpclib
-from urlparse import urlparse
+from six.moves.xmlrpc_client import ServerProxy
+from six.moves.urllib.parse import urlparse
 
 class XMLRPCConnection:
   """
@@ -47,4 +47,4 @@ class XMLRPCConnection:
       schema = urlparse(url)
       url = '%s://%s:%s@%s%s' %(schema[0], self._user_name, self._password,
                                 schema[1], schema[2])
-    return xmlrpclib.ServerProxy(url, allow_none=1)
+    return ServerProxy(url, allow_none=1)
