@@ -5,6 +5,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, WARNING
 import random, string, hashlib, urllib2, socket
 from urlparse import urlparse
+from six import string_types as basestring
 try:
   import xml.etree.cElementTree as ET
 except ImportError:
