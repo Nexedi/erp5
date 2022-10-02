@@ -32,6 +32,7 @@ from logging import getLogger
 from urlparse import urlparse
 from lxml import etree
 from copy import deepcopy
+from six import string_types as basestring
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import newSecurityManager

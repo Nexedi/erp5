@@ -38,6 +38,7 @@ from erp5.component.interface.IEncryptedPassword import IEncryptedPassword
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
+from six import string_types as basestring
 
 @zope.interface.implementer(IEncryptedPassword,)
 class EncryptedPasswordMixin(object):
