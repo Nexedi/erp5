@@ -31,6 +31,7 @@ import unittest
 from base64 import b64encode, b64decode, b16encode
 from lxml import etree
 from unittest import expectedFailure
+from six import string_types as basestring
 
 from AccessControl.SecurityManagement import newSecurityManager
 from ERP5Diff import ERP5Diff
