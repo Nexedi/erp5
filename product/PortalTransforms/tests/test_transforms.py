@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from __future__ import print_function # six.PY2
 import os
 import logging
 from Products.Archetypes.tests.atsitetestcase import ATSiteTestCase
@@ -44,8 +45,8 @@ class TransformTest(ATSiteTestCase):
             output = open(output)
         except IOError:
             import sys
-            print >>sys.stderr, 'No output file found.'
-            print >>sys.stderr, 'File %s created, check it !' % self.output
+            print('No output file found.', file=sys.stderr)
+            print('File %s created, check it !' % self.output, file=sys.stderr)
             output = open(output, 'w')
             output.write(got)
             output.close()
@@ -238,7 +239,7 @@ def make_tests(test_descr=TRANSFORMS_TESTINFO):
                 continue
 
         if TR_NAMES is not None and not _transform.name() in TR_NAMES:
-            print 'skip test for', _transform.name()
+            print('skip test for', _transform.name())
             continue
 
         class TransformTestSubclass(TransformTest):
