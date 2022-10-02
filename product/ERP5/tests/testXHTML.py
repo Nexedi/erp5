@@ -748,7 +748,7 @@ if validator_to_use == 'tidy':
   warning = False
   validator_path = '/usr/bin/tidy'
   if not os.path.exists(validator_path):
-    print 'tidy is not installed at %s' % validator_path
+    print('tidy is not installed at %s' % validator_path)
   else:
     validator = TidyValidator(validator_path, show_warnings)
 
