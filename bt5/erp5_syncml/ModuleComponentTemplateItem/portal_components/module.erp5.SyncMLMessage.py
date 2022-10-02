@@ -28,6 +28,7 @@
 from lxml.builder import ElementMaker
 from lxml.etree import Element
 from lxml import etree
+from six import string_types as basestring
 
 from erp5.component.module.XMLSyncUtils import resolveSyncmlStatusCode, \
      encode, resolveSyncmlAlertCode
