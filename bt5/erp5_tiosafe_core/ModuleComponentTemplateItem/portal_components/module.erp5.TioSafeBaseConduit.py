@@ -35,6 +35,7 @@ from zLOG import LOG, INFO, WARNING
 from erp5.component.module.ERP5Conduit import ERP5Conduit
 from lxml import etree
 from copy import deepcopy
+from six import string_types as basestring
 parser = etree.XMLParser(remove_blank_text=True)
 
 XUPDATE_INSERT_LIST = ('xupdate:insert-after', 'xupdate:insert-before')

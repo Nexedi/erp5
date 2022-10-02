@@ -48,6 +48,7 @@ from xupdate_processor import xuproc
 from base64 import standard_b64decode
 from zope.interface import implementer
 from copy import deepcopy
+from six import string_types as basestring
 
 import logging
 syncml_logger = logging.getLogger('ERP5SyncML')
