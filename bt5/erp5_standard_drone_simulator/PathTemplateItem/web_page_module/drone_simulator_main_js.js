@@ -148,7 +148,8 @@
                   width: options.width,
                   height: options.height,
                   script: options.script,
-                  log: options.log
+                  log: options.log,
+                  simulation_speed: options.simulation_speed
                 }, [options.canvas]);
                 break;
               case 'started':
