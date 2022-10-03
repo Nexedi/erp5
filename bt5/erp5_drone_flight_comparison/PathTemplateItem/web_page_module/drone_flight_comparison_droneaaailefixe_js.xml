@@ -62,8 +62,16 @@
             </value>
         </item>
         <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -236,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1003.25863.35207.61047</string> </value>
+                      <value> <string>1003.25873.53691.48554</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -254,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1664807505.71</float>
+                              <float>1664808112.64</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
