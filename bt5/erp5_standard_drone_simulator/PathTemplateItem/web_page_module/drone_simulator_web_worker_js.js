@@ -28,6 +28,7 @@ importScripts('babylon.js', 'babylon.gui.js', 'rsvp.js');
 function mainToWorker(evt) {
   switch (evt.data.type) {
     case 'start':
+      console.log("[WEB WORKER] Ready to handle the folliwing events:", handlers.keys());
       for (var i = 0; i < evt.data.logic_url_list.length; i += 1) {
         importScripts(evt.data.logic_url_list[i]);
       }
@@ -82,7 +83,6 @@ const rect = {
 
 function bindHandler(targetName, eventName, fn, opt) {
 	const handlerId = targetName + eventName;
-  console.log("[WEBWORKER] bindHandler. handlerId:", handlerId);
 	handlers.set(handlerId, fn);
 	postMessage({
 		type: 'event',
