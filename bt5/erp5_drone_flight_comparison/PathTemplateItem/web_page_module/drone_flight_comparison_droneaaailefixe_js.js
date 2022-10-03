@@ -5,15 +5,63 @@ LOITER_LIMIT = 30;
 LOITER_RADIUS_FACTOR = 0.60;
 LOITER_SPEED_FACTOR = 1.5;
 
-var DroneAaileFixeAPI = (function () {
-  // CONSTRUCTOR
+var DroneAaileFixeAPI = /** @class */ (function () {
+  //** CONSTRUCTOR
   function DroneAaileFixeAPI(gameManager, flight_parameters) {
-      this._gameManager = gameManager;
-      this._flight_parameters = flight_parameters;
-      this._loiter_radius = 0;
-      this._last_loiter_point_reached = -1;
-      this._last_altitude_point_reached = -1;
+    this._gameManager = gameManager;
+    this._flight_parameters = flight_parameters;
+    this._loiter_radius = 0;
+    this._last_loiter_point_reached = -1;
+    this._last_altitude_point_reached = -1;
+    this._start_loiter = 0;
+    this._start_altitude = 0;
   }
+  /*
+  ** Function called on start phase of the drone, just before onStart AI script
+  */
+  DroneAaileFixeAPI.prototype.internal_start = function () {
+  };
+  /*
+  ** Function called on every drone update, right after onUpdate AI script
+  */
+  DroneAaileFixeAPI.prototype.internal_update = function (drone) {
+    if (this._start_loiter > 0) {
+      this.loiter(drone);
+    }
+    if (this._start_altitude > 0) { //TODO move start_altitude here
+      this.reachAltitude(drone);
+    }
+  };
+
+  DroneAaileFixeAPI.prototype.set_loiter_mode = function () {
+    if (this._start_loiter === 0) {
+      this._start_loiter = 1;
+    }
+  };
+  DroneAaileFixeAPI.prototype.internal_setTargetCoordinates =
+    function (drone, x, y, z, r) {
+    if (r !== -1) {
+      this._start_loiter = 0;
+      drone._maxSpeed = this.getMaxSpeed();
+    }
+    this._start_altitude = 0;
+    //convert real geo-coordinates to virtual x-y coordinates
+    var coordinates = this.processCoordinates(x, y, z, r);
+    this.internal_setVirtualPlaneTargetCoordinates(drone,
+                                                   coordinates.x,
+                                                   coordinates.y,
+                                                   coordinates.z);
+  };
+  DroneAaileFixeAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
+    function (drone, x, y, z) {
+    x -= drone._controlMesh.position.x; //TODO use position
+    y -= drone._controlMesh.position.z;
+    z -= drone._controlMesh.position.y;
+    drone.setDirection(x, y, z);
+    drone.setAcceleration(drone._maxAcceleration);
+    return;
+  };
+  
   DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
     var _this = this;
     _this._gameManager.delay(function () {
@@ -156,6 +204,7 @@ var DroneAaileFixeAPI = (function () {
       }
       //loiter
       var next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
+      //TODO check every place where drone (DroneManager) is called and use directly API methods instead
       drone.setTargetCoordinates(next_point.x, next_point.y, next_point.z, -1);
       if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
         this._last_loiter_point_reached += 1;
@@ -171,6 +220,9 @@ var DroneAaileFixeAPI = (function () {
     return null;
   };
   DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone, skip_loiter) {
+    if (this._start_altitude === 0) {
+      this._start_altitude = 1;
+    }
     this.takeoff_path = [];
     if (skip_loiter) {
       var drone_pos = drone.getCurrentPosition();
@@ -211,7 +263,7 @@ var DroneAaileFixeAPI = (function () {
     if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
       this._last_altitude_point_reached = -1;
       this.takeoff_path = [];
-      drone._start_altitude = 0;
+      this._start_altitude = 0;
       drone.setDirection(0, 0, 0);
       return;
     }
@@ -222,14 +274,14 @@ var DroneAaileFixeAPI = (function () {
       z: drone.position.z
     };
     var next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-    drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
+    this.internal_setVirtualPlaneTargetCoordinates(next_point.x, next_point.y, next_point.z);
     if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
       this._last_altitude_point_reached += 1;
       if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
         return;
       }
       next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-      drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
+      this.internal_setVirtualPlaneTargetCoordinates(next_point.x, next_point.y, next_point.z);
     }
   };
   DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
