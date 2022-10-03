@@ -143,7 +143,7 @@
               case 'loaded':
                 return worker.postMessage({
                   type: 'start',
-                  logic_url: options.logic_url,
+                  logic_url_list: options.logic_url_list,
                   canvas: options.canvas,
                   width: options.width,
                   height: options.height,

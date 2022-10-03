@@ -28,7 +28,9 @@ importScripts('babylon.js', 'babylon.gui.js', 'rsvp.js');
 function mainToWorker(evt) {
   switch (evt.data.type) {
     case 'start':
-      importScripts(evt.data.logic_url);
+      for (var i = 0; i < evt.data.logic_url_list.length; i += 1) {
+        importScripts(evt.data.logic_url_list[i]);
+      }
       var offscreen_canvas = prepareCanvas(evt.data);
       RSVP = window.RSVP;
       return new RSVP.Queue()
