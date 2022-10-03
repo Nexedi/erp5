@@ -5,6 +5,16 @@
           loopEventListener, history, console) {
   "use strict";
 
+  function hidePage() {
+    document.documentElement.hidden = true;
+    document.documentElement.style.display = 'none';
+  }
+
+  function showPage() {
+    document.documentElement.hidden = false;
+    document.documentElement.style.display = 'unset';
+  }
+
   // XXX Copy/paste from renderjs
   function ajax(url) {
     var xhr;
@@ -386,7 +396,7 @@
 
   rJS(window)
     .allowPublicAcquisition("reportServiceError", function () {
-      this.element.hidden = false;
+      showPage();
       throw rJS.AcquisitionError();
     })
     .declareJob("listenURLChange", listenURLChange)
@@ -426,10 +436,16 @@
               gadget.listenURLChange();
 
               body.appendChild(style_gadget.element);
-              gadget.element.hidden = false;
+              // Show the page after the first rendering
+              // This prevent displaying the original HTML page
+              // in case cpu/network is too slow
+              showPage();
+
               scrollToHash(window.location.hash);
             }, function (error) {
-              gadget.element.hidden = false;
+              // Ensure the page is visible in case of error
+              showPage();
+
               throw error;
             });
         }, function (error) {
@@ -447,6 +463,14 @@
             });
         });
     });
+
+  // Hide the page as soon as possible
+  // This prevent displaying the original HTML page
+  // in case cpu/network is too slow
+  // (when fetching rendering gadget or if pages containes img elements)
+  // Hiding the page MUST NOT be done in the HTML, to ensure compatibility
+  // with browsers without javascript
+  hidePage();
 
 }(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
   rJS.loopEventListener, history, console));
