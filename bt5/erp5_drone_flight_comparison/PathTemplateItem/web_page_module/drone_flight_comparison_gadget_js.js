@@ -13,10 +13,12 @@
       var gadget = this,
         logic_file_list = [],
         canvas = domsugar('canvas'),
+        simulation_speed,
         offscreen;
       domsugar(gadget.element, [canvas]);
 
       // XXX hardcoded
+      simulation_speed = 100;
       logic_file_list.push('gadget_erp5_page_drone_simulator_logic_comparison.js');
       logic_file_list.push('gadget_erp5_page_flight_comparison_droneaaailefixe.js');
       logic_file_list.push('gadget_erp5_page_flight_comparison_dronelogfollower.js');
@@ -48,7 +50,8 @@
             width: canvas.width,
             height: canvas.height,
             script: script_content,
-            log: log_content
+            log: log_content,
+            simulation_speed: simulation_speed
           });
 
           return gadget.updateHeader({
