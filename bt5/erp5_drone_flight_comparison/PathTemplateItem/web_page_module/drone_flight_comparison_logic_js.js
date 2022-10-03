@@ -4,13 +4,12 @@
 /*********************** DRONE SIMULATOR LOGIC ********************************/
 
 var runGame, updateGame, game_manager_instance;
-var SIMULATION_SPEED = 10;
 
 (function () {
   "use strict";
   console.log('game logic');
 
-  runGame = function (canvas, script, log) {
+  runGame = function (canvas, script, log, simulation_speed) {
 
     var game_parameters_json = {
       "drone": {
@@ -230,7 +229,7 @@ var SIMULATION_SPEED = 10;
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
                                               game_parameters_json,
-                                              SIMULATION_SPEED
+                                              simulation_speed
                                              );
     }
     return game_manager_instance.run();
@@ -288,10 +287,10 @@ var GameManager = /** @class */ (function () {
     this._log_count = [];
     this._flight_log = [];
     if (GAMEPARAMETERS.compareFlights) {
-      for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
-        this._flight_log[count] = [];
-        this._log_count[count] = 0;
-        this._last_position_drawn[count] = null;
+      for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
+        this._flight_log[drone] = [];
+        this._log_count[drone] = 0;
+        this._last_position_drawn[drone] = null;
       }
       this._colors = [
         new BABYLON.Color3(255, 165, 0),
@@ -318,9 +317,7 @@ var GameManager = /** @class */ (function () {
     var gadget = this;
     return gadget._init()
       .push(function () {
-        //TODO return result
-        gadget._final_score = "fake-result 000";
-        return gadget._final_score;
+        return gadget._flight_log;
       });
   };
 
@@ -390,14 +387,14 @@ var GameManager = /** @class */ (function () {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000);
     if (GAMEPARAMETERS.compareFlights) {
-      for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
-        if (this._droneList[count].can_play) {
-          var drone_position_x = this._droneList[count].position.x,
-            drone_position_y = this._droneList[count].position.y,
-            drone_position_z = this._droneList[count].position.z;
+      for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
+        if (this._droneList[drone].can_play) {
+          var drone_position_x = this._droneList[drone].position.x,
+            drone_position_y = this._droneList[drone].position.y,
+            drone_position_z = this._droneList[drone].position.z;
           if (GAMEPARAMETERS.compareFlights.log) {
-            if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
-              this._log_count[count] += GAMEPARAMETERS.compareFlights.log_interval_time;
+            if (this._log_count[drone] === 0 || this._game_duration / this._log_count[drone] > 1) {
+              this._log_count[drone] += GAMEPARAMETERS.compareFlights.log_interval_time;
               //convert x-y coordinates into latitud-longitude
               var lon = drone_position_x + GAMEPARAMETERS.compareFlights.map_width / 2;
               lon = lon / 1000;
@@ -407,13 +404,13 @@ var GameManager = /** @class */ (function () {
               lat = lat / 1000;
               lat = lat * (GAMEPARAMETERS.compareFlights.MAX_Y - GAMEPARAMETERS.compareFlights.MIN_Y) + GAMEPARAMETERS.compareFlights.MIN_Y;
               lat = 90 - lat / (GAMEPARAMETERS.compareFlights.map_height / 180.0);
-              this._flight_log[count].push([lat, lon, drone_position_z]);
+              this._flight_log[drone].push([lat, lon, drone_position_z]);
             }
           }
           if (GAMEPARAMETERS.compareFlights.draw) { //TODO review this in JSON dict
             //draw drone position every second
-            if (this._last_position_drawn[count] !== seconds) {
-              this._last_position_drawn[count] = seconds;
+            if (this._last_position_drawn[drone] !== seconds) {
+              this._last_position_drawn[drone] = seconds;
               var position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" + seconds, {
                   'diameterX': 3.5,
                   'diameterY': 3.5,
@@ -424,8 +421,8 @@ var GameManager = /** @class */ (function () {
               var material = new BABYLON.StandardMaterial(this._scene);
               material.alpha = 1;
               var color = new BABYLON.Color3(255, 0, 0);
-              if (this._colors[count]) {
-                color = this._colors[count];
+              if (this._colors[drone]) {
+                color = this._colors[drone];
               }
               material.diffuseColor = color;
               position_obj.material = material;
