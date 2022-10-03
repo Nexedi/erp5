@@ -355,12 +355,43 @@ var GameManager = /** @class */ (function () {
     this._delayed_defer_list.push([callback, millisecond]);
   };
 
+  GameManager.prototype._update = function (delta_time, update_dom) {
+    var _this = this,
+      queue = new RSVP.Queue(),
+      i;
+    this._updateDisplayedInfo(delta_time, update_dom);
+
+    // trigger all deferred calls if it is time
+    for (i = _this._delayed_defer_list.length - 1; 0 <= i; i -= 1) {
+      _this._delayed_defer_list[i][1] = _this._delayed_defer_list[i][1] - delta_time;
+      if (_this._delayed_defer_list[i][1] <= 0) {
+        queue.push(_this._delayed_defer_list[i][0]);
+        _this._delayed_defer_list.splice(i, 1);
+      }
+    }
+
+    this._droneList.forEach(function (drone) {
+      queue.push(function () {
+        drone._tick += 1; //TODO don't access _tick, use an API method
+        return drone.internal_update(delta_time);
+      });
+    });
+
+    return queue
+      .push(function () {
+        if (_this._timeOut()) {
+          console.log("TIMEOUT!");
+          return _this._finish();
+        }
+      });
+  };
+
   GameManager.prototype._updateDisplayedInfo = function (delta_time, update_dom) {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000);
     if (GAMEPARAMETERS.compareFlights) {
       for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
-        if (this._droneList[count]._controlMesh) {
+        if (this._droneList[count]._controlMesh) { //TODO don't use _controlMesh, access a droneAPI method
           var drone_position_x = this._droneList[count]._controlMesh.position.x,
             drone_position_z = this._droneList[count]._controlMesh.position.y,
             drone_position_y = this._droneList[count]._controlMesh.position.z;
@@ -403,41 +434,6 @@ var GameManager = /** @class */ (function () {
         }
       }
     }
-};
-
-  GameManager.prototype._update = function (delta_time, update_dom) {
-    var _this = this,
-      queue = new RSVP.Queue(),
-      i;
-    this._updateDisplayedInfo(delta_time, update_dom);
-
-    // trigger all deferred calls if it is time
-    for (i = _this._delayed_defer_list.length - 1; 0 <= i; i -= 1) {
-      _this._delayed_defer_list[i][1] = _this._delayed_defer_list[i][1] - delta_time;
-      if (_this._delayed_defer_list[i][1] <= 0) {
-        queue.push(_this._delayed_defer_list[i][0]);
-        _this._delayed_defer_list.splice(i, 1);
-      }
-    }
-
-    function updateDrone(drone) {
-      drone._tick += 1;
-      return drone.internal_update(delta_time);
-    }
-
-    this._droneList.forEach(function (drone) {
-      queue.push(function () {
-        return updateDrone(drone);
-      });
-    });
-
-    return queue
-      .push(function () {
-        if (_this._timeOut()) {
-          console.log("TIMEOUT!");
-          return _this._finish();
-        }
-      });
   };
 
   GameManager.prototype._timeOut = function () {
@@ -513,7 +509,7 @@ var GameManager = /** @class */ (function () {
       var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI", true, ctx._scene);
       document = documentTmp;
       for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) { //TODO use one color per drone
-        var controlMeshBlue = ctx._droneList[count].infosMesh;
+        var controlMeshBlue = ctx._droneList[count].infosMesh; //TODO check
         var rectBlue = new BABYLON.GUI.Rectangle();
         rectBlue.width = "10px";
         rectBlue.height = "10px";
@@ -559,7 +555,7 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         promise_list = [];
         _this._droneList.forEach(function (drone) {
-          drone._tick = 0;
+          drone._tick = 0; //TODO don't access _tick, use an API method
           promise_list.push(drone.internal_start());
         });
         return RSVP.all(promise_list);
@@ -575,7 +571,8 @@ var GameManager = /** @class */ (function () {
       assetManager = new BABYLON.AssetsManager(this._scene);
     assetManager.useDefaultLoadingScreen = true;
     // DRONE
-    droneTask = assetManager.addMeshTask("loadingDrone", "", "assets/drone/", "drone.babylon"); //TODO got from RS skin!
+    droneTask = assetManager.addMeshTask("loadingDrone", "", "assets/drone/",
+                                         "drone.babylon");
     droneTask.onSuccess = function (task) {
         task.loadedMeshes.forEach(function (mesh) {
             mesh.isPickable = false;
@@ -589,7 +586,8 @@ var GameManager = /** @class */ (function () {
         console.log("Error loading 3D model for Drone");
     };
     // MAP
-    mapTask = assetManager.addMeshTask("loadingMap", "", "assets/map/", "map.babylon");
+    mapTask = assetManager.addMeshTask("loadingMap", "", "assets/map/",
+                                       "map.babylon");
     mapTask.onSuccess = function (task) {
         task.loadedMeshes.forEach(function (mesh) {
             mesh.isPickable = false;
