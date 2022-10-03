@@ -67,13 +67,13 @@ class TestInvalidationBug(ERP5TypeTestCase):
       query = connection.factory()('-' + connection.connection_string).query
       sql = "rollback\0select * from %s where path='%s'" % (table, path)
       test_list.append(lambda query=query, sql=sql: len(query(sql)[1]))
-    result_list = [map(apply, test_list)]
+    result_list = [[test() for test in test_list]]
     Transaction_commitResources = transaction.Transaction._commitResources
     connection = module._p_jar
     def _commitResources(self):
       def tpc_finish(rm, txn):
         rm.__class__.tpc_finish(rm, txn)
-        result_list.append(None if rm is connection else map(apply, test_list))
+        result_list.append(None if rm is connection else [test() for test in test_list])
       try:
         for rm in self._resources:
           rm.tpc_finish = lambda txn, rm=rm: tpc_finish(rm, txn)
