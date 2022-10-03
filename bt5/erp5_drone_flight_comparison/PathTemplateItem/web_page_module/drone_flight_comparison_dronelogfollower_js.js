@@ -1,11 +1,31 @@
 /**************************** DRONE LOG FOLLOWER ******************************/
 
-var DroneLogAPI = (function () {
-  // CONSTRUCTOR
+var DroneLogAPI = /** @class */ (function () {
+  //** CONSTRUCTOR
   function DroneLogAPI(gameManager, flight_parameters) {
     this._gameManager = gameManager;
     this._flight_parameters = flight_parameters;
   }
+  /*
+  ** Function called at start phase of the drone, just before onStart AI script
+  */
+  DroneLogAPI.prototype.internal_start = function () {
+  };
+  /*
+  ** Function called on every drone update, right after onUpdate AI script
+  */
+  DroneLogAPI.prototype.internal_update = function () {
+  };
+  DroneLogAPI.prototype.internal_setTargetCoordinates =
+    function (drone, x, y, z, r) {
+    var coordinates = this.processCoordinates(x, y, z, r);
+    coordinates.x -= drone._controlMesh.position.x; //TODO use position
+    coordinates.y -= drone._controlMesh.position.z;
+    coordinates.z -= drone._controlMesh.position.y;
+    drone.setDirection(coordinates.x, coordinates.y, coordinates.z);
+    drone.setAcceleration(drone._maxAcceleration);
+    return;
+  };
   //TODO test sendMsg (what is iterable _this.team??) (latency.communication?)(GM.delay?)
   DroneLogAPI.prototype.internal_sendMsg = function (msg, to) {
     var _this = this;
@@ -95,8 +115,9 @@ var DroneLogAPI = (function () {
       '}' +
       '};';
   };
+  DroneLogAPI.prototype.set_loiter_mode = function () {
+  };
   DroneLogAPI.prototype.setAltitude = function (altitude) {
-    return altitude;
   };
   DroneLogAPI.prototype.getMaxSpeed = function () {
     return 3000;

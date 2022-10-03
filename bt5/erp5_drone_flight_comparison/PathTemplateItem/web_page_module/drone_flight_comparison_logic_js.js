@@ -686,8 +686,8 @@ var GameManager = /** @class */ (function () {
   return GameManager;
 }());
 
-
 /******************************************************************************/
+
 
 /******************************* DRONE MANAGER ********************************/
 
@@ -711,8 +711,6 @@ var DroneManager = /** @class */ (function () {
     this._canUpdate = true;
     this._id = id;
     this._leader_id = 0;
-    this._start_loiter = 0;
-    this._start_altitude = 0;
     this._API = API; // var API created on AI evel
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox("droneControl_" + id, 0.01, this._scene);
@@ -801,6 +799,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.internal_start = function () {
       this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
       this._maxSpeed = this._API.getMaxSpeed();
+      this._API.internal_start();
       this._canPlay = true;
       this._canCommunicate = true;
       try {
@@ -810,15 +809,13 @@ var DroneManager = /** @class */ (function () {
         this._internal_crash();
       }
   };
-  DroneManager.prototype.internal_setTargetCoordinates = function (x, y, z) {
+  /**
+   * Set a target point to move
+   */
+  DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
     if (!this._canPlay)
       return;
-    x -= this._controlMesh.position.x;
-    y -= this._controlMesh.position.z;
-    z -= this._controlMesh.position.y;
-    this.setDirection(x, y, z);
-    this.setAcceleration(this._maxAcceleration);
-    return;
+    return this._API.internal_setTargetCoordinates(this, x, y, z, r);
   };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
@@ -850,12 +847,7 @@ var DroneManager = /** @class */ (function () {
             context._internal_crash();
           })
           .push(function () {
-            if (context._start_loiter > 0) {
-              context._API.loiter(context);
-            }
-            if (context._start_altitude > 0) {
-              context._API.reachAltitude(context);
-            }
+            context._API.internal_update(context);
           });
       }
       return;
@@ -900,26 +892,6 @@ var DroneManager = /** @class */ (function () {
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
   };
   /**
-   * Set a target point to move
-   */
-  DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
-    if (!this._canPlay)
-      return;
-    //HACK too specific for DroneAaileFixe, should be a flag: (bool)process?
-    if (r !== -1) {
-      this._start_loiter = 0;
-      this._maxSpeed = this._API.getMaxSpeed();
-    }
-    this._start_altitude = 0;
-    var coordinates = this._API.processCoordinates(x, y, z, r);
-    coordinates.x -= this._controlMesh.position.x;
-    coordinates.y -= this._controlMesh.position.z;
-    coordinates.z -= this._controlMesh.position.y;
-    this.setDirection(coordinates.x, coordinates.y, coordinates.z);
-    this.setAcceleration(this._maxAcceleration);
-    return;
-  };
-  /**
    * Send a message to team drones
    * @param msg The message to send
    * @param id The targeted drone. -1 or nothing to broadcast
@@ -950,7 +922,7 @@ var DroneManager = /** @class */ (function () {
   };
   DroneManager.prototype.getAltitudeAbs = function () {
     if (this._controlMesh) {
-      var altitude = this._controlMesh.position.y;
+      var altitude = this._controlMesh.position.y; //TODO use position
       return this._API.getAltitudeAbs(altitude);
     }
     return null;
@@ -976,11 +948,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.setAltitude = function (altitude, skip_loiter) {
     if (!this._canPlay)
       return;
-    if (this._start_altitude === 0) {
-      this._start_altitude = 1;
-    }
-    altitude = this._API.setAltitude(altitude, this, skip_loiter);
-    return;
+    return this._API.setAltitude(altitude, this, skip_loiter);
   };
   /**
    * Make the drone loiter (circle with a set radius)
@@ -988,9 +956,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.loiter = function () {
     if (!this._canPlay)
       return;
-    if (this._start_loiter === 0) {
-      this._start_loiter = 1;
-    }
+    this._API.set_loiter_mode();
   };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters)
