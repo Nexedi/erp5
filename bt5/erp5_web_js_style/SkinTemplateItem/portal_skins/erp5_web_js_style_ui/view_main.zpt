@@ -104,7 +104,7 @@
     <tal:block tal:content="structure python: web_section.WebSection_generateNavigationHTML(include_document=include_document)"></tal:block>
     <p tal:content="request/portal_status_message | nothing" id="portal_status_message"/>
 
-    <main><template><tal:block metal:define-slot="main"/></template></main>
+    <main><noscript><tal:block metal:define-slot="main"/></noscript></main>
   </body>
 </html>
     </tal:block>
