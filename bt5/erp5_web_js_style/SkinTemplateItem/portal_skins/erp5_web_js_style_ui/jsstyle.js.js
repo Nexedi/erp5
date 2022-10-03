@@ -386,7 +386,9 @@
 
   rJS(window)
     .allowPublicAcquisition("reportServiceError", function () {
-      this.element.hidden = false;
+      document.documentElement.hidden = false;
+      document.documentElement.style.display = 'unset';
+
       throw rJS.AcquisitionError();
     })
     .declareJob("listenURLChange", listenURLChange)
@@ -426,10 +428,14 @@
               gadget.listenURLChange();
 
               body.appendChild(style_gadget.element);
-              gadget.element.hidden = false;
+              document.documentElement.hidden = false;
+              document.documentElement.style.display = 'unset';
+
               scrollToHash(window.location.hash);
             }, function (error) {
-              gadget.element.hidden = false;
+              document.documentElement.hidden = false;
+              document.documentElement.style.display = 'unset';
+
               throw error;
             });
         }, function (error) {
@@ -447,6 +453,9 @@
             });
         });
     });
+
+  document.documentElement.hidden = true;
+  document.documentElement.style.display = 'none';
 
 }(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
   rJS.loopEventListener, history, console));
