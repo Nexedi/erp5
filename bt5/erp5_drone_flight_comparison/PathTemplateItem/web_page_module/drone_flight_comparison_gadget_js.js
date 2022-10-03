@@ -11,12 +11,15 @@
 
     .declareMethod('render', function renderHeader() {
       var gadget = this,
-        // XXX hardcoded
-        parameter_gamelogic = 'gadget_erp5_page_drone_simulator_logic_comparison.js',
+        logic_file_list = [],
         canvas = domsugar('canvas'),
         offscreen;
       domsugar(gadget.element, [canvas]);
 
+      // XXX hardcoded
+      logic_file_list.push('gadget_erp5_page_drone_simulator_logic_comparison.js');
+      logic_file_list.push('gadget_erp5_page_flight_comparison_droneaaailefixe.js');
+      logic_file_list.push('gadget_erp5_page_flight_comparison_dronelogfollower.js');
       //TODO fix hardcoded
       canvas.width = 680;//canvas.clientWidth; <-- this is 0
       canvas.height = 340;//canvas.clientHeight; <-- this is 0
@@ -39,7 +42,7 @@
           log_content = result.data.rows[0].value.text_content;
 
           gadget.runGame({
-            logic_url: parameter_gamelogic,
+            logic_url_list: logic_file_list,
             canvas: offscreen,
             canvas_original: canvas,
             width: canvas.width,
