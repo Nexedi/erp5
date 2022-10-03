@@ -12,7 +12,10 @@ def patch():
     import six
 
     import traceback
-    from unittest import TextTestResult, TextTestRunner
+    from unittest import TestCase, TextTestResult, TextTestRunner
+
+    if six.PY3:
+        TestCase.assertItemsEqual = TestCase.assertCountEqual
 
     TextTestResult_addError = six.get_unbound_function(TextTestResult.addError)
     def addError(self, test, err):
