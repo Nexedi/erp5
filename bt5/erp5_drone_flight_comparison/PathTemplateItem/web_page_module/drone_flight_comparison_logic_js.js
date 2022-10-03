@@ -391,10 +391,10 @@ var GameManager = /** @class */ (function () {
     var seconds = Math.floor(this._game_duration / 1000);
     if (GAMEPARAMETERS.compareFlights) {
       for (var count = 0; count < GAMEPARAMETERS.droneList.length; count++) {
-        if (this._droneList[count]._controlMesh) { //TODO don't use _controlMesh, access a droneAPI method
-          var drone_position_x = this._droneList[count]._controlMesh.position.x,
-            drone_position_z = this._droneList[count]._controlMesh.position.y,
-            drone_position_y = this._droneList[count]._controlMesh.position.z;
+        if (this._droneList[count].can_play) {
+          var drone_position_x = this._droneList[count].position.x,
+            drone_position_y = this._droneList[count].position.y,
+            drone_position_z = this._droneList[count].position.z;
           if (GAMEPARAMETERS.compareFlights.log) {
             if (this._log_count[count] === 0 || this._game_duration / this._log_count[count] > 1) {
               this._log_count[count] += GAMEPARAMETERS.compareFlights.log_interval_time;
@@ -1001,9 +1001,9 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       total_points = 360/CIRCLE_ANGLE*LOOPS,
       initial_altitude = drone.getAltitudeAbs(),
       center = {
-        x: drone._controlMesh.position.x,
-        y: drone._controlMesh.position.z,
-        z: drone._controlMesh.position.y
+        x: drone.position.x,
+        y: drone.position.y,
+        z: drone.position.z
       };
     for (var l = 0; l <= LOOPS; l+=1){
       for (var angle = 360; angle > 0; angle-=CIRCLE_ANGLE){ //clockwise sense
@@ -1034,10 +1034,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     }
     //loiter
     var drone_pos = {
-        x: drone._controlMesh.position.x,
-        y: drone._controlMesh.position.z,
-        z: drone._controlMesh.position.y
-      };
+      x: drone.position.x,
+      y: drone.position.y,
+      z: drone.position.z
+    };
     var next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
     drone.internal_setTargetCoordinates(next_point.x, next_point.y, next_point.z);
     if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
@@ -1140,6 +1140,11 @@ var DroneManager = /** @class */ (function () {
   };
   Object.defineProperty(DroneManager.prototype, "leader_id", {
     get: function () { return this._leader_id; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "can_play", {
+    get: function () { return this._canPlay; },
     enumerable: true,
     configurable: true
   });
