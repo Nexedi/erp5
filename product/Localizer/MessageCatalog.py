@@ -106,13 +106,9 @@ def message_decode(message):
     To be used in the user interface, to avoid problems with the
     encodings, HTML entities, etc..
     """
-    message = decodebytes(message)
+    message = decodebytes(message.encode())
     encoding = HTTPRequest.default_encoding
     return six.text_type(message, encoding)
-
-
-def filter_sort(x, y):
-    return cmp(to_unicode(x), to_unicode(y))
 
 
 def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
@@ -396,7 +392,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         for m, t in six.iteritems(self._messages):
             if query.search(m) and (not empty or not t.get(lang, '').strip()):
                 messages.append(m)
-        messages.sort(filter_sort)
+        messages.sort(key=lambda m: to_unicode(m))
         # How many messages
         n = len(messages)
         namespace['n_messages'] = n
@@ -664,6 +660,8 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         messages = self._messages
 
         # Load the data
+        if isinstance(data, bytes):
+            data = data.decode("utf-8")
         po = polib.pofile(data)
         encoding = to_str(po.encoding)
         for entry in po:
@@ -688,8 +686,10 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     def manage_import(self, lang, file, REQUEST=None, RESPONSE=None):
         """ """
         # XXX For backwards compatibility only, use "po_import" instead.
-        if isinstance(file, str):
+        if isinstance(file, str): # six.PY2
             content = file
+        elif isinstance(file, bytes): # six.PY3
+            content = file.decode()
         else:
             content = file.read()
 
