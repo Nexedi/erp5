@@ -166,6 +166,7 @@ def runwsgi():
     parser = argparse.ArgumentParser()
     parser.add_argument('--event-log-file', help='Event log file')
     parser.add_argument('--access-log-file', help='Access log file')
+    parser.add_argument('--long-request-log-file', help='Long requests log file')
     parser.add_argument('-w', '--webdav', action='store_true')
     parser.add_argument('address', help='<ip>:<port>')
     parser.add_argument('zope_conf', help='path to zope.conf')
@@ -201,6 +202,13 @@ def runwsgi():
     access_log_logger = logging.getLogger('access')
     access_log_logger.propagate = False
     access_log_logger.addHandler(access_log_handler)
+
+    if args.long_request_log_file:
+      from Products.ERP5Type.patches import LongRequestLogger_dumper
+      long_request_log_handler = logging.FileHandler(args.long_request_log_file)
+      long_request_log_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+      LongRequestLogger_dumper.logger.propagate = False
+      LongRequestLogger_dumper.logger.addHandler(long_request_log_handler)
 
     if conf.debug_mode:
       console_handler = logging.StreamHandler(sys.stderr)
