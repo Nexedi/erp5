@@ -1,5 +1,4 @@
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
 
 portal_object = context.getPortalObject()
 
@@ -15,7 +14,7 @@ def createInputLine(new_id):
   int_len = 3
   o = newTempBase( portal_object,
                    str(new_id),
-                   uid ='new_%s' % zfill(new_id, int_len)
+                   uid ='new_%s' % str(new_id).zfill(int_len)
                  )
   l.append(o)
 
