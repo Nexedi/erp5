@@ -11,6 +11,15 @@ var runGame, updateGame, game_manager_instance;
 
   runGame = function (canvas, script, log, simulation_speed) {
 
+    //HARDCODED VALUES, should be UI parameters or can be got from a log
+    var map_size = 1143,
+      map_height = 100,
+      min_x = 616.7504175,
+      max_x = 616.828205,
+      min_y = 281.70885999999996,
+      max_y = 281.6225,
+      start_AMSL = 595.328;
+
     var game_parameters_json = {
       "drone": {
         "maxAcceleration": 1,
@@ -20,6 +29,16 @@ var runGame, updateGame, game_manager_instance;
       "latency": {
         "information": 0,
         "communication": 0
+      },
+      "map": {
+        "depth": map_size,
+        "height": map_height,
+        "width": map_size,
+        "min_x": min_x,
+        "min_y": min_y,
+        "max_x": max_x,
+        "max_y": max_y,
+        "start_AMSL": start_AMSL
       },
       "initialPosition": {
         "x": 0,
@@ -221,7 +240,7 @@ var runGame, updateGame, game_manager_instance;
           "z": start_position[2]
         },
         "gameTime" : flight_time,
-        "map": {
+        "map": { //this is here in case map parameters are not given
           "depth": map_size,
           "height": 100,
           "width": map_size,
@@ -243,7 +262,9 @@ var runGame, updateGame, game_manager_instance;
     game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
     game_parameters_json.initialPosition = processed_log.initialPosition;
     game_parameters_json.gameTime = processed_log.gameTime;
-    game_parameters_json.map = processed_log.map;
+    if (!game_parameters_json.map) {
+      game_parameters_json.map = processed_log.map;
+    }
 
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
