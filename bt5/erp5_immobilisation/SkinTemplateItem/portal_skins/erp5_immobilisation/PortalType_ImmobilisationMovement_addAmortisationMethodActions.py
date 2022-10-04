@@ -1,5 +1,3 @@
-from string import capitalize
-
 view_id_basis = "%s_%s_amortisation_method_view_details"
 view_action_basis = "Immobilisation_%s%sAmortisationMethodViewDetails"
 view_condition_basis = "object/Immobilisation_isUsing%s%sAmortisationMethod"
@@ -27,9 +25,9 @@ for method in amortisation_method_list:
       exists = 1
 
   if not exists:
-    capitalized_id = "".join([capitalize(o) for o in id.split("_")])
+    capitalized_id = "".join([o.capitalize() for o in id.split("_")])
     action_action = view_action_basis % (region, capitalized_id)
-    action_condition = view_condition_basis % (capitalize(region),capitalized_id)
+    action_condition = view_condition_basis % (region.capitalize(), capitalized_id)
     context.addAction(id = action_id,
                       name = "Amortisation Details",
                       action = action_action,
