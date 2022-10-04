@@ -35,8 +35,8 @@ for item in item_list:
   item_value = item[int(not is_right_display)]
 
   # Hash key from item_value
-  item_split = string.split(item_value, '/')
-  item_key = string.join(item_split[:split_depth] , '/' )
+  item_split = item_value.split('/')
+  item_key = '/'.join(item_split[:split_depth])
   base_category = item_split[0]
   multi = True
 
