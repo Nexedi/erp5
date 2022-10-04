@@ -17,8 +17,8 @@ for item in item_list:
   # Get value of the item
   item_value = item[int(not is_right_display)]
   # Hash key from item_value
-  item_split = string.split(item_value, '/')
-  item_key = string.join(item_split[:split_depth] , '/' )
+  item_split = item_value.split('/')
+  item_key = '/'.join(item_split[:split_depth])
   base_category = item_split[0]
 
   sub_field_property_dict = sub_field_dict.setdefault(item_key, default_sub_field_property_dict.copy())

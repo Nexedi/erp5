@@ -1,8 +1,6 @@
 divergence_messages_list =  context.getDivergenceList()
 
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
-
 
 portal_object = context.getPortalObject()
 l = []
@@ -13,7 +11,7 @@ def createInputLine(d_message, new_id):
 
   o = newTempBase( portal_object
                  , str(new_id)
-                 , uid ='new_%s' % zfill(new_id, int_len)
+                 , uid ='new_%s' % str(new_id).zfill(int_len)
                  ,  message = str(d_message.getTranslatedMessage())
                  ,  tested_property_id = d_message.getProperty('tested_property')
                  ,  object_title =  d_message.getObject().getTranslatedTitle()
