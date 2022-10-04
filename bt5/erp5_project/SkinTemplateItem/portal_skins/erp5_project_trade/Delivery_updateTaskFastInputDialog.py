@@ -5,7 +5,6 @@ information is correct.
 portal = context.getPortalObject()
 line_portal_type = "Sale Order Line"
 request = context.REQUEST
-from string import zfill
 from Products.PythonScripts.standard import Object
 from Products.ERP5Type.Message import translateString
 
@@ -31,7 +30,7 @@ i = 1
 project_search_dict = {}
 for line in line_list:
   line_dict = {}
-  key = zfill(i,3)
+  key = str(i).zfill(3)
   for property_name in ('title', 'quantity_unit_title', 'quantity',
                         'resource_title', 'total_price', 'price',
                         'reference', 'relative_url'):
