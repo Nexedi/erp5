@@ -569,6 +569,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 
 if str is bytes:
   bytes2str = str2bytes = lambda s: s
+  def str2unicode(s):
+    return s.decode('utf-8')
   def unicode2str(s):
     return s.encode('utf-8')
 else:
@@ -576,6 +578,8 @@ else:
     return s.decode()
   def str2bytes(s):
     return s.encode()
+  def str2unicode(s):
+    return s
   def unicode2str(s):
     return s
 
