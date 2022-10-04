@@ -42,12 +42,20 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.Cache import CachingMethod
+import six
+if six.PY3:
+  from functools import cmp_to_key
+  def cmp(a, b):
+      return (a > b) - (a < b)
 
 DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 
 from zLOG import LOG
 
-NBSP_UTF8 = u'\xA0'.encode('utf-8')
+if six.PY2:
+  NBSP_UTF8 = u'\xA0'.encode('utf-8')
+else:
+  NBSP_UTF8 = '\xA0'
 
 manage_addCategoryForm=DTMLFile('dtml/category_add', globals())
 
@@ -331,8 +339,10 @@ class Category(Folder):
       if local_sort_method:
         # sort objects at the current level
         child_value_list = list(child_value_list)
-        child_value_list.sort(local_sort_method)
-
+        if six.PY2:
+          child_value_list.sort(local_sort_method)
+        else:
+          child_value_list.sort(key=cmp_to_key(local_sort_method))
       if recursive:
         for c in child_value_list:
           # Do not pass sort_on / sort_order parameters intentionally, because
@@ -883,7 +893,10 @@ class BaseCategory(Category):
       if local_sort_method:
         # sort objects at the current level
         child_value_list = list(child_value_list)
-        child_value_list.sort(local_sort_method)
+        if six.PY2:
+          child_value_list.sort(local_sort_method)
+        else:
+          child_value_list.sort(key=cmp_to_key(local_sort_method))
 
       if recursive:
         for c in child_value_list:
