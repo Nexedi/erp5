@@ -780,15 +780,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     for i in self.getPortalObject().portal_categories.collect_order_group.contentValues():
       category_index_dict[i.getId()] = i.getIntIndex()
 
-    def sort_movement_group(a, b):
-      return cmp(category_index_dict.get(a.getCollectOrderGroup()),
-                 category_index_dict.get(b.getCollectOrderGroup())) or \
-             cmp(a.getIntIndex(), b.getIntIndex())
+    def sort_movement_group_key(a):
+      return (
+        category_index_dict.get(a.getCollectOrderGroup()),
+        a.getIntIndex(),
+      )
     if portal_type is None:
       portal_type = self.getPortalMovementGroupTypeList()
     movement_group_list = [x for x in self.contentValues(filter={'portal_type': portal_type}) \
                            if collect_order_group is None or collect_order_group == x.getCollectOrderGroup()]
-    return sorted(movement_group_list, sort_movement_group)
+    return sorted(movement_group_list, key=sort_movement_group_key)
 
   # XXX category name is hardcoded.
   def getDeliveryMovementGroupList(self, **kw):
