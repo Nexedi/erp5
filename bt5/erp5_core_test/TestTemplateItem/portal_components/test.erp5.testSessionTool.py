@@ -30,7 +30,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.tool.SessionTool import SESSION_CACHE_FACTORY
-from string import letters as LETTERS
+from string import ascii_letters as LETTERS
 from random import choice
 import time
 
