@@ -34,6 +34,8 @@ from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
 import six
+if six.PY3:
+  from functools import cmp_to_key
 import os
 import re
 import string
@@ -206,7 +208,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
             if result != 0:
               break
           return result
-        sort_kw = {'cmp':sortValues}
+        if six.PY2:
+          sort_kw = {'cmp':sortValues}
+        else:
+          sort_kw = {'key': cmp_to_key(sortValues)}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
 
     if isinstance(value_list, LazyMap):
