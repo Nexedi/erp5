@@ -97,7 +97,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     console.log("API say : " + msg);
   };
   DroneAaileFixeAPI.prototype.getGameParameter = function (name) {
-    if (["gameTime", "mapSize"].includes(name))
+    if (["gameTime", "map"].includes(name))
       return this._gameManager.gameParameter[name];
   };
   DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z, r) {
@@ -106,21 +106,21 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     }
     var flightParameters = this.getFlightParameters();
     function longitudToX(lon, flightParameters) {
-      return (flightParameters.MAP_SIZE / 360.0) * (180 + lon);
+      return (flightParameters.map.width / 360.0) * (180 + lon);
     }
     function latitudeToY(lat, flightParameters) {
-      return (flightParameters.MAP_SIZE / 180.0) * (90 - lat);
+      return (flightParameters.map.depth / 180.0) * (90 - lat);
     }
     function normalizeToMap(x, y, flightParameters) {
-      var n_x = (x - flightParameters.MIN_X) / (flightParameters.MAX_X - flightParameters.MIN_X),
-        n_y = (y - flightParameters.MIN_Y) / (flightParameters.MAX_Y - flightParameters.MIN_Y);
-      return [n_x * 1000 - flightParameters.MAP_SIZE / 2, n_y * 1000 - flightParameters.MAP_SIZE / 2];
+      var n_x = (x - flightParameters.map.min_x) / (flightParameters.map.max_x - flightParameters.map.min_x),
+        n_y = (y - flightParameters.map.min_y) / (flightParameters.map.max_y - flightParameters.map.min_y);
+      return [n_x * 1000 - flightParameters.map.width / 2, n_y * 1000 - flightParameters.map.depth / 2];
     }
     var x = longitudToX(lon, flightParameters),
       y = latitudeToY(lat, flightParameters),
       position = normalizeToMap(x, y, flightParameters);
-    if (z > flightParameters.start_AMSL) {
-      z -= flightParameters.start_AMSL;
+    if (z > flightParameters.map.start_AMSL) {
+      z -= flightParameters.map.start_AMSL;
     }
     var processed_coordinates = {
       x: position[0],
@@ -147,14 +147,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   DroneAaileFixeAPI.prototype.processCurrentPosition = function (x, y, z) {
     //convert x-y coordinates into latitud-longitude
     var flightParameters = this.getFlightParameters();
-    var lon = x + flightParameters.map_width / 2;
+    var lon = x + flightParameters.map.width / 2;
     lon = lon / 1000;
-    lon = lon * (flightParameters.MAX_X - flightParameters.MIN_X) + flightParameters.MIN_X;
-    lon = lon / (flightParameters.map_width / 360.0) - 180;
-    var lat = y + flightParameters.map_height / 2;
+    lon = lon * (flightParameters.map.max_x - flightParameters.map.min_x) + flightParameters.map.min_x;
+    lon = lon / (flightParameters.map.width / 360.0) - 180;
+    var lat = y + flightParameters.map.depth / 2;
     lat = lat / 1000;
-    lat = lat * (flightParameters.MAX_Y - flightParameters.MIN_Y) + flightParameters.MIN_Y;
-    lat = 90 - lat / (flightParameters.map_height / 180.0);
+    lat = lat * (flightParameters.map.max_y - flightParameters.map.min_y) + flightParameters.map.min_y;
+    lat = 90 - lat / (flightParameters.map.depth / 180.0);
     return {
       x: lat,
       y: lon,

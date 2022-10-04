@@ -26,6 +26,16 @@ var runGame, updateGame, game_manager_instance;
         "y": 0,
         "z": 20
       },
+      "map": {
+        "depth": 0,
+        "height": 0,
+        "width": 0,
+        "min_x": 0,
+        "min_y": 0,
+        "max_x": 0,
+        "max_y": 0,
+        "start_AMSL": 0
+      },
       "droneList": ["DroneAaileFixeAPI", "DroneLogAPI"]
     };
 
@@ -38,7 +48,8 @@ var runGame, updateGame, game_manager_instance;
         MAX_Y,
         SPEED_FACTOR = 0.75,
         log_point_list = [],
-        converted_log_point_list = [];
+        converted_log_point_list = [],
+        log_info_json = {};
       function longitudToX(lon) {
         return (MAP_SIZE / 360.0) * (180 + lon);
       }
@@ -193,14 +204,6 @@ var runGame, updateGame, game_manager_instance;
       game_parameters_json.compareFlights = {
         log: true,
         draw: true,
-        map_width: MAP_SIZE,
-        map_height: MAP_SIZE,
-        MAP_SIZE: MAP_SIZE,
-        MIN_X: MIN_X,
-        MAX_X: MAX_X,
-        MIN_Y: MIN_Y,
-        MAX_Y: MAX_Y,
-        start_AMSL: start_AMSL,
         flight_time: flight_time,
         average_speed: average_speed,
         log_interval_time: log_interval_time,
@@ -214,13 +217,14 @@ var runGame, updateGame, game_manager_instance;
       game_parameters_json.initialPosition.y = start_position[1];
       game_parameters_json.initialPosition.z = start_position[2];
       game_parameters_json.gameTime = flight_time;
-      //give map some margin from flight limits
-      MAP_SIZE *= 1.10;
-      game_parameters_json.mapSize = {
-        "depth": MAP_SIZE,
-        "height": 100,
-        "width": MAP_SIZE
-      }
+      game_parameters_json.map.depth = MAP_SIZE;
+      game_parameters_json.map.width = MAP_SIZE;
+      game_parameters_json.map.height = 100;
+      game_parameters_json.map.min_x = MIN_X;
+      game_parameters_json.map.min_y = MIN_Y;
+      game_parameters_json.map.max_x = MAX_X;
+      game_parameters_json.map.max_y = MAX_Y;
+      game_parameters_json.map.start_AMSL = start_AMSL;
       return game_parameters_json;
     }
 
@@ -395,15 +399,14 @@ var GameManager = /** @class */ (function () {
           if (GAMEPARAMETERS.compareFlights.log) {
             if (this._log_count[drone] === 0 || this._game_duration / this._log_count[drone] > 1) {
               this._log_count[drone] += GAMEPARAMETERS.compareFlights.log_interval_time;
-              //convert x-y coordinates into latitud-longitude
-              var lon = drone_position_x + GAMEPARAMETERS.compareFlights.map_width / 2;
+              var lon = drone_position_x + GAMEPARAMETERS.map.width / 2;
               lon = lon / 1000;
-              lon = lon * (GAMEPARAMETERS.compareFlights.MAX_X - GAMEPARAMETERS.compareFlights.MIN_X) + GAMEPARAMETERS.compareFlights.MIN_X;
-              lon = lon / (GAMEPARAMETERS.compareFlights.map_width / 360.0) - 180;
-              var lat = drone_position_y + GAMEPARAMETERS.compareFlights.map_height / 2;
+              lon = lon * (GAMEPARAMETERS.map.max_x - GAMEPARAMETERS.map.min_x) + GAMEPARAMETERS.map.min_x;
+              lon = lon / (GAMEPARAMETERS.map.width / 360.0) - 180;
+              var lat = drone_position_y + GAMEPARAMETERS.map.depth / 2;
               lat = lat / 1000;
-              lat = lat * (GAMEPARAMETERS.compareFlights.MAX_Y - GAMEPARAMETERS.compareFlights.MIN_Y) + GAMEPARAMETERS.compareFlights.MIN_Y;
-              lat = 90 - lat / (GAMEPARAMETERS.compareFlights.map_height / 180.0);
+              lat = lat * (GAMEPARAMETERS.map.max_y - GAMEPARAMETERS.map.min_y) + GAMEPARAMETERS.map.min_y;
+              lat = 90 - lat / (GAMEPARAMETERS.map.depth / 180.0);
               this._flight_log[drone].push([lat, lon, drone_position_z]);
             }
           }
@@ -674,7 +677,7 @@ var GameManager = /** @class */ (function () {
       }
       else {
         position_list.push(position);
-        var api = new this.APIs_dict[drone_list[i]](this, GAMEPARAMETERS.compareFlights);
+        var api = new this.APIs_dict[drone_list[i]](this, GAMEPARAMETERS);
         spawnDrone(position.x, position.y, position.z, i, api, code, this);
       }
     }
@@ -1015,12 +1018,12 @@ var MapManager = /** @class */ (function () {
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this;
-    var max = GAMEPARAMETERS.mapSize.width;
-    if (GAMEPARAMETERS.mapSize.depth > max)
-        max = GAMEPARAMETERS.mapSize.depth;
-    if (GAMEPARAMETERS.mapSize.height > max)
-        max = GAMEPARAMETERS.mapSize.height;
-    max = max < GAMEPARAMETERS.mapSize.depth ? GAMEPARAMETERS.mapSize.depth : max;
+    var max = GAMEPARAMETERS.map.width;
+    if (GAMEPARAMETERS.map.depth > max)
+        max = GAMEPARAMETERS.map.depth;
+    if (GAMEPARAMETERS.map.height > max)
+        max = GAMEPARAMETERS.map.height;
+    max = max < GAMEPARAMETERS.map.depth ? GAMEPARAMETERS.map.depth : max;
     // Skybox
     var max_sky = (max * 10 < 20000) ? max * 10 : 20000,
       skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
@@ -1045,9 +1048,10 @@ var MapManager = /** @class */ (function () {
     // Camera
     scene.activeCamera.upperRadiusLimit = max * 4;
     // Terrain
-    var width = GAMEPARAMETERS.mapSize.width,
-      depth = GAMEPARAMETERS.mapSize.depth,
-      height = GAMEPARAMETERS.mapSize.height,
+    // Give map some margin from the flight limits
+    var width = GAMEPARAMETERS.map.width * 1.10,
+      depth = GAMEPARAMETERS.map.depth * 1.10,
+      height = GAMEPARAMETERS.map.height,
       terrain = scene.getMeshByName("terrain001");
     terrain.isVisible = true;
     terrain.position = BABYLON.Vector3.Zero();
