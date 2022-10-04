@@ -64,7 +64,10 @@
     .declareJob('runGame', function runGame(options) {
       var gadget = this,
         game_manager = new DroneGameManager();
-      return game_manager.play(options);
+      return game_manager.play(options)
+      .push(function () {
+        console.log("simulation result:", game_manager.result());
+      });
     });
 
 }(window, rJS, domsugar, DroneGameManager));
