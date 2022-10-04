@@ -66,7 +66,6 @@
         web_page_element,
         element_list,
         element,
-        new_element,
         feed_url;
 
       if (modification_dict.hasOwnProperty('page_title')) {
@@ -105,9 +104,10 @@
             element.src = feed_url.href;
           }
 
-          domsugar(gadget.element.querySelector('main'), [
-            web_page_element
-          ]);
+          domsugar(
+            gadget.element.querySelector('main'),
+            Array.from(web_page_element.childNodes)
+          );
         }
       }
       if (modification_dict.hasOwnProperty('gadget_style_url')) {
