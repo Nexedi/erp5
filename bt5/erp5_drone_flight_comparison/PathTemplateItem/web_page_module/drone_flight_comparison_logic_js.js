@@ -26,40 +26,30 @@ var runGame, updateGame, game_manager_instance;
         "y": 0,
         "z": 20
       },
-      "map": {
-        "depth": 0,
-        "height": 0,
-        "width": 0,
-        "min_x": 0,
-        "min_y": 0,
-        "max_x": 0,
-        "max_y": 0,
-        "start_AMSL": 0
-      },
       "droneList": ["DroneAaileFixeAPI", "DroneLogAPI"]
     };
 
-    function processLog(game_parameters_json, log) {
-      var MAP_SIZE,
-        MIN_HEIGHT = 15,
-        MIN_X,
-        MAX_X,
-        MIN_Y,
-        MAX_Y,
+    function processLog(log) {
+      var map_size,
+        min_height = 15,
+        min_x,
+        max_x,
+        min_y,
+        max_y,
         SPEED_FACTOR = 0.75,
         log_point_list = [],
         converted_log_point_list = [],
         log_info_json = {};
       function longitudToX(lon) {
-        return (MAP_SIZE / 360.0) * (180 + lon);
+        return (map_size / 360.0) * (180 + lon);
       }
       function latitudeToY(lat) {
-        return (MAP_SIZE / 180.0) * (90 - lat);
+        return (map_size / 180.0) * (90 - lat);
       }
       function normalizeToMap(x, y) {
-        var n_x = (x - MIN_X) / (MAX_X - MIN_X),
-          n_y = (y - MIN_Y) / (MAX_Y - MIN_Y);
-        return [n_x * 1000 - MAP_SIZE / 2, n_y * 1000 - MAP_SIZE / 2];
+        var n_x = (x - min_x) / (max_x - min_x),
+          n_y = (y - min_y) / (max_y - min_y);
+        return [n_x * 1000 - map_size / 2, n_y * 1000 - map_size / 2];
       }
       function latLonDistance(c1, c2) {
         var R = 6371e3,
@@ -77,53 +67,69 @@ var runGame, updateGame, game_manager_instance;
         return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
                          Math.pow(p1[1] - p2[1], 2));
       }
-      var path_point_list = [], max_width, max_height,
-        line_list = log.split('\n'), log_entry_list = [],
-        i, start_time, end_time, log_entry, splitted_log_entry,
-        lat, lon, x, y, position, min_lon = 99999, min_lat = 99999,
-        max_lon = 0, max_lat = 0, previous, start_position, dist = 0,
-        path_point, average_speed = 0, flight_time, log_interval_time,
-        previous_log_time, height, timestamp, log_header_found, time_offset = 1,
-        flight_dist = 0, start_AMSL = 0;
-      for (i = 0; i < line_list.length; i += 1) {
-        if (!log_header_found && !line_list[i].includes("timestamp;")) {
-          continue;
-        } else {
-          log_header_found = true;
-        }
-        if (line_list[i].indexOf("AMSL") >= 0 ||
-            !line_list[i].includes(";")) {
-          continue;
-        }
-        log_entry = line_list[i].trim();
-        if (log_entry) {
-          log_entry_list.push(log_entry);
-          splitted_log_entry = log_entry.split(";");
-          lat = parseFloat(splitted_log_entry[1]);
-          lon = parseFloat(splitted_log_entry[2]);
-          //get min and max lat and lon
-          if (lon < min_lon) {
-            min_lon = lon;
+      function parseLog(log) {
+        var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
+          log_header_found, splitted_log_entry, lat, lon, max_lon = 0,
+          max_lat = 0, min_lon = 99999, min_lat = 99999;
+        for (i = 0; i < line_list.length; i += 1) {
+          if (!log_header_found && !line_list[i].includes("timestamp;")) {
+            continue;
+          } else {
+            log_header_found = true;
           }
-          if (lat < min_lat) {
-            min_lat = lat;
+          if (line_list[i].indexOf("AMSL") >= 0 ||
+              !line_list[i].includes(";")) {
+            continue;
           }
-          if (lon > max_lon) {
-            max_lon = lon;
-          }
-          if (lat > max_lat) {
-            max_lat = lat;
+          log_entry = line_list[i].trim();
+          if (log_entry) {
+            log_entry_list.push(log_entry);
+            splitted_log_entry = log_entry.split(";");
+            lat = parseFloat(splitted_log_entry[1]);
+            lon = parseFloat(splitted_log_entry[2]);
+            //get min and max lat and lon
+            if (lon < min_lon) {
+              min_lon = lon;
+            }
+            if (lat < min_lat) {
+              min_lat = lat;
+            }
+            if (lon > max_lon) {
+              max_lon = lon;
+            }
+            if (lat > max_lat) {
+              max_lat = lat;
+            }
           }
         }
+        return {
+          "log_entry_list": log_entry_list,
+          "min_lat": min_lat,
+          "min_lon": min_lon,
+          "max_lat": max_lat,
+          "max_lon": max_lon
+        };
       }
+      var path_point_list = [], max_width, max_height, i,
+        splitted_log_entry, start_time, end_time, x, y, position, lat, lon,
+        previous, start_position, dist = 0, log_entry_list, parsed_log_info,
+        path_point, average_speed = 0, flight_time, log_interval_time,
+        previous_log_time, height, timestamp, time_offset = 1,
+        flight_dist = 0, start_AMSL = 0, min_lat, min_lon, max_lat, max_lon;
+      parsed_log_info = parseLog(log);
+      log_entry_list = parsed_log_info.log_entry_list;
       //get map size from max distance
+      min_lat = parsed_log_info.min_lat;
+      min_lon = parsed_log_info.min_lon;
+      max_lat = parsed_log_info.max_lat;
+      max_lon = parsed_log_info.max_lon;
       max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
       max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
-      MAP_SIZE = Math.ceil(Math.max(max_width, max_height)) * 0.6;
-      MIN_X = longitudToX(min_lon);
-      MAX_X = longitudToX(max_lon);
-      MIN_Y = latitudeToY(min_lat);
-      MAX_Y = latitudeToY(max_lat);
+      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
+      min_x = longitudToX(min_lon);
+      max_x = longitudToX(max_lon);
+      min_y = latitudeToY(min_lat);
+      max_y = latitudeToY(max_lat);
       if (log_entry_list[0] && log_entry_list[1]) {
         var entry_1 = log_entry_list[0].split(";"),
           entry_2 = log_entry_list[1].split(";"),
@@ -151,8 +157,8 @@ var runGame, updateGame, game_manager_instance;
           end_time = timestamp;
         }
         height = parseFloat(splitted_log_entry[4]);
-        if (height < MIN_HEIGHT) {
-          height = MIN_HEIGHT;
+        if (height < min_height) {
+          height = min_height;
         } else {
           height = height;
         }
@@ -200,29 +206,45 @@ var runGame, updateGame, game_manager_instance;
       average_speed = average_speed / log_entry_list.length;
       log_interval_time = log_interval_time / log_entry_list.length / time_offset;
       flight_time = (end_time - start_time) / 1000 / time_offset;
-      game_parameters_json.logInfo = {
-        log: true,
-        draw: true,
-        log_interval_time: log_interval_time,
-        converted_log_point_list: converted_log_point_list
+      return {
+        "logInfo": {
+          log: true,
+          draw: true,
+          log_interval_time: log_interval_time,
+          converted_log_point_list: converted_log_point_list
+        },
+        "maxSpeed" : (flight_dist / flight_time) * SPEED_FACTOR,
+        "flight_path_point_list" : path_point_list,
+        "initialPosition" : {
+          "x": start_position[0],
+          "y": start_position[1],
+          "z": start_position[2]
+        },
+        "gameTime" : flight_time,
+        "map": {
+          "depth": map_size,
+          "height": 100,
+          "width": map_size,
+          "min_x": min_x,
+          "min_y": min_y,
+          "max_x": max_x,
+          "max_y": max_y,
+          "min_lat": parsed_log_info.min_lat,
+          "min_lon": parsed_log_info.min_lon,
+          "max_lat": parsed_log_info.max_lat,
+          "max_lon": parsed_log_info.max_lon,
+          "start_AMSL": start_AMSL
+        }
       };
-      game_parameters_json.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
-      game_parameters_json.flight_path_point_list = path_point_list;
-      game_parameters_json.initialPosition.x = start_position[0];
-      game_parameters_json.initialPosition.y = start_position[1];
-      game_parameters_json.initialPosition.z = start_position[2];
-      game_parameters_json.gameTime = flight_time;
-      game_parameters_json.map.depth = MAP_SIZE;
-      game_parameters_json.map.width = MAP_SIZE;
-      game_parameters_json.map.height = 100;
-      game_parameters_json.map.min_x = MIN_X;
-      game_parameters_json.map.min_y = MIN_Y;
-      game_parameters_json.map.max_x = MAX_X;
-      game_parameters_json.map.max_y = MAX_Y;
-      game_parameters_json.map.start_AMSL = start_AMSL;
-      return game_parameters_json;
     }
-    game_parameters_json = processLog(game_parameters_json, log);
+    var processed_log = processLog(log);
+    game_parameters_json.logInfo = processed_log.logInfo;
+    game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
+    game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
+    game_parameters_json.initialPosition = processed_log.initialPosition;
+    game_parameters_json.gameTime = processed_log.gameTime;
+    game_parameters_json.map = processed_log.map;
+
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
                                               game_parameters_json,
