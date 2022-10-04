@@ -18,6 +18,8 @@
 		'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
 	]);
 
+  var game_result;
+
   //////////////////////////////////////////
   // Webworker
   //////////////////////////////////////////
@@ -116,6 +118,9 @@
       delete this.loop_promise;
       delete this.pause_defer;
     },
+    result: function resultGameManager() {
+      return game_result;
+    },
     play: function startGameManager(options) {
       if (this.hasOwnProperty('loop_promise')) {
         throw new Error('Can not start the game if already started');
@@ -162,6 +167,7 @@
                 break;
               case 'finished':
                 console.log('GAME: finished');
+                game_result = evt.data.result;
                 return context.quit();
                 break;
               case 'event':
