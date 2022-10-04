@@ -33,60 +33,14 @@
 </tr>
 
 <tr>
-  <td>assertElementNotPresent</td>
-  <td>//head/link[@rel='prerender']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//head/link[@rel='alternate' and @type='application/rss+xml' and @href='feed.rss']</td>
+  <td>waitForElementPresent</td>
+  <td>//main//img[@id='lazy_img' and @alt='loaded']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//head/link[@rel='stylesheet' and @href='jsstyle.css']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//nav[@id='sitemap']/a[text()='Demo Style']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//nav[@id='language']//a[@hreflang='en']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//aside[@id='document_list']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@class='input']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//main//h2[text()='Unauthorized']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//main//p[text()='You do not have enough permissions to access this page.']</td>
+  <td>//main//img[@id='eager_img' and @alt='error']</td>
   <td></td>
 </tr>
 
