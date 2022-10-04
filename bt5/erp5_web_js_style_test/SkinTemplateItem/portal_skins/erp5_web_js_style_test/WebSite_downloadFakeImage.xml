@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST, format=None, display=None, quality=None</string> </value>
+            <value> <string>REQUEST, display=None, quality=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
