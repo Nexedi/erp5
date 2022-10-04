@@ -688,8 +688,10 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     def manage_import(self, lang, file, REQUEST=None, RESPONSE=None):
         """ """
         # XXX For backwards compatibility only, use "po_import" instead.
-        if isinstance(file, str):
+        if isinstance(file, str): # six.PY2
             content = file
+        elif isinstance(file, bytes): # six.PY3
+            content = file.decode()
         else:
             content = file.read()
 
