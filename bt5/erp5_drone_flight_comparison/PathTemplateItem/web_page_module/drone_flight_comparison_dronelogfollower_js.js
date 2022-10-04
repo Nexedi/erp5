@@ -87,9 +87,9 @@ var DroneLogAPI = /** @class */ (function () {
       'if (!me.getFlightParameters())' +
       'throw "DroneLog API must implement getFlightParameters";' +
       'me.flightParameters = me.getFlightParameters();' +
-      'me.checkpoint_list = me.flightParameters.compareFlights.converted_log_point_list;' +
+      'me.checkpoint_list = me.flightParameters.logInfo.converted_log_point_list;' +
       'me.startTime = new Date();' +
-      'me.initTimestamp = me.flightParameters.compareFlights.converted_log_point_list[0][3];' +
+      'me.initTimestamp = me.flightParameters.logInfo.converted_log_point_list[0][3];' +
       'me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
       'me.last_checkpoint_reached = -1;' +
       'me.setAcceleration(10);' +

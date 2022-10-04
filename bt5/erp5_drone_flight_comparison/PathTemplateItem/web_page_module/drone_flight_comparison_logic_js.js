@@ -201,7 +201,7 @@ var runGame, updateGame, game_manager_instance;
       log_interval_time = log_interval_time / log_entry_list.length / time_offset;
       flight_time = (end_time - start_time) / 1000 / time_offset;
       //TODO refactor this
-      game_parameters_json.compareFlights = {
+      game_parameters_json.logInfo = {
         log: true,
         draw: true,
         flight_time: flight_time,
@@ -227,7 +227,6 @@ var runGame, updateGame, game_manager_instance;
       game_parameters_json.map.start_AMSL = start_AMSL;
       return game_parameters_json;
     }
-
     game_parameters_json = processLog(game_parameters_json, log);
 
     if (!game_manager_instance) {
@@ -290,7 +289,7 @@ var GameManager = /** @class */ (function () {
     this._last_position_drawn = [];
     this._log_count = [];
     this._flight_log = [];
-    if (GAMEPARAMETERS.compareFlights) {
+    if (GAMEPARAMETERS.logInfo) {
       for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
         this._flight_log[drone] = [];
         this._log_count[drone] = 0;
@@ -390,15 +389,15 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._updateDisplayedInfo = function (delta_time, update_dom) {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000);
-    if (GAMEPARAMETERS.compareFlights) {
+    if (GAMEPARAMETERS.logInfo) {
       for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
         if (this._droneList[drone].can_play) {
           var drone_position_x = this._droneList[drone].position.x,
             drone_position_y = this._droneList[drone].position.y,
             drone_position_z = this._droneList[drone].position.z;
-          if (GAMEPARAMETERS.compareFlights.log) {
+          if (GAMEPARAMETERS.logInfo.log) {
             if (this._log_count[drone] === 0 || this._game_duration / this._log_count[drone] > 1) {
-              this._log_count[drone] += GAMEPARAMETERS.compareFlights.log_interval_time;
+              this._log_count[drone] += GAMEPARAMETERS.logInfo.log_interval_time;
               var lon = drone_position_x + GAMEPARAMETERS.map.width / 2;
               lon = lon / 1000;
               lon = lon * (GAMEPARAMETERS.map.max_x - GAMEPARAMETERS.map.min_x) + GAMEPARAMETERS.map.min_x;
@@ -410,7 +409,7 @@ var GameManager = /** @class */ (function () {
               this._flight_log[drone].push([lat, lon, drone_position_z]);
             }
           }
-          if (GAMEPARAMETERS.compareFlights.draw) { //TODO review this in JSON dict
+          if (GAMEPARAMETERS.logInfo.draw) { //TODO review this in JSON dict
             //draw drone position every second
             if (this._last_position_drawn[drone] !== seconds) {
               this._last_position_drawn[drone] = seconds;
