@@ -38,6 +38,9 @@ from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 import six
+if six.PY3:
+  def cmp(a, b):
+      return (a > b) - (a < b)
 
 class TestCMFCategory(ERP5TypeTestCase):
 
