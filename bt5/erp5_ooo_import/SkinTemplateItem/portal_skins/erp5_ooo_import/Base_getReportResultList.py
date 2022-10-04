@@ -1,5 +1,4 @@
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
 
 portal_object = context.getPortalObject()
 num = 0
@@ -25,8 +24,8 @@ for [method_id, result] in result_list:
   num += 1
   int_len = 3
   o = newTempBase(portal_object, safe_id)
-  o.setUid( 'new_%s' % zfill(num, int_len)) # XXX There is a security issue here
-  o.edit(uid='new_%s' % zfill(num, int_len)) # XXX There is a security issue here
+  o.setUid( 'new_%s' % str(num).zfill(int_len)) # XXX There is a security issue here
+  o.edit(uid='new_%s' % str(num).zfill(int_len)) # XXX There is a security issue here
   o.edit( method_id   = method_id
          , result     = result['message']
          , object_url = result['object_url']
