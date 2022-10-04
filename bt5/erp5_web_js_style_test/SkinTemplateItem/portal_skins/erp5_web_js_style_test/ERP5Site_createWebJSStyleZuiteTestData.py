@@ -186,7 +186,7 @@ web_page = module.newContent(
   language="en",
   version="001",
   text_content="""
-<img loading="lazy" src="erp5_web_js_style_test_big_image?format="></img>
+<img src="WebSite_downloadFakeImage"></img>
 """
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
