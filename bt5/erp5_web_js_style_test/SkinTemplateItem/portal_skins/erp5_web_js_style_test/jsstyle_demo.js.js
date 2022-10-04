@@ -1,7 +1,15 @@
-/*globals window, document, rJS, domsugar*/
+/*globals window, document, rJS, domsugar, URL*/
 /*jslint indent: 2, maxlen: 80*/
-(function (window, document, rJS, domsugar) {
+(function (window, document, rJS, domsugar, URL) {
   "use strict";
+
+  function changeAltLoad(evt) {
+    evt.target.alt = 'loaded';
+  }
+
+  function changeAltError(evt) {
+    evt.target.alt = 'error';
+  }
 
   function renderSitemap(sitemap, element) {
     var child_list = [],
@@ -58,6 +66,7 @@
         web_page_element,
         element_list,
         element,
+        new_element,
         feed_url;
 
       if (modification_dict.hasOwnProperty('page_title')) {
@@ -81,28 +90,24 @@
           web_page_element = domsugar('div', {html: gadget.state.html_content})
                                      .querySelector('div.input').firstChild;
 
-    // Improve img rendering by default to reduce size
-    element_list = web_page_element.querySelectorAll('img');
-    for (i = 0; i < element_list.length; i += 1) {
-      element = element_list[i];
-      if (!element.getAttribute('loading')) {
-        element.loading = 'lazy';
-      }
-      feed_url = element.getAttribute('src');
-/*
-      if ((feed_url) &&
-          (feed_url.indexOf('/') === -1)) {
-*/
-      if (feed_url) {
-        feed_url = feed_url.split('?')[0] +
-                   '?format=jpg&display=small&quality=90';
-        element.src = feed_url;
-      }
-    }
+          // Replace IMG src value, to disable the browser cache
+          // and force downloading it.
+          // Used by test to check if original url has been accessed
+          element_list = web_page_element.querySelectorAll('img');
+          for (i = 0; i < element_list.length; i += 1) {
+            element = element_list[i];
+            feed_url = new URL(element.getAttribute('src'),
+                               window.location.href);
+            feed_url.search = feed_url.search + '&cachevalue=foo';
+            // Not renderJS friendly, but that's only for the test...
+            element.addEventListener('load', changeAltLoad);
+            element.addEventListener('error', changeAltError);
+            element.src = feed_url.href;
+          }
 
-          domsugar(gadget.element.querySelector('main'), {
-            html: web_page_element.innerHTML
-          });
+          domsugar(gadget.element.querySelector('main'), [
+            web_page_element
+          ]);
         }
       }
       if (modification_dict.hasOwnProperty('gadget_style_url')) {
@@ -161,4 +166,4 @@
       }
     });
 
-}(window, document, rJS, domsugar));
+}(window, document, rJS, domsugar, URL));

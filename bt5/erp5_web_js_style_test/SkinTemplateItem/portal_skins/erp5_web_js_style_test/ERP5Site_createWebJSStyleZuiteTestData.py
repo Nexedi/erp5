@@ -2,6 +2,7 @@
 from DateTime import DateTime
 
 portal = context.getPortalObject()
+now = DateTime()
 
 web_page_portal_type = "Web Page"
 web_site_portal_type = "Web Site"
@@ -186,10 +187,9 @@ web_page = module.newContent(
   language="en",
   version="001",
   text_content="""
-<img loading="lazy" src="WebSite_downloadFakeImage?loading=lazy"></img>
-<img src="WebSite_downloadFakeImage?loading=eager"></img>
-
-"""
+<img loading="eager" id="eager_img" alt="default alt" src="WebSite_downloadFakeImage?cachekey=eager_%s"></img>
+<img loading="lazy" id="lazy_img" alt="default alt" src="WebSite_downloadFakeImage?cachekey=lazy_%s"></img>
+""" % (now.HTML4(), now.HTML4())
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
 
