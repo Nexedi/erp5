@@ -1,5 +1,4 @@
 from Products.ERP5Type.Document import newTempBase
-from string import zfill
 
 num = 0
 listbox_lines = []
@@ -23,8 +22,8 @@ for spreadsheet in spreadsheets.keys():
       # int_len is used to fill the uid of the created object like 0000001
       int_len = 7
       o = newTempBase(context, safe_id)
-      o.setUid('new_%s' % zfill(num, int_len)) # XXX There is a security issue here
-      o.edit(uid='new_%s' % zfill(num, int_len)) # XXX There is a security issue here
+      o.setUid('new_%s' % str(num).zfill(int_len)) # XXX There is a security issue here
+      o.edit(uid='new_%s' % str(num).zfill(int_len)) # XXX There is a security issue here
       o.edit(
           id=safe_id,
           spreadsheet_name=spreadsheet,

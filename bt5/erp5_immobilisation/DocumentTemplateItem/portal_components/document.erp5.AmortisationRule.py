@@ -28,7 +28,6 @@
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from string import capitalize
 
 from erp5.component.module.DateUtils import centis, getClosestDate, addToDate
 from erp5.component.module.DateUtils import getDecimalNumberOfYearsBetween
@@ -99,7 +98,7 @@ class AmortisationRule(RuleMixin):
         modified_properties = []
         for (key, value) in calculated_movement.items():
           if key not in ('name','status','id','divergent'):
-            getter_name = 'get%s' % ''.join([capitalize(o) for o in key.split('_')])
+            getter_name = 'get%s' % ''.join([o.capitalize() for o in key.split('_')])
             getter = getattr(simulation_movement, getter_name)
             previous_value = getter()
             # Check if this property changes
@@ -109,7 +108,7 @@ class AmortisationRule(RuleMixin):
 
             if value is None and key.split('_')[-1] == 'value':
               key = '_'.join(key.split('_')[:-1])
-            setter_name = 'set%s' % ''.join([capitalize(o) for o in key.split('_')])
+            setter_name = 'set%s' % ''.join([o.capitalize() for o in key.split('_')])
             setter = getattr(simulation_movement, setter_name)
             setter(value)
         simulation_movement.edit(start_date=simulation_movement.getStopDate())
