@@ -294,7 +294,7 @@ class StrippingParser(HTMLParser):
                             self.original_charset = charset
                         v = charset_parser.sub(
                             CharsetReplacer(self.default_encoding), v)
-                    self.result.append(' %s="%s"' % (k, html_quote(v, True)))
+                    self.result.append(' %s="%s"' % (k, html_quote(v)))
 
             #UNUSED endTag = '</%s>' % tag
             if safeToInt(self.valid.get(tag)):
