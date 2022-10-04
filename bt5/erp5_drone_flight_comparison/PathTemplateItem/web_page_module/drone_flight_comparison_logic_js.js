@@ -200,15 +200,10 @@ var runGame, updateGame, game_manager_instance;
       average_speed = average_speed / log_entry_list.length;
       log_interval_time = log_interval_time / log_entry_list.length / time_offset;
       flight_time = (end_time - start_time) / 1000 / time_offset;
-      //TODO refactor this
       game_parameters_json.logInfo = {
         log: true,
         draw: true,
-        flight_time: flight_time,
-        average_speed: average_speed,
         log_interval_time: log_interval_time,
-        path: path_point_list,
-        full_log: log_point_list,
         converted_log_point_list: converted_log_point_list
       };
       game_parameters_json.drone.maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
@@ -228,7 +223,6 @@ var runGame, updateGame, game_manager_instance;
       return game_parameters_json;
     }
     game_parameters_json = processLog(game_parameters_json, log);
-
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
                                               game_parameters_json,
