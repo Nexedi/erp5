@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from six import unichr
 from zLOG import ERROR
-from six.moves.html_parser import HTMLParser
+from six.moves.html_parser import HTMLParser, HTMLParseError
 import re
 from Products.PythonScripts.standard import html_quote
 import codecs
@@ -294,7 +294,7 @@ class StrippingParser(HTMLParser):
                             self.original_charset = charset
                         v = charset_parser.sub(
                             CharsetReplacer(self.default_encoding), v)
-                    self.result.append(' %s="%s"' % (k, html_quote(v, True)))
+                    self.result.append(' %s="%s"' % (k, html_quote(v)))
 
             #UNUSED endTag = '</%s>' % tag
             if safeToInt(self.valid.get(tag)):
