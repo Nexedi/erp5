@@ -1,4 +1,4 @@
-from Products.ERP5Type.Utils import getMessageIdWithContext
+from Products.ERP5Type.Utils import getMessageIdWithContext, str2unicode, unicode2str
 
 supported_languages = context.Localizer.get_supported_languages()
 translated_keys = {} # This dict prevents entering the same key twice
@@ -34,7 +34,7 @@ for portal_type in portal_type_list:
       for lang in supported_languages:
         key = (lang, portal_type.getId(), state_var, state_reference)
         if key not in translated_keys:
-          translated_message = context.Localizer.erp5_ui.gettext(state_reference, lang=lang).encode('utf-8')
+          translated_message = unicode2str(context.Localizer.erp5_ui.gettext(state_reference, lang=lang))
           translated_keys[key] = None # mark as translated
           object_list.append(dict(language=lang, message_context=state_var, portal_type=portal_type.getId(), original_message=state_reference,
                              translated_message=translated_message))
@@ -43,10 +43,10 @@ for portal_type in portal_type_list:
         if state.getTitle() is not None and state.getTitle() != '':
           state_var_title = '%s_title' % state_var
           msg_id = getMessageIdWithContext(state.getTitle(), 'state', wf_id)
-          translated_message = context.Localizer.erp5_ui.gettext(msg_id, default='', lang=lang).encode('utf-8')
+          translated_message = unicode2str(context.Localizer.erp5_ui.gettext(msg_id, default='', lang=lang))
           if translated_message == '':
             msg_id = state.getTitle()
-            translated_message = context.Localizer.erp5_ui.gettext(state.getTitle().decode('utf-8'), lang=lang).encode('utf-8')
+            translated_message = unicode2str(context.Localizer.erp5_ui.gettext(str2unicode(state.getTitle()), lang=lang))
           key = (lang, portal_type.getId(), state_var_title, state_reference, msg_id)
           if key not in translated_keys:
             translated_keys[key] = None # mark as translated
@@ -67,7 +67,7 @@ for ptype in context.portal_types.objectValues():
     if key not in translated_keys:
       translated_keys[key] = None # mark as translated
       object_list.append(dict(language=lang, message_context='portal_type', portal_type=portal_type, original_message=portal_type,
-                         translated_message=context.Localizer.erp5_ui.gettext(portal_type, lang=lang).encode('utf-8')))
+                         translated_message=unicode2str(context.Localizer.erp5_ui.gettext(portal_type, lang=lang))))
 if object_list:
   catalog_translation_list(object_list)
 
