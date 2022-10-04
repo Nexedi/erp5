@@ -32,7 +32,6 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from DateTime import DateTime
-from string import capitalize
 
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.interface.IImmobilisationItem import IImmobilisationItem
@@ -469,7 +468,7 @@ class ImmobilisableItem(Item, Amount):
             property_list.extend(movement.getUncontinuousNeededSpecificParameterListForItem(self))
             property_list.extend(movement.getFacultativeSpecificParameterListForItem(self))
             for key,value,_ in property_list:
-              value = 'get' + ''.join(map(capitalize, value.split('_')))
+              value = 'get' + ''.join(e.capitalize() for e in value.split('_'))
               value = getattr(movement, value, None)
               if value is not None:
                 value = value()
