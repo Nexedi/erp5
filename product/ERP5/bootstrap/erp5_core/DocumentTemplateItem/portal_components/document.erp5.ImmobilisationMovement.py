@@ -33,8 +33,6 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.Movement import Movement
 
-from string import capitalize
-
 UNIMMOBILISING_METHOD = "unimmobilise"
 NO_CHANGE_METHOD = "no_change"
 AMORTISATION_METHOD_PREFIX = "portal_skins/erp5_accounting_"
@@ -103,7 +101,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     def checkValuesAreNotNone(property_list):
       errors = []
       for key, value, name in property_list:
-        value = 'get' + ''.join(map(capitalize, value.split('_')))
+        value = 'get' + ''.join(capitalize(e) for e in value.split('_'))
         value = getattr(self, value, None)
         if value is not None:
           value = value()

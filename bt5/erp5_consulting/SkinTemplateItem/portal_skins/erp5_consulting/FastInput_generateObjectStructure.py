@@ -1,5 +1,3 @@
-from string import zfill
-
 ##################################################
 #### About the transformation_rules structure ####
 # a key indicate that input of that level having the same value must be grouped together
