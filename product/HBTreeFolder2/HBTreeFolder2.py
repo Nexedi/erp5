@@ -423,7 +423,10 @@ class HBTreeFolder2Base (Persistent):
                     s.append((k, six.iteritems(v)))
                 break
               s.append((k, six.iteritems(v)))
-        r.sort()
+        if six.PY2:
+          r.sort()
+        else:
+          r.sort(key=lambda e: '' if e is None else e)
         return r
 
     security.declareProtected(access_contents_information,
