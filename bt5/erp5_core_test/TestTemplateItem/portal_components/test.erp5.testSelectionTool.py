@@ -29,7 +29,7 @@
 import contextlib
 import unittest
 from threading import Thread
-from thread import get_ident
+from six.moves._thread import get_ident
 from unittest import skip
 
 import transaction
