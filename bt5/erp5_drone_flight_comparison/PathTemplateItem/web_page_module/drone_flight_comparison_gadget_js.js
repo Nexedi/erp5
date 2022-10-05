@@ -5,6 +5,11 @@
   "use strict";
 
   var canvas, offscreen;
+  var LOGIC_FILE_LIST = [
+    'gadget_erp5_page_drone_simulator_logic_comparison.js',
+    'gadget_erp5_page_flight_comparison_droneaaailefixe.js',
+    'gadget_erp5_page_flight_comparison_dronelogfollower.js'
+  ];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -35,6 +40,7 @@
       options.canvas_original = canvas;
       options.width = canvas.width;
       options.height = canvas.height;
+      options.logic_url_list = LOGIC_FILE_LIST;
       var gadget = this,
         game_manager = new DroneGameManager();
       return game_manager.play(options)
