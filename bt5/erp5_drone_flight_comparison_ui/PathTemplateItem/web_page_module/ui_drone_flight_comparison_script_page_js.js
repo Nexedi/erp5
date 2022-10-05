@@ -1,7 +1,19 @@
 (function (window, RSVP, rJS, domsugar, document, Blob) {
   "use strict";
 
-  var SIMULATION_SPEED = 200;
+  //HARDCODED VALUES, TODO get from UI inputs
+  var SIMULATION_SPEED = 200,
+    SIMULATION_TIME = 1800,
+    map_size = 1143,
+    map_height = 100,
+    min_x = 616.7504175,
+    max_x = 616.828205,
+    min_y = 281.70885999999996,
+    max_y = 281.6225,
+    start_AMSL = 595.328,
+    MAX_SPEED = 16.666667,
+    MAX_ACCELERATION = 1,
+    DRONE_LIST = ["DroneAaileFixeAPI", "DroneLogAPI"];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -15,6 +27,7 @@
       var gadget = this, script_content, log_content, query,
         fragment = domsugar(gadget.element.querySelector('#fragment'),
                             [domsugar('div')]).firstElementChild;
+      //TODO this should come from inputs textareas
       return new RSVP.Queue()
         .push(function () {
           query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
@@ -54,21 +67,12 @@
           return gadget.getDeclaredGadget('simulator');
         })
         .push(function (simulator) {
-          //HARDCODED VALUES, TODO get from UI inputs
-          var map_size = 1143,
-            map_height = 100,
-            min_x = 616.7504175,
-            max_x = 616.828205,
-            min_y = 281.70885999999996,
-            max_y = 281.6225,
-            start_AMSL = 595.328;
-
           var game_parameters_json = {
             "drone": {
               "maxAcceleration": 1,
-              "maxSpeed": 16.666667
+              "maxSpeed": MAX_SPEED
             },
-            "gameTime": 1800,
+            "gameTime": SIMULATION_TIME,
             "simulation_speed": SIMULATION_SPEED,
             "latency": {
               "information": 0,
@@ -89,7 +93,7 @@
               "y": 0,
               "z": 20
             },
-            "droneList": ["DroneAaileFixeAPI", "DroneLogAPI"]
+            "droneList": DRONE_LIST
           };
           return simulator.runGame({
             script: options.script,
