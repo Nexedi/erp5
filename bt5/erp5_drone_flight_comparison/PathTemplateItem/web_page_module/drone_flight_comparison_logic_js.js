@@ -9,44 +9,7 @@ var runGame, updateGame, game_manager_instance;
   "use strict";
   console.log('game logic');
 
-  runGame = function (canvas, script, log, simulation_speed) {
-
-    //HARDCODED VALUES, should be UI parameters or can be got from a log
-    var map_size = 1143,
-      map_height = 100,
-      min_x = 616.7504175,
-      max_x = 616.828205,
-      min_y = 281.70885999999996,
-      max_y = 281.6225,
-      start_AMSL = 595.328;
-
-    var game_parameters_json = {
-      "drone": {
-        "maxAcceleration": 1,
-        "maxSpeed": 16.666667
-      },
-      "gameTime": 1800,
-      "latency": {
-        "information": 0,
-        "communication": 0
-      },
-      "map": {
-        "depth": map_size,
-        "height": map_height,
-        "width": map_size,
-        "min_x": min_x,
-        "min_y": min_y,
-        "max_x": max_x,
-        "max_y": max_y,
-        "start_AMSL": start_AMSL
-      },
-      "initialPosition": {
-        "x": 0,
-        "y": 0,
-        "z": 20
-      },
-      "droneList": ["DroneAaileFixeAPI", "DroneLogAPI"]
-    };
+  runGame = function (canvas, script, log, game_parameters_json) {
 
     function processLog(log) {
       var map_size,
@@ -268,8 +231,7 @@ var runGame, updateGame, game_manager_instance;
 
     if (!game_manager_instance) {
       game_manager_instance = new GameManager(canvas, script,
-                                              game_parameters_json,
-                                              simulation_speed
+                                              game_parameters_json
                                              );
     }
     return game_manager_instance.run();
@@ -310,15 +272,15 @@ function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
 
 var GameManager = /** @class */ (function () {
   // *** CONSTRUCTOR ***
-  function GameManager(canvas, script, game_parameters_json, simulation_speed) {
+  function GameManager(canvas, script, game_parameters_json) {
     var _this = this;
     this._canvas = canvas;
     this._scene = null;
     this._engine = null;
     this._droneList = [];
     this._canUpdate = false;
-    if (!simulation_speed) { simulation_speed = 5; }
-    this._max_step_animation_frame = simulation_speed;
+    this._max_step_animation_frame = game_parameters_json.simulation_speed;
+    if (!this._max_step_animation_frame) { this._max_step_animation_frame = 5; }
     Object.assign(GAMEPARAMETERS, game_parameters_json);
     this._game_parameters_json = game_parameters_json;
     this._map_swapped = false;
