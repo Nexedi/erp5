@@ -16,6 +16,7 @@
 """
 from __future__ import absolute_import
 
+import base64
 from DateTime import DateTime
 from six.moves import map
 import six
@@ -33,6 +34,7 @@ from Products.CMFCore.PortalObject import PortalObjectBase
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base
+from Products.ERP5Security import _setUserNameForAccessLog
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
@@ -53,6 +55,10 @@ import transaction
 from App.config import getConfiguration
 MARKER = []
 
+ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME = '__enable_authorisation_extractor'
+ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE = '1'
+ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME = 'username'
+ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME = 'password'
 
 # Site Creation DTML
 manage_addERP5SiteFormDtml = Globals.HTMLFile('dtml/addERP5Site', globals())
@@ -198,6 +204,56 @@ class ReferCheckerBeforeTraverseHook:
             'request : "%s"' % http_url)
         response.unauthorized()
 
+class AutorisationExtractorBeforeTraverseHook(object):
+  """
+  Extract login and password from the request and fake an Authorization header.
+
+  Our user folder is not the only user folder: there is also Zope's root user
+  folder. The former handles fancy authentication mechanisms, while the latter
+  only understands the HTTP "Basic" authentication.
+  Which means that, to use such root user (which is required on any freshly
+  created ERP5 instance) one would have to use their browser's basic
+  authentication support (/manage_main, then input login and password).
+  As problem of basic authentication is that the action of logging out is both
+  non-straightforward (get asked a login & password and cancel the request)
+  and non-integred with ERP5's logout procedure.
+  So, to stop using basic authentication while still being able to use these
+  root users, there needs to be a way to convert a POST request payload into
+  an Authorization header with "Basic" scheme.
+  This cannot be done at the level of a PAS extractor plugin because
+  ZPublisher.BaseRequest.BaseRequest.traverse caches its _auth property
+  (which holds the content of Authorization header) after traversal and before
+  querying the user folders available from the object being published.
+  Which means it needs to be done one step earlier: during trversal.
+
+  Avoid fancy configurable (and potentially conflicting) prefixes on the fields
+  being extracted by using a separate marker field (which should be more
+  convenient to tweak in case of conflicts than a pair of prefixes).
+  """
+  handle = '_erp5_authorisation_extractor'
+  def __call__(self, container, request):
+    form_dict = request.form
+    if (
+      # Do nothing if request already has any Authorization header
+      not request._auth and
+      # Do nothing on non-POST requests
+      request.method == 'POST' and
+      # Do nothing if our dedicated marker argument does not have the expected
+      # value.
+      form_dict.get(
+        ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME,
+      ) == ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE and
+      # Do nothing if username or password is missing
+      ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME in form_dict and
+      ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME in form_dict
+    ):
+      username = form_dict[ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME]
+      request._auth = 'Basic ' + base64.b64encode('%s:%s' % (
+        username,
+        form_dict[ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME],
+      ))
+      request.response._auth = 1
+      _setUserNameForAccessLog(username, request)
 
 class _site(threading.local):
   """Class for getting and setting the site in the thread global namespace
@@ -291,6 +347,14 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       self.erp5_catalog_storage,
       'erp5_jquery',
       'erp5_xhtml_style',
+
+      'erp5_full_text_mroonga_catalog',
+      'erp5_base',
+      'erp5_content_translation',
+      'erp5_web_service',
+      'erp5_session',
+      'erp5_oauth2_authorisation',
+      'erp5_oauth2_resource',
     ]
 
   security.declarePrivate('reindexObject')
@@ -551,6 +615,27 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
     """Disable the HTTP_REFERER check."""
     BeforeTraverse.unregisterBeforeTraverse(self,
                                         ReferCheckerBeforeTraverseHook.handle)
+
+  security.declareProtected(Permissions.ManagePortal, 'enableAuthorisationExtractor')
+  def enableAuthorisationExtractor(self):
+    """
+    Enable AutorisationExtractorBeforeTraverseHook.
+    """
+    BeforeTraverse.registerBeforeTraverse(
+      self,
+      AutorisationExtractorBeforeTraverseHook(),
+      AutorisationExtractorBeforeTraverseHook.handle,
+    )
+
+  security.declareProtected(Permissions.ManagePortal, 'isAuthorisationExtractorEnabled')
+  def isAuthorisationExtractorEnabled(self):
+    """
+    Returns whether AutorisationExtractorBeforeTraverseHook is enabled.
+    """
+    return bool(BeforeTraverse.queryBeforeTraverse(
+      self,
+      AutorisationExtractorBeforeTraverseHook.handle,
+    ))
 
   def hasObject(self, id):
     """
@@ -2065,6 +2150,12 @@ class ERP5Generator(PortalGenerator):
           after_tag=reindex_all_tag,
           tag=upgrade_tag,
         ).upgradeSite(bt5.split(), update_catalog=True)
+        # XXX: workaround for the above BT installation not using the upgrader,
+        # and hence not triggering post-install constraints.
+        if 'erp5_oauth2_authorisation' in bt5:
+          p.portal_templates.activate(
+            after_tag=upgrade_tag,
+          ).ERP5Site_checkOAuth2AuthorisationServerPostUpgradeConsistency(fixit=True)
     if id_store_interval != '':
       id_store_interval = int(id_store_interval)
       if id_store_interval < 0:
@@ -2344,6 +2435,9 @@ class ERP5Generator(PortalGenerator):
       erp5security_dispatcher.addERP5UserFactory('erp5_user_factory')
       erp5security_dispatcher.addERP5DumbHTTPExtractionPlugin(
                                         'erp5_dumb_http_extraction')
+      erp5security_dispatcher.addERP5OAuth2ResourceServerPlugin(
+        id='erp5_oauth2_resource',
+      )
       # Register ERP5UserManager Interface
       p.acl_users.erp5_login_users.manage_activateInterfaces(
                                         ('IAuthenticationPlugin',
@@ -2406,6 +2500,13 @@ class ERP5Generator(PortalGenerator):
     if not p.hasObject('cookie_authentication'):
       self.setupCookieAuth(p)
 
+    if not p.isAuthorisationExtractorEnabled():
+      # Authorisation extractor, intended to supersede CookieCrumbler's without
+      # its forced authentication cookie. Dependency of oauth2 authentication,
+      # and only active when a quite restrictive set of condition is matched,
+      # which should eliminate undesired triggering.
+      p.enableAuthorisationExtractor()
+
     if 'Member' not in getattr(p, '__ac_roles__', ()):
       self.setupRoles(p)
     if not update:
@@ -2450,6 +2551,8 @@ class ERP5Generator(PortalGenerator):
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
         bt.install(**kw)
+    p.ERP5Site_checkOAuth2ResourceServerPostUpgradeConsistency(fixit=True)
+    p.ERP5Site_checkOAuth2AuthorisationServerPostUpgradeConsistency(fixit=True)
 
   def setupERP5Promise(self,p,**kw):
     """

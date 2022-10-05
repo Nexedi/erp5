@@ -75,6 +75,10 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Last In, First Out</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>LIFODeliverySolver</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

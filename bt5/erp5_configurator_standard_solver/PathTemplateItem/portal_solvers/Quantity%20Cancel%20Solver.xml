@@ -147,6 +147,10 @@
             <value> <string>Cancel Quantity</string> </value>
         </item>
         <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>QuantityCancelSolver</string> </value>
+        </item>
+        <item>
             <key> <string>workflow_list</string> </key>
             <value>
               <list>

@@ -146,9 +146,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
     """
       Return the list of business templates.
     """
-    return ('erp5_full_text_mroonga_catalog',
-            'erp5_configurator',
-           )
+    return ('erp5_configurator', )
 
 def test_suite():
   suite = unittest.TestSuite()

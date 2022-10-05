@@ -71,6 +71,10 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Delivery</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

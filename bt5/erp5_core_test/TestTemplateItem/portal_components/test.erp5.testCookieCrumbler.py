@@ -89,6 +89,17 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
                          self.credentials)
     self.assertEqual(resp.cookies['__ac']['path'], '/')
 
+  def testCacheHeaderDisabled(self):
+    # Cache header is forcibly set on any authenticated user independently from
+    # CookieCrumbler's presence.
+    _, cc, req, credentials = self._makeSite()
+    cc.cache_header_value = ''
+    req.cookies['__ac'] = credentials
+    req.traverse('/')
+    self.assertEqual(
+        req.response.headers.get('cache-control', ''), 'private')
+
+
 def test_suite():
   return unittest.makeSuite(ERP5CookieCrumblerTests)
 

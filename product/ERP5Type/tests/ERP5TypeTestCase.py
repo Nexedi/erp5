@@ -23,6 +23,7 @@ import ConfigParser
 from contextlib import contextmanager
 from io import BytesIO
 from functools import partial
+from six.moves.urllib.parse import unquote_to_bytes
 from cPickle import dumps
 from glob import glob
 from hashlib import md5
@@ -793,13 +794,14 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         env['SERVER_PROTOCOL'] = 'HTTP/1.1'
         env['REQUEST_METHOD'] = request_method
 
-        p = path.split('?')
-        if len(p) == 1:
-            env['PATH_INFO'] = p[0]
-        elif len(p) == 2:
-            [env['PATH_INFO'], env['QUERY_STRING']] = p
+        query = ''
+        if '?' in path:
+            path, query = path.split("?", 1)
+        if six.PY2:
+            env['PATH_INFO'] = unquote_to_bytes(path)
         else:
-            raise TypeError('')
+            env['PATH_INFO'] = unquote_to_bytes(path).decode('latin-1')
+        env['QUERY_STRING'] = query
 
         if basic:
           assert not user, (basic, user)

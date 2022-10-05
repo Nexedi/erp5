@@ -85,7 +85,7 @@ class TestCRM(BaseTestCRM):
     return "CRM"
 
   def getBusinessTemplateList(self):
-    return ('erp5_full_text_mroonga_catalog',
+    return (
             'erp5_core_proxy_field_legacy',
             'erp5_base',
             'erp5_ingestion',
@@ -655,7 +655,6 @@ class TestCRMMailIngestion(BaseTestCRM):
   def getBusinessTemplateList(self):
     # Mail Ingestion must work with CRM alone.
     return ('erp5_core_proxy_field_legacy',
-            'erp5_full_text_mroonga_catalog',
             'erp5_base',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',

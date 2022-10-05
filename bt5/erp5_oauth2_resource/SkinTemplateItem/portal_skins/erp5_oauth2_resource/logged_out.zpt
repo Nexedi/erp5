@@ -1,0 +1,40 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<tal:block tal:define="authorisation_server_is_remote python: getattr(
+  context.ERP5Site_getOAuth2AuthorisationClientConnectorValue(client_id=None),
+  'isAuthorisationServerRemote',
+  lambda: False,
+)()">
+  <tal:block
+    tal:condition="python: authorisation_server_is_remote"
+    tal:define="dummy python: context.REQUEST.form.setdefault('portal_status_message', context.Base_translateString('You have been logged out.'))"
+  ><tal:block tal:replace="nothing"><!--
+    When the default Authorisation Server is remote, logging out should not redirect to
+    the portal, as it would itself redirect to login_form, which would then initiate a
+    login sequence with the Authorisation Server, on which the user may still have an
+    active session.
+    At best this means the next thing the user will see is the "Authorise" dialog, and at
+    worst it will be the Resource Server again, with a fresh new session - defeating the
+    logout attempt.
+  --></tal:block>
+    <tal:block metal:use-macro="python: context.main_template.macros['master']">
+      <tal:block metal:fill-slot="main">
+        <div class="index_html">
+          <h2 i18n:translate="" i18n:domain="ui">Goodbye</h2>
+          <table border="1">
+            <tr>
+              <td><a href="https://www.erp5.com/"><img src="images/erp5_logo.png" alt="ERP5 Logo" /></a></td>
+            </tr>
+          </table>
+          <p i18n:translate="" i18n:domain="ui"><a tal:attributes="href python: context.getPortalObject().absolute_url()">Log in</a></p>
+        </div>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+  <tal:block
+    tal:condition="python: not authorisation_server_is_remote"
+    tal:replace="structure python: context.skinSuper('erp5_oauth2_resource', template.id)(**options)"
+  />
+</tal:block>
+</tal:block>

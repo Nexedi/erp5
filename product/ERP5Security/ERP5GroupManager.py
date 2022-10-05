@@ -15,6 +15,9 @@
 """ Classes: ERP5GroupManager
 """
 
+from collections import defaultdict
+from contextlib import contextmanager
+from threading import local
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -40,6 +43,21 @@ import six
 # hard to debug. Setting NO_CACHE_MODE allows to debug such
 # issues.
 NO_CACHE_MODE = 0
+
+_CACHE_ENABLED_LOCAL = local()
+@contextmanager
+def disableCache():
+  """
+  Disable ERP5GroupManager.getGroupsForPrincipal internal cache.
+  Use when retrieving a user from PAS:
+    with disableCache():
+      user = user_folder.getUser(...)
+  """
+  _CACHE_ENABLED_LOCAL.value = False
+  try:
+    yield
+  finally:
+    _CACHE_ENABLED_LOCAL.value = True
 
 class ConsistencyError(Exception): pass
 
@@ -82,27 +100,25 @@ class ERP5GroupManager(BasePlugin):
     """ See IGroupsPlugin.
     """
     # If this is the super user, skip the check.
-    if principal.getId() == ERP5Security.SUPER_USER:
+    if (
+      principal.getId() == ERP5Security.SUPER_USER or
+      # OAuth2 authentication brings its own groups.
+      principal.isFromOAuth2Token()
+    ):
       return ()
 
     @UnrestrictedMethod
     def _getGroupsForPrincipal(user_id, path):
-      user_path_set = {
-        x['path']
-        for x in self.searchUsers(id=user_id, exact_match=True)
-        if 'path' in x
-      }
-      if not user_path_set:
+      # Note: arguments are just as a cache key. user_id is bijective to
+      # principal, so its presence in the cache key allows us to access
+      # principal.
+      user_value = getattr(principal, 'getUserValue', lambda: None)()
+      if user_value is None:
         return ()
-      user_path, = user_path_set
-      user_value = self.getPortalObject().unrestrictedTraverse(user_path)
-      security_category_dict = {}
+      security_category_dict = defaultdict(list)
       for method_name, base_category_list in self.getPortalSecurityCategoryMapping():
         base_category_list = tuple(base_category_list)
-        security_category_list = security_category_dict.setdefault(
-          base_category_list,
-          [],
-        )
+        security_category_list = security_category_dict[base_category_list]
         try:
           # The called script may want to distinguish if it is called
           # from here or from _updateLocalRolesOnSecurityGroups.
@@ -125,7 +141,6 @@ class ERP5GroupManager(BasePlugin):
             'could not get security categories from %s' % (method_name, ),
             error=True,
           )
-
       # Get group names from category values
       # XXX try ERP5Type_asSecurityGroupIdList first for compatibility
       generator_name = 'ERP5Type_asSecurityGroupIdList'
@@ -155,11 +170,10 @@ class ERP5GroupManager(BasePlugin):
             )
       return tuple(security_group_list)
 
-    if not NO_CACHE_MODE:
+    if not NO_CACHE_MODE and getattr(_CACHE_ENABLED_LOCAL, 'value', True):
       _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal,
                                              id='ERP5GroupManager_getGroupsForPrincipal',
                                              cache_factory='erp5_content_short')
-
     return _getGroupsForPrincipal(
                 user_id=principal.getId(),
                 path=self.getPhysicalPath())

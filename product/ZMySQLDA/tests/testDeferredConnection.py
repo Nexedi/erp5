@@ -63,9 +63,6 @@ class TestDeferredConnection(ERP5TypeTestCase):
     Test MySQL Deferred Connection
   """
 
-  def getBusinessTemplateList(self):
-    return 'erp5_full_text_mroonga_catalog',
-
   def getTitle(self):
     return "Deferred Connection"
 

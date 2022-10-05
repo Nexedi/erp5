@@ -1,0 +1,123 @@
+<html tal:define="
+                  ERP5Site python: modules['Products.ERP5.ERP5Site'];
+                  has_oauth2 python: options.get('has_oauth2', True);
+                  form_action python: 'logged_in_once' if has_oauth2 else 'WebSite_login';
+                  absolute_url python: context.absolute_url() + '/';
+                  web_site_value python: context.getWebSiteValue();
+                  portal python: context.getPortalObject();
+                  root_absolute_url python: (portal if web_site_value is None else web_site_value).absolute_url() + '/';
+                  available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
+                  enable_google_login python: 'google' in available_oauth_login_list;
+                  enable_facebook_login python: 'facebook' in available_oauth_login_list;
+                  enable_openidconnect_login python: 'openidconnect' in available_oauth_login_list;
+                  ">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title tal:content="python: portal.getTitle()"></title>
+    <link rel="stylesheet" href="gadget_erp5_nojqm.css">
+  </head>
+
+  <body>
+
+    <div data-gadget-scope='header'>
+      <div class="ui-header">
+        <h1><span i18n:domain="ui" i18n:translate="">Log in</span></h1>
+      </div>
+    </div>
+
+    <div data-gadget-scope='panel'>
+      <div data-role="header">
+        <div class="panel_img">
+          <img alt="ERP5" src="erp5_small_logo.png"/>
+        </div>
+      </div>
+    </div>
+    <div data-role="page">
+      <div class="gadget-content">
+        <article>
+          <section>
+            <div class="visible" data-gadget-scope="notification" tal:condition="python: 'portal_status_message' in request">
+              <button type="submit" class="error" tal:attributes="data-i18n python: request['portal_status_message']"><span tal:content="python: request['portal_status_message']"></span></button>
+            </div>
+          </section>
+
+          <section>
+            <section class="ui-content-header-plain">
+                <h3 class="ui-content-title ui-body-c">
+                    <span class="ui-icon ui-icon-custom ui-icon-sign-in"></span>
+                    <tal:block  i18n:domain="ui" i18n:translate="">Log in</tal:block>
+                </h3>
+            </section>
+            <form method="post" tal:attributes="action python: absolute_url" class="field_container">
+              <tal:block tal:condition="python: has_oauth2">
+                <input type="hidden"
+                  tal:attributes="
+                    name  python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME;
+                    value python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE;
+                  "
+                />
+                <input type="hidden"
+                  name="login_retry_url"
+                  tal:attributes="value python: request.get('login_retry_url', '')"
+                />
+              </tal:block>
+              <div>
+                <div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Username</label>
+                    <div><input autofocus type="text" value="" required="" tal:attributes="name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME if has_oauth2 else '__ac_name'"></div>
+                  </div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Password</label>
+                    <div><input type="password" value="" autocomplete="off" tal:attributes="name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME if has_oauth2 else '__ac_password'"/></div>
+                  </div>
+                  <div class="dialog_button_container">
+                    <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
+                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%sWebSite_viewRecoverAccount?%s' % (absolute_url, modules['urllib'].urlencode([('came_from', absolute_url)]))">I forgot my password!</a>
+                  </div>
+                  <div class="dialog_button_container" tal:condition="enable_google_login">
+                    <a tal:attributes="href python: root_absolute_url + 'ERP5Site_redirectToGoogleLoginPage'"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      class="sign_in_with_google"
+                      >
+                      <img alt="Sign in with Google" src="google_login_button.png"/>
+
+                  </a>
+                  </div>
+                  <div class="dialog_button_container" tal:condition="enable_facebook_login">
+                    <a tal:attributes="href python: root_absolute_url + 'ERP5Site_redirectToFacebookLoginPage'"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      class="sign_in_with_facebook"
+
+                      >
+                      <img alt="Login with Facebook" src="facebook_login_button.png">
+                  </a>
+                  </div>
+                  <div class="dialog_button_container" tal:condition="enable_openidconnect_login">
+                    <a tal:attributes="href python: root_absolute_url + 'ERP5Site_redirectToOpenIdLoginPage'"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      class="sign_in_with_openid"
+
+                      >
+                      <img alt="Sign in with OpenID Connect" src="openid_login_button.png"/>
+
+                  </a>
+                  </div>
+                </div>
+              </div>
+
+              <input type="hidden" name="url" tal:attributes="value absolute_url" />
+              <input tal:condition="python: 'came_from' in request"
+                     type="hidden" name="came_from"
+                     tal:attributes="value python: request['came_from']" />
+            </form>
+           </section>
+        </article>
+      </div>
+    </div>
+  </body>
+</html>
