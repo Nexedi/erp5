@@ -38,7 +38,7 @@ function mainToWorker(evt) {
         .push(function () {
           postMessage({'type': 'started'});
           return runGame(offscreen_canvas, evt.data.script,
-                         evt.data.log, evt.data.simulation_speed);
+                         evt.data.log, evt.data.game_parameters);
         })
         .push(function (result) {
           return postMessage({'type': 'finished', 'result': result});
