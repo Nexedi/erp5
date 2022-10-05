@@ -163,8 +163,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
         'erp5.component.extension.GoogleLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()
@@ -207,8 +207,8 @@ class TestGoogleLogin(GoogleLoginTestCase):
         'erp5.component.extension.GoogleLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
 
     getAccessTokenFromCode_mock.assert_called_once()
@@ -278,8 +278,8 @@ return credential_request
         'erp5.component.extension.GoogleLoginUtility.getUserEntry',
         side_effect=getUserEntry
       ) as getUserEntry_mock:
-      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
-      getUserEntry_mock.func_code = getUserEntry.func_code
+      getAccessTokenFromCode_mock.__code__ = getAccessTokenFromCode.__code__
+      getUserEntry_mock.__code__ = getUserEntry.__code__
       response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
     getAccessTokenFromCode_mock.assert_called_once()
     getUserEntry_mock.assert_called_once()
