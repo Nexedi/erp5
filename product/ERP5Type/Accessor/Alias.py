@@ -82,7 +82,7 @@ class Dummy(Reindex):
       self._id = id
       self.__name__ = id
       self._accessor_id = accessor_id
-#      self.__code__ = func_code = getattr(instance, self._accessor_id).func_code
+#      self.__code__ = func_code = getattr(instance, self._accessor_id).__code__
 
     def __call__(self, instance, *args, **kw):
       method = getattr(instance, self._accessor_id)
