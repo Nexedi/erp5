@@ -38,7 +38,6 @@ from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
-from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
 
 
 from Products.ERP5Type.Base import Base
