@@ -219,14 +219,16 @@ var runGame, updateGame, game_manager_instance;
         }
       };
     }
-    var processed_log = processLog(log);
-    game_parameters_json.logInfo = processed_log.logInfo;
-    game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
-    game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
-    game_parameters_json.initialPosition = processed_log.initialPosition;
-    game_parameters_json.gameTime = processed_log.gameTime;
-    if (!game_parameters_json.map) {
-      game_parameters_json.map = processed_log.map;
+    if (log) {
+      var processed_log = processLog(log);
+      game_parameters_json.logInfo = processed_log.logInfo;
+      game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
+      game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
+      game_parameters_json.initialPosition = processed_log.initialPosition;
+      game_parameters_json.gameTime = processed_log.gameTime;
+      if (!game_parameters_json.map) {
+        game_parameters_json.map = processed_log.map;
+      }
     }
 
     if (!game_manager_instance) {
