@@ -57,7 +57,7 @@ def special_extract_tb(tb, limit = None):
         else: line = None
 
         # display where we failed in the sequence
-        if co == Sequence.play.func_code:
+        if co == Sequence.play.__code__:
           if line is None:
             line = ''
           sequence = f.f_locals['self']
