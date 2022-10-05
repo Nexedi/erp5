@@ -59,4 +59,4 @@ try:
 except TypeError:
     # We need to monkey patch in-place, as it is a top-level function and
     # already imported in other places.
-    convertToUnicode.func_code = patched_convertToUnicode.func_code
+    convertToUnicode.__code__ = patched_convertToUnicode.__code__
