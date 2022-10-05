@@ -28,7 +28,7 @@
 ##############################################################################
 
 from functools import partial
-import httplib
+import six.moves.http_client
 from random import randint
 import sys
 import threading
@@ -4128,7 +4128,7 @@ VALUES
     ret = self.publish(
         self.portal.portal_catalog.getPath(),
         basic='ERP5TypeTestCase:')
-    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertEqual(six.moves.http_client.OK, ret.getStatus())
     # check if we did not just publish the result of `str(portal_catalog.__call__())`,
     # but a proper page
     self.assertIn('<title>Catalog Tool - portal_catalog', ret.getBody())
