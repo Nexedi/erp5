@@ -1,1 +1,1 @@
-Drone simulator that compares a real flight loaded from a log with a simulated flight from a AI script
+Drone simulator that can run different types of drone implementations such as a drone driven by a flight log or by an AI script
