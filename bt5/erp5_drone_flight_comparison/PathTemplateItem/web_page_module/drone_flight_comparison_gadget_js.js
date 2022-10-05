@@ -14,7 +14,6 @@
     /////////////////////////////////////////////////////////////////
     // for standaloneDemo
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function render() {
