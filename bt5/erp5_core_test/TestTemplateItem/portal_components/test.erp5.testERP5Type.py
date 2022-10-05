@@ -29,7 +29,7 @@
 try:
   from ZODB._compat import cPickle
 except ImportError: # BBB: ZODB < 4
-  import cPickle
+  import six.moves.cPickle
 import unittest
 import sys
 import mock
@@ -330,7 +330,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     portal.person_module._setObject(o.getId(), aq_base(o))
     try:
       self.commit()
-    except cPickle.PicklingError:
+    except six.moves.cPickle.PicklingError:
       self.abort()
     else:
       self.fail("No exception raised when storing explicitly a temp object"
