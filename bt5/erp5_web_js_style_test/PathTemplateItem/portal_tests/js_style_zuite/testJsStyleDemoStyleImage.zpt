@@ -7,7 +7,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test JS Style No Style</td></tr>
+<tr><td rowspan="1" colspan="3">Test JS Style Image not loaded on recent browsers (expected failure)</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
