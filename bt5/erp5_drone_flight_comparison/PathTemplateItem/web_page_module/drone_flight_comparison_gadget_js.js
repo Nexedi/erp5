@@ -15,7 +15,7 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-    .declareMethod('render', function renderHeader() {
+    .declareMethod('render', function render() {
       var gadget = this,
         container = domsugar('div');
       canvas = domsugar('canvas');
