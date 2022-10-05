@@ -92,22 +92,5 @@ class XMLObject( Folder ):
       self._setDescription(value)
       self.reindexObject()
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'XUpdateDocument' )
-    def XUpdateDocument(self, xupdate):
-      """
-          Update a document by providing an xupdate XML file
-      """
-      pass
-
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'fromXML' )
-    def fromXML(self, xml):
-      """
-          Replace the content of this object by providing an xml content
-      """
-      from erp5.component.module.ERP5Conduit import ERP5Conduit
-      conduit = ERP5Conduit()
-      conduit.addNode(object=self, xml=xml)
-
 
 InitializeClass(XMLObject)
