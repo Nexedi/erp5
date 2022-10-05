@@ -51,8 +51,14 @@ from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
                                                   _AuthenticationFailure
 from Products import ERP5Security
 
+# TODO pycrypto is obsolete and should be replaced by cryptography or pycryptodome
 from Crypto.Cipher import AES
 from Crypto import Random
+import six
+if six.PY3:
+  import time
+  time.clock = time.process_time
+
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 class AESCipher:
