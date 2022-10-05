@@ -29,8 +29,8 @@
 
 import collections
 import pprint
-import httplib
-import urlparse
+import six.moves.http_client
+import six.moves.urllib.parse
 import base64
 import urllib
 import lxml.html
@@ -636,9 +636,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.commit()
     self.tic()
 
-    _, api_netloc, _, _, _ = urlparse.urlsplit(self.portal.absolute_url())
+    _, api_netloc, _, _, _ = six.moves.urllib.parse.urlsplit(self.portal.absolute_url())
 
-    connection = httplib.HTTPConnection(api_netloc)
+    connection = six.moves.http_client.HTTPConnection(api_netloc)
     connection.request(
       method='GET',
       url='%s/Person_getPrimaryGroup' % \
