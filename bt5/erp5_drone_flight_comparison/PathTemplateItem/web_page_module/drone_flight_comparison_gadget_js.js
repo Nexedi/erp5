@@ -1,6 +1,3 @@
-
-//TODO move this full JS to MAIN
-
 (function (window, rJS, domsugar, DroneGameManager, document, Blob) {
   "use strict";
 
