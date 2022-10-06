@@ -20,6 +20,8 @@
       "z": 15
     },
     DRAW = true,
+    LOG = true,
+    LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [
       {"id": 0, "type": "DroneAaileFixeAPI", "script_content": ""},
       {"id": 1, "type": "DroneLogAPI", "log_content": ""}
@@ -100,6 +102,8 @@
             },
             "initialPosition": INITIAL_POSITION,
             "draw_flight_path": DRAW,
+            "log_drone_flight": LOG,
+            "log_interval_time": LOG_TIME,
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
