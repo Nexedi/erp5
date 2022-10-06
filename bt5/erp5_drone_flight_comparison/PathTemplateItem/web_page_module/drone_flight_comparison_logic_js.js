@@ -677,7 +677,7 @@ var GameManager = /** @class */ (function () {
       }
       else {
         position_list.push(position);
-        var api = new this.APIs_dict[drone_list[i]](this, GAMEPARAMETERS);
+        var api = new this.APIs_dict[drone_list[i].type](this, GAMEPARAMETERS);
         spawnDrone(position.x, position.y, position.z, i, api, code, this);
       }
     }
