@@ -1,18 +1,25 @@
 (function (window, RSVP, rJS, domsugar, document, Blob) {
   "use strict";
 
-  //HARDCODED VALUES, TODO get from UI inputs
+  //HARDCODED VALUES FROM LOG, TODO get from UI inputs
   var SIMULATION_SPEED = 200,
     SIMULATION_TIME = 2000,
     map_size = 1143,
     map_height = 100,
+    //TODO this should be lat-lon and drone or map should convert it to x-t
     min_x = 616.7504175,
     max_x = 616.828205,
     min_y = 281.70885999999996,
     max_y = 281.6225,
     start_AMSL = 595.328,
-    MAX_SPEED = 16.666667,
+    MAX_SPEED = 7.542174921016468, //16.666667,
     MAX_ACCELERATION = 1,
+    INITIAL_POSITION = {
+      "x": -12.316326531328059,
+      "y": -218.55882352976022,
+      "z": 15
+    },
+    DRAW = true,
     DRONE_LIST = [
       {"id": 0, "type": "DroneLogAPI", "log_content": ""},
       {"id": 1, "type": "DroneLogAPI", "log_content": ""}
@@ -91,11 +98,8 @@
               "max_y": max_y,
               "start_AMSL": start_AMSL
             },
-            "initialPosition": {
-              "x": 0,
-              "y": 0,
-              "z": 20
-            },
+            "initialPosition": INITIAL_POSITION,
+            "draw_flight_path": DRAW,
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
