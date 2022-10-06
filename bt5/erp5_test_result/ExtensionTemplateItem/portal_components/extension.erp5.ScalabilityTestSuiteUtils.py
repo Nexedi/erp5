@@ -27,6 +27,7 @@
 
 import jinja2
 import json
+from six.moves import range
 
 def getGeneratedConfigurationList(self, *args, **kw):
   document_list = []
@@ -36,7 +37,7 @@ def getGeneratedConfigurationList(self, *args, **kw):
   #max = self.getNumberConfiguration()
   comp_list_view = [ "COMP-%i" %(x) for x in range(0,max_comp) ]
 
-  for count in xrange(1, max_+1):
+  for count in range(1, max_+1):
     template_vars = { "count" : count, "comp" : comp_list_view }
     output_text = template.render(template_vars)
     description = json.dumps(json.loads(output_text), sort_keys=True, indent=4, separators=(',', ': '))
@@ -126,7 +127,7 @@ def generateConfigurationList(self, test_suite_title):
   # bad json configuration
   try:
     template = jinja2.Template(cluster_configuration)
-    for count in xrange(1, number_configuration+1):
+    for count in range(1, number_configuration+1):
       template_vars = { "count" : count, "comp" : remaining_nodes_computer_guid }
       configuration_list_json.append( json.loads( template.render( template_vars ) ) )
     return_dict['launchable'] = True
