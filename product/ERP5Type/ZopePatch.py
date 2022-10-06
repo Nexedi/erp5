@@ -71,7 +71,6 @@ if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
-from Products.ERP5Type.patches import make_hidden_input
 from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
