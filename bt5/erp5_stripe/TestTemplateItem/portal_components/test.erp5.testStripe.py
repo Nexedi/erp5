@@ -27,6 +27,8 @@
 
 import json
 import responses
+import urllib
+from StringIO import StringIO
 from urlparse import parse_qs
 from DateTime import DateTime
 from Products.ERP5Type.Globals import get_request
@@ -155,10 +157,11 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         'application/x-www-form-urlencoded',
         request.headers['Content-Type'], request.headers)
       url = request.url
-      if session_id == "abc321_completed":
+      if session_id in ("abc321_completed", "abc321_webhook"):
         return (200, {'content-type': 'application/json'}, json.dumps({
           "id": session_id,
           "status": "complete",
+          "payment_status": "paid",
           "object": "checkout.session"
         }))
       if session_id == "abc321_expired":
@@ -481,4 +484,69 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.assertEqual("HTTP Exchange", http_exchange.getPortalType())
       self.assertEqual("expired", json.loads(http_exchange.getResponse())["status"])
       self.tic()
-      self._document_to_delete_list.append(http_exchange)
+
+  def test_stripe_webhook_endpoint(self):
+    connector = self._create_connector()
+    session_id = "abc321_webhook"
+    module = self.portal.stripe_payment_session_module
+    for session in module.searchFolder(reference=session_id):
+      session.setReference("%s_disabled" % session.getReference())
+      if session.getValidationState() == "open":
+        session.expire()
+    self.tic()
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        self._response_callback(session_id)
+      )
+      stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
+        connector,
+        self.data.copy(),
+        batch_mode=True
+      )
+      self.tic()
+      #self._document_to_delete_list.append(stripe_payment_session)
+    first_http_exchange, = stripe_payment_session.getFollowUpRelatedValueList(
+      portal_type="HTTP Exchange")
+    self.assertEqual(
+      "http_exchange_resource/stripe/create_session",
+      first_http_exchange.getResource()
+    )
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.GET,
+        "https://mock:8080/checkout/sessions/%s" % session_id,
+        self._get_response_callback(session_id)
+      )
+      ret = self.publish(
+        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
+        stdin=StringIO(urllib.urlencode({
+          "BODY": json.dumps({
+            "id": "evt_%s" % session_id,
+            "object": "event",
+            "data": {
+              "object": {
+                "id": session_id,
+                "status": "complete",
+                "payment_status": "paid",
+                "object": "checkout.session"
+              }
+            }
+          })
+        })),
+        request_method="POST",
+        handle_errors=False)
+      self.assertEqual(200, ret.getStatus())
+      self.tic()
+    second_http_exchange, = [event
+      for event in stripe_payment_session.getFollowUpRelatedValueList(portal_type="HTTP Exchange")
+      if event != first_http_exchange and event.isMemberOf("resource/http_exchange_resource/stripe/webhook")
+    ]
+    self.assertEqual("acknowledged", second_http_exchange.getValidationState())
+    third_http_exchange, = [event
+      for event in stripe_payment_session.getFollowUpRelatedValueList(portal_type="HTTP Exchange")
+      if event not in (first_http_exchange, second_http_exchange) and event.isMemberOf("resource/http_exchange_resource/stripe/retrieve_session")
+    ]
+    self.assertEqual("acknowledged", third_http_exchange.getValidationState())
+
