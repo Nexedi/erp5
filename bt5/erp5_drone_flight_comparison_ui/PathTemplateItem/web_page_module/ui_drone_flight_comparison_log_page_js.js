@@ -3,7 +3,7 @@
 
   //HARDCODED VALUES, TODO get from UI inputs
   var SIMULATION_SPEED = 200,
-    SIMULATION_TIME = 1800,
+    SIMULATION_TIME = 2000,
     map_size = 1143,
     map_height = 100,
     min_x = 616.7504175,
@@ -13,7 +13,10 @@
     start_AMSL = 595.328,
     MAX_SPEED = 16.666667,
     MAX_ACCELERATION = 1,
-    DRONE_LIST = ["DroneAaileFixeAPI", "DroneLogAPI"];
+    DRONE_LIST = [
+      {"id": 0, "type": "DroneLogAPI", "log_content": ""},
+      {"id": 1, "type": "DroneLogAPI", "log_content": ""}
+    ];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -23,22 +26,24 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function render() {
-      var gadget = this, script_content, log_content, query,
+      var gadget = this, log_content_1, log_content_2, query,
         fragment = domsugar(gadget.element.querySelector('#fragment'),
                             [domsugar('div')]).firstElementChild;
       //TODO this should come from inputs textareas
       return new RSVP.Queue()
         .push(function () {
-          query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
-          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
-        .push(function (result) {
-          script_content = result.data.rows[0].value.text_content;
           query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
         .push(function (result) {
-          log_content = result.data.rows[0].value.text_content;
+          log_content_1 = result.data.rows[0].value.text_content;
+          DRONE_LIST[0].log_content = result.data.rows[0].value.text_content;
+          query = '(portal_type:"Web Manifest") AND (reference:"bounce_flight_log")';
+          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
+        })
+        .push(function (result) {
+          log_content_2 = result.data.rows[0].value.text_content;
+          DRONE_LIST[1].log_content = result.data.rows[0].value.text_content;
           return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
                                       {element: fragment, scope: 'simulator'});
         })
@@ -48,8 +53,7 @@
         .push(function () {
           //TODO this should be called in a button click event
           gadget.runGame({
-            script: script_content,
-            log: log_content
+            log: log_content_1
           });
           return gadget.updateHeader({
             page_title: 'Drone Simulator - Run flight logs',
@@ -95,7 +99,6 @@
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
-            script: options.script,
             log: options.log,
             game_parameters: game_parameters_json
           });

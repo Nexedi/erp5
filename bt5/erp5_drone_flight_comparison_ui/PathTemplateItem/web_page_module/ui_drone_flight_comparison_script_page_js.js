@@ -13,7 +13,10 @@
     start_AMSL = 595.328,
     MAX_SPEED = 16.666667,
     MAX_ACCELERATION = 1,
-    DRONE_LIST = ["DroneAaileFixeAPI", "DroneLogAPI"];
+    DRONE_LIST = [
+      {"id": 0, "type": "DroneAaileFixeAPI", "script_content": ""},
+      {"id": 1, "type": "DroneLogAPI", "log_content": ""}
+    ];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -33,6 +36,7 @@
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
         .push(function (result) {
+          DRONE_LIST[0].script_content = result.data.rows[0].value.text_content;
           script_content = result.data.rows[0].value.text_content;
           query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
