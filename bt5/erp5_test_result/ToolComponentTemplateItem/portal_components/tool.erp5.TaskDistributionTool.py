@@ -32,7 +32,8 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 from zLOG import LOG, DEBUG
-from xmlrpclib import Binary
+from six.moves.xmlrpc_client import Binary
+import six
 
 class TaskDistributionTool(BaseTool):
   """
@@ -266,7 +267,7 @@ class TaskDistributionTool(BaseTool):
     extract all xmlrpclib.Binary instance
     """
     return {x: y.data if isinstance(y, Binary) else y
-       for x, y in xmlrpc_dict.iteritems()}
+       for x, y in six.iteritems(xmlrpc_dict)}
 
   security.declarePublic('reportTaskFailure')
   def reportTaskFailure(self, test_result_path, status_dict, node_title):

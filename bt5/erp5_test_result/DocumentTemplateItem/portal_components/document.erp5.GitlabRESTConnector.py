@@ -28,8 +28,8 @@
 
 
 from urllib import quote_plus
-from urlparse import urlparse
-from urlparse import urljoin
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import urljoin
 import logging
 
 from AccessControl import ClassSecurityInfo
