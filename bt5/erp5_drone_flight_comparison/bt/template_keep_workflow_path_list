@@ -1,3 +1,4 @@
 web_page_module/drone_flight_comparison_*
 web_page_module/loiter_flight_log
 web_page_module/loiter_flight_script
+web_page_module/bounce_flight_log
