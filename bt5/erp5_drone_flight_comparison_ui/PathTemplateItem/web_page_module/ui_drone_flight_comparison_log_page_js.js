@@ -39,7 +39,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function render() {
-      var gadget = this, log_content_1, log_content_2, query,
+      var gadget = this, query,
         fragment = domsugar(gadget.element.querySelector('#fragment'),
                             [domsugar('div')]).firstElementChild;
       //TODO this should come from inputs textareas
@@ -49,13 +49,11 @@
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
         .push(function (result) {
-          log_content_1 = result.data.rows[0].value.text_content;
           DRONE_LIST[0].log_content = result.data.rows[0].value.text_content;
           query = '(portal_type:"Web Manifest") AND (reference:"bounce_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
         .push(function (result) {
-          log_content_2 = result.data.rows[0].value.text_content;
           DRONE_LIST[1].log_content = result.data.rows[0].value.text_content;
           return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
                                       {element: fragment, scope: 'simulator'});
@@ -65,9 +63,7 @@
         })
         .push(function () {
           //TODO this should be called in a button click event
-          gadget.runGame({
-            log: log_content_1
-          });
+          gadget.runGame();
           return gadget.updateHeader({
             page_title: 'Drone Simulator - Run flight logs',
             page_icon: 'puzzle-piece'
@@ -106,16 +102,16 @@
             },
             "initialPosition": INITIAL_POSITION,
             "draw_flight_path": DRAW,
-            "log_drone_flight": LOG,
+            "log_drone_flight": LOG, //TODO remove as this is already a log
             "log_interval_time": LOG_TIME,
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
-            log: options.log,
             game_parameters: game_parameters_json
           });
         })
         .push(function (result_list) {
+          //TODO remove as this is already a log
           for (var i = 0; i < result_list.length; i += 1) {
             var log_content = result_list[i].join(' ') + '\n',
               blob = new Blob([log_content], {type: 'text/plain'}),

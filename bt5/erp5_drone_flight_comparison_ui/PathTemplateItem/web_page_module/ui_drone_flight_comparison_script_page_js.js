@@ -39,7 +39,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function render() {
-      var gadget = this, log_content, query,
+      var gadget = this, query,
         fragment = domsugar(gadget.element.querySelector('#fragment'),
                             [domsugar('div')]).firstElementChild;
       //TODO this should come from inputs textareas
@@ -50,11 +50,11 @@
         })
         .push(function (result) {
           DRONE_LIST[0].script_content = result.data.rows[0].value.text_content;
-          query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
+          /*query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
         .push(function (result) {
-          log_content = result.data.rows[0].value.text_content;
+          DRONE_LIST[1].log_content = result.data.rows[0].value.text_content;*/
           return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
                                       {element: fragment, scope: 'simulator'});
         })
@@ -63,9 +63,7 @@
         })
         .push(function () {
           //TODO this should be called in a button click event
-          gadget.runGame({
-            log: log_content
-          });
+          gadget.runGame();
           return gadget.updateHeader({
             page_title: 'Drone Simulator - Edit and run script',
             page_icon: 'puzzle-piece'
@@ -109,8 +107,6 @@
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
-            script: options.script,
-            log: options.log,
             game_parameters: game_parameters_json
           });
         })
