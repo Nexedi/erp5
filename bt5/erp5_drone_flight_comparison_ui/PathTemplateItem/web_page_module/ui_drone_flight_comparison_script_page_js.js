@@ -11,6 +11,10 @@
     max_x = 616.828205,
     min_y = 281.70885999999996,
     max_y = 281.6225,
+    min_lat = 45.6364,
+    max_lat = 45.65,
+    min_lon = 14.2521,
+    max_lon = 14.2766,
     start_AMSL = 595.328,
     MAX_SPEED = 7.542174921016468, //16.666667,
     MAX_ACCELERATION = 1,
@@ -24,7 +28,7 @@
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [
       {"id": 0, "type": "DroneAaileFixeAPI", "script_content": ""},
-      {"id": 1, "type": "DroneLogAPI", "log_content": ""}
+      //{"id": 1, "type": "DroneLogAPI", "log_content": ""}
     ];
 
   rJS(window)
@@ -35,7 +39,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function render() {
-      var gadget = this, script_content, log_content, query,
+      var gadget = this, log_content, query,
         fragment = domsugar(gadget.element.querySelector('#fragment'),
                             [domsugar('div')]).firstElementChild;
       //TODO this should come from inputs textareas
@@ -46,7 +50,6 @@
         })
         .push(function (result) {
           DRONE_LIST[0].script_content = result.data.rows[0].value.text_content;
-          script_content = result.data.rows[0].value.text_content;
           query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
@@ -61,7 +64,6 @@
         .push(function () {
           //TODO this should be called in a button click event
           gadget.runGame({
-            script: script_content,
             log: log_content
           });
           return gadget.updateHeader({
