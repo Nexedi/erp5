@@ -7,9 +7,10 @@ LOITER_SPEED_FACTOR = 1.5;
 
 var DroneAaileFixeAPI = /** @class */ (function () {
   //** CONSTRUCTOR
-  function DroneAaileFixeAPI(gameManager, flight_parameters) {
+  function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
     this._flight_parameters = flight_parameters;
+    this._drone_info = drone_info;
     this._loiter_radius = 0;
     this._last_loiter_point_reached = -1;
     this._last_altitude_point_reached = -1;
