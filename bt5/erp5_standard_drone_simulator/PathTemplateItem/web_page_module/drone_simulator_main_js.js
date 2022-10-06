@@ -152,9 +152,7 @@
                   canvas: options.canvas,
                   width: options.width,
                   height: options.height,
-                  script: options.script,
-                  game_parameters: options.game_parameters,
-                  log: options.log
+                  game_parameters: options.game_parameters
                 }, [options.canvas]);
                 break;
               case 'started':

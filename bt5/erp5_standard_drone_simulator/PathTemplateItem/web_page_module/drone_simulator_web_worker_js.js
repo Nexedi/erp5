@@ -37,8 +37,7 @@ function mainToWorker(evt) {
       return new RSVP.Queue()
         .push(function () {
           postMessage({'type': 'started'});
-          return runGame(offscreen_canvas, evt.data.script,
-                         evt.data.log, evt.data.game_parameters);
+          return runGame(offscreen_canvas, evt.data.game_parameters);
         })
         .push(function (result) {
           return postMessage({'type': 'finished', 'result': result});
