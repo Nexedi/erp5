@@ -187,40 +187,29 @@ var DroneLogAPI = /** @class */ (function () {
                           parseFloat(splitted_log_entry[2]),
                           height, timestamp]);
     }
+    //more values calculated above:
+    /*map_size,
+    min_x,
+    min_y,
+    max_x,
+    max_y,
+    min_lat,
+    min_lon,
+    max_lat,
+    max_lon,
+    start_AMSL*/
+    // XXX: old pre-drawn flight path (obsolete?)
+    //var flight_path_point_list = path_point_list;
     average_speed = average_speed / log_entry_list.length;
     log_interval_time = log_interval_time / log_entry_list.length / time_offset;
     flight_time = (end_time - start_time) / 1000 / time_offset;
+    var initialPosition = {
+      "x": start_position[0],
+      "y": start_position[1],
+      "z": start_position[2]
+    };
+    var maxSpeed = (flight_dist / flight_time) * SPEED_FACTOR;
     this._flight_parameters.converted_log_point_list = converted_log_point_list;
-    /*return {
-      "logInfo": {
-        log: true,
-        draw: true,
-        log_interval_time: log_interval_time,
-        converted_log_point_list: converted_log_point_list
-      },
-      "maxSpeed" : (flight_dist / flight_time) * SPEED_FACTOR,
-      "flight_path_point_list" : path_point_list,
-      "initialPosition" : {
-        "x": start_position[0],
-        "y": start_position[1],
-        "z": start_position[2]
-      },
-      "gameTime" : flight_time,
-      "map": { //this is here in case map parameters are not given
-        "depth": map_size,
-        "height": 100,
-        "width": map_size,
-        "min_x": min_x,
-        "min_y": min_y,
-        "max_x": max_x,
-        "max_y": max_y,
-        "min_lat": parsed_log_info.min_lat,
-        "min_lon": parsed_log_info.min_lon,
-        "max_lat": parsed_log_info.max_lat,
-        "max_lon": parsed_log_info.max_lon,
-        "start_AMSL": start_AMSL
-      }
-    };*/
   };
   /*
   ** Function called on every drone update, right after onUpdate AI script
