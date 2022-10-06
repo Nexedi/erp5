@@ -187,7 +187,6 @@ var runGame, updateGame, game_manager_instance;
                             parseFloat(splitted_log_entry[2]),
                             height, timestamp]);
       }
-      console.log("flight_dist:", flight_dist); //8346.636603325447
       average_speed = average_speed / log_entry_list.length;
       log_interval_time = log_interval_time / log_entry_list.length / time_offset;
       flight_time = (end_time - start_time) / 1000 / time_offset;
@@ -225,12 +224,13 @@ var runGame, updateGame, game_manager_instance;
     if (log) {
       var processed_log = processLog(log);
       game_parameters_json.logInfo = processed_log.logInfo;
-      game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
+      //game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
       //game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
-      game_parameters_json.initialPosition = processed_log.initialPosition;
-      game_parameters_json.gameTime = processed_log.gameTime;
+      //game_parameters_json.initialPosition = processed_log.initialPosition;
+      //game_parameters_json.gameTime = processed_log.gameTime;
       if (!game_parameters_json.map) {
         game_parameters_json.map = processed_log.map;
+        console.log("processed_log.map:", processed_log.map);
       }
     }
 
@@ -290,10 +290,10 @@ var GameManager = /** @class */ (function () {
     this._game_parameters_json = game_parameters_json;
     this._map_swapped = false;
     this._script = script;
-    this._last_position_drawn = [];
     this._log_count = [];
     this._flight_log = [];
-    if (GAMEPARAMETERS.logInfo) {
+    if (GAMEPARAMETERS.draw_flight_path) {
+      this._last_position_drawn = [];
       for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
         this._flight_log[drone] = [];
         this._log_count[drone] = 0;
@@ -413,7 +413,7 @@ var GameManager = /** @class */ (function () {
               this._flight_log[drone].push([lat, lon, drone_position_z]);
             }
           }
-          if (GAMEPARAMETERS.logInfo.draw) { //TODO review this in JSON dict
+          if (GAMEPARAMETERS.draw_flight_path) {
             //draw drone position every second
             if (this._last_position_drawn[drone] !== seconds) {
               this._last_position_drawn[drone] = seconds;
