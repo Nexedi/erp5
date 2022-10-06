@@ -22,7 +22,7 @@ for tl in test_result_lines:
         test_name = test.split(':')[0]
         test_documents_created = test.split(':')[1].replace('doc/hour', '').strip()
         # initial init
-        if test_name not in results.keys():
+        if test_name not in list(results.keys()):
           results[test_name] = []
         results[test_name].append({'created_docs': test_documents_created,
                                    'duration':3600})
