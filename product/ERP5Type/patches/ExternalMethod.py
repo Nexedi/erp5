@@ -101,7 +101,10 @@ class _(PatchClass(ExternalMethod)):
         i += has_self
         if i:
             code = FuncCode(ff, i)
-        self._v_f = _f = (f, f.__defaults__, code, has_self, arg_list)
+        try:
+          self._v_f = _f = (f, f.__defaults__, code, has_self, arg_list)
+        except AttributeError: # six.PY2 with mock
+          self._v_f = _f = (f, f.func_defaults, code, has_self, arg_list)
         return _f
 
     def __call__(self, *args, **kw):
