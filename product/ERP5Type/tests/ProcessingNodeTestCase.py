@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import errno, logging, os, socket, time
+import errno, logging, mock, os, socket, time
 import itertools
 from threading import Thread
 from UserDict import IterableUserDict
@@ -396,20 +396,28 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     """
     import Products.TimerService
 
-    timerserver_thread = None
-    try:
-      while not Lifetime._shutdown_phase:
-        time.sleep(.3)
-        transaction.begin()
-        try:
-          self.portal = self.app[self.app.test_portal_name]
-        except (AttributeError, KeyError):
-          continue
-        self._setUpDummyMailHost()
-        if not timerserver_thread:
-          timerserver_thread = Products.TimerService.timerserver.TimerServer.TimerServer(
-            module='Zope2',
-            interval=0.1,
-          )
-    except KeyboardInterrupt:
-      pass
+    # AlarmTool uses alarmNode='' as a way to bootstrap an alarm node, but
+    # during these tests we don't want the first node to start executing
+    # alarms directly, because this usually cause conflicts when other
+    # nodes register.
+    with mock.patch(
+      'Products.ERP5.Tool.AlarmTool.AlarmTool.getAlarmNode',
+      return_value='bootstrap_disabled_in_test'):
+
+      timerserver_thread = None
+      try:
+        while not Lifetime._shutdown_phase:
+          time.sleep(.3)
+          transaction.begin()
+          try:
+            self.portal = self.app[self.app.test_portal_name]
+          except (AttributeError, KeyError):
+            continue
+          self._setUpDummyMailHost()
+          if not timerserver_thread:
+            timerserver_thread = Products.TimerService.timerserver.TimerServer.TimerServer(
+              module='Zope2',
+              interval=0.1,
+            )
+      except KeyboardInterrupt:
+        pass
