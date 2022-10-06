@@ -4,7 +4,8 @@ import json
 from time import sleep
 from DateTime import DateTime
 import responses
-import httplib
+import six.moves.http_client
+from six.moves import range
 
 
 class TaskDistributionTestCase(ERP5TypeTestCase):
@@ -1348,7 +1349,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       zope_partition_dict += "{% endif %}\n"
     cluster_configuration += zope_partition_dict + '\n}}'
     # -Generate graph coordinate
-    graph_coordinate = range(1, len(node_list)+1)
+    graph_coordinate = list(range(1, len(node_list)+1))
     # -Create the test suite
     self._createTestSuite(quantity=1,priority=1, reference_correction=0,
                        specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite",
@@ -1675,7 +1676,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           self.id(),
           body['name'])
-      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, '{}')
     return _callback
 
   def test_start_test(self):
@@ -1830,7 +1831,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           'https://erp5js.example.com/#%s' % self.test_result.getRelativeUrl(),
           body['target_url'])
-      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, '{}')
 
     with responses.RequestsMock() as rsps:
       rsps.add_callback(
@@ -1912,7 +1913,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
           responses.POST,
           self.post_commit_status_url,
           json={"message": 'Cannot transition status via :run from :running (Reason(s): Status cannot transition via "run")'},
-          status=httplib.BAD_REQUEST,
+          status=six.moves.http_client.BAD_REQUEST,
       )
       self.test_result.start()
       self.tic()
