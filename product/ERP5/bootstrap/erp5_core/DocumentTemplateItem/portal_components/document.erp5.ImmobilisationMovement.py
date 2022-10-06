@@ -101,7 +101,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     def checkValuesAreNotNone(property_list):
       errors = []
       for key, value, name in property_list:
-        value = 'get' + ''.join(capitalize(e) for e in value.split('_'))
+        value = 'get' + ''.join(e.capitalize() for e in value.split('_'))
         value = getattr(self, value, None)
         if value is not None:
           value = value()
