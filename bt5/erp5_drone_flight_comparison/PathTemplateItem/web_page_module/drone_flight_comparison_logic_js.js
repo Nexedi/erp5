@@ -393,15 +393,15 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._updateDisplayedInfo = function (delta_time, update_dom) {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000);
-    if (GAMEPARAMETERS.logInfo) {
+    if (GAMEPARAMETERS.log_drone_flight || GAMEPARAMETERS.draw_flight_path) {
       for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
         if (this._droneList[drone].can_play) {
           var drone_position_x = this._droneList[drone].position.x,
             drone_position_y = this._droneList[drone].position.y,
             drone_position_z = this._droneList[drone].position.z;
-          if (GAMEPARAMETERS.logInfo.log) {
+          if (GAMEPARAMETERS.log_drone_flight) {
             if (this._log_count[drone] === 0 || this._game_duration / this._log_count[drone] > 1) {
-              this._log_count[drone] += GAMEPARAMETERS.logInfo.log_interval_time;
+              this._log_count[drone] += GAMEPARAMETERS.log_interval_time;
               var lon = drone_position_x + GAMEPARAMETERS.map.width / 2;
               lon = lon / 1000;
               lon = lon * (GAMEPARAMETERS.map.max_x - GAMEPARAMETERS.map.min_x) + GAMEPARAMETERS.map.min_x;
