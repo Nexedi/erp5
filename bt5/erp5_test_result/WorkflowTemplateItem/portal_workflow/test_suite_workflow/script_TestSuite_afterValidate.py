@@ -1,5 +1,6 @@
 import string
 from random import choice
+from six.moves import range
 
 test_suite = state_change['object']
 portal = test_suite.getPortalObject()
