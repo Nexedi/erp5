@@ -9,7 +9,7 @@ var runGame, updateGame, game_manager_instance;
   "use strict";
   console.log('game logic');
 
-  runGame = function (canvas, script, log, game_parameters_json) {
+  runGame = function (canvas, log, game_parameters_json) {
 
     function processLog(log) {
       var map_size,
@@ -192,13 +192,14 @@ var runGame, updateGame, game_manager_instance;
       flight_time = (end_time - start_time) / 1000 / time_offset;
       return {
         "logInfo": {
-          log: true,
+          /*log: true,
           draw: true,
-          log_interval_time: log_interval_time,
+          log_interval_time: log_interval_time,*/
+          //used by DroneLogAPI AI script
           converted_log_point_list: converted_log_point_list
-        },
+        }/*,
         "maxSpeed" : (flight_dist / flight_time) * SPEED_FACTOR,
-        //"flight_path_point_list" : path_point_list,
+        "flight_path_point_list" : path_point_list,
         "initialPosition" : {
           "x": start_position[0],
           "y": start_position[1],
@@ -218,26 +219,27 @@ var runGame, updateGame, game_manager_instance;
           "max_lat": parsed_log_info.max_lat,
           "max_lon": parsed_log_info.max_lon,
           "start_AMSL": start_AMSL
-        }
+        }*/
       };
     }
+    /*if (log) {
+      var processed_log = processLog(log);
+      game_parameters_json.logInfo = processed_log.logInfo;
+      game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
+      game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
+      game_parameters_json.initialPosition = processed_log.initialPosition;
+      game_parameters_json.gameTime = processed_log.gameTime;
+      if (!game_parameters_json.map) {
+        game_parameters_json.map = processed_log.map;
+      }
+    }*/
     if (log) {
       var processed_log = processLog(log);
       game_parameters_json.logInfo = processed_log.logInfo;
-      //game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
-      //game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
-      //game_parameters_json.initialPosition = processed_log.initialPosition;
-      //game_parameters_json.gameTime = processed_log.gameTime;
-      if (!game_parameters_json.map) {
-        game_parameters_json.map = processed_log.map;
-        console.log("processed_log.map:", processed_log.map);
-      }
     }
 
     if (!game_manager_instance) {
-      game_manager_instance = new GameManager(canvas, script,
-                                              game_parameters_json
-                                             );
+      game_manager_instance = new GameManager(canvas, game_parameters_json);
     }
     return game_manager_instance.run();
   };
@@ -277,7 +279,7 @@ function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
 
 var GameManager = /** @class */ (function () {
   // *** CONSTRUCTOR ***
-  function GameManager(canvas, script, game_parameters_json) {
+  function GameManager(canvas, game_parameters_json) {
     var _this = this;
     this._canvas = canvas;
     this._scene = null;
@@ -289,7 +291,6 @@ var GameManager = /** @class */ (function () {
     Object.assign(GAMEPARAMETERS, game_parameters_json);
     this._game_parameters_json = game_parameters_json;
     this._map_swapped = false;
-    this._script = script;
     this._log_count = [];
     this._flight_log = [];
     if (GAMEPARAMETERS.draw_flight_path) {
@@ -503,7 +504,7 @@ var GameManager = /** @class */ (function () {
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       ctx._spawnDrones(GAMEPARAMETERS.initialPosition,
-                       GAMEPARAMETERS.droneList, ctx._script);
+                       GAMEPARAMETERS.droneList);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -630,7 +631,7 @@ var GameManager = /** @class */ (function () {
     return parameter;
   };
 
-  GameManager.prototype._spawnDrones = function (center, drone_list, code) {
+  GameManager.prototype._spawnDrones = function (center, drone_list) {
     var position, i, position_list = [], max_collision = 10 * drone_list.length,
       collision_nb = 0;
     function checkCollision(position, list) {
@@ -642,10 +643,12 @@ var GameManager = /** @class */ (function () {
       }
       return false;
     }
-    function spawnDrone(x, y, z, index, api, code, ctx) {
-      var default_drone_AI = api.getDroneAI();
+    function spawnDrone(x, y, z, index, drone_info, api, ctx) {
+      var default_drone_AI = api.getDroneAI(), code;
       if (default_drone_AI) {
         code = default_drone_AI;
+      } else {
+        code = drone_info.script_content;
       }
       var base, code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', api);' +
@@ -681,8 +684,8 @@ var GameManager = /** @class */ (function () {
       }
       else {
         position_list.push(position);
-        var api = new this.APIs_dict[drone_list[i].type](this, GAMEPARAMETERS);
-        spawnDrone(position.x, position.y, position.z, i, api, code, this);
+        var api = new this.APIs_dict[drone_list[i].type](this, drone_list[i], GAMEPARAMETERS);
+        spawnDrone(position.x, position.y, position.z, i, drone_list[i], api, this);
       }
     }
   };

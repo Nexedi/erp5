@@ -2,8 +2,9 @@
 
 var DroneLogAPI = /** @class */ (function () {
   //** CONSTRUCTOR
-  function DroneLogAPI(gameManager, flight_parameters) {
+  function DroneLogAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
+    this._drone_info = drone_info;
     this._flight_parameters = flight_parameters;
   }
   /*
