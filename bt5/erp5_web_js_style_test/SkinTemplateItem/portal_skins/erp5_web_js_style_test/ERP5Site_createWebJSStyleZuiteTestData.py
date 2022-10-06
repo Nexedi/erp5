@@ -2,6 +2,7 @@
 from DateTime import DateTime
 
 portal = context.getPortalObject()
+now = DateTime()
 
 web_page_portal_type = "Web Page"
 web_site_portal_type = "Web Site"
@@ -33,6 +34,9 @@ web_page_content_reference = "erp5_web_js_style_test_contentpage"
 web_page_content_en_id = "erp5_web_js_style_test_contentpage_en"
 web_page_content_fr_id = "erp5_web_js_style_test_contentpage_fr"
 web_page_content_zh_id = "erp5_web_js_style_test_contentpage_zh"
+
+web_page_image_content_en_id = "erp5_web_js_style_test_image_contentpage_en"
+web_page_image_content_reference = 'erp5_web_js_style_test_image_contentpage'
 
 publicate_date = DateTime('2011/12/13 11:22:33 GMT+5')
 
@@ -151,6 +155,24 @@ web_page = module.newContent(
 )
 portal.portal_workflow.doActionFor(web_page, 'publish_action')
 
+### English image web page
+module = portal.getDefaultModule(web_page_portal_type)
+if getattr(module, web_page_image_content_en_id, None) is not None:
+  module.manage_delObjects([web_page_image_content_en_id])
+web_page = module.newContent(
+  portal_type=web_page_portal_type,
+  id=web_page_image_content_en_id,
+  reference=web_page_image_content_reference,
+  contributor_value=contributor,
+  language="en",
+  version="001",
+  text_content="""
+<img loading="eager" id="eager_img" alt="default alt" src="WebSite_downloadFakeImage?cachekey=eager_%s"></img>
+<img loading="lazy" id="lazy_img" alt="default alt" src="WebSite_downloadFakeImage?cachekey=lazy_%s"></img>
+""" % (now.HTML4(), now.HTML4())
+)
+portal.portal_workflow.doActionFor(web_page, 'publish_action')
+
 configuration_dict = {
   'nostyle': {
     'title': 'No Style',
@@ -251,7 +273,7 @@ web_site = module.newContent(
   criterion_property_list=('reference',),
   **configuration_dict[configuration]
 )
-web_site.setCriterion('reference', identity='erp5_web_js_style_test_contentpage')
+web_site.setCriterion('reference', identity=web_page_content_reference)
 
 web_section = web_site.newContent(
   portal_type=web_section_portal_type,
