@@ -32,6 +32,7 @@ from zLOG import LOG,DEBUG,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
+from six.moves import range
 TEST_SUITE_MAX = 4
 # Depending on the test suite priority, we will affect
 # more or less cores
@@ -215,12 +216,12 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       # we divide per 3 because we have 3 cores per node
       node_quantity_min = PRIORITY_MAPPING[int_index][0]/3
       node_quantity_max = PRIORITY_MAPPING[int_index][1]/3
-      for x in xrange(0, node_quantity_min):
+      for x in range(0, node_quantity_min):
         score = float(x)/(x+1)
         all_test_suite_list.append((score, test_suite_url, title))
         test_suite_score.setdefault(test_suite_url, []).append(score)
       # additional suites, lower score
-      for x in xrange(0, node_quantity_max -
+      for x in range(0, node_quantity_max -
                    node_quantity_min ):
         score = float(1) + x/(x+1)
         all_test_suite_list.append((1 + x/(x+1), test_suite_url, title))
