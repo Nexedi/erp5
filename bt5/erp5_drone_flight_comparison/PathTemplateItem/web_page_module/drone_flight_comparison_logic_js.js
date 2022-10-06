@@ -69,6 +69,7 @@ var GameManager = /** @class */ (function () {
       this._last_position_drawn = [];
       for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
         this._flight_log[drone] = [];
+        this._flight_log[drone].push(["timestamp;", "latitude;", "longitude;", "AMSL (m);", "rel altitude (m);", "pitch (Â°);", "roll(Â°);", "yaw(Â°);", "air speed (m/s);", "throttle(%);", "climb rate(m/s)"]);
         this._log_count[drone] = 0;
         this._last_position_drawn[drone] = null;
       }
