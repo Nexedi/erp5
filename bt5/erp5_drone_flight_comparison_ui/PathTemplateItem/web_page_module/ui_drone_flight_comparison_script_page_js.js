@@ -20,10 +20,9 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-    .declareMethod('render', function renderHeader() {
+    .declareMethod('render', function render() {
       var gadget = this, script_content, log_content, query,
         fragment = domsugar(gadget.element.querySelector('#fragment'),
                             [domsugar('div')]).firstElementChild;
