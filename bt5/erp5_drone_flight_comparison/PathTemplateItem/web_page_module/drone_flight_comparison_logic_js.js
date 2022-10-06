@@ -92,10 +92,10 @@ var runGame, updateGame, game_manager_instance;
           "max_lon": max_lon
         };
       }
-      var path_point_list = [], max_width, max_height, i,
+      var /*path_point, path_point_list = [], */max_width, max_height, i,
         splitted_log_entry, start_time, end_time, x, y, position, lat, lon,
         previous, start_position, dist = 0, log_entry_list, parsed_log_info,
-        path_point, average_speed = 0, flight_time, log_interval_time,
+        average_speed = 0, flight_time, log_interval_time,
         previous_log_time, height, timestamp, time_offset = 1,
         flight_dist = 0, start_AMSL = 0, min_lat, min_lon, max_lat, max_lon;
       parsed_log_info = parseLog(log);
@@ -155,7 +155,9 @@ var runGame, updateGame, game_manager_instance;
         }
         dist = distance(previous, position);
         flight_dist += dist;
-        if (dist > 15) {
+        previous = position;
+        // XXX: old pre-drawn flight path (obsolete?)
+        /*if (dist > 15) {
           previous = position;
           path_point = {
             "type": "box",
@@ -177,7 +179,7 @@ var runGame, updateGame, game_manager_instance;
             "timestamp": timestamp
           };
           path_point_list.push(path_point);
-        }
+        }*/
         converted_log_point_list.push([position[0],
                                       position[1],
                                       height, timestamp / time_offset]);
@@ -185,6 +187,7 @@ var runGame, updateGame, game_manager_instance;
                             parseFloat(splitted_log_entry[2]),
                             height, timestamp]);
       }
+      console.log("flight_dist:", flight_dist); //8346.636603325447
       average_speed = average_speed / log_entry_list.length;
       log_interval_time = log_interval_time / log_entry_list.length / time_offset;
       flight_time = (end_time - start_time) / 1000 / time_offset;
@@ -196,7 +199,7 @@ var runGame, updateGame, game_manager_instance;
           converted_log_point_list: converted_log_point_list
         },
         "maxSpeed" : (flight_dist / flight_time) * SPEED_FACTOR,
-        "flight_path_point_list" : path_point_list,
+        //"flight_path_point_list" : path_point_list,
         "initialPosition" : {
           "x": start_position[0],
           "y": start_position[1],
@@ -223,7 +226,7 @@ var runGame, updateGame, game_manager_instance;
       var processed_log = processLog(log);
       game_parameters_json.logInfo = processed_log.logInfo;
       game_parameters_json.drone.maxSpeed = processed_log.maxSpeed;
-      game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
+      //game_parameters_json.flight_path_point_list = processed_log.flight_path_point_list;
       game_parameters_json.initialPosition = processed_log.initialPosition;
       game_parameters_json.gameTime = processed_log.gameTime;
       if (!game_parameters_json.map) {
@@ -615,14 +618,15 @@ var GameManager = /** @class */ (function () {
     Object.assign(parameter, this._game_parameters_json);
     this._gameParameter = {};
     Object.assign(this._gameParameter, this._game_parameters_json);
-    for (i = 0; i < parameter.flight_path_point_list.length; i += 1) {
+    // XXX: old pre-drawn flight path (obsolete?)
+    /*for (i = 0; i < parameter.flight_path_point_list.length; i += 1) {
       parameter.flight_path_point_list[i].position =
         swap(parameter.flight_path_point_list[i].position);
       if (parameter.flight_path_point_list[i].scale) {
         parameter.flight_path_point_list[i].scale =
           swap(parameter.flight_path_point_list[i].scale);
       }
-    }
+    }*/
     return parameter;
   };
 
@@ -1056,8 +1060,8 @@ var MapManager = /** @class */ (function () {
     terrain.isVisible = true;
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000, width / 50000);
-    // Flight path point list
-    var count = 0;
+    // XXX: old pre-drawn flight path (obsolete?)
+    /*var count = 0;
     this._flight_path_point_list = [];
     GAMEPARAMETERS.flight_path_point_list.forEach(function (obs) {
       var newObj;
@@ -1097,7 +1101,7 @@ var MapManager = /** @class */ (function () {
         newObj.material = material;
       }
       _this._flight_path_point_list.push(newObj);
-    });
+    });*/
   }
   return MapManager;
 }());
