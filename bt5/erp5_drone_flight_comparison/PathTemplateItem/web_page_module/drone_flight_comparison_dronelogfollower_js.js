@@ -2,14 +2,225 @@
 
 var DroneLogAPI = /** @class */ (function () {
   //** CONSTRUCTOR
-  function DroneLogAPI(gameManager, flight_parameters) {
+  function DroneLogAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
+    this._drone_info = drone_info;
     this._flight_parameters = flight_parameters;
   }
   /*
   ** Function called at start phase of the drone, just before onStart AI script
   */
   DroneLogAPI.prototype.internal_start = function () {
+    var log = this._drone_info.log_content,
+      map_size,
+      min_height = 15,
+      min_x,
+      max_x,
+      min_y,
+      max_y,
+      SPEED_FACTOR = 0.75,
+      log_point_list = [],
+      converted_log_point_list = [],
+      log_info_json = {};
+    function longitudToX(lon) {
+      return (map_size / 360.0) * (180 + lon);
+    }
+    function latitudeToY(lat) {
+      return (map_size / 180.0) * (90 - lat);
+    }
+    function normalizeToMap(x, y) {
+      var n_x = (x - min_x) / (max_x - min_x),
+        n_y = (y - min_y) / (max_y - min_y);
+      return [n_x * 1000 - map_size / 2, n_y * 1000 - map_size / 2];
+    }
+    function latLonDistance(c1, c2) {
+      var R = 6371e3,
+        q1 = c1[0] * Math.PI / 180,
+        q2 = c2[0] * Math.PI / 180,
+        dq = (c2[0] - c1[0]) * Math.PI / 180,
+        dl = (c2[1] - c1[1]) * Math.PI / 180,
+        a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+          Math.cos(q1) * Math.cos(q2) *
+          Math.sin(dl / 2) * Math.sin(dl / 2),
+        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+    function distance(p1, p2) {
+      return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                       Math.pow(p1[1] - p2[1], 2));
+    }
+    function parseLog(log) {
+      var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
+        log_header_found, splitted_log_entry, lat, lon, max_lon = 0,
+        max_lat = 0, min_lon = 99999, min_lat = 99999;
+      for (i = 0; i < line_list.length; i += 1) {
+        if (!log_header_found && !line_list[i].includes("timestamp;")) {
+          continue;
+        } else {
+          log_header_found = true;
+        }
+        if (line_list[i].indexOf("AMSL") >= 0 ||
+            !line_list[i].includes(";")) {
+          continue;
+        }
+        log_entry = line_list[i].trim();
+        if (log_entry) {
+          log_entry_list.push(log_entry);
+          splitted_log_entry = log_entry.split(";");
+          lat = parseFloat(splitted_log_entry[1]);
+          lon = parseFloat(splitted_log_entry[2]);
+          //get min and max lat and lon
+          if (lon < min_lon) {
+            min_lon = lon;
+          }
+          if (lat < min_lat) {
+            min_lat = lat;
+          }
+          if (lon > max_lon) {
+            max_lon = lon;
+          }
+          if (lat > max_lat) {
+            max_lat = lat;
+          }
+        }
+      }
+      return {
+        "log_entry_list": log_entry_list,
+        "min_lat": min_lat,
+        "min_lon": min_lon,
+        "max_lat": max_lat,
+        "max_lon": max_lon
+      };
+    }
+    var /*path_point, path_point_list = [], */max_width, max_height, i,
+      splitted_log_entry, start_time, end_time, x, y, position, lat, lon,
+      previous, start_position, dist = 0, log_entry_list, parsed_log_info,
+      average_speed = 0, flight_time, log_interval_time,
+      previous_log_time, height, timestamp, time_offset = 1,
+      flight_dist = 0, start_AMSL = 0, min_lat, min_lon, max_lat, max_lon;
+    parsed_log_info = parseLog(log);
+    log_entry_list = parsed_log_info.log_entry_list;
+    //get map size from max distance
+    min_lat = parsed_log_info.min_lat;
+    min_lon = parsed_log_info.min_lon;
+    max_lat = parsed_log_info.max_lat;
+    max_lon = parsed_log_info.max_lon;
+    max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
+    max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
+    map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
+    min_x = longitudToX(min_lon);
+    max_x = longitudToX(max_lon);
+    min_y = latitudeToY(min_lat);
+    max_y = latitudeToY(max_lat);
+    if (log_entry_list[0] && log_entry_list[1]) {
+      var entry_1 = log_entry_list[0].split(";"),
+        entry_2 = log_entry_list[1].split(";"),
+        interval = parseInt(entry_2[0], 10) - parseInt(entry_1[0], 10);
+      //if interval > 1' then timestamp is in microseconds
+      if (Math.floor(interval / 1000) > 60) {
+        time_offset = 1000;
+      }
+    }
+    for (i = 0; i < log_entry_list.length; i += 1) {
+      splitted_log_entry = log_entry_list[i].split(";");
+      timestamp = parseInt(splitted_log_entry[0], 10);
+      if (i === 0) {
+        log_interval_time = 0;
+        start_time = timestamp;
+      } else {
+        log_interval_time += (parseInt(splitted_log_entry[0], 10) -
+          previous_log_time);
+      }
+      previous_log_time = parseInt(splitted_log_entry[0], 10);
+      average_speed += parseFloat(splitted_log_entry[8]);
+      lat = parseFloat(splitted_log_entry[1]);
+      lon = parseFloat(splitted_log_entry[2]);
+      if (i === log_entry_list.length - 1) {
+        end_time = timestamp;
+      }
+      height = parseFloat(splitted_log_entry[4]);
+      if (height < min_height) {
+        height = min_height;
+      } else {
+        height = height;
+      }
+      x = longitudToX(lon);
+      y = latitudeToY(lat);
+      position = normalizeToMap(x, y);
+      if (!previous) {
+        start_AMSL = parseFloat(splitted_log_entry[3]);
+        start_position = position;
+        start_position.push(height);
+        previous = position;
+      }
+      dist = distance(previous, position);
+      flight_dist += dist;
+      previous = position;
+      // XXX: old pre-drawn flight path (obsolete?)
+      /*if (dist > 15) {
+        previous = position;
+        path_point = {
+          "type": "box",
+          "position": {
+            "x": position[0],
+            "y": position[1],
+            "z": height
+          },
+          "scale": {
+            "x": 3.5,
+            "y": 3.5,
+            "z": 3.5
+          },
+          "color": {
+            "r": 0,
+            "g": 255,
+            "b": 0
+          },
+          "timestamp": timestamp
+        };
+        path_point_list.push(path_point);
+      }*/
+      converted_log_point_list.push([position[0],
+                                    position[1],
+                                    height, timestamp / time_offset]);
+      log_point_list.push([parseFloat(splitted_log_entry[1]),
+                          parseFloat(splitted_log_entry[2]),
+                          height, timestamp]);
+    }
+    average_speed = average_speed / log_entry_list.length;
+    log_interval_time = log_interval_time / log_entry_list.length / time_offset;
+    flight_time = (end_time - start_time) / 1000 / time_offset;
+    this._flight_parameters.converted_log_point_list = converted_log_point_list;
+    /*return {
+      "logInfo": {
+        log: true,
+        draw: true,
+        log_interval_time: log_interval_time,
+        converted_log_point_list: converted_log_point_list
+      },
+      "maxSpeed" : (flight_dist / flight_time) * SPEED_FACTOR,
+      "flight_path_point_list" : path_point_list,
+      "initialPosition" : {
+        "x": start_position[0],
+        "y": start_position[1],
+        "z": start_position[2]
+      },
+      "gameTime" : flight_time,
+      "map": { //this is here in case map parameters are not given
+        "depth": map_size,
+        "height": 100,
+        "width": map_size,
+        "min_x": min_x,
+        "min_y": min_y,
+        "max_x": max_x,
+        "max_y": max_y,
+        "min_lat": parsed_log_info.min_lat,
+        "min_lon": parsed_log_info.min_lon,
+        "max_lat": parsed_log_info.max_lat,
+        "max_lon": parsed_log_info.max_lon,
+        "start_AMSL": start_AMSL
+      }
+    };*/
   };
   /*
   ** Function called on every drone update, right after onUpdate AI script
@@ -87,9 +298,11 @@ var DroneLogAPI = /** @class */ (function () {
       'if (!me.getFlightParameters())' +
       'throw "DroneLog API must implement getFlightParameters";' +
       'me.flightParameters = me.getFlightParameters();' +
-      'me.checkpoint_list = me.flightParameters.logInfo.converted_log_point_list;' +
+      'me.checkpoint_list = me.flightParameters.converted_log_point_list;' +
+      'if (me.checkpoint_list.length === 0)' +
+      'throw "flight log is empty or it does not contain valid entries";' +
       'me.startTime = new Date();' +
-      'me.initTimestamp = me.flightParameters.logInfo.converted_log_point_list[0][3];' +
+      'me.initTimestamp = me.checkpoint_list[0][3];' +
       'me.setTargetCoordinates(me.checkpoint_list[0][0], me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
       'me.last_checkpoint_reached = -1;' +
       'me.setAcceleration(10);' +
