@@ -39,6 +39,7 @@ getPreferredCategoryChildItemListMethodId.
 # It is much simpler if only "empty_category=False" case is handled.
 from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import getSecurityManager
+from six.moves import range
 portal = context.getPortalObject()
 checkPermission = portal.portal_membership.checkPermission
 portal_preferences = portal.portal_preferences
@@ -67,7 +68,7 @@ def getResourceItemList():
     def getCategoryTitle_(category, depth):
       result = []
       append = result.append
-      for _ in xrange(depth + 1):
+      for _ in range(depth + 1):
         append(getattr(category, accessor_id)())
         category = category.getParentValue()
       return '/'.join(result[::-1])

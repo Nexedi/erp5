@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
+from six.moves import range
 
 
 class TestTrashTool(ERP5TypeTestCase):
@@ -76,7 +77,7 @@ class TestTrashTool(ERP5TypeTestCase):
     base_category = pc._getOb(bc_id, None)
     self.assertTrue(base_category is not None)
     category_list = []
-    for _ in xrange(10):
+    for _ in range(10):
       category = base_category.newContent(portal_type='Category')
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
