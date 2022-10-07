@@ -39,6 +39,7 @@ from ZTUtils import make_query
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import str2bytes
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
@@ -1225,10 +1226,7 @@ class SelectionTool( BaseTool, SimpleItem ):
           return None
       # XXX To avoid the difference of the string representations of int and long,
       # convert each element to a string.
-      if six.PY3:
-          return md5(str(sorted(uid_list)).encode()).hexdigest()
-      else:
-          return md5(str(sorted(map(str, uid_list)))).hexdigest()
+      return md5(str2bytes(repr(sorted(str(e) for e in uid_list)))).hexdigest()
 
     # Related document searching
     security.declarePublic('viewSearchRelatedDocumentDialog')

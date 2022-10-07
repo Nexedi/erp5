@@ -30,6 +30,7 @@
 
 from hashlib import md5
 import random
+from Products.ERP5Type.Utils import str2bytes
 
 class CaptchasDotNet:
     def __init__ (self, client, secret,
@@ -130,7 +131,7 @@ class CaptchasDotNet:
         encryption_base = self.__secret + random
         if (password_alphabet != "abcdefghijklmnopqrstuvwxyz") or (password_length != 6):
             encryption_base += ":" + password_alphabet + ":" + str(password_length)
-        digest = md5(encryption_base).digest()
+        digest = md5(str2bytes(encryption_base)).digest()
 
         # Compute password
         correct_password = ''
