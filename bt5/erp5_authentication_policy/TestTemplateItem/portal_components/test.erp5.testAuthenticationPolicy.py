@@ -30,9 +30,8 @@
 
 from functools import partial
 import unittest
-import urllib
-import urlparse
-from StringIO import StringIO
+import six.moves.urllib.parse
+from six.moves import cStringIO as StringIO
 import time
 import httplib
 import mock
