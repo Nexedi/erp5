@@ -6,7 +6,7 @@ from six.moves import cStringIO as StringIO
 from erp5.portal_type import Image
 from types import ModuleType
 from ZODB.serialize import ObjectWriter
-import cPickle
+import six.moves.cPickle
 import sys
 import traceback
 import ast
@@ -589,7 +589,7 @@ def canSerialize(obj):
     # for example: if the user defines a dict with an object of a class
     # that he created the dump will stil work, but the load will fail.
     try:
-      cPickle.loads(cPickle.dumps(obj))
+      six.moves.cPickle.loads(six.moves.cPickle.dumps(obj))
     # By unknowing reasons, trying to catch cPickle.PicklingError in the "normal"
     # way isn't working. This issue might be related to some weirdness in
     # pickle/cPickle that is reported in this issue: http://bugs.python.org/issue1457119.
@@ -599,7 +599,7 @@ def canSerialize(obj):
     #
     # Even though the issue seems complicated, this quickfix should be
     # properly rewritten in a better way as soon as possible.
-    except (cPickle.PicklingError, TypeError, NameError, AttributeError):
+    except (six.moves.cPickle.PicklingError, TypeError, NameError, AttributeError):
       return False
     else:
       return True

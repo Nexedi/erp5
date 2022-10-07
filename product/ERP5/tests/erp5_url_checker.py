@@ -22,7 +22,7 @@ from urllib import splittype
 import string
 
 from urllib import FancyURLopener
-from Cookie import SimpleCookie
+from six.moves.http_cookies import SimpleCookie
 
 def main():
   max_thread = 7  # The number of thread we want by the same time
@@ -76,7 +76,7 @@ class URLOpener(FancyURLopener):
 
     def open_http(self, url, data=None):
         """Use HTTP protocol."""
-        import httplib
+        import six.moves.http_client
         user_passwd = None
         if type(url) is type(""):
             host, selector = splithost(url)
@@ -104,7 +104,7 @@ class URLOpener(FancyURLopener):
             auth = base64.encodestring(user_passwd).strip()
         else:
             auth = None
-        h = httplib.HTTP(host)
+        h = six.moves.http_client.HTTP(host)
         if data is not None:
             h.putrequest('POST', selector)
             h.putheader('Content-type', 'application/x-www-form-urlencoded')
