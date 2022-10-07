@@ -48,6 +48,7 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
+from six.moves import range
 
 if six.PY3:
   long = int  # pylint:disable=redefined-builtin
@@ -590,7 +591,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     from Products.ZSQLCatalog.SQLCatalog import UID_BUFFER_SIZE
     uid_dict = {}
-    for _ in xrange(UID_BUFFER_SIZE * 3):
+    for _ in range(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
       self.assertIsInstance(uid, long)
       self.assertNotIn(uid, uid_dict)
@@ -1289,7 +1290,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     old_default_result_limit = ctool.default_result_limit
     max_ = ctool.default_result_limit = 3
     #Create max + 2 Organisations
-    for i in xrange(max_ + 2):
+    for i in range(max_ + 2):
       self._makeOrganisation(title='abc%s' % (i), description='abc')
     self.assertEqual(max_,
                      len(self.getCatalogTool()(portal_type='Organisation')))
@@ -4071,7 +4072,7 @@ VALUES
     now = DateTime()
     try:
       organisation_list = []
-      for _ in xrange(0,300):
+      for _ in range(0,300):
         organisation_list.append(
             self.portal.organisation_module.newContent().getPath())
       self.tic()
