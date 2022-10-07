@@ -27,6 +27,7 @@
 
 
 from erp5.component.module.testERP5SyncMLMixin import TestERP5SyncMLMixin
+from six.moves import range
 
 
 class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
@@ -100,7 +101,7 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
   def _fillModule(self, module, nb_objects):
     self.title_list = []
     append = self.title_list.append
-    for x in xrange(nb_objects):
+    for x in range(nb_objects):
       module.newContent(title=str(x))
       append(str(x))
 
