@@ -26,7 +26,7 @@
 ##############################################################################
 
 import zipfile, cStringIO, re
-import xmlrpclib, base64
+import six.moves.xmlrpc_client, base64
 from Products.CMFCore.utils import getToolByName
 
 def extractContent(data):
@@ -68,7 +68,7 @@ def mkProxy(self):
   nr = pref.getPreferredDmsOoodocServerPortNumber()
   if adr is None or nr is None:
     raise Exception('you should set conversion server coordinates in preferences')
-  sp = xmlrpclib.ServerProxy('http://%s:%d' % (adr,nr), allow_none=True)
+  sp = six.moves.xmlrpc_client.ServerProxy('http://%s:%d' % (adr,nr), allow_none=True)
   return sp
 
 def generateFile(self, name, data, format):  # pylint: disable=redefined-builtin
