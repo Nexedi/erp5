@@ -27,7 +27,8 @@
 #
 ##############################################################################
 
-import re, zipfile, cStringIO
+import re, zipfile
+from six.moves import cStringIO as StringIO
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from OFS.Image import Pdata

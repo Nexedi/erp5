@@ -11,7 +11,7 @@ https://github.com/tmbdev/ocropy
 
 import numpy as np
 import scipy.ndimage as ndi
-import StringIO
+from six.moves import cStringIO as StringIO
 from matplotlib import pylab
 import matplotlib.image as mpimg
 import scipy.stats as stats
@@ -38,7 +38,7 @@ def getReceiptValue(self, image_data, model_name = "en-default.pyrnn"):
   This function look for euros only and return a price with a two digit
   precison like "135.79" or "43,89".
   """
-  image_as_string = StringIO.StringIO(image_data)
+  image_as_string = StringIO(image_data)
   image_as_array = mpimg.imread(image_as_string, format = 'JPG')
   line_list, cleared = getLinesFromPicture(image_as_array)
 

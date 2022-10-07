@@ -27,7 +27,7 @@
 ##############################################################################
 
 import zope.interface
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet

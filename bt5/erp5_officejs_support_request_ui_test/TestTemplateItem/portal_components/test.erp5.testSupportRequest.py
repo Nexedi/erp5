@@ -25,9 +25,9 @@
 #
 ##############################################################################
 import json
-from StringIO import StringIO
-import urlparse
-import httplib
+from six.moves import cStringIO as StringIO
+import six.moves.urllib.parse
+import six.moves.http_client
 
 import feedparser
 from DateTime import DateTime
