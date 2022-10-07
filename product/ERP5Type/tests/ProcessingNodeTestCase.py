@@ -2,6 +2,7 @@
 import errno, logging, mock, os, socket, time
 import itertools
 from threading import Thread
+from six.moves import range
 try: # six.PY2
   from UserDict import IterableUserDict as UserDict
 except ImportError:
@@ -328,7 +329,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     This aborts current transaction.
     """
-    for i in xrange(60):
+    for i in range(60):
       node_list = list(self.portal.portal_activities.getProcessingNodeList())
       if len(node_list) >= node_count:
         node_list.remove(getCurrentNode())
