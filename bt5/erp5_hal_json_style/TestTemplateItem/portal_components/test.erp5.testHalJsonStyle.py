@@ -12,7 +12,7 @@ from ZPublisher.HTTPResponse import HTTPResponse
 
 import base64
 import DateTime
-import StringIO
+from six.moves import cStringIO as StringIO
 import json
 import re
 from six.moves.urllib.parse import quote, quote_plus
@@ -118,7 +118,7 @@ def do_fake_request(request_method, headers=None, data=()):
   env['GATEWAY_INTERFACE']='CGI/1.1 '
   env['SCRIPT_NAME']='Main'
   env.update(headers)
-  body_stream = StringIO.StringIO()
+  body_stream = StringIO()
 
   # for some mysterious reason QUERY_STRING does not get parsed into data fields
   if data and request_method.upper() == 'GET':

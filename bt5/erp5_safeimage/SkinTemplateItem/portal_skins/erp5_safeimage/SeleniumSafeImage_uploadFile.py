@@ -1,5 +1,5 @@
 #from Products.ERP5.Document.TileImageTransformed import TileImageTransformed
-#from cStringIO import StringIO
+#from six.moves import cStringIO as StringIO
 
 
 portal = context.getPortalObject()
