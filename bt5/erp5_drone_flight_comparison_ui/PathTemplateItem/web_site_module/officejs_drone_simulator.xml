@@ -353,7 +353,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' https://*.tile.openstreetmap.org data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+            <value> <string>default-src \'none\'; manifest-src \'self\' data:; img-src \'self\' https://*.tile.openstreetmap.org data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -369,7 +369,9 @@
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_erp5_header.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -652,7 +654,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1003.31619.154.16384</string> </value>
+                      <value> <string>1003.31636.31329.23756</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -670,7 +672,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1665152854.99</float>
+                              <float>1665154022.29</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
