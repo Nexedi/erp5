@@ -63,7 +63,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
-import httplib
+import six.moves.http_client
 import urllib
 import difflib
 import re
@@ -1897,7 +1897,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     </html>
 """
     web_page.edit(text_content=html_content)
-    from HTMLParser import HTMLParseError
+    from six.moves.html_parser import HTMLParseError
     try:
       web_page.asStrippedHTML()
     except HTMLParseError:
@@ -1965,7 +1965,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
-          assert response.getStatus() == httplib.OK
+          assert response.getStatus() == six.moves.http_client.OK
 
     # assume there is no password
     credential = '%s:' % (getSecurityManager().getUser().getId(),)

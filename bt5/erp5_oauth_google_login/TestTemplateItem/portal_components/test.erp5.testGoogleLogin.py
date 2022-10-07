@@ -28,8 +28,8 @@
 import uuid
 import mock
 import lxml
-import urlparse
-import httplib
+import six.moves.urllib.parse
+import six.moves.http_client
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
@@ -328,9 +328,9 @@ class TestERP5JSGoogleLogin(GoogleLoginTestCase):
         if img.attrib['alt'] == 'Sign in with Google'
     ]
     self.assertIn('/ERP5Site_redirectToGoogleLoginPage', google_login_link)
-    resp = self.publish(urlparse.urlparse(google_login_link).path)
+    resp = self.publish(six.moves.urllib.parse.urlparse(google_login_link).path)
     # this request redirects to google
-    self.assertEqual(resp.getStatus(), httplib.FOUND)
+    self.assertEqual(resp.getStatus(), six.moves.http_client.FOUND)
     self.assertIn('google.com', resp.getHeader('Location'))
 
   def test_logout(self):

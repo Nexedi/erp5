@@ -27,8 +27,8 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-import urlparse
-import httplib
+import six.moves.urllib.parse
+import six.moves.http_client
 import unittest
 import ssl
 
@@ -91,13 +91,13 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
     if source_path.endswith("?"):
       source_path = source_path[:-1]
 
-    api_scheme, api_netloc, api_path, _, _ = urlparse.urlsplit(absolute_url)
+    api_scheme, api_netloc, api_path, _, _ = six.moves.urllib.parse.urlsplit(absolute_url)
     redirect_url = website.getLayoutProperty("redirect_domain")
     redirect_location = "/".join([redirect_url, source_path])
 
-    status_to_assert = httplib.MOVED_PERMANENTLY
+    status_to_assert = six.moves.http_client.MOVED_PERMANENTLY
     if use_moved_temporarily:
-      status_to_assert = httplib.FOUND
+      status_to_assert = six.moves.http_client.FOUND
 
     api_netloc = '[ERP5_IPV6]:ERP5_PORT'
     for url_to_check in [
@@ -111,12 +111,12 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
       # '%s://%s/VirtualHostBase/http/example.org:1234/erp5/web_site_module/VirtualHostRoot/%s/%s' % (api_scheme, api_netloc, website.getId(), source_path)
     ]:
 
-      scheme_to_check, netloc_to_check, _, _, _ = urlparse.urlsplit(url_to_check)
+      scheme_to_check, netloc_to_check, _, _, _ = six.moves.urllib.parse.urlsplit(url_to_check)
 
       if (scheme_to_check == 'https'):
-        connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context(), timeout=10)
+        connection = six.moves.http_client.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context(), timeout=10)
       else:
-        connection = httplib.HTTPConnection(netloc_to_check, timeout=10)
+        connection = six.moves.http_client.HTTPConnection(netloc_to_check, timeout=10)
       self.addCleanup(connection.close)
       connection.request(
         method="GET",
@@ -127,7 +127,7 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
 
       if (source_path == configuration_service_worker_url):
         # Test service worker URL
-        self.assertEqual(response.status, httplib.OK, '%s: %s' % (response.status, url_to_check))
+        self.assertEqual(response.status, six.moves.http_client.OK, '%s: %s' % (response.status, url_to_check))
         self.assertEqual(response.getheader('Content-Type'), 'application/javascript')
         self.assertTrue('self.registration.unregister()' in response_body,
                         response_body)
