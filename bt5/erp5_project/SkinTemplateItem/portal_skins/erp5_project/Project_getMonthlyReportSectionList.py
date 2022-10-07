@@ -79,7 +79,7 @@ project_relative_url_dict = {}
 def fillDictWithParentAndChildRelativeUrls(my_dict, document_url):
   if my_dict.get(document_url) is None:
     splitted_document_url = document_url.split('/')
-    for x in xrange(0, len(splitted_document_url)):
+    for x in range(0, len(splitted_document_url)):
       my_dict['/'.join(splitted_document_url[0:x+1])] = 1
 
 
@@ -194,6 +194,7 @@ portal.portal_selections.setListboxDisplayMode(request, 'ReportTreeMode',
 
 result = []
 from Products.ERP5Form.Report import ReportSection
+from six.moves import range
 
 project_dict = {}
 for project_relative_url in project_relative_url_dict.keys():
