@@ -28,7 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from six.moves import cStringIO as StringIO
 import urllib
-import httplib
+import six.moves.http_client
 
 
 class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
@@ -127,7 +127,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
       request_method="POST",
       handle_errors=False
     )
-    self.assertEqual(httplib.FOUND, ret.getStatus())
+    self.assertEqual(six.moves.http_client.FOUND, ret.getStatus())
 
     alarm.Alarm_solve()
 
