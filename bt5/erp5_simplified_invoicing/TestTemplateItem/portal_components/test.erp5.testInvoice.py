@@ -563,8 +563,8 @@ class TestInvoice(TestInvoiceMixin):
     invoice.confirm()
     self.tic()
     odt = invoice.Invoice_viewAsODT()
-    import cStringIO
-    output = cStringIO.StringIO()
+    from io import BytesIO
+    output = BytesIO()
     output.write(odt)
     m = OpenDocumentTextFile(output)
     text_content=m.toString().encode('ascii','replace')

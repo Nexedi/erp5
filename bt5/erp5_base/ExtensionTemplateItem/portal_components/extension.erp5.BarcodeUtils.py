@@ -22,7 +22,7 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
     output = encoder.get_imagedata()
   elif barcode_type == 'qrcode':
     import qrcode
-    from cStringIO import StringIO
+    from six.moves import cStringIO as StringIO
     fp = StringIO()
     img = qrcode.make(data)
     img.save(fp, 'png')

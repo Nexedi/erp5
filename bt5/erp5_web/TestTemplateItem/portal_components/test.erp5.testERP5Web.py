@@ -32,8 +32,8 @@ import re
 import requests
 import time
 from unittest import expectedFailure, skip
-from StringIO import StringIO
-from urllib import urlencode
+from six.moves import cStringIO as StringIO
+from six.moves.urllib.parse import urlencode
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from DateTime import DateTime

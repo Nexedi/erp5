@@ -47,7 +47,7 @@
 
 import unittest
 import time
-import StringIO
+from six.moves import cStringIO as StringIO
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
@@ -1769,7 +1769,7 @@ class TestDocument(TestDocumentMixin):
     # as it is done in reality
 
     # Mimic the behaviour of a FileUpload from WebPage_view
-    file_like = StringIO.StringIO()
+    file_like = StringIO()
     file_like.write(html_content)
     setattr(file_like, 'filename', 'something.htm')
     web_page.edit(file=file_like)
@@ -2058,7 +2058,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertEqual(document.asText(), 'ERP5 is a free software.')
 
   def test_broken_pdf_asText(self):
-    class StringIOWithFilename(StringIO.StringIO):
+    class StringIOWithFilename(StringIO):
       filename = 'broken.pdf'
     document = self.portal.document_module.newContent(
         portal_type='PDF',
@@ -2071,7 +2071,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     pdf_writer = PyPDF2.PdfFileWriter()
     pdf_writer.addPage(pdf_reader.getPage(0))
     pdf_writer.encrypt('secret')
-    encrypted_pdf_stream = StringIO.StringIO()
+    encrypted_pdf_stream = StringIO()
     pdf_writer.write(encrypted_pdf_stream)
     document = self.portal.document_module.newContent(
         portal_type='PDF',
