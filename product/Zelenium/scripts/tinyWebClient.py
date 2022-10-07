@@ -1,5 +1,5 @@
 import sys
-import httplib
+import six.moves.http_client
 
 if ( len(sys.argv) != 5 ):
     print("usage tinyWebClient.py host port method path")
@@ -11,6 +11,6 @@ else:
 
     info = (host, port)
     print("%s:%s" % info)
-    conn = httplib.HTTPConnection("%s:%s" % info)
+    conn = six.moves.http_client.HTTPConnection("%s:%s" % info)
     conn.request(method, path)
     print(conn.getresponse().msg)
