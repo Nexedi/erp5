@@ -32,7 +32,7 @@ from ZPublisher.HTTPResponse import HTTPResponse
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from DateTime import DateTime
 import urllib
-import httplib
+import six.moves.http_client
 import base64
 from six.moves import cStringIO as StringIO
 import mock
@@ -143,7 +143,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
         urllib.urlencode({
             'access_token': access_token.getId(),
             'access_token_secret': access_token.getReference()})))
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
     # XXX caption currently shows plugin id and relative URL of the token,
     # that's not ideal.
     self.assertEqual(
