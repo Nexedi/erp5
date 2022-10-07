@@ -30,17 +30,17 @@
 # This extension should be replaced by a clever parser provided by
 # ERP5OOo or probably by CloudOOo itself.
 
-import StringIO
+from io import BytesIO
 
 def read(self, filename, data):
   """
-  Return a OOCalc as a StringIO
+  Return a OOCalc as a BytesIO
   """
   if data is None:
     oo_template_file = getattr(self, filename)
-    fp = StringIO.StringIO(oo_template_file)
+    fp = BytesIO(oo_template_file)
   else:
-    fp = StringIO.StringIO(data)
+    fp = BytesIO(data)
   fp.filename = filename
   return fp
 
