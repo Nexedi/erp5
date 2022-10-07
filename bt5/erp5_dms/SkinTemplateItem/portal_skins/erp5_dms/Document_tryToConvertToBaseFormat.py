@@ -1,7 +1,7 @@
 from erp5.component.document.Document import ConversionError
 from erp5.component.module.Log import log
 from ZODB.POSException import ConflictError
-from xmlrpclib import Fault
+from six.moves.xmlrpc_client import Fault
 from socket import error as SocketError
 
 message = None

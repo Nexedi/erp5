@@ -36,7 +36,7 @@ import email, re
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 import cgi
-import urlparse
+import six.moves.urllib.parse
 
 use_verbose_security = 0
 if use_verbose_security:
@@ -810,7 +810,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     url = url.strip()
     self.assertNotEqual(url, None)
     self.publish(url)
-    parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
+    parameters = cgi.parse_qs(six.moves.urllib.parse.urlparse(url)[4])
     self.assertTrue(
       'reset_key' in parameters,
       'reset_key not found in mail message : %s' % body_message
@@ -1322,7 +1322,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.ERP5Site_viewNewPersonCredentialUpdateDialog()
     ret = self.portal.ERP5Site_newPersonCredentialUpdate(password='new_password')
     self.assertEqual(
-      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
       ['Password changed.'],
     )
     self.tic()
@@ -1490,7 +1490,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     ret = self.portal.ERP5Site_newCredentialRecovery(reference=self._testMethodName)
     self.assertEqual(
-      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
       ['We have sent you an email to enable you to reset your password. Please check your inbox and your junk/spam mail for this email and follow the link to reset your password.'],
     )
     person.setDefaultEmailCoordinateText(None)
