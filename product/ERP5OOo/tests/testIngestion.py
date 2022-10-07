@@ -31,7 +31,7 @@
 
 import unittest
 import os
-import StringIO
+from six.moves import cStringIO as StringIO
 from cgi import FieldStorage
 from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
@@ -2108,7 +2108,7 @@ class Base_contributeMixin:
     """
     person = self.portal.person_module.newContent(portal_type='Person')
     empty_file_upload = ZPublisher.HTTPRequest.FileUpload(FieldStorage(
-                            fp=StringIO.StringIO(),
+                            fp=StringIO(),
                             environ=dict(REQUEST_METHOD='PUT'),
                             headers={"content-disposition":
                               "attachment; filename=empty;"}))
