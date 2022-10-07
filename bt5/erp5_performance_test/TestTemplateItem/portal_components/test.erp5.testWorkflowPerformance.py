@@ -27,6 +27,7 @@
 
 from test import pystone
 from time import time
+from six.moves import range
 pystone.clock = time
 from erp5.component.test.testPerformance import TestPerformanceMixin
 from Products.ERP5Type.Core.Workflow import ValidationFailed
@@ -47,11 +48,11 @@ class TestWorkflowPerformance(TestPerformanceMixin):
 
     foo_list = []
     foo_list_append = foo_list.append
-    range_10 = range(10)
+    range_10 = list(range(10))
     portal_workflow = self.portal.portal_workflow
     foo_count = 100
 
-    for x in xrange(foo_count):
+    for x in range(foo_count):
       foo = self.foo_module.newContent()
       foo_list_append(foo)
 
