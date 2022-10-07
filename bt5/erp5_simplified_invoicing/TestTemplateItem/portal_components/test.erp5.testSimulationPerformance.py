@@ -30,6 +30,7 @@ import subprocess
 import unittest
 from test import pystone
 from time import time
+from six.moves import range
 pystone.clock = time
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 from erp5.component.test.testTradeModelLine import TestTradeModelLineSale
@@ -63,7 +64,7 @@ class TestSimulationPerformance(TestTradeModelLineSale):
   def perf_01_invoiceSimpleOrder(self, order_count=1):
     start = time()
     order = self.portal.unrestrictedTraverse(self._order)
-    order_list = [self.clone(order) for _ in xrange(order_count)]
+    order_list = [self.clone(order) for _ in range(order_count)]
     for order in order_list:
       for line in list(order.getMovementList()):
         self.clone(line)
