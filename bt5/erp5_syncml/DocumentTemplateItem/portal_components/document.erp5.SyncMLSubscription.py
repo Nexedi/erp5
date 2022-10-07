@@ -29,7 +29,7 @@
 
 from base64 import b16encode, b16decode
 from logging import getLogger
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 from lxml import etree
 from copy import deepcopy
 from six import string_types as basestring
