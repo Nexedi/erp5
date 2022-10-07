@@ -35,6 +35,7 @@ from Products.Formulator.Errors import ValidationError
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type.Utils import str2bytes
 from Products.Formulator.TALESField import TALESField
 from . import CaptchasDotNet
 import string
@@ -75,7 +76,7 @@ class CaptchasDotNetProvider(object):
 
   def getHTML(self, field, captcha_key):
     image_generator = self.getImageGenerator(field)
-    return image_generator.image(captcha_key, "__captcha_" + md5(captcha_key).hexdigest())
+    return image_generator.image(captcha_key, "__captcha_" + md5(str2bytes(captcha_key)).hexdigest())
 
   # dynamic fields
   _dynamic_property_list = [dict(id='captcha_dot_net_client',
@@ -197,14 +198,14 @@ class CaptchaWidget(Widget.TextWidget):
     provider = CaptchaProviderFactory.getProvider(captcha_type)
     (captcha_key, captcha_answer) = provider.generate(field)
     portal_sessions = field.getPortalObject().portal_sessions
-    while not self.add_captcha(portal_sessions, md5(captcha_key).hexdigest(), captcha_answer):
+    while not self.add_captcha(portal_sessions, md5(str2bytes(captcha_key)).hexdigest(), captcha_answer):
       (captcha_key, captcha_answer) = provider.generate(field)
     captcha_field = provider.getHTML(field, captcha_key)
 
     key_field = Widget.render_element("input",
                                       type="hidden",
                                       name="__captcha_" + key + "__",
-                                      value=md5(captcha_key).hexdigest())
+                                      value=md5(str2bytes(captcha_key)).hexdigest())
     splitter = "<br />"
     answer = Widget.render_element("input",
                                    type="text",

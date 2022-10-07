@@ -928,7 +928,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       forced_portal_id = os.environ.get('erp5_tests_portal_id')
       if forced_portal_id:
         return str(forced_portal_id)
-      m = md5(repr(self.getBusinessTemplateList()) + self.getTitle())
+      m = md5(str2bytes(repr(self.getBusinessTemplateList()) + self.getTitle()))
       return portal_name + '_' + m.hexdigest()
 
     def getPortal(self):
