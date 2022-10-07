@@ -35,7 +35,7 @@ def mergePDFList(self, pdf_data_list, start_on_recto=False):
   to have each PDF as the recto page. This is useful if you have to print the
   merged pdf in recto/verso mode.
   """
-  from StringIO import StringIO
+  from six.moves import cStringIO as StringIO
   from PyPDF2 import PdfFileWriter, PdfFileReader
 
   output = PdfFileWriter()

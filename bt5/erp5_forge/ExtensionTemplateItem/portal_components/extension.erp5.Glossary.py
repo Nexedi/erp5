@@ -53,7 +53,7 @@ def getActionTitleListFromAllActionProvider(portal):
   return result
 
 
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 from zope.tal.htmltalparser import HTMLTALParser
 from zope.tal.talparser import TALParser
 from zope.tal.talgenerator import TALGenerator

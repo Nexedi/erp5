@@ -18,7 +18,7 @@ zipfile (bool)
   When false, the result is a bare profiling result (cachegrind file format).
 """
 from time import sleep
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 profiler, thread = context.ERP5Site_getStatisticalProfilerAndThread(single=False)
 with thread:
   sleep(duration)

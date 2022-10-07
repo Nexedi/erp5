@@ -2,7 +2,7 @@
 from matplotlib.figure import Figure
 from IPython.core.display import DisplayObject
 from IPython.lib.display import IFrame
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from erp5.portal_type import Image
 from types import ModuleType
 from ZODB.serialize import ObjectWriter

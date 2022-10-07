@@ -31,7 +31,7 @@ import unittest
 import os
 import quopri
 import functools
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 from lxml import etree
 from base64 import b64decode, b64encode
 from email.parser import Parser as EmailParser
