@@ -25,7 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import StringIO
+from six.moves import cStringIO as StringIO
 import textwrap
 import time
 
@@ -332,7 +332,7 @@ class TestRenderUpdateTranslationData(RenderJSUpgradeTestCase):
   def test_WebSite_getTranslationDataTextContent_extract_from_file(self):
     self.portal.portal_skins.custom.manage_addProduct['OFS'].manage_addFile(
         'test_portal_skins_gadget.html',
-        file=StringIO.StringIO(textwrap.dedent('''
+        file=StringIO(textwrap.dedent('''
           <html>
           <!--
            data-i18n=Message from file
