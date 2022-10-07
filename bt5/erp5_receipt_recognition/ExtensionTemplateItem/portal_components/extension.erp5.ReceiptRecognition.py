@@ -16,7 +16,7 @@ from matplotlib import pylab
 import matplotlib.image as mpimg
 import scipy.stats as stats
 import re
-import cPickle
+import six.moves.cPickle
 import ocrolib
 
 def getReceiptValue(self, image_data, model_name = "en-default.pyrnn"):
@@ -102,7 +102,7 @@ def getRnnModelFromDataStream(self, model_name="en-default.pyrnn"):
   WARNING: This function present a security issue and should NOT be called with
   an user-defined model name (see cpickle security issue)
   """
-  network = cPickle.loads(self.data_stream_module[model_name].getData())
+  network = six.moves.cPickle.loads(self.data_stream_module[model_name].getData())
   lnorm = getattr(network, "lnorm", None)
   return network, lnorm
 
