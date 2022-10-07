@@ -1,3 +1,4 @@
+from six.moves import range
 portal = context.getPortalObject()
 batch_size = 100
 priority = 1
@@ -28,7 +29,7 @@ else:
 
 object_list_len = len(payment_relative_url_list)
 activate = portal.portal_activities.activate
-for i in xrange(0, object_list_len, batch_size):
+for i in range(0, object_list_len, batch_size):
   current_path_list = payment_relative_url_list[i:i+batch_size]
   activate(activity='SQLQueue', activate_kw=activate_kw,).callMethodOnObjectList(
       current_path_list,

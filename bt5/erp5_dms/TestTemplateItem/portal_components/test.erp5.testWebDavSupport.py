@@ -39,6 +39,7 @@ from six.moves import cStringIO as StringIO
 from DateTime import DateTime
 
 from lxml import etree
+from six.moves import range
 
 def makeFilePath(name):
   import Products.ERP5.tests
@@ -186,7 +187,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """
     iso_text_content = text_content.decode('utf-8').encode('iso-8859-1')
     path = web_page_module.getPath()
-    for _ in xrange(2): # Run twice to check the code that compares
+    for _ in range(2): # Run twice to check the code that compares
                         # old & new data when setting file attribute.
       response = self.publish('%s/%s' % (path, filename),
                               request_method='PUT',
