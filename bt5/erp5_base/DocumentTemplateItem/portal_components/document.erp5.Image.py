@@ -32,7 +32,7 @@
 
 import os
 import subprocess
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
