@@ -1,3 +1,4 @@
+from six.moves import range
 def cleanString(str):
   clean_item = str
   if clean_item.find('"') != -1:
@@ -51,7 +52,7 @@ for line in iter(import_file.readline, ""):
   csv_data_list = splitCsvLine(line)
 
   attribute_value_dict = dict([(csv_property_list[x], csv_data_list[x]) \
-                               for x in xrange(len(csv_property_list))])
+                               for x in range(len(csv_property_list))])
 
   method(priority=4, activity="SQLQueue").Base_importCsvLine(attribute_value_dict)
 redirect_url = '%s?%s' % ( context.absolute_url()+'/'+'view', 'portal_status_message=Importing+CSV+file.')

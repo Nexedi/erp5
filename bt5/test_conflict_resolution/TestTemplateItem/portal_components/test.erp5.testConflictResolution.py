@@ -31,6 +31,7 @@ import transaction
 import ZODB
 from ZODB.DemoStorage import DemoStorage
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from six.moves import range
 
 
 class TestType(unittest.TestCase):
@@ -54,18 +55,18 @@ class TestType(unittest.TestCase):
       self.tm2.begin()
       x2 = self.conn2.root()['x']
       x1.append(-1)
-      x2.extend(xrange(200))
+      x2.extend(range(200))
       self.tm1.commit()
       self.tm2.commit()
       self.tm1.begin()
       x1 += 401, 402
-      x2.extend(xrange(200, 400))
+      x2.extend(range(200, 400))
       self.tm2.commit()
       x2.append(400)
       self.tm2.commit()
       self.tm1.commit()
       self.tm2.begin()
-      expected = range(-1, 403)
+      expected = list(range(-1, 403))
       self.assertEqual(expected, list(x1))
       self.assertEqual(expected, list(x2))
       self.assertEqual(expected[::-1], list(reversed(x1)))
@@ -112,7 +113,7 @@ class TestERP5(ERP5TypeTestCase):
                    # (see also Products.ERP5Type.patches.ZODBConnection)
     for id in active_process.getRelativeUrl().split('/'):
       remote = getattr(remote, id)
-    for x in xrange(100):
+    for x in range(100):
       active_process.postResult(x)
     remote.testActiveProcess_postResult(100)
     try:
@@ -120,7 +121,7 @@ class TestERP5(ERP5TypeTestCase):
     except:
       self.abort() # make failure more readable in case of regression
       raise
-    self.assertEqual(sorted(active_process.getResultList()), range(101))
+    self.assertEqual(sorted(active_process.getResultList()), list(range(101)))
 
 
 def test_suite():
