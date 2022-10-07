@@ -54,6 +54,7 @@ from erp5.component.module.SyncMLTransportERP5 import ERP5Transport
 from erp5.component.module.SyncMLConstant import MAX_LEN, ADD_ACTION, \
     REPLACE_ACTION
 from erp5.component.module.XMLSyncUtils import cutXML
+from six.moves import range
 
 transport_scheme_dict = {
   "http" : HTTPTransport(),
@@ -161,7 +162,7 @@ class SyncMLSubscription(XMLObject):
         activate = self.activate
         callback_method = getattr(activate(**activate_kw), callback)
         if generated_other_activity:
-          for i in xrange(0, result_count, packet_size):
+          for i in range(0, result_count, packet_size):
             syncml_logger.info("-- getAndIndex : recursive call, generating for %s",
                                r[i:i+packet_size])
             callback_method(path_list=r[i:i+packet_size],
@@ -169,7 +170,7 @@ class SyncMLSubscription(XMLObject):
                             **method_kw)
         else:
           if result_count > packet_size and limit:
-            for i in xrange(0, result_count-packet_size, packet_size):
+            for i in range(0, result_count-packet_size, packet_size):
               syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s",
                                  i, r[i:i+packet_size], activate_kw)
               callback_method(path_list=r[i:i+packet_size],
@@ -311,7 +312,7 @@ class SyncMLSubscription(XMLObject):
       if generated_other_activity:
         #  XXX Can be factorized with following code
         # upper_limit of xrange + some check ???
-        for i in xrange(0, result_count, packet_size):
+        for i in range(0, result_count, packet_size):
           if first_call:
             min_gid = None
             first_call = False
@@ -331,7 +332,7 @@ class SyncMLSubscription(XMLObject):
       else:
         i = 0
         if result_count > packet_size:
-          for i in xrange(0, result_count-packet_size, packet_size):
+          for i in range(0, result_count-packet_size, packet_size):
             if first_call:
               min_gid = None
               first_call = False
@@ -1147,7 +1148,7 @@ class SyncMLSubscription(XMLObject):
     """
     object_id_list = list(self.getObjectIds())
     object_list_len = len(object_id_list)
-    for i in xrange(0, object_list_len, MAX_OBJECTS):
+    for i in range(0, object_list_len, MAX_OBJECTS):
       current_id_list = object_id_list[i:i+MAX_OBJECTS]
       self.activate(activity='SQLQueue',
                     priority=ACTIVITY_PRIORITY).manage_delObjects(current_id_list)

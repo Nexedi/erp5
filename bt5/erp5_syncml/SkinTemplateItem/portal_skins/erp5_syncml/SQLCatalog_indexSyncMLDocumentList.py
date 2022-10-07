@@ -1,3 +1,4 @@
+from six.moves import range
 if not len(path_list):
   return
 restrictedTraverse = context.getPortalObject().restrictedTraverse
@@ -35,7 +36,7 @@ for path in path_list:
     object_list = obj()
   else:
     object_list = [obj,]
-  for x in xrange(0, len(object_list), MAX_PER_QUERY):
+  for x in range(0, len(object_list), MAX_PER_QUERY):
     parameter_dict, parameter_append_list = generateParameterList()
     for obj in object_list[x:x+MAX_PER_QUERY]:
       for value_list, getter in parameter_append_list:

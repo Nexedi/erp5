@@ -40,6 +40,7 @@ from Products.ERP5Type.tests.utils import FileUpload
 from DateTime import DateTime
 from lxml import etree
 import os
+from six.moves import range
 
 class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 
@@ -689,7 +690,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     request = self.app.REQUEST
     request['here'] = test1
 
-    for i in xrange(3, 7):
+    for i in range(3, 7):
       foo_id = "foo_%s" % i
       if test1._getOb(foo_id, None) is None:
         test1.newContent(foo_id, portal_type='Foo Line')
