@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-import urlparse
+import six.moves.urllib.parse
 import lxml.etree
 from DateTime import DateTime
 
@@ -251,7 +251,7 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
     ret = ptg.PaymentTransactionGroup_generateSEPACreditTransferFile(
       version='pain.001.001.02')
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ['SEPA Credit Transfer File generated.'])
     self.tic()
 
@@ -279,7 +279,7 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
     ret = ptg.PaymentTransactionGroup_generateSEPACreditTransferFile(
         version='pain.001.001.02')
     self.assertEqual(
-        urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+        six.moves.urllib.parse.parse_qs(six.moves.urllib.parse.urlparse(ret).query)['portal_status_message'],
         ['Some payments are still beeing processed in the background, please retry later'])
     self.tic()
 

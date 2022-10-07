@@ -98,7 +98,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='PUT',
                             stdin=file_object,
                             basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     image = person['erp5_logo.png']
     self.assertEqual(image.getPortalType(), 'Embedded File')
     self.assertEqual(image.getContentType(), 'image/png')
@@ -118,7 +118,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=file_object,
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     document_module = self.getDocumentModule()
     self.assertIn(filename, document_module.objectIds())
     self.assertEqual(document_module[filename].getPortalType(), 'Presentation')
@@ -140,7 +140,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=file_object,
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     self.tic()
 
     # check Document fetching
@@ -153,7 +153,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
     self.assertEqual(response.getBody(), document.getData(),
           'Error in getting data, get:%r' % response.getHeader('content-type'))
 
@@ -168,7 +168,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             request_method='PUT',
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.CREATED)
+    self.assertEqual(response.getStatus(), six.moves.http_client.CREATED)
     web_page_module = self.getWebPageModule()
     self.assertIn(filename, web_page_module.objectIds())
     self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
@@ -192,7 +192,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                               request_method='PUT',
                               stdin=StringIO(iso_text_content),
                               basic=self.authentication)
-      self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
+      self.assertEqual(response.getStatus(), six.moves.http_client.NO_CONTENT)
       self.assertEqual(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
     self.tic()
@@ -223,7 +223,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.OK)
+    self.assertEqual(response.getStatus(), six.moves.http_client.OK)
     self.assertEqual(response.getBody(), document.getData(),
              'Error in getting data, get:%r' % response.getHeader('content-type'))
 
@@ -247,7 +247,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), six.moves.http_client.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
     self.assertEqual(xml_metadata.find('{DAV:}response/{DAV:}href').text,
@@ -285,7 +285,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=StringIO(),
                             basic=self.authentication)
 
-    self.assertEqual(response.getStatus(), httplib.MULTI_STATUS)
+    self.assertEqual(response.getStatus(), six.moves.http_client.MULTI_STATUS)
     xml_metadata_string = response.getBody()
     xml_metadata = etree.fromstring(xml_metadata_string)
     self.assertEqual(xml_metadata.find(
