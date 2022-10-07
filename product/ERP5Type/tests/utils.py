@@ -55,6 +55,7 @@ from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
 import pytz
 import six
+from six.moves import range
 if six.PY2:
   FileIO = file
 else:
@@ -382,7 +383,7 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
   m = 499 # must be a prime number
   x = instance_random.randrange(0, m)
   c = instance_random.randrange(1, m)
-  for i in xrange(m):
+  for i in range(m):
     yield default_host, 55000 + x
     x = (x + c) % m
   raise RuntimeError("Can't find free port (tried ports %u to %u)\n"

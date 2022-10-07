@@ -33,6 +33,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from MySQLdb import ProgrammingError
+from six.moves import range
 
 class TestIdTool(ERP5TypeTestCase):
 
@@ -389,14 +390,14 @@ class TestIdTool(ERP5TypeTestCase):
 
     A_LOT_OF_KEY = 2500
     var_id = 'C-%04d'
-    for x in xrange(A_LOT_OF_KEY):
+    for x in range(A_LOT_OF_KEY):
       self.assertEqual(0, self.id_tool.generateNewId(id_generator=id_generator,
                                                       id_group=var_id % x))
 
     # test before update
     self.assertEqual(None, sql_generator.last_max_id_dict.get('A-08'))
     self.assertEqual(None, sql_generator.last_max_id_dict.get('B-08'))
-    for x in xrange(A_LOT_OF_KEY):
+    for x in range(A_LOT_OF_KEY):
       self.assertEqual(None, sql_generator.last_max_id_dict.get(var_id % x))
     createZODBPythonScript(
       self.portal.portal_skins.custom,
@@ -420,7 +421,7 @@ if new_last_id_group is not None:
     # asserts
     self.assertEqual(2, sql_generator.last_max_id_dict['A-08'].value)
     self.assertEqual(1, sql_generator.last_max_id_dict['B-08'].value)
-    for x in xrange(A_LOT_OF_KEY):
+    for x in range(A_LOT_OF_KEY):
       self.assertEqual(0, sql_generator.last_max_id_dict[var_id % x].value)
 
   def test_decentralised_ZODB_id_generator(self):
