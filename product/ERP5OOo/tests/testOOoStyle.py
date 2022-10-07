@@ -34,11 +34,11 @@ from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
-import httplib
+import six.moves.http_client
 import lxml.html
 import PyPDF2
 
-HTTP_OK = httplib.OK
+HTTP_OK = six.moves.http_client.OK
 
 # setting this to True allows the .publish() calls to provide tracebacks
 debug = False
