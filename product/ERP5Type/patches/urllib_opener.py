@@ -29,9 +29,8 @@
 
 # Install openers
 # -> testTemplateTool.TestTemplateTool.test_getBusinessTemplateUrl
-import urllib
-import urllib2
-import cStringIO
+import six.moves.urllib.request, six.moves.urllib.parse, six.moves.urllib.error
+from six.moves import cStringIO as StringIO
 import socket
 import os
 import dircache
@@ -61,7 +60,7 @@ class DirectoryFileHandler(urllib2.FileHandler):
         size = stats.st_size
         modified = formatdate(stats.st_mtime, usegmt=True)
         mtype = mimetypes.guess_type(file)[0]
-        headers = mimetools.Message(cStringIO.StringIO(
+        headers = mimetools.Message(StringIO(
             'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
             (mtype or 'text/plain', size, modified)))
         if host:
@@ -70,14 +69,14 @@ class DirectoryFileHandler(urllib2.FileHandler):
            (not port and socket.gethostbyname(host) in self.get_names()):
             try:
               file_list = dircache.listdir(localfile)
-              s = cStringIO.StringIO()
+              s = StringIO()
               s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
               s.write('<p>Directory Content:</p>')
               for f in file_list:
                 s.write('<p><a href="%s">%s</a></p>\n' % (urllib.quote(f), f))
               s.write('</body></html>')
               s.seek(0)
-              headers = mimetools.Message(cStringIO.StringIO(
+              headers = mimetools.Message(StringIO(
                   'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
                   ('text/html', size, modified)))
               return urllib2.addinfourl(s, headers, 'file:' + file)
