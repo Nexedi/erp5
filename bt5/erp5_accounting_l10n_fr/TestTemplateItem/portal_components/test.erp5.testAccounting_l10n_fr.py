@@ -34,7 +34,7 @@ import unittest
 import zipfile
 import email
 import os.path
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from DateTime import DateTime
 
 from lxml import etree

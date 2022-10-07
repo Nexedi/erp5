@@ -30,7 +30,7 @@
 
 """
 
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 import lxml
 
 from DateTime import DateTime

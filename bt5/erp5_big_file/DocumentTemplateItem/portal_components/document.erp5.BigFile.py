@@ -14,7 +14,7 @@
 #
 ##############################################################################
 
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface

@@ -29,7 +29,7 @@
 ##############################################################################
 
 from functools import partial
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 import unittest
 import urllib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
