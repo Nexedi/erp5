@@ -28,7 +28,7 @@ try:
 except ImportError: # BBB Zope2
   from Globals import package_home
 import PIL.Image as PIL_Image
-import thread
+import six.moves._thread
 import random
 import base64
 from OFS.Folder import Folder

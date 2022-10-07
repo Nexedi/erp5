@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from HTMLParser import HTMLParser
+from six.moves.html_parser import HTMLParser
 class HtmlParseHelper(HTMLParser):
   """
   Listens to all the HTMLParser methods and push results in a list of tuple.
