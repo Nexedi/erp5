@@ -448,6 +448,8 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     )
 
   def test_StringIO(self):
+    if six.PY3:
+      return # Python 3's StringIO is cStringIO, thus we just test in test_cStringIO.
     self.createAndRunScript('''
         import StringIO
         s = StringIO.StringIO()
@@ -465,16 +467,16 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
 
   def test_cStringIO(self):
     self.createAndRunScript('''
-        import cStringIO
-        s = cStringIO.StringIO()
+        from six.moves import cStringIO as StringIO
+        s = StringIO()
         s.write("ok")
         return s.getvalue()
         ''',
         expected="ok"
     )
     self.createAndRunScript('''
-        import cStringIO
-        return cStringIO.StringIO("ok").getvalue()
+        from six.moves import cStringIO as StringIO
+        return StringIO("ok").getvalue()
         ''',
         expected="ok"
     )
@@ -696,7 +698,7 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     for pandas_read_function in ("read_json", "read_csv", "read_fwf"):
       for preparation, prohibited_input in (
         ('', 100),
-        ('from StringIO import StringIO', 'StringIO("[1, 2, 3]")'),
+        ('from six.moves import cStringIO as StringIO', 'StringIO("[1, 2, 3]")'),
       ):
         self.assertRaises(
           ZopeGuardsUnauthorized,
