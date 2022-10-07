@@ -26,6 +26,7 @@ from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.PythonScripts.PythonScript import PythonScript
 import six
+from six.moves import range
 
 
 class HBTreeFolder2Tests(ERP5TypeTestCase):

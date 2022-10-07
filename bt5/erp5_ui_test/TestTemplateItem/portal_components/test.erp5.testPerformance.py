@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
 import os
+from six.moves import range
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
@@ -210,7 +211,7 @@ class TestPerformance(TestPerformanceMixin):
     self.tic()
     # Check performance
     before_view = time()
-    for _ in xrange(100):
+    for _ in range(100):
       # XXX: Note that we don't clean TransactionVariable cache and REQUEST
       #      before each call to 'view' requests. In reality, they would be
       #      always empty at the beginning of such requests.
@@ -250,9 +251,9 @@ class TestPerformance(TestPerformanceMixin):
     # call view once to fill caches
     self.bar_module.BarModule_viewBarList()
     # add object in bar module
-    for i in xrange(10):
+    for i in range(10):
       def add():
-        for x in xrange(100):
+        for x in range(100):
           self.bar_module.newContent(portal_type='Bar',
                                          title='Bar Test',
                                          quantity="%4d" %(x,))
@@ -271,7 +272,7 @@ class TestPerformance(TestPerformanceMixin):
       after_tic = time()
       gc.collect()
       before_form = time()
-      for _ in xrange(100):
+      for _ in range(100):
         self.bar_module.BarModule_viewBarList()
       after_form = time()
       # store result
@@ -333,7 +334,7 @@ class TestPerformance(TestPerformanceMixin):
     self.tic()
     # Check performance
     before_view = time()
-    for _ in xrange(100):
+    for _ in range(100):
       foo.Foo_viewProxyField()
     after_view = time()
     req_time = (after_view - before_view)/100.
@@ -358,13 +359,13 @@ class TestPerformance(TestPerformanceMixin):
     """
     foo = self.foo_module.newContent(portal_type='Foo',
                                      title='Foo Test')
-    for i in xrange(100):
+    for i in range(100):
       foo.newContent(portal_type='Foo Line',
                      title='Line %s' % i)
     self.tic()
     # Check performance
     before_view = time()
-    for _ in xrange(100):
+    for _ in range(100):
       foo.Foo_viewPerformance()
     after_view = time()
     req_time = (after_view - before_view)/100.
@@ -403,7 +404,7 @@ class TestPropertyPerformance(TestPerformanceMixin):
   def _benchmark(self, nb_iterations, min_time, max_time):
     def decorated(f):
       before = time()
-      for i in xrange(nb_iterations):
+      for i in range(nb_iterations):
         f(i)
       after = time()
       total_time = (after - before) / 100.
