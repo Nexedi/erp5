@@ -1226,7 +1226,7 @@ class SelectionTool( BaseTool, SimpleItem ):
           return None
       # XXX To avoid the difference of the string representations of int and long,
       # convert each element to a string.
-      return md5(str2bytes(repr(sorted(uid_list)))).hexdigest()
+      return md5(str2bytes(repr(sorted(str(e) for e in uid_list)))).hexdigest()
 
     # Related document searching
     security.declarePublic('viewSearchRelatedDocumentDialog')
