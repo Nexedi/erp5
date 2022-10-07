@@ -33,6 +33,7 @@ from Acquisition import aq_base
 from OFS.Traversable import Traversable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
+from Products.ERP5Type.Utils import str2bytes
 from Products.PythonScripts.Utility import allow_class
 from hashlib import md5
 
@@ -375,8 +376,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     security.declarePublic('getAnonymousSelectionKey')
     def getAnonymousSelectionKey(self):
-        return md5(repr({k: v for k, v in six.iteritems(self.__dict__)
-                              if k != 'index'})).hexdigest()
+        return md5(str2bytes(repr({k: v for k, v in six.iteritems(self.__dict__)
+                                        if k != 'index'}))).hexdigest()
 
 InitializeClass(Selection)
 allow_class(Selection)
