@@ -18,7 +18,7 @@
 
 from __future__ import print_function
 import os, sys, shutil, tempfile
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from zLOG import LOG,ERROR,INFO,WARNING
 from OFS.Image import File, Image
 import os, transaction
