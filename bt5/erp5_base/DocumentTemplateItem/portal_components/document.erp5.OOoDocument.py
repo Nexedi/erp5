@@ -150,7 +150,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      from xmlrpclib import Fault
+      from six.moves.xmlrpc_client import Fault
       server_proxy = DocumentConversionServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
