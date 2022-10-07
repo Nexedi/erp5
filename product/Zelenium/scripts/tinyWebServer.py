@@ -17,15 +17,15 @@
 # serves files relative to the current directory.
 # cgi-bin directory serves Python CGIs.
 
-import BaseHTTPServer
-import CGIHTTPServer
+import six.moves.BaseHTTPServer
+import six.moves.CGIHTTPServer
 import time
-import httplib
+import six.moves.http_client
 import sys
 
 PORT = 8000
 
-class HTTPHandler(CGIHTTPServer.CGIHTTPRequestHandler):
+class HTTPHandler(six.moves.CGIHTTPServer.CGIHTTPRequestHandler):
     """
     Simple Web Server that can handle query strings in a request URL and
     can be stopped with a request
@@ -47,7 +47,7 @@ class HTTPHandler(CGIHTTPServer.CGIHTTPRequestHandler):
             time.sleep(0.3)
 
         # Carry on with the rest of the processing...
-        CGIHTTPServer.CGIHTTPRequestHandler.do_GET(self)
+        six.moves.CGIHTTPServer.CGIHTTPRequestHandler.do_GET(self)
 
     def do_QUIT(self):
         self.send_response(200)
@@ -60,7 +60,7 @@ if __name__ == '__main__':
         port = int(sys.argv[1])
 
     server_address = ('', port)
-    httpd = BaseHTTPServer.HTTPServer(server_address, HTTPHandler)
+    httpd = six.moves.BaseHTTPServer.HTTPServer(server_address, HTTPHandler)
 
     print("serving at port", port)
     print("To run the entire JsUnit test suite, open")
