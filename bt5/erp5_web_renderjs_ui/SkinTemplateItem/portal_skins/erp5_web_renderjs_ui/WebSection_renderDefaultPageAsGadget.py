@@ -1,6 +1,6 @@
 import json
 import re
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 
 if REQUEST is None:
   REQUEST = context.REQUEST
