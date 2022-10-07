@@ -3,6 +3,7 @@
 import random
 import string
 import json
+from six.moves import range
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
@@ -18,7 +19,7 @@ if user_quantity is None:
                      "error_message": "Parameter 'user_quantity' is required.",
                      "password" : None })
 
-password = ''.join(random.choice(string.digits + string.ascii_letters) for i in xrange(10))
+password = ''.join(random.choice(string.digits + string.ascii_letters) for i in range(10))
 
 # check erp5_scalability_test business template is present
 configurator = portal.business_configuration_module.default_standard_configuration

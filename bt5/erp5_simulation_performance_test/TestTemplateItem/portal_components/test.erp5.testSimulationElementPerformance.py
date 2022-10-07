@@ -80,6 +80,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.Sequence import SequenceList
+from six.moves import range
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
@@ -398,7 +399,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     destination_decision = sequence.get('destination_decision')
     destination_administration = sequence.get('destination_administration')
     resource = sequence.get('resource')
-    for i in xrange(number_of_sale_orders):
+    for i in range(number_of_sale_orders):
       start_date = base_date + i
       stop_date = base_date + i + 1
       order = module.newContent(
@@ -410,7 +411,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
               stop_date=stop_date)
       # Set the rest through the trade condition.
       order.SaleOrder_applySaleTradeCondition()
-      for _ in xrange(number_of_sale_order_lines):
+      for _ in range(number_of_sale_order_lines):
         order.newContent(portal_type='Sale Order Line',
                 resource=resource, quantity=1.0)
 
@@ -767,7 +768,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     number = sequence.get('number_of_additional_sale_packing_list_lines')
     resource = sequence.get('resource')
     for packing_list in module.contentValues(portal_type='Sale Packing List'):
-      for _ in xrange(number):
+      for _ in range(number):
         packing_list.newContent(portal_type='Sale Packing List Line',
                 resource=resource, quantity=1.0)
 
