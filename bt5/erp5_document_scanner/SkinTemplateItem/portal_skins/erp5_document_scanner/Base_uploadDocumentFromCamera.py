@@ -1,6 +1,6 @@
-from StringIO import StringIO
+from io import BytesIO
 
-class StringIOWithFileName(StringIO):
+class BytesIOWithFileName(BytesIO):
   filename =  "{}.pdf".format(
     kw.get("title") or DateTime().strftime('%d-%m-%Y_%Hh%M'))
 
@@ -9,7 +9,7 @@ active_process = portal.restrictedTraverse(str(active_process_url))
 
 pdf_data_list = context.Base_getTempImageList(active_process, image_list)
 pdf_data = context.ERP5Site_mergePDFList(pdf_data_list=pdf_data_list)
-file_object = StringIOWithFileName(pdf_data)
+file_object = BytesIOWithFileName(pdf_data)
 
 context.Base_contribute(
     file=file_object,
