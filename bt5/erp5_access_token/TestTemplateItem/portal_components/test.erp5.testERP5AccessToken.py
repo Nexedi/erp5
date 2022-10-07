@@ -34,7 +34,7 @@ from DateTime import DateTime
 import urllib
 import httplib
 import base64
-import StringIO
+from six.moves import cStringIO as StringIO
 import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import ERP5DumbHTTPExtractionPlugin
@@ -438,7 +438,7 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     env['GATEWAY_INTERFACE']='CGI/1.1 '
     env['SCRIPT_NAME']='Main'
     env.update(headers)
-    return HTTPRequest(StringIO.StringIO(), env, HTTPResponse())
+    return HTTPRequest(StringIO(), env, HTTPResponse())
 
   def test_working_authentication(self):
     request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("login:password")})
