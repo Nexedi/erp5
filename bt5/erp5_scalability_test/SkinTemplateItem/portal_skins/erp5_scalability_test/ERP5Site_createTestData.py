@@ -5,6 +5,7 @@
 # random password is given by parameter
 from DateTime import DateTime
 import json
+from six.moves import range
 now = DateTime()
 
 portal = context.getPortalObject()
@@ -19,7 +20,7 @@ try:
     return json.dumps({"status_code" : 1, "error_message": error_message, "password" : None })
   organisation = organisation.getObject().getRelativeUrl()
 
-  for i in xrange(0, int(user_quantity)):
+  for i in range(0, int(user_quantity)):
     user_id = "scalability_user_%i" % i
     person = portal_catalog.getResultValue(
                     portal_type="Person",
