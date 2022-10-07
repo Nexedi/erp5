@@ -30,7 +30,7 @@ import unittest
 import pickle
 import re
 import xml.sax
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 from Products.ERP5Type.XMLExportImport import ppml
 

@@ -1,6 +1,6 @@
 # coding: utf-8
 import unicodedata
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import zipfile
 from Products.ERP5Type.Message import translateString
 
