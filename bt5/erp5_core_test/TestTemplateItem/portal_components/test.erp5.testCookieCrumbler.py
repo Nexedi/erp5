@@ -12,7 +12,7 @@
 ##############################################################################
 
 import base64
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import unittest
 import urllib
 

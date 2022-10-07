@@ -34,8 +34,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from unittest import expectedFailure
 
-import httplib
-from StringIO import StringIO
+import six.moves.http_client
+from six.moves import cStringIO as StringIO
 from DateTime import DateTime
 
 from lxml import etree

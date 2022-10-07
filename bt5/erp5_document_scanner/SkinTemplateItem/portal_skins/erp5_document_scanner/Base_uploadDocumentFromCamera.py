@@ -1,4 +1,4 @@
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 
 class StringIOWithFileName(StringIO):
   filename =  "{}.pdf".format(
