@@ -37,7 +37,7 @@ from hashlib import md5
 
 from ZPublisher.HTTPRequest import FileUpload
 from OFS.Image import Pdata
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 import transaction
 
 class PdataHelper(persistent.Persistent):

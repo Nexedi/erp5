@@ -39,7 +39,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from ZPublisher.HTTPRequest import FileUpload
-from StringIO import StringIO
+from six.moves import cStringIO as StringIO
 from Products.ERP5Form.Selection import Selection
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.ListBox import ListBoxHTMLRenderer

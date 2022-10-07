@@ -60,7 +60,7 @@ if not zip_file:
   rejectSoftwarePublication(software_publication)
   return
 
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 import zipfile
 from zipfile import BadZipfile
 
