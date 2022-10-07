@@ -30,6 +30,7 @@ from logging import getLogger
 from erp5.component.mixin.SyncMLEngineMixin import SyncMLEngineMixin
 from erp5.component.module.SyncMLConstant import ACTIVITY_PRIORITY
 from Products.ERP5.ERP5Site import getSite
+from six.moves import range
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -282,7 +283,7 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       response_id_list.reverse()
     else:
       response_id_list = [None for _ in
-                          xrange(len(syncml_request.sync_command_list))]
+                          range(len(syncml_request.sync_command_list))]
     split = getSite().portal_preferences.getPreferredSyncActionPerActivityCount()
     if not split:  # We do not use activities
       if send_response:
