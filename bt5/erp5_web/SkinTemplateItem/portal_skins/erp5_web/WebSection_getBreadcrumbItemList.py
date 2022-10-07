@@ -53,6 +53,7 @@
  multiple sites on a single ERP5Site instance.
 """
 from zExceptions import Unauthorized
+from six.moves import range
 if document is None: document = context
 crumb_list = []
 
@@ -69,7 +70,7 @@ is_web_section_default_document = bool(context.REQUEST.get('is_web_section_defau
 if is_web_section_default_document:
   last_breadcrumb_offset = 2
 
-for chain_index in xrange(0, chain_list_length):
+for chain_index in range(0, chain_list_length):
   try:
     crumb = chain_list[chain_index]
     if chain_index == 0:

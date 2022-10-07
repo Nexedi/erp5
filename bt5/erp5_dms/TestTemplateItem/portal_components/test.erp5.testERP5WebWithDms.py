@@ -45,6 +45,7 @@ from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from erp5.component.document.Document import ConversionError
 
 from PIL import Image
+from six.moves import range
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 IMAGE_COMPARE_TOLERANCE = 850
@@ -493,7 +494,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     policy_list = self.portal.caching_policy_manager.listPolicies()
     policy = [policy[1] for policy in policy_list\
                 if policy[0] == 'unauthenticated no language'][0]
-    for i in xrange(3):
+    for i in range(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
@@ -668,7 +669,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(policy.getMaxAgeSecs(), 1200)
     self.assertEquals(policy.getStaleWhileRevalidateSecs(), 30)
     self.assertEquals(policy.getStaleIfErrorSecs(), 600)
-    for i in xrange(3):
+    for i in range(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))

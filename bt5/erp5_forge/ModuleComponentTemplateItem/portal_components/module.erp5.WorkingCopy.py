@@ -42,6 +42,7 @@ from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5Type.Utils import simple_decorator
 from six import string_types as basestring
+from six.moves import range
 
 @simple_decorator
 def selfcached(func):
@@ -406,7 +407,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     prefix_length = len(os.path.join(self.path, ''))
     for dirpath, dirnames, filenames in os.walk(self.path):
       dirpath = dirpath[prefix_length:]
-      for i in xrange(len(dirnames) - 1, -1, -1):
+      for i in range(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
         if d[0] != '.':
           d = os.path.join(dirpath, d)

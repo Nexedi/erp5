@@ -36,6 +36,7 @@ import pkg_resources
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from six.moves import range
 
 ZEO5 = pkg_resources.parse_version(
   pkg_resources.get_distribution('ZEO').version
@@ -215,7 +216,7 @@ if (count % 500) < 5:
     log('creation speed: %s obj/s' % ((count - start[0]) /
         (86400 * (DateTime() - start[1]))))
 """)
-    for x in xrange(0,200):
+    for x in range(0,200):
       module.activate(activity='SQLQueue', priority=2).create_script()
     self.tic()
 
