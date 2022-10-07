@@ -28,8 +28,8 @@
 ##############################################################################
 
 
-import httplib
-import urlparse
+import six.moves.http_client
+import six.moves.urllib.parse
 import json
 import random
 from unittest import expectedFailure
@@ -52,8 +52,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Post the information calling the Python Script.
       It simulates the real usage.
     """
-    parsed = urlparse.urlparse(self.shadir_url)
-    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    parsed = six.moves.urllib.parse.urlparse(self.shadir_url)
+    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
     try:
       connection.request('PUT', '/'.join([parsed.path, key or self.key]),
         data or self.data, self.header_dict)
@@ -61,7 +61,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(result.status, httplib.CREATED)
+    self.assertEqual(result.status, six.moves.http_client.CREATED)
     self.assertEqual(data, '')
 
   def getInformation(self, key=None):
@@ -69,8 +69,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Get the information calling the Python Script.
       It simulates the real usage.
     """
-    parsed = urlparse.urlparse(self.shadir_url)
-    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    parsed = six.moves.urllib.parse.urlparse(self.shadir_url)
+    connection = six.moves.http_client.HTTPConnection(parsed.hostname, parsed.port)
     try:
       connection.request('GET', '/'.join([parsed.path, key or self.key]),
         self.data, self.header_dict)
@@ -125,7 +125,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.tic()
 
     result, data = self.getInformation()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
 
     information_list = json.loads(data)
 
@@ -157,7 +157,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
         q.getValidationState() for q in document_list]))
 
     result, data = self.getInformation()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
@@ -195,7 +195,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.tic()
 
     result, data = self.getInformation()
-    self.assertEqual(result, httplib.OK)
+    self.assertEqual(result, six.moves.http_client.OK)
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))

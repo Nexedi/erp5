@@ -813,7 +813,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         elif user:
           PAS = self.portal.acl_users.__class__
           orig_extractUserIds = PAS._extractUserIds
-          from thread import get_ident
+          from six.moves._thread import get_ident
           me = get_ident()
           def _extractUserIds(pas, request, plugins):
             if me == get_ident():
