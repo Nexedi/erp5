@@ -1,6 +1,7 @@
+from Products.ERP5Type.Utils import ensure_list
 new_request = {}
 
-for k, v in request.other.items() + request.form.items():
+for k, v in ensure_list(request.other.items()) + ensure_list(request.form.items()):
   if k not in ('TraversalRequestNameStack', 'AUTHENTICATED_USER', 'URL',
       'SERVER_URL', 'AUTHENTICATION_PATH', 'USER_PREF_LANGUAGES', 'PARENTS',
       'PUBLISHED', 'AcceptLanguage', 'AcceptCharset', 'RESPONSE', 'SESSION',
