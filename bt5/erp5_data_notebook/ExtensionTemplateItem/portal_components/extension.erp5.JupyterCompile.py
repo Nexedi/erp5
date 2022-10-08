@@ -17,6 +17,7 @@ import Acquisition
 import astor
 import importlib
 from erp5.component.module.Log import log
+from Products.ERP5Type.Utils import ensure_list
 
 # Display matplotlib figure automatically like
 # the original python kernel
@@ -495,7 +496,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
     # Saves a list of all the variables we injected into the user context and
     # shall be deleted before saving the context.
-    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context.get('_volatile_variable_list', [])
+    volatile_variable_list = ensure_list(current_setup_dict.keys()) + ensure_list(inject_variable_dict.keys()) + user_context.get('_volatile_variable_list', [])
     volatile_variable_list.append('__builtins__')
 
     for key, val in user_context.items():
