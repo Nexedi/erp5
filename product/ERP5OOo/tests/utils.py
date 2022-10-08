@@ -38,7 +38,7 @@ import os
 import sys
 import tempfile
 import zipfile
-import popen2
+import subprocess
 from six.moves import urllib
 from six.moves import cStringIO as StringIO
 
@@ -93,8 +93,12 @@ elif odfpy:
       fd, file_name = tempfile.mkstemp()
       os.write(fd, odf_file_content)
       os.close(fd)
-      stdout, stdin = popen2.popen4('odflint %s' % file_name)
-      stdin.close()
+      process = subprocess.Popen(
+        ['odflint', file_name],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+      )
+      stdout, _ = process.communicate()
       error_list = ''
       for line in stdout:
         if line.startswith('Error: '):
