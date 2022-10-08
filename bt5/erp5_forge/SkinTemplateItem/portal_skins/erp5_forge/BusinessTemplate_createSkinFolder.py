@@ -5,7 +5,8 @@ portal = context.getPortalObject()
 if skin_folder_name not in portal.portal_skins.objectIds():
   portal.portal_skins.manage_addFolder(skin_folder_name)
 if skin_folder_name not in (context.getTemplateSkinIdList() or []):
-  context.setTemplateSkinIdList(tuple(context.getTemplateSkinIdList() or []) + (skin_folder_name, ))
+  context.setTemplateSkinIdList(
+    sorted(tuple(context.getTemplateSkinIdList() or []) + (skin_folder_name, )))
 
 skin_folder = portal.portal_skins[skin_folder_name]
 
@@ -30,7 +31,8 @@ if skin_layer_list:
         registered_skin = '%s | %s' % (skin_folder_name, skin_name)
         registered_skin_selection_list = context.getTemplateRegisteredSkinSelectionList() or []
         if registered_skin not in registered_skin_selection_list:
-          context.setTemplateRegisteredSkinSelectionList(tuple(registered_skin_selection_list) + (registered_skin, ))
+          context.setTemplateRegisteredSkinSelectionList(
+            sorted(tuple(registered_skin_selection_list) + (registered_skin, )))
 
   if not all_skin_layers_selected:
     marker = []
