@@ -50,14 +50,7 @@ else:
   from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 
 
-class UserExistsError(
-    ValidationFailed,
-    # to workaround pylint's false positive:
-    #   Exception doesn't inherit from standard "Exception" class (nonstandard-exception)
-    # because it cannot import ValidationFailed (which is set by a monkey patch), we also
-    # inherit from Exception.
-    Exception,
-  ):
+class UserExistsError(ValidationFailed):
   def __init__(self, user_id):
     super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
 
