@@ -37,6 +37,7 @@ from Products.MimetypesRegistry.mime_types.magic import guessMime
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.Utils import bytes2str
 from DateTime import DateTime
 from lxml import etree
 import os
@@ -148,7 +149,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Foo title!") > 0)
+    self.assertTrue(bytes2str(content_xml).find("Foo title!") > 0)
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
                      'application/vnd.oasis.opendocument.text')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
@@ -167,7 +168,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Changed Title!") > 0)
+    self.assertTrue(bytes2str(content_xml).find("Changed Title!") > 0)
     self._validate(odf_document)
 
     # 3. False case: change the field name
@@ -179,7 +180,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("you cannot find") > 0)
+    self.assertFalse(bytes2str(content_xml).find("you cannot find") > 0)
     self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
@@ -199,7 +200,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("call!") > 0)
+    self.assertTrue(bytes2str(content_xml).find("call!") > 0)
     # Zope4 add charset=utf-8
     self.assertTrue('text/html' in request.RESPONSE.getHeader('content-type'))
     self._validate(odf_document)
@@ -210,7 +211,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Français") > 0)
+    self.assertTrue(bytes2str(content_xml).find("Français") > 0)
     self._validate(odf_document)
 
     # 6. Normal case: unicode string
@@ -219,7 +220,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("Français test2") > 0)
+    self.assertTrue(bytes2str(content_xml).find("Français test2") > 0)
     self._validate(odf_document)
 
     # 7. Change Filename of downloadable file
@@ -307,8 +308,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("ZZZ test here ZZZ") > 0)
-    self.assertTrue(content_xml.find("test title") < 0)
+    self.assertTrue(bytes2str(content_xml).find("ZZZ test here ZZZ") > 0)
+    self.assertTrue(bytes2str(content_xml).find("test title") < 0)
     self._validate(odf_document)
 
   def test_02_Table_01_Normal(self):
@@ -360,7 +361,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("foo_title_1") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_1") > 0)
     self._validate(odf_document)
 
   def test_02_Table_02_SmallerThanListboxColumns(self):
@@ -401,8 +402,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_title_1") > 0)
-    self.assertTrue(content_xml.find("foo_title_2") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_title_1") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_2") > 0)
     self._validate(odf_document)
 
   def test_02_Table_03_ListboxColumnsLargerThanTable(self):
@@ -437,8 +438,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_title_2") > 0)
-    self.assertTrue(content_xml.find("foo_title_3") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_title_2") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_3") > 0)
     self._validate(odf_document)
 
   def test_02_Table_04_ListboxHasNotStat(self):
@@ -473,8 +474,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(odf_document is not None)
-    self.assertFalse(content_xml.find("foo_title_3") > 0)
-    self.assertTrue(content_xml.find("foo_title_4") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_title_3") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_4") > 0)
 
     content = etree.XML(content_xml)
     table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
@@ -542,7 +543,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     #Check that each listbox values are inside ODT table cells
     xpath_result_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p/text()'
     self.assertEqual(['foo_1', 'foo_title_5', '0.0', 'foo_2', 'foo_2', '0.0', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
-    self.assertFalse(content_xml.find("foo_title_4") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_title_4") > 0)
     self._validate(odf_document)
 
     # put back the field name
@@ -590,8 +591,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_title_5") > 0)
-    self.assertTrue(content_xml.find("foo_title_6") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_title_5") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_6") > 0)
     self._validate(odf_document)
 
     # put back the field name
@@ -627,8 +628,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_title_6") > 0)
-    self.assertTrue(content_xml.find("foo_title_7") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_title_6") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_7") > 0)
 
     content = etree.XML(content_xml)
     table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
@@ -702,7 +703,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
 r"""
 line_index = kw['list_index']
 line_number = line_index + 1
-for n in xrange(6, 0, -1):
+for n in range(6, 0, -1):
   if line_number % n is 0:
     return "line" + str(n)
 """
@@ -729,7 +730,7 @@ for n in xrange(6, 0, -1):
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("foo_title_9") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_title_9") > 0)
 
     content = etree.XML(content_xml)
     table_row_xpath = '//table:table[@table:name="listbox4"]/table:table-row'
@@ -838,7 +839,7 @@ return report_section_list
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("foo_04_Iteration_1") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_04_Iteration_1") > 0)
     content = etree.XML(content_xml)
     frame_xpath = '//draw:frame[@draw:name="FooReport_getReportSectionList"]'
     frame_list = content.xpath(frame_xpath, namespaces=content.nsmap)
@@ -865,7 +866,7 @@ return []
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_04_Iteration") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_04_Iteration") > 0)
     content = etree.XML(content_xml)
     frame_xpath = '//draw:frame[@draw:name="FooReport_getReportSectionList"]'
     frame_list = content.xpath(frame_xpath, namespaces=content.nsmap)
@@ -942,7 +943,7 @@ return report_section_list
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("foo_04_Iteration_1") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_04_Iteration_1") > 0)
     content = etree.XML(content_xml)
     section_xpath = '//text:section[@text:name="FooReport_getReportSectionList"]'
     section_list = content.xpath(section_xpath, namespaces=content.nsmap)
@@ -969,7 +970,7 @@ return []
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_04_Iteration") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_04_Iteration") > 0)
     content = etree.XML(content_xml)
     section_xpath = '//text:section[@text:name="FooReport_getReportSectionList"]'
     section_list = content.xpath(section_xpath, namespaces=content.nsmap)
@@ -1054,7 +1055,7 @@ return report_section_list
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("foo_04_Iteration_1") > 0)
+    self.assertTrue(bytes2str(content_xml).find("foo_04_Iteration_1") > 0)
     content = etree.XML(content_xml)
     section_xpath = '//text:section[@text:name="your_report_box1"]'
     section_list = content.xpath(section_xpath, namespaces=content.nsmap)
@@ -1081,7 +1082,7 @@ return []
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertFalse(content_xml.find("foo_04_Iteration") > 0)
+    self.assertFalse(bytes2str(content_xml).find("foo_04_Iteration") > 0)
     content = etree.XML(content_xml)
     section_xpath = '//text:section[@text:name="your_report_box1"]'
     section_list = content.xpath(section_xpath, namespaces=content.nsmap)
@@ -1142,7 +1143,7 @@ return []
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
-    self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
+    self.assertTrue(bytes2str(content_xml).find('<draw:image xlink:href') < 0)
     self._validate(odf_document)
 
   def test_08_OOoConversion(self):
