@@ -37,7 +37,7 @@ from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
-
+import six
 
 _MARKER = object()
 
@@ -186,6 +186,8 @@ class File(Document, OFS_File):
     if data is None:
       return None
     else:
+      if six.PY3 and isinstance(data, str):
+        return bytes(data, self._get_encoding())
       return bytes(data)
 
   # DAV Support
