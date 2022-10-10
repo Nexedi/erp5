@@ -68,6 +68,7 @@ for item in item_list:
     else:
       sub_field_dict[item_key]['title'] = base_category
 
-sub_field_values = sub_field_dict.values()
-sub_field_values.sort(key=lambda d:d['int_index'])
-return sub_field_values
+return sorted(
+  sub_field_dict.values(),
+  key=lambda d: d['int_index']
+)
