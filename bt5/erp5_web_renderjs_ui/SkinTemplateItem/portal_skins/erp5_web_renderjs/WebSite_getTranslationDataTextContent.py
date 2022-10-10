@@ -1,6 +1,7 @@
 """Returns the `text_content` that should be set on the translation data script for this RJS website.
 """
 import json
+from Products.ERP5Type.Utils import str2unicode, unicode2str
 
 portal = context.getPortalObject()
 Base_translateString = context.Base_translateString
@@ -38,14 +39,13 @@ tmp = {}
 for language in context.getAvailableLanguageSet():
   tmp[language] = {}
   for word in translatable_message_set:
-    tmp[language][word] = unicode(Base_translateString(word, lang = language), 'utf-8')
-
+    tmp[language][word] = str2unicode(Base_translateString(word, lang = language))
 
 # We pass unicode to this json.dump(ensure_ascii=False), so that it produce
 # UTF-8 string and not escaped characters. At the end we return an UTF-8
 # encoded string and not an unicode instance, because text_content property
 # is usually UTF-8 encoded str (not unicode).
-return (u"""/**
+return unicode2str(u"""/**
  * This translation data is generated automatically and updated with upgrader in post-upgarde.
  * Do not edit manually, but use "Update Translation Data" action on web site to update from
  * Localizer and from data-i18n tags on web pages.
@@ -64,4 +64,4 @@ return (u"""/**
             sort_keys=True,
             indent=2,
             ensure_ascii=False,
-            separators=(',', ': ')).splitlines()))).encode('utf-8')
+            separators=(',', ': ')).splitlines())))
