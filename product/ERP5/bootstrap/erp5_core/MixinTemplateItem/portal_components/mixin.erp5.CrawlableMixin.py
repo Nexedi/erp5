@@ -111,7 +111,7 @@ class CrawlableMixin:
       # For now take into acount only a and img tags
       if attribute_name not in ('href',):
         continue
-      if isinstance(link, six.text_type):
+      if six.PY2 and isinstance(link, six.text_type):
         link = link.encode('utf-8')
       href_list.append(link)
     return href_list
@@ -129,7 +129,7 @@ class CrawlableMixin:
     path_part = '/'.join(path_part.split('/')[:-1])
     base_url = urlunsplit((splitted_url[0], splitted_url[1], path_part, None,
                            None))
-    if isinstance(base_url, six.text_type):
+    if six.PY2 and isinstance(base_url, six.text_type):
       base_url = base_url.encode('utf-8')
     return base_url
 
@@ -145,7 +145,7 @@ class CrawlableMixin:
     # in www.example.com or www.3.example.com
     # keep only the example.com part
     reference_domain = ''.join(reference_domain.split('.')[-2:])
-    if isinstance(reference_domain, six.text_type):
+    if six.PY2 and isinstance(reference_domain, six.text_type):
       reference_domain = reference_domain.encode('utf-8')
     url_list = []
     base_url = self.getContentBaseURL()
@@ -159,7 +159,7 @@ class CrawlableMixin:
       if not url:
         continue
       url_domain = urlsplit(url)[1]
-      if isinstance(url_domain, six.text_type):
+      if six.PY2 and isinstance(url_domain, six.text_type):
         url_domain = url_domain.encode('utf-8')
       if url_domain and ''.join(url_domain.split('.')[-2:]) != reference_domain:
         continue
