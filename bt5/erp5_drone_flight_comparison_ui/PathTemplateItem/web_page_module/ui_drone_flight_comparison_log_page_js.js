@@ -24,7 +24,7 @@
       "z": 15
     },
     DRAW = true,
-    LOG = true,
+    LOG = false,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [
       {"id": 0, "type": "DroneLogAPI", "log_content": ""},
