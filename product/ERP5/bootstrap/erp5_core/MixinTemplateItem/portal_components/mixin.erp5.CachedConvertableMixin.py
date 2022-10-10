@@ -37,6 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import str2bytes
 from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
 
@@ -129,17 +130,20 @@ class CachedConvertableMixin:
       conversion_md5 = None
       size = 0
     elif isinstance(data, Pdata):
-      cached_value = aq_base(data)
-      size = str(cached_value) # not a size but avoids a 'del' statement
-      conversion_md5 = md5(size).hexdigest()
-      size = len(size)
+      cached_value = bytes(aq_base(data))
+      conversion_md5 = md5(cached_value).hexdigest()
+      size = len(cached_value)
     elif isinstance(data, OFSImage):
       warn('Passing an OFS.Image to setConversion is deprecated', stacklevel=1)
+      cached_value = bytes(data)
+      conversion_md5 = md5(cached_value).hexdigest()
+      size = len(cached_value)
+    elif isinstance(data, bytes):
       cached_value = data
-      conversion_md5 = md5(str(data.data)).hexdigest()
-      size = len(data.data)
+      conversion_md5 = md5(cached_value).hexdigest()
+      size = len(cached_value)
     elif isinstance(data, six.string_types):
-      cached_value = data
+      cached_value = str2bytes(data)
       conversion_md5 = md5(cached_value).hexdigest()
       size = len(cached_value)
     elif isinstance(data, dict):
