@@ -44,6 +44,12 @@ ATTRIBUTE_PREFIX = ''
 def identity(value):
   return value
 
+
+def asData(value):
+  assert not isinstance(value, six.text_type)
+  return value
+
+
 def asFloat(value):
   """
     Return the value as a float or a type-specific default value if it fails.
@@ -101,7 +107,7 @@ def asString(value):
       if six.PY2 and isinstance(value, six.text_type):
         result = value.encode('utf-8')
       elif six.PY3 and isinstance(value, bytes):
-        result = value.decode('utf-8')
+        result = value.decode('utf-8', 'surrogateescape')
       else:
         result = str(value)
   except TypeError:
@@ -195,8 +201,8 @@ type_definition = {
                            # which intention is store large data
                            # such as files of BLOBs. It uses pdata
                            # structure.
-    'data'               : { 'cast'    : identity,
-                             'null'    : ('', 'None', None,),
+    'data'               : { 'cast'    : asData,
+                             'null'    : (b'', b'None', None,),
                              'default' : None,
                              'isList'  : 0,
                            },
