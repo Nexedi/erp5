@@ -1,13 +1,17 @@
 (function (window, RSVP, rJS, domsugar, document, Blob) {
   "use strict";
 
-  //HARDCODED VALUES, TODO get from UI inputs
+  //HARDCODED VALUES to present as defaults
   var SIMULATION_SPEED = 200,
     SIMULATION_TIME = 1000,
-    map_height = 100,
-    start_AMSL = 595.328,
     MAX_SPEED = 7.542174921016468, //16.666667,
     MAX_ACCELERATION = 1,
+    min_lat = 45.6364,
+    max_lat = 45.65,
+    min_lon = 14.2521,
+    max_lon = 14.2766,
+    map_height = 100,
+    start_AMSL = 595.328,
     INITIAL_POSITION = {
       "x": -12.316326531328059,
       "y": -218.55882352976022,
@@ -19,11 +23,7 @@
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [
       {"id": 0, "type": "DroneAaileFixeAPI", "script_content": ""}
-    ],
-    min_lat = 45.6364,
-    max_lat = 45.65,
-    min_lon = 14.2521,
-    max_lon = 14.2766;
+    ];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -31,6 +31,22 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+
+    .onEvent('submit', function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget('form_view')
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
+        })
+        .push(function (input) {
+          console.log("from input:", input);
+          gadget.runGame(input);
+        });
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('input[type="submit"]').click();
+    })
 
     .declareMethod('render', function render() {
       var gadget = this, query,
@@ -126,7 +142,7 @@
                 "my_minimum_longitud": {
                   "description": "",
                   "title": "Minimum longitude",
-                  "default": min_lat,
+                  "default": min_lon,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
@@ -199,7 +215,19 @@
                   "key": "init_pos_z",
                   "hidden": 0,
                   "type": "StringField"
+                },
+                "my_script": {
+                  "description": "",
+                  "title": "",
+                  "default": DRONE_LIST[0].script_content,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "script",
+                  "hidden": 0,
+                  "type": "TextAreaField"
                 }
+
               }}, // TODO drone type listbox?
               "_links": {
                 "type": {
@@ -216,13 +244,14 @@
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
                   ["my_init_pos_x"], ["my_init_pos_y"], ["my_init_pos_z"],
                   ["my_start_AMSL"], ["my_map_height"]]
+              ],[
+                "right",
+                [["my_script"]]
               ]]
             }
           });
         })
         .push(function () {
-          //TODO this should be called in a button click event
-          gadget.runGame();
           return gadget.updateHeader({
             page_title: 'Drone Simulator - Edit and run script',
             page_icon: 'puzzle-piece'
@@ -231,33 +260,49 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      //TODO handle crash. e.g. pass empty log_content
+      //TODO handle crash. e.g. pass empty or invalid script
       var gadget = this;
       return new RSVP.Queue()
+        //Reload the entire gadget?
+        /*var fragment = domsugar(gadget.element.querySelector('#fragment'),
+                            [domsugar('div')]).firstElementChild;
+        return new RSVP.Queue()
+        .push(function () {
+          return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
+                                      {element: fragment, scope: 'simulator'});
+        })
+        .push(function (drone_gadget) {
+          return drone_gadget.render();
+        })*/
         .push(function () {
           return gadget.getDeclaredGadget('simulator');
         })
         .push(function (simulator) {
+          DRONE_LIST[0].script_content = options.script;
           var game_parameters_json = {
             "drone": {
-              "maxAcceleration": 1,
-              "maxSpeed": MAX_SPEED
+              "maxAcceleration": parseFloat(options.drone_acceleration),
+              "maxSpeed": parseFloat(options.drone_speed)
             },
-            "gameTime": SIMULATION_TIME,
-            "simulation_speed": SIMULATION_SPEED,
+            "gameTime": parseFloat(options.simulation_time),
+            "simulation_speed": parseFloat(options.simulation_speed),
             "latency": {
               "information": 0,
               "communication": 0
             },
             "map": {
-              "min_lat": min_lat,
-              "max_lat": max_lat,
-              "min_lon": min_lon,
-              "max_lon": max_lon,
-              "height": map_height,
-              "start_AMSL": start_AMSL
+              "min_lat": parseFloat(options.min_lat),
+              "max_lat": parseFloat(options.max_lat),
+              "min_lon": parseFloat(options.min_lon),
+              "max_lon": parseFloat(options.max_lon),
+              "height": parseFloat(options.map_height),
+              "start_AMSL": parseFloat(options.start_AMSL)
             },
-            "initialPosition": INITIAL_POSITION,
+            "initialPosition": {
+              "x": parseFloat(options.init_pos_x),
+              "y": parseFloat(options.init_pos_y),
+              "z": parseFloat(options.init_pos_z)
+            },
             "draw_flight_path": DRAW,
             "log_drone_flight": LOG,
             "log_interval_time": LOG_TIME,
