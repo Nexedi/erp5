@@ -1,1 +1,1 @@
-Insert into inventory_cache(`query`, `date`, `result`) values (<dtml-sqlvar query type="string">, <dtml-sqlvar date type="datetime">, <dtml-sqlvar result type="string">)
+Insert into inventory_cache(`query`, `date`, `result`) values (UNHEX(<dtml-sqlvar query type="string">), <dtml-sqlvar date type="datetime">, <dtml-sqlvar result type="string">)
