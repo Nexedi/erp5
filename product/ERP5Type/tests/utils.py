@@ -80,7 +80,7 @@ class FileUpload(FileIO):
     if name is None:
       name = os.path.basename(path)
     self.filename = name
-    file.__init__(self, path)
+    FileIO.__init__(self, path)
     self.headers = {}
 
 # dummy objects
