@@ -345,7 +345,10 @@ class OOoTemplate(ZopePageTemplate):
                                       ('style', 'draw:style-name', 'fr1')):
         options_dict.setdefault(name, options_dict.pop(old_name, default))
 
-      picture = self._resolvePath(options_dict.pop('path').encode())
+      if six.PY2:
+        picture = self._resolvePath(options_dict.pop('path').encode())
+      else:
+        picture = self._resolvePath(options_dict.pop('path'))
 
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):
