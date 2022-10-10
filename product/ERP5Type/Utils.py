@@ -1770,7 +1770,7 @@ def legacyNormalizeUrl(url, base_url=None):
   # Remove trailing '?'
   # http://www.example.com/? -> http://www.example.com/
   url = re_cleanup_tail.sub('', url)
-  if isinstance(url, six.text_type):
+  if six.PY2 and isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
@@ -1792,7 +1792,7 @@ def urlnormNormaliseUrl(url, base_url=None):
   if base_url and not (url_protocol or url_domain):
     # Make relative URL absolute
     url = urljoin(base_url, url)
-  if isinstance(url, six.text_type):
+  if six.PY2 and isinstance(url, six.text_type):
     url = url.encode('utf-8')
   return url
 
