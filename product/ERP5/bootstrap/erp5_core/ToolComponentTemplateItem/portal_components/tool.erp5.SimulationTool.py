@@ -37,6 +37,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import str2bytes
 
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
@@ -1411,10 +1412,10 @@ class SimulationTool(BaseTool):
     if src__:
       sql_source_list = []
     # Generate the cache key (md5 of query source)
-    sql_text_hash = md5(Resource_zGetInventoryList(
+    sql_text_hash = md5(str2bytes(Resource_zGetInventoryList(
       stock_table_id=stock_table_id,
       src__=1,
-      **kw)).digest()
+      **kw))).hexdigest()
     # Try to get result from cache
     Resource_zGetInventoryCacheResult = self.Resource_zGetInventoryCacheResult
     inventory_cache_kw = {'query': sql_text_hash}
