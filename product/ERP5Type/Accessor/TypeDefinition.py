@@ -98,7 +98,7 @@ def asString(value):
     if value is None:
       result = ''
     else:
-      if six.PY2 and isinstance(value, unicode):
+      if six.PY2 and isinstance(value, six.text_type):
         result = value.encode('utf-8')
       elif six.PY3 and isinstance(value, bytes):
         result = value.decode('utf-8')

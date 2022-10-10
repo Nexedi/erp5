@@ -27,9 +27,10 @@
   xmlns:metal='http://xml.zope.org/namespaces/metal'>
   <tal:block metal:define-macro="other_informations" 
              tal:define="data_dict here/PaySheetTransaction_getOtherInformationsDataDict;
- quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
-               default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
-             hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">
+                         quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
+                         default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
+                         unicode python: unicode if bytes==str else lambda t, encoding: t;
+                         hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">
     <table:table-row table:style-name='Tableau3.8'>
       <table:table-cell table:style-name='Tableau3.A8' office:value-type='string'>
         <text:p text:style-name='Table_20_Contents' />

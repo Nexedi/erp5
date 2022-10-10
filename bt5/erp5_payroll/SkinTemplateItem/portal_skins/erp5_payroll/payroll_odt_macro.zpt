@@ -2,6 +2,7 @@
 macro is found. It's used to display description field -->
 
 <tal:block
+  tal:define="unicode python: unicode if bytes==str else lambda t, encoding: t;"
   xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
   xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' 
   xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0'
