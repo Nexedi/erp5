@@ -33,6 +33,7 @@ from Products.ERP5Type.Message import translateString
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from io import BytesIO
+import six
 _MARKER = object()
 
 class BaseConvertableFileMixin:
