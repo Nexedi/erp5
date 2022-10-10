@@ -50,10 +50,9 @@ from zExceptions import BadRequest
 from zExceptions import Redirect
 import ZPublisher.HTTPRequest
 from unittest import expectedFailure
-import urllib
-import urllib2
 import six.moves.http_client
-import six.moves.urllib.parse
+import six.moves.urllib.parse, six.moves.urllib.request
+
 import base64
 import mock
 
@@ -2050,7 +2049,7 @@ return result
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
-    request = urllib2.Request(push_url, urllib.urlencode(
+    request = six.moves.urllib.request.Request(push_url, six.moves.urllib.parse.urlencode(
                                         {'data': data,
                                         'filename': filename,
                                         'reference': reference,
@@ -2061,7 +2060,7 @@ return result
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
-    response = urllib2.urlopen(request)
+    response = six.moves.urllib.request.urlopen(request)
     self.assertEqual(response.getcode(), six.moves.http_client.OK)
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
