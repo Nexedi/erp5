@@ -29,7 +29,7 @@ if context.getPortalType() in ["Presentation"]:
   portal = context.getPortalObject()
   mimetype = 'text/html'
   content_type = context.getContentType()
-  raw_data = portal.portal_transforms.convertToData(mimetype, str(context.getData() or ""), context=context, mimetype=content_type)
+  raw_data = portal.portal_transforms.convertToData(mimetype, bytes(context.getData() or b""), context=context, mimetype=content_type)
   if raw_data is None:
     raise ValueError("Failed to convert to %r" % mimetype)
   if context.REQUEST is not None:
