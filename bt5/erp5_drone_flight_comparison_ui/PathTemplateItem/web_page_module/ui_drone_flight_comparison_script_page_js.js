@@ -2,13 +2,13 @@
   "use strict";
 
   //HARDCODED VALUES, TODO get from UI inputs
-  var SIMULATION_SPEED = 200, //
-    SIMULATION_TIME = 1800, //
-    map_height = 100, //
-    start_AMSL = 595.328, //
-    MAX_SPEED = 7.542174921016468, //16.666667, //
-    MAX_ACCELERATION = 1, //
-    INITIAL_POSITION = { //
+  var SIMULATION_SPEED = 200,
+    SIMULATION_TIME = 1000,
+    map_height = 100,
+    start_AMSL = 595.328,
+    MAX_SPEED = 7.542174921016468, //16.666667,
+    MAX_ACCELERATION = 1,
+    INITIAL_POSITION = {
       "x": -12.316326531328059,
       "y": -218.55882352976022,
       "z": 15
@@ -20,13 +20,6 @@
     DRONE_LIST = [
       {"id": 0, "type": "DroneAaileFixeAPI", "script_content": ""}
     ],
-    //TODO calculate this from max-mins
-    map_size = 1143,
-    //TODO this should be lat-lon and drone or map should convert it to x-t
-    min_x = 616.7504175,
-    max_x = 616.828205,
-    min_y = 281.70885999999996,
-    max_y = 281.6225,
     min_lat = 45.6364,
     max_lat = 45.65,
     min_lon = 14.2521,
@@ -207,20 +200,7 @@
                   "hidden": 0,
                   "type": "StringField"
                 }
-              }},
-                /* TODO drone type listbox?
-                "my_drone_type": {
-                  "description": "Drone type",
-                  "title": "",
-                  "default": "",
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_type",
-                  "hidden": 0,
-                  "type": "StringField"
-                }
-              }},*/
+              }}, // TODO drone type listbox?
               "_links": {
                 "type": {
                   // form_list display portal_type in header
@@ -270,13 +250,11 @@
               "communication": 0
             },
             "map": {
-              "depth": map_size,
+              "min_lat": min_lat,
+              "max_lat": max_lat,
+              "min_lon": min_lon,
+              "max_lon": max_lon,
               "height": map_height,
-              "width": map_size,
-              "min_x": min_x,
-              "min_y": min_y,
-              "max_x": max_x,
-              "max_y": max_y,
               "start_AMSL": start_AMSL
             },
             "initialPosition": INITIAL_POSITION,
@@ -291,7 +269,7 @@
         })
         .push(function (result_list) {
           for (var i = 0; i < result_list.length; i += 1) {
-            var log_content = result_list[i].join(' ') + '\n',
+            var log_content = result_list[i].join('\n').replaceAll(",", ";"),
               blob = new Blob([log_content], {type: 'text/plain'}),
               a = document.createElement('a'),
               div = document.createElement('div');
