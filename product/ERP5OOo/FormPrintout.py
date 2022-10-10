@@ -37,6 +37,7 @@ from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from AccessControl import ClassSecurityInfo
 from OFS.role import RoleManager
 from OFS.SimpleItem import Item
@@ -290,11 +291,11 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     from erp5.component.document.Document import DocumentConversionServerProxy, enc, dec
     server_proxy = DocumentConversionServerProxy(self)
     extension = guess_extension(content_type).strip('.')
-    printout = dec(server_proxy.convertFile(enc(printout),
+    printout = dec(str2bytes(server_proxy.convertFile(bytes2str(enc(printout)),
                                         extension, # source_format
                                         extension, # destination_format
                                         False, # zip
-                                        True)) # refresh
+                                        True))) # refresh
     # End of temporary implementation
     if not format:
       if REQUEST is not None and not batch_mode:
@@ -317,7 +318,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
       REQUEST.RESPONSE.setHeader('Content-type', mime)
       REQUEST.RESPONSE.setHeader('Content-disposition',
           'attachment;filename="%s.%s"' % (filename, format))
-    return str(data)
+    return bytes(data)
 
 InitializeClass(FormPrintout)
 
@@ -574,7 +575,7 @@ class ODFStrategy(Implicit):
     path = image_field.get_value('default')
     image_node = image_list[0]
     image_frame = image_node.getparent()
-    if path is not None:
+    if six.PY2 and path is not None:
       path = path.encode()
     picture = self.getPortalObject().restrictedTraverse(path)
     picture_data = getattr(aq_base(picture), 'data', None)
@@ -816,19 +817,20 @@ class ODFStrategy(Implicit):
       \n -> line-breaks
       DateTime -> Y-m-d
     """
-    assert six.PY2 # TODO-py3
     if value is None:
       value = ''
-    translated_value = str(value)
     if isinstance(value, DateTime):
       translated_value = value.strftime('%Y-%m-%d')
+    elif isinstance(value, bytes):
+      translated_value = value.decode('utf-8')
+    else:
+      translated_value = str(value)
     translated_value = escape(translated_value)
     tab_element_str = '<text:tab xmlns:text="%s"/>' % TEXT_URI
     line_break_element_str ='<text:line-break xmlns:text="%s"/>' % TEXT_URI
     translated_value = translated_value.replace('\t', tab_element_str)
     translated_value = translated_value.replace('\r', '')
     translated_value = translated_value.replace('\n', line_break_element_str)
-    translated_value = unicode(str(translated_value),'utf-8')
     # create a paragraph
     template = '<text:p xmlns:text="%s">%s</text:p>'
     fragment_element_tree = etree.XML(template % (TEXT_URI, translated_value))
