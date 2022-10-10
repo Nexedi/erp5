@@ -2,6 +2,7 @@ from Products.PythonScripts.standard import Object
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
 from Products.ERP5Type.Document import newTempBase
+import six
 Base_translateString = context.Base_translateString
 
 try:
@@ -43,19 +44,19 @@ for prop_dict in sorted(context.getPropertyMap(), key=lambda prop: prop['id']):
     new_value = base_error_message
   if new_value != old_value or error:
     # check if values are unicode convertible (binary are not)
-    if isinstance(new_value, (str, unicode)):
+    if not isinstance(new_value, six.text_type):
       try:
-        unicode(str(new_value), 'utf-8')
+        six.text_type(new_value if isinstance(new_value, bytes) else str(new_value), 'utf-8')
       except UnicodeDecodeError:
         new_value = binary_data_explanation
-    if isinstance(old_value, (str, unicode)):
+    if not isinstance(old_value, six.text_type):
       try:
-        unicode(str(old_value), 'utf-8')
+        six.text_type(old_value if isinstance(old_value, bytes) else str(old_value), 'utf-8')
       except UnicodeDecodeError:
         old_value = binary_data_explanation
-    if isinstance(current_value, (str, unicode)):
+    if not isinstance(current_value, six.text_type):
       try:
-        unicode(str(current_value), 'utf-8')
+        six.text_type(current_value if isinstance(current_value, bytes) else str(current_value), 'utf-8')
       except UnicodeDecodeError:
         current_value = binary_data_explanation
     x = {'property_name': prop,
