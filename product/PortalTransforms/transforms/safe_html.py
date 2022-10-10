@@ -535,7 +535,7 @@ class SafeHTML:
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
-                if isinstance(orig, unicode):
+                if isinstance(orig, six.text_type):
                   orig = orig.encode('utf-8')
                 data.setData(orig)
                 break
