@@ -10,6 +10,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
     this._flight_parameters = flight_parameters;
+    this._flight_parameters.map = this._gameManager._mapManager.getMapInfo();
     this._drone_info = drone_info;
     this._loiter_radius = 0;
     this._last_loiter_point_reached = -1;
