@@ -894,7 +894,9 @@ class ODFStrategy(Implicit):
     if isinstance(field_value, six.text_type):
       value = field_value
     elif field_value is not None:
-      value = unicode(str(field_value), 'utf-8')
+      value = str(field_value)
+      if six.PY2:
+        value = value.decode('utf-8')
     return value
 
 class ODTStrategy(ODFStrategy):
