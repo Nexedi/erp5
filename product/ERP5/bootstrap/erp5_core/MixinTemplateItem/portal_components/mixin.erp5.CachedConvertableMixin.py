@@ -100,8 +100,12 @@ class CachedConvertableMixin:
     http://pypi.python.org/pypi/uuid/ to generate
     a uuid stored as private property.
     """
-    format_cache_id = str(makeSortedTuple(kw)).\
-                             translate(string.maketrans('', ''), '[]()<>\'", ')
+    if six.PY2:
+      format_cache_id = str(makeSortedTuple(kw)).\
+                              translate(string.maketrans('', ''), '[]()<>\'", ')
+    else:
+      format_cache_id = str(makeSortedTuple(kw)).\
+                              translate(str.maketrans('', '', '[]()<>\'", '))
     return '%s:%s:%s' % (aq_base(self).getUid(), self.getRevision(),
                          format_cache_id)
 
