@@ -46,6 +46,7 @@ from Products.ERP5Type.Utils import guessEncodingFromText
 
 from lxml import html as etree_html
 from lxml import etree
+import six
 
 class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContentHistoryMixin,
                                                             TextContent, File):
@@ -91,16 +92,20 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       mapping = method(**kw)
 
       is_str = isinstance(text, str)
-      if is_str:
+      if six.PY2 and is_str:
         text = text.decode('utf-8')
 
       class UnicodeMapping:
         def __getitem__(self, item):
           v = mapping[item]
-          if isinstance(v, str):
-            v = v.decode('utf-8')
-          elif not isinstance(v, unicode):
-            v = str(v).decode('utf-8')
+          if six.PY2:
+            if isinstance(v, str):
+              v = v.decode('utf-8')
+            elif not isinstance(v, six.text_type):
+              v = str(v).decode('utf-8')
+          else:
+            if not isinstance(v, str):
+              v = str(v)
           return v
       unicode_mapping = UnicodeMapping()
 
