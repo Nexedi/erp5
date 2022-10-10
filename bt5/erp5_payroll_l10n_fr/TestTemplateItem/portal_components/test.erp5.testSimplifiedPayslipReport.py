@@ -181,7 +181,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     image_source_pdf_doc.setData(pdf_data)
     self.tic()
     _, png = image_source_pdf_doc.convert("png", frame=0, quality=100)
-    self.assertImageRenderingEquals(str(png), str(expected_image.getData()))
+    self.assertImageRenderingEquals(bytes(png), bytes(expected_image.getData()))
 
   def test_03_payslip_holiday(self):
     for i in self.portal.portal_catalog(
@@ -257,5 +257,3 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     self.assertEqual(payslip_data["report_data"]["total_holiday_this_year"], 2)
     self.assertEqual(payslip_data["report_data"]["taken_holiday"], 2)
     self.assertEqual(payslip_data["report_data"]["total_holiday_year_before"], 0)
-
-
