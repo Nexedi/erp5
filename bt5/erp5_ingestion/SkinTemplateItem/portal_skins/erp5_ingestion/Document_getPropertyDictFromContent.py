@@ -7,6 +7,7 @@ To use, write your own method (probably External Method, since it is most likely
 to use re) that would analyze text content of the doc
 and return a dictionary of properties.
 """
+import six
 information = context.getContentInformation()
 
 result = {}
@@ -14,7 +15,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode): v = v.encode('utf-8')
+    if six.PY2 and isinstance(v, six.text_type): v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
         pass # XXX - We can not trust reference on getContentInformation
@@ -26,7 +27,7 @@ for k, v in information.items():
         result['contributor'] = p.getRelativeUrl()
     elif key == 'keywords':
       if isinstance(v, (list, tuple)):
-        v = [isinstance(x, unicode) and x.encode('utf-8') or x for x in v]
+        v = [x.encode('utf-8') if six.PY2 and isinstance(x, six.text_type) else x for x in v]
       else:
         v = v.split()
       result['subject_list'] = v
