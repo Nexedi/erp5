@@ -20,7 +20,10 @@ def formToXML(form, prologue=1):
         else:
           value = 'false'
       sub_element = SubElement(form_as_xml, id)
-      sub_element.text = str(value).decode(encoding)
+      if six.PY2:
+        sub_element.text = str(value).decode(encoding)
+      else:
+        sub_element.text = str(value)
     groups = SubElement(form_as_xml, 'groups')
     # export form groups
     for group in form.get_groups(include_empty=1):
@@ -36,8 +39,7 @@ def formToXML(form, prologue=1):
 
         fields.append(field_element)
         values_element = SubElement(field_element, 'values')
-        items = field.values.items()
-        items.sort()
+        items = sorted(field.values.items())
         for key, value in items:
           if value is None:
             continue
@@ -57,19 +59,27 @@ def formToXML(form, prologue=1):
             if not isinstance(value, six.string_types):
               value = str(value)
             value_element = SubElement(values_element, key)
-          value_element.text = str(value).decode(encoding)
+          if six.PY2:
+            value_element.text = str(value).decode(encoding)
+          else:
+            value_element.text = str(value)
 
         tales_element = SubElement(field_element, 'tales')
-        items = field.tales.items()
-        items.sort()
+        items = sorted(field.tales.items())
         for key, value in items:
           if value:
             tale_element = SubElement(tales_element, key)
-            tale_element.text = str(value._text).decode(encoding)
+            if six.PY2:
+              tale_element.text = str(value._text).decode(encoding)
+            else:
+              tale_element.text = str(value._text)
         messages = SubElement(field_element, 'messages')
         for message_key in field.get_error_names():
           message_element = SubElement(messages, 'message', name=message_key)
-          message_element.text = field.get_error_message(message_key).decode(encoding)
+          if six.PY2:
+            message_element.text = field.get_error_message(message_key).decode(encoding)
+          else:
+            message_element.text = field.get_error_message(message_key)
         # Special attribute for ProxyFields *delegated_list*
         delegated_list = getattr(field, 'delegated_list', [])
         if delegated_list:
@@ -78,8 +88,12 @@ def formToXML(form, prologue=1):
           [SubElement(delegated_list_element, delegated) for delegated in delegated_list]
 
     if form.unicode_mode:
-      return etree.tostring(form_as_xml, encoding='utf-8',
+      xml = etree.tostring(form_as_xml, encoding='utf-8',
                                     xml_declaration=True, pretty_print=True)
     else:
-      return etree.tostring(form_as_xml, encoding=form.stored_encoding,
+      xml = etree.tostring(form_as_xml, encoding=form.stored_encoding,
                                     xml_declaration=True, pretty_print=True)
+    if six.PY2:
+      return xml
+    else:
+      return xml.decode()
