@@ -2717,7 +2717,10 @@ class ListBoxListRenderer(ListBoxRenderer):
     title_listboxline = ListBoxLine()
     title_listboxline.markTitleLine()
     for c in self.getSelectedColumnList():
-      title_listboxline.addColumn(c[0], c[1].encode(self.getEncoding()))
+      if six.PY2:
+        title_listboxline.addColumn(c[0], c[1].encode(self.getEncoding()))
+      else:
+        title_listboxline.addColumn(c[0], c[1])
     listboxline_list.append(title_listboxline)
 
     # Obtain the list of lines.
@@ -2743,7 +2746,7 @@ class ListBoxListRenderer(ListBoxRenderer):
         listboxline.checkLine(uid in checked_uid_set)
 
       for (original_value, processed_value), (sql, title) in zip(line.getValueList(), self.getSelectedColumnList()):
-        if isinstance(original_value, six.text_type):
+        if six.PY2 and isinstance(original_value, six.text_type):
           value = original_value.encode(self.getEncoding())
         else:
           value = original_value
@@ -2761,7 +2764,7 @@ class ListBoxListRenderer(ListBoxRenderer):
       stat_listboxline.markStatLine()
 
       for (original_value, processed_value), (sql, title) in zip(self.getStatValueList(), self.getSelectedColumnList()):
-        if isinstance(original_value, six.text_type):
+        if six.PY2 and isinstance(original_value, six.text_type):
           value = original_value.encode(self.getEncoding())
         else:
           value = original_value
