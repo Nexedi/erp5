@@ -26,7 +26,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import StringIO
+import six.moves import cStringIO as StringIO
 import urllib
 import six.moves.http_client
 
@@ -118,7 +118,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     ret = self.publish(
       '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
       basic='%s:current' % self.id(),
-      stdin=StringIO.StringIO(urllib.urlencode({
+      stdin=StringIO(urllib.urlencode({
         'Base_callDialogMethod:method': '',
         'dialog_id': 'Alarm_viewSolveDialog',
         'dialog_method': 'Alarm_solve',
