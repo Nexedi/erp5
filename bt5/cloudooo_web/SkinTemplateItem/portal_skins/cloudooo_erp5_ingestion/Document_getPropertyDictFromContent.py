@@ -8,7 +8,7 @@ to use re) that would analyze text content of the doc
 and return a dictionary of properties.
 """
 #Proxify to allow discover of metadata when publishing document
-
+import six
 information = context.getContentInformation()
 
 result = {}
@@ -16,7 +16,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode): v = v.encode('utf-8')
+    if six.PY2 and isinstance(v, six.text_type): v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
         pass # XXX - We can not trust reference on getContentInformation
