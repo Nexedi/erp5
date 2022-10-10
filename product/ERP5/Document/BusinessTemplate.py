@@ -94,6 +94,10 @@ from importlib import import_module
 import posixpath
 import transaction
 import inspect
+if six.PY2:
+  BufferedReader = file
+else:
+  from io import BufferedReader
 
 import threading
 from ZODB.broken import Broken, BrokenModified
@@ -344,9 +348,11 @@ class BusinessTemplateArchive(object):
     try:
       write = self._writeFile
     except AttributeError:
-      if not isinstance(obj, str):
+      if not isinstance(obj, (bytes, str)):
         obj.seek(0)
         obj = obj.read()
+      elif not isinstance(obj, bytes):
+        obj = obj.encode('utf-8')
       self.revision.hash(path, obj)
       self._writeString(obj, path)
     else:
@@ -374,11 +380,8 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     object_path = os.path.join(self.path, path)
     path = os.path.dirname(object_path)
     os.path.exists(path) or os.makedirs(path)
-    f = open(object_path, 'wb')
-    try:
+    with open(object_path, 'wb') as f:
       f.write(obj)
-    finally:
-      f.close()
 
   def importFiles(self, item):
     """
@@ -919,7 +922,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       connection = self.getConnection(self.aq_parent)
       __traceback_info__ = 'Importing %s' % file_name
-      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+      if hasattr(cache_database, 'db') and isinstance(file_obj, BufferedReader):
         obj = connection.importFile(self._compileXML(file_obj))
       else:
         # FIXME: Why not use the importXML function directly? Are there any BT5s
