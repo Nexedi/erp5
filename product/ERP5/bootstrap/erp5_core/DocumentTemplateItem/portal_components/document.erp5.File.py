@@ -36,7 +36,7 @@ from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
-
+import six
 
 def _unpackData(data):
   """
@@ -180,13 +180,15 @@ class File(Document, OFS_File):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
-    """return Data as str."""
+    """return Data as bytes."""
     self._checkConversionFormatPermission(None)
     data = self._baseGetData()
     if data is None:
       return None
     else:
-      return str(data)
+      if six.PY3 and isinstance(data, str):
+        return bytes(data, self._get_encoding())
+      return bytes(data)
 
   # DAV Support
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
