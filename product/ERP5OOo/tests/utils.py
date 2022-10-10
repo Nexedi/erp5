@@ -41,6 +41,7 @@ import zipfile
 import subprocess
 from six.moves import urllib
 from six.moves import cStringIO as StringIO
+from io import BytesIO
 
 try:
   import lxml
@@ -65,14 +66,14 @@ if lxml:
 
     def validate(self, odf_file_content):
       error_list = []
-      odf_file = StringIO(odf_file_content)
+      odf_file = BytesIO(odf_file_content)
       for f in ('content.xml', 'meta.xml', 'styles.xml', 'settings.xml'):
         error_list.extend(self._validateXML(odf_file, f))
       return error_list
 
     def _validateXML(self, odf_file, content_file_name):
       zfd = zipfile.ZipFile(odf_file)
-      doc = lxml.etree.parse(StringIO(zfd.read(content_file_name)))
+      doc = lxml.etree.parse(BytesIO(zfd.read(content_file_name)))
       return []
       # The following is the past implementation that validates with
       # RelaxNG schema. But recent LibreOffice uses extended odf
