@@ -4,6 +4,7 @@
                                      quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
                                      gross_category python:'base_amount/payroll/report/salary/gross';
                                      price_renderer nocall:here/PaySheetTransaction_viewFieldLibrary/my_price/render_pdf;
+                                     unicode python: unicode if bytes==str else lambda t, encoding: t;
                                      default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language())">
   <office:scripts/>
   <office:font-face-decls>
