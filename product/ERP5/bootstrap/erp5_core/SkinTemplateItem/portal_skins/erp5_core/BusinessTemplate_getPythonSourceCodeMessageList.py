@@ -53,7 +53,7 @@ def checkPythonScript(script_instance, script_path):
     'DateTime', 'whrandom', 'reorder', 'sets', 'test', 'math']
   code = script_instance.body()
   if six.PY2:
-    code = unicode(code, 'utf8')
+    code = six.text_type(code, 'utf8')
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
       {'bound_names': extra_builtins +
          script_instance.getBindingAssignments().getAssignedNamesInOrder(),
@@ -80,7 +80,7 @@ def checkComponent(component_instance):
         jio_key=component_relative_url,),)
   code = component_instance.getTextContent()
   if six.PY2:
-    code = unicode(code, 'utf8')
+    code = six.text_type(code, 'utf8')
   for annotation in json.loads(portal.ERP5Site_checkPythonSourceCodeAsJSON(
         {'code': code}))['annotations']:
     annotation['component_path'] = component_relative_url
