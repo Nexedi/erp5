@@ -91,6 +91,10 @@ from difflib import unified_diff
 import posixpath
 import transaction
 import inspect
+if six.PY2:
+  BufferedReader = file
+else:
+  from io import BufferedReader
 
 import threading
 from ZODB.broken import Broken, BrokenModified
@@ -916,7 +920,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       connection = self.getConnection(self.aq_parent)
       __traceback_info__ = 'Importing %s' % file_name
-      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+      if hasattr(cache_database, 'db') and isinstance(file_obj, BufferedReader):
         obj = connection.importFile(self._compileXML(file_obj))
       else:
         # FIXME: Why not use the importXML function directly? Are there any BT5s
