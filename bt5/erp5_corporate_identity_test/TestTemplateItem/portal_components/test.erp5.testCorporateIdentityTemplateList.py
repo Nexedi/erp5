@@ -259,7 +259,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     if dump:
       expected_image.setData(png)
       self.tic()
-    self.assertImageRenderingEquals(str(png), str(expected_image.getData()))
+    self.assertImageRenderingEquals(bytes(png), bytes(expected_image.getData()))
 
   ##############################################################################
   # What rendering is tested:
