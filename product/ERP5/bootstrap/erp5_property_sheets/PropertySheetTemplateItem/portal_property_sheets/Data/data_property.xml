@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: \'\'</string> </value>
+            <value> <string>python: b\'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
