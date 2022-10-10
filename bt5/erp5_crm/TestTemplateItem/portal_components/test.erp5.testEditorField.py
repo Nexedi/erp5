@@ -215,7 +215,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
@@ -244,7 +244,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
@@ -272,7 +272,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
@@ -300,7 +300,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Set a fake file on Event and make sure no more editor is displayed
     # and that instead a div with page CSS style appears with stripped HTML
-    event.setData('fake')
+    event.setData(b'fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
     self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
