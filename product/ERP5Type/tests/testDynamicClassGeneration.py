@@ -1389,10 +1389,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     with self.assertRaises(TypeError):
       person.setSocialTitle(social_title_value)
 
-    # Passing a unicode object to a not-Value setter should raise
     with self.assertRaises(TypeError):
       organisation = self.portal.organisation_module.newContent()
-      person.setSubordination(unicode(organisation.getRelativeUrl()))
+      if six.PY2:
+        # Passing a unicode object to a not-Value setter should raise
+        person.setSubordination(six.text_type(organisation.getRelativeUrl()))
+      else:
+        # Passing a bytes object to a not-Value setter should raise
+        person.setSubordination(organisation.getRelativeUrl().encode())
 
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool
