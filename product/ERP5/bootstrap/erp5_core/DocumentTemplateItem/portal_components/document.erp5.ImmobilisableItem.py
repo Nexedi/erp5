@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Utils import ensure_list
-
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
@@ -318,8 +316,7 @@ class ImmobilisableItem(Item, Amount):
       Returns a list of dictionaries representing immobilisation periods for the object
       from_date is included, to_date is excluded
     """
-    kw_key_list = kw.keys()
-    kw_key_list.sort()
+    kw_key_list = sorted(kw.keys())
     if kw_key_list.count('immo_cache_dict'):
       kw_key_list.remove('immo_cache_dict')
     immo_cache_dict = kw.get('immo_cache_dict', {'period':{},
@@ -779,8 +776,7 @@ class ImmobilisableItem(Item, Amount):
     """
     if at_date is None:
       at_date = DateTime()
-    kw_key_list = ensure_list(kw.keys())
-    kw_key_list.sort()
+    kw_key_list = sorted(kw.keys())
 
     if kw_key_list.count('immo_cache_dict'):
       kw_key_list.remove('immo_cache_dict')
