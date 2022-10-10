@@ -180,4 +180,4 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     image_source_pdf_doc.setData(pdf_data)
     self.tic()
     _, png = image_source_pdf_doc.convert("png", frame=0, quality=100)
-    self.assertImageRenderingEquals(str(png), str(expected_image.getData()))
+    self.assertImageRenderingEquals(bytes(png), bytes(expected_image.getData()))

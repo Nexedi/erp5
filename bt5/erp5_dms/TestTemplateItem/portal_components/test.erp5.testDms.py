@@ -1260,7 +1260,7 @@ class TestDocument(TestDocumentMixin):
                                      display='thumbnail')
     self.assertEqual(mime, 'image/png')
     # it's a valid PNG
-    self.assertEqual(image_data[1:4], 'PNG')
+    self.assertEqual(image_data[1:4], b'PNG')
 
   def test_PDFToJpg(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1271,7 +1271,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/jpeg')
-    self.assertEqual(image_data[6:10], 'JFIF')
+    self.assertEqual(image_data[6:10], b'JFIF')
 
   def test_PDFToGif(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1282,7 +1282,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/gif')
-    self.assertEqual(image_data[0:4], 'GIF8')
+    self.assertEqual(image_data[0:4], b'GIF8')
 
   def test_PDFToTiff(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1293,7 +1293,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/tiff')
-    self.assertIn(image_data[0:2], ('II', 'MM'))
+    self.assertIn(image_data[0:2], (b'II', b'MM'))
 
 
   def test_PDF_content_information(self):
@@ -2813,7 +2813,7 @@ return 1
     document.setReference('TEST')
     request = self.app.REQUEST
     download_file = document.index_html(REQUEST=request, format=None)
-    self.assertEqual(download_file, 'foo\n')
+    self.assertEqual(download_file, b'foo\n')
     document_format = None
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))
