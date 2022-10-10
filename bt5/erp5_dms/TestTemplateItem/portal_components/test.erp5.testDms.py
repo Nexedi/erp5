@@ -2900,7 +2900,7 @@ return 1
     document.setReference('TEST')
     request = self.app.REQUEST
     download_file = document.index_html(REQUEST=request, format=None)
-    self.assertEqual(download_file, 'foo\n')
+    self.assertEqual(download_file, b'foo\n')
     document_format = None
     self.assertEqual('TEST-001-en.dummy', document.getStandardFilename(
                       document_format))

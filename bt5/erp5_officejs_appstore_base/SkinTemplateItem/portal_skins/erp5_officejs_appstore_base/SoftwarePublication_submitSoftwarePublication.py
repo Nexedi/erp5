@@ -60,12 +60,12 @@ if not zip_file:
   rejectSoftwarePublication(software_publication)
   return
 
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 import zipfile
 from zipfile import BadZipfile
 
-zipbuffer = StringIO()
-zipbuffer.write(str(zip_file.getData()))
+zipbuffer = BytesIO()
+zipbuffer.write(bytes(zip_file.getData()))
 try:
   zip_reader = zipfile.ZipFile(zipbuffer)
 except BadZipfile:

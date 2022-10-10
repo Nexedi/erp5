@@ -727,7 +727,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEqual(
       'Mail Message',
       self.portal.portal_contribution_registry.findPortalTypeName(
-      filename='postfix_mail.eml', content_type='message/rfc822', data='Test'
+      filename='postfix_mail.eml', content_type='message/rfc822', data=b'Test'
       ))
 
   def test_Base_getEntityListFromFromHeader(self):
@@ -844,13 +844,13 @@ class TestCRMMailIngestion(BaseTestCRM):
     event = self.portal.event_module.newContent(
         portal_type='Mail Message',
         destination_value=organisation,
-        data='\r\n'.join(textwrap.dedent('''
+        data=('\r\n'.join(textwrap.dedent('''
         From: Source <source@example.com>
         To: destination <destination@example.com>
         Subject: mail subject
 
         content
-        ''').splitlines()[1:]))
+        ''').splitlines()[1:])).encode())
 
     property_dict = event.getPropertyDictFromContent()
     # destination is set on the event. In this case it is kept as is.
@@ -1059,7 +1059,8 @@ class TestCRMMailIngestion(BaseTestCRM):
       file_path = '%s/test_data/%s' % (
         os.path.dirname(Products.ERP5.tests.__file__),
         filename)
-      event.setData(open(file_path).read())
+      with open(file_path, 'rb') as f:
+        event.setData(f.read())
       self.assertTrue(event.getTextContent().startswith('<'))
 
 
@@ -1811,7 +1812,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual(event.getTitle(), dummy_title)
     self.assertEqual(event.getTextContent(), dummy_content)
 
-    event.setData('Subject: %s\r\n\r\n%s' % (real_title, real_content))
+    event.setData(('Subject: %s\r\n\r\n%s' % (real_title, real_content)).encode())
     self.assertTrue(event.hasFile(), '%r has no file' % (event,))
     self.assertEqual(event.getTitle(), real_title)
     self.assertEqual(event.getTextContent(), real_content)
