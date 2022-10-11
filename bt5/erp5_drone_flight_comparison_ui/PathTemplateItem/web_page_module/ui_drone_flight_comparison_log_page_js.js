@@ -1,8 +1,8 @@
 (function (window, RSVP, rJS, domsugar, document, Blob) {
   "use strict";
 
-  //HARDCODED VALUES FROM LOG, TODO get from UI inputs
   var SIMULATION_SPEED = 200,
+    //HARDCODED VALUES, THIS SHOULD BE GOT FROM LOGS
     SIMULATION_TIME = 1500,
     map_height = 100,
     min_lat = 45.6364,
@@ -32,11 +32,23 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
+    .onEvent('submit', function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget('form_view')
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
+        })
+        .push(function (input) {
+          gadget.runGame(input);
+        });
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('input[type="submit"]').click();
+    })
+
     .declareMethod('render', function render() {
-      var gadget = this, query,
-        fragment = domsugar(gadget.element.querySelector('#fragment'),
-                            [domsugar('div')]).firstElementChild;
-      //TODO this should come from inputs textareas
+      var gadget = this, query;
       return new RSVP.Queue()
         .push(function () {
           query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
@@ -50,15 +62,64 @@
         })
         .push(function (result) {
           DRONE_LIST[1].log_content = result.data.rows[0].value.text_content;
-          return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
-                                      {element: fragment, scope: 'simulator'});
+          return gadget.getDeclaredGadget('form_view');
         })
-        .push(function (drone_gadget) {
-          return drone_gadget.render();
+        .push(function (form_gadget) {
+          return form_gadget.render({
+            erp5_document: {
+              "_embedded": {"_view": {
+                "my_simulation_speed": {
+                  "description": "",
+                  "title": "Simulation Speed",
+                  "default": SIMULATION_SPEED,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "simulation_speed",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
+                "my_log_1": {
+                  "description": "Log 1 content",
+                  "title": "",
+                  "default": DRONE_LIST[0].log_content,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "log_1",
+                  "hidden": 0,
+                  "type": "TextAreaField"
+                },
+                "my_log_2": {
+                  "description": "Log 2 content",
+                  "title": "",
+                  "default": DRONE_LIST[1].log_content,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "log_2",
+                  "hidden": 0,
+                  "type": "TextAreaField"
+                }
+              }},
+              "_links": {
+                "type": {
+                  name: ""
+                }
+              }
+            },
+            form_definition: {
+              group_list: [[
+                "left",
+                [["my_log_1"], ["my_simulation_speed"]]
+              ],[
+                "right",
+                [["my_log_2"]]
+              ]]
+            }
+          });
         })
         .push(function () {
-          //TODO this should be called in a button click event
-          gadget.runGame();
           return gadget.updateHeader({
             page_title: 'Drone Simulator - Run flight logs',
             page_icon: 'puzzle-piece'
@@ -68,19 +129,33 @@
 
     .declareJob('runGame', function runGame(options) {
       //TODO handle crash. e.g. pass empty log_content
-      var gadget = this;
+      var gadget = this, simulator;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getDeclaredGadget('simulator');
+          var fragment = gadget.element.querySelector('#fragment');
+          //drop previous execution
+          if (fragment.childNodes[0]) {
+            fragment.removeChild(fragment.childNodes[0]);
+          }
+          fragment = domsugar(gadget.element.querySelector('#fragment'),
+                                  [domsugar('div')]).firstElementChild;
+          return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
+                                      {element: fragment, scope: 'simulator'});
         })
-        .push(function (simulator) {
+        .push(function (drone_gadget) {
+          simulator = drone_gadget;
+          return simulator.render();
+        })
+        .push(function () {
+          DRONE_LIST[0].log_content = options.log_1;
+          DRONE_LIST[1].log_content = options.log_2;
           var game_parameters_json = {
             "drone": {
               "maxAcceleration": 1,
               "maxSpeed": MAX_SPEED
             },
             "gameTime": SIMULATION_TIME,
-            "simulation_speed": SIMULATION_SPEED,
+            "simulation_speed": parseFloat(options.simulation_speed),
             "latency": {
               "information": 0,
               "communication": 0
