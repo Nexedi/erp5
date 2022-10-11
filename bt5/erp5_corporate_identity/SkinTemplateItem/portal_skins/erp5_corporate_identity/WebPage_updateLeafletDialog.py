@@ -28,9 +28,10 @@ if dialog_id is not None:
   request.form['portal_status_message'] = translateString('Preview updated.')
   request.form['cancel_url'] = cancel_url
   request.form['portal_skin'] = portal_skin
-  request.form['override_source_organisation_title'] = override_source_organisation_title
-  request.form['override_source_person_title'] = override_source_person_title
-  request.form['override_leaflet_header_title'] = override_leaflet_header_title
+  request.form['field_your_override_source_organisation_title'] = context.Base_getLeafletParameter(sender_company=True)
+  request.form['field_your_override_source_person_title'] = context.Base_getLeafletParameter(sender=True)
+  request.form['field_your_override_leaflet_header_title'] = context.Base_getLeafletParameter(leaflet_header=True)
+  request.form['field_your_override_logo_reference'] = context.Base_getLeafletParameter(logo=True)
   request.form['format'] = format
   request.form['display_svg'] = display_svg
   request.form['display_side'] = display_side

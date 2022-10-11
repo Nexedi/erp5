@@ -15,6 +15,7 @@ return """
   (function () {
     var table_list = document.body.querySelectorAll("table"),
       blockquote_list = document.body.querySelectorAll("table"),
+      gantt_list = document.body.querySelectorAll(".gantt_container"),
       sheet_width_in_px,
       div;
 
@@ -24,7 +25,7 @@ return """
     document.body.appendChild(div);
     sheet_width_in_px = div.clientWidth;
     document.body.removeChild(div);
-
+    console.log(table_list)
     if (table_list.length > 0) {
 
       // Resize a table by reducing th and td font-size,
@@ -45,6 +46,17 @@ return """
         });
       });
     }
+    if (gantt_list.length > 0) {
+      [].forEach.call(gantt_list, function (gantt) {
+        if (sheet_width_in_px > gantt.clientWidth) return;
+        var ratio_percent = Math.floor((sheet_width_in_px / gantt.clientWidth) * 100);
+        gantt.style.width = "100%";
+
+        [].forEach.call(gantt.children, function (e) {
+          e.setAttribute("style", "font-size: " + ratio_percent + "%");
+        });
+      });
+    }
 
     // same for other elements
     if (blockquote_list.length > 0) {
@@ -53,8 +65,6 @@ return """
         var ratio_percent = Math.floor((sheet_width_in_px / blockquote.clientWidth) * 100);
         blockquote.style.width = "100%";
 
-        // Select all children and affect the font-size in percent.
-        // The CSS should not set the font-size on the table instead of th and td
         [].forEach.call(blockquote.children, function (e) {
           e.setAttribute("style", "font-size: " + ratio_percent + "%");
         });

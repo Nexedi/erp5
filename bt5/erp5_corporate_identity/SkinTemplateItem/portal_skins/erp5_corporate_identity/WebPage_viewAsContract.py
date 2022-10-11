@@ -41,7 +41,7 @@ if isinstance(contract_content, unicode):
 contract_history_section_list = re.findall('<section.+?>.+?</section>', contract_content, re.S)
 for contract_history_section in contract_history_section_list:
   contract_content = contract_content.replace(contract_history_section, '')
-
+"""
 for header in re.findall("<h[1-6].*</h[1-6]>", contract_content or ""):
   convert_to_h2 = True
   for tag in ['introduction', 'annex', 'appendix']:
@@ -57,7 +57,7 @@ for header in re.findall("<h[1-6].*</h[1-6]>", contract_content or ""):
         header,
         header.replace(tag, 'h%s' % (int(key) + 1))
       )
-
+"""
 
 # override for tests
 if override_batch_mode:

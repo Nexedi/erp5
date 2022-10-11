@@ -44,7 +44,8 @@ pref = context.getPortalObject().portal_preferences
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def translateText(snip):
-  return doc_localiser.erp5_ui.gettext(snip, lang=doc_language).encode('utf-8').strip()
+  return context.Base_translateString(snip, lang=doc_language)
+  #return doc_localiser.erp5_ui.gettext(snip, lang=doc_language).encode('utf-8').strip()
 
 # -------------------------- Setup ---------------------------------------------
 doc = context

@@ -44,19 +44,39 @@ if source is None:
   # override
   if override_source_organisation_title:
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation", source_data=override_source_organisation_title)
-  if not source_organisation_list:
-    # follow up
-    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None) or []
-  if not source_organisation_list and default_company_relative_url:
-    # default company
-    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation_relative_url", source_data=default_company_relative_url) or []
-  if not source_organisation_list and source_person_list:
-    for source_person in source_person_list:
-      # person 's Career Subordination Value
-      organisation_candidate_list = context.Base_getTemplateProxyParameter(parameter="source", source_data=source_person.get("uid")) or []
-      if organisation_candidate_list:
-        source_organisation_list = organisation_candidate_list
-        break
+
+  if letter_context:
+    if not source_organisation_list and source_person_list:
+      for source_person in source_person_list:
+        # person 's Career Subordination Value
+        organisation_candidate_list = context.Base_getTemplateProxyParameter(parameter="source", source_data=source_person.get("uid")) or []
+        if organisation_candidate_list:
+          source_organisation_list = organisation_candidate_list
+          break
+    if not source_organisation_list:
+      # follow up
+      source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None) or []
+    if not source_organisation_list and default_company_relative_url:
+      # default company
+      source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation_relative_url", source_data=default_company_relative_url) or []
+
+  else:
+    if not source_organisation_list:
+      # follow up
+      source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None) or []
+    if not source_organisation_list and default_company_relative_url:
+      # default company
+      source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation_relative_url", source_data=default_company_relative_url) or []
+    if not source_organisation_list and source_person_list:
+      for source_person in source_person_list:
+        # person 's Career Subordination Value
+        organisation_candidate_list = context.Base_getTemplateProxyParameter(parameter="source", source_data=source_person.get("uid")) or []
+        if organisation_candidate_list:
+          source_organisation_list = organisation_candidate_list
+          break
+
+
+
   if not source_organisation_list and getattr(context, 'getSourceDecisionValue', None):
     source_organisation_candidate = context.getSourceDecisionValue()
     if source_organisation_candidate and source_organisation_candidate.getPortalType() == "Organisation":

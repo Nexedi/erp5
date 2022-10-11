@@ -47,6 +47,7 @@ leaflet_display_side = int(kw.get('display_side') or 0)
 override_leaflet_header_title = kw.get('override_leaflet_header_title')
 override_source_person_title = kw.get('override_source_person_title', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
+override_logo_reference = kw.get('override_logo_reference', None)
 override_batch_mode = kw.get('batch_mode')
 
 
@@ -78,7 +79,7 @@ if leaflet_reference is None:
 leaflet_full_reference = '-'.join([leaflet_reference, leaflet_version, leaflet_language])
 
 # ---------------------------- Theme Parameters --------------------------------
-leaflet_theme = leaflet.Base_getThemeDict(doc_format=leaflet_format, css_path="template_css/leaflet", skin="Leaflet")
+leaflet_theme = leaflet.Base_getThemeDict(doc_format=leaflet_format, css_path="template_css/leaflet", skin="Leaflet", theme_reference=override_logo_reference)
 
 if override_leaflet_header_title and override_leaflet_header_title != blank:
   leaflet_theme["theme_logo_description"] = html_quote(override_leaflet_header_title)

@@ -307,14 +307,14 @@ table {
   margin-top: 24px !important;
 }
 table * {
-  font-size: 16px !important;
+  font-size: 24px !important;
 }
 .ci-slideshow table,
 .ci-slideshow-handout table {
   margin: auto;
   border-collapse: collapse;
   border-spacing: 0;
-  border: 0 none;
+  /*border: 0 none;*/
 }
 .ci-slideshow table tr,
 .ci-slideshow-handout table tr {
@@ -330,13 +330,43 @@ table * {
 .ci-slideshow-handout table tr th {
   margin: 0;
   padding: 0;
-  border: 0;
+  /*border: 0;*/
   font: inherit;
   vertical-align: baseline;
   text-align: left;
   padding: 0.2em 0.5em 0.2em 0.5em;
   border-bottom: 1px solid;
 }
+
+/* ======================= zenburn theme ================================ */
+.ci-slideshow section table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.ci-slideshow section table th {
+  font-weight: bold; }
+
+.ci-slideshow section table th,
+.ci-slideshow section table td {
+  text-align: left;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border-bottom: 1px solid; }
+
+.ci-slideshow section table th[align="center"],
+.ci-slideshow section table td[align="center"] {
+  text-align: center; }
+
+.ci-slideshow section table th[align="right"],
+.ci-slideshow section table td[align="right"] {
+  text-align: right; }
+
+.ci-slideshow section table tbody tr:last-child th,
+.ci-slideshow section table tbody tr:last-child td {
+  border-bottom: none; }
+
+
+
 /* notes header */
 .ci-slideshow-handout .ci-slideshow-handout-header {
   text-align: center;
@@ -574,3 +604,4 @@ table * {
   top: 0mm;
   left: 0;
 }
+

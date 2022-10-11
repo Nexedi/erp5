@@ -26,14 +26,18 @@ theme = (
   context.Base_getTemplateProxyParameter(parameter="theme", source_data=None) or
   pref.getPreferredCorporateIdentityTemplateDefaultTheme()
 )
-if theme is not None:
+if not theme_reference and theme is not None:
   theme = theme.lower()
   theme_logo_prefix = pref.getPreferredCorporateIdentityTemplateDefaultLogoPrefix()
   if theme_logo_prefix:
     theme_reference = theme_logo_prefix + theme.capitalize()
-    theme_logo_list = context.Base_getTemplateProxyParameter(parameter="logo", source_data=theme_reference) or []
-    if len(theme_logo_list) > 0:
-      theme_logo_dict = theme_logo_list[0]
+
+if theme_reference:
+  theme_logo_list = context.Base_getTemplateProxyParameter(parameter="logo", source_data=theme_reference) or []
+  if len(theme_logo_list) > 0:
+    theme_logo_dict = theme_logo_list[0]
+
+
 theme_dict = {
   "theme":theme,
   "theme_logo_description":theme_logo_dict.get("description", blank)

@@ -78,7 +78,11 @@ for citation in re.findall(r'\[(.*?)\]', document_content or ''):
 
   citation_dict = {}
   citation_dict["input"] = citation
-  citation_type = re.findall(match_citation_type, citation)[0]
+  citation_type = re.findall(match_citation_type, citation)
+  if len(citation_type):
+    citation_type = citation_type[0]
+  else:
+    continue
   # Those 3 parts has similar codes, leave as it so that it's easy to customize for each other
   if citation_type == "AD":
     if citation_href not in citation_ad_doubles:

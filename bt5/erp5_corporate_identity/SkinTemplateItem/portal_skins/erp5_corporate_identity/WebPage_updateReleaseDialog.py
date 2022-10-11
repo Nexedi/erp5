@@ -27,8 +27,8 @@ if dialog_id is not None:
   request.form['portal_status_message'] = translateString('Preview updated.')
   request.form['cancel_url'] = cancel_url
   request.form['portal_skin'] = portal_skin
-  request.form['override_source_organisation_title'] = override_source_organisation_title
-  request.form['override_source_person_title'] = override_source_person_title
+  request.form['field_your_override_source_organisation_title'] = context.Base_getPressReleaseParameter(sender_company=True)
+  request.form['field_your_override_source_person_title'] = context.Base_getPressReleaseParameter(sender=True)
   request.form['format'] = format
   request.form['display_svg'] = display_svg
   request.form['display_about'] = display_about
