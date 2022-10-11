@@ -1663,6 +1663,24 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
+  def test_pdfBookImageAltSpan(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_image_alt_span_html",
+      "template_test_book_image_alt_span_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=1,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_reference_table = 1
+      )
+    )
+
+  @changeSkin('Book')
   def test_pdfBookPrint(self):
     """
       Test:

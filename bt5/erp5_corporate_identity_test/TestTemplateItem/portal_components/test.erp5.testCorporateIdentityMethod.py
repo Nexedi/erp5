@@ -201,7 +201,7 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     self.assertEqual(output, doc_content)
 
     output =web_page_with_follow_up.WebPage_embedReportDocumentList(doc_content)
-    self.assertEqual(output, '<div>%s</div>' % web_page_with_follow_up.Base_generateCorporareIdentityTestReport()[0])
+    self.assertEqual(output, '<div>%s</div>' % web_page_with_follow_up.Base_generateCorporareIdentityTestReport(display_comment=True)[0])
 
     # it has no matter with/without follow up
     doc_content = '<div> <a href="sale_opportunity_module/template_test_embed_sale_opportunity?report=Base_generateCorporareIdentityTestReport&amp;test=23"></a> </div>'

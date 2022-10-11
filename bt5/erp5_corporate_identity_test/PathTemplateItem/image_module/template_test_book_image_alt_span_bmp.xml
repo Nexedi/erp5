@@ -79,53 +79,27 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>9e294307002601a2fa4c873c6353af5a</string> </value>
+            <value> <string>692504124ea7958fefe8178941ab75b1</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>image/png</string> </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>Template.Test.Release.Page</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string>Screenshot generated from template_test_release_input_002_de_pdf</string> </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
-            <value> <int>595</int> </value>
+            <value> <int>842</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>template_test_release_input_page_0_002_de_bmp</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>de</string> </value>
+            <value> <string>template_test_book_image_alt_span_bmp</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Image</string> </value>
         </item>
         <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Template Test Release Page</string> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
-            <value> <string>002</string> </value>
-        </item>
-        <item>
             <key> <string>width</string> </key>
-            <value> <int>842</int> </value>
+            <value> <int>595</int> </value>
         </item>
       </dictionary>
     </pickle>
