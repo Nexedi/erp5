@@ -211,7 +211,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     server_proxy = DocumentConversionServerProxy(self)
     orig_format = self.getBaseContentType()
     generate_result = server_proxy.run_generate(self.getId(),
-                                       enc(bytes(self.getBaseData())),
+                                       bytes2str(enc(bytes(self.getBaseData()))),
                                        None,
                                        format,
                                        orig_format)
