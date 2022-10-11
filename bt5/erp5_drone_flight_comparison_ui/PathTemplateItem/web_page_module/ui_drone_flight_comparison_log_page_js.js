@@ -128,7 +128,6 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      //TODO handle crash. e.g. pass empty log_content
       var gadget = this, simulator;
       return new RSVP.Queue()
         .push(function () {

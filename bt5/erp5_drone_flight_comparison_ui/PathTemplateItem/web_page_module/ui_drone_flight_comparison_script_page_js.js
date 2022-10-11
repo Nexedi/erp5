@@ -75,7 +75,7 @@
                   "type": "StringField"
                 },
                 "my_simulation_time": {
-                  "description": "The name of a document in ERP5",
+                  "description": "Duration of the simulation (in seconds)",
                   "title": "Simulation Time",
                   "default": SIMULATION_TIME,
                   "css_class": "",
@@ -101,7 +101,7 @@
                   "title": "Drone Acceleration",
                   "default": MAX_ACCELERATION,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_acceleration",
                   "hidden": 0,
@@ -209,7 +209,7 @@
                 "my_script": {
                   "default": DRONE_LIST[0].script_content,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "script",
                   "hidden": 0,
