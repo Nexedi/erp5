@@ -31,6 +31,7 @@
 from collections import OrderedDict
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.Utils import ensure_list
 
 
 class MovementGroupNode:
