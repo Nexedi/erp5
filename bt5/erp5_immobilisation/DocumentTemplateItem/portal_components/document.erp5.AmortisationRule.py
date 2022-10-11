@@ -32,6 +32,7 @@ from DateTime import DateTime
 from erp5.component.module.DateUtils import centis, getClosestDate, addToDate
 from erp5.component.module.DateUtils import getDecimalNumberOfYearsBetween
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import ensure_list
 from erp5.component.mixin.RuleMixin import RuleMixin
 from Products.CMFCore.utils import getToolByName
 from erp5.component.document.ImmobilisationMovement import NO_CHANGE_METHOD
@@ -659,8 +660,8 @@ class AmortisationRule(RuleMixin):
       # according to these ratio : the highest ratio gets the priority, then the next
       # highest is taken into account if corresponding resources are free, and so on
       matching_ratio_list.sort(key=lambda x: x['ratio'], reverse=True)
-      calculated_to_match = calculated_period_dict.keys()
-      aggregated_to_match = aggregated_period_dict.keys()
+      calculated_to_match = ensure_list(calculated_period_dict.keys())
+      aggregated_to_match = ensure_list(aggregated_period_dict.keys())
       match_dict = {}
       for matching_ratio in matching_ratio_list:
         calculated  = matching_ratio['calculated_period']
