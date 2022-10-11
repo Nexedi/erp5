@@ -111,7 +111,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
       Check that a basic query succeeds.
     """
     connection = self.getDeferredConnection()
-    connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
+    connection.query(b'REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     try:
       self.commit()
     except OperationalError:
@@ -128,7 +128,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     """
     connection = self.getDeferredConnection()
     # Queue a query
-    connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
+    connection.query(b'REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     # Replace dynamically the function used to send queries to mysql so it's
     # dumber than the implemented one.
     self.monkeypatchConnection(connection)
@@ -153,7 +153,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     """
     connection = self.getDeferredConnection()
     # Queue a query
-    connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
+    connection.query(b'REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     # Artificially cause a connection close.
     self.monkeypatchConnection(connection)
     try:
@@ -169,10 +169,10 @@ class TestDeferredConnection(ERP5TypeTestCase):
     """
     connection = self.getDeferredConnection()
     # Queue a query
-    connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
+    connection.query(b'REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     self.assertEqual(len(connection._sql_string_list), 1)
     self.commit()
-    connection.query('REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
+    connection.query(b'REPLACE INTO `full_text` SET `uid`=0, `SearchableText`="dummy test"')
     self.assertEqual(len(connection._sql_string_list), 1)
 
 if __name__ == '__main__':
