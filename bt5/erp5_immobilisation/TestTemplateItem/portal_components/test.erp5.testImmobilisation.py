@@ -2947,7 +2947,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
           e_line = e_line_list[e_line_cursor]
           wrong_line = 0
           key_cursor = 0
-          key_list = e_line.keys()
+          key_list = list(e_line.keys())
           while key_cursor < len(key_list) and not wrong_line:
             key = key_list[key_cursor]
             e_value = e_line[key]

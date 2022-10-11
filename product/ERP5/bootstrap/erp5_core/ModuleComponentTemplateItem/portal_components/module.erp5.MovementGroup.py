@@ -30,6 +30,7 @@
 
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.Utils import ensure_list
 
 class FakeMovementError(Exception) : pass
 class MovementGroupError(Exception) : pass
@@ -110,7 +111,7 @@ class MovementGroupNode:
       Get property dict for the futur created object
     """
     property_dict = getattr(self, '_property_dict', {}).copy()
-    for key in property_dict.keys():
+    for key in ensure_list(property_dict.keys()):
       if key.startswith('_'):
         del(property_dict[key])
     return property_dict
