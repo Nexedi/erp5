@@ -18,6 +18,7 @@
       "z": 15
     },
     // Non-inputs parameters
+    DEFAULT_SCRIPT = 'loiter_flight_script',
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
@@ -39,7 +40,6 @@
           return form_gadget.getContent();
         })
         .push(function (input) {
-          console.log("from input:", input);
           gadget.runGame(input);
         });
     })
@@ -49,24 +49,14 @@
     })
 
     .declareMethod('render', function render() {
-      var gadget = this, query,
-        fragment = domsugar(gadget.element.querySelector('#fragment'),
-                            [domsugar('div')]).firstElementChild;
-      //TODO this should come from inputs textareas
+      var gadget = this, query;
       return new RSVP.Queue()
         .push(function () {
-          query = '(portal_type:"Web Script") AND (reference:"loiter_flight_script")';
+          query = '(portal_type:"Web Script") AND (reference:"' + DEFAULT_SCRIPT + '")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
         })
         .push(function (result) {
           DRONE_LIST[0].script_content = result.data.rows[0].value.text_content;
-          return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
-                                      {element: fragment, scope: 'simulator'});
-        })
-        .push(function (drone_gadget) {
-          return drone_gadget.render();
-        })
-        .push(function () {
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
@@ -115,7 +105,7 @@
                   "editable": 1,
                   "key": "drone_acceleration",
                   "hidden": 0,
-                  "type": "TextAreaField"
+                  "type": "StringField"
                 },
                 "my_minimum_latitud": {
                   "description": "",
@@ -217,21 +207,21 @@
                   "type": "StringField"
                 },
                 "my_script": {
-                  "description": "",
-                  "title": "",
                   "default": DRONE_LIST[0].script_content,
                   "css_class": "",
-                  "required": 1,
+                  "required": 0,
                   "editable": 1,
                   "key": "script",
                   "hidden": 0,
-                  "type": "TextAreaField"
+                  "type": "GadgetField",
+                  "renderjs_extra": '{"editor": "codemirror", "maximize": true}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
 
-              }}, // TODO drone type listbox?
+              }},
               "_links": {
                 "type": {
-                  // form_list display portal_type in header
                   name: ""
                 }
               }
@@ -239,13 +229,15 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_drone_speed"], ["my_drone_acceleration"],
-                  ["my_minimum_latitud"], ["my_maximum_latitud"],
-                  ["my_minimum_longitud"], ["my_maximum_longitud"],
-                  ["my_init_pos_x"], ["my_init_pos_y"], ["my_init_pos_z"],
-                  ["my_start_AMSL"], ["my_map_height"]]
+                [["my_simulation_speed"], ["my_simulation_time"], ["my_drone_speed"],
+                 ["my_drone_acceleration"], ["my_minimum_latitud"], ["my_maximum_latitud"]]
               ],[
                 "right",
+                [["my_minimum_longitud"], ["my_maximum_longitud"],
+                 ["my_init_pos_x"], ["my_init_pos_y"], ["my_init_pos_z"],
+                 ["my_start_AMSL"], ["my_map_height"]]
+              ], [
+                "bottom",
                 [["my_script"]]
               ]]
             }
@@ -261,23 +253,24 @@
 
     .declareJob('runGame', function runGame(options) {
       //TODO handle crash. e.g. pass empty or invalid script
-      var gadget = this;
+      var gadget = this, simulator;
       return new RSVP.Queue()
-        //Reload the entire gadget?
-        /*var fragment = domsugar(gadget.element.querySelector('#fragment'),
-                            [domsugar('div')]).firstElementChild;
-        return new RSVP.Queue()
         .push(function () {
+          var fragment = gadget.element.querySelector('#fragment');
+          //drop previous execution
+          if (fragment.childNodes[0]) {
+            fragment.removeChild(fragment.childNodes[0]);
+          }
+          fragment = domsugar(gadget.element.querySelector('#fragment'),
+                                  [domsugar('div')]).firstElementChild;
           return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
                                       {element: fragment, scope: 'simulator'});
         })
         .push(function (drone_gadget) {
-          return drone_gadget.render();
-        })*/
-        .push(function () {
-          return gadget.getDeclaredGadget('simulator');
+          simulator = drone_gadget;
+          return simulator.render();
         })
-        .push(function (simulator) {
+        .push(function () {
           DRONE_LIST[0].script_content = options.script;
           var game_parameters_json = {
             "drone": {
