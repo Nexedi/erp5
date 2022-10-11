@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import ensure_list
 from erp5.component.document.Movement import Movement
 from erp5.component.module.ExpandPolicy import policy_dict, TREE_DELIVERED_CACHE_KEY
 
@@ -287,7 +288,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
-    applicable_rule_list = applicable_rule_dict.values()
+    applicable_rule_list = ensure_list(applicable_rule_dict.values())
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
       try:
