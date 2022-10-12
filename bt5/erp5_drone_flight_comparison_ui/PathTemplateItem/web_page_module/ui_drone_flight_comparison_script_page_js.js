@@ -3,6 +3,7 @@
 
   //HARDCODED VALUES to present as defaults
   var SIMULATION_SPEED = 200,
+    //TODO end game when all drones are stopped or down
     SIMULATION_TIME = 1000,
     MAX_SPEED = 7.542174921016468, //16.666667,
     MAX_ACCELERATION = 1,
@@ -306,11 +307,15 @@
           });
         })
         .push(function (result_list) {
+          var text_area_log = gadget.element.querySelector('#text_area_log');
+          text_area_log.value = "aaaaaaaaa";
           for (var i = 0; i < result_list.length; i += 1) {
             var log_content = result_list[i].join('\n').replaceAll(",", ";"),
               blob = new Blob([log_content], {type: 'text/plain'}),
               a = document.createElement('a'),
+              log = document.createElement('textarea'),
               div = document.createElement('div');
+            log.value = log_content;
             a.download = 'simulation_log.txt';
             a.href = window.URL.createObjectURL(blob);
             a.dataset.downloadurl =  ['text/plain', a.download,
@@ -318,6 +323,7 @@
             a.textContent = 'Download Simulation LOG ' + i;
             div.appendChild(a);
             document.querySelector('.container').appendChild(div);
+            document.querySelector('.container').appendChild(log);
           }
         });
     });
