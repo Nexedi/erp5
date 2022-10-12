@@ -38,6 +38,7 @@ from subprocess import CalledProcessError
 from .Updater import Updater
 from .NodeTestSuite import NodeTestSuite, SlapOSInstance
 from .ScalabilityTestRunner import ScalabilityTestRunner
+from .RealRequestRunner import RealRequestRunner
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
 from .. import taskdistribution
@@ -49,6 +50,7 @@ PROFILE_PATH_KEY = 'profile_path'
 test_type_registry = {
   'UnitTest': UnitTestRunner,
   'ScalabilityTest': ScalabilityTestRunner,
+  'SlapOSAgentTest': RealRequestRunner
 }
 
 class TestNode(object):
@@ -106,13 +108,13 @@ class TestNode(object):
 
         # Absolute path to relative path
         software_config_path = os.path.join(repository_path, profile_path)
-        if use_relative_path :
+        if use_relative_path:
           from_path = os.path.join(self.working_directory,
                                     node_test_suite.reference)
           software_config_path = os.path.relpath(software_config_path, from_path)
 
       # Construct sections
-      if not(buildout_section_id is None):
+      if buildout_section_id is not None:
         # Absolute path to relative
         if use_relative_path:
           from_path = os.path.join(self.working_directory,
@@ -320,7 +322,7 @@ shared = true
               testnode_software_successfully_built = True
               logger.info("Will now skip build of testnode software")
           # Clean-up test suites
-          self.purgeOldTestSuite(test_suite_data)
+          #self.purgeOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:
             node_test_suite = self.getNodeTestSuite(
                test_suite.pop("test_suite_reference"))
@@ -354,6 +356,8 @@ shared = true
               generated_config = taskdistributor.generateConfiguration(
                 node_test_suite.test_suite_title)
               json_data = json.loads(generated_config)
+              logger.info("DEBUG JSON")
+              logger.info(json_data)
               cluster_configuration = deunicodeData(json_data['configuration_list'][0])
               node_test_suite.edit(cluster_configuration=cluster_configuration)
               # Now prepare the installation of SlapOS and create instance
@@ -364,35 +368,26 @@ shared = true
               # should be at the same revision, so it is safe to prune orphan
               # objects now.
               git_gc_auto()
+              def report_error(error_message):
+                test_result.reportFailure(
+                    stdout=error_message
+                )
+                logger.error(error_message)
+                raise ValueError(error_message)
+              if status_dict['status_code'] == 1:
+                report_error(status_dict.get('error_message') or "Error during prepareSlapOSForTestSuite")
+
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
               time.sleep(20)
-              # XXX: Do not switch according to the test type. IOW, the
-              #      following code must be moved to the test type class.
-              if my_test_type == 'UnitTest':
-                runner.runTestSuite(node_test_suite, portal_url)
-              elif my_test_type == 'ScalabilityTest':
-                error_message = None
-                # A problem is appeared during runTestSuite
-                if status_dict['status_code'] == 1:
-                  error_message = "Software installation too long or error(s) are present during SR install."
-                else:
-                  status_dict = runner.runTestSuite(node_test_suite, portal_url)
-                  # A problem is appeared during runTestSuite
-                  if status_dict['status_code'] == 1:
-                    error_message = status_dict['error_message']
 
-                # If an error is appeared
-                if error_message:
-                  test_result.reportFailure(
-                      stdout=error_message
-                  )
-                  logger.error(error_message)
-                  raise ValueError(error_message)
-              else:
-                raise NotImplementedError
-              # break the loop to get latest priorities from master
+              runner.runTestSuite(node_test_suite, portal_url)
+              status_dict = runner.runTestSuite(node_test_suite, portal_url)
+              # A problem is appeared during runTestSuite
+              if status_dict['status_code'] == 1:
+                report_error(status_dict.get('error_message') or 'Error during runTestSuite')
+
               break
         except (SubprocessError, CalledProcessError, ConnectionError) as e:
           logger.exception("")
