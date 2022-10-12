@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
-assert WITH_LEGACY_WORKFLOW
 
 from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.PythonScripts.Utility import allow_class
