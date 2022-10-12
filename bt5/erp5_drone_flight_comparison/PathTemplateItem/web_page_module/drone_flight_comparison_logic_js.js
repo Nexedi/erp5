@@ -840,11 +840,18 @@ var MapManager = /** @class */ (function () {
     var _this = this;
     if (GAMEPARAMETERS.map) {
       _this.map_info = calculateMapInfo(GAMEPARAMETERS.map);
-      console.log("map info calculated from form parameters:", _this.map_info);
     } else {
       //Get map info from drone log
       if (GAMEPARAMETERS.droneList[0].log_content) {
-        _this.map_info = DroneLogAPI.prototype.parseLog(GAMEPARAMETERS.droneList[0].log_content);
+        var map_size = 0, map_info
+        for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
+          map_info = DroneLogAPI.prototype.parseLog(GAMEPARAMETERS.droneList[drone].log_content);
+          if (map_info.map_size > map_size) {
+            map_size = map_info.map_size;
+            _this.map_info = map_info;
+          }
+        }
+        GAMEPARAMETERS.initialPosition = _this.map_info.initialPosition;
       } else {
         throw "Missing map information (not latitude-longitud parameters or log content given)";
       }
