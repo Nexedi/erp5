@@ -2,24 +2,9 @@
   "use strict";
 
   var SIMULATION_SPEED = 200,
-    //HARDCODED VALUES, THIS SHOULD BE GOT FROM LOGS
     SIMULATION_TIME = 1500,
-    map_height = 100,
-    min_lat = 45.6364,
-    max_lat = 45.65,
-    min_lon = 14.2521,
-    max_lon = 14.2766,
-    start_AMSL = 595.328,
-    MAX_SPEED = 7.542174921016468, //16.666667,
-    MAX_ACCELERATION = 1,
-    INITIAL_POSITION = {
-      "x": -12.316326531328059,
-      "y": -218.55882352976022,
-      "z": 15
-    },
     DRAW = true,
     LOG = false,
-    LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [
       {"id": 0, "type": "DroneLogAPI", "log_content": ""},
       {"id": 1, "type": "DroneLogAPI", "log_content": ""}
@@ -151,7 +136,7 @@
           var game_parameters_json = {
             "drone": {
               "maxAcceleration": 1,
-              "maxSpeed": MAX_SPEED
+              "maxSpeed": 1
             },
             "gameTime": SIMULATION_TIME,
             "simulation_speed": parseFloat(options.simulation_speed),
@@ -159,18 +144,8 @@
               "information": 0,
               "communication": 0
             },
-            "map": {
-              "min_lat": min_lat,
-              "max_lat": max_lat,
-              "min_lon": min_lon,
-              "max_lon": max_lon,
-              "height": map_height,
-              "start_AMSL": start_AMSL
-            },
-            "initialPosition": INITIAL_POSITION,
             "draw_flight_path": DRAW,
             "log_drone_flight": LOG,
-            "log_interval_time": LOG_TIME,
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
