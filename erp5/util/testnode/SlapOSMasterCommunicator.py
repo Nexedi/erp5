@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import datetime
+import feedparser
 import json
 import traceback
 import time
@@ -71,6 +72,8 @@ class SlapOSMasterCommunicator(object):
     self.slap_order = slap_order
     self.slap_supply = slap_supply
     self.hateoas_navigator = self.slap._hateoas_navigator
+    self.message_history = []
+    self.computer_guid = ""
 
     if url is not None and \
       url.startswith(SOFTWARE_PRODUCT_NAMESPACE):
@@ -79,7 +82,7 @@ class SlapOSMasterCommunicator(object):
       try:
         url = product.__getattr__(url[len(SOFTWARE_PRODUCT_NAMESPACE):])
       except AttributeError as e:
-        logger.warning('Error on get software release: %s ', e.message)
+        logger.warning("Error on get software release: {}".format(e))
 
     self.url = url
 
@@ -115,6 +118,7 @@ class SlapOSMasterCommunicator(object):
             partition_reference=self.name,
             shared=shared,
             state=state,
+            software_type=software_type,
             **self.request_kw)
 
   @retryOnNetworkFailure
@@ -183,16 +187,18 @@ class SlapOSMasterCommunicator(object):
     message_list = []
     try:
       for instance in self.getInstanceUrlList():
-        # we need to explicitly encode as utf-8 the unicode string we get
-        instance["text_content"] = instance["text_content"].encode('utf8')
+        logger.info('in _getInstanceState, viewing instance')
+        logger.info(instance)
         news = instance['SoftwareInstance_getNewsDict']
         state = INSTANCE_STATE_UNKNOWN
         monitor_information_dict = {}
 
         is_slave = instance['portal_type'] == "Slave Instance"
         if is_slave:
-          if len(instance['getConnectionXmlAsDict']) > 0:
-            state =  INSTANCE_STATE_STARTED
+          # XXX for now consider a slave as always ready because in ORS software
+          # there is no information published in the slave
+          #if len(instance['getConnectionXmlAsDict']) > 0:
+          state =  INSTANCE_STATE_STARTED
         else:
           # not slave
           instance_state = news
@@ -300,7 +306,6 @@ class SlapOSTester(SlapOSMasterCommunicator):
       self.request_kw = json.loads(request_kw)
     else:
       self.request_kw = request_kw
-    self.message_history = []
 
   def getInfo(self):
     info = ""
@@ -323,12 +328,13 @@ class SlapOSTester(SlapOSMasterCommunicator):
   def requestInstanceStop(self, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
     self.instance = self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw, shared, software_type)
 
-  def requestInstanceDestroy(self, instance_title=None, request_kw=None, shared=False):
+  def requestInstanceDestroy(self):
+    # TODO remove this function
+    self.destroyInstance()
+
+  def waitInstanceStarted(self, instance_title=None):
     if not instance_title:
       instance_title = self.name
-    self.destroyInstance(instance_title)
-
-  def waitInstanceStarted(self, instance_title):
     error_message = self._waitInstance(instance_title, INSTANCE_STATE_STARTED)["error_message"]
     if error_message is not None:
       logger.error(error_message)
@@ -349,6 +355,13 @@ class SlapOSTester(SlapOSMasterCommunicator):
       logger.error(error_message)
       raise ValueError(error_message)
 
+  def getInstanceParameterDict(self):
+    for instance in self.getInstanceUrlList():
+      if instance["title"] == self.name:
+        return instance["getConnectionXmlAsDict"]
+    return {}
+
+
   def getMasterFrontendDict(self):
     def getInstanceGuid():
       try:
@@ -365,7 +378,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
           pass
     start_time = time.time()
     while not getInstanceGuid() and time.time()-start_time < 60*5:
-      sleep(60)
+      time.sleep(60)
     return {'instance_guid' : getInstanceGuid(), 'frontend_master_ipv6' : frontend_master_ipv6}
 
   # XXX TODO
@@ -406,16 +419,15 @@ class SlapOSTester(SlapOSMasterCommunicator):
             'frontend-url-list' : frontend_url_list, \
             'balancer-user-v6': balancer_user_v6 }
 
-  def destroyInstance(self, instance_title):
-    self.name = instance_title
+  def destroyInstance(self):
     instance_url_list = self.getInstanceUrlList()
     if instance_url_list:
       for instance in instance_url_list:
-        if instance["title"] != instance_title:
+        if instance["title"] != self.name:
           self._request(INSTANCE_STATE_DESTROYED, instance["title"])
         else:
           root_instance = instance
-      logger.info("Going to destroy root partition: " + str(instance_title))
+      logger.info("Going to destroy root partition: " + str(self.name))
       self._request(INSTANCE_STATE_DESTROYED, root_instance["title"])
     else:
       logger.info("Instance not found")
@@ -537,7 +549,7 @@ class SoftwareReleaseTester(SlapOSTester):
     deadline = self.deadline
 
     if deadline < now and deadline is not None:
-      raise TestTimeout(self.state)
+      raise Exception("Test timeout (current state is {}).".format(self.state))
 
     _, _, next_state, software_state, instance_state = self.transition_dict[
         self.state]
