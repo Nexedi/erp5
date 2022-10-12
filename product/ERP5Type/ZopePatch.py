@@ -67,8 +67,7 @@ if six.PY2:
   # No more ZServer
   from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import StateChangeInfoPatch
+from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import DemoStorage
