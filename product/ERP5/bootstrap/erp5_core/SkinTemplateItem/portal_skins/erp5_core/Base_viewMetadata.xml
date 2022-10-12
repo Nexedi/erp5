@@ -99,6 +99,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_uid</string>
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_description</string>
