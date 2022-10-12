@@ -307,8 +307,6 @@
           });
         })
         .push(function (result_list) {
-          var text_area_log = gadget.element.querySelector('#text_area_log');
-          text_area_log.value = "aaaaaaaaa";
           for (var i = 0; i < result_list.length; i += 1) {
             var log_content = result_list[i].join('\n').replaceAll(",", ";"),
               blob = new Blob([log_content], {type: 'text/plain'}),
