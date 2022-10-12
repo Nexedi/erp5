@@ -824,6 +824,7 @@ function calculateMapInfo(map_dict) {
     "depth": map_size,
     "height": map_dict.height,
     "width": map_size,
+    "map_size": map_size,
     "min_x": longitudToX(map_dict.min_lon, map_size),
     "min_y": latitudeToY(map_dict.min_lat, map_size),
     "max_x": longitudToX(map_dict.max_lon, map_size),
@@ -837,7 +838,17 @@ var MapManager = /** @class */ (function () {
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this;
-    _this.map_info = calculateMapInfo(GAMEPARAMETERS.map);
+    if (GAMEPARAMETERS.map) {
+      _this.map_info = calculateMapInfo(GAMEPARAMETERS.map);
+      console.log("map info calculated from form parameters:", _this.map_info);
+    } else {
+      //Get map info from drone log
+      if (GAMEPARAMETERS.droneList[0].log_content) {
+        _this.map_info = DroneLogAPI.prototype.parseLog(GAMEPARAMETERS.droneList[0].log_content);
+      } else {
+        throw "Missing map information (not latitude-longitud parameters or log content given)";
+      }
+    }
     var max = _this.map_info.width;
     if (_this.map_info.depth > max)
         max = _this.map_info.depth;

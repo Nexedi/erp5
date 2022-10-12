@@ -10,7 +10,6 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
     this._flight_parameters = flight_parameters;
-    this._flight_parameters.map = this._gameManager._mapManager.getMapInfo();
     this._drone_info = drone_info;
     this._loiter_radius = 0;
     this._last_loiter_point_reached = -1;
@@ -22,6 +21,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   DroneAaileFixeAPI.prototype.internal_start = function () {
+    this._flight_parameters.map = this._gameManager._mapManager.getMapInfo();
   };
   /*
   ** Function called on every drone update, right after onUpdate AI script
