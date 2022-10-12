@@ -1040,7 +1040,6 @@ class TestIngestion(IngestionTestCase):
     """
       Make sure that preferences are set up properly and accessible
     """
-    import pdb; pdb.set_trace()
     preference_tool = self.portal.portal_preferences
     self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrlList(),
                      _getConversionServerUrlList())
