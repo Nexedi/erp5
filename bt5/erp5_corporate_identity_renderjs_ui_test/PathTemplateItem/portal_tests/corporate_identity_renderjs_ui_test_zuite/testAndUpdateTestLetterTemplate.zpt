@@ -77,7 +77,7 @@
 
     <tr>
       <td>type</td>
-      <td>name=field_override_source_organisation_title</td>
+      <td>name=field_your_override_source_organisation_title</td>
       <td>Test Association</td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
@@ -99,7 +99,7 @@
     </tr>
   <tr>
     <td>type</td>
-    <td>//select[@name='field_format']</td>
+    <td>//select[@name='field_your_format']</td>
     <td>pdf</td>
   </tr>
 
