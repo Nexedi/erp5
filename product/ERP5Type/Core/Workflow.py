@@ -1001,7 +1001,7 @@ class Workflow(XMLObject):
       sci.setWorkflowVariable(error_message=before_script_error_message)
       if validation_exc :
         # reraise validation failed exception
-        reraise(validation_exc, None, validation_exc_traceback)
+        reraise(type(validation_exc), validation_exc, validation_exc_traceback)
       return new_state
 
     # update state
