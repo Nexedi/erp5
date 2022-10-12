@@ -386,10 +386,11 @@ Require valid-user
       self.error_message = test_configuration['error_message']
       self.randomized_path = test_configuration['randomized_path']
       if not self.launchable:
-        logger.info("Test suite %s is not actually launchable"
-                    " with the current cluster configuration.", node_test_suite.test_suite_title)
-        logger.info("ERP5 Master indicates : %s", self.error_message)
-        return {'status_code' : 1}
+        error_message = ("Test suite %s is not actually launchable"
+                        " with the current cluster configuration.\n"
+                        "ERP5 Master indicates : %s" % (node_test_suite.test_suite_title, self.error_message))
+        logger.info(error_message)
+        return {'status_code' : 1, 'error_message' : error_message}
 
       configuration_list = test_configuration['configuration_list']
       configuration = configuration_list[0]
@@ -451,8 +452,9 @@ Require valid-user
         self._comeBackFromDummySlapOS()
         if self.remainSoftwareToInstall() :
           # All softwares are not installed, however maxtime is elapsed, that's a failure.
-          logger.error("All softwares are not installed.")
-          return {'status_code' : 1}
+          error_message = "All softwares are not installed."
+          logger.error(error_message)
+          return {'status_code' : 1, 'error_message' : error_message}
         logger.debug("All software installed.")
 
       # even if we re-use existing setup we need proper configuration applied
@@ -469,11 +471,12 @@ Require valid-user
                              purge_previous_instance = not self.use_existing_setup)
         logger.debug("Scalability instance requested.")
       except Exception as e:
-        logger.error("Error creating instance: " + str(e))
-        return {'status_code' : 1}
+        error_message = "Error creating instance: " + str(e)
+        logger.error(error_message)
+        return {'status_code' : 1, 'error_message' : error_message}
 
       return {'status_code' : 0}
-    return {'status_code' : 1}
+    return {'status_code' : 1, 'error_message' : "Software installation too long or error(s) are present during SR install."}
 
   def makeSuite(self, test_suite, location_list, **kwargs):
     import imp
