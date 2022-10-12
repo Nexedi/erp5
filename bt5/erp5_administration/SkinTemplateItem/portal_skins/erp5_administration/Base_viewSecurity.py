@@ -6,18 +6,18 @@ u = getSecurityManager().getUser()
 
 user_value = u.getUserValue()
 if user_value is None:
-  print 'User ID:', u.getId()
+  print('User ID: %s' % u.getId())
 else:
-  print 'User ID:', u.getId(), user_value.getPath()
+  print('User ID: %s %s' % (u.getId(), user_value.getPath()))
 login_value = u.getLoginValue()
 if login_value is None:
-  print 'Login:', u.getUserName()
+  print('Login: %s' % u.getUserName())
 else:
-  print 'Login:', u.getUserName(), login_value.getPath()
-print 'Is owner:', u.allowed(context,('Owner',))
-print 'User roles:', u.getRoles()
-print 'User roles in context:', u.getRolesInContext(context)
-print 'Permissions:'
+  print('Login: %s %s' % (u.getUserName(), login_value.getPath()))
+print('Is owner: %s' % u.allowed(context,('Owner',)))
+print('User roles: %s' % u.getRoles())
+print('User roles in context: %s' % u.getRolesInContext(context))
+print('Permissions:')
 for permission in [
   'Access contents information',
   'Add portal content',
@@ -26,25 +26,25 @@ for permission in [
   'View',
   'Manage portal',
 ]:
-  print " ", permission, u.has_permission(permission, context)
+  print("  %s %s" % (permission, u.has_permission(permission, context)))
 
-print
+print('')
 try:
-  print "User groups:\n", pformat(sorted(u.getGroups()))
+  print("User groups:\n%s" % pformat(sorted(u.getGroups())))
 except AttributeError:
-  print 'no getGroups'
+  print('no getGroups')
 
-print
-print 'Local roles on document:\n', pformat(context.get_local_roles())
+print('')
+print('Local roles on document:\n%s' % pformat(context.get_local_roles()))
 
-print '''
+print('''
 ----------------
 Security mapping
-----------------'''
+----------------''')
 if u.getId() is not None:
   try:
-    print context.Base_viewSecurityMappingAsUser(u.getId())
+    print(context.Base_viewSecurityMappingAsUser(u.getId()))
   except Unauthorized:
-    print "user doesn't have permission to security mapping in this context"
+    print("user doesn't have permission to security mapping in this context")
 
 return printed
