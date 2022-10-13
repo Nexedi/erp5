@@ -166,5 +166,5 @@ class subprocesstransform:
             return cache
 
         finally:
-            if isinstance(stdin_file, file):
+            if hasattr(stdin_file, 'close'):
                 stdin_file.close()
