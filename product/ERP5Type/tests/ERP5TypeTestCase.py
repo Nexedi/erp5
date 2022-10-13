@@ -1491,7 +1491,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
-      os.write(zeo_client, repr(host_port))
+      os.write(zeo_client, str2bytes(repr(host_port)))
       os.close(zeo_client)
     ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
 
