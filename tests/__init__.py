@@ -49,6 +49,9 @@ class _ERP5(ERP5TypeTestSuite):
                                component_re_match.group(2))
       else:
         test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+      # XXX six.PY3: disable tests that installs many business templates for now
+      if test_case in ('testERP5NamingConvention', 'testSpellChecking','testXHTML'):
+        continue
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
       if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
