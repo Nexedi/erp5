@@ -390,14 +390,14 @@ class DB(TM):
         try:
             self.db.query(query)
         except OperationalError as m:
-            if m[0] in query_syntax_error:
-              raise OperationalError(m[0], '%s: %s' % (m[1], query))
-            if m[0] in lock_error:
-              raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
-            if m[0] in query_timeout_error:
-              raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
+            if m.args[0] in query_syntax_error:
+              raise OperationalError(m.args[0], '%s: %s' % (m.args[1], query))
+            if m.args[0] in lock_error:
+              raise ConflictError('%s: %s: %s' % (m.args[0], m.args[1], query))
+            if m.args[0] in query_timeout_error:
+              raise TimeoutReachedError('%s: %s: %s' % (m.args[0], m.args[1], query))
             if (allow_reconnect or not self._use_TM) and \
-              m[0] in hosed_connection:
+              m.args[0] in hosed_connection:
               self._forceReconnection()
               self.db.query(query)
             else:
@@ -409,8 +409,8 @@ class DB(TM):
         try:
           return self.db.store_result()
         except OperationalError as m:
-          if m[0] in query_timeout_error:
-            raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
+          if m.args[0] in query_timeout_error:
+            raise TimeoutReachedError('%s: %s: %s' % (m.args[0], m.args[1], query))
           else:
             raise
 
@@ -513,7 +513,7 @@ class DB(TM):
         except OperationalError as m:
             LOG('ZMySQLDA', ERROR, "exception during _abort",
                 error=True)
-            if m[0] not in hosed_connection:
+            if m.args[0] not in hosed_connection:
                 raise
 
     def getMaxAllowedPacket(self):
