@@ -7,6 +7,7 @@ from six.moves import cStringIO as StringIO
 from json import dumps
 from Acquisition import aq_base
 from six.moves.urllib.parse import urljoin
+import base64
 
 class GadgetWidget(Widget.Widget):
   """
@@ -150,7 +151,7 @@ class GadgetFieldValidator(Validator.Validator):
         if value is not None:
           if field.get_value('data_url'):
             value=value.split(",")[1]
-            return StringIO(value.decode('base64'))
+            return StringIO(base64.b64decode(value))
           return value
 
 
