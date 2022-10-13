@@ -23,6 +23,7 @@ from AccessControl.User import UserFolder
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.tests.test_CookieCrumbler import makerequest
 from Products.CMFCore.tests.test_CookieCrumbler import CookieCrumblerTests
+from Products.CMFCore.tests.test_CookieCrumbler import normalizeCookieParameterName
 
 class ERP5CookieCrumblerTests (CookieCrumblerTests):
   """ Modify original CMFCore Cookie Crumbler unit test to test long login """
@@ -87,7 +88,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.credentials = base64.encodestring('%s:%s' % (long_name, long_pass)).replace('\012', '')
     self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)
-    self.assertEqual(resp.cookies['__ac']['path'], '/')
+    self.assertEqual(resp.cookies['__ac'][normalizeCookieParameterName('path')], '/')
 
   def testCacheHeaderDisabled(self):
     # Cache header is forcibly set on any authenticated user independently from
