@@ -192,7 +192,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'data:%s;base64,%s\' %(here.getContentType(), here.getData().encode("base64").replace(\'\\n\', ""))</string> </value>
+            <value> <string>python: \'data:%s;base64,%s\' %(here.getContentType(), modules['Products.ERP5Type.Utils'].bytes2str(modules['base64'].b64encode(here.getData())).replace(\'\\n\', ""))</string> </value>
         </item>
       </dictionary>
     </pickle>
