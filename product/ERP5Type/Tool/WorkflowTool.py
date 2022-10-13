@@ -384,7 +384,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             self.Base_zClearWorklistTable()
           except ProgrammingError as error_value:
             # 1146 = table does not exist
-            if error_value[0] != 1146:
+            if error_value.args[0] != 1146:
               raise
             self.Base_zCreateWorklistTable()
         portal_catalog = self.getPortalObject().portal_catalog
@@ -444,7 +444,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               Base_zInsertIntoWorklistTable(**value_column_dict)
             except (ProgrammingError, OperationalError) as error_value:
               # OperationalError 1054 = unknown column
-              if isinstance(error_value, OperationalError) and error_value[0] != 1054:
+              if isinstance(error_value, OperationalError) and error_value.args[0] != 1054:
                 raise
               LOG('WorkflowTool', WARNING, 'Insertion in worklist cache table ' \
                   'failed. Recreating table and retrying.',
@@ -604,13 +604,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           continue
         except ProgrammingError as error_value:
           # 1146 = table does not exist
-          if not use_cache or error_value[0] != 1146:
+          if not use_cache or error_value.args[0] != 1146:
             raise
           try:
             self.Base_zCreateWorklistTable()
           except ProgrammingError as error_value:
             # 1050 = table exists (alarm run just a bit too late)
-            if error_value[0] != 1050:
+            if error_value.args[0] != 1050:
               raise
         if src__:
           action_list.append(catalog_brain_result)
