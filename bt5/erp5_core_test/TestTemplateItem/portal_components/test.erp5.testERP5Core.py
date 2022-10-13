@@ -74,7 +74,7 @@ if 1: # BBB
     # class
     sm = zope.component.getSiteManager()
     portal = Acquisition.aq_parent(sm)
-    from zope.component.interfaces import ComponentLookupError
+    from zope.interface.interfaces import ComponentLookupError
     try:
       ui_domain = sm.getUtility(ITranslationDomain, name='ui')
     except ComponentLookupError:
