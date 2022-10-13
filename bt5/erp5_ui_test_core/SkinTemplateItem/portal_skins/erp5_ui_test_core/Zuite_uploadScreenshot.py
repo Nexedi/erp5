@@ -1,6 +1,7 @@
 """
   Upload a screenshot taken by the test to ERP5
 """
+import base64
 data_uri = context.REQUEST.form.get('data_uri', 'default')
 
 image_module = getattr(context, "image_module", None)
@@ -16,7 +17,7 @@ if image is None or image.getPortalType() != "Image":
 
 image.setContentType('image/png')
 data_text = data_uri.read()
-data = data_text.decode('base64')
+data = base64.b64decode(data_text)
 
 image.edit(data=data,
            filename=str(image_reference) + '.png',
