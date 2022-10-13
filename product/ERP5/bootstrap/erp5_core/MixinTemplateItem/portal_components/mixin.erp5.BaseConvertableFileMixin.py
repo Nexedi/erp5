@@ -89,8 +89,6 @@ class BaseConvertableFileMixin:
       base_data = self._baseGetBaseData(default)
     if base_data is None:
       return None
-    elif six.PY3 and isinstance(base_data, str):
-      return bytes(base_data, self._get_encoding())
     else:
       return bytes(base_data)
 
