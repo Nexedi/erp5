@@ -167,7 +167,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
               s.listen(0)
             except socket.error as e:
               s.close()
-              if e[0] != errno.EADDRINUSE:
+              if e.args[0] != errno.EADDRINUSE:
                 raise
               if zserver:
                 raise RuntimeError(str(e))
