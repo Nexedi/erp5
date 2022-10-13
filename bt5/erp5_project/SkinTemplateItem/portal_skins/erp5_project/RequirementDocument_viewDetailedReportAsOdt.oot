@@ -104,7 +104,7 @@
                   <draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="3in" draw:z-index="0"
                               tal:attributes="draw:name python:'embedded_erp5_image_%s' % image.getId();
                                               svg:height python: '%1.1fin' % (3.0 * image.getHeight() / (image.getWidth() or 1.0))">
-                    <draw:image><office:binary-data tal:content="python:str(image.convert(format='png')[1]).encode('base64')" /></draw:image>
+                    <draw:image><office:binary-data tal:content="python:modules['base64'].b64encode(image.convert(format='png')[1])" /></draw:image>
                   </draw:frame>
                 </text:p>
               </tal:block>
