@@ -26,7 +26,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import six.moves import cStringIO as StringIO
+from six.moves import cStringIO as StringIO
 import urllib
 import six.moves.http_client
 
