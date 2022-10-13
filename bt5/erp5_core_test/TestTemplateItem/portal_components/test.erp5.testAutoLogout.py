@@ -34,6 +34,8 @@ import unittest
 import urllib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
+from ZPublisher.cookie import normalizeCookieParameterName
+
 
 class TestAuoLogout(ERP5TypeTestCase):
   """
@@ -87,7 +89,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     # check '__ac' cookie has set an expire timeout
     ac_cookie = response.getCookie('__ac')
     self.assertNotEqual(ac_cookie, None)
-    cookie_expire = ac_cookie['expires']
+    cookie_expire = ac_cookie[normalizeCookieParameterName('expires')]
     one_second = 1/24.0/60.0/60.0
     self.assertGreater((now + (5 + 1) * one_second), DateTime(cookie_expire)) # give 1s tollerance
 
@@ -100,7 +102,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     self.assertIn('Welcome to ERP5', response.getBody())
     ac_cookie = response.getCookie('__ac')
     self.assertNotEqual(ac_cookie, None)
-    self.assertEqual(ac_cookie.get('expires', None), None)
+    self.assertEqual(ac_cookie.get(normalizeCookieParameterName('expires'), None), None)
 
 def test_suite():
   suite = unittest.TestSuite()
