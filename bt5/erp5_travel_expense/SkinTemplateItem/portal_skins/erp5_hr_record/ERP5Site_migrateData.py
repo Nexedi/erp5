@@ -1,3 +1,4 @@
+import base64
 portal = context.getPortalObject()
 
 # Update Photos
@@ -9,7 +10,7 @@ for record in portal.expense_record_module.objectValues(portal_type="Expense Rec
       if ticket.getReference():
         photo_data = photo_data.split(",")[1]
         image = portal.portal_contributions.newContent(
-          data = photo_data.decode('base64'),
+          data = base64.b64decode(photo_data),
           reference=ticket.getReference()+ "-justificatif",
           title = ticket.getReference() + " Justificatif",
           description = ticket.getDescription(),
