@@ -29,6 +29,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.testDms import makeFileUpload
 from time import time
+import base64
 
 class TestRunMyDoc(ERP5TypeTestCase):
   """
@@ -132,7 +133,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.tic()
     # The right image were updated.
     image_upload.seek(0)
-    self.assertEqual(image_page_2.getData(), image_upload.read().decode("base64"))
+    self.assertEqual(image_page_2.getData(), base64.b64decode(image_upload.read()))
     self.assertEqual(image_page_2.getFilename(), image_reference + '.png')
     self.assertEqual(image_page.getData(), '')
 
