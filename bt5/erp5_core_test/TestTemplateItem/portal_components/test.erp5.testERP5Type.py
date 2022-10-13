@@ -3285,10 +3285,6 @@ def test_suite():
   add_tests(suite, ZPublisher.tests.testHTTPRequest)
 
   import ZPublisher.tests.testHTTPResponse
-  testHTTPResponse_TestHeaderEncodingRegistry_test_encode_words = \
-      ZPublisher.tests.testHTTPResponse.TestHeaderEncodingRegistry.test_encode_words
-  ZPublisher.tests.testHTTPResponse.TestHeaderEncodingRegistry.test_encode_words = \
-      unittest.expectedFailure(testHTTPResponse_TestHeaderEncodingRegistry_test_encode_words)
   add_tests(suite, ZPublisher.tests.testHTTPResponse)
 
   import ZPublisher.tests.testIterators
