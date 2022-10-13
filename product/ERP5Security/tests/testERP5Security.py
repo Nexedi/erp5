@@ -1584,8 +1584,8 @@ class TestAuthenticationCookie(UserManagementTestCase):
     # Secure flag so that cookie is sent only on https
     self.assertIn('; Secure', ac_cookie)
 
-    # HTTPOnly flag so that javascript cannot access cookie
-    self.assertIn('; HTTPOnly', ac_cookie)
+    # HttpOnly flag so that javascript cannot access cookie
+    self.assertIn('; HttpOnly', ac_cookie)
 
     # SameSite=Lax flag so that cookie is not sent on cross origin requests.
     # We set Lax (and not strict) so that opening a link to ERP5 from an
