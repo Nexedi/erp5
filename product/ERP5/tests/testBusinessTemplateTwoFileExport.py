@@ -30,6 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCase, immediateCompilation
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from runUnitTest import tests_home
+import base64
 import glob
 import shutil
 import os
@@ -280,9 +281,9 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
       self.assertEqual(image_page.getProperty(property_id), property_value)
 
 
-  png_data = """iVBORw0KGgoAAAANSUhEUgAAAAUA
+  png_data = base64.b64decode(b"""iVBORw0KGgoAAAANSUhEUgAAAAUA
 AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
-9TXL0Y4OHwAAAABJRU5ErkJggg==""".decode("base64")
+9TXL0Y4OHwAAAABJRU5ErkJggg==""")
 
   def test_twoFileImportExportForImageIdentifyingTypeByContent(self):
     """
