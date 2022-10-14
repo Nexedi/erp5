@@ -33,7 +33,11 @@ class ZSQLBrain(Acquisition.Implicit):
     """
     if name.startswith('__') :
       return None
-    return getattr(self.getObject(), name, None)
+    try:
+      obj = self.getObject()
+    except ValueError:
+      return None
+    return getattr(obj, name, None)
 
   def getURL(self):
     return self.path
