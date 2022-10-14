@@ -40,6 +40,10 @@ from lxml import etree
 from zLOG import LOG, ERROR, INFO
 from erp5.component.tool.WebServiceTool import ConnectionError
 from Products.ERP5Type.Cache import CachingMethod
+import six
+
+if six.PY3:
+  long = int
 
 ID_SEPARATOR="-"
 

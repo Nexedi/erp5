@@ -100,7 +100,7 @@
     -->
     <tal:block metal:define-macro="cell_value">
       <tal:block  tal:define="is_list python:same_type(value, []) or same_type(value, ());
-                              is_float python: isinstance(value, (int, long, float));">
+                              is_float python: isinstance(value, modules['six'].integer_types + (float,));">
 
 
         <tal:block tal:condition="python: is_list">
@@ -116,7 +116,7 @@
         </tal:block>
         <tal:block tal:condition="python: value is not None and not is_list">
           <tal:block tal:condition="is_float">
-            <tal:block tal:condition="python: isinstance(value, (int, long))">
+            <tal:block tal:condition="python: isinstance(value, modules['six'].integer_types)">
               <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"
                                 tal:attributes="office:value value;
                                 table:style-name string:${style_prefix}figure"
