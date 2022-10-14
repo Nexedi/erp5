@@ -329,6 +329,7 @@ var DroneLogAPI = /** @class */ (function () {
       'me.onUpdate = function () {' +
       'var next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
       'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
+      'me.going = false;' +
       'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
       'time_elapsed = new Date() - me.startTime;' +
       'if (time_elapsed < log_elapsed) {' +
@@ -336,14 +337,17 @@ var DroneLogAPI = /** @class */ (function () {
       'return;' +
       '}' +
       'if (me.last_checkpoint_reached + 1 === me.checkpoint_list.length - 1) {' +
-      'me.setTargetCoordinates(me.position.x, me.position.y, me.position.z);' +
+      'me.exit(0);' +
       'return;' +
       '}' +
       'me.last_checkpoint_reached += 1;' +
       'next_checkpoint = me.checkpoint_list[me.last_checkpoint_reached+1];' +
       'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
       '} else {' +
+      'if (!me.going) {' +
       'me.setTargetCoordinates(next_checkpoint[0], next_checkpoint[1], next_checkpoint[2]);' +
+      'me.going = true;' +
+      '}' +
       '}' +
       '};';
   };
@@ -368,6 +372,8 @@ var DroneLogAPI = /** @class */ (function () {
   };
   DroneLogAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
+  };
+  DroneLogAPI.prototype.exit = function (drone) {
   };
   return DroneLogAPI;
 }());
