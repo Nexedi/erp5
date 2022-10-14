@@ -1568,8 +1568,8 @@ class SimulationTool(BaseTool):
       try:
         # We must copy the path so that getObject works
         setattr(result, 'path', line_a.path)
-      except ValueError: # XXX: ValueError ? really ?
-        # getInventory return no object, so no path available
+      except (AttributeError, ValueError):
+        # getInventory returned no object, so no path available
         pass
       if parent is not None:
         result = result.__of__(parent)
