@@ -303,7 +303,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         # Extra processing required since
         # we receive a zip file
         cs = BytesIO()
-        cs.write(data)
+        cs.write(bytes(data))
         z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
         for f in z.infolist():
           fn = f.filename
