@@ -70,7 +70,7 @@
 
               <tal:block tal:condition="not:display_header">
                 <table:table-row table:style-name='listbox_header_row'>
-                  <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">
+                  <tal:block tal:repeat="empty_index python: range(0, max_section_depth)">
                     <table:table-cell table:style-name='report-column-title'
                                       table:number-columns-spanned='1'
                                       office:value-type='string'>
