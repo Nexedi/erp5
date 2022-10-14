@@ -1,4 +1,5 @@
 # export_only : allow to disable the uid column and the id of columns
+import six
 result = ''
 request = context.REQUEST
 
@@ -9,7 +10,7 @@ listboxline_list = context.get_value('default', render_format='list', REQUEST=re
 def encode(value):
   if isinstance(value, bool):
     return '"%s"' % value
-  if isinstance(value, (int, long, float)):
+  if isinstance(value, six.integer_types + (float,)):
     return str(value)
   else:
     if isinstance(value, str):
