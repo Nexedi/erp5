@@ -110,7 +110,7 @@
     <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="date_style">
       <style:table-cell-properties style:vertical-align='middle' style:repeat-content='false' style:text-align-source='fix' fo:border-right='0.002cm solid #000000' />
     </style:style>
-    <tal:block tal:repeat="precision python: xrange(0,here.Base_getODSMaximumSupportedPrecision())">
+    <tal:block tal:repeat="precision python: range(0,here.Base_getODSMaximumSupportedPrecision())">
       <tal:block tal:define="figure_data_precision_style_name string:figure_data_precision_${precision}">
         <number:number-style style:name="figure_data_precision_X" tal:attributes="style:name figure_data_precision_style_name">
           <number:number number:decimal-places="X" number:min-integer-digits="1" number:grouping="true" tal:attributes="number:decimal-places precision"/>
