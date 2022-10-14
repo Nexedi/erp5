@@ -48,6 +48,9 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
 
+if six.PY3:
+  long = int
+
 def format_stack(thread=None):
   frame_dict = sys._current_frames()
   if thread is not None:
