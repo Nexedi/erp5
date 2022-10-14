@@ -31,6 +31,7 @@ import io
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
@@ -454,7 +455,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       from Products.ERP5OOo.OOoUtils import OOoParser
       parser = OOoParser()
       parser.openFromString(body)
-      content_xml = parser.oo_files['content.xml']
+      content_xml = bytes2str(parser.oo_files['content.xml'])
       self.assert_('&lt;Escape&gt;&amp;<text:line-break/>newline' in content_xml)
 
   def test_untranslatable_columns(self):
@@ -484,7 +485,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
     parser.openFromString(body)
-    content_xml = parser.oo_files['content.xml']
+    content_xml = bytes2str(parser.oo_files['content.xml'])
     self.assertTrue(message in content_xml)
 
     # This untranslatable column have not been translated
@@ -499,7 +500,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     # Simplistic assertion that we are viewing the ODF XML source
-    self.assertTrue('office:document-content' in response.getBody())
+    self.assertTrue('office:document-content' in bytes2str(response.getBody()))
 
   def test_form_list_ZMI(self):
     """We can edit form_list in the ZMI."""
@@ -509,7 +510,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertEquals('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertTrue('office:document-content' in response.getBody())
+    self.assertTrue('office:document-content' in bytes2str(response.getBody()))
 
   def test_report_view_ZMI(self):
     """We can edit report_view in the ZMI."""
@@ -519,7 +520,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertEquals('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertTrue('office:document-content' in response.getBody())
+    self.assertTrue('office:document-content' in bytes2str(response.getBody()))
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'
