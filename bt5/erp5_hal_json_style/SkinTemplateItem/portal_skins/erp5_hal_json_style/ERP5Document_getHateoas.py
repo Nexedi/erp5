@@ -63,6 +63,7 @@ from Products.ERP5Type.Message import Message
 from collections import OrderedDict
 from Products.ERP5Form.Selection import Selection
 from Products.PythonScripts.standard import Object
+import six
 
 
 MARKER = Object()
@@ -83,7 +84,7 @@ def toBasicTypes(obj):
   """Ensure that  obj contains only basic types."""
   if obj is None:
     return obj
-  if isinstance(obj, (bool, int, float, long, str, unicode)):
+  if isinstance(obj, (bool, float, str) + six.integer_types + six.text_type):
     return obj
   if isinstance(obj, list):
     return [toBasicTypes(x) for x in obj]
