@@ -75,12 +75,14 @@ changed_line_list = []
 for (node, section, mirror_section, _), line_info_list in lines_per_node.items():
   if node is None:
     continue
-  total_price = sum([l['total_price'] for l in line_info_list])
-  # get the currency rounding for this section
+  # get the currency rounding for this section, with a fallback that something that would
+  # allow grouping in case precision is not defined.
+  currency_precision = 5
   if section:
     default_currency = portal.restrictedTraverse(section).getPriceCurrencyValue()
     if default_currency is not None:
-      total_price = round(total_price, default_currency.getQuantityPrecision())
+      currency_precision = default_currency.getQuantityPrecision()
+  total_price = round(sum([l['total_price'] for l in line_info_list]), currency_precision)
   if total_price == 0 or allow_grouping_with_different_quantity:
     # we should include mirror node in the id_group, but this would reset
     # id generators and generate grouping references that were already used.
