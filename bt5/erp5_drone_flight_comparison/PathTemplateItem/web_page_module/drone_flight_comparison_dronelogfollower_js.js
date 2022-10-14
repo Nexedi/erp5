@@ -353,7 +353,7 @@ var DroneLogAPI = /** @class */ (function () {
   };
   DroneLogAPI.prototype.set_loiter_mode = function () {
   };
-  DroneLogAPI.prototype.setAltitude = function (altitude) {
+  DroneLogAPI.prototype.setAltitude = function (altitude, drone) {
   };
   DroneLogAPI.prototype.getMaxSpeed = function () {
     return 3000;
