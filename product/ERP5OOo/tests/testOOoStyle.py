@@ -30,6 +30,7 @@
 import io
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from DateTime import DateTime
@@ -599,7 +600,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       from Products.ERP5OOo.OOoUtils import OOoParser
       parser = OOoParser()
       parser.openFromString(body)
-      content_xml = parser.oo_files['content.xml']
+      content_xml = bytes2str(parser.oo_files['content.xml'])
       self.assertIn('&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
 
   def test_translation(self):
@@ -700,7 +701,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     # Simplistic assertion that we are viewing the ODF XML source
-    self.assertIn('office:document-content', response.getBody())
+    self.assertIn('office:document-content', bytes2str(response.getBody()))
 
   def test_form_list_ZMI(self):
     """We can edit form_list in the ZMI."""
@@ -710,7 +711,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertIn('office:document-content', response.getBody())
+    self.assertIn('office:document-content', bytes2str(response.getBody()))
 
   def test_report_view_ZMI(self):
     """We can edit report_view in the ZMI."""
@@ -720,7 +721,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertIn('office:document-content', response.getBody())
+    self.assertIn('office:document-content', bytes2str(response.getBody()))
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'
