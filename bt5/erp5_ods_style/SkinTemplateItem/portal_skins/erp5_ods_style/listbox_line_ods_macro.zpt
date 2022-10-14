@@ -18,7 +18,7 @@
         <tal:block tal:condition="not:listboxline/isTitleLine">
           <table:table-row tal:attributes="table:style-name python: listboxline.isStatLine() and 'listbox_stat_row' or 'listbox_data_row'">
             <tal:block tal:condition="python: listboxline.isDataLine()">
-              <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">
+              <tal:block tal:repeat="empty_index python: range(0, max_section_depth)">
                 <table:table-cell table:style-name='report-column-title'
                                   table:number-columns-spanned='1'
                                   office:value-type='string'>
@@ -36,7 +36,7 @@
             </tal:block>
 
             <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">
-              <tal:block tal:repeat="empty_index python: xrange(0, listboxline.getSectionDepth())">
+              <tal:block tal:repeat="empty_index python: range(0, listboxline.getSectionDepth())">
                 <table:table-cell table:style-name='report-column-title'
                                   table:number-columns-spanned='1'
                                   office:value-type='string'>
@@ -48,7 +48,7 @@
                                 office:value-type='string'>
                   <text:p tal:content="listboxline/getSectionName"/>
               </table:table-cell>
-              <tal:block tal:repeat="empty_index python: xrange(listboxline.getSectionDepth()+1, max_section_depth)">
+              <tal:block tal:repeat="empty_index python: range(listboxline.getSectionDepth()+1, max_section_depth)">
                 <table:table-cell table:style-name='report-column-title'
                                   table:number-columns-spanned='1'
                                   office:value-type='string'>
