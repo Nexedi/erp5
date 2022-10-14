@@ -129,6 +129,8 @@ class DownloadableMixin:
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
     else:
       RESPONSE.setHeader('Content-Disposition', 'inline')
+    if isinstance(data, (str, bytes)):
+      return data
     return str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
