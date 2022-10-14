@@ -301,7 +301,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
   def _importZodbTestComponent(self, name):
     import erp5.component.test
     module = __import__('erp5.component.test.' + name,
-                        fromlist=['erp5.component.test'],
+                        fromlist=['erp5.component.test'] if six.PY2 else ['erp5'],
                         level=0)
     try:
       self._test_component_ref_list.append(module)
