@@ -30,6 +30,7 @@ from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
 from io import BytesIO
 from Products.ERP5Type import Permissions
+import six
 
 security = ClassSecurityInfo()
 DA.security = security
@@ -279,7 +280,7 @@ def getObjectMeta(original_function):
     # imported, which is enough to use a ZODB Extension as a brain.
     try:
       m = __import__('erp5.component.extension.%s' % module, globals(),
-                     {}, 'erp5.component.extension')
+                     {}, ['erp5.component.extension'] if six.PY2 else ['erp5'])
 
       o = getattr(m, name, None)
       if o is None:
