@@ -55,6 +55,7 @@ from zExceptions import Forbidden
 
 from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import ensure_list
 
 class FieldValueCacheDict(dict):
   _last_sync = -1
@@ -1039,7 +1040,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                 return a==b
 
         def remove_same_value(new_dict, target_dict):
-            for key, value in new_dict.items():
+            for key, value in ensure_list(new_dict.items()):
                 target_value = target_dict.get(key)
                 if force_delegate or is_equal(value, target_value):
                     del new_dict[key]
@@ -1086,7 +1087,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                                           getFieldDict(target_field, 'tales'))
 
             if target_field.meta_type=='ProxyField':
-                for i in new_values.keys():
+                for i in ensure_list(new_values.keys()):
                     if not i in target_field.delegated_list:
                         # obsolete variable check
                         try:
@@ -1098,7 +1099,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                             if is_equal(target_field.get_recursive_orig_value(i),
                                         new_values[i]):
                                 del new_values[i]
-                for i in new_tales.keys():
+                for i in ensure_list(new_tales.keys()):
                     if not i in target_field.delegated_list:
                         # obsolete variable check
                         try:
@@ -1159,7 +1160,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                 return a==b
 
         def remove_same_value(new_dict, target_dict):
-            for key, value in new_dict.items():
+            for key, value in ensure_list(new_dict.items()):
                 target_value = target_dict.get(key)
                 if is_equal(value, target_value):
                     del new_dict[key]
