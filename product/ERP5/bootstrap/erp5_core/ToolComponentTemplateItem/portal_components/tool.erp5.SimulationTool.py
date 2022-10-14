@@ -62,6 +62,7 @@ from hashlib import md5
 from warnings import warn
 from six.moves.cPickle import loads, dumps
 from copy import deepcopy
+import base64
 import six
 
 MYSQL_MIN_DATETIME_RESOLUTION = 1/86400.
@@ -1438,7 +1439,7 @@ class SimulationTool(BaseTool):
     if src__:
       sql_source_list.append(Resource_zGetInventoryCacheResult(src__=1, **inventory_cache_kw))
     if cached_sql_result:
-      brain_result = loads(cached_sql_result[0].result)
+      brain_result = loads(base64.b64decode(cached_sql_result[0].result))
       # Rebuild the brains
       cached_result = Results(
         (brain_result['items'], brain_result['data']),
@@ -1487,10 +1488,10 @@ class SimulationTool(BaseTool):
         self.Resource_zInsertInventoryCacheResult(
           query=sql_text_hash,
           date=cached_date,
-          result=dumps({
+          result=base64.b64encode(dumps({
             'items': result.__items__,
             'data': result._data,
-          }),
+          })),
         )
     else:
       # Cache miss and this getInventory() not specifying to_date,
