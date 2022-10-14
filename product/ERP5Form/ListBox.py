@@ -38,8 +38,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from .Selection import Selection, DomainSelection
 from .Tool.SelectionTool import createFolderMixInPageSelectionMethod
-from Products.ERP5Type.Utils import getPath
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Utils import UpperCase, ensure_list, getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
@@ -106,7 +105,7 @@ class CatalogMethodWrapper(MethodWrapper):
     # XXX: I'm not sure if this filtering really belongs to here.
     # It is probably needed at a more generic level (Forms ? Selection ?), or
     # even a more specific one (limited to HTML ?)...
-    for key, value in kw.items():
+    for key, value in ensure_list(kw.items()):
       if value == '':
         kw.pop(key)
     return getattr(self.context, self.method_name)(*args, **kw)
