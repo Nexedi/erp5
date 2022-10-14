@@ -290,16 +290,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     return GAMEPARAMETERS.drone.maxSpeed;
   };
   DroneAaileFixeAPI.prototype.doParachute = function (drone) {
-    //TODO what to do here?
-    drone.setDirection(0, 0, 0);
+    var drone_pos = drone.getCurrentPosition();
+    drone.setTargetCoordinates(drone_pos.x, drone_pos.y, 5);
   };
   DroneAaileFixeAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    return Math.floor(drone_pos.z) === 0;
+    return Math.floor(drone_pos.z) < 10;
   };
   DroneAaileFixeAPI.prototype.exit = function (drone) {
-    //TODO what to do here?
-    drone.setDirection(0, 0, 0);
   };
   DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
     return 0;
