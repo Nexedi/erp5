@@ -161,6 +161,10 @@ var GameManager = /** @class */ (function () {
           console.log("TIMEOUT!");
           return _this._finish();
         }
+        if (_this._allDronesFinished()) {
+          console.log("ALL DRONES EXITED");
+          return _this._finish();
+        }
       });
   };
 
@@ -217,6 +221,14 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._timeOut = function () {
     var seconds = Math.floor(this._game_duration / 1000);
     return this._totalTime - seconds <= 0;
+  };
+
+  GameManager.prototype._allDronesFinished = function () {
+    var finish = true;
+    this._droneList.forEach(function (drone) {
+      if (drone.can_play) finish = false;
+    });
+    return finish;
   };
 
   GameManager.prototype._finish = function () {
@@ -752,6 +764,7 @@ var DroneManager = /** @class */ (function () {
     return this._API.doParachute(this);
   };
   DroneManager.prototype.exit = function () {
+    this._internal_crash();
     return this._API.exit(this);
   };
   DroneManager.prototype.landed = function () {
