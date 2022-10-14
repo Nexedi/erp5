@@ -28,7 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
 from PIL import Image
-import cStringIO
+from io import BytesIO
 import math
 import os.path
 from lxml.html import fromstring, tostring
@@ -120,8 +120,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     # http://snipplr.com/view/757/compare-two-pil-images-in-python/
     # http://effbot.org/zone/pil-comparing-images.htm
     # http://effbot.org/imagingbook/image.htm
-    image1 = Image.open(cStringIO.StringIO(image_data_1))
-    image2 = Image.open(cStringIO.StringIO(image_data_2))
+    image1 = Image.open(BytesIO(image_data_1))
+    image2 = Image.open(BytesIO(image_data_2))
 
     # image can be converted into greyscale without transparency
     h1 = image1.histogram()
