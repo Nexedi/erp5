@@ -118,11 +118,11 @@
                                             column_id python: column_item[0]">
                       <tal:block tal:condition="python: column_property is not None">
                        <table:table-cell table:style-name='listbox-table.A1' office:value-type='string'>
-                         <tal:block tal:condition="python: untranslatable_columns_dict.has_key(column_id)">
+                         <tal:block tal:condition="python: column_id in untranslatable_columns_dict">
                            <text:p text:style-name='listbox-header'
                                  tal:content="python: column_property"/> 
                          </tal:block>
-                         <tal:block tal:condition="python: not(untranslatable_columns_dict.has_key(column_id))">
+                         <tal:block tal:condition="python: column_id not in untranslatable_columns_dict">
                            <text:p text:style-name='listbox-header'
                                  tal:content="python: here.Base_translateString(column_property)"/> 
                          </tal:block>
