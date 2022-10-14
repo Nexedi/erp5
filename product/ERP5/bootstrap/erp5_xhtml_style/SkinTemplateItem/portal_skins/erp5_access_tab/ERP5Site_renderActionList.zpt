@@ -9,7 +9,7 @@
          cell_number python: len(module_category_list);
          row_number python: (cell_number/max_per_line+1)"
          class="access_tab_table">
-    <tr tal:repeat="row python: xrange(row_number)">
+    <tr tal:repeat="row python: range(row_number)">
       <tal:block tal:repeat="module_category python: module_category_list[(row*max_per_line):((row+1)*max_per_line)]">
         <td>
         <div style="width:25%; min-width:150px; float:left;"
