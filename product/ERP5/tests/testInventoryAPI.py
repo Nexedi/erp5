@@ -901,7 +901,7 @@ class TestInventoryList(InventoryAPITestCase):
     getInventoryList = self.getSimulationTool().getInventoryList
     inventory_list = getInventoryList()
     self.assertEqual(str(inventory_list.__class__),
-                    'Shared.DC.ZRDB.Results.Results')
+                    'Shared.DC.ZRDB.Results.Results' if six.PY2 else "<class 'Shared.DC.ZRDB.Results.Results'>")
     # the brain is InventoryListBrain
     self.assertIn('InventoryListBrain',
           [c.__name__ for c in inventory_list._class.__bases__])
@@ -1712,7 +1712,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList()
     self.assertEqual(str(mvt_history_list.__class__),
-                    'Shared.DC.ZRDB.Results.Results')
+                    'Shared.DC.ZRDB.Results.Results' if six.PY2 else "<class 'Shared.DC.ZRDB.Results.Results'>")
     # default is an empty list
     self.assertEqual(0, len(mvt_history_list))
 
