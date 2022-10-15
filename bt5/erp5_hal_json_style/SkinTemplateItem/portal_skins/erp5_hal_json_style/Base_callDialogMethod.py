@@ -15,16 +15,17 @@ There are runtime values hidden in every dialog form (injected by getHateoas Scr
 from erp5.component.module.Log import log, WARNING
 from Products.Formulator.Errors import FormValidationError
 import json
+import six
 
 # http://stackoverflow.com/a/13105359
 def byteify(value):
   if isinstance(value, dict):
-    return {byteify(key): byteify(value) for key, value in value.iteritems()}
+    return {byteify(key): byteify(value) for key, value in six.iteritems(value)}
   elif isinstance(value, list):
     return [byteify(element) for element in value]
   elif isinstance(value, tuple):
     return tuple(byteify(element) for element in value)
-  elif isinstance(value, unicode):
+  elif six.PY2 and isinstance(value, six.text_type):
     return value.encode('utf-8')
   else:
     return value
