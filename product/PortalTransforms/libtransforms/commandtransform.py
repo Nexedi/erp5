@@ -5,6 +5,7 @@ import tempfile
 import re
 import shutil
 from os.path import join, basename
+import six
 
 from zope.interface import implementer
 
@@ -159,6 +160,8 @@ class subprocesstransform:
             argument_list = shlex.split(command)
             process = Popen(argument_list, stdin=stdin_file, stdout=PIPE,
                             stderr=PIPE, close_fds=True)
+            if six.PY3 and isinstance(data, str):
+              data = data.encode()
             data_out, data_err = process.communicate(input=data)
             if process.returncode:
               raise OSError(data_err) # XXX
