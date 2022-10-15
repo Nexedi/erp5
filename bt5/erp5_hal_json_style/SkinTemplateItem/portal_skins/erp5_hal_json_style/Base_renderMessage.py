@@ -6,8 +6,9 @@ Return JSON with message to be displayed and set according HTTP STATUS for messa
 """
 import json
 from erp5.component.module.Log import WARNING, ERROR
+import six
 
-if isinstance(level, (str, unicode)):
+if isinstance(level, (str, six.text_type)):
   if level.lower() == "error":
     response_code = 500
   elif level.lower().startswith("warn"):
