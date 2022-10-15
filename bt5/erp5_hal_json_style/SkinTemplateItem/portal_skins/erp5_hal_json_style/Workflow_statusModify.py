@@ -3,6 +3,7 @@ from Products.Formulator.Errors import FormValidationError
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 from erp5.component.module.Log import WARNING
+import six
 
 portal = context.getPortalObject()
 request = REQUEST or context.REQUEST
@@ -43,7 +44,7 @@ for f in form.get_fields():
 listbox = request.get('listbox') # XXX: hardcoded field name
 if listbox is not None:
   listbox_line_list = []
-  for key, value in sorted(listbox.iteritems()):
+  for key, value in sorted(six.iteritems(listbox)):
     value['listbox_key'] = key
     listbox_line_list.append(value)
   doaction_param_list['listbox'] = tuple(listbox_line_list)
