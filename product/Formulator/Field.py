@@ -460,8 +460,8 @@ class Field:
           return obj.encode('utf-8')
         return str(obj)
       return ' '.join(map(getSearchSource,
-                         (self.values.values()+self.tales.values()+
-                          self.overrides.values())))
+                         (list(self.values.values())+list(self.tales.values())+
+                          list(self.overrides.values()))))
 
 InitializeClass(Field)
 

@@ -67,7 +67,7 @@ def format_stack(thread=None):
         thread_id,
         '     '.join(traceback.format_stack(frame)),
       )
-      for thread_id, frame in frame_dict.iteritems()
+      for thread_id, frame in six.iteritems(frame_dict)
     ))
   finally:
     del frame, frame_dict
@@ -351,7 +351,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       activity_tool.distribute()
       # XXX: duplicate ActivityTool.tic, without locking as we are being
       # multiple activity nodes in a single process.
-      for activity in ActivityTool.activity_dict.itervalues():
+      for activity in six.itervalues(ActivityTool.activity_dict):
         while not activity.dequeueMessage(activity_tool, node_id, ()):
           pass
     # Monkey-patch catalog to synchronise between main thread and the
@@ -2097,7 +2097,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     def newContent(container, portal_type, acquire_view_permission, view_role_list, local_role_dict):
       document = container.newContent(portal_type=portal_type)
       document.manage_permission('View', roles=view_role_list, acquire=acquire_view_permission)
-      for user, role_list in local_role_dict.iteritems():
+      for user, role_list in six.iteritems(local_role_dict):
         document.manage_setLocalRoles(userid=user, roles=role_list)
       return document
 
@@ -2112,7 +2112,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       return (portal_type, acquire_view_permission,
               tuple(view_role_list),
               tuple([(x, tuple(y))
-                     for x, y in local_role_dict.iteritems()])
+                     for x, y in six.iteritems(local_role_dict)])
              )
 
     for container, portal_type in ((person_module, person),

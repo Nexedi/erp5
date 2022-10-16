@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.AcceptSolver import AcceptSolver
 from erp5.component.interface.ISolver import ISolver
+import six
 
 @zope.interface.implementer(ISolver,)
 class UnifySolver(AcceptSolver):
@@ -105,7 +106,7 @@ class UnifySolver(AcceptSolver):
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                set()).add(simulation_movement)
-    for movement, simulation_movement_set in delivery_dict.iteritems():
+    for movement, simulation_movement_set in six.iteritems(delivery_dict):
       # get the movement that actually has the property to update
       movement = self._getActualTargetMovement(movement, solved_property)
       # and all other simulation movements we should also update

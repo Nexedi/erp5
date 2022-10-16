@@ -36,6 +36,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Message import translateString
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
+import six
 
 @zope.interface.implementer(ISolver,
                             IConfigurable,)
@@ -71,7 +72,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
       delivery_dict.setdefault(delivery, []).append(simulation_movement)
 
     for delivery, split_simulation_movement_list \
-        in delivery_dict.iteritems():
+        in six.iteritems(delivery_dict):
       # First, duplicate the whole delivery document including its
       # sub objects.
       old_delivery_url = delivery.getRelativeUrl()
@@ -166,7 +167,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error)
-          for movement, quantity in quantity_dict.iteritems():
+          for movement, quantity in six.iteritems(quantity_dict):
             movement.setQuantity(quantity)
 
       assert delivery.getMovementList() and new_delivery.getMovementList()
@@ -206,7 +207,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           if getattr(parent, 'setVariationCategoryList', None) is not None:
             line_dict.setdefault(parent, []).extend(
               movement.getVariationCategoryList())
-        for line, category_list in line_dict.iteritems():
+        for line, category_list in six.iteritems(line_dict):
           line.setVariationCategoryList(sorted(set(category_list)))
       _updateVariationCategoryList(delivery)
       _updateVariationCategoryList(new_delivery)
