@@ -37,6 +37,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from erp5.component.interface.IMovement import IMovement
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
+import six
 
 @zope.interface.implementer(ISolver,
                             IConfigurable,)

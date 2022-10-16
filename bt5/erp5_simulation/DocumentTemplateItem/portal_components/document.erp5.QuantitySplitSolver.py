@@ -38,6 +38,7 @@ from erp5.component.mixin.ConfigurableMixin import ConfigurableMixin
 from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategoryList
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
+import six
 
 @zope.interface.implementer(ISolver,
                             IConfigurable,)
@@ -83,7 +84,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
-    for movement, simulation_movement_list in delivery_dict.iteritems():
+    for movement, simulation_movement_list in six.iteritems(delivery_dict):
       decision_quantity = movement.getQuantity()
       delivery_solver = self.getParentValue().newContent(
         portal_type=configuration_dict['delivery_solver'],
