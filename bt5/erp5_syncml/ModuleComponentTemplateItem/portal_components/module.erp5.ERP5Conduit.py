@@ -42,6 +42,7 @@ from xml.sax.saxutils import unescape
 import re
 from lxml import etree
 from lxml.etree import Element
+import six
 parser = etree.XMLParser(remove_blank_text=True)
 from xml_marshaller.xml_marshaller import load_tree as unmarshaller
 from xupdate_processor import xuproc
@@ -222,7 +223,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       # /erp5/object[@gid='313730']/../workflow_action[@id=SHA(TIME + ACTOR)]
       wf_action_id = EXTRACT_ID_FROM_XPATH.findall(xpath_expression)[-1][-1]
       def deleteWorkflowNode():
-        for wf_id, wf_history_tuple in object.workflow_history.iteritems():
+        for wf_id, wf_history_tuple in six.iteritems(object.workflow_history):
           for wf_history_index, wf_history in enumerate(wf_history_tuple):
             if sha1(wf_id + str(wf_history['time']) +
                        wf_history['actor']).hexdigest() == wf_action_id:
@@ -823,7 +824,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         xupdate_builded = True
 
         # Find the prefix used by marshaller.
-        for prefix, namespace_uri in subnode.nsmap.iteritems():
+        for prefix, namespace_uri in six.iteritems(subnode.nsmap):
           if namespace_uri == MARSHALLER_NAMESPACE_URI:
             break
         # TODO add support of etree objects for xuproc to avoid
@@ -881,7 +882,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          previous_xml=previous_xml, **kw)
 
     # Now apply collected xupdated_node
-    for update_dict in xpath_expression_update_dict.itervalues():
+    for update_dict in six.itervalues(xpath_expression_update_dict):
       update_dict.update(kw)
       conflict_list += self.updateNode(previous_xml=previous_xml,
                                        **update_dict)
@@ -906,7 +907,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if time <= action.get('time'):
         # action in the past are not appended
         addable = WORKFLOW_ACTION_INSERTABLE
-      key_list = action.keys()
+      key_list = list(action.keys())
       key_list.remove("time")
       for key in key_list:
         if status[key] != action[key]:

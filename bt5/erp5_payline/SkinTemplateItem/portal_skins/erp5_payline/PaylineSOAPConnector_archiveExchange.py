@@ -15,7 +15,7 @@ def getdoc(document, identifier):
           document.getPath(),
         )
       )
-    return document.values()[0]
+    return list(document.values())[0]
   return getattr(document, identifier)
 
 exchange = portal.system_event_module.newContent(

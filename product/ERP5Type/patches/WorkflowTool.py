@@ -14,6 +14,7 @@
 ##############################################################################
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+import six
 assert WITH_LEGACY_WORKFLOW
 
 from zLOG import LOG, WARNING
@@ -109,7 +110,7 @@ def WorkflowTool_getChainDict(self):
     """Test if the given transition exist from the current state.
     """
     chain_dict = {}
-    for portal_type, wf_id_list in self._chains_by_type.iteritems():
+    for portal_type, wf_id_list in six.iteritems(self._chains_by_type):
         for wf_id in wf_id_list:
             chain_dict.setdefault(wf_id, []).append(portal_type)
     return chain_dict

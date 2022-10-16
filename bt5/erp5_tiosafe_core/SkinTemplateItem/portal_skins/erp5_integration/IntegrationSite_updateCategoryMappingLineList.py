@@ -40,7 +40,7 @@ request= context.REQUEST
 integration_site = context
 
 if len(bad_destination_list) > 0:
-  status_message = "Impossible to update because of redundancy of %s." % repr({}.fromkeys(bad_destination_list).keys())
+  status_message = "Impossible to update because of redundancy of %s." % repr(list({}.fromkeys(bad_destination_list).keys()))
   request.set('portal_status_message', status_message)
   return getattr(context, request.form['dialog_id'])(listbox=listbox, kw=kw)
 

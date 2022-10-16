@@ -10,6 +10,7 @@ import os
 import time
 import requests
 from Products.ERP5Type.Core.Workflow import ValidationFailed
+import six
 
 present = False
 tz = None
@@ -156,7 +157,7 @@ class PayzenService(XMLObject, PayzenREST):
     signature = self._getSignature(payzen_dict, sorted(payzen_dict.keys()))
     payzen_dict['signature'] = signature
     field_list = []
-    for k,v in payzen_dict.iteritems():
+    for k,v in six.iteritems(payzen_dict):
       field_list.append((k, v))
     return field_list
 
