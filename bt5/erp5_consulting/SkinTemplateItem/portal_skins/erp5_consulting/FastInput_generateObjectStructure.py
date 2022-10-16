@@ -137,7 +137,7 @@ for i in range(len(ordered_items)):
   # item is level-coherent, so keep it
   if item_ok == True:
     # add to the clean list
-    clean_data.append(current_item_data.values()[0])
+    clean_data.append(list(current_item_data.values())[0])
     # add to the processed list of level
     processed_level.append(current_item_level)
 
