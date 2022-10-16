@@ -1539,7 +1539,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getSelectionNameListFromContainer(self):
       user_id = self._getUserId()
       return list(set(self._getContainer().getSelectionNameList(user_id) +
-                      self.getTemporarySelectionDict().keys()))
+                      list(self.getTemporarySelectionDict().keys())))
 
     def isAnonymous(self):
       return self._getUserId() == 'Anonymous User'
