@@ -27,6 +27,7 @@ from IPython.core.pylabtools import print_figure
 from IPython.core.display import _pngxy
 from ipykernel.jsonutil import json_clean, encode_images
 import threading
+import six
 display_data_wrapper_lock = threading.Lock()
 
 # Well known unserializable types
@@ -415,13 +416,13 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Removing all the setup functions if user call environment.clearAll()
       if environment_collector.clearAll():
-        keys = notebook_context ['setup'].keys()
+        keys = list(notebook_context ['setup'].keys())
         for key in keys:
           del notebook_context['setup'][key]
 
       # Running all the setup functions that we got
       failed_setup_key_list = []
-      for key, value in notebook_context['setup'].iteritems():
+      for key, value in six.iteritems(notebook_context['setup']):
         try:
           code = compile(value['code'], '<string>', 'exec')
           exec(code, user_context, user_context)
@@ -440,7 +441,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are functions and saving them as setup functions.
-      for func_name, data in current_setup_dict.iteritems():
+      for func_name, data in six.iteritems(current_setup_dict):
         setup_string = (
           "%s\n"
           "_result = %s()\n"
@@ -455,7 +456,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
-      for variable, value, in current_var_dict.iteritems():
+      for variable, value, in six.iteritems(current_var_dict):
         setup_string = "%s = %s\n" % (variable, repr(value))
         notebook_context['setup'][variable] = {
           'func_name': variable,
@@ -558,7 +559,7 @@ def canSerialize(obj):
   if isinstance(obj, container_type_tuple):
     if isinstance(obj, dict):
       result_list = []
-      for key, value in obj.iteritems():
+      for key, value in six.iteritems(obj):
         result_list.append(canSerialize(key))
         result_list.append(canSerialize(value))
     else:
