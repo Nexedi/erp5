@@ -119,7 +119,7 @@ else:
     if line.getGroupingReference():
       # Call AccountingTransactionLine_resetGroupingReference synchronously
       # to know the number of ungrouped lines.
-      ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference(async=False))
+      ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference(asynchronous=False))
 
   psm = Base_translateString('${ungrouped_line_count} lines ungrouped.',
                              mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))
