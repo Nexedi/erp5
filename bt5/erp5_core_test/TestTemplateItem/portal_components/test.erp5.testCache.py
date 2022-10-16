@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 import random
 import time
 
@@ -69,7 +70,7 @@ class TestRamCache(ERP5TypeTestCase):
 
     for cache_plugin in filtered_cache_plugins:
       if not self.quiet:
-        print "TESTING (scope): ", cache_plugin
+        print("TESTING (scope): ", cache_plugin)
 
       ## clear cache for this plugin
       cache_plugin.clearCache()
@@ -85,7 +86,7 @@ class TestRamCache(ERP5TypeTestCase):
         ## we set ONLY one value per scope -> check if we get the same cache_id
         self.assertEqual([cache_id], cache_plugin.getScopeKeyList(scope))
         if not self.quiet:
-          print "\t", cache_id, scope, "\t\tOK"
+          print("\t", cache_id, scope, "\t\tOK")
 
       ## get list of scopes which must be the same as test_scopes since we clear cache initially
       scopes_from_cache = cache_plugin.getScopeList()
@@ -118,7 +119,7 @@ class TestRamCache(ERP5TypeTestCase):
 
   def generalExpire(self, cache_plugin, iterations):
     if not self.quiet:
-      print "TESTING (expire): ", cache_plugin
+      print("TESTING (expire): ", cache_plugin)
     base_timeout = 1
     values = self.prepareValues(iterations)
     scope = "peter"
@@ -128,7 +129,7 @@ class TestRamCache(ERP5TypeTestCase):
       cache_timeout = base_timeout + random.random()*2
       cache_id = "mycache_id_to_expire_%s" %(count)
       if not self.quiet:
-        print "\t", cache_id, " ==> timeout (s) = ", cache_timeout,
+        print("\t", cache_id, " ==> timeout (s) = ", cache_timeout, end=' ')
 
       ## set to cache
       cache_plugin.set(cache_id, scope, value, cache_timeout)
@@ -142,11 +143,11 @@ class TestRamCache(ERP5TypeTestCase):
       ##  check it, we MUST NOT have this key any more in cache
       self.assertEqual(False, cache_plugin.has_key(cache_id, scope))
       if not self.quiet:
-        print "\t\tOK"
+        print("\t\tOK")
 
   def generaltestSetGet(self, cache_plugin, iterations):
     if not self.quiet:
-      print "TESTING (set/get/has/del): ", cache_plugin
+      print("TESTING (set/get/has/del): ", cache_plugin)
     values = self.prepareValues(iterations)
     cache_duration = 30
     scope = "peter"
@@ -158,7 +159,7 @@ class TestRamCache(ERP5TypeTestCase):
       ## set to cache
       cache_plugin.set(cache_id, scope, value, cache_duration)
       if not self.quiet:
-        print "\t", cache_id,
+        print("\t", cache_id, end=' ')
 
       ## check has_key()
       self.assertEqual(True, cache_plugin.has_key(cache_id, scope))
@@ -184,7 +185,7 @@ class TestRamCache(ERP5TypeTestCase):
       self.assertEqual(False, cache_plugin.has_key(cache_id, scope))
 
       if not self.quiet:
-        print "\t\tOK"
+        print("\t\tOK")
 
   def prepareValues(self, iterations):
     """ generate a big list of values """
