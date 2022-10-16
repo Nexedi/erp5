@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>async=True</string> </value>
+            <value> <string>asynchronous=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
