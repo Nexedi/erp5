@@ -1,6 +1,7 @@
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.PythonScripts.standard import Object
 from ZTUtils import LazyFilter
+import six
 
 portal = context.getPortalObject()
 portal_categories = portal.portal_categories
@@ -42,7 +43,7 @@ src_list = []
 def getInventoryList(node_uid=None, **kw):
   if not node_uid and node_uid is not None:
     return []
-  for key, value in inventory_params.iteritems():
+  for key, value in six.iteritems(inventory_params):
     assert key not in kw, key
     kw[key] = value
   result = getInventoryList_(
@@ -632,7 +633,7 @@ def getPaymentTitleFromUid(uid):
     return title
 
 line_list = []
-for key, data in line_per_account.iteritems():
+for key, data in six.iteritems(line_per_account):
   node_relative_url = key[0]
   mirror_section_uid = key[1]
   payment_uid = key[2]

@@ -9,6 +9,7 @@ What is expected with this script:
   - In reality we probably also want that amount on vat line match invoice vat
   amount, but we have ignored this.
 """
+import six
 line_list = context.getMovementList(
             portal_type=context.getPortalAccountingMovementTypeList())
 
@@ -41,7 +42,7 @@ receivable_type = account_type.asset.receivable
 payable_type = account_type.liability.payable
 
 asset_line = None
-for line, account_type_list in account_type_dict.iteritems():
+for line, account_type_list in six.iteritems(account_type_dict):
   if receivable_type in account_type_list or payable_type in account_type_list:
     if line.getSourceSection() == context.getSourceSection() and \
         line.getDestinationSection() == context.getDestinationSection():

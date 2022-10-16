@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.Base import Base
+import six
 try:
   from spyne import MethodContext
 except ImportError:
@@ -65,7 +66,7 @@ class SOAPBinding(Base):
   @classmethod
   def getRegisteredServiceClassItemList(cls):
     return sorted(('%s (%s)' % (v.__name__, v.__module__), k)
-                  for k, v in cls._service_class_dict.iteritems())
+                  for k, v in six.iteritems(cls._service_class_dict))
 
   security.declarePrivate('getListItemUrl')
   def getListItemUrl(self, *args):

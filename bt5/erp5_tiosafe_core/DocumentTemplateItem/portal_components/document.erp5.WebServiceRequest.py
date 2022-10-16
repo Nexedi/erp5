@@ -169,7 +169,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     new_kw = kw.copy()
     args = []
     if self.getDestination():
-      for k,v in kw.iteritems():
+      for k,v in six.iteritems(kw):
         new_key = site.getMappingFromProperty(self.getDestinationValue(), k)
         new_kw.pop(k)
         if new_key is None:
