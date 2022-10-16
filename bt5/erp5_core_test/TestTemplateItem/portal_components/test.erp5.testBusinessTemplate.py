@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
-from urllib import pathname2url
+from six.moves.urllib.request import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor

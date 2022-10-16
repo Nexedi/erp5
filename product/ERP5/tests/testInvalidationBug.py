@@ -30,7 +30,7 @@
 
 import threading
 import unittest
-import urllib
+from six.moves.urllib.request import urlopen
 import transaction
 import pkg_resources
 from DateTime import DateTime
@@ -161,7 +161,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
         storage._server = None
         # ... monkey-patch done
         ## create object
-        urllib.urlopen(new_content_url).read()
+        urlopen(new_content_url).read()
         ## validate reindex activity
         activity_tool.distribute()
         self.assertEqual(1, len(activity_tool.getMessageList()))
