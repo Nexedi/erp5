@@ -188,8 +188,8 @@ class TestInvalidationBug(ERP5TypeTestCase):
     module.setIdGenerator('_generatePerDayId')
     #module.migrateToHBTree()
     self.tic()
-    print 'OID(%s) = %r' % (module.getRelativeUrl(), module._p_oid)
-    print '  OID(_tree) = %r' % module._tree._p_oid
+    print('OID(%s) = %r' % (module.getRelativeUrl(), module._p_oid))
+    print('  OID(_tree) = %r' % module._tree._p_oid)
     previous = DateTime()
     skin_folder = self.getPortal().portal_skins.custom
     if 'create_script' in skin_folder.objectIds():
