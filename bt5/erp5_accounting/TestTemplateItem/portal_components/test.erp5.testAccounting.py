@@ -3907,7 +3907,7 @@ class TestTransactions(AccountingTestCase):
 
     # reset from the payment line, the invoice line from the same group will be
     # ungrouped
-    payment_line.AccountingTransactionLine_resetGroupingReference(async=False)
+    payment_line.AccountingTransactionLine_resetGroupingReference(asynchronous=False)
     self.assertFalse(payment_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingDate())
     self.assertFalse(invoice_line.getGroupingReference())
