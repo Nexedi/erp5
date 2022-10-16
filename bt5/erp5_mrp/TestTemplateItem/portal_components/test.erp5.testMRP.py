@@ -30,6 +30,7 @@ import unittest
 from DateTime import DateTime
 from erp5.component.test.testBPMCore import TestBPMMixin
 from six.moves import range
+import six
 
 class TestMRPMixin(TestBPMMixin):
 
@@ -279,7 +280,7 @@ class TestMRPMixin(TestBPMMixin):
                                               group_by_variation=1):
       self.assertEqual(expected_dict.pop((r.node_uid, r.variation_text), 0),
                        r.inventory)
-    self.assertFalse(any(expected_dict.itervalues()), expected_dict)
+    self.assertFalse(any(six.itervalues(expected_dict)), expected_dict)
 
 class TestMRPImplementation(TestMRPMixin):
   """the test for implementation"""
