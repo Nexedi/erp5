@@ -31,7 +31,7 @@
 from functools import partial
 from six.moves import cStringIO as StringIO
 import unittest
-import urllib
+from six.moves.urllib.parse import urlencode
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 try:
@@ -75,7 +75,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     """
     portal = self.getPortal()
 
-    stdin = urllib.urlencode({
+    stdin = urlencode({
       '__ac_name': self.manager_username,
       '__ac_password': self.manager_password,
     })
