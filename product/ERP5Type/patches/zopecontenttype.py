@@ -6,7 +6,7 @@ try:
   original_text_type = zope.contenttype.text_type
   def svg_fix_text_type(s):
     s = s.strip()
-    if '<html>' not in s and "<svg" in s:
+    if b'<html>' not in s and b"<svg" in s:
       return 'image/svg+xml'
 
     # If it is not an svg, just try original behaviour.
