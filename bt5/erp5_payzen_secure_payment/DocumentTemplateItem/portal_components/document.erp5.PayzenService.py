@@ -8,9 +8,9 @@ import base64
 import datetime
 import os
 import time
-import six
 import requests
 from Products.ERP5Type.Core.Workflow import ValidationFailed
+import six
 
 present = False
 tz = None

@@ -35,6 +35,7 @@ from Acquisition import Implicit
 from BTrees.OOBTree import OOBTree
 from warnings import warn
 from six.moves import range
+import six
 
 ACTIVITY_GROUPING_COUNT = 200
 
@@ -151,7 +152,7 @@ class UrlRegistryTool(BaseTool):
       warn('context argument ignored', DeprecationWarning)
     mapping = self._getMappingDict()
     url_list = []
-    for url, stored_reference in mapping.iteritems():
+    for url, stored_reference in six.iteritems(mapping):
       if reference == stored_reference:
         url_list.append(url)
     return url_list
