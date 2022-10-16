@@ -1,7 +1,7 @@
 """Resets grouping reference on this line and all related lines.
 
-This runs by default asynchronously, but can be call with `async=False` to
-run synchronously and returns the list of ungrouped lines. With `async=True`,
+This runs by default asynchronoushronously, but can be call with `asynchronous=False` to
+run synchronously and returns the list of ungrouped lines. With `asynchronous=True`,
 the returned list is always empty.
 """
 
@@ -13,7 +13,7 @@ if not context.getGroupingReference():
 portal = context.getPortalObject()
 
 resetGroupingReference = portal.ERP5Site_resetAccountingTransactionLineGroupingReference
-if async:
+if asynchronous:
   resetGroupingReference = portal.portal_simulation.activate(
       activity='SQLQueue',
       after_tag='accounting_grouping_reference'
