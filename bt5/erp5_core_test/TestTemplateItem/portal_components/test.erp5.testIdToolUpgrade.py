@@ -35,6 +35,7 @@ from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from BTrees.Length import Length
 from BTrees.OOBTree import OOBTree
 from six.moves import range
+import six
 
 
 class TestIdToolUpgrade(ERP5TypeTestCase):
@@ -138,7 +139,7 @@ class TestIdToolUpgrade(ERP5TypeTestCase):
     del id_tool.__class__.getTypeInfo
     bt = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_core',
                                                                   strict=True)
-    for path, obj in bt._path_item._objects.iteritems():
+    for path, obj in six.iteritems(bt._path_item._objects):
       path, obj_id = path.rsplit('/', 1)
       if path == 'portal_ids':
         id_tool._setObject(obj_id, obj._getCopy(bt))

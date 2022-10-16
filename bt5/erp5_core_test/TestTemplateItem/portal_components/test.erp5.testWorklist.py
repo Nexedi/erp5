@@ -29,6 +29,7 @@
 
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
 from Products.ERP5Type.tests.utils import todo_erp5
+import six
 
 class TestWorklist(TestWorkflowMixin):
 
@@ -179,7 +180,7 @@ class TestWorklist(TestWorkflowMixin):
       if v:
         worklist_value.setCriterion(SECURITY_PARAMETER_ID,
                                     [var.strip() for var in v.split(';')])
-      for k, v in kw.iteritems():
+      for k, v in six.iteritems(kw):
         if k not in (SECURITY_PARAMETER_ID, workflow_value.getStateVariable()):
           variable_value = workflow_value.getVariableValueByReference(k)
           if variable_value is None:
@@ -194,7 +195,7 @@ class TestWorklist(TestWorkflowMixin):
       worklist_value.setProperties('',
         actbox_name='%s (%%(count)s)' % actbox_name, actbox_url=actbox_url,
         props={k if k.startswith('guard_') else 'var_match_' + k: v
-               for k, v in kw.iteritems()})
+               for k, v in six.iteritems(kw)})
 
 
   def removeWorklist(self, workflow_id, worklist_id_list):
