@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+import six
 
 
 class UnrestrictedStringIO(StringIO):
@@ -149,7 +150,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     category_path_dict = {item['path']: item
       for item in cache[base_category_id]}
 
-    for path in category_path_dict.iterkeys():
+    for path in six.iterkeys(category_path_dict):
       # the first item in this list is the base category itself, so we skip it.
       if path == base_category_id:
         continue
