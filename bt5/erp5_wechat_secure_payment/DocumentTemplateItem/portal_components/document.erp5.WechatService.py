@@ -3,7 +3,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, WARNING
-import random, string, hashlib, urllib2, socket
+import random, string, hashlib, socket
+from six.moves.urllib.request import Request, urlopen
 from six.moves.urllib.parse import urlparse
 from six import string_types as basestring
 try:
@@ -103,8 +104,8 @@ class WechatService(XMLObject):
     params['sign'] = self.calculateSign(params, self.getServiceApiKey())
     LOG('WechatService', WARNING,
       "getSandboxKey : data = %s SANDBOX_KEY_URL = %s" % (self.convert_dict_to_xml(params), SANDBOX_KEY_URL), error=False)
-    result = urllib2.Request(SANDBOX_KEY_URL, data=self.convert_dict_to_xml(params))
-    result_data = urllib2.urlopen(result)
+    result = Request(SANDBOX_KEY_URL, data=self.convert_dict_to_xml(params))
+    result_data = urlopen(result)
     result_read = result_data.read()
     result_dict_content = self.convert_xml_to_dict(result_read)
     return_code = result_dict_content.get('return_code', '')
@@ -151,8 +152,8 @@ class WechatService(XMLObject):
     LOG('callWechatApi', WARNING,
       "data = %s URL = %s" % (self.convert_dict_to_xml(wechat_dict), wechat_url + URL), error=False)
     # send data
-    result = urllib2.Request(wechat_url + URL, data=self.convert_dict_to_xml(wechat_dict))
-    result_data = urllib2.urlopen(result)
+    result = Request(wechat_url + URL, data=self.convert_dict_to_xml(wechat_dict))
+    result_data = urlopen(result)
     result_read = result_data.read()
     result_dict_content = self.convert_xml_to_dict(result_read)
     return_code = result_dict_content['return_code']
