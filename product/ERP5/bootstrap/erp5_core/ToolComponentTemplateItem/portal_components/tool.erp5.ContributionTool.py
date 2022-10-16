@@ -28,7 +28,7 @@
 ##############################################################################
 
 import re
-from six.moves import cStringIO as StringIO
+from io import BytesIO
 from six.moves import urllib
 from cgi import parse_header
 import os
@@ -167,7 +167,7 @@ class ContributionTool(BaseTool):
         except KeyError:
           raise ValueError('data must be provided')
         if data is not None:
-          file_object = StringIO()
+          file_object = BytesIO()
           file_object.write(data)
           file_object.seek(0)
           kw['file'] = file_object
@@ -641,7 +641,7 @@ class ContributionTool(BaseTool):
     url_file = urllib.request.urlopen(urllib.request.Request(url,
                                                headers={'Accept':'*/*'}))
     data = url_file.read() # time out must be set or ... too long XXX
-    file_object = StringIO()
+    file_object = BytesIO()
     file_object.write(data)
     file_object.seek(0)
     # if a content-disposition header is present,
