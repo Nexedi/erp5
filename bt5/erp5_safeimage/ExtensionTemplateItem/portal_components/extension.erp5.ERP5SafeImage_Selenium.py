@@ -1,3 +1,4 @@
+from __future__ import print_function
 import PIL.Image as PIL_Image
 import os
 import transaction
@@ -42,9 +43,9 @@ def uploadImage(self):
 
 def cleanUp(self):
     portal = self.getPortalObject()
-    print "exists path: %r" %os.path.exists("tmp/selenium_image_test.jpg")
+    print("exists path: %r" %os.path.exists("tmp/selenium_image_test.jpg"))
     if os.path.exists("tmp/selenium_image_test.jpg"):
-      print "REMOVE IMAGE: %s" %(os.remove("tmp/selenium_image_test.jpg"))
+      print("REMOVE IMAGE: %s" %(os.remove("tmp/selenium_image_test.jpg")))
       portal.image_module.manage_delObjects(ids=['testTileTransformed'])
       return True
     else:
