@@ -27,7 +27,7 @@
 ##############################################################################
 
 
-from urllib import quote_plus
+from six.moves.urllib.parse import quote_plus
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.parse import urljoin
 import logging

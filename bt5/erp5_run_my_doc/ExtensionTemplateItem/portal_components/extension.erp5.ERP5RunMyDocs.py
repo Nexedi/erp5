@@ -57,8 +57,8 @@ def parseTestReport(text):
   Return the content of a web page
 """
 def urlread(url):
-  import urllib
-  return urllib.urlopen(url).read()
+  from six.moves.urllib.request import urlopen
+  return urlopen(url).read()
 
 """
   Remove everything but the test in a webpage
