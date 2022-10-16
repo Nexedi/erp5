@@ -33,6 +33,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Utils import deprecated
 
 from erp5.component.document.Coordinate import Coordinate
+import six
 
 class InternetProtocolAddress(Coordinate):
   """
@@ -95,7 +96,7 @@ class InternetProtocolAddress(Coordinate):
     self._setCoordinateText(coordinate_text)
     kw_dict = self._splitCoordinateText(coordinate_text)
 
-    for name, value in kw_dict.iteritems():
+    for name, value in six.iteritems(kw_dict):
       setter_name = 'set%s' % convertToUpperCase(name)
       setter_method = getattr(self, setter_name)
       setter_method(value)
