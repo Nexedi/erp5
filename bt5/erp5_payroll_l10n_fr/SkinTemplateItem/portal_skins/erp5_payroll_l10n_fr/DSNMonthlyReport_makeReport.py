@@ -1,4 +1,5 @@
 from erp5.component.module.DateUtils import addToDate, getNumberOfDayInMonth
+import six
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \
@@ -223,12 +224,12 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
 
   contract_change_block_list = []
   if employee in change_block_dict:
-    for rubric_root, change_date_block in change_block_dict[employee].iteritems():
+    for rubric_root, change_date_block in six.iteritems(change_block_dict[employee]):
       if rubric_root == 'S21.G00.31':
-        for date, change_block in change_date_block.iteritems():
+        for date, change_block in six.iteritems(change_date_block):
           dsn_file.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date))
       elif rubric_root == 'S21.G00.41':
-        for date, change_block in change_date_block.iteritems():
+        for date, change_block in six.iteritems(change_date_block):
           contract_change_block_list.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date))
 
   employee_data_dict['contract']['S21.G00.40.019'] = establishment_registration_code
@@ -279,13 +280,13 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   for remuneration_block in paysheet_data_dict['remuneration']:
     dsn_file.append(remuneration_block)
 
-  for bonus_category in paysheet_data_dict['other_bonus'].itervalues():
+  for bonus_category in six.itervalues(paysheet_data_dict['other_bonus']):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.52', target=bonus_category))
 
-  for bonus_category in paysheet_data_dict['other_income'].itervalues():
+  for bonus_category in six.itervalues(paysheet_data_dict['other_income']):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.54', target=bonus_category))
 
-  for taxable_base_category in paysheet_data_dict['taxable_base'].itervalues():
+  for taxable_base_category in six.itervalues(paysheet_data_dict['taxable_base']):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.78', target=taxable_base_category))
     if taxable_base_category['code'] == '02': # Assiette Brute plafonnee
       if ('063', '') in paysheet_data_dict['individual_contribution']:
@@ -319,13 +320,13 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
         dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=paysheet_data_dict['individual_contribution'][('059', taxable_base_category['contract_id'])]))
         del paysheet_data_dict['individual_contribution'][('059', taxable_base_category['contract_id'])]
 
-  for taxable_base_component_category in paysheet_data_dict['taxable_base_component'].itervalues():
+  for taxable_base_component_category in six.itervalues(paysheet_data_dict['taxable_base_component']):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.79', target=taxable_base_component_category))
     if ('03', '') in taxable_base_component_category:
       dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=paysheet_data_dict['individual_contribution'][('064', '')]))
       del paysheet_data_dict['individual_contribution'][('064', '')]
 
-  for individual_contribution_category in paysheet_data_dict['individual_contribution'].itervalues():
+  for individual_contribution_category in six.itervalues(paysheet_data_dict['individual_contribution']):
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=individual_contribution_category))
 
   dsn_file.append(employee_data_dict['seniority'])
