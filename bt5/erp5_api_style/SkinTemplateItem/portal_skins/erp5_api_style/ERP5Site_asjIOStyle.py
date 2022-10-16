@@ -60,7 +60,7 @@ mode_dict = {
 }
 
 if mode not in mode_dict:
-  return "Used Mode is not defined in the mode list %s" % mode_dict.keys()
+  return "Used Mode is not defined in the mode list %s" % list(mode_dict.keys())
 
 # Check JSON Form
 try:
