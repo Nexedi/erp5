@@ -1,4 +1,5 @@
 from erp5.component.module.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
+import six
 
 portal = context.getPortalObject()
 portal_categories = context.portal_categories
@@ -43,7 +44,7 @@ if block_id in ('S21.G00.31', 'S21.G00.41', 'S21.G00.72'):
   change_block = kw['change_block']
   change_date = kw['change_date']
   rubric_value_dict[block_id + ".001"] = change_date
-  for rubric, value in change_block.iteritems():
+  for rubric, value in six.iteritems(change_block):
     rubric_value_dict[rubric] = value
 
 # Envoi
