@@ -31,7 +31,7 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from DateTime import DateTime
-import urllib
+from six.moves.urllib.parse import urlencode
 import six.moves.http_client
 import base64
 from six.moves import cStringIO as StringIO
@@ -140,7 +140,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
 
     response = self.publish('/%s/Base_getUserCaption?%s' % (
         self.portal.getId(),
-        urllib.urlencode({
+        urlencode({
             'access_token': access_token.getId(),
             'access_token_secret': access_token.getReference()})))
     self.assertEqual(response.getStatus(), six.moves.http_client.OK)
