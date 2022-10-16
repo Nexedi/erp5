@@ -12,6 +12,7 @@
 # user: user1    password: user1
 # user: user2    password: user2
 
+from __future__ import print_function
 from threading import Thread
 from time import sleep
 from urllib import addinfourl
