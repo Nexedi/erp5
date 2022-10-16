@@ -308,7 +308,7 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepClickUnsubscriptionLinkInEvent(self, sequence=None, sequence_list=None,
       **kw):
-    from urllib import urlopen
+    from six.moves.urllib.request import urlopen
     link = sequence['unsubscription_link']
     self.logout()
     data = urlopen(link)
