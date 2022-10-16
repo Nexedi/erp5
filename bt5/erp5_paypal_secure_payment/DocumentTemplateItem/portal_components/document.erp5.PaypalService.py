@@ -27,8 +27,8 @@
 #
 ##############################################################################
 import zope
-from urllib import urlencode
-from urllib2 import urlopen, Request
+from six.moves.urllib.parse import urlencode
+from six.moves.urllib.request import urlopen, Request
 from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
