@@ -34,6 +34,7 @@ from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.test.testPackingList import TestPackingListMixin
+import six
 
 class TestInvoiceMixin(TestPackingListMixin):
   """Test methods for invoices
@@ -1046,7 +1047,7 @@ class TestInvoiceMixin(TestPackingListMixin):
       """
       rule_type = rule.getSpecialiseValue().getPortalType()
       rule_def = rule_dict.get(rule_type, {})
-      for k, v in rule_def.iteritems():
+      for k, v in six.iteritems(rule_def):
         if k == 'movement_type_list':
           for movement in rule.objectValues():
             if movement.getDeliveryValue() is not None:
@@ -1067,7 +1068,7 @@ class TestInvoiceMixin(TestPackingListMixin):
             # for each movement, we want to make sure that each rule is not
             # instanciated more than once
             if len(found_rule_dict):
-              self.assertEqual(set(found_rule_dict.itervalues()), {1})
+              self.assertEqual(set(six.itervalues(found_rule_dict)), {1})
         elif k == 'parent_movement_type_list':
           if rule.getParentValue().getDeliveryValue() is not None:
             parent_type = rule.getParentValue().getDeliveryValue().getPortalType()

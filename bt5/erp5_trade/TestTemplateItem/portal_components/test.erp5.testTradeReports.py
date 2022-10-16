@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
+import six
 
 class TestTradeReports(ERP5ReportTestCase):
   """Test Trade reports
@@ -275,7 +276,7 @@ class TestTradeReports(ERP5ReportTestCase):
     if resource_dict is None:
       resource_dict = {}
     sale_order = self.sale_order_module.newContent(portal_type="Sale Order", **kw)
-    for product, values in resource_dict.iteritems():
+    for product, values in six.iteritems(resource_dict):
       sale_order.newContent(portal_type="Sale Order Line",
                                               resource=product,
                                               quantity=values["quantity"],
@@ -296,7 +297,7 @@ class TestTradeReports(ERP5ReportTestCase):
     if resource_dict is None:
       resource_dict = {}
     sale_packing_list = self.portal.sale_packing_list_module.newContent(portal_type="Sale Packing List", **kw)
-    for product, values in resource_dict.iteritems():
+    for product, values in six.iteritems(resource_dict):
       sale_packing_list.newContent(
           portal_type="Sale Packing List Line",
           resource=product,
