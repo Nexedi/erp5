@@ -17,6 +17,7 @@
 # serves files relative to the current directory.
 # cgi-bin directory serves Python CGIs.
 
+from __future__ import print_function
 import six.moves.BaseHTTPServer
 import six.moves.CGIHTTPServer
 import time
