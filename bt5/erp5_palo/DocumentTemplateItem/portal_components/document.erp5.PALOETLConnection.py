@@ -26,7 +26,7 @@
 ##############################################################################
 
 import suds
-import urllib2
+import six.moves.urllib.request
 import ssl
 import lxml.etree
 
@@ -39,7 +39,7 @@ from suds.transport.https import HttpAuthenticated
 
 class HTTPAuthenticatedUnverifiedSSL(HttpAuthenticated):
   def u2handlers(self):
-    handlers = [ urllib2.HTTPSHandler(context=ssl._create_unverified_context()) ]
+    handlers = [ six.moves.urllib.request.HTTPSHandler(context=ssl._create_unverified_context()) ]
     handlers.extend(HttpAuthenticated.u2handlers(self))
     return handlers
 
