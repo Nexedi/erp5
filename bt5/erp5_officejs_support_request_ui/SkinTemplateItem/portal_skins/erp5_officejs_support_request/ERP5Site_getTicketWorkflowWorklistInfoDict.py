@@ -5,6 +5,7 @@ If `portal_type` is provided, only return worklists that apply for this portal t
 This script has proxy role, as only manager can access workflow configuration.
 """
 from Products.ERP5Type.Message import translateString
+import six
 portal = context.getPortalObject()
 
 query_dict = {}
@@ -20,7 +21,7 @@ for worklist in workflow.getWorklistValueList():
     continue
 
   query_list = []
-  for key, value in identity_criterion_dict.iteritems():
+  for key, value in six.iteritems(identity_criterion_dict):
     if key == workflow_state_var:
       # instead of having {'validation_state': 'draft'}, we want to have
       #  {'translated_validation_state_title': 'Brouillon'}
