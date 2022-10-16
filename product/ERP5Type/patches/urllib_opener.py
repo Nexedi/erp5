@@ -36,7 +36,7 @@ import os
 import dircache
 import mimetypes, mimetools
 from email.utils import formatdate
-class DirectoryFileHandler(urllib2.FileHandler):
+class DirectoryFileHandler(six.moves.urllib.request.FileHandler):
     """
     Extends the file handler to provide an HTML
     representation of local directories.
@@ -55,7 +55,7 @@ class DirectoryFileHandler(urllib2.FileHandler):
     def open_local_file(self, req):
         host = req.get_host()
         file = req.get_selector()
-        localfile = urllib2.url2pathname(file)
+        localfile = six.moves.urllib.request.url2pathname(file)
         stats = os.stat(localfile)
         size = stats.st_size
         modified = formatdate(stats.st_mtime, usegmt=True)
@@ -64,7 +64,7 @@ class DirectoryFileHandler(urllib2.FileHandler):
             'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
             (mtype or 'text/plain', size, modified)))
         if host:
-            host, port = urllib.splitport(host)
+            host, port = six.moves.urllib.parse.splitport(host)
         if not host or \
            (not port and socket.gethostbyname(host) in self.get_names()):
             try:
@@ -73,16 +73,16 @@ class DirectoryFileHandler(urllib2.FileHandler):
               s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
               s.write('<p>Directory Content:</p>')
               for f in file_list:
-                s.write('<p><a href="%s">%s</a></p>\n' % (urllib.quote(f), f))
+                s.write('<p><a href="%s">%s</a></p>\n' % (six.moves.urllib.parse.quote(f), f))
               s.write('</body></html>')
               s.seek(0)
               headers = mimetools.Message(StringIO(
                   'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
                   ('text/html', size, modified)))
-              return urllib2.addinfourl(s, headers, 'file:' + file)
+              return six.moves.urllib.response.addinfourl(s, headers, 'file:' + file)
             except OSError:
-              return urllib2.addinfourl(open(localfile, 'rb'),
+              return six.moves.urllib.response.addinfourl(open(localfile, 'rb'),
                                         headers, 'file:'+file)
-        raise urllib2.URLError('file not on local host')
-opener = urllib2.build_opener(DirectoryFileHandler)
-urllib2.install_opener(opener)
+        raise six.moves.urllib.error.URLError('file not on local host')
+opener = six.moves.urllib.request.build_opener(DirectoryFileHandler)
+six.moves.urllib.request.install_opener(opener)
