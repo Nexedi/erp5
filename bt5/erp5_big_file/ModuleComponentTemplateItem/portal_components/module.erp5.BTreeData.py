@@ -1,3 +1,4 @@
+from __future__ import print_function
 from BTrees.LOBTree import LOBTree
 from persistent import Persistent
 import itertools
@@ -314,7 +315,7 @@ class BTreeData(Persistent):
 if __name__ == '__main__':
 
   def check(tree, length, read_offset, read_length, data_, keys=None):
-    print list(tree._tree.items())
+    print(list(tree._tree.items()))
     tree_length = len(tree)
     tree_data = tree.read(read_offset, read_length)
     tree_iterator_data = ''.join(tree.iterate(read_offset, read_length))
