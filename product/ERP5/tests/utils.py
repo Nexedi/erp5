@@ -29,7 +29,7 @@ import os
 import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
-from urllib import url2pathname
+from six.moves.urllib.request import url2pathname
 from ZODB.DemoStorage import DemoStorage
 from ZODB import DB
 from Products.ERP5Type.XMLExportImport import importXML

@@ -14,7 +14,7 @@
 import base64
 from six.moves import cStringIO as StringIO
 import unittest
-import urllib
+from six.moves.urllib.parse import quote
 
 from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder
@@ -72,7 +72,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.responseOut = StringIO()
     self.req = makerequest(root, self.responseOut)
 
-    self.credentials = urllib.quote(
+    self.credentials = quote(
         base64.encodestring('abraham:pass-w').replace('\012', ''))
 
   def testCookieLongLogin(self):
