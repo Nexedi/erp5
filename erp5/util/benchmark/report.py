@@ -574,7 +574,7 @@ def generateReport():
                                DIAGRAM_PER_PAGE],
                      only_average=argument_namespace.only_average)
 
-    for suite_name, use_case_dict in use_case_dict.viewitems():
+    for suite_name, use_case_dict in six.viewitems(use_case_dict):
       drawUseCasePerNumberOfUserPlot(
         pdf,
         "Scalability for %s with %d users" % (suite_name, nb_users),
