@@ -35,6 +35,7 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.mixin.variated import VariatedMixin
 from Products.ERP5Type.Cache import transactional_cached
 from ZTUtils import make_query
+import six
 
 class TempBudgetCell(object):
   __allow_access_to_unprotected_subobjects__ = 1
@@ -118,7 +119,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     the value is the engaged budget.
     """
     budget_dict = {k: v * -1
-      for k, v in self.getEngagedBudgetDict(**kw).iteritems()}
+      for k, v in six.iteritems(self.getEngagedBudgetDict(**kw))}
 
     cell_key_list = self.getCellKeyList()
     for cell_key in cell_key_list:

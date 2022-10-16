@@ -38,6 +38,7 @@ from Acquisition import aq_base
 from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
+import six
 
 @zope.interface.implementer(IRule,
                             IDivergenceController,
@@ -107,7 +108,7 @@ class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
       # Only take loyalty trade model line
       if amount.getResource() and [x for x in amount.getBaseApplicationList() if x in ['base_amount/loyalty_program/collect_point', 'base_amount/loyalty_program/using_point']]:
         movement = input_movement.asContext(**{k: v
-            for k, v in amount.__dict__.iteritems()
+            for k, v in six.iteritems(amount.__dict__)
             if k[0] != '_' and k != 'categories'})
         base_category_set = set([x for x in amount.getBaseCategoryList() if x not in ('price_currency')])
         movement._setCategoryMembership(base_category_set,
