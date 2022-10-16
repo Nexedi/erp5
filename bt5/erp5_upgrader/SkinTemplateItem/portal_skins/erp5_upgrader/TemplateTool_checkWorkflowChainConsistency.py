@@ -1,4 +1,5 @@
 import re
+import six
 template_tool = context
 
 bt5_per_title_dict = {}
@@ -12,7 +13,7 @@ for bt5 in installed_bt5_list:
     continue
   bt5_per_title_dict[bt5_title] = bt5
 
-resolved_list = template_tool.resolveBusinessTemplateListDependency(bt5_per_title_dict.iterkeys())
+resolved_list = template_tool.resolveBusinessTemplateListDependency(six.iterkeys(bt5_per_title_dict))
 
 pattern = re.compile(r"(?P<portal_type>.*)[| ]\|[| ](?P<workflow_id>.*)")
 portal_type_dict = {}
@@ -38,7 +39,7 @@ for _, bt5_id in resolved_list:
     workflow_id_list.append(workflow_id)
 
 error_list = []
-for portal_type, workflow_chain in portal_type_dict.iteritems():
+for portal_type, workflow_chain in six.iteritems(portal_type_dict):
   portal_type_document = context.portal_types.getTypeInfo(portal_type)
   workflow_chain_list = portal_type_document.getTypeWorkflowList()
   expected_workflow_chain = sorted(workflow_chain)
