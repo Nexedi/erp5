@@ -33,6 +33,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from erp5.component.test.testOrder import TestOrderMixin
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
+import six
 
 class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
 
@@ -157,7 +158,7 @@ class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
     order_line, = order.contentValues(portal_type=self.order_line_portal_type)
     self.assertEqual(order_line.getResourceValue(), resource)
     self.assertEqual(order_line.getTotalQuantity(),
-      sum(self.wanted_quantity_matrix.itervalues()))
+      sum(six.itervalues(self.wanted_quantity_matrix)))
 
     quantity_matrix = {}
     for cell in order_line.contentValues(portal_type=self.order_cell_portal_type):

@@ -423,7 +423,7 @@ class FakeMovement:
     """
     price_dict = self._getPriceDict()
     if len(price_dict) == 1:
-      return price_dict.keys()[0]
+      return list(price_dict.keys())[0]
     total_quantity = sum(price_dict.values())
     return (total_quantity and
       sum(price * quantity for price, quantity in price_dict.items())

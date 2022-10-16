@@ -31,6 +31,7 @@ import json
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+import six
 
 
 class TestjIOApiStyle(ERP5TypeTestCase):
@@ -77,7 +78,7 @@ class TestjIOApiStyle(ERP5TypeTestCase):
       "alldocs": "object_json_api_all_docs",
       "get": "object_json_api_get",
     }
-    for key, action_type in self.action_type_dict.iteritems():
+    for key, action_type in six.iteritems(self.action_type_dict):
       self.updateCreateActionType(action_type)
       self.api_web_section.setProperty(
         "configuration_%s_action_type" % key,
