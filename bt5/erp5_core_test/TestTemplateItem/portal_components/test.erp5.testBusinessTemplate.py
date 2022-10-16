@@ -48,6 +48,7 @@ import glob
 import sys
 from OFS.Image import Pdata
 from six.moves import range
+import six
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -979,8 +980,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIsNotNone(form)
     group_dict = sequence.get('group_dict')
     self.assertEqual(sorted(form.get_groups(include_empty=1)),
-                      sorted(group_dict.iterkeys()))
-    for group in group_dict.iterkeys():
+                      sorted(six.iterkeys(group_dict)))
+    for group in six.iterkeys(group_dict):
       id_list = []
       for field in form.get_fields_in_group(group):
         id_list.append(field.getId())
@@ -2720,7 +2721,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     for item_name in item_list:
       item = getattr(bt, item_name)
       if item is not None:
-        for data in item._objects.itervalues():
+        for data in six.itervalues(item._objects):
           if hasattr(data, '__ac_local_roles__'):
             self.assertTrue(data.__ac_local_roles__ is None)
           if hasattr(data, '_owner'):
@@ -3313,7 +3314,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     copied, = template_tool.manage_pasteObjects(cb_data)
     current = current_bt._property_sheet_item._objects.copy()
     current_bt._property_sheet_item._objects = PersistentMapping()
-    for k,v in current.iteritems():
+    for k,v in six.iteritems(current):
       k = k.lstrip('portal_property_sheets/')
       current_bt._property_sheet_item._objects[k] = v
     sequence.edit(current_bt=template_tool._getOb(copied['new_id']))

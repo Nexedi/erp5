@@ -62,7 +62,7 @@ class WebTraversalHookTestMixin(object):
     """
     self.assertEqual(1, len(self.web_section.__before_traverse__))
     self.assertIsInstance(
-      self.web_section.__before_traverse__.values()[0],
+      list(self.web_section.__before_traverse__.values())[0],
       self.traversal_hook_class)
 
   def test_TraversalHook_on_clone(self):
@@ -520,7 +520,7 @@ Hé Hé Hé!""", page.asText().strip())
                      '15': dict(language='pt', version="2", reference="F"),
                      '16': dict(language='', version="1", reference="A"),
                     }
-    sequence_one = property_dict.keys()
+    sequence_one = list(property_dict.keys())
     sequence_two = ['01', '13', '12', '09', '06', '15', '04', '11', '02',
                     '05', '03', '07', '10', '08', '14', '16']
     sequence_three = ['05', '12', '13', '14', '06', '09', '10', '07',
