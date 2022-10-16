@@ -24,6 +24,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from __future__ import print_function
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
@@ -86,7 +87,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
     ERP5TypeFunctionalTestCase.afterSetUp(self)
 
     self.http_root_dir = tempfile.mkdtemp()
-    print "Serving files on http from %r" % self.http_root_dir
+    print("Serving files on http from %r" % self.http_root_dir)
 
     self.generateMonitoringInstanceTree()
     self.httpd_is_alive = True
