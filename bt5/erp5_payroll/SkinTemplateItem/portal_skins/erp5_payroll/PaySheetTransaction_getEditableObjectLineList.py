@@ -113,7 +113,7 @@ for model_line in model_line_list:
 
 
 if batch_mode:
-  object_dict_list = [x.values()[0] for x in object_dict_list]
+  object_dict_list = [list(x.values())[0] for x in object_dict_list]
   return object_dict_list
 
 # sort results
