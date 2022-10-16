@@ -31,6 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from erp5.component.mixin.ConfigurablePropertySolverMixin import ConfigurablePropertySolverMixin
+import six
 
 class AcceptSolver(ConfigurablePropertySolverMixin):
   """Target solver that accepts the values from the decision on the prevision.
@@ -84,7 +85,7 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
   # like recording the same values in other simulation movements
   def _updateSimulationMovement(self, simulation_movement, value_dict,
                                 activate_kw):
-    for property_id, value in value_dict.iteritems():
+    for property_id, value in six.iteritems(value_dict):
       if not simulation_movement.isPropertyRecorded(property_id):
         simulation_movement.recordProperty(property_id)
       simulation_movement.setProperty(property_id, value)
