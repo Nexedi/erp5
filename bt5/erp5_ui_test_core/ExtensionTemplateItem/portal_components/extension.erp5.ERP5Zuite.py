@@ -41,9 +41,9 @@ def UpdateImage(image):
   image._update_image_info()
 
 def urlread(url, safe_return=0):
-  import urllib
+  from six.moves.urllib.request import urlopen
   try:
-    return urllib.urlopen(url).read()
+    return urlopen(url).read()
   except IOError as e:
     if safe_return:
       # Return an Selenium test code that will obviously fail. This
