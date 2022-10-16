@@ -16,13 +16,13 @@ from __future__ import print_function
 from threading import Thread
 from time import sleep
 from urllib import addinfourl
-from urllib import splithost
-from urllib import splituser
-from urllib import unquote
-from urllib import splittype
+from six.moves.urllib.parse import splithost
+from six.moves.urllib.parse import splituser
+from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import splittype
 import string
 
-from urllib import FancyURLopener
+from six.moves.urllib.request import FancyURLopener
 from six.moves.http_cookies import SimpleCookie
 
 def main():
