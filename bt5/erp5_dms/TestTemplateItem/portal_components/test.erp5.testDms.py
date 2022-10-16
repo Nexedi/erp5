@@ -64,7 +64,8 @@ from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
 import six.moves.http_client
-import urllib
+from six.moves.urllib.request import urlopen
+from six.moves.urllib.parse import urlencode
 import difflib
 import re
 from AccessControl import Unauthorized
@@ -230,7 +231,7 @@ class TestDocument(TestDocumentMixin):
     # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
     url = '%s?%s&__ac=%s' %(uri, make_query(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
     format_=kw.get('format', 'jpeg')
-    infile = urllib.urlopen(url)
+    infile = urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
     filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format_)
     f = open(filename, "w")
@@ -2355,8 +2356,8 @@ return 1
     """
     def getURL(uri, **kw):
       # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
-      return urllib.urlopen(url)
+      url = '%s?%s&__ac=%s' %(uri, urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      return urlopen(url)
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')
