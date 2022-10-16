@@ -45,6 +45,7 @@
   These are subject to another suite "testIngestion".
 """
 
+from __future__ import print_function
 import unittest
 import time
 from six.moves import cStringIO as StringIO
@@ -879,7 +880,7 @@ class TestDocument(TestDocumentMixin):
       if portal_type is not None:
         kw['portal_type'] = portal_type
       if src__==1:
-        print portal.portal_catalog(src__=src__,**kw)
+        print(portal.portal_catalog(src__=src__,**kw))
       result_list = [x.getObject() for x in portal.portal_catalog(**kw)]
       return [x for x in result_list if x in test_document_set]
 
