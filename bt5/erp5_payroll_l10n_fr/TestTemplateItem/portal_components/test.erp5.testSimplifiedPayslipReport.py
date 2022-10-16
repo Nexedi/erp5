@@ -32,6 +32,7 @@ from io import BytesIO
 import math
 import os.path
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
+import six
 
 
 class TestSimplifiedPayslipReport(ERP5TypeTestCase):
@@ -107,7 +108,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     "total_contribution_relief": 468.88
     }
     payslip_content = test_pay_sheet_transaction.PaySheetTransaction_getPayslipData()
-    for key, value in expected_payslip_content.iteritems():
+    for key, value in six.iteritems(expected_payslip_content):
       self.assertAlmostEqual(value, payslip_content[key])
 
     expected_non_contribution_dict_list= [
@@ -124,7 +125,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     for index in  range(len(expected_non_contribution_dict_list)):
       expected_value_dict = expected_non_contribution_dict_list[index]
       value_dict = non_contribution_dict_list[index]
-      for key, value in expected_value_dict.iteritems():
+      for key, value in six.iteritems(expected_value_dict):
         self.assertEqual(value_dict[key], value)
 
     expected_contribution_dict_list = [
@@ -163,7 +164,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     for index in  range(len(expected_contribution_dict_list)):
       expected_value_dict = expected_contribution_dict_list[index]
       value_dict = contribution_dict_list[index]
-      for key, value in expected_value_dict.iteritems():
+      for key, value in six.iteritems(expected_value_dict):
         self.assertAlmostEqual(value_dict[key], value)
 
     test_pay_sheet_transaction.setStartDate(DateTime("2020/01/01"))

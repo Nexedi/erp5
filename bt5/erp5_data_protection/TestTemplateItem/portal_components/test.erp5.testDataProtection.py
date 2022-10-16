@@ -114,7 +114,7 @@ class TestDataProtection(ERP5TypeTestCase):
     data_protection = portal.restrictedTraverse(
                           sequence.get('data_protection_request_relative_url'))
     portal.portal_selections.setSelectionCheckedUidsFor(self.selection_name,
-                                                  self.document_edit_kw.keys())
+                                                  list(self.document_edit_kw.keys()))
     # False means keep workflow history comments
     data_protection.DataProtectionRequest_eraseSomeOriginalData('View', False)
 
