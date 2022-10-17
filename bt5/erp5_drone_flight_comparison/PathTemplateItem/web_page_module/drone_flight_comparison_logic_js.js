@@ -605,10 +605,10 @@ var DroneManager = /** @class */ (function () {
   /**
    * Set a target point to move
    */
-  DroneManager.prototype.setTargetCoordinates = function (x, y, z, r) {
+  DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
     if (!this._canPlay)
       return;
-    return this._API.internal_setTargetCoordinates(this, x, y, z, r);
+    return this._API.internal_setTargetCoordinates(this, x, y, z);
   };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
@@ -746,10 +746,10 @@ var DroneManager = /** @class */ (function () {
   /**
    * Make the drone loiter (circle with a set radius)
    */
-  DroneManager.prototype.loiter = function () {
+  DroneManager.prototype.loiter = function (radius) {
     if (!this._canPlay)
       return;
-    this._API.set_loiter_mode();
+    this._API.set_loiter_mode(radius, this);
   };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters)

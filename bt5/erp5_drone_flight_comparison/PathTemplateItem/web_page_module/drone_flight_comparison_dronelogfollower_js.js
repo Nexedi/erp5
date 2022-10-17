@@ -351,7 +351,7 @@ var DroneLogAPI = /** @class */ (function () {
       '}' +
       '};';
   };
-  DroneLogAPI.prototype.set_loiter_mode = function () {
+  DroneLogAPI.prototype.set_loiter_mode = function (radius, drone) {
   };
   DroneLogAPI.prototype.setAltitude = function (altitude, drone) {
   };
