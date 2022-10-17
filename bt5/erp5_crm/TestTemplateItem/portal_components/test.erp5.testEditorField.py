@@ -35,7 +35,7 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate import html_quote
 
 class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
