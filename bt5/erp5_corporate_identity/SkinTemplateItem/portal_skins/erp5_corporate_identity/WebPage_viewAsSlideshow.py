@@ -179,7 +179,6 @@ doc_is_slideshow = getSlideList(doc_content) or None
 override_logo_reference = kw.get('override_logo_reference', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
 override_batch_mode = kw.get('batch_mode')
-override_source_person_title = None
 
 doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/slide", skin="Slide")
 
@@ -273,12 +272,10 @@ doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {'
 
 # ---------------------------------- Source ------------------------------------
 doc_source = doc.Base_getSourceDict(
-  override_source_person_title=override_source_person_title,
   override_source_organisation_title=override_source_organisation_title,
   override_logo_reference=override_logo_reference,
   theme_logo_url=doc_theme.get("theme_logo_url", None)
 )
-
 # --------------------------- Content Upgrades ---------------------------------
 for image in re.findall('(<img.*?/>)', doc_content):
   doc_content = doc_content.replace(

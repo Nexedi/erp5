@@ -73,22 +73,22 @@
     </tr>
     <tr>
       <td>select</td>
-      <td>name=field_format</td>
+      <td>name=field_your_format</td>
       <td>index=1</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_organisation_title</td>
+      <td>name=field_your_override_source_organisation_title</td>
       <td>Test Association</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_person_title</td>
+      <td>name=field_your_override_source_person_title</td>
       <td>Test Association Member</td>
     </tr>
     <tr>
       <td>check</td>
-      <td>name=field_display_about</td>
+      <td>name=field_your_display_about</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
@@ -106,7 +106,7 @@
     </tr>
   <tr>
     <td>type</td>
-    <td>//select[@name='field_format']</td>
+    <td>//select[@name='field_your_format']</td>
     <td>pdf</td>
   </tr>
 

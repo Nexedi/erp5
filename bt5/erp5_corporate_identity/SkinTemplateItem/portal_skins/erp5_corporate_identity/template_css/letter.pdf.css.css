@@ -30,6 +30,8 @@ html {
 }
 .ci-letter .ci-letter-header .ci-letter-bar-logo span {
   font-size: 14px;
+  width: 500px;
+  display: inline-block;
 }
 .ci-letter .ci-letter-head .ci-letter-source span,
 .ci-letter .ci-letter-footer table {

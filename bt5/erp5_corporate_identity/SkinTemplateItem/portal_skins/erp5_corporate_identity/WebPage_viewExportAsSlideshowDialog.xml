@@ -17,6 +17,10 @@
             <value> <string>WebPage_exportAsSlideshow</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Export this web pages as a Slideshow in the chosen format.</string> </value>
         </item>
@@ -32,7 +36,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -54,7 +58,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>content</string>
+                        <string>your_content</string>
                       </list>
                     </value>
                 </item>
@@ -74,11 +78,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>format</string>
-                        <string>display_note</string>
-                        <string>display_svg</string>
-                        <string>document_save</string>
-                        <string>portal_skin</string>
+                        <string>your_format</string>
+                        <string>your_display_note</string>
+                        <string>your_display_svg</string>
+                        <string>your_document_save</string>
+                        <string>your_portal_skin</string>
+                        <string>your_theme</string>
                       </list>
                     </value>
                 </item>
@@ -86,8 +91,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>override_logo_reference</string>
-                        <string>override_source_organisation_title</string>
+                        <string>your_override_logo_reference</string>
+                        <string>your_override_source_organisation_title</string>
                       </list>
                     </value>
                 </item>

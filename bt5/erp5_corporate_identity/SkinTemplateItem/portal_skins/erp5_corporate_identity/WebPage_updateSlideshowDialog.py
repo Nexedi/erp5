@@ -35,8 +35,8 @@ if dialog_id is not None:
   request.form['display_svg'] = display_svg
   request.form['document_save'] = document_save
   request.form['document_download'] = document_download
-  request.form['override_logo_reference'] = override_logo_reference
-  request.form['override_source_organisation_title'] = override_source_organisation_title
+  request.form['field_your_override_logo_reference'] = context.Base_getSlideParameter(logo=True)
+  request.form['field_your_override_source_organisation_title'] = context.Base_getSlideParameter(organisation=True)
   request.form['display_note'] = display_note
 
   return context.Base_renderForm(dialog_id)

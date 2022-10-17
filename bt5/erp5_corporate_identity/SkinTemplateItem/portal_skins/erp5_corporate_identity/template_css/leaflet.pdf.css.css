@@ -121,10 +121,14 @@ html{
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-
+h1 {
+  padding-left: 33% /* width left-summary + padding main-content */;
+}
+p + h1 {
+  padding-left: 0;
+}
 .ci-leaflet h1 {
   text-align: left;
-  padding-left: 33% /* width left-summary + padding main-content */;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;

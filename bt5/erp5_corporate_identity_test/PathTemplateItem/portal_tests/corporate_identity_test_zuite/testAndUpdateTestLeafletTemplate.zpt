@@ -425,22 +425,22 @@ Note:
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_organisation_title</td>
+      <td>name=field_your_override_source_organisation_title</td>
       <td>Test Association</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_person_title</td>
+      <td>name=field_your_override_source_person_title</td>
       <td>Test Recipient</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_leaflet_header_title</td>
+      <td>name=field_your_override_leaflet_header_title</td>
       <td>Couscous</td>
     </tr>
     <tr>
       <td>uncheck</td>
-      <td>name=field_display_side</td>
+      <td>name=field_your_display_side</td>
       <td></td>
     </tr>
     <tr>
@@ -938,7 +938,7 @@ Note:
     </tr>
     <tr>
       <td>select</td>
-      <td>name=field_format</td>
+      <td>name=field_your_format</td>
       <td>index=1</td>
     </tr>
     <tal:block tal:condition="python: no_file_update == False">
@@ -1195,27 +1195,27 @@ Note:
     </tr>
     <tr>
       <td>select</td>
-      <td>name=field_format</td>
+      <td>name=field_your_format</td>
       <td>index=1</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_organisation_title</td>
+      <td>name=field_your_override_source_organisation_title</td>
       <td>Test Association</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_person_title</td>
+      <td>name=field_your_override_source_person_title</td>
       <td>Test Recipient</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_leaflet_header_title</td>
+      <td>name=field_your_override_leaflet_header_title</td>
       <td>Couscous</td>
     </tr>
     <tr>
       <td>check</td>
-      <td>name=field_display_side</td>
+      <td>name=field_your_display_side</td>
       <td></td>
     </tr>
     <tal:block tal:condition="python: no_file_update == False">
@@ -1471,7 +1471,7 @@ Note:
     </tr>
     <tr>
       <td>select</td>
-      <td>name=field_format</td>
+      <td>name=field_your_format</td>
       <td>index=1</td>
     </tr>
     <tal:block tal:condition="python: no_file_update == False">
