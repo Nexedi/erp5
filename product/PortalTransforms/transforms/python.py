@@ -20,7 +20,7 @@ from six.moves import cStringIO as StringIO
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate import html_quote
 
 ## Python Source Parser #####################################################
 
