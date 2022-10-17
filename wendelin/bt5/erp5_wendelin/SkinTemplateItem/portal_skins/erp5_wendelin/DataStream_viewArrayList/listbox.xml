@@ -15,7 +15,6 @@
                 <string>default_params</string>
                 <string>list_method</string>
                 <string>portal_types</string>
-                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
@@ -89,10 +88,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -160,10 +155,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
