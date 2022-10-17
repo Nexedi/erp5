@@ -69,7 +69,7 @@ class TestSpellChecking(ERP5TypeTestCase):
     return "Spell Checking Test"
 
   def getBusinessTemplateList(self):
-    return (
+    return ('erp5_full_text_mroonga_catalog',
             'erp5_base',
             'erp5_simulation',
             'erp5_accounting',
