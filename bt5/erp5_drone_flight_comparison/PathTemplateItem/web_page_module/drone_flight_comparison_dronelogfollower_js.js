@@ -247,8 +247,8 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.internal_update = function () {
   };
   DroneLogAPI.prototype.internal_setTargetCoordinates =
-    function (drone, x, y, z, r) {
-    var coordinates = this.processCoordinates(x, y, z, r);
+    function (drone, x, y, z) {
+    var coordinates = this.processCoordinates(x, y, z);
     coordinates.x -= drone._controlMesh.position.x; //TODO use position
     coordinates.y -= drone._controlMesh.position.z;
     coordinates.z -= drone._controlMesh.position.y;
