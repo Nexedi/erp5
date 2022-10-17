@@ -25,8 +25,11 @@ from OFS.Folder import Folder
 from DateTime import DateTime
 from Acquisition import Implicit, aq_base
 from Persistence import Persistent
-from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
-from DocumentTemplate.DT_Util import Eval
+from DocumentTemplate.DT_Util import Eval, TemplateDict
+try:
+  from DocumentTemplate._DocumentTemplate import InstanceDict
+except ImportError: # BBB
+  from DocumentTemplate.DT_Util import InstanceDict
 from AccessControl.Permission import pname
 from AccessControl.Permissions import import_export_objects, \
     manage_zcatalog_entries
