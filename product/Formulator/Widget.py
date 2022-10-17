@@ -4,7 +4,7 @@ from six import unichr
 from six.moves import xrange
 import string
 from .DummyField import fields
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate import html_quote
 from DateTime import DateTime, Timezones
 from Products.PythonScripts.standard import html_quote
 import types
