@@ -848,6 +848,13 @@ function calculateMapInfo(map_dict) {
 
 
 var MapManager = /** @class */ (function () {
+  var MIN_MAP_SIZE = 1143,
+    MIN_X = 616.7504175,
+    MAX_X = 616.828205,
+    MIN_Y = 281.70885999999996,
+    MAX_Y = 281.6225,
+    MIN_WIDTH = 1143,
+    MIN_DEPTH = 1143;
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this;
@@ -856,7 +863,7 @@ var MapManager = /** @class */ (function () {
     } else {
       //Get map info from drone log
       if (GAMEPARAMETERS.droneList[0].log_content) {
-        var map_size = 0, map_info
+        var map_size = -1, map_info
         for (var drone = 0; drone < GAMEPARAMETERS.droneList.length; drone++) {
           map_info = DroneLogAPI.prototype.parseLog(GAMEPARAMETERS.droneList[drone].log_content);
           if (map_info.map_size > map_size) {
@@ -869,6 +876,14 @@ var MapManager = /** @class */ (function () {
         throw "Missing map information (not latitude-longitud parameters or log content given)";
       }
     }
+    //set a minimum map size
+    if (_this.map_info.width < MIN_WIDTH) _this.map_info.width = MIN_WIDTH;
+    if (_this.map_info.depth < MIN_DEPTH) _this.map_info.depth = MIN_DEPTH;
+    if (_this.map_info.map_size < MIN_MAP_SIZE) _this.map_info.map_size = MIN_MAP_SIZE;
+    if (_this.map_info.min_x < MIN_X) _this.map_info.min_x = MIN_X;
+    if (_this.map_info.max_x < MAX_X) _this.map_info.max_x = MAX_X;
+    if (_this.map_info.min_y < MIN_Y) _this.map_info.min_y = MIN_Y;
+    if (_this.map_info.max_y < MAX_Y) _this.map_info.max_y = MAX_Y;
     var max = _this.map_info.width;
     if (_this.map_info.depth > max)
         max = _this.map_info.depth;
