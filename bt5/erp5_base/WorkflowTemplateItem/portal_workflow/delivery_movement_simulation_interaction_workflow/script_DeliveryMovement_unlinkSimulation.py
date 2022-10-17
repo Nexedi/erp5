@@ -24,4 +24,4 @@ for simulation_movement in simulation_movement_list:
   if simulation_movement.getOrder() == delivery_movement.getRelativeUrl():
     simulation_movement.setOrder(None)
 
-context.DeliveryMovement_updateSimulation(state_change)
+container.script_DeliveryMovement_updateSimulation(state_change)

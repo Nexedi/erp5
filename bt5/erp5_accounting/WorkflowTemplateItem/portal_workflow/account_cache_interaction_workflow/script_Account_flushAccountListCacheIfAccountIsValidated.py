@@ -2,4 +2,4 @@
 because only validated accounts are displayed in the cache.
 """
 if sci['object'].getValidationState() == 'validated':
-  container.Account_flushAccountListCache(sci)
+  container.script_Account_flushAccountListCache(sci)
