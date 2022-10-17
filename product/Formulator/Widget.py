@@ -4,9 +4,8 @@ from six import unichr
 from six.moves import xrange
 import string
 from .DummyField import fields
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate.html_quote import html_quote
 from DateTime import DateTime, Timezones
-from Products.PythonScripts.standard import html_quote
 import types
 from DocumentTemplate.ustr import ustr
 from six.moves.urllib.parse import urljoin

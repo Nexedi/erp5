@@ -1,6 +1,6 @@
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implementer
-from DocumentTemplate.DT_Util import html_quote
+from DocumentTemplate.html_quote import html_quote
 
 __revision__ = '$Id: text_to_html.py 4787 2005-08-19 21:43:41Z dreamcatcher $'
 
