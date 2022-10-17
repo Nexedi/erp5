@@ -940,7 +940,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       # ObjectTemplateItem.__init__()
       # XXX - the above comment is a bit unclear,
       # still not sure if this is handled correctly
-      if file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components':
+      if obj_key.split(os.path.sep, 1)[0] == 'portal_components':
         self._archive[obj_key] = None
         try:
           del self._archive[obj_key[len('portal_components/'):]]
@@ -1678,6 +1678,7 @@ class PathTemplateItem(ObjectTemplateItem):
     id_list = ensure_list(self._archive.keys())
     self._archive.clear()
     self._path_archive = PersistentMapping()
+    self._files = PersistentMapping()
     for id in id_list:
       self._path_archive[id] = None
 
@@ -1769,6 +1770,8 @@ class PathTemplateItem(ObjectTemplateItem):
         obj.wl_clearLocks()
 
   def install(self, context, *args, **kw):
+    for file_name, data in six.iteritems(self._files):
+      super(PathTemplateItem, self)._importFile(file_name, BytesIO(data))
     super(PathTemplateItem, self).install(context, *args, **kw)
 
     # Regenerate local roles for all paths in this business template
@@ -1807,6 +1810,9 @@ class PathTemplateItem(ObjectTemplateItem):
                 "Updated Local Roles for '%s' (%s)"
                 % (portal_type, obj.getRelativeUrl()))
       transaction.get().addBeforeCommitHook(updateLocalRolesOnDocument)
+
+  def _importFile(self, file_name, file_obj):
+    self._files[file_name] = file_obj.read()
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
