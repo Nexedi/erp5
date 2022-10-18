@@ -138,6 +138,10 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     for bt_title in self.getTestedBusinessTemplateList():
       bt = template_tool.getInstalledBusinessTemplate(bt_title, strict=True)
+      # run migrations on the business template, except for the BT used to
+      # test workflow migration.
+      if bt_title != 'erp5_workflow_test':
+        bt.BusinessTemplate_convertAllDCWorkflowToERP5Workflow()
       # make sure we can rebuild
       bt.build()
 
