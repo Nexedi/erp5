@@ -159,27 +159,57 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           if p and not p.strip().startswith("#")}
 
       diff_line_list = []
+      def get_difference(path, has_old=True, has_new=True):
+        old = (
+          os.path.join(bt_base_path, path)
+          if has_old else
+          os.devnull
+        )
+        new = (
+          os.path.join(export_base_path, path)
+          if has_new else
+          os.devnull
+        )
+        old_is_dir = os.path.isdir(old)
+        new_is_dir = os.path.isdir(new)
+        # Raise if we are going from a directory to a file or vice-versa.
+        assert not has_old or not has_new or old_is_dir == new_is_dir, (path, old_is_dir, new_is_dir)
+        if old_is_dir or new_is_dir:
+          return
+        with open(old) as ff, open(new) as tf:
+          diff_line_list.extend(
+            difflib.unified_diff(
+              ff.readlines(),
+              tf.readlines(),
+              (
+                os.path.join('git', path)
+                if has_old else
+                os.devnull
+              ),
+              (
+                os.path.join('bt5', path)
+                if has_new else
+                os.devnull
+              ),
+            ),
+          )
+
       def get_differences(dcmp, base):
         for name in dcmp.left_only:
-          yield 'removed: ' + os.path.join(base, name)
+          path = os.path.join(base, name)
+          yield 'removed: ' + path
+          get_difference(path, has_new=False)
         for name in dcmp.right_only:
-          yield 'added: ' + os.path.join(base, name)
+          path = os.path.join(base, name)
+          yield 'added: ' + path
+          get_difference(path, has_old=False)
         for name in dcmp.funny_files:
           yield 'funny: ' + os.path.join(base, name)
         for name in dcmp.diff_files:
           path = os.path.join(base, name)
+          get_difference(path)
           if not any(fnmatch.fnmatch(path, ignored_path) for ignored_path in ignored_paths):
             yield 'modified: ' + path
-            with open(os.path.join(bt_base_path, path)) as ff, \
-                open(os.path.join(export_base_path, path)) as tf:
-              diff_line_list.extend(
-                  difflib.unified_diff(
-                      ff.readlines(),
-                      tf.readlines(),
-                      os.path.join('git', path),
-                      os.path.join('bt5', path),
-                  ))
-              diff_line_list.append('\n')
         for sub_path, sub_dcmp in six.iteritems(dcmp.subdirs):
           for diff in get_differences(sub_dcmp, os.path.join(base, sub_path)):
             yield diff
