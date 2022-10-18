@@ -34,6 +34,14 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('input[type="submit"]').click();
+    })
+
     .onEvent('submit', function () {
       var gadget = this;
       return gadget.getDeclaredGadget('form_view')
@@ -43,10 +51,6 @@
         .push(function (input) {
           gadget.runGame(input);
         });
-    })
-
-    .declareMethod("triggerSubmit", function () {
-      return this.element.querySelector('input[type="submit"]').click();
     })
 
     .declareMethod('render', function render() {
