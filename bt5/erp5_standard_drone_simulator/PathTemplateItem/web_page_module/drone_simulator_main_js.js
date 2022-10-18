@@ -75,12 +75,12 @@
   //////////////////////////////////////////
   // DroneGameManager
   //////////////////////////////////////////
-  function DroneGameManager() {
+  function DroneGameManager(gadget) {
+    this._gadget = gadget;
     if (!(this instanceof DroneGameManager)) {
       return new DroneGameManager();
     }
   }
-
   DroneGameManager.prototype = {
     constructor: DroneGameManager,
     pause: function pauseGameManager() {
@@ -157,6 +157,10 @@
                 break;
               case 'started':
                 console.log('GAME: started');
+                if (context._gadget) {
+                  var loading = context._gadget.element.querySelector('#loading');
+                  if (loading) { loading.innerHTML = ""; }
+                }
                 context.unpause();
                 return step();
                 break;
