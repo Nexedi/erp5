@@ -139,8 +139,30 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
       sort_on = (sort_on,)
     # try to cache keyword arguments for sort()
     sort_on = tuple([isinstance(x, str) and x or tuple(x) for x in sort_on])
+
+    def cast_to_float(e):
+      return -sys.maxsize if e is None else float(e)
+
+    def cast_to_int(e):
+      return -sys.maxsize if e is None else int(e)
+
+    def cast_to_str(e):
+      return '\x00' if e is None else str(e)
+
+    def sortValue(a):
+      value_list = []
+      for key, reverse, as_type in new_sort_on:
+        x = a.getProperty(key, None)
+        if as_type is not None:
+          try:
+            x = as_type(x)
+          except TypeError:
+            pass
+        value_list.append((x, reverse))
+      return value_list
+
     try:
-      sort_kw = sort_kw_cache[(sort_on, sort_order)]
+      sort_kw, new_sort_on = sort_kw_cache[(sort_on, sort_order)]
     except (KeyError, TypeError):
       new_sort_on = []
       reverse_dict = {}
@@ -162,12 +184,12 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
             # Emulate MySQL types
             as_type = key[2].lower()
             if as_type in ('int', 'bigint'):
-              f=int
+              f = cast_to_int
             elif as_type in ('float', 'real', 'double'):
-              f=float
+              f = cast_to_float
             else:
               # XXX: For an unknown type, use a string.
-              f=str
+              f = cast_to_str
             reverse = (key[1] in ('descending', 'reverse', 'DESC'))
             new_sort_on.append((key[0], reverse, f))
             reverse_dict[reverse] = True
@@ -176,50 +198,71 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
         # if we have only one kind of reverse value (i.e. all True or all
         # False), we can use sort(key=func) that is faster than
         # sort(cmp=func).
-        def sortValue(a):
-          value_list = []
-          for key, reverse, as_type in new_sort_on:
-            x = a.getProperty(key, None)
-            if as_type is not None:
-              try:
-                x = as_type(x)
-              except TypeError:
-                pass
-            value_list.append(x)
-          return value_list
         sort_kw = {'key':sortValue, 'reverse':reverse}
-        sort_kw_cache[(sort_on, sort_order)] = sort_kw
       else:
         # otherwise we use sort(cmp=func).
         def sortValues(a, b):
           result = 0
-          for key, reverse, as_type in new_sort_on:
-            x = a.getProperty(key, None)
-            y = b.getProperty(key, None)
-            if as_type is not None:
-              try:
-                x = as_type(x)
-                y = as_type(y)
-              except TypeError:
-                pass
+          value_list_a = sortValue(a)
+          value_list_b = sortValue(b)
+          for i in range(len(value_list_a)):
+            x, reverse = value_list_a[i]
+            y, _ = value_list_b[i]
             result = cmp(x, y)
             if reverse:
               result = -result
             if result != 0:
               break
           return result
-        if six.PY2:
-          sort_kw = {'cmp':sortValues}
-        else:
-          sort_kw = {'key': cmp_to_key(sortValues)}
-        sort_kw_cache[(sort_on, sort_order)] = sort_kw
+        sort_kw = {'cmp':sortValues}
+      sort_kw_cache[(sort_on, sort_order)] = (sort_kw, new_sort_on)
 
     if isinstance(value_list, LazyMap):
       new_value_list = [x for x in value_list]
       value_list = new_value_list
 
-    value_list.sort(**sort_kw)
-
+    if six.PY2:
+      value_list.sort(**sort_kw)
+    else:
+      # Python 3 does not support comparing different types, like None <=> int, None <=> str etc.
+      # So first we check key value for each element and unify the type using float() or str(),
+      # then get the sorted order using it and get the sorted result of value_list.
+      key_list = [sortValue(e) for e in value_list]
+      cast_list = [cast_to_float if e[2] is None else e[2] for e in new_sort_on]
+      key_list = []
+      key_list_append = key_list.append
+      for e in value_list:
+        key = sortValue(e)
+        key_list_append(key)
+        for i, (value, reverse) in enumerate(key):
+          if new_sort_on[i][2] is None and cast_list[i] == cast_to_float and value is not None and not isinstance(value, (int, float)):
+            cast_list[i] = cast_to_str
+      if 'key' in sort_kw:
+        sorted_order = sorted(
+          range(len(value_list)),
+          key=lambda i: tuple(cast(key_list[i][n][0]) for n, cast in enumerate(cast_list)),
+          reverse=sort_kw['reverse'],
+        )
+      else:
+        def compareKey(a, b):
+          result = 0
+          key_a = key_list[a]
+          key_b = key_list[b]
+          for i in range(len(key_a)):
+            x, reverse = key_a[i]
+            y, _ = key_b[i]
+            cast = cast_list[i]
+            result = cmp(cast(x), cast(y))
+            if reverse:
+              result = -result
+            if result != 0:
+              break
+          return result
+        sort_order = sorted(
+          range(len(value_list)),
+          key=cmp_to_key(compareKey),
+        )
+      value_list = [value_list[e] for e in sorted_order]
   return value_list
 
 #####################################################
