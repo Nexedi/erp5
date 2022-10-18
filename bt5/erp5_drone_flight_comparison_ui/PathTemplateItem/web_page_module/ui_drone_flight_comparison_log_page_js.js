@@ -10,61 +10,6 @@
       {"id": 1, "type": "DroneLogAPI", "log_content": ""}
     ];
 
-  function latLonDistance(c1, c2) {
-    var R = 6371e3,
-      q1 = c1[0] * Math.PI / 180,
-      q2 = c2[0] * Math.PI / 180,
-      dq = (c2[0] - c1[0]) * Math.PI / 180,
-      dl = (c2[1] - c1[1]) * Math.PI / 180,
-      a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-        Math.cos(q1) * Math.cos(q2) *
-        Math.sin(dl / 2) * Math.sin(dl / 2),
-      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-  function averageDistance(a, b, z) {
-    function distance3D(p1, p2) {
-      return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                       Math.pow(p1[1] - p2[1], 2) +
-                       Math.pow(p1[2] - p2[2], 2));
-    }
-    var i, sum = 0;
-    for (i = 0; i < a.length; i++) {
-      if (b[i]) {
-        if (z) {
-          sum += distance3D(a[i], b[i]);
-        } else {
-          sum += latLonDistance(a[i], b[i]);
-        }
-      }
-    }
-    /*if (Math.abs(a.length - b.length) > 50) {
-      //penalize very different logs ?
-      sum += 100;
-    }*/
-    return sum / a.length;
-  }
-  function getLogEntries(log) {
-    var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
-      log_header_found;
-    for (i = 0; i < line_list.length; i += 1) {
-      if (!log_header_found && !line_list[i].includes("timestamp;")) {
-        continue;
-      } else {
-        log_header_found = true;
-      }
-      if (line_list[i].indexOf("AMSL") >= 0 ||
-          !line_list[i].includes(";")) {
-        continue;
-      }
-      log_entry = line_list[i].trim();
-      if (log_entry) {
-        log_entry_list.push(log_entry);
-      }
-    }
-    return log_entry_list;
-  }
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -171,11 +116,68 @@
       var gadget = this, simulator;
       return new RSVP.Queue()
         .push(function () {
-          console.log("log 1 entries:", getLogEntries(options.log_1));
-          console.log("log 2 entries:", getLogEntries(options.log_2));
+          function latLonDistance(c1, c2) {
+            var R = 6371e3,
+              q1 = c1[0] * Math.PI / 180,
+              q2 = c2[0] * Math.PI / 180,
+              dq = (c2[0] - c1[0]) * Math.PI / 180,
+              dl = (c2[1] - c1[1]) * Math.PI / 180,
+              a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+                Math.cos(q1) * Math.cos(q2) *
+                Math.sin(dl / 2) * Math.sin(dl / 2),
+              c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+          }
+          function getLogEntries(log) {
+            var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
+              log_header_found;
+            for (i = 0; i < line_list.length; i += 1) {
+              if (!log_header_found && !line_list[i].includes("timestamp;")) {
+                continue;
+              } else {
+                log_header_found = true;
+              }
+              if (line_list[i].indexOf("AMSL") >= 0 ||
+                  !line_list[i].includes(";")) {
+                continue;
+              }
+              log_entry = line_list[i].trim();
+              if (log_entry) {
+                log_entry = log_entry.split(';');
+                log_entry_list.push(log_entry);
+              }
+            }
+            return log_entry_list;
+          }
+          function averageLogDistance(a, b, z) {
+            function distance3D(p1, p2) {
+              return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                               Math.pow(p1[1] - p2[1], 2) +
+                               Math.pow(p1[2] - p2[2], 2));
+            }
+            var i, sum = 0, point_a, point_b, penalization = 0, length;
+            for (i = 0; i < a.length; i++) {
+              if (b[i]) {
+                point_a = [a[i][1], a[i][1]];
+                point_b = [b[i][1], b[i][1]];
+                if (z) {
+                  sum += distance3D(point_a, point_b);
+                } else {
+                  var d = latLonDistance(point_a, point_b);
+                  sum += d;
+                }
+              }
+            }
+            length = Math.min(a.length, b.length);
+            if (Math.abs(a.length - b.length) > 50) {
+              //penalize very different logs ?
+              penalization = Math.abs(a.length - b.length);
+            }
+            console.log("distance penalization:", penalization);
+            return sum / length + penalization;
+          }
           var span = document.querySelector('#distance'),
-            //dist_2 = averageDistance(getLogEntries(options.log_2), getLogEntries(options.log_1), false),
-            dist = averageDistance(getLogEntries(options.log_1), getLogEntries(options.log_2), false);
+            dist = averageLogDistance(getLogEntries(options.log_1), getLogEntries(options.log_2), false);
           span.textContent = 'Average flights distance: ' +
             Math.round(dist * 100) / 100;
           var fragment = gadget.element.querySelector('#fragment');
