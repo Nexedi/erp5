@@ -35,8 +35,9 @@ from Products.ERP5Type.patches.WorkflowTool import \
   WorkflowHistoryList as LegacyWorkflowHistoryList
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from six.moves import range
+from six import get_unbound_function
 
-orig_maybe_rotate = DoublyLinkList._maybe_rotate.__func__
+orig_maybe_rotate = get_unbound_function(DoublyLinkList._maybe_rotate)
 
 def _maybe_rotate(self):
   if len(self._log) < 16:
