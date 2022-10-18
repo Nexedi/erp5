@@ -18,11 +18,13 @@
 
     .declareMethod('render', function render() {
       var gadget = this,
+        loading = domsugar('span', ["Loading..."]),
         container = domsugar('div');
       canvas = domsugar('canvas');
+      loading.id = "loading";
       container.className = 'container';
       container.appendChild(canvas);
-      domsugar(gadget.element, [container]);
+      domsugar(gadget.element, [loading, container]);
       //TODO fix hardcoded
       canvas.width = 680;//canvas.clientWidth; <-- this is 0
       canvas.height = 340;//canvas.clientHeight; <-- this is 0
@@ -38,7 +40,7 @@
       options.height = canvas.height;
       options.logic_url_list = LOGIC_FILE_LIST;
       var gadget = this,
-        game_manager = new DroneGameManager();
+        game_manager = new DroneGameManager(gadget);
       return game_manager.play(options)
       .push(function () {
         return game_manager.result();
