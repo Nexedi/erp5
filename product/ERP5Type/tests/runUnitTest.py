@@ -214,14 +214,13 @@ def initializeInstanceHome(tests_framework_home,
         else:
           os.symlink(src, d)
     d = 'custom_zodb.py'
-    if not os.path.exists(d):
-      src = os.path.join(tests_framework_home, d)
-      if os.path.islink(d):
-        os.remove(d)
-      if WIN:
-        shutil.copy(src, d)
-      else:
-        os.symlink(src, d)
+    src = os.path.join(tests_framework_home, d)
+    if os.path.exists(d):
+      os.remove(d)
+    if WIN:
+      shutil.copy(src, d)
+    else:
+      os.symlink(src, d)
   finally:
     os.chdir(old_pwd)
 
