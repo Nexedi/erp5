@@ -1,4 +1,9 @@
 import six
+if six.PY3:
+  def cmp(a, b):
+      return (a > b) - (a < b)
+  globals()['__builtins__']['cmp'] = cmp
+
 class PatchClass(tuple):
     """Helper to easily monkey-patch many attributes of an object
 
