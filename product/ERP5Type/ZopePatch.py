@@ -37,8 +37,7 @@ if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
   from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import WorkflowTool
+from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import sqltest
