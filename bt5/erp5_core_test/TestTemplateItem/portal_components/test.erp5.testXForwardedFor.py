@@ -34,7 +34,7 @@ import unittest
 
 def get_Z2_log_last_line():
   z2_log_path = os.path.join(log_directory, 'Z2.log')
-  f = open(z2_log_path, 'rb')
+  f = open(z2_log_path, 'r')
   try:
     f.seek(-256, os.SEEK_END) # Assumes last line is not longer than 256 chars (it should be about 130)
   except IOError: # too short
