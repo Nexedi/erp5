@@ -31,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from erp5.component.document.Movement import Movement
-
+from six import get_unbound_function
 
 class DummyMovement(Movement):
   """Dummy Movement for testing purposes."""
@@ -72,7 +72,7 @@ class DummyMovement(Movement):
     parent = self.getParentValue()
     if isinstance(parent, DummyDelivery):
       self = parent
-    return DummyDelivery.getSimulationState(self)
+    return get_unbound_function(DummyDelivery.getSimulationState)(self)
 
   def getDeliveryValue(self):
     """
