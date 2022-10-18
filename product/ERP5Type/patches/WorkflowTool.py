@@ -161,64 +161,8 @@ if WITH_LEGACY_WORKFLOW:
   def canDoActionFor(self, ob, action, wf_id=None, guard_kw={}):
     """ Check we can perform the given workflow action on 'ob'.
     """
-    chain_dict = {}
-    for portal_type, wf_id_list in six.iteritems(self._chains_by_type):
-        for wf_id in wf_id_list:
-            chain_dict.setdefault(wf_id, []).append(portal_type)
-    return chain_dict
-
-security.declareProtected(Permissions.ManagePortal, 'getChainDict')
-WorkflowTool.getChainDict = WorkflowTool_getChainDict
-
-# Backward compatibility, as WorkflowMethod has been removed in CMFCore 2.2
-from MethodObject import Method
-class WorkflowMethod( Method ):
-
-    """ Wrap a method to workflow-enable it.
-    """
-    _need__name__=1
-
-    def __init__(self, method, id=None, reindex=1):
-        self._m = method
-        if id is None:
-            id = method.__name__
-        self._id = id
-        # reindex ignored since workflows now perform the reindexing.
-
-    def __call__(self, instance, *args, **kw):
-
-        """ Invoke the wrapped method, and deal with the results.
-        """
-        wf = getToolByName(instance, 'portal_workflow', None)
-        if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
-            # No workflow tool found.
-            try:
-                res = self._m(instance, *args, **kw)
-            except ObjectDeleted as ex:
-                res = ex.getResult()
-            else:
-                if hasattr(aq_base(instance), 'reindexObject'):
-                    instance.reindexObject()
-        else:
-            res = wf.wrapWorkflowMethod(instance, self._id, self._m,
-                                        (instance,) + args, kw)
-
-from Products.CMFCore import WorkflowCore
-# BBB: WorkflowMethod has been removed from CMFCore 2
-WorkflowCore.WorkflowAction = WorkflowMethod
-
-# XXX: Kept here instead of ERP5Type.Tool.WorkflowTool because not used in
-# erp5.git: is it used in projects?
-security.declarePublic('canDoActionFor')
-def canDoActionFor(self, ob, action, wf_id=None, guard_kw={}):
-  """ Check we can perform the given workflow action on 'ob'.
-  """
-  if wf_id is None:
-    workflow_list = self.getWorkflowValueListFor(ob) or ()
-  else:
-    workflow = self._getOb(wf_id, None)
-    if workflow:
-      workflow_list = (workflow,)
+    if wf_id is None:
+      workflow_list = self.getWorkflowValueListFor(ob) or ()
     else:
       workflow = self._getOb(wf_id, None)
       if workflow:
