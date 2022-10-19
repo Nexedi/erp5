@@ -11,11 +11,7 @@ import socket
 import sys
 from tempfile import TemporaryFile
 import time
-from six.moves.urllib.parse import quote
-try:
-  from urllib import splitport
-except ImportError: # six.PY3
-  from urllib.parse import splitport
+from six.moves.urllib.parse import quote, urlsplit
 
 from waitress.server import create_server
 import ZConfig
@@ -268,8 +264,7 @@ def runwsgi():
       new_limit = (cur_limit[1], cur_limit[1])
       resource.setrlimit(resource.RLIMIT_NOFILE, new_limit)
 
-    ip, port = splitport(args.address)
-    port = int(port)
+    port = urlsplit('//' + args.address).port
     createServer(
         app_wrapper(
           large_file_threshold=args.large_file_threshold,
