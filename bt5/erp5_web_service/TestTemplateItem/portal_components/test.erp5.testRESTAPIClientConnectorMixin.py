@@ -2,7 +2,7 @@
 # Copyright (c) 2002-2015 Nexedi SA and Contributors. All Rights Reserved.
 from json import dumps
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from httplib import HTTPSConnection
+from six.moves.http_client import HTTPSConnection
 from erp5.component.mixin.RESTAPIClientConnectorMixin import RESTAPIClientConnectorMixin
 from ssl import SSLError
 from Products.ERP5Type.Timeout import TimeoutReachedError
@@ -71,11 +71,11 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
     with mock.patch(
       'ssl.create_default_context',
     ) as mock_ssl_create_default_context, mock.patch(
-      'httplib.HTTPSConnection.request',
+      'six.moves.http_client.HTTPSConnection.request',
     ) as mock_https_connection_request, mock.patch(
-      'httplib.HTTPSConnection.getresponse',
+      'six.moves.http_client.HTTPSConnection.getresponse',
       return_value=HTTPResponse_getresponse()
-    ), mock.patch('httplib.HTTPSConnection', return_value=HTTPSConnection) as mock_https_connection:
+    ), mock.patch('six.moves.http_client.HTTPSConnection', return_value=HTTPSConnection) as mock_https_connection:
       header_dict, body_dict, status = self.rest_api_client_connection.call(
         archive_resource=None,
         method='POST',
@@ -145,9 +145,9 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
     with mock.patch(
       'ssl.create_default_context',
     ), mock.patch(
-      'httplib.HTTPSConnection.request',
+      'six.moves.http_client.HTTPSConnection.request',
     ), mock.patch(
-      'httplib.HTTPSConnection.getresponse',
+      'six.moves.http_client.HTTPSConnection.getresponse',
       return_value=HTTPResponse_getresponse(498)
     ):
       with self.assertRaises(RESTAPIError) as error:
@@ -175,9 +175,9 @@ class TestRESTAPIClientConnector(ERP5TypeTestCase):
     with mock.patch(
       'ssl.create_default_context',
     ), mock.patch(
-      'httplib.HTTPSConnection.request',
+      'six.moves.http_client.HTTPSConnection.request',
     ), mock.patch(
-      'httplib.HTTPSConnection.getresponse',
+      'six.moves.http_client.HTTPSConnection.getresponse',
     ) as mock_https_connection_getresponse:
       mock_https_connection_getresponse.side_effect = SSLError('The read operation timed out')
       self.assertRaises(
