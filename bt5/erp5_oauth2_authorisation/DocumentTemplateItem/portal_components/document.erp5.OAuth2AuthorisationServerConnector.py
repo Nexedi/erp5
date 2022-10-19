@@ -31,8 +31,7 @@ from io import BytesIO
 import json
 from os import urandom
 from time import time
-import urllib
-import urlparse
+from six.moves.urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import uuid
 from cryptography.hazmat.backends import default_backend
 from cryptography import fernet
@@ -145,7 +144,7 @@ def substituteRequest(
   environ = request.environ
   inner_environ_dict = environ.copy()
   inner_environ_dict['REQUEST_METHOD'] = method
-  inner_environ_dict['QUERY_STRING'] = urllib.urlencode(query_list)
+  inner_environ_dict['QUERY_STRING'] = urlencode(query_list)
   if request._auth:
     inner_environ_dict['HTTP_AUTHORIZATION'] = request._auth
 
@@ -256,18 +255,18 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         if is_local_client and self.__login_retry_url:
           # ...with a local resource server, redirect user agent to
           # the provided login URL.
-          split_login_retry_url = urlparse.urlsplit(self.__login_retry_url)
+          split_login_retry_url = urlsplit(self.__login_retry_url)
           return (
             (
               (
                 'Location',
-                urlparse.urlunsplit((
+                urlunsplit((
                   split_login_retry_url.scheme,
                   split_login_retry_url.netloc,
                   split_login_retry_url.path,
-                  urllib.urlencode([
+                  urlencode([
                     (x, y)
-                    for x, y in urlparse.parse_qsl(split_login_retry_url.query)
+                    for x, y in parse_qsl(split_login_retry_url.query)
                     if x != 'portal_status_message'
                   ] + [(
                     'portal_status_message',
@@ -299,7 +298,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         credentials=credentials,
       )
       if authorization_status == 302 and is_local_client:
-        split_location = urlparse.urlsplit(authorization_header_dict['Location'])
+        split_location = urlsplit(authorization_header_dict['Location'])
         # XXX: to cut down on code complexity, this code has strong expectations on what location is.
         _, client_connector_id, method_id = split_location.path.rsplit('/', 2)
         if method_id != 'loggedIn':
@@ -307,7 +306,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         client_connector_value = client_value.getParentValue().getParentValue()[client_connector_id]
         if client_connector_value.getPortalType() != 'OAuth2 Authorisation Client Connector':
           raise ValueError(split_location.path)
-        query_list = urlparse.parse_qsl(split_location.query)
+        query_list = parse_qsl(split_location.query)
         # Note: query string generation should not have produce any duplicate
         # entries, so convert into a dict for code simplicity.
         query_dict = {
@@ -361,7 +360,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
       for key, value in six.iteritems(request_info_dict):
         if value is None:
           continue
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.text_type):
           raise TypeError((key, repr(value)))
         new_request_info_dict[key] = value
       inner_response = HTTPResponse(stdout=None, stderr=None)
@@ -385,7 +384,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             # Use the internal path back to us so it can be traversed to while
             # still in the just-authenticated request.
             (
-              self.__server_connector_path + '?' + urlparse.urlsplit(uri).query
+              self.__server_connector_path + '?' + urlsplit(uri).query
             ) if is_local_client else
             # Use the external URL back to us so user can be redirected to it,
             # as they are then authenticated over multiple requests.
@@ -407,8 +406,8 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             login_form = neutral_context_value.login_form
           portal_status_message_list = [
             value
-            for name, value in urlparse.parse_qsl(
-              urlparse.urlsplit(came_from).query,
+            for name, value in parse_qsl(
+              urlsplit(came_from).query,
             )
             if name == 'portal_status_message'
           ]
@@ -763,8 +762,8 @@ class _ERP5RequestValidator(RequestValidator):
       # redirect_uri path, but it may be under an extra layer of VirtualHost Monster
       # magic.
       # Client is declared local, accept any redirect URI on our scheme and netloc.
-      split_my_url = urlparse.urlsplit(client_value.absolute_url())
-      split_redirect_uri = urlparse.urlsplit(redirect_uri)
+      split_my_url = urlsplit(client_value.absolute_url())
+      split_redirect_uri = urlsplit(redirect_uri)
       return (
         split_my_url.scheme == split_redirect_uri.scheme and
         split_my_url.netloc == split_redirect_uri.netloc
@@ -854,10 +853,10 @@ def _callEndpoint(endpoint, self, REQUEST):
   if request_body is None and content_type == 'application/x-www-form-urlencoded':
     # XXX: very imperfect, but should be good enough for OAuth2 usage:
     # no standard OAuth2 POST field should be marshalled by Zope.
-    request_body = urllib.urlencode([
+    request_body = urlencode([
       (x, y)
       for x, y in six.iteritems(REQUEST.form)
-      if isinstance(y, basestring)
+      if isinstance(y, six.text_type)
     ])
   uri = other.get('URL', '')
   query_string = environ.get('QUERY_STRING')
