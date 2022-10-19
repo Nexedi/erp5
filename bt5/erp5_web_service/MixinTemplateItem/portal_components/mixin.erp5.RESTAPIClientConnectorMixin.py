@@ -26,10 +26,11 @@
 #
 ##############################################################################
 import time
-import urlparse
 import ssl
-import httplib
 import json
+from six.moves.http_client import HTTPSConnection
+from six.moves.urllib.parse import urlparse
+from six import string_types as basestring
 from Products.ERP5Type.Timeout import getTimeLeft
 from contextlib import contextmanager
 from Products.ERP5Type.XMLObject import XMLObject
@@ -106,7 +107,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       header_dict['content-type'] = 'application/json'
       body = json.dumps(body)
     plain_url = self.getBaseUrl().rstrip('/') + '/' + path.lstrip('/')
-    parsed_url = urlparse.urlparse(plain_url)
+    parsed_url = urlparse(plain_url)
     ssl_context = ssl.create_default_context(
       cadata=self.getCaCertificatePem(),
     )
@@ -116,7 +117,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
     if bind_address:
       bind_address = (bind_address, 0)
     time_left_before_timeout = getTimeLeft()
-    http_connection = httplib.HTTPSConnection(
+    http_connection = HTTPSConnection(
       host=parsed_url.hostname,
       port=parsed_url.port,
       strict=True,
@@ -185,7 +186,7 @@ class RESTAPIClientConnectorMixin(XMLObject):
       with time_tracker('call'), Deadline(timeout):
         # Limit numbers of retries, in case the authentication API succeeds
         # but the token is not usable.
-        for _ in xrange(2):
+        for _ in range(2):
           with time_tracker('token'):
             access_token = self._getAccessToken()
             if access_token is not None:
