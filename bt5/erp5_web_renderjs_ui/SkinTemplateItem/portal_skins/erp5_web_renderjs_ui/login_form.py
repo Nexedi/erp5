@@ -1,5 +1,5 @@
 # Short-circuit old (pre-oauth2) web-mode "login_form"s
-import urllib
+from six.moves.urllib.parse import urlencode
 web_section_value = context.getWebSectionValue()
 client_id = context.getPortalObject().ERP5Site_getOAuth2ClientConnectorClientId(
   connector_id=(
@@ -13,7 +13,7 @@ if client_id is None:
   return context.login_once_form(has_oauth2=False)
 if came_from:
   # Make the user go through WebSite_login after authentication, so it does its url de-templatification magic
-  came_from = context.absolute_url() + '/WebSite_login?' + urllib.urlencode((('came_from', came_from), ))
+  came_from = context.absolute_url() + '/WebSite_login?' + urlencode((('came_from', came_from), ))
 return context.skinSuper('erp5_web_renderjs_ui', script.id)(
   REQUEST=REQUEST,
   RESPONSE=RESPONSE,
