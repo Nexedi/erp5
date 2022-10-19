@@ -10,10 +10,6 @@ import sys
 from tempfile import TemporaryFile
 import time
 from six.moves.urllib.parse import quote
-try:
-  from urllib import splitport
-except ImportError: # six.PY3
-  from urllib.parse import splitport
 
 from waitress.server import create_server
 import ZConfig
@@ -245,8 +241,6 @@ def runwsgi():
           interval=args.timerserver_interval,
       )
 
-    ip, port = splitport(args.address)
-    port = int(port)
     createServer(
         app_wrapper(
           large_file_threshold=args.large_file_threshold,
