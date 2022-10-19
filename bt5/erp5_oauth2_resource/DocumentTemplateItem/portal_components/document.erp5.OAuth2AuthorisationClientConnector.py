@@ -31,13 +31,12 @@ import email.utils
 import functools
 import hashlib
 import hmac
-import httplib
+from six.moves.http_client import HTTPConnection, HTTPSConnection
 import json
 from os import urandom
 import random
 from time import time
-import urllib
-import urlparse
+from six.moves.urllib.parse import urlencode, urljoin, urlparse
 import ssl
 from AccessControl import (
   ClassSecurityInfo,
@@ -191,7 +190,7 @@ class _OAuth2AuthorisationServerProxy(object):
     ca_certificate_pem,
     insecure,
   ):
-    scheme = urlparse.urlsplit(authorisation_server_url).scheme
+    scheme = urlsplit(authorisation_server_url).scheme
     if scheme != 'https' and not insecure:
       raise ValueError('Only https access to Authorisation Server is allowed')
     self._scheme = scheme
@@ -210,7 +209,7 @@ class _OAuth2AuthorisationServerProxy(object):
 
   def _query(self, method_id, body, header_dict=()):
     plain_url = self._authorisation_server_url + '/' + method_id
-    parsed_url = urlparse.urlparse(plain_url)
+    parsed_url = urlparse(plain_url)
     if self._scheme == 'https':
       ssl_context = ssl.create_default_context(
         cadata=self._ca_certificate_pem,
@@ -222,11 +221,11 @@ class _OAuth2AuthorisationServerProxy(object):
         ssl_context.verify_mode = ssl.CERT_REQUIRED
         ssl_context.check_hostname = True
       Connection = functools.partial(
-        httplib.HTTPSConnection,
+        HTTPSConnection,
         context=ssl_context,
       )
     else:
-      Connection = httplib.HTTPConnection
+      Connection = HTTPConnection
     timeout = getTimeLeft()
     if timeout is None or timeout > self._timeout:
       timeout = self._timeout
@@ -256,7 +255,7 @@ class _OAuth2AuthorisationServerProxy(object):
   def _queryERP5(self, method_id, kw=()):
     header_dict, body, status = self._query(
       method_id=method_id,
-      body=urllib.urlencode(kw),
+      body=urlencode(kw),
       header_dict={
         'Accept': 'application/json;charset=UTF-8',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -274,7 +273,7 @@ class _OAuth2AuthorisationServerProxy(object):
   def _queryOAuth2(self, method, REQUEST, RESPONSE):
     header_dict, body, status = self._query(
       method,
-      body=urllib.urlencode(REQUEST.form.items()),
+      body=urlencode(REQUEST.form.items()),
       header_dict={
         'CONTENT_TYPE': REQUEST.environ['CONTENT_TYPE'],
       },
@@ -377,7 +376,7 @@ class OAuth2AuthorisationClientConnector(
     if '/' in authorisation_server_url:
       # Remote Authorisation Server
       return _OAuth2AuthorisationServerProxy(
-        authorisation_server_url=urlparse.urljoin(
+        authorisation_server_url=urljoin(
           # In case authorisation_server_url contains slashes but is still
           # relative (to the scheme or to the netloc - path-relative is not
           # supported by urljoin)
@@ -474,7 +473,7 @@ class OAuth2AuthorisationClientConnector(
     assert inner_response.status == 200
     access_token = oauth2_response['access_token']
     refresh_token = oauth2_response.get('refresh_token')
-    parsed_actual_url = urlparse.urlparse(request.other.get('ACTUAL_URL'))
+    parsed_actual_url = urlparse(request.other.get('ACTUAL_URL'))
     same_site = self.ERP5Site_getAuthCookieSameSite(
       scheme=parsed_actual_url.scheme,
       hostname=parsed_actual_url.hostname,
@@ -712,8 +711,8 @@ class OAuth2AuthorisationClientConnector(
     # came_from is what the user was trying to do just before they ended up
     # here, so we can redirect them there once they are authenticated.
     if came_from:
-      parsed_came_from = urlparse.urlparse(came_from)
-      parsed_redirect_uri = urlparse.urlparse(redirect_uri)
+      parsed_came_from = urlparse(came_from)
+      parsed_redirect_uri = urlparse(redirect_uri)
       if (
         parsed_came_from.scheme != parsed_redirect_uri.scheme or
         parsed_came_from.netloc != parsed_redirect_uri.netloc
@@ -829,7 +828,7 @@ class OAuth2AuthorisationClientConnector(
         'Location',
         self._getAuthorisationServerValue(
           REQUEST=REQUEST,
-        ).absolute_url() + '/authorize?' + urllib.urlencode(query_list),
+        ).absolute_url() + '/authorize?' + urlencode(query_list),
       )
     else:
       # Provide the current URL to authorize, so that it can redirect the
