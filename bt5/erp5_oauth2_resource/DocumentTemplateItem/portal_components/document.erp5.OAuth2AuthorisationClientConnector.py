@@ -36,7 +36,7 @@ import json
 from os import urandom
 import random
 from time import time
-from six.moves.urllib.parse import urlencode, urljoin, urlparse
+from six.moves.urllib.parse import urlencode, urljoin, urlparse, urlsplit
 import ssl
 from AccessControl import (
   ClassSecurityInfo,
@@ -51,6 +51,7 @@ from OFS.Traversable import NotFound
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Timeout import getTimeLeft
+from Products.ERP5Type.Utils import bytes2str, str2bytes, str2unicode
 from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
   OAuth2AuthorisationClientConnectorMixIn,
   ERP5OAuth2ResourceServerPlugin,
@@ -156,9 +157,9 @@ class _SimpleHTTPRequest(object):
 
   def _authUserPW(self):
     if self._auth.lower().startswith('basic '):
-      return base64.decodestring(
+      return bytes2str(base64.decodestring(
         self._auth.split(None, 1)[1],
-      ).split(':', 1)
+      )).split(':', 1)
 
   def get(self, name):
     if name == 'BODY':
@@ -200,7 +201,7 @@ class _OAuth2AuthorisationServerProxy(object):
     self._bind_address = (bind_address, 0) if bind_address else None
     if ca_certificate_pem is not None:
       # On python2 cadata is expected as an unicode object only.
-      ca_certificate_pem = ca_certificate_pem.decode('utf-8')
+      ca_certificate_pem = str2unicode(ca_certificate_pem)
     self._ca_certificate_pem = ca_certificate_pem
 
   #
@@ -580,7 +581,7 @@ class OAuth2AuthorisationClientConnector(
       )
     RESPONSE.setCookie(
       name=name,
-      value=base64.urlsafe_b64encode(content),
+      value=bytes2str(base64.urlsafe_b64encode(str2bytes(content))),
       # prevent this cookie from being read over the network
       # (assuming an uncompromised SSL setup, but if it is compromised
       # then the attacker may just as well impersonate the victim using
@@ -615,10 +616,10 @@ class OAuth2AuthorisationClientConnector(
     ttl = self._SESSION_STATE_VALIDITY
     for name, value in six.iteritems(self._getRawStateCookieDict(REQUEST)):
       try:
-        result[name] = decrypt(
+        result[name] = bytes2str(decrypt(
           base64.urlsafe_b64decode(value),
           ttl=ttl,
-        )
+        ))
       except (fernet.InvalidToken, TypeError):
         self._expireStateCookie(RESPONSE, name)
     return result
@@ -752,8 +753,8 @@ class OAuth2AuthorisationClientConnector(
       )))
     except StopIteration:
       name = None
-      identifier = base64.urlsafe_b64encode(urandom(32))
-    code_verifier = base64.urlsafe_b64encode(urandom(32))
+      identifier = bytes2str(base64.urlsafe_b64encode(urandom(32)))
+    code_verifier = bytes2str(base64.urlsafe_b64encode(urandom(32)))
     _, state_key = self.__getStateFernetKeyList()[0]
     encrypt = fernet.Fernet(state_key).encrypt
     query_list = [
@@ -765,7 +766,7 @@ class OAuth2AuthorisationClientConnector(
         # Note: fernet both signs and encrypts the content.
         # It uses on AES128-CBC, PKCS7 padding, and SHA256 HMAC, with
         # independent keys for encryption and authentication.
-        encrypt(json.dumps({
+        bytes2str(encrypt(str2bytes(json.dumps({
           # Identifier is also stored in User-Agent as a cookie.
           # This is used to prevent an attacker from tricking a user into
           # giving us an Authorisation Code under the control of the attacker.
@@ -787,7 +788,7 @@ class OAuth2AuthorisationClientConnector(
           # done above), this means the key may be attacked using (partially)
           # chosen-cleartext (if AES128 is found vulnerable to such attack).
           _STATE_CAME_FROM_NAME: (
-            came_from.decode('utf-8')
+            str2unicode(came_from)
             if came_from else
             came_from
           ),
@@ -795,15 +796,15 @@ class OAuth2AuthorisationClientConnector(
           # Authorisation Code converted into tokens. To be kept secret from
           # everyone other than this server.
           _STATE_CODE_VERIFIER_NAME: code_verifier,
-        })),
+        })))),
       ),
       ('code_challenge_method', 'S256'),
       (
         'code_challenge',
         # S256 standard PKCE encoding
-        base64.urlsafe_b64encode(
-          hashlib.sha256(code_verifier).digest(),
-        ).rstrip('='),
+        bytes2str(base64.urlsafe_b64encode(
+          hashlib.sha256(str2bytes(code_verifier)).digest(),
+        )).rstrip('='),
       ),
     ]
     if scope_list:
@@ -817,7 +818,7 @@ class OAuth2AuthorisationClientConnector(
     self._setStateCookie(
       RESPONSE=RESPONSE,
       name=name,
-      content=encrypt(identifier),
+      content=bytes2str(encrypt(str2bytes(identifier))),
     )
     if (
       self.isAuthorisationServerRemote() or
