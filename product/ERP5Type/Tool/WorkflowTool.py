@@ -645,10 +645,10 @@ if WITH_LEGACY_WORKFLOW:
     deprecated('getWorkflowIds() is deprecated; use objectIds()')\
               (lambda self: self.objectIds())
   WorkflowTool.security.declarePrivate('getWorkflowIds')
-  WorkflowTool.getWorkflowById = \
-    deprecated('getWorkflowById() is deprecated')\
-              (lambda self, wf_id: self._getOb(wf_id, None))
-  WorkflowTool.security.declarePrivate('getWorkflowById')
+
+# XXX We still use portal_workflow.getInfoFor, that calls WorkflowTool.getWorkflowById
+WorkflowTool.getWorkflowById = lambda self, wf_id: self._getOb(wf_id, None)
+WorkflowTool.security.declarePrivate('getWorkflowById')
 
 InitializeClass(WorkflowTool)
 
