@@ -16,7 +16,7 @@ if context.REQUEST["REQUEST_METHOD"] == "POST":
     title="WebHook Response",
     portal_type="HTTP Exchange",
     response=json.dumps(data, indent=2),
-    resource="http_exchange_resource/stripe/webhook",
+    resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
   )
   system_event.confirm()
   portal = context.getPortalObject()
