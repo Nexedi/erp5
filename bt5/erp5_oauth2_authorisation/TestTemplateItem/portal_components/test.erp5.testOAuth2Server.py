@@ -393,6 +393,7 @@ class TestOAuth2(ERP5TypeTestCase):
       Zope2.app(connection=self.portal._p_jar),
     ]
     published_callable = request.traverse(path)
+    exc = None
     try:
       response.setBody(
         mapply(
@@ -403,10 +404,9 @@ class TestOAuth2(ERP5TypeTestCase):
           bind=1,
         ),
       )
-    except Exception as exc:
+    except Exception as e:
+      exc = e
       raise
-    else:
-      exc = None
     finally:
       setSecurityManager(current_security_manager)
       cookie_dict = {}
