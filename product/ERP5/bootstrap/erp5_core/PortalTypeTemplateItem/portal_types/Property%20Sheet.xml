@@ -60,6 +60,15 @@
             <value> <string>Base Type</string> </value>
         </item>
         <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>id</string>
+                <string>description</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
             <value> <string>PropertySheet</string> </value>
         </item>
