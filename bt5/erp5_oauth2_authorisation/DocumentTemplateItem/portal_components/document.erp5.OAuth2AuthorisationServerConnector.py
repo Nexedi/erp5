@@ -91,6 +91,14 @@ from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
 )
 from ZPublisher.HTTPResponse import HTTPResponse
 
+def ensure_ascii(s):
+  if six.PY2:
+    return s.encode('ascii')
+  else:
+    if isinstance(s, str):
+      s = bytes(s, 'ascii')
+    return s.decode('ascii')
+
 _DEFAULT_BACKEND = default_backend()
 _SIGNATURE_ALGORITHM_TO_KEY_BYTE_LENGTH_DICT = {
   'HS256': 32,
@@ -310,7 +318,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
         # Note: query string generation should not have produce any duplicate
         # entries, so convert into a dict for code simplicity.
         query_dict = {
-          x.encode('ascii'): y.encode('ascii')
+          ensure_ascii(x): ensure_ascii(y)
           for x, y in query_list
         }
         inner_response = HTTPResponse(stdout=None, stderr=None)
@@ -1275,7 +1283,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
         continue
       else:
         token_dict[JWT_PAYLOAD_KEY] = decodeAccessTokenPayload(
-          token_dict[JWT_PAYLOAD_KEY].encode('ascii'),
+          ensure_ascii(token_dict[JWT_PAYLOAD_KEY]),
         )
         return token_dict
     raise
@@ -1679,15 +1687,15 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       (
         now,
         access_token_signature_algorithm,
-        private_key.private_bytes(
+        ensure_ascii(private_key.private_bytes(
           encoding=Encoding.PEM,
           format=PrivateFormat.PKCS8,
           encryption_algorithm=NoEncryption(),
-        ).encode('ascii'),
-        private_key.public_key().public_bytes(
+        )),
+        ensure_ascii(private_key.public_key().public_bytes(
           encoding=Encoding.PEM,
           format=PublicFormat.SubjectPublicKeyInfo,
-        ).encode('ascii'),
+        )),
       ),
     ) + tuple(
       x
