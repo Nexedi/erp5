@@ -44,7 +44,7 @@
           //query = '(portal_type:"Web Manifest") AND (reference:"bounce_flight_log")';
           query = '(portal_type:"Web Manifest") AND (reference:"result_flight_log")';
           return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
+        }, function (error) { console.log("error:", error); return gadget.getDeclaredGadget('form_view');})
         .push(function (result) {
           DRONE_LIST[1].log_content = result.data.rows[0].value.text_content;
           return gadget.getDeclaredGadget('form_view');
