@@ -63,7 +63,7 @@
         .push(function (result) {
           DRONE_LIST[0].script_content = result.data.rows[0].value.text_content;
           return gadget.getDeclaredGadget('form_view');
-        }, function (error) { console.log("error:", error); return gadget.getDeclaredGadget('form_view');})
+        })
         .push(function (form_gadget) {
           return form_gadget.render({
             erp5_document: {
