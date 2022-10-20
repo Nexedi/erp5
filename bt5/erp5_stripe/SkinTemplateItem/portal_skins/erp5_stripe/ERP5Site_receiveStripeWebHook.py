@@ -12,22 +12,20 @@ if context.REQUEST["REQUEST_METHOD"] == "POST":
   assert data, "BODY should not be empty"
   assert "id" in data, "ID is missing"
   assert data["object"] == "event", "Unexpected object"
-  system_event = portal.system_event_module.newContent(
-    title="WebHook Response",
-    portal_type="HTTP Exchange",
-    response=json.dumps(data, indent=2),
-    resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
-  )
-  system_event.confirm()
-  portal = context.getPortalObject()
+  store_webhook_tag = "store_webhook"
+  with portal.portal_activities.defaultActivateParameterDict({"tag": store_webhook_tag}, placeless=True):
+    system_event = portal.system_event_module.newContent(
+      title="WebHook Response",
+      portal_type="HTTP Exchange",
+      response=json.dumps(data, indent=2),
+      resource_value=portal.portal_categories.http_exchange_resource.stripe.webhook,
+    )
+    system_event.confirm()
   alarm = portal.portal_alarms.handle_confirmed_http_exchanges
   tag = "handle_confirmed_http_exchanges_webhook"
   if not portal.portal_activities.countMessage(tag=tag):
     alarm.activate(
-      after_path_and_method_id=(
-        (system_event.getPath(),),
-        ("immediateReindexObject",)
-      ),
+      after_tag=store_webhook_tag,
       tag=tag
     ).activeSense()
   response.setStatus(200)
