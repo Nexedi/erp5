@@ -70,6 +70,7 @@ from DateTime import DateTime
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.UnrestrictedMethod import super_user
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Security.ERP5GroupManager import (
   disableCache as ERP5GroupManager_disableCache,
@@ -535,7 +536,7 @@ class _ERP5RequestValidator(RequestValidator):
 
   def _getClientValue(self, client_id):
     try:
-      result = self._authorisation_server_connector_value[client_id.encode('utf-8')]
+      result = self._authorisation_server_connector_value[unicode2str(client_id)]
     except KeyError:
       return
     if result.getValidationState() == 'validated':
@@ -1035,7 +1036,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     multi_fernet = self.__getLoginRetryURLMultiFernet()
     # Retrieve posted field, validate signature and extract the url.
     try:
-      login_retry_url = multi_fernet.decrypt(REQUEST.form['login_retry_url'])
+      login_retry_url = bytes2str(multi_fernet.decrypt(str2bytes(REQUEST.form['login_retry_url'])))
     except (fernet.InvalidToken, TypeError, KeyError):
       # No login_retry_url provided or its value is unusable: if this is a GET
       # request (trying to display a login form), use the current URL.
@@ -1049,7 +1050,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     def getSignedLoginRetryUrl():
       if login_retry_url is None:
         return None
-      return multi_fernet.encrypt(login_retry_url)
+      return bytes2str(multi_fernet.encrypt(str2bytes(login_retry_url)))
     return _ERP5AuthorisationEndpoint(
       server_connector_path=self.getPath(),
       zope_request=REQUEST,
@@ -1082,7 +1083,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       method=method,
       query_list=query_list + [(
         'login_retry_url',
-        self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
+        bytes2str(self.__getLoginRetryURLMultiFernet().encrypt(str2bytes(login_retry_url))),
       )],
     ) as inner_request:
       # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
