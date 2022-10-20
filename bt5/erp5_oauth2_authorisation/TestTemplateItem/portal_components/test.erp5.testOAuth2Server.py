@@ -420,8 +420,10 @@ class TestOAuth2(ERP5TypeTestCase):
           if key == 'set-cookie':
             # XXX: minimal Set-Cookie parser
             cookie_name, cookie_body = value.split('=', 1)
-            assert cookie_body[0] == '"', repr(cookie_body)
-            cookie_value, cookie_attributes = cookie_body[1:].split('"', 1)
+            # RFC6265 makes quoting obsolete
+            # assert cookie_body[0] == '"', repr(cookie_body)
+            cookie_value, cookie_attributes = cookie_body.split(';', 1)
+            cookie_value = cookie_value.strip('"')
             cookie_value_dict = {
               'value': urllib.unquote(cookie_value),
             }
