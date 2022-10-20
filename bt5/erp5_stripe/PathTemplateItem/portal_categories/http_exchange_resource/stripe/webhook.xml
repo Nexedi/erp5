@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>codification</string> </key>
-            <value> <string>WebHook</string> </value>
+            <value> <string>StripeWebHook</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>WebHook</string> </value>
+            <value> <string>Stripe Web Hook</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>HTTPExchange_getFollowUpForWebHook</string> </value>
+            <value> <string>HTTPExchange_getFollowUpForStripeWebHook</string> </value>
         </item>
       </dictionary>
     </pickle>
