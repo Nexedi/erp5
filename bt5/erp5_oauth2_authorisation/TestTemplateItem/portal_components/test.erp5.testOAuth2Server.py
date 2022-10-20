@@ -41,6 +41,7 @@ import six
 from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ERP5.ERP5Site import (
   ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME,
   ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME,
@@ -549,7 +550,7 @@ class TestOAuth2(ERP5TypeTestCase):
     self.assertContentTypeEqual(result_header_dict, 'text/html')
     assert result_body
     parser = FormExtractor()
-    parser.feed(result_body)
+    parser.feed(bytes2str(result_body))
     parser.close()
     (action_url, field_list), = parser.form_list # pylint: disable=unbalanced-tuple-unpacking
     for field_name, _ in field_list:
@@ -566,13 +567,13 @@ class TestOAuth2(ERP5TypeTestCase):
       content_type='application/x-www-form-urlencoded',
       header_dict=header_dict,
       cookie_dict=cookie_dict,
-      body=urlencode(list(value_callback(
+      body=str2bytes(urlencode(list(value_callback(
         field_item_list=tuple(
           (key, value)
           for key, value in field_list
           if not key.endswith(':method')
         ),
-      ))),
+      )))),
     )
     if script_id == 'Base_callDialogMethod' and status == 302:
       # Base_callDialogMethod ended in redirection. It may be that the action
@@ -781,9 +782,9 @@ class TestOAuth2(ERP5TypeTestCase):
     """
     Get a token, renew it, terminate session.
     """
-    basic_auth = 'Basic ' + base64.encodestring(
-      _TEST_USER_LOGIN + ':' + self.__password,
-    ).rstrip()
+    basic_auth = 'Basic ' + bytes2str(base64.encodestring(
+      str2bytes(_TEST_USER_LOGIN + ':' + self.__password),
+    )).rstrip()
     oauth2_server_connector = self.__oauth2_server_connector_value.getPath()
     oauth2_client_declaration_value = self.__oauth2_external_client_declaration
     authorisation_code_lifespan = oauth2_client_declaration_value.getAuthorisationCodeLifespan()
@@ -802,7 +803,7 @@ class TestOAuth2(ERP5TypeTestCase):
     # Client produces a PKCE secret and sends the Resource Owner to the Authorisation Server
     # to authorise them, getting an ahutorisation code.
     code_verifier = base64.urlsafe_b64encode(
-      'this is not a good secret6789012', # 32 bytes
+      b'this is not a good secret6789012', # 32 bytes
     )
     reference_state = 'dummy'
     client_id = oauth2_client_declaration_value.getId()
@@ -813,9 +814,9 @@ class TestOAuth2(ERP5TypeTestCase):
         'client_id': client_id,
         'state': reference_state,
         'code_challenge_method': 'S256',
-        'code_challenge': base64.urlsafe_b64encode(
+        'code_challenge': bytes2str(base64.urlsafe_b64encode(
           hashlib.sha256(code_verifier).digest(),
-        ).rstrip('='),
+        )).rstrip('='),
         'redirect_uri': _EXTERNAL_CLIENT_REDIRECT_URI,
       }),
       redirect_uri=_EXTERNAL_CLIENT_REDIRECT_URI,
