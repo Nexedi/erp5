@@ -29,7 +29,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.WorkflowCore import WorkflowAction
+from Products.ERP5Type.Base import WorkflowMethod
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -64,7 +64,7 @@ class ApparelMeasurement(XMLObject, XMLMatrix, Image):
     # Inheritance
     _edit = Image._edit
     security.declareProtected(Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowAction( _edit )
+    edit = WorkflowMethod( _edit )
 
     security.declareProtected(Permissions.View,  'index_html')
     index_html = Image.index_html
