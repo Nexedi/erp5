@@ -13,10 +13,10 @@ def beautifyChange(change_dict):
   for property_name, property_value in sorted(change_dict.items()):
     if isinstance(property_value, six.binary_type):
       try:
-        property_value = six.text_type(property_value, 'utf-8')
+        six.text_type(property_value, 'utf-8')
       except UnicodeDecodeError:
         property_value = '(binary)'
-    change_list.append('%s:%s' % (property_name, property_value))
+    change_list.append('{}:{}'.format(property_name, property_value))
   return change_list
 
 try:

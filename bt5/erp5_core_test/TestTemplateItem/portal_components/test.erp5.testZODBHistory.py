@@ -134,6 +134,17 @@ class TestZODBHistory(ERP5TypeTestCase):
     from zExceptions import Unauthorized
     self.assertRaises(Unauthorized, document.Base_viewZODBHistory)
 
+  def test_ZODBHistoryNonAsciiProperty(self):
+    self.loginByUserName('tatuya')
+    document = self.addOrganisation(self.id())
+    document.edit(title='ネクセディ', default_address_city='千代田区')
+    self.commit()
+    _, change, = document.Base_getZODBHistoryList()
+    self.assertIn('title:ネクセディ', change.getProperty('changes'))
+
+    # no encoding error
+    document.Base_viewZODBHistory()
+
   def test_ZODBHistoryBinaryData(self):
     """
      Make sure ZODB History view works with binary content
