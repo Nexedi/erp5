@@ -1707,13 +1707,11 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 #  URL Normaliser #
 ###################
 from Products.PythonScripts.standard import url_unquote
-# No new release of urlnorm since 2016 and no py3 support
 urlnorm = None
-if six.PY2:
-  try:
-    import urlnorm
-  except ImportError:
-    warnings.warn("urlnorm lib is not installed", DeprecationWarning)
+try:
+  import urlnorm
+except ImportError:
+  warnings.warn("urlnorm lib is not installed", DeprecationWarning)
 from six.moves.urllib.parse import urlsplit, urlunsplit, urljoin
 
 # Regular expressions
