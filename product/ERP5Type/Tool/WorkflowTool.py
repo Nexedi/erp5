@@ -98,7 +98,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     This is public method to allow passing meta transition (Jump form
     any state to another in same workflow)
     """
-    from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    if WITH_LEGACY_WORKFLOW:
+      from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    else:
+      InteractionWorkflowDefinition = None.__class__
     from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
@@ -124,7 +127,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """Test if given state_id is available for ob
     in at least one associated workflow
     """
-    from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    if WITH_LEGACY_WORKFLOW:
+      from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    else:
+      InteractionWorkflowDefinition = None.__class__
     from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
       if not isinstance(workflow, (InteractionWorkflowDefinition,
