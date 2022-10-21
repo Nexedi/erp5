@@ -50,7 +50,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
         # XXX or {author} commented on {support_request} / {author} opened new Ticket: {support_request} ?
         'title': support_request_title,
         'category': support_request_category,
-        'author': brain.node_title,
+        'author': event.getSourceTitle(checked_permission="View"),
         'link': support_request_link,
         'description': event.asStrippedHTML(),
         'pubDate': brain.date,

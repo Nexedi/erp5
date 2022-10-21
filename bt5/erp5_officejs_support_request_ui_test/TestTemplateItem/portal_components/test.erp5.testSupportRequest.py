@@ -558,6 +558,7 @@ class TestSupportRequestRSSSNonVisibleSupportRequest(SupportRequestRSSTestCase, 
     super(TestSupportRequestRSSSNonVisibleSupportRequest, self).afterSetUp()
     support_request = self.support_request.Base_createCloneDocument(batch_mode=True)
     support_request.manage_permission('View', ['Manager'], 0)
+    support_request.manage_permission('Access contents information', ['Manager'], 0)
     self.event.setFollowUpValue(support_request)
     self.tic()
 
@@ -570,6 +571,27 @@ class TestSupportRequestRSSSNonVisibleSupportRequest(SupportRequestRSSTestCase, 
     self.assertNotIn(self.support_request.getRelativeUrl(), item['link'])
     self.assertEqual(item['published'], DateTime(2001, 1, 1).rfc822())
     self.assertEqual(item['summary'], '<p>This is <b>Content</b></p>')
+    # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
+    self.assertFalse(rss.bozo)
+
+
+class TestSupportRequestRSSSNonVisibleSender(SupportRequestRSSTestCase, DefaultTestRSSMixin):
+  """Edge case test for support request RSS for an event (visible by user) by a sender not visible by user.
+  """
+  def afterSetUp(self):
+    super(TestSupportRequestRSSSNonVisibleSender, self).afterSetUp()
+    unknown_sender = self.portal.person_module.newContent()
+    unknown_sender.manage_permission('View', ['Manager'], 0)
+    unknown_sender.manage_permission('Access contents information', ['Manager'], 0)
+    self.event.setSourceValue(unknown_sender)
+    self.tic()
+
+  def _checkRSS(self, response):
+    self.assertEqual(httplib.OK, response.getStatus())
+    rss = feedparser.parse(response.getBody())
+    item, = rss.entries
+    # no author for this event, because sender could not be access
+    self.assertFalse(item.get('author'))
     # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
     self.assertFalse(rss.bozo)
 
