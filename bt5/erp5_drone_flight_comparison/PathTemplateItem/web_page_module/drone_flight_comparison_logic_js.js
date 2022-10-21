@@ -328,6 +328,9 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         on3DmodelsReady(_this);
         var result = new RSVP.Queue();
+        result.push(function () {
+          return RSVP.delay(1000);
+        });
         return result.push(_this._start.bind(_this));
       });
   };
