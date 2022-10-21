@@ -365,7 +365,9 @@
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
@@ -654,7 +656,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1003.31636.31329.23756</string> </value>
+                      <value> <string>1003.48989.6344.58521</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -672,7 +674,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1665154022.29</float>
+                              <float>1666195200.82</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
