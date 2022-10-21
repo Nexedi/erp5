@@ -11,147 +11,27 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
-<!-- Initialize
-<tr>
-  <td>open</td>
-  <td>${base_url}/ERP5Site_createTestRescueSwarmParticipant</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/ERP5Site_createTestRescueSwarmEvaluator</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/ERP5Site_createParticipantScripts</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr> -->
-  
-<!-- Ensure logout (for test node)
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/rescue_swarm_game/WebSite_logout</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>3000</td>
-  <td></td>
-</tr> -->
-
-<!-- Go back to site -->
+<!-- Go to site -->
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/officejs_drone_simulator/</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="__ac_name"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@type="submit" and @value="Login"]</td>
-  <td></td>
-</tr>
-<!-- Login as test user -->
-<tr>
-  <td>type</td>
-  <td>//input[@name="__ac_name"]</td>
-  <td>j_test</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//input[@name="__ac_password"]</td>
-  <td>s_test</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@type="submit" and @value="Login"]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <!-- Check panel -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-question-circle') and text()='API']</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_simulator.html')]//a[contains(@class, 'ui-icon-edit') and text()='Edit & Run Script']</td>
   <td></td>
 <tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-tasks') and text()='Demo']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-edit') and text()='Edit Script']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-power-off') and text()='Logout']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//dt[contains(@class, 'ui-icon-wrench') and text()='Script code']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//dt[contains(@class, 'ui-icon-globe') and text()='Maps']</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_simulator.html')]//a[contains(@class, 'ui-icon-puzzle-piece') and text()='Run Logs']</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_rescue_swarm_play.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_log_page.html')]</td>
   <td></td>
 <tr>
 <tr>
@@ -167,109 +47,12 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-tasks') and text()='Demo']</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_log_page.html')]//input[@type="submit" and @name="action_run"]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[text()='Demo scripts']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//td//a[text()='Fixed direction']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//td//a[text()='Bounce walls']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//td//a[text()='Align drones']</td>
-  <td></td>
-<tr>
-<!-- Edit script -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/rescue_swarm_game/</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-edit') and text()='Edit Script']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[contains(@class, 'ui-icon-edit') and text()='Edit Script']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_rescue_swarm_play.html')]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'codemirror.gadget.html')]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@type="submit" and @name="submit" and text()='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>3000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@type="submit" and @name="submit" and text()='Save']</td>
-  <td></td>
-</tr>
-<tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Data updated'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
-<!-- Check simulator -->
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_rescue_swarm.html')]//a[text()='Middle of the sea']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_rescue_swarm_play.html')]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_editor.html')]//div[contains(@data-gadget-url, 'rescue_swarm_game.html')]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@id='restart_simulation' and @value='Restart' and @type='submit']</td>
-  <td></td>
-<tr>
-<!-- element within the simulator -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@id='messages']</td>
+  <td>//span[@id="loading"]</td>
   <td></td>
 <tr>
 </tbody></table>
