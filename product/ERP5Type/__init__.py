@@ -39,11 +39,7 @@ if six.PY2:
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
-if six.PY3:
-  # DCWorkflow python2-only
-  WITH_LEGACY_WORKFLOW = False
-else:
-  WITH_LEGACY_WORKFLOW = True
+WITH_LEGACY_WORKFLOW = False
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
