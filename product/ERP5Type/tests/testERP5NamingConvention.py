@@ -28,6 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 from Testing import ZopeTestCase
 
 class TestNamingConvention(ERP5TypeTestCase):
@@ -65,7 +66,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_promise', 'erp5_software_pdm', 'erp5_sso_openam', 'erp5_jquery_plugin_hotkey',
       'erp5_jquery_plugin_jgraduate', 'erp5_jquery_plugin_svgicon', 'erp5_jquery_plugin_jquerybbq',
       'erp5_jquery_plugin_spinbtn', 'erp5_jquery_plugin_svg_editor', 'erp5_svg_editor', 'erp5_syncml',
-      'erp5_system_event', 'erp5_tiosafe_core', 'erp5_workflow_test',
+      'erp5_system_event', 'erp5_tiosafe_core',
       'erp5_public_accounting_budget', 'erp5_publication',
       'erp5_social_contracts', 'test_core', 'test_accounting', 'test_web', 'test_html_style',
       'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', 'erp5_configurator',
@@ -79,7 +80,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       # 'erp5_accounting_l10n_pl',
       # 'erp5_accounting_l10n_sn',
       # 'erp5_accounting_l10n_in',
-      )
+      ) + (('erp5_workflow_test',) if WITH_LEGACY_WORKFLOW else ())
 
   def getTitle(self):
     return "Naming Convention"
