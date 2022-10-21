@@ -16,7 +16,7 @@ def beautifyChange(change_dict):
         six.text_type(property_value, 'utf-8')
       except UnicodeDecodeError:
         property_value = '(binary)'
-    change_list.append('%s:%r' % (property_name, property_value))
+    change_list.append('{}:{}'.format(property_name, property_value))
   return change_list
 
 try:
