@@ -5,6 +5,7 @@ const ALTITUDE_DIFF = 30,
   EPSILON_YAW = 6,
   EPSILON_ALTITUDE = 5,
   TARGET_YAW = 0,
+  LOITER_RADIUS = 100,
   checkpoint_list = [
     {
       "latitude": 45.64492790560583,
@@ -111,7 +112,7 @@ me.onStart = function() {
     me.must_wait = 0;
   }
   exit_on_fail(
-    me.setAltitude(me.start_altitude + 1, true),
+    me.setAltitude(me.start_altitude + 1),
     "Failed to set start altitude");
 };
 
@@ -144,8 +145,7 @@ me.onUpdate = function(timestamp) {
         me.setTargetCoordinates(
           me.drone_dict[LEADER_ID].latitude,
           me.drone_dict[LEADER_ID].longitude,
-          me.drone_dict[LEADER_ID].altitudeAbs + ALTITUDE_DIFF,
-          30.001
+          me.drone_dict[LEADER_ID].altitudeAbs + ALTITUDE_DIFF
         ),
         "Failed to follow leader");
     } else {
@@ -170,8 +170,7 @@ me.onUpdate = function(timestamp) {
         me.setTargetCoordinates(
           checkpoint_list[me.next_checkpoint].latitude,
           checkpoint_list[me.next_checkpoint].longitude,
-          checkpoint_list[me.next_checkpoint].altitude + FLIGH_ALTITUDE,
-          100
+          checkpoint_list[me.next_checkpoint].altitude + FLIGH_ALTITUDE
         ),
         "Failed to set checkpoint coordinates");
       //console.log(`[DEMO] Going to Checkpoint ${me.next_checkpoint}\n`)
@@ -179,13 +178,7 @@ me.onUpdate = function(timestamp) {
       console.log("[DEMO] Setting landing coordinates...\n");
       me.landing_altitude = me.getAltitudeAbs() - me.getCurrentPosition().z + PARACHUTE_ALTITUDE;
       exit_on_fail(
-        /*me.setTargetCoordinates(
-          checkpoint_list[checkpoint_list.length - 1].latitude,
-          checkpoint_list[checkpoint_list.length - 1].longitude,
-          me.landing_altitude,
-          100
-        ),*/
-        me.setAltitude(me.landing_altitude, true),
+        me.setAltitude(me.landing_altitude),
         "Failed to set landing coordinates");
     }
     me.direction_set = true;
@@ -202,14 +195,13 @@ me.onUpdate = function(timestamp) {
     } else {
       /*console.log(`[DEMO] Reached Checkpoint ${me.next_checkpoint}\n`);
       console.log("[SCRIPT] current_position:", me.current_position);*/
-      var loiter_center = checkpoint_list[me.next_checkpoint];
       /*console.log("[SCRIPT] next_checkpoint:", checkpoint_list[me.next_checkpoint]);
       console.log("[SCRIPT] drone-checkpoint distance:", me.distance);*/
       me.next_checkpoint += 1;
       me.sendMsg(JSON.stringify({ next_checkpoint: me.next_checkpoint }));
       me.direction_set = false;
       me.must_wait = 30000;
-      me.loiter();
+      me.loiter(LOITER_RADIUS);
     }
     return;
   }
