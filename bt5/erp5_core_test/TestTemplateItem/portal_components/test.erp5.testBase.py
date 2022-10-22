@@ -969,16 +969,20 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     dummy_simulation_workflow_id = 'fake_simulation_workflow'
     dummy_validation_workflow_id = 'fake_validation_workflow'
     #Assume that erp5_styles workflow Manage permissions with acquired Role by default
-    addWorkflowByType(pw, 'erp5_workflow', dummy_simulation_workflow_id)
-    addWorkflowByType(pw, 'erp5_workflow', dummy_validation_workflow_id)
-    dummy_simulation_workflow = pw[dummy_simulation_workflow_id]
-    dummy_validation_workflow = pw[dummy_validation_workflow_id]
-    dummy_validation_workflow.variables.setStateVar('validation_state')
+    dummy_simulation_workflow = pw.newContent(
+      portal_type='Workflow',
+      reference=dummy_simulation_workflow_id,
+    )
+    dummy_validation_workflow = pw.newContent(
+      portal_type='Workflow',
+      reference=dummy_validation_workflow_id,
+      state_variable='validation_state',
+    )
     organisation_type = portal.portal_types.getTypeInfo(portal_type)
     organisation_initial_workflow_list = organisation_type.getTypeWorkflowList()
     organisation_type.setTypeWorkflowList([dummy_validation_workflow_id,
                                            dummy_simulation_workflow_id])
-    permission_list = list(dummy_simulation_workflow.permissions)
+    permission_list = dummy_simulation_workflow.getWorkflowManagedPermissionList()
     manager_has_permission = {}
     for permission in permission_list:
       manager_has_permission[permission] = ('Manager',)
@@ -989,7 +993,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     user = getSecurityManager().getUser()
     try:
       self.assertTrue(permission_list)
-      self.assertFalse(dummy_simulation_workflow.states.draft.permission_roles)
+      self.assertFalse(dummy_simulation_workflow['state_draft'].getStatePermissionRoleListDict())
       #1
       obj = module.newContent(portal_type=portal_type)
       #No role is defined by default on workflow
@@ -999,21 +1003,21 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
       #2 Now configure both workflow with same configuration
-      dummy_simulation_workflow.states.draft.permission_roles = manager_has_permission.copy()
-      dummy_validation_workflow.states.draft.permission_roles = manager_has_permission.copy()
+      dummy_simulation_workflow['state_draft'].setStatePermissionRoleListDict(manager_has_permission.copy())
+      dummy_validation_workflow['state_draft'].setStatePermissionRoleListDict(manager_has_permission.copy())
       dummy_simulation_workflow.updateRoleMappingsFor(obj)
       dummy_validation_workflow.updateRoleMappingsFor(obj)
 
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
       #3 change only dummy_simulation_workflow
-      dummy_simulation_workflow.states.draft.permission_roles = manager_has_no_permission.copy()
+      dummy_simulation_workflow['state_draft'].setStatePermissionRoleListDict(manager_has_no_permission.copy())
       dummy_simulation_workflow.updateRoleMappingsFor(obj)
 
       for permission in permission_list:
         self.assertFalse(user.has_permission(permission, obj))
       #4 enable acquisition for dummy_simulation_workflow
-      dummy_simulation_workflow.states.draft.permission_roles = None
+      dummy_simulation_workflow['state_draft'].setAcquirePermissionList(permission_list)
       dummy_simulation_workflow.updateRoleMappingsFor(obj)
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
