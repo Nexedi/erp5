@@ -10,9 +10,9 @@ portal = context.getPortalObject()
 query_dict = {}
 
 workflow = portal.portal_workflow.ticket_workflow
-workflow_state_var = workflow.variables.getStateVar()
+workflow_state_var = workflow.getStateVariable()
 
-for worklist in workflow.worklists.objectValues():
+for worklist in workflow.getWorklistValueList():
   identity_criterion_dict = worklist.getIdentityCriterionDict()
   if portal_type \
        and 'portal_type' in worklist.getCriterionPropertyList() \
