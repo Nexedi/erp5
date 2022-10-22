@@ -2299,6 +2299,13 @@ lxml.etree.Element('test')
 
 from BTrees.OOBTree import OOBTree
 OOBTree()
+
+from cryptography.hazmat.primitives.asymmetric import rsa
+rsa.generate_private_key(
+  public_exponent=65537,
+  key_size=2048,
+).public_key()
+
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
