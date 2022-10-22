@@ -39,7 +39,6 @@ from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
-from Products.ERP5Type.Workflow import addWorkflowByType
 import shutil
 import os
 import random
@@ -1315,8 +1314,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     wf_id = 'geek_workflow'
     pw = self.getWorkflowTool()
-    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
-    workflow = pw._getOb(wf_id, None)
+    workflow = pw.newContent(
+      portal_type='Workflow',
+      reference=wf_id,
+    )
+    self.tic()
     self.assertTrue(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
 
@@ -2886,8 +2888,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     wf_id = 'custom_geek_workflow'
     pw = self.getWorkflowTool()
-    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
-    workflow = pw._getOb(wf_id, None)
+    workflow = pw.newContent(
+      portal_type='Workflow',
+      reference=wf_id,
+    )
+    self.tic()
     self.assertTrue(workflow is not None)
     sequence.edit(workflow_id=workflow.getId())
 
