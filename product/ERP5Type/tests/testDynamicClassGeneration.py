@@ -2306,6 +2306,18 @@ rsa.generate_private_key(
   key_size=2048,
 ).public_key()
 
+def xmlsec_decrypt():
+  # from https://xmlsec.readthedocs.io/en/stable/examples.html#decrypt
+  import xmlsec
+  manager = xmlsec.KeysManager()
+  key = xmlsec.Key.from_file('rsakey.pem', xmlsec.constants.KeyDataFormatPem)
+  manager.add_key(key)
+  enc_ctx = xmlsec.EncryptionContext(manager)
+  root = lxml.etree.parse("enc1-res.xml").getroot()
+  enc_data = xmlsec.tree.find_child(root, "EncryptedData", xmlsec.constants.EncNs)
+  decrypted = enc_ctx.decrypt(enc_data)
+  print(lxml.etree.tostring(decrypted))
+
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
