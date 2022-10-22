@@ -372,6 +372,15 @@ else:
         return m
     MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
 
+# prevent a crash with cryptography:
+#   File "develop-eggs/astroid-1.3.8+slapospatched001-py2.7.egg/astroid/raw_building.py", line 360, in _set_proxied
+#      return _CONST_PROXY[const.value.__class__]
+#  KeyError: <type 'CompiledFFI'>
+import cryptography.hazmat.bindings._openssl
+_register_module_extender_from_live_module(
+  'cryptography.hazmat.bindings._openssl',
+  cryptography.hazmat.bindings._openssl)
+
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
