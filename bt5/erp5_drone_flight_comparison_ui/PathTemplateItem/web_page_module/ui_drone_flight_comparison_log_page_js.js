@@ -15,7 +15,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     .onEvent('submit', function () {
       var gadget = this;
@@ -36,17 +36,6 @@
       var gadget = this, query;
       return new RSVP.Queue()
         .push(function () {
-          query = '(portal_type:"Web Manifest") AND (reference:"loiter_flight_log")';
-          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
-        .push(function (result) {
-          DRONE_LIST[0].log_content = result.data.rows[0].value.text_content;
-          //query = '(portal_type:"Web Manifest") AND (reference:"bounce_flight_log")';
-          query = '(portal_type:"Web Manifest") AND (reference:"result_flight_log")';
-          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
-        .push(function (result) {
-          DRONE_LIST[1].log_content = result.data.rows[0].value.text_content;
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
@@ -178,6 +167,9 @@
           }
           var span = document.querySelector('#distance'),
             dist = averageLogDistance(getLogEntries(options.log_1), getLogEntries(options.log_2), false);
+          if (isNaN(dist)) {
+            throw 'Invalid log content';
+          }
           span.textContent = 'Average flights distance: ' +
             Math.round(dist * 100) / 100;
           var fragment = gadget.element.querySelector('#fragment');
@@ -215,6 +207,11 @@
           return simulator.runGame({
             game_parameters: game_parameters_json
           });
+        }, function (error) {
+          return new RSVP.Queue()
+            .push(function () {
+              return gadget.notifySubmitted({message: error, status: 'error'});
+            });
         });
     });
 
