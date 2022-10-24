@@ -26,7 +26,9 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 import StringIO
+import unittest
 import urllib
 import httplib
 
@@ -148,3 +150,9 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.assertEquals(
       error_list, [],
       msg="The following Portal Type classes could not be loaded (see zLOG.log): %r" % error_list)
+
+def test_suite():
+  suite = unittest.TestSuite()
+  if WITH_LEGACY_WORKFLOW:
+    suite.addTest(unittest.makeSuite(TestUpgradeInstanceWithOldDataFs))
+  return suite
