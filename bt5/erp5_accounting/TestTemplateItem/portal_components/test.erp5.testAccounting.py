@@ -3786,6 +3786,61 @@ class TestTransactions(AccountingTestCase):
     self.tic()
     self.assertFalse(payment.line_with_grouping_reference.getGroupingReference())
 
+  def test_grouping_reference_rounding(self):
+    """Reproduction of a bug that grouping was not possible because of rounding error
+
+    >>> 0.1 + 0.2 - 0.3 == 0
+    False
+    """
+    invoice = self._makeOne(
+               title='Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                          source_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.1,
+                           id='line_1'),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.2,
+                           id='line_2')))
+    payment = self._makeOne(
+               title='Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_3',
+                           source_debit=0.3),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=0.3,)))
+    self.tic()
+    grouped = invoice.AccountingTransaction_guessGroupedLines(
+      accounting_transaction_line_uid_list=(
+        invoice.line_1.getUid(),
+        invoice.line_2.getUid(),
+        payment.line_3.getUid(),
+    ))
+    self.assertEqual(
+      sorted(grouped),
+      sorted([
+        invoice.line_1.getRelativeUrl(),
+        invoice.line_2.getRelativeUrl(),
+        payment.line_3.getRelativeUrl(),
+    ]))
+    self.tic()
+
+  def test_grouping_reference_rounding_without_accounting_currency_on_section(self):
+    accounting_currency = self.section.getPriceCurrency()
+    self.assertTrue(accounting_currency)
+    self.section.setPriceCurrency(None)
+    try:
+      self.test_grouping_reference_rounding()
+    finally:
+      self.abort()
+      self.section.setPriceCurrency(accounting_currency)
+      self.tic()
+
   def test_automatically_setting_grouping_reference(self):
     invoice = self._makeOne(
                title='First Invoice',
