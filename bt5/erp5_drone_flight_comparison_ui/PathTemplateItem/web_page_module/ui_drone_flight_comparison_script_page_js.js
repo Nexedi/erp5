@@ -19,7 +19,6 @@
       "z": 15
     },
     // Non-inputs parameters
-    DEFAULT_SCRIPT = 'loiter_flight_script',
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
@@ -32,7 +31,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
@@ -57,11 +55,6 @@
       var gadget = this, query;
       return new RSVP.Queue()
         .push(function () {
-          query = '(portal_type:"Web Script") AND (reference:"' + DEFAULT_SCRIPT + '")';
-          return gadget.jio_allDocs({query: query, select_list: ["text_content"]});
-        })
-        .push(function (result) {
-          DRONE_LIST[0].script_content = result.data.rows[0].value.text_content;
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
