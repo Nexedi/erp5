@@ -13,6 +13,7 @@ url_list = [
   "gadget_erp5_page_flight_comparison_droneaaailefixe.js",
   "gadget_erp5_page_flight_comparison_dronelogfollower.js",
   "babylon.js",
+  "drone.png",
   "babylon.gui.js",
   "gadget_officejs_drone_simulator.json",
   "assets/map/terrain.jpg",
