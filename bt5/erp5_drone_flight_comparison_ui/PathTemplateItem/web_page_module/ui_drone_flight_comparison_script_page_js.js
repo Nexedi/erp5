@@ -19,6 +19,27 @@
       "z": 15
     },
     // Non-inputs parameters
+    DEFAULT_SCRIPT_CONTENT =
+      '/**\n' +
+      ' * The minimal expresion of a AI drone scrip\n' +
+      '**/\n' +
+      '/**\n\n' +
+      ' * Start function called at the beginning of the simulation\n' +
+      ' * "me" is each drone itself\n' +
+      '**/\n' +
+      'me.onStart = function() {\n' +
+      '  //set initial values for a drone like acceleration\n' +
+      '  me.setAcceleration(10);\n' +
+      '  // e.g. arbitrary coordinates\n' +
+      '  me.setTargetCoordinates(0,0,10);\n' +
+      '}\n\n' +
+      '/**\n' +
+      ' * Update function is called 30 times / second\n' +
+      ' * On every execution, information of the current state of simulation can be get\n' +
+      ' * and the drone team strategy can be updated\n' +
+      '**/\n' +
+      'me.onUpdate = function () {\n' +
+      '}\n',
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
@@ -55,6 +76,7 @@
       var gadget = this, query;
       return new RSVP.Queue()
         .push(function () {
+          DRONE_LIST[0].script_content = DEFAULT_SCRIPT_CONTENT;
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
