@@ -23,7 +23,7 @@ if related:
   # get[Category]RelatedList returning a lazy list directly.
   if len(portal_type) == 1:
     catalog_list = portal.portal_catalog(portal_type=portal_type, limit=2,
-                                       **{'default_%s_uid' % base_category: relation.getUid()})
+                                       **{'%s__uid' % base_category: relation.getUid()})
     if len(catalog_list) == 2:
       related_list = catalog_list
       module_id = portal.getDefaultModuleId(portal_type[0], None)
@@ -37,7 +37,7 @@ if related:
             mapping={"that_portal_type": context.getTranslatedPortalType(),
                      "that_title": context.getTitleOrId() }),)
         return module.Base_redirect(
-                 'view', keep_items={'default_%s_uid' % base_category: relation.getUid(),
+                 'view', keep_items={'%s__uid' % base_category: relation.getUid(),
                                      'ignore_hide_rows': 1,
                                      'reset': 1,
                                      'portal_status_message': message})
