@@ -3,8 +3,8 @@
       "name": "OfficeJS Drone Simulator",
       "description": "Drone simulator to run AI scripts and flight logs",
       "icons": [{
-        "src": "erp5.png",
-        "sizes": "128x128",
+        "src": "drone.png",
+        "sizes": "any",
         "type": "image/png"
       }],
       "start_url": "../../",
