@@ -39,6 +39,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript
+from Products.ERP5Type.Utils import cmp
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     """
@@ -283,6 +284,11 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       script = person['test_script']
       self.assertIn(script, person.objectValues())
       self.assertNotIn(script, person.objectValues(portal_type='Person'))
+
+    def test_cmp(self):
+      self.assertEqual(cmp(None, 0), -1)
+      self.assertEqual(cmp(None, ''), -1)
+      self.assertEqual(cmp(0, ''), -1)
 
 def test_suite():
   suite = unittest.TestSuite()
