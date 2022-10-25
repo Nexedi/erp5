@@ -38,7 +38,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript
-from Products.ERP5Type.Utils import cmp
+from Products.ERP5Type.Utils import OrderableList, cmp
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     """
@@ -285,6 +285,16 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(cmp(None, 0), -1)
       self.assertEqual(cmp(None, ''), -1)
       self.assertEqual(cmp(0, ''), -1)
+
+    def test_OrderableList(self):
+      o1 = OrderableList(None, 1)
+      o2 = OrderableList(0, 0)
+      self.assertEqual(sorted([o1, o2]), [o1, o2])
+      self.assertEqual(sorted([o2, o1]), [o1, o2])
+      o3 = OrderableList(1,2,3)
+      o4 = OrderableList(1,2,3,4)
+      self.assertEqual(sorted([o3, o4]), [o3, o4])
+      self.assertEqual(sorted([o4, o3]), [o3, o4])
 
 def test_suite():
   suite = unittest.TestSuite()
