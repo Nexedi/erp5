@@ -29,7 +29,6 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from past.builtins import cmp
 from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
@@ -124,6 +123,22 @@ from Products.ERP5Type.Globals import get_request
 
 from .Accessor.TypeDefinition import type_definition
 from .Accessor.TypeDefinition import list_types
+
+if six.PY3:
+  def cmp(a, b):
+    try:
+      return (a > b) - (a < b)
+    except TypeError:
+      if a is None:
+          return -1
+      elif b is None:
+          return 1
+      type_a = '' if isinstance(a, (int, float)) else type(a).__name__
+      type_b = '' if isinstance(b, (int, float)) else type(b).__name__
+      return (type_a > type_b) - (type_a < type_b)
+else:
+  import __builtin__
+  cmp = __builtin__.cmp
 
 #####################################################
 # Generic sort method
