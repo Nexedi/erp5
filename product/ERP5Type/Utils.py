@@ -144,6 +144,26 @@ else:
 # Generic sort method
 #####################################################
 
+class OrderableList(object):
+  def __init__(self, *args):
+    self.__slots__ = args
+
+  def __lt__(self, other):
+    for i, v in enumerate(self.__slots__):
+      try:
+        other_v = other.__slots__[i]
+      except IndexError:
+        return False
+      c = cmp(v, other_v)
+      if c == -1:
+        return True
+      elif c == 1:
+        return False
+    return True
+
+  def __repr__(self):
+    return repr(self.__slots__)
+
 sort_kw_cache = {}
 
 def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
@@ -201,7 +221,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
               except TypeError:
                 pass
             value_list.append(x)
-          return value_list
+          if six.PY2:
+            return value_list
+          else:
+            return OrderableList(*value_list)
         sort_kw = {'key':sortValue, 'reverse':reverse}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
       else:
