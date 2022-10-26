@@ -18,6 +18,7 @@
       "y": -218.55882352976022,
       "z": 15
     },
+    NUMBER_OF_DRONES = 3,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       '/**\n' +
@@ -31,7 +32,9 @@
       '  //set initial values for a drone like acceleration\n' +
       '  me.setAcceleration(10);\n' +
       '  // e.g. arbitrary coordinates\n' +
-      '  me.setTargetCoordinates(0,0,10);\n' +
+      '  var lat = 45.64492790560583 + me.id * 0.01;\n' +
+      '  var lon = 14.25334942966329 - me.id * 0.01;\n' +
+      '  me.setTargetCoordinates(lat,lon,10);\n' +
       '}\n\n' +
       '/**\n' +
       ' * Update function is called 30 times / second\n' +
@@ -43,9 +46,7 @@
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
-    DRONE_LIST = [
-      {"id": 0, "type": "DroneAaileFixeAPI", "script_content": ""}
-    ];
+    DRONE_LIST = [];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -76,7 +77,6 @@
       var gadget = this, query;
       return new RSVP.Queue()
         .push(function () {
-          DRONE_LIST[0].script_content = DEFAULT_SCRIPT_CONTENT;
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
@@ -226,8 +226,19 @@
                   "hidden": 0,
                   "type": "StringField"
                 },
+                "my_number_of_drones": {
+                  "description": "",
+                  "title": "Number of drones",
+                  "default": NUMBER_OF_DRONES,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "number_of_drones",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_script": {
-                  "default": DRONE_LIST[0].script_content,
+                  "default": DEFAULT_SCRIPT_CONTENT,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
@@ -238,7 +249,6 @@
                   "url": "gadget_editor.html",
                   "sandbox": "public"
                 }
-
               }},
               "_links": {
                 "type": {
@@ -249,13 +259,14 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_drone_speed"],
-                 ["my_drone_acceleration"], ["my_minimum_latitud"], ["my_maximum_latitud"]]
+                [["my_simulation_speed"], ["my_simulation_time"],
+                 ["my_drone_speed"], ["my_drone_acceleration"],
+                 ["my_number_of_drones"], ["my_map_height"], ["my_start_AMSL"]]
               ],[
                 "right",
-                [["my_minimum_longitud"], ["my_maximum_longitud"],
-                 ["my_init_pos_x"], ["my_init_pos_y"], ["my_init_pos_z"],
-                 ["my_start_AMSL"], ["my_map_height"]]
+                [["my_minimum_latitud"], ["my_maximum_latitud"],
+                 ["my_minimum_longitud"], ["my_maximum_longitud"],
+                 ["my_init_pos_x"], ["my_init_pos_y"], ["my_init_pos_z"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -291,7 +302,9 @@
           return simulator.render();
         })
         .push(function () {
-          DRONE_LIST[0].script_content = options.script;
+          for (var i = 0; i < options.number_of_drones; i += 1) {
+            DRONE_LIST[i] = {"id": i, "type": "DroneAaileFixeAPI", "script_content": options.script};
+          }
           var game_parameters_json = {
             "drone": {
               "maxAcceleration": parseFloat(options.drone_acceleration),
