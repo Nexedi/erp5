@@ -370,6 +370,9 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.getMaxHeight = function () {
     return 220;
   };
+  DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
+    return;
+  };
   DroneLogAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
   };

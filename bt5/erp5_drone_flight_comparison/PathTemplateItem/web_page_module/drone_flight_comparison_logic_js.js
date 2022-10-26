@@ -763,8 +763,8 @@ var DroneManager = /** @class */ (function () {
     //TODO
     return 0;
   };
-  DroneManager.prototype.doParachute = function () {
-    return this._API.doParachute(this);
+  DroneManager.prototype.triggerParachute = function () {
+    return this._API.triggerParachute(this);
   };
   DroneManager.prototype.exit = function () {
     this._internal_crash();

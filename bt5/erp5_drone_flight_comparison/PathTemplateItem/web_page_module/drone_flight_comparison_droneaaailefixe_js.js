@@ -288,7 +288,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
     return GAMEPARAMETERS.drone.maxSpeed;
   };
-  DroneAaileFixeAPI.prototype.doParachute = function (drone) {
+  DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     this.internal_setTargetCoordinates(drone, drone_pos.x, drone_pos.y, 5);
   };
