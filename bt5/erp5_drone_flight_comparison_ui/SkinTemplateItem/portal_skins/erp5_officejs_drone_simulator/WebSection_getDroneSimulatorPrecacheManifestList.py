@@ -28,7 +28,8 @@ url_list = [
   "assets/skybox/sky_nz.jpg",
   "assets/skybox/sky_px.jpg",
   "assets/skybox/sky_py.jpg",
-  "assets/skybox/sky_pz.jpg"
+  "assets/skybox/sky_pz.jpg",
+  "gadget_erp5_notification.html"
 ]
 
 return url_list
