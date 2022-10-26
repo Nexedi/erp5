@@ -76,13 +76,14 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     drone.setAcceleration(drone._maxAcceleration);
     return;
   };
-  
+
   DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
     var _this = this;
+    var droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
       if (to < 0) {
         // Send to all drones
-        _this.team.forEach(function (drone) {
+        droneList.forEach(function (drone) {
           if (drone.infosMesh) {
             try {
               drone.onGetMsg(msg);
@@ -96,13 +97,13 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       }
       else {
         // Send to specific drone
-        if (drone.infosMesh) {
+        if (droneList[to].infosMesh) {
           try {
-            _this.team[to].onGetMsg(msg);
+            droneList[to].onGetMsg(msg);
           }
           catch (error) {
             console.warn('Drone crashed on sendMsg due to error:', error);
-            _this.team[to]._internal_crash();
+            droneList[to]._internal_crash();
           }
         }
       }

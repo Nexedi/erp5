@@ -693,8 +693,6 @@ var DroneManager = /** @class */ (function () {
    * @param id The targeted drone. -1 or nothing to broadcast
    */
   DroneManager.prototype.sendMsg = function (msg, id) {
-    //TODO
-    return;
     var _this = this;
     if (!this._canCommunicate)
       return;
