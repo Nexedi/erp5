@@ -41,7 +41,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     self._session_to_delete = set()
 
     self.connector_reference = "abc"
-    self.method_id = 'Alarm_getStripeConnectorReference'
     self.session_url = "https://mock:8080/checkout/sessions"
     self.data = {
       "success_url": "http://success",
@@ -66,17 +65,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         "quantity": 1
       }]
     }
-
-    custom_skin = self.portal.portal_skins.custom
-    if not getattr(custom_skin, self.method_id, None):
-      custom_skin.manage_addProduct['PythonScripts'].manage_addPythonScript(
-        id=self.method_id
-      )
-
-    custom_skin[self.method_id].ZPythonScript_edit(
-      '',
-      'return "%s"' % self.connector_reference
-    )
 
     for doc in self.portal.portal_catalog(
       portal_type="Stripe Connector",
@@ -120,10 +108,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
 
     for doc in self._document_to_delete_list:
       doc.getParentValue().manage_delObjects(ids=[doc.getId(),])
-    custom_skin = self.portal.portal_skins.custom
-    if self.method_id in custom_skin.objectIds():
-      custom_skin.manage_delObjects([self.method_id])
-
     self.tic()
 
   def test_create_stripe_payment_session_and_assign_http_exchange(self):
