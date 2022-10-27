@@ -31,7 +31,7 @@
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_log_page.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_script_page.html')]</td>
   <td></td>
 <tr>
 <tr>
@@ -39,7 +39,7 @@
   <td>//div[contains(@data-gadget-url, 'codemirror.gadget.html')]</td>
   <td></td>
 <tr>
-<!-- Check demos -->
+<!-- Run simulator -->
 <tr>
   <td>pause</td>
   <td>3000</td>
@@ -47,12 +47,23 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_log_page.html')]//input[@type="submit" and @name="action_run"]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_script_page.html')]//input[@type="submit" and @name="action_run"]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//span[@id="loading"]</td>
+  <td></td>
+<tr>
+<!-- Check simulator gadget and babylon lib -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_flight_comparison_gadget.html')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_flight_comparison_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
   <td></td>
 <tr>
 </tbody></table>
