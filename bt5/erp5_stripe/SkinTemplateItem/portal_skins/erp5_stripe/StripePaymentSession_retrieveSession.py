@@ -8,7 +8,7 @@ http_exchange = portal.system_event_module.newContent(
   portal_type="HTTP Exchange",
   title="Retrieve Session",
   follow_up_value=context,
-  resource="http_exchange_resource/stripe/retrieve_session",
+  resource_value=portal.portal_categories.http_exchange_resource.stripe.retrieve_session,
   response=json.dumps(response, indent=2)
 )
 

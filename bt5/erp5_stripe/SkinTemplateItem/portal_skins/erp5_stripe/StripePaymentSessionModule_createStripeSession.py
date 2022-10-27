@@ -20,7 +20,7 @@ http_exchange = portal.system_event_module.newContent(
   title="Create Session",
   follow_up_value=stripe_payment_session,
   source_value=context,
-  resource="http_exchange_resource/stripe/create_session",
+  resource_value=portal.portal_categories.http_exchange_resource.stripe.create_session,
   request=json.dumps(data, indent=2),
   response=json.dumps(response, indent=2)
 )
