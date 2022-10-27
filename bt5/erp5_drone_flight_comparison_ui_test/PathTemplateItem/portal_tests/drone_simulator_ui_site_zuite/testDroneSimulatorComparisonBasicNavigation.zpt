@@ -17,7 +17,25 @@
   <td>${base_url}/web_site_module/officejs_drone_simulator/</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block tal:define="web_site_name python: 'officejs_drone_simulator'">
+   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
+ </tal:block>
+<!-- Check form -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_script_page.html')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[text()='Simulation Speed']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'codemirror.gadget.html')]</td>
+  <td></td>
+<tr>
 <!-- Check panel -->
 <tr>
   <td>assertElementPresent</td>
@@ -27,16 +45,6 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_simulator.html')]//a[contains(@class, 'ui-icon-puzzle-piece') and text()='Run Logs']</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_ui_flight_comparison_script_page.html')]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'codemirror.gadget.html')]</td>
   <td></td>
 <tr>
 <!-- Run simulator -->
