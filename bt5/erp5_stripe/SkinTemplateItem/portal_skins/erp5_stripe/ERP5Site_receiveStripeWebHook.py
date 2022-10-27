@@ -1,5 +1,4 @@
-# proxy role: Author and Auditor
-# Proxy roles are used to create HTTP Exchange (Author) and call getPath (Auditor)
+# proxy role: Author to create HTTP Exchange
 import json
 
 response = container.REQUEST.RESPONSE
