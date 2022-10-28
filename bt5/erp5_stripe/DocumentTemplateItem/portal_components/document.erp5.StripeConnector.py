@@ -90,7 +90,6 @@ class StripeConnector(XMLObject):
     header_dict = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    header_dict.update(kw.get("extra_header") or {})
     url_string = self.getUrlString()
     if not url_string.endswith("/"):
       url_string += "/"
