@@ -347,7 +347,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         "https://mock:8080/checkout/sessions/%s" % session_id,
         self._get_response_callback(session_id)
       )
- 
+
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector, data, module.getRelativeUrl(), batch_mode=True)
       self.assertEqual("open", stripe_payment_session.getValidationState())
@@ -463,7 +463,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       self.tic()
       self._document_to_delete_list.append(stripe_payment_session)
-    
+
     first_http_exchange, = stripe_payment_session.getFollowUpRelatedValueList(
       portal_type="HTTP Exchange")
     self.assertEqual("acknowledged", first_http_exchange.getValidationState())
