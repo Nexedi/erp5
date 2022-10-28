@@ -81,6 +81,8 @@ class StripeConnector(XMLObject):
   def createSession(self, data, **kw):
     """
       Create Session in Stripe using Stripe API and return a checkout.session
+
+      data is a dict, see https://stripe.com/docs/api/checkout/sessions/create
     """
     end_point = "checkout/sessions"
     # copy data, not to mutate caller's data
