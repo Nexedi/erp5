@@ -26,8 +26,11 @@
 #
 ##############################################################################
 
-import requests
+
 import urllib
+from copy import deepcopy
+
+import requests
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -78,8 +81,8 @@ class StripeConnector(XMLObject):
       Create Session in Stripe using Stripe API and return a checkout.session      
     """
     end_point = "checkout/sessions"
-    # copy data, other we will change the real data request
-    request_data = data.copy()
+    # copy data, not to mutate caller's data
+    request_data = deepcopy(data)
 
     if "mode" not in request_data:
       request_data["mode"] = "payment"
