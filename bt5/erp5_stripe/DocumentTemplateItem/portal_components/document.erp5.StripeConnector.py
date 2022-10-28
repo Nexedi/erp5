@@ -102,6 +102,13 @@ class StripeConnector(XMLObject):
       data=urllib.urlencode(request_data),
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
+    if not response.ok:
+      __traceback_info__ = ( # pylint:disable=unused-variable
+        response.request.url,
+        response.request.body,
+        response.text
+      )
+      response.raise_for_status()
     return response.json()
 
   def retrieveSession(self, session_id, **kw):
@@ -116,4 +123,11 @@ class StripeConnector(XMLObject):
       url_string,
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
+    if not response.ok:
+      __traceback_info__ = ( # pylint:disable=unused-variable
+        response.request.url,
+        response.request.body,
+        response.text
+      )
+      response.raise_for_status()
     return response.json()
