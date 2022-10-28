@@ -1,11 +1,8 @@
 import json
 from Products.ERP5Type.Message import translateString
 
-# ignore if SPS is not open or not expired yet
-if context.getValidationState() != "open" or (
-     context.getExpirationDate() > DateTime() and (
-       not bypass_uid or (context.getUid() != bypass_uid)
-     )):
+# ignore if SPS is not open or already had an error
+if context.getValidationState() != "open" or context.hasErrorActivity():
   return
 
 web_service = context.getSourceValue(portal_type="Stripe Connector")
