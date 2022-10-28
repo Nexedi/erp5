@@ -115,9 +115,6 @@ class StripeConnector(XMLObject):
     url_string += "checkout/sessions/%(session_id)s" % {"session_id": session_id}
     response = requests.get(
       url_string,
-      headers={
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
     return response.json()

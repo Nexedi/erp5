@@ -158,9 +158,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     self._session_to_delete.add(session_id)
 
     def _callback(request):
-      self.assertEqual(
-        'application/x-www-form-urlencoded',
-        request.headers['Content-Type'], request.headers)
       url = request.url
       if session_id in ("abc321_completed", "abc321_webhook"):
         return (200, {'content-type': 'application/json'}, json.dumps({
