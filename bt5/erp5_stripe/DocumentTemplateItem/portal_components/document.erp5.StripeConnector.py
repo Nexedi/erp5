@@ -64,14 +64,14 @@ class StripeConnector(XMLObject):
     for key in key_list:
       prefix += "[%s]" % key
     return prefix
-  
+
   def buildLine(self, data_dict, prefix, key_list, value):
     if not isinstance(value, dict):
       data_dict[self.buildLineKey(prefix, key_list)] = value
     else:
       for subkey, subvalue in six.iteritems(value):
         self.buildLine(data_dict, prefix, key_list + [subkey,], subvalue)
- 
+
   def buildLineItemList(self, prefix, line_item_list):
     data_dict = {}
     for key, value in enumerate(line_item_list):
@@ -80,7 +80,7 @@ class StripeConnector(XMLObject):
 
   def createSession(self, data, **kw):
     """
-      Create Session in Stripe using Stripe API and return a checkout.session      
+      Create Session in Stripe using Stripe API and return a checkout.session
     """
     end_point = "checkout/sessions"
     # copy data, not to mutate caller's data
@@ -115,7 +115,7 @@ class StripeConnector(XMLObject):
 
   def retrieveSession(self, session_id, **kw):
     """
-      Retrieve Session in Stripe using Stripe API and return a checkout.session      
+      Retrieve Session in Stripe using Stripe API and return a checkout.session
     """
     url_string = self.getUrlString()
     if not url_string.endswith("/"):
