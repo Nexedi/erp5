@@ -93,6 +93,8 @@ def toBasicTypes(obj):
     return tuple(toBasicTypes(x) for x in obj)
   if isinstance(obj, Message):
     return obj.translate()
+  if isinstance(obj, DateTime):
+    return obj.rfc822()
   try:
     return {toBasicTypes(key): toBasicTypes(obj[key]) for key in obj}
   except Exception:
