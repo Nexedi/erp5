@@ -1,11 +1,15 @@
+/*global console*/
+/*jslint nomen: true, indent: 2, maxlen: 80, white: true */
+
 /************************** DRONE A AILE FIXE API ****************************/
 
-TAKEOFF_RADIUS = 60;
-LOITER_LIMIT = 30;
-LOITER_RADIUS_FACTOR = 0.60;
-LOITER_SPEED_FACTOR = 1.5;
+var TAKEOFF_RADIUS = 60,
+    LOITER_LIMIT = 30,
+    LOITER_RADIUS_FACTOR = 0.60,
+    LOITER_SPEED_FACTOR = 1.5;
 
 var DroneAaileFixeAPI = /** @class */ (function () {
+  "use strict";
   //** CONSTRUCTOR
   function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
@@ -35,19 +39,22 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     }*/
   };
 
-  DroneAaileFixeAPI.prototype.set_loiter_mode = function (radius, drone) {
+  DroneAaileFixeAPI.prototype.set_loiter_mode = function (radius) {
     this._loiter_mode = true;
     if (radius && radius > LOITER_LIMIT) {
       this._loiter_radius = radius * LOITER_RADIUS_FACTOR;
       this._loiter_center = this._last_target;
       this._loiter_coordinates = [];
       this._last_loiter_point_reached = -1;
-      var x1, y1;
+      var x1, y1, angle;
       //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
-      for (var angle = 360; angle > 0; angle-=8){ //clockwise
-        x1 = this._loiter_radius * Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
-        y1 = this._loiter_radius * Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
-        this._loiter_coordinates.push(this.processCurrentPosition(x1, y1, this._loiter_center.z));
+      for (angle = 360; angle > 0; angle-=8){ //clockwise
+        x1 = this._loiter_radius *
+          Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
+        y1 = this._loiter_radius *
+          Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
+        this._loiter_coordinates.push(
+          this.processCurrentPosition(x1, y1, this._loiter_center.z));
       }
     }
   };
@@ -69,7 +76,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   };
   DroneAaileFixeAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
     function (drone, x, y, z) {
-    x -= drone._controlMesh.position.x; //TODO use position
+    x -= drone._controlMesh.position.x;
     y -= drone._controlMesh.position.z;
     z -= drone._controlMesh.position.y;
     drone.setDirection(x, y, z);
@@ -78,8 +85,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   };
 
   DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
-    var _this = this;
-    var droneList = _this._gameManager._droneList;
+    var _this = this,
+        droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
       if (to < 0) {
         // Send to all drones
@@ -107,20 +114,20 @@ var DroneAaileFixeAPI = /** @class */ (function () {
           }
         }
       }
-    }, GAMEPARAMETERS.latency.communication);
+    }, _this._flight_parameters.latency.communication);
   };
   DroneAaileFixeAPI.prototype.log = function (msg) {
     console.log("API say : " + msg);
   };
   DroneAaileFixeAPI.prototype.getGameParameter = function (name) {
-    if (["gameTime", "map"].includes(name))
+    if (["gameTime", "map"].includes(name)) {
       return this._gameManager.gameParameter[name];
+    }
   };
   DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z) {
     if(isNaN(lat) || isNaN(lon) || isNaN(z)){
       throw new Error('Target coordinates must be numbers');
     }
-    var flightParameters = this.getFlightParameters();
     function longitudToX(lon, flightParameters) {
       return (flightParameters.map.width / 360.0) * (180 + lon);
     }
@@ -128,17 +135,21 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       return (flightParameters.map.depth / 180.0) * (90 - lat);
     }
     function normalizeToMap(x, y, flightParameters) {
-      var n_x = (x - flightParameters.map.min_x) / (flightParameters.map.max_x - flightParameters.map.min_x),
-        n_y = (y - flightParameters.map.min_y) / (flightParameters.map.max_y - flightParameters.map.min_y);
-      return [n_x * 1000 - flightParameters.map.width / 2, n_y * 1000 - flightParameters.map.depth / 2];
+      var n_x = (x - flightParameters.map.min_x) /
+          (flightParameters.map.max_x - flightParameters.map.min_x),
+        n_y = (y - flightParameters.map.min_y) /
+          (flightParameters.map.max_y - flightParameters.map.min_y);
+      return [n_x * 1000 - flightParameters.map.width / 2,
+              n_y * 1000 - flightParameters.map.depth / 2];
     }
-    var x = longitudToX(lon, flightParameters),
+    var flightParameters = this.getFlightParameters(),
+      x = longitudToX(lon, flightParameters),
       y = latitudeToY(lat, flightParameters),
-      position = normalizeToMap(x, y, flightParameters);
+      position = normalizeToMap(x, y, flightParameters), processed_coordinates;
     if (z > flightParameters.map.start_AMSL) {
       z -= flightParameters.map.start_AMSL;
     }
-    var processed_coordinates = {
+    processed_coordinates = {
       x: position[0],
       y: position[1],
       z: z
@@ -149,14 +160,16 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   };
   DroneAaileFixeAPI.prototype.processCurrentPosition = function (x, y, z) {
     //convert x-y coordinates into latitud-longitude
-    var flightParameters = this.getFlightParameters();
-    var lon = x + flightParameters.map.width / 2;
+    var flightParameters = this.getFlightParameters(),
+      lon = x + flightParameters.map.width / 2,
+      lat = y + flightParameters.map.depth / 2;
     lon = lon / 1000;
-    lon = lon * (flightParameters.map.max_x - flightParameters.map.min_x) + flightParameters.map.min_x;
+    lon = lon * (flightParameters.map.max_x - flightParameters.map.min_x) +
+      flightParameters.map.min_x;
     lon = lon / (flightParameters.map.width / 360.0) - 180;
-    var lat = y + flightParameters.map.depth / 2;
     lat = lat / 1000;
-    lat = lat * (flightParameters.map.max_y - flightParameters.map.min_y) + flightParameters.map.min_y;
+    lat = lat * (flightParameters.map.max_y - flightParameters.map.min_y) +
+      flightParameters.map.min_y;
     lat = 90 - lat / (flightParameters.map.depth / 180.0);
     return {
       x: lat,
@@ -178,27 +191,31 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       return R * c;
     }
     if (this._loiter_radius > LOITER_LIMIT) {
-      var drone_pos = drone.getCurrentPosition();
+      var drone_pos = drone.getCurrentPosition(),
+        min = 9999, min_i, i, d, next_point;
       //shift loiter circle to nearest point
       if (this._last_loiter_point_reached === -1) {
         if (!this.shifted) {
           drone._maxSpeed = drone._maxSpeed * LOITER_SPEED_FACTOR;
-          var min = 9999, min_i;
-          for (var i = 0; i < this._loiter_coordinates.length; i++){
-            var d = distance([drone_pos.x, drone_pos.y], [this._loiter_coordinates[i].x, this._loiter_coordinates[i].y]);
+          for (i = 0; i < this._loiter_coordinates.length; i+=1){
+            d = distance([drone_pos.x, drone_pos.y],
+                             [this._loiter_coordinates[i].x,
+                              this._loiter_coordinates[i].y]);
             if (d < min) {
               min = d;
               min_i = i;
             }
           }
-          this._loiter_coordinates = this._loiter_coordinates.concat(this._loiter_coordinates.splice(0,min_i));
+          this._loiter_coordinates = this._loiter_coordinates.concat(
+            this._loiter_coordinates.splice(0,min_i));
           this.shifted = true;
         }
       } else {
         this.shifted = false;
       }
       //stop
-      if (this._last_loiter_point_reached === this._loiter_coordinates.length - 1) {
+      if (this._last_loiter_point_reached ===
+          this._loiter_coordinates.length - 1) {
         if (drone._maxSpeed !== this.getMaxSpeed()) {
           drone._maxSpeed = this.getMaxSpeed();
         }
@@ -206,15 +223,21 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         return;
       }
       //loiter
-      var next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
-      this.internal_setTargetCoordinates(drone, next_point.x, next_point.y, next_point.z, true);
-      if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
+      next_point =
+        this._loiter_coordinates[this._last_loiter_point_reached + 1];
+      this.internal_setTargetCoordinates(
+        drone, next_point.x, next_point.y, next_point.z, true);
+      if (distance([drone_pos.x, drone_pos.y],
+                   [next_point.x, next_point.y]) < 1) {
         this._last_loiter_point_reached += 1;
-        if (this._last_loiter_point_reached === this._loiter_coordinates.length - 1) {
+        if (this._last_loiter_point_reached ===
+            this._loiter_coordinates.length - 1) {
           return;
         }
-        next_point = this._loiter_coordinates[this._last_loiter_point_reached + 1];
-        this.internal_setTargetCoordinates(drone, next_point.x, next_point.y, next_point.z, true);
+        next_point = this._loiter_coordinates[
+          this._last_loiter_point_reached + 1];
+        this.internal_setTargetCoordinates(
+          drone, next_point.x, next_point.y, next_point.z, true);
       }
     }
   };
@@ -227,9 +250,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     }
     this.takeoff_path = [];
     if (skip_loiter) {*/
-      var drone_pos = drone.getCurrentPosition();
-      this.internal_setTargetCoordinates(drone, drone_pos.x, drone_pos.y, altitude);
-      return;
+    var drone_pos = drone.getCurrentPosition();
+    this.internal_setTargetCoordinates(
+      drone, drone_pos.x, drone_pos.y, altitude);
+    return;
     /*}
     var x1, y1,
       LOOPS = 1,
@@ -252,7 +276,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
           x1 = center.x*FACTOR + x1*(1-FACTOR);
           y1 = center.y*FACTOR + y1*(1-FACTOR);
         }
-        this.takeoff_path.push({x: x1, y: y1, z: initial_altitude + current_point * (altitude-initial_altitude)/total_points});
+        this.takeoff_path.push({x: x1, y: y1, z: initial_altitude +
+          current_point * (altitude-initial_altitude)/total_points});
       }
     }*/
   };
@@ -276,18 +301,21 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       z: drone.position.z
     };
     var next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-    this.internal_setVirtualPlaneTargetCoordinates(next_point.x, next_point.y, next_point.z);
-    if (distance([drone_pos.x, drone_pos.y], [next_point.x, next_point.y]) < 1) {
+    this.internal_setVirtualPlaneTargetCoordinates(
+      next_point.x, next_point.y, next_point.z);
+    if (distance([drone_pos.x, drone_pos.y],
+      [next_point.x, next_point.y]) < 1) {
       this._last_altitude_point_reached += 1;
       if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
         return;
       }
       next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-      this.internal_setVirtualPlaneTargetCoordinates(next_point.x, next_point.y, next_point.z);
+      this.internal_setVirtualPlaneTargetCoordinates(
+        next_point.x, next_point.y, next_point.z);
     }
   };*/
   DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
-    return GAMEPARAMETERS.drone.maxSpeed;
+    return this._flight_parameters.drone.maxSpeed;
   };
   DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
@@ -297,7 +325,8 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     var drone_pos = drone.getCurrentPosition();
     return Math.floor(drone_pos.z) < 10;
   };
-  DroneAaileFixeAPI.prototype.exit = function (drone) {
+  DroneAaileFixeAPI.prototype.exit = function () {
+    return;
   };
   DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
     return 0;
