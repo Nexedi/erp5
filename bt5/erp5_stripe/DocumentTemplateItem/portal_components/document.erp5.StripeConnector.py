@@ -27,10 +27,12 @@
 ##############################################################################
 
 
-import urllib
+
+from six.moves import urllib
 from copy import deepcopy
 
 import requests
+import six
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -66,8 +68,8 @@ class StripeConnector(XMLObject):
   def buildLine(self, data_dict, prefix, key_list, value):
     if not isinstance(value, dict):
       data_dict[self.buildLineKey(prefix, key_list)] = value
-    elif isinstance(value, dict):
-      for subkey, subvalue in value.items():
+    else:
+      for subkey, subvalue in six.iteritems(value):
         self.buildLine(data_dict, prefix, key_list + [subkey,], subvalue)
  
   def buildLineItemList(self, prefix, line_item_list):
@@ -99,7 +101,7 @@ class StripeConnector(XMLObject):
     response = requests.post(
       url_string,
       headers=header_dict,
-      data=urllib.urlencode(request_data),
+      data=urllib.parse.urlencode(request_data),
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
     if not response.ok:

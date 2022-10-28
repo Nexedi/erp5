@@ -26,11 +26,13 @@
 ##############################################################################
 
 import json
+from six.moves import urllib
+from io import BytesIO
+from urlparse import parse_qs
+
 import requests
 import responses
-import urllib
-from StringIO import StringIO
-from urlparse import parse_qs
+
 from DateTime import DateTime
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -299,7 +301,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % "abc321_expired",
             "object": "event",
@@ -312,7 +314,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
@@ -358,7 +360,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       stripe_payment_session.log("first_expiration_date BEFORE FIRST", stripe_payment_session.getExpirationDate())
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
@@ -371,7 +373,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
@@ -382,7 +384,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.assertEqual("open", stripe_payment_session.getValidationState())
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
@@ -395,7 +397,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
@@ -417,7 +419,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       # Both Stripe Payment sessions should keep the same expiration date
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
@@ -430,7 +432,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
@@ -549,7 +551,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
@@ -562,7 +564,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
