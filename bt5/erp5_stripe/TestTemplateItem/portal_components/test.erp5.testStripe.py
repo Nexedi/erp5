@@ -95,10 +95,11 @@ class TestStripePaymentSession(ERP5TypeTestCase):
 
     self.tic()
 
-    for session in [s.getObject() for s in self.portal.stripe_payment_session_module.searchFolder(
+    if self._session_to_delete:
+      for session in [s.getObject() for s in self.portal.stripe_payment_session_module.searchFolder(
         reference=self._session_to_delete)]:
-      if session not in self._document_to_delete_list:
-        self._document_to_delete_list.append(session)
+        if session not in self._document_to_delete_list:
+          self._document_to_delete_list.append(session)
 
     for doc in self._document_to_delete_list:
       if doc.getPortalType() == "Stripe Payment Session":
