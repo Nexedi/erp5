@@ -175,12 +175,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
           "status": "expired",
           "object": "checkout.session"
         }))
-      if session_id in ("test_update_expiration_date", "test_update_expiration_date_other"):
-        return (200, {'content-type': 'application/json'}, json.dumps({
-          "id": session_id,
-          "status": "open",
-          "object": "checkout.session"
-        }))
       if session_id == "abc321":
         return (200, {'content-type': 'application/json'}, json.dumps({
           "id": session_id,
@@ -335,19 +329,26 @@ class TestStripePaymentSession(ERP5TypeTestCase):
   def test_update_expiration_date(self):
     connector = self._create_connector()
     data = self.data.copy()
-    session_id = "test_update_expiration_date"
 
     module = self.portal.stripe_payment_session_module
     with responses.RequestsMock() as rsps:
-      rsps.add_callback(
+      rsps.add(
         responses.POST,
         self.session_url,
-        self._response_callback(session_id)
+        json={
+          "id": "test_update_expiration_date",
+          "status": "open",
+          "object": "checkout.session"
+        },
       )
-      rsps.add_callback(
+      rsps.add(
         responses.GET,
-        "https://mock:8080/checkout/sessions/%s" % session_id,
-        self._get_response_callback(session_id)
+        "https://mock:8080/checkout/sessions/test_update_expiration_date",
+        json={
+          "id": "test_update_expiration_date",
+          "status": "open",
+          "object": "checkout.session"
+        },
       )
 
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
@@ -357,92 +358,10 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.tic()
       self._document_to_delete_list.append(stripe_payment_session)
       first_expiration_date = stripe_payment_session.getExpirationDate()
-      stripe_payment_session.log("first_expiration_date BEFORE FIRST", stripe_payment_session.getExpirationDate())
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id,
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        }).encode()),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
+
+      self.portal.portal_alarms.check_stripe_payment_session.activeSense()
       self.tic()
-
-      second_expiration_date = stripe_payment_session.getExpirationDate()
-      self.assertNotEqual(first_expiration_date, second_expiration_date)
-      self.assertEqual("open", stripe_payment_session.getValidationState())
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id,
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        }).encode()),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
-      self.tic()
-
-      third_expiration_date = stripe_payment_session.getExpirationDate()
-      self.assertNotEqual(third_expiration_date, second_expiration_date)
-
-      second_stripe_payment_session = self.portal.stripe_payment_session_module.newContent(
-        reference=session_id + "_other",
-        portal_type="Stripe Payment Session"
-      )
-      second_stripe_payment_session.expire()
-      self.tic()
-      self._document_to_delete_list.append(second_stripe_payment_session)
-      second_stripe_payment_session_expiration_date = second_stripe_payment_session.getExpirationDate()
-
-      # Here, we simulate pass one session_id to an expired Stripe Payment Session
-      # Both Stripe Payment sessions should keep the same expiration date
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=BytesIO(urllib.parse.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id + "_other",
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        }).encode()),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
-      self.tic()
-
-      self.assertEqual(
-        second_stripe_payment_session_expiration_date,
-        second_stripe_payment_session.getExpirationDate()
-      )
-      self.assertEqual(third_expiration_date, stripe_payment_session.getExpirationDate())
+      self.assertGreater(stripe_payment_session.getExpirationDate(), first_expiration_date)
 
   def test_invalid_request_error(self):
     connector = self._create_connector()
