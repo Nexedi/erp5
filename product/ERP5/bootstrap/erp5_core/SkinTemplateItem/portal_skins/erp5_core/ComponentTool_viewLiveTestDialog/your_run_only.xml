@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -226,6 +226,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
