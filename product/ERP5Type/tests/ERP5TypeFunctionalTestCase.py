@@ -454,7 +454,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
     for page_template_path, page_template in tests_tool.ZopeFind(
         tests_tool[self.run_only] if self.run_only else tests_tool,
-        obj_metatypes=('Page Template',), search_sub=1):
+        obj_metatypes=('Page Template', 'ERP5 Page Template',), search_sub=1):
       try:
         page_template.pt_render()
       except Exception:

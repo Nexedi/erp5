@@ -111,16 +111,16 @@ class PageTemplate(XMLObject, ZopePageTemplate, ExpressionMixin('expression')):
 
   __call__ = ZopePageTemplate.__call__
 
-  # keep `text` stored as unicode for page template engine, but exposed
-  # as an utf-8 encoded string for ERP5 interface.
+  # BBB PY2: keep `text` stored as unicode for page template engine, but
+  # exposed as an utf-8 encoded str for ERP5 interface
   def _setText(self, value):
-    print ('_setText', repr(value))
+    #print ('_setText', repr(value))
     if six.PY2 and isinstance(value, str):
       value = value.decode('utf-8')
     self.pt_edit(value, self.getContentType())
 
   def getText(self, default=''):
-    print('getText')
+    #print('getText')
     value = self._text or default
     if six.PY2:
       value = value.encode('utf-8')
