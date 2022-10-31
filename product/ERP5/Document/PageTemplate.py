@@ -99,6 +99,8 @@ class PageTemplate(XMLObject, ZopePageTemplate, ExpressionMixin('expression')):
                     , PropertySheet.Reference
                     )
 
+  isPrincipiaFolderish = False
+
   def __init__(self, *args, **kw):
     """
     override to call __init__ of page template in order to set
