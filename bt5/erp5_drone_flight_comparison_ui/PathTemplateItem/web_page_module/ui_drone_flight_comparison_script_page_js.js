@@ -294,7 +294,7 @@
           }
           fragment = domsugar(gadget.element.querySelector('#fragment'),
                                   [domsugar('div')]).firstElementChild;
-          return gadget.declareGadget("gadget_erp5_page_flight_comparison_gadget.html",
+          return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
                                       {element: fragment, scope: 'simulator'});
         })
         .push(function (drone_gadget) {
