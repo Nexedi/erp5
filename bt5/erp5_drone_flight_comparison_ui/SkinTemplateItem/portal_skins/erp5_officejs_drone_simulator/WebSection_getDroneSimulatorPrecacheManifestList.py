@@ -1,5 +1,5 @@
 url_list = [
-  "gadget_erp5_page_babylonjs_logic_comparison.js",
+  "gadget_erp5_page_drone_simulator_logic.js",
   "gadget_erp5_page_ui_flight_comparison_script_page.html",
   "gadget_erp5_page_ui_flight_comparison_script_page.js",
   "gadget_erp5_page_ui_flight_comparison_log_page.html",
