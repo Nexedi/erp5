@@ -2285,12 +2285,20 @@ class FooBar(ValidationFailed):
   def __init__(self, *args, **kw):
     super(FooBar, self).__init__(*args, **kw)
 
+# Test for various pylint fixes
+
 # Transforms for Zope which should ideally be upstream'ed
 from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, imPermissionRole, _what_not_even_god_should_do # pylint: disable=unused-import
 
 # Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
 # Shared.DC was not considered a namespace package
 from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
+
+import lxml.etree
+lxml.etree.Element('test')
+
+from BTrees.OOBTree import OOBTree
+OOBTree()
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
