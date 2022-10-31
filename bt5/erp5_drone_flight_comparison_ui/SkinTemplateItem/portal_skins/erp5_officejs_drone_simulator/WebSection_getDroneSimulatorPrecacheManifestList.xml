@@ -53,6 +53,14 @@
             <value> <string>REQUEST=None</string> </value>
         </item>
         <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple>
+                <string>invalid syntax (Script (Python), line 2)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>WebSection_getDroneSimulatorPrecacheManifestList</string> </value>
         </item>
