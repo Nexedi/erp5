@@ -71,7 +71,11 @@ def manage_page_footer(self):
   elif document.meta_type in ('Z SQL Method', 'ERP5 SQL Method'):
     mode = 'sql'
     textarea_selector = 'textarea[name="template:text"]'
-  elif document.meta_type in ('Page Template', 'ERP5 OOo Template', ):
+  elif document.meta_type in (
+    'Page Template',
+    'ERP5 OOo Template',
+    'ERP5 Page Template',
+    ):
     if 'html' in document.content_type:
       if editor == 'codemirror':
         mode = 'htmlmixed'
