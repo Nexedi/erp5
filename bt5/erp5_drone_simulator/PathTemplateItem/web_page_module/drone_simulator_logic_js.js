@@ -144,7 +144,7 @@ var DroneManager = /** @class */ (function () {
         return this.onStart();
       } catch (error) {
         console.warn('Drone crashed on start due to error:', error);
-        this._internal_crash();
+        this._internal_crash(error);
       }
   };
   /**
@@ -185,9 +185,9 @@ var DroneManager = /** @class */ (function () {
           })
           .push(function () {
             context._canUpdate = true;
-          }, function (err) {
-            console.warn('Drone crashed on update due to error:', err);
-            context._internal_crash();
+          }, function (error) {
+            console.warn('Drone crashed on update due to error:', error);
+            context._internal_crash(error);
           })
           .push(function () {
             context._API.internal_update(context);
@@ -197,11 +197,14 @@ var DroneManager = /** @class */ (function () {
     }
     return;
   };
-  DroneManager.prototype._internal_crash = function () {
+  DroneManager.prototype._internal_crash = function (error) {
     this._canCommunicate = false;
     this._controlMesh = null;
     this._mesh = null;
     this._canPlay = false;
+    if (error) {
+      this._API._gameManager.logError(this, error);
+    }
     this.onTouched();
   };
   DroneManager.prototype.setStartingPosition = function (x, y, z) {
@@ -651,6 +654,10 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype.delay = function (callback, millisecond) {
     this._delayed_defer_list.push([callback, millisecond]);
+  };
+
+  GameManager.prototype.logError = function (drone, error) {
+    this._flight_log[drone._id].push(error.stack);
   };
 
   GameManager.prototype._update = function (delta_time) {
