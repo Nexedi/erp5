@@ -1,0 +1,164 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Drone Simulator OJS app (expected failure)</title>
+<!-- This test is expected to fail as the drone simulator runs on a web worker canvas, which relies on a very new feature: offscreen canvas
+---- This feature is not supported yet by the latest Firefox ESR used in the test nodes -->
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Drone Simulator OJS app (expected failure)</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Go to site -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_drone_simulator/</td>
+  <td></td>
+</tr>
+<tal:block tal:define="web_site_name python: 'officejs_drone_simulator'">
+   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
+ </tal:block>
+<!-- Check form -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_script_page.html')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[text()='Simulation Speed']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'codemirror.gadget.html')]</td>
+  <td></td>
+<tr>
+<!-- Check panel -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_simulator.html')]//a[contains(@class, 'ui-icon-edit') and text()='Edit & Run Script']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_simulator.html')]//a[contains(@class, 'ui-icon-puzzle-piece') and text()='Run Logs']</td>
+  <td></td>
+<tr>
+<!-- Run simulator -->
+<tr>
+  <td>pause</td>
+  <td>3000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_script_page.html')]//input[@type="submit" and @name="action_run"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@id="loading"]</td>
+  <td></td>
+<tr>
+<!-- Check simulator gadget and babylon lib -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="container"]//a[contains(text(), 'Download Simulation LOG')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="container"]//textarea</td>
+  <td></td>
+<tr>
+<!-- Go to log page -->
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel_drone_simulator.html')]//a[contains(@class, 'ui-icon-puzzle-piece') and text()='Run Logs']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[text()='Simulation Speed']</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@id="log_1"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@id="log_1"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@id="log_2"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_log_page.html')]//input[@type="submit" and @name="action_run"]</td>
+  <td></td>
+<tr>
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Invalid log content'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>type</td>
+  <td>//textarea[@id="log_1"]</td>
+  <td>timestamp;;latitude;;longitude;;AMSL (m);;rel altitude (m);;pitch (Â°);;roll(Â°);;yaw(Â°);;air speed (m/s);;throttle(%);;climb rate(m/s)
+    16.666666666666668;45.6412;14.265800000000013;610.328;15</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@id="log_2"]</td>
+  <td>timestamp;;latitude;;longitude;;AMSL (m);;rel altitude (m);;pitch (Â°);;roll(Â°);;yaw(Â°);;air speed (m/s);;throttle(%);;climb rate(m/s)
+    16.666666666666668;45.6412;14.265800000000013;610.328;15</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_log_page.html')]//input[@type="submit" and @name="action_run"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@id="distance" and contains(text(), 'Average flights distance')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@id="loading"]</td>
+  <td></td>
+<tr>
+<!-- Check simulator gadget and babylon lib -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
+  <td></td>
+<tr>
+</tbody></table>
+</body>
+</html>
