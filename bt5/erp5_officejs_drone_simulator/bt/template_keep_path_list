@@ -1,0 +1,5 @@
+image_module/drone_icon_png
+web_page_module/ojs_drone_simulator_*
+web_site_module/officejs_drone_simulator
+web_site_module/officejs_drone_simulator/*
+web_page_module/drone_simulator_*
