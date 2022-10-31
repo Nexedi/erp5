@@ -136,6 +136,10 @@
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Page Template</type>
+  <workflow>edit_action</workflow>
+ </chain>
+ <chain>
   <type>Predicate</type>
   <workflow>edit_workflow</workflow>
  </chain>

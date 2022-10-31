@@ -45,6 +45,7 @@ Mixin Component | edit_workflow
 Module Component | component_validation_workflow
 Module Component | dynamic_class_generation_interaction_workflow
 Module Component | edit_workflow
+Page Template | edit_action
 Predicate | edit_workflow
 Preference | edit_workflow
 Preference | preference_interaction_workflow
