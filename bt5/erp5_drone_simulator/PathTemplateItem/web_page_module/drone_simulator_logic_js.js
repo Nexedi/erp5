@@ -56,6 +56,7 @@ var DroneManager = /** @class */ (function () {
     this._canUpdate = true;
     this._id = id;
     this._leader_id = 0;
+    this._drone_dict = {};
     this._API = API; // var API created on AI evel
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
@@ -83,6 +84,11 @@ var DroneManager = /** @class */ (function () {
   };
   Object.defineProperty(DroneManager.prototype, "leader_id", {
     get: function () { return this._leader_id; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "drone_dict", {
+    get: function () { return this._drone_dict; },
     enumerable: true,
     configurable: true
   });
