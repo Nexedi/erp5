@@ -84,13 +84,6 @@
   <td>//div[@class="container"]//textarea</td>
   <td></td>
 <tr>
-  <!--
-<a download="simulation_log.txt" href="blob:https://softinst157899.host.vifib.net/3011053b-4df5-46d3-9bf7-227f24835ed8" data-downloadurl="text/plain:simulation_log.txt:blob:https://softinst157899.host.vifib.net/3011053b-4df5-46d3-9bf7-227f24835ed8">Download Simulation LOG 0</a>
-
-<div class="container">
-  textarea
-
--->
 <!-- Go to log page -->
 <tr>
   <td>click</td>
