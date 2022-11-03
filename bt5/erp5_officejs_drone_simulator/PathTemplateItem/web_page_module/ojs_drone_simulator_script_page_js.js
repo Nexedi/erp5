@@ -1,9 +1,8 @@
 (function (window, RSVP, rJS, domsugar, document, Blob) {
   "use strict";
 
-  //HARDCODED VALUES to present as defaults
+  //Default values
   var SIMULATION_SPEED = 200,
-    //TODO end game when all drones are stopped or down
     SIMULATION_TIME = 1000,
     MAX_SPEED = 7.542174921016468, //16.666667,
     MAX_ACCELERATION = 1,
