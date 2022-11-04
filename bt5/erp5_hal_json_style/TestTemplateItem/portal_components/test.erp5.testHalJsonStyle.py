@@ -2942,8 +2942,12 @@ return msg"
     # worklists with the actual count of document
     fake_request = do_fake_request("GET")
 
+    self.portal.Base_addUITestTranslation(message='Draft to Validate', translation='Draft to Validate translated', language="wo")
+
+
     default_gettext = self.portal.Localizer.erp5_ui.gettext
     def gettext(message, **kw):
+      # TODO can't we return mock.DEFAULT here ?
       return default_gettext(message, **kw)
 
     with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext) as gettext_mock:
