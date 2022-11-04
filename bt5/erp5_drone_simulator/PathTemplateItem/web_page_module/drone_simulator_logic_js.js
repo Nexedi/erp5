@@ -89,6 +89,7 @@ var DroneManager = /** @class */ (function () {
   });
   Object.defineProperty(DroneManager.prototype, "drone_dict", {
     get: function () { return this._drone_dict; },
+    set: function (value) { this._drone_dict = value; },
     enumerable: true,
     configurable: true
   });
@@ -669,7 +670,7 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._update = function (delta_time) {
     var _this = this,
       queue = new RSVP.Queue(),
-      i;
+      i, drone_dict = [], drone_position;
     this._updateDisplayedInfo(delta_time);
 
     // trigger all deferred calls if it is time
@@ -683,8 +684,20 @@ var GameManager = /** @class */ (function () {
     }
 
     this._droneList.forEach(function (drone) {
+      drone_position = drone.getCurrentPosition();
+      drone_dict.push({
+        'altitudeRel' : drone_position.z,
+        'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
+        drone_position.z,
+        'latitude' : drone_position.x,
+        'longitude' : drone_position.y
+      });
+    });
+
+    this._droneList.forEach(function (drone) {
       queue.push(function () {
         drone._tick += 1;
+        drone.drone_dict = drone_dict;
         return drone.internal_update(delta_time);
       });
     });
