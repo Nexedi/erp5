@@ -53,7 +53,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
         """
           Return the list of business templates.
         """
-        return ('erp5_core_proxy_field_legacy',
+        return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
                 'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
                 'erp5_jquery', 'erp5_jquery_ui',
