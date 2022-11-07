@@ -2942,9 +2942,8 @@ return msg"
     # worklists with the actual count of document
     fake_request = do_fake_request("GET")
 
-    default_gettext = self.portal.Localizer.erp5_ui.gettext
     def gettext(message, **kw):
-      return default_gettext(message, **kw)
+      return kw.get('default', message)
 
     with mock.patch.object(self.portal.Localizer.erp5_ui.__class__, 'gettext', side_effect=gettext) as gettext_mock:
       self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
