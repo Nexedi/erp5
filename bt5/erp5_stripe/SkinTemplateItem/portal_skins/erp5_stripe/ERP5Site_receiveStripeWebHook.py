@@ -1,5 +1,4 @@
-# proxy role: Author and Auditor
-# Proxy roles are used to create HTTP Exchange (Author) and call getPath (Auditor)
+# proxy role: Author to create HTTP Exchange
 import json
 
 response = container.REQUEST.RESPONSE
@@ -22,12 +21,10 @@ if context.REQUEST["REQUEST_METHOD"] == "POST":
     )
     system_event.confirm()
   alarm = portal.portal_alarms.handle_confirmed_http_exchanges
-  tag = "handle_confirmed_http_exchanges_webhook"
-  if not portal.portal_activities.countMessage(tag=tag):
-    alarm.activate(
-      after_tag=store_webhook_tag,
-      tag=tag
-    ).activeSense()
+  alarm.activate(
+    after_tag=store_webhook_tag,
+    activity='SQLQueue',
+  ).activeSense()
   response.setStatus(200)
 else:
   response.setStatus(400)

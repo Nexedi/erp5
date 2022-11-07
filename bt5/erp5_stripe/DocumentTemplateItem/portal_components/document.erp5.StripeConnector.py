@@ -26,8 +26,13 @@
 #
 ##############################################################################
 
+
+
+from six.moves import urllib
+from copy import deepcopy
+
 import requests
-import urllib
+import six
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -59,14 +64,14 @@ class StripeConnector(XMLObject):
     for key in key_list:
       prefix += "[%s]" % key
     return prefix
-  
+
   def buildLine(self, data_dict, prefix, key_list, value):
     if not isinstance(value, dict):
       data_dict[self.buildLineKey(prefix, key_list)] = value
-    elif isinstance(value, dict):
-      for subkey, subvalue in value.items():
+    else:
+      for subkey, subvalue in six.iteritems(value):
         self.buildLine(data_dict, prefix, key_list + [subkey,], subvalue)
- 
+
   def buildLineItemList(self, prefix, line_item_list):
     data_dict = {}
     for key, value in enumerate(line_item_list):
@@ -75,11 +80,13 @@ class StripeConnector(XMLObject):
 
   def createSession(self, data, **kw):
     """
-      Create Session in Stripe using Stripe API and return a checkout.session      
+      Create Session in Stripe using Stripe API and return a checkout.session
+
+      data is a dict, see https://stripe.com/docs/api/checkout/sessions/create
     """
     end_point = "checkout/sessions"
-    # copy data, other we will change the real data request
-    request_data = data.copy()
+    # copy data, not to mutate caller's data
+    request_data = deepcopy(data)
 
     if "mode" not in request_data:
       request_data["mode"] = "payment"
@@ -87,7 +94,6 @@ class StripeConnector(XMLObject):
     header_dict = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
-    header_dict.update(kw.get("extra_header") or {})
     url_string = self.getUrlString()
     if not url_string.endswith("/"):
       url_string += "/"
@@ -97,14 +103,21 @@ class StripeConnector(XMLObject):
     response = requests.post(
       url_string,
       headers=header_dict,
-      data=urllib.urlencode(request_data),
+      data=urllib.parse.urlencode(request_data),
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
+    if not response.ok:
+      __traceback_info__ = ( # pylint:disable=unused-variable
+        response.request.url,
+        response.request.body,
+        response.text
+      )
+      response.raise_for_status()
     return response.json()
 
   def retrieveSession(self, session_id, **kw):
     """
-      Retrieve Session in Stripe using Stripe API and return a checkout.session      
+      Retrieve Session in Stripe using Stripe API and return a checkout.session
     """
     url_string = self.getUrlString()
     if not url_string.endswith("/"):
@@ -112,9 +125,13 @@ class StripeConnector(XMLObject):
     url_string += "checkout/sessions/%(session_id)s" % {"session_id": session_id}
     response = requests.get(
       url_string,
-      headers={
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
+    if not response.ok:
+      __traceback_info__ = ( # pylint:disable=unused-variable
+        response.request.url,
+        response.request.body,
+        response.text
+      )
+      response.raise_for_status()
     return response.json()

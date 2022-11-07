@@ -26,10 +26,13 @@
 ##############################################################################
 
 import json
-import responses
-import urllib
-from StringIO import StringIO
+from six.moves import urllib
+from io import BytesIO
 from urlparse import parse_qs
+
+import requests
+import responses
+
 from DateTime import DateTime
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -41,7 +44,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     self._session_to_delete = set()
 
     self.connector_reference = "abc"
-    self.method_id = 'Alarm_getStripeConnectorReference'
     self.session_url = "https://mock:8080/checkout/sessions"
     self.data = {
       "success_url": "http://success",
@@ -66,17 +68,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         "quantity": 1
       }]
     }
-
-    custom_skin = self.portal.portal_skins.custom
-    if not getattr(custom_skin, self.method_id, None):
-      custom_skin.manage_addProduct['PythonScripts'].manage_addPythonScript(
-        id=self.method_id
-      )
-
-    custom_skin[self.method_id].ZPythonScript_edit(
-      '',
-      'return "%s"' % self.connector_reference
-    )
 
     for doc in self.portal.portal_catalog(
       portal_type="Stripe Connector",
@@ -107,10 +98,11 @@ class TestStripePaymentSession(ERP5TypeTestCase):
 
     self.tic()
 
-    for session in [s.getObject() for s in self.portal.stripe_payment_session_module.searchFolder(
+    if self._session_to_delete:
+      for session in [s.getObject() for s in self.portal.stripe_payment_session_module.searchFolder(
         reference=self._session_to_delete)]:
-      if session not in self._document_to_delete_list:
-        self._document_to_delete_list.append(session)
+        if session not in self._document_to_delete_list:
+          self._document_to_delete_list.append(session)
 
     for doc in self._document_to_delete_list:
       if doc.getPortalType() == "Stripe Payment Session":
@@ -120,10 +112,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
 
     for doc in self._document_to_delete_list:
       doc.getParentValue().manage_delObjects(ids=[doc.getId(),])
-    custom_skin = self.portal.portal_skins.custom
-    if self.method_id in custom_skin.objectIds():
-      custom_skin.manage_delObjects([self.method_id])
-
     self.tic()
 
   def test_create_stripe_payment_session_and_assign_http_exchange(self):
@@ -173,9 +161,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
     self._session_to_delete.add(session_id)
 
     def _callback(request):
-      self.assertEqual(
-        'application/x-www-form-urlencoded',
-        request.headers['Content-Type'], request.headers)
       url = request.url
       if session_id in ("abc321_completed", "abc321_webhook"):
         return (200, {'content-type': 'application/json'}, json.dumps({
@@ -188,12 +173,6 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         return (200, {'content-type': 'application/json'}, json.dumps({
           "id": session_id,
           "status": "expired",
-          "object": "checkout.session"
-        }))
-      if session_id in ("test_update_expiration_date", "test_update_expiration_date_other"):
-        return (200, {'content-type': 'application/json'}, json.dumps({
-          "id": session_id,
-          "status": "open",
           "object": "checkout.session"
         }))
       if session_id == "abc321":
@@ -316,7 +295,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % "abc321_expired",
             "object": "event",
@@ -329,7 +308,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())
@@ -350,21 +329,28 @@ class TestStripePaymentSession(ERP5TypeTestCase):
   def test_update_expiration_date(self):
     connector = self._create_connector()
     data = self.data.copy()
-    session_id = "test_update_expiration_date"
 
     module = self.portal.stripe_payment_session_module
     with responses.RequestsMock() as rsps:
-      rsps.add_callback(
+      rsps.add(
         responses.POST,
         self.session_url,
-        self._response_callback(session_id)
+        json={
+          "id": "test_update_expiration_date",
+          "status": "open",
+          "object": "checkout.session"
+        },
       )
-      rsps.add_callback(
+      rsps.add(
         responses.GET,
-        "https://mock:8080/checkout/sessions/%s" % session_id,
-        self._get_response_callback(session_id)
+        "https://mock:8080/checkout/sessions/test_update_expiration_date",
+        json={
+          "id": "test_update_expiration_date",
+          "status": "open",
+          "object": "checkout.session"
+        },
       )
- 
+
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector, data, module.getRelativeUrl(), batch_mode=True)
       self.assertEqual("open", stripe_payment_session.getValidationState())
@@ -372,92 +358,10 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.tic()
       self._document_to_delete_list.append(stripe_payment_session)
       first_expiration_date = stripe_payment_session.getExpirationDate()
-      stripe_payment_session.log("first_expiration_date BEFORE FIRST", stripe_payment_session.getExpirationDate())
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id,
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        })),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
+
+      self.portal.portal_alarms.check_stripe_payment_session.activeSense()
       self.tic()
-
-      second_expiration_date = stripe_payment_session.getExpirationDate()
-      self.assertNotEqual(first_expiration_date, second_expiration_date)
-      self.assertEqual("open", stripe_payment_session.getValidationState())
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id,
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        })),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
-      self.tic()
-
-      third_expiration_date = stripe_payment_session.getExpirationDate()
-      self.assertNotEqual(third_expiration_date, second_expiration_date)
-
-      second_stripe_payment_session = self.portal.stripe_payment_session_module.newContent(
-        reference=session_id + "_other",
-        portal_type="Stripe Payment Session"
-      )
-      second_stripe_payment_session.expire()
-      self.tic()
-      self._document_to_delete_list.append(second_stripe_payment_session)
-      second_stripe_payment_session_expiration_date = second_stripe_payment_session.getExpirationDate()
-
-      # Here, we simulate pass one session_id to an expired Stripe Payment Session
-      # Both Stripe Payment sessions should keep the same expiration date
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id + "_other",
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        })),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
-      self.tic()
-
-      self.assertEqual(
-        second_stripe_payment_session_expiration_date,
-        second_stripe_payment_session.getExpirationDate()
-      )
-      self.assertEqual(third_expiration_date, stripe_payment_session.getExpirationDate())
+      self.assertGreater(stripe_payment_session.getExpirationDate(), first_expiration_date)
 
   def test_invalid_request_error(self):
     connector = self._create_connector()
@@ -480,7 +384,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       self.tic()
       self._document_to_delete_list.append(stripe_payment_session)
-    
+
     first_http_exchange, = stripe_payment_session.getFollowUpRelatedValueList(
       portal_type="HTTP Exchange")
     self.assertEqual("acknowledged", first_http_exchange.getValidationState())
@@ -491,137 +395,12 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         "https://mock:8080/checkout/sessions/%s" % session_id,
         self._get_response_callback(session_id)
       )
-      second_http_exchange = stripe_payment_session.StripePaymentSession_retrieveSession(
+      self.assertRaises(
+        requests.HTTPError,
+        stripe_payment_session.StripePaymentSession_retrieveSession,
         connector, batch_mode=1
       )
       self.tic()
-      self._document_to_delete_list.append(second_http_exchange)
-
-      self.assertEqual("HTTP Exchange", second_http_exchange.getPortalType())
-      self.assertEqual({
-        'message': 'Invalid checkout.session id: not_found',
-        'type': 'invalid_request_error'
-      }, json.loads(second_http_exchange.getResponse())["error"])
-      stripe_payment_session.setExpirationDate(DateTime() - 1)
-      self.tic()
-
-      self.assertRaises(
-        ValueError,
-        stripe_payment_session.StripePaymentSession_checkStripeSessionOpen,
-        connector.getRelativeUrl())
-      self.tic()
-
-      third_http_exchange, = [s
-        for s in stripe_payment_session.getFollowUpRelatedValueList(
-          portal_type="HTTP Exchange")
-        if s.isMemberOf("resource/http_exchange_resource/stripe/retrieve_session") and \
-          s not in (second_http_exchange, first_http_exchange)
-      ]
-      self._document_to_delete_list.append(third_http_exchange)
-
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id,
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        })),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
-
-      def stop_condition(message_list):
-        return any([x.processing_node == -2 for x in message_list])
-
-      self.tic(stop_condition=stop_condition)
-
-      fourth_http_exchange, = [s
-        for s in stripe_payment_session.getFollowUpRelatedValueList(
-          portal_type="HTTP Exchange")
-        if s.isMemberOf("resource/http_exchange_resource/stripe/webhook") and \
-          s not in (second_http_exchange, first_http_exchange, third_http_exchange)
-      ]
-      self._document_to_delete_list.append(fourth_http_exchange)
-
-      activity_tool = self.portal.portal_activities
-      self.assertIn((
-        stripe_payment_session.getPath(),
-        'StripePaymentSession_checkStripeSessionOpen',
-        -2
-      ), [
-        ("/".join(m.object_path), m.method_id, m.processing_node)
-        for m in activity_tool.getMessageList()
-      ])
-      self.assertEqual(0, self.portal.portal_activities.countMessage(
-        method_id="activeSense"))
-      ret = self.publish(
-        "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
-          "BODY": json.dumps({
-            "id": "evt_%s" % session_id,
-            "object": "event",
-            "data": {
-              "object": {
-                "id": session_id,
-                "status": "open",
-                "payment_status": "unpaid",
-                "object": "checkout.session"
-              }
-            }
-          })
-        })),
-        request_method="POST",
-        handle_errors=False)
-      self.assertEqual(200, ret.getStatus())
-
-      self.commit()
-      self.assertEqual(1, activity_tool.countMessage(
-        method_id="activeSense"))
-
-      activity_tool.manageInvoke(
-        object_path=self.portal.portal_alarms["check_stripe_payment_session"].getPath(),
-        method_id='activeSense'
-      )
-      self.commit()
-      self.assertEqual(1, self.portal.portal_activities.countMessage(
-        path=stripe_payment_session.getPath(),
-        method_id="StripePaymentSession_checkStripeSessionOpen"))
-      self.assertEqual(1, self.portal.portal_activities.countMessage(
-        path=self.portal.portal_alarms.handle_confirmed_http_exchanges.getPath(),
-        method_id="activeSense"))
-      self.tic(stop_condition=stop_condition)
-
-      self.assertEqual(1, self.portal.portal_activities.countMessage(
-        path=stripe_payment_session.getPath(),
-        method_id="StripePaymentSession_checkStripeSessionOpen"))
-
-      for message in activity_tool.getMessageList():
-        if "handle_confirmed_http_exchanges" in message.object_path and message.method_id == "activeSense" or (
-          message.method_id == "StripePaymentSession_checkStripeSessionOpen"
-        ):
-          activity_tool.manageDelete(message.uid, message.activity)
-        self.commit()
-
-      stripe_payment_session.expire()
-      # If there is one activity to fail, it will fail here
-      self.tic()      
-      fifth_http_exchange, = [s
-        for s in self.portal.system_event_module.searchFolder(
-          portal_type="HTTP Exchange")
-        if s.isMemberOf("resource/http_exchange_resource/stripe/webhook") and \
-          s.getValidationState() == "confirmed" and \
-          s not in (second_http_exchange, first_http_exchange, third_http_exchange, fourth_http_exchange)
-      ]
-      self._document_to_delete_list.append(fifth_http_exchange)
 
   def test_retrieve_stripe_payment_session_status(self):
     connector = self._create_connector()
@@ -691,7 +470,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       )
       ret = self.publish(
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
-        stdin=StringIO(urllib.urlencode({
+        stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
             "id": "evt_%s" % session_id,
             "object": "event",
@@ -704,7 +483,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
               }
             }
           })
-        })),
+        }).encode()),
         request_method="POST",
         handle_errors=False)
       self.assertEqual(200, ret.getStatus())

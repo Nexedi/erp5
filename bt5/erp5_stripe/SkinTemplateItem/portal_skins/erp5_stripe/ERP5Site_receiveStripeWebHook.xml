@@ -56,7 +56,6 @@
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
                 <string>Author</string>
               </tuple>
             </value>
