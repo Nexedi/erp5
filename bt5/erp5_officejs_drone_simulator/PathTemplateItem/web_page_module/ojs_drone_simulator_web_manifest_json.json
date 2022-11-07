@@ -1,0 +1,12 @@
+{
+      "short_name": "Drone Simulator",
+      "name": "OfficeJS Drone Simulator",
+      "description": "Drone simulator to run AI scripts and flight logs",
+      "icons": [{
+        "src": "drone.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
