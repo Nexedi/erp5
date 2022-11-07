@@ -65,6 +65,7 @@ def simulate(script_id, params_string, code_string):
       try:
         result = f(self, *args, **kw)
       finally:
+        transaction.abort()
         if script_id in self.portal.portal_skins.custom.objectIds():
           self.portal.portal_skins.custom.manage_delObjects(script_id)
         transaction.commit()
@@ -159,17 +160,11 @@ def replace_request(new_request, context):
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-#####################################################
-# Base_getRequestHeader
-#####################################################
+
 class ERP5HALJSONStyleSkinsMixin(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     wipeFolder(self.portal.foo_module, commit=False)
-
-
-  def beforeTearDown(self):
-    transaction.abort()
 
   def generateNewId(self):
     return "%sö" % self.portal.portal_ids.generateNewId(
@@ -184,6 +179,10 @@ class ERP5HALJSONStyleSkinsMixin(ERP5TypeTestCase):
     )
     return foo
 
+
+#####################################################
+# Base_getRequestHeader
+#####################################################
 class TestBase_getRequestHeader(ERP5HALJSONStyleSkinsMixin):
   @changeSkin('Hal')
   def test_getRequestHeader_REQUEST_disallowed(self):
@@ -2437,8 +2436,9 @@ class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.tic()
 
   def beforeTearDown(self):
+    super(TestERP5Person_getHateoas_mode_search, self).beforeTearDown()
     self.portal.person_module.deleteContent(self.person.getId())
-
+    self.tic()
 
   @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
