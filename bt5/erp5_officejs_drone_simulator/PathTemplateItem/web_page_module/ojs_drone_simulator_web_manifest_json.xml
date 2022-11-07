@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,18 +62,22 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_simulator_gadget.html</string> </value>
+            <value> <string>gadget_officejs_drone_simulator.json</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,17 +87,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_simulator_gadget_html</string> </value>
+            <value> <string>ojs_drone_simulator_web_manifest_json</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,13 +105,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Simulator Gadget</string> </value>
+            <value> <string>Officejs Drone Simulator Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -193,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1664478783.04</float>
+                              <float>1665150616.46</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -242,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1004.696.58996.11161</string> </value>
+                      <value> <string>1003.57671.25721.5666</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1667230263.06</float>
+                              <float>1667236199.25</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -321,7 +321,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1664478763.22</float>
+                              <float>1665150504.11</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
