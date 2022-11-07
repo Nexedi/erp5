@@ -89,6 +89,7 @@ var DroneManager = /** @class */ (function () {
   });
   Object.defineProperty(DroneManager.prototype, "drone_dict", {
     get: function () { return this._drone_dict; },
+    set: function (value) { this._drone_dict = value; },
     enumerable: true,
     configurable: true
   });
@@ -150,7 +151,7 @@ var DroneManager = /** @class */ (function () {
         return this.onStart();
       } catch (error) {
         console.warn('Drone crashed on start due to error:', error);
-        this._internal_crash();
+        this._internal_crash(error);
       }
   };
   /**
@@ -191,9 +192,9 @@ var DroneManager = /** @class */ (function () {
           })
           .push(function () {
             context._canUpdate = true;
-          }, function (err) {
-            console.warn('Drone crashed on update due to error:', err);
-            context._internal_crash();
+          }, function (error) {
+            console.warn('Drone crashed on update due to error:', error);
+            context._internal_crash(error);
           })
           .push(function () {
             context._API.internal_update(context);
@@ -203,11 +204,14 @@ var DroneManager = /** @class */ (function () {
     }
     return;
   };
-  DroneManager.prototype._internal_crash = function () {
+  DroneManager.prototype._internal_crash = function (error) {
     this._canCommunicate = false;
     this._controlMesh = null;
     this._mesh = null;
     this._canPlay = false;
+    if (error) {
+      this._API._gameManager.logError(this, error);
+    }
     this.onTouched();
   };
   DroneManager.prototype.setStartingPosition = function (x, y, z) {
@@ -659,10 +663,14 @@ var GameManager = /** @class */ (function () {
     this._delayed_defer_list.push([callback, millisecond]);
   };
 
+  GameManager.prototype.logError = function (drone, error) {
+    this._flight_log[drone._id].push(error.stack);
+  };
+
   GameManager.prototype._update = function (delta_time) {
     var _this = this,
       queue = new RSVP.Queue(),
-      i;
+      i, drone_dict = [], drone_position;
     this._updateDisplayedInfo(delta_time);
 
     // trigger all deferred calls if it is time
@@ -676,8 +684,20 @@ var GameManager = /** @class */ (function () {
     }
 
     this._droneList.forEach(function (drone) {
+      drone_position = drone.getCurrentPosition();
+      drone_dict.push({
+        'altitudeRel' : drone_position.z,
+        'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
+        drone_position.z,
+        'latitude' : drone_position.x,
+        'longitude' : drone_position.y
+      });
+    });
+
+    this._droneList.forEach(function (drone) {
       queue.push(function () {
         drone._tick += 1;
+        drone.drone_dict = drone_dict;
         return drone.internal_update(delta_time);
       });
     });
