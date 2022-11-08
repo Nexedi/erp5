@@ -3,21 +3,21 @@
 
   //Default values
   var SIMULATION_SPEED = 200,
-    SIMULATION_TIME = 1000,
-    MAX_SPEED = 7.542174921016468, //16.666667,
+    SIMULATION_TIME = 1500,
+    MAX_SPEED = 7.5, //16.666667,
     MAX_ACCELERATION = 1,
     min_lat = 45.6364,
     max_lat = 45.65,
     min_lon = 14.2521,
     max_lon = 14.2766,
     map_height = 100,
-    start_AMSL = 595.328,
+    start_AMSL = 595,
     INITIAL_POSITION = {
-      "x": -12.316326531328059,
-      "y": -218.55882352976022,
+      "latitude": 45.6412,
+      "longitude": 14.2658,
       "z": 15
     },
-    NUMBER_OF_DRONES = 3,
+    NUMBER_OF_DRONES = 2,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       '/**\n' +
@@ -192,25 +192,25 @@
                   "hidden": 0,
                   "type": "StringField"
                 },
-                "my_init_pos_x": {
+                "my_init_pos_lon": {
                   "description": "",
-                  "title": "Initial drone position X",
-                  "default": INITIAL_POSITION.x,
+                  "title": "Initial drone longitude",
+                  "default": INITIAL_POSITION.longitude,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "init_pos_x",
+                  "key": "init_pos_lon",
                   "hidden": 0,
                   "type": "StringField"
                 },
-                "my_init_pos_y": {
+                "my_init_pos_lat": {
                   "description": "",
-                  "title": "Initial drone position Y",
-                  "default": INITIAL_POSITION.y,
+                  "title": "Initial drone latitude",
+                  "default": INITIAL_POSITION.latitude,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "init_pos_y",
+                  "key": "init_pos_lat",
                   "hidden": 0,
                   "type": "StringField"
                 },
@@ -265,7 +265,7 @@
                 "right",
                 [["my_minimum_latitud"], ["my_maximum_latitud"],
                  ["my_minimum_longitud"], ["my_maximum_longitud"],
-                 ["my_init_pos_x"], ["my_init_pos_y"], ["my_init_pos_z"]]
+                 ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -324,8 +324,8 @@
               "start_AMSL": parseFloat(options.start_AMSL)
             },
             "initialPosition": {
-              "x": parseFloat(options.init_pos_x),
-              "y": parseFloat(options.init_pos_y),
+              "longitude": parseFloat(options.init_pos_lon),
+              "latitude": parseFloat(options.init_pos_lat),
               "z": parseFloat(options.init_pos_z)
             },
             "draw_flight_path": DRAW,
