@@ -301,7 +301,7 @@ var DroneLogAPI = /** @class */ (function () {
       'me.last_checkpoint_reached = -1;' +
       'me.setAcceleration(10);' +
       '};' +
-      'me.onUpdate = function () {' +
+      'me.onUpdate = function(timestamp) {' +
       'var next_checkpoint = me.checkpoint_list' +
       '[me.last_checkpoint_reached+1];' +
       'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
@@ -329,6 +329,13 @@ var DroneLogAPI = /** @class */ (function () {
       '}' +
       '}' +
       '};';
+  };
+  DroneLogAPI.prototype.getCurrentPosition = function (x, y, z) {
+    return {
+      x: x,
+      y: y,
+      z: z
+    };
   };
   DroneLogAPI.prototype.set_loiter_mode = function (radius, drone) {
     return;

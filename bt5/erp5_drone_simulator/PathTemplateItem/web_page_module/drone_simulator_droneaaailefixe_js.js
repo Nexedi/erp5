@@ -54,7 +54,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         y1 = this._loiter_radius *
           Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
         this._loiter_coordinates.push(
-          this.processCurrentPosition(x1, y1, this._loiter_center.z));
+          this.getCurrentPosition(x1, y1, this._loiter_center.z));
       }
     }
   };
@@ -74,6 +74,9 @@ var DroneAaileFixeAPI = /** @class */ (function () {
                                                    coordinates.y,
                                                    coordinates.z);
   };
+  /*
+  ** This expects x,y plane coordinates (not geo latitude-longitud)
+  */
   DroneAaileFixeAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
     function (drone, x, y, z) {
     x -= drone._controlMesh.position.x;
@@ -124,6 +127,9 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       return this._gameManager.gameParameter[name];
     }
   };
+  /*
+  ** Converts geo latitude-longitud coordinates (º) to x,y plane coordinates (m)
+  */
   DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z) {
     if(isNaN(lat) || isNaN(lon) || isNaN(z)){
       throw new Error('Target coordinates must be numbers');
@@ -158,7 +164,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     //this.takeoff_path = [];
     return processed_coordinates;
   };
-  DroneAaileFixeAPI.prototype.processCurrentPosition = function (x, y, z) {
+  DroneAaileFixeAPI.prototype.getCurrentPosition = function (x, y, z) {
     //convert x-y coordinates into latitud-longitude
     var flightParameters = this.getFlightParameters(),
       lon = x + flightParameters.map.width / 2,

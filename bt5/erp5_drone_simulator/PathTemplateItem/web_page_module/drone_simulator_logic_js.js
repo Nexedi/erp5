@@ -296,7 +296,7 @@ var DroneManager = /** @class */ (function () {
   };
   DroneManager.prototype.getCurrentPosition = function () {
     if (this._controlMesh) {
-      return this._API.processCurrentPosition(
+      return this._API.getCurrentPosition(
         this._controlMesh.position.x,
         this._controlMesh.position.z,
         this._controlMesh.position.y
@@ -373,13 +373,13 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
-  var MIN_MAP_SIZE = 1143,
+  /*var MIN_MAP_SIZE = 1143,
     MIN_X = 616.7504175,
     MAX_X = 616.828205,
     MIN_Y = 281.70885999999996,
     MAX_Y = 281.6225,
     MIN_WIDTH = 1143,
-    MIN_DEPTH = 1143;
+    MIN_DEPTH = 1143;*/
   //TODO move all geo-coordinates lat-lon conversion to x-y done in drones here
   function calculateMapInfo(map_dict) {
     function longitudToX(lon, map_size) {
@@ -440,28 +440,6 @@ var MapManager = /** @class */ (function () {
         throw "Missing map information " +
           "(not latitude-longitud parameters or log content given)";
       }
-    }
-    //set a minimum map size
-    if (_this.map_info.width < MIN_WIDTH) {
-      _this.map_info.width = MIN_WIDTH;
-    }
-    if (_this.map_info.depth < MIN_DEPTH) {
-      _this.map_info.depth = MIN_DEPTH;
-    }
-    if (_this.map_info.map_size < MIN_MAP_SIZE) {
-      _this.map_info.map_size = MIN_MAP_SIZE;
-    }
-    if (_this.map_info.min_x < MIN_X) {
-      _this.map_info.min_x = MIN_X;
-    }
-    if (_this.map_info.max_x < MAX_X) {
-      _this.map_info.max_x = MAX_X;
-    }
-    if (_this.map_info.min_y < MIN_Y) {
-      _this.map_info.min_y = MIN_Y;
-    }
-    if (_this.map_info.max_y < MAX_Y) {
-      _this.map_info.max_y = MAX_Y;
     }
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
@@ -685,13 +663,15 @@ var GameManager = /** @class */ (function () {
 
     this._droneList.forEach(function (drone) {
       drone_position = drone.getCurrentPosition();
-      drone_dict.push({
-        'altitudeRel' : drone_position.z,
-        'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
-        drone_position.z,
-        'latitude' : drone_position.x,
-        'longitude' : drone_position.y
-      });
+      if (drone_position) {
+        drone_dict.push({
+          'altitudeRel' : drone_position.z,
+          'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
+          drone_position.z,
+          'latitude' : drone_position.x,
+          'longitude' : drone_position.y
+        });
+      }
     });
 
     this._droneList.forEach(function (drone) {
