@@ -1,7 +1,7 @@
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 
-container.Event_checkConsistency(sci)
+container.script_Event_checkConsistency(sci)
 
 portal = sci.getPortal()
 portal_workflow = portal.portal_workflow
