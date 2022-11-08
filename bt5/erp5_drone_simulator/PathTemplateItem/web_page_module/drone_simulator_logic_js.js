@@ -373,15 +373,8 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
-  /*var MIN_MAP_SIZE = 1143,
-    MIN_X = 616.7504175,
-    MAX_X = 616.828205,
-    MIN_Y = 281.70885999999996,
-    MAX_Y = 281.6225,
-    MIN_WIDTH = 1143,
-    MIN_DEPTH = 1143;*/
   //TODO move all geo-coordinates lat-lon conversion to x-y done in drones here
-  function calculateMapInfo(map_dict) {
+  function calculateMapInfo(map_dict, initial_position) {
     function longitudToX(lon, map_size) {
       return (map_size / 360.0) * (180 + lon);
     }
@@ -400,47 +393,46 @@ var MapManager = /** @class */ (function () {
         c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       return R * c;
     }
+    function normalize(x, y, map_info) {
+      var n_x = (x - map_info.min_x) /
+          (map_info.max_x - map_info.min_x),
+        n_y = (y - map_info.min_y) /
+          (map_info.max_y - map_info.min_y);
+      return [n_x * 1000 - map_info.width / 2,
+              n_y * 1000 - map_info.depth / 2];
+    }
     var max_width = latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                    [map_dict.min_lat, map_dict.max_lon]),
       max_height = latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                   [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
-    return {
-      "depth": map_size,
-      "height": map_dict.height,
-      "width": map_size,
-      "map_size": map_size,
-      "min_x": longitudToX(map_dict.min_lon, map_size),
-      "min_y": latitudeToY(map_dict.min_lat, map_size),
-      "max_x": longitudToX(map_dict.max_lon, map_size),
-      "max_y": latitudeToY(map_dict.max_lat, map_size),
-      "start_AMSL": map_dict.start_AMSL
+      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6,
+      map_info = {
+        "depth": map_size,
+        "height": map_dict.height,
+        "width": map_size,
+        "map_size": map_size,
+        "min_x": longitudToX(map_dict.min_lon, map_size),
+        "min_y": latitudeToY(map_dict.min_lat, map_size),
+        "max_x": longitudToX(map_dict.max_lon, map_size),
+        "max_y": latitudeToY(map_dict.max_lat, map_size),
+        "start_AMSL": map_dict.start_AMSL
+      },
+      position = normalize(longitudToX(initial_position.longitude, map_size),
+                           latitudeToY(initial_position.latitude, map_size),
+                           map_info);
+    map_info.initial_position = {
+      "x": position[0],
+      "y": position[1],
+      "z": initial_position.z
     };
+    return map_info;
   }
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, drone, map_size, map_info, max_sky, skybox, skyboxMat,
       largeGroundMat, largeGroundBottom, width, depth, terrain, max;
-    if (GAMEPARAMETERS.map) {
-      _this.map_info = calculateMapInfo(GAMEPARAMETERS.map);
-    } else {
-      //Get map info from drone log
-      if (GAMEPARAMETERS.droneList[0].log_content) {
-        map_size = -1;
-        for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone+=1) {
-          map_info = DroneLogAPI.prototype.parseLog(
-            GAMEPARAMETERS.droneList[drone].log_content);
-          if (map_info.map_size > map_size) {
-            map_size = map_info.map_size;
-            _this.map_info = map_info;
-          }
-        }
-        GAMEPARAMETERS.initialPosition = _this.map_info.initialPosition;
-      } else {
-        throw "Missing map information " +
-          "(not latitude-longitud parameters or log content given)";
-      }
-    }
+    _this.map_info = calculateMapInfo(GAMEPARAMETERS.map,
+                                      GAMEPARAMETERS.initialPosition);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -827,7 +819,7 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      ctx._spawnDrones(GAMEPARAMETERS.initialPosition,
+      ctx._spawnDrones(_this._mapManager.map_info.initial_position,
                        GAMEPARAMETERS.droneList, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
