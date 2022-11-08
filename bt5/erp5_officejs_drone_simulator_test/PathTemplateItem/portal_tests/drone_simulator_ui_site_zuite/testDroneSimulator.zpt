@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test Drone Simulator OJS app (expected failure)</title>
+<!-- This test is expected to fail as the drone simulator runs on a web worker canvas, which relies on a very new feature: offscreen canvas
+---- This feature is not supported yet by the latest Firefox ESR used in the test nodes -->
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
