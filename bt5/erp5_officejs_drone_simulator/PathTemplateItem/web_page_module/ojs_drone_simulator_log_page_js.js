@@ -2,7 +2,7 @@
   "use strict";
 
   var SIMULATION_SPEED = 200,
-    SIMULATION_TIME = 1500,
+    SIMULATION_TIME = 2000,
     DRAW = true,
     LOG = false,
     DRONE_LIST = [
@@ -102,7 +102,7 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      var gadget = this, simulator;
+      var gadget = this, simulator, log_1_entry_list, log_2_entry_list;
       return new RSVP.Queue()
         .push(function () {
           function latLonDistance(c1, c2) {
@@ -165,8 +165,10 @@
             console.log("distance penalization:", penalization);
             return sum / length + penalization;
           }
+          log_1_entry_list = getLogEntries(options.log_1);
+          log_2_entry_list = getLogEntries(options.log_2);
           var span = document.querySelector('#distance'),
-            dist = averageLogDistance(getLogEntries(options.log_1), getLogEntries(options.log_2), false);
+            dist = averageLogDistance(log_1_entry_list, log_1_entry_list, false);
           if (isNaN(dist)) {
             throw 'Invalid log content';
           }
@@ -189,6 +191,37 @@
         .push(function () {
           DRONE_LIST[0].log_content = options.log_1;
           DRONE_LIST[1].log_content = options.log_2;
+          function generateMapInfo(list_1, list_2) {
+            var all = list_1.concat(list_2), i,
+              min_lat = 999, min_lon = 999,
+              max_lat = 0, max_lon = 0;
+            for (i = 0; i < all.length; i+=1) {
+              if (all[i][1] < min_lat) min_lat = all[i][1];
+              if (all[i][1] > max_lat) max_lat = all[i][1];
+              if (all[i][2] < min_lon) min_lon = all[i][2];
+              if (all[i][2] > max_lon) max_lon = all[i][2];
+            }
+            return {
+              "min_lat": min_lat,
+              "max_lat": max_lat,
+              "min_lon": min_lon,
+              "max_lon": max_lon,
+              "start_AMSL": all[0][3] - all[0][4],
+              "init_pos_lat": all[0][1],
+              "init_pos_lon": all[0][2],
+              "init_pos_z": all[0][4]
+            };
+          }
+          var map_info = generateMapInfo(log_1_entry_list, log_2_entry_list);
+          options.min_lat = map_info.min_lat;//45.6364;
+          options.max_lat = map_info.max_lat;//45.65;
+          options.min_lon = map_info.min_lon;//14.2521;
+          options.max_lon = map_info.max_lon;//14.2766;
+          options.map_height = 100;
+          options.start_AMSL = map_info.start_AMSL;//595;
+          options.init_pos_lon = map_info.init_pos_lon;//14.2658;
+          options.init_pos_lat = map_info.init_pos_lat;//45.6412;
+          options.init_pos_z = map_info.init_pos_z;//15;
           var game_parameters_json = {
             "drone": {
               "maxAcceleration": 1,
@@ -199,6 +232,19 @@
             "latency": {
               "information": 0,
               "communication": 0
+            },
+            "map": {
+              "min_lat": parseFloat(options.min_lat),
+              "max_lat": parseFloat(options.max_lat),
+              "min_lon": parseFloat(options.min_lon),
+              "max_lon": parseFloat(options.max_lon),
+              "height": parseFloat(options.map_height),
+              "start_AMSL": parseFloat(options.start_AMSL)
+            },
+            "initialPosition": {
+              "longitude": parseFloat(options.init_pos_lon),
+              "latitude": parseFloat(options.init_pos_lat),
+              "z": parseFloat(options.init_pos_z)
             },
             "draw_flight_path": DRAW,
             "log_drone_flight": LOG,
