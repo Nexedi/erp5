@@ -8,6 +8,7 @@ var DroneLogAPI = /** @class */ (function () {
   //** CONSTRUCTOR
   function DroneLogAPI(gameManager, drone_info, flight_parameters) {
     this._gameManager = gameManager;
+    this._mapManager = this._gameManager._mapManager;
     this._drone_info = drone_info;
     this._flight_parameters = flight_parameters;
   }
@@ -29,162 +30,6 @@ var DroneLogAPI = /** @class */ (function () {
     return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
                      Math.pow(p1[1] - p2[1], 2));
   }
-  function latLonDistance(c1, c2) {
-    var R = 6371e3,
-      q1 = c1[0] * Math.PI / 180,
-      q2 = c2[0] * Math.PI / 180,
-      dq = (c2[0] - c1[0]) * Math.PI / 180,
-      dl = (c2[1] - c1[1]) * Math.PI / 180,
-      a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-        Math.cos(q1) * Math.cos(q2) *
-        Math.sin(dl / 2) * Math.sin(dl / 2),
-      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  }
-
-  DroneLogAPI.prototype.parseLog = function (log_content) {
-    function getLogInfo(log) {
-      var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
-        log_header_found, splitted_log_entry, lat, lon, max_lon = 0, map_size,
-        max_lat = 0, min_lon = 99999, min_lat = 99999, max_width, max_height;
-      for (i = 0; i < line_list.length; i += 1) {
-        if (!log_header_found && !line_list[i].includes("timestamp;")) {
-          continue;
-        }/* else {
-          log_header_found = true;
-        }*/
-        log_header_found = true;
-        if (line_list[i].indexOf("AMSL") >= 0 ||
-            !line_list[i].includes(";")) {
-          continue;
-        }
-        log_entry = line_list[i].trim();
-        if (log_entry) {
-          log_entry_list.push(log_entry);
-          splitted_log_entry = log_entry.split(";");
-          lat = parseFloat(splitted_log_entry[1]);
-          lon = parseFloat(splitted_log_entry[2]);
-          if (lon < min_lon) {
-            min_lon = lon;
-          }
-          if (lat < min_lat) {
-            min_lat = lat;
-          }
-          if (lon > max_lon) {
-            max_lon = lon;
-          }
-          if (lat > max_lat) {
-            max_lat = lat;
-          }
-        }
-      }
-      max_width = latLonDistance([min_lat, min_lon], [min_lat, max_lon]);
-      max_height = latLonDistance([min_lat, min_lon], [max_lat, min_lon]);
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
-      return {
-        "log_entry_list": log_entry_list,
-        "min_lat": min_lat,
-        "min_lon": min_lon,
-        "max_lat": max_lat,
-        "max_lon": max_lon,
-        "map_size": map_size,
-        "width": map_size,
-        "depth": map_size,
-        "min_x": longitudToX(min_lon, map_size),
-        "min_y": latitudeToY(min_lat, map_size),
-        "max_x": longitudToX(max_lon, map_size),
-        "max_y": latitudeToY(max_lat, map_size)
-      };
-    }
-    var log = log_content, min_height = 15, SPEED_FACTOR = 0.75, i,
-      splitted_log_entry, start_time, end_time, x, y, position, lat, lon,
-      previous, start_position, dist = 0, average_speed = 0,
-      log_interval_time, previous_log_time, height, timestamp,
-      time_offset = 1, log_info = getLogInfo(log),
-      flight_dist = 0, start_AMSL = 0, log_entry_list = log_info.log_entry_list,
-      entry_1, entry_2, interval;
-    if (log_entry_list[0] && log_entry_list[1]) {
-      entry_1 = log_entry_list[0].split(";");
-      entry_2 = log_entry_list[1].split(";");
-      interval = parseInt(entry_2[0], 10) - parseInt(entry_1[0], 10);
-      //if interval > 1' then timestamp is in microseconds
-      if (Math.floor(interval / 1000) > 60) {
-        time_offset = 1000;
-      }
-    }
-    for (i = 0; i < log_entry_list.length; i += 1) {
-      splitted_log_entry = log_entry_list[i].split(";");
-      timestamp = parseInt(splitted_log_entry[0], 10);
-      if (i === 0) {
-        log_interval_time = 0;
-        start_time = timestamp;
-      } else {
-        log_interval_time += (parseInt(splitted_log_entry[0], 10) -
-          previous_log_time);
-      }
-      previous_log_time = parseInt(splitted_log_entry[0], 10);
-      average_speed += parseFloat(splitted_log_entry[8]);
-      lat = parseFloat(splitted_log_entry[1]);
-      lon = parseFloat(splitted_log_entry[2]);
-      if (i === log_entry_list.length - 1) {
-        end_time = timestamp;
-      }
-      height = parseFloat(splitted_log_entry[4]);
-      if (height < min_height) {
-        height = min_height;
-      }
-      x = longitudToX(lon, log_info.map_size);
-      y = latitudeToY(lat, log_info.map_size);
-      position = normalizeToMap(x, y, log_info);
-      if (!previous) {
-        start_AMSL = parseFloat(splitted_log_entry[3]);
-        start_position = position;
-        start_position.push(height);
-        previous = position;
-      }
-      dist = distance(previous, position);
-      flight_dist += dist;
-      previous = position;
-      if (dist > 15) {
-        previous = position;
-        // XXX: old pre-drawn flight path (obsolete?)
-        /*path_point = {
-          "type": "box",
-          "position": {
-            "x": position[0],
-            "y": position[1],
-            "z": height
-          },
-          "scale": {
-            "x": 3.5,
-            "y": 3.5,
-            "z": 3.5
-          },
-          "color": {
-            "r": 0,
-            "g": 255,
-            "b": 0
-          },
-          "timestamp": timestamp
-        };
-        path_point_list.push(path_point);*/
-      }
-    }
-    //log_info.draw_path_point_list = path_point_list;
-    log_info.average_speed = average_speed / log_entry_list.length;
-    log_info.log_interval_time = log_interval_time / log_entry_list.length /
-      time_offset;
-    log_info.flight_time = (end_time - start_time) / 1000 / time_offset;
-    log_info.initialPosition = {
-      "x": start_position[0],
-      "y": start_position[1],
-      "z": start_position[2]
-    };
-    log_info.maxSpeed = (flight_dist / log_info.flight_time) * SPEED_FACTOR;
-    log_info.height = 100;
-    log_info.start_AMSL = start_AMSL;
-    return log_info;
-  };
   /*
   ** Function called at start phase of the drone, just before onStart AI script
   */
@@ -209,7 +54,7 @@ var DroneLogAPI = /** @class */ (function () {
       return log_entry_list;
     }
     var log = this._drone_info.log_content, entry_1, entry_2, interval,
-      map_dict = this._gameManager._mapManager.getMapInfo(),
+      map_dict = this._mapManager.getMapInfo(),
       min_height = 15, converted_log_point_list = [],
       i, splitted_log_entry, x, y, position, lat, lon, height, timestamp,
       time_offset = 1, log_entry_list = getLogEntries(log);
