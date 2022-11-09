@@ -1,0 +1,109 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+    <table cellpadding="1" cellspacing="1" border="1">
+        <thead>
+            <tr>
+                <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+            <tr>
+                <td>open</td>
+                <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertTextPresent</td>
+                <td>Reset Successfully.</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><b>Set prefered text editor</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>click</td>
+                <td>//input[@name="field_my_preferred_text_editor" and @value="monaco"]</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>//button[@name='Base_edit:method']</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"><b>Make a new web site using our cache manifest</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/web_site_module/renderjs_runner/?ignore_layout:int=1&editable_mode:int=1</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>name=Base_createCloneDocument:method</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertPortalStatusMessage</td>
+                <td>Created Clone Web Site.</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>storeValue</td>
+                <td>name=field_my_id</td>
+                <td>new_web_site_id</td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>link=Layout Configuration</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>type</td>
+                <td>field_my_configuration_precache_manifest_script_list</td>
+                <td><br/>WebSection_getMonacoEditorPrecacheManifestList</td>
+            </tr>
+            <tr>
+                <td>clickAndWait</td>
+                <td>name=Base_edit:method</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>assertPortalStatusMessage</td>
+                <td>Data updated.</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><b>Switch to renderjs UI and check the manifest is loaded</b></td>
+            </tr>
+            <tr>
+                <td>open</td>
+                <td>${base_url}/web_site_module/${new_web_site_id}/#/web_page_module?editable=true</td>
+                <td></td>
+            </tr>
+            <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+            <tr>
+                <td>waitForCondition</td>
+                <td>selenium.browserbot.currentWindow.navigator.serviceWorker.controller !== null</td>
+                <td>180000</td>
+            </tr>
+
+        </tbody>
+    </table>
+</body>
+
+</html>
