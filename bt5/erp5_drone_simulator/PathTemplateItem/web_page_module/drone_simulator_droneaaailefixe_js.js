@@ -152,22 +152,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     return processed_coordinates;
   };
   DroneAaileFixeAPI.prototype.getCurrentPosition = function (x, y, z) {
-    //convert x-y coordinates into latitud-longitude
-    var lon = x + this._map_dict.width / 2,
-      lat = y + this._map_dict.depth / 2;
-    lon = lon / 1000;
-    lon = lon * (this._map_dict.max_x - this._map_dict.min_x) +
-      this._map_dict.min_x;
-    lon = lon / (this._map_dict.width / 360.0) - 180;
-    lat = lat / 1000;
-    lat = lat * (this._map_dict.max_y - this._map_dict.min_y) +
-      this._map_dict.min_y;
-    lat = 90 - lat / (this._map_dict.depth / 180.0);
-    return {
-      x: lat,
-      y: lon,
-      z: z
-    };
+    return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
   };
   DroneAaileFixeAPI.prototype.loiter = function (drone) {
     if (this._loiter_radius > LOITER_LIMIT) {
