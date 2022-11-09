@@ -168,7 +168,7 @@
           log_1_entry_list = getLogEntries(options.log_1);
           log_2_entry_list = getLogEntries(options.log_2);
           var span = document.querySelector('#distance'),
-            dist = averageLogDistance(log_1_entry_list, log_1_entry_list, false);
+            dist = averageLogDistance(log_1_entry_list, log_2_entry_list, false);
           if (isNaN(dist)) {
             throw 'Invalid log content';
           }
