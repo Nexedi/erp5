@@ -12,24 +12,6 @@ var DroneLogAPI = /** @class */ (function () {
     this._drone_info = drone_info;
     this._flight_parameters = flight_parameters;
   }
-
-  //** UTILS
-  function longitudToX(lon, map_size) {
-    return (map_size / 360.0) * (180 + lon);
-  }
-  function latitudeToY(lat, map_size) {
-    return (map_size / 180.0) * (90 - lat);
-  }
-  function normalizeToMap(x, y, map_dict) {
-    var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
-        n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.map_size / 2,
-            n_y * 1000 - map_dict.map_size / 2];
-  }
-  function distance(p1, p2) {
-    return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                     Math.pow(p1[1] - p2[1], 2));
-  }
   /*
   ** Function called at start phase of the drone, just before onStart AI script
   */
@@ -73,9 +55,9 @@ var DroneLogAPI = /** @class */ (function () {
       timestamp = parseInt(splitted_log_entry[0], 10);
       lat = parseFloat(splitted_log_entry[1]);
       lon = parseFloat(splitted_log_entry[2]);
-      x = longitudToX(lon, map_dict.map_size);
-      y = latitudeToY(lat, map_dict.map_size);
-      position = normalizeToMap(x, y, map_dict);
+      x = this._mapManager.longitudToX(lon, map_dict.map_size);
+      y = this._mapManager.latitudeToY(lat, map_dict.map_size);
+      position = this._mapManager.normalize(x, y, map_dict);
       height = parseFloat(splitted_log_entry[4]);
       if (height < min_height) {
         height = min_height;

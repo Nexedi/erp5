@@ -373,53 +373,27 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
-  //TODO move all geo-coordinates lat-lon conversion to x-y done in drones here
-  function calculateMapInfo(map_dict, initial_position) {
-    function longitudToX(lon, map_size) {
-      return (map_size / 360.0) * (180 + lon);
-    }
-    function latitudeToY(lat, map_size) {
-      return (map_size / 180.0) * (90 - lat);
-    }
-    function latLonDistance(c1, c2) {
-      var R = 6371e3,
-        q1 = c1[0] * Math.PI / 180,
-        q2 = c2[0] * Math.PI / 180,
-        dq = (c2[0] - c1[0]) * Math.PI / 180,
-        dl = (c2[1] - c1[1]) * Math.PI / 180,
-        a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-          Math.cos(q1) * Math.cos(q2) *
-          Math.sin(dl / 2) * Math.sin(dl / 2),
-        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-    function normalize(x, y, map_info) {
-      var n_x = (x - map_info.min_x) /
-          (map_info.max_x - map_info.min_x),
-        n_y = (y - map_info.min_y) /
-          (map_info.max_y - map_info.min_y);
-      return [n_x * 1000 - map_info.width / 2,
-              n_y * 1000 - map_info.depth / 2];
-    }
-    var max_width = latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                   [map_dict.min_lat, map_dict.max_lon]),
-      max_height = latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                  [map_dict.max_lat, map_dict.min_lon]),
+  function calculateMapInfo(map, map_dict, initial_position) {
+    var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                       [map_dict.min_lat, map_dict.max_lon]),
+      max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                      [map_dict.max_lat, map_dict.min_lon]),
       map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6,
       map_info = {
         "depth": map_size,
         "height": map_dict.height,
         "width": map_size,
         "map_size": map_size,
-        "min_x": longitudToX(map_dict.min_lon, map_size),
-        "min_y": latitudeToY(map_dict.min_lat, map_size),
-        "max_x": longitudToX(map_dict.max_lon, map_size),
-        "max_y": latitudeToY(map_dict.max_lat, map_size),
+        "min_x": map.longitudToX(map_dict.min_lon, map_size),
+        "min_y": map.latitudeToY(map_dict.min_lat, map_size),
+        "max_x": map.longitudToX(map_dict.max_lon, map_size),
+        "max_y": map.latitudeToY(map_dict.max_lat, map_size),
         "start_AMSL": map_dict.start_AMSL
       },
-      position = normalize(longitudToX(initial_position.longitude, map_size),
-                           latitudeToY(initial_position.latitude, map_size),
-                           map_info);
+      position = map.normalize(
+        map.longitudToX(initial_position.longitude, map_size),
+        map.latitudeToY(initial_position.latitude, map_size),
+        map_info);
     map_info.initial_position = {
       "x": position[0],
       "y": position[1],
@@ -431,7 +405,7 @@ var MapManager = /** @class */ (function () {
   function MapManager(scene) {
     var _this = this, drone, map_size, map_info, max_sky, skybox, skyboxMat,
       largeGroundMat, largeGroundBottom, width, depth, terrain, max;
-    _this.map_info = calculateMapInfo(GAMEPARAMETERS.map,
+    _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map,
                                       GAMEPARAMETERS.initialPosition);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
@@ -476,56 +450,33 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
-    // XXX: old pre-drawn flight path (obsolete?)
-    /*var count = 0;
-    this._flight_path_point_list = [];
-    GAMEPARAMETERS.flight_path_point_list.forEach(function (obs) {
-      var newObj;
-      switch (obs.type) {
-        case "box":
-          newObj = BABYLON.MeshBuilder.CreateBox("obs_" + count, { 'size': 1 },
-          scene);
-          break;
-        case "cylinder":
-          newObj = BABYLON.MeshBuilder.CreateCylinder("obs_" + count, {
-            'diameterBottom': obs.diameterBottom,
-            'diameterTop': obs.diameterTop,
-            'height': 1
-          }, scene);
-          break;
-        case "sphere":
-          newObj = BABYLON.MeshBuilder.CreateSphere("obs_" + count, {
-            'diameterX': obs.scale.x,
-            'diameterY': obs.scale.y,
-            'diameterZ': obs.scale.z
-          }, scene);
-          break;
-        default:
-          return;
-      }
-      newObj.obsType = obs.type;
-      var convertion = Math.PI / 180;
-      if ("position" in obs)
-        newObj.position = new BABYLON.Vector3(obs.position.x, obs.position.y,
-        obs.position.z);
-      if ("rotation" in obs)
-        newObj.rotation = new BABYLON.Vector3(obs.rotation.x * convertion,
-        obs.rotation.y * convertion, obs.rotation.z * convertion);
-      if ("scale" in obs)
-        newObj.scaling = new BABYLON.Vector3(obs.scale.x, obs.scale.y,
-        obs.scale.z);
-      if ("color" in obs) {
-        var material = new BABYLON.StandardMaterial(scene);
-        material.alpha = 1;
-        material.diffuseColor = new BABYLON.Color3(obs.color.r, obs.color.g,
-        obs.color.b);
-        newObj.material = material;
-      }
-      _this._flight_path_point_list.push(newObj);
-    });*/
   }
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
+  };
+  MapManager.prototype.longitudToX = function (lon, map_size) {
+    return (map_size / 360.0) * (180 + lon);
+  };
+  MapManager.prototype.latitudeToY = function (lat, map_size) {
+    return (map_size / 180.0) * (90 - lat);
+  };
+  MapManager.prototype.latLonDistance = function (c1, c2) {
+    var R = 6371e3,
+      q1 = c1[0] * Math.PI / 180,
+      q2 = c2[0] * Math.PI / 180,
+      dq = (c2[0] - c1[0]) * Math.PI / 180,
+      dl = (c2[1] - c1[1]) * Math.PI / 180,
+      a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+        Math.cos(q1) * Math.cos(q2) *
+        Math.sin(dl / 2) * Math.sin(dl / 2),
+      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+  MapManager.prototype.normalize = function (x, y, map_dict) {
+    var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
+      n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
+    return [n_x * 1000 - map_dict.width / 2,
+            n_y * 1000 - map_dict.depth / 2];
   };
   return MapManager;
 }());
@@ -641,7 +592,7 @@ var GameManager = /** @class */ (function () {
     var _this = this,
       queue = new RSVP.Queue(),
       i, drone_dict = [], drone_position;
-    this._updateDisplayedInfo(delta_time);
+    this._updateTimeAndLog(delta_time);
 
     // trigger all deferred calls if it is time
     for (i = _this._delayed_defer_list.length - 1; 0 <= i; i -= 1) {
@@ -687,7 +638,7 @@ var GameManager = /** @class */ (function () {
       });
   };
 
-  GameManager.prototype._updateDisplayedInfo =
+  GameManager.prototype._updateTimeAndLog =
     function (delta_time) {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000), drone,
@@ -933,22 +884,6 @@ var GameManager = /** @class */ (function () {
     Object.assign(parameter, this._game_parameters_json);
     this._gameParameter = {};
     Object.assign(this._gameParameter, this._game_parameters_json);
-    // XXX: old pre-drawn flight path (obsolete?),
-    /*var swap = function (pos) {
-      return {
-        x: pos.x,
-        y: pos.z,
-        z: pos.y
-      };
-    };
-    for (i = 0; i < parameter.flight_path_point_list.length; i += 1) {
-      parameter.flight_path_point_list[i].position =
-        swap(parameter.flight_path_point_list[i].position);
-      if (parameter.flight_path_point_list[i].scale) {
-        parameter.flight_path_point_list[i].scale =
-          swap(parameter.flight_path_point_list[i].scale);
-      }
-    }*/
     return parameter;
   };
 
