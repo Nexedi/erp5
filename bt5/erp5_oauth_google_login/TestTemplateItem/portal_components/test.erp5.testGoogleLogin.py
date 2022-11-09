@@ -215,9 +215,9 @@ class TestGoogleLogin(GoogleLoginTestCase):
     getUserEntry_mock.assert_called_once()
 
     ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_google_hash=' in v]
-    self.assertIn('; Secure', ac_cookie)
-    self.assertIn('; HttpOnly', ac_cookie)
-    self.assertIn('; SameSite=Lax', ac_cookie)
+    self.assertIn('; secure', ac_cookie.lower())
+    self.assertIn('; httponly', ac_cookie.lower())
+    self.assertIn('; samesite=lax', ac_cookie.lower())
 
   def test_create_user_in_ERP5Site_createGoogleUserToOAuth(self):
     """
