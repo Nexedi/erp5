@@ -1013,7 +1013,7 @@ var GameManager = /** @class */ (function () {
     for (i = 0; i < drone_list.length; i += 1) {
       position = randomSpherePoint(center.x + i, center.y + i, center.z + i,
                                    0, 0, 0);
-      if (checkCollision(position, position_list) || position.z < 0.05) {
+      if (checkCollision(position, position_list)/* || position.z < 0.05*/) {
         collision_nb += 1;
         if (collision_nb < max_collision) {
           i -= 1;
