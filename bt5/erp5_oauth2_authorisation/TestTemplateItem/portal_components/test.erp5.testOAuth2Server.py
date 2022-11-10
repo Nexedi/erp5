@@ -409,43 +409,39 @@ class TestOAuth2(ERP5TypeTestCase):
       exc = None
     finally:
       setSecurityManager(current_security_manager)
-      cookie_dict = response.cookies.copy()
+      cookie_dict = {}
       response_header_dict = {}
-      for item_list in (
-        six.iteritems(response.headers),
-        response.accumulated_headers,
-      ):
-        for key, value in item_list:
-          key = key.lower()
-          if key == 'set-cookie':
-            # XXX: minimal Set-Cookie parser
-            cookie_name, cookie_body = value.split('=', 1)
-            # RFC6265 makes quoting obsolete
-            # assert cookie_body[0] == '"', repr(cookie_body)
-            cookie_value, cookie_attributes = cookie_body.split(';', 1)
-            cookie_value = cookie_value.strip('"')
-            cookie_value_dict = {
-              'value': urllib.unquote(cookie_value),
-            }
-            for cookie_attribute in cookie_attributes.split(';'):
-              cookie_attribute = cookie_attribute.lstrip()
-              if '=' in cookie_attribute:
-                cookie_attribute_name, cookie_attribute_value = cookie_attribute.split('=', 1)
-              else:
-                cookie_attribute_name = cookie_attribute
-                cookie_attribute_value = True
-              cookie_attribute_name = cookie_attribute_name.lower()
-              if cookie_attribute_name == 'max-age':
-                cookie_attribute_name = 'max_age'
-                cookie_attribute_value = int(cookie_attribute_value, 10)
-              elif cookie_attribute_name == 'httponly':
-                cookie_attribute_name = 'http_only'
-              assert cookie_attribute_name not in cookie_value_dict, (cookie_attribute_name, value)
-              cookie_value_dict[cookie_attribute_name] = cookie_attribute_value
-            assert cookie_name not in cookie_dict, (cookie_name, cookie_value_dict)
-            cookie_dict[cookie_name] = cookie_value_dict
-          else:
-            response_header_dict[key] = value
+      for key, value in response.listHeaders():
+        key = key.lower()
+        if key == 'set-cookie':
+          # XXX: minimal Set-Cookie parser
+          cookie_name, cookie_body = value.split('=', 1)
+          # RFC6265 makes quoting obsolete
+          # assert cookie_body[0] == '"', repr(cookie_body)
+          cookie_value, cookie_attributes = cookie_body.split(';', 1)
+          cookie_value = cookie_value.strip('"')
+          cookie_value_dict = {
+            'value': urllib.unquote(cookie_value),
+          }
+          for cookie_attribute in cookie_attributes.split(';'):
+            cookie_attribute = cookie_attribute.lstrip()
+            if '=' in cookie_attribute:
+              cookie_attribute_name, cookie_attribute_value = cookie_attribute.split('=', 1)
+            else:
+              cookie_attribute_name = cookie_attribute
+              cookie_attribute_value = True
+            cookie_attribute_name = cookie_attribute_name.lower()
+            if cookie_attribute_name == 'max-age':
+              cookie_attribute_name = 'max_age'
+              cookie_attribute_value = int(cookie_attribute_value, 10)
+            elif cookie_attribute_name == 'httponly':
+              cookie_attribute_name = 'http_only'
+            assert cookie_attribute_name not in cookie_value_dict, (cookie_attribute_name, value)
+            cookie_value_dict[cookie_attribute_name] = cookie_attribute_value
+          assert cookie_name not in cookie_dict, (cookie_name, cookie_value_dict)
+          cookie_dict[cookie_name] = cookie_value_dict
+        else:
+          response_header_dict[key] = value
       if query_trace is not None:
         self.__query_trace.append('request=%s\nresponse=%s' % (
           query_trace_request,
