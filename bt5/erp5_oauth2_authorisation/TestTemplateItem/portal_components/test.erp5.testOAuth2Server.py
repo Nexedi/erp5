@@ -464,13 +464,12 @@ class TestOAuth2(ERP5TypeTestCase):
         ))
     if response.body:
       response.headers.setdefault('content-type', 'text/html; charset=utf-8')
-    # response.cookies can contain 'max_age': 0 in Zope < 4.8 but 'Max-Age': '0' in Zope >= 4.8.
     return (
       response.status,
       response_header_dict,
       {
         name: (
-          cookie_dict if cookie_dict.get('max_age', cookie_dict.get('Max-Age')) not in (0, '0') else
+          cookie_dict if cookie_dict.get('max_age', True) else
           None
         ) for name, cookie_dict in six.iteritems(cookie_dict)
       },
