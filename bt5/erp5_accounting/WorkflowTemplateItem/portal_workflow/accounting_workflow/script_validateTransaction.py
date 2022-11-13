@@ -28,7 +28,7 @@ transaction.Base_checkConsistency()
 skip_period_validation = state_change['kwargs'].get(
                               'skip_period_validation', 0)
 transition = state_change['transition']
-if transition.id in ('plan_action', 'confirm_action') :
+if transition.getReference() in ('plan_action', 'confirm_action') :
   skip_period_validation = 1
 
 source_section = transaction.getSourceSectionValue(
