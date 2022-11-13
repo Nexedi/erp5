@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/activeSense</string> </value>
+            <value> <string>string:${object_url}/Alarm_activeSense</string> </value>
         </item>
       </dictionary>
     </pickle>
