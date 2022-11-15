@@ -1,41 +1,36 @@
 (function (window, rJS, domsugar, DroneGameManager) {
   "use strict";
 
+  var LOGIC_FILE_LIST = ['gadget_erp5_page_babylonjs_logic.js'],
+    WIDTH = 680, HEIGHT = 340;
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("translate", "translate")
 
-    .declareMethod('render', function renderHeader() {
+    .declareMethod('render', function (options) {
       var gadget = this,
-        logic_file_list = [],
         canvas = domsugar('canvas'),
         offscreen;
       domsugar(gadget.element, [canvas]);
-
-      // XXX hardcoded
-      logic_file_list.push('gadget_erp5_page_babylonjs_logic.js');
-
-      //TODO fix hardcoded
-      canvas.width = 680;//canvas.clientWidth; <-- this is 0
-      canvas.height = 340;//canvas.clientHeight; <-- this is 0
-
+      canvas.width = options.width || WIDTH;
+      canvas.height = options.height || HEIGHT;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
-
-      return new RSVP.Queue()
-        .push(function () {
-          gadget.runGame({
-            logic_url_list: logic_file_list,
-            canvas: offscreen,
-            canvas_original: canvas,
-            width: canvas.width,
-            height: canvas.height
-          });
-
+      gadget.runGame({
+        logic_url_list: LOGIC_FILE_LIST,
+        canvas: offscreen,
+        canvas_original: canvas,
+        width: canvas.width,
+        height: canvas.height
+      });
+      return gadget.translate('BabylonJS Canvas In Web Worker')
+        .push(function (translated) {
           return gadget.updateHeader({
-            page_title: 'BabylonJS Canvas In Web Worker',
+            page_title: translated,
             page_icon: 'puzzle-piece'
           });
         });
