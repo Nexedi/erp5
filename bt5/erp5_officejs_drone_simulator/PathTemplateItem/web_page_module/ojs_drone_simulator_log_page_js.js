@@ -169,12 +169,8 @@
       }
       span.textContent = 'Average flights distance: ' +
         Math.round(dist * 100) / 100;
-      var fragment = gadget.element.querySelector('#fragment');
-      //drop previous execution
-      if (fragment.childNodes[0]) {
-        fragment.removeChild(fragment.childNodes[0]);
-      }
-      fragment = domsugar(gadget.element.querySelector('#fragment'),
+      var fragment = gadget.element.querySelector('.simulator_div');
+      fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
                                   {element: fragment, scope: 'simulator'})
