@@ -1,3 +1,6 @@
+/*global window, rJS, domsugar, DroneGameManager*/
+/*jslint nomen: true, indent: 2, maxlen: 80, white: true, evil: false */
+
 (function (window, rJS, domsugar, DroneGameManager) {
   "use strict";
 
@@ -37,8 +40,7 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      var gadget = this,
-        game_manager = new DroneGameManager();
+      var game_manager = new DroneGameManager();
       return game_manager.play(options);
     });
 
