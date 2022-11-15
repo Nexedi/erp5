@@ -1,8 +1,9 @@
 (function (window, rJS, domsugar, DroneGameManager, document, Blob) {
   "use strict";
 
-  var canvas, offscreen;
-  var LOGIC_FILE_LIST = [
+  var canvas, offscreen,
+    WIDTH = 680, HEIGHT = 340,
+    LOGIC_FILE_LIST = [
     'gadget_erp5_page_drone_simulator_logic.js',
     'gadget_erp5_page_drone_simulator_droneaaailefixe.js',
     'gadget_erp5_page_drone_simulator_dronelogfollower.js'
@@ -12,11 +13,10 @@
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
-    // for standaloneDemo
-    .declareAcquiredMethod("updateHeader", "updateHeader")
+
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-    .declareMethod('render', function render() {
+    .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         container = domsugar('div');
@@ -25,9 +25,8 @@
       container.className = 'container';
       container.appendChild(canvas);
       domsugar(gadget.element, [loading, container]);
-      //TODO fix hardcoded
-      canvas.width = 680;//canvas.clientWidth; <-- this is 0
-      canvas.height = 340;//canvas.clientHeight; <-- this is 0
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
     })
