@@ -34,10 +34,7 @@
 
     .declareMethod('render', function render() {
       var gadget = this, query;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getDeclaredGadget('form_view');
-        })
+      return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
             erp5_document: {
@@ -103,87 +100,84 @@
 
     .declareJob('runGame', function runGame(options) {
       var gadget = this, simulator, log_1_entry_list, log_2_entry_list;
-      return new RSVP.Queue()
-        .push(function () {
-          function latLonDistance(c1, c2) {
-            var R = 6371e3,
-              q1 = c1[0] * Math.PI / 180,
-              q2 = c2[0] * Math.PI / 180,
-              dq = (c2[0] - c1[0]) * Math.PI / 180,
-              dl = (c2[1] - c1[1]) * Math.PI / 180,
-              a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-                Math.cos(q1) * Math.cos(q2) *
-                Math.sin(dl / 2) * Math.sin(dl / 2),
-              c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
+      function latLonDistance(c1, c2) {
+        var R = 6371e3,
+          q1 = c1[0] * Math.PI / 180,
+          q2 = c2[0] * Math.PI / 180,
+          dq = (c2[0] - c1[0]) * Math.PI / 180,
+          dl = (c2[1] - c1[1]) * Math.PI / 180,
+          a = Math.sin(dq / 2) * Math.sin(dq / 2) +
+            Math.cos(q1) * Math.cos(q2) *
+            Math.sin(dl / 2) * Math.sin(dl / 2),
+          c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      }
+      function getLogEntries(log) {
+        var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
+          log_header_found;
+        for (i = 0; i < line_list.length; i += 1) {
+          if (!log_header_found && !line_list[i].includes("timestamp;")) {
+            continue;
+          } else {
+            log_header_found = true;
           }
-          function getLogEntries(log) {
-            var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
-              log_header_found;
-            for (i = 0; i < line_list.length; i += 1) {
-              if (!log_header_found && !line_list[i].includes("timestamp;")) {
-                continue;
-              } else {
-                log_header_found = true;
-              }
-              if (line_list[i].indexOf("AMSL") >= 0 ||
-                  !line_list[i].includes(";")) {
-                continue;
-              }
-              log_entry = line_list[i].trim();
-              if (log_entry) {
-                log_entry = log_entry.split(';');
-                log_entry_list.push(log_entry);
-              }
+          if (line_list[i].indexOf("AMSL") >= 0 ||
+              !line_list[i].includes(";")) {
+            continue;
+          }
+          log_entry = line_list[i].trim();
+          if (log_entry) {
+            log_entry = log_entry.split(';');
+            log_entry_list.push(log_entry);
+          }
+        }
+        return log_entry_list;
+      }
+      function averageLogDistance(a, b, z) {
+        function distance3D(p1, p2) {
+          return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
+                           Math.pow(p1[1] - p2[1], 2) +
+                           Math.pow(p1[2] - p2[2], 2));
+        }
+        var i, sum = 0, point_a, point_b, penalization = 0, length;
+        for (i = 0; i < a.length; i++) {
+          if (b[i]) {
+            point_a = [a[i][1], a[i][1]];
+            point_b = [b[i][1], b[i][1]];
+            if (z) {
+              sum += distance3D(point_a, point_b);
+            } else {
+              var d = latLonDistance(point_a, point_b);
+              sum += d;
             }
-            return log_entry_list;
           }
-          function averageLogDistance(a, b, z) {
-            function distance3D(p1, p2) {
-              return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                               Math.pow(p1[1] - p2[1], 2) +
-                               Math.pow(p1[2] - p2[2], 2));
-            }
-            var i, sum = 0, point_a, point_b, penalization = 0, length;
-            for (i = 0; i < a.length; i++) {
-              if (b[i]) {
-                point_a = [a[i][1], a[i][1]];
-                point_b = [b[i][1], b[i][1]];
-                if (z) {
-                  sum += distance3D(point_a, point_b);
-                } else {
-                  var d = latLonDistance(point_a, point_b);
-                  sum += d;
-                }
-              }
-            }
-            length = Math.min(a.length, b.length);
-            if (Math.abs(a.length - b.length) > 50) {
-              //penalize very different logs ?
-              penalization = Math.abs(a.length - b.length);
-            }
-            console.log("distance penalization:", penalization);
-            return sum / length + penalization;
-          }
-          log_1_entry_list = getLogEntries(options.log_1);
-          log_2_entry_list = getLogEntries(options.log_2);
-          var span = document.querySelector('#distance'),
-            dist = averageLogDistance(log_1_entry_list, log_2_entry_list, false);
-          if (isNaN(dist)) {
-            throw 'Invalid log content';
-          }
-          span.textContent = 'Average flights distance: ' +
-            Math.round(dist * 100) / 100;
-          var fragment = gadget.element.querySelector('#fragment');
-          //drop previous execution
-          if (fragment.childNodes[0]) {
-            fragment.removeChild(fragment.childNodes[0]);
-          }
-          fragment = domsugar(gadget.element.querySelector('#fragment'),
-                                  [domsugar('div')]).firstElementChild;
-          return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
-                                      {element: fragment, scope: 'simulator'});
-        })
+        }
+        length = Math.min(a.length, b.length);
+        if (Math.abs(a.length - b.length) > 50) {
+          //penalize very different logs ?
+          penalization = Math.abs(a.length - b.length);
+        }
+        console.log("distance penalization:", penalization);
+        return sum / length + penalization;
+      }
+      log_1_entry_list = getLogEntries(options.log_1);
+      log_2_entry_list = getLogEntries(options.log_2);
+      var span = document.querySelector('#distance'),
+        dist = averageLogDistance(log_1_entry_list, log_2_entry_list, false);
+      if (isNaN(dist)) {
+        return gadget.notifySubmitted({message: 'Invalid log content', status: 'error'});
+      }
+      span.textContent = 'Average flights distance: ' +
+        Math.round(dist * 100) / 100;
+      var fragment = gadget.element.querySelector('#fragment');
+      //drop previous execution
+      if (fragment.childNodes[0]) {
+        fragment.removeChild(fragment.childNodes[0]);
+      }
+      fragment = domsugar(gadget.element.querySelector('#fragment'),
+                              [domsugar('div')]).firstElementChild;
+      return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
+                                  {element: fragment, scope: 'simulator'})
         .push(function (drone_gadget) {
           simulator = drone_gadget;
           return simulator.render();
@@ -213,15 +207,15 @@
             };
           }
           var map_info = generateMapInfo(log_1_entry_list, log_2_entry_list);
-          options.min_lat = map_info.min_lat;//45.6364;
-          options.max_lat = map_info.max_lat;//45.65;
-          options.min_lon = map_info.min_lon;//14.2521;
-          options.max_lon = map_info.max_lon;//14.2766;
+          options.min_lat = map_info.min_lat;
+          options.max_lat = map_info.max_lat;
+          options.min_lon = map_info.min_lon;
+          options.max_lon = map_info.max_lon;
           options.map_height = 100;
-          options.start_AMSL = map_info.start_AMSL;//595;
-          options.init_pos_lon = map_info.init_pos_lon;//14.2658;
-          options.init_pos_lat = map_info.init_pos_lat;//45.6412;
-          options.init_pos_z = map_info.init_pos_z;//15;
+          options.start_AMSL = map_info.start_AMSL;
+          options.init_pos_lon = map_info.init_pos_lon;
+          options.init_pos_lat = map_info.init_pos_lat;
+          options.init_pos_z = map_info.init_pos_z;
           var game_parameters_json = {
             "drone": {
               "maxAcceleration": 1,
@@ -253,11 +247,6 @@
           return simulator.runGame({
             game_parameters: game_parameters_json
           });
-        }, function (error) {
-          return new RSVP.Queue()
-            .push(function () {
-              return gadget.notifySubmitted({message: error, status: 'error'});
-            });
         });
     });
 

@@ -74,10 +74,7 @@
 
     .declareMethod('render', function render() {
       var gadget = this, query;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getDeclaredGadget('form_view');
-        })
+      return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
             erp5_document: {
@@ -282,20 +279,16 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      //TODO handle crash. e.g. pass empty or invalid script
-      var gadget = this, simulator;
-      return new RSVP.Queue()
-        .push(function () {
-          var fragment = gadget.element.querySelector('#fragment');
-          //drop previous execution
-          if (fragment.childNodes[0]) {
-            fragment.removeChild(fragment.childNodes[0]);
-          }
-          fragment = domsugar(gadget.element.querySelector('#fragment'),
-                                  [domsugar('div')]).firstElementChild;
-          return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
-                                      {element: fragment, scope: 'simulator'});
-        })
+      var gadget = this, simulator,
+        fragment = gadget.element.querySelector('#fragment');
+      //drop previous execution
+      if (fragment.childNodes[0]) {
+        fragment.removeChild(fragment.childNodes[0]);
+      }
+      fragment = domsugar(gadget.element.querySelector('#fragment'),
+                              [domsugar('div')]).firstElementChild;
+      return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
+                                  {element: fragment, scope: 'simulator'})
         .push(function (drone_gadget) {
           simulator = drone_gadget;
           return simulator.render();
