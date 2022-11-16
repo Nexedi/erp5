@@ -1,4 +1,4 @@
-/*global window, rJS, jIO, RSVP, domsugar, console,
+/*global window, rJS, jIO, RSVP, Set, domsugar, console,
          requestAnimationFrame, cancelAnimationFrame,
          Worker,
          DroneGameManager*/
@@ -8,17 +8,15 @@
 (function (RSVP, requestAnimationFrame, cancelAnimationFrame) {
   "use strict";
 
-	// Events props to send to worker
-	var mouseEventFields = new Set(['altKey', 'bubbles', 'button', 'buttons',
-		'cancelBubble', 'cancelable', 'clientX', 'clientY', 'composed', 'ctrlKey',
-		'defaultPrevented', 'detail', 'eventPhase', 'fromElement', 'isTrusted',
-		'layerX', 'layerY', 'metaKey', 'movementX', 'movementY', 'offsetX', 'pageX',
-		'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
-		'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
-		'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-	]);
-
-  var game_result;
+  // Events props to send to worker
+  var mouseEventFields = new Set(['altKey', 'bubbles', 'button', 'buttons',
+    'cancelBubble', 'cancelable', 'clientX', 'clientY', 'composed', 'ctrlKey',
+    'defaultPrevented', 'detail', 'eventPhase', 'fromElement', 'isTrusted',
+    'layerX', 'layerY', 'metaKey', 'movementX', 'movementY', 'offsetX', 'pageX',
+    'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
+    'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
+    'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
+    ]), game_result;
 
   //////////////////////////////////////////
   // Webworker
@@ -133,18 +131,72 @@
 
       return RSVP.Queue(RSVP.any([
         loop_promise,
-        handleWorker('gadget_erp5_page_babylonjs_web_worker.js', function (worker) {
+        handleWorker('gadget_erp5_page_babylonjs_web_worker.js',
+                     function (worker) {
 
-          var message_error_handler_defer = RSVP.defer(),
-            update_defer = null;
+            var message_error_handler_defer = RSVP.defer(),
+              update_defer = null;
 
-          worker.onmessage = workerToMain;
-          // Always quit the game when the worker callback usage is over
-          // to prevent trying to call pause
-          return message_error_handler_defer.promise;
+            function step() {
+              context.loop_promise
+                .push(function () {
+                  worker.postMessage({
+                    type: 'update'
+                  });
+                  update_defer = RSVP.defer();
+                  return RSVP.all([
+                    promiseAnimationFrame(),
+                    update_defer.promise
+                  ]);
+                })
+                .push(function () {
+                  step();
+                });
+            }
 
-          function workerToMain(evt) {
-            switch (evt.data.type) {
+            function cloneEvent(event) {
+              event.preventDefault();
+              var eventClone = {};
+              for (let field of mouseEventFields) {
+                eventClone[field] = event[field];
+              }
+              return eventClone;
+            }
+
+            function bindEvent(data) {
+              var target;
+              switch (data.targetName) {
+              case 'window':
+                target = window;
+                break;
+              case 'canvas':
+                target = options.canvas_original;
+                break;
+              case 'document':
+                target = document;
+                break;
+              }
+              if (!target) {
+                console.error('Unknown target: ' + data.targetName);
+                return;
+              }
+              target.addEventListener(data.eventName, function (e) {
+                // We can`t pass original event to the worker
+                var eventClone = cloneEvent(e);
+                if (eventClone.type === "pointerout") {
+                  return;
+                }
+                worker.postMessage({
+                  type: 'event',
+                  targetName: data.targetName,
+                  eventName: data.eventName,
+                  eventClone: eventClone
+                });
+              }, data.opt);
+            }
+
+            function workerToMain(evt) {
+              switch (evt.data.type) {
               case 'loaded':
                 return worker.postMessage({
                   type: 'start',
@@ -154,24 +206,21 @@
                   height: options.height,
                   game_parameters: options.game_parameters
                 }, [options.canvas]);
-                break;
               case 'started':
                 console.log('GAME: started');
                 if (context._gadget) {
-                  var loading = context._gadget.element.querySelector('#loading');
+                  var loading =
+                      context._gadget.element.querySelector('#loading');
                   if (loading) { loading.innerHTML = ""; }
                 }
                 context.unpause();
                 return step();
-                break;
               case 'updated':
                 return update_defer.resolve('updated');
-                break;
               case 'finished':
                 console.log('GAME: finished');
                 game_result = evt.data.result;
                 return context.quit();
-                break;
               case 'event':
                 bindEvent(evt.data);
                 break;
@@ -188,67 +237,14 @@
                 message_error_handler_defer.reject(
                   new Error('Unsupported message ' + JSON.stringify(evt.data))
                 );
-            }
-          };
-
-          function step() {
-            context.loop_promise
-              .push(function () {
-                worker.postMessage({
-                  type: 'update'
-                });
-                update_defer = RSVP.defer();
-                return RSVP.all([
-                  promiseAnimationFrame(),
-                  update_defer.promise
-                ]);
-              })
-              .push(function () {
-                step();
-              });
-          }
-
-          function bindEvent(data) {
-            let target;
-            switch (data.targetName) {
-              case 'window':
-                target = window;
-                break;
-              case 'canvas':
-                target = options.canvas_original;
-                break;
-              case 'document':
-                target = document;
-                break;
-            }
-            if (!target) {
-              console.error('Unknown target: ' + data.targetName);
-              return;
-            }
-            target.addEventListener(data.eventName, function (e) {
-              // We can`t pass original event to the worker
-              const eventClone = cloneEvent(e);
-              if (eventClone.type === "pointerout") {
-                return;
               }
-              worker.postMessage({
-                type: 'event',
-                targetName: data.targetName,
-                eventName: data.eventName,
-                eventClone: eventClone,
-              });
-            }, data.opt);
-          }
-
-          function cloneEvent(event) {
-            event.preventDefault();
-            const eventClone = {};
-            for (let field of mouseEventFields) {
-              eventClone[field] = event[field];
             }
-            return eventClone;
-          }
-        })
+
+            worker.onmessage = workerToMain;
+            // Always quit the game when the worker callback usage is over
+            // to prevent trying to call pause
+            return message_error_handler_defer.promise;
+          })
       ]))
         .push(undefined, function (error) {
           // As the loop_promise will be cancelled at some point when calling
