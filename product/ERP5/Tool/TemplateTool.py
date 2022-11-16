@@ -401,6 +401,7 @@ class TemplateTool (BaseTool):
         bt = self._download_local(path, id)
 
       bt.build(no_action=True)
+      bt.setPublicationUrl(url)
       return bt
 
     security.declareProtected('Import/Export objects', 'importBase64EncodedText')
