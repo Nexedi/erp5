@@ -77,12 +77,13 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
 from OFS import SimpleItem
 from OFS.Image import Pdata
+import coverage
 from io import BytesIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML, customImporters
 from Products.ERP5Type.Workflow import WorkflowHistoryList
-from zLOG import LOG, WARNING, INFO
+from zLOG import LOG, WARNING, INFO, PROBLEM
 from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
@@ -97,6 +98,7 @@ import threading
 from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
+from Products.ERP5Type.mixin.component import ComponentMixin
 
 CACHE_DATABASE_PATH = None
 try:
@@ -1165,7 +1167,16 @@ class ObjectTemplateItem(BaseTemplateItem):
       `context` is the business template instance, in its acquisition context.
       Can be overridden by subclasses.
     """
-    pass
+    if isinstance(obj, (PythonScript, ComponentMixin)) and coverage.Coverage.current():
+      relative_path = '/'.join(obj.getPhysicalPath()[len(context.getPortalObject().getPhysicalPath()):])
+      filename = os.path.join(
+        context.getPublicationUrl(),
+        self.__class__.__name__,
+        relative_path + '.py')
+      if os.path.exists(filename):
+        obj._erp5_coverage_filename = filename
+      else:
+        LOG('BusinessTemplate', PROBLEM, 'Could not find file for %s' % filename)
 
   def onReplaceObject(self, obj, context):
     """
