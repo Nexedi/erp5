@@ -62,6 +62,7 @@ class OpenOrderLine(SupplyLine):
                     , PropertySheet.Comment
                     )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
   def getTotalQuantity(self, default=0):
     """Returns the total quantity for this open order line.
     If the order line contains cells, the total quantity of cells are
@@ -72,6 +73,7 @@ class OpenOrderLine(SupplyLine):
                     self.getCellValueList(base_id='path')])
     return self.getQuantity(default)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
   def getTotalPrice(self):
     """Returns the total price for this open order line.
     If the order line contains cells, the total price of cells are
