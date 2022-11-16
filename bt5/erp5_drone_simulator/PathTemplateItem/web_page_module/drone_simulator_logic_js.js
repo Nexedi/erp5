@@ -1,38 +1,6 @@
 /*global BABYLON, RSVP, console, DroneAaileFixeAPI, DroneLogAPI*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true, evil: false */
 
-/*********************** DRONE SIMULATOR LOGIC ********************************/
-
-var runGame, updateGame;
-
-(function () {
-  "use strict";
-  console.log('game logic');
-  var game_manager_instance;
-
-  runGame = function (canvas, game_parameters_json) {
-    if (!game_manager_instance) {
-      game_manager_instance = new GameManager(canvas, game_parameters_json);
-    }
-    return game_manager_instance.run();
-  };
-
-  updateGame = function () {
-    if (game_manager_instance) {
-      return game_manager_instance.update();
-    }
-  };
-
-  /*// Resize canvas on window resize
-  window.addEventListener('resize', function () {
-    engine.resize();
-  });*/
-
-
-}(this));
-
-/******************************************************************************/
-
 
 /******************************* DRONE MANAGER ********************************/
 
@@ -403,8 +371,8 @@ var MapManager = /** @class */ (function () {
   }
   //** CONSTRUCTOR
   function MapManager(scene) {
-    var _this = this, drone, map_size, map_info, max_sky, skybox, skyboxMat,
-      largeGroundMat, largeGroundBottom, width, depth, terrain, max;
+    var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
+      largeGroundBottom, width, depth, terrain, max;
     _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map,
                                       GAMEPARAMETERS.initialPosition);
     max = _this.map_info.width;
@@ -659,8 +627,7 @@ var GameManager = /** @class */ (function () {
     function (delta_time) {
     this._game_duration += delta_time;
     var seconds = Math.floor(this._game_duration / 1000), drone,
-      drone_position, map_info, lat, lon,
-      position_obj, material, color;
+      drone_position, map_info, geo_coordinates, position_obj, material, color;
     if (GAMEPARAMETERS.log_drone_flight || GAMEPARAMETERS.draw_flight_path) {
       for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone+=1) {
         if (this._droneList[drone].can_play) {
@@ -670,7 +637,7 @@ var GameManager = /** @class */ (function () {
             if (this._log_count[drone] === 0 ||
                 this._game_duration / this._log_count[drone] > 1) {
               this._log_count[drone] += GAMEPARAMETERS.log_interval_time;
-              var geo_coordinates = this._mapManager.convertToGeoCoordinates(
+              geo_coordinates = this._mapManager.convertToGeoCoordinates(
                 drone_position.x, drone_position.y, drone_position.z, map_info);
               this._flight_log[drone].push(
                 [this._game_duration, geo_coordinates.x, geo_coordinates.y,
@@ -975,5 +942,37 @@ var GameManager = /** @class */ (function () {
 
   return GameManager;
 }());
+
+/******************************************************************************/
+
+/*********************** DRONE SIMULATOR LOGIC ********************************/
+
+var runGame, updateGame;
+
+(function () {
+  "use strict";
+  console.log('game logic');
+  var game_manager_instance;
+
+  runGame = function (canvas, game_parameters_json) {
+    if (!game_manager_instance) {
+      game_manager_instance = new GameManager(canvas, game_parameters_json);
+    }
+    return game_manager_instance.run();
+  };
+
+  updateGame = function () {
+    if (game_manager_instance) {
+      return game_manager_instance.update();
+    }
+  };
+
+  /*// Resize canvas on window resize
+  window.addEventListener('resize', function () {
+    engine.resize();
+  });*/
+
+
+}(this));
 
 /******************************************************************************/
