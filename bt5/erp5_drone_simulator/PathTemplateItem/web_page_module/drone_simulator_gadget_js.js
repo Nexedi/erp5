@@ -1,4 +1,7 @@
-(function (window, rJS, domsugar, DroneGameManager, document, Blob) {
+/*global window, rJS, domsugar, DroneGameManager*/
+/*jslint nomen: true, indent: 2, maxlen: 80, white: true, evil: false */
+
+(function (window, rJS, domsugar, DroneGameManager) {
   "use strict";
 
   var canvas, offscreen,
@@ -16,7 +19,7 @@
 
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-    .declareMethod('render', function render(options) {
+    .declareMethod('render', function render() {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         container = domsugar('div');
@@ -46,4 +49,4 @@
       });
     });
 
-}(window, rJS, domsugar, DroneGameManager, document, Blob));
+}(window, rJS, domsugar, DroneGameManager));
