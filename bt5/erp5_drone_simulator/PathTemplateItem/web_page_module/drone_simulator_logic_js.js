@@ -645,19 +645,16 @@ var GameManager = /** @class */ (function () {
             }
           }
           if (GAMEPARAMETERS.draw_flight_path) {
-            //draw drone position every second
-            if (this._last_position_drawn[drone] !== seconds) {
+            //draw drone position every 5 seconds
+            if (seconds - this._last_position_drawn[drone] > 3) {
               this._last_position_drawn[drone] = seconds;
-              position_obj = BABYLON.MeshBuilder.CreateSphere("obs_" +
-                                                                  seconds, {
-                'diameterX': 3.5,
-                'diameterY': 3.5,
-                'diameterZ': 3.5
-              }, this._scene);
+              position_obj = BABYLON.MeshBuilder.CreateBox("obs_" + seconds,
+                                                           { size: 1 },
+                                                           this._scene);
               position_obj.position = new BABYLON.Vector3(drone_position.x,
                                                           drone_position.z,
                                                           drone_position.y);
-              position_obj.scaling = new BABYLON.Vector3(3.5, 3.5, 3.5);
+              position_obj.scaling = new BABYLON.Vector3(4, 4, 4);
               material = new BABYLON.StandardMaterial(this._scene);
               material.alpha = 1;
               color = new BABYLON.Color3(255, 0, 0);
