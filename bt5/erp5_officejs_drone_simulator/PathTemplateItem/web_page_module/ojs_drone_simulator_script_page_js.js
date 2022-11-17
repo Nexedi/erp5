@@ -318,6 +318,7 @@
               "z": parseFloat(options.init_pos_z)
             },
             "draw_flight_path": DRAW,
+            "temp_flight_path": true,
             "log_drone_flight": LOG,
             "log_interval_time": LOG_TIME,
             "droneList": DRONE_LIST
