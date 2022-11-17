@@ -24,7 +24,6 @@ var DroneManager = /** @class */ (function () {
     this._canUpdate = true;
     this._id = id;
     this._leader_id = 0;
-    this._drone_dict = {};
     this._API = API; // var API created on AI evel
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
@@ -56,8 +55,7 @@ var DroneManager = /** @class */ (function () {
     configurable: true
   });
   Object.defineProperty(DroneManager.prototype, "drone_dict", {
-    get: function () { return this._drone_dict; },
-    set: function (value) { this._drone_dict = value; },
+    get: function () { return this._API._drone_dict_list; },
     enumerable: true,
     configurable: true
   });
@@ -217,7 +215,7 @@ var DroneManager = /** @class */ (function () {
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
   };
   /**
-   * Send a message to team drones
+   * Send a message to drones
    * @param msg The message to send
    * @param id The targeted drone. -1 or nothing to broadcast
    */
@@ -231,8 +229,16 @@ var DroneManager = /** @class */ (function () {
       id = -1;
     }
     if (_this.infosMesh) {
-      return _this._API.internal_sendMsg(JSON.parse(JSON.stringify(msg)), id);
+      return _this._API.sendMsg(JSON.parse(JSON.stringify(msg)), id);
     }
+  };
+  /**
+   * Handle internal get msg
+   * @param msg The message to send
+   * @param id of the sender
+   */
+  DroneManager.prototype.internal_getMsg = function (msg, id) {
+    return this._API.internal_getMsg(msg, id);
   };
   /** Perform a console.log with drone id + the message */
   DroneManager.prototype.log = function (msg) { return msg; };
@@ -578,7 +584,7 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._update = function (delta_time) {
     var _this = this,
       queue = new RSVP.Queue(),
-      i, drone_dict = [], drone_position;
+      i, drone_position;
     this._updateTimeAndLog(delta_time);
 
     // trigger all deferred calls if it is time
@@ -592,22 +598,8 @@ var GameManager = /** @class */ (function () {
     }
 
     this._droneList.forEach(function (drone) {
-      drone_position = drone.getCurrentPosition();
-      if (drone_position) {
-        drone_dict.push({
-          'altitudeRel' : drone_position.z,
-          'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
-          drone_position.z,
-          'latitude' : drone_position.x,
-          'longitude' : drone_position.y
-        });
-      }
-    });
-
-    this._droneList.forEach(function (drone) {
       queue.push(function () {
         drone._tick += 1;
-        drone.drone_dict = drone_dict;
         return drone.internal_update(delta_time);
       });
     });
@@ -939,7 +931,7 @@ var GameManager = /** @class */ (function () {
       else {
         position_list.push(position);
         api = new this.APIs_dict[drone_list[i].type](
-          this, drone_list[i], GAMEPARAMETERS);
+          this, drone_list[i], GAMEPARAMETERS, i);
         spawnDrone(position.x, position.y, position.z, i,
                    drone_list[i], api);
       }
