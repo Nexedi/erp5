@@ -4,6 +4,7 @@ Base_translateString = portal.Base_translateString
 checkPerm = portal.portal_membership.checkPermission
 
 redirect_context = context
+status_level = 'success'
 
 if jump_from_relative_url is None:
   relation = context
@@ -53,6 +54,7 @@ if len(related_list) == 0:
     'No %s Related' % portal_type[0],
     default=Base_translateString('No ${portal_type} related.',
                                  mapping={'portal_type': Base_translateString(portal_type[0])}))
+  status_level = 'warning'
 
 elif len(related_list) == 1:
   relation_found = 1
@@ -78,6 +80,7 @@ elif len(related_list) == 1:
                  "that_title": context.getTitleOrId() }),)
   else :
     message = Base_translateString("You are not authorised to view the related document.")
+    status_level = 'warning'
     relation_found = 0
 
 else:
@@ -114,6 +117,7 @@ else:
       related_object_list.append(obj)
   if len(related_object_list) == 0 :
     message = Base_translateString("You are not authorised to view any related document.")
+    status_level = 'warning'
     relation_found = 0
   else :
     selection_uid_list = [x.getUid() for x in related_object_list]
@@ -129,7 +133,7 @@ else:
                                 uid=selection_uid_list,
                                 portal_status_message=message))
 
-query_params = dict(portal_status_message=message)
+query_params = dict(portal_status_message=message, portal_status_level=status_level)
 if selection_name and not relation_found:
   query_params['selection_name'] = selection_name
   query_params['selection_index'] = selection_index
