@@ -149,9 +149,7 @@
                     update_defer.promise
                   ]);
                 })
-                .push(function () {
-                  step();
-                });
+                .push(step);
             }
 
             function cloneEvent(event) {
