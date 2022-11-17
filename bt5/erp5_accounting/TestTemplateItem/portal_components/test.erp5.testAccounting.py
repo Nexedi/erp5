@@ -1147,6 +1147,33 @@ class TestTransactionValidation(AccountingTestCase):
     self.portal.portal_workflow.doActionFor(accounting_transaction,
                                             'stop_action')
 
+  def test_AccountingTransaction_checkConsistency(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2008/12/31'),
+               destination_section_value=self.organisation_module.supplier,
+               lines=(dict(id='line_with_wrong_quantity',
+                           source_value=self.account_module.goods_purchase,
+                           source_debit=400),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    self.assertRaisesRegexp(
+      ValidationFailed,
+      'Transaction is not balanced',
+      accounting_transaction.AccountingTransaction_checkConsistency,
+    )
+
+    accounting_transaction.line_with_wrong_quantity.setSourceDebit(500)
+    self.assertRaisesRegexp(
+      ValidationFailed,
+      'Date is not in a started Accounting Period',
+      accounting_transaction.AccountingTransaction_checkConsistency,
+    )
+
+    accounting_transaction.setStartDate(DateTime('2007/11/11'))
+    accounting_transaction.AccountingTransaction_checkConsistency()
+
 
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
