@@ -238,6 +238,7 @@
             },
             "draw_flight_path": DRAW,
             "log_drone_flight": LOG,
+            "temp_flight_path": false,
             "droneList": DRONE_LIST
           };
           return simulator.runGame({
