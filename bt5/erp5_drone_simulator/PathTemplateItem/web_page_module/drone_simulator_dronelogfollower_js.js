@@ -6,7 +6,7 @@
 var DroneLogAPI = /** @class */ (function () {
   "use strict";
   //** CONSTRUCTOR
-  function DroneLogAPI(gameManager, drone_info, flight_parameters) {
+  function DroneLogAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
     this._mapManager = this._gameManager._mapManager;
     this._drone_info = drone_info;
@@ -85,7 +85,7 @@ var DroneLogAPI = /** @class */ (function () {
     return;
   };
 
-  DroneLogAPI.prototype.internal_sendMsg = function (msg, to) {
+  DroneLogAPI.prototype.sendMsg = function (msg, to) {
     return;
   };
   DroneLogAPI.prototype.log = function (msg) {

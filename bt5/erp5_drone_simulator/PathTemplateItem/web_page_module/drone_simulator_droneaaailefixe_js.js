@@ -11,17 +11,19 @@ var TAKEOFF_RADIUS = 60,
 var DroneAaileFixeAPI = /** @class */ (function () {
   "use strict";
   //** CONSTRUCTOR
-  function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters) {
+  function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
     this._mapManager = this._gameManager._mapManager;
     this._map_dict = this._mapManager.getMapInfo();
     this._flight_parameters = flight_parameters;
+    this._id = id;
     this._drone_info = drone_info;
     this._loiter_radius = 0;
     this._last_loiter_point_reached = -1;
+    //this._start_altitude = 0;
     //this._last_altitude_point_reached = -1;
     this._loiter_mode = false;
-    //this._start_altitude = 0;
+    this._drone_dict_list = [];
   }
   /*
   ** Function called on start phase of the drone, just before onStart AI script
@@ -38,6 +40,27 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     /*if (this._start_altitude > 0) { //TODO move start_altitude here
       this.reachAltitude(drone);
     }*/
+    var _this = this, drone_position = drone.getCurrentPosition(), drone_info;
+    if (drone_position) {
+      drone_info = {
+        'altitudeRel' : drone_position.z,
+        'altitudeAbs' : this._mapManager.getMapInfo().start_AMSL +
+        drone_position.z,
+        'latitude' : drone_position.x,
+        'longitude' : drone_position.y
+      };
+      this._drone_dict_list[this._id] = drone_info;
+      //broadcast drone info using internal msg
+      this._gameManager._droneList.forEach(function (drone) {
+        if (drone.id !== _this._id) {
+          drone.internal_getMsg(drone_info, _this._id);
+        }
+      });
+    }
+  };
+
+  DroneAaileFixeAPI.prototype.internal_getMsg = function (msg, id) {
+    this._drone_dict_list[id] = msg;
   };
 
   DroneAaileFixeAPI.prototype.set_loiter_mode = function (radius) {
@@ -88,7 +111,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     return;
   };
 
-  DroneAaileFixeAPI.prototype.internal_sendMsg = function (msg, to) {
+  DroneAaileFixeAPI.prototype.sendMsg = function (msg, to) {
     var _this = this,
         droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
