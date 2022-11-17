@@ -647,7 +647,7 @@ var GameManager = /** @class */ (function () {
             }
           }
           if (GAMEPARAMETERS.draw_flight_path) {
-            //draw drone position every 5 seconds
+            //draw drone position every some seconds
             if (seconds - this._last_position_drawn[drone] > 3) {
               this._last_position_drawn[drone] = seconds;
               position_obj = BABYLON.MeshBuilder.CreateBox("obs_" + seconds,
@@ -665,11 +665,13 @@ var GameManager = /** @class */ (function () {
               }
               material.diffuseColor = color;
               position_obj.material = material;
-              if (this._trace_objects_per_drone[drone].length === 20) {
-                this._trace_objects_per_drone[drone][0].dispose();
-                this._trace_objects_per_drone[drone].splice(0, 1);
+              if (GAMEPARAMETERS.temp_flight_path) {
+                if (this._trace_objects_per_drone[drone].length === 20) {
+                  this._trace_objects_per_drone[drone][0].dispose();
+                  this._trace_objects_per_drone[drone].splice(0, 1);
+                }
+                this._trace_objects_per_drone[drone].push(position_obj);
               }
-              this._trace_objects_per_drone[drone].push(position_obj);
             }
           }
         }
