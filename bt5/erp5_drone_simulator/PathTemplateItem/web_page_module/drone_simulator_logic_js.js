@@ -491,6 +491,7 @@ var GameManager = /** @class */ (function () {
     this._flight_log = [];
     if (GAMEPARAMETERS.draw_flight_path) {
       this._last_position_drawn = [];
+      this._trace_objects_per_drone = [];
       header_list = ["timestamp;", "latitude;", "longitude;", "AMSL (m);",
                      "rel altitude (m);", "pitch (Â°);", "roll(Â°);",
                      "yaw(Â°);", "air speed (m/s);", "throttle(%);",
@@ -500,6 +501,7 @@ var GameManager = /** @class */ (function () {
         this._flight_log[drone].push(header_list);
         this._log_count[drone] = 0;
         this._last_position_drawn[drone] = null;
+        this._trace_objects_per_drone[drone] = [];
       }
       this._colors = [
         new BABYLON.Color3(255, 165, 0),
@@ -663,6 +665,11 @@ var GameManager = /** @class */ (function () {
               }
               material.diffuseColor = color;
               position_obj.material = material;
+              if (this._trace_objects_per_drone[drone].length === 20) {
+                this._trace_objects_per_drone[drone][0].dispose();
+                this._trace_objects_per_drone[drone].splice(0, 1);
+              }
+              this._trace_objects_per_drone[drone].push(position_obj);
             }
           }
         }
