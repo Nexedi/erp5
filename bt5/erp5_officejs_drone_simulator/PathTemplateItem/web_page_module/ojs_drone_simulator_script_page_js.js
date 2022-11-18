@@ -20,28 +20,98 @@
     NUMBER_OF_DRONES = 2,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      '/**\n' +
-      ' * The minimal expresion of a AI drone scrip\n' +
-      '**/\n' +
-      '/**\n\n' +
-      ' * Start function called at the beginning of the simulation\n' +
-      ' * "me" is each drone itself\n' +
-      '**/\n' +
-      'me.onStart = function() {\n' +
-      '  //set initial values for a drone like acceleration\n' +
-      '  me.setAcceleration(10);\n' +
-      '  // e.g. arbitrary coordinates\n' +
-      '  var lat = 45.64492790560583 + me.id * 0.01;\n' +
-      '  var lon = 14.25334942966329 - me.id * 0.01;\n' +
-      '  me.setTargetCoordinates(lat,lon,10);\n' +
-      '}\n\n' +
-      '/**\n' +
-      ' * Update function is called 30 times / second\n' +
-      ' * On every execution, information of the current state of simulation can be get\n' +
-      ' * and the drone team strategy can be updated\n' +
-      '**/\n' +
-      'me.onUpdate = function () {\n' +
-      '}\n',
+      'var ALTITUDE = 100,\n' +
+      '  EPSILON = 9,\n' +
+      '  CHECKPOINT_LIST = [\n' +
+      '    {\n' +
+      '      altitude: 585.1806861589965,\n' +
+      '      latitude: 45.64492790560583,\n' +
+      '      longitude: 14.25334942966329\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 589.8802607573035,\n' +
+      '      latitude: 45.64316335436476,\n' +
+      '      longitude: 14.26332880184475\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 608.6648153348965,\n' +
+      '      latitude: 45.64911917196595,\n' +
+      '      longitude: 14.26214792790128\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 606.1448368129072,\n' +
+      '      latitude: 45.64122685351364,\n' +
+      '      longitude: 14.26590493128597\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 630.0829598206344,\n' +
+      '      latitude: 45.64543355564817,\n' +
+      '      longitude: 14.27242391207985\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 616.1839898415284,\n' +
+      '      latitude: 45.6372792927328,\n' +
+      '      longitude: 14.27533492411138\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 598.0603137354178,\n' +
+      '      latitude: 45.64061299543953,\n' +
+      '      longitude: 14.26161958465814\n' +
+      '    },\n' +
+      '    {\n' +
+      '      altitude: 607.1243119862851,\n' +
+      '      latitude: 45.64032340702919,\n' +
+      '      longitude: 14.2682896662383\n' +
+      '    }\n' +
+      '  ];\n' +
+      '\n' +
+      'function distance(lat1, lon1, lat2, lon2) {\n' +
+      '  var R = 6371e3, // meters\n' +
+      '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
+      '    la2 = lat2 * Math.PI / 180,\n' +
+      '    lo1 = lon1 * Math.PI / 180,\n' +
+      '    lo2 = lon2 * Math.PI / 180,\n' +
+      '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
+      '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
+      '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
+      '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
+      '}\n' +
+      '\n' +
+      'me.onStart = function () {\n' +
+      '  me.direction_set = false;\n' +
+      '  me.next_checkpoint = 0;\n' +
+      '};\n' +
+      '\n' +
+      'me.onUpdate = function (timestamp) {' +
+      '  if (!me.direction_set) {\n' +
+      '    if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
+      '      me.setTargetCoordinates(\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id\n' +
+      '      );\n' +
+      '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
+      '    }\n' +
+      '    me.direction_set = true;\n' +
+      '    return;\n' +
+      '  }\n' +
+      '  if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
+      '    me.current_position = me.getCurrentPosition();\n' +
+      '    me.distance = distance(\n' +
+      '      me.current_position.x,\n' +
+      '      me.current_position.y,\n' +
+      '      CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
+      '      CHECKPOINT_LIST[me.next_checkpoint].longitude\n' +
+      '    );\n' +
+      '    if (me.distance <= EPSILON) {\n' +
+      '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
+      '      me.next_checkpoint += 1;\n' +
+      '      me.direction_set = false;\n' +
+      '    }\n' +
+      '    return;\n' +
+      '  }\n' +
+      '  me.exit(0);\n' +
+      '};',
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
