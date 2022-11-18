@@ -581,6 +581,14 @@ var GameManager = /** @class */ (function () {
     this._flight_log[drone._id].push(error.stack);
   };
 
+  GameManager.prototype._checkDroneRules = function (drone) {
+    //TODO move this to API methods
+    if (drone.getCurrentPosition()) {
+      return drone.getCurrentPosition().z > 1;
+    }
+    return false;
+  };
+
   GameManager.prototype._update = function (delta_time) {
     var _this = this,
       queue = new RSVP.Queue(),
@@ -600,7 +608,11 @@ var GameManager = /** @class */ (function () {
     this._droneList.forEach(function (drone) {
       queue.push(function () {
         drone._tick += 1;
-        return drone.internal_update(delta_time);
+        if (_this._checkDroneRules(drone)) {
+          return drone.internal_update(delta_time);
+        }
+        //TODO error must be defined by the api?
+        drone._internal_crash('Drone touched the floor');
       });
     });
 
