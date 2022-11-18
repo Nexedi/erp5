@@ -220,6 +220,65 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       response = connector.createSession(data=self.data.copy())
       self.assertEqual(response["id"], "123")
 
+  def test_api_create_session_with_metadata(self):
+    connector = self._create_connector()
+
+    def _request_callback(request):
+      self.assertEqual(
+        'application/x-www-form-urlencoded', request.headers['Content-Type'],
+        request.headers)
+      body = parse_qs(request.body)
+      self.assertEqual(
+        body, {
+          "success_url": ["http://success"],
+          "cancel_url": ["http://cancel"],
+          "line_items[0][price_data][currency]": ["eur"],
+          "line_items[0][price_data][unit_amount]": ["100"],
+          "line_items[0][price_data][product_data][name]": ["Product"],
+          "line_items[0][quantity]": ["1"],
+          "metadata[key]": ["value"],
+          "mode": ["payment"],
+        })
+      return (
+        200, {
+          'content-type': 'application/json'
+        },
+        json.dumps(
+          {
+            "id": "123",
+            "status": "open",
+            "object": "checkout.session"
+          }))
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+        responses.POST,
+        self.session_url,
+        _request_callback,
+      )
+      response = connector.createSession(
+        data={
+          "success_url": "http://success",
+          "cancel_url": "http://cancel",
+          "line_items": [
+            {
+              "price_data": {
+                "currency": "eur",
+                "unit_amount": "100",
+                "product_data": {
+                  "name": "Product",
+                }
+              },
+              "quantity": 1
+            }
+          ],
+          "metadata": {
+            "key": "value",
+          },
+          "mode": "payment"
+        })
+      self.assertEqual(response["id"], "123")
+
   def test_create_stripe_payment_session_open(self):
     connector = self._create_connector()
 
