@@ -72,10 +72,22 @@ class StripeConnector(XMLObject):
       for subkey, subvalue in six.iteritems(value):
         self.buildLine(data_dict, prefix, key_list + [subkey,], subvalue)
 
-  def buildLineItemList(self, prefix, line_item_list):
+  def buildSessionItemList(self, prefix, item_list, with_index=True):
+    """
+      Build parameters to POST to Stripe
+
+      This method supports the parameters (prefix) above:
+      
+      line_items -> https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-line_items
+      metadata -> https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-metadata
+    """
     data_dict = {}
-    for key, value in enumerate(line_item_list):
-      self.buildLine(data_dict, prefix, [key,], value)
+    if with_index:
+      for key, value in enumerate(item_list):
+        self.buildLine(data_dict, prefix, [key,], value)
+    else:
+      for key, value in item_list:
+        data_dict["{}[{}]".format(prefix, key)] = value
     return data_dict
 
   def createSession(self, data, **kw):
@@ -99,7 +111,13 @@ class StripeConnector(XMLObject):
       url_string += "/"
     url_string += end_point
     line_item_list = request_data.pop("line_items")
-    request_data.update(self.buildLineItemList("line_items", line_item_list))
+    request_data.update(self.buildSessionItemList("line_items", line_item_list))
+    metadata = request_data.pop("metadata", None)
+    if metadata:
+      request_data.update(
+        self.buildSessionItemList("metadata", metadata.items(), with_index=False)
+      )
+
     response = requests.post(
       url_string,
       headers=header_dict,
