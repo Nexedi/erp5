@@ -140,6 +140,9 @@ def main():
     args.test_node_title, suite.allow_restart, test_suite_title,
     args.project_title)
   if test_result is not None:
+    os.environ['ERP5_TEST_RESULT_REVISION'] = test_result.revision
+    os.environ['ERP5_TEST_RESULT_ID'] = test_result.test_result_path.split('/')[-1]
+
     assert revision == test_result.revision, (revision, test_result.revision)
     while suite.acquire():
       test = test_result.start(suite.running.keys())
