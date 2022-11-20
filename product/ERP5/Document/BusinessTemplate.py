@@ -88,7 +88,7 @@ from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import quote, unquote, urlparse
 from difflib import unified_diff
 import posixpath
 import transaction
@@ -5743,6 +5743,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
         value = self.getProperty(id)
         if not value:
           continue
+        if id == 'publication_url':
+          if urlparse(value).scheme in ('file', ''):
+            continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(str(value), name=id, path='bt', ext='')
         elif prop_type in ('lines', 'tokens'):
