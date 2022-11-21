@@ -11,7 +11,7 @@ Surcharge <dtml-var meta_type> properties here.
 <form action="manage_edit" method="POST">
 <table cellspacing="0" cellpadding="2" border="0">
 <dtml-let proxy_field="this()"
-          current_field="proxy_field.getRecursiveTemplateField()">
+          current_field="None if proxy_field.getTemplateField() is None else proxy_field.getRecursiveTemplateField()">
 
   <!-- First, display ProxyField properties -->
   <!-- see: Formulator/dtml/fieldEdit.dtml -->
