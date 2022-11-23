@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>title</string>
               </list>
@@ -72,6 +73,65 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>elementary_type</string>
+                          <string>Property Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>multivalued</string>
+                          <string>Multivalued</string>
+                        </tuple>
+                        <tuple>
+                          <string>preference</string>
+                          <string>Preference</string>
+                        </tuple>
+                        <tuple>
+                          <string>property_default</string>
+                          <string>Property Default</string>
+                        </tuple>
+                        <tuple>
+                          <string>range</string>
+                          <string>Range</string>
+                        </tuple>
+                        <tuple>
+                          <string>read_permission</string>
+                          <string>Read Permission</string>
+                        </tuple>
+                        <tuple>
+                          <string>storage_id</string>
+                          <string>Storage ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>translatable</string>
+                          <string>Translatable</string>
+                        </tuple>
+                        <tuple>
+                          <string>translation_domain</string>
+                          <string>Translation Domain</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
