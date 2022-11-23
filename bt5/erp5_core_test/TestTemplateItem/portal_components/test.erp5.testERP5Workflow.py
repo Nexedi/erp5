@@ -239,20 +239,6 @@ class TestERP5Workflow(ERP5TypeTestCase):
   def test_InteractionGuards(self):
     self.test_TransitionGuards(transition_type='Interaction Workflow Interaction')
 
-  def test_Base_viewDict(self):
-    """
-    verify that Base_viewDict view can be accessed
-    """
-    workflow = self.workflow_module.newContent(portal_type='Workflow')
-    state = workflow.newContent(portal_type='Workflow State', title='Some State')
-    state.Base_viewDict()
-    transition = workflow.newContent(portal_type='Workflow Transition',
-                                     title='Some Transition')
-    transition.setReference('change_something')
-    transition.setGuardRoleList(['Assignee', 'Assignor'])
-    transition.setCategoryList('destination/' + transition.getPath())
-    transition.Base_viewDict()
-
   # XXX: When ERP5Workflow was designed for Configurator, it was deemed
   #      necessary for WorkflowTool to not be viewable by Anonymous but
   #      DCWorkflow portal_workflow inherits all permissions from the Site
