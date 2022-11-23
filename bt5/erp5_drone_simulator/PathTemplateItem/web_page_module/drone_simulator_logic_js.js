@@ -1,13 +1,13 @@
-/*global BABYLON, RSVP, console, DroneAaileFixeAPI, DroneLogAPI*/
-/*jslint nomen: true, indent: 2, maxlen: 80, white: true, evil: false */
-
-
-/******************************* DRONE MANAGER ********************************/
+/*global BABYLON, RSVP, console, DroneAaileFixeAPI, DroneLogAPI, document*/
+/*jslint nomen: true, indent: 2, maxlen: 80, white: true, todo: true,
+         unparam: true */
 
 var GAMEPARAMETERS = {};
 
+/******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
   "use strict";
+
   //** CONSTRUCTOR
   function DroneManager(scene, id, API) {
     this._mesh = null;
@@ -224,8 +224,7 @@ var DroneManager = /** @class */ (function () {
     if (!this._canCommunicate) {
       return;
     }
-    if (id >= 0) { }
-    else {
+    if (id < 0) {
       id = -1;
     }
     if (_this.infosMesh) {
@@ -322,20 +321,21 @@ var DroneManager = /** @class */ (function () {
   /**
    * Function called on game start
    */
-  DroneManager.prototype.onStart = function () { };
+  DroneManager.prototype.onStart = function () { return;};
   /**
    * Function called on game update
+   * @param timestamp The tic value
    */
-  DroneManager.prototype.onUpdate = function (timestamp) { };
+  DroneManager.prototype.onUpdate = function () { return;};
   /**
    * Function called when drone crashes
    */
-  DroneManager.prototype.onTouched = function () { };
+  DroneManager.prototype.onTouched = function () { return;};
   /**
    * Function called when a message is received
    * @param msg The message
    */
-  DroneManager.prototype.onGetMsg = function (msg) { };
+  DroneManager.prototype.onGetMsg = function () { return;};
   return DroneManager;
 }());
 
@@ -592,7 +592,7 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._update = function (delta_time) {
     var _this = this,
       queue = new RSVP.Queue(),
-      i, drone_position;
+      i;
     this._updateTimeAndLog(delta_time);
 
     // trigger all deferred calls if it is time
@@ -652,7 +652,7 @@ var GameManager = /** @class */ (function () {
           }
           if (GAMEPARAMETERS.draw_flight_path) {
             //draw drone position every some seconds
-            if (seconds - this._last_position_drawn[drone] > 3) {
+            if (seconds - this._last_position_drawn[drone] > 0.2) {
               this._last_position_drawn[drone] = seconds;
               position_obj = BABYLON.MeshBuilder.CreateBox("obs_" + seconds,
                                                            { size: 1 },
@@ -670,7 +670,7 @@ var GameManager = /** @class */ (function () {
               material.diffuseColor = color;
               position_obj.material = material;
               if (GAMEPARAMETERS.temp_flight_path) {
-                if (this._trace_objects_per_drone[drone].length === 20) {
+                if (this._trace_objects_per_drone[drone].length === 10) {
                   this._trace_objects_per_drone[drone][0].dispose();
                   this._trace_objects_per_drone[drone].splice(0, 1);
                 }
@@ -914,12 +914,14 @@ var GameManager = /** @class */ (function () {
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
         base += "};ctx._droneList.push(drone)";
         code_eval += "ctx._droneList.push(drone)";
+      /*jslint evil: true*/
       try {
         eval(code_eval);
       }
       catch (error) {
         eval(base);
       }
+      /*jslint evil: false*/
     }
     function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
       var u = Math.random(), v = Math.random(),
