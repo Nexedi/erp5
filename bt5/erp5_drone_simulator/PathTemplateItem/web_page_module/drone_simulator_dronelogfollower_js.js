@@ -157,6 +157,7 @@ var DroneLogAPI = /** @class */ (function () {
       '}' +
       '};';
   };
+
   DroneLogAPI.prototype.getCurrentPosition = function (x, y, z) {
     return {
       x: x,
@@ -194,5 +195,6 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.exit = function (drone) {
     return;
   };
+
   return DroneLogAPI;
 }());

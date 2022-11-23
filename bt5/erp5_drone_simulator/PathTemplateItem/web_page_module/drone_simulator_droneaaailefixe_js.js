@@ -2,14 +2,14 @@
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true */
 
 /************************** DRONE A AILE FIXE API ****************************/
+var DroneAaileFixeAPI = /** @class */ (function () {
+  "use strict";
 
-var TAKEOFF_RADIUS = 60,
-    LOITER_LIMIT = 30,
+  // var TAKEOFF_RADIUS = 60,
+  var LOITER_LIMIT = 30,
     LOITER_RADIUS_FACTOR = 0.60,
     LOITER_SPEED_FACTOR = 1.5;
 
-var DroneAaileFixeAPI = /** @class */ (function () {
-  "use strict";
   //** CONSTRUCTOR
   function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
@@ -29,6 +29,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   DroneAaileFixeAPI.prototype.internal_start = function () {
+    return;
   };
   /*
   ** Function called on every drone update, right after onUpdate AI script
