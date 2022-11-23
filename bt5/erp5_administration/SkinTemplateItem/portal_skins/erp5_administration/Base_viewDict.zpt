@@ -1,0 +1,14 @@
+<html>
+
+<body>
+  <table width="100%" tal:define="pformat nocall: modules/pprint/pformat">
+    <tal:block tal:repeat="item python: sorted(modules['six'].iteritems(context.showDict()))">
+      <tr tal:attributes="bgcolor python: '#dddd88' if repeat['item'].odd() else '#88dddd'">
+        <td tal:content="python: item[0]" />
+        <td><pre tal:content="python: pformat(item[1])" /></td>
+      </tr>
+    </tal:block>
+  </table>
+</body>
+
+</html>
