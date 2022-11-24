@@ -1,6 +1,7 @@
 import itertools
 import time
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+from Products.CMFActivity.ActivityTool import getCurrentNode
 
 def waitForActivities(self, delay=100, count=None):
   """
@@ -9,13 +10,17 @@ def waitForActivities(self, delay=100, count=None):
     RuntimeError is raised in case there is no way
     to finish activities.
   """
+  activity_tool = self.getPortalObject().portal_activities
+  assert not (
+    activity_tool.isSubscribed()
+    and getCurrentNode() in activity_tool.getProcessingNodeList())
+
   if count is not None: # BBB
     # completely arbitrary conversion factor: count used to default to 1000
     # and I (just as arbitrarily) converted that into a 100s default maximum
     # tolerable wait delay before bailing.
     delay = count / 10.
   deadline = time.time() + delay
-  activity_tool = self.getPortalObject().portal_activities
   for call_count in itertools.count():
     x = activity_tool.getMessageList()
     if not x:
