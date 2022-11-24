@@ -33,4 +33,5 @@ if not error_list:
 if error_list:
   result = ''.join(error_list)
 
+container.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
 return '<html><body><span id="result">%s</span></body></html>' % result
