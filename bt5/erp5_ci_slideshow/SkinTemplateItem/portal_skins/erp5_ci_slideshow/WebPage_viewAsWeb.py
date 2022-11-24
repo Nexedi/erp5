@@ -5,6 +5,9 @@ Presentation Layout ?portal_skin=CI_slideshow
 """
 import re
 
+container.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+
+
 def getSlideList(content):
   return re.findall(r'<section[^>]*?>(.*?)</section>', content, re.S)
 
