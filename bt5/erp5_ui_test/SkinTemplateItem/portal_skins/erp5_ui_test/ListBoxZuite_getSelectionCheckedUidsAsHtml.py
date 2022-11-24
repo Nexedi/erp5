@@ -16,6 +16,7 @@ checked_uids_objs.sort(key=lambda x:x.getId())
 # we produce html for easier Selenium parsing
 table = "\n".join(["<tr><td>%s</td><td>%s</td></tr>" % (
                     x.getUid(), x.getId()) for x in checked_uids_objs])
+container.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
 return """<html>
 <head><title>len(checked_uids) == %d</title></head>
 <body>
