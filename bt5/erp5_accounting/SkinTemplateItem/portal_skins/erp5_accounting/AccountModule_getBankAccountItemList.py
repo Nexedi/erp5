@@ -10,6 +10,9 @@ organisation, using the following policy:
 
 If organisation is not passed, this script will return all bank accounts
 applicable for section_category and section_category_strict_membership.
+
+If `base_category` is passed, the currently linked bank account with the specified
+base_category is anyway included.
 """
 portal = context.getPortalObject()
 
@@ -56,11 +59,19 @@ item_list = [('', '')]
 include_organisation_hierarchy = len(set(
   ['/'.join(b.path.split('/')[:-1]) for b in bank_account_list])) > 1
 
+bank_account_list = [brain.getObject() for brain in sorted(
+  bank_account_list, key=lambda b:b.path
+)]
+
+if base_category is not None:
+  current_value = context.getProperty(base_category + '_value')
+  if current_value not in bank_account_list:
+    bank_account_list.append(current_value)
+
 previous_organisation = None
 # sort bank accounts in a way that bank accounts from the same
 # organisation are consecutive
-for brain in sorted(bank_account_list, key=lambda b:b.path):
-  bank = brain.getObject()
+for bank in bank_account_list:
   if include_organisation_hierarchy:
     organisation = bank.getParentValue()
     if organisation != previous_organisation:
