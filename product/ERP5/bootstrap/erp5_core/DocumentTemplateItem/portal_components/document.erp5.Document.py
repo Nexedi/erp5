@@ -37,6 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import deprecated, guessEncodingFromText
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.PythonScripts.standard import html_quote
 from erp5.component.tool.ContributionTool import MAX_REPEAT
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 from AccessControl import Unauthorized
@@ -818,7 +819,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     return str(subject)
 
   security.declareProtected(Permissions.View, 'asEntireHTML')
-  def asEntireHTML(self, **kw):
+  def asEntireHTML(self, REQUEST=None, **kw):
     """
       Returns a complete HTML representation of the document
       (with body tags, etc.). Adds if necessary a base
@@ -833,9 +834,11 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       # if base is defined yet.
       html = str(html)
       if not html.find('<base') >= 0:
-        base = '<base href="%s"/>' % self.getContentBaseURL()
+        base = '<base href="%s"/>' % html_quote(self.getContentBaseURL())
         html = html.replace('<head>', '<head>%s' % base, 1)
       self.setConversion(html, mime='text/html', format='base-html')
+    if REQUEST is not None:
+      REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
     return html
 
   security.declarePrivate('_asHTML')
