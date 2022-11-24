@@ -1,6 +1,7 @@
 """List all skins that are present in more than one skin folder, ordered by
 priority.
 """
+container.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
 
 # make sure context is the skins tool
 stool = context.portal_skins

@@ -1,3 +1,4 @@
+container.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
 print '<html><head><meta http-equiv="refresh" content="%s"></head><body>' % refresh_interval
 
 for table in 'message', 'message_queue':
