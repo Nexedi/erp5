@@ -106,11 +106,11 @@ class StripeConnector(XMLObject):
       url_string += "/"
     url_string += end_point
     request_data = {}
-    for key, value in data.items():
+    for key, value in six.iteritems(data):
       if isinstance(value, list):
         request_data.update(self.serializeSessionParameter(key, value))
       elif isinstance(value, dict):
-        request_data.update(self.serializeSessionParameter(key, value.items(), with_index=False))
+        request_data.update(self.serializeSessionParameter(key, six.iteritems(value), with_index=False))
       else:
         request_data[key] = value
 
