@@ -271,7 +271,9 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         })
       self.assertEqual(response["id"], "123")
 
-  def test_api_create_session_with_metadata_with_multiple_values(self):
+  def test_api_create_session_with_any_hash(self):
+    """ Test if dicts and lists are serialized properly
+    """
     connector = self._create_connector()
 
     def _request_callback(request):
@@ -281,8 +283,21 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       body = parse_qs(request.body)
       self.assertEqual(
         body, {
+          "automatic_tax[enabled]": ['true'],
+          "automatic_tax[status]": ['complete'],
           "success_url": ["http://success"],
           "cancel_url": ["http://cancel"],
+          'custom_text[shipping_text][message]': ['Rue XV'],
+          'custom_text[submit][message]': ['Rue XV'],
+          'customer_details[address]': ['Rue XV'],
+          'customer_details[email]': ['text@text.com'],
+          'customer_details[name]': ['My name'],
+          'customer_details[phone]': ['2199909'],
+          'customer_details[tax_exempt]': ['tax'],
+          'customer_details[tax_ids][0][type]': ['eu_vat'],
+          'customer_details[tax_ids][0][value]': ['33'],
+          'customer_details[tax_ids][1][type]': ['br_cnpj'],
+          'customer_details[tax_ids][1][value]': ['33'],
           "line_items[0][price_data][currency]": ["eur"],
           "line_items[0][price_data][unit_amount]": ["100"],
           "line_items[0][price_data][product_data][name]": ["First Line"],
@@ -291,6 +306,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
           "metadata[key1]": ["value1"],
           "metadata[key2]": ["value2"],
           "mode": ["payment"],
+          "payment_method_options[acss_debit][current]": ['usd']
         })
       return (
         200, {
@@ -320,6 +336,37 @@ class TestStripePaymentSession(ERP5TypeTestCase):
             "key": "value",
             "key1": "value1",
             "key2": "value2",
+          },
+          "automatic_tax": {
+            "enabled": "true",
+            "status": "complete"
+          },
+          "custom_text": {
+            "shipping_text": {
+            "message": "Rue XV",
+            },
+            "submit": {
+              "message": "Rue XV",
+            }
+          },
+          "customer_details": {
+            "address": "Rue XV",
+            "email": "text@text.com",
+            "name": "My name",
+            "phone": "2199909",
+            "tax_exempt": "tax",
+            "tax_ids": [{
+              "type": "eu_vat",
+              "value": "33"
+            }, {
+              "type": "br_cnpj",
+              "value": "33"
+            }]
+          },
+          "payment_method_options": {
+            "acss_debit": {
+              "current": "usd"
+            }
           },
           "mode": "payment"
         })

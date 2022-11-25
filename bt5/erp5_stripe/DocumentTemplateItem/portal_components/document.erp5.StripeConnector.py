@@ -29,7 +29,6 @@
 
 
 from six.moves import urllib
-from copy import deepcopy
 
 import requests
 import six
@@ -72,22 +71,24 @@ class StripeConnector(XMLObject):
       for subkey, subvalue in six.iteritems(value):
         self.buildLine(data_dict, prefix, key_list + [subkey,], subvalue)
 
-  def buildSessionItemList(self, prefix, item_list, with_index=True):
-    """
-      Build parameters to POST to Stripe
-
-      This method supports the parameters (prefix) above:
-      
-      line_items -> https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-line_items
-      metadata -> https://stripe.com/docs/api/checkout/sessions/object#checkout_session_object-metadata
-    """
+  def serializeSessionParameter(self, prefix, item_list, with_index=True):
     data_dict = {}
     if with_index:
       for key, value in enumerate(item_list):
         self.buildLine(data_dict, prefix, [key,], value)
     else:
       for key, value in item_list:
-        data_dict["{}[{}]".format(prefix, key)] = value
+        key_formatted = "{}[{}]".format(prefix, key)
+        if isinstance(value, dict):
+          data_dict.update(
+            self.serializeSessionParameter(key_formatted, value.items(), False)
+          )
+        elif isinstance(value, list):
+          data_dict.update(
+            self.serializeSessionParameter(key_formatted, value, True)
+          )
+        else:
+          data_dict[key_formatted] = value
     return data_dict
 
   def createSession(self, data, **kw):
@@ -97,12 +98,6 @@ class StripeConnector(XMLObject):
       data is a dict, see https://stripe.com/docs/api/checkout/sessions/create
     """
     end_point = "checkout/sessions"
-    # copy data, not to mutate caller's data
-    request_data = deepcopy(data)
-
-    if "mode" not in request_data:
-      request_data["mode"] = "payment"
-
     header_dict = {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
@@ -110,13 +105,17 @@ class StripeConnector(XMLObject):
     if not url_string.endswith("/"):
       url_string += "/"
     url_string += end_point
-    line_item_list = request_data.pop("line_items")
-    request_data.update(self.buildSessionItemList("line_items", line_item_list))
-    metadata = request_data.pop("metadata", None)
-    if metadata:
-      request_data.update(
-        self.buildSessionItemList("metadata", metadata.items(), with_index=False)
-      )
+    request_data = {}
+    for key, value in data.items():
+      if isinstance(value, list):
+        request_data.update(self.serializeSessionParameter(key, value))
+      elif isinstance(value, dict):
+        request_data.update(self.serializeSessionParameter(key, value.items(), with_index=False))
+      else:
+        request_data[key] = value
+
+    if "mode" not in request_data:
+      request_data["mode"] = "payment"
 
     response = requests.post(
       url_string,
