@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-
-
 from six.moves import urllib
 
 import requests
@@ -59,37 +57,16 @@ class StripeConnector(XMLObject):
     PropertySheet.DublinCore
   )
 
-  def buildLineKey(self, prefix, key_list):
-    for key in key_list:
-      prefix += "[%s]" % key
-    return prefix
-
-  def buildLine(self, data_dict, prefix, key_list, value):
-    if not isinstance(value, dict):
-      data_dict[self.buildLineKey(prefix, key_list)] = value
+  def serializeSessionParameter(self, request_data, key, value):
+    if isinstance(value, list) or isinstance(value, dict):
+      iterator = six.iteritems(value) if isinstance(value, dict) else enumerate(value)
+      for subkey, subvalue in iterator:
+        self.serializeSessionParameter(
+          request_data,
+          "{}[{}]".format(key, subkey),
+          subvalue)
     else:
-      for subkey, subvalue in six.iteritems(value):
-        self.buildLine(data_dict, prefix, key_list + [subkey,], subvalue)
-
-  def serializeSessionParameter(self, prefix, item_list, with_index=True):
-    data_dict = {}
-    if with_index:
-      for key, value in enumerate(item_list):
-        self.buildLine(data_dict, prefix, [key,], value)
-    else:
-      for key, value in item_list:
-        key_formatted = "{}[{}]".format(prefix, key)
-        if isinstance(value, dict):
-          data_dict.update(
-            self.serializeSessionParameter(key_formatted, value.items(), False)
-          )
-        elif isinstance(value, list):
-          data_dict.update(
-            self.serializeSessionParameter(key_formatted, value, True)
-          )
-        else:
-          data_dict[key_formatted] = value
-    return data_dict
+      request_data[key] = value
 
   def createSession(self, data, **kw):
     """
@@ -107,12 +84,7 @@ class StripeConnector(XMLObject):
     url_string += end_point
     request_data = {}
     for key, value in six.iteritems(data):
-      if isinstance(value, list):
-        request_data.update(self.serializeSessionParameter(key, value))
-      elif isinstance(value, dict):
-        request_data.update(self.serializeSessionParameter(key, six.iteritems(value), with_index=False))
-      else:
-        request_data[key] = value
+      self.serializeSessionParameter(request_data, key, value)
 
     if "mode" not in request_data:
       request_data["mode"] = "payment"
