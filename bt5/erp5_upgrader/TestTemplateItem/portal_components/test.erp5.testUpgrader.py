@@ -786,7 +786,7 @@ class TestUpgrader(ERP5TypeTestCase):
   def stepCheckPersonTitleHistory(self, sequence=None):
     self.assertEqual(
       [x.changes for x in self.portal.person_module['1'].Base_getZODBHistoryList()[-3:]],
-      [('title:M. pre_upgrade',), ('title:M. upgrader',), ('title:M. post_upgrade',)])
+      [('title: M. pre_upgrade',), ('title: M. upgrader',), ('title: M. post_upgrade',)])
 
   def test_upgrade_activities_are_run_sequentially(self):
     """
