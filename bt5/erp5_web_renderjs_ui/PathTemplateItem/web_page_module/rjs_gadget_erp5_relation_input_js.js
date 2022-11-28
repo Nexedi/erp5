@@ -3,7 +3,8 @@
  SimpleQuery, ComplexQuery, Query, QueryFactory, document, XMLHttpRequest,
  console*/
 (function (window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console) {
+  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console,
+  MouseEvent) {
   "use strict";
 
   function displayNonEditableLink(gadget) {
@@ -548,7 +549,79 @@
         }
       }
     }, false, false)
+    .onEvent('keydown', function (evt) {
+      var gadget = this,
+          i,
+          next_event,
+          active_index,
+          ul = gadget.element.querySelector(".search_ul");
+      if (evt.key === "ArrowDown" || evt.key === "ArrowUp") {
+        if (ul.childNodes.length > 0) {
+          for (i = 0; i < ul.childNodes.length; i += 1) {
+            if (ul.childNodes[i].classList.contains('active')) {
+              active_index = i;
+            }
+          }
+          if (active_index === undefined) {
+            if (evt.key === "ArrowDown") {
+              active_index = 0;
+            } else if (evt.key === "ArrowUp") {
+              active_index = ul.childNodes.length - 1;
+            }
+          } else {
+            if (evt.key === "ArrowDown") {
+              active_index = active_index + 1;
+            } else if (evt.key === "ArrowUp") {
+              active_index = active_index - 1;
+            }
+            if (active_index >= ul.childNodes.length) {
+              active_index = 0;
+            }
+            else if (active_index === -1) {
+              active_index = ul.childNodes.length - 1;
+            }
+          }
+          for (i = 0; i < ul.childNodes.length; i += 1) {
+            if (i === active_index) {
+              if (!ul.childNodes[i].classList.contains('active')) {
+                ul.childNodes[i].classList.add('active');
+              }
+            } else {
+              if (ul.childNodes[i].classList.contains('active')) {
+                ul.childNodes[i].classList.remove('active');
+              }
+            }
+          }
+          evt.preventDefault();
+        }
+      } else if (evt.key === "Enter") {
+        for (i = 0; i < ul.childNodes.length; i += 1) {
+          if (ul.childNodes[i].classList.contains('active')) {
+            next_event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true
+            });
+            ul.childNodes[i].dispatchEvent(next_event);
+            evt.preventDefault();
+          }
+        }
+      }
+    }, true, false)
 
+    .onEvent('mouseover', function (evt) {
+      // Do not use li:hover css syntax, since we have to disable manually
+      // the highlightnment when keyboard is used
+      var gadget = this,
+                   i,
+                   ul = gadget.element.querySelector(".search_ul");
+      if (evt.target.tagName.toLowerCase() === 'li') {
+        for (i = 0; i < ul.childNodes.length; i += 1) {
+          ul.childNodes[i].classList.remove('active');
+        }
+        evt.target.classList.add('active');
+      }
+    }, true, false)
     .declareAcquiredMethod("notifyBlur", "notifyBlur")
     .onEvent('blur', function (evt) {
       var gadget = this;
@@ -647,4 +720,5 @@
     }, true, false);
 
 }(window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console));
+  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console,
+  MouseEvent));
