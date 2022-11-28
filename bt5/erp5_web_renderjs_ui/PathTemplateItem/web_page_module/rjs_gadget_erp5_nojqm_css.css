@@ -1315,8 +1315,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .relation-input ul li::before {
   padding-right: 6pt;
 }
-.relation-input ul li:hover,
-.relation-input ul li:active {
+.relation-input ul .active {
   background-color: #1F1F1F;
 }
 .relation-input .ui-icon-warning {
