@@ -104,6 +104,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(test_web.getPortalType(), 'Business Template')
     self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertEqual(len(test_web.getRevision()), 28)
+    self.assertEqual(
+      test_web.getPublicationUrl(),
+      'http://www.erp5.org/dists/snapshot/test_bt5/test_web.bt5')
 
   def _svn_setup_ssl(self):
     """
@@ -139,6 +142,8 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(test_web.getPortalType(), 'Business Template')
     self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertEqual(len(test_web.getRevision()), 28)
+    self.assertEqual(
+      test_web.getPublicationUrl(), bt5_url)
 
   def test_00_updateBusinessTemplateFromUrl_simple(self):
     """
@@ -549,6 +554,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
     self.assertNotEquals(bt, None)
     self.assertEqual(bt.getTitle(), bt5_name)
+    self.assertEqual(bt.getPublicationUrl(), self._getBTPathAndIdList([bt5_name])[0][0])
 
     # Repeat operation, the bt5 should be ignored
     self.templates_tool.installBusinessTemplateListFromRepository([bt5_name])
