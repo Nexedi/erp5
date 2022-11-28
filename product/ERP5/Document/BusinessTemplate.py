@@ -77,17 +77,18 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
 from OFS import SimpleItem
 from OFS.Image import Pdata
+import coverage
 from io import BytesIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML, customImporters
 from Products.ERP5Type.Workflow import WorkflowHistoryList
-from zLOG import LOG, WARNING, INFO
+from zLOG import LOG, WARNING, INFO, PROBLEM
 from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import quote, unquote, urlparse
 from difflib import unified_diff
 import posixpath
 import transaction
@@ -97,6 +98,7 @@ import threading
 from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
+from Products.ERP5Type.mixin.component import ComponentMixin
 
 CACHE_DATABASE_PATH = None
 try:
@@ -1156,22 +1158,33 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
-  def onNewObject(self, obj):
+  def onNewObject(self, obj, context):
     """
       Installation hook.
       Called when installation process determined that object to install is
       new on current site (it's not replacing an existing object).
       `obj` parameter is the newly created object in its acquisition context.
+      `context` is the business template instance, in its acquisition context.
       Can be overridden by subclasses.
     """
-    pass
+    if isinstance(obj, (PythonScript, ComponentMixin)) and coverage.Coverage.current():
+      relative_path = '/'.join(obj.getPhysicalPath()[len(context.getPortalObject().getPhysicalPath()):])
+      filename = os.path.join(
+        context.getPublicationUrl(),
+        self.__class__.__name__,
+        relative_path + '.py')
+      if os.path.exists(filename):
+        obj._erp5_coverage_filename = filename
+      else:
+        LOG('BusinessTemplate', PROBLEM, 'Could not find file for %s' % filename)
 
-  def onReplaceObject(self, obj):
+  def onReplaceObject(self, obj, context):
     """
       Installation hook.
       Called when installation process determined that object to install is
       to replace an existing object on current site (it's not new).
       `obj` parameter is the replaced object in its acquisition context.
+      `context` is the business template instance, in its acquisition context.
       Can be overridden by subclasses.
     """
     pass
@@ -1416,9 +1429,9 @@ class ObjectTemplateItem(BaseTemplateItem):
 
         if not object_existed:
           # A new object was added, call the hook
-          self.onNewObject(obj)
+          self.onNewObject(obj, context)
         else:
-          self.onReplaceObject(obj)
+          self.onReplaceObject(obj, context)
 
         # mark a business template installation so in 'PortalType_afterClone' scripts
         # we can implement logical for reseting or not attributes (i.e reference).
@@ -1972,9 +1985,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
 
   def beforeInstall(self):
     self._installed_new_category = False
+    return super(CategoryTemplateItem, self).beforeInstall()
 
-  def onNewObject(self, obj):
+  def onNewObject(self, obj, context):
     self._installed_new_category = True
+    return super(CategoryTemplateItem, self).onNewObject(obj, context)
 
   def afterInstall(self):
     if self._installed_new_category:
@@ -2392,7 +2407,8 @@ class WorkflowTemplateItem(ObjectTemplateItem):
               continue
           raise
         container_ids = container.objectIds()
-        if object_id in container_ids:    # Object already exists
+        object_existed = object_id in container_ids 
+        if object_existed:
           self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
           container.manage_delObjects([object_id])
         obj = self._objects[path]
@@ -2402,6 +2418,11 @@ class WorkflowTemplateItem(ObjectTemplateItem):
         obj = container._getOb(object_id)
         obj.manage_afterClone(obj)
         obj.wl_clearLocks()
+        if not object_existed:
+          # A new object was added, call the hook
+          self.onNewObject(obj, context)
+        else:
+          self.onReplaceObject(obj, context)
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -4218,7 +4239,7 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     raise NotImplementedError
 
   def __init__(self, id_list, tool_id='portal_components', **kw):
-    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    super(_ZodbComponentTemplateItem, self).__init__(id_list, tool_id=tool_id, **kw)
 
   def isKeepWorkflowObjectLastHistoryOnly(self, path):
     """
@@ -4248,9 +4269,13 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 
-  def onNewObject(self, _):
+  def onNewObject(self, obj, context):
     self._do_reset = True
-  onReplaceObject = onNewObject
+    return super(_ZodbComponentTemplateItem, self).onNewObject(obj, context)
+
+  def onReplaceObject(self, obj, context):
+    self._do_reset = True
+    return super(_ZodbComponentTemplateItem, self).onReplaceObject(obj, context)
 
   def afterInstall(self):
     """
@@ -5718,6 +5743,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
         value = self.getProperty(id)
         if not value:
           continue
+        if id == 'publication_url':
+          if urlparse(value).scheme in ('file', ''):
+            continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(str(value), name=id, path='bt', ext='')
         elif prop_type in ('lines', 'tokens'):

@@ -1867,7 +1867,8 @@ class Catalog(Folder,
     else:
       if related_key_definition is not None:
         search_key = search_key.getSearchKey(sql_catalog=self,
-          related_key_definition=related_key_definition)
+          related_key_definition=related_key_definition,
+          search_key_name=search_key_name)
     return search_key
 
   security.declareProtected(access_contents_information, 'buildSingleQuery')
@@ -1885,17 +1886,18 @@ class Catalog(Folder,
       from it.
     """
     return self._buildQuery(
-      buildQueryFromSearchKey=lambda search_key: search_key.buildQuery(
+      lambda search_key: search_key.buildQuery(
         value,
         logical_operator=logical_operator,
         comparison_operator=comparison_operator,
       ),
-      key=key,
-      search_key_name=search_key_name,
-      ignore_unknown_columns=ignore_unknown_columns,
+      key,
+      search_key_name,
+      ignore_unknown_columns,
     )
 
-  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap, ignore_unknown_columns):
+  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap,
+                                            ignore_unknown_columns):
     """
     node
       Abstract syntax tree node (see SearchText/AdvancedSearchTextParser.py,
@@ -1952,7 +1954,10 @@ class Catalog(Folder,
     return result
 
   security.declareProtected(access_contents_information, 'buildQueryFromAbstractSyntaxTreeNode')
-  def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x, ignore_unknown_columns=False):
+  def buildQueryFromAbstractSyntaxTreeNode(self, node, key,
+                                           search_key_name=None,
+                                           wrap=lambda x: x,
+                                           ignore_unknown_columns=False):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
       its childs.
@@ -1966,17 +1971,18 @@ class Catalog(Folder,
       Expected node API is described in interfaces/abstract_syntax_node.py .
     """
     return self._buildQuery(
-      buildQueryFromSearchKey=lambda search_key: self._buildQueryFromAbstractSyntaxTreeNode(
+      lambda search_key: self._buildQueryFromAbstractSyntaxTreeNode(
         node,
         search_key,
         wrap,
         ignore_unknown_columns,
       ),
-      key=key,
-      ignore_unknown_columns=ignore_unknown_columns,
+      key,
+      search_key_name,
+      ignore_unknown_columns,
     )
 
-  def _buildQuery(self, buildQueryFromSearchKey, key, search_key_name=None, ignore_unknown_columns=False):
+  def _buildQuery(self, buildQueryFromSearchKey, key, search_key_name, ignore_unknown_columns):
     """
       Determine the SearchKey to use to generate a Query, and call buildQueryFromSearchKey with it.
     """
@@ -1996,7 +2002,7 @@ class Catalog(Folder,
           related_key_definition=related_key_definition,
           search_key_name=search_key_name,
         )
-      result = buildQueryFromSearchKey(search_key=build_key)
+      result = buildQueryFromSearchKey(build_key)
       if related_key_definition is not None:
         result = search_key.buildQuery(sql_catalog=self,
           related_key_definition=related_key_definition,
@@ -2049,32 +2055,35 @@ class Catalog(Folder,
         # We have an empty value, do not create a query from it
         empty_value_dict[key] = value
       else:
-        if isinstance(value, dict):
-          # Dictionnary: might contain the search key to use.
-          search_key_name = value.get('key')
-          # Backward compatibility: former "Keyword" key is now named
-          # "KeywordKey".
-          if search_key_name == 'Keyword':
-            search_key_name = value['key'] = 'KeywordKey'
-          # Backward compatibility: former "ExactMatch" is now only available
-          # as "RawKey"
-          elif search_key_name == 'ExactMatch':
-            search_key_name = value['key'] = 'RawKey'
         if isinstance(value, BaseQuery):
           # Query instance: use as such, ignore key.
           result = value
         elif isinstance(value, (basestring, dict)):
           # String: parse using key's default search key.
           raw_value = value
+          wrap = lambda x: x
           if isinstance(value, dict):
-            # De-wrap value for parsing, and re-wrap when building queries.
-            def wrap(x):
-              result = raw_value.copy()
-              result['query'] = x
-              return result
+            # Dictionary: might contain the search key to use.
+            search_key_name = value.pop('key', None)
+            # Backward compatibility: former "Keyword" key is now named
+            # "KeywordKey".
+            if search_key_name == 'Keyword':
+              search_key_name = 'KeywordKey'
+            # Backward compatibility: former "ExactMatch" is now only available
+            # as "RawKey"
+            elif search_key_name == 'ExactMatch':
+              search_key_name = 'RawKey'
+            # De-wrap value for parsing.
             value = value['query']
+            # If necessary, re-wrap when building queries.
+            if len(raw_value) > 1:
+              def wrap(x):
+                result = raw_value.copy()
+                result['query'] = x
+                return result
+            else:
+              raw_value = value
           else:
-            wrap = lambda x: x
             search_key_name = None
           search_key = self.getColumnDefaultSearchKey(key,
             search_key_name=search_key_name)
@@ -2093,7 +2102,7 @@ class Catalog(Folder,
               )
             else:
               result = self.buildQueryFromAbstractSyntaxTreeNode(
-                abstract_syntax_tree, key, wrap,
+                abstract_syntax_tree, key, search_key_name, wrap,
                 ignore_unknown_columns=ignore_unknown_columns,
               )
         else:

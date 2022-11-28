@@ -36,6 +36,7 @@ import imp
 import collections
 from six import reraise
 
+import coverage
 from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type import product_path as ERP5Type_product_path
@@ -333,6 +334,14 @@ class ComponentDynamicPackage(ModuleType):
 
       # This must be set for imports at least (see PEP 302)
       module.__file__ = '<' + relative_url + '>'
+      if coverage.Coverage.current():
+        if hasattr(component, '_erp5_coverage_filename'):
+          module.__file__ = component._erp5_coverage_filename
+        else:
+          LOG(
+            "ERP5Type.Tool.ComponentTool",
+            WARNING,
+            "No coverage filesystem mapping for %s" % (module_fullname_alias or module_fullname))
 
       # Only useful for get_source(), do it before exec'ing the source code
       # so that the source code is properly display in case of error

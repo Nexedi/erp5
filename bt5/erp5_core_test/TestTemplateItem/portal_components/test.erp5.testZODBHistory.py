@@ -84,7 +84,6 @@ class TestZODBHistory(ERP5TypeTestCase):
     self.assertTrue(len(history_list) > 0)
     d = history_list[0]
     changes = d['changes']
-    self.assertEqual(changes['portal_type'], 'Organisation')
     self.assertEqual(changes['id'], 'org')
     self.assertTrue(changes['uid'] is not None)
 
@@ -140,7 +139,7 @@ class TestZODBHistory(ERP5TypeTestCase):
     document.edit(title='ネクセディ', default_address_city='千代田区')
     self.commit()
     _, change, = document.Base_getZODBHistoryList()
-    self.assertIn('title:ネクセディ', change.getProperty('changes'))
+    self.assertIn('title: ネクセディ', change.getProperty('changes'))
 
     # no encoding error
     document.Base_viewZODBHistory()
@@ -167,9 +166,9 @@ class TestZODBHistory(ERP5TypeTestCase):
     document.Base_viewZODBHistory()
 
     change, = document.Base_getZODBHistoryList()
-    self.assertIn('data:(binary)', change.getProperty('changes'))
-    self.assertIn('content_type:image/png', change.getProperty('changes'))
-    self.assertIn('title:ロゴ', change.getProperty('changes'))
+    self.assertIn('data: (binary)', change.getProperty('changes'))
+    self.assertIn('content_type: image/png', change.getProperty('changes'))
+    self.assertIn('title: ロゴ', change.getProperty('changes'))
 
 
 def test_suite():
