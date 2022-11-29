@@ -101,11 +101,11 @@
                           <string>Guard Roles</string>
                         </tuple>
                         <tuple>
-                          <string>before_script_list</string>
+                          <string>before_script_reference_list</string>
                           <string>Before Script</string>
                         </tuple>
                         <tuple>
-                          <string>after_script_list</string>
+                          <string>after_script_reference_list</string>
                           <string>After Script</string>
                         </tuple>
                       </list>

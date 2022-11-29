@@ -81,8 +81,8 @@
                       <list>
                         <string>listbox_trigger_type</string>
                         <string>listbox_guard_role_list</string>
-                        <string>listbox_before_script_list</string>
-                        <string>listbox_after_script_list</string>
+                        <string>listbox_before_script_reference_list</string>
+                        <string>listbox_after_script_reference_list</string>
                       </list>
                     </value>
                 </item>
