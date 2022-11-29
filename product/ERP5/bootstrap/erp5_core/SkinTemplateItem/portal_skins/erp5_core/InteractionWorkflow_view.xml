@@ -71,10 +71,10 @@
                     <value>
                       <list>
                         <string>interaction_listbox_trigger_method_id_list</string>
-                        <string>interaction_listbox_after_script_id_list</string>
-                        <string>interaction_listbox_before_script_id_list</string>
-                        <string>interaction_listbox_before_commit_script_id_list</string>
-                        <string>interaction_listbox_activate_script_id_list</string>
+                        <string>interaction_listbox_after_script_reference_list</string>
+                        <string>interaction_listbox_before_script_reference_list</string>
+                        <string>interaction_listbox_before_commit_script_reference_list</string>
+                        <string>interaction_listbox_activate_script_reference_list</string>
                         <string>interaction_listbox_guard_role_list</string>
                       </list>
                     </value>

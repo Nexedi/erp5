@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
@@ -76,6 +77,41 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>guard_expression</string>
+                          <string>Guard Expression</string>
+                        </tuple>
+                        <tuple>
+                          <string>guard_group_list</string>
+                          <string>Guard Group</string>
+                        </tuple>
+                        <tuple>
+                          <string>guard_permission_list</string>
+                          <string>Guard Permission</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type_filter_list</string>
+                          <string>Portal Type Filter</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type_filter_group_list</string>
+                          <string>Portal Type Group Filter</string>
+                        </tuple>
+                        <tuple>
+                          <string>temporary_document_disallowed</string>
+                          <string>Do not Trigger on a Temporary Document</string>
+                        </tuple>
+                        <tuple>
+                          <string>trigger_once_per_transaction</string>
+                          <string>Trigger once per Transaction</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -96,19 +132,19 @@
                           <string>Required Roles</string>
                         </tuple>
                         <tuple>
-                          <string>before_script_id_list</string>
+                          <string>before_script_reference_list</string>
                           <string>Before Script</string>
                         </tuple>
                         <tuple>
-                          <string>after_script_id_list</string>
+                          <string>after_script_reference_list</string>
                           <string>After Script</string>
                         </tuple>
                         <tuple>
-                          <string>before_commit_script_id_list</string>
+                          <string>before_commit_script_reference_list</string>
                           <string>Script (End of Transaction)</string>
                         </tuple>
                         <tuple>
-                          <string>activate_script_id_list</string>
+                          <string>activate_script_reference_list</string>
                           <string>Activities (Later)</string>
                         </tuple>
                         <tuple>
