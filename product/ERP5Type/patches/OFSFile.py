@@ -1,12 +1,7 @@
 from App.special_dtml import DTMLFile
 from OFS.Image import File
-from OFS.SimpleItem import Item
 from Products.ERP5Type import _dtmldir
 
-
-# restore __repr__ after persistent > 4.4
-# https://github.com/zopefoundation/Zope/issues/379
-File.__repr__ = Item.__repr__
 
 def _setData(self, data):
   """

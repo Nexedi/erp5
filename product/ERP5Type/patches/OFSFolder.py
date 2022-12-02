@@ -15,7 +15,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from OFS.Folder import Folder
-from OFS.SimpleItem import Item
 from Products.ERP5Type import Permissions
 
 """
@@ -73,7 +72,3 @@ security.declareProtected(Permissions.ManagePortal, 'isERP5SitePresent')
 security.declarePublic('zope_quick_start')
 Folder.security = security
 InitializeClass(Folder)
-
-# restore __repr__ after persistent > 4.4
-# https://github.com/zopefoundation/Zope/issues/379
-Folder.__repr__ = Item.__repr__
