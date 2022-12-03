@@ -49,7 +49,7 @@ from AccessControl import Unauthorized, ClassSecurityInfo
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
 from zExceptions import Redirect
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_get
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from zExceptions import Forbidden
 
@@ -676,7 +676,13 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             raise AccessControl_Unauthorized('This document is not authorized for view.')
         else:
           container = None
-        pt = getattr(self,self.pt)
+        pt = getattr(self, self.pt)
+        request = aq_get(self, 'REQUEST', None)
+        if request is not None:
+            response = request.response
+            if 'content-type' not in response.headers:
+                response.setHeader('content-type', self.content_type)
+
         extra_context = dict( container=container,
                               template=self,
                               form=self,
