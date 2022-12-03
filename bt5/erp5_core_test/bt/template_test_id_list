@@ -1,5 +1,4 @@
 test.erp5.testAccessTab
-test.erp5.testSequence
 test.erp5.testActivityTool
 test.erp5.testAlarm
 test.erp5.testArrow
@@ -8,8 +7,8 @@ test.erp5.testAutoLogout
 test.erp5.testBase
 test.erp5.testBusinessTemplate
 test.erp5.testCache
-test.erp5.testCacheTool
 test.erp5.testCachedSkinsTool
+test.erp5.testCacheTool
 test.erp5.testConstraint
 test.erp5.testContributionRegistryTool
 test.erp5.testCookieCrumbler
@@ -20,6 +19,7 @@ test.erp5.testERP5Catalog
 test.erp5.testERP5Category
 test.erp5.testERP5Coordinate
 test.erp5.testERP5Core
+test.erp5.testERP5Form
 test.erp5.testERP5Type
 test.erp5.testERP5TypeInterfaces
 test.erp5.testERP5Workflow
@@ -42,11 +42,11 @@ test.erp5.testPerson
 test.erp5.testPredicate
 test.erp5.testPreferences
 test.erp5.testPropertyRecordable
-test.erp5.testProxify
 test.erp5.testProxyField
 test.erp5.testQueryModule
 test.erp5.testRestrictedPythonSecurity
 test.erp5.testSelectionTool
+test.erp5.testSequence
 test.erp5.testSessionTool
 test.erp5.testTimeout
 test.erp5.testTimerService

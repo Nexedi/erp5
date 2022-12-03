@@ -31,10 +31,51 @@ from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import field_value_cache
 
-class TestProxify(ERP5TypeTestCase):
 
-  def getTitle(self):
-    return "Proxify"
+class TestERP5Form(ERP5TypeTestCase):
+  def afterSetUp(self):
+
+    self.portal.portal_skins.custom.manage_addProduct[
+      'PageTemplates'].manage_addPageTemplate(
+        'Base_viewTestRenderer', 'Base_viewTestRenderer')
+    self.page_template = self.portal.portal_skins.custom.Base_viewTestRenderer
+    self.page_template.write('''
+      <html>
+        <form>
+          <tal:block tal:repeat="field form/get_fields">
+            <tal:block tal:replace="structure field/render" />
+          </tal:block>
+        </form>
+      </html>
+    ''')
+
+    self.portal.portal_skins.custom.manage_addProduct['ERP5Form'].addERP5Form(
+      'Base_viewTest', 'Test')
+    self.form = self.portal.portal_skins.custom.Base_viewTest
+    self.form.manage_addField('my_string_field', 'String Field', 'StringField')
+    self.form.my_string_field.values['default'] = "test string field"
+
+    self.form.pt = self.page_template.getId()
+
+  def beforeTearDown(self):
+    self.abort()
+    for custom_skin in (self.form.getId(), self.page_template.getId(),):
+      if custom_skin in self.portal.portal_skins.custom.objectIds():
+        self.portal.portal_skins.custom.manage_delObjects([custom_skin])
+        self.commit()
+
+  def test_call(self):
+    html = self.form()
+    self.assertIn("test string field", html)
+
+  def test_zmi(self):
+    # minimal tests for custom ZMI views
+    self.assertTrue(self.form.formProxify())
+    self.assertTrue(self.form.formUnProxify())
+    self.assertTrue(self.form.formShowRelatedProxyFields())
+
+
+class TestProxify(ERP5TypeTestCase):
 
   def afterSetUp(self):
     # base field library
