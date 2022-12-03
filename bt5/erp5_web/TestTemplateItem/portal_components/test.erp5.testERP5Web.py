@@ -418,7 +418,7 @@ Hé Hé Hé!""", page.asText().strip())
       appropriate language of that default document.
 
       Note: due to generic ERP5 Web implementation this test highly depends
-      on WebSection_geDefaulttDocumentValueList
+      on WebSection_geDefaultDocumentValueList
     """
     self.setupWebSite()
     websection = self.setupWebSection()
@@ -1578,6 +1578,39 @@ Hé Hé Hé!""", page.asText().strip())
     # document2 is visible & listed at and above date2
     check(document2, date2)
     check(document2, date3)
+
+  def test_default_page_displayed(self):
+    web_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      text_content='<h1>Hello !</h1>',
+      content_type='text/html',
+      reference=self.id()
+    )
+    web_page.publish()
+    web_site = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+      aggregate_value=web_page,
+    )
+    web_site.publish()
+    web_section = web_site.newContent(
+      portal_type='Web Section',
+      aggregate_value=web_page,
+    )
+    self.tic()
+
+    for context in web_site, web_section:
+      self.assertTrue(context.getDefaultPageDisplayed())
+      resp = self.publish(context.getPath(), handle_errors=False)
+      self.assertEqual(resp.getStatus(), 200)
+      self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
+      self.assertIn(b'<h1>Hello !</h1>', resp.getBody())
+
+      context.setDefaultPageDisplayed(False)
+      resp = self.publish(context.getPath(), handle_errors=False)
+      self.assertEqual(resp.getStatus(), 200)
+      self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
+      self.assertNotIn(b'<h1>Hello !</h1>', resp.getBody())
+
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
