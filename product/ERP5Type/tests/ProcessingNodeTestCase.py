@@ -108,9 +108,11 @@ def Application_resolveConflict(self, old_state, saved_state, new_state):
       saved_state.pop('test_distributing_node', ''),
       new_state.pop('test_distributing_node', '')}
   test_distributing_node_set.discard('')
-  if len(test_distributing_node_set) != 1:
-    raise ConflictError
-  new_state['test_distributing_node'] = test_distributing_node_set.pop()
+  new_state['test_distributing_node'] = ''
+  if test_distributing_node_set:
+    if len(test_distributing_node_set) != 1:
+      raise ConflictError
+    new_state['test_distributing_node'] = test_distributing_node_set.pop()
 
   old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
                      for state in (old_state, saved_state, new_state)]
