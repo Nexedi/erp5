@@ -860,6 +860,7 @@ class Workflow(XMLObject):
         continue
 
       expr = None
+      value = None
       if variable_id in transition_expression_dict:
         expr = transition_expression_dict[variable_id]
       elif not vdef.getAutomaticUpdate() and variable_reference in former_status:
