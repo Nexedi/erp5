@@ -140,7 +140,6 @@ div[data-gadget-url$="gadget_html_viewer.html"] {
 table {
     display: table;
     border-spacing: 2px;
-    border: 1px solid @colorforeground;
 }
 thead {
     display: table-header-group;
@@ -167,7 +166,6 @@ colgroup {
 tr {
     display: table-row;
     vertical-align: middle;
-    border: 1px solid @colorforeground;
     padding: 0 @margin-size;
 
 }
@@ -175,11 +173,18 @@ td, th {
     display: table-cell;
     vertical-align: inherit;
     padding: 0 @margin-size;
-    border: 1px solid @colorforeground;
 }
 th {
     font-weight: bold;
 }
+
+table[border="1"],
+table[border="1"] tr,
+table[border="1"] th,
+table[border="1"] td {
+    border: 1px solid @colorforeground;
+}
+
 caption {
     display: table-caption;
     text-align: -webkit-center;
