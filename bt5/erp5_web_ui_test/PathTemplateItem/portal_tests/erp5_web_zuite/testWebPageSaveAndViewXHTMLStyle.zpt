@@ -1,0 +1,149 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_page_module/WebPageModule_createTestWebPage?id=test_web_page&amp;reference=test_web_page
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Created Successfully.</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_page_module/test_web_page/WebPage_viewEditor?editable_mode:int=1</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-scope="editor"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <!-- gadget iframe -->
+        <td>selectFrame</td>
+        <td>//div[@data-gadget-scope="editor"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <!-- CKEditor iframe -->
+        <td>selectFrame</td>
+        <td>//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//body</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertEval</td>
+        <td>
+          (function (){
+          selenium.browserbot.getCurrentWindow().document.body.innerHTML = `
+          &lt;h1&gt;Some Example content&lt;/h1&gt;
+          &lt;h2&gt;Tables&lt;/h2&gt;
+          &lt;table border="1"&gt;
+          &lt;caption&gt;A table with border=1&lt;/caption&gt;
+          &lt;thead&gt;
+          &lt;tr&gt;
+          &lt;th&gt;First&lt;/th&gt;
+          &lt;th&gt;Second&lt;/th&gt;
+          &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+          &lt;tr&gt;
+          &lt;td&gt;One&lt;/td&gt;
+          &lt;td&gt;Two&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;/tbody&gt;
+          &lt;/table&gt;
+
+          &lt;table&gt;
+          &lt;caption&gt;A table without border=1&lt;/caption&gt;
+          &lt;thead&gt;
+          &lt;tr&gt;
+          &lt;th&gt;Third&lt;/th&gt;
+          &lt;th&gt;Forth&lt;/th&gt;
+          &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+          &lt;tr&gt;
+          &lt;td&gt;Three&lt;td&gt;
+          &lt;td&gt;Four&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+          &lt;td&gt;3&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;/tbody&gt;
+          &lt;/table&gt;
+          `;
+          return 'OK';
+          })()
+        <td>OK</td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>relative=top</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>//button[@name="Base_edit:method"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>link=View</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForText</td>
+        <td>//div[contains(@data-gadget-url, "gadget_html_viewer.html")]/h1</td>
+        <td>Some Example content</td>
+      </tr>
+      <tr>
+        <td>verifyImageMatchSnapshot</td>
+        <td>//div[contains(@data-gadget-url, "gadget_html_viewer.html")]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>
