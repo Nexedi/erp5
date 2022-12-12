@@ -224,7 +224,7 @@ var DroneManager = /** @class */ (function () {
     if (!this._canCommunicate) {
       return;
     }
-    if (id < 0) {
+    if (!id || id < 0) {
       id = -1;
     }
     if (_this.infosMesh) {
