@@ -1,4 +1,6 @@
-(function (window, RSVP, rJS, domsugar, document, Blob) {
+/*jslint indent: 2, maxlen: 100*/
+/*global window, rJS, domsugar, document, Blob*/
+(function (window, rJS, domsugar, document, Blob) {
   "use strict";
 
   //Default values
@@ -143,7 +145,7 @@
     })
 
     .declareMethod('render', function render() {
-      var gadget = this, query;
+      var gadget = this;//, query;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -326,13 +328,13 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"],
-                 ["my_drone_speed"], ["my_drone_acceleration"],
-                 ["my_number_of_drones"], ["my_map_height"], ["my_start_AMSL"]]
-              ],[
+                  ["my_drone_speed"], ["my_drone_acceleration"],
+                  ["my_number_of_drones"], ["my_map_height"], ["my_start_AMSL"]]
+              ], [
                 "right",
                 [["my_minimum_latitud"], ["my_maximum_latitud"],
-                 ["my_minimum_longitud"], ["my_maximum_longitud"],
-                 ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"]]
+                  ["my_minimum_longitud"], ["my_maximum_longitud"],
+                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -361,10 +363,13 @@
           return simulator.render();
         })
         .push(function () {
-          for (var i = 0; i < options.number_of_drones; i += 1) {
-            DRONE_LIST[i] = {"id": i, "type": "DroneAaileFixeAPI", "script_content": options.script};
+          var i,
+            game_parameters_json;
+          for (i = 0; i < options.number_of_drones; i += 1) {
+            DRONE_LIST[i] = {"id": i, "type": "DroneAaileFixeAPI",
+                             "script_content": options.script};
           }
-          var game_parameters_json = {
+          game_parameters_json = {
             "drone": {
               "maxAcceleration": parseFloat(options.drone_acceleration),
               "maxSpeed": parseFloat(options.drone_speed)
@@ -399,16 +404,22 @@
           });
         })
         .push(function (result_list) {
-          for (var i = 0; i < result_list.length; i += 1) {
-            var log_content = result_list[i].join('\n').replaceAll(",", ";"),
-              blob = new Blob([log_content], {type: 'text/plain'}),
-              a = domsugar('a', {
-                text: 'Download Simulation LOG ' + i,
-                download: 'simulation_log.txt',
-                href: window.URL.createObjectURL(blob)
-              }),
-              log = domsugar('textarea', { value: log_content }),
-              div = domsugar('div', [a]);
+          var i,
+            log_content,
+            blob,
+            a,
+            log,
+            div;
+          for (i = 0; i < result_list.length; i += 1) {
+            log_content = result_list[i].join('\n').replaceAll(",", ";");
+            blob = new Blob([log_content], {type: 'text/plain'});
+            a = domsugar('a', {
+              text: 'Download Simulation LOG ' + i,
+              download: 'simulation_log.txt',
+              href: window.URL.createObjectURL(blob)
+            });
+            log = domsugar('textarea', { value: log_content });
+            div = domsugar('div', [a]);
             a.dataset.downloadurl =  ['text/plain', a.download,
                                       a.href].join(':');
             document.querySelector('.container').appendChild(div);
@@ -417,4 +428,4 @@
         });
     });
 
-}(window, RSVP, rJS, domsugar, document, Blob));
+}(window, rJS, domsugar, document, Blob));
