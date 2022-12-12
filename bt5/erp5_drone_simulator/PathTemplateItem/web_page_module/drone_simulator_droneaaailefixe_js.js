@@ -240,8 +240,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     this.takeoff_path = [];
     if (skip_loiter) {*/
     var drone_pos = drone.getCurrentPosition();
-    this.internal_setTargetCoordinates(
-      drone, drone_pos.x, drone_pos.y, altitude);
+    this.internal_setVirtualPlaneTargetCoordinates(drone,
+                                                   drone_pos.x,
+                                                   drone_pos.y,
+                                                   altitude);
     return;
     /*}
     var x1, y1,
