@@ -21,6 +21,8 @@ Data Ingestion | data_simulation_workflow
 Data Ingestion | edit_workflow
 Data License | edit_workflow
 Data License | validation_workflow
+Data Mapping | edit_workflow
+Data Mapping | validation_workflow
 Data Operation | edit_workflow
 Data Operation | validation_workflow
 Data Order Line | edit_workflow
