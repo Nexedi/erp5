@@ -9,15 +9,6 @@ portal_callables/DataIngestionLine_writeFluentdIngestionToDataStream
 portal_callables/DataIngestionLine_writeIngestionToDataStream
 portal_callables/IngestionPolicy_parseSimpleFluentdTag
 portal_callables/IngestionPolicy_parseSimpleIngestionTag
-portal_categories/business_application
-portal_categories/business_application/**
-portal_categories/quantity_unit
-portal_categories/quantity_unit/**
-portal_categories/resolution
-portal_categories/resolution/**
-portal_categories/trade_phase/data
-portal_categories/trade_phase/data/**
-portal_categories/use
 portal_categories/use/**
 portal_gadgets/WendelinInformationGadget
 portal_gadgets/WendelinInformationGadget/**
