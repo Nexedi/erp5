@@ -760,3 +760,113 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
       data_analysis = getDataAnalysisByTitle(data_analysis_title)
       self.assertNotEqual(data_analysis, None)
       self.addCleanup(self._removeDocument, data_analysis)
+
+  def test_17_DataMapping(self):
+    """
+    """
+    portal = self.portal
+    data_mapping = portal.data_mapping_module.newContent(portal_type='Data Mapping')
+    self.assertEqual(0, data_mapping.getSize())
+    data_list = [
+      ('/usr/bin/2to3-2.7', '3ea002bead53f6bdf7', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'),
+      ('/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'),
+      ('/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527'),
+      ('/usr/bin/[', '5c348873d0e0abe26d56cc752f0', 'ebb7ae1a78018b62224','9162fdf5b9598c9e9d'),
+      ('/usr/bin/aa-enabled', 'c2336b14b7e9d1407d9', 'c8c7af8e6d14a4d1061', '09726542c6c4ca907417c676b4'),
+      ('/usr/bin/aa-exec', '7f66cd90da4b27703de299', 'b4bfe90f53a690deb2687342', 'ad36c9002fa84d4e86'),
+      ('/usr/bin/aclocal-1.16', '6ba134fb4f97d79a5', '64e518309fc9544b01c164c2e48', 'cc4595fba3251aaa9b48'),
+      ('/usr/bin/activate-global-python-argcomplete3', '4007899eba237603a', '8a2584480e9094f9e4761f7', '893ebeeca071795ecd457ed2'),
+      ('/usr/bin/addpart', '078a10c409b8b21c3b5137d', '481766f1aa1d393e4a3a', '668374ce14a57b2dd14bb'),
+      ('/usr/bin/ansible', 'cb8a161dabae51cf2616c4a85', '31173931d09486697c05', '00ee4c55e8b46f69a54'),
+      ('/usr/bin/ansible-connection', 'ffbef34c8d2ae633031f4e8', '61cf10e6b6e4ff33c7ded21244', 'c670ce6af9b645c'),
+      ('/usr/bin/ansible-test', '40f528bebb16199d2b11a43b', 'ea6d8680d833fb36e9548a', 'a2c1b309b22cd4285a'),
+      ('/usr/bin/appres', '7ccb78e306838a87b68d2c', '7d089e41ee491fc64b2b', 'c3e24ec3fee558e9f06bd0'),
+      ('/usr/bin/apt', '3ca60d2b26761b7a50d812', '8b624ea3f31040bd838dfc', '36b5070dd02c87b47512'),
+      ('/usr/bin/apt-cache', 'f0e82d30aa1d8a80e', '7da7f514d8056033c4844a6f0', 'be07d8cb7140399252c51c'),
+      ('/usr/bin/apt-cdrom', '073483cad694b013a1', 'fb7b20b9450ab7abb4bcc', '2ad240a6670f486e2e1da9daa'),
+      ('/usr/bin/apt-config', '32856a9a4e703346d6b8', '407560704903fb078e45dac', 'ee559cd54c2a34f3ad3d4')
+    ]
+    data_mapped_list = []
+
+    # each different object return a different value
+    for data in data_list:
+      data_mapped_list.append(data_mapping.addObject(data))
+    self.assertEqual(len(data_mapped_list), len(data_list))
+    self.assertEqual(len(data_list), data_mapping.getSize())
+
+    # ensure add again same data return always samething
+    tmp_list = []
+    for data in data_list:
+      tmp_list.append(data_mapping.addObject(data))
+    self.assertEqual(tmp_list, data_mapped_list)
+    # size still same
+    self.assertEqual(len(data_list), data_mapping.getSize())
+
+   # ensure we can get original value
+    for index in range(len(data_mapped_list)):
+      self.assertEqual(data_mapping.getObjectFromValue(data_mapped_list[index]), data_list[index])
+
+  # ensure we can get mapped value
+    for index in range(len(data_mapped_list)):
+      self.assertEqual(data_mapping.getValueFromObject(data_list[index]), data_mapped_list[index])
+
+    # another data list, /usr/bin/2to3-2.7, /usr/bin/appres, /usr/bin/aclocal-1.16 's value are different compare to previous data
+    # so 3 values are different
+    another_data_list = [
+      ('/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'),
+      ('/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'),
+      ('/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527'),
+      ('/usr/bin/[', '5c348873d0e0abe26d56cc752f0', 'ebb7ae1a78018b62224','9162fdf5b9598c9e9d'),
+      ('/usr/bin/aa-enabled', 'c2336b14b7e9d1407d9', 'c8c7af8e6d14a4d1061', '09726542c6c4ca907417c676b4'),
+      ('/usr/bin/aa-exec', '7f66cd90da4b27703de299', 'b4bfe90f53a690deb2687342', 'ad36c9002fa84d4e86'),
+      ('/usr/bin/aclocal-1.16', '6ba134fb4f97d79a5', 'ModifiedValue', 'cc4595fba3251aaa9b48'),
+      ('/usr/bin/activate-global-python-argcomplete3', '4007899eba237603a', '8a2584480e9094f9e4761f7', '893ebeeca071795ecd457ed2'),
+      ('/usr/bin/addpart', '078a10c409b8b21c3b5137d', '481766f1aa1d393e4a3a', '668374ce14a57b2dd14bb'),
+      ('/usr/bin/ansible', 'cb8a161dabae51cf2616c4a85', '31173931d09486697c05', '00ee4c55e8b46f69a54'),
+      ('/usr/bin/ansible-connection', 'ffbef34c8d2ae633031f4e8', '61cf10e6b6e4ff33c7ded21244', 'c670ce6af9b645c'),
+      ('/usr/bin/ansible-test', '40f528bebb16199d2b11a43b', 'ea6d8680d833fb36e9548a', 'a2c1b309b22cd4285a'),
+      ('/usr/bin/appres', '7ccb78e306838a87b68d2c', 'ModifiedValue', 'c3e24ec3fee558e9f06bd0'),
+      ('/usr/bin/apt', '3ca60d2b26761b7a50d812', '8b624ea3f31040bd838dfc', '36b5070dd02c87b47512'),
+      ('/usr/bin/apt-cache', 'f0e82d30aa1d8a80e', '7da7f514d8056033c4844a6f0', 'be07d8cb7140399252c51c'),
+      ('/usr/bin/apt-cdrom', '073483cad694b013a1', 'fb7b20b9450ab7abb4bcc', '2ad240a6670f486e2e1da9daa'),
+      ('/usr/bin/apt-config', '32856a9a4e703346d6b8', '407560704903fb078e45dac', 'ee559cd54c2a34f3ad3d4')
+    ]
+
+    another_data_mapped_list = []
+
+    for data in another_data_list:
+      another_data_mapped_list.append(data_mapping.addObject(data))
+    self.assertEqual(len(another_data_mapped_list), len(data_list))
+
+    array = np.array(data_mapped_list)
+    another_array = np.array(another_data_mapped_list)
+    # simply call setdiff1d to get the different between two datas
+    diff_array = np.setdiff1d(another_array, array)
+    self.assertEqual(diff_array.size, 3)
+    diff_object_list = []
+    for value in diff_array:
+      diff_object_list.append(data_mapping.getObjectFromValue(value))
+    self.assertEqual(diff_object_list, [('/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'),
+                                        ('/usr/bin/aclocal-1.16', '6ba134fb4f97d79a5', 'ModifiedValue', 'cc4595fba3251aaa9b48'),
+                                        ('/usr/bin/appres', '7ccb78e306838a87b68d2c', 'ModifiedValue', 'c3e24ec3fee558e9f06bd0')])
+    # same data value as "another_data_list" but in other format
+    other_format_data_list = [
+      ['/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'],
+      ['/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'],
+      ['/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527']
+    ]
+    other_format_data_mapped_list = []
+    original_size = data_mapping.getSize()
+    for data in other_format_data_list:
+      other_format_data_mapped_list.append(data_mapping.addObject(data))
+    self.assertEqual(original_size + 3, data_mapping.getSize())
+    other_format_array = np.array(other_format_data_mapped_list)
+    # ensure "even data values are same but format is different" is considered different
+    diff_array = np.setdiff1d(other_format_array, another_array)
+    self.assertEqual(diff_array.size, 3)
+    diff_object_list = []
+    for value in diff_array:
+      diff_object_list.append(data_mapping.getObjectFromValue(value))
+    self.assertEqual(diff_object_list, [['/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'],
+                                        ['/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'],
+                                        ['/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527']])
