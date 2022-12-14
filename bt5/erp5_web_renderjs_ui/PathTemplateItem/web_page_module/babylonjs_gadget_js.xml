@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_babylonjs_gadget.js</string> </value>
+            <value> <string>babylonjs.gadget.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671026042.13</float>
+                              <float>1671031894.7</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

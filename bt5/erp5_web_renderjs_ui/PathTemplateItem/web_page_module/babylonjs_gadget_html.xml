@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_babylonjs_gadget.html</string> </value>
+            <value> <string>babylonjs.gadget.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -242,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1004.65402.55895.9523</string> </value>
+                      <value> <string>1004.65506.56753.7492</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671027885.86</float>
+                              <float>1671031903.79</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
