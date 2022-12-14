@@ -172,7 +172,7 @@
       var fragment = gadget.element.querySelector('.simulator_div');
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
-      return gadget.declareGadget("gadget_erp5_page_drone_simulator_gadget.html",
+      return gadget.declareGadget("gadget_erp5_page_babylonjs_gadget.html",
                                   {element: fragment, scope: 'simulator'})
         .push(function (drone_gadget) {
           simulator = drone_gadget;
