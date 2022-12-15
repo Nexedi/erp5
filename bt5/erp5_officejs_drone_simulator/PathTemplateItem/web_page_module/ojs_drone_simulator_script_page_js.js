@@ -117,7 +117,14 @@
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
-    DRONE_LIST = [];
+    DRONE_LIST = [],
+    WIDTH = 680,
+    HEIGHT = 340,
+    LOGIC_FILE_LIST = [
+      'gadget_erp5_page_drone_simulator_logic.js',
+      'gadget_erp5_page_drone_simulator_droneaaailefixe.js',
+      'gadget_erp5_page_drone_simulator_dronelogfollower.js'
+    ];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -145,7 +152,7 @@
     })
 
     .declareMethod('render', function render() {
-      var gadget = this;//, query;
+      var gadget = this;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -351,67 +358,101 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      var gadget = this, simulator,
-        fragment = gadget.element.querySelector('.simulator_div');
+      var gadget = this, simulator, i,
+        fragment = gadget.element.querySelector('.simulator_div'),
+        game_parameters_json;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       DRONE_LIST = [];
-      return gadget.declareGadget("gadget_erp5_page_babylonjs_gadget.html",
+      for (i = 0; i < options.number_of_drones; i += 1) {
+        DRONE_LIST[i] = {"id": i, "type": "DroneAaileFixeAPI",
+                         "script_content": options.script};
+      }
+      game_parameters_json = {
+        "drone": {
+          "maxAcceleration": parseFloat(options.drone_acceleration),
+          "maxSpeed": parseFloat(options.drone_speed)
+        },
+        "gameTime": parseFloat(options.simulation_time),
+        "simulation_speed": parseFloat(options.simulation_speed),
+        "latency": {
+          "information": 0,
+          "communication": 0
+        },
+        "map": {
+          "min_lat": parseFloat(options.min_lat),
+          "max_lat": parseFloat(options.max_lat),
+          "min_lon": parseFloat(options.min_lon),
+          "max_lon": parseFloat(options.max_lon),
+          "height": parseFloat(options.map_height),
+          "start_AMSL": parseFloat(options.start_AMSL)
+        },
+        "initialPosition": {
+          "longitude": parseFloat(options.init_pos_lon),
+          "latitude": parseFloat(options.init_pos_lat),
+          "z": parseFloat(options.init_pos_z)
+        },
+        "draw_flight_path": DRAW,
+        "temp_flight_path": true,
+        "log_drone_flight": LOG,
+        "log_interval_time": LOG_TIME,
+        "droneList": DRONE_LIST
+      };
+      return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
-        .push(function (drone_gadget) {
-          simulator = drone_gadget;
-          return simulator.render();
-        })
         .push(function () {
-          var i,
-            game_parameters_json;
-          for (i = 0; i < options.number_of_drones; i += 1) {
-            DRONE_LIST[i] = {"id": i, "type": "DroneAaileFixeAPI",
-                             "script_content": options.script};
-          }
-          game_parameters_json = {
-            "drone": {
-              "maxAcceleration": parseFloat(options.drone_acceleration),
-              "maxSpeed": parseFloat(options.drone_speed)
+          return gadget.getDeclaredGadget('form_view_babylonjs');
+        })
+        .push(function (form_gadget) {
+          return form_gadget.render({
+            erp5_document: {
+              "_embedded": {"_view": {
+                "my_babylonjs": {
+                  "default": "",
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "babylonjs",
+                  "hidden": 0,
+                  "type": "GadgetField",
+                  "url": "babylonjs.gadget.html",
+                  "sandbox": "public",
+                  "renderjs_extra": '{"autorun": false, "width": ' + WIDTH + ', ' +
+                  '"height": ' + HEIGHT + ', ' +
+                  '"logic_file_list": ' + JSON.stringify(LOGIC_FILE_LIST) + ', ' +
+                  '"game_parameters": ' + JSON.stringify(game_parameters_json) +
+                  '}'
+                }
+              }},
+              "_links": {
+                "type": {
+                  name: ""
+                }
+              }
             },
-            "gameTime": parseFloat(options.simulation_time),
-            "simulation_speed": parseFloat(options.simulation_speed),
-            "latency": {
-              "information": 0,
-              "communication": 0
-            },
-            "map": {
-              "min_lat": parseFloat(options.min_lat),
-              "max_lat": parseFloat(options.max_lat),
-              "min_lon": parseFloat(options.min_lon),
-              "max_lon": parseFloat(options.max_lon),
-              "height": parseFloat(options.map_height),
-              "start_AMSL": parseFloat(options.start_AMSL)
-            },
-            "initialPosition": {
-              "longitude": parseFloat(options.init_pos_lon),
-              "latitude": parseFloat(options.init_pos_lat),
-              "z": parseFloat(options.init_pos_z)
-            },
-            "draw_flight_path": DRAW,
-            "temp_flight_path": true,
-            "log_drone_flight": LOG,
-            "log_interval_time": LOG_TIME,
-            "droneList": DRONE_LIST
-          };
-          return simulator.runGame({
-            game_parameters: game_parameters_json
+            form_definition: {
+              group_list: [[
+                "bottom",
+                [["my_babylonjs"]]
+              ]]
+            }
           });
         })
-        .push(function (result_list) {
+        .push(function () {
+          return gadget.getDeclaredGadget('form_view_babylonjs');
+        })
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
+        })
+        .push(function (result) {
           var i,
             log_content,
             blob,
             a,
             log,
             div;
-          for (i = 0; i < result_list.length; i += 1) {
-            log_content = result_list[i].join('\n').replaceAll(",", ";");
+          for (var key in result) {
+            log_content = result[key].join('\n').replaceAll(",", ";");
             blob = new Blob([log_content], {type: 'text/plain'});
             a = domsugar('a', {
               text: 'Download Simulation LOG ' + i,
