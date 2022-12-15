@@ -265,14 +265,7 @@
 (function (window, rJS, domsugar, DroneGameManager) {
   "use strict";
 
-  var canvas, offscreen,
-    //TODO: should be RENDER PARAMETERS
-    WIDTH = 680, HEIGHT = 340,
-    LOGIC_FILE_LIST = [
-    'gadget_erp5_page_drone_simulator_logic.js',
-    'gadget_erp5_page_drone_simulator_droneaaailefixe.js',
-    'gadget_erp5_page_drone_simulator_dronelogfollower.js'
-  ];
+  var canvas, offscreen;
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -291,19 +284,28 @@
       container.className = 'container';
       container.appendChild(canvas);
       domsugar(gadget.element, [loading, container]);
-      canvas.width = WIDTH;
-      canvas.height = HEIGHT;
+      canvas.width = options.width;
+      canvas.height = options.height;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
+      return gadget.changeState({
+        logic_file_list: options.logic_file_list,
+        game_parameters: options.game_parameters
+      });
     })
-
-    // To be called outside
+    .declareMethod('getContent', function getContent() {
+      var gadget = this;
+      return gadget.runGame({
+        logic_file_list: gadget.state.logic_file_list,
+        game_parameters: gadget.state.game_parameters
+      });
+    })
     .declareMethod('runGame', function runGame(options) {
       options.canvas = offscreen;
       options.canvas_original = canvas;
       options.width = canvas.width;
       options.height = canvas.height;
-      options.logic_url_list = LOGIC_FILE_LIST;
+      options.logic_url_list = options.logic_file_list;
       var gadget = this,
         game_manager = new DroneGameManager(gadget);
       return game_manager.play(options)
