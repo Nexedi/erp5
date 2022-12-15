@@ -14,6 +14,11 @@
         "storage_type": "precache",
         "cache": precache_manifest
       },
+      "Drone Simulator": {
+        "url": "officejs_drone_simulator/",
+        "storage_type": "precache",
+        "cache": precache_manifest
+      },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",
         "storage_type": "precache",
