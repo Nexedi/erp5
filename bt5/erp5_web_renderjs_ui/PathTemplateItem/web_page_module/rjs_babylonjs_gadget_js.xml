@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_babylonjs_web_worker.js</string> </value>
+            <value> <string>babylonjs.gadget.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>babylonjs_web_worker_js</string> </value>
+            <value> <string>rjs_babylonjs_gadget_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>BabylonJS Web Worker JS</string> </value>
+            <value> <string>BabylonJS Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477482.67</float>
+                              <float>1662477484.97</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1004.22590.20102.60876</string> </value>
+                      <value> <string>1005.195.32486.49868</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1668543292.95</float>
+                              <float>1671113072.97</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -289,9 +289,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>detect_converted_file</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -307,7 +305,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>empty</string> </value>
+                      <value> <string>converted</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -325,7 +323,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477373.53</float>
+                              <float>1662477154.74</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
