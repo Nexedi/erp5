@@ -2,10 +2,10 @@ Data Acquisition Unit Module | business_application
 Data Aggregation Unit Module | business_application
 Data Analysis Module | business_application
 Data Array Module | business_application
+Data Array View Line | predecessor
 Data Configuration Module | business_application
 Data Descriptor Module | business_application
 Data Event Module | business_application
-Data Array View Line | predecessor
 Data Event | aggregate
 Data Event | destination
 Data Event | resource
@@ -13,6 +13,7 @@ Data Event | source
 Data Ingestion Batch Module | business_application
 Data Ingestion Module | business_application
 Data License Module | business_application
+Data Mapping Module | business_application
 Data Operation Module | business_application
 Data Order Module | business_application
 Data Product Module | business_application

@@ -11,14 +11,14 @@
  <portal_type id="Data Array Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Data Array View Line">
+  <item>predecessor</item>
+ </portal_type>
  <portal_type id="Data Configuration Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Data Descriptor Module">
   <item>business_application</item>
- </portal_type>
- <portal_type id="Data Array View Line">
-  <item>predecessor</item>
  </portal_type>
  <portal_type id="Data Event">
   <item>aggregate</item>
@@ -36,6 +36,9 @@
   <item>business_application</item>
  </portal_type>
  <portal_type id="Data License Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Mapping Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Data Operation Module">
