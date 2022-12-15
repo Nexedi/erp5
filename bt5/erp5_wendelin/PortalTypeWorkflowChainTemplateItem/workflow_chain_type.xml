@@ -24,16 +24,16 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Data Bucket Stream</type>
-  <workflow>data_stream_interaction_workflow, edit_workflow, validation_workflow</workflow>
- </chain>
- <chain>
   <type>Data Array View</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Data Array View Line</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Bucket Stream</type>
+  <workflow>data_stream_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Data Event</type>
@@ -49,6 +49,10 @@
  </chain>
  <chain>
   <type>Data License</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Mapping</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
