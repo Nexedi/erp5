@@ -1,10 +1,9 @@
-/*global window, rJS, jIO, RSVP, Set, domsugar, console,
-         requestAnimationFrame, cancelAnimationFrame,
-         Worker,
-         DroneGameManager*/
+/*global window, rJS, domsugar, RSVP,
+  requestAnimationFrame, cancelAnimationFrame*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true, evil: false */
 
-(function (RSVP, requestAnimationFrame, cancelAnimationFrame) {
+(function (window, rJS, domsugar, RSVP,
+           requestAnimationFrame, cancelAnimationFrame) {
   "use strict";
 
   // Events props to send to worker
@@ -254,7 +253,7 @@
     }
   };
 
-  window.DroneGameManager = DroneGameManager;
+  /*window.DroneGameManager = DroneGameManager;
 }(RSVP, requestAnimationFrame, cancelAnimationFrame));
 
 
@@ -263,7 +262,7 @@
 //////////////////////////////////////////
 
 (function (window, rJS, domsugar, DroneGameManager) {
-  "use strict";
+  "use strict";*/
 
   var canvas, offscreen;
 
@@ -275,7 +274,6 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     .declareMethod('render', function render(options) {
-      console.log("babylonjs gadget render options:", options);
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         container = domsugar('div');
@@ -313,5 +311,4 @@
         return game_manager.result();
       });
     });
-
-}(window, rJS, domsugar, DroneGameManager));
+}(window, rJS, domsugar, RSVP, requestAnimationFrame, cancelAnimationFrame));
