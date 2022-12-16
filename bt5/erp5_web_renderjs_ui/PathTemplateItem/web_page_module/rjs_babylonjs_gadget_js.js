@@ -1,8 +1,8 @@
-/*global window, rJS, domsugar, RSVP,
+/*global window, rJS, domsugar, RSVP, Set, Worker,
   requestAnimationFrame, cancelAnimationFrame*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true, evil: false */
 
-(function (window, rJS, domsugar, RSVP,
+(function (window, rJS, domsugar, RSVP, Set, Worker,
            requestAnimationFrame, cancelAnimationFrame) {
   "use strict";
 
@@ -14,7 +14,7 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result;
+    ]), game_result, canvas, offscreen;
 
   //////////////////////////////////////////
   // Webworker
@@ -253,19 +253,6 @@
     }
   };
 
-  /*window.DroneGameManager = DroneGameManager;
-}(RSVP, requestAnimationFrame, cancelAnimationFrame));
-
-
-//////////////////////////////////////////
-// Gadget
-//////////////////////////////////////////
-
-(function (window, rJS, domsugar, DroneGameManager) {
-  "use strict";*/
-
-  var canvas, offscreen;
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -311,4 +298,5 @@
         return game_manager.result();
       });
     });
-}(window, rJS, domsugar, RSVP, requestAnimationFrame, cancelAnimationFrame));
+}(window, rJS, domsugar, RSVP, Set, Worker,
+  requestAnimationFrame, cancelAnimationFrame));
