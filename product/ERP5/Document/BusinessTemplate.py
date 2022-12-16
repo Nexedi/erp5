@@ -1167,7 +1167,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       `context` is the business template instance, in its acquisition context.
       Can be overridden by subclasses.
     """
-    if isinstance(obj, (PythonScript, ComponentMixin)) and coverage.Coverage.current():
+    if isinstance(obj, (PythonScript, ComponentMixin)) and hasattr(coverage.Coverage, 'current') and coverage.Coverage.current():
       relative_path = '/'.join(obj.getPhysicalPath()[len(context.getPortalObject().getPhysicalPath()):])
       filename = os.path.join(
         context.getPublicationUrl(),
@@ -2407,7 +2407,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
               continue
           raise
         container_ids = container.objectIds()
-        object_existed = object_id in container_ids 
+        object_existed = object_id in container_ids
         if object_existed:
           self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
           container.manage_delObjects([object_id])

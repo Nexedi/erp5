@@ -334,7 +334,7 @@ class ComponentDynamicPackage(ModuleType):
 
       # This must be set for imports at least (see PEP 302)
       module.__file__ = '<' + relative_url + '>'
-      if coverage.Coverage.current():
+      if getattr(coverage.Coverage, 'current', lambda: False)():
         if hasattr(component, '_erp5_coverage_filename'):
           module.__file__ = component._erp5_coverage_filename
         else:
