@@ -25,6 +25,7 @@ MAIN FILE: generate presentation in different output formats
 
 import re
 
+from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
 blank = ''
@@ -34,7 +35,7 @@ pref = context.getPortalObject().portal_preferences
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def getHeaderSlideTitle(my_doc):
-  return '<h1>' + my_doc.getTitle() + '</h1>'
+  return '<h1>' + html_quote(my_doc.getTitle()) + '</h1>'
 
 def getSlideList(my_content):
   return re.findall(r'<section[^>]*?>(.*?)</section>', my_content, re.S)
