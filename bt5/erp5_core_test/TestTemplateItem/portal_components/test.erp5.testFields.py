@@ -42,6 +42,7 @@ from Products.Formulator.StandardFields import FloatField, StringField,\
 DateTimeField, TextAreaField, CheckBoxField, ListField, LinesField, \
 MultiListField, IntegerField
 from Products.ERP5Form.CaptchaField import CaptchaField
+from Products.ERP5Form.EditorField import EditorField
 from Products.Formulator.MethodField import Method
 from Products.Formulator.TALESField import TALESMethod
 
@@ -1260,6 +1261,45 @@ class TestCaptchaField(ERP5TypeTestCase):
         })
 
 
+class TestEditorField(ERP5TypeTestCase):
+  def afterSetUp(self):
+    self.field = EditorField('test_field').__of__(self.portal)
+    self.portal.REQUEST['here'] = self.portal
+
+  def test_render_editable_textarea(self):
+    self.field.values['default'] = 'value'
+    self.assertEqual(
+      self.field.render(REQUEST=self.portal.REQUEST),
+      '<textarea rows="5" cols="40" name="field_test_field" >\nvalue</textarea>')
+
+  def test_render_editable_textarea_REQUEST(self):
+    self.field.values['default'] = 'default value'
+    self.field.values['editable'] = 1
+    self.portal.REQUEST.form[
+      self.field.generate_field_key(key=self.field.id)
+    ] = 'user <value>'
+    self.assertEqual(
+      self.field.render(REQUEST=self.portal.REQUEST),
+      '<textarea rows="5" cols="40" name="field_test_field" >\nuser &lt;value&gt;</textarea>')
+
+  def test_render_non_editable_textarea(self):
+    self.field.values['default'] = '<not &scaped'
+    self.field.values['editable'] = 0
+    self.assertEqual(
+      self.field.render(REQUEST=self.portal.REQUEST),
+      '<div  ><not &scaped</div>')
+
+  def test_render_non_editable_textarea_REQUEST(self):
+    self.field.values['default'] = 'trusted value'
+    self.field.values['editable'] = 0
+    self.portal.REQUEST.form[
+      self.field.generate_field_key(key=self.field.id)
+    ] = 'untrusted user value'
+    self.assertEqual(
+      self.field.render(REQUEST=self.portal.REQUEST),
+      '<div  >trusted value</div>')
+
+
 def makeDummyOid():
   import time, random
   return '%s%s' % (time.time(), random.random())
@@ -1280,4 +1320,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestProxyField))
   suite.addTest(unittest.makeSuite(TestFieldValueCache))
   suite.addTest(unittest.makeSuite(TestCaptchaField))
+  suite.addTest(unittest.makeSuite(TestEditorField))
   return suite

@@ -155,3 +155,13 @@ class EditorField(ZMIField):
 
   widget = EditorWidgetInstance
   validator = Validator.TextValidatorInstance
+
+  def _get_user_input_value(self, key, REQUEST):
+    """
+    Try to get a value of the field from the REQUEST
+    """
+    # because non-editable editor fields are used to render raw HTML, we don't
+    # initialize them with user input.
+    if self.get_value('editable'):
+      return REQUEST.form[key]
+    raise KeyError(key)

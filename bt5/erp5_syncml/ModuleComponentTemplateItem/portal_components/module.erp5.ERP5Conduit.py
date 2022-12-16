@@ -43,7 +43,7 @@ import re
 from lxml import etree
 from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
-from xml_marshaller.xml_marshaller import load_tree as unmarshaller
+from xml_marshaller.xml_marshaller import Unmarshaller
 from xupdate_processor import xuproc
 from base64 import standard_b64decode
 from zope.interface import implementer
@@ -57,6 +57,14 @@ from hashlib import sha1
 from erp5.component.module.SyncMLConstant import XUPDATE_ELEMENT,\
      XUPDATE_INSERT_OR_ADD_LIST, XUPDATE_DEL, XUPDATE_UPDATE, XUPDATE_INSERT_LIST
 from erp5.component.interface.IConduit import IConduit
+
+
+class SafeUnmarshaller(Unmarshaller):
+  def find_class(self, module, name):
+    raise ValueError("Refusing to unmarshall {}.{}".format(module, name))
+
+unmarshaller = SafeUnmarshaller().load_tree
+
 # Constant
 HISTORY_TAG = 'workflow_action'
 XML_OBJECT_TAG = 'object'
