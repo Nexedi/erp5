@@ -574,6 +574,27 @@ class TestSupportRequestRSSSNonVisibleSupportRequest(SupportRequestRSSTestCase, 
     self.assertFalse(rss.bozo)
 
 
+class TestSupportRequestRSSSNonVisibleSender(SupportRequestRSSTestCase, DefaultTestRSSMixin):
+  """Edge case test for support request RSS for an event (visible by user) by a sender not visible by user.
+  """
+  def afterSetUp(self):
+    super(TestSupportRequestRSSSNonVisibleSender, self).afterSetUp()
+    unknown_sender = self.portal.person_module.newContent()
+    unknown_sender.manage_permission('View', ['Manager'], 0)
+    unknown_sender.manage_permission('Access contents information', ['Manager'], 0)
+    self.event.setSourceValue(unknown_sender)
+    self.tic()
+
+  def _checkRSS(self, response):
+    self.assertEqual(httplib.OK, response.getStatus())
+    rss = feedparser.parse(response.getBody())
+    item, = rss.entries
+    # no author for this event, because sender could not be access
+    self.assertFalse(item.get('author'))
+    # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
+    self.assertFalse(rss.bozo)
+
+
 class TestSupportRequestRSSSNonVisibleAttachment(SupportRequestRSSTestCase, DefaultTestRSSMixin):
   """Edge case test for support request RSS for an event (visible by user) with attachment not visible by user.
   """

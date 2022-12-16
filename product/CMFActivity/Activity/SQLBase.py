@@ -674,10 +674,9 @@ CREATE TABLE %s (
 
   def distribute(self, activity_tool, node_count):
     db = activity_tool.getSQLConnection()
-    now_date = getNow(db)
     where_kw = {
       'processing_node': -1,
-      'to_date': now_date,
+      'to_date': getNow(db),
       'count': READ_MESSAGE_LIMIT,
     }
     validated_count = 0

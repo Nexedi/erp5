@@ -2285,12 +2285,39 @@ class FooBar(ValidationFailed):
   def __init__(self, *args, **kw):
     super(FooBar, self).__init__(*args, **kw)
 
+# Test for various pylint fixes
+
 # Transforms for Zope which should ideally be upstream'ed
 from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, imPermissionRole, _what_not_even_god_should_do # pylint: disable=unused-import
 
 # Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
 # Shared.DC was not considered a namespace package
 from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
+
+import lxml.etree
+lxml.etree.Element('test')
+
+from BTrees.OOBTree import OOBTree
+OOBTree()
+
+from cryptography.hazmat.primitives.asymmetric import rsa
+rsa.generate_private_key(
+  public_exponent=65537,
+  key_size=2048,
+).public_key()
+
+def xmlsec_decrypt():
+  # from https://xmlsec.readthedocs.io/en/stable/examples.html#decrypt
+  import xmlsec
+  manager = xmlsec.KeysManager()
+  key = xmlsec.Key.from_file('rsakey.pem', xmlsec.constants.KeyDataFormatPem)
+  manager.add_key(key)
+  enc_ctx = xmlsec.EncryptionContext(manager)
+  root = lxml.etree.parse("enc1-res.xml").getroot()
+  enc_data = xmlsec.tree.find_child(root, "EncryptedData", xmlsec.constants.EncNs)
+  decrypted = enc_ctx.decrypt(enc_data)
+  print(lxml.etree.tostring(decrypted))
+
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,

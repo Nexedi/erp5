@@ -31,7 +31,7 @@ import os
 import random
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Core.Workflow import ValidationFailed
 from AccessControl import Unauthorized
 
 class TestCertificateAuthority(ERP5TypeTestCase):

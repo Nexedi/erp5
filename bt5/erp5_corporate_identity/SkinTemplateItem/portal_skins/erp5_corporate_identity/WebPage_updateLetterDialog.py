@@ -36,10 +36,10 @@ if dialog_id is not None:
   request.form['display_svg'] = display_svg
   request.form['document_save'] = document_save
   request.form['document_download'] = document_download
-  request.form['override_source_organisation_title'] = override_source_organisation_title
-  request.form['override_source_person_title'] = override_source_person_title
-  request.form['override_destination_organisation_title'] = override_destination_organisation_title
-  request.form['override_destination_person_title'] = override_destination_person_title
+  request.form['field_your_override_source_organisation_title'] = context.Base_getLetterParameter(sender_company=True)
+  request.form['field_your_override_source_person_title'] = context.Base_getLetterParameter(sender=True)
+  request.form['field_your_override_destination_organisation_title'] = context.Base_getLetterParameter(recipient_company=True)
+  request.form['field_your_override_destination_person_title'] = context.Base_getLetterParameter(recipient=True)
   request.form['override_date'] = override_date
   request.form['display_head'] = display_head
   request.form['destination_position_in_letter'] = destination_position_in_letter

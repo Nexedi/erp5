@@ -46,6 +46,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
       Return the list of required business templates.
     """
     return ('erp5_core_proxy_field_legacy',
+            'erp5_full_text_mroonga_catalog',
             'erp5_base',)
 
   def afterSetUp(self):

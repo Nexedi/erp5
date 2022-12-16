@@ -45,6 +45,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ZSQLMethods.SQL import SQL
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.Accessor.TypeDefinition import asList
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.UnrestrictedMethod import super_user
@@ -76,17 +77,18 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Traversable import NotFound
 from OFS import SimpleItem
 from OFS.Image import Pdata
+import coverage
 from io import BytesIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML, customImporters
 from Products.ERP5Type.Workflow import WorkflowHistoryList
-from zLOG import LOG, WARNING, INFO
+from zLOG import LOG, WARNING, INFO, PROBLEM
 from warnings import warn
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-from six.moves.urllib.parse import quote, unquote
+from six.moves.urllib.parse import quote, unquote, urlparse
 from difflib import unified_diff
 import posixpath
 import transaction
@@ -96,6 +98,7 @@ import threading
 from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
+from Products.ERP5Type.mixin.component import ComponentMixin
 
 CACHE_DATABASE_PATH = None
 try:
@@ -1155,22 +1158,33 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
-  def onNewObject(self, obj):
+  def onNewObject(self, obj, context):
     """
       Installation hook.
       Called when installation process determined that object to install is
       new on current site (it's not replacing an existing object).
       `obj` parameter is the newly created object in its acquisition context.
+      `context` is the business template instance, in its acquisition context.
       Can be overridden by subclasses.
     """
-    pass
+    if isinstance(obj, (PythonScript, ComponentMixin)) and coverage.Coverage.current():
+      relative_path = '/'.join(obj.getPhysicalPath()[len(context.getPortalObject().getPhysicalPath()):])
+      filename = os.path.join(
+        context.getPublicationUrl(),
+        self.__class__.__name__,
+        relative_path + '.py')
+      if os.path.exists(filename):
+        obj._erp5_coverage_filename = filename
+      else:
+        LOG('BusinessTemplate', PROBLEM, 'Could not find file for %s' % filename)
 
-  def onReplaceObject(self, obj):
+  def onReplaceObject(self, obj, context):
     """
       Installation hook.
       Called when installation process determined that object to install is
       to replace an existing object on current site (it's not new).
       `obj` parameter is the replaced object in its acquisition context.
+      `context` is the business template instance, in its acquisition context.
       Can be overridden by subclasses.
     """
     pass
@@ -1415,9 +1429,9 @@ class ObjectTemplateItem(BaseTemplateItem):
 
         if not object_existed:
           # A new object was added, call the hook
-          self.onNewObject(obj)
+          self.onNewObject(obj, context)
         else:
-          self.onReplaceObject(obj)
+          self.onReplaceObject(obj, context)
 
         # mark a business template installation so in 'PortalType_afterClone' scripts
         # we can implement logical for reseting or not attributes (i.e reference).
@@ -1971,9 +1985,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
 
   def beforeInstall(self):
     self._installed_new_category = False
+    return super(CategoryTemplateItem, self).beforeInstall()
 
-  def onNewObject(self, obj):
+  def onNewObject(self, obj, context):
     self._installed_new_category = True
+    return super(CategoryTemplateItem, self).onNewObject(obj, context)
 
   def afterInstall(self):
     if self._installed_new_category:
@@ -2391,7 +2407,8 @@ class WorkflowTemplateItem(ObjectTemplateItem):
               continue
           raise
         container_ids = container.objectIds()
-        if object_id in container_ids:    # Object already exists
+        object_existed = object_id in container_ids 
+        if object_existed:
           self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
           container.manage_delObjects([object_id])
         obj = self._objects[path]
@@ -2401,6 +2418,11 @@ class WorkflowTemplateItem(ObjectTemplateItem):
         obj = container._getOb(object_id)
         obj.manage_afterClone(obj)
         obj.wl_clearLocks()
+        if not object_existed:
+          # A new object was added, call the hook
+          self.onNewObject(obj, context)
+        else:
+          self.onReplaceObject(obj, context)
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -4217,7 +4239,7 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     raise NotImplementedError
 
   def __init__(self, id_list, tool_id='portal_components', **kw):
-    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    super(_ZodbComponentTemplateItem, self).__init__(id_list, tool_id=tool_id, **kw)
 
   def isKeepWorkflowObjectLastHistoryOnly(self, path):
     """
@@ -4247,9 +4269,13 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 
-  def onNewObject(self, _):
+  def onNewObject(self, obj, context):
     self._do_reset = True
-  onReplaceObject = onNewObject
+    return super(_ZodbComponentTemplateItem, self).onNewObject(obj, context)
+
+  def onReplaceObject(self, obj, context):
+    self._do_reset = True
+    return super(_ZodbComponentTemplateItem, self).onReplaceObject(obj, context)
 
   def afterInstall(self):
     """
@@ -5578,185 +5604,48 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                                download=1)
       return export_string
 
-    def _getOrderedList(self, id):
+    def _edit(self, *args, **kw):
+      """Make sure UI stores list properties as sorted.
       """
-        We have to set this method because we want an
-        ordered list
-      """
-      method_id = '_baseGet%sList' % convertToUpperCase(id)
-      result = getattr(self, method_id)(())
-      if result is None: result = ()
-      if result != ():
-        result = list(result)
-        result.sort()
-        # XXX Why do we need to return a tuple ?
-        result = tuple(result)
-      return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateCatalogMethodIdList')
-    def getTemplateCatalogMethodIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_catalog_method_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateBaseCategoryList')
-    def getTemplateBaseCategoryList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_base_category')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateWorkflowIdList')
-    def getTemplateWorkflowIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_workflow_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeIdList')
-    def getTemplatePortalTypeIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeWorkflowChainList')
-    def getTemplatePortalTypeWorkflowChainList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_workflow_chain')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePathList')
-    def getTemplatePathList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_path')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePreferenceList')
-    def getTemplatePreferenceList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_preference')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeAllowedContentTypeList')
-    def getTemplatePortalTypeAllowedContentTypeList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_allowed_content_type')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeHiddenContentTypeList')
-    def getTemplatePortalTypeHiddenContentTypeList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_hidden_content_type')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypePropertySheetList')
-    def getTemplatePortalTypePropertySheetList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_property_sheet')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeBaseCategoryList')
-    def getTemplatePortalTypeBaseCategoryList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_base_category')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateActionPathList')
-    def getTemplateActionPathList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_action_path')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePortalTypeRoleList')
-    def getTemplatePortalTypeRoleList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_portal_type_role')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateLocalRoleList')
-    def getTemplateLocalRoleList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_local_role')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateSkinIdList')
-    def getTemplateSkinIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_skin_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRegisteredSkinSelectionList')
-    def getTemplateRegisteredSkinSelectionList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_registered_skin_selection')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRegisteredVersionPrioritySelectionList')
-    def getTemplateRegisteredVersionPrioritySelectionList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      try:
-        return self._getOrderedList('template_registered_version_priority_selection')
-      # This property may not be defined if erp5_property_sheets has not been
-      # upgraded yet
-      except AttributeError:
-        return ()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateModuleIdList')
-    def getTemplateModuleIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_module_id')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateMessageTranslationList')
-    def getTemplateMessageTranslationList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_message_translation')
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateToolIdList')
-    def getTemplateToolIdList(self):
-      """
-      We have to set this method because we want an
-      ordered list
-      """
-      return self._getOrderedList('template_tool_id')
+      edit_kw = {}
+      for k, v in six.iteritems(kw):
+        if v and k in (
+          'template_action_path_list',
+          'template_base_category_list',
+          'template_catalog_method_id_list',
+          'template_constraint_id_list',
+          'template_document_id_list',
+          'template_extension_id_list',
+          'template_interface_id_list',
+          'template_keep_last_workflow_history_only_path_list',
+          'template_keep_path_list',
+          'template_keep_workflow_path_list',
+          'template_local_role_list',
+          'template_message_translation_list',
+          'template_mixin_id_list',
+          'template_module_component_id_list',
+          'template_module_id_list',
+          'template_path_list',
+          'template_portal_type_allowed_content_type_list',
+          'template_portal_type_base_category_list',
+          'template_portal_type_hidden_content_type_list',
+          'template_portal_type_id_list',
+          'template_portal_type_property_sheet_list',
+          'template_portal_type_role_list',
+          'template_portal_type_workflow_chain_list',
+          'template_preference_list',
+          'template_property_sheet_id_list',
+          'template_registered_skin_selection_list',
+          'template_registered_version_priority_selection_list',
+          'template_skin_id_list',
+          'template_test_id_list',
+          'template_tool_component_id_list',
+          'template_tool_id_list',
+          'template_workflow_id_list',
+        ):
+          v = sorted(asList(v))
+        edit_kw[k] = v
+      return super(BusinessTemplate, self)._edit(*args, **edit_kw)
 
     def _isInKeepList(self, keep_list, path):
       for keep_path in keep_list:
@@ -5863,6 +5752,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
         value = self.getProperty(id)
         if not value:
           continue
+        if id == 'publication_url':
+          if urlparse(value).scheme in ('file', ''):
+            continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(str(value), name=id, path='bt', ext='')
         elif prop_type in ('lines', 'tokens'):

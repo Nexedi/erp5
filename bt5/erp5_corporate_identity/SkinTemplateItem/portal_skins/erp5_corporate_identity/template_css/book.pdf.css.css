@@ -3,6 +3,15 @@
   margin-right:15mm;
 }
 
+.ci-book table.table-with-pre tr td {
+   max-width: 80mm;
+}
+.ci-book table.table-with-pre thead tr th,
+.ci-book table.table-with-pre tbody tr td {
+  font-size: 4.2625mm !important; /* 13.5pt; */ /* 18px; */
+}
+
+
 /* === font-size === */
 .ci-book h1 + p::first-letter {
   font-size: 21.1667mm; /* 60pt; */ /* 80px; */
@@ -80,7 +89,8 @@
 .ci-book .ci-book-box-offer-milestone div,
 .ci-book .ci-book-box-offer div b,
 .ci-book .ci-book-box-offer-line div b,
-.ci-book .ci-book-box-offer-milestone div b {
+.ci-book .ci-book-box-offer-milestone div b,
+.ci-book table tr td pre  {
   font-size: 3.704167mm; /* 10.5pt; */ /* 14px; */ /* 8px; */
 }
 
@@ -265,9 +275,11 @@
   font-weight: bold;
 }
 .ci-book .ci-book-header .ci-book-header-title {
+  display: inline;
   padding-top: 2mm;
   padding-bottom: 2mm;
 }
+
 
 /* header image dimensions */
 .ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper {
@@ -860,9 +872,20 @@ html .ci-book table td p ~ p {
   display: block;
 	background-color: rgb(234,246,246);
 }
-.ci-book p code,
-.ci-book blockquote {
+.ci-book p code {
 	background-color: rgb(234,246,246);
+}
+.ci-book blockquote {
+  /* background: #f9f9f9; */
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  margin-left: 2em !important;
+  width: 90% !important;
+  text-align: justify;
+}
+.ci-book blockquote p {
+  display: inline;
 }
 
 /* === special headers === */
@@ -1049,3 +1072,9 @@ div.ci-document-box-offer-milestone {
 .ci-document-box-end + .ci-document-box-resources {
   margin-left: 20%;
 }
+
+li a ::before,
+p a::before {
+  content: "\00a0";
+}
+

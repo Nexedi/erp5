@@ -240,10 +240,8 @@ if pass_parameter is not None and pass_source_data is not None:
   if pass_parameter == "override_organisation":
     organisation_list = portal_object.portal_catalog(
       portal_type="Organisation",
-      #title=(''.join(["=", str(pass_source_data)]))
-      title=pass_source_data,
+      title = '="%s"' % pass_source_data,
     )
-    organisation_list = [x for x in organisation_list if x.getTitle()==pass_source_data]
     return populateOrganisationDict(organisation_list)
 
   # ------------ Override Sender/Recipient Organisation (URL) --------------------

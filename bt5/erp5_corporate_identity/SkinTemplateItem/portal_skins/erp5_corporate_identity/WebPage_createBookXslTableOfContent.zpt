@@ -111,6 +111,9 @@
           .ci-book-table-of-content {
             display: block;
             width: 100%;
+            /*width: auto;
+            margin-left:15mm;
+            margin-right:15mm;*/
             -webkit-box-sizing: border-box;
             -moz-box-sizing: border-box;
             box-sizing: border-box;
@@ -154,18 +157,41 @@
             margin-top: 24mm;
             margin-bottom: 12%;
           }
+          .h1-margin-15mm {
+            margin-right:15mm;
+          }
+         .content-margin-15mm {
+            width: auto !important;
+            margin-left:15mm;
+            margin-right:15mm;
+            padding-right: 0px !important;
+          }
         </style>
-      </head> 
+      </head>
       <body class="ci-book-toc">
-        <p class="ci-book-faux-h1" tal:content="python: options.get('book_toc_title') or ''">Table of Contents</p>
-        <div class="ci-book-table-of-content">
-          <p class="ci-book-helper"></p>
-          <ol>
-            <xsl:apply-templates select="outline:item/outline:item">
-              <xsl:with-param name="count" select="$count" />
-            </xsl:apply-templates>
-          </ol>
-        </div>
+        <tal:block tal:condition="python: not options.get('margin_15mm')">
+          <p class="ci-book-faux-h1" tal:content="python: options.get('book_toc_title') or ''">Table of Contents</p>
+          <div class="ci-book-table-of-content">
+            <p class="ci-book-helper"></p>
+            <ol>
+              <xsl:apply-templates select="outline:item/outline:item">
+                <xsl:with-param name="count" select="$count" />
+              </xsl:apply-templates>
+            </ol>
+          </div>
+       </tal:block>
+
+       <tal:block tal:condition="python: options.get('margin_15mm')">
+          <p class="ci-book-faux-h1 h1-margin-15mm" tal:content="python: options.get('book_toc_title') or ''">Table of Contents</p>
+          <div class="ci-book-table-of-content content-margin-15mm">
+            <p class="ci-book-helper"></p>
+            <ol>
+              <xsl:apply-templates select="outline:item/outline:item">
+                <xsl:with-param name="count" select="$count" />
+              </xsl:apply-templates>
+            </ol>
+          </div>
+       </tal:block>
       </body>
     </html>
   </xsl:template>

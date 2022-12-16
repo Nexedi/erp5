@@ -3532,7 +3532,11 @@ class Base(
 
     # Use meta transition to jump from one state to another
     # without existing transitions.
-    from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+    if WITH_LEGACY_WORKFLOW:
+      from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    else:
+      InteractionWorkflowDefinition = None.__class__
     from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow

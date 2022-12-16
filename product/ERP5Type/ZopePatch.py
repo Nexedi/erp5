@@ -37,8 +37,7 @@ if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
   from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import WorkflowTool
+from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import sqltest
@@ -67,11 +66,9 @@ if six.PY2:
   # No more ZServer
   from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import StateChangeInfoPatch
+from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
-from Products.ERP5Type.patches import make_hidden_input
 from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection

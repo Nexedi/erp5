@@ -25,7 +25,9 @@ html{
   font-size: 18px;
 }
 .ci-press-release .ci-press-release-page-header p:last-child,
-.ci-press-release .ci-press-release-about span {
+.ci-press-release .ci-press-release-about span,
+.ci-press-release .ci-press-release-main h2 + ul li,
+.ci-press-release .ci-press-release-main h1 + ul li{
   font-size: 16px;
 }
 .ci-press-release .ci-press-release-page-footer ci-press-release-container {

@@ -28,10 +28,10 @@ def getReportViaFancyName(my_report_name, follow_up):
   if method_call is not None:
     # extra curl: Coverage report requires parameter details (1|0)
     if coverage_name:
-      return method_call(comment_visibility=True)[0].encode(encoding='UTF-8')
+      return method_call(display_comment=True)[0].encode(encoding='UTF-8')
     if detail_name:
       return method_call(format='detailed',display_detail = 1)[0].encode(encoding='UTF-8')
-    return method_call()[0].encode(encoding='UTF-8')
+    return method_call(display_comment=True)[0].encode(encoding='UTF-8')
 
 if doc_content.find('${WebPage_') != -1:
   document_required_follow_up_list = [x.getObject() for x in document.portal_catalog(

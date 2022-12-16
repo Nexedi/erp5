@@ -6,6 +6,7 @@
 
 portal_type = context.getPortalType()
 website = context.getWebSiteValue()
+web_site_default_document = website.getDefaultDocumentValue()
 website_url = website.getAbsoluteUrl()
 website_name = website.getProperty('short_title')
 website_fallback_image = website.getProperty('layout_seo_open_graph_image', '')
@@ -61,24 +62,33 @@ def generateOpenGraphParamaters(my_context, has_text_content=None):
     document_image
   )
 
+
 if portal_type == 'Web Page':
-  return generateOpenGraphParamaters(context, True)
+  if context.getReference() !=  web_site_default_document.getReference():
+    return generateOpenGraphParamaters(context, True)
+  return generateOpenGraphParamaters(website)
 
 if portal_type == 'Web Section':
   websection = context
+  return generateOpenGraphParamaters(websection)
+  """
   default_document = websection.getDefaultDocumentValue()
 
   if default_document is not None:
     return generateOpenGraphParamaters(default_document, True)
   else:
     return generateOpenGraphParamaters(websection)
+  """
 
 if portal_type == 'Web Site':
+  return generateOpenGraphParamaters(website)
+  """
   default_document = website.getDefaultDocumentValue()
 
   if default_document is not None:
     return generateOpenGraphParamaters(default_document, True)
   else:
     return generateOpenGraphParamaters(website)
+  """
 
 return ''

@@ -591,26 +591,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
 
       def search(path, template):
-        parsed_url = six.moves.urllib.parse.urlparse(path + '/' + template)
-        if parsed_url.scheme == 'http':
-          user = parsed_url.username
-          password = parsed_url.password
-          host = parsed_url.hostname
-          selector = parsed_url.path
-          h = http_client.HTTP(host)
-          h.putrequest('HEAD', selector)
-          h.putheader('Host', host)
-          if user and passwd:
-            h.putheader('Authorization',
-                        'Basic %s' % base64.b64encode(str2bytes('%s:%s' % (user, passwd))).strip())
-          h.endheaders()
-          errcode, errmsg, headers = h.getreply()
-          if errcode == 200:
-            return urltype + ':' + url
-        else:
-          path_list = glob(os.path.join(path, template))
-          if path_list:
-            return path_list[0]
+        path_list = glob(os.path.join(path, template))
+        if path_list:
+          return path_list[0]
 
       not_found_list = []
       new_template_list = []

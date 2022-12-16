@@ -50,10 +50,10 @@ for brain in portal.portal_simulation.getMovementHistoryList(
         # XXX or {author} commented on {support_request} / {author} opened new Ticket: {support_request} ?
         'title': support_request_title,
         'category': support_request_category,
-        'author': brain.node_title,
+        'author': event.getSourceTitle(checked_permission="View"),
         'link': support_request_link,
         'description': event.asStrippedHTML(),
-        'pubDate': brain.date,
+        'pubDate': event.getStartDate(),
         'guid': event.getSourceReference() or event.absolute_url(),
         'thumbnail': ( # XXX this is not really a thumbnail, but it's what RSS style uses for <enclosure/>
                        # Also, with this `thumbnail` it will look good for image, and most of the time

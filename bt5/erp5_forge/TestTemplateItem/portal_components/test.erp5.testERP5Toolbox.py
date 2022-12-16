@@ -76,9 +76,10 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
 
     # actions were added to business template
     self.assertEqual(
-        (
+        [
             'Foo Module | dummy_export_export',
-            'Foo Module | dummy_report_report'),
+            'Foo Module | dummy_report_report',
+        ],
         self.business_template.getTemplateActionPathList(),
     )
 
@@ -97,7 +98,7 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
     self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
     # skin is added to business template
     self.assertEqual(
-        ('dummy_skin_folder', 'existing'),
+        ['dummy_skin_folder', 'existing'],
         self.business_template.getTemplateSkinIdList())
 
   def test_BusinessTemplate_createSkinFolder_priority(self):
@@ -154,8 +155,8 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
 
     # skin is added to business template
     self.assertEqual(
-        (
+        [
             'dummy_skin_folder | SelectedSkinSelection',
             'dummy_skin_folder | View',
             'existing | SelectedSkinSelection',
-        ), self.business_template.getTemplateRegisteredSkinSelectionList())
+        ], self.business_template.getTemplateRegisteredSkinSelectionList())

@@ -105,7 +105,8 @@ letter_source = letter.Base_getSourceDict(
   override_source_person_title=override_source_person_title,
   override_source_organisation_title=override_source_organisation_title,
   override_logo_reference=None,
-  theme_logo_url=letter_theme.get("theme_logo_url", None)
+  theme_logo_url=letter_theme.get("theme_logo_url", None),
+  letter_context=True
 )
 letter_destination = letter.Base_getDestinationDict(
   destination=letter_destination,

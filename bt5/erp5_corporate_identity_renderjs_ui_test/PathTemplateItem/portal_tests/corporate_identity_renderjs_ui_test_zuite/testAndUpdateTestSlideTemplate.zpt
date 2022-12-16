@@ -49,13 +49,8 @@
     </tr>
      <tr>
       <td>type</td>
-      <td>name=field_override_logo_reference</td>
+      <td>name=field_your_override_logo_reference</td>
       <td>Template.Test.Image.Logo.Alternativ</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=field_override_source_organisation_title</td>
-      <td>Foobarbazbam</td>
     </tr>
     <tr>
       <td>click</td>
@@ -87,7 +82,7 @@
     </tr>
   <tr>
     <td>type</td>
-    <td>//select[@name='field_format']</td>
+    <td>//select[@name='field_your_format']</td>
     <td>pdf</td>
   </tr>
 

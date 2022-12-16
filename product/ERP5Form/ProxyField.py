@@ -171,8 +171,9 @@ class ProxyField(ZMIField):
     Surcharged values from proxied field.
     """
     # Edit template field attributes
-    template_field = self.getRecursiveTemplateField()
+    template_field = self.getTemplateField()
     if template_field is not None:
+      template_field = self.getRecursiveTemplateField()
 
       # Check the surcharged checkboxes
       surcharge_list = []
@@ -580,6 +581,14 @@ class ProxyField(ZMIField):
       # FIXME: should show some error message
       # ("form_id and field_id don't define a valid template")
       pass
+
+  security.declareProtected('View', 'title')
+  def title(self):
+    """The title of this field."""
+    try:
+      return super(ProxyField, self).title()
+    except BrokenProxyField:
+      return 'broken'
 
   security.declareProtected('Access contents information', 'has_value')
   def has_value(self, id):

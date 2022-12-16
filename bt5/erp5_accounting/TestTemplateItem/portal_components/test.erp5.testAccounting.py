@@ -1147,6 +1147,33 @@ class TestTransactionValidation(AccountingTestCase):
     self.portal.portal_workflow.doActionFor(accounting_transaction,
                                             'stop_action')
 
+  def test_AccountingTransaction_checkConsistency(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2008/12/31'),
+               destination_section_value=self.organisation_module.supplier,
+               lines=(dict(id='line_with_wrong_quantity',
+                           source_value=self.account_module.goods_purchase,
+                           source_debit=400),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    self.assertRaisesRegexp(
+      ValidationFailed,
+      'Transaction is not balanced',
+      accounting_transaction.AccountingTransaction_checkConsistency,
+    )
+
+    accounting_transaction.line_with_wrong_quantity.setSourceDebit(500)
+    self.assertRaisesRegexp(
+      ValidationFailed,
+      'Date is not in a started Accounting Period',
+      accounting_transaction.AccountingTransaction_checkConsistency,
+    )
+
+    accounting_transaction.setStartDate(DateTime('2007/11/11'))
+    accounting_transaction.AccountingTransaction_checkConsistency()
+
 
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
@@ -3786,6 +3813,61 @@ class TestTransactions(AccountingTestCase):
     self.tic()
     self.assertFalse(payment.line_with_grouping_reference.getGroupingReference())
 
+  def test_grouping_reference_rounding(self):
+    """Reproduction of a bug that grouping was not possible because of rounding error
+
+    >>> 0.1 + 0.2 - 0.3 == 0
+    False
+    """
+    invoice = self._makeOne(
+               title='Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                          source_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.1,
+                           id='line_1'),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.2,
+                           id='line_2')))
+    payment = self._makeOne(
+               title='Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_3',
+                           source_debit=0.3),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=0.3,)))
+    self.tic()
+    grouped = invoice.AccountingTransaction_guessGroupedLines(
+      accounting_transaction_line_uid_list=(
+        invoice.line_1.getUid(),
+        invoice.line_2.getUid(),
+        payment.line_3.getUid(),
+    ))
+    self.assertEqual(
+      sorted(grouped),
+      sorted([
+        invoice.line_1.getRelativeUrl(),
+        invoice.line_2.getRelativeUrl(),
+        payment.line_3.getRelativeUrl(),
+    ]))
+    self.tic()
+
+  def test_grouping_reference_rounding_without_accounting_currency_on_section(self):
+    accounting_currency = self.section.getPriceCurrency()
+    self.assertTrue(accounting_currency)
+    self.section.setPriceCurrency(None)
+    try:
+      self.test_grouping_reference_rounding()
+    finally:
+      self.abort()
+      self.section.setPriceCurrency(accounting_currency)
+      self.tic()
+
   def test_automatically_setting_grouping_reference(self):
     invoice = self._makeOne(
                title='First Invoice',
@@ -6113,6 +6195,208 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
     self.assertEqual(stat_internal_transaction.destination_asset_debit, 0.44) # line2
     self.assertEqual(stat_internal_transaction.destination_credit, 1) # line1
     self.assertEqual(stat_internal_transaction.destination_asset_credit, 0.22) # line1
+
+  def test_grouping_reference_both_sides(self):
+    # Group together lines from two internal invoices:
+    #
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | receivable     | 10    |        | A        |                     |       |        |          |
+    # | sales          |       | 10     |          | purchase            | 10    |        |          |
+    # |                |       |        |          | payable             |       | 10     | B        |
+    # and
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | sales          | 10    |        |          | purchase            |       | 10     |          |
+    # | receivable     |       | 10     | A        |                     |       |        |          |
+    # |                |       |        |          | payable             | 10    |        | B        |
+    # This example does not really make sense from usage of internal invoices, because we usually
+    # use the same line for receivable and purchase in such a case, but it reproduces a case that did
+    # not group automatically.
+
+    internal_invoice1 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice1',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      created_by_builder=True,
+    )
+    # start before creating lines, because we don't want our lines to
+    # be initialized with mirror accounts.
+    internal_invoice1.start()
+    internal_invoice1.newContent(
+      id='line_a',
+      source_value=self.portal.account_module.receivable,
+      source_debit=10,
+    )
+    internal_invoice1.newContent(
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_credit=10,
+    )
+    internal_invoice1.newContent(
+      id='line_b',
+      destination_value=self.portal.account_module.payable,
+      destination_credit=10,
+    )
+    internal_invoice1.stop()
+    self.tic()
+
+    internal_invoice2 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice2',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      causality_value=internal_invoice1,
+      created_by_builder=True,
+    )
+    internal_invoice2.start()
+    internal_invoice2.newContent(
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_debit=10,
+    )
+    internal_invoice2.newContent(
+      id='line_a',
+      source_value=self.portal.account_module.receivable,
+      source_credit=10,
+    )
+    internal_invoice2.newContent(
+      id='line_b',
+      destination_value=self.portal.account_module.payable,
+      destination_debit=10,
+    )
+    internal_invoice2.stop()
+    self.tic()
+    self.assertTrue(internal_invoice1.line_a.getGroupingReference())
+    self.assertEqual(
+      internal_invoice1.line_a.getGroupingReference(),
+      internal_invoice2.line_a.getGroupingReference(),
+    )
+    self.assertTrue(internal_invoice1.line_b.getGroupingReference())
+    self.assertEqual(
+      internal_invoice1.line_b.getGroupingReference(),
+      internal_invoice2.line_b.getGroupingReference(),
+    )
+
+  def test_grouping_reference_no_group_when_mirror_accounts_are_different(self):
+    # Does not together lines from two internal invoices:
+    #
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | receivable     | 10    |        |  no  ->  | payable             |       | 10     |          |
+    # | sales          |       | 10     |          | purchase            | 10    |        |          |
+    # and
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | sales          | 10    |        |          | payable             |       | 10     |          |
+    # | receivable     |       | 10     |  no  ->  | purchase            | 10    |        |          |
+
+    internal_invoice1 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice1',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      created_by_builder=True,
+    )
+    internal_invoice1.start()
+    internal_invoice1.newContent(
+      id='line1',
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.payable,
+      source_debit=10,
+    )
+    internal_invoice1.newContent(
+      id='line2',
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_credit=10,
+    )
+    internal_invoice1.stop()
+    self.tic()
+
+    internal_invoice2 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice2',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      causality_value=internal_invoice1,
+      created_by_builder=True,
+    )
+    internal_invoice2.start()
+    internal_invoice2.newContent(
+      id='line1',
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.payable,
+      source_debit=10,
+    )
+    internal_invoice2.newContent(
+      id='line2',
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_debit=10,
+    )
+    internal_invoice2.stop()
+    self.tic()
+    self.assertFalse(internal_invoice1.line1.getGroupingReference())
+    self.assertFalse(internal_invoice1.line2.getGroupingReference())
+    self.assertFalse(internal_invoice2.line1.getGroupingReference())
+    self.assertFalse(internal_invoice2.line2.getGroupingReference())
+
+  def test_grouping_reference_both_sides_with_line_for_0(self):
+    # Lines for 0 are automatically grouped, but this takes care that the
+    # amount is also 0 for the mirror side.
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | receivable     | 0     |        | A        |                     |       |        |          |
+    # | sales          |       | 0      |          | purchase            | 10    |        |          |
+    # |                |       |        |          | payable             |       | 10     |          |
+    # |                |       |        |          | receivable          |       |  0     |  A       |
+    #
+    internal_invoice1 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice1',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      created_by_builder=True,
+    )
+    # start before creating lines, because we don't want our lines to
+    # be initialized with mirror accounts.
+    internal_invoice1.start()
+    internal_invoice1.newContent(
+      id='line_1',
+      source_value=self.portal.account_module.receivable,
+      source_debit=0,
+    )
+    internal_invoice1.newContent(
+      id='line_2',
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_credit=0,
+      destination_asset_debit=10,
+    )
+    internal_invoice1.newContent(
+      id='line_3',
+      destination_value=self.portal.account_module.payable,
+      destination_asset_credit=10,
+    )
+    internal_invoice1.newContent(
+      id='line_4',
+      destination_value=self.portal.account_module.receivable,
+      destination_credit=0,
+    )
+    internal_invoice1.stop()
+    self.tic()
+
+    self.assertTrue(internal_invoice1.line_1.getGroupingReference())
+    self.assertFalse(internal_invoice1.line_2.getGroupingReference())
+    self.assertFalse(internal_invoice1.line_3.getGroupingReference())
+    self.assertTrue(internal_invoice1.line_4.getGroupingReference())
 
 
 class TestAccountingAlarms(AccountingTestCase):

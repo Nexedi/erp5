@@ -48,9 +48,10 @@
             <key> <string>guard_role</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Associate</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

@@ -17,6 +17,10 @@
             <value> <string>WebPage_exportAsLetter</string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Export this web pages as a Letter in the chosen format.</string> </value>
         </item>
@@ -32,7 +36,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -54,7 +58,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>content</string>
+                        <string>your_content</string>
                       </list>
                     </value>
                 </item>
@@ -74,13 +78,14 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>format</string>
-                        <string>portal_skin</string>
-                        <string>display_head</string>
-                        <string>letter_header_margin_to_top</string>
-                        <string>display_sender_company_above_recipient</string>
-                        <string>display_svg</string>
-                        <string>document_save</string>
+                        <string>your_format</string>
+                        <string>your_portal_skin</string>
+                        <string>your_display_head</string>
+                        <string>your_letter_header_margin_to_top</string>
+                        <string>your_display_sender_company_above_recipient</string>
+                        <string>your_display_svg</string>
+                        <string>your_document_save</string>
+                        <string>your_theme</string>
                       </list>
                     </value>
                 </item>
@@ -88,13 +93,13 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>override_source_organisation_title</string>
-                        <string>override_source_person_title</string>
-                        <string>override_destination_organisation_title</string>
-                        <string>override_destination_person_title</string>
-                        <string>destination_position_in_letter</string>
-                        <string>destination_position_padding_left</string>
-                        <string>override_date</string>
+                        <string>your_override_source_organisation_title</string>
+                        <string>your_override_source_person_title</string>
+                        <string>your_override_destination_organisation_title</string>
+                        <string>your_override_destination_person_title</string>
+                        <string>your_destination_position_in_letter</string>
+                        <string>your_destination_position_padding_left</string>
+                        <string>your_override_date</string>
                       </list>
                     </value>
                 </item>
