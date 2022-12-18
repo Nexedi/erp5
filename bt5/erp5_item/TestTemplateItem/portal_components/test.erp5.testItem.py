@@ -250,12 +250,12 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """ Check items """
     item_list = sequence.get('item_list')
     self.assertEqual(len(line.getAggregateList()),1)
-    self.assertTrue(item_list[0] in line.getAggregateValueList())
+    self.assertIn(item_list[0], line.getAggregateValueList())
 
   def checkAggregateList(self, line=None, sequence=None):
     """ Check items """
     item_list = self.portal.item_module.contentValues(portal_type='Item')
-    self.assertTrue(line.getAggregateValueList()[0] in item_list)
+    self.assertIn(line.getAggregateValueList()[0], item_list)
 
 
   DEFAULT_ITEM_WITH_ORDER_SEQUENCE = \

@@ -536,7 +536,7 @@ class TestCommerce(ERP5TypeTestCase):
     id_string = self.getPortal().Base_generateSessionID()
     self.assertEqual(10, len(id_string))
     for caracter in id_string:
-      self.assertTrue(caracter in string.ascii_letters)
+      self.assertIn(caracter, string.ascii_letters)
 
     id_string = self.getPortal().Base_generateSessionID(max_long=20)
     self.assertEqual(20, len(id_string))
@@ -567,14 +567,14 @@ class TestCommerce(ERP5TypeTestCase):
     self.logout()
     self.assertEqual(1, len(self.website.SaleOrder_getShoppingCartItemList()))
     self.website.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("You need to create an account to " \
-                              "continue. If you already have please login.") in
+    self.assertIn(urllib.quote("You need to create an account to " \
+                              "continue. If you already have please login."),
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
     self.loginByUserName('customer')
     self.portal.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
+    self.assertIn(urllib.quote("SaleOrder_viewAsWeb"),
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
   def test_10_deleteShoppingCartItem(self):
@@ -587,7 +587,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     # Trying to remove
     self.portal.SaleOrder_deleteShoppingCartItem()
-    self.assertTrue(urllib.quote("Please select an item.") in
+    self.assertIn(urllib.quote("Please select an item."),
                                self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # Check if the item still into the Shopping Cart
@@ -599,8 +599,8 @@ class TestCommerce(ERP5TypeTestCase):
                                           field_my_order_line_id=product_id)
 
     # Check if the Product have been removed sucessfully
-    self.assertTrue(
-              urllib.quote("Successfully removed from shopping cart.") in
+    self.assertIn(
+              urllib.quote("Successfully removed from shopping cart."),
                  self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # Check if the Shopping Cart is empty
@@ -731,7 +731,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     #4 : paypal step 1 : get a new token
     token = self.website.cart.WebSection_getNewPaypalToken()
-    self.assertNotEquals(token, None)
+    self.assertNotEqual(token, None)
 
     #5 : paypal step 2 : go to paypal and confirm this token
     # PayerID is normaly set in the request when paypal
@@ -742,7 +742,7 @@ class TestCommerce(ERP5TypeTestCase):
     error = self.website.WebSection_checkPaypalIdentification()
     self.assertEqual(error, None)
     url_location = request.RESPONSE.getHeader('location')
-    self.assertTrue('/checkout' in url_location)
+    self.assertIn('/checkout', url_location)
 
     #7 : paypal step 4 : validate the payment
     self.assertEqual(1,
@@ -861,7 +861,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.loginByUserName('toto')
     self.portal.SaleOrder_paymentRedirect()
-    self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
+    self.assertIn(urllib.quote("SaleOrder_viewAsWeb"),
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
   def test_23_getShoppingCartCustomer(self):
@@ -875,7 +875,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.loginByUserName('webmaster')
     person_object = self.website.SaleOrder_getShoppingCartCustomer()
-    self.assertNotEquals(person_object, None)
+    self.assertNotEqual(person_object, None)
     self.assertEqual(person_object.getReference(), 'webmaster')
 
   def test_24_getImageDataWithAnonymousUser(self):
@@ -892,8 +892,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.logout()
     product = self.getDefaultProduct()
-    self.assertTrue(product.getDefaultImageValue().getData()
-                                                 not in ('', None))
+    self.assertNotIn(product.getDefaultImageValue().getData(), ('', None))
 
   def test_25_getSaleOrderModuleAbsoluteUrlWithAnonymousUser(self):
     """
@@ -901,7 +900,7 @@ class TestCommerce(ERP5TypeTestCase):
       information.
     """
     self.logout()
-    self.assertNotEquals(self.website.sale_order_module.absolute_url(), None)
+    self.assertNotEqual(self.website.sale_order_module.absolute_url(), None)
 
   def test_26_getShoppingCartDefaultCurrencyWithAnonymousUser(self):
     """

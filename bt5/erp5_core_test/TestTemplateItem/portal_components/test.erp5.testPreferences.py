@@ -97,9 +97,9 @@ class TestPreferences(PropertySheetTestCase):
   def test_AllowedContentTypes(self):
     """Tests Preference can be added in Preference Tool.
     """
-    self.assertTrue('Preference' in [x.getId() for x in
+    self.assertIn('Preference', [x.getId() for x in
            self.getPortal().portal_preferences.allowedContentTypes()])
-    self.assertTrue('System Preference' in [x.getId() for x in
+    self.assertIn('System Preference', [x.getId() for x in
            self.getPortal().portal_preferences.allowedContentTypes()])
 
   def test_EnablePreferences(self):
@@ -252,18 +252,18 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(site.getPreferenceState(),     'global')
     group.setPreferredAccountingTransactionSimulationStateList(['cancelled'])
 
-    self.assertNotEquals( None,
+    self.assertNotEqual( None,
       pref_tool.getPreferredAccountingTransactionSimulationStateList())
-    self.assertNotEquals( [],
+    self.assertNotEqual( [],
       list(pref_tool.getPreferredAccountingTransactionSimulationStateList()))
     self.assertEqual(
       list(pref_tool.getPreferredAccountingTransactionSimulationStateList()),
       list(pref_tool.getPreference(
          'preferred_accounting_transaction_simulation_state_list')))
     # standards attributes must not be looked up on Preferences
-    self.assertNotEquals(pref_tool.getTitleOrId(), group.getTitleOrId())
-    self.assertNotEquals(pref_tool.objectValues(), group.objectValues())
-    self.assertNotEquals(pref_tool.getParentValue(), group.getParentValue())
+    self.assertNotEqual(pref_tool.getTitleOrId(), group.getTitleOrId())
+    self.assertNotEqual(pref_tool.objectValues(), group.objectValues())
+    self.assertNotEqual(pref_tool.getParentValue(), group.getParentValue())
     try :
       pref_tool.getPreferredNotExistingPreference()
       self.fail('Attribute error should be raised for dummy methods')
@@ -336,7 +336,7 @@ class TestPreferences(PropertySheetTestCase):
     # preferences
     self.loginByUserName('manager')
 
-    self.assert_('Manager' in
+    self.assertIn('Manager',
       getSecurityManager().getUser().getRolesInContext(portal_preferences))
 
     # create a pref for manager
@@ -361,7 +361,7 @@ class TestPreferences(PropertySheetTestCase):
     # preferences actually owned by the user are taken into account.
     uf._doAddUser('manager_and_owner', '', ['Manager', 'Owner'], [])
     self.loginByUserName('manager_and_owner')
-    self.assert_('Owner' in
+    self.assertIn('Owner',
       getSecurityManager().getUser().getRolesInContext(manager_pref))
     self.assertEqual(None,
         portal_preferences.getPreferredAccountingTransactionAtDate())

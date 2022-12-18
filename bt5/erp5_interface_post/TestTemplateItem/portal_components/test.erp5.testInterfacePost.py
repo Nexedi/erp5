@@ -245,7 +245,7 @@ class TestInterfacePost(ERP5TypeTestCase):
 
   def stepCheckLatestMessageFromMailHost(self, sequence=None, sequence_list=None):
     last_message, = self.portal.MailHost._message_list
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     _, _, message_text = last_message
     self.assertIn(message_text, sequence['internet_message_post'].getData())
 

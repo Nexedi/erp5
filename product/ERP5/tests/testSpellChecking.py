@@ -132,8 +132,8 @@ class TestSpellChecking(ERP5TypeTestCase):
     self.assertEqual(self.validate_spell('2010/11/20'), {})
 
     # check some suggestion are given for a small mistake
-    self.assertNotEquals(self.validate_spell('canceled'), {})
-    self.assertTrue('is misspelled' in \
+    self.assertNotEqual(self.validate_spell('canceled'), {})
+    self.assertIn('is misspelled', \
                              self.validate_spell('canceled').values()[0])
 
   def test_business_template_list_with_workflow_template_item(self):
