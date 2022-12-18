@@ -157,7 +157,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
           path = path[cat]
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
     self.tic()
@@ -673,7 +673,7 @@ class TestInventory(InventoryAPITestCase):
   def test_MultipleNodes(self):
     """Test section category with many nodes. """
     test_group = self.getCategoryTool().resolveCategory('group/test_group')
-    self.assertNotEquals(len(test_group.objectValues()), 0)
+    self.assertNotEqual(len(test_group.objectValues()), 0)
     # we first create a section for each group category
     quantity_for_node = {}
     for category in test_group.getCategoryChildValueList():
@@ -689,7 +689,7 @@ class TestInventory(InventoryAPITestCase):
 
     for category in test_group.getCategoryChildValueList():
       node_list = category.getGroupRelatedValueList(portal_type='Organisation')
-      self.assertNotEquals(len(node_list), 0)
+      self.assertNotEqual(len(node_list), 0)
 
       # getInventory on node uid for all member of a category ...
       total_quantity = sum([quantity_for_node[node] for node in node_list])
@@ -729,11 +729,11 @@ class TestInventory(InventoryAPITestCase):
     getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
     self._makeMovement(quantity=0.1234, price=1)
 
-    self.assertAlmostEquals(0.123,
+    self.assertAlmostEqual(0.123,
                             self.getInventory(precision=3,
                                               node_uid=self.node.getUid()),
                             places=3)
-    self.assertAlmostEquals(0.123,
+    self.assertAlmostEqual(0.123,
                             getInventoryAssetPrice(precision=3,
                                                    node_uid=self.node.getUid()),
                             places=3)
@@ -893,7 +893,7 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEqual(str(inventory_list.__class__),
                     'Shared.DC.ZRDB.Results.Results')
     # the brain is InventoryListBrain
-    self.assert_('InventoryListBrain' in
+    self.assertIn('InventoryListBrain',
           [c.__name__ for c in inventory_list._class.__bases__])
     # default is an empty list
     self.assertEqual(0, len(inventory_list))
@@ -3041,7 +3041,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     self.doubleStockValue()
     # Check it use cache
     self.assertEqual(value, self.getInventory(**inventory_kw))
-    self.assertNotEquals(value,
+    self.assertNotEqual(value,
                          self.getInventory(optimisation__=False,
                                            **inventory_kw))
 

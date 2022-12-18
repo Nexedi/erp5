@@ -164,10 +164,10 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepCheckFreeSubscriptionCreated(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
-    self.assertNotEquals(request.getFollowUp(), None)
+    self.assertNotEqual(request.getFollowUp(), None)
     subscription = request.getFollowUpValue()
-    self.assertEquals(subscription.getValidationState(), "validated")
-    self.assertNotEquals(subscription.getReference(), None)
+    self.assertEqual(subscription.getValidationState(), "validated")
+    self.assertNotEqual(subscription.getReference(), None)
 
   def stepSubmitFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
@@ -175,8 +175,8 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepCheckSubmittedFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
-    self.assertEquals(request.getValidationState(), 'submitted')
-    self.assertNotEquals(request.getReference(), None)
+    self.assertEqual(request.getValidationState(), 'submitted')
+    self.assertNotEqual(request.getReference(), None)
 
   def stepAcceptFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
@@ -184,8 +184,8 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepCheckAcceptedFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
-    self.assertEquals(request.getValidationState(), 'accepted')
-    self.assertNotEquals(request.getReference(), None)
+    self.assertEqual(request.getValidationState(), 'accepted')
+    self.assertNotEqual(request.getReference(), None)
 
   def stepRejectFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
@@ -193,11 +193,11 @@ class TestFreeSubscription(ERP5TypeTestCase):
 
   def stepCheckRejectedFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
-    self.assertEquals(request.getValidationState(), 'accepted')
+    self.assertEqual(request.getValidationState(), 'accepted')
 
   def stepCheckFreeSubscriptionInvalidated(self, sequence=None, sequence_list=None):
     subscription = sequence['free_subscription']
-    self.assertEquals(subscription.getValidationState(), "invalidated")
+    self.assertEqual(subscription.getValidationState(), "invalidated")
 
   def stepCreateReceiver(self, sequence=None, sequence_list=None,
       **kw):
@@ -291,15 +291,15 @@ class TestFreeSubscription(ERP5TypeTestCase):
   def stepCheckEventCreated(self, sequence=None, sequence_list=None,
       **kw):
     event_list = self.portal.event_module.objectValues()
-    self.assertEquals(len(event_list), 1)
+    self.assertEqual(len(event_list), 1)
     for event in event_list:
-      self.assertEquals(event.getSimulationState(), "planned")
-      self.assertEquals(event.getFollowUp(), sequence['campaign'].getRelativeUrl())
-      self.assertEquals(event.getPortalType(), "Mail Message")
-      self.assertEquals(event.getTextFormat(), "text/html")
-      self.assertFalse("blank_image_url" in event.getTextContent())
-      self.assertFalse("newsletter_url" in event.getTextContent())
-      self.assertTrue("Bonjour" in event.getTextContent())
+      self.assertEqual(event.getSimulationState(), "planned")
+      self.assertEqual(event.getFollowUp(), sequence['campaign'].getRelativeUrl())
+      self.assertEqual(event.getPortalType(), "Mail Message")
+      self.assertEqual(event.getTextFormat(), "text/html")
+      self.assertNotIn("blank_image_url", event.getTextContent())
+      self.assertNotIn("newsletter_url", event.getTextContent())
+      self.assertIn("Bonjour", event.getTextContent())
       content = event.getTextContent()
       unsubscription = content.split('<br />')[0]
       unsubscription_link = unsubscription.split('"')[1]
@@ -312,20 +312,20 @@ class TestFreeSubscription(ERP5TypeTestCase):
     link = sequence['unsubscription_link']
     self.logout()
     data = urlopen(link)
-    self.assertFalse("Site Error" in data)
-    self.assertFalse("You do not have enough permissions to access this page" in data.read())
+    self.assertNotIn("Site Error", data)
+    self.assertNotIn("You do not have enough permissions to access this page", data.read())
     self.login()
 
   def stepCheckFreeSubscriptionRequestCreated(self, sequence=None, sequence_list=None,
       **kw):
     request_list = self.portal.free_subscription_request_module.objectValues()
-    self.assertEquals(len(request_list), 1)
+    self.assertEqual(len(request_list), 1)
     request = request_list[0]
-    self.assertEquals(request.getSourceValue(), sequence['sender'])
-    self.assertEquals(request.getDestinationValue(), sequence['receiver'])
-    self.assertEquals(request.getResourceValue(), sequence['mailing'])
-    self.assertEquals(request.getCausalityValue(), sequence['event'])
-    self.assertEquals(len(request.getFollowUpValueList()), 1)
+    self.assertEqual(request.getSourceValue(), sequence['sender'])
+    self.assertEqual(request.getDestinationValue(), sequence['receiver'])
+    self.assertEqual(request.getResourceValue(), sequence['mailing'])
+    self.assertEqual(request.getCausalityValue(), sequence['event'])
+    self.assertEqual(len(request.getFollowUpValueList()), 1)
     sequence.edit(
       free_subscription_request=request,
       free_subscription=request.getFollowUpValue())

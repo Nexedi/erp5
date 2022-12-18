@@ -331,7 +331,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     which is marked as new/updated/removed
     """
     bt = sequence.get('current_bt', None)
-    self.assertNotEquals(len(bt.preinstall()), 0)
+    self.assertNotEqual(len(bt.preinstall()), 0)
 
   def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
@@ -925,7 +925,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertIsNotNone(form)
     field_id = sequence.get('field_id')
     field = form.get_field(field_id)
-    self.assertNotEquals(field, None)
+    self.assertNotEqual(field, None)
     form.manage_delObjects([field_id])
     self.assertRaises(AttributeError, form.get_field, field_id)
 
@@ -955,7 +955,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertIsNotNone(form)
     title_field =form._getOb('my_title', None)
-    self.assertNotEquals(title_field, None)
+    self.assertNotEqual(title_field, None)
 
   def stepCreateNewObjectInSkinSubFolder(self, sequence=None, **kw):
     """
@@ -2304,7 +2304,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(module is not None)
     module.__ac_local_roles__ = {'someone_else': ['Associate']}
     new_local_roles = sequence.get('local_roles')
-    self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertNotEqual(module.__ac_local_roles__, new_local_roles)
 
   def stepAddLocalRolesToBusinessTemplate(self, sequence=None, **kw):
     """
@@ -2358,7 +2358,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
     self.assertTrue(module is not None)
-    self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertNotEqual(module.__ac_local_roles__, new_local_roles)
 
   # Document, Property Sheet, Extension And Test
   # they use the same class so only one test is required for them
@@ -2526,8 +2526,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCheckBeforeReinstall(self, sequence=None, **kw):
     import_bt = sequence.get('current_bt')
     diff_list = import_bt.BusinessTemplate_getModifiedObject()
-    self.assertTrue('portal_types/Geek Object/become_geek'
-                    in [line.object_id for line in diff_list])
+    self.assertIn('portal_types/Geek Object/become_geek', [line.object_id for line in diff_list])
 
   def stepInstallCurrentBusinessTemplate(self, sequence=None, **kw):
     import_bt = sequence.get('current_bt')
@@ -2905,8 +2904,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
-    self.assertEquals(template.getBuildingState(), 'draft')
-    self.assertEquals(template.getInstallationState(), 'not_installed')
+    self.assertEqual(template.getBuildingState(), 'draft')
+    self.assertEqual(template.getInstallationState(), 'not_installed')
     template.edit(title='custom geek template',
                   version='1.0',
                   description='custom bt for unit_test')
@@ -3065,7 +3064,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCheckFakeZODBScriptIsUpdated(self, sequence=None, **kw):
     script = self.portal.portal_skins[sequence['skin_folder_id']]\
         [sequence['python_script_id']]
-    self.assertEquals('return "body"\n',
+    self.assertEqual('return "body"\n',
         script._body)
 
   def stepCheckFakeZODBScriptIsBackedUp(self, sequence=None, **kw):
@@ -3073,7 +3072,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     trash_bin, = trash.objectValues()
     backup_script = trash_bin.portal_skins_items[sequence['skin_folder_id']]\
         [sequence['python_script_id']]
-    self.assertEquals('return "new body"\n',
+    self.assertEqual('return "new body"\n',
         backup_script._body)
 
   def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, **kw):
@@ -6421,7 +6420,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                       ti in types_tool.listTypeInfo()])
 
       dummy_type = types_tool.getTypeInfo('Dummy Type')
-      self.assertNotEquals(None, dummy_type)
+      self.assertNotEqual(None, dummy_type)
       # all the configuration from the type is still here
       self.assertEqual(['Reference'], dummy_type.getTypePropertySheetList())
       self.assertEqual(['source'], dummy_type.getTypeBaseCategoryList())
@@ -6446,7 +6445,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     finally:
       new_bt.uninstall()
-      self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+      self.assertNotEqual(None, types_tool.getTypeInfo('Base Category'))
       self.assertEqual(None, types_tool.getTypeInfo('Dummy Type'))
       self.assertNotIn('dummy_type_provider', types_tool.type_provider_list)
 
@@ -6509,7 +6508,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       shutil.rmtree(export_dir)
 
     new_bt.install(force=0, object_to_update={'dummy_type_provider': 'remove'})
-    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+    self.assertNotEqual(None, types_tool.getTypeInfo('Base Category'))
     self.assertNotIn('dummy_type_provider', types_tool.type_provider_list)
 
   def test_global_action(self):
@@ -6553,7 +6552,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # installed
     new_bt.install()
     self.tic()
-    self.assertNotEquals(None,
+    self.assertNotEqual(None,
         self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
 
   def test_indexation_of_updated_path_item(self):
@@ -7275,13 +7274,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                                 title='my email%d' % (j+1),
                                 portal_type='Email')
       id_list.append(organisation.getId())
-    self.assertNotEquals(id_list, [])
+    self.assertNotEqual(id_list, [])
     sequence.edit(organisation_id_list=id_list)
 
   def stepModifyOrganisation(self, sequence=None, **kw):
     """ Modify Organisation """
     organisation_id_list = sequence.get('organisation_id_list', [])
-    self.assertNotEquals(organisation_id_list, [])
+    self.assertNotEqual(organisation_id_list, [])
     for organisation_id in organisation_id_list:
       organisation_module = self.portal.organisation_module
       organisation = organisation_module[organisation_id]
@@ -7340,7 +7339,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepCheckOrganisationModified(self, sequence=None, **kw):
     organisation_id_list = sequence.get('organisation_id_list', [])
-    self.assertNotEquals(organisation_id_list, [])
+    self.assertNotEqual(organisation_id_list, [])
     for organisation_id in organisation_id_list:
       organisation_module = self.portal.organisation_module
       organisation = organisation_module[organisation_id]
@@ -7361,7 +7360,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepRevertOrganisation(self, sequence=None, **kw):
     organisation_id_list = sequence.get('organisation_id_list', [])
-    self.assertNotEquals(organisation_id_list, [])
+    self.assertNotEqual(organisation_id_list, [])
     for organisation_id in organisation_id_list:
       organisation_module = self.portal.organisation_module
       organisation = organisation_module[organisation_id]
@@ -7372,15 +7371,15 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepRemoveOrganisation(self, sequence=None, **kw):
     id_list = sequence.get('organisation_id_list', None)
-    self.assertNotEquals(id_list, [])
+    self.assertNotEqual(id_list, [])
     organisation_id_list = id_list[:]
     organisation_module = self.portal.organisation_module
     organisation_module.manage_delObjects(organisation_id_list)
-    self.assertNotEquals(id_list, [])
+    self.assertNotEqual(id_list, [])
 
   def stepCheckOrganisationRestored(self, sequence=None, **kw):
     organisation_id_list = sequence.get('organisation_id_list', [])
-    self.assertNotEquals(organisation_id_list, [])
+    self.assertNotEqual(organisation_id_list, [])
     for organisation_id in organisation_id_list:
       organisation_module = self.portal.organisation_module
       organisation = organisation_module[organisation_id]
@@ -7950,7 +7949,7 @@ class _ProductMigrationTemplateItemMixin:
     from importlib import import_module
     filesystem_module = import_module(document_source_reference)
     filesystem_class = getattr(filesystem_module, self.document_title)
-    self.assertTrue(filesystem_class in portal_type_class.__mro__)
+    self.assertIn(filesystem_class, portal_type_class.__mro__)
 
   def stepCheckProductDocumentMigration(self, sequence=None, **kw):
     self.stepCheckDocumentMigration(sequence, **kw)
@@ -7965,7 +7964,7 @@ class _ProductMigrationTemplateItemMixin:
 
     filesystem_module = import_module('Products.ERP5.Document.%s' % module_name)
     filesystem_class = getattr(filesystem_module, module_name)
-    self.assertFalse(filesystem_class in portal_type_class.__mro__)
+    self.assertNotIn(filesystem_class, portal_type_class.__mro__)
 
     component_module_name = 'erp5.component.document.' + module_name
     try:
@@ -7974,7 +7973,7 @@ class _ProductMigrationTemplateItemMixin:
       raise AssertionError("%s should be importable" % component_module_name)
     else:
       component_class = getattr(component_module, module_name)
-      self.assertTrue(component_class in portal_type_class.__mro__)
+      self.assertIn(component_class, portal_type_class.__mro__)
 
   def test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb(self):
     """

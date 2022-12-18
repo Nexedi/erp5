@@ -272,7 +272,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
                                int))
     self.assertTrue(number_of_additional_sale_packing_list_lines > 0)
 
-    self.assertTrue(measurable in (True, False))
+    self.assertIn(measurable, (True, False))
 
     self._init_dict = dict(number_of_sale_orders=number_of_sale_orders,
             number_of_sale_order_lines=number_of_sale_order_lines,
@@ -465,7 +465,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       applied_rule = causality_list[0]
       self.assertEqual(applied_rule.getPortalType(), 'Applied Rule')
       rule = applied_rule.getSpecialiseValue()
-      self.assertNotEquals(rule, None)
+      self.assertNotEqual(rule, None)
       self.assertEqual(rule.getReference(),
               'test_order_root_simulation_rule')
       self.assertEqual(applied_rule.objectCount(),
@@ -503,7 +503,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(packing_list.objectCount(), 1)
       for line in packing_list.objectValues():
         self.assertEqual(line.getResource(), resource)
-        self.assertAlmostEquals(line.getQuantity(),
+        self.assertAlmostEqual(line.getQuantity(),
                 1.0 * number_of_sale_order_lines)
         simulation_movement_list = line.getDeliveryRelatedValueList()
         self.assertEqual(len(simulation_movement_list),
@@ -533,7 +533,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       commodity_invoice_line = invoice_line_list[0]
       self.assertEqual(commodity_invoice_line.getResource(),
               'product_module/commodity')
-      self.assertAlmostEquals(commodity_invoice_line.getQuantity(),
+      self.assertAlmostEqual(commodity_invoice_line.getQuantity(),
               1.0 * (number_of_sale_order_lines \
                       + number_of_additional_sale_packing_list_lines) \
                       * number_of_sale_orders)
@@ -553,7 +553,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       tax_invoice_line = invoice_line_list[1]
       self.assertEqual(tax_invoice_line.getResource(),
               'service_module/vat_low')
-      self.assertAlmostEquals(tax_invoice_line.getQuantity(),
+      self.assertAlmostEqual(tax_invoice_line.getQuantity(),
               commodity_invoice_line.getPrice() \
                       * (number_of_sale_order_lines \
                          + number_of_additional_sale_packing_list_lines) \
@@ -590,7 +590,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       commodity_invoice_line = invoice_line_list[0]
       self.assertEqual(commodity_invoice_line.getResource(),
               'product_module/commodity')
-      self.assertAlmostEquals(commodity_invoice_line.getQuantity(),
+      self.assertAlmostEqual(commodity_invoice_line.getQuantity(),
               1.0 * (number_of_sale_order_lines \
                       + number_of_additional_sale_packing_list_lines) \
                       * number_of_sale_orders)
@@ -610,7 +610,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       luxury_invoice_line = invoice_line_list[1]
       self.assertEqual(luxury_invoice_line.getResource(),
               'product_module/luxury')
-      self.assertAlmostEquals(luxury_invoice_line.getQuantity(),
+      self.assertAlmostEqual(luxury_invoice_line.getQuantity(),
               1.0 * number_of_additional_sale_packing_list_lines \
                       * number_of_sale_orders)
       simulation_movement_list \
@@ -628,7 +628,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       high_tax_invoice_line = invoice_line_list[2]
       self.assertEqual(high_tax_invoice_line.getResource(),
               'service_module/vat_high')
-      self.assertAlmostEquals(high_tax_invoice_line.getQuantity(),
+      self.assertAlmostEqual(high_tax_invoice_line.getQuantity(),
               luxury_invoice_line.getPrice() \
                       * number_of_additional_sale_packing_list_lines \
                       * number_of_sale_orders)
@@ -648,7 +648,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       low_tax_invoice_line = invoice_line_list[3]
       self.assertEqual(low_tax_invoice_line.getResource(),
               'service_module/vat_low')
-      self.assertAlmostEquals(low_tax_invoice_line.getQuantity(),
+      self.assertAlmostEqual(low_tax_invoice_line.getQuantity(),
               commodity_invoice_line.getPrice() \
                       * (number_of_sale_order_lines \
                          + number_of_additional_sale_packing_list_lines) \
@@ -696,7 +696,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       applied_rule = causality_list[0]
       self.assertEqual(applied_rule.getPortalType(), 'Applied Rule')
       rule = applied_rule.getSpecialiseValue()
-      self.assertNotEquals(rule, None)
+      self.assertNotEqual(rule, None)
       self.assertEqual(rule.getReference(),
               'test_delivery_root_simulation_rule')
       self.assertEqual(applied_rule.objectCount(),

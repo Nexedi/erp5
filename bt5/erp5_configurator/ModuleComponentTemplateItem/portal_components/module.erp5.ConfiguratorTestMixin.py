@@ -339,7 +339,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     # title is translated here
     title = account_business_configuration_item.getTitle()
-    self.assertTrue(title in ('Capital', 'Gezeichnetes Kapital',
+    self.assertIn(title, ('Capital', 'Gezeichnetes Kapital',
         '\xd0\xa3\xd1\x81\xd1\x82\xd0\xb0\xd0\xb2\xd0\xbd\xd1\x8b\xd0\xb9 ' \
                   '\xd0\xba\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x82\xd0\xb0\xd0\xbb'))
 
@@ -488,7 +488,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     expected_list = self.expected_bt5_list + bt5_tuple
     self.assertEqual([i for i in expected_list if i not in bt5_title_list], [])
 
-    self.assertFalse(bc_id in bt5_title_list)
+    self.assertNotIn(bc_id, bt5_title_list)
 
     bt = business_configuration.getSpecialiseValue(portal_type="Business Template")
     self.assertEqual(bc_id, bt.getTitle())
@@ -766,7 +766,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.loginByUserName(user_name='test_configurator_user')
     business_configuration = sequence.get('business_configuration')
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
-    self.assertNotEquals(0, len(person_list))
+    self.assertNotEqual(0, len(person_list))
 
     for entity in person_list:
       for user_id in self._getUserIdList(self.all_username_list):
@@ -777,7 +777,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.loginByUserName(user_name='test_configurator_user')
     business_configuration = sequence.get('business_configuration')
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
-    self.assertNotEquals(0, len(organisation_list))
+    self.assertNotEqual(0, len(organisation_list))
 
     for entity in organisation_list:
       for user_id in self._getUserIdList(self.all_username_list):
@@ -788,7 +788,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.loginByUserName(user_name='test_configurator_user')
     business_configuration = sequence.get('business_configuration')
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
-    self.assertNotEquals(0, len(person_list))
+    self.assertNotEqual(0, len(person_list))
 
     for person in person_list:
       found_one = 0
@@ -808,7 +808,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                           portal_type='Organisation')
     for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
-      self.assertTrue('Accounting Period' in
+      self.assertIn('Accounting Period',
             organisation.getVisibleAllowedContentTypeList())
 
   def stepValidatedAccountingPeriods(self, sequence=None, sequence_list=None, **kw):
@@ -964,9 +964,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
       self.failUnlessUserCanAddDocument(user_id, person)
-      self.assertTrue('Bank Account' in
+      self.assertIn('Bank Account',
                     person.getVisibleAllowedContentTypeList())
-      self.assertTrue('Credit Card' in
+      self.assertIn('Credit Card',
                     person.getVisibleAllowedContentTypeList())
     # when the entity is validated, we can still add some payment nodes
     person.validate()
@@ -974,9 +974,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
       self.failUnlessUserCanAddDocument(user_id, person)
-      self.assertTrue('Bank Account' in
+      self.assertIn('Bank Account',
                     person.getVisibleAllowedContentTypeList())
-      self.assertTrue('Credit Card' in
+      self.assertIn('Credit Card',
                     person.getVisibleAllowedContentTypeList())
 
   def stepAddPaymentNodeInOrganisation(self, sequence=None, sequence_list=None, **kw):
@@ -985,9 +985,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
       self.failUnlessUserCanAddDocument(user_id, org)
-      self.assertTrue('Bank Account' in
+      self.assertIn('Bank Account',
                     org.getVisibleAllowedContentTypeList())
-      self.assertTrue('Credit Card' in
+      self.assertIn('Credit Card',
                     org.getVisibleAllowedContentTypeList())
     # when the entity is validated, we can still add some payment nodes
     org.validate()
@@ -995,9 +995,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
       self.failUnlessUserCanAddDocument(user_id, org)
-      self.assertTrue('Bank Account' in
+      self.assertIn('Bank Account',
                     org.getVisibleAllowedContentTypeList())
-      self.assertTrue('Credit Card' in
+      self.assertIn('Credit Card',
                     org.getVisibleAllowedContentTypeList())
 
   def stepCopyAndPasteBankAccountInPerson(self, sequence=None, sequence_list=None, **kw):
@@ -1661,12 +1661,12 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     self.assertEqual(5, len(accounting_transaction_list))
 
-    self.assertTrue(accounting_transaction_a in accounting_transaction_list)
-    self.assertTrue(accounting_transaction_b in accounting_transaction_list)
-    self.assertTrue(accounting_transaction_c in accounting_transaction_list)
-    self.assertTrue(accounting_transaction_x_related_to_a in \
+    self.assertIn(accounting_transaction_a, accounting_transaction_list)
+    self.assertIn(accounting_transaction_b, accounting_transaction_list)
+    self.assertIn(accounting_transaction_c, accounting_transaction_list)
+    self.assertIn(accounting_transaction_x_related_to_a, \
                                                 accounting_transaction_list)
-    self.assertTrue(accounting_transaction_y_related_to_a in \
+    self.assertIn(accounting_transaction_y_related_to_a, \
                                                 accounting_transaction_list)
 
     accounting_transaction_x_related_to_a.delete()
@@ -1678,9 +1678,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     self.assertEqual(3, len(accounting_transaction_list))
 
-    self.assertFalse(accounting_transaction_x_related_to_a in \
+    self.assertNotIn(accounting_transaction_x_related_to_a, \
                                                 accounting_transaction_list)
-    self.assertFalse(accounting_transaction_y_related_to_a in \
+    self.assertNotIn(accounting_transaction_y_related_to_a, \
                                                 accounting_transaction_list)
 
   # }}}
@@ -1691,13 +1691,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
-      self.assertTrue('Assignment' in
+      self.assertIn('Assignment',
                   person.getVisibleAllowedContentTypeList())
       self.failUnlessUserCanAddDocument(user_id, person)
 
   def stepAssignmentTI(self, sequence=None, sequence_list=None, **kw):
     ti = self.getTypesTool().getTypeInfo('Assignment')
-    self.assertNotEquals(None, ti)
+    self.assertNotEqual(None, ti)
     # Acquire local roles on Assignment ? no
     self.assertFalse(ti.getProperty('type_acquire_local_role', 1))
 

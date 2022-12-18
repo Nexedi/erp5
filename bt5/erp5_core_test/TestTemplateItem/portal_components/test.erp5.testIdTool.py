@@ -178,7 +178,7 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEqual(len(sql_generator.last_max_id_dict), 0)
     # retrieve method to recovery the last id in the database
     last_id_method = getattr(self.portal, 'IdTool_zGetLastId', None)
-    self.assertNotEquals(last_id_method, None)
+    self.assertNotEqual(last_id_method, None)
     # store the ids in zodb
     if store:
       sql_generator.setStoredInZodb(True)

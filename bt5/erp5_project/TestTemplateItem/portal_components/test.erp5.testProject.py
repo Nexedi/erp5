@@ -158,8 +158,8 @@ class TestProject(ERP5TypeTestCase):
     # It shows planned tasks also.
     task_line_list = project.Project_getSourceProjectRelatedTaskReportList()
     self.assertEqual(1, len(task_line_list))
-    self.assertNotEquals(task_line_list[0], task.default_task_line)
-    self.assertNotEquals(task_line_list[0].getCausalityRelatedValue(),
+    self.assertNotEqual(task_line_list[0], task.default_task_line)
+    self.assertNotEqual(task_line_list[0].getCausalityRelatedValue(),
                            task.default_task_line)
 
 def test_suite():
