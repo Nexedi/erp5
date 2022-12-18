@@ -1,4 +1,4 @@
-# -*- coding: latin-1 -*-
+# -*- coding: utf-8 -*-
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -703,7 +703,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££'.encode('utf-8'),
+            unicode=u'Â£Â£Â£'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -719,7 +719,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££'.encode('utf-8'),
+            unicode=u'Â£Â£Â£'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -732,7 +732,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££',
+            unicode=u'Â£Â£Â£',
             encoding='utf-8'
             )
 
@@ -753,7 +753,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££',
+            unicode=u'Â£Â£Â£',
             encoding='utf-8'
             )
 
