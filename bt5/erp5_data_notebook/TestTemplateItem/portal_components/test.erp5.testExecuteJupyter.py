@@ -123,8 +123,8 @@ portal.%s()
       old_notebook_context=portal.Base_createNotebookContext()
     )
 
-    self.assertEquals(result['ename'], 'NameError')
-    self.assertEquals(result['result_string'], None)
+    self.assertEqual(result['ename'], 'NameError')
+    self.assertEqual(result['result_string'], None)
 
     # There's no need to abort the current transaction. The error handling code
     # should be responsible for this, so we check the script's title
@@ -165,7 +165,7 @@ portal.%s()
     )
     result_json = json.loads(result)
 
-    self.assertEquals(result_json['ename'], 'SyntaxError')
+    self.assertEqual(result_json['ename'], 'SyntaxError')
 
   def testUserCannotAccessBaseExecuteJupyter(self):
     """
@@ -176,7 +176,7 @@ portal.%s()
     self.login('member_user')
     result = portal.Base_executeJupyter(title='Any title', reference='Any reference')
 
-    self.assertEquals(result, 'You are not authorized to access the script')
+    self.assertEqual(result, 'You are not authorized to access the script')
 
   def testUserCanCreateNotebookWithoutCode(self):
     """
@@ -194,7 +194,7 @@ portal.%s()
 
     result_title = [obj.getTitle() for obj in notebook_search_result]
     if result_title:
-      self.assertEquals(notebook.getTitle(), result_title[0])
+      self.assertEqual(notebook.getTitle(), result_title[0])
 
   def testUserCanCreateNotebookWithCode(self):
     """
@@ -219,7 +219,7 @@ portal.%s()
 
     if result_reference_list:
       self.assertIn(notebook.getReference(), result_reference_list)
-      self.assertEquals(notebook_line.getReference(), notebook.getReference())
+      self.assertEqual(notebook_line.getReference(), notebook.getReference())
       self.assertIn(notebook_line.getId(), result_id_list)
 
   def testBaseExecuteJupyterAddNewNotebook(self):
@@ -242,7 +242,7 @@ portal.%s()
                                     reference=reference
                                     )
 
-    self.assertEquals(len([obj.getTitle() for obj in notebook_list]), 1)
+    self.assertEqual(len([obj.getTitle() for obj in notebook_list]), 1)
 
   def testBaseExecuteJupyterAddNotebookLine(self):
     """
@@ -281,7 +281,7 @@ portal.%s()
     # then it means that the code has been added to Input and Output of Data
     # Notebook Line portal_type
     if notebook_line_search_result:
-      self.assertEquals(notebook.getReference(), notebook_line_search_result.getReference())
+      self.assertEqual(notebook.getReference(), notebook_line_search_result.getReference())
 
   def testBaseExecuteJupyterErrorHandling(self):
     """
@@ -301,8 +301,8 @@ portal.%s()
       python_expression=python_expression
     ))
 
-    self.assertEquals(result['ename'], 'NameError')
-    self.assertEquals(result['code_result'], None)
+    self.assertEqual(result['ename'], 'NameError')
+    self.assertEqual(result['code_result'], None)
 
   def testBaseExecuteJupyterSaveNotebookContext(self):
     """
@@ -357,7 +357,7 @@ portal.%s()
     self.tic()
 
     expected_result = '11'
-    self.assertEquals(json.loads(result)['code_result'].rstrip(), expected_result)
+    self.assertEqual(json.loads(result)['code_result'].rstrip(), expected_result)
 
   def testSavingModuleObjectLocalVariables(self):
     """
@@ -382,8 +382,8 @@ import sys
       reference=reference,
       python_expression=jupyter_code)
 
-    self.assertEquals(json.loads(result)['code_result'].rstrip(), 'imghdr')
-    self.assertEquals(json.loads(result)['mime_type'].rstrip(), 'text/plain')
+    self.assertEqual(json.loads(result)['code_result'].rstrip(), 'imghdr')
+    self.assertEqual(json.loads(result)['mime_type'].rstrip(), 'text/plain')
 
   def testERP5ImageProcessor(self):
     """
@@ -419,7 +419,7 @@ context.Base_renderAsHtml(image)
       old_notebook_context=notebook_context
       )
 
-    self.assertTrue((data_template % base64.b64encode(data)) in result['result_string'])
+    self.assertIn((data_template % base64.b64encode(data)), result['result_string'])
     # Mime_type shouldn't be  image/png just because of filename, instead it is
     # dependent on file and file data
     self.assertNotEqual(result['mime_type'], 'image/png')
@@ -457,7 +457,7 @@ context.Base_renderAsHtml(image)
       reference=reference,
       python_expression=jupyter_code2
       )
-    self.assertEquals(json.loads(result)['code_result'].rstrip(), 'sys')
+    self.assertEqual(json.loads(result)['code_result'].rstrip(), 'sys')
 
   def testEnvironmentObjectWithFunctionAndClass(self):
     self.login('dev_user')
@@ -483,7 +483,7 @@ environment.define(create_sum_machines, 'creates sum function and class')
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
 print sum_function(1, 1)
@@ -497,8 +497,8 @@ print Calculator().sum(2, 2)
     self.tic()
     result = json.loads(result)
     output = result['code_result']
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(output.strip(), '2\n4')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(output.strip(), '2\n4')
 
   def testEnvironmentObjectSimpleVariable(self):
     self.login('dev_user')
@@ -513,7 +513,7 @@ environment.define(x='couscous')
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = 'print x'
     result = self.portal.Base_executeJupyter(
@@ -523,8 +523,8 @@ environment.define(x='couscous')
 
     self.tic()
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), 'couscous')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), 'couscous')
 
   def testEnvironmentUndefineFunctionClass(self):
     self.login('dev_user')
@@ -550,7 +550,7 @@ environment.define(create_sum_machines, 'creates sum function and class')
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     undefine_code = '''
 environment.undefine('creates sum function and class')
@@ -561,7 +561,7 @@ environment.undefine('creates sum function and class')
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
 print 'sum_function' in locals()
@@ -574,8 +574,8 @@ print 'Calculator' in locals()
     )
     result = json.loads(result)
     output = result['code_result']
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(output.strip(), 'False\nFalse')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(output.strip(), 'False\nFalse')
 
   def testEnvironmentUndefineVariable(self):
     self.login('dev_user')
@@ -590,7 +590,7 @@ environment.define(x='couscous')
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     undefine_code = 'environment.undefine("x")'
     result = self.portal.Base_executeJupyter(
@@ -599,7 +599,7 @@ environment.define(x='couscous')
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = "print 'x' in locals()"
     result = self.portal.Base_executeJupyter(
@@ -609,8 +609,8 @@ environment.define(x='couscous')
 
     self.tic()
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), 'False')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), 'False')
 
   def testImportFixer(self):
     self.login('dev_user')
@@ -625,7 +625,7 @@ import random
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
 print random.randint(1,1)
@@ -637,8 +637,8 @@ print random.randint(1,1)
 
     self.tic()
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), '1')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), '1')
 
   def testEnvorinmentUndefineErrors(self):
     """
@@ -656,7 +656,7 @@ print random.randint(1,1)
     self.tic()
 
     error_substring = 'EnvironmentUndefineError: Trying to remove non existing'
-    self.assertTrue(error_substring in result)
+    self.assertIn(error_substring, result)
 
     not_string_code = 'def foobar(): pass\nenvironment.undefine(foobar)'
 
@@ -668,7 +668,7 @@ print random.randint(1,1)
     self.tic()
 
     error_substring = 'EnvironmentUndefineError: Type mismatch.'
-    self.assertTrue(error_substring in result)
+    self.assertIn(error_substring, result)
 
   def testEnvironmentDefineErrrors(self):
     """
@@ -687,8 +687,8 @@ print random.randint(1,1)
     self.tic()
 
     error_substring = 'EnvironmentDefinitionError: Type mismatch'
-    self.assertTrue(error_substring in result)
-    self.assertTrue('first argument' in result)
+    self.assertIn(error_substring, result)
+    self.assertIn('first argument', result)
 
     second_arg_type_code = 'def couscous(): pass\nenvironment.define(couscous, 123)'
 
@@ -700,8 +700,8 @@ print random.randint(1,1)
     self.tic()
 
     error_substring = 'EnvironmentDefinitionError: Type mismatch'
-    self.assertTrue(error_substring in result)
-    self.assertTrue('second argument' in result)
+    self.assertIn(error_substring, result)
+    self.assertIn('second argument', result)
 
   def testImportFixerWithAlias(self):
     self.login('dev_user')
@@ -716,7 +716,7 @@ import random as rand
     )
 
     self.tic()
-    self.assertEquals(json.loads(result)['status'], 'ok')
+    self.assertEqual(json.loads(result)['status'], 'ok')
 
     jupyter_code = '''
 print rand.randint(1,1)
@@ -728,8 +728,8 @@ print rand.randint(1,1)
 
     self.tic()
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), '1')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), '1')
 
   def testPivotTableJsIntegration(self):
     '''
@@ -778,7 +778,7 @@ from string import ascii_lowercase, ascii_uppercase, digits
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
 print ascii_lowercase
@@ -790,8 +790,8 @@ print ascii_lowercase
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
 
     jupyter_code = '''
 print ascii_uppercase
@@ -803,8 +803,8 @@ print ascii_uppercase
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
     jupyter_code = '''
 print digits
@@ -816,8 +816,8 @@ print digits
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), '0123456789')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), '0123456789')
 
   def testStarImport(self):
     '''
@@ -835,7 +835,7 @@ from string import *
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
 print ascii_lowercase
@@ -847,8 +847,8 @@ print ascii_lowercase
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
 
   def testAsImport(self):
     '''
@@ -866,7 +866,7 @@ from string import digits as dig
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
 print dig
@@ -878,8 +878,8 @@ print dig
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), '0123456789')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), '0123456789')
 
   def testReferenceWarning(self):
     '''
@@ -902,7 +902,7 @@ print dig
     )
     self.tic()
 
-    self.assertEquals(result, True)
+    self.assertEqual(result, True)
 
   def testNPArrayPrint(self):
     self.login('dev_user')
@@ -917,7 +917,7 @@ import numpy as np
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
     jupyter_code = '''
 print np.random.rand(256, 256, 256)
 '''
@@ -929,7 +929,7 @@ print np.random.rand(256, 256, 256)
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
 print np.random.randint(low = 2 ** 63 - 1, size = (256, 256, 256), dtype = 'int64')
@@ -942,7 +942,7 @@ print np.random.randint(low = 2 ** 63 - 1, size = (256, 256, 256), dtype = 'int6
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
   def testImportWarning(self):
     '''
@@ -968,8 +968,8 @@ import datetime
                        u' functions were named as *module*_setup.')
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), expected_result)
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), expected_result)
 
     jupyter_code = '''
 print np.array([1, 2, 3])
@@ -981,8 +981,8 @@ print np.array([1, 2, 3])
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
-    self.assertEquals(result['code_result'].strip(), u'[1 2 3]')
+    self.assertEqual(result['status'], 'ok')
+    self.assertEqual(result['code_result'].strip(), u'[1 2 3]')
 
   def testDotImport(self):
     '''
@@ -1000,7 +1000,7 @@ import os.path
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
     jupyter_code = '''
 print os.path
@@ -1012,7 +1012,7 @@ print os.path
     self.tic()
 
     result = json.loads(result)
-    self.assertEquals(result['status'], 'ok')
+    self.assertEqual(result['status'], 'ok')
 
   def checkEgg(self, egg):
     '''

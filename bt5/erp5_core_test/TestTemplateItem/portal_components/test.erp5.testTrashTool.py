@@ -112,7 +112,7 @@ class TestTrashTool(ERP5TypeTestCase):
     self.assertTrue(bt is not None)
     trashbin = trash.newTrashBin(bt_title='fake_bin', bt=bt)
     self.assertTrue(trashbin is not None)
-    self.assertTrue('fake_bin' in trashbin.getId())
+    self.assertIn('fake_bin', trashbin.getId())
     sequence.edit(trash_id=trashbin.getId())
 
   def stepCheckTrashBinIndexation(self, sequence=None, sequence_list=None, **kw):

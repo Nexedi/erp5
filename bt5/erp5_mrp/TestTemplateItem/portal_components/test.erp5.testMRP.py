@@ -360,7 +360,7 @@ class TestMRPImplementation(TestMRPMixin):
     def getRelatedDeliveryList(portal_type):
       return order.getCausalityRelatedValueList(portal_type=portal_type)
 
-    self.assertEquals(len(getRelatedDeliveryList("Manufacturing Order Line")), 1)
+    self.assertEqual(len(getRelatedDeliveryList("Manufacturing Order Line")), 1)
     # Build First Manufacturing Execution
     order.localBuild()
     self.tic()
@@ -418,7 +418,7 @@ class TestMRPImplementation(TestMRPMixin):
     self.tic()
     manufacturing_order_line, = order.getCausalityRelatedValueList(
                             portal_type="Manufacturing Order Line")
-    self.assertEquals(self.item, manufacturing_order_line.getAggregateValue())
+    self.assertEqual(self.item, manufacturing_order_line.getAggregateValue())
     order.localBuild()
     self.tic()
 

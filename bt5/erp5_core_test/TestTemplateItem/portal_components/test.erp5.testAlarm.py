@@ -73,8 +73,8 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_01_HasEverything(self):
     # Test if portal_alarms was created
-    self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
-    self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
+    self.assertNotEqual(self.portal._getOb('portal_alarms', None), None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
     # ... and that it should be subscribed by default
     self.assertTrue(self.portal.portal_alarms.isSubscribed())
 
@@ -348,7 +348,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.activeSense()
     self.tic()
     # Chen that the second alarm execution did happen
-    self.assertNotEquals(alarm.getLastActiveProcess(), None)
+    self.assertNotEqual(alarm.getLastActiveProcess(), None)
 
   def test_16_uncatalog(self):
     """
@@ -402,7 +402,7 @@ class TestAlarm(ERP5TypeTestCase):
     # Nothing should happens yet
     alarm_tool.tic()
     self.tic()
-    self.assertTrue(alarm.getDescription() in (None, ''))
+    self.assertIn(alarm.getDescription(), (None, ''))
     now = DateTime()
     date = addToDate(now, day=-1)
     alarm.setPeriodicityStartDate(date)
@@ -518,7 +518,7 @@ class TestAlarm(ERP5TypeTestCase):
     # Now, check that everybody can invoke an enabled alarm manually.
     setSecurityManager(sm)
     correct_answer = str(alarm.showPermissions())
-    self.assertNotEquals(correct_answer, None)
+    self.assertNotEqual(correct_answer, None)
 
     alarm.activeSense()
     self.tic()

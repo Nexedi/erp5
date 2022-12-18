@@ -132,7 +132,7 @@ class SecurityTestCase(ERP5TypeTestCase):
     else:
       uf = self.portal.acl_users
       user = uf.getUserById(user_id)
-      self.assertNotEquals(user, None, 'No user %s' % user_id)
+      self.assertNotEqual(user, None, 'No user %s' % user_id)
       newSecurityManager(None, user.__of__(uf))
 
   # Permission methods
@@ -268,7 +268,7 @@ class SecurityTestCase(ERP5TypeTestCase):
         self.fail("User %s does not have worklist %s.\nWorklists: %s" % (
           user_id, worklist_id, pformat(global_action_list)))
       worklist_action, = worklist_action_list
-      self.assertEquals(document_count, worklist_action['count'],
+      self.assertEqual(document_count, worklist_action['count'],
         "User %s has %s documents in her %s worklist, not %s" % (
           user_id, worklist_action['count'], worklist_id, document_count))
     finally:

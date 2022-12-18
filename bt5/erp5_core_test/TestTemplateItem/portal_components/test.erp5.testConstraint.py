@@ -1188,10 +1188,10 @@ class TestConstraint(PropertySheetTestCase):
                       property_id="local_property",
                       elementary_type="string")
     obj.edit(local_property='1')
-    self.assertFalse('_local_properties' in obj.__dict__)
+    self.assertNotIn('_local_properties', obj.__dict__)
     self.assertEqual([], constraint.checkConsistency(obj))
     self.assertEqual([], constraint.fixConsistency(obj))
-    self.assertFalse('_local_properties' in obj.__dict__)
+    self.assertNotIn('_local_properties', obj.__dict__)
     self.assertEqual('1', obj.getLocalProperty())
     obj.edit(local_property='something else')
     self.assertEqual('something else', obj.getLocalProperty())
