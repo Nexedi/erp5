@@ -679,6 +679,13 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
 
+    # BBB
+    if six.PY2:
+      def assertRaisesRegex(self, *args):
+        return self.assertRaisesRegexp(*args)
+      def assertRegex(self, *args):
+        return self.assertRegexpMatches(*args)
+
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
       try: # try ipython if available
