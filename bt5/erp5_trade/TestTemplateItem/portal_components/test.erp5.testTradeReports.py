@@ -1861,7 +1861,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # call the report first, it will set selection
     report_html = \
         self.portal.sale_order_module.Folder_generateWorkflowReport()
-    self.assertFalse('Site Error' in report_html)
+    self.assertNotIn('Site Error', report_html)
 
     line_list = self.portal.sale_order_module.Folder_viewWorkflowReport.listbox.\
         get_value('default',
@@ -2040,7 +2040,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # view the module first, it will set selection
     self.portal.REQUEST.form['simulation_state'] = 'draft'
     view = self.portal.sale_order_module.view()
-    self.assertFalse('Site Error' in view)
+    self.assertNotIn('Site Error', view)
 
     self.portal.REQUEST.form['portal_type'] = ['Sale Order Line']
     self.portal.REQUEST.form['use'] = []
@@ -2085,7 +2085,7 @@ class TestTradeReports(ERP5ReportTestCase):
 
     # view the module first, it will set selection
     view = self.portal.sale_order_module.view()
-    self.assertFalse('Site Error' in view)
+    self.assertNotIn('Site Error', view)
 
     self.portal.REQUEST.form['portal_type'] = ['Sale Order Line']
     self.portal.REQUEST.form['use'] = ['use/u1']

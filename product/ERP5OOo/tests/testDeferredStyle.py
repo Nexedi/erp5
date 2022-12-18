@@ -120,7 +120,7 @@ class TestDeferredStyleBase(DeferredStyleTestCase):
   """Tests deferred styles for ERP5."""
 
   def test_skin_selection(self):
-    self.assertTrue('Deferred' in self.portal.portal_skins.getSkinSelections())
+    self.assertIn('Deferred', self.portal.portal_skins.getSkinSelections())
 
   def test_report_view(self):
     self.loginAsUser(self.username)

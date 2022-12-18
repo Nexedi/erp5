@@ -129,7 +129,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
     fec_xml = ''
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
@@ -222,7 +222,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
     fec_xml = ''
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
