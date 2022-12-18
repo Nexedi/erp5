@@ -261,7 +261,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       # but they can not be saved in ZODB accidentally
       self.portal.person_module.oops = temp_object
-      self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
+      self.assertRaisesRegex(Exception, "Temporary objects can't be pickled", self.commit)
       self.abort()
 
     def test_temp_object_persistent(self):

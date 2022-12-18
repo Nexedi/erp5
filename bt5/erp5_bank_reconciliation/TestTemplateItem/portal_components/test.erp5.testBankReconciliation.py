@@ -402,7 +402,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     # These constraints are only verified when we go from open to close state.
     # (that is why the bank reconciliation have been openned for the
     # assertions above)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValidationFailed,
         "Previous bank statement balance does not match reconciled balance at previous bank statement date"):
       self.portal.portal_workflow.doActionFor(

@@ -86,7 +86,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     document = website.WebSection_getDocumentValue(test_page_reference)
 
-    self.assertNotEquals(None, document)
+    self.assertNotEqual(None, document)
     self.assertEqual(document.getRelativeUrl(),
                       test_page.getRelativeUrl())
 
@@ -96,7 +96,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
       update screenshots of the documents.
     """
     image_upload = makeFileUpload('TEST-en-002.png')
-    self.assertNotEquals(None, image_upload)
+    self.assertNotEqual(None, image_upload)
 
     # Create a web page, and check if the content is not overwriten
     web_page_reference = "WEB-PAGE-REFERENCE"
@@ -120,10 +120,10 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     self.portal.REQUEST.form['data_uri'] = image_upload
     fake_image_reference = "DO-NOT-EXISTANT-IMAGE"
-    self.assertNotEquals(None,
+    self.assertNotEqual(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, fake_image_reference))
 
-    self.assertNotEquals(None,
+    self.assertNotEqual(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, web_page_reference))
 
     self.assertEqual(None,
@@ -232,10 +232,10 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page.TestPage_runSeleniumTest()
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
-    self.assertNotEquals(zuite, None)
+    self.assertNotEqual(zuite, None)
 
     zptest = getattr(zuite, "TEST", None)
-    self.assertNotEquals(zptest, None)
+    self.assertNotEqual(zptest, None)
 
     expected_html = expected_test_html % ("ERP5TypeTestCase", "")
 
@@ -306,10 +306,10 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page.TestPage_runSeleniumTest()
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
-    self.assertNotEquals(zuite, None)
+    self.assertNotEqual(zuite, None)
 
     zptest = getattr(zuite, "TEST", None)
-    self.assertNotEquals(zptest, None)
+    self.assertNotEqual(zptest, None)
 
     expected_html = expected_test_html % ("http://toto.com", "toto", "toto")
 
