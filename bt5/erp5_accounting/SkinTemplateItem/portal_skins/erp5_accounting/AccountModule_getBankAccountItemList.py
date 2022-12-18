@@ -1,7 +1,7 @@
 """Returns an item list of the acceptable bank accounts.
 If `organisation` is passed, then we only show bank accounts available for that
 organisation, using the following policy:
- - if organisation is independant accounting entity (ie. have accounting periods),
+ - if organisation is independent accounting entity (ie. have accounting periods),
    only bank accounts from this organisation can be selected
  - otherwise, bank accounts from this organisation and all organisation directly
    members of the parent groups can be us
@@ -16,14 +16,15 @@ base_category is anyway included.
 """
 portal = context.getPortalObject()
 
-search_kw = dict(portal_type=portal.getPortalPaymentNodeTypeList())
-if skip_invalidated_bank_accounts:
-  search_kw['validation_state'] = '!=invalidated'
+search_kw = dict(
+  portal_type=portal.getPortalPaymentNodeTypeList(),
+  validation_state='validated',
+)
 
 if organisation:
   organisation_value = portal.restrictedTraverse(organisation)
 
-  # if organisation is an independant accounting section and contains bank accounts,
+  # if organisation is an independent accounting section and contains bank accounts,
   # only take into account those.
   if organisation_value == organisation_value.Organisation_getMappingRelatedOrganisation():
     bank_account_list = organisation_value.searchFolder(**search_kw)
