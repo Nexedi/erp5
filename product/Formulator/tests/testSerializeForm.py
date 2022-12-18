@@ -171,7 +171,7 @@ class SerializeTestCase(unittest.TestCase):
         XMLToForm(xml, form2)
 
         for field in form.get_fields():
-            self.assert_(form2.has_field(field.getId()))
+            self.assertTrue(form2.has_field(field.getId()))
             field2 = getattr(form2, field.getId())
             # XXX test if values are the same
             self.assertEqual(field.values, field2.values)
@@ -354,7 +354,7 @@ class SerializeTestCase(unittest.TestCase):
         XMLToForm(xml, form2)
 
         for field in form.get_fields():
-            self.assert_(form2.has_field(field.getId()))
+            self.assertTrue(form2.has_field(field.getId()))
             field2 = getattr(form2, field.getId())
 
             # XXX In Formulator, None and '' are treated as nearly

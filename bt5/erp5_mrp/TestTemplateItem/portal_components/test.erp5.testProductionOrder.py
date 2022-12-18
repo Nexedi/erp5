@@ -389,7 +389,7 @@ class TestProductionOrderMixin(TestOrderMixin):
 
     transformation = sequence.get('transformation')
     resource = sequence.get('resource')
-    self.assertNotEquals(None, resource)
+    self.assertNotEqual(None, resource)
     transformation.setResourceValue(resource)
 
   def stepSetOrderLineQuantity(self, sequence=None, sequence_list=None,
@@ -425,7 +425,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     transformation_transformed_resource = sequence.get('transformation_transformed_resource')
     component1 = sequence.get('component1')
 
-    self.assertNotEquals(None, component1)
+    self.assertNotEqual(None, component1)
 
     transformation_transformed_resource.edit(
       resource_value = component1,
@@ -642,7 +642,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     order_line = sequence.get('order_line')
     transformation = sequence.get('transformation')
 
-    self.assertNotEquals(None, transformation)
+    self.assertNotEqual(None, transformation)
 
     self.assertEqual(order_line.getSpecialiseValue(), transformation)
 
@@ -1758,7 +1758,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
     supply_node = supply_chain.contentValues(portal_type='Supply Node')[0]
     cb_data = supply_chain.manage_cutObjects([supply_node.getId()])
-    self.assertEquals(len(empty_supply_chain.manage_pasteObjects(cb_data)), 1)
+    self.assertEqual(len(empty_supply_chain.manage_pasteObjects(cb_data)), 1)
 
   def stepCheckPastedSupplyNode(self, sequence=None, sequence_list=None,
                                  **kw):

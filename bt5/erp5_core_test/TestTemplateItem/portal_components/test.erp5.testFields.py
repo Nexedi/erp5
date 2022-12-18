@@ -303,7 +303,7 @@ class TestIntegerField(ERP5TypeTestCase):
     self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'float')
     self.assertEqual(node.get('{%s}value' % NSMAP['office']), str(value))
     self.assertEqual(node.text, str(value))
-    self.assertTrue('{%s}formula' % NSMAP['text'] not in node.attrib)
+    self.assertNotIn('{%s}formula' % NSMAP['text'], node.attrib)
 
   def test_render_odg_view(self):
     self.field.values['default'] = 34
@@ -752,7 +752,7 @@ class TestProxyField(ERP5TypeTestCase):
                                 'my_title', 'Not Title', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_title',))
-    self.assert_(proxy_field.is_delegated('title'))
+    self.assertTrue(proxy_field.is_delegated('title'))
     self.assertEqual('Title', proxy_field.get_value('title'))
 
   def test_simple_not_surcharge(self):
@@ -853,19 +853,19 @@ class TestProxyField(ERP5TypeTestCase):
 
     # change style in the original field
     original_field.manage_edit_xmlrpc(dict(input_style='number'))
-    self.assertTrue('type="number"' in original_field.render())
-    self.assertTrue('type="number"' in proxy_field.render())
+    self.assertIn('type="number"', original_field.render())
+    self.assertIn('type="number"', proxy_field.render())
 
     # override style in the proxy field
     original_field.manage_edit_xmlrpc(dict(input_style='text'))
     proxy_field._surcharged_edit({'input_style': 'number'}, ['input_style'])
-    self.assertTrue('type="text"' in original_field.render())
-    self.assertTrue('type="number"' in proxy_field.render())
+    self.assertIn('type="text"', original_field.render())
+    self.assertIn('type="number"', proxy_field.render())
 
     # unproxify the proxy field
     self.container.Base_view.unProxifyField({'my_date': 'on'})
     unproxified_field = self.container.Base_view.my_date
-    self.assertTrue('type="number"' in unproxified_field.render())
+    self.assertIn('type="number"', unproxified_field.render())
 
   def test_manage_edit_surcharged_xmlrpc(self):
     # manage_edit_surcharged_xmlrpc is a method to edit proxyfields
@@ -932,30 +932,30 @@ class TestProxyField(ERP5TypeTestCase):
     def surcharge_edit():
       #surcharge from edit
       field._surcharged_edit(dict(title='TestTitle'), ['title'])
-      self.assertTrue('title' in field.delegated_list)
+      self.assertIn('title', field.delegated_list)
       self.assertEqual(field.values['title'], 'TestTitle')
-      self.assertTrue('title' not in field.tales)
+      self.assertNotIn('title', field.tales)
 
     def delegate_edit():
       # delegate the field from edit view
       field._surcharged_edit(dict(title='TestTitle'), [])
-      self.assertTrue('title' not in field.delegated_list)
-      self.assertTrue('title' not in field.values)
-      self.assertTrue('title' not in field.tales)
+      self.assertNotIn('title', field.delegated_list)
+      self.assertNotIn('title', field.values)
+      self.assertNotIn('title', field.tales)
 
     def surcharge_tales():
       #surcharge from tales
       field._surcharged_tales(dict(title='string:TestTitle'), ['title'])
-      self.assertTrue('title' in field.delegated_list)
+      self.assertIn('title', field.delegated_list)
       self.assertTrue(field.values['title'], 'OrigTitle')
       self.assertEqual(field.tales['title'], 'string:TestTitle')
 
     def delegate_tales():
       # delegate the field from tales view
       field._surcharged_tales(dict(title='string:TestTitle'), [])
-      self.assertTrue('title' not in field.delegated_list)
-      self.assertTrue('title' not in field.values)
-      self.assertTrue('title' not in field.tales)
+      self.assertNotIn('title', field.delegated_list)
+      self.assertNotIn('title', field.values)
+      self.assertNotIn('title', field.tales)
 
     surcharge_edit()
     delegate_edit()

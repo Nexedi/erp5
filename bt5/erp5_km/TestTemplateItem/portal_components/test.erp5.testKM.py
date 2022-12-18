@@ -430,7 +430,7 @@ class TestKM(TestKMMixIn):
     #self.changeSkin('KM')
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertTrue(self.web_front_knowledge_pad.getTitle() in response.getBody())
+    self.assertIn(self.web_front_knowledge_pad.getTitle(), response.getBody())
 
     # Web Front gadgets
     web_front_gadgets = [km_my_tasks_gadget,  km_my_documents_gadget,  km_my_contacts_gadget]
@@ -441,7 +441,7 @@ class TestKM(TestKMMixIn):
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
     for gadget in web_front_gadgets:
-      self.assertTrue(gadget.getTitle() in response.getBody())
+      self.assertIn(gadget.getTitle(), response.getBody())
 
   def test_05MyTaskGadget(self):
     """ Check My Task Gadgets """
@@ -479,8 +479,8 @@ class TestKM(TestKMMixIn):
                                                   self.webpage.getRelativeUrl(),
                                                   km_my_tasks_box_url)
                                , self.auth)]:
-      self.assertTrue(project.getTitle() in response.getBody())
-      self.assertTrue(visit.getTitle() in response.getBody())
+      self.assertIn(project.getTitle(), response.getBody())
+      self.assertIn(visit.getTitle(), response.getBody())
 
   def test_06MyDocumentsGadget(self):
     """ Check My Document Gadgets """
@@ -522,8 +522,8 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),
                                                  km_my_documents_gadget_box_url)
                          , self.auth)]:
-      self.assertTrue(web_page.getTitle() in response.getBody())
-      self.assertTrue(presentation.getTitle() in response.getBody())
+      self.assertIn(web_page.getTitle(), response.getBody())
+      self.assertIn(presentation.getTitle(), response.getBody())
 
   def test_07MyContactsGadget(self):
     """ Check My Contacts Gadgets """
@@ -559,7 +559,7 @@ class TestKM(TestKMMixIn):
                                                  self.webpage.getRelativeUrl(),
                                                  km_my_contacts_gadget_box_url)
                          , self.auth)]:
-      self.assertTrue(person.getTitle() in response.getBody())
+      self.assertIn(person.getTitle(), response.getBody())
 
   def test_08WebSectionGadget(self):
     """ Check Web Section Gadgets """
@@ -578,7 +578,7 @@ class TestKM(TestKMMixIn):
       self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_gadgets:
-      self.assertTrue(gadget.getTitle() in response.getBody())
+      self.assertIn(gadget.getTitle(), response.getBody())
 
   def test_10LatestContentGadget(self):
     """ Check Latest Content Gadgets """
@@ -619,7 +619,7 @@ class TestKM(TestKMMixIn):
     presentation.publish()
     self.tic()
     self.changeSkin('KM')
-    self.assertTrue(presentation.getTitle() in
+    self.assertIn(presentation.getTitle(),
           self.publish(self.base_url_pattern
                     %(self.web_section_url+'/%s' %latest_docs_subsection.getId(),
                       gadget_view_form_id,
@@ -647,7 +647,7 @@ class TestKM(TestKMMixIn):
                                           self.web_section_knowledge_pad,
                                           km_assigned_member_gadget)
     self.changeSkin('KM')
-    self.assertTrue('No result' in
+    self.assertIn('No result',
           self.publish(self.base_url_pattern
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),
               gadget_view_form_id,
@@ -661,7 +661,7 @@ class TestKM(TestKMMixIn):
     assignment =  person.newContent(portal_type = 'Assignment', destination_project_value=project)
     self.tic()
     self.changeSkin('KM')
-    self.assertTrue(person.getTitle() in
+    self.assertIn(person.getTitle(),
                     self.publish(self.base_url_pattern
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),
               gadget_view_form_id,
@@ -687,7 +687,7 @@ class TestKM(TestKMMixIn):
       self.web_section_url + '/WebSection_viewKnowledgePadColumn?gadget_mode=', self.auth)
 
     for gadget in web_section_content_gadgets:
-      self.assertTrue(gadget.getTitle() in response.getBody())
+      self.assertIn(gadget.getTitle(), response.getBody())
 
   def test_12RelationGadget(self):
     """ Check  Relation Gadgets """
@@ -716,7 +716,7 @@ class TestKM(TestKMMixIn):
                                      gadget_view_form_id)
 
     # no related docs should exist
-    self.assertTrue('No result.' in relation_form_renderer())
+    self.assertIn('No result.', relation_form_renderer())
 
     # set related docs
     similar_doc = portal.web_page_module.newContent(
@@ -738,9 +738,9 @@ class TestKM(TestKMMixIn):
 
     self.changeSkin('KM')
     # .. should be in gadget html
-    self.assertTrue(similar_doc.getTitle() in relation_form_renderer())
-    self.assertTrue(predecessor_doc.getTitle() in relation_form_renderer())
-    self.assertTrue(successor_doc.getTitle() in relation_form_renderer())
+    self.assertIn(similar_doc.getTitle(), relation_form_renderer())
+    self.assertIn(predecessor_doc.getTitle(), relation_form_renderer())
+    self.assertIn(successor_doc.getTitle(), relation_form_renderer())
 
   def test_15GadgetServerSideFailure(self):
     """
@@ -752,7 +752,7 @@ class TestKM(TestKMMixIn):
 
     url = '%s/ERP5Site_viewHomeAreaRenderer?gadget_mode=web_front' %self.web_site_url
     response = self.publish(url, self.auth)
-    self.assertTrue(self.web_front_knowledge_pad.getTitle() in response.getBody())
+    self.assertIn(self.web_front_knowledge_pad.getTitle(), response.getBody())
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(uids=[gadget.getUid()])
@@ -760,25 +760,25 @@ class TestKM(TestKMMixIn):
 
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
-    self.assertTrue(gadget.getTitle() in response.getBody())
+    self.assertIn(gadget.getTitle(), response.getBody())
 
     # set non existent view_form
     old_gadget_view_form_id =  gadget.view_form_id
     gadget.view_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
-    self.assertTrue('Server side error' in response.getBody())
+    self.assertIn('Server side error', response.getBody())
     gadget.view_form_id = old_gadget_view_form_id
     response = self.publish(url, self.auth)
-    self.assertTrue('Server side error' not in response.getBody())
+    self.assertNotIn('Server side error', response.getBody())
 
     # set non existent edit_form
     old_gadget_edit_form_id =  gadget.edit_form_id
     gadget.edit_form_id = 'NO_SUCH_FORM_EXISTS'
     response = self.publish(url, self.auth)
-    self.assertTrue('Server side error' in response.getBody())
+    self.assertIn('Server side error', response.getBody())
     gadget.edit_form_id = old_gadget_edit_form_id
     response = self.publish(url, self.auth)
-    self.assertTrue('Server side error' not in response.getBody())
+    self.assertNotIn('Server side error', response.getBody())
 
   def test_16WebSiteBrowserGadget(self):
     """
@@ -805,14 +805,14 @@ class TestKM(TestKMMixIn):
                                   gadget_view_form_id,
                                   self.website.getRelativeUrl(),
                                   box_url)
-    self.assertTrue(subsection.getTitle() not in
+    self.assertNotIn(subsection.getTitle(),
                     self.publish(url, self.auth).getBody())
 
     # make section visible
     subsection.edit(visible=True)
     self.tic()
     self.changeSkin('KM')
-    self.assertTrue(subsection.getTitle() in
+    self.assertIn(subsection.getTitle(),
                     self.publish(url, self.auth).getBody())
 
   def test_17AddGadgets(self):

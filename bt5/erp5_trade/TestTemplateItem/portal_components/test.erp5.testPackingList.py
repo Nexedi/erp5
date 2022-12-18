@@ -207,7 +207,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    self.assertFalse('Site Error' in packing_list.view())
+    self.assertNotIn('Site Error', packing_list.view())
     self.assertTrue(packing_list.isDivergent())
 
   def stepCheckNewPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
@@ -2088,7 +2088,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                source_project_value = project1,
                destination_project_value = project2 )
     order.setPaymentConditionEfficiency(1.0)
-    self.assertTrue('Site Error' not in order.view())
+    self.assertNotIn('Site Error', order.view())
 
 
   def testTransferOfOwnership(self, quiet=quiet):

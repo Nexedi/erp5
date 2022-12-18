@@ -370,9 +370,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                       stop_date = stop_date,
                       price_currency = self.price_currency
                      )
-    self.assertNotEquals( packing_list.getSourceSectionValue(), None)
-    self.assertNotEquals( packing_list.getSourceValue(), None)
-    self.assertNotEquals( packing_list.getSourceSectionValue(),
+    self.assertNotEqual( packing_list.getSourceSectionValue(), None)
+    self.assertNotEqual( packing_list.getSourceValue(), None)
+    self.assertNotEqual( packing_list.getSourceSectionValue(),
                           packing_list.getDestinationSectionValue() )
     sequence.edit(packing_list=packing_list)
 
@@ -1719,7 +1719,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       if len(found_list) == 0:
         LOG('TEST ERROR : Found a line with getInventoryList which is not expected.', 0, 'Found line : %s (inventory : %s) ; expected values with these attributes : %s' % (a_attributes, a_inventory, expected_list))
         LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
-        self.assertNotEquals(len(found_list), 0)
+        self.assertNotEqual(len(found_list), 0)
       found = found_list[0]
       LOG('found a line with inventory =', 0, repr(found['inventory']))
       del expected[found['id']]
@@ -2078,10 +2078,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                               'in your test method')
     params = dict(start_date=self.full_inventory_start_date_1)
     if getattr(self, 'full_inventory_resource_1', None) is not None:
-      self.assertNotEquals(sequence.get(self.full_inventory_resource_1), None)
+      self.assertNotEqual(sequence.get(self.full_inventory_resource_1), None)
       params['resource_value'] = sequence.get(self.full_inventory_resource_1)
     if getattr(self, 'full_inventory_node_1', None) is not None:
-      self.assertNotEquals(sequence.get(self.full_inventory_node_1), None)
+      self.assertNotEqual(sequence.get(self.full_inventory_node_1), None)
       params['destination_value'] = sequence.get(self.full_inventory_node_1)
     self.stepCreateFullInventoryAtTheDate(sequence, sequence_list, **params)
 
@@ -2092,10 +2092,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                               'in your test method')
     params = dict(start_date=self.full_inventory_start_date_2)
     if getattr(self, 'full_inventory_resource_2', None) is not None:
-      self.assertNotEquals(sequence.get(self.full_inventory_resource_2), None)
+      self.assertNotEqual(sequence.get(self.full_inventory_resource_2), None)
       params['resource_value'] = sequence.get(self.full_inventory_resource_2)
     if getattr(self, 'full_inventory_node_2', None) is not None:
-      self.assertNotEquals(sequence.get(self.full_inventory_node_2), None)
+      self.assertNotEqual(sequence.get(self.full_inventory_node_2), None)
       params['destination_value'] = sequence.get(self.full_inventory_node_2)
     self.stepCreateFullInventoryAtTheDate(sequence, sequence_list, **params)
 
@@ -2141,9 +2141,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                         destination_value=node,
                         start_date=movement['start_date'],
                         price_currency=self.price_currency)
-      self.assertNotEquals(packing_list.getSourceSectionValue(), None)
-      self.assertNotEquals(packing_list.getSourceValue(), None)
-      self.assertNotEquals(packing_list.getSourceSectionValue(),
+      self.assertNotEqual(packing_list.getSourceSectionValue(), None)
+      self.assertNotEqual(packing_list.getSourceValue(), None)
+      self.assertNotEqual(packing_list.getSourceSectionValue(),
                            packing_list.getDestinationSectionValue())
 
       line = packing_list.newContent(
@@ -2195,7 +2195,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       raise UnboundLocalError('Please Assign self.resource_1 '
                               'in your test method')
     resource_value = sequence.get(self.resource_1)
-    self.assertNotEquals(resource_value, None)
+    self.assertNotEqual(resource_value, None)
     self.stepCreatePackingListLine(sequence=sequence,
                                    sequence_list=sequence_list,
                                    resource_value=resource_value)
@@ -2209,7 +2209,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       raise UnboundLocalError('Please Assign self.resource_2 '
                               'in your test method')
     resource_value = sequence.get(self.resource_2)
-    self.assertNotEquals(resource_value, None)
+    self.assertNotEqual(resource_value, None)
     self.stepCreatePackingListLine(sequence=sequence,
                                    sequence_list=sequence_list,
                                    resource_value=resource_value)

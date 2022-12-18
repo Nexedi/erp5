@@ -89,7 +89,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         `b` int(11) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("SELECT b FROM X")
-    with self.assertRaisesRegexp(OperationalError,
+    with self.assertRaisesRegex(OperationalError,
                                  "Unknown column 'a' in 'field list'"):
       self.query("SELECT a FROM X")
 
@@ -106,7 +106,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         `b` int(11) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.query("SELECT b FROM X")
-    with self.assertRaisesRegexp(OperationalError,
+    with self.assertRaisesRegex(OperationalError,
                                  "Unknown column 'a' in 'field list'"):
       self.query("SELECT a FROM X")
 
@@ -192,7 +192,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
       CREATE TABLE `X` (
         `a` int(11) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
-    with self.assertRaisesRegexp(OperationalError,
+    with self.assertRaisesRegex(OperationalError,
                                  "Key 'idx_a' doesn't exist in table 'X'"):
       self.query("SELECT * FROM X USE INDEX (`idx_a`)")
 
