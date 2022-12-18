@@ -30,24 +30,30 @@
         this.element.querySelector('.monaco-container'),
         {
           autoIndent: true,
-          automaticLayout: true,
+          automaticLayout: window.ResizeObserver ? true : false,
+          experimental: {
+            stickyScroll: {
+              enabled: true,
+              maxLineCount: 3
+            }
+          }
         }
       );
 
       editor.addAction({
         id: 'save',
         label: 'Save',
-        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
         precondition: null,
         keybindingContext: null,
         contextMenuGroupId: 'navigation',
         contextMenuOrder: 1.5,
-        run: context.deferNotifySubmit.bind(context),
+        run: context.deferNotifySubmit.bind(context)
       });
 
       editor.getModel().updateOptions({
         tabSize: 2,
-        insertSpaces: true,
+        insertSpaces: true
       });
       editor.getModel().onDidChangeContent(deferNotifyChange);
     })
@@ -71,7 +77,7 @@
                   startColumn: err.character,
                   message: err.reason,
                   severity: monaco.MarkerSeverity.Error,
-                  source: 'jslint',
+                  source: 'jslint'
                 }))
             );
           }
@@ -81,7 +87,7 @@
       var model_language,
         state_dict = {
           key: options.key,
-          editable: options.editable === undefined ? true : options.editable,
+          editable: options.editable === undefined ? true : options.editable
         };
       if (
         options.portal_type === 'Web Page' ||
@@ -149,10 +155,10 @@
                 return [
                   {
                     range: model.getFullModelRange(),
-                    text,
-                  },
+                    text
+                  }
                 ];
-              },
+              }
             }
           );
 
@@ -163,7 +169,7 @@
           // lint with typescript compiler
           monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
-            noSyntaxValidation: false,
+            noSyntaxValidation: false
           });
 
           monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -171,7 +177,7 @@
             allowNonTsExtensions: true,
             checkJs: true,
             allowJs: true,
-            module: monaco.languages.typescript.ModuleKind.UMD,
+            module: monaco.languages.typescript.ModuleKind.UMD
           });
 
           // Type mapping for Nexedi libraries
