@@ -154,9 +154,9 @@ class TestRSS(ERP5TypeTestCase):
     portal.Test_view.manage_addField('listbox_link',  'listbox_link',  'StringField')
 
     listbox=portal.Test_view.listbox
-    self.assertNotEquals(listbox, None)
+    self.assertNotEqual(listbox, None)
     listbox_link=portal.Test_view.listbox_link
-    self.assertNotEquals(listbox_link,  None)
+    self.assertNotEqual(listbox_link,  None)
 
     listbox.manage_edit_xmlrpc(
         dict(columns=[('title', 'Title'),

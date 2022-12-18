@@ -169,7 +169,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           path = path[cat]
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -1312,11 +1312,11 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     # modify price on movements :
     cell_1 = model_line.getCell('contribution_share/employee',
         base_id='movement')
-    self.assertNotEquals(cell_1, None)
+    self.assertNotEqual(cell_1, None)
     cell_1.edit(price=0.2)
     cell_2 = model_line.getCell('contribution_share/employer',
         base_id='movement')
-    self.assertNotEquals(cell_2, None)
+    self.assertNotEqual(cell_2, None)
     cell_2.edit(price=0.6)
 
   def stepModelDelUrssafModelLine(self, sequence=None, **kw):
@@ -1437,7 +1437,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     self.assertEqual(model_company_alt_url in model_reference_dict, True)
     self.assertEqual(model_reference_dict[model_company_alt_url],
         ['social_insurance'])
-    self.assertNotEquals(model_country_url in model_reference_dict, True)
+    self.assertNotEqual(model_country_url in model_reference_dict, True)
 
     # check the object list :
     object_list = paysheet.getInheritedObjectValueList(portal_type_list=\
@@ -1448,15 +1448,15 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                                            # in the list
     over_time_duration = paysheet.getAnnotationLineFromReference(\
         'over_time_duration')
-    self.assertNotEquals(over_time_duration, None)
+    self.assertNotEqual(over_time_duration, None)
     over_time_duration.getQuantity(1)
     worked_time_duration = paysheet.getAnnotationLineFromReference(\
         'worked_time_duration')
-    self.assertNotEquals(worked_time_duration, None)
+    self.assertNotEqual(worked_time_duration, None)
     worked_time_duration.getQuantity(2)
     social_insurance = paysheet.getAnnotationLineFromReference(\
         'social_insurance')
-    self.assertNotEquals(social_insurance, None)
+    self.assertNotEqual(social_insurance, None)
     social_insurance.getQuantity(3)
 
   def stepCheckPaySheetTransaction_getMovementListReturn(self,
@@ -1950,7 +1950,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           for prop in property_list:
             prop_from_model_line = getattr(model_line, prop, None)
             # check a value is set on the model line
-            self.assertNotEquals(prop_from_model_line, None)
+            self.assertNotEqual(prop_from_model_line, None)
             prop_from_paysheet_line = getattr(paysheet_line, prop, None)
             # check the property is the same on model_line and paysheet_line
             self.assertEqual(prop_from_model_line, prop_from_paysheet_line)
@@ -3224,7 +3224,7 @@ class TestPayroll(TestPayrollMixin):
 
     related_applied_rule = ps.getCausalityRelatedValue(
                                 portal_type='Applied Rule')
-    self.assertNotEquals(related_applied_rule, None)
+    self.assertNotEqual(related_applied_rule, None)
 
     # build accounting lines
     ps.confirm()

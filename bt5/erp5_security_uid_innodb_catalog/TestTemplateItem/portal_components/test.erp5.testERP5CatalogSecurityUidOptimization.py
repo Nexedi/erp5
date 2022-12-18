@@ -152,11 +152,11 @@ CREATE TABLE alternate_roles_and_users (
       # those entries are in alternate security table
       alternate_roles_and_users = sql_connection.manage_test(
         "SELECT * from alternate_roles_and_users").dictionaries()
-      self.assertTrue(dict(uid=user1.getUid(),
-                           alternate_security_uid=user1_alternate_security_uid) in
+      self.assertIn(dict(uid=user1.getUid(),
+                           alternate_security_uid=user1_alternate_security_uid),
                       alternate_roles_and_users)
-      self.assertTrue(dict(uid=user2.getUid(),
-                           alternate_security_uid=user2_alternate_security_uid) in
+      self.assertIn(dict(uid=user2.getUid(),
+                           alternate_security_uid=user2_alternate_security_uid),
                       alternate_roles_and_users)
 
       # low level check of the security query of a logged in user
@@ -203,8 +203,8 @@ CREATE TABLE alternate_roles_and_users (
 
       alternate_roles_and_users = sql_connection.manage_test(
         "SELECT * from alternate_roles_and_users").dictionaries()
-      self.assertTrue(dict(uid=career.getUid(),
-                           alternate_security_uid=user1_alternate_security_uid) in
+      self.assertIn(dict(uid=career.getUid(),
+                           alternate_security_uid=user1_alternate_security_uid),
                       alternate_roles_and_users)
       self.loginByUserName('user1')
       self.assertEqual([career],

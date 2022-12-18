@@ -5,7 +5,7 @@ class TestWorkflowMixin(ERP5TypeTestCase):
     # action_name look like: "Documents to validate (3)"
     self.assertEqual(action_name[-1], ')')
     left_parenthesis_offset = action_name.rfind('(')
-    self.assertNotEquals(left_parenthesis_offset, -1)
+    self.assertNotEqual(left_parenthesis_offset, -1)
     return int(action_name[left_parenthesis_offset + 1:-1])
 
   def checkWorklist(self, action_list, name, count,

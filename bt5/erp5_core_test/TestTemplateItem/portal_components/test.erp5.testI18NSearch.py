@@ -80,10 +80,10 @@ class TestI18NSearch(ERP5TypeTestCase):
     self.assertEqual(result[0].getPath(), self.person1.getPath())
 
     # check sort on fulltext column
-    self.assertTrue('ORDER BY\n  `full_text`.`SearchableText` ASC' in self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText', 'ascending'),), src__=1))
+    self.assertIn('ORDER BY\n  `full_text`.`SearchableText` ASC', self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText', 'ascending'),), src__=1))
 
     # check sort on fulltext search score
-    self.assertTrue('ORDER BY\n  full_text_SearchableText__score__ ASC' in self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText__score__', 'ascending'),), src__=1))
+    self.assertIn('ORDER BY\n  full_text_SearchableText__score__ ASC', self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText__score__', 'ascending'),), src__=1))
 
   @expectedFailure
   def test_catalog_full_text_title(self):
@@ -114,19 +114,19 @@ class TestI18NSearch(ERP5TypeTestCase):
       self.assertEqual(result[0].getPath(), self.person3.getPath())
 
     # check sort on fulltext column
-    self.assertFalse('ORDER BY\n  title__score__ ASC' in self.portal.portal_catalog(**{
+    self.assertNotIn('ORDER BY\n  title__score__ ASC', self.portal.portal_catalog(**{
       'catalog_full_text.title':'Faure',
       'sort_on':(('catalog_full_text.title', 'ascending'),),
       'src__':1
       }))
 
     # check sort on fulltext search score
-    self.assertTrue('ORDER BY\n  catalog_full_text_title__score__' in self.portal.portal_catalog(**{
+    self.assertIn('ORDER BY\n  catalog_full_text_title__score__', self.portal.portal_catalog(**{
       'catalog_full_text.title':'Faure',
       'sort_on':(('catalog_full_text.title__score__', 'ascending'),),
       'src__':1
       }))
-    self.assertTrue('ORDER BY\n  catalog_full_text_title__score__' in self.portal.portal_catalog(**{
+    self.assertIn('ORDER BY\n  catalog_full_text_title__score__', self.portal.portal_catalog(**{
       'catalog_full_text.title':'Faure',
       'sort_on':(('title__score__', 'ascending'),),
       'src__':1
@@ -156,13 +156,13 @@ class TestI18NSearch(ERP5TypeTestCase):
       self.assertEqual(result[0].getPath(), self.person3.getPath())
 
     # check fulltext search for automatically generated related keys.
-    self.assertTrue('MATCH' in self.portal.portal_catalog(destination_title='Faure', src__=1))
+    self.assertIn('MATCH', self.portal.portal_catalog(destination_title='Faure', src__=1))
 
     # check sort on fulltext column
-    self.assertTrue('ORDER BY\n  `catalog`.`title` ASC' in self.portal.portal_catalog(title='Faure', sort_on=(('title', 'ascending'),), src__=1))
+    self.assertIn('ORDER BY\n  `catalog`.`title` ASC', self.portal.portal_catalog(title='Faure', sort_on=(('title', 'ascending'),), src__=1))
 
     # check sort on fulltext search score
-    self.assertTrue('ORDER BY\n  catalog_full_text_title__score__' in self.portal.portal_catalog(title='Faure', sort_on=(('title__score__', 'ascending'),), src__=1))
+    self.assertIn('ORDER BY\n  catalog_full_text_title__score__', self.portal.portal_catalog(title='Faure', sort_on=(('title__score__', 'ascending'),), src__=1))
 
 def test_suite():
   suite = unittest.TestSuite()

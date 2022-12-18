@@ -601,7 +601,7 @@ return json.dumps({
     ))
     if not "id" in response:
       raise ValueError("Unexcpected Answer %s" % response)
-    self.assertEquals(self.portal.REQUEST.RESPONSE.getStatus(), 201)
+    self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
     person = self.portal.restrictedTraverse(response['id'].encode())
     self.assertEqual(person.getTitle(), self.id_template)
@@ -648,7 +648,7 @@ return json.dumps({
     ))
     if not "id" in response:
       raise ValueError("Unexcpected Answer %s" % response)
-    self.assertEquals(self.portal.REQUEST.RESPONSE.getStatus(), 201)
+    self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
     organisation = self.portal.restrictedTraverse(response['id'].encode())
     self.assertEqual(organisation.getTitle(), self.id_template)
@@ -661,7 +661,7 @@ return json.dumps({
     ))
     if not "id" in response:
       raise ValueError("Unexcpected Answer %s" % response)
-    self.assertEquals(self.portal.REQUEST.RESPONSE.getStatus(), 201)
+    self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
     person = self.portal.restrictedTraverse(response['id'].encode())
     self.assertEqual(person.getTitle(), self.id_template)

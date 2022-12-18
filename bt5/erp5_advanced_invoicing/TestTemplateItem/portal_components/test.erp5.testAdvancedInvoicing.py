@@ -145,7 +145,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(
       portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
+    self.assertNotEqual(invoice, None)
     invoice.start()
     self.assertEqual('started', invoice.getSimulationState())
 
@@ -186,7 +186,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   def stepChangeQuantityDoubledOnInvoice(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     invoice = packing_list.getCausalityRelatedValue(portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
+    self.assertNotEqual(invoice, None)
     invoice_line_list = invoice.getMovementList()
     self.assertEqual(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]
@@ -279,7 +279,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     self.assertEqual([], invoice.getDivergenceList())
 
     invoice_transaction  = invoice.getCausalityRelatedValue()
-    self.assertNotEquals(invoice_transaction, None)
+    self.assertNotEqual(invoice_transaction, None)
     self.assertEqual('solved', invoice_transaction.getCausalityState())
 
   def test_AcceptQuantityDivergenceOnInvoiceWithStoppedPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):

@@ -108,7 +108,7 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     }
     payslip_content = test_pay_sheet_transaction.PaySheetTransaction_getPayslipData()
     for key, value in expected_payslip_content.iteritems():
-      self.assertAlmostEquals(value, payslip_content[key])
+      self.assertAlmostEqual(value, payslip_content[key])
 
     expected_non_contribution_dict_list= [
       {'title': 'AMOUNT NON SUBJECT TO CONTRIBUTION', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
@@ -120,12 +120,12 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     ]
 
     non_contribution_dict_list = payslip_content['non_contribution_dict_list']
-    self.assertEquals(len(non_contribution_dict_list), len(expected_non_contribution_dict_list))
+    self.assertEqual(len(non_contribution_dict_list), len(expected_non_contribution_dict_list))
     for index in  range(len(expected_non_contribution_dict_list)):
       expected_value_dict = expected_non_contribution_dict_list[index]
       value_dict = non_contribution_dict_list[index]
       for key, value in expected_value_dict.iteritems():
-        self.assertEquals(value_dict[key], value)
+        self.assertEqual(value_dict[key], value)
 
     expected_contribution_dict_list = [
       {'title': 'FIRST NAME LAST NAME', 'base': 0, 'employee_price': 0, 'employee_total_price': 0, 'employer_price': 0, 'employer_total_price': 0},
@@ -159,12 +159,12 @@ class TestSimplifiedPayslipReport(ERP5TypeTestCase):
     ]
 
     contribution_dict_list = payslip_content['contribution_dict_list']
-    self.assertEquals(len(contribution_dict_list), len(expected_contribution_dict_list))
+    self.assertEqual(len(contribution_dict_list), len(expected_contribution_dict_list))
     for index in  range(len(expected_contribution_dict_list)):
       expected_value_dict = expected_contribution_dict_list[index]
       value_dict = contribution_dict_list[index]
       for key, value in expected_value_dict.iteritems():
-        self.assertAlmostEquals(value_dict[key], value)
+        self.assertAlmostEqual(value_dict[key], value)
 
     test_pay_sheet_transaction.setStartDate(DateTime("2020/01/01"))
     self.tic()

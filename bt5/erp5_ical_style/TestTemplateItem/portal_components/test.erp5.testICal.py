@@ -104,10 +104,10 @@ class TestICal(ERP5TypeTestCase):
     self.tic()
 
     feed_dict = self.getICalFeed(module)
-    self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
-    self.assertTrue('END:VCALENDAR' in feed_dict)
-    self.assertTrue('BEGIN:VEVENT' in feed_dict)
-    self.assertTrue('END:VEVENT' in feed_dict)
+    self.assertIn('BEGIN:VCALENDAR', feed_dict)
+    self.assertIn('END:VCALENDAR', feed_dict)
+    self.assertIn('BEGIN:VEVENT', feed_dict)
+    self.assertIn('END:VEVENT', feed_dict)
     self.assertEqual(feed_dict['SUMMARY'], 'Event One')
     # if not set start date, it must be same as creation date
     # if not set end date, it must be same as start date
@@ -118,7 +118,7 @@ class TestICal(ERP5TypeTestCase):
     self.assertEqual(feed_dict['URL'],  event.absolute_url())
     self.assertEqual(feed_dict['UID'], 'uuid%s' % event.getUid())
     # there is no description
-    self.assertFalse('DESCRIPTION' in feed_dict)
+    self.assertNotIn('DESCRIPTION', feed_dict)
     # current workflow state - draft
     self.assertEqual(feed_dict['STATUS'], 'TENTATIVE')
 
@@ -142,7 +142,7 @@ class TestICal(ERP5TypeTestCase):
     self.tic()
 
     feed_dict = self.getICalFeed(module)
-    self.assertTrue(feed_dict['CATEGORIES'] in ('NEWSALEOP', 'New Opportunity')) # forward compatibility
+    self.assertIn(feed_dict['CATEGORIES'], ('NEWSALEOP', 'New Opportunity')) # forward compatibility
 
     # set stop date and change workflow state - assigned
     event.confirm()
@@ -177,10 +177,10 @@ class TestICal(ERP5TypeTestCase):
 
    # current workflow state - draft
     feed_dict = self.getICalFeed(module)
-    self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
-    self.assertTrue('END:VCALENDAR' in feed_dict)
-    self.assertTrue('BEGIN:VTODO' in feed_dict)
-    self.assertTrue('END:VTODO' in feed_dict)
+    self.assertIn('BEGIN:VCALENDAR', feed_dict)
+    self.assertIn('END:VCALENDAR', feed_dict)
+    self.assertIn('BEGIN:VTODO', feed_dict)
+    self.assertIn('END:VTODO', feed_dict)
     self.assertEqual(feed_dict['SUMMARY'], 'Task One')
     self.assertEqual(feed_dict['STATUS'], 'NEEDS-ACTION')
     self.assertEqual(feed_dict.get('PERCENT-COMPLETE', '0'), '0') # when it is zero it doesn't have to be there
@@ -232,7 +232,7 @@ class TestICal(ERP5TypeTestCase):
     self.portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
 
     listbox=self.portal.Test_view.listbox
-    self.assertNotEquals(listbox, None)
+    self.assertNotEqual(listbox, None)
 
     listbox.manage_edit_xmlrpc(
           dict(columns=[('title', 'Title'),
@@ -249,10 +249,10 @@ class TestICal(ERP5TypeTestCase):
     feed_string = self.portal.person_module.Test_view()
     feed_dict = self.parseICalFeed(feed_string)
 
-    self.assertTrue('BEGIN:VCALENDAR' in feed_dict)
-    self.assertTrue('END:VCALENDAR' in feed_dict)
-    self.assertTrue('BEGIN:VJOURNAL' in feed_dict)
-    self.assertTrue('END:VJOURNAL' in feed_dict)
+    self.assertIn('BEGIN:VCALENDAR', feed_dict)
+    self.assertIn('END:VCALENDAR', feed_dict)
+    self.assertIn('BEGIN:VJOURNAL', feed_dict)
+    self.assertIn('END:VJOURNAL', feed_dict)
     self.assertEqual(feed_dict['SUMMARY'], 'One')
     self.assertEqual(feed_dict['DESCRIPTION'], 'Person One')
     self.assertEqual(feed_dict['CREATED'], one.getCreationDate().HTML4().replace('-','').replace(':',''))

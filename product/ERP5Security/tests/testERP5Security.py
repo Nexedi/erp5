@@ -115,7 +115,7 @@ class UserManagementTestCase(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    self.assertNotEquals(uf.getUser(login), None)
+    self.assertNotEqual(uf.getUser(login), None)
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
@@ -524,7 +524,7 @@ class DuplicatePrevention(UserManagementTestCase):
     changed, = container.manage_pasteObjects(
       container.manage_copyObjects([user_value.getId()]),
     )
-    self.assertNotEquals(
+    self.assertNotEqual(
       container[changed['new_id']].Person_getUserId(),
       user_id,
     )
@@ -593,7 +593,7 @@ class DuplicatePrevention(UserManagementTestCase):
 
     # When generating an user id we check this user id already exists
     # and fail if we generate an already existant user id
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'user id P%i already exists' % (latest_user_id + 1),
         self.portal.person_module.newContent,
@@ -672,7 +672,7 @@ class TestPreferences(UserManagementTestCase):
     self._assertUserExists(login, new_password)
     self._assertUserDoesNotExists(login, password)
     # password is not stored in plain text
-    self.assertNotEquals(new_password, self.portal.restrictedTraverse(pas_user['path']).getPassword())
+    self.assertNotEqual(new_password, self.portal.restrictedTraverse(pas_user['path']).getPassword())
 
 
 class TestAssignmentAndRoles(UserManagementTestCase):
@@ -950,9 +950,9 @@ class TestMigration(UserManagementTestCase):
     self.tic()
     self._assertUserDoesNotExists('the_user', 'secret')
     self._assertUserExists('the_user', 'secret2')
-    self.assertFalse('erp5_users' in \
+    self.assertNotIn('erp5_users', \
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
-    self.assertFalse('erp5_users' in \
+    self.assertNotIn('erp5_users', \
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
   def test_ERP5LoginUserManagerMigration(self):
@@ -965,15 +965,15 @@ class TestMigration(UserManagementTestCase):
     self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
     portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
     self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
-    self.assertTrue('erp5_login_users' in \
+    self.assertIn('erp5_login_users', \
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
-    self.assertTrue('erp5_login_users' in \
+    self.assertIn('erp5_login_users', \
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
   def test_DuplicateUserIdPreventionDuringMigration(self):
     self._enableERP5UsersPlugin()
     pers = self._createERP5UserPerson('old_user_id', 'secret')
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'user id old_user_id already exists',
         self.portal.person_module.newContent,
@@ -996,7 +996,7 @@ class TestMigration(UserManagementTestCase):
       # tested here). So only check this constraint for as long as that
       # activity is present.
       if any(m.method_id == 'ERP5Site_disableERP5UserManager' for m in message_list):
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
           ValidationFailed,
           'user id old_user_id already exists',
           self.portal.person_module.newContent,
@@ -1006,7 +1006,7 @@ class TestMigration(UserManagementTestCase):
       return False
     self.tic(stop_condition=stop_condition)
     self.portal.person_module.newContent(portal_type='Person', reference='old_user_id')
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'user id old_user_id already exists',
         self.portal.person_module.newContent,
@@ -1025,7 +1025,7 @@ class TestMigration(UserManagementTestCase):
       return mock.DEFAULT
 
     with mock.patch.object(self.portal.portal_ids.__class__, 'generateNewId', side_effect=generateNewId):
-      self.assertRaisesRegexp(
+      self.assertRaisesRegex(
             ValidationFailed,
             'user id P1234 already exists',
             self.portal.person_module.newContent,
@@ -1035,7 +1035,7 @@ class TestMigration(UserManagementTestCase):
       self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
       def stop_condition(message_list):
         if any(m.method_id != 'immediateReindexObject' for m in message_list):
-          self.assertRaisesRegexp(
+          self.assertRaisesRegex(
             ValidationFailed,
             'user id P1234 already exists',
             self.portal.person_module.newContent,
@@ -1044,7 +1044,7 @@ class TestMigration(UserManagementTestCase):
         return False
       self.tic(stop_condition=stop_condition)
 
-      self.assertRaisesRegexp(
+      self.assertRaisesRegex(
           ValidationFailed,
           'user id P1234 already exists',
           self.portal.person_module.newContent,
@@ -1171,9 +1171,9 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     """Test users have the Member role.
     """
     self.loginAsUser(self.username)
-    self.assertTrue('Member' in
+    self.assertIn('Member',
             getSecurityManager().getUser().getRolesInContext(self.portal))
-    self.assertTrue('Member' in
+    self.assertIn('Member',
             getSecurityManager().getUser().getRoles())
 
   def testSimpleLocalRole(self):
@@ -1194,8 +1194,8 @@ class TestLocalRoleManagement(RoleManagementTestCase):
 
     obj = self._makeOne()
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
-    self.assertTrue('Assignor' in user.getRolesInContext(obj))
-    self.assertFalse('Assignee' in user.getRolesInContext(obj))
+    self.assertIn('Assignor', user.getRolesInContext(obj))
+    self.assertNotIn('Assignee', user.getRolesInContext(obj))
 
     # check if assignment change is effective immediately
     self.login()
@@ -1233,7 +1233,7 @@ class TestLocalRoleManagement(RoleManagementTestCase):
 
     obj = self._makeOne()
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
-    self.assertTrue('Assignor' in user.getRolesInContext(obj))
+    self.assertIn('Assignor', user.getRolesInContext(obj))
     self.assertEqual({('F1_G1_S1', 'Assignor')},
       obj.__ac_local_roles_group_id_dict__.get('Alternate'))
     self.abort()
@@ -1258,8 +1258,8 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     obj = self._makeOne()
     self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F2_G1_S1'))
-    self.assertTrue('Assignee' in user.getRolesInContext(obj))
-    self.assertFalse('Assignor' in user.getRolesInContext(obj))
+    self.assertIn('Assignee', user.getRolesInContext(obj))
+    self.assertNotIn('Assignor', user.getRolesInContext(obj))
     self.abort()
 
   def testSeveralFunctionsOnASingleAssignment(self):
@@ -1280,8 +1280,8 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     obj = self._makeOne()
     self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F2_G1_S1'))
-    self.assertTrue('Assignee' in user.getRolesInContext(obj))
-    self.assertFalse('Assignor' in user.getRolesInContext(obj))
+    self.assertIn('Assignee', user.getRolesInContext(obj))
+    self.assertNotIn('Assignor', user.getRolesInContext(obj))
     self.abort()
 
   def testAcquireLocalRoles(self):
@@ -1307,15 +1307,15 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     self.assertEqual(None, obj.__ac_local_roles__.get('F1_G1_S1'))
     # same testing with roles in context.
     self.loginAsUser(self.username)
-    self.assertTrue('Assignor' in
+    self.assertIn('Assignor',
             getSecurityManager().getUser().getRolesInContext(module))
-    self.assertFalse('Assignor' in
+    self.assertNotIn('Assignor',
             getSecurityManager().getUser().getRolesInContext(obj))
 
   def testLocalRoleWithTraverser(self):
     """Make sure that local role works correctly when traversing
     """
-    self.assert_(not self.portal.portal_types.Person.acquire_local_roles)
+    self.assertTrue(not self.portal.portal_types.Person.acquire_local_roles)
 
     self.getPersonModule().newContent(portal_type='Person',
                                       id='first_last',
@@ -1414,7 +1414,7 @@ class TestKeyAuthentication(RoleManagementTestCase):
 
     # encrypt & decrypt works
     key = erp5_auth_key_plugin.encrypt(reference)
-    self.assertNotEquals(reference, key)
+    self.assertNotEqual(reference, key)
     self.assertEqual(reference, erp5_auth_key_plugin.decrypt(key))
     base_url = portal.absolute_url(relative=1)
 
@@ -1422,24 +1422,24 @@ class TestKeyAuthentication(RoleManagementTestCase):
     # status code to login_form
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
-    self.assertTrue('location' in response.headers.keys())
+    self.assertIn('location', response.headers.keys())
     self.assertTrue(response.headers['location'].endswith('login_form'))
 
     # view front page we should be logged in if we use authentication key
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
+    self.assertIn(reference, response.getBody())
 
     # check if key authentication works other page than front page
     person_module = portal.person_module
     base_url = person_module.absolute_url(relative=1)
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
-    self.assertTrue('location' in response.headers.keys())
+    self.assertIn('location', response.headers.keys())
     self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
+    self.assertIn(reference, response.getBody())
 
     # check if key authentication works with web_mode too
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
@@ -1449,7 +1449,7 @@ class TestKeyAuthentication(RoleManagementTestCase):
     base_url = web_site.absolute_url(relative=1)
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
-    self.assertTrue('location' in response.headers.keys())
+    self.assertIn('location', response.headers.keys())
     self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
     # web site access
     response = self.publish('%s?__ac_key=%s' %(base_url, key))

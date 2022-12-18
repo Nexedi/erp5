@@ -97,7 +97,7 @@ class TestTabularDataTool(ERP5TypeTestCase):
                                      fillna_on_string=None)
     self.assertEqual(len(organisation_tabular), 2)
 
-    self.assertTrue('title' in organisation_tabular.columns.tolist())
+    self.assertIn('title', organisation_tabular.columns.tolist())
     organisationA_tabular = organisation_tabular[
                                 organisation_tabular['title'] == organisationA_title]
     self.assertEqual(len(organisationA_tabular), 1)
@@ -199,8 +199,8 @@ class TestTabularDataTool(ERP5TypeTestCase):
     inventory_tabular = self.portal.portal_tabular.getFromDocumentList(
                           inventory_list, property_name_list=["node_title", "title"])
     self.assertEqual(len(inventory_tabular), 1)
-    self.assertTrue('node_title' in inventory_tabular.columns.tolist())
-    self.assertTrue('title' in inventory_tabular.columns.tolist())
+    self.assertIn('node_title', inventory_tabular.columns.tolist())
+    self.assertIn('title', inventory_tabular.columns.tolist())
 
     # if explicitly specifies property_name_list,
     # the tabular only has the specified columns
@@ -212,8 +212,8 @@ class TestTabularDataTool(ERP5TypeTestCase):
     self.assertEqual(len(default_inventory_tabular), 1)
 
     # The inventory list is ragarged as Internal Packing Line List, so does not have node_title
-    self.assertFalse('node_title' in default_inventory_tabular.columns.tolist())
-    self.assertTrue('title' in default_inventory_tabular.columns.tolist())
+    self.assertNotIn('node_title', default_inventory_tabular.columns.tolist())
+    self.assertIn('title', default_inventory_tabular.columns.tolist())
 
     # If do not specify the property_names, it automatically add
     # all the Sale Packing List Line property and category names based on the portal type
@@ -221,7 +221,7 @@ class TestTabularDataTool(ERP5TypeTestCase):
     self.assertTrue(len(default_inventory_tabular.columns.tolist()) > 2)
 
     self.assertEqual(default_inventory_tabular.iloc[0]['title'], movement_title)
-    self.assertTrue('source_title' in default_inventory_tabular.columns.tolist())
+    self.assertIn('source_title', default_inventory_tabular.columns.tolist())
     # The inventory list is regarded as Sale Packing Line List, so it has source_title
     self.assertEqual(default_inventory_tabular.iloc[0]['source_title'], node_title)
 
@@ -529,7 +529,7 @@ class TestTabularDataTool(ERP5TypeTestCase):
       self.assertTrue(isinstance(report_dict, dict))
       self.assertEqual(report_dict['node_title'], node_value.getTitle())
       self.assertEqual(report_dict['inventory'], -20)
-      self.assertTrue('resource_title' in report_dict)
+      self.assertIn('resource_title', report_dict)
 
   def testReport(self):
     """
@@ -587,5 +587,5 @@ class TestTabularDataTool(ERP5TypeTestCase):
     empty_tabular = self.portal.portal_tabular(data_list=[])
     empty_tabular['a'] = [1,2,3]
     empty_tabular2 = self.portal.portal_tabular(data_list=[])
-    self.assertNotEquals(len(empty_tabular.columns), len(empty_tabular2.columns))
-    self.assertNotEquals(len(empty_tabular), len(empty_tabular2))
+    self.assertNotEqual(len(empty_tabular.columns), len(empty_tabular2.columns))
+    self.assertNotEqual(len(empty_tabular), len(empty_tabular2))

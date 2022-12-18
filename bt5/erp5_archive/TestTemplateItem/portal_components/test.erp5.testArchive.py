@@ -110,7 +110,7 @@ class TestArchive(InventoryAPITestCase):
     for url in url_list:
       path = '/' + portal_id + '/' + url
       #LOG('checkRelativeUrlInSQLPathList found path:',0,path)
-      self.assertTrue(path in path_list)
+      self.assertIn(path, path_list)
 
   def checkRelativeUrlNotInSQLPathList(self,url_list,connection_id=None):
     path_list = self.getSQLPathList(connection_id=connection_id)
@@ -118,7 +118,7 @@ class TestArchive(InventoryAPITestCase):
     for url in url_list:
       path = '/' + portal_id + '/' + url
       #LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
-      self.assertTrue(path not in  path_list)
+      self.assertNotIn(path,  path_list)
 
   @reindex
   def _makeInventory(self, date): # pylint: disable=arguments-differ

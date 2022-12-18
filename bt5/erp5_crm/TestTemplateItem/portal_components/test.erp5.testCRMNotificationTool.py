@@ -68,7 +68,7 @@ class TestCRMNotificationTool(TestNotificationTool):
     self.assertEqual('Mail Message', event.getPortalTypeName())
     self.assertEqual('Subject', event.getTitle())
     self.assertEqual('Message', event.getTextContent())
-    self.assertNotEquals(None, event.getStartDate())
+    self.assertNotEqual(None, event.getStartDate())
     self.assertEqual(person, event.getDestinationValue())
     self.assertEqual('started', event.getSimulationState())
 

@@ -290,7 +290,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
       return len(message) == 1, '\n'.join(message)
 
     def html_file(check_path):
-      self.assert_(*validate_html_file(source_path=check_path))
+      self.assertTrue(*validate_html_file(source_path=check_path))
 
     portal_skins_path = '%s/portal_skins' % self.portal.getId()
     for path in path_list:
@@ -384,7 +384,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
             if not callable(method):
               error_list.append('Form %s/%s : list_action "%s" is not callable.'\
                   % (form_path, field.id, list_action))
-    self.assert_(not len(error_list), '\n'.join(error_list))
+    self.assertTrue(not len(error_list), '\n'.join(error_list))
 
   def test_moduleListMethod(self):
     """Make sure that module's list method works."""
@@ -688,7 +688,7 @@ def makeTestMethod(validator, portal_type, view_name, bt_name):
       _, params = cgi.parse_header(content_type)
       charset = params.get('charset', charset)
 
-    self.assert_(*validate_xhtml( validator=validator,
+    self.assertTrue(*validate_xhtml( validator=validator,
                                   source=response.getBody().decode(charset),
                                   view_name=view_name,
                                   bt_name=bt_name))

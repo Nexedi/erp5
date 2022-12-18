@@ -68,7 +68,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     # draft document must be not be part of acknowledgements
     document_url_list = portal.portal_acknowledgements\
                          .getUnreadDocumentUrlList(**acknowledgement_tool_kw)
-    self.assertFalse(event.getRelativeUrl() in document_url_list)
+    self.assertNotIn(event.getRelativeUrl(), document_url_list)
 
     # validated document must be part of acknowledgements
     portal.portal_workflow.doActionFor(event, 'start_action')
@@ -76,7 +76,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     self.tic()
     document_url_list = portal.portal_acknowledgements\
                          .getUnreadDocumentUrlList(**acknowledgement_tool_kw)
-    self.assertTrue(event.getRelativeUrl() in document_url_list)
+    self.assertIn(event.getRelativeUrl(), document_url_list)
 
     # function in order to retrieve many times the list of acknowledgements
     def getEventAcknowlegementList():

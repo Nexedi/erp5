@@ -71,13 +71,13 @@ class TestPlanningBox(ERP5TypeTestCase):
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
     message = portal.foo_module.FooModule_createObjects()
-    self.assertTrue('Created Successfully' in message)
+    self.assertIn('Created Successfully', message)
 
   def stepCreateObjectLines(self, sequence = None, sequence_list = None, **kw):
     # Make sure that the status is clean.
     portal = self.getPortal()
     message = portal.foo_module['0'].Foo_createObjects(num=1)
-    self.assertTrue('Created Successfully' in message)
+    self.assertIn('Created Successfully', message)
     portal.foo_module['0'].Foo_editObjectLineDates()
 
   def stepRenderStructure(self, sequence = None, sequence_list = None, **kw):

@@ -100,7 +100,7 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(image_property, None)
      self.assertEqual("Embedded File", image_property.getPortalType())
      image_group = getattr(tile, "TileGroup0", None)
-     self.assertNotEquals(image_group, None)
+     self.assertNotEqual(image_group, None)
      self.assertEqual("Image Tile Group",image_group.getPortalType())
      splitted_image_list = image_group.objectValues(portal_type="Image")
      self.assertEqual(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
@@ -134,7 +134,7 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(image_transform, None)
      self.assertEqual("Embedded File", image_transform.getPortalType())
      image_group = getattr(tile_transformed, "TileGroup0", None)
-     self.assertNotEquals(image_group, None)
+     self.assertNotEqual(image_group, None)
      self.assertEqual("Image Tile Group",image_group.getPortalType())
      splitted_image_list = image_group.objectValues(portal_type="Image")
      self.assertEqual(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),

@@ -255,7 +255,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     original_date = DateTime().earliestTime() # lower precision of date
     new_date = DateTime(original_date + 10)
 
-    self.assertNotEquals(original_date, new_date)
+    self.assertNotEqual(original_date, new_date)
 
     supply = self._makeSupply(start_date_range_min=original_date)
     supply.validate()
@@ -469,7 +469,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     preference.setPreferredPricingOptimise(False)
     # every time modifying preference, need to clear cache
     self._clearCache()
-    self.assertEquals(preference.getPreferredPricingOptimise(), False)
+    self.assertEqual(preference.getPreferredPricingOptimise(), False)
     self._makeSections()
     self._makeResource(self.id())
     self.tic()
@@ -482,7 +482,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       resource_value=resource_value,
       source_section_value=source_section_value,
       destination_section_value=destination_section_value)
-    self.assertEquals(movement.getPrice(), None)
+    self.assertEqual(movement.getPrice(), None)
 
     supply = self._makeSupply(
       start_date_range_min='2014/01/01',
@@ -497,14 +497,14 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     self.tic()
 
-    self.assertEquals(movement.getPrice(), 100)
+    self.assertEqual(movement.getPrice(), 100)
     # only the flag is enabled, the behavior is same with not-optimised one
     preference.setPreferredPricingOptimise(True)
     preference.getPreferredPricingSupplyPathKeyCategoryList(
       ['resource', 'source_section', 'destination_section'])
     self.tic()
     self._clearCache()
-    self.assertEquals(movement.getPrice(), 100)
+    self.assertEqual(movement.getPrice(), 100)
 
     # With following setting, Movement_getPriceCalculationOperandDict creates
     # efficient query from the RDBMS point of view.
@@ -520,7 +520,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self._clearCache()
 
     movement.setPrice(None) # getPrice() sets the price, so clear it first.
-    self.assertEquals(movement.getPrice(), 100)
+    self.assertEqual(movement.getPrice(), 100)
     preference.setPreferredPricingOptimise(False)
     self._clearCache()
 
@@ -534,7 +534,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     preference = getattr(self.getPreferenceTool(), 'test_system_preference')
     preference.setPreferredPricingOptimise(True)
     self._clearCache()
-    self.assertEquals(preference.getPreferredPricingOptimise(), True)
+    self.assertEqual(preference.getPreferredPricingOptimise(), True)
     self._makeSections()
     self._makeResource(self.id())
     self.tic()
@@ -577,7 +577,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       self._clearCache()
       self.tic()
       movement.setPrice(None)
-      self.assertEquals(movement.getPrice(), 10)
+      self.assertEqual(movement.getPrice(), 10)
     elif self.delivery_portal_type in ('Purchase Order', 'Internal Order'):
       preference.setPreferredPurchaseMovementSupplyPathTypeList(
         ['Sale Supply Line'])
@@ -586,7 +586,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       self._clearCache()
       self.tic()
       movement.setPrice(None)
-      self.assertEquals(movement.getPrice(), 5)
+      self.assertEqual(movement.getPrice(), 5)
     preference.setPreferredPricingOptimise(False)
     self._clearCache()
 

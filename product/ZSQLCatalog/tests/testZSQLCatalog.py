@@ -49,7 +49,7 @@ class TestSQLCatalog(unittest.TestCase):
     self._catalog.sql_catalog_object_list = ('z_dummy_method', )
 
   def test_getFilterableMethodList(self):
-    self.assertTrue(self._catalog.z_dummy_method in
+    self.assertIn(self._catalog.z_dummy_method,
                     self._catalog.getFilterableMethodList())
 
   def test_getRecordByUid(self):

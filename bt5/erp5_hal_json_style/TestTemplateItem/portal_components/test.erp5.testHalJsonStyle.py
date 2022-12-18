@@ -194,14 +194,14 @@ class TestBase_getRequestHeader(ERP5HALJSONStyleSkinsMixin):
 
   @changeSkin('Hal')
   def test_getRequestHeader_key_error(self):
-    self.assertEquals(
+    self.assertEqual(
         self.portal.Base_getRequestHeader('foo'),
         None
         )
 
   @changeSkin('Hal')
   def test_getRequestHeader_default_value(self):
-    self.assertEquals(
+    self.assertEqual(
         self.portal.Base_getRequestHeader('foo', default='bar'),
         'bar'
         )
@@ -255,7 +255,7 @@ class TestBase_handleAcceptHeader(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "*/*"')
   @changeSkin('Hal')
   def test_handleAcceptHeader_star_accept(self):
-    self.assertEquals(
+    self.assertEqual(
         self.portal.Base_handleAcceptHeader(['application/vnd+test',
                                              'application/vnd+test2']),
         'application/vnd+test'
@@ -265,7 +265,7 @@ class TestBase_handleAcceptHeader(ERP5HALJSONStyleSkinsMixin):
             'return "application/vnd+2test"')
   @changeSkin('Hal')
   def test_handleAcceptHeader_matching_type(self):
-    self.assertEquals(
+    self.assertEqual(
         self.portal.Base_handleAcceptHeader(['application/vnd+test',
                                              'application/vnd+2test']),
         'application/vnd+2test'
@@ -275,7 +275,7 @@ class TestBase_handleAcceptHeader(ERP5HALJSONStyleSkinsMixin):
             'return "application/vnd+2test"')
   @changeSkin('Hal')
   def test_handleAcceptHeader_non_matching_type(self):
-    self.assertEquals(
+    self.assertEqual(
         self.portal.Base_handleAcceptHeader(['application/vnd+test']),
         None
         )
@@ -289,8 +289,8 @@ class TestERP5Document_getHateoas_general(ERP5HALJSONStyleSkinsMixin):
     document = self._makeDocument()
     fake_request = do_fake_request("GET")
     result = document.ERP5Document_getHateoas(REQUEST=fake_request)
-    self.assertEquals(fake_request.RESPONSE.status, 406)
-    self.assertEquals(result, "")
+    self.assertEqual(fake_request.RESPONSE.status, 406)
+    self.assertEqual(result, "")
 
   @skip('TODO')
   def test_getHateoas_drop_restricted(self):
@@ -316,8 +316,8 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     document = self._makeDocument()
     fake_request = do_fake_request("POST")
     result = document.ERP5Document_getHateoas(REQUEST=fake_request)
-    self.assertEquals(fake_request.RESPONSE.status, 405)
-    self.assertEquals(result, "")
+    self.assertEqual(fake_request.RESPONSE.status, 405)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -332,8 +332,8 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     #           From test point of view it does not make much sense since this should never happen in reality
     #           ERP5Document_getHateoas should be always called on portal, Web Site, or Web Section.
     result = document.ERP5Document_getHateoas(REQUEST=fake_request)
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -397,8 +397,8 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     fake_request = do_fake_request("GET")
     # Note empty relative_url to force `is_portal_root` == True and to obtain "raw_search" in the links
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request)
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -475,8 +475,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     document = self._makeDocument()
     fake_request = do_fake_request("POST")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl())
-    self.assertEquals(fake_request.RESPONSE.status, 405)
-    self.assertEquals(result, "")
+    self.assertEqual(fake_request.RESPONSE.status, 405)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -488,8 +488,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl())
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -549,8 +549,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasDocument_portal_workflow(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url='portal_workflow')
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -581,8 +581,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -717,8 +717,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     document = self._makeDocument()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="not_existing_action")
-    self.assertEquals(fake_request.RESPONSE.status, 404)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), None)
+    self.assertEqual(fake_request.RESPONSE.status, 404)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), None)
     self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -739,8 +739,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -761,8 +761,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -789,8 +789,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -808,8 +808,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasDocument_base_domain_view(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url='portal_domains/foo_domain', view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -847,8 +847,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       mode="traverse",
       relative_url=document.getRelativeUrl(),
       view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -881,8 +881,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -940,7 +940,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       'form_view'
     )
 
-    self.assertFalse('_actions' in result_dict['_embedded']['_view'])
+    self.assertNotIn('_actions', result_dict['_embedded']['_view'])
 
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -954,8 +954,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="Base_viewMetadata")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1065,8 +1065,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request, mode="traverse", relative_url="portal_skins/erp5_ui_test/Foo_viewDummyDialog")
 
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1111,8 +1111,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       view="view"
       )
 
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1151,8 +1151,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="history")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1228,8 +1228,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasForm_no_view(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url="portal_skins/erp5_ui_test/Foo_view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1283,8 +1283,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       relative_url=document.getRelativeUrl(),
       view="Base_viewDocumentList"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1299,7 +1299,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       ''
     )
 
-    self.assertTrue('_actions' not in result_dict['_embedded']['_view'])
+    self.assertNotIn('_actions', result_dict['_embedded']['_view'])
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1312,8 +1312,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     document.setTitle('\xe9\xcf\xf3\xaf')
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1330,8 +1330,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasDocument_bad_method(self):
     fake_request = do_fake_request("POST")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search")
-    self.assertEquals(fake_request.RESPONSE.status, 405)
-    self.assertEquals(result, "")
+    self.assertEqual(fake_request.RESPONSE.status, 405)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1341,8 +1341,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_no_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1375,8 +1375,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_limit_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", limit=1)
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1406,8 +1406,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_select_list_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", select_list=["id", "relative_url"])
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1441,8 +1441,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
                    "getTranslatedValidationStateTitle",],
       group_by="validation_state"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1469,8 +1469,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
                    "indexation_timestamp"],
       group_by="indexation_timestamp"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1496,8 +1496,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     query = "ANIMPOSSIBLECOUSCOUSVALUE" + "FOOTOFINDINDATA"
 
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", query=query)
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1534,8 +1534,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
       mode="search",
       query='bar:"foo"'
     )
-    self.assertEquals(fake_request.RESPONSE.status, 400)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 400)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1549,8 +1549,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_local_roles_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", local_roles=["Assignor", "Assignee"])
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1579,8 +1579,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
                                                                          select_list='count(*)',
                                                                          query='portal_type:"Base Category"',
                                                                          group_by="portal_type")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1607,8 +1607,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_selection_domain_category_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", selection_domain=json.dumps({'foo_category': 'a/a2'}))
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1637,8 +1637,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_selection_domain_domain_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", selection_domain=json.dumps({'foo_domain': 'a/a1'}))
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -1667,7 +1667,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_default_param_json_param(self):
     fake_request = do_fake_request("GET")
 
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
       TypeError,
       # "Unknown columns.*'\\xc3\\xaa'.",
       "Unknown columns.*\\\\xc3\\\\xaa.*",
@@ -2104,8 +2104,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       list_method='Test_listObjects',
       select_list=['credit_price', 'debit_price']
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2349,14 +2349,14 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       default_param_json='eyJwb3J0YWxfdHlwZSI6IFsiRm9vIl0sICJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZX0=',
       sort_on=json.dumps(["title","descending"])
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
 
     selection = selection_tool.getSelectionFor(selection_name)
-    self.assertEquals(selection.method_path, '/%s/foo_module/Test_listCatalog' % self.portal.getId())
-    self.assertEquals(
+    self.assertEqual(selection.method_path, '/%s/foo_module/Test_listCatalog' % self.portal.getId())
+    self.assertEqual(
       selection.getParams(), {
         'local_roles': ['Manager'],
         'full_text': 'id:"foo"',
@@ -2364,15 +2364,15 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
         'portal_type': ['Foo'],
         'limit': 1000
       })
-    self.assertEquals(selection.getSortOrder(), [('title', 'DESC')])
-    self.assertEquals(selection.columns, [('title', 'Title')])
-    self.assertEquals(selection.getDomainPath(), ['foo_domain', 'foo_category'])
-    self.assertEquals(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
-    self.assertEquals(selection.flat_list_mode, 0)
-    self.assertEquals(selection.domain_tree_mode, 1)
-    self.assertEquals(selection.report_tree_mode, 0)
+    self.assertEqual(selection.getSortOrder(), [('title', 'DESC')])
+    self.assertEqual(selection.columns, [('title', 'Title')])
+    self.assertEqual(selection.getDomainPath(), ['foo_domain', 'foo_category'])
+    self.assertEqual(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
+    self.assertEqual(selection.flat_list_mode, 0)
+    self.assertEqual(selection.domain_tree_mode, 1)
+    self.assertEqual(selection.report_tree_mode, 0)
     self.assertTrue(isinstance(selection.domain, DomainSelection))
-    self.assertEquals(selection.domain.domain_dict,
+    self.assertEqual(selection.domain.domain_dict,
                       {'foo_category': ('portal_categories', 'foo_category/a/a2'),
                        'foo_domain': ('portal_domains', 'foo_domain/a/a1')})
 
@@ -2391,8 +2391,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
 
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2417,8 +2417,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       query='uid:"%s"' % document.getUid(),
       select_list=['title'],
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2537,8 +2537,8 @@ return portal.portal_simulation.getInventoryList(section_uid=context.getUid())
       select_list=['total_price', 'total_quantity']
     )
 
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), "application/hal+json")
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), "application/hal+json")
 
     result_dict = json.loads(result)
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
@@ -2561,8 +2561,8 @@ class TestERP5Document_getHateoas_mode_form(ERP5HALJSONStyleSkinsMixin):
       REQUEST=fake_request, mode="form", relative_url=document.getRelativeUrl(),
       form=getattr(document, 'Foo_view'), portal_status_message="Couscous", portal_status_level='error')
 
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2578,8 +2578,8 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasBulk_bad_method(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="bulk")
-    self.assertEquals(fake_request.RESPONSE.status, 405)
-    self.assertEquals(result, "")
+    self.assertEqual(fake_request.RESPONSE.status, 405)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -2595,8 +2595,8 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
       mode="bulk",
       bulk_list=json.dumps([{"relative_url": document.getRelativeUrl(), "view": "view"}])
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2699,8 +2699,8 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoasWorklist_bad_method(self):
     fake_request = do_fake_request("POST")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="worklist")
-    self.assertEquals(fake_request.RESPONSE.status, 405)
-    self.assertEquals(result, "")
+    self.assertEqual(fake_request.RESPONSE.status, 405)
+    self.assertEqual(result, "")
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -2715,8 +2715,8 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
       REQUEST=fake_request,
       mode="worklist"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2726,7 +2726,7 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(len(work_list), 1)
     self.assertTrue(work_list[0]['count'] > 0)
     self.assertEqual(work_list[0]['name'], 'Draft To Validate')
-    self.assertFalse('module' in work_list[0])
+    self.assertNotIn('module', work_list[0])
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")
@@ -2749,7 +2749,7 @@ class TestERP5Document_getHateoas_mode_url_generator(ERP5HALJSONStyleSkinsMixin)
       relative_url="foo/bar",
       view="Foo_viewBar"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(
       result,
       '%s/web_site_module/hateoas/ERP5Document_getHateoas?'
@@ -2772,7 +2772,7 @@ class TestERP5Document_getHateoas_mode_url_generator(ERP5HALJSONStyleSkinsMixin)
       view="Foo_viewBar",
       keep_items={'foo': 'a', 'bar': 'b'}
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(
       result,
       '%s/web_site_module/hateoas/ERP5Document_getHateoas?'
@@ -2796,7 +2796,7 @@ class TestERP5Document_getHateoas_mode_url_generator(ERP5HALJSONStyleSkinsMixin)
       mode="url_generator",
       view="Foo_viewBar"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(
       result,
       '%s/web_site_module/hateoas/ERP5Document_getHateoas?'
@@ -2819,7 +2819,7 @@ class TestERP5Document_getHateoas_mode_url_generator(ERP5HALJSONStyleSkinsMixin)
       mode="url_generator",
       view="Foo_viewBar"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(
       result,
       '%s/ERP5Document_getHateoas?'
@@ -2870,8 +2870,8 @@ return msg"
       mode="bulk",
       bulk_list=json.dumps([{"relative_url": document.getRelativeUrl(), "view": "view"}])
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2891,8 +2891,8 @@ return msg"
     document = self._makeDocument()
     fake_request = do_fake_request("GET")
     result = document.ERP5Document_getHateoas(REQUEST=fake_request)
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2917,8 +2917,8 @@ return msg"
       REQUEST=fake_request,
       mode="worklist"
     )
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -2927,7 +2927,7 @@ return msg"
     self.assertEqual(len(work_list), 1)
     self.assertEqual(work_list[0]['name'], 'daiyanzhen')
     self.assertEqual(work_list[0]['count'], 1)
-    self.assertFalse('module' in work_list[0])
+    self.assertNotIn('module', work_list[0])
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")
@@ -2968,8 +2968,8 @@ return msg"
   def test_getHateoasForm_no_view(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url="portal_skins/erp5_ui_test/Foo_view")
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -3140,8 +3140,8 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       sort_on=json.dumps(["title","descending"])
     )
 
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
@@ -3201,8 +3201,8 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       sort_on=json.dumps(["title","descending"])
     )
 
-    self.assertEquals(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)

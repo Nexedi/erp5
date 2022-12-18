@@ -198,7 +198,7 @@ class TestBusinessTemplateTwoFileExport(ERP5TypeTestCase):
       file_content=open(file_document_path,'r+')
       self.assertEqual(file_content.read(), web_file[2]["text_content"])
       xml_file=open(xml_document_path,'r+')
-      self.assertFalse('<string>text_content</string>' in xml_file.read())
+      self.assertNotIn('<string>text_content</string>', xml_file.read())
 
     import_template = self._importBusinessTemplate()
 
@@ -1101,7 +1101,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     # check that the encoding value on the .xml file is iso-8859-15
     root = etree.parse(page_template_path + '.xml').getroot()
-    self.assertEquals('iso-8859-15',
+    self.assertEqual('iso-8859-15',
       root.xpath('.//item[key/string[.="output_encoding"]]/value/string')[0].text)
 
     # delete the business template and the zope page templatefrom the portal
@@ -1143,7 +1143,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     # check that the encoding value on the .xml file is iso-8859-15
     root = etree.parse(page_template_path + '.xml').getroot()
-    self.assertEquals('iso-8859-15',
+    self.assertEqual('iso-8859-15',
       root.xpath('.//item[key/string[.="output_encoding"]]/value/string')[0].text)
 
   def test_twoFileImportExportPreinstallForPythonScript(self):
@@ -1186,7 +1186,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 
     # check that preinstalling the import_template no difference is found
     result = import_template.preinstall()
-    self.assertEquals(result, {})
+    self.assertEqual(result, {})
 
     # edit python PythonScript code
     self.portal.portal_skins[skin_folder_id][python_script_id]._body = "bar"
@@ -1194,7 +1194,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     # check that preinstalling the import_template still no difference is found
     # since the change was in the portal and not installed
     result = import_template.preinstall()
-    self.assertEquals(result, {})
+    self.assertEqual(result, {})
 
     import_template.build()
     import_template.install()
@@ -1205,5 +1205,5 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     # check that preinstalling the second_import_template
     # the PythonScript is recognised as modified
     result = second_import_template.preinstall()
-    self.assertEquals(result.get('portal_skins/%s/%s' % (skin_folder_id, python_script_id)),
+    self.assertEqual(result.get('portal_skins/%s/%s' % (skin_folder_id, python_script_id)),
                       ('Modified', 'Skin'))

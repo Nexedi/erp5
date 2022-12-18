@@ -419,7 +419,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['2', '3', ], ['b', 'c',]]
     matrix.setCellRange(*cell_range, **kwd)
     self.commit()
-    self.assertFalse('quantity_0_1' in matrix.objectIds())
+    self.assertNotIn('quantity_0_1', matrix.objectIds())
 
     cell = matrix.getCell('2', 'b', **kwd)
     self.assertEqual('quantity_1_1', cell.getId())
@@ -452,7 +452,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     cell_range = [['2', ], ['b',]]
     matrix.setCellRange(*cell_range, **kwd)
     self.tic()
-    self.assertEquals(set(["quantity_1_1"]), set([
+    self.assertEqual(set(["quantity_1_1"]), set([
       x.getId() for x in matrix.objectValues()]))
 
     cell = matrix.getCell('2', 'b', **kwd)

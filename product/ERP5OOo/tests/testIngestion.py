@@ -270,8 +270,8 @@ class TestIngestion(IngestionTestCase):
       if document.isSupportBaseDataConversion():
         # this is how we know if it was ok or not
         self.assertEqual(document.getExternalProcessingState(), 'converted')
-        self.assert_('magic' in document.SearchableText())
-        self.assert_('magic' in str(document.asText()))
+        self.assertIn('magic', document.SearchableText())
+        self.assertIn('magic', str(document.asText()))
       else:
         # check if SearchableText() does not raise any exception
         document.SearchableText()
@@ -337,7 +337,7 @@ class TestIngestion(IngestionTestCase):
         # We check if conversion has succeeded by looking
         # at the external_processing workflow
         self.assertEqual(document.getExternalProcessingState(), 'converted')
-        self.assert_('magic' in document.SearchableText())
+        self.assertIn('magic', document.SearchableText())
 
   def newPythonScript(self, script_id, argument_list, code):
     """
@@ -512,7 +512,7 @@ class TestIngestion(IngestionTestCase):
     self.assertEqual(document.getRevision(), '1')
     f = makeFileUpload(filename)
     document.edit(file=f)
-    self.assert_(document.hasFile())
+    self.assertTrue(document.hasFile())
     self.assertEqual(document.getFilename(), filename)
     # Revision is 1 after upload (revisions are strings)
     self.assertEqual(document.getRevision(), '2')
@@ -548,7 +548,7 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     revision = document.getRevision()
     number_of_document = len(self.portal.document_module.objectIds())
-    self.assert_('This document is modified.' not in document.asText())
+    self.assertNotIn('This document is modified.', document.asText())
 
     f = makeFileUpload('TEST-en-002-modified.doc')
     f.filename = 'TEST-en-002.doc'
@@ -556,7 +556,7 @@ class TestIngestion(IngestionTestCase):
     self.portal.portal_contributions.newContent(file=f)
     self.tic()
     self.assertEqual(document.getRevision(), str(int(revision) + 1))
-    self.assert_('This document is modified.' in document.asText())
+    self.assertIn('This document is modified.', document.asText())
     self.assertEqual(len(self.portal.document_module.objectIds()),
                       number_of_document)
     document.reindexObject()
@@ -570,7 +570,7 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.portal_contributions.newContent(id='two', file=f)
     sequence.edit(document_path=document.getPath())
     self.tic()
-    self.assertTrue('This is a another very interesting document.' in document.asText())
+    self.assertIn('This is a another very interesting document.', document.asText())
     self.assertEqual(document.getReference(), 'ANOTHE')
     self.assertEqual(document.getVersion(), '001')
     self.assertEqual(document.getLanguage(), 'en')
@@ -610,9 +610,9 @@ class TestIngestion(IngestionTestCase):
     """
     self.tic()
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.assert_(document.hasBaseData())
-    self.assert_('magic' in document.SearchableText())
-    self.assert_('magic' in str(document.asText()))
+    self.assertTrue(document.hasBaseData())
+    self.assertIn('magic', document.SearchableText())
+    self.assertIn('magic', str(document.asText()))
 
   def stepSetSimulatedDiscoveryScript(self, sequence=None, sequence_list=None, **kw):
     """
@@ -786,10 +786,10 @@ class TestIngestion(IngestionTestCase):
     f = makeFileUpload('TEST-en-002.pdf')
     document.edit(file=f)
     mime, text = document.convert('text')
-    self.assertTrue('magic' in text)
+    self.assertIn('magic', text)
     self.assertTrue(mime == 'text/plain')
     mime, html = document.convert('html')
-    self.assertTrue('magic' in html)
+    self.assertIn('magic', html)
     self.assertTrue(mime == 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
@@ -997,11 +997,11 @@ class TestIngestion(IngestionTestCase):
                                reference='TEST%s' %sub_reference,
                                language='en',
                                version='002')
-      self.assertNotEquals(None, ingested_document)
+      self.assertNotEqual(None, ingested_document)
       if ingested_document.isSupportBaseDataConversion():
         self.assertEqual('converted', ingested_document.getExternalProcessingState())
       # check aggregate between 'Document Ingestion Message' and ingested document
-      self.assertTrue(ingested_document in attachment_list)
+      self.assertIn(ingested_document, attachment_list)
     return attachment_list, ingested_document
 
   def verifyEmailedDocument(self):
@@ -1027,7 +1027,7 @@ class TestIngestion(IngestionTestCase):
                                version='002')
     self.assertEqual('MAIL-en-002.doc', ingested_document.getFilename())
     self.assertEqual('converted', ingested_document.getExternalProcessingState())
-    self.assertTrue('magic' in ingested_document.asText())
+    self.assertIn('magic', ingested_document.asText())
 
     # check aggregate between 'Document Ingestion Message' and ingested document
     self.assertEqual(attachment_list[0], ingested_document)

@@ -112,7 +112,7 @@ class TestOOoChart(TestOOoChartMixin):
   def test_ooo_chart(self):
     portal = self.getPortal()
     # Does the form exist ?
-    self.assertTrue(self.form_id in portal.portal_skins.custom.objectIds())
+    self.assertIn(self.form_id, portal.portal_skins.custom.objectIds())
     getattr(aq_base(portal.portal_skins.custom), self.form_id)
     form = getattr(portal.portal_skins.custom, self.form_id)
     #listbox = form.listbox
@@ -161,7 +161,7 @@ class TestOOoChart(TestOOoChartMixin):
     xpath = '//@*[name() = "office:value"]'
     value_list = doc_build.xpath(xpath)
     # Test the data presence in the file XML
-    self.assertNotEquals(0, len(value_list))
+    self.assertNotEqual(0, len(value_list))
     # 2 values because there are - 10 document created by a owner
     #                            - 0 Reference count
     self.assertEqual(2, len(value_list))
@@ -216,7 +216,7 @@ class TestOOoChart(TestOOoChartMixin):
   def test_proxy_ooo_chart(self):
     portal = self.getPortal()
     # Does the form exist ?
-    self.assertTrue(self.form_id in portal.portal_skins.custom.objectIds())
+    self.assertIn(self.form_id, portal.portal_skins.custom.objectIds())
     getattr(aq_base(portal.portal_skins.custom), self.form_id)
     form = getattr(portal.portal_skins.custom, self.form_id)
 
@@ -255,7 +255,7 @@ class TestOOoChart(TestOOoChartMixin):
     xpath = '//@*[name() = "office:value"]'
     value_list = doc_build.xpath(xpath)
     # Test the data presence in the file XML
-    self.assertNotEquals(0, len(value_list))
+    self.assertNotEqual(0, len(value_list))
     # 2 values because there are - 10 document created by a owner
     #                            - 0 Reference count
     self.assertEqual(2, len(value_list))

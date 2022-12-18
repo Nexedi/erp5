@@ -185,7 +185,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue(len(message_list) > 0)
     self.assertTrue(len(message_list) < 3)
     for method_id in method_id_list:
-      self.assertTrue(method_id in ["immediateReindexObject"])
+      self.assertIn(method_id, ["immediateReindexObject"])
 
   def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None,
                                     **kw):
@@ -1170,7 +1170,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                     portal_type='Organisation',
                                                     temp_object=True)
     user = getSecurityManager().getUser()
-    self.assertTrue('Owner' in user.getRolesInContext(organisation))
+    self.assertIn('Owner', user.getRolesInContext(organisation))
     from AccessControl.ZopeGuards import guarded_getattr
     property_map_dict = organisation.propertyMap()
     property_id_list = ('edit', 'setProperty', 'getProperty') + \
@@ -1193,7 +1193,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                     portal_type='Organisation',
                                                     temp_object=True)
     user = getSecurityManager().getUser()
-    self.assertTrue('Owner' in user.getRolesInContext(organisation))
+    self.assertIn('Owner', user.getRolesInContext(organisation))
     from AccessControl.ZopeGuards import guarded_getattr
     property_map_dict = organisation.propertyMap()
     property_id_list = ('edit', 'setProperty', 'getProperty') + \
@@ -1306,7 +1306,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     ob._setProperty('a_dummy_property', dummy_property_value)
 
     # the property appears in property map
-    self.assertTrue('a_dummy_property' in [x['id'] for x in ob.propertyMap()])
+    self.assertIn('a_dummy_property', [x['id'] for x in ob.propertyMap()])
     # the value and can be retrieved using getProperty
     self.assertEqual(ob.getProperty('a_dummy_property'), dummy_property_value)
     # the value is also stored as a class attribute
@@ -1316,7 +1316,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     """_setProperty raises an error if the property already exists."""
     ob = self._makeOne('ob')
     # make sure that title property exists
-    self.assertTrue('title' in [x['id'] for x in ob.propertyMap()])
+    self.assertIn('title', [x['id'] for x in ob.propertyMap()])
     # trying to call _setProperty will with an existing property raises:
     #         BadRequest: Invalid or duplicate property id: title
     self.assertRaises(BadRequest, ob._setProperty, 'title', 'property value')
@@ -1326,7 +1326,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     """
     ob = self._makeOne('ob')
     # make sure that title property exists
-    self.assertTrue('title' in [x['id'] for x in ob.propertyMap()])
+    self.assertIn('title', [x['id'] for x in ob.propertyMap()])
     prop_value = 'title value'
     ob._updateProperty('title', prop_value)
     self.assertEqual(ob.getProperty('title'), prop_value)

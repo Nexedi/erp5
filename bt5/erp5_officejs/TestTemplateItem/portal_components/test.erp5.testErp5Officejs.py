@@ -30,4 +30,4 @@ class TestErp5Officejs(ERP5TypeTestCase):
 
     # actual test
     other_image = web_page.restrictedTraverse("TEST-Test.Restricted.Traverse.With.ERP5.Officejs")
-    self.assertEquals(image.getUid(), other_image.getUid())
+    self.assertEqual(image.getUid(), other_image.getUid())

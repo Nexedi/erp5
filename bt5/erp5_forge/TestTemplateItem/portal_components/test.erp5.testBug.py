@@ -214,7 +214,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEqual('dummy <loggedperson@localhost>', mfrom)
     self.assertEqual(['person1@localhost'], mto)
@@ -228,7 +228,7 @@ class TestBug(ERP5TypeTestCase):
     """
     bug = sequence.get('bug')
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEqual('person2@localhost', mfrom)
     self.assertEqual(['person1@localhost'], mto)
@@ -311,12 +311,12 @@ class TestBug(ERP5TypeTestCase):
       Check the bug message when re-assign
     """
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     _, _, messageText = last_message
     from email.parser import Parser
     p = Parser()
     m = p.parsestr(messageText)
-    self.assertTrue('Re-assign!' in m.get_payload()[0].get_payload(decode=True))
+    self.assertIn('Re-assign!', m.get_payload()[0].get_payload(decode=True))
 
 
   def stepCheckBugInit(self, sequence=None, sequence_list=None, **kw):
@@ -332,7 +332,7 @@ class TestBug(ERP5TypeTestCase):
       Create a dummy bug
     """
     bug_to_clone = sequence.get('bug')
-    self.assertNotEquals(len(bug_to_clone.contentValues()), 0)
+    self.assertNotEqual(len(bug_to_clone.contentValues()), 0)
     bug = bug_to_clone.Base_createCloneDocument(batch_mode=1)
     self.assertEqual("#%s" % bug.getId(), bug.getReference())
     self.assertEqual(len(bug.contentValues()), 0)

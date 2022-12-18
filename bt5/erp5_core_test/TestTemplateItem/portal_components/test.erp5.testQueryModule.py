@@ -118,14 +118,14 @@ class TestQueryModule(ERP5TypeTestCase):
     query = self.portal.query_module.contentValues()[0]
 
     # owner user has an Assignee local role on this query
-    self.assertTrue('Assignee' in owner_user.getRolesInContext(query))
+    self.assertIn('Assignee', owner_user.getRolesInContext(query))
 
     newSecurityManager(None, owner_user)
     self.portal.portal_workflow.doActionFor(query, 'answer_action')
     self.assertEqual('answered', query.getValidationState())
     # this should have sent an email from owner_user to question_user
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEqual('owner_user@example.invalid', mfrom)
     self.assertEqual(['question_user@example.invalid'], mto)

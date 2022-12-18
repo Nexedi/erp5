@@ -56,9 +56,9 @@ def getMessageList(o):
 
 class TestERP5PayzenSecurePaymenConstraint(TestERP5PayzenSecurePaymentMixin):
   def _test(self, message, prop, value='12345'):
-    self.assertTrue(message in getMessageList(self.service))
+    self.assertIn(message, getMessageList(self.service))
     self.service.edit(**{prop: value})
-    self.assertFalse(message in getMessageList(self.service))
+    self.assertNotIn(message, getMessageList(self.service))
 
   def test_service_username(self):
     self._test('vads_site_id have to be set', 'service_username')

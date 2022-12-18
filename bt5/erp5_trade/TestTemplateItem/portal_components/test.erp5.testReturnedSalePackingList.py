@@ -353,7 +353,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     self.assertEqual(2, len(variation_category_list))
     cell_key_list = list(returned_packing_list_line.getCellKeyList(base_id=base_id))
 
-    self.assertNotEquals(0, len(cell_key_list))
+    self.assertNotEqual(0, len(cell_key_list))
     for cell_key in cell_key_list:
       cell = returned_packing_list_line.newCell(base_id=base_id,
                                          portal_type=self.returned_packing_list_cell_portal_type,

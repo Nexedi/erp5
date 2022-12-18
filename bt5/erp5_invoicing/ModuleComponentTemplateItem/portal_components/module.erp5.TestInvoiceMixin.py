@@ -93,7 +93,7 @@ class TestInvoiceMixin(TestPackingListMixin):
           path = path[cat]
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -199,7 +199,7 @@ class TestInvoiceMixin(TestPackingListMixin):
     sequence.edit(vendor=vendor)
     client1 = sequence.get('organisation2')
     client1.setRegion(self.default_region)
-    self.assertNotEquals(client1.getRegionValue(), None)
+    self.assertNotEqual(client1.getRegionValue(), None)
     client1.validate()
     sequence.edit(client1=client1)
     client2 = sequence.get('organisation3')
@@ -214,7 +214,7 @@ class TestInvoiceMixin(TestPackingListMixin):
     # Check that there is an applied rule for our packing list
     rule_list = [x for x in simulation_tool.objectValues()
                             if x.getCausalityValue()==order]
-    self.assertNotEquals(len(rule_list), 0)
+    self.assertNotEqual(len(rule_list), 0)
     sequence.edit(order_rule_list = rule_list)
 
     self.assertEqual(len(order.getMovementList()),
@@ -242,7 +242,7 @@ class TestInvoiceMixin(TestPackingListMixin):
       self.assertEqual(invoicing_rule.getPortalType(),
           'Applied Rule')
       simulation_movement_list = invoicing_rule.objectValues()
-      self.assertNotEquals(len(simulation_movement_list), 0)
+      self.assertNotEqual(len(simulation_movement_list), 0)
       for simulation_movement in simulation_movement_list :
         invoice_transaction_rule_list.extend([applied_rule for applied_rule
           in simulation_movement.objectValues() if applied_rule \
@@ -251,7 +251,7 @@ class TestInvoiceMixin(TestPackingListMixin):
         resource_list = sequence.get('resource_list')
         self.assertEqual(simulation_movement.getPortalType(),
                           'Simulation Movement')
-        self.assertTrue(simulation_movement.getResourceValue() in
+        self.assertIn(simulation_movement.getResourceValue(),
             resource_list)
         self.assertTrue(simulation_movement.isConvergent())
         # TODO: What is the invoice dates supposed to be ?
@@ -394,7 +394,7 @@ class TestInvoiceMixin(TestPackingListMixin):
     # check simulation movements from this packing list
     for movement in packing_list.getMovementList() :
       simulation_movement_list = movement.getOrderRelatedValueList()
-      self.assertNotEquals(len(simulation_movement_list), 0)
+      self.assertNotEqual(len(simulation_movement_list), 0)
       total_quantity = 0
       for simulation_movement in simulation_movement_list :
         total_quantity += simulation_movement.getQuantity()
@@ -464,7 +464,7 @@ class TestInvoiceMixin(TestPackingListMixin):
         self.assertEqual(len(invoice_movement_list), 1)
         invoice_movement = invoice_movement_list[0]
         self.assertTrue(invoice_movement is not None)
-        self.assert_(invoice_movement.getRelativeUrl().\
+        self.assertTrue(invoice_movement.getRelativeUrl().\
                               startswith(invoice_relative_url))
 
       # Then, test if each Invoice movement is equals to the sum of somes
@@ -696,7 +696,7 @@ class TestInvoiceMixin(TestPackingListMixin):
       }
     self.failIfDifferentSet(expected_dict.keys(),found_dict.keys())
     for key in found_dict.keys():
-      self.assertAlmostEquals(expected_dict[key],found_dict[key],places=2)
+      self.assertAlmostEqual(expected_dict[key],found_dict[key],places=2)
     found_dict = {}
     for line in new_invoice.objectValues(
         portal_type=self.invoice_transaction_line_portal_type):
@@ -710,7 +710,7 @@ class TestInvoiceMixin(TestPackingListMixin):
       }
     self.failIfDifferentSet(expected_dict.keys(), found_dict.keys())
     for key in found_dict.keys():
-      self.assertAlmostEquals(expected_dict[key], found_dict[key], places=2)
+      self.assertAlmostEqual(expected_dict[key], found_dict[key], places=2)
 
   def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
                                            sequence_list=None, **kw):
@@ -768,7 +768,7 @@ class TestInvoiceMixin(TestPackingListMixin):
   def stepSetReadyWorkflowTransitionIsBlockByConsistency(self,
                     sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Causality State is not "Solved"*'):
       self.getPortal().portal_workflow.doActionFor(
         packing_list, 'set_ready_action')

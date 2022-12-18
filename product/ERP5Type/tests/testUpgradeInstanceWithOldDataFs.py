@@ -111,7 +111,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     alarm.activeSense()
     self.tic()
 
-    self.assertNotEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
+    self.assertNotEqual([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Solve divergencies, like called from the form_dialog
     # XXX We only check that Base_callDialogMethod can be correctly executed
@@ -136,7 +136,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
 
     self.tic(delay=2400)
 
-    self.assertEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
+    self.assertEqual([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Make sure that *all* Portal Type can be loaded after upgrade
     import erp5.portal_type
@@ -148,7 +148,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
       portal_type_class.loadClass()
       if issubclass(portal_type_class, ERP5BaseBroken):
         error_list.append(portal_type_id)
-    self.assertEquals(
+    self.assertEqual(
       error_list, [],
       msg="The following Portal Type classes could not be loaded (see zLOG.log): %r" % error_list)
 

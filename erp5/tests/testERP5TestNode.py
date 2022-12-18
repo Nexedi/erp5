@@ -340,7 +340,7 @@ shared = true
         if x['repository_path'].endswith("rep2"))
     call = self.getCaller(cwd=rep2_clone_path)
     output = call("git branch".split()).strip()
-    self.assertTrue("* foo" in output.split('\n'))
+    self.assertIn("* foo", output.split('\n'))
     vcs_repository_info = node_test_suite.vcs_repository_list[0]
     self.assertEqual(vcs_repository_info['repository_id'], 'rep2')
     self.assertEqual(vcs_repository_info['branch'], 'foo')
@@ -349,14 +349,14 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
     print(output)
-    self.assertTrue("* master" in output.split('\n'))
+    self.assertIn("* master", output.split('\n'))
     # Add a third branch on remote, make sure we could switch to it
     remote_call = self.getCaller(cwd=self.remote_repository2)
     output = remote_call('git checkout master -b bar'.split())
     vcs_repository_info['branch'] = 'bar'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
-    self.assertTrue("* bar" in output.split('\n'))
+    self.assertIn("* bar", output.split('\n'))
     # Add a fourth branch on remote, make sure we could switch to it
     # this time the branch name is a substring of previous one (we had
     # failure is such case at some point)
@@ -365,7 +365,7 @@ shared = true
     vcs_repository_info['branch'] = 'ba'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
-    self.assertTrue("* ba" in output.split('\n'))
+    self.assertIn("* ba", output.split('\n'))
 
   def test_05c_changeRepositoryUrl(self):
     """

@@ -159,11 +159,11 @@ class TestCacheTool(ERP5TypeTestCase):
     portal_caches.updateCache()
 
     ## do we have the same structure we created above?
-    self.assertTrue('ram_cache_factory' in CachingMethod.factories)
-    self.assertTrue('another_ram_cache_factory' in CachingMethod.factories)
-    self.assertTrue('distributed_ram_cache_factory' in CachingMethod.factories)
-    self.assertTrue('distributed_persistent_cache_factory' in CachingMethod.factories)
-    self.assertTrue('erp5_user_factory' in CachingMethod.factories)
+    self.assertIn('ram_cache_factory', CachingMethod.factories)
+    self.assertIn('another_ram_cache_factory', CachingMethod.factories)
+    self.assertIn('distributed_ram_cache_factory', CachingMethod.factories)
+    self.assertIn('distributed_persistent_cache_factory', CachingMethod.factories)
+    self.assertIn('erp5_user_factory', CachingMethod.factories)
 
   def createCachedMethod(self):
     portal = self.portal

@@ -220,7 +220,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     dummy_bank_account = organisation.newContent(
           portal_type='Bank Account',
           id='dummy_bank_account')
-    self.assertNotEquals(dummy_bank_account, 3)
+    self.assertNotEqual(dummy_bank_account, 3)
     self.assertEqual(dummy_bank_account.getPortalType(), 'Bank Account')
 
   def test_multiple_methods(self):
@@ -260,11 +260,11 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
     organisation = self.organisation
     organisation.edit()
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
     organisation.setCorporateName("this should not change anything")
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
 
@@ -284,11 +284,11 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
     organisation = self.organisation
     organisation.edit()
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
     organisation.setCorporateName("this should not change anything")
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
 

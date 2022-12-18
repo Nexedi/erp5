@@ -394,7 +394,7 @@ class TestERP5Base(ERP5TypeTestCase):
     organisation.setDefaultFaxText('+55(0)69-1337')
     organisation.setDefaultEmailText('kevin@truc-bidule.com')
 
-    self.assertTrue('default_address' in organisation.contentIds())
+    self.assertIn('default_address', organisation.contentIds())
     default_address = organisation.default_address
     self.assertEqual(default_address.getPortalType(), 'Address')
     self.assertEqual(organisation.getDefaultAddressValue(), default_address)
@@ -423,7 +423,7 @@ class TestERP5Base(ERP5TypeTestCase):
                      , default_address.getRegion()
                      )
 
-    self.assertTrue('default_telephone' in organisation.contentIds())
+    self.assertIn('default_telephone', organisation.contentIds())
     default_telephone = organisation.default_telephone
     self.assertEqual(default_telephone.getPortalType(), 'Telephone')
     self.assertEqual( organisation.getDefaultTelephoneText()
@@ -432,7 +432,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertTrue(organisation.hasDefaultTelephone())
     self.assertTrue(organisation.hasDefaultTelephoneCoordinateText())
 
-    self.assertTrue('default_fax' in organisation.contentIds())
+    self.assertIn('default_fax', organisation.contentIds())
     default_fax = organisation.default_fax
     self.assertEqual(default_fax.getPortalType(), 'Fax')
     self.assertEqual( organisation.getDefaultFaxText()
@@ -441,7 +441,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertTrue(organisation.hasDefaultFax())
     self.assertTrue(organisation.hasDefaultFaxCoordinateText())
 
-    self.assertTrue('default_email' in organisation.contentIds())
+    self.assertIn('default_email', organisation.contentIds())
     default_email = organisation.default_email
     self.assertEqual(default_email.getPortalType(), 'Email')
     self.assertEqual( organisation.getDefaultEmailText()
@@ -515,7 +515,7 @@ class TestERP5Base(ERP5TypeTestCase):
       category_value = self.portal_categories.resolveCategory(category_path)
       skill_object_list.append(category_value)
     for skill_object in skill_object_list:
-      self.assertTrue(person in skill_object.getSkillRelatedValueList())
+      self.assertIn(person, skill_object.getSkillRelatedValueList())
     self.assertEqual(person.getSkillValue(), skill_object_list[0])
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
@@ -526,7 +526,7 @@ class TestERP5Base(ERP5TypeTestCase):
     person = sequence.get('person')
 
     # Check default career sub-object
-    self.assertTrue('default_career' in person.contentIds())
+    self.assertIn('default_career', person.contentIds())
     default_career = person.default_career
     self.assertEqual(default_career.getPortalType(), 'Career')
 
@@ -598,8 +598,8 @@ class TestERP5Base(ERP5TypeTestCase):
         new_career_step = career
       else :
         old_career_step = career
-    self.assertNotEquals(new_career_step, None)
-    self.assertNotEquals(old_career_step, None)
+    self.assertNotEqual(new_career_step, None)
+    self.assertNotEqual(old_career_step, None)
 
     sequence.edit( old_career_step = old_career_step,
                    new_career_step = new_career_step,
@@ -616,7 +616,7 @@ class TestERP5Base(ERP5TypeTestCase):
     new_organisation_title = new_organisation.getTitle()
     old_organisation_title = old_organisation.getTitle()
 
-    self.assert_( "subordination/%s" % old_organisation.getRelativeUrl() in
+    self.assertTrue( "subordination/%s" % old_organisation.getRelativeUrl() in
                     old_career_step.getCategoryList(),
                 '%s not in %s' % (old_organisation.getRelativeUrl(),
                                   old_career_step.getCategoryList()))
@@ -625,7 +625,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual( old_career_step.getSubordinationTitle(),
                        old_organisation_title )
 
-    self.assert_( "subordination/%s" % new_organisation.getRelativeUrl() in
+    self.assertTrue( "subordination/%s" % new_organisation.getRelativeUrl() in
                     new_career_step.getCategoryList(),
                 '%s not in %s' % (new_organisation.getRelativeUrl(),
                                   new_career_step.getCategoryList()))
@@ -665,7 +665,7 @@ class TestERP5Base(ERP5TypeTestCase):
         default_address_city='La Garnache',
         default_address_zip_code='59000')
 
-    self.assertNotEquals(person.getDefaultAddress(),
+    self.assertNotEqual(person.getDefaultAddress(),
         organisation.getDefaultAddress())
     self.assertEqual(person.getDefaultAddressCity(),'La Garnache')
     self.assertEqual(person.getDefaultAddressZipCode(), '59000')
@@ -684,7 +684,7 @@ class TestERP5Base(ERP5TypeTestCase):
         default_address_city='Lille',
         default_address_zip_code='69000')
 
-    self.assertNotEquals(person.getDefaultAddress(),
+    self.assertNotEqual(person.getDefaultAddress(),
         organisation.getDefaultAddress())
     self.assertEqual(person.getDefaultAddressCity(),'Lille')
     self.assertEqual(person.getDefaultAddressZipCode(), '69000')
@@ -695,7 +695,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # there is no reason to create a subobject (default_address)
     person.manage_delObjects(['default_address'])
     person.edit(career_subordination_value=organisation)
-    self.assertTrue('default_address' not in person.objectIds())
+    self.assertNotIn('default_address', person.objectIds())
     self.assertEqual(person.getDefaultAddress(),
         organisation.getDefaultAddress())
     self.assertEqual(person.getDefaultAddressCity(),
@@ -705,8 +705,8 @@ class TestERP5Base(ERP5TypeTestCase):
     # if the address of the person is different then the subobject
     # (default_address) must be created.
     person.edit(default_address_city='La Garnache')
-    self.assertTrue('default_address' in person.objectIds())
-    self.assertNotEquals(person.getDefaultAddressCity(),
+    self.assertIn('default_address', person.objectIds())
+    self.assertNotEqual(person.getDefaultAddressCity(),
          organisation.getDefaultAddressCity())
 
 
@@ -858,9 +858,9 @@ class TestERP5Base(ERP5TypeTestCase):
 
     # on Person_view, the user select leaves for functions:
     field = person.Person_view.my_career_function
-    self.assertTrue('function_node' not in [x[1] for x in
+    self.assertNotIn('function_node', [x[1] for x in
                           field.get_value('items')])
-    self.assertTrue('function_node/function_leave' in [x[1] for x in
+    self.assertIn('function_node/function_leave', [x[1] for x in
                           field.get_value('items')])
     # person acquire function from the organisation
     self.assertEqual(person.getFunctionValue(), function_node)
@@ -1029,7 +1029,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual(None, assignment.getStopDate())
     self.portal.portal_workflow.doActionFor(assignment, 'close_action')
     self.assertEqual('closed', assignment.getValidationState())
-    self.assertNotEquals(None, assignment.getStopDate())
+    self.assertNotEqual(None, assignment.getStopDate())
     self.assertEqual(DateTime().day(), assignment.getStopDate().day())
 
   def test_ERP5Site_checkDataWithScript(self):
@@ -1060,10 +1060,10 @@ class TestERP5Base(ERP5TypeTestCase):
 
     self.assertEqual(len(relative_url_list), len(set(relative_url_list)))
     for obj in organisation, person, person.getDefaultEmailValue():
-      self.assertTrue('/'.join(obj.getPhysicalPath()) in relative_url_list)
+      self.assertIn('/'.join(obj.getPhysicalPath()), relative_url_list)
     for relative_url in relative_url_list:
-      self.assertTrue('/' in relative_url)
-      self.assertNotEquals(None, self.portal.unrestrictedTraverse(relative_url))
+      self.assertIn('/', relative_url)
+      self.assertNotEqual(None, self.portal.unrestrictedTraverse(relative_url))
 
   def test_standard_translated_related_keys(self):
     # make sure we can search by "translated_validation_state_title" and
@@ -1132,7 +1132,7 @@ class TestERP5Base(ERP5TypeTestCase):
     person = module.newContent(portal_type='Person',)
     bank_account = person.newContent(portal_type='Bank Account')
     # A bank account is a folder, it can contain other documents
-    self.assertNotEquals(0, len(bank_account.allowedContentTypes()))
+    self.assertNotEqual(0, len(bank_account.allowedContentTypes()))
 
     self.assertEqual(1, len(person))
     bank_account.Base_createCloneDocument()
@@ -1174,7 +1174,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # person has property comment with value
     self.assertEqual(person.comment, comment)
     # workflow has no artificial comment
-    self.assertFalse(comment in [q['comment'] for q in workflow_history ])
+    self.assertNotIn(comment, [q['comment'] for q in workflow_history ])
 
   def test_comment_edit_workflow_store_workflow(self):
     comment = 'some comment'
@@ -1184,7 +1184,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # person is not changed
     self.assertEqual(getattr(person, 'comment', None), None)
     # workflow is affected
-    self.assertTrue(comment in [q['comment'] for q in workflow_history ])
+    self.assertIn(comment, [q['comment'] for q in workflow_history ])
 
   def test_Base_addEditWorkflowComment(self):
     # rather than using low level doActionFor, an helper script Base_addEditWorkflowComment
@@ -1206,14 +1206,14 @@ class TestERP5Base(ERP5TypeTestCase):
     # person is not changed
     self.assertEqual(getattr(person, 'comment', None), None)
     # workflow is affected
-    self.assertTrue(comment in [q['comment'] for q in workflow_history])
+    self.assertIn(comment, [q['comment'] for q in workflow_history])
 
   def test_user_creation(self):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    group='nexedi/storever',
                                    site='distibution/tokyo')
-    self.assertNotEquals(None, assignment.getGroupValue())
+    self.assertNotEqual(None, assignment.getGroupValue())
     assignment.open()
     login = person.newContent(
       portal_type="ERP5 Login",
@@ -1225,18 +1225,18 @@ class TestERP5Base(ERP5TypeTestCase):
 
     # a user is created
     user = self.portal.acl_users.getUser('user_login')
-    self.assertNotEquals(None, user)
+    self.assertNotEqual(None, user)
 
     # This user does not have a preference created automatically ...
     newSecurityManager(None, user.__of__(self.portal.acl_users))
-    self.assertEquals(None,
+    self.assertEqual(None,
         self.portal.portal_catalog.getResultValue(portal_type='Preference',
                                                   owner=user.getId()))
     # ... but only when `getActiveUserPreference`
     preference = self.portal.portal_preferences.getActiveUserPreference()
-    self.assertNotEquals(None, preference)
+    self.assertNotEqual(None, preference)
     self.tic()
-    self.assertNotEquals(None,
+    self.assertNotEqual(None,
         self.portal.portal_catalog.getResultValue(portal_type='Preference',
                                                   owner=user.getId()))
 

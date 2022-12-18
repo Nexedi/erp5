@@ -89,7 +89,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
                                                   reference=self.key,
                                                   creation_date=' >= "%s"' % now)
-    self.assertNotEquals(None, document)
+    self.assertNotEqual(None, document)
     self.assertEqual(self.data, document.getData())
     self.assertEqual('File', document.getPortalType())
     self.assertEqual('Published', document.getValidationStateTitle())

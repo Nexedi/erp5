@@ -143,7 +143,7 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertEqual(1, len(budget_line.contentValues()))
     budget_cell = budget_line.getCell('source/account_module/goods_purchase')
-    self.assertNotEquals(None, budget_cell)
+    self.assertNotEqual(None, budget_cell)
 
     self.assertEqual(['source/account_module/goods_purchase'],
         budget_cell.getMembershipCriterionCategoryList())
@@ -175,8 +175,8 @@ class TestBudget(ERP5TypeTestCase):
 
     variation_range_category_list = \
        budget_line.BudgetLine_getVariationRangeCategoryList()
-    self.assertTrue(['', ''] in variation_range_category_list)
-    self.assertTrue(['Expense', 'account_type/expense'] in variation_range_category_list)
+    self.assertIn(['', ''], variation_range_category_list)
+    self.assertIn(['Expense', 'account_type/expense'], variation_range_category_list)
 
   def test_category_budget_line_variation(self):
     # test that using a variation on budget line level sets membership
@@ -200,8 +200,8 @@ class TestBudget(ERP5TypeTestCase):
     variation_range_category_list = \
        budget_line.BudgetLine_getVariationRangeCategoryList()
 
-    self.assertTrue(['', ''] in variation_range_category_list)
-    self.assertTrue(['Demo Group', 'group/demo_group'] in variation_range_category_list)
+    self.assertIn(['', ''], variation_range_category_list)
+    self.assertIn(['Demo Group', 'group/demo_group'], variation_range_category_list)
 
     budget_line.edit(variation_category_list=['group/demo_group'])
     self.assertEqual(['group'],
@@ -283,8 +283,8 @@ class TestBudget(ERP5TypeTestCase):
     variation_range_category_list = \
        budget.Budget_getVariationRangeCategoryList()
 
-    self.assertTrue(['', ''] in variation_range_category_list)
-    self.assertTrue(['Demo Group', 'group/demo_group'] in variation_range_category_list)
+    self.assertIn(['', ''], variation_range_category_list)
+    self.assertIn(['Demo Group', 'group/demo_group'], variation_range_category_list)
 
     # setting this variation on the budget also sets membership
     budget.edit(variation_category_list=['group/demo_group'])
@@ -364,7 +364,7 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(2, len(budget_line.contentValues()))
     budget_cell = budget_line.getCell('source/account_module/goods_purchase',
                                       'account_type/expense')
-    self.assertNotEquals(None, budget_cell)
+    self.assertNotEqual(None, budget_cell)
     self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
@@ -375,7 +375,7 @@ class TestBudget(ERP5TypeTestCase):
 
     budget_cell = budget_line.getCell('source/account_module/fixed_assets',
                                       'account_type/asset')
-    self.assertNotEquals(None, budget_cell)
+    self.assertNotEqual(None, budget_cell)
     self.assertEqual(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
@@ -2009,7 +2009,7 @@ class TestBudget(ERP5TypeTestCase):
         'product_line/1/1.2',
         'source/account_module/goods_purchase',
         'group/demo_group/sub1')
-    self.assertNotEquals(None, budget_cell)
+    self.assertNotEqual(None, budget_cell)
     self.assertEqual(2, budget_cell.getQuantity())
     budget_cell.setQuantity(6)
 
@@ -2117,14 +2117,14 @@ class TestBudget(ERP5TypeTestCase):
         'product_line/1/1.1',
         'source/account_module/goods_purchase',
         'account_type/asset/cash')
-    self.assertNotEquals(None, budget_cell)
+    self.assertNotEqual(None, budget_cell)
     self.assertEqual(1, budget_cell.getQuantity())
 
     budget_cell = budget_line.getCell(
         'product_line/1/1.1',
         'source/account_module/goods_purchase',
         'account_type/asset',)
-    self.assertNotEquals(None, budget_cell)
+    self.assertNotEqual(None, budget_cell)
     self.assertEqual(1, budget_cell.getQuantity())
 
   def updateBudgetCellList(self, budget_line, table_list):
@@ -2245,13 +2245,13 @@ class TestBudget(ERP5TypeTestCase):
       ('resource/product_module/test_product',
        'source_section/organisation_module/my_organisation'),
       None)
-    self.assertNotEquals(None, total_price)
+    self.assertNotEqual(None, total_price)
     self.assertEqual(500.0, total_price)
     total_price = budget_line.getEngagedBudgetDict().get(
       ('resource/product_module/demo_product',
        'source_section/organisation_module/main_organisation'),
       None)
-    self.assertNotEquals(None, total_price)
+    self.assertNotEqual(None, total_price)
     self.assertEqual(1200.0, total_price)
 
 

@@ -415,7 +415,7 @@ return printed
                 , partial(field.get_value, 'default')
                 , partial(field.get_recursive_tales, 'default')
                 ):
-      self.assertRaisesRegexp(BrokenProxyField, regexp, func)
+      self.assertRaisesRegex(BrokenProxyField, regexp, func)
 
     # we can still view the field in ZMI
     form.manage_main()

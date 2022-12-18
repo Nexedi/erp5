@@ -93,7 +93,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                        portal_type="Organisation",
                        title = title)
 
-    self.assertNotEquals(organisation, None)
+    self.assertNotEqual(organisation, None)
 
     self.assertEqual(group_id, organisation.getGroup())
     self.assertEqual(kw['title'], organisation.getTitle())
@@ -139,7 +139,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     category_0 = getattr(self.portal.portal_categories.group, category_id_0, None)
-    self.assertNotEquals(category_0, None)
+    self.assertNotEqual(category_0, None)
     self.assertEqual(category_0.getTitle(), "title_%s" % category_id_0)
 
     category_1 = getattr(self.portal.portal_categories.group, category_id_1, None)
@@ -149,7 +149,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, category_id_1, None)
-    self.assertNotEquals(category_1, None)
+    self.assertNotEqual(category_1, None)
     self.assertEqual(category_1.getTitle(), "title_%s" % category_id_1)
 
     # recreate category_1 with new title
@@ -165,7 +165,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
     category_1 = getattr(self.portal.portal_categories.group,
                          category_id_1, None)
-    self.assertNotEquals(category_1, None)
+    self.assertNotEqual(category_1, None)
     self.assertEqual(category_1.getTitle(), "new_title_%s" % category_id_1)
 
   def testCurrencyConfiguratorItem(self):
@@ -194,7 +194,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     eur = getattr(self.portal.currency_module, eur_currency_id , None)
-    self.assertNotEquals(eur, None)
+    self.assertNotEqual(eur, None)
     self.assertEqual(eur.getTitle(), eur_currency_title)
 
     brl = getattr(self.portal.currency_module, brl_currency_id , None)
@@ -204,7 +204,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     brl = getattr(self.portal.currency_module, brl_currency_id , None)
-    self.assertNotEquals(brl, None)
+    self.assertNotEqual(brl, None)
     self.assertEqual(brl.getTitle(), brl_currency_title)
 
     # Build several times to not break portal.
@@ -241,7 +241,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     security_script = getattr(self.portal.portal_skins.custom,
                               "ERP5Type_getSecurityCategoryMapping", None)
 
-    self.assertNotEquals(None, security_script)
+    self.assertNotEqual(None, security_script)
     self.assertEqual(security_script(), expect_script_outcome)
 
   def testAccountConfiguratorItem(self):
@@ -264,7 +264,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     account = getattr(account_module, account_dict['account_id'], None)
-    self.assertNotEquals(account, None)
+    self.assertNotEqual(account, None)
     self.assertEqual(account.getTitle(), account_dict['title'])
     self.assertEqual(account.getGap(), account_dict['gap'])
     self.assertEqual(account.getFinancialSection(),
@@ -323,7 +323,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.tic()
 
     alarm = getattr(self.portal.portal_alarms, "my_test_alarm", None)
-    self.assertNotEquals(None, alarm)
+    self.assertNotEqual(None, alarm)
 
     self.assertEqual(alarm.getEnabled(), True)
     self.assertEqual(alarm.getTitle(), "My Test Alarm")
@@ -339,7 +339,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                       property_map["periodicity_hour_list"])
     self.assertEqual(alarm.getActiveSenseMethodId(),
                       property_map["active_sense_method_id"])
-    self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+    self.assertNotEqual(alarm.getPeriodicityStartDate(), None)
     self.assertTrue(alarm.getPeriodicityStartDate() < DateTime())
     alarm.activeSense()
     self.tic()
@@ -446,14 +446,14 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       # Check first Level
       base_category = getattr(category_tool, base_category_id)
       my_test = getattr(base_category, "my_test", None)
-      self.assertNotEquals(my_test, None)
+      self.assertNotEqual(my_test, None)
       self.assertEqual(my_test.getTitle(), "TEST")
       self.assertEqual(my_test.getDescription(), "TEST")
       self.assertEqual(my_test.getCodification(), "TEST")
       self.assertEqual(my_test.getIntIndex(), 1)
       # Check Second level
       my_test = getattr(my_test, "my_test", None)
-      self.assertNotEquals(my_test, None)
+      self.assertNotEqual(my_test, None)
       self.assertEqual(my_test.getTitle(), "TEST")
       self.assertEqual(my_test.getDescription(), "TEST")
       self.assertEqual(my_test.getCodification(), "TEST")
@@ -461,7 +461,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
       # Check Thrid level
       my_test = getattr(my_test, "my_test", None)
-      self.assertNotEquals(my_test, None)
+      self.assertNotEqual(my_test, None)
       self.assertEqual(my_test.getTitle(), "TEST")
       self.assertEqual(my_test.getDescription(), "TEST")
       self.assertEqual(my_test.getCodification(), "TEST")
@@ -528,24 +528,24 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
           portal_type="Business Process",
           reference=reference)
 
-    self.assertNotEquals(business_process, None)
+    self.assertNotEqual(business_process, None)
 
     order_path = getattr(business_process, "order_path", None)
-    self.assertNotEquals(order_path, None)
+    self.assertNotEqual(order_path, None)
     self.assertEqual(order_path.getEfficiency(), 1.0)
     self.assertEqual(order_path.getTradePhase(), 'trade/order')
     self.assertEqual(order_path.getTradeDate(), 'trade_phase/trade/order')
     self.assertEqual(order_path.getTestMethodId(), None)
 
     delivery_path = getattr(business_process, "delivery_path", None)
-    self.assertNotEquals(delivery_path, None)
+    self.assertNotEqual(delivery_path, None)
     self.assertEqual(delivery_path.getEfficiency(), 1.0)
     self.assertEqual(delivery_path.getTradePhase(), 'trade/delivery')
     self.assertEqual(delivery_path.getTradeDate(), 'trade_phase/trade/order')
     self.assertEqual(delivery_path.getTestMethodId(), None)
 
     invoicing_path = getattr(business_process, "invoicing_path", None)
-    self.assertNotEquals(invoicing_path, None)
+    self.assertNotEqual(invoicing_path, None)
     self.assertEqual(invoicing_path.getEfficiency(), 1.0)
     self.assertEqual(invoicing_path.getTradePhase(), 'trade/invoicing')
     self.assertEqual(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
@@ -554,7 +554,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(invoicing_path.getMembershipCriterionCategoryList(), [])
 
     accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
-    self.assertNotEquals(accounting_debit_path, None)
+    self.assertNotEqual(accounting_debit_path, None)
     self.assertEqual(accounting_debit_path.getEfficiency(), 1.0)
     self.assertEqual(accounting_debit_path.getTradePhase(), 'trade/accounting')
     self.assertEqual(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
@@ -567,7 +567,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
         ['trade_phase/trade/invoicing', 'trade_phase/trade/delivery',])
 
     accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
-    self.assertNotEquals(accounting_credit_path, None)
+    self.assertNotEqual(accounting_credit_path, None)
     self.assertEqual(accounting_credit_path.getEfficiency(), -1.0)
     self.assertEqual(accounting_credit_path.getTradePhase(), 'trade/accounting')
     self.assertEqual(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
@@ -580,7 +580,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
         ['trade_phase/trade/delivery',])
 
     order_link = getattr(business_process, "order_link", None)
-    self.assertNotEquals(order_link, None)
+    self.assertNotEqual(order_link, None)
     #self.assertTrue(order_link.getDeliverable())
     self.assertEqual(order_link.getSuccessor(), "trade_state/trade/ordered")
     self.assertEqual(order_link.getPredecessor(),None)
@@ -590,7 +590,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(order_link.getTradePhase(),'trade/order')
 
     deliver_link = getattr(business_process, "deliver_link", None)
-    self.assertNotEquals(deliver_link, None)
+    self.assertNotEqual(deliver_link, None)
     #self.assertTrue(deliver_link.getDeliverable())
     self.assertEqual(deliver_link.getSuccessor(),"trade_state/trade/delivered")
     self.assertEqual(deliver_link.getPredecessor(),"trade_state/trade/ordered")
@@ -604,7 +604,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             "portal_deliveries/purchase_packing_list_builder"])
 
     invoice_link = getattr(business_process, "invoice_link", None)
-    self.assertNotEquals(invoice_link, None)
+    self.assertNotEqual(invoice_link, None)
     #self.assertFalse(invoice_link.getDeliverable())
     self.assertEqual(invoice_link.getSuccessor(),"trade_state/trade/invoiced")
     self.assertEqual(invoice_link.getPredecessor(),"trade_state/trade/delivered")
@@ -620,7 +620,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             "portal_deliveries/sale_invoice_transaction_trade_model_builder"])
 
     account_link = getattr(business_process, "account_link", None)
-    self.assertNotEquals(account_link, None)
+    self.assertNotEqual(account_link, None)
     #self.assertFalse(account_link.getDeliverable())
     self.assertEqual(account_link.getSuccessor(),"trade_state/trade/accounted")
     self.assertEqual(account_link.getPredecessor(),"trade_state/trade/invoiced")
@@ -633,7 +633,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             "portal_deliveries/sale_invoice_transaction_builder"])
 
     pay_link = getattr(business_process, "pay_link", None)
-    self.assertNotEquals(pay_link, None)
+    self.assertNotEqual(pay_link, None)
     #self.assertFalse(pay_link.getDeliverable())
     self.assertEqual(pay_link.getTradePhase(), 'trade/payment')
     self.assertEqual(pay_link.getSuccessor(), None)

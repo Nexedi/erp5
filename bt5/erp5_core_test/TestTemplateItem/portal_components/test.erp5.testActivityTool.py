@@ -52,32 +52,32 @@ class Test(ERP5TypeTestCase):
 
   def RestartAndDeleteActivity(self, activity):
     self.test_activity_tool_object._setTitle('title1')
-    self.assertEquals('title1',self.test_activity_tool_object.getTitle())
+    self.assertEqual('title1',self.test_activity_tool_object.getTitle())
 
     self.test_activity_tool_object.activate(activity=activity)._setTitle('title2')
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = self.activity_tool.getMessageTempObjectList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     self.activity_tool.manageDelete([message_list[0].uid],activity)
     # Needed so that the message are removed from the queue
     self.commit()
     self.tic()
-    self.assertEquals('title1',self.test_activity_tool_object.getTitle())
+    self.assertEqual('title1',self.test_activity_tool_object.getTitle())
     message_list = self.activity_tool.getMessageTempObjectList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
 
     self.test_activity_tool_object.activate(activity=activity)._setTitle('title2')
     # Needed so that the message are commited into the queue
     self.commit()
     message_list = self.activity_tool.getMessageTempObjectList()
-    self.assertEquals(len(message_list),1)
+    self.assertEqual(len(message_list),1)
     self.activity_tool.manageRestart([message_list[0].uid],activity)
     self.commit()
     self.tic()
-    self.assertEquals('title2',self.test_activity_tool_object.getTitle())
+    self.assertEqual('title2',self.test_activity_tool_object.getTitle())
     message_list = self.activity_tool.getMessageTempObjectList()
-    self.assertEquals(len(message_list),0)
+    self.assertEqual(len(message_list),0)
 
   def test_manageDelete(self):
     self.RestartAndDeleteActivity('SQLQueue')

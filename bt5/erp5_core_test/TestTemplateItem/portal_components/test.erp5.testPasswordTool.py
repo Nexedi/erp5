@@ -67,7 +67,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    self.assertNotEquals(uf.getUser(login), None)
+    self.assertNotEqual(uf.getUser(login), None)
     for _, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
@@ -162,7 +162,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     Check mail has been sent after fill in the form password
     """
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, _ = last_message
     self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEqual(['userA@example.invalid'], mto)
@@ -430,7 +430,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                   user_login='user-login', REQUEST=self.portal.REQUEST)
 
     # For security reasons, the message should always be the same
-    self.assertTrue("portal_status_message=An+email+has+been+sent+to+you." in str(ret))
+    self.assertIn("portal_status_message=An+email+has+been+sent+to+you.", str(ret))
     # But no mail has been sent
     self.stepCheckNoMailSent()
 
@@ -456,7 +456,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                   user_login='user-login', REQUEST=self.portal.REQUEST)
 
     # For security reasons, the message should always be the same
-    self.assertTrue("portal_status_message=An+email+has+been+sent+to+you." in str(ret))
+    self.assertIn("portal_status_message=An+email+has+been+sent+to+you.", str(ret))
     # But no mail has been sent
     self.stepCheckNoMailSent()
 
@@ -483,7 +483,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                   user_login='user-login', REQUEST=self.portal.REQUEST)
 
     # For security reasons, the message should always be the same
-    self.assertTrue("portal_status_message=An+email+has+been+sent+to+you." in str(ret))
+    self.assertIn("portal_status_message=An+email+has+been+sent+to+you.", str(ret))
     # But no mail has been sent
     self.stepCheckNoMailSent()
 

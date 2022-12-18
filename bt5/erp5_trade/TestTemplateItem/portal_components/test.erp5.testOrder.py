@@ -639,7 +639,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       self.assertEqual(total_quantity, order_line.getTotalQuantity())
     self.assertEqual( order_line.getTotalQuantity(fast = 0),
                        order_line.getTotalQuantity(fast = 1) )
-    self.assertNotEquals(order_line.getTotalQuantity(fast = 1),0)
+    self.assertNotEqual(order_line.getTotalQuantity(fast = 1),0)
 
   def stepCheckOrderLineTotalPrice(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -667,7 +667,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       self.assertEqual(total_price, order_line.getTotalPrice())
     self.assertEqual( order_line.getTotalPrice(fast = 0),
                        order_line.getTotalPrice(fast = 1) )
-    self.assertNotEquals(order_line.getTotalPrice(fast = 1),0)
+    self.assertNotEqual(order_line.getTotalPrice(fast = 1),0)
 
   def stepCheckOrderLineTotalPriceAndQuantityFastParameter(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -694,7 +694,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     self.assertEqual(total_quantity, order_line.getTotalQuantity(fast=0))
     self.assertEqual(0, order_line.getTotalPrice(fast=1))
     self.assertEqual(0, order_line.getTotalQuantity(fast=1))
-    self.assertNotEquals(total_price, 0)
+    self.assertNotEqual(total_price, 0)
     self.tic()
     self.assertEqual(len(portal_catalog(relative_url=
                                          order_line.getRelativeUrl())),1)
@@ -761,7 +761,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       total_price += order_line.getTotalPrice()
     self.assertEqual(0, len(portal_catalog(relative_url=order.getRelativeUrl())))
     self.assertEqual(total_price, order.getTotalPrice(fast=0))
-    self.assertNotEquals(total_price, 0)
+    self.assertNotEqual(total_price, 0)
     self.assertEqual(0, order.getTotalPrice(fast=1))
     self.tic()
     self.assertEqual(1, len(portal_catalog(relative_url=order.getRelativeUrl())))
@@ -849,7 +849,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
 #     self.assertEqual(len(order_line.getVariationRangeBaseCategoryList()), \
 #                       len(cvcl))
     for variation_category in cvcl:
-      self.assertTrue(variation_category in olvcl)
+      self.assertIn(variation_category, olvcl)
 
   def stepCheckOrderSimulation(self, sequence=None, sequence_list=None, **kw):
     """
@@ -937,8 +937,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       Test if some portal method are well defined
     """
     order = sequence.get('order')
-    self.assertTrue('Simulation Movement' in order.getPortalMovementTypeList())
-    self.assertTrue(self.order_line_portal_type in order.getPortalMovementTypeList())
+    self.assertIn('Simulation Movement', order.getPortalMovementTypeList())
+    self.assertIn(self.order_line_portal_type, order.getPortalMovementTypeList())
 
   def stepCheckDeliveryBuilderPresence(self, sequence=None,
                                        sequence_list=None, **kw):
@@ -1003,7 +1003,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                 source_project_value = project1,
                 destination_project_value = project2 )
     order.setPaymentConditionEfficiency(1.0)
-    self.assertTrue('Site Error' not in order.view())
+    self.assertNotIn('Site Error', order.view())
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
     """
@@ -3056,8 +3056,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     html = sale_order.view()
     # report tree is used, and we had no error
-    self.assertTrue('listbox-table-report-tree-selection-cell' in html)
-    self.assertTrue('Object Tree' in html)
+    self.assertIn('listbox-table-report-tree-selection-cell', html)
+    self.assertIn('Object Tree', html)
 
 
 def test_suite():

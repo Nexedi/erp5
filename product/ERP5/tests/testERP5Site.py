@@ -56,7 +56,7 @@ class TestERP5Site(ERP5TypeTestCase):
     kw = self._getSiteCreationParameterDict()
     del kw['sql_reset']
     self._getSiteCreationParameterDict = lambda: kw
-    self.assertRaisesRegexp(Exception, "not empty",
+    self.assertRaisesRegex(Exception, "not empty",
       super(TestERP5Site, self).setUp)
     self.assertFalse(hasattr(self, 'portal'))
     self.assertIn(self.getPortalName(), failed_portal_installation)

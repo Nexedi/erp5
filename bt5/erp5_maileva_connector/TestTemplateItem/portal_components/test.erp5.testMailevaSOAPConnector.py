@@ -240,14 +240,14 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(getattr(event, 'track_id', ""), 192625)
       self.assertEqual(event.getValidationState(), 'confirmed')
       self.assertEqual(self.document.getSendState(), 'sending')
-      self.assertTrue('PENDING' in event.getProperty('response_detail', ''))
+      self.assertIn('PENDING', event.getProperty('response_detail', ''))
 
       self.portal.portal_alarms.check_maileva_document_status.activeSense()
       self.tic()
       self.assertEqual(getattr(event, 'track_id', ""), 192625)
       self.assertEqual(event.getValidationState(), 'acknowledged')
       self.assertEqual(self.document.getSendState(), 'success')
-      self.assertTrue('SENT' in event.getProperty('response_detail', ''))
+      self.assertIn('SENT', event.getProperty('response_detail', ''))
 
   def test_send_pdf_to_maileva_with_failure(self):
     self.portal.system_event_module.manage_delObjects([x.getId() for x in self.portal.system_event_module.objectValues(portal_type='Maileva Exchange')])
@@ -276,15 +276,15 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(getattr(event, 'track_id', ""), 192625)
       self.assertEqual(event.getValidationState(), 'confirmed')
       self.assertEqual(self.document.getSendState(), 'sending')
-      self.assertTrue('PENDING' in event.getProperty('response_detail', ''))
+      self.assertIn('PENDING', event.getProperty('response_detail', ''))
 
       self.portal.portal_alarms.check_maileva_document_status.activeSense()
       self.tic()
       self.assertEqual(getattr(event, 'track_id', ""), 192625)
       self.assertEqual(event.getValidationState(), 'acknowledged')
       self.assertEqual(self.document.getSendState(), 'failed')
-      self.assertTrue('SENT' in event.getProperty('response_detail', ''))
-      self.assertTrue('NACCEPT' in event.getProperty('response_detail', ''))
+      self.assertIn('SENT', event.getProperty('response_detail', ''))
+      self.assertIn('NACCEPT', event.getProperty('response_detail', ''))
 
 
   def test_failed_to_submit_to_maileva(self):
@@ -305,7 +305,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
       self.assertEqual(event.getFollowUpValue(), self.document)
       self.assertEqual(self.document.getSendState(), 'failed')
       self.assertNotEqual(event.getRequest(), None)
-      self.assertTrue('exception' in event.getResponse())
+      self.assertIn('exception', event.getResponse())
       self.tic()
 
   def test_maileva_xml(self):

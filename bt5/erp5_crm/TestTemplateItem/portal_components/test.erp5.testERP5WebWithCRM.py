@@ -119,7 +119,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                       form_kw['source_person_last_name'])
     self.assertEqual(person.getDefaultEmailText(),
                       form_kw['source_person_default_email_text'])
-    self.assertTrue(form_kw['source_person_default_telephone_text'] in\
+    self.assertIn(form_kw['source_person_default_telephone_text'],\
                     person.getDefaultTelephoneText())
     self.assertEqual(person.getValidationState(), 'validated')
     organisation = person.getSubordinationValue()

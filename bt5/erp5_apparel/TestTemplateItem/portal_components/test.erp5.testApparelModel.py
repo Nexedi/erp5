@@ -67,7 +67,7 @@ class TestApparelModel(ERP5TypeTestCase):
           path = path[cat_id]
     # check categories have been created
     for cat_string in self.getNeededCategoryList():
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -149,20 +149,20 @@ class TestApparelModel(ERP5TypeTestCase):
     acrylique = apparel_model.getCell(
         'composition/acrylique',
         base_id = 'composition')
-    self.assertNotEquals(acrylique, None)
+    self.assertNotEqual(acrylique, None)
     self.assertEqual(acrylique.getProperty('quantity'), 0.88)
 
     elasthane = apparel_model.getCell(
         'composition/elasthane',
         base_id = 'composition')
-    self.assertNotEquals(elasthane, None)
+    self.assertNotEqual(elasthane, None)
     self.assertEqual(elasthane.getProperty('quantity'), 0.12)
 
     # check indexes are present
-    self.assertTrue('composition' in apparel_model.index)
+    self.assertIn('composition', apparel_model.index)
     index = apparel_model.index['composition'][0]
-    self.assertTrue('composition/elasthane' in index)
-    self.assertTrue('composition/acrylique' in index)
+    self.assertIn('composition/elasthane', index)
+    self.assertIn('composition/acrylique', index)
 
   def test_checkCopyColourRangeVariation(self):
     '''

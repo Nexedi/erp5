@@ -154,7 +154,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
     from DateTime import DateTime
     date = DateTime().Date()
     date = date.replace("/", "")
-    self.assertTrue(date in obj1.getId())
+    self.assertIn(date, obj1.getId())
     # check we still have a hbtree
     self.assertEqual(self.folder.isBTree(), False)
     self.assertEqual(self.folder.isHBTree(), True)

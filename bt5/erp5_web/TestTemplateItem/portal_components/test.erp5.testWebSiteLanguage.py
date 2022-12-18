@@ -62,7 +62,7 @@ class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
 
   def assertDocumentIndexed(self, doc, expected_result):
     sql_foo_list = self.portal.portal_catalog(relative_url=doc.getRelativeUrl())
-    self.assertEquals(len(sql_foo_list), int(expected_result))
+    self.assertEqual(len(sql_foo_list), int(expected_result))
 
   def test_isSubtreeIndexable(self):
     web_site = self.setupWebSite()

@@ -145,7 +145,7 @@ class TestAccessTab(ERP5TypeTestCase):
 
     (currency_label, currency_url) = currency_menu
     self.assertEqual(currency_label, 'Currencies')
-    self.assertTrue('https' in currency_url[0][1])
+    self.assertIn('https', currency_url[0][1])
 
   def test_01_testAccessTab(self):
     """

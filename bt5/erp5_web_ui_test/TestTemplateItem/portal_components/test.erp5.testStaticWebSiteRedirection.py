@@ -126,16 +126,16 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
 
       if (source_path == configuration_service_worker_url):
         # Test service worker URL
-        self.assertEquals(response.status, httplib.OK, '%s: %s' % (response.status, url_to_check))
-        self.assertEquals(response.getheader('Content-Type'), 'application/javascript')
+        self.assertEqual(response.status, httplib.OK, '%s: %s' % (response.status, url_to_check))
+        self.assertEqual(response.getheader('Content-Type'), 'application/javascript')
         self.assertTrue('self.registration.unregister()' in response_body,
                         response_body)
 
       else:
-        self.assertEquals(response.status, status_to_assert, '%s: %s' % (response.status, url_to_check))
-        self.assertEquals(response.getheader(LOCATION), redirect_location)
-        self.assertEquals(response.getheader('Content-Type'), 'text/plain; charset=utf-8')
-        self.assertEquals(response_body, redirect_location)
+        self.assertEqual(response.status, status_to_assert, '%s: %s' % (response.status, url_to_check))
+        self.assertEqual(response.getheader(LOCATION), redirect_location)
+        self.assertEqual(response.getheader('Content-Type'), 'text/plain; charset=utf-8')
+        self.assertEqual(response_body, redirect_location)
 
   ##############################################################################
 

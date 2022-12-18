@@ -90,14 +90,14 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     data_set = self.portal.portal_catalog.getResultValue(
                               portal_type='Data Set',
                               reference=self.key)
-    self.assertNotEquals(None, data_set)
+    self.assertNotEqual(None, data_set)
     self.assertEqual('Published', data_set.getValidationStateTitle())
 
     # Check Document
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
                                                 reference=self.sha512sum,
                                                 creation_date=' >= "%s"' % now)
-    self.assertNotEquals(None, document)
+    self.assertNotEqual(None, document)
     self.assertEqual(self.data, document.getData())
     self.assertEqual(str(self.expiration_date),
                                str(document.getExpirationDate()))

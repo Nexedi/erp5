@@ -384,7 +384,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def checkComposition(self, movement, specialise_value_list, type_count_dict):
     composed = movement.asComposedDocument()
-    self.assertFalse(movement in composed._effective_model_list)
+    self.assertNotIn(movement, composed._effective_model_list)
     self.assertSameSet(composed.getSpecialiseValueList(),
                        specialise_value_list)
     count = 0
@@ -1027,7 +1027,7 @@ return lambda *args, **kw: 1""")
 
     packing_list = order.getCausalityRelatedValue(
                       portal_type=self.packing_list_portal_type)
-    self.assertNotEquals(packing_list, None)
+    self.assertNotEqual(packing_list, None)
     self.assertEqual(1000, packing_list.getTotalPrice())
 
     packing_list.start()
@@ -1038,7 +1038,7 @@ return lambda *args, **kw: 1""")
 
     invoice = packing_list.getCausalityRelatedValue(
                       portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
+    self.assertNotEqual(invoice, None)
     self.assertEqual(2, len(invoice.getMovementList()))
     self.assertEqual(1150, invoice.getTotalPrice())
     self.assertEqual([], invoice.getDivergenceList())

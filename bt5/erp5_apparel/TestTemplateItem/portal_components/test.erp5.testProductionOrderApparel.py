@@ -276,7 +276,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     order_line = sequence.get('order_line')
     transformation = sequence.get('transformation')
 
-    self.assertNotEquals(None, transformation)
+    self.assertNotEqual(None, transformation)
 
     self.assertEqual(order_line.getSpecialiseValue(), transformation)
 

@@ -372,7 +372,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     """
     Check that notification fails when the destination hasn't a email adress
     """
-    with self.assertRaisesRegexp(ValueError, "email must be set"):
+    with self.assertRaisesRegex(ValueError, "email must be set"):
       self.portal.portal_notifications.sendMessage(
           recipient=sequence['user_without_email_id'], subject='Subject', message='Message')
 

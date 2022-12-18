@@ -194,8 +194,8 @@ class TestContentTranslation(ERP5TypeTestCase):
                      False)
     self.assertEqual(getattr(person, 'getJaKanaTranslatedFirstName', False),
                      False)
-    self.assert_(getattr(person, 'getEnTranslatedFirstName', False))
-    self.assert_(getattr(person, 'getEnTranslatedFirstName', False))
+    self.assertTrue(getattr(person, 'getEnTranslatedFirstName', False))
+    self.assertTrue(getattr(person, 'getEnTranslatedFirstName', False))
 
     ##
     # Add custom local.language
@@ -204,11 +204,11 @@ class TestContentTranslation(ERP5TypeTestCase):
     portal.Localizer.add_language('ja-kana')
     self.tic()
 
-    self.assert_(getattr(person, 'setJaKanaTranslatedFirstName', False))
-    self.assert_(getattr(person, 'getJaKanaTranslatedFirstName', False))
-    self.assert_(getattr(person, 'hasJaKanaTranslatedFirstName', False))
+    self.assertTrue(getattr(person, 'setJaKanaTranslatedFirstName', False))
+    self.assertTrue(getattr(person, 'getJaKanaTranslatedFirstName', False))
+    self.assertTrue(getattr(person, 'hasJaKanaTranslatedFirstName', False))
 
-    self.assert_(not person.hasJaKanaTranslatedFirstName())
+    self.assertTrue(not person.hasJaKanaTranslatedFirstName())
 
     # if there is no translation, original value is returned.
     self.assertEqual(None, getattr(person, '__translation_dict', None))
@@ -230,13 +230,13 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assertEqual(set([('last_name', 'ja-kana'), ('first_name', 'ja-kana')]),
                      set(translation_dict.keys()))
 
-    self.assert_(person.hasJaKanaTranslatedFirstName())
+    self.assertTrue(person.hasJaKanaTranslatedFirstName())
 
     self.tic()
 
     x = person.Base_viewContentTranslation().encode('utf-8')
-    self.assertTrue('タハラ' in x)
-    self.assertTrue('ユウセイ' in x)
+    self.assertIn('タハラ', x)
+    self.assertIn('ユウセイ', x)
 
     self.assertEqual(person.getJaKanaTranslatedFirstName(), 'タハラ')
     self.assertEqual(person.getJaKanaTranslatedLastName(), 'ユウセイ')
@@ -263,7 +263,7 @@ class TestContentTranslation(ERP5TypeTestCase):
   def test_getInstancePropertySet(self):
     """Translatable properies are returned by getInstancePropertySet
     """
-    self.assertTrue('en_translated_first_name' in
+    self.assertIn('en_translated_first_name',
       self.portal.portal_types.Person.getInstancePropertySet())
 
 def test_suite():

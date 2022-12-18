@@ -312,10 +312,10 @@ class TestConversionInSimulation(AccountingTestCase):
           invoice_transaction_movement_1.getResourceValue())
     self.assertEqual(currency,
           delivery_movement.getPriceCurrencyValue())
-    self.assertEquals\
+    self.assertEqual\
      (invoice_transaction_movement_1.getDestinationTotalAssetPrice(),
         655.957*invoice_transaction_movement_1.getTotalPrice())
-    self.assertEquals\
+    self.assertEqual\
         (invoice_transaction_movement_1.getSourceTotalAssetPrice(),
         None)
     invoice_transaction_movement_2 =\
@@ -324,7 +324,7 @@ class TestConversionInSimulation(AccountingTestCase):
           invoice_transaction_movement_2.getResourceValue())
     self.assertEqual(currency,
           delivery_movement.getPriceCurrencyValue())
-    self.assertEquals\
+    self.assertEqual\
         (invoice_transaction_movement_2.getDestinationTotalAssetPrice(),
         655.957*invoice_transaction_movement_2.getTotalPrice())
 
@@ -404,10 +404,10 @@ class TestConversionInSimulation(AccountingTestCase):
           invoice_transaction_movement.getResourceValue())
     self.assertEqual(currency,
           delivery_movement.getPriceCurrencyValue())
-    self.assertEquals\
+    self.assertEqual\
         (invoice_transaction_movement.getSourceTotalAssetPrice(),
          -655.957*invoice_transaction_movement.getTotalPrice())
-    self.assertEquals\
+    self.assertEqual\
         (invoice_transaction_movement.getDestinationTotalAssetPrice(),
         None)
 
@@ -474,25 +474,25 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     related_packing_list.start()
     related_packing_list.stop()
     self.tic()
     self.buildInvoices()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                             portal_type='Sale Invoice Transaction')
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
     related_invoice.start()
     self.tic()
     line_list= related_invoice.contentValues(
       portal_type=self.portal.getPortalAccountingMovementTypeList())
-    self.assertNotEquals(line_list, None)
+    self.assertNotEqual(line_list, None)
     result_list = []
     for line in line_list:
       result_list.append((line.getSource(), line.getDestinationTotalAssetPrice()))
       self.assertEqual(line.getSourceTotalAssetPrice(), None)
 
-    self.assertEquals(
+    self.assertEqual(
       sorted(result_list),
       sorted([
         ('account_module/customer', round(-2*(1+0.196)*655.957)),
@@ -566,25 +566,25 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     related_packing_list.start()
     related_packing_list.stop()
     self.tic()
     self.buildInvoices()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                             portal_type='Sale Invoice Transaction')
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
     related_invoice.start()
     self.tic()
     line_list= related_invoice.contentValues(
       portal_type=self.portal.getPortalAccountingMovementTypeList())
-    self.assertNotEquals(line_list, None)
+    self.assertNotEqual(line_list, None)
     result_list = []
     for line in line_list:
       result_list.append((line.getSource(), line.getSourceTotalAssetPrice()))
       self.assertEqual(line.getDestinationTotalAssetPrice(), None)
 
-    self.assertEquals(
+    self.assertEqual(
       sorted(result_list),
       sorted([
         ('account_module/customer', round(2*(1+0.196)*655.957)),
@@ -661,7 +661,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     related_packing_list_line_list=related_packing_list.getMovementList()
     related_packing_list_line= related_packing_list_line_list[0]
     self.assertEqual(related_packing_list_line.getQuantity(),5.0)
@@ -688,7 +688,7 @@ class TestConversionInSimulation(AccountingTestCase):
     result_list = []
     for invoice_transaction_movement in invoice_transaction_applied_rule.contentValues():
       result_list.append((invoice_transaction_movement.getSource(), invoice_transaction_movement.getDestinationTotalAssetPrice()))
-    self.assertEquals(
+    self.assertEqual(
       sorted(result_list),
       sorted([
         ('account_module/customer', -2*3*(1+0.196)*655.957),
@@ -764,7 +764,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Purchase Packing List')
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     related_packing_list_line_list=related_packing_list.getMovementList()
     related_packing_list_line= related_packing_list_line_list[0]
     self.assertEqual(related_packing_list_line.getQuantity(),5.0)
@@ -792,7 +792,7 @@ class TestConversionInSimulation(AccountingTestCase):
     result_list = []
     for invoice_transaction_movement in invoice_transaction_applied_rule.contentValues():
       result_list.append((invoice_transaction_movement.getSource(), invoice_transaction_movement.getSourceTotalAssetPrice()))
-    self.assertEquals(
+    self.assertEqual(
       sorted(result_list),
       sorted([
         ('account_module/customer', 2*3*(1+0.196)*655.957),
@@ -869,7 +869,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     self.assertEqual(related_packing_list.getDeliveryMode(),
                          order.getDeliveryMode())
     self.assertEqual(related_packing_list.getIncoterm(),
@@ -880,7 +880,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildInvoices()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                              portal_type='Sale Invoice Transaction')
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
     self.assertEqual(related_invoice.getDeliveryMode(),
                          order.getDeliveryMode())
     self.assertEqual(related_invoice.getIncoterm(),
@@ -945,7 +945,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     movement_list = related_packing_list.getMovementList()
     movement_list.sort(key=lambda x:x.getCausalityId())
     self.assertEqual(len(movement_list),2)

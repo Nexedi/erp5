@@ -322,7 +322,7 @@ class TestUpgrader(ERP5TypeTestCase):
       bt5.uninstall()
 
   def stepCheckERP5WebBTInstalled(self, sequence=None):
-    self.assertTrue('erp5_web' in \
+    self.assertIn('erp5_web', \
       self.portal.portal_templates.getInstalledBusinessTemplateTitleList())
 
   def stepCheckNoActivitiesCreated(self, sequence=None):
@@ -401,9 +401,9 @@ class TestUpgrader(ERP5TypeTestCase):
       person_module_type.setTypePropertySheetList(
         [constraint_id,] + propery_sheet_list)
 
-    self.assertTrue(constraint_id in person_type.getTypePropertySheetList())
-    self.assertTrue(
-      constraint_id in person_module_type.getTypePropertySheetList())
+    self.assertIn(constraint_id, person_type.getTypePropertySheetList())
+    self.assertIn(
+      constraint_id, person_module_type.getTypePropertySheetList())
 
   def stepCreateAndInstallBusinessTemplate(self, sequence=None):
     bt5 = self.portal.portal_templates.newContent(
@@ -416,7 +416,7 @@ class TestUpgrader(ERP5TypeTestCase):
     sequence.get("bt5").uninstall()
 
   def stepCheckBusinessTemplateInstalled(self, sequence=None):
-    self.assertTrue(sequence.get('bt5').getTitle() in \
+    self.assertIn(sequence.get('bt5').getTitle(), \
       self.portal.portal_templates.getInstalledBusinessTemplateTitleList())
 
   def stepCheckConsistencyInTemplateTool(self, sequence=None):

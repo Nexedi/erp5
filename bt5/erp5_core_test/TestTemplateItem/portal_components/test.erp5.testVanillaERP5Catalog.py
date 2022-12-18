@@ -98,7 +98,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
-      self.assertTrue(path in path_list)
+      self.assertIn(path, path_list)
       LOG('checkRelativeUrlInSQLPathList found path:',0,path)
 
   def checkRelativeUrlNotInSQLPathList(self,url_list,connection_id=None):
@@ -106,7 +106,7 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_id = self.getPortalId()
     for url in url_list:
       path = '/' + portal_id + '/' + url
-      self.assertTrue(path not in  path_list)
+      self.assertNotIn(path,  path_list)
       LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
 
   def test_1_ERP5Site_reindexAll(self):
