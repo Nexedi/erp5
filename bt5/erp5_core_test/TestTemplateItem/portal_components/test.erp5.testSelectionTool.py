@@ -63,15 +63,15 @@ class TestSelectionTool(ERP5TypeTestCase):
                       self.portal_selections.getSelectionNameList())
     self.assertEqual(['test_selection'],
                       self.portal_selections.getSelectionNames())
-    self.assert_(self.portal_selections._getContainer() is not None)
-    self.assert_(getattr(self.portal_selections, 'selection_data', None)
+    self.assertTrue(self.portal_selections._getContainer() is not None)
+    self.assertTrue(getattr(self.portal_selections, 'selection_data', None)
                  is not None)
-    self.assert_(getattr(self.portal_selections, '_v_selection_container', None)
+    self.assertTrue(getattr(self.portal_selections, '_v_selection_container', None)
                  is not None)
 
   def testGetSelectionFor(self):
     selection = self.portal_selections.getSelectionFor('test_selection')
-    self.assert_(isinstance(selection, Selection))
+    self.assertTrue(isinstance(selection, Selection))
     self.assertEqual('test_selection', selection.name)
 
   def testGetSelectionParamsFor(self):
@@ -192,7 +192,7 @@ class TestSelectionTool(ERP5TypeTestCase):
 
   def testDeleteSelection(self):
     selection = self.portal_selections.getSelectionFor('test_selection')
-    self.assert_(isinstance(selection, Selection))
+    self.assertTrue(isinstance(selection, Selection))
     self.portal_selections.manage_deleteSelection('test_selection')
     selection = self.portal_selections.getSelectionFor('test_selection')
     self.assertEqual(selection, None)
@@ -201,7 +201,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     # XXX: There is side effect, that manager, running user, is the same use
     #      and there is no way (for now) to get selections per user...
     selection = self.portal_selections.getSelectionFor('test_selection')
-    self.assert_(isinstance(selection, Selection))
+    self.assertTrue(isinstance(selection, Selection))
     self.portal_selections.manage_deleteSelectionForUser('test_selection',
         'manager')
     selection = self.portal_selections.getSelectionFor('test_selection')
@@ -209,7 +209,7 @@ class TestSelectionTool(ERP5TypeTestCase):
 
   def testDeleteGlobalSelection(self):
     selection = self.portal_selections.getSelectionFor('test_selection')
-    self.assert_(isinstance(selection, Selection))
+    self.assertTrue(isinstance(selection, Selection))
     self.portal_selections.manage_deleteGlobalSelection('test_selection')
     selection = self.portal_selections.getSelectionFor('test_selection')
     self.assertEqual(selection, None)
@@ -351,8 +351,8 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
                       self.portal_selections.getSelectionNameList())
     self.assertEqual([],
                       self.portal_selections.getSelectionNames())
-    self.assert_(self.portal_selections._getContainer() is not None)
-    self.assert_(getattr(self.portal_selections, '_v_selection_container', None)
+    self.assertTrue(self.portal_selections._getContainer() is not None)
+    self.assertTrue(getattr(self.portal_selections, '_v_selection_container', None)
                  is not None)
 
   @skip('To be decided if implementation is required')

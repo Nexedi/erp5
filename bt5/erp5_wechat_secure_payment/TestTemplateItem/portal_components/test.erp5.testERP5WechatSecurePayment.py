@@ -56,9 +56,9 @@ def getMessageList(o):
 
 class TestERP5WechatSecurePaymenConstraint(TestERP5WechatSecurePaymentMixin):
   def _test(self, message, prop, value='12345'):
-    self.assertTrue(message in getMessageList(self.service))
+    self.assertIn(message, getMessageList(self.service))
     self.service.edit(**{prop: value})
-    self.assertFalse(message in getMessageList(self.service))
+    self.assertNotIn(message, getMessageList(self.service))
 
   def test_link_url_string(self):
     self._test('Wechat URL has to be set.', 'link_url_string')

@@ -52,7 +52,7 @@ class TestGUISecurity(ERP5TypeTestCase):
     # Make sure that the status is clean.
     self.portal.ListBoxZuite_reset()
     message = self.portal.foo_module.FooModule_createObjects()
-    self.assertTrue('Created Successfully' in message)
+    self.assertIn('Created Successfully', message)
     if not hasattr(self.portal.person_module, 'user'):
       user = self.portal.person_module.newContent(portal_type='Person', id='user', reference='user')
       user.newContent(portal_type='ERP5 Login', reference='user').validate()

@@ -106,7 +106,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.fail('No %s found in %s (%s group)' % (field_type, form_id, group))
 
   def test_skin_selection(self):
-    self.assertTrue(self.skin in
+    self.assertIn(self.skin,
               self.portal.portal_skins.getSkinSelections())
 
   def test_form_list(self):
@@ -435,7 +435,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_textarea_center_group(self):
     self._assertFieldInGroup('TextAreaField', 'Person_view', 'center')
-    self.assert_('my_description' in [f.getId() for f in
+    self.assertIn('my_description', [f.getId() for f in
         self.portal.Person_view.get_fields_in_group('center')])
     self.portal.person_module.pers.setDescription('<Escape>&\nnewline')
     response = self.publish(
@@ -455,7 +455,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       parser = OOoParser()
       parser.openFromString(body)
       content_xml = parser.oo_files['content.xml']
-      self.assert_('&lt;Escape&gt;&amp;<text:line-break/>newline' in content_xml)
+      self.assertIn('&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
 
   def test_untranslatable_columns(self):
     self.portal.ListBoxZuite_reset()
@@ -485,10 +485,10 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     parser = OOoParser()
     parser.openFromString(body)
     content_xml = parser.oo_files['content.xml']
-    self.assertTrue(message in content_xml)
+    self.assertIn(message, content_xml)
 
     # This untranslatable column have not been translated
-    self.assertTrue(message not in message_catalog._translated)
+    self.assertNotIn(message, message_catalog._translated)
 
   def test_form_view_ZMI(self):
     """We can edit form_view in the ZMI."""
@@ -496,10 +496,10 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertEqual('text/html;charset=UTF-8', content_type)
     self.assertFalse(response.getHeader('content-disposition'))
     # Simplistic assertion that we are viewing the ODF XML source
-    self.assertTrue('office:document-content' in response.getBody())
+    self.assertIn('office:document-content', response.getBody())
 
   def test_form_list_ZMI(self):
     """We can edit form_list in the ZMI."""
@@ -507,9 +507,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertEqual('text/html;charset=UTF-8', content_type)
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertTrue('office:document-content' in response.getBody())
+    self.assertIn('office:document-content', response.getBody())
 
   def test_report_view_ZMI(self):
     """We can edit report_view in the ZMI."""
@@ -517,9 +517,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEquals('text/html;charset=UTF-8', content_type)
+    self.assertEqual('text/html;charset=UTF-8', content_type)
     self.assertFalse(response.getHeader('content-disposition'))
-    self.assertTrue('office:document-content' in response.getBody())
+    self.assertIn('office:document-content', response.getBody())
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'

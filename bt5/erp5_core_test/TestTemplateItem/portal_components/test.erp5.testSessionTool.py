@@ -208,10 +208,10 @@ class SessionToolTestCase(ERP5TypeTestCase):
     session.clear()
     # get / set
     session['foo'] = 'Bar'
-    self.assertTrue('foo' in session)
+    self.assertIn('foo', session)
     self.assertEqual('Bar', session['foo'])
     self.assertEqual('Bar', session.get('foo'))
-    self.assertFalse('bar' in session)
+    self.assertNotIn('bar', session)
     self.assertEqual('Default', session.get('bar', 'Default'))
     self.assertRaises(KeyError, session.__getitem__, 'bar')
 
