@@ -875,7 +875,7 @@ body[dir="rtl"] .logged_in_as {
 }
 
 .bottom_actions {
-  margin-bottom: 1em;
+  padding-bottom: 1em;
 }
 
 .document .actions {
