@@ -97,15 +97,22 @@ $script.onload = function() {
   if (mode === "htmlmixed") {
     mode = "html";
   }
- 
+
   var editor = monaco.editor.create(
     document.getElementById("monaco-container"),
     {
       value: $textarea.value,
       language: mode,
-      autoIndent: true
+      autoIndent: true,
+      experimental: {
+        stickyScroll: {
+          enabled: true,
+          maxLineCount: 3,
+        }
+      }
     }
   );
+
   if (mode == "python") {
     editor.getModel().updateOptions({ tabSize: 2 });
   }
@@ -267,7 +274,7 @@ $script.onload = function() {
   editor.addAction({
     id: "save",
     label: "Save",
-    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
+    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
     precondition: null,
     keybindingContext: null,
     contextMenuGroupId: "navigation",
