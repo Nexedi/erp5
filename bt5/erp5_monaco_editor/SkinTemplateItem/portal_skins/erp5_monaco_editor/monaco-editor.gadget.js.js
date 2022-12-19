@@ -200,6 +200,43 @@
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
             .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
         }
+
+        if (this.state.model_language === 'python') {
+          const documentSymbolProvider = {
+            provideDocumentSymbols: function (model, token) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              data.append('data', JSON.stringify({ code: model.getValue() }));
+              return fetch(
+                new URL(
+                  'ERP5Site_getPythonCodeSymbolList',
+                  location.href
+                ).toString(),
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal
+                }
+              ).then(
+                (response) => response.json(),
+                (e) => {
+                  if (!(e instanceof DOMException) /* AbortError */) {
+                    throw e;
+                  }
+                  /* ignore aborted requests */
+                }
+              );
+            }
+          };
+          monaco.languages.registerDocumentSymbolProvider(
+            'python',
+            documentSymbolProvider
+          );
+        }
+
         if (modification_dict.hasOwnProperty('editable')) {
           this.editor.updateOptions({ readOnly: !this.state.editable });
         }
