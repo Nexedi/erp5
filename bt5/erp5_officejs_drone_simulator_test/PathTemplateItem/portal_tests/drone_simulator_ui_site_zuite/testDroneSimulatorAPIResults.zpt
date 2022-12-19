@@ -16,7 +16,7 @@
 <!-- Go to site -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_drone_simulator/app/#/?page=drone_simulator_unit_test</td>
+  <td>${base_url}/web_site_module/officejs_drone_simulator/</td>
   <td></td>
 </tr>
 <!-- Check form -->
