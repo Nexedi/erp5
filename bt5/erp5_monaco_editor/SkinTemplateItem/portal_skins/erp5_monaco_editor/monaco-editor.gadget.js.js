@@ -235,6 +235,75 @@
             'python',
             documentSymbolProvider
           );
+
+          const gadget = this;
+          const yapfDocumentFormattingProvider = {
+            _provideFormattingEdits: function (model, range, options, token) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              data.append(
+                'data',
+                JSON.stringify({ code: model.getValue(), range: range })
+              );
+              return fetch(
+                new URL(
+                  'ERP5Site_formatPythonSourceCode',
+                  location.href
+                ).toString(),
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal
+                }
+              )
+                .then((response) => response.json())
+                .then(
+                  (data) => {
+                    if (data.error) {
+                      gadget.editor.revealLine(data.error_line);
+                      return;
+                    }
+                    if (data.changed) {
+                      return [
+                        {
+                          range: model.getFullModelRange(),
+                          text: data.formatted_code
+                        }
+                      ];
+                    }
+                  },
+                  (e) => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            },
+            provideDocumentRangeFormattingEdits: function (
+              model,
+              range,
+              options,
+              token
+            ) {
+              return this._provideFormattingEdits(model, range, options, token);
+            },
+            provideDocumentFormattingEdits: function (model, options, token) {
+              return this._provideFormattingEdits(model, null, options, token);
+            }
+          };
+
+          monaco.languages.registerDocumentFormattingEditProvider(
+            'python',
+            yapfDocumentFormattingProvider
+          );
+          monaco.languages.registerDocumentRangeFormattingEditProvider(
+            'python',
+            yapfDocumentFormattingProvider
+          );
         }
 
         if (modification_dict.hasOwnProperty('editable')) {
