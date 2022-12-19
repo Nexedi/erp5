@@ -1,4 +1,7 @@
 <module>
+ <category_list>
+  <category>business_application/crm</category>
+ </category_list>
  <id>event_module</id>
  <permission_list>
   <permission type='tuple'>
