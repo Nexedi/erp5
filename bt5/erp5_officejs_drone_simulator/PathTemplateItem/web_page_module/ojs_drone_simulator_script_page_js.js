@@ -122,7 +122,7 @@
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_simulator_logic.js',
-      'gadget_erp5_page_drone_simulator_droneaaailefixe.js',
+      'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
       'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 
@@ -365,7 +365,7 @@
                               [domsugar('div')]).firstElementChild;
       DRONE_LIST = [];
       for (i = 0; i < options.number_of_drones; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "DroneAaileFixeAPI",
+        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
       }
       game_parameters_json = {
