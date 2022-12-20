@@ -292,3 +292,80 @@ class TestSecurityUidOptimizationWorklist(SecurityUidOptimizationTestCase):
         'security_uid_or_alternate_security_uid_draft': 4,
       }
     )
+
+  def test_worklist_exclusionlist_collision(self):
+    # non-regression test for an issue with multiple local role group
+    self.portal.portal_types.Organisation.newContent(
+      portal_type='Role Information',
+      role_name='Assignee',
+      role_category_list=('group/g1', ),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
+    )
+    self.portal.portal_types.Organisation.newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/g2', ),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
+    )
+    self.portal.portal_types.Person.newContent(
+      portal_type='Role Information',
+      role_name='Assignee',
+      role_category_list=('group/g1', ),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Other,
+    )
+    self.portal.portal_types.Person.newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/g2', ),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
+    )
+
+    self.portal.portal_types.Currency.newContent(
+      portal_type='Role Information',
+      role_name='Assignor',
+      role_category_list=('group/g1', ),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
+    )
+    self.portal.currency_module.newContent(portal_type='Currency')
+
+    collision_worklist = self.portal.portal_workflow.security_uid_test_simulation_workflow.newContent(
+      portal_type='Worklist',
+      reference='collision_worklist',
+      action_name='collision_worklist',
+      action_type='global',
+      action='/?portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&validation_state=%(validation_state)s'
+    )
+    collision_worklist.setCriterion('portal_type', ('Organisation',))
+    collision_worklist.setCriterion('local_roles', ('Assignee', 'Assignor'))
+    collision_worklist.setCriterion('validation_state', ('draft',))
+
+    def remove_worklist():
+      self.portal.portal_workflow.security_uid_test_simulation_workflow.manage_delObjects(
+        [collision_worklist.getId()])
+      self.tic()
+    self.addCleanup(remove_worklist)
+
+    user_g1 = self.portal.person_module.newContent(
+      portal_type='Person',
+      user_id='user_g1')
+    user_g1.newContent(portal_type='Assignment', group='g1').open()
+    user_g1.newContent(portal_type='ERP5 Login', reference='user_g1').validate()
+    self.tic()
+
+    self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.portal.organisation_module.newContent(portal_type='Organisation').validate()
+    self.tic()
+
+    self.assertWorklistCount(
+       'user_g1',
+       {
+         collision_worklist.getReference(): 1,
+        # Worklist from business template
+        'security_uid_or_alternate_security_uid_draft': 1,
+       }
+     )
