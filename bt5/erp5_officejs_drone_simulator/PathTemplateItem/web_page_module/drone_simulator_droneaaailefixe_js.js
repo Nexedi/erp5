@@ -334,5 +334,13 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   DroneAaileFixeAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
   };
+  DroneAaileFixeAPI.prototype.getYaw = function () {
+    //TODO
+    return 0;
+  };
+  DroneAaileFixeAPI.prototype.getClimbRate = function () {
+    //TODO
+    return 0;
+  };
   return DroneAaileFixeAPI;
 }());
