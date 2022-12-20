@@ -299,7 +299,13 @@ var DroneManager = /** @class */ (function () {
     return null;
   };
   DroneManager.prototype.getYaw = function () {
-    return 0;
+    return this._API.getYaw();
+  };
+  DroneManager.prototype.getSpeed = function () {
+    return this._speed;
+  };
+  DroneManager.prototype.getClimbRate = function () {
+    return this._API.getClimbRate();
   };
   DroneManager.prototype.triggerParachute = function () {
     return this._API.triggerParachute(this);
