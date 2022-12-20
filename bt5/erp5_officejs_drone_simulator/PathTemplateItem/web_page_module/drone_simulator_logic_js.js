@@ -1,4 +1,4 @@
-/*global BABYLON, RSVP, console, DroneAaileFixeAPI, DroneLogAPI, document*/
+/*global BABYLON, RSVP, console, FixedWingDroneAPI, DroneLogAPI, document*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true, todo: true,
          unparam: true */
 
@@ -14,12 +14,21 @@ var DroneManager = /** @class */ (function () {
     this._controlMesh = null;
     this._canPlay = false;
     this._canCommunicate = false;
+    this._minAcceleration = 0; //deceleration
     this._maxAcceleration = 0;
+    this._minSpeed = 0;
     this._maxSpeed = 0;
+    this._minPitchAngle = 0;
+    this._maxPitchAngle = 0;
+    this._minRollAngle = 0;
+    this._maxRollAngle = 0;
+    this._minVerticalSpeed = 0;
+    this._maxVerticalSpeed = 0;
+    this._maxOrientation = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = BABYLON.Vector3.Zero();
-    this._maxOrientation = Math.PI / 4;
+    this._rotationSpeed = 0.4;
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
@@ -108,8 +117,17 @@ var DroneManager = /** @class */ (function () {
     configurable: true
   });
   DroneManager.prototype.internal_start = function () {
-      this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
+      this._minAcceleration = this._API.getMinAcceleration();
+      this._maxAcceleration = this._API.getMaxAcceleration();
+      this._minSpeed = this._API.getMinSpeed();
       this._maxSpeed = this._API.getMaxSpeed();
+      this._minPitchAngle = this._API.getMinPitchAngle();
+      this._maxPitchAngle = this._API.getMaxPitchAngle();
+      this._minRollAngle = this._API.getMinRollAngle();
+      this._maxRollAngle = this._API.getMaxRollAngle();
+      this._minVerticalSpeed = this._API.getMinVerticalSpeed();
+      this._maxVerticalSpeed = this._API.getMaxVerticalSpeed();
+      this._maxOrientation = this._API.getMaxOrientation();
       this._API.internal_start();
       this._canPlay = true;
       this._canCommunicate = true;
@@ -132,6 +150,37 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this, updateSpeed;
     if (this._controlMesh) {
+      //TODO rotation
+      if (context._rotationTarget) {
+          var rotStep = BABYLON.Vector3.Zero(),
+            diff = context._rotationTarget
+              .subtract(context._controlMesh.rotation);
+          if (diff.x >= 1)
+              rotStep.x = 1;
+          else
+              rotStep.x = diff.x;
+          if (diff.y >= 1)
+              rotStep.y = 1;
+          else
+              rotStep.y = diff.y;
+          if (diff.z >= 1)
+              rotStep.z = 1;
+          else
+              rotStep.z = diff.z;
+          if (rotStep == BABYLON.Vector3.Zero()) {
+              context._rotationTarget = null;
+              return;
+          }
+          var newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
+                                           (rotStep.x * context._rotationSpeed),
+                                           context._controlMesh.rotation.y +
+                                           (rotStep.y * context._rotationSpeed),
+                                           context._controlMesh.rotation.z +
+                                           (rotStep.z * context._rotationSpeed)
+                                          );
+          context._controlMesh.rotation = newrot;
+      }
+
       context._speed += context._acceleration * delta_time / 1000;
       if (context._speed > context._maxSpeed) {
         context._speed = context._maxSpeed;
@@ -148,6 +197,12 @@ var DroneManager = /** @class */ (function () {
           context._direction.y * updateSpeed,
           context._direction.z * updateSpeed));
       }
+      //TODO rotation
+      var orientationValue = context._maxOrientation *
+          (context._speed / context._maxSpeed);
+      context._mesh.rotation =
+        new BABYLON.Vector3(orientationValue * context._direction.z, 0,
+                            -orientationValue * context._direction.x);
       context._controlMesh.computeWorldMatrix(true);
       context._mesh.computeWorldMatrix(true);
       if (context._canUpdate) {
@@ -214,6 +269,23 @@ var DroneManager = /** @class */ (function () {
     }
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
   };
+  //TODO rotation
+  DroneManager.prototype.setRotation = function (x, y, z) {
+      if (!this._canPlay)
+          return;
+      if (this._team == "R")
+          y += Math.PI;
+      this._rotationTarget = new BABYLON.Vector3(x, z, y);
+  };
+  //TODO rotation
+  DroneManager.prototype.setRotationBy = function (x, y, z) {
+      if (!this._canPlay)
+          return;
+      this._rotationTarget = new BABYLON.Vector3(this.rotation.x + x,
+                                                 this.rotation.y + z,
+                                                 this.rotation.z + y);
+  };
+
   /**
    * Send a message to drones
    * @param msg The message to send
@@ -299,7 +371,16 @@ var DroneManager = /** @class */ (function () {
     return null;
   };
   DroneManager.prototype.getYaw = function () {
-    return 0;
+    return this._API.getYaw();
+  };
+  DroneManager.prototype.getSpeed = function () {
+    return this._speed;
+  };
+  DroneManager.prototype.getClimbRate = function () {
+    return this._API.getClimbRate();
+  };
+  DroneManager.prototype.getSinkRate = function () {
+    return this._API.getSinkRate();
   };
   DroneManager.prototype.triggerParachute = function () {
     return this._API.triggerParachute(this);
@@ -523,7 +604,7 @@ var GameManager = /** @class */ (function () {
       ];
     }
     this.APIs_dict = {
-      DroneAaileFixeAPI: DroneAaileFixeAPI,
+      FixedWingDroneAPI: FixedWingDroneAPI,
       DroneLogAPI: DroneLogAPI
     };
   }
@@ -895,7 +976,7 @@ var GameManager = /** @class */ (function () {
       code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', api);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
-          " GameManager, DroneLogAPI, DroneAaileFixeAPI, BABYLON, " +
+          " GameManager, DroneLogAPI, FixedWingDroneAPI, BABYLON, " +
           "GAMEPARAMETERS) {" +
           "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
           "Date.now = function () {" +

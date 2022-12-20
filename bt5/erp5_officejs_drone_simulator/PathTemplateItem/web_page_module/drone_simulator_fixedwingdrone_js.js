@@ -1,8 +1,8 @@
 /*global console*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true */
 
-/************************** DRONE A AILE FIXE API ****************************/
-var DroneAaileFixeAPI = /** @class */ (function () {
+/************************** FIXED WING DRONE API ****************************/
+var FixedWingDroneAPI = /** @class */ (function () {
   "use strict";
 
   // var TAKEOFF_RADIUS = 60,
@@ -11,7 +11,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     LOITER_SPEED_FACTOR = 1.5;
 
   //** CONSTRUCTOR
-  function DroneAaileFixeAPI(gameManager, drone_info, flight_parameters, id) {
+  function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
     this._mapManager = this._gameManager._mapManager;
     this._map_dict = this._mapManager.getMapInfo();
@@ -28,13 +28,13 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   /*
   ** Function called on start phase of the drone, just before onStart AI script
   */
-  DroneAaileFixeAPI.prototype.internal_start = function () {
+  FixedWingDroneAPI.prototype.internal_start = function () {
     return;
   };
   /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  DroneAaileFixeAPI.prototype.internal_update = function (drone) {
+  FixedWingDroneAPI.prototype.internal_update = function (drone) {
     if (this._loiter_mode) {
       this.loiter(drone);
     }
@@ -60,11 +60,11 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     }
   };
 
-  DroneAaileFixeAPI.prototype.internal_getMsg = function (msg, id) {
+  FixedWingDroneAPI.prototype.internal_getMsg = function (msg, id) {
     this._drone_dict_list[id] = msg;
   };
 
-  DroneAaileFixeAPI.prototype.set_loiter_mode = function (radius) {
+  FixedWingDroneAPI.prototype.set_loiter_mode = function (radius) {
     this._loiter_mode = true;
     if (radius && radius > LOITER_LIMIT) {
       this._loiter_radius = radius * LOITER_RADIUS_FACTOR;
@@ -83,7 +83,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       }
     }
   };
-  DroneAaileFixeAPI.prototype.internal_setTargetCoordinates =
+  FixedWingDroneAPI.prototype.internal_setTargetCoordinates =
     function (drone, x, y, z, loiter) {
     //this._start_altitude = 0;
     //convert real geo-coordinates to virtual x-y coordinates
@@ -102,7 +102,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   /*
   ** This expects x,y plane coordinates (not geo latitude-longitud)
   */
-  DroneAaileFixeAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
+  FixedWingDroneAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
     function (drone, x, y, z) {
     x -= drone._controlMesh.position.x;
     y -= drone._controlMesh.position.z;
@@ -112,7 +112,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     return;
   };
 
-  DroneAaileFixeAPI.prototype.sendMsg = function (msg, to) {
+  FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
     var _this = this,
         droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
@@ -144,10 +144,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       }
     }, _this._flight_parameters.latency.communication);
   };
-  DroneAaileFixeAPI.prototype.log = function (msg) {
+  FixedWingDroneAPI.prototype.log = function (msg) {
     console.log("API say : " + msg);
   };
-  DroneAaileFixeAPI.prototype.getGameParameter = function (name) {
+  FixedWingDroneAPI.prototype.getGameParameter = function (name) {
     if (["gameTime", "map"].includes(name)) {
       return this._gameManager.gameParameter[name];
     }
@@ -155,7 +155,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   /*
   ** Converts geo latitude-longitud coordinates (º) to x,y plane coordinates (m)
   */
-  DroneAaileFixeAPI.prototype.processCoordinates = function (lat, lon, z) {
+  FixedWingDroneAPI.prototype.processCoordinates = function (lat, lon, z) {
     if(isNaN(lat) || isNaN(lon) || isNaN(z)){
       throw new Error('Target coordinates must be numbers');
     }
@@ -175,10 +175,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
     //this.takeoff_path = [];
     return processed_coordinates;
   };
-  DroneAaileFixeAPI.prototype.getCurrentPosition = function (x, y, z) {
+  FixedWingDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
     return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
   };
-  DroneAaileFixeAPI.prototype.loiter = function (drone) {
+  FixedWingDroneAPI.prototype.loiter = function (drone) {
     if (this._loiter_radius > LOITER_LIMIT) {
       var drone_pos = drone.getCurrentPosition(),
         min = 9999, min_i, i, d, next_point;
@@ -230,10 +230,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       }
     }
   };
-  DroneAaileFixeAPI.prototype.getDroneAI = function () {
+  FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;
   };
-  DroneAaileFixeAPI.prototype.setAltitude = function (altitude, drone) {
+  FixedWingDroneAPI.prototype.setAltitude = function (altitude, drone) {
     /*if (this._start_altitude === 0) {
       this._start_altitude = 1;
     }
@@ -272,7 +272,7 @@ var DroneAaileFixeAPI = /** @class */ (function () {
       }
     }*/
   };
-  /*DroneAaileFixeAPI.prototype.reachAltitude = function (drone) {
+  /*FixedWingDroneAPI.prototype.reachAltitude = function (drone) {
     function distance(p1, p2) {
       return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
                        Math.pow(p1[1] - p2[1], 2));
@@ -305,34 +305,77 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         next_point.x, next_point.y, next_point.z);
     }
   };*/
-  DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
+  FixedWingDroneAPI.prototype.getMinSpeed = function () {
+    return this._flight_parameters.drone.minSpeed;
+  };
+  FixedWingDroneAPI.prototype.getMaxSpeed = function () {
     return this._flight_parameters.drone.maxSpeed;
   };
-  DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
+  FixedWingDroneAPI.prototype.getMinAcceleration = function () {
+    return this._flight_parameters.drone.minAcceleration;
+  };
+  FixedWingDroneAPI.prototype.getMaxAcceleration = function () {
+    return this._flight_parameters.drone.maxAcceleration;
+  };
+  FixedWingDroneAPI.prototype.getMinPitchAngle = function () {
+    return this._flight_parameters.drone.minPitchAngle;
+  };
+  FixedWingDroneAPI.prototype.getMaxPitchAngle = function () {
+    return this._flight_parameters.drone.maxPitchAngle;
+  };
+  FixedWingDroneAPI.prototype.getMinRollAngle = function () {
+    return this._flight_parameters.drone.minRollAngle;
+  };
+  FixedWingDroneAPI.prototype.getMaxRollAngle = function () {
+    return this._flight_parameters.drone.maxRollAngle;
+  };
+  FixedWingDroneAPI.prototype.getMinVerticalSpeed = function () {
+    return this._flight_parameters.drone.minVerticalSpeed;
+  };
+  FixedWingDroneAPI.prototype.getMaxVerticalSpeed = function () {
+    return this._flight_parameters.drone.maxVerticalSpeed;
+  };
+  FixedWingDroneAPI.prototype.getMaxOrientation = function () {
+    //TODO should be a game parameter (but how to force value to PI quarters?)
+    return Math.PI / 4;
+  };
+  FixedWingDroneAPI.prototype.getYaw = function () {
+    //TODO
+    return 0;
+  };
+  FixedWingDroneAPI.prototype.getSinkRate = function () {
+    //TODO
+    return 0;
+  };
+  FixedWingDroneAPI.prototype.getClimbRate = function () {
+    //TODO
+    return 0;
+  };
+  FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     this.internal_setTargetCoordinates(drone, drone_pos.x, drone_pos.y, 5);
   };
-  DroneAaileFixeAPI.prototype.landed = function (drone) {
+  FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     return Math.floor(drone_pos.z) < 10;
   };
-  DroneAaileFixeAPI.prototype.exit = function () {
+  FixedWingDroneAPI.prototype.exit = function () {
     return;
   };
-  DroneAaileFixeAPI.prototype.getInitialAltitude = function () {
+  FixedWingDroneAPI.prototype.getInitialAltitude = function () {
     return 0;
   };
-  DroneAaileFixeAPI.prototype.getAltitudeAbs = function (altitude) {
+  FixedWingDroneAPI.prototype.getAltitudeAbs = function (altitude) {
     return altitude;
   };
-  DroneAaileFixeAPI.prototype.getMinHeight = function () {
+  FixedWingDroneAPI.prototype.getMinHeight = function () {
     return 0;
   };
-  DroneAaileFixeAPI.prototype.getMaxHeight = function () {
+  FixedWingDroneAPI.prototype.getMaxHeight = function () {
     return 800;
   };
-  DroneAaileFixeAPI.prototype.getFlightParameters = function () {
+  FixedWingDroneAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
   };
-  return DroneAaileFixeAPI;
+  return FixedWingDroneAPI;
 }());
