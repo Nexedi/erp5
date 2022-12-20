@@ -2,26 +2,21 @@
 #
 # Copyright (c) 2002-2020 Nexedi SA and Contributors. All Rights Reserved.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsibility of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly adviced to contract a Free Software
-# Service Company
+# This program is free software: you can Use, Study, Modify and Redistribute
+# it under the terms of the GNU General Public License version 3, or (at your
+# option) any later version, as published by the Free Software Foundation.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# You can also Link and Combine this program with other software covered by
+# the terms of any of the Free Software licenses or any of the Open Source
+# Initiative approved licenses and Convey the resulting work. Corresponding
+# source of such a combination shall include the source code for all other
+# software used.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# This program is distributed WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+# See COPYING file for full licensing terms.
+# See https://www.nexedi.com/licensing for rationale and options.
 #
 ##############################################################################
 import unittest
