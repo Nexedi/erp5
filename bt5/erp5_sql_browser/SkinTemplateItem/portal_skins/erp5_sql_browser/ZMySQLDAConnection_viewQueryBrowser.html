@@ -102,7 +102,7 @@
           editor = monaco_editor = monaco.editor.create(
             document.querySelector('#query'),
             {
-              automaticLayout: true,
+              automaticLayout: window.ResizeObserver ? true : false,
               autoIndent: true
             }
           );
