@@ -115,7 +115,8 @@ from Products.ERP5Type.Utils import str2bytes
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
-    CR.SERVER_LOST
+    CR.SERVER_LOST,
+    CR.COMMANDS_OUT_OF_SYNC
     )
 
 query_syntax_error = (
@@ -404,9 +405,14 @@ class DB(TM):
             else:
               LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
               raise
-        except ProgrammingError:
-          LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
-          raise
+        except ProgrammingError as m:
+          if (allow_reconnect or not self._use_TM) and \
+              m[0] in hosed_connection:
+            self._forceReconnection()
+            self.db.query(query)
+          else:
+            LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+            raise
         try:
           return self.db.store_result()
         except OperationalError as m:
