@@ -6,7 +6,7 @@ url_list = [
   "gadget_erp5_page_drone_simulator_log_page.js",
   "gadget_erp5_panel_drone_simulator.html",
   "gadget_erp5_panel_drone_simulator.js",
-  "gadget_erp5_page_drone_simulator_droneaaailefixe.js",
+  "gadget_erp5_page_drone_simulator_fixedwingdrone.js",
   "gadget_erp5_page_drone_simulator_dronelogfollower.js",
   "drone.png",
   "gadget_officejs_drone_simulator.json",
