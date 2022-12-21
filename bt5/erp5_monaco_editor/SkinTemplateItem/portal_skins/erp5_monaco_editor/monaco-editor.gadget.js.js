@@ -31,11 +31,9 @@
         {
           autoIndent: true,
           automaticLayout: window.ResizeObserver ? true : false,
-          experimental: {
-            stickyScroll: {
-              enabled: true,
-              maxLineCount: 3
-            }
+          stickyScroll: {
+            enabled: true,
+            maxLineCount: 3
           }
         }
       );
