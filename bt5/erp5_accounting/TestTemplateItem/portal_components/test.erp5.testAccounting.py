@@ -704,6 +704,7 @@ class TestTransactionValidation(AccountingTestCase):
     # bank account
     bank_account = self.section.newContent(portal_type='Bank Account',
         price_currency_value=self.currency_module.euro)
+    bank_account.validate()
     accounting_transaction = self._makeOne(
                portal_type='Payment Transaction',
                start_date=DateTime('2007/01/02'),
@@ -724,6 +725,112 @@ class TestTransactionValidation(AccountingTestCase):
     # with same currency in bank account and transaction, it's OK
     accounting_transaction.setResourceValue(self.currency_module.euro)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationCheckBankAccountValidationState(self):
+    for section, mirror_section in (
+      (self.main_section, self.portal.organisation_module.client_1),
+      (self.main_section, self.portal.person_module.newContent()),
+      # with person member of section's group
+      (self.main_section, self.portal.person_module.john_smith),
+      (self.section, self.portal.organisation_module.client_1),
+      (self.main_section, self.portal.person_module.newContent()),
+      (self.main_section, self.section),
+    ):
+      section_bank_account = section.newContent(
+        title='section bank account',
+        portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+      mirror_section_bank_account = mirror_section.newContent(
+        title='mirror section bank account',
+        portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+
+      accounting_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        start_date=DateTime('2007/01/02'),
+        source_section_value=section,
+        source_payment_value=section_bank_account,
+        destination_section_value=mirror_section,
+        destination_payment_value=mirror_section_bank_account,
+        payment_mode='default',
+        resource_value=self.currency_module.euro,
+        lines=(
+          dict(source_value=self.account_module.bank, source_debit=500),
+          dict(source_value=self.account_module.receivable, source_credit=500)))
+
+      self.assertRaisesRegex(
+        ValidationFailed,
+        "Bank Account section bank account is invalid.",
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+      )
+      section_bank_account.validate()
+      self.tic()
+
+      self.assertRaisesRegex(
+        ValidationFailed,
+        "Bank Account mirror section bank account is invalid.",
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+      )
+      mirror_section_bank_account.validate()
+      self.tic()
+
+      self.portal.portal_workflow.doActionFor(
+        accounting_transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationCheckBankAccountOwner(self):
+    main_section_bank_account = self.main_section.newContent(
+      title='main section bank account',
+      portal_type='Bank Account',
+      price_currency_value=self.currency_module.euro)
+    main_section_bank_account.validate()
+    client_1_bank_account = self.portal.organisation_module.client_1.newContent(
+      title='client_1 bank account',
+      portal_type='Bank Account',
+      price_currency_value=self.currency_module.euro)
+    client_1_bank_account.validate()
+
+    # main_section_bank_account can be used by both main_section and section.
+    for section in self.main_section, self.section:
+      accounting_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        start_date=DateTime('2007/01/02'),
+        source_section_value=section,
+        source_payment_value=main_section_bank_account,
+        destination_section_value=self.portal.organisation_module.client_1,
+        destination_payment_value=client_1_bank_account,
+        payment_mode='default',
+        resource_value=self.currency_module.euro,
+        lines=(
+          dict(source_value=self.account_module.bank, source_debit=500),
+          dict(source_value=self.account_module.receivable,
+               source_credit=500)))
+      self.portal.portal_workflow.doActionFor(
+        accounting_transaction, 'stop_action')
+
+    # client_1's bank account can only be used with client 1, not with client 2
+    accounting_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      start_date=DateTime('2007/01/02'),
+      source_section_value=self.main_section,
+      source_payment_value=main_section_bank_account,
+      destination_section_value=self.portal.organisation_module.client_2,
+      destination_payment_value=client_1_bank_account,
+      payment_mode='default',
+      resource_value=self.currency_module.euro,
+      lines=(
+        dict(source_value=self.account_module.bank, source_debit=500),
+        dict(source_value=self.account_module.receivable, source_credit=500)))
+    self.assertRaisesRegex(
+      ValidationFailed,
+      "Bank Account client_1 bank account is invalid.",
+      self.portal.portal_workflow.doActionFor,
+      accounting_transaction,
+      'stop_action',
+    )
 
   def test_NonBalancedAccountingTransaction(self):
     # Accounting Transactions have to be balanced to be validated
