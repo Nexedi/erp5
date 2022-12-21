@@ -4835,6 +4835,63 @@ class TestTransactions(AccountingTestCase):
       ('from section', bank_account.getRelativeUrl()),
       destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
 
+  def test_AccountingTransaction_getSourcePaymentItemList_bank_accounts_from_other_entities(self):
+    client_1_bank_account = self.portal.organisation_module.client_1.newContent(
+      portal_type='Bank Account',
+      title='client_1 bank account'
+    )
+    client_1_bank_account.validate()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      # section is client 2 but account is for client 1
+      source_section_value=self.organisation_module.client_2,
+      source_payment_value=client_1_bank_account,
+      lines=(
+        dict(
+          destination_value=self.account_module.goods_purchase,
+          destination_debit=500),
+        dict(
+          destination_value=self.account_module.receivable,
+          destination_credit=500)))
+    self.assertEqual(
+      [
+        (str(label), value) for (label, value) in
+        source_transaction.AccountingTransaction_getSourcePaymentItemList()
+      ],
+      [
+        ('', ''),
+        ('Invalid bank account from Client 1', None),
+        ('client_1 bank account', client_1_bank_account.getRelativeUrl()),
+      ],
+    )
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      # section is client 2 but account is for client 1
+      destination_section_value=self.organisation_module.client_2,
+      destination_payment_value=client_1_bank_account,
+      lines=(
+        dict(
+          destination_value=self.account_module.goods_purchase,
+          destination_debit=500),
+        dict(
+          destination_value=self.account_module.receivable,
+          destination_credit=500)))
+    self.assertEqual(
+      [
+        (str(label), value) for (label, value) in destination_transaction.
+        AccountingTransaction_getDestinationPaymentItemList()
+      ],
+      [
+        ('', ''),
+        ('Invalid bank account from Client 1', None),
+        ('client_1 bank account', client_1_bank_account.getRelativeUrl()),
+      ],
+    )
+
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
