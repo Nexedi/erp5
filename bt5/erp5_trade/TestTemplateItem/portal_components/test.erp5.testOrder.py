@@ -314,7 +314,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                                    portal_type=organisation_portal_type)
     organisation.newContent(id='bank',
                             portal_type='Bank Account',
-                            title='bank%s' % organisation.getId())
+                            title='bank%s' % organisation.getId()).validate()
     organisation.setDefaultAddressStreetAddress('rue xv')
     organisation.setDefaultAddressZipCode('12345')
     if title is None:

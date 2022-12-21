@@ -22,12 +22,15 @@ organisation = portal.organisation_module.newContent(
     title=organisation_id,
     group_value=portal.portal_categories.group.demo_group,
 )
+organisation.validate()
+
 bank_account_id = "erp5_payment_mean_bank"
 bank_account = organisation.newContent(
     portal_type='Bank Account',
     id=bank_account_id,
     title=bank_account_id
 )
+bank_account.validate()
 
 payment_mean_id = "erp5_payment_mean_ui_test_payment_transaction_group"
 payment_mean = portal.payment_transaction_group_module.newContent(
