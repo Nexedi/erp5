@@ -4,6 +4,10 @@ Presentation Layout ?portal_skin=CI_slideshow
 ================================================================================
 """
 import re
+from Products.PythonScripts.standard import html_quote
+
+container.REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+
 
 def getSlideList(content):
   return re.findall(r'<section[^>]*?>(.*?)</section>', content, re.S)
@@ -82,11 +86,10 @@ document = context
 # wkhtmltopdf
 document_output_type = document.REQUEST.form.get("output", default=None)
 
-document_reference = document.getReference()
 document_content = removeEmptyDetails(document.getTextContent())
-document_theme = getThemeFromFirstFollowUpProduct(document_reference)
-document_title = document.getTitle()
-document_description = document.getDescription()
+document_theme = getThemeFromFirstFollowUpProduct(document.getReference())
+document_title = html_quote(document.getTitle())
+document_description = html_quote(document.getDescription())
 document_creation_date = document.getCreationDate()
 document_creation_year = document_creation_date.strftime('%Y') if document_creation_date else ''
 document_theme_logo_url = "NXD-Media.Logo." + document_theme.capitalize()

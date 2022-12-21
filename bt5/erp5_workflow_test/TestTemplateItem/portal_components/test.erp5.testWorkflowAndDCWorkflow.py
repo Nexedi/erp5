@@ -418,10 +418,6 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     self.assertEqual(tuple(getattr(text_document3, permission_key)),
                      ('Assignee', 'Assignor', 'Auditor', 'Author'))
 
-  def test_15_testGuardsAreNotMessingUpBase_viewDict(self):
-    # check Base_viewDict is available on workflow's transition
-    self.workflow.transition_delete_action.Base_viewDict()
-
   def test_16_testWorklistViewIsAccessible(self):
     # check worklist view is available on workflow
     self.workflow.worklist_1_draft_test_workflow_document_list.view()
