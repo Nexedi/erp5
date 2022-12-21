@@ -593,7 +593,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
       'resource/%s' % euro.getRelativeUrl(),
       'price_currency/%s' % usd.getRelativeUrl(),
       base_id='path')
-    self.assertNotEquals(None, type_a_cell)
+    self.assertNotEqual(None, type_a_cell)
     self.assertEqual('Currency Exchange Cell', type_a_cell.getPortalTypeName())
 
     # int index have been copied, so that listbox in CurrencyExchangeLine_view
@@ -601,7 +601,7 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
     # currency_exchange_type categories.
     self.assertEqual(1, type_a_cell.getIntIndex())
 
-    self.assertTrue('currency_exchange_type/type_a' in
+    self.assertIn('currency_exchange_type/type_a',
         type_a_cell.getCategoryList())
 
     type_a_cell_predicate = type_a_cell.asPredicate()

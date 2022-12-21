@@ -176,10 +176,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
   # erp5_core tests
   def testERP5CoreHasParentBaseCategory(self):
     # Test if erp5_core parent base category was imported successfully
-    self.assertNotEquals(getattr(self.getCategoryTool(), 'parent', None), None)
+    self.assertNotEqual(getattr(self.getCategoryTool(), 'parent', None), None)
 
   def testERP5CoreHasImageType(self):
-    self.assertNotEquals(getattr(self.getTypeTool(), 'Image', None), None)
+    self.assertNotEqual(getattr(self.getTypeTool(), 'Image', None), None)
 
   # Business Template Tests
   def testBusinessTemplate(self):
@@ -488,16 +488,16 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # double-check that they also have group accessors
     category_tool = self.portal.portal_categories.aq_inner
     method = getattr(category_tool, 'getRegionRelatedList', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
 
     region_category = category_tool.region.aq_inner
     method = getattr(region_category, 'getRegionRelatedList', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
 
     property_sheet_tool = self.portal.portal_property_sheets
     person_property_sheet = property_sheet_tool.Person.aq_inner
     method = getattr(person_property_sheet, 'getRegionRelatedList', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
 
 
   def test_05_setProperty(self):
@@ -1022,7 +1022,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person = self.getPersonModule().newContent(id='1', portal_type='Person')
     wf = self.getWorkflowTool().validation_workflow
     # those are assumptions for this test.
-    self.assertTrue(wf in self.getWorkflowTool().getWorkflowValueListFor('Person'))
+    self.assertIn(wf, self.getWorkflowTool().getWorkflowValueListFor('Person'))
     self.assertEqual('validation_state', wf.getStateVariable())
     initial_state = wf.getSourceValue()
     other_state = wf.getStateValueByReference('validated')
@@ -1107,7 +1107,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # an organisation is created inside the person.
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('Organisation',
                       default_organisation.getPortalTypeName())
     self.assertEqual('The organisation title',
@@ -1171,7 +1171,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDefaultOrganisationReference('The organisation ref')
 
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('Organisation',
                       default_organisation.getPortalTypeName())
     self.assertEqual('The organisation ref',
@@ -1234,11 +1234,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDefaultOrganisationTitle('The organisation title')
     # here we want to make sure we didn't modify this 'default_organisation'
     # we could have get by acquisition.
-    self.assertNotEquals(another_person_title,
+    self.assertNotEqual(another_person_title,
                          person.getDefaultOrganisationTitle())
     # an organisation is created inside the person.
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('The organisation title',
                       person.getDefaultOrganisationTitle())
 
@@ -1318,11 +1318,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDefaultOrganisationTitle('The organisation title')
     # here we want to make sure we didn't modify this 'default_organisation'
     # we could have get by acquisition.
-    self.assertNotEquals(another_person_title,
+    self.assertNotEqual(another_person_title,
                          person.getDefaultOrganisationTitle())
     # an organisation is created inside the person.
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('The organisation title',
                       person.getDefaultOrganisationTitle())
 
@@ -1606,19 +1606,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     action_tool = self.portal.portal_actions
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action1' not in action_id_list)
+    self.assertNotIn('action1', action_id_list)
     obj.setDescription('foo')
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action1' in action_id_list)
+    self.assertIn('action1', action_id_list)
     addCustomAction('action2',"python: portal_url not in (None,'')")
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action2' in action_id_list)
+    self.assertIn('action2', action_id_list)
     addCustomAction('action3',"python: object_url not in (None,'')")
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action3' in action_id_list)
+    self.assertIn('action3', action_id_list)
 
 
   def test_21bis_getDefaultViewFor(self):
@@ -1718,7 +1718,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # The user may not view the person object.
     self.tic()
-    self.assertTrue('Auditor' not in user.getRolesInContext(person))
+    self.assertNotIn('Auditor', user.getRolesInContext(person))
     self.logout()
     newSecurityManager(None, user)
     self.assertEqual(len(person_module.searchFolder(id=person.getId())), 0)
@@ -1733,7 +1733,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # reindexed, and Jean-Paul believes that this should not be
     # automatic.
     self.tic()
-    self.assertTrue('Auditor' in user.getRolesInContext(person))
+    self.assertIn('Auditor', user.getRolesInContext(person))
     self.logout()
     newSecurityManager(None, user)
     self.assertEqual(len(person_module.searchFolder(id=person.getId())), 0)
@@ -1744,7 +1744,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # synchronized.
     person_module.recursiveReindexObject()
     self.tic()
-    self.assertTrue('Auditor' in user.getRolesInContext(person))
+    self.assertIn('Auditor', user.getRolesInContext(person))
     self.logout()
     newSecurityManager(None, user)
     self.assertEqual(len(person_module.searchFolder(id=person.getId())), 1)
@@ -1758,7 +1758,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person')
     self.assertFalse(person.hasTitle())
-    self.assertFalse('title' in person.__dict__)
+    self.assertNotIn('title', person.__dict__)
 
   def test_24_relatedValueAccessor(self):
     """
@@ -2776,22 +2776,22 @@ return True''')
 
     self.assertTrue(getSecurityManager().getUser().has_permission(
                     'Add portal content', container))
-    self.assertTrue(type_info in container.allowedContentTypes())
+    self.assertIn(type_info, container.allowedContentTypes())
     container.newContent(portal_type=object_portal_type)
 
     container.manage_permission('Add portal content', [], 0)
-    self.assertFalse(type_info in container.allowedContentTypes())
+    self.assertNotIn(type_info, container.allowedContentTypes())
     self.assertRaises(Unauthorized, container.newContent,
                       portal_type=object_portal_type)
 
     type_info.permission = 'Manage portal'
     container.manage_permission('Manage portal', [], 0)
-    self.assertFalse(type_info in container.allowedContentTypes())
+    self.assertNotIn(type_info, container.allowedContentTypes())
     self.assertRaises(Unauthorized, container.newContent,
                       portal_type=object_portal_type)
 
     container.manage_permission('Manage portal', ['Anonymous'], 0)
-    self.assertTrue(type_info in container.allowedContentTypes())
+    self.assertIn(type_info, container.allowedContentTypes())
     doc = container.newContent(portal_type=object_portal_type)
 
     # we can also clone such documents only with the permission registered on
@@ -2971,10 +2971,10 @@ return True''')
     """
     person = self.getPersonModule().newContent(portal_type='Person')
     method = getattr(person, 'isDeliveryType', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertEqual(0, method())
     method = getattr(person, 'isNodeType', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertEqual(1, method())
 
   def test_providesAccessors(self):
@@ -2984,10 +2984,10 @@ return True''')
     """
     person = self.getPersonModule().newContent(portal_type='Person')
     method = getattr(person, 'providesIMovement', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertEqual(False, method())
     method = getattr(person, 'providesICategoryAccessProvider', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertTrue(method())
 
   def test_dynamic_accessor_mockable(self):
@@ -3026,8 +3026,8 @@ return True''')
     self.commit()
 
     # our type is available from types tool
-    self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
-    self.assertTrue('Dummy Type' in [ti.getId() for ti in
+    self.assertNotEqual(None, types_tool.getTypeInfo('Dummy Type'))
+    self.assertIn('Dummy Type', [ti.getId() for ti in
                                       types_tool.listTypeInfo()])
 
     # not existing types are not an error
@@ -3082,7 +3082,7 @@ return True''')
       self.assertEqual(final_action_list[0]['id'], 'test_before')
       self.assertEqual(final_action_list[-1]['id'], 'test_after')
       # check that we have another portal types action in the middle
-      self.assertTrue('view' in [x['id'] for x in final_action_list[1:-1]])
+      self.assertIn('view', [x['id'] for x in final_action_list[1:-1]])
     finally:
       index_list = []
       action_list = portal_actions._cloneActions()
@@ -3118,7 +3118,7 @@ return True''')
     for x in "id", "address_city", "function":
       self.assertTrue(x in result_set, "%s not in %s" % (x, result_set))
     # Values from which acquired properties are fetched are not returned.
-    self.assertFalse("address" in result_set)
+    self.assertNotIn("address", result_set)
 
   def test_callable_guards(self):
     skin = self.getSkinsTool().custom

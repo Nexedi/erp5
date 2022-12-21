@@ -228,7 +228,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     # check the individual variation is returned by the
     # getVariationCategoryList
     individual_url = 'variation/%s' % individual_variation.getRelativeUrl()
-    self.assertTrue(individual_url in
+    self.assertIn(individual_url,
         transformation.getVariationCategoryList())
 
 

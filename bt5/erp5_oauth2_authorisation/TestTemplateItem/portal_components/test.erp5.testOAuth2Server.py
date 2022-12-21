@@ -1028,7 +1028,7 @@ class TestOAuth2(ERP5TypeTestCase):
     # In any case, the response must set the login state cookie.
     self.assertEqual(len(cookie_dict), 1, cookie_dict)
     login_state_cookie_name, = cookie_dict
-    self.assertRegexpMatches(login_state_cookie_name, '^__Host-login-state-')
+    self.assertRegex(login_state_cookie_name, '^__Host-login-state-')
     resource_server_cookie_jar.update(cookie_dict)
     if authentication_is_local:
       login_form_cookie_jar = resource_server_cookie_jar
@@ -1222,7 +1222,7 @@ class TestOAuth2(ERP5TypeTestCase):
       )
       self.assertEqual(len(cookie_dict), 1, cookie_dict)
       login_state_cookie_name, = cookie_dict
-      self.assertRegexpMatches(login_state_cookie_name, '^__Host-login-state-')
+      self.assertRegex(login_state_cookie_name, '^__Host-login-state-')
       cookie_jar.update(cookie_dict)
       login_form_response_dict[login_state_cookie_name] = query_result
     # Tolerate some amount of state cookie collision: this means that some login form
@@ -1242,7 +1242,7 @@ class TestOAuth2(ERP5TypeTestCase):
     )
     self.assertEqual(len(cookie_dict), 1, cookie_dict)
     login_state_cookie_name, = cookie_dict
-    self.assertRegexpMatches(login_state_cookie_name, '^__Host-login-state-')
+    self.assertRegex(login_state_cookie_name, '^__Host-login-state-')
     self.assertIn(login_state_cookie_name, cookie_jar)
     cookie_jar.update(cookie_dict)
     # Do not store the received login page, to check that the original one is still working.

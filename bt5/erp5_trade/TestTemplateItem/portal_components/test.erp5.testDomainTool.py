@@ -359,9 +359,9 @@ class TestDomainTool(TestPredicateMixIn):
     # Basic sanity checks
     self.assertTrue(predicate_both_match.test(document))
     self.assertFalse(predicate_one_match.test(document))
-    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=1))
+    self.assertNotIn(predicate_one_match, portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=1))
     # Real test
-    self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=0))
+    self.assertNotIn(predicate_one_match, portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=0))
 
   def test_07_NonLeftJoinModeOfSearchPredicateList(self):
     searchPredicateList = self.portal.portal_domains.searchPredicateList
@@ -464,7 +464,7 @@ class TestDomainTool(TestPredicateMixIn):
     predicate = self.portal.sale_supply_module.newContent(
       portal_type='Sale Supply')
     predicate.validate()
-    self.assertNotEquals(predicate.asPredicate(), None)
+    self.assertNotEqual(predicate.asPredicate(), None)
 
     context = self.portal.person_module.newContent(
       portal_type='Person',

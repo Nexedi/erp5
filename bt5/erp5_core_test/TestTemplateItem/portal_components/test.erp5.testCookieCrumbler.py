@@ -80,11 +80,11 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.req.cookies['__ac_password'] = long_pass
     self.req.traverse('/')
 
-    self.assert_('AUTHENTICATED_USER' in self.req)
+    self.assertIn('AUTHENTICATED_USER', self.req)
     self.assertEqual(self.req['AUTHENTICATED_USER'].getId(),
                          'abrahammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
     resp = self.req.response
-    self.assert_('__ac' in resp.cookies)
+    self.assertIn('__ac', resp.cookies)
     self.credentials = base64.encodestring('%s:%s' % (long_name, long_pass)).replace('\012', '')
     self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)

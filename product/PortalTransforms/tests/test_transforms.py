@@ -38,7 +38,7 @@ class TransformTest(ATSiteTestCase):
         input.close()
         data = datastream(self.transform.name())
         res_data = self.transform.convert(orig, data, filename=filename)
-        self.assert_(IDataStream.providedBy(res_data))
+        self.assertTrue(IDataStream.providedBy(res_data))
         got = res_data.getData()
         try:
             output = open(output)
@@ -49,7 +49,7 @@ class TransformTest(ATSiteTestCase):
             output = open(output, 'w')
             output.write(got)
             output.close()
-            self.assert_(0)
+            self.assertTrue(0)
         expected = output.read()
         if self.normalize is not None:
             expected = self.normalize(expected)

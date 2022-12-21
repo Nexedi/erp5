@@ -501,8 +501,8 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       policy_list = self.portal.caching_policy_manager.listPolicies()
       policy = [policy for policy in policy_list\
                                           if policy[0] == 'unauthenticated no language'][0]
-      self.assertEquals(response.getHeader('Content-Type'), 'image/png')
-      self.assertEquals(
+      self.assertEqual(response.getHeader('Content-Type'), 'image/png')
+      self.assertEqual(
         response.getHeader('Cache-Control'),
         'max-age=%s, stale-while-revalidate=%s, public' % (
           policy[1].getMaxAgeSecs(),
@@ -556,14 +556,14 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertTrue('<form' in response.getBody()) # means the web_page
+    self.assertIn('<form', response.getBody()) # means the web_page
                                       # is rendered in web_site context
 
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
     self.assertEqual(response.getHeader('content-type'),
                                          'text/html; charset=utf-8')
-    self.assertTrue('<form' in response.getBody()) # means the web_page
+    self.assertIn('<form', response.getBody()) # means the web_page
                                       # is rendered in web_site context
 
     response = self.publish(website.absolute_url_path() + '/' +\
@@ -665,16 +665,16 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     policy = [policy[1] for policy in policy_list\
                 if policy[0] == 'unauthenticated no language'][0]
     # Check policy has been updated
-    self.assertEquals(policy.getMaxAgeSecs(), 1200)
-    self.assertEquals(policy.getStaleWhileRevalidateSecs(), 30)
-    self.assertEquals(policy.getStaleIfErrorSecs(), 600)
+    self.assertEqual(policy.getMaxAgeSecs(), 1200)
+    self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
+    self.assertEqual(policy.getStaleIfErrorSecs(), 600)
     for i in xrange(3):
       path = '/'.join((website_url,
                        reference,
                        'img%s.png' % i))
       response = self.publish(path)
-      self.assertEquals(response.getHeader('Content-Type'), 'image/png')
-      self.assertEquals(response.getHeader('Cache-Control'),
+      self.assertEqual(response.getHeader('Content-Type'), 'image/png')
+      self.assertEqual(response.getHeader('Cache-Control'),
             'max-age=%d, stale-while-revalidate=%d, stale-if-error=%d, public' % \
                           (policy.getMaxAgeSecs(),
                            policy.getStaleWhileRevalidateSecs(),

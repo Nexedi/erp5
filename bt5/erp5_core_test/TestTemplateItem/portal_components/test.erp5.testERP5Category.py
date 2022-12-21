@@ -280,18 +280,6 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEqual(len(om['2'].getRelatedValueList('abc')), 1)
     self.assertEqual(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
 
-  def test_09_Base_viewDictWithCategoryWithSubCategory(
-                        self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Make sure Base_viewDict is working for categories with sub categories')
-    portal_categories = self.getCategoryTool()
-    base_category = portal_categories.activity
-    self.assertTrue(len(base_category.Base_viewDict())>0)
-    base_category.newContent(id='toto',title='Toto')
-    self.assertTrue(len(base_category.Base_viewDict())>0)
-
-
   def test_getAcquiredCategoryList(self):
     # create a base category
     ctool = self.getCategoryTool()
