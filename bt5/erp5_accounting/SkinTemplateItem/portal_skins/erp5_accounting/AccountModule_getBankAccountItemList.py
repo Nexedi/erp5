@@ -17,6 +17,7 @@ applicable for section_category and section_category_strict_membership.
 If `base_category` is passed, the currently linked bank account with the specified
 base_category is anyway included.
 """
+from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 
 
@@ -58,44 +59,45 @@ else:
 item_list = [('', '')]
 
 
-# If we have bank accounts from more than one organisation, include
-# the organisation as hierarchy to show which organisation the bank
+# If we have bank accounts from more than one entity, include
+# the entity as hierarchy to show which entity the bank
 # account belongs to.
-include_organisation_hierarchy = len(set(
+include_entity_hierarchy = len(set(
   ['/'.join(b.path.split('/')[:-1]) for b in bank_account_list])) > 1
 
 bank_account_list = [brain.getObject() for brain in sorted(
   bank_account_list, key=lambda b:b.path
 )]
 
+
+def getItemList(bank_account):
+  reference = bank_account.getReference()
+  title = bank_account.getTitle() or bank_account.getSourceFreeText() or bank_account.getSourceTitle()
+  label = title
+  if reference != title:
+    label = '{} - {}'.format(reference, title)
+  return (label, bank_account.getRelativeUrl())
+
+
+previous_entity = None
+# sort bank accounts in a way that bank accounts from the same
+# entity are consecutive
+for bank in bank_account_list:
+  if include_entity_hierarchy:
+    entity = bank.getParentValue()
+    if entity != previous_entity:
+      previous_entity = entity
+      # include non-selectable element to show hierarchy
+      item_list.append((entity.getTranslatedTitle(), None))
+  item_list.append(getItemList(bank))
+
 if base_category is not None:
   current_value = context.getProperty(base_category + '_value')
-  if current_value not in bank_account_list:
-    bank_account_list.append(current_value)
-
-previous_organisation = None
-# sort bank accounts in a way that bank accounts from the same
-# organisation are consecutive
-for bank in bank_account_list:
-  if include_organisation_hierarchy:
-    organisation = bank.getParentValue()
-    if organisation != previous_organisation:
-      previous_organisation = organisation
-      # include non-selectable element to show hierarchy
-      item_list.append((organisation.getTranslatedTitle(), None))
-
-  if bank.getReference() and bank.getTitle() \
-                  and bank.getReference() != bank.getTitle():
-    item_list.append(('%s - %s' % ( bank.getReference(),
-                                    bank.getTitle() or
-                                    bank.getSourceFreeText() or
-                                    bank.getSourceTitle()),
-                                    bank.getRelativeUrl()))
-  else:
-    item_list.append(( bank.getReference() or
-                       bank.getTitle() or
-                       bank.getSourceFreeText() or
-                       bank.getSourceTitle(),
-                       bank.getRelativeUrl() ))
+  if current_value and current_value not in bank_account_list:
+    item_list.append((
+      translateString(
+        'Invalid bank account from ${entity_title}',
+        mapping={'entity_title': current_value.getParentTitle()}), None))
+    item_list.append(getItemList(current_value))
 
 return item_list
