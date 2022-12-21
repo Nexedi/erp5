@@ -79,7 +79,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
     person_list = self.portal.person_module.searchFolder()
-    self.assertNotEquals(0, len(person_list))
+    self.assertNotEqual(0, len(person_list))
 
     for entity in person_list:
       for username in self.all_username_list:
@@ -89,7 +89,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   def stepViewCreatedOrganisations(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
     organisation_list = self.portal.organisation_module.searchFolder()
-    self.assertNotEquals(0, len(organisation_list))
+    self.assertNotEqual(0, len(organisation_list))
 
     for entity in organisation_list:
       for username in self.all_username_list:
@@ -99,7 +99,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   def stepViewCreatedAssignemnts(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
     person_list = self.portal_person_module.searchFolder()
-    self.assertNotEquals(0, len(person_list))
+    self.assertNotEqual(0, len(person_list))
 
     for person in person_list:
       for assignment in person.contentValues(portal_type='Assignment'):
@@ -112,7 +112,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     person = self.portal.portal_catalog.getResultValue(portal_type="Person",
     reference="user")
 
-    self.assertNotEquals(person.Person_getAvailableAssignmentValueList(), [])
+    self.assertNotEqual(person.Person_getAvailableAssignmentValueList(), [])
     self.assertEqual(person.getTitle(), "Herr Admin")
     self.assertEqual(person.getDefaultEmailText(), 'herradmin@isih-gmbh.de')
     self.assertEqual(person.getFunction(), 'company')

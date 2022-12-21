@@ -161,7 +161,7 @@ class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
     quantity_matrix = {}
     for cell in order_line.contentValues(portal_type=self.order_cell_portal_type):
       key = cell.getProperty('membership_criterion_category')
-      self.assertFalse(key in quantity_matrix)
+      self.assertNotIn(key, quantity_matrix)
       quantity_matrix[key] = cell.getQuantity()
     self.assertEqual(quantity_matrix, self.wanted_quantity_matrix)
 
@@ -538,7 +538,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     # for everyone to have auto_planned as part of future inventory
     self.portal.portal_workflow.order_workflow.getStateValueByReference('auto_planned').setStateTypeList(('planned_order', 'future_inventory'))
     self.portal.portal_caches.clearAllCache()
-    self.assertTrue('auto_planned' in self.portal.getPortalFutureInventoryStateList())
+    self.assertIn('auto_planned', self.portal.getPortalFutureInventoryStateList())
     # end of patch
     self.createOrderBuilder()
     self.fillOrderBuilder()

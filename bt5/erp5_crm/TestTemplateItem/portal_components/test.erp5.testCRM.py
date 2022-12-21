@@ -261,7 +261,7 @@ class TestCRM(BaseTestCRM):
     elif direction == "incoming":
       getter_id = "getSourceRelatedValue"
     related_event = getattr(pers1, getter_id)(portal_type='Mail Message')
-    self.assertNotEquals(None, related_event)
+    self.assertNotEqual(None, related_event)
     self.assertEqual('The Event Title', related_event.getTitle())
     self.assertEqual('The Event Descr.', related_event.getDescription())
     self.assertEqual('Event Content', related_event.getTextContent())
@@ -301,7 +301,7 @@ class TestCRM(BaseTestCRM):
     for person in (pers1, pers2):
       related_event = person.getDestinationRelatedValue(
                             portal_type='Mail Message')
-      self.assertNotEquals(None, related_event)
+      self.assertNotEqual(None, related_event)
       self.assertEqual('The Event Title', related_event.getTitle())
       self.assertEqual('The Event Descr.', related_event.getDescription())
       self.assertEqual('Event Content', related_event.getTextContent())
@@ -428,13 +428,13 @@ class TestCRM(BaseTestCRM):
                                         title=title,)
     self.tic()
 
-    self.assertNotEquals(None, support_request.getReference())
+    self.assertNotEqual(None, support_request.getReference())
 
     new_support_request = support_request.Base_createCloneDocument(
                                                                  batch_mode=1)
     self.assertEqual(new_support_request.getTitle(), title)
-    self.assertNotEquals(None, support_request.getReference())
-    self.assertNotEquals(support_request.getReference(),
+    self.assertNotEqual(None, support_request.getReference())
+    self.assertNotEqual(support_request.getReference(),
                                         new_support_request.getReference())
 
   def test_posting_event_updates_support_request_modification_date(self):
@@ -486,24 +486,24 @@ class TestCRM(BaseTestCRM):
     event = module.newContent(portal_type=portal_type)
     # Check that existing valid resource relations which should not be normaly
     # found by Event_getResourceItemList are present.
-    self.assertTrue(event.getResource() not in\
+    self.assertNotIn(event.getResource(),\
                        [item[1] for item in event.Event_getResourceItemList()])
     event.setResource('0')
     self.assertTrue(event.getResourceValue() is not None)
-    self.assertTrue(event.getResource() in\
+    self.assertIn(event.getResource(),\
                        [item[1] for item in event.Event_getResourceItemList()])
     # Check Backward compatibility support
     # When base_category value is stored in categories_list
     # resource/resource/my_category_id instead of resource/my_category_id
     event.setResource('resource/0')
     self.assertTrue(event.getResourceValue() is not None)
-    self.assertTrue(event.getResource() in\
+    self.assertIn(event.getResource(),\
                        [item[1] for item in event.Event_getResourceItemList()])
 
     # Check that relation with an object which
     # is not a Category works.
     event.setResourceValue(person)
-    self.assertTrue(event.getResource() in\
+    self.assertIn(event.getResource(),\
                        [item[1] for item in event.Event_getResourceItemList()])
 
   def test_EventPath(self):
@@ -594,7 +594,7 @@ class TestCRM(BaseTestCRM):
       if event.getPortalType() != 'Mail Message']
     self.assertEqual(event_list, [])
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Mail Message')
-    self.assertNotEquals(event_list, [])
+    self.assertNotEqual(event_list, [])
     destination_list = [x.getDestinationValue() for x in event_list]
     self.assertEqual(destination_list, [first_user])
     mail_message = event_list[0]
@@ -615,7 +615,7 @@ class TestCRM(BaseTestCRM):
       if event.getPortalType() != 'Visit']
     self.assertEqual([], event_list)
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Visit')
-    self.assertNotEquals([], event_list)
+    self.assertNotEqual([], event_list)
     destination_uid_list = [x.getDestinationUid() for x in event_list]
     self.assertEqual([organisation.getUid()], destination_uid_list)
 
@@ -986,8 +986,8 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = self._ingestMail(filename='sample_multipart_mixed_and_alternative')
     self.tic()
     stripped_html = document.asStrippedHTML()
-    self.assertTrue('<form' not in stripped_html)
-    self.assertTrue('<form' not in document.getAttachmentData(4))
+    self.assertNotIn('<form', stripped_html)
+    self.assertNotIn('<form', document.getAttachmentData(4))
     self.assertEqual('This is my content.\n*ERP5* is a Free _Software_\n',
                       document.getAttachmentData(2))
     self.assertEqual('text/html', document.getContentType())
@@ -1029,7 +1029,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.attach(part)
     event.setData(message.as_string())
     self.tic()
-    self.assertTrue('html' in event.getTextContent())
+    self.assertIn('html', event.getTextContent())
     self.assertEqual(len(event.getAttachmentInformationList()), 2)
     self.assertTrue(bool(event.getAttachmentData(1)))
     self.assertTrue(bool(event.getAttachmentData(2)))
@@ -1128,7 +1128,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message, = self.portal.MailHost._message_list
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
@@ -1154,8 +1154,8 @@ class TestCRMMailSend(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
-    self.assertNotEquals((), last_message_1)
-    self.assertNotEquals((), last_message_2)
+    self.assertNotEqual((), last_message_1)
+    self.assertNotEqual((), last_message_2)
     # check last message 1 and last message 2 (the order is random)
     # both should have 'From: Me'
     self.assertEqual(['"Me," <me@erp5.org>', '"Me," <me@erp5.org>'],
@@ -1212,7 +1212,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual(event.getContentType(), 'text/html')
 
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEqual('"Me," <me@erp5.org>', mfrom)
     self.assertEqual(['"Recipient," <recipient@example.com>'], mto)
@@ -1235,7 +1235,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEqual('=?utf-8?q?Me=2C_=F0=9F=90=88_fan?= <me@erp5.org>', mfrom)
     self.assertEqual(['=?utf-8?q?Recipient=2C_=F0=9F=90=88_fan?= <recipient@example.com>'], mto)
@@ -1291,7 +1291,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # pdf
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1338,13 +1338,13 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # odt
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
       if i.get_filename() == filename:
         part = i
-    self.assert_(len(part.get_payload(decode=True))>0)
+    self.assertTrue(len(part.get_payload(decode=True))>0)
 
   def test_MailAttachmentFile(self):
     """
@@ -1383,13 +1383,13 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # zip
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
       if i.get_filename() == filename:
         part = i
-    self.assert_(len(part.get_payload(decode=True))>0)
+    self.assertTrue(len(part.get_payload(decode=True))>0)
 
   def test_MailAttachmentImage(self):
     """
@@ -1430,7 +1430,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # gif
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1477,7 +1477,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # html
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1528,7 +1528,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # pdf
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1576,13 +1576,13 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # zip
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
       if i.get_filename() == filename:
         part = i
-    self.assert_(len(part.get_payload(decode=True))>0)
+    self.assertTrue(len(part.get_payload(decode=True))>0)
 
   def test_testValidatorForAttachmentField(self):
     """
@@ -1659,7 +1659,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual(answer_event.getSource(), 'person_module/recipient')
     self.assertEqual(answer_event.getTextContent(), '> This is an advertisement mail.')
     self.assertEqual(answer_event.getFollowUpValue(), ticket)
-    self.assert_(answer_event.getData() is not None)
+    self.assertTrue(answer_event.getData() is not None)
 
   def test_MailAttachmentFileWithoutDMS(self):
     """
@@ -1708,13 +1708,13 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # txt
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
       if i.get_filename() == filename:
         part = i
-    self.assert_(len(part.get_payload(decode=True))>0)
+    self.assertTrue(len(part.get_payload(decode=True))>0)
 
 
 
@@ -1765,7 +1765,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     # Check attachment
     # gif
-    self.assert_(filename in
+    self.assertIn(filename,
                  [i.get_filename() for i in message.get_payload()])
     part = None
     for i in message.get_payload():
@@ -1804,7 +1804,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual(new_event.getData(), '')
     self.assertEqual(new_event.getTitle(), real_title)
     self.assertEqual(new_event.getTextContent(), real_content)
-    self.assertNotEquals(new_event.getReference(), event.getReference())
+    self.assertNotEqual(new_event.getReference(), event.getReference())
 
   def test_cloneTicketAndEventList(self):
     """
@@ -2016,7 +2016,7 @@ class TestCRMMailSend(BaseTestCRM):
 
     self.assertEqual(5, len(self.portal.MailHost._message_list))
     for message_info in self.portal.MailHost._message_list:
-      self.assertTrue(mail_text_content in message_info[-1])
+      self.assertIn(mail_text_content, message_info[-1])
       message = message_from_string(message_info[-1])
       self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
@@ -2034,7 +2034,7 @@ class TestCRMMailSend(BaseTestCRM):
                       attachment_list=[])
     self.tic()
     (from_url, to_url, last_message,), = self.portal.MailHost._message_list
-    self.assertTrue("Body Simple Case" in last_message)
+    self.assertIn("Body Simple Case", last_message)
     self.assertEqual('FG ER <eee@eee.com>', from_url)
     self.assertEqual(['Expert User <expert@in24.test>'], to_url)
 

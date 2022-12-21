@@ -1099,7 +1099,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertNotEquals('Previous Balance',
+    self.assertNotEqual('Previous Balance',
           data_line_list[0].getColumnProperty('Movement_getSpecificReference'))
 
   def testAccountStatementAtDateLatestTime(self):
@@ -6075,8 +6075,8 @@ DT, b, P2 - Project 2''',
     request_form['show_detailed_balance_columns'] = 1
     # in the dialog, categories are in the '_translated_title' form
     request_form['group_analytic'] = ['product_line_translated_title']
-    self.assertTrue(
-        ('Product Line', 'product_line_translated_title') in
+    self.assertIn(
+        ('Product Line', 'product_line_translated_title'),
       self.portal.accounting_module.AccountModule_viewTrialBalanceReportDialog\
         .your_group_analytic.get_value('items'))
 

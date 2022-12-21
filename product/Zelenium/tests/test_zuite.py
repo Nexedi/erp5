@@ -179,8 +179,8 @@ class ZuiteTests( unittest.TestCase ):
 
         zuite = self._makeOne()
         self.assertEqual( len( zuite.test_case_metatypes ), 2 )
-        self.assertTrue( 'File' in zuite.test_case_metatypes )
-        self.assertTrue( 'Page Template' in zuite.test_case_metatypes )
+        self.assertIn( 'File', zuite.test_case_metatypes )
+        self.assertIn( 'Page Template', zuite.test_case_metatypes )
         self.assertEqual( len( zuite.listTestCases() ), 0 )
 
     def test___getitem___normal( self ):
@@ -293,7 +293,7 @@ class ZuiteTests( unittest.TestCase ):
         cases = zuite.listTestCases()
         self.assertEqual( len( cases ), len( _TEST_IDS ) )
         for case in cases:
-            self.assertTrue( case[ 'id' ] in _TEST_IDS )
+            self.assertIn( case[ 'id' ], _TEST_IDS )
 
         zuite.test_case_metatypes = ()
         self.assertEqual( len( zuite.listTestCases() ), 0 )
@@ -302,7 +302,7 @@ class ZuiteTests( unittest.TestCase ):
         cases = zuite.listTestCases()
         self.assertEqual( len( cases ), len( _TEST_IDS ) )
         for case in cases:
-            self.assertTrue( case[ 'id' ] in _TEST_IDS )
+            self.assertIn( case[ 'id' ], _TEST_IDS )
 
     def test_listTestCases_recursive( self ):
 
@@ -331,14 +331,14 @@ class ZuiteTests( unittest.TestCase ):
         expected = _TEST_IDS + _SUB_IDS
         self.assertEqual( len( cases ), len( expected ) )
         for case in cases:
-            self.assertTrue( case[ 'id' ] in expected )
+            self.assertIn( case[ 'id' ], expected )
 
         # verfiy that disabling the parent's metatypes leaves the child's OK.
         zuite.test_case_metatypes = ()
         cases = zuite.listTestCases()
         self.assertEqual( len( cases ), len( _SUB_IDS ) )
         for case in cases:
-            self.assertTrue( case[ 'id' ] in _SUB_IDS )
+            self.assertIn( case[ 'id' ], _SUB_IDS )
 
         # verfiy that disabling the child's metatypes leaves the parent's OK.
         zuite.test_case_metatypes = ( 'File', )
@@ -346,7 +346,7 @@ class ZuiteTests( unittest.TestCase ):
         cases = zuite.listTestCases()
         self.assertEqual( len( cases ), len( _TEST_IDS ) )
         for case in cases:
-            self.assertTrue( case[ 'id' ] in _TEST_IDS )
+            self.assertIn( case[ 'id' ], _TEST_IDS )
 
     def test_listTestCases_filesystem( self ):
 
@@ -379,8 +379,8 @@ class ZuiteTests( unittest.TestCase ):
         cases = zuite.listTestCases()
         self.assertEqual( len( cases ), 2 )
         case_ids = [ x[ 'id' ] for x in cases ]
-        self.assertTrue( 'test_one.html' in case_ids )
-        self.assertTrue( 'test_another.html' in case_ids )
+        self.assertIn( 'test_one.html', case_ids )
+        self.assertIn( 'test_another.html', case_ids )
 
     def test_listTestCases_filesystem_ordered_default( self ):
 
@@ -590,7 +590,7 @@ class ZuiteTests( unittest.TestCase ):
         zuite.manage_createSnapshot( archive_name=_ARCHIVE_NAME )
         object_ids = zuite.objectIds()
         self.assertEqual( len( object_ids ), 1 )
-        self.assertTrue( _ARCHIVE_NAME in object_ids )
+        self.assertIn( _ARCHIVE_NAME, object_ids )
 
         archive = zuite._getOb( _ARCHIVE_NAME )
         expected = self._listDefaultArchiveNames()
@@ -608,7 +608,7 @@ class ZuiteTests( unittest.TestCase ):
                                    )
         object_ids = zuite.objectIds()
         self.assertEqual( len( object_ids ), 1 )
-        self.assertTrue( _ARCHIVE_NAME in object_ids )
+        self.assertIn( _ARCHIVE_NAME, object_ids )
 
         archive = zuite._getOb( _ARCHIVE_NAME )
         expected = self._listDefaultArchiveNames( include_selenium=False )
@@ -631,7 +631,7 @@ class ZuiteTests( unittest.TestCase ):
         object_ids = zuite.objectIds()
         self.assertEqual( len( object_ids ), 2 )
         expected_id = '%s-%s.zip' % ( zuite.getId(), _NOW )
-        self.assertTrue( expected_id in object_ids )
+        self.assertIn( expected_id, object_ids )
 
         expected = self._listDefaultArchiveNames()
         expected.append( '.objects' )
@@ -666,7 +666,7 @@ class ZuiteTests( unittest.TestCase ):
         zuite.manage_createSnapshot( archive_name=_ARCHIVE_NAME )
         object_ids = zuite.objectIds()
         self.assertEqual( len( object_ids ), len( _TEST_IDS ) + 2 )
-        self.assertTrue( _ARCHIVE_NAME in object_ids )
+        self.assertIn( _ARCHIVE_NAME, object_ids )
 
         archive = zuite._getOb( _ARCHIVE_NAME )
         expected = self._listDefaultArchiveNames()
@@ -719,7 +719,7 @@ class ZuiteTests( unittest.TestCase ):
                                  , 'text/html'
                                  )
                            )
-        self.assertTrue( u'azértï' in zresults.index_html() )
+        self.assertIn( u'azértï', zresults.index_html() )
 
 
 def test_suite():

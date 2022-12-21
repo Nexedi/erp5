@@ -447,9 +447,9 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                         node_uid=node_uid,
                         resource=resource_url,
                         to_date=date):
-      self.assertNotEquals(inventory_brain.getExplanationText(),
+      self.assertNotEqual(inventory_brain.getExplanationText(),
                            'Unknown')
-      self.assertNotEquals(inventory_brain.getListItemUrl(
+      self.assertNotEqual(inventory_brain.getListItemUrl(
                                 'getExplanationText',
                                 0,
                                 'dummy_selection_name'), '')

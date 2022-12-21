@@ -278,13 +278,13 @@ class TestAccounts(AccountingTestCase):
 
     # non regression: this constraint is also properly verified during workflow
     account.setAccountType(None)
-    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+    with self.assertRaisesRegex(ValidationFailed, 'Account Type must be set'):
       self.portal.portal_workflow.doActionFor(account, 'validate_action')
     account.setAccountType('equity')
     self.portal.portal_workflow.doActionFor(account, 'validate_action')
     self.portal.portal_workflow.doActionFor(account, 'invalidate_action')
     account.setAccountType(None)
-    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+    with self.assertRaisesRegex(ValidationFailed, 'Account Type must be set'):
       self.portal.portal_workflow.doActionFor(account, 'validate_action')
 
   def test_AccountWorkflow(self):
@@ -932,7 +932,7 @@ class TestTransactionValidation(AccountingTestCase):
                            source_credit=1/3.0),
                       dict(source_value=self.account_module.receivable,
                            source_credit=1/3.0),))
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'Transaction is not balanced for',
         self.portal.portal_workflow.doActionFor,
@@ -961,7 +961,7 @@ class TestTransactionValidation(AccountingTestCase):
                            destination_credit=1/3.0),
                       dict(destination_value=self.account_module.receivable,
                            destination_credit=1/3.0),))
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'Transaction is not balanced for',
         self.portal.portal_workflow.doActionFor,
@@ -977,7 +977,7 @@ class TestTransactionValidation(AccountingTestCase):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems
     category = self.section.getGroupValue()
-    self.assertNotEquals(category, None)
+    self.assertNotEqual(category, None)
     accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
@@ -1158,14 +1158,14 @@ class TestTransactionValidation(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=500)))
 
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
       ValidationFailed,
       'Transaction is not balanced',
       accounting_transaction.AccountingTransaction_checkConsistency,
     )
 
     accounting_transaction.line_with_wrong_quantity.setSourceDebit(500)
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
       ValidationFailed,
       'Date is not in a started Accounting Period',
       accounting_transaction.AccountingTransaction_checkConsistency,
@@ -1900,7 +1900,7 @@ class TestClosingPeriod(AccountingTestCase):
                       client1_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_1,
                       client1_movement.getSourceSectionValue())
-    self.assertAlmostEquals(1.1,
+    self.assertAlmostEqual(1.1,
           client1_movement.getDestinationInventoriatedTotalAssetCredit(),
           accounting_currency_precision)
     self.assertEqual(None, client1_movement.getSourceTotalAssetPrice())
@@ -1918,7 +1918,7 @@ class TestClosingPeriod(AccountingTestCase):
                       client2_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_2,
                       client2_movement.getSourceSectionValue())
-    self.assertAlmostEquals(2.2,
+    self.assertAlmostEqual(2.2,
         client2_movement.getDestinationInventoriatedTotalAssetCredit(),
         accounting_currency_precision)
     self.assertEqual(None, client2_movement.getSourceTotalAssetPrice())
@@ -1936,7 +1936,7 @@ class TestClosingPeriod(AccountingTestCase):
                       pl_movement.getSourceSection())
     self.assertEqual(None, pl_movement.getDestinationTotalAssetPrice())
     self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
-    self.assertAlmostEquals(3.3,
+    self.assertAlmostEqual(3.3,
                   pl_movement.getDestinationDebit(),
                   accounting_currency_precision)
 
@@ -1948,11 +1948,11 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT total_price FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT quantity FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
@@ -2057,7 +2057,7 @@ class TestClosingPeriod(AccountingTestCase):
                       yen_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_1,
                       yen_movement.getSourceSectionValue())
-    self.assertAlmostEquals(1.1,
+    self.assertAlmostEqual(1.1,
           yen_movement.getDestinationInventoriatedTotalAssetCredit(),
           accounting_currency_precision)
     self.assertEqual(None, yen_movement.getSourceTotalAssetPrice())
@@ -2071,7 +2071,7 @@ class TestClosingPeriod(AccountingTestCase):
                       dollar_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_1,
                       dollar_movement.getSourceSectionValue())
-    self.assertAlmostEquals(2.2,
+    self.assertAlmostEqual(2.2,
           dollar_movement.getDestinationInventoriatedTotalAssetCredit(),
           accounting_currency_precision)
     self.assertEqual(None, dollar_movement.getSourceTotalAssetPrice())
@@ -2084,11 +2084,11 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT total_price FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT quantity FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
@@ -2634,9 +2634,9 @@ class TestClosingPeriod(AccountingTestCase):
     # Maybe we want to add line for each account in that case ?
     line, = balance_transaction.contentValues()
 
-    self.assertEquals(line.getDestinationValue(), pl)
-    self.assertEquals(line.getQuantity(), 0)
-    self.assertEquals(line.getDestinationTotalAssetPrice(), None)
+    self.assertEqual(line.getDestinationValue(), pl)
+    self.assertEqual(line.getQuantity(), 0)
+    self.assertEqual(line.getDestinationTotalAssetPrice(), None)
 
 
   def test_InventoryIndexingNodeAndMirrorSection(self):
@@ -3184,7 +3184,7 @@ class TestClosingPeriod(AccountingTestCase):
            period, 'stop_action',
            profit_and_loss_account=pl.getRelativeUrl())
 
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Previous accounting periods has to be closed first.*'):
       self.getPortal().portal_workflow.doActionFor(
         period2, 'stop_action')
@@ -3210,7 +3210,7 @@ class TestClosingPeriod(AccountingTestCase):
              dict(source_value=self.account_module.receivable,
                   source_debit=100)))
 
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValidationFailed,
        'All Accounting Transactions for this organisation during'
        ' the period have to be closed first'):
@@ -3269,9 +3269,9 @@ class TestAccountingExport(AccountingTestCase):
         '40 - Payable',
         self.account_module.payable.Account_getFormattedTitle())
     # check that this account name can be found in the content
-    self.assertTrue('40 - Payable' in content_xml)
+    self.assertIn('40 - Payable', content_xml)
     # check that we don't have unknown categories
-    self.assertFalse('???' in content_xml)
+    self.assertNotIn('???', content_xml)
 
 
 class TestTransactions(AccountingTestCase):
@@ -3420,9 +3420,9 @@ class TestTransactions(AccountingTestCase):
                                 description="A description",
                                 comment="Some comments")
     searchable_text = accounting_transaction.SearchableText()
-    self.assertTrue('A new Transaction' in searchable_text)
-    self.assertTrue('A description' in searchable_text)
-    self.assertTrue('Some comments' in searchable_text)
+    self.assertIn('A new Transaction', searchable_text)
+    self.assertIn('A description', searchable_text)
+    self.assertIn('Some comments', searchable_text)
 
 
   def test_Organisation_getMappingRelatedOrganisation(self):
@@ -3449,7 +3449,7 @@ class TestTransactions(AccountingTestCase):
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
     """Check payment of a Sale Invoice.
     """
-    eq = self.assertEquals
+    eq = self.assertEqual
     eq('Payment Transaction', payment.getPortalTypeName())
     eq([invoice], payment.getCausalityValueList())
     eq(invoice.getSourceSection(), payment.getSourceSection())
@@ -4860,7 +4860,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -5039,7 +5039,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     for account in self.account_list :
       account.validate()
-      self.assertTrue('Site Error' not in account.view())
+      self.assertNotIn('Site Error', account.view())
       self.assertEqual(account.getValidationState(), 'validated')
     self.tic()
 
@@ -5283,10 +5283,10 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     portal = self.getPortal()
     accounting_module = portal.accounting_module
-    self.assertTrue('Site Error' not in accounting_module.view())
-    self.assertNotEquals(
+    self.assertNotIn('Site Error', accounting_module.view())
+    self.assertNotEqual(
           len(portal.getPortalAccountingMovementTypeList()), 0)
-    self.assertNotEquals(
+    self.assertNotEqual(
           len(portal.getPortalAccountingTransactionTypeList()), 0)
     for accounting_portal_type in accounting_module.allowedContentTypes():
       accounting_transaction = accounting_module.newContent(
@@ -5294,14 +5294,14 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
             source_section_value = source_section_value,
             destination_section_value = destination_section_value,
             resource_value = resource_value )
-      self.assertTrue('Site Error' not in accounting_transaction.view())
+      self.assertNotIn('Site Error', accounting_transaction.view())
       self.assertEqual( accounting_transaction.getSourceSectionValue(),
                          source_section_value )
       self.assertEqual( accounting_transaction.getDestinationSectionValue(),
                          destination_section_value )
       self.assertEqual( accounting_transaction.getResourceValue(),
                          resource_value )
-      self.assertNotEquals(
+      self.assertNotEqual(
               len(accounting_transaction.allowedContentTypes()), 0)
       tested_line_portal_type = 0
       for line_portal_type in portal.getPortalAccountingMovementTypeList():
@@ -5310,7 +5310,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         if line_portal_type in allowed_content_types :
           line = accounting_transaction.newContent(
             portal_type = line_portal_type, )
-          self.assertTrue('Site Error' not in line.view())
+          self.assertNotIn('Site Error', line.view())
           # section and resource is acquired from parent transaction.
           self.assertEqual( line.getDestinationSectionValue(),
                              destination_section_value )
@@ -5323,7 +5323,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
           self.assertEqual( line.getResourceValue(),
                              resource_value )
           tested_line_portal_type = 1
-      self.assert_(tested_line_portal_type, ("No lines tested ... " +
+      self.assertTrue(tested_line_portal_type, ("No lines tested ... " +
                           "getPortalAccountingMovementTypeList = %s " +
                           "<%s>.allowedContentTypes = %s") %
                           (portal.getPortalAccountingMovementTypeList(),
@@ -6082,7 +6082,7 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
       source_value=self.portal.account_module.goods_sales,
       source_credit=101)
 
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Transaction is not balanced.*'):
       self.portal.portal_workflow.doActionFor(
         internal_invoice, 'start_action')
@@ -6099,7 +6099,7 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
       destination_value=self.portal.account_module.refundable_vat,
       destination_debit=101)
 
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Transaction is not balanced.*'):
       self.portal.portal_workflow.doActionFor(
         internal_invoice, 'stop_action')
@@ -6518,7 +6518,7 @@ class TestAccountingPeriod(AccountingTestCase):
         portal_type='Accounting Period',
         start_date=DateTime('2021/01/01'),
         stop_date=DateTime('2020/12/31'),)
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         'Start date is after stop date'):
       self.portal.portal_workflow.doActionFor(first_accounting_period, 'start_action')
 
@@ -6532,13 +6532,13 @@ class TestAccountingPeriod(AccountingTestCase):
         portal_type='Accounting Period',
         start_date=DateTime('2021/01/01'),
         stop_date=DateTime('2022/12/31'),)
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '2021/01/01 00:00:00 .* is already in an open accounting period.'):
       self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
 
     # check there are no "holes" between dates
     second_accounting_period.setStartDate('2022/01/02')
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         'Last opened period ends on 2021/12/31.*, this period starts on 2022/01/02.*. Accounting Periods must be consecutive.'):
       self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
 
