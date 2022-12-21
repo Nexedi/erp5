@@ -4628,6 +4628,28 @@ class TestTransactions(AccountingTestCase):
       ('BA-1', bank_account.getRelativeUrl()),
       at.AccountingTransaction_getDestinationPaymentItemList())
 
+  def test_AccountingTransaction_getSourcePaymentItemList_no_section(self):
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='BA-1'
+    )
+    bank_account.validate()
+    self.tic()
+
+    at = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    at.setSourceSectionValue(None)
+    at.setDestinationSectionValue(None)
+    self.assertEqual(
+      at.AccountingTransaction_getSourcePaymentItemList(), [('', '')])
+    self.assertEqual(
+      at.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
+
   def test_AccountingTransaction_getSourcePaymentItemList_parent_section(self):
     # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList
     # allows to select bank accounts from parent groups of source section
