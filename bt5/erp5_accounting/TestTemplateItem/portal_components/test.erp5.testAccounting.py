@@ -4666,6 +4666,36 @@ class TestTransactions(AccountingTestCase):
     self.assertEqual(
       at.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
 
+  def test_AccountingTransaction_getSourcePaymentItemList_person_member_of_group(self):
+    bank_account = self.main_section.newContent(
+      portal_type='Bank Account',
+      reference='should not be displayed'
+    )
+    bank_account.validate()
+    self.tic()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.person_module.john_smith,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertEqual(
+      source_transaction.AccountingTransaction_getSourcePaymentItemList(), [('', '')])
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.person_module.john_smith,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  destination_credit=500)))
+    self.assertEqual(
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
+
   def test_AccountingTransaction_getSourcePaymentItemList_parent_section(self):
     # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList
     # allows to select bank accounts from parent groups of source section
