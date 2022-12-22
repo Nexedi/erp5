@@ -496,7 +496,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
        % self.portal.getId(), self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
-    self.assertEqual('text/html;charset=UTF-8', content_type.lower())
+    self.assertEqual('text/html;charset=utf-8', content_type.lower())
     self.assertFalse(response.getHeader('content-disposition'))
     # Simplistic assertion that we are viewing the ODF XML source
     self.assertIn('office:document-content', response.getBody())
