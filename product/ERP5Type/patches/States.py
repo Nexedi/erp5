@@ -45,10 +45,6 @@ def setProperties(self, title='', transitions=(), REQUEST=None, description='', 
     if REQUEST is not None:
         return self.manage_properties(REQUEST, 'Properties changed.')
 
-def addPossibleTransition(self, tr_ref):
-    self.transitions = self.transitions + (tr_ref,)
-
-StateDefinition.addPossibleTransition = addPossibleTransition
 StateDefinition._properties_form = _properties_form
 StateDefinition.getAvailableTypeList = getAvailableTypeList
 StateDefinition.setProperties = setProperties
