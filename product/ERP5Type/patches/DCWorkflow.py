@@ -1041,9 +1041,9 @@ def convertToERP5Workflow(self, temp_object=False):
       # set state's possible transitions:
       for sid in self.states:
         sdef = workflow._getOb('state_'+sid)
-        new_category = []
-        for transition_id in self.states.get(sid).transitions:
-          sdef.addPossibleTransition(transition_id)
+        sdef.setDestinationValueList([
+          workflow.getTransitionValueByReference(tid)
+          for tid in self.states.get(sid).transitions])
       # set transition's destination state:
       for tid in dc_workflow_transition_value_list:
         tdef = workflow.getTransitionValueByReference(tid)
