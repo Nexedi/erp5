@@ -44,8 +44,6 @@ from Products.ERP5Type.patches import sqltest
 from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import States
 from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
