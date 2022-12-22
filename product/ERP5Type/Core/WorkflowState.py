@@ -58,15 +58,6 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     'WorkflowState',
   )
 
-  def addPossibleTransition(self, tr_ref):
-    possible_transition_list = self.getCategoryList()
-    transition = self.getParentValue()._getOb('transition_'+tr_ref, None)
-    if transition is not None:
-      tr_path = 'destination/' + '/'.join(transition.getPath().split('/')[2:])
-      possible_transition_list.append(tr_path)
-      self.setCategoryList(possible_transition_list)
-
-
   # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDestinationList')
