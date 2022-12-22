@@ -6,30 +6,11 @@ for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
-
-validated = False
-# validate currencies and clear cache if we have validated new currencies
-for currency in portal.currency_module.objectValues():
-  if currency.getValidationState() != 'validated':
-    currency.validate()
-    validated = True
-if validated:
-  portal.portal_caches.clearCache(cache_factory_list=('erp5_ui_short', ))
-
-# validate all accounts
+# validate all accounts, because we have test invalidating accounts, see
+# accounting_zuite/accounting_transaction_zuite/test_accounting_transaction_input_invalidated_accounts.html
 for account in portal.account_module.objectValues():
   if account.getValidationState() != 'validated':
     account.validate()
-
-# validate third parties and set them a dummy region, because it's required
-for entity in ( portal.organisation_module.objectValues() +
-                portal.person_module.objectValues() ):
-  if entity.getValidationState() != 'validated':
-    entity.setRegion('region')
-    entity.validate()
-
-# create accounting periods ?
-# XXX
 
 # enable preference
 ptool = portal.portal_preferences
