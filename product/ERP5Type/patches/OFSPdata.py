@@ -30,23 +30,6 @@ import six
 
 from OFS.Image import Pdata
 
-def getLastPdata(self):
-  """Return the last Pdata chunk"""
-  if six.PY2:
-    next = self.next
-  else:
-    next = self.__next__
-
-  while next is not None:
-    self = next
-    if six.PY2:
-      next = self.next
-    else:
-      next = self.__next__
-  return self
-
-Pdata.getLastPdata = getLastPdata
-
 def __nonzero__(self):
   while not self.data:
     if six.PY2:

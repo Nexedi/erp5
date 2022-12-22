@@ -28,6 +28,7 @@
 ##############################################################################
 
 # Required modules - some modules are imported later to prevent circular deadlocks
+import six
 import persistent
 from hashlib import md5
 
@@ -186,9 +187,15 @@ class PdataHelper(persistent.Persistent):
     of a Pdata chains
     """
     pdata = self._data
-    next_ = pdata.next
+    if six.PY2:
+      next_ = pdata.next
+    else:
+      next_ = pdata.__next__
 
     while next_ is not None:
       pdata = next_
-      next_ = pdata.next
+      if six.PY2:
+        next_ = pdata.next
+      else:
+        next_ = pdata.__next__
     return pdata
