@@ -5,6 +5,10 @@
   root is defined then it renders the error from portal.
 """
 from zExceptions import Unauthorized
+
+# Adjust exception context for Zope 4.
+context = container.REQUEST.PARENTS[0]
+
 try:
   return context.standard_error_message_template(*args, **kw)
 except Unauthorized:
