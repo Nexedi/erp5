@@ -180,6 +180,12 @@ var DroneManager = /** @class */ (function () {
           context._direction.y * updateSpeed,
           context._direction.z * updateSpeed));
       }
+      //TODO rotation
+      var orientationValue = context._maxOrientation *
+          (context._speed / context._maxSpeed);
+      context._mesh.rotation =
+        new BABYLON.Vector3(orientationValue * context._direction.z, 0,
+                            -orientationValue * context._direction.x);
       context._controlMesh.computeWorldMatrix(true);
       context._mesh.computeWorldMatrix(true);
       if (context._canUpdate) {
