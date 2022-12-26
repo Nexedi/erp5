@@ -7,7 +7,7 @@
 from zExceptions import Unauthorized
 
 # Adjust exception context for Zope 4.
-context = container.REQUEST.PARENTS[0]
+context = container.REQUEST.get('PARENTS', [context])[0]
 
 try:
   return context.standard_error_message_template(*args, **kw)
