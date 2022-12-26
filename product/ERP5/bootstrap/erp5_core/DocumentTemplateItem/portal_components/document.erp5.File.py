@@ -38,13 +38,6 @@ from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
 
 
-def _unpackData(data):
-  """
-  Unpack Pdata into string
-  OBSOLETED. use str(data) instead, because Pdata.__str__ is defined.
-  """
-  return str(data)
-
 _MARKER = object()
 
 class File(Document, OFS_File):
@@ -147,7 +140,7 @@ class File(Document, OFS_File):
     if data is None:
       return
     if self.hasData():
-      if str(data.read()) == str(self.getData()):
+      if bytes(data.read()) == bytes(self.getData()):
         # Same data as previous, no need to change its content
         return
     else:
@@ -180,13 +173,13 @@ class File(Document, OFS_File):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
-    """return Data as str."""
+    """return Data as bytes."""
     self._checkConversionFormatPermission(None)
     data = self._baseGetData()
     if data is None:
       return None
     else:
-      return str(data)
+      return bytes(data)
 
   # DAV Support
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
@@ -226,8 +219,8 @@ class File(Document, OFS_File):
       elif getattr(self, 'getBaseData', None) is not None:
         content = self.getBaseData()
 
-    if content and not isinstance(content, str):
-      content = str(content)
+    if content and not isinstance(content, bytes):
+      content = bytes(content)
 
     return (mime_type, content)
 
