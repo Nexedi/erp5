@@ -20,6 +20,7 @@ var DroneManager = /** @class */ (function () {
     this._acceleration = 0;
     this._direction = BABYLON.Vector3.Zero();
     this._maxOrientation = Math.PI / 4;
+    this._rotationSpeed = 0.4;
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
@@ -132,6 +133,37 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this, updateSpeed;
     if (this._controlMesh) {
+      //TODO rotation
+      if (context._rotationTarget) {
+          var rotStep = BABYLON.Vector3.Zero(),
+            diff = context._rotationTarget
+              .subtract(context._controlMesh.rotation);
+          if (diff.x >= 1)
+              rotStep.x = 1;
+          else
+              rotStep.x = diff.x;
+          if (diff.y >= 1)
+              rotStep.y = 1;
+          else
+              rotStep.y = diff.y;
+          if (diff.z >= 1)
+              rotStep.z = 1;
+          else
+              rotStep.z = diff.z;
+          if (rotStep == BABYLON.Vector3.Zero()) {
+              context._rotationTarget = null;
+              return;
+          }
+          var newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
+                                           (rotStep.x * context._rotationSpeed),
+                                           context._controlMesh.rotation.y +
+                                           (rotStep.y * context._rotationSpeed),
+                                           context._controlMesh.rotation.z +
+                                           (rotStep.z * context._rotationSpeed)
+                                          );
+          context._controlMesh.rotation = newrot;
+      }
+
       context._speed += context._acceleration * delta_time / 1000;
       if (context._speed > context._maxSpeed) {
         context._speed = context._maxSpeed;
