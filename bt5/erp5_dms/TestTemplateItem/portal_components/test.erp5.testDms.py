@@ -629,12 +629,22 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="TEST-en-002.doc"',
                       response.headers['content-disposition'])
+
     response = self.publish('%s/OOoDocument_getOOoFile' % doc.getPath(),
                             basic='member_user1:secret')
     self.assertEqual('application/vnd.oasis.opendocument.text',
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="TEST-en-002.odt"',
                       response.headers['content-disposition'])
+
+    # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    doc.setFilename('テスト-jp-002.doc')
+    self.tic()
+    response = self.publish('%s/Base_download' % doc.getPath(), basic='member_user1:secret')
+    self.assertEqual(
+      response.headers['content-disposition'],
+      'attachment; filename="-jp-002.doc"; filename*=UTF-8\'\'%E3%83%86%E3%82%B9%E3%83%88-jp-002.doc',
+    )
 
   def test_Member_download_pdf_format(self):
     # tests that members can download OOo documents in pdf format (at least in
@@ -670,6 +680,15 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.headers['content-disposition'])
+
+    # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    doc.setFilename('PDFファイル.ods')
+    self.tic()
+    response = self.publish('%s?format=pdf' % doc.getPath(), basic='member_user2:secret')
+    self.assertEqual(
+      response.headers['content-disposition'],
+      'attachment; filename="PDF.pdf"; filename*=UTF-8\'\'PDF%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.pdf',
+    )
 
   def test_05_getCreationDate(self):
     """
