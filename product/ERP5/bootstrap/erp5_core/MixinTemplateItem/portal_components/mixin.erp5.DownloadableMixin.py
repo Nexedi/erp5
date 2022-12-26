@@ -26,6 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import six
+from six.moves.urllib.parse import quote
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
@@ -34,6 +36,41 @@ from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCach
     _ViewEmulator
 import warnings
 from zExceptions import Forbidden
+
+try:
+  # Zope5
+  from ZPublisher.HTTPResponse import make_content_disposition # pylint:disable=no-name-in-module
+except ImportError:
+  # BBB backport https://github.com/zopefoundation/Zope/pull/893 with py2 support
+  def make_content_disposition(disposition, file_name):
+    if six.PY2 and not isinstance(file_name, unicode):
+      file_name = file_name.decode('utf-8')
+    try:
+      file_name.encode('us-ascii')
+    except UnicodeEncodeError:
+      # the file cannot be encoded using the `us-ascii` encoding
+      # which is advocated by RFC 7230 - 7237
+      #
+      # a special header has to be crafted
+      # also see https://tools.ietf.org/html/rfc6266#appendix-D
+      encoded_file_name = file_name.encode('us-ascii', errors='ignore')
+      if six.PY2:
+        quoted_file_name = quote(file_name.encode('utf-8'))
+      else:
+        quoted_file_name = quote(file_name)
+
+      return '{disposition}; '\
+        'filename="{encoded_file_name}"; '\
+        'filename*=UTF-8\'\'{quoted_file_name}'.format(
+          disposition=disposition,
+          encoded_file_name=encoded_file_name,
+          quoted_file_name=quoted_file_name)
+    else:
+      return '{disposition}; '\
+        'filename="{file_name}"'.format(
+          disposition=disposition,
+          file_name=file_name)
+
 
 _MARKER = object()
 
@@ -124,8 +161,9 @@ class DownloadableMixin:
         filename = self.getStandardFilename(format=format)
       # workaround for IE's bug to download files over SSL
       RESPONSE.setHeader('Pragma', '')
-      RESPONSE.setHeader('Content-Disposition',
-                         'attachment; filename="%s"' % filename)
+      RESPONSE.setHeader(
+        'Content-Disposition',
+        make_content_disposition('attachment', filename))
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
     else:
       RESPONSE.setHeader('Content-Disposition', 'inline')
