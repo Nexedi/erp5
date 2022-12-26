@@ -246,6 +246,23 @@ var DroneManager = /** @class */ (function () {
     }
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
   };
+  //TODO rotation
+  DroneManager.prototype.setRotation = function (x, y, z) {
+      if (!this._canPlay)
+          return;
+      if (this._team == "R")
+          y += Math.PI;
+      this._rotationTarget = new BABYLON.Vector3(x, z, y);
+  };
+  //TODO rotation
+  DroneManager.prototype.setRotationBy = function (x, y, z) {
+      if (!this._canPlay)
+          return;
+      this._rotationTarget = new BABYLON.Vector3(this.rotation.x + x,
+                                                 this.rotation.y + z,
+                                                 this.rotation.z + y);
+  };
+
   /**
    * Send a message to drones
    * @param msg The message to send
