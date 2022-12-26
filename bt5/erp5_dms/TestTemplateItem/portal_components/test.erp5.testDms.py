@@ -589,8 +589,8 @@ class TestDocument(TestDocumentMixin):
   def testTempOOoDocument_get_size(self):
     # test get_size on temporary OOoDocument
     doc = self.portal.newContent(temp_object=True, portal_type='OOo Document', id='tmp')
-    doc.edit(data='OOo')
-    self.assertEqual(len('OOo'), doc.get_size())
+    doc.edit(data=b'OOo')
+    self.assertEqual(len(b'OOo'), doc.get_size())
 
   def testOOoDocument_hasData(self):
     # test hasData on OOoDocument
@@ -1279,7 +1279,7 @@ class TestDocument(TestDocumentMixin):
                                      display='thumbnail')
     self.assertEqual(mime, 'image/png')
     # it's a valid PNG
-    self.assertEqual(image_data[1:4], 'PNG')
+    self.assertEqual(image_data[1:4], b'PNG')
 
   def test_PDFToJpg(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1290,7 +1290,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/jpeg')
-    self.assertEqual(image_data[6:10], 'JFIF')
+    self.assertEqual(image_data[6:10], b'JFIF')
 
   def test_PDFToGif(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1301,7 +1301,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/gif')
-    self.assertEqual(image_data[0:4], 'GIF8')
+    self.assertEqual(image_data[0:4], b'GIF8')
 
   def test_PDFToTiff(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1312,7 +1312,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/tiff')
-    self.assertIn(image_data[0:2], ('II', 'MM'))
+    self.assertIn(image_data[0:2], (b'II', b'MM'))
 
 
   def test_PDF_content_information(self):
