@@ -3012,11 +3012,91 @@ class TestDocumentPerformance(TestDocumentMixin):
         req_time)
 
 
+class DocumentConsistencyTestCase(ERP5TypeTestCase):
+  portal_type = NotImplemented
+  content_type = NotImplemented
+  filename = NotImplemented
+
+  def _getDocumentModule(self):
+    return self.portal.document_module
+
+  def afterSetUp(self):
+    self.document = self._getDocumentModule().newContent(portal_type=self.portal_type)
+    self.file_upload = makeFileUpload(self.filename)
+    with open(makeFilePath(self.filename)) as f:
+      self.file_data = f.read()
+    self.file_size = len(self.file_data)
+
+  def _checkDocument(self):
+    self.assertEqual(self.document.checkConsistency(), [])
+    from Products.ERP5Type.Constraint import PropertyTypeValidity
+    self.assertEqual(
+      PropertyTypeValidity(
+        id='type_check',
+        description='Type Validity Check',
+      ).checkConsistency(self.document),
+      [],
+    )
+    self.assertEqual(self.document.getData(), self.file_data)
+    self.assertEqual(self.document.getSize(), self.file_size)
+    self.assertEqual(self.document.getContentType(), self.content_type)
+    self.assertEqual(self.document.getFilename(), self.filename)
+
+  def test_set_file(self):
+    self.document.edit(file=self.file_upload)
+    self._checkDocument()
+
+  def test_set_data(self):
+    self.document.edit(data=self.file_data)
+    # when setting data, we have to set the content type and filename ourselves
+    self.document.setContentType(self.content_type)
+    self.document.setFilename(self.filename)
+    self._checkDocument()
+
+
+class DrawingConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Drawing'
+  filename = 'Foo_001.odg'
+  content_type = 'application/vnd.oasis.opendocument.graphics'
+
+class FileConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'File'
+  filename = 'dummy.bin'
+  content_type = 'application/octet-stream'
+
+class PDFConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'PDF'
+  filename = 'TEST.Large.Document.pdf'
+  content_type = 'application/pdf'
+
+class PresentationConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Presentation'
+  filename = 'TEST-en-003.odp'
+  content_type = 'application/vnd.oasis.opendocument.presentation'
+
+class SpreadsheetConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Spreadsheet'
+  filename = 'import_big_spreadsheet.ods'
+  content_type = 'application/vnd.oasis.opendocument.spreadsheet'
+
+class TextConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Text'
+  filename = 'REF-en-001.odt'
+  content_type = 'application/vnd.oasis.opendocument.text'
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
   suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  suite.addTest(unittest.makeSuite(DrawingConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(FileConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(PDFConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(PresentationConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(SpreadsheetConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(TextConsistencyTestCase))
+
   # Run erp5_base's TestImage with dms installed (because dms has specific interactions)
   from erp5.component.test.testERP5Base import TestImage
   suite.addTest(unittest.makeSuite(TestImage))
