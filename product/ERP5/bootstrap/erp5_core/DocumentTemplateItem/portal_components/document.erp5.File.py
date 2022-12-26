@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -149,6 +150,12 @@ class File(Document, OFS_File):
     if data.tell():
       data.seek(0)
       self.manage_upload(data)
+
+  security.declarePrivate('update_data')
+  def update_data(self, *args, **kw):
+    super(File, self).update_data(*args, **kw)
+    if six.PY2 and isinstance(self.size, long):
+      self.size = int(self.size)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
   def setFile(self, data, precondition=None):
