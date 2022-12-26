@@ -83,6 +83,7 @@
                       <list>
                         <string>listbox_string_index</string>
                         <string>listbox_start_date</string>
+                        <string>listbox_duration</string>
                       </list>
                     </value>
                 </item>
