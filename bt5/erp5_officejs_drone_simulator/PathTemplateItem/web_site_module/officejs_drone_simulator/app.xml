@@ -151,6 +151,16 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>configuration_default_view_action_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>configuration_application_title</string> </value>
                   </item>
                   <item>
@@ -208,16 +218,6 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_default_view_action_reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
               </tuple>
             </value>
         </item>
@@ -231,8 +231,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
         </item>
@@ -268,7 +268,6 @@
             <key> <string>configuration_precache_manifest_script_list</string> </key>
             <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
 WebSection_getCodeMirrorPrecacheManifestList\n
-WebSection_getBabylonjsPrecacheManifestList\n
 WebSection_getDroneSimulatorPrecacheManifestList</string> </value>
         </item>
         <item>
@@ -447,7 +446,7 @@ WebSection_getDroneSimulatorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1666634324.85</float>
+                              <float>1671213786.25</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -496,7 +495,7 @@ WebSection_getDroneSimulatorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.2930.45130.17817</string> </value>
+                      <value> <string>1005.3003.37836.27374</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -514,7 +513,7 @@ WebSection_getDroneSimulatorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671209780.63</float>
+                              <float>1671213855.38</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
