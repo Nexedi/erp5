@@ -22,12 +22,7 @@ url_list = [
   "assets/skybox/sky_nz.jpg",
   "assets/skybox/sky_px.jpg",
   "assets/skybox/sky_py.jpg",
-  "assets/skybox/sky_pz.jpg",
-  "babylonjs.gadget.html",
-  "babylonjs.gadget.js",
-  "gadget_erp5_page_babylonjs_web_worker.js",
-  "babylon.js",
-  "babylon.gui.js"
+  "assets/skybox/sky_pz.jpg"
 ]
 
 return url_list

@@ -262,8 +262,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/gadget_officejs_bootloader.html</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
         </item>
@@ -483,7 +483,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671213713.44</float>
+                              <float>1666634283.84</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -532,7 +532,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.3001.58379.20121</string> </value>
+                      <value> <string>1003.56310.48998.8311</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -550,7 +550,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1671213735.26</float>
+                              <float>1666634612.83</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
