@@ -1053,6 +1053,22 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertFalse(_checkPermission('Modify portal content',
       accounting_transaction))
 
+    another_accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           source_credit=500)))
+
+    doActionFor(another_accounting_transaction, 'cancel_action')
+    self.assertEqual('cancelled', another_accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      another_accounting_transaction))
+
   def test_UneededSourceAssetPrice(self):
     # It is refunsed to validate an accounting transaction if lines have an
     # asset price but the resource is the same as the accounting resource
