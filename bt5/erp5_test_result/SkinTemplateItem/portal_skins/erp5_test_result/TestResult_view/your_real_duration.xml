@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_duration</string> </value>
+            <value> <string>your_real_duration</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -207,7 +207,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Difference between end date and start date</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: modules[\'datetime\'].timedelta(seconds=context.getProperty(\'duration\'))</string> </value>
+            <value> <string>python: context.getStopDate().asdatetime() - context.getStartDate().asdatetime() if context.hasStopDate() else \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
