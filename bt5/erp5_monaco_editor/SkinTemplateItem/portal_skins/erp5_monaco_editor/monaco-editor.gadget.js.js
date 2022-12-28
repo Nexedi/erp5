@@ -30,24 +30,28 @@
         this.element.querySelector('.monaco-container'),
         {
           autoIndent: true,
-          automaticLayout: true,
+          automaticLayout: window.ResizeObserver ? true : false,
+          stickyScroll: {
+            enabled: true,
+            maxLineCount: 3
+          }
         }
       );
 
       editor.addAction({
         id: 'save',
         label: 'Save',
-        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
         precondition: null,
         keybindingContext: null,
         contextMenuGroupId: 'navigation',
         contextMenuOrder: 1.5,
-        run: context.deferNotifySubmit.bind(context),
+        run: context.deferNotifySubmit.bind(context)
       });
 
       editor.getModel().updateOptions({
         tabSize: 2,
-        insertSpaces: true,
+        insertSpaces: true
       });
       editor.getModel().onDidChangeContent(deferNotifyChange);
     })
@@ -71,7 +75,7 @@
                   startColumn: err.character,
                   message: err.reason,
                   severity: monaco.MarkerSeverity.Error,
-                  source: 'jslint',
+                  source: 'jslint'
                 }))
             );
           }
@@ -81,7 +85,7 @@
       var model_language,
         state_dict = {
           key: options.key,
-          editable: options.editable === undefined ? true : options.editable,
+          editable: options.editable === undefined ? true : options.editable
         };
       if (
         options.portal_type === 'Web Page' ||
@@ -149,10 +153,10 @@
                 return [
                   {
                     range: model.getFullModelRange(),
-                    text,
-                  },
+                    text
+                  }
                 ];
-              },
+              }
             }
           );
 
@@ -163,7 +167,7 @@
           // lint with typescript compiler
           monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
-            noSyntaxValidation: false,
+            noSyntaxValidation: false
           });
 
           monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -171,7 +175,7 @@
             allowNonTsExtensions: true,
             checkJs: true,
             allowJs: true,
-            module: monaco.languages.typescript.ModuleKind.UMD,
+            module: monaco.languages.typescript.ModuleKind.UMD
           });
 
           // Type mapping for Nexedi libraries
@@ -194,6 +198,112 @@
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
             .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
         }
+
+        if (this.state.model_language === 'python') {
+          const documentSymbolProvider = {
+            provideDocumentSymbols: function (model, token) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              data.append('data', JSON.stringify({ code: model.getValue() }));
+              return fetch(
+                new URL(
+                  'ERP5Site_getPythonCodeSymbolList',
+                  location.href
+                ).toString(),
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal
+                }
+              ).then(
+                (response) => response.json(),
+                (e) => {
+                  if (!(e instanceof DOMException) /* AbortError */) {
+                    throw e;
+                  }
+                  /* ignore aborted requests */
+                }
+              );
+            }
+          };
+          monaco.languages.registerDocumentSymbolProvider(
+            'python',
+            documentSymbolProvider
+          );
+
+          const gadget = this;
+          const yapfDocumentFormattingProvider = {
+            _provideFormattingEdits: function (model, range, options, token) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              data.append(
+                'data',
+                JSON.stringify({ code: model.getValue(), range: range })
+              );
+              return fetch(
+                new URL(
+                  'ERP5Site_formatPythonSourceCode',
+                  location.href
+                ).toString(),
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal
+                }
+              )
+                .then((response) => response.json())
+                .then(
+                  (data) => {
+                    if (data.error) {
+                      gadget.editor.revealLine(data.error_line);
+                      return;
+                    }
+                    if (data.changed) {
+                      return [
+                        {
+                          range: model.getFullModelRange(),
+                          text: data.formatted_code
+                        }
+                      ];
+                    }
+                  },
+                  (e) => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            },
+            provideDocumentRangeFormattingEdits: function (
+              model,
+              range,
+              options,
+              token
+            ) {
+              return this._provideFormattingEdits(model, range, options, token);
+            },
+            provideDocumentFormattingEdits: function (model, options, token) {
+              return this._provideFormattingEdits(model, null, options, token);
+            }
+          };
+
+          monaco.languages.registerDocumentFormattingEditProvider(
+            'python',
+            yapfDocumentFormattingProvider
+          );
+          monaco.languages.registerDocumentRangeFormattingEditProvider(
+            'python',
+            yapfDocumentFormattingProvider
+          );
+        }
+
         if (modification_dict.hasOwnProperty('editable')) {
           this.editor.updateOptions({ readOnly: !this.state.editable });
         }
