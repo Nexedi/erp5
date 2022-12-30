@@ -23,49 +23,25 @@
           <img src="telecom-nexedi-logos?display=svg" alt="BigData Home">
         <p>Ebulk tool</p>
       </div>
+
       <h1>Tool description</h1>
-      <p><a target="_blank" href="https://lab.nexedi.com/nexedi/ebulk">Ebulk</a> makes easy to exchange or archive very large data sets. It performs data set ingestions or downloads from different protocols, to Wendelin-IA platform. It also allows to perform local changes in data sets and to upload added and modified files. One key feature of Ebulk is to be able to resume and recover from errors happening with interrupted transfers. <b><a href="#/?page=ebulk_doc" style="color:#116D82">See documentation</a></b></p>
+      <p><a target="_blank" href="https://lab.nexedi.com/nexedi/ebulk">Ebulk</a> makes it easy to exchange or archive very large data sets. It performs data set ingestions or downloads from different protocols, to Wendelin Big Data platform. It also allows to perform local changes in data sets and to upload added and modified files. One key feature of Ebulk is to be able to resume and recover from errors happening with interrupted transfers.</p>
 
       <h1>Requirements</h1>
-      <p>Ebulk tool relies on <b>Embulk</b> Java application (see <a target="_blank" href="https://www.embulk.org/">docs</a>). Please make sure that <a target="_blank" href="https://www.oracle.com/java/technologies/javase-downloads.html">Java 8</a> is installed.
-</p>
+      <p>Ebulk tool relies on <b>Embulk</b> Java application (see <a target="_blank" href="https://www.embulk.org/">docs</a>). Please make sure that <a target="_blank" href="https://www.oracle.com/java/technologies/javase-downloads.html">Java 8</a> is installed.</p>
 
-      <h1>Install</h1>
-      <p>Please use the package installation for your operative system and follow the installation instructions.</p>
+      <h1>Installation</h1>
 
-      <h2>Linux</h2>
-      <p>Ebulk package available in ubuntu-ppa repository allows to easily install the tool using apt commands.</p>
-      <p>Make sure <code>software-properties-common</code> is installed in order to run all apt commands:</p>
-      <div class="code"><p>sudo apt-get install software-properties-common</p></div>
-      <p>Add the ppa repository:</p>
-      <div class="code"><p>sudo add-apt-repository ppa:rporchetto/ebulk-ppa</p></div>
-      <p>Update your local sources and install ebulk:</p>
+      <h2>Debian / Ubuntu Linux OS</h2>
+      <p>Please follow these instructions.</p>
       <div class="code">
-        <p>sudo apt-get update</p>
-        <p>sudo apt-get install ebulk</p>
+        <p>gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys B38DB8D777BB9026 </p>
+        <p>gpg --output /usr/share/keyrings/ebulk-ebulk-ppa-archive-keyring.gpg --export B38DB8D777BB9026</p>
+        <p>echo "deb [signed-by=/usr/share/keyrings/ebulk-ebulk-ppa-archive-keyring.gpg] http://ppa.launchpad.net/ebulk/ebulk-ppa/ubuntu xenial main" > /etc/apt/sources.list.d/ebulk-ebulk-ppa.list </p>
+        <p>apt update</p>
+        <p>apt install ebulk curl</p>
       </div>
 
-      <h2>Debian considerations</h2>
-      <p>For any OS version/series inconvenient during apt installation, it is recommended to install ebulk from the <code>.deb</code> package directly.</p>
-      <p>Please download the <a id="deb_link">latest <code>.deb</code> ebulk package</a> and install it by running:</p>
-      <div class="code"><p>dpkg -i ebulk_package.deb</p></div>
-
-      <h2>Mac OS X</h2>
-      <p>Installation on Mac OS can be done via homebrew packages by running:</p>
-      <div class="code">
-        <p>curl -L https://github.com/roquegit/homebrew-ebulk/raw/master/ebulk.rb > ebulk.rb</p>
-        <p>brew install ebulk.rb</p>
-      </div>
-
-      <h2>Potential installation issues</h2>
-      <p>During the package intallation, or during first ebulk execution, the bash script will try to install Embulk automatically (if it is not installed).
-If your OS needs special permission, it maybe will be necessary to install Embulk v 0.9.7 manually:</p>
-      <div class="code">
-        <p>curl --create-dirs -o ~/.embulk/bin/embulk -L "https://github.com/embulk/embulk/releases/download/v0.9.7/embulk-0.9.7.jar"</p>
-        <p>chmod +x ~/.embulk/bin/embulk</p>
-        <p>echo 'export PATH="$HOME/.embulk/bin:$PATH"' >> ~/.bashrc</p>
-        <p>source ~/.bashrc</p>
-      </div>
       <h2>Linux Source</h2>
       <p><a href="https://lab.nexedi.com/nexedi/ebulk"> Git project repository</a></p>
     </div>
