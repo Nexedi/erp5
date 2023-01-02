@@ -18,7 +18,7 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod('triggerSubmit', function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareMethod("render", function () {
       var gadget = this;
@@ -44,7 +44,7 @@
               )).href
           });
         });
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var gadget = this;

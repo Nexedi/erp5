@@ -147,7 +147,7 @@
           }
           return gadget.changeState(state_options);
         });
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var fragment = document.createElement('div'),
@@ -173,7 +173,7 @@
         .push(function (gadget) {
           return gadget.triggerSubmit();
         });
-    })
+    }, {mutex: 'render'})
 
     .allowPublicAcquisition('submitContent', function (options) {
       var gadget = this,

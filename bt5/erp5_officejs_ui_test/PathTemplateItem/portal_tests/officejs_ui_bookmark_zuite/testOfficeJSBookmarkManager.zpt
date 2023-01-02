@@ -34,6 +34,7 @@
   <td>link=Local is Enough</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Add</td>
@@ -45,6 +46,7 @@
   <td>link=Add</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>store</td>
   <td>My cloud</td>
@@ -75,17 +77,21 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Add</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <!-- Save 2nd Bookmark -->
 <tr>
   <td>click</td>
   <td>link=Add</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>store</td>
   <td>My blog</td>
@@ -116,6 +122,9 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <!-- Verify Search -->
 <tr>
   <td>waitForElementPresent</td>
@@ -184,6 +193,7 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//h1[@class='test-script-title']</td>
@@ -200,6 +210,7 @@
   <td>${base_url}/web_site_module/${install_url}/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Search']</td>
@@ -230,6 +241,7 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
@@ -250,6 +262,7 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Add</td>
@@ -286,6 +299,7 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//h1[@class='test-script-title']</td>
@@ -313,6 +327,7 @@
   <td>//a[@data-i18n='Preferences']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name='auto_redirect']</td>
