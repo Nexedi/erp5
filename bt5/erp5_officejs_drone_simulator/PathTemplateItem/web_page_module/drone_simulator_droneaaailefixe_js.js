@@ -305,8 +305,35 @@ var DroneAaileFixeAPI = /** @class */ (function () {
         next_point.x, next_point.y, next_point.z);
     }
   };*/
+  DroneAaileFixeAPI.prototype.getMinSpeed = function () {
+    return this._flight_parameters.drone.minSpeed;
+  };
   DroneAaileFixeAPI.prototype.getMaxSpeed = function () {
     return this._flight_parameters.drone.maxSpeed;
+  };
+  DroneAaileFixeAPI.prototype.getMinAcceleration = function () {
+    return this._flight_parameters.drone.minAcceleration;
+  };
+  DroneAaileFixeAPI.prototype.getMaxAcceleration = function () {
+    return this._flight_parameters.drone.maxAcceleration;
+  };
+  DroneAaileFixeAPI.prototype.getMinPitchAngle = function () {
+    return this._flight_parameters.drone.minPitchAngle;
+  };
+  DroneAaileFixeAPI.prototype.getMaxPitchAngle = function () {
+    return this._flight_parameters.drone.maxPitchAngle;
+  };
+  DroneAaileFixeAPI.prototype.getMinRollAngle = function () {
+    return this._flight_parameters.drone.minRollAngle;
+  };
+  DroneAaileFixeAPI.prototype.getMaxRollAngle = function () {
+    return this._flight_parameters.drone.maxRollAngle;
+  };
+  DroneAaileFixeAPI.prototype.getMinVerticalSpeed = function () {
+    return this._flight_parameters.drone.minVerticalSpeed;
+  };
+  DroneAaileFixeAPI.prototype.getMaxVerticalSpeed = function () {
+    return this._flight_parameters.drone.maxVerticalSpeed;
   };
   DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();

@@ -14,8 +14,16 @@ var DroneManager = /** @class */ (function () {
     this._controlMesh = null;
     this._canPlay = false;
     this._canCommunicate = false;
+    this._minAcceleration = 0; //deceleration
     this._maxAcceleration = 0;
+    this._minSpeed = 0;
     this._maxSpeed = 0;
+    this._minPitchAngle = 0;
+    this._maxPitchAngle = 0;
+    this._minRollAngle = 0;
+    this._maxRollAngle = 0;
+    this._minVerticalSpeed = 0;
+    this._maxVerticalSpeed = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = BABYLON.Vector3.Zero();
@@ -109,8 +117,16 @@ var DroneManager = /** @class */ (function () {
     configurable: true
   });
   DroneManager.prototype.internal_start = function () {
-      this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
+      this._minAcceleration = this._API.getMinAcceleration();
+      this._maxAcceleration = this._API.getMaxAcceleration();
+      this._minSpeed = this._API.getMinSpeed();
       this._maxSpeed = this._API.getMaxSpeed();
+      this._minPitchAngle = this._API.getMinPitchAngle();
+      this._maxPitchAngle = this._API.getMaxPitchAngle();
+      this._minRollAngle = this._API.getMinRollAngle();
+      this._maxRollAngle = this._API.getMaxRollAngle();
+      this._minVerticalSpeed = this._API.getMinVerticalSpeed();
+      this._maxVerticalSpeed = this._API.getMaxVerticalSpeed();
       this._API.internal_start();
       this._canPlay = true;
       this._canCommunicate = true;
