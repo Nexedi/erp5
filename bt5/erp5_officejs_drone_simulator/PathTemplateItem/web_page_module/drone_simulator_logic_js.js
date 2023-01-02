@@ -1,4 +1,4 @@
-/*global BABYLON, RSVP, console, DroneAaileFixeAPI, DroneLogAPI, document*/
+/*global BABYLON, RSVP, console, FixedWingDroneAPI, DroneLogAPI, document*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true, todo: true,
          unparam: true */
 
@@ -24,10 +24,10 @@ var DroneManager = /** @class */ (function () {
     this._maxRollAngle = 0;
     this._minVerticalSpeed = 0;
     this._maxVerticalSpeed = 0;
+    this._maxOrientation = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = BABYLON.Vector3.Zero();
-    this._maxOrientation = Math.PI / 4;
     this._rotationSpeed = 0.4;
     this._scene = scene;
     this._canUpdate = true;
@@ -127,6 +127,7 @@ var DroneManager = /** @class */ (function () {
       this._maxRollAngle = this._API.getMaxRollAngle();
       this._minVerticalSpeed = this._API.getMinVerticalSpeed();
       this._maxVerticalSpeed = this._API.getMaxVerticalSpeed();
+      this._maxOrientation = this._API.getMaxOrientation();
       this._API.internal_start();
       this._canPlay = true;
       this._canCommunicate = true;
@@ -378,6 +379,9 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getClimbRate = function () {
     return this._API.getClimbRate();
   };
+  DroneManager.prototype.getSinkRate = function () {
+    return this._API.getSinkRate();
+  };
   DroneManager.prototype.triggerParachute = function () {
     return this._API.triggerParachute(this);
   };
@@ -600,7 +604,7 @@ var GameManager = /** @class */ (function () {
       ];
     }
     this.APIs_dict = {
-      DroneAaileFixeAPI: DroneAaileFixeAPI,
+      FixedWingDroneAPI: FixedWingDroneAPI,
       DroneLogAPI: DroneLogAPI
     };
   }
@@ -972,7 +976,7 @@ var GameManager = /** @class */ (function () {
       code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', api);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
-          " GameManager, DroneLogAPI, DroneAaileFixeAPI, BABYLON, " +
+          " GameManager, DroneLogAPI, FixedWingDroneAPI, BABYLON, " +
           "GAMEPARAMETERS) {" +
           "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
           "Date.now = function () {" +
