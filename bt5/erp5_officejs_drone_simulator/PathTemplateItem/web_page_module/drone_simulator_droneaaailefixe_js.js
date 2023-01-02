@@ -329,6 +329,12 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   DroneAaileFixeAPI.prototype.getMaxRollAngle = function () {
     return this._flight_parameters.drone.maxRollAngle;
   };
+  DroneAaileFixeAPI.prototype.getMinVerticalSpeed = function () {
+    return this._flight_parameters.drone.minVerticalSpeed;
+  };
+  DroneAaileFixeAPI.prototype.getMaxVerticalSpeed = function () {
+    return this._flight_parameters.drone.maxVerticalSpeed;
+  };
   DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     this.internal_setTargetCoordinates(drone, drone_pos.x, drone_pos.y, 5);
