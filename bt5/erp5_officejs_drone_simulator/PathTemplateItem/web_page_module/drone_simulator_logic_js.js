@@ -15,6 +15,7 @@ var DroneManager = /** @class */ (function () {
     this._canPlay = false;
     this._canCommunicate = false;
     this._maxAcceleration = 0;
+    this._minSpeed = 0;
     this._maxSpeed = 0;
     this._speed = 0;
     this._acceleration = 0;
@@ -110,6 +111,7 @@ var DroneManager = /** @class */ (function () {
   });
   DroneManager.prototype.internal_start = function () {
       this._maxAcceleration = GAMEPARAMETERS.drone.maxAcceleration;
+      this._minSpeed = this._API.getMinSpeed();
       this._maxSpeed = this._API.getMaxSpeed();
       this._API.internal_start();
       this._canPlay = true;

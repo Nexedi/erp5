@@ -171,6 +171,9 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.setAltitude = function (altitude, drone) {
     return;
   };
+  DroneLogAPI.prototype.getMinSpeed = function () {
+    return 3000;
+  };
   DroneLogAPI.prototype.getMaxSpeed = function () {
     return 3000;
   };
