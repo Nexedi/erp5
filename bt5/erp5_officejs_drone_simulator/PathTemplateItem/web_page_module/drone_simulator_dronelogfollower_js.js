@@ -201,6 +201,9 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.getMaxVerticalSpeed = function () {
     return 0;
   };
+  DroneLogAPI.prototype.getMaxOrientation = function () {
+    return 0;
+  };
   DroneLogAPI.prototype.getYaw = function () {
     return 0;
   };

@@ -335,6 +335,10 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   DroneAaileFixeAPI.prototype.getMaxVerticalSpeed = function () {
     return this._flight_parameters.drone.maxVerticalSpeed;
   };
+  DroneAaileFixeAPI.prototype.getMaxOrientation = function () {
+    //TODO should be a game parameter (but how to force value to PI quarters?)
+    return Math.PI / 4;
+  };
   DroneAaileFixeAPI.prototype.getYaw = function () {
     //TODO
     return 0;
