@@ -335,6 +335,18 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   DroneAaileFixeAPI.prototype.getMaxVerticalSpeed = function () {
     return this._flight_parameters.drone.maxVerticalSpeed;
   };
+  DroneAaileFixeAPI.prototype.getYaw = function () {
+    //TODO
+    return 0;
+  };
+  DroneAaileFixeAPI.prototype.getSinkRate = function () {
+    //TODO
+    return 0;
+  };
+  DroneAaileFixeAPI.prototype.getClimbRate = function () {
+    //TODO
+    return 0;
+  };
   DroneAaileFixeAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     this.internal_setTargetCoordinates(drone, drone_pos.x, drone_pos.y, 5);
@@ -360,14 +372,6 @@ var DroneAaileFixeAPI = /** @class */ (function () {
   };
   DroneAaileFixeAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
-  };
-  DroneAaileFixeAPI.prototype.getYaw = function () {
-    //TODO
-    return 0;
-  };
-  DroneAaileFixeAPI.prototype.getClimbRate = function () {
-    //TODO
-    return 0;
   };
   return DroneAaileFixeAPI;
 }());

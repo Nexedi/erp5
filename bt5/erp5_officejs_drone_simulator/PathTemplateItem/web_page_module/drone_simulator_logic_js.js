@@ -378,6 +378,9 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getClimbRate = function () {
     return this._API.getClimbRate();
   };
+  DroneManager.prototype.getSinkRate = function () {
+    return this._API.getSinkRate();
+  };
   DroneManager.prototype.triggerParachute = function () {
     return this._API.triggerParachute(this);
   };
