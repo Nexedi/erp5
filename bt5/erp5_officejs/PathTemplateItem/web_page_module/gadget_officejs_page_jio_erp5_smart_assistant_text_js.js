@@ -77,7 +77,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareMethod("render", function () {
       var gadget = this;
@@ -139,5 +139,5 @@
             selection_url: url_list[0]
           });
         });
-    });
+    }, {mutex: 'render'});
 }(document, window, rJS, RSVP));
