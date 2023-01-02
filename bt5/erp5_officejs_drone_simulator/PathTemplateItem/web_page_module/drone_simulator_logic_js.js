@@ -20,6 +20,8 @@ var DroneManager = /** @class */ (function () {
     this._maxSpeed = 0;
     this._minPitchAngle = 0;
     this._maxPitchAngle = 0;
+    this._minRollAngle = 0;
+    this._maxRollAngle = 0;
     this._speed = 0;
     this._acceleration = 0;
     this._direction = BABYLON.Vector3.Zero();
@@ -119,6 +121,8 @@ var DroneManager = /** @class */ (function () {
       this._maxSpeed = this._API.getMaxSpeed();
       this._minPitchAngle = this._API.getMinPitchAngle();
       this._maxPitchAngle = this._API.getMaxPitchAngle();
+      this._minRollAngle = this._API.getMinRollAngle();
+      this._maxRollAngle = this._API.getMaxRollAngle();
       this._API.internal_start();
       this._canPlay = true;
       this._canCommunicate = true;

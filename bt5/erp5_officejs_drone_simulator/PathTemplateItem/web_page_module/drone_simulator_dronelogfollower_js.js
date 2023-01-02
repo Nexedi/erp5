@@ -189,6 +189,12 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.getMaxPitchAngle = function () {
     return 0;
   };
+  DroneLogAPI.prototype.getMinRollAngle = function () {
+    return 0;
+  };
+  DroneLogAPI.prototype.getMaxRollAngle = function () {
+    return 0;
+  };
   DroneLogAPI.prototype.getInitialAltitude = function () {
     return 0;
   };
