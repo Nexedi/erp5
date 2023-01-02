@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP, jIO, console */
+/*global document, window, rJS, jIO, console */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, jIO, console) {
+(function (document, window, rJS, jIO, console) {
   "use strict";
 
   rJS(window)
@@ -115,7 +115,7 @@
           }
           throw error;
         });
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var fragment = document.createElement('div'),
@@ -180,6 +180,6 @@
         .push(function (view_gadget) {
           return view_gadget.triggerSubmit(argument_list);
         });
-    });
+    }, {mutex: 'render'});
 
-}(document, window, rJS, RSVP, jIO, console));
+}(document, window, rJS, jIO, console));
