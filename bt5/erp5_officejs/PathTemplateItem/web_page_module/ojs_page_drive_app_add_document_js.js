@@ -87,7 +87,7 @@
     })
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareMethod("render", function () {
       var gadget = this;
@@ -250,5 +250,5 @@
             save_action: true
           });
         });
-    });
+    }, {mutex: 'render'});
 }(window, rJS, RSVP));

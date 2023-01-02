@@ -185,7 +185,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareMethod('render', function () {
       var gadget = this;
@@ -198,7 +198,7 @@
             panel_action: false
           });
         });
-    })
+    }, {mutex: 'render'})
 
     .declareService(function () {
       var gadget = this;

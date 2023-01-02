@@ -84,7 +84,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareMethod("render", function (options) {
       var gadget = this;
@@ -103,7 +103,7 @@
             download_format: options.download_format
           });
         });
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var gadget = this, format_list;

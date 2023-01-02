@@ -197,7 +197,7 @@
           if (!content_dict) { return; }
           return handleSubmit(gadget, child_gadget, content_dict);
         });
-    })
+    }, {mutex: 'render'})
 
     .declareMethod("render", function (options) {
       var gadget = this,
@@ -237,7 +237,7 @@
         }
       }
       return gadget.changeState(state_dict);
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function onStateChange() {
       var fragment = document.createElement('div'),

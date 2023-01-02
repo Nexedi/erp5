@@ -95,7 +95,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareMethod("render", function () {
       var gadget = this;
@@ -105,7 +105,7 @@
             upload: window.JSON.parse(upload_dict)
           });
         });
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var gadget = this;
