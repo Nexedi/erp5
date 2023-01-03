@@ -301,7 +301,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
 
 url_template_dict = {
-  "form_action": "%(traversed_document_url)s/%(action_id)s?portal_skin=HalRestricted",
+  "form_action": "%(traversed_document_url)s/%(action_id)s",
   "traverse_generator": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s",
   "traverse_generator_action": "%(root_url)s/%(script_id)s?mode=traverse" + \
@@ -2414,7 +2414,6 @@ is_web_mode = (context.REQUEST.get('current_web_section', None) is not None) or 
 # is_web_mode =  traversed_document.isWebMode()
 if is_web_mode:
   site_root = context.getWebSectionValue()
-  site_root = portal.web_site_module.renderjs_runner.hateoas
   view_action_type = site_root.getLayoutProperty("configuration_view_action_category", default='object_view')
 else:
   site_root = portal
