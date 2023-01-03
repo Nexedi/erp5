@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_simulator_droneaaailefixe.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_simulator_fixedwingdrone.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_simulator_droneaaailefixe_js</string> </value>
+            <value> <string>drone_simulator_fixedwingdrone_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone A Aile Fixe (API)</string> </value>
+            <value> <string>Fixed Wing Drone (API)</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -244,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.27538.4739.41796</string> </value>
+                      <value> <string>1005.28713.26390.8260</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1672685899.54</float>
+                              <float>1672756417.68</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
