@@ -124,7 +124,7 @@
             url: url
           });
         });
-    })
+    }, {mutex: 'render'})
 
     /////////////////////////////////////////
     // Form submit
@@ -142,7 +142,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var gadget = this;

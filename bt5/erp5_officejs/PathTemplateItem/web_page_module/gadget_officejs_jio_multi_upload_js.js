@@ -33,7 +33,7 @@
       return gadget.changeState({
         title: 'Untitled Document'
       });
-    })
+    }, {mutex: 'render'})
 
     .declareMethod('putIntoDB', function (data, portal_type, parent_relative_url) {
       var gadget = this,
@@ -100,7 +100,7 @@
             })
           ]);
         });
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var gadget = this;
