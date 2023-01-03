@@ -74,7 +74,7 @@
             page_title: "Import"
           });
         });
-    }, {mutext: 'render'})
+    }, {mutex: 'render'})
 
     .declareMethod("triggerSubmit", function () {
       var gadget = this;
@@ -85,6 +85,6 @@
         .push(function (doc) {
           return gadget.jio_put(gadget.state.jio_key, doc);
         });
-    }, {mutext: 'render'});
+    }, {mutex: 'render'});
 
 }(window, rJS, RSVP));

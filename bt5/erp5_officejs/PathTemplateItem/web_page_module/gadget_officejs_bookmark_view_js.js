@@ -28,7 +28,7 @@
         jio_key: options.jio_key,
         doc: options.doc
       });
-    })
+    }, {mutex: 'render'})
 
     .onEvent('submit', function () {
       var gadget = this;
@@ -49,7 +49,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .onStateChange(function () {
       var gadget = this;
