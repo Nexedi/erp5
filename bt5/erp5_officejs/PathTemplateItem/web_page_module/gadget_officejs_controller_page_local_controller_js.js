@@ -131,7 +131,8 @@
       }
       gadget.element.appendChild(fragment);
       return gadget.declareGadget(view_gadget_url,
-                                  {element: fragment, scope: 'form_view'})
+                                  {element: fragment,
+                                   scope: 'officejs_form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
         }, function (error) {
@@ -176,7 +177,7 @@
 
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
-      return this.getDeclaredGadget('form_view')
+      return this.getDeclaredGadget('officejs_form_view')
         .push(function (view_gadget) {
           return view_gadget.triggerSubmit(argument_list);
         });
