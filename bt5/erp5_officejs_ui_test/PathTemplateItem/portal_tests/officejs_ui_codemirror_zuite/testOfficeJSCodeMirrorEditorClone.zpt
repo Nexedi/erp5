@@ -37,6 +37,8 @@
   <td>link=Storages</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Erp5</td>
@@ -47,6 +49,8 @@
   <td>link=Erp5</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>name=erp5_url</td>
@@ -62,6 +66,8 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
  <td>waitForElementPresent</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
@@ -72,6 +78,8 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -154,6 +162,8 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>pause</td>
   <td>100</td>
@@ -169,6 +179,8 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
  <td>waitForElementPresent</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
@@ -189,6 +201,8 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>pause</td>
   <td>100</td>
@@ -220,6 +234,8 @@
   <td>link=Actions</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Clone']</td>
@@ -230,6 +246,8 @@
   <td>//a[@data-i18n='Clone']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@value='Clone']</td>
@@ -279,6 +297,8 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>pause</td>
   <td>100</td>
@@ -293,6 +313,8 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
  <td>waitForElementPresent</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
@@ -313,6 +335,8 @@
   <td>link=${cloned_title}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
@@ -368,6 +392,8 @@
   <td>//a[@data-i18n='Synchronize']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>name=search</td>
@@ -408,6 +434,8 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
