@@ -135,12 +135,6 @@
                                    scope: 'officejs_form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
-        }, function (error) {
-          console.log(error);
-          return gadget.notifySubmitted({
-            message: "Error rendering view",
-            status: "error"
-          });
         })
         .push(function () {
           return gadget.updatePanel({
