@@ -4,6 +4,9 @@
   "use strict";
 
   rJS(window)
+    .ready(function () {
+      this._debug = 'ready\n';
+    })
 
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -21,6 +24,8 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
+      this._debug += 'render starting\n';
+
       var gadget = this,
         app_view,
         gadget_util,
@@ -62,6 +67,7 @@
         })
         .push(function (result) {
           gadget_util = result;
+          console.log('common util', gadget_util);
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
@@ -114,10 +120,16 @@
             });
           }
           throw error;
+        })
+        .push(function (result) {
+          gadget._debug += 'render ending\n';
+          return result;
         });
     }, {mutex: 'render'})
 
     .onStateChange(function () {
+      this._debug += 'onStateChange starting\n';
+
       var fragment = document.createElement('div'),
         gadget = this,
         view_gadget_url = "gadget_officejs_form_view.html",
@@ -146,6 +158,10 @@
           return gadget.updatePanel({
             view_action_dict: gadget.state.view_action_dict
           });
+        })
+        .push(function (result) {
+          gadget._debug += 'onStateChange stopping\n';
+          return result;
         });
     })
 
@@ -153,6 +169,8 @@
       return this.triggerSubmit();
     })
     .allowPublicAcquisition('submitContent', function (param_list) {
+      this._debug += 'submitContent starting\n';
+
       var gadget = this,
         //target_url = options[1],
         content_dict = param_list[2];
@@ -172,14 +190,26 @@
         .push(function () {
           return gadget.notifySubmitted({message: 'Data Updated',
                                          status: 'success'});
+        })
+        .push(function (result) {
+          gadget._debug += 'submitContent stopping\n';
+          return result;
         });
     })
 
     .declareMethod("triggerSubmit", function () {
-      var argument_list = arguments;
+      this._debug += 'triggerSubmit starting\n';
+      var argument_list = arguments,
+        gadget = this;
       return this.getDeclaredGadget('officejs_form_view')
         .push(function (view_gadget) {
           return view_gadget.triggerSubmit(argument_list);
+        }, function (error) {
+          throw new Error('Failed getting officejs_form_view.\n' + gadget._debug);
+        })
+        .push(function (result) {
+          gadget._debug += 'triggerSubmit stopping\n';
+          return result;
         });
     }, {mutex: 'render'});
 
