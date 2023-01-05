@@ -1,10 +1,9 @@
-/*global document, window, rJS, jIO, console */
+/*global document, window, rJS, jIO, console, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (document, window, rJS, jIO, console) {
   "use strict";
 
   rJS(window)
-
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -37,10 +36,10 @@
         window.location.host.length;
       current_version = current_version.substr(index);
       return gadget.getSettingList(["migration_version",
-                                    "app_view_reference",
-                                    "parent_portal_type",
-                                    'default_view_reference',
-                                    'app_actions'])
+                                "app_view_reference",
+                                "parent_portal_type",
+                                'default_view_reference',
+                                'app_actions'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
@@ -135,12 +134,6 @@
                                    scope: 'officejs_form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
-        }, function (error) {
-          console.log(error);
-          return gadget.notifySubmitted({
-            message: "Error rendering view",
-            status: "error"
-          });
         })
         .push(function () {
           return gadget.updatePanel({
