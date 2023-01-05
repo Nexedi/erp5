@@ -37,6 +37,7 @@
   <td>link=Storages</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Erp5</td>
@@ -47,6 +48,7 @@
   <td>link=Erp5</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>name=erp5_url</td>
@@ -62,6 +64,7 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
  <td>waitForElementPresent</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
@@ -154,6 +157,8 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>pause</td>
   <td>100</td>
@@ -169,6 +174,8 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
  <td>waitForElementPresent</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
@@ -189,6 +196,8 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>pause</td>
   <td>100</td>
