@@ -37,8 +37,6 @@
   <td>link=Storages</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Erp5</td>
@@ -49,8 +47,6 @@
   <td>link=Erp5</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>name=erp5_url</td>
@@ -66,7 +62,6 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
  <td>waitForElementPresent</td>
@@ -78,8 +73,6 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -132,8 +125,6 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -151,8 +142,6 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -171,8 +160,6 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -210,8 +197,6 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -229,8 +214,6 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
      Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
@@ -266,8 +249,6 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
@@ -353,8 +334,6 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>

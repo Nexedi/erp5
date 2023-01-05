@@ -34,8 +34,6 @@
   <td>//a[@data-i18n='Storages']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Local is Enough</td>
@@ -46,8 +44,6 @@
   <td>link=Local is Enough</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Add</td>
@@ -58,8 +54,6 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Save']</td>
@@ -125,8 +119,6 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
@@ -137,8 +129,6 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Add</td>
@@ -154,8 +144,6 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//textarea[@name='description']</td>
