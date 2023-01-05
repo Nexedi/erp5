@@ -124,6 +124,9 @@
         .push(function (result) {
           gadget._debug += 'render ending\n';
           return result;
+        }, function (error) {
+          gadget._debug += 'render error\n' + error + '\n';
+          throw error;
         });
     }, {mutex: 'render'})
 
@@ -162,6 +165,9 @@
         .push(function (result) {
           gadget._debug += 'onStateChange stopping\n';
           return result;
+        }, function (error) {
+          gadget._debug += 'onstatechange error\n' + error + '\n';
+          throw error;
         });
     })
 
@@ -194,6 +200,9 @@
         .push(function (result) {
           gadget._debug += 'submitContent stopping\n';
           return result;
+        }, function (error) {
+          gadget._debug += 'submitContent error\n' + error + '\n';
+          throw error;
         });
     })
 
@@ -210,7 +219,11 @@
         .push(function (result) {
           gadget._debug += 'triggerSubmit stopping\n';
           return result;
+        }, function (error) {
+          gadget._debug += 'triggerSubmit error\n' + error + '\n';
+          throw error;
         });
+
     }, {mutex: 'render'});
 
 }(document, window, rJS, jIO, console));
