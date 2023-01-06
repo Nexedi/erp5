@@ -48,6 +48,8 @@
                                     'default_view_reference',
                                     'app_actions'])
         .push(function (setting_list) {
+          gadget._debug += 'render setting list fetched\n';
+
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
           default_view = setting_list[3];
@@ -66,14 +68,20 @@
           }
         })
         .push(function () {
+          gadget._debug += 'render get common list\n';
+
           return gadget.getDeclaredGadget("common_util");
         })
         .push(function (result) {
+          gadget._debug += 'render common list fetched\n';
+
           gadget_util = result;
           console.log('common util', gadget_util);
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
+          gadget._debug += 'render jio key fetched\n';
+
           jio_document = result;
           if (jio_document.portal_type === undefined) {
             throw new Error('Can not display document: ' + options.jio_key);
@@ -86,6 +94,8 @@
           throw error;
         })
         .push(function (parent_portal_type) {
+          gadget._debug += 'render before getformdefinition\n';
+
           if (jio_document) {
             portal_type = jio_document.portal_type;
           } else if (options.portal_type) {
@@ -96,12 +106,16 @@
           return gadget_util.getFormDefinition(portal_type, app_view);
         })
         .push(function (result) {
+          gadget._debug += 'render before getviewandactiondict\n';
+
           form_definition = result;
           return gadget_util.getViewAndActionDict(portal_type, app_view,
                                                   default_view, app_action_list,
                                                   options.jio_key);
         })
         .push(function (view_action_dict) {
+          gadget._debug += 'render before changeState\n';
+
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: jio_document,
