@@ -175,6 +175,7 @@
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
         }, function (error) {
+          gadget._debug += 'onStateChange crashing\n' + error + '\n';
           // do not hide errors
           // https://lab.nexedi.com/nexedi/erp5/commit/cbb3b35be3288fb5d82a2db99f62da309a86ab14
           throw error;
