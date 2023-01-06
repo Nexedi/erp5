@@ -1,4 +1,4 @@
-/*global document, window, rJS, jIO, console */
+/*global document, window, rJS, jIO, console, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (document, window, rJS, jIO, console) {
   "use strict";
@@ -42,11 +42,18 @@
         window.location.host.length;
       current_version = current_version.substr(index);
       gadget._debug += 'render ongoing\n';
-      return gadget.getSettingList(["migration_version",
-                                    "app_view_reference",
-                                    "parent_portal_type",
-                                    'default_view_reference',
-                                    'app_actions'])
+      return new RSVP.Queue(RSVP.any([
+        gadget.getSettingList(["migration_version",
+                                "app_view_reference",
+                                "parent_portal_type",
+                                'default_view_reference',
+                                'app_actions']),
+        new RSVP.Promise(function () {
+          return RSVP.defer().promise;
+        }, function (msg) {
+          gadget._debug += 'render cancelling render\n' + msg + '\n';
+        })
+      ]))
         .push(function (setting_list) {
           gadget._debug += 'render setting list fetched\n';
 
