@@ -41,6 +41,7 @@
       index = current_version.indexOf(window.location.host) +
         window.location.host.length;
       current_version = current_version.substr(index);
+      this._debug += 'render ongoing\n';
       return gadget.getSettingList(["migration_version",
                                     "app_view_reference",
                                     "parent_portal_type",
@@ -53,6 +54,8 @@
           app_action_list = setting_list[4];
           if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
+            this._debug += 'render want to redirect\n';
+
             return gadget.redirect({
               'command': 'display',
               'options': {
