@@ -415,7 +415,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>FIF Data Runner</string> </value>
+            <value> <string>Wendelin Data Lake</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -597,7 +597,7 @@
                   <item>
                       <key> <string>comment</string> </key>
                       <value>
-                        <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                        <none/>
                       </value>
                   </item>
                   <item>
@@ -606,7 +606,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>0.0.0.0</string> </value>
+                      <value> <string>1005.6661.23967.23773</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -624,7 +624,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586523571.73</float>
+                              <float>1673005789.41</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -634,38 +634,6 @@
                 </dictionary>
               </list>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="11" aka="AAAAAAAAAAs=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_site_module/fif_data_runner</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
         </item>
       </dictionary>
     </pickle>
