@@ -1076,6 +1076,28 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertIn("dialog_id", field_names)
     # no need for dialog_method because that one is hardcoded in javascript
 
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_last_form_rendering_context(self):
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(dict(selection_name='python: "foo_selection" if here.getPortalType()=="Foo Module" else "wrong_selection"'))
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="traverse",
+      relative_url=self.portal.foo_module.getRelativeUrl(),
+      view="create_a_document",
+      extra_param_json = {"form_id": "FooModule_viewFooList"}
+      )
+
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_embedded']['_view']['selection_name']['default'], 'foo_selection')
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(dict(selection_name=''))
+
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
