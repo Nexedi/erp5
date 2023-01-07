@@ -997,7 +997,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # ... so we can do some magic with it (especially embedded listbox if exists)!
     try:
       if last_form_id:
-        last_form = getattr(context, last_form_id)
+        last_form = getattr(traversed_document, last_form_id)
         last_listbox = last_form.Base_getListbox()
     except AttributeError:
       pass
