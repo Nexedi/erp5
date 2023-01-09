@@ -445,7 +445,7 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var i,
+          var i = 0,
             log_content,
             blob,
             a,
@@ -456,7 +456,7 @@
             blob = new Blob([log_content], {type: 'text/plain'});
             a = domsugar('a', {
               text: 'Download Simulation LOG ' + i,
-              download: 'simulation_log.txt',
+              download: 'simulation_log_' + i + '.txt',
               href: window.URL.createObjectURL(blob)
             });
             log = domsugar('textarea', { value: log_content });
@@ -465,6 +465,7 @@
                                       a.href].join(':');
             document.querySelector('.container').appendChild(div);
             document.querySelector('.container').appendChild(log);
+            i++;
           }
         });
     });
