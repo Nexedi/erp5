@@ -9,6 +9,7 @@ data_ingestion_batch_module
 data_ingestion_module
 data_license_module
 data_mapping_module
+data_notebook_module
 data_operation_module
 data_order_module
 data_product_module
@@ -18,5 +19,6 @@ data_stream_module
 data_supply_module
 data_transformation_module
 device_configuration_module
+notebook_module
 progress_indicator_module
 sensor_module
