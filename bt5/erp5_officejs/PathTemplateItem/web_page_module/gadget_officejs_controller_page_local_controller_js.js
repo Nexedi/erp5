@@ -5,8 +5,8 @@
 
   rJS(window)
     .ready(function () {
-      if (!this.prototype.hasOwnProperty('_debug')) {
-        this.prototype._debug = 'first prototype ready\n';
+      if (!Object.getPrototypeOf(this).hasOwnProperty('_debug')) {
+        Object.getPrototypeOf(this)._debug = 'first prototype ready\n';
       }
       this._debug += 'gadget ready\n';
     })
