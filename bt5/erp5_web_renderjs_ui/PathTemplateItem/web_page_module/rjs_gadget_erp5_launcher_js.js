@@ -141,7 +141,7 @@
     // and allow user to go back to the frontpage
 
     // Add error handling stack
-    error_list.push(new Error('stopping ERP5JS'));
+    error_list.push(new Error('stopping ERP5JS\n' + gadget._debug));
 
     for (i = 0; i < error_list.length; i += 1) {
       error = error_list[i];
@@ -375,6 +375,11 @@
       var gadget = this,
         setting_gadget,
         setting;
+      if (!Object.getPrototypeOf(this).hasOwnProperty('_debug')) {
+        Object.getPrototypeOf(this)._debug = 'LAUNCHER first prototype ready\n';
+      }
+      this._debug += 'LAUNCHER gadget ready\n';
+
       this.props = {
         content_element: this.element.querySelector('.gadget-content'),
         is_declared_gadget_dict: {
@@ -506,8 +511,10 @@
     // XXX Those methods may be directly integrated into the header,
     // as it handles the submit triggering
     .allowPublicAcquisition('notifySubmitting', function notifySubmitting(
-      argument_list
+      argument_list, scope
     ) {
+      this._debug += 'LAUNCHER notifySubmitting: ' + scope + '\n';
+
       return RSVP.all([
         route(this, "header", 'notifySubmitting'),
         this.deferChangeState({
@@ -518,8 +525,10 @@
       ]);
     })
     .allowPublicAcquisition('notifySubmitted', function notifySubmitted(
-      argument_list
+      argument_list, scope
     ) {
+      this._debug += 'LAUNCHER notifySubmitted: ' + scope + '\n';
+
       return RSVP.all([
         route(this, "header", 'notifySubmitted'),
         this.deferChangeState({
@@ -531,8 +540,10 @@
       ]);
     })
     .allowPublicAcquisition('notifyChange', function notifyChange(
-      argument_list
+      argument_list, scope
     ) {
+      this._debug += 'LAUNCHER notifyChange: ' + scope + '\n';
+
       return RSVP.all([
         route(this, "header", 'notifyChange'),
         this.deferChangeState({
@@ -645,14 +656,18 @@
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
       return hideDesktopPanel(this, param_list[0]);
     })
-    .allowPublicAcquisition('triggerPanel', function triggerPanel() {
+    .allowPublicAcquisition('triggerPanel', function triggerPanel(unused, scope) {
+      this._debug += 'LAUNCHER triggerPanel: ' + scope + '\n';
+
       // Force calling panel toggle
       return this.deferChangeState({
         panel_visible: new Date().getTime()
       });
     })
     .allowPublicAcquisition('renderEditorPanel',
-                            function renderEditorPanel(param_list) {
+                            function renderEditorPanel(param_list, scope) {
+        this._debug += 'LAUNCHER renderEditorPanel: ' + scope + '\n';
+
         return this.deferChangeState({
           // Force calling editor panel render
           editor_panel_render_timestamp: new Date().getTime(),
@@ -730,7 +745,16 @@
     })
 
     .declareJob('deferChangeState', function deferChangeState(state) {
-      return this.changeState(state);
+      this._debug += 'LAUNCHER start deferChangeState\n';
+      var gadget;
+      return this.changeState(state)
+        .push(function (result) {
+          gadget._debug += 'LAUNCHER resolved deferChangeState\n';
+          return result;
+        }, function (error) {
+          gadget._debug += 'LAUNCHER failed deferChangeState\n';
+          throw error;
+        });
     })
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
