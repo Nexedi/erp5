@@ -99,11 +99,13 @@
         })
         .push(function (result) {
           var login_link = document.querySelector("#login-li"),
-            logout_link = document.querySelector("#logout-li");
+            logout_link = document.querySelector("#logout-li"),
+            register_link = document.querySelector("#register-li");
           if (result.target.response && result.target.response !== "Anonymous User") {
             logout_link.classList.remove("ui-screen-hidden");
           } else {
             login_link.classList.remove("ui-screen-hidden");
+            register_link.classList.remove("ui-screen-hidden");
           }
         });
     })
