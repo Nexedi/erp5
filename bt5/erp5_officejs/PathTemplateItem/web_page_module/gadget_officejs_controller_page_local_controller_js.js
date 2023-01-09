@@ -5,7 +5,10 @@
 
   rJS(window)
     .ready(function () {
-      this._debug = 'ready\n';
+      if (!this.prototype.hasOwnProperty('_debug')) {
+        this.prototype._debug = 'first prototype ready\n';
+      }
+      this._debug += 'gadget ready\n';
     })
 
     /////////////////////////////////////////////////////////////////
