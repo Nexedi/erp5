@@ -100,14 +100,14 @@ class QuantitySplitMoveSolver(QuantitySplitSolver):
     if divergence_list:
       solver_process_tool = portal.portal_solver_processes
       solver_process = solver_process_tool.newSolverProcess(delivery_to_move)
-      solver_decision, = [x for x in solver_process.contentValues()
-        if x.getCausalityValue().getTestedProperty() == "quantity"]
-      # use Quantity Accept Solver.
-      solver_decision.setSolverValue(portal.portal_solvers['Adopt Solver'])
-      # configure for Accept Solver.
-      solver_decision.updateConfiguration(tested_property_list=['quantity'])
-      solver_process.buildTargetSolverList()
-      solver_process.solve()
+      for solver_decision in [x for x in solver_process.contentValues() \
+          if x.getCausalityValue().getTestedProperty() == "quantity"]:
+        # use Quantity Accept Solver.
+        solver_decision.setSolverValue(portal.portal_solvers['Adopt Solver'])
+        # configure for Accept Solver.
+        solver_decision.updateConfiguration(tested_property_list=['quantity'])
+        solver_process.buildTargetSolverList()
+        solver_process.solve()
 
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
