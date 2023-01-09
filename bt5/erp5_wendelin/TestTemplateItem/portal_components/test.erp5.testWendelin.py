@@ -74,8 +74,8 @@ class Test(ERP5TypeTestCase):
     # add brand new ingestion
     reference = getRandomString()
     ingestion_policy, data_supply, _ = portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy(
-      reference = reference, 
-      title = reference, 
+      reference = reference,
+      title = reference,
       batch_mode=1)
     self.tic()
 
@@ -120,7 +120,7 @@ class Test(ERP5TypeTestCase):
 
     # try sample transformation
     data_array = portal.data_array_module.newContent(
-                          portal_type = 'Data Array', 
+                          portal_type = 'Data Array',
                           reference = reference)
     data_array.validate()
     self.tic()
@@ -151,7 +151,7 @@ class Test(ERP5TypeTestCase):
     """
     portal = self.portal
     reference = getRandomString()
-    
+
     row = ','.join(['%s' %x for x in range(1000)])
     number_string_list = [row]*20
     real_data = '\n'.join(number_string_list)
@@ -162,11 +162,11 @@ class Test(ERP5TypeTestCase):
     data_stream.appendData(real_data)
     data_stream.validate()
     data_array = portal.data_array_module.newContent(
-                          portal_type = 'Data Array', 
+                          portal_type = 'Data Array',
                           reference = reference)
     data_array.validate()
     self.tic()
-    
+
     data_stream.DataStream_transform(\
         chunk_length = len(row), \
         transform_script_id = 'DataStream_copyCSVToDataArray',
@@ -212,7 +212,7 @@ class Test(ERP5TypeTestCase):
     persistent_zbig_array[:,:] = new_array
     self.assertEquals(new_array.shape, persistent_zbig_array.shape)
     self.assertTrue(np.array_equal(new_array, persistent_zbig_array))
-    
+
     # test set element in zbig array
     persistent_zbig_array[:2, 2] = 0
     self.assertFalse(np.array_equal(new_array, persistent_zbig_array))
@@ -220,20 +220,20 @@ class Test(ERP5TypeTestCase):
     # resize Zbig Array
     persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
     self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
-    
+
     # get array slice (fails)
     data_array = self.portal.data_array_module.newContent( \
                    portal_type = 'Data Array')
     shape = (1000,)
     data_array.initArray(shape, np.uint8)
     self.tic()
-    
+
     persistent_zbig_array = data_array.getArray()
     new_array = np.arange(1000)
     new_array.resize(shape)
 
     self.assertEquals(new_array.shape, persistent_zbig_array.shape)
-        
+
     persistent_zbig_array[:,] = new_array
     self.tic()
 
@@ -248,29 +248,29 @@ class Test(ERP5TypeTestCase):
     bucket_stream = self.portal.data_stream_module.newContent( \
                                 portal_type = 'Data Bucket Stream')
     self.tic()
-    
+
     self.assertEqual(0, len(bucket_stream))
-    
+
     # test set and get
     bin_string = "1"*100000
     key = len(bucket_stream) + 1
     bucket_stream.insertBucket(key, bin_string )
     self.assertEqual(bin_string, bucket_stream.getBucketByKey(key))
-    
+
     # test sequence
     self.assertEqual(1, len(bucket_stream))
-    
+
     # test delete bucket by key
     bucket_stream.delBucketByKey(key)
     self.assertEqual(0, len(bucket_stream))
-    
+
     # set many buckets
     for i in range(100):
       bucket_stream.insertBucket(i, i*10000)
 
     self.assertEqual(100, len(bucket_stream))
     self.assertEqual(range(100), bucket_stream.getKeyList())
-    
+
     # test as sequence
     bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]
     self.assertEqual(100000, bucket[1].value)
@@ -288,9 +288,9 @@ class Test(ERP5TypeTestCase):
       Test that nobody accidently removes needed by HowTo's default configurations.
     """
     # the default json ingestion is usde in HowTo / Docs
-    self.assertNotEqual(None, 
+    self.assertNotEqual(None,
            getattr(self.portal.portal_ingestion_policies, "default", None))
-    self.assertNotEqual(None, 
+    self.assertNotEqual(None,
            getattr(self.portal.data_supply_module, "default", None))
 
   def test_07_LinkedDataStreamList(self):
@@ -317,7 +317,7 @@ class Test(ERP5TypeTestCase):
     data_stream_2.setSuccessorValue(data_stream_3)
     data_stream_3.setSuccessorValue(data_stream_4)
     data_stream_4.setSuccessorValue(data_stream_5)
-    
+
     # set predecessor
     data_stream_2.setPredecessorValue(data_stream_1)
     data_stream_3.setPredecessorValue(data_stream_2)
@@ -329,7 +329,7 @@ class Test(ERP5TypeTestCase):
                        [data_stream_3, data_stream_4, data_stream_5])
     self.assertSameSet(data_stream_5.getRecursiveSuccessorValueList(), \
                        [])
-    
+
     # test predecessor
     self.assertSameSet(data_stream_1.getRecursivePredecessorValueList(), \
                        [])
