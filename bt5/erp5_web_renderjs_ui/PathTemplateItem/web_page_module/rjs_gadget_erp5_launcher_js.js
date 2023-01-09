@@ -1,7 +1,7 @@
 /*globals window, document, RSVP, rJS,
           URI, location, XMLHttpRequest, console, navigator, Event,
           URL, domsugar*/
-/*jslint indent: 2, maxlen: 80*/
+/*jslint indent: 2, maxlen: 80, unparam: true*/
 (function (window, document, RSVP, rJS,
            XMLHttpRequest, location, console, navigator, Event,
            URL, domsugar) {
@@ -30,6 +30,7 @@
         new URL(gadget.state.base_prefix, window.location.href).href
       ).href;
     }
+
     return gadget.declareGadget(url, {
       scope: MAIN_SCOPE
     })
@@ -375,6 +376,7 @@
       var gadget = this,
         setting_gadget,
         setting;
+
       this.props = {
         content_element: this.element.querySelector('.gadget-content'),
         is_declared_gadget_dict: {
@@ -506,8 +508,14 @@
     // XXX Those methods may be directly integrated into the header,
     // as it handles the submit triggering
     .allowPublicAcquisition('notifySubmitting', function notifySubmitting(
-      argument_list
+      argument_list,
+      scope
     ) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
+
       return RSVP.all([
         route(this, "header", 'notifySubmitting'),
         this.deferChangeState({
@@ -518,8 +526,14 @@
       ]);
     })
     .allowPublicAcquisition('notifySubmitted', function notifySubmitted(
-      argument_list
+      argument_list,
+      scope
     ) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
+
       return RSVP.all([
         route(this, "header", 'notifySubmitted'),
         this.deferChangeState({
@@ -531,8 +545,14 @@
       ]);
     })
     .allowPublicAcquisition('notifyChange', function notifyChange(
-      argument_list
+      argument_list,
+      scope
     ) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
+
       return RSVP.all([
         route(this, "header", 'notifyChange'),
         this.deferChangeState({
@@ -606,7 +626,12 @@
       return route(this, 'router', 'getCommandUrlForDict', param_list);
     })
 
-    .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
+    .allowPublicAcquisition("updateHeader", function updateHeader(param_list,
+                                                                  scope) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
       initHeaderOptions(this);
       var text_list = [],
         key,
@@ -631,28 +656,48 @@
         });
     })
 
-    .allowPublicAcquisition("updatePanel", function updatePanel(param_list) {
+    .allowPublicAcquisition("updatePanel", function updatePanel(param_list,
+                                                                scope) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
       var gadget = this;
       initPanelOptions(gadget);
       gadget.props.panel_argument_list = param_list[0];
     })
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
-      function acquireRefreshHeaderAndPanel() {
+      function acquireRefreshHeaderAndPanel(ignore, scope) {
+        if (scope === undefined) {
+          // If sub gadget has been dropped, no need to keep notification
+          return;
+        }
         return refreshHeaderAndPanel(this, true);
       })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
       return hideDesktopPanel(this, param_list[0]);
     })
-    .allowPublicAcquisition('triggerPanel', function triggerPanel() {
+    .allowPublicAcquisition('triggerPanel', function triggerPanel(ignore,
+                                                                  scope) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
+
       // Force calling panel toggle
       return this.deferChangeState({
         panel_visible: new Date().getTime()
       });
     })
     .allowPublicAcquisition('renderEditorPanel',
-                            function renderEditorPanel(param_list) {
+                            function renderEditorPanel(param_list, scope) {
+        if (scope === undefined) {
+          // If sub gadget has been dropped, no need to keep notification
+          return;
+        }
+
         return this.deferChangeState({
           // Force calling editor panel render
           editor_panel_render_timestamp: new Date().getTime(),
@@ -703,8 +748,13 @@
         });
     })
     .allowPublicAcquisition("triggerMaximize", function maximize(
-      param_list
+      param_list,
+      scope
     ) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, nothing to maximize
+        return;
+      }
       return triggerMaximize(this, param_list[0]);
     })
     /////////////////////////////////////////////////////////////////
@@ -730,7 +780,12 @@
     })
 
     .declareJob('deferChangeState', function deferChangeState(state) {
-      return this.changeState(state);
+      return this.changeState(state)
+        .push(function (result) {
+          return result;
+        }, function (error) {
+          throw error;
+        });
     })
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
@@ -856,6 +911,7 @@
       // Update the panel state
       if (modification_dict.hasOwnProperty('panel_visible')) {
         if (gadget.state.panel_visible !== false) {
+
           promise_list.push(route(this, 'panel', "toggle"));
         } else {
           promise_list.push(route(this, 'panel', "close"));
