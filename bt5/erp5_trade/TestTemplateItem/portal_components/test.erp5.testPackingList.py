@@ -32,7 +32,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from erp5.component.test.testOrder import TestOrderMixin
 from DateTime import DateTime
 
@@ -1704,6 +1704,71 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self, quiet=quiet)
+
+  def test_11c_MoveSeveralLinesToDelivery(self,
+                                               quiet=quiet, run=run_all_test):
+    """
+      Move partially two lines in a new packing list.
+      Then move again partially theses 2 same lines in the same new packing list.
+    """
+    if not run: return
+    from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+    BaseMessage.max_retry = property(lambda self:
+      self.activity_kw.get('max_retry', 0))
+    sequence = Sequence(context=self)
+    sequence_string = self.default_sequence_with_two_lines
+    sequence(sequence_string)
+    sale_packing_list_list = self.getCreatedTypeList(
+      self.packing_list_portal_type)
+    sale_packing_list1, = self.getCreatedTypeList(
+      self.packing_list_portal_type)
+    movement_list = sale_packing_list1.getMovementList()
+    self.assertEqual(2, len(movement_list))
+    movement_list[0].setQuantity(98)
+    self.tic()
+    sequence("""SplitAndDeferPackingList
+                Tic""")
+    sale_packing_list2, = [x for x in self.getCreatedTypeList(
+      self.packing_list_portal_type) if x.getUid() != sale_packing_list1.getUid()]
+    # now decide to move the two lines
+    solver_process_tool = self.portal.portal_solver_processes
+    def moveTwoLines():
+      movement_list = sale_packing_list1.getMovementList()
+      self.assertEqual(2, len(movement_list))
+      for movement in movement_list:
+        movement.setQuantity(movement.getQuantity()-1)
+      self.tic()
+      solver_process = solver_process_tool.newSolverProcess(sale_packing_list1)
+      quantity_solver_decision_list = [x for x in solver_process.contentValues()
+        if 'quantity' in x.getCausalityValue().getTestedPropertyList()]
+      # use Quantity Split Solver.
+      for quantity_solver_decision in quantity_solver_decision_list:
+        quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Move Solver'])
+        # configure for Quantity Split Solver.
+        kw = {'delivery_solver':'FIFO Delivery Solver',
+              'delivery_url': sale_packing_list2.getRelativeUrl()}
+        quantity_solver_decision.updateConfiguration(**kw)
+      solver_process.buildTargetSolverList()
+      solver_process.solve()
+      self.tic()
+    # first move of two lines. Here sale packing list 2 has only one line, then
+    # will have two lines after the move
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    self.assertEqual("solved", sale_packing_list2.getCausalityState())
+    self.assertEqual({98, 99}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({1}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
+    moveTwoLines()
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    self.assertEqual("solved", sale_packing_list2.getCausalityState())
+    self.assertEqual({97, 98}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({1, 2}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
+    # move two lines again. This time, the sale packing list already have 2 lines,
+    # thus they will be just completed
+    moveTwoLines()
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    self.assertEqual("solved", sale_packing_list2.getCausalityState())
+    self.assertEqual({96, 97}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
 
   def test_SplitAndDeferDoNothing(self, quiet=quiet, run=run_all_test):
     """
