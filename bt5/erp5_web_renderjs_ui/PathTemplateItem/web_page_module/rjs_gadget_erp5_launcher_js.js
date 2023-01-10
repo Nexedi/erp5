@@ -30,6 +30,8 @@
         new URL(gadget.state.base_prefix, window.location.href).href
       ).href;
     }
+    gadget._debug += 'LAUNCHER start renderMainGadget: ' + url + '\n';
+
     return gadget.declareGadget(url, {
       scope: MAIN_SCOPE
     })
@@ -37,10 +39,14 @@
         page_gadget = result;
         gadget.props.m_options_string = JSON.stringify(options);
         if (page_gadget.render !== undefined) {
+          gadget._debug += 'LAUNCHER render renderMainGadget: ' + url + '\n';
+
           return page_gadget.render(options);
         }
       })
       .push(function () {
+        gadget._debug += 'LAUNCHER rendered renderMainGadget: ' + url + '\n';
+
         return page_gadget;
       });
   }
@@ -761,8 +767,12 @@
         route_result = gadget.state,
         promise_list,
         slow_loading_promise;
+      gadget._debug += 'LAUNCHER start onStateChange\n';
+
 
       if (modification_dict.hasOwnProperty('error_text')) {
+        gadget._debug += 'LAUNCHER onStateChange error_text\n';
+
         return gadget.dropGadget(MAIN_SCOPE)
           .push(undefined, function () {
             // Do not crash the app if the pg gadget in not defined
@@ -833,6 +843,8 @@
 
       // Update the main gadget
       if (modification_dict.hasOwnProperty('render_timestamp')) {
+        gadget._debug += 'LAUNCHER onStateChange render_timestamp\n';
+
         // By default, init the header options to be empty
         // (ERP5 title by default + sidebar)
         initHeaderOptions(gadget);
@@ -843,6 +855,8 @@
         }
       }
       if (modification_dict.hasOwnProperty('url')) {
+        gadget._debug += 'LAUNCHER onStateChange url: ' + modification_dict.url + '\n';
+
         promise_list.push(renderMainGadget(
           gadget,
           route_result.url,
@@ -879,7 +893,9 @@
 
       // Update the panel state
       if (modification_dict.hasOwnProperty('panel_visible')) {
+        gadget._debug += 'LAUNCHER onStateChange pane visible\n';
         if (gadget.state.panel_visible !== false) {
+
           promise_list.push(route(this, 'panel', "toggle"));
         } else {
           promise_list.push(route(this, 'panel', "close"));
@@ -888,6 +904,8 @@
       // Update the editor panel
       if (modification_dict.hasOwnProperty('editor_panel_url') ||
           modification_dict.hasOwnProperty('editor_panel_render_timestamp')) {
+        gadget._debug += 'LAUNCHER onStateChange editor_panel\n';
+
         promise_list.push(
           route(gadget, 'editor_panel', 'render',
                 [gadget.state.editor_panel_url,
@@ -898,6 +916,8 @@
       // Update the notification
       if (modification_dict.hasOwnProperty('notification_options') ||
           modification_dict.hasOwnProperty('notification_timestamp')) {
+        gadget._debug += 'LAUNCHER onStateChange notification\n';
+
         if (gadget.state.notification_options === undefined) {
           promise_list.push(
             route(gadget, "notification", 'close')
@@ -915,6 +935,8 @@
     // Render the page
     .declareMethod('render', function render(route_result, keep_message) {
       var gadget = this;
+      gadget._debug += 'LAUNCHER render: ' + route_result.url +'\n';
+
       return gadget.changeState({
         first_bootstrap: true,
         url: route_result.url,
