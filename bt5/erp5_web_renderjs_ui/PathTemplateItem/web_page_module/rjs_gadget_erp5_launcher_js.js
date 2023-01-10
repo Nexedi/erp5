@@ -716,10 +716,15 @@
       return callJioGadget(this, "repair", param_list);
     })
     .allowPublicAcquisition("triggerSubmit", function triggerSubmit(
-      param_list
+      param_list, scope
     ) {
+      var gadget = this;
+      this._debug += 'LAUNCHER start triggerSubmit: ' + scope + '\n';
+
       return this.getDeclaredGadget(MAIN_SCOPE)
         .push(function (main_gadget) {
+          gadget._debug += 'LAUNCHER calling sub triggerSubmit: ' + scope + '\n';
+
           return main_gadget.triggerSubmit.apply(main_gadget, param_list);
         });
     })
