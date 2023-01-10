@@ -58,7 +58,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An example Ingestion Policy.</string> </value>
+            <value> <string>Handles ingestion of packets of data (aka messages) in various formats (TXT, JSON, MQTT, etc).\n
+By default these messages usually go through fluentd / fluent-bit and are wrapped in MessagePack protocol itself. </string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -525,6 +526,51 @@
                           <state>
                             <tuple>
                               <float>1594795698.95</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1005.37029.57002.40823</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass> <reference id="3.1"/> </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1673359560.15</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
