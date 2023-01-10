@@ -746,7 +746,7 @@
 
     .declareJob('deferChangeState', function deferChangeState(state) {
       this._debug += 'LAUNCHER start deferChangeState\n';
-      var gadget;
+      var gadget = this;
       return this.changeState(state)
         .push(function (result) {
           gadget._debug += 'LAUNCHER resolved deferChangeState\n';
