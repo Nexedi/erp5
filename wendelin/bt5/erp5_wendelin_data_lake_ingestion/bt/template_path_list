@@ -13,4 +13,3 @@ portal_callables/DataIngestionLine_writeEbulkIngestionToDataStream
 portal_callables/IngestionPolicy_parseEbulkIngestionTag
 portal_categories/use/**
 portal_ingestion_policies/default_ebulk
-portal_ingestion_policies/wendelin_embulk
