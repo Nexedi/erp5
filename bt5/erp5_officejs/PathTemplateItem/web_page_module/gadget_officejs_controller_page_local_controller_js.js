@@ -3,12 +3,15 @@
 (function (document, window, rJS, jIO, console) {
   "use strict";
 
+  var global_debug = '';
+
   rJS(window)
     .ready(function () {
       if (!Object.getPrototypeOf(this).hasOwnProperty('_debug')) {
         Object.getPrototypeOf(this)._debug = 'first prototype ready\n';
       }
       this._debug += 'gadget ready\n';
+      global_debug += 'GLOBAL DEBUG ready';
     })
 
     /////////////////////////////////////////////////////////////////
@@ -247,7 +250,7 @@
         .push(function (view_gadget) {
           return view_gadget.triggerSubmit(argument_list);
         }, function (error) {
-          throw new Error('Failed getting officejs_form_view.\n' + gadget._debug);
+          throw new Error('Failed getting officejs_form_view.\n' + gadget._debug + '\n' + global_debug);
         })
         .push(function (result) {
           gadget._debug += 'triggerSubmit stopping\n';
