@@ -3,12 +3,13 @@
 (function (document, window, rJS, jIO, console) {
   "use strict";
 
-  var global_debug = '';
+  var global_debug = '',
+    klass = rJS(window);
 
-  rJS(window)
+  klass
     .ready(function () {
-      if (!Object.getPrototypeOf(this).hasOwnProperty('_debug')) {
-        Object.getPrototypeOf(this)._debug = 'first prototype ready\n';
+      if (!klass.prototype.hasOwnProperty('_debug')) {
+        klass.prototype._debug = 'first prototype ready\n';
       }
       this._debug += 'gadget ready\n';
       global_debug += 'GLOBAL DEBUG ready';
