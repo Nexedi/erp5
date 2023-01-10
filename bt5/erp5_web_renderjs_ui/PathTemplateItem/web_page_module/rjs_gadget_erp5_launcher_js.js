@@ -875,6 +875,8 @@
               while (element.firstChild) {
                 element.removeChild(element.firstChild);
               }
+              gadget._debug += 'LAUNCHER onStateChange url adding to DOM\n';
+
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
             }
