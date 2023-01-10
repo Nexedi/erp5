@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Handles ingestion of raw files bytes sent to us from ebulk.</string> </value>
+            <value> <string>Handles ingestion of raw files sent to Wendelin from ebulk client (https://lab.nexedi.com/nexedi/ebulk).</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Ebulk Ingestion Policy</string> </value>
+            <value> <string>Default ebulk</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -154,7 +154,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>984.990.49194.19609</string> </value>
+                      <value> <string>1005.38773.3531.24268</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -172,7 +172,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589986625.99</float>
+                              <float>1673360004.07</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
