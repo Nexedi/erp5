@@ -520,6 +520,10 @@
       argument_list, scope
     ) {
       this._debug += 'LAUNCHER notifySubmitting: ' + scope + '\n';
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
 
       return RSVP.all([
         route(this, "header", 'notifySubmitting'),
@@ -534,6 +538,10 @@
       argument_list, scope
     ) {
       this._debug += 'LAUNCHER notifySubmitted: ' + scope + '\n';
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
 
       return RSVP.all([
         route(this, "header", 'notifySubmitted'),
@@ -549,6 +557,10 @@
       argument_list, scope
     ) {
       this._debug += 'LAUNCHER notifyChange: ' + scope + '\n';
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
 
       return RSVP.all([
         route(this, "header", 'notifyChange'),
@@ -623,7 +635,11 @@
       return route(this, 'router', 'getCommandUrlForDict', param_list);
     })
 
-    .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
+    .allowPublicAcquisition("updateHeader", function updateHeader(param_list, scope) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
       initHeaderOptions(this);
       var text_list = [],
         key,
@@ -648,14 +664,22 @@
         });
     })
 
-    .allowPublicAcquisition("updatePanel", function updatePanel(param_list) {
+    .allowPublicAcquisition("updatePanel", function updatePanel(param_list, scope) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
       var gadget = this;
       initPanelOptions(gadget);
       gadget.props.panel_argument_list = param_list[0];
     })
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
-      function acquireRefreshHeaderAndPanel() {
+      function acquireRefreshHeaderAndPanel(unused, scope) {
+        if (scope === undefined) {
+          // If sub gadget has been dropped, no need to keep notification
+          return;
+        }
         return refreshHeaderAndPanel(this, true);
       })
 
@@ -664,6 +688,10 @@
     })
     .allowPublicAcquisition('triggerPanel', function triggerPanel(unused, scope) {
       this._debug += 'LAUNCHER triggerPanel: ' + scope + '\n';
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
 
       // Force calling panel toggle
       return this.deferChangeState({
@@ -673,6 +701,10 @@
     .allowPublicAcquisition('renderEditorPanel',
                             function renderEditorPanel(param_list, scope) {
         this._debug += 'LAUNCHER renderEditorPanel: ' + scope + '\n';
+        if (scope === undefined) {
+          // If sub gadget has been dropped, no need to keep notification
+          return;
+        }
 
         return this.deferChangeState({
           // Force calling editor panel render
@@ -720,6 +752,10 @@
     ) {
       var gadget = this;
       this._debug += 'LAUNCHER start triggerSubmit: ' + scope + '\n';
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
 
       return this.getDeclaredGadget(MAIN_SCOPE)
         .push(function (main_gadget) {
@@ -729,8 +765,12 @@
         });
     })
     .allowPublicAcquisition("triggerMaximize", function maximize(
-      param_list
+      param_list, scope
     ) {
+      if (scope === undefined) {
+        // If sub gadget has been dropped, no need to keep notification
+        return;
+      }
       return triggerMaximize(this, param_list[0]);
     })
     /////////////////////////////////////////////////////////////////
