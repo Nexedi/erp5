@@ -992,19 +992,32 @@ if (typeof document.contains !== 'function') {
     this._latest_promise = null;
   };
 
+  function doNothing() {
+    return;
+  }
+
   Mutex.prototype = {
     constructor: Mutex,
     lockAndRun: function lockMutexAndRun(callback) {
-      var previous_promise = this._latest_promise;
+      var previous_promise = this._latest_promise,
+        returned_promise;
       if (previous_promise === null) {
         this._latest_promise = RSVP.resolve(callback());
-      } else {
-        this._latest_promise = this._latest_promise
-          .always(function () {
-            return callback();
-          });
+        return this._latest_promise;
       }
-      return this._latest_promise;
+      returned_promise = previous_promise
+        .always(function () {
+          return callback();
+        });
+      // Do not return latest promise, to not allow external caller
+      // to explicitely cancel it,
+      // ie, ensure next promise is triggered only when ALL previous
+      // promised are finished (not only the single previous one)
+      this._latest_promise = RSVP.all([
+        previous_promise.always(doNothing),
+        returned_promise.always(doNothing)
+      ]);
+      return returned_promise;
     }
   };
 
