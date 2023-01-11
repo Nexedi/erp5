@@ -3,18 +3,7 @@
 (function (document, window, rJS, jIO, console) {
   "use strict";
 
-  var global_debug = '',
-    klass = rJS(window);
-
-  klass
-    .ready(function () {
-      if (!klass.prototype.hasOwnProperty('_debug')) {
-        klass.prototype._debug = 'first prototype ready\n';
-      }
-      this._debug += 'gadget ready\n';
-      global_debug += 'GLOBAL DEBUG ready';
-    })
-
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -31,8 +20,6 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      this._debug += 'render starting\n';
-
       var gadget = this,
         app_view,
         gadget_util,
@@ -48,30 +35,18 @@
       index = current_version.indexOf(window.location.host) +
         window.location.host.length;
       current_version = current_version.substr(index);
-      gadget._debug += 'render ongoing\n';
-      return new RSVP.Queue(RSVP.any([
-        gadget.getSettingList(["migration_version",
+      return gadget.getSettingList(["migration_version",
                                 "app_view_reference",
                                 "parent_portal_type",
                                 'default_view_reference',
-                                'app_actions']),
-        new RSVP.Promise(function () {
-          return RSVP.defer().promise;
-        }, function (msg) {
-          gadget._debug += 'render cancelling render\n' + msg + '\n';
-        })
-      ]))
+                                'app_actions'])
         .push(function (setting_list) {
-          gadget._debug += 'render setting list fetched\n';
-
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
           default_view = setting_list[3];
           app_action_list = setting_list[4];
           if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
-            gadget._debug += 'render want to redirect\n';
-
             return gadget.redirect({
               'command': 'display',
               'options': {
@@ -82,20 +57,13 @@
           }
         })
         .push(function () {
-          gadget._debug += 'render get common list\n';
-
           return gadget.getDeclaredGadget("common_util");
         })
         .push(function (result) {
-          gadget._debug += 'render common list fetched\n';
-
           gadget_util = result;
-          console.log('common util', gadget_util);
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
-          gadget._debug += 'render jio key fetched\n';
-
           jio_document = result;
           if (jio_document.portal_type === undefined) {
             throw new Error('Can not display document: ' + options.jio_key);
@@ -108,8 +76,6 @@
           throw error;
         })
         .push(function (parent_portal_type) {
-          gadget._debug += 'render before getformdefinition\n';
-
           if (jio_document) {
             portal_type = jio_document.portal_type;
           } else if (options.portal_type) {
@@ -120,16 +86,12 @@
           return gadget_util.getFormDefinition(portal_type, app_view);
         })
         .push(function (result) {
-          gadget._debug += 'render before getviewandactiondict\n';
-
           form_definition = result;
           return gadget_util.getViewAndActionDict(portal_type, app_view,
                                                   default_view, app_action_list,
                                                   options.jio_key);
         })
         .push(function (view_action_dict) {
-          gadget._debug += 'render before changeState\n';
-
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: jio_document,
@@ -151,19 +113,10 @@
             });
           }
           throw error;
-        })
-        .push(function (result) {
-          gadget._debug += 'render ending\n';
-          return result;
-        }, function (error) {
-          gadget._debug += 'render error\n' + error + '\n';
-          throw error;
         });
     }, {mutex: 'render'})
 
     .onStateChange(function () {
-      this._debug += 'onStateChange starting\n';
-
       var fragment = document.createElement('div'),
         gadget = this,
         view_gadget_url = "gadget_officejs_form_view.html",
@@ -181,30 +134,11 @@
                                    scope: 'officejs_form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
-        }, function (error) {
-          gadget._debug += 'onStateChange crashing\n' + error + '\n';
-          // do not hide errors
-          // https://lab.nexedi.com/nexedi/erp5/commit/cbb3b35be3288fb5d82a2db99f62da309a86ab14
-          throw error;
-          /*
-          console.log(error);
-          return gadget.notifySubmitted({
-            message: "Error rendering view",
-            status: "error"
-          });
-          */
         })
         .push(function () {
           return gadget.updatePanel({
             view_action_dict: gadget.state.view_action_dict
           });
-        })
-        .push(function (result) {
-          gadget._debug += 'onStateChange stopping\n';
-          return result;
-        }, function (error) {
-          gadget._debug += 'onstatechange error\n' + error + '\n';
-          throw error;
         });
     })
 
@@ -212,8 +146,6 @@
       return this.triggerSubmit();
     })
     .allowPublicAcquisition('submitContent', function (param_list) {
-      this._debug += 'submitContent starting\n';
-
       var gadget = this,
         //target_url = options[1],
         content_dict = param_list[2];
@@ -233,34 +165,15 @@
         .push(function () {
           return gadget.notifySubmitted({message: 'Data Updated',
                                          status: 'success'});
-        })
-        .push(function (result) {
-          gadget._debug += 'submitContent stopping\n';
-          return result;
-        }, function (error) {
-          gadget._debug += 'submitContent error\n' + error + '\n';
-          throw error;
         });
     })
 
     .declareMethod("triggerSubmit", function () {
-      this._debug += 'triggerSubmit starting\n';
-      var argument_list = arguments,
-        gadget = this;
+      var argument_list = arguments;
       return this.getDeclaredGadget('officejs_form_view')
         .push(function (view_gadget) {
           return view_gadget.triggerSubmit(argument_list);
-        }, function (error) {
-          throw new Error('Failed getting officejs_form_view.\n' + gadget._debug + '\n' + global_debug);
-        })
-        .push(function (result) {
-          gadget._debug += 'triggerSubmit stopping\n';
-          return result;
-        }, function (error) {
-          gadget._debug += 'triggerSubmit error\n' + error + '\n';
-          throw error;
         });
-
     }, {mutex: 'render'});
 
 }(document, window, rJS, jIO, console));
