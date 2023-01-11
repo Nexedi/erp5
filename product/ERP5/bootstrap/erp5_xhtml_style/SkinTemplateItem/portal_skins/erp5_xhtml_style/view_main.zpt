@@ -18,7 +18,7 @@
           <tal:block metal:use-macro="here/context_box_render/macros/master" />
         </tal:block>
         <tal:block metal:fill-slot="main">
-          <script type="text/javascript"
+          <script
             tal:condition="portal/portal_preferences/getPreferredHtmlStyleUnsavedFormWarning"
             tal:define="message python:context.Base_translateString('You have unsaved changes').replace('\\', '\\\\').replace('\'', '\\\'')"
             tal:content="structure string:installUnsavedChangesWarning('$message');">
