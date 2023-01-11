@@ -12,7 +12,7 @@ import string
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
     for n in xrange(32)])
-    
+
 # Game of Life examples
 default_input_ndarray = np.array([[0,0,0,0,0,0],
                                   [0,0,0,1,0,0],
@@ -46,7 +46,7 @@ def game_of_life_out_of_core(self):
                                         reference = array_reference,
                                         version = '001')
   data_array.initArray((6,6), uint8)
-  
+
   life_area = data_array.getArray()[:,:] # ZBigArray -> ndarray view of it
 
   # change the data, exactly as if working with numpy.ndarray but
@@ -55,10 +55,10 @@ def game_of_life_out_of_core(self):
   transaction.commit()
 
   print_list.append(str(life_area))
-  for i in range(4): 
+  for i in range(4):
     iterate_2(life_area)
     print_list.append(str(life_area))
-  
+
   return '\n\n'.join(print_list)
 
 def ERP5Site_gameOfLife(self, array_reference):
@@ -69,14 +69,14 @@ def ERP5Site_gameOfLife(self, array_reference):
                                      portal_type = 'Data Array',
                                      reference = array_reference)
   life_area = data_array.getArray()[:,:] # ZBigArray -> ndarray view of it
-  
+
   # we make a copy, with big volumes maybe not wise
   input_life_area = np.copy(life_area)
-  
+
   # do real calculation on ndarray
   iterate_2(life_area)
   self.log(str(life_area))
-  
+
   if not (input_life_area==life_area).all():
     # input array not equals output array, in this case we can continue
     # until we find a solution or an end stage
@@ -97,10 +97,10 @@ def game_of_life_out_of_core_activities(self):
   data_array.initArray((6,6), uint8)
 
   life_area = data_array.getArray()[:,:] # ZBigArray -> ndarray view of it
-  
+
   # initialise
   life_area[:,:] = default_input_ndarray
-  
+
   transaction.commit()
 
   # start calculation in background using activities
@@ -117,12 +117,12 @@ def game_of_life(self):
   Z = default_input_ndarray
 
   print_list.append(str(Z))
-  for i in range(4): 
+  for i in range(4):
     iterate_2(Z)
     print_list.append(str(Z))
 
   return '\n\n'.join(print_list)
-  
+
 def DataArray_calculateArraySliceAverageAndStore(self, start, end):
   """
     Compute average on a data array slice and store result on an Active Process.
