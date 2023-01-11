@@ -33,7 +33,7 @@
     // Display the error message in the portal_status location
     // As renderJS does not report which element is failing while loading
     // a gadget
-    var error_element = document.getElementById('transition_message');
+    var error_element = document.querySelector('.transition_message');
     error_element.textContent = error + '. ' + error_element.textContent;
   }
 
