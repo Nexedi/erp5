@@ -1,0 +1,597 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>drone_data_graph</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+%% fetch\n
+js: jio.js\n
+js: ndarray_bundle.js\n
+js: wendelin.js\n
+js: https://cdn.plot.ly/plotly-latest.min.js\n
+\n
+js: https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML\n
+\n
+%% md\n
+# Drone Simmulations with the help of headless-chromium servers and wendelin\n
+Given the truth values of a drone flight (for a given flight), including the coordinates at each timestep, the ground speed, the climb rate and the ASML (Above Sea Level Maximum), we want to find the parameters such that our simulated drones have a similar flight pattern.\n
+To achieve this we have two parts working together:\n
+\n
+1. Headless chrome-servers: This contains two parts, the python script that generates the parameters, starts the headless-chromium servers, retrieves the generated simulation data writes a file that contains the data (the headless-chromium servers do not write anything, the script reads their output and writes the files) and the fluentd agent that sends the data to our wendelin instance on another SlapOS instance.\n
+2. Wendelin: Given the simulation data create data arrays, use these data arrays to calculate the score (see Score Plot for the formula) and plot the data here.\n
+\n
+\n
+The next few section will display some information about the best 5 parameters and their simulation. In the next section we can see a flowchart describing the whole process of gathering and processing the simulation data.\n
+\n
+\n
+%% md\n
+## Table of Contents\n
+- [Flow Chart](#flowchart)\n
+- [Score Plot](#plot_div5)\n
+- [Distance Deviation Plot](#plot_div)\n
+- [ASML Deviation Plot](#plot_div2)\n
+- [Ground Speed Deviation Plot](#plot_div3)\n
+- [Climb Rate Deviation Plot](#plot_div4)\n
+\n
+\n
+%% md\n
+# Flowchart\n
+<div class="flowchart" id="flowchart"/>\n
+\n
+<iframe frameborder="0" style="width:100%;height:519px;" src="https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Untitled%20Diagram.drawio.html#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FDemonkeys%2FDodgeTheLasers%2Fmain%2FUntitled%2520Diagram.drawio.html"></iframe>\n
+\n
+This notebook centers on the Wendelin instance (SlapOS 2). While potential modifications to the concrete implementation of the instance may arise in the future, the overarching workflow is expected to remain largely unchanged. As the author of this notebook was not directly involved in the core functionalities of the SlapOS 1 instance, detailed explanations of its inner workings are beyond the scope of this document. Instead, our approach will be to provide a brief overview of the Python script and the headless Chrome servers within SlapOS 1, acknowledging that the author\'s responsibility lies primarily in assuming the availability and transmission of data to Wendelin.\n
+\n
+1. We start with a python script inside the first SlapOS instance. This script is responsible for requesting and starting the selenium headless-chrome servers. The script also generates the parameters for each simulation. Currently we can only set the drone speed and the drone max roll parameters, while drone min pitch and drone max pitch are not used, or at least can not be chosen.\n
+After the headless-chrome servers have generated the simulation data, the script process the data and saves it localy. This data is then read by the fluentd agent which sends this data to wendelin.\n
+\n
+2. The wendelin instance, on another SlapOS instance, recieves the raw simulation data, which is formated as a csv file, which is then processed and stored inside a data array. This is done by the \n
+<a id= "convert_drone_raw_data" >Convert Drone Raw Data</a> transformation for the simulated flight data and <a id = "convert_drone_raw_real_data">Convert Drone Raw Real Data</a> transformation for the real flight data.\n
+\n
+3. The next step is to use the simulated data and compare it to the ground truth. In this step we calculate the score (see [Score Plot](#plot_div5)) and store it in two data arrays: one containing the score data and the other containing some additional information, such as the deviation between the simulation and the ground truth at each timestamp. The coresponding transformation is called <a id ="create_score_list_array">Create Score List Array</a>.\n
+\n
+4. In the last step we use the previously calculated data arrays (both the data array containing the score data and the data array containing some additional information) to find the best 5 simulations (and with it the best 5 parameters). This generates two data arrays: one containing the score data for the best 5 simulations and the other containing some addtional information, such as the deviation between the best 5 simulations and the ground truth at each timestamp, which is used in the next step to create the plots we can see in this notebook. The coresponding transformation for this step is called <a id = "recalculate-score-list-array">Recalculate Score List Array</a>.\n
+\n
+5. This notebook uses the data created from the last step to display some information, which includes the scores but also the deviations.\n
+\n
+\n
+The data arrays created in the last step are now used for two things: \n
+  1. Plot information about the simulations\n
+  2. Inform the python script from the SlapOS 1 instance that the data has been processed.\n
+\n
+The plot data can be seen in this notebook.\n
+The python script from the SlapOS 1 instance, after generating the simulation data, periodically performs a GET request on the generated score data array. This array contains a column called "Iteration" which the python script can use to determine if the data processing has finished. The script can also use the score data to determine which parameters should be chosen for the next iteration, but this is currently not used. Rather it will choose from a random set of parameters instead.\n
+\n
+%% md\n
+# Links to the Data Arrays\n
+<div class="array_links" id="array_links"/>\n
+\n
+%% md\n
+# Bar Plot\n
+## Reciprocal Score\n
+The reciprocal Score for the best 5 parameters with have found. The higher the score, the better the parameters. The maximal score is 1, which means that the simulation and the real drone flight are identical. The score is calculated by this formula:\n
+$$\n
+\\sum_{x \\in \\text{\\{distance, ASML, ground speed, climb rate \\}}} \\frac{1}{4}\\frac{1}{(1 + (\\text{truth\\_value}(x) - \\text{simulated\\_value}(x)))}\n
+$$\n
+<div class="plot_div5" id="plot_div5"/>\n
+\n
+\n
+\n
+\n
+%% md\n
+# Deviation Plot\n
+## Distance/Positional difference\n
+This line plot illustrates the deviation between the simulation data and the ground truth values, focusing on the common timestamps. It\'s important to note that the simulations may end at different times, resulting in a representation of a shorter timeframe for some simulations compared to others.\n
+<div class="plot_div" id="plot_div"/>\n
+\n
+%% md\n
+# Deviation Plot\n
+## ASML difference\n
+This line plot illustrates the deviation between the simulation data and the ground truth values, focusing on the common timestamps. It\'s important to note that the simulations may end at different times, resulting in a representation of a shorter timeframe for some simulations compared to others.\n
+<div class="plot_div2" id="plot_div2"/>\n
+\n
+\n
+%% md\n
+# Deviation Plot\n
+## Ground speed difference\n
+This line plot illustrates the deviation between the simulation data and the ground truth values, focusing on the common timestamps. It\'s important to note that the simulations may end at different times, resulting in a representation of a shorter timeframe for some simulations compared to others.\n
+<div class="plot_div3" id="plot_div3"/>\n
+\n
+\n
+%% md\n
+# Deviation Plot\n
+## Climb rate difference\n
+This line plot illustrates the deviation between the simulation data and the ground truth values, focusing on the common timestamps. It\'s important to note that the simulations may end at different times, resulting in a representation of a shorter timeframe for some simulations compared to others.\n
+<div class="plot_div4" id="plot_div4"/>\n
+\n
+\n
+\n
+\n
+%% js\n
+\n
+\n
+\n
+transformation_locations = [\n
+    ["convert_drone_raw_data", "/erp5/web_site_module/default_wendelin_front/#/data_transformation_module/convert_drone_raw_data"],\n
+    ["convert_drone_raw_real_data", "/erp5/web_site_module/default_wendelin_front/#/data_transformation_module/convert_drone_raw_real_data"],\n
+    ["create_score_list_array", "/erp5/web_site_module/default_wendelin_front/#/data_transformation_module/create_score_list_array"],\n
+    ["recalculate-score-list-array", "/erp5/web_site_module/default_wendelin_front/#/data_transformation_module/recalculate-score-list-array"]\n
+]\n
+\n
+for (transformation of transformation_locations) {\n
+    document.getElementById(transformation[0])\n
+        .setAttribute("href", "https://" + window.location.host + transformation[1])\n
+}\n
+\n
+hateoas_url = "https://" + window.location.host + "/erp5/web_site_module/renderjs_runner/hateoas/";\n
+jio = jIO.createJIO({\n
+    type: "erp5",\n
+    url: hateoas_url,\n
+    default_view_reference: "view"\n
+});\n
+\n
+gadget = {\n
+    getSetting: function (property) {\n
+        return new RSVP.Queue()\n
+            .push(function () {\n
+                if (property == "hateoas_url") {\n
+                    return hateoas_url;\n
+                }\n
+                return;\n
+            });\n
+    },\n
+    jio_getAttachment: function (id, url, parameter_dict) {\n
+        return jio.getAttachment(id, url, parameter_dict);\n
+    },\n
+    jio_get: function (id) {\n
+        return jio.get(id);\n
+    }\n
+}\n
+\n
+\n
+\n
+var graph_data = [],\n
+    label_list = ["ASML_diff", "ground_speed_diff", "climb_rate_diff", "timestamp", "distance_diff", "Param2", "Param1"]\n
+\n
+\n
+\n
+\n
+function unpack(rows, key) {\n
+    return rows.map(function (row) {\n
+        return row[key];\n
+    });\n
+}\n
+\n
+\n
+\n
+function findNewestIteration(arrayID, rank) {\n
+    return jio.allDocs({\n
+            query: \'portal_type:"Data Array Line" AND \' +\n
+                \'title: "\' + rank + \'"\'\n
+\n
+        })\n
+        .then(function (result) {\n
+            array_id = result.data.rows[0].id; //would be the correct thing, but as we have multiple data arrays with the same name, we need to fix it like this\n
+            return gadget.jio_get(array_id)\n
+        })\n
+        .then(function (result) {\n
+\n
+            return result.index_expression.split(":")\n
+\n
+        })\n
+\n
+}\n
+\n
+\n
+\n
+\n
+function getAllData(arrayID, ranks, column_names) {\n
+\n
+    intervals = []\n
+    return RSVP.all(ranks.map((rank) => findNewestIteration(arrayID, rank)))\n
+        .then(function (result) {\n
+            intervals = []\n
+            for (interval of result) {\n
+                start_index = interval[0];\n
+                stop_index = interval[1];\n
+                intervals.push([Number(start_index), Number(stop_index)]);\n
+            }\n
+            array_id = arrayID\n
+            return wendelin.getArrayRawSlice(gadget, array_id, intervals[0][0], intervals[4][1]);\n
+        })\n
+        .then(function (result) {\n
+\n
+            all_tables_column_data = []\n
+            for (interval of intervals) {\n
+\n
+                table_data = []\n
+                for (i = interval[0]; i < interval[1]; i += 1) {\n
+                    table_data = table_data.concat([nj.unpack(result.pick(i, null))])\n
+                }\n
+\n
+                column_names = [\n
+                    "ASML_diff", "ground_speed_diff", "climb_rate_diff", "climb_rate_reciprocal", "timestamp", "score_cosine_row", "score_cosine_column", "distance_reciprocal", "iteration", "score_reciprocal", "ground_speed_reciprocal", "distance_diff", "Param2", "Param1", "ASML_reciprocal"\n
+                ]\n
+                for (i = 0; i < column_names.length; i += 1) {\n
+                    column_data = []\n
+                    for (row of table_data) {\n
+                        column_data.push(row[i])\n
+                    }\n
+                    graph_data.push(column_data)\n
+                }\n
+\n
+                all_tables_column_data.push(graph_data)\n
+                graph_data = []\n
+            }\n
+            return all_tables_column_data\n
+        })\n
+        .then(function (all_data) {\n
+\n
+            return all_data\n
+        })\n
+}\n
+\n
+\n
+function createLinePlotData(arrayData, column_names, label_list) {\n
+    all_trace_templates = []\n
+    const plotlyColors = [\n
+        \'rgb(31, 119, 180)\', // Blue\n
+        \'rgb(255, 127, 14)\', // Orange\n
+        \'rgb(44, 160, 44)\', // Green\n
+        \'rgb(214, 39, 40)\', // Red\n
+        \'rgb(148, 103, 189)\' // Purple\n
+    ];\n
+    for (i = 0; i < arrayData.length; i = i + 1) {\n
+        trace_templates = []\n
+        for (j = 0; j < label_list.length; j = j + 1) {\n
+            if (label_list[j] != "timestamp") {\n
+\n
+                name_string = "The parameters are (drone_speed, drone_max_roll): " + [arrayData[i][column_names.indexOf("Param1")][0], arrayData[i][column_names.indexOf("Param2")][0]].join(\', \')\n
+\n
+                trace_template = {\n
+                    type: "scatter",\n
+                    name: name_string,\n
+                    x: arrayData[i][column_names.indexOf("timestamp")],\n
+                    y: arrayData[i][column_names.indexOf(label_list[j])],\n
+                    line: {\n
+                        color: plotlyColors[i]\n
+                    }\n
+                }\n
+                trace_templates = trace_templates.concat(trace_template);\n
+            }\n
+        }\n
+        all_trace_templates.push(trace_template)\n
+    }\n
+\n
+    return all_trace_templates;\n
+\n
+}\n
+\n
+\n
+\n
+\n
+function createBarPlotData(arrayData, column_names, label_list) {\n
+    all_trace_templates = []\n
+    const plotlyColors = [\n
+        \'rgb(31, 119, 180)\', // Blue\n
+        \'rgb(255, 127, 14)\', // Orange\n
+        \'rgb(44, 160, 44)\', // Green\n
+        \'rgb(214, 39, 40)\', // Red\n
+        \'rgb(148, 103, 189)\' // Purple\n
+    ];\n
+    for (i = 0; i < arrayData.length; i = i + 1) {\n
+        trace_templates = []\n
+        for (j = 0; j < label_list.length; j = j + 1) {\n
+            if (label_list[j] != "timestamp") {\n
+\n
+                name_string = "The parameters are (drone_speed, drone_max_roll): " + [arrayData[i][column_names.indexOf("Param1")][0], arrayData[i][column_names.indexOf("Param2")][0]].join(\', \')\n
+\n
+                trace_template = {\n
+                    type: "bar", // Set type to "bar" for a bar plot\n
+                    name: name_string,\n
+                    x: ["Value"], //arrayData[i][column_names.indexOf("timestamp")],\n
+                    y: [arrayData[i][column_names.indexOf(label_list[j])][0]],\n
+                    marker: {\n
+                        color: plotlyColors[i]\n
+                    }\n
+                };\n
+                trace_templates = trace_templates.concat(trace_template);\n
+            }\n
+        }\n
+        all_trace_templates.push(trace_template)\n
+    }\n
+\n
+    return all_trace_templates;\n
+\n
+}\n
+\n
+\n
+\n
+\n
+function getColumnNames(arrayID) {\n
+\n
+    return gadget.jio_get(arrayID)\n
+        .then(function (result) {\n
+            column_names = result.array_dtype.match(/\\(\'(.*?)\',/g);\n
+            column_names = column_names.map(match => match.match(/\\(\'(.*?)\',/))\n
+            column_names = column_names.map(thing => thing[1]);\n
+            return column_names\n
+        })\n
+}\n
+\n
+function plot(data, plotTitle = null, graph = null, layout = null) {\n
+    if (layout == null) {\n
+        layout = {\n
+            \'title\': plotTitle,\n
+            xaxis: {\n
+                title: \'Timestamp\'\n
+            },\n
+            yaxis: {\n
+                title: \'Difference\'\n
+            }\n
+        }\n
+    }\n
+    Plotly.newPlot(\n
+        graph, data, layout);\n
+}\n
+\n
+function prepareData() {\n
+    return jio.allDocs({\n
+            query: \'portal_type:"Data Analysis Line" AND \' +\n
+                \'title: "Recalculated Plots" AND \' +\n
+                \'simulation_state:"started"\'\n
+        })\n
+        .then(function (result) {\n
+\n
+            var data_analysis_line_id = result.data.rows[0].id;\n
+            return jio.allDocs({\n
+                query: \'portal_type:"Data Array" AND \' +\n
+                    \'aggregate_related_relative_url:"\' + data_analysis_line_id + \'"\'\n
+            });\n
+        })\n
+        .then(function (result) {\n
+\n
+            column_names = getColumnNames(result.data.rows[0].id)\n
+            return [column_names, result.data.rows[0].id]\n
+        })\n
+        .then(function (result) {\n
+\n
+            return RSVP.all([result[0], getAllData(result[1], [1, 2, 3, 4, 5], result[0])])\n
+        })\n
+}\n
+\n
+\n
+\n
+\n
+prepareData()\n
+    .then(function (result) {\n
+\n
+        const layout = {\n
+            barmode: \'group\',\n
+            title: \'Bar Chart\',\n
+            xaxis: {\n
+                title: \'The different simulations\'\n
+            },\n
+            yaxis: {\n
+                title: \'The score of the simulations\'\n
+            }\n
+        };\n
+\n
+        graph = document.getElementById(\'plot_div\')\n
+        data = createLinePlotData(result[1], result[0], ["distance_diff"])\n
+        plot(data, "", graph, null)\n
+\n
+        graph = document.getElementById(\'plot_div2\')\n
+        data = createLinePlotData(result[1], result[0], ["ASML_diff"])\n
+        plot(data, "", graph, null)\n
+\n
+\n
+        graph = document.getElementById(\'plot_div3\')\n
+        data = createLinePlotData(result[1], result[0], ["ground_speed_diff"])\n
+        plot(data, "", graph, null)\n
+\n
+\n
+        graph = document.getElementById(\'plot_div4\')\n
+        data = createLinePlotData(result[1], result[0], ["climb_rate_diff"])\n
+        plot(data, "", graph, null)\n
+\n
+\n
+        graph = document.getElementById(\'plot_div5\')\n
+        data = createBarPlotData(result[1], result[0], ["score_reciprocal"])\n
+        plot(data, "", graph, layout)\n
+\n
+    })\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DroneSim</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <unicode>zope</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1012.46657.35863.5717</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="_reconstructor" module="copy_reg"/>
+                          </klass>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1700840040.49</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
