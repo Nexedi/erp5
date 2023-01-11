@@ -1,9 +1,10 @@
-/*global document, window, rJS, jIO, console, RSVP */
+/*global document, window, rJS, jIO, console */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (document, window, rJS, jIO, console) {
   "use strict";
 
   rJS(window)
+
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -36,10 +37,10 @@
         window.location.host.length;
       current_version = current_version.substr(index);
       return gadget.getSettingList(["migration_version",
-                                "app_view_reference",
-                                "parent_portal_type",
-                                'default_view_reference',
-                                'app_actions'])
+                                    "app_view_reference",
+                                    "parent_portal_type",
+                                    'default_view_reference',
+                                    'app_actions'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
