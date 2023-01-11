@@ -207,7 +207,7 @@ div.listbox_dataline:hover {
     </style>
     </head>
     <body onload="toggle_all()">
-      <script type="text/javascript"><!--
+      <script><!--
         function toggle_all() {
           my_elements = document.getElementsByName("toggleable");
           for(i=0; i<my_elements.length; i++) {

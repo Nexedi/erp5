@@ -38,7 +38,7 @@
                     tal:content="python:here.Base_getFormViewDialogActionButtonTitle(form)">Do Action</span>
             </button>
           </div>
-          <script type="text/javascript"
+          <script
             tal:define="message python:context.Base_translateString('This dialog has already been submitted. Do you want to submit again ?').replace('\\', '\\\\').replace('\'', '\\\'')"
             tal:content="structure string:installDoubleSubmitDialogPrevention('$message');">
           </script>

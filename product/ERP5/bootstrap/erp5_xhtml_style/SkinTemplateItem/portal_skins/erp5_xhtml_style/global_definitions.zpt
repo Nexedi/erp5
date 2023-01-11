@@ -80,7 +80,6 @@
     ><script
       tal:define="dummy python: known.add(js)"
       tal:attributes="src js"
-      type="text/javascript"
     ></script></tal:block></tal:block>
   </tal:block>
   <tal:block metal:define-macro="http_definitions">

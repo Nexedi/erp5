@@ -1,12 +1,12 @@
-<script type="text/javascript" src="jquery/core/jquery.js"></script>
-<script type="text/javascript" src="jquery/plugin/sheet/jquery.sheet.js"></script>
-<script type="text/javascript" src="jquery/plugin/mbmenu/mbMenu.min.js"></script>
-<script type="text/javascript" src="jquery/ui/js/jquery-ui.js"></script>
-<script type="text/javascript" src="jquery/plugin/jqchart/jgcharts.min.js"></script>
-<script type="text/javascript" src="jquery/plugin/colorpicker/jquery.colorPicker.min.js"></script>
-<script type="text/javascript" src="jquery/plugin/elastic/jquery.elastic.min.js"></script>
+<script src="jquery/core/jquery.js"></script>
+<script src="jquery/plugin/sheet/jquery.sheet.js"></script>
+<script src="jquery/plugin/mbmenu/mbMenu.min.js"></script>
+<script src="jquery/ui/js/jquery-ui.js"></script>
+<script src="jquery/plugin/jqchart/jgcharts.min.js"></script>
+<script src="jquery/plugin/colorpicker/jquery.colorPicker.min.js"></script>
+<script src="jquery/plugin/elastic/jquery.elastic.min.js"></script>
                         
-<script type="text/javascript">
+<script>
  $("button.save").click(function(event){
     source = $.sheet.instance[0].getSource(true);
     $("input#my_text_content").attr("value", source)

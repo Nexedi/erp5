@@ -25,7 +25,7 @@ moving and resizing
 block_string = ','.join(['"%s"' % block.name for block in planning.content if \
                                 not context.PlanningBox_isFrozenBlock(block=block)])
 
-return '<script type="text/javascript">SET_DHTML(%s,' \
+return '<script>SET_DHTML(%s,' \
        '"top"+CURSOR_N_RESIZE+VERTICAL, ' \
        '"right"+CURSOR_E_RESIZE+HORIZONTAL, ' \
        '"bottom"+CURSOR_S_RESIZE+VERTICAL, ' \

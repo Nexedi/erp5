@@ -45,7 +45,7 @@ IDEAS:
             <link tal:attributes="href css" type="text/css" rel="stylesheet" />
           </tal:block>
           <tal:block tal:repeat="js python: js_list">
-            <script tal:attributes="src js" type="text/javascript"></script>
+            <script tal:attributes="src js"></script>
           </tal:block>
           <link rel="icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />
           <link rel="shortcut icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />

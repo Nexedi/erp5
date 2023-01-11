@@ -18,8 +18,7 @@
   <tal:block metal:use-macro="here/wizard_main_template/macros/master">
     <tal:block metal:fill-slot="main">
 
-      <script type="text/javascript" 
-              language="javascript" 
+      <script language="javascript" 
               tal:content="here/ConfiguratorTool_generateJavaScript"/>
 
       <div class="dialog_box">

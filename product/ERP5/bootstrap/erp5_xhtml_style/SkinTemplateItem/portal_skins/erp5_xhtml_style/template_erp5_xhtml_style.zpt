@@ -72,7 +72,7 @@ DEPRECATION:
                   <div id="information_area" class="information_area" i18n:translate="" i18n:domain="ui">
                     Input data has errors. Please look at the error messages below.
                   </div>
-                  <script type="text/javascript">changed = true;</script>
+                  <script>changed = true;</script>
                 </tal:block>
               </div>
               <div id="master" class="master">
