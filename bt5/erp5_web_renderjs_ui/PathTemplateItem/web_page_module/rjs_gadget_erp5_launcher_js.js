@@ -1,7 +1,7 @@
 /*globals window, document, RSVP, rJS,
           URI, location, XMLHttpRequest, console, navigator, Event,
           URL, domsugar*/
-/*jslint indent: 2, maxlen: 80*/
+/*jslint indent: 2, maxlen: 80, unparam: true*/
 (function (window, document, RSVP, rJS,
            XMLHttpRequest, location, console, navigator, Event,
            URL, domsugar) {
@@ -30,7 +30,6 @@
         new URL(gadget.state.base_prefix, window.location.href).href
       ).href;
     }
-    gadget._debug += 'LAUNCHER start renderMainGadget: ' + url + '\n';
 
     return gadget.declareGadget(url, {
       scope: MAIN_SCOPE
@@ -39,14 +38,10 @@
         page_gadget = result;
         gadget.props.m_options_string = JSON.stringify(options);
         if (page_gadget.render !== undefined) {
-          gadget._debug += 'LAUNCHER render renderMainGadget: ' + url + '\n';
-
           return page_gadget.render(options);
         }
       })
       .push(function () {
-        gadget._debug += 'LAUNCHER rendered renderMainGadget: ' + url + '\n';
-
         return page_gadget;
       });
   }
@@ -147,7 +142,7 @@
     // and allow user to go back to the frontpage
 
     // Add error handling stack
-    error_list.push(new Error('stopping ERP5JS\n' + gadget._debug));
+    error_list.push(new Error('stopping ERP5JS'));
 
     for (i = 0; i < error_list.length; i += 1) {
       error = error_list[i];
@@ -381,10 +376,6 @@
       var gadget = this,
         setting_gadget,
         setting;
-      if (!Object.getPrototypeOf(this).hasOwnProperty('_debug')) {
-        Object.getPrototypeOf(this)._debug = 'LAUNCHER first prototype ready\n';
-      }
-      this._debug += 'LAUNCHER gadget ready\n';
 
       this.props = {
         content_element: this.element.querySelector('.gadget-content'),
@@ -517,9 +508,9 @@
     // XXX Those methods may be directly integrated into the header,
     // as it handles the submit triggering
     .allowPublicAcquisition('notifySubmitting', function notifySubmitting(
-      argument_list, scope
+      argument_list,
+      scope
     ) {
-      this._debug += 'LAUNCHER notifySubmitting: ' + scope + '\n';
       if (scope === undefined) {
         // If sub gadget has been dropped, no need to keep notification
         return;
@@ -535,9 +526,9 @@
       ]);
     })
     .allowPublicAcquisition('notifySubmitted', function notifySubmitted(
-      argument_list, scope
+      argument_list,
+      scope
     ) {
-      this._debug += 'LAUNCHER notifySubmitted: ' + scope + '\n';
       if (scope === undefined) {
         // If sub gadget has been dropped, no need to keep notification
         return;
@@ -554,9 +545,9 @@
       ]);
     })
     .allowPublicAcquisition('notifyChange', function notifyChange(
-      argument_list, scope
+      argument_list,
+      scope
     ) {
-      this._debug += 'LAUNCHER notifyChange: ' + scope + '\n';
       if (scope === undefined) {
         // If sub gadget has been dropped, no need to keep notification
         return;
@@ -635,7 +626,8 @@
       return route(this, 'router', 'getCommandUrlForDict', param_list);
     })
 
-    .allowPublicAcquisition("updateHeader", function updateHeader(param_list, scope) {
+    .allowPublicAcquisition("updateHeader", function updateHeader(param_list,
+                                                                  scope) {
       if (scope === undefined) {
         // If sub gadget has been dropped, no need to keep notification
         return;
@@ -664,7 +656,8 @@
         });
     })
 
-    .allowPublicAcquisition("updatePanel", function updatePanel(param_list, scope) {
+    .allowPublicAcquisition("updatePanel", function updatePanel(param_list,
+                                                                scope) {
       if (scope === undefined) {
         // If sub gadget has been dropped, no need to keep notification
         return;
@@ -675,7 +668,7 @@
     })
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
-      function acquireRefreshHeaderAndPanel(unused, scope) {
+      function acquireRefreshHeaderAndPanel(ignore, scope) {
         if (scope === undefined) {
           // If sub gadget has been dropped, no need to keep notification
           return;
@@ -686,8 +679,8 @@
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
       return hideDesktopPanel(this, param_list[0]);
     })
-    .allowPublicAcquisition('triggerPanel', function triggerPanel(unused, scope) {
-      this._debug += 'LAUNCHER triggerPanel: ' + scope + '\n';
+    .allowPublicAcquisition('triggerPanel', function triggerPanel(ignore,
+                                                                  scope) {
       if (scope === undefined) {
         // If sub gadget has been dropped, no need to keep notification
         return;
@@ -700,7 +693,6 @@
     })
     .allowPublicAcquisition('renderEditorPanel',
                             function renderEditorPanel(param_list, scope) {
-        this._debug += 'LAUNCHER renderEditorPanel: ' + scope + '\n';
         if (scope === undefined) {
           // If sub gadget has been dropped, no need to keep notification
           return;
@@ -748,27 +740,19 @@
       return callJioGadget(this, "repair", param_list);
     })
     .allowPublicAcquisition("triggerSubmit", function triggerSubmit(
-      param_list, scope
+      param_list
     ) {
-      var gadget = this;
-      this._debug += 'LAUNCHER start triggerSubmit: ' + scope + '\n';
-      if (scope === undefined) {
-        // If sub gadget has been dropped, no need to keep notification
-        return;
-      }
-
       return this.getDeclaredGadget(MAIN_SCOPE)
         .push(function (main_gadget) {
-          gadget._debug += 'LAUNCHER calling sub triggerSubmit: ' + scope + '\n';
-
           return main_gadget.triggerSubmit.apply(main_gadget, param_list);
         });
     })
     .allowPublicAcquisition("triggerMaximize", function maximize(
-      param_list, scope
+      param_list,
+      scope
     ) {
       if (scope === undefined) {
-        // If sub gadget has been dropped, no need to keep notification
+        // If sub gadget has been dropped, nothing to maximize
         return;
       }
       return triggerMaximize(this, param_list[0]);
@@ -796,14 +780,10 @@
     })
 
     .declareJob('deferChangeState', function deferChangeState(state) {
-      this._debug += 'LAUNCHER start deferChangeState\n';
-      var gadget = this;
       return this.changeState(state)
         .push(function (result) {
-          gadget._debug += 'LAUNCHER resolved deferChangeState\n';
           return result;
         }, function (error) {
-          gadget._debug += 'LAUNCHER failed deferChangeState\n';
           throw error;
         });
     })
@@ -812,12 +792,8 @@
         route_result = gadget.state,
         promise_list,
         slow_loading_promise;
-      gadget._debug += 'LAUNCHER start onStateChange\n';
-
 
       if (modification_dict.hasOwnProperty('error_text')) {
-        gadget._debug += 'LAUNCHER onStateChange error_text\n';
-
         return gadget.dropGadget(MAIN_SCOPE)
           .push(undefined, function () {
             // Do not crash the app if the pg gadget in not defined
@@ -888,8 +864,6 @@
 
       // Update the main gadget
       if (modification_dict.hasOwnProperty('render_timestamp')) {
-        gadget._debug += 'LAUNCHER onStateChange render_timestamp\n';
-
         // By default, init the header options to be empty
         // (ERP5 title by default + sidebar)
         initHeaderOptions(gadget);
@@ -900,8 +874,6 @@
         }
       }
       if (modification_dict.hasOwnProperty('url')) {
-        gadget._debug += 'LAUNCHER onStateChange url: ' + modification_dict.url + '\n';
-
         promise_list.push(renderMainGadget(
           gadget,
           route_result.url,
@@ -920,8 +892,6 @@
               while (element.firstChild) {
                 element.removeChild(element.firstChild);
               }
-              gadget._debug += 'LAUNCHER onStateChange url adding to DOM\n';
-
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
             }
@@ -940,7 +910,6 @@
 
       // Update the panel state
       if (modification_dict.hasOwnProperty('panel_visible')) {
-        gadget._debug += 'LAUNCHER onStateChange pane visible\n';
         if (gadget.state.panel_visible !== false) {
 
           promise_list.push(route(this, 'panel', "toggle"));
@@ -951,8 +920,6 @@
       // Update the editor panel
       if (modification_dict.hasOwnProperty('editor_panel_url') ||
           modification_dict.hasOwnProperty('editor_panel_render_timestamp')) {
-        gadget._debug += 'LAUNCHER onStateChange editor_panel\n';
-
         promise_list.push(
           route(gadget, 'editor_panel', 'render',
                 [gadget.state.editor_panel_url,
@@ -963,8 +930,6 @@
       // Update the notification
       if (modification_dict.hasOwnProperty('notification_options') ||
           modification_dict.hasOwnProperty('notification_timestamp')) {
-        gadget._debug += 'LAUNCHER onStateChange notification\n';
-
         if (gadget.state.notification_options === undefined) {
           promise_list.push(
             route(gadget, "notification", 'close')
@@ -982,8 +947,6 @@
     // Render the page
     .declareMethod('render', function render(route_result, keep_message) {
       var gadget = this;
-      gadget._debug += 'LAUNCHER render: ' + route_result.url +'\n';
-
       return gadget.changeState({
         first_bootstrap: true,
         url: route_result.url,
