@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>testWendelinDrones</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test.erp5.testWendelinDrones</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W: 45,  0: Cannot decode using encoding "ascii", unexpected byte at position 50 (invalid-encoded-data)</string>
+                <string>W: 46,  0: Cannot decode using encoding "ascii", unexpected byte at position 61 (invalid-encoded-data)</string>
+                <string>W: 47,  0: Cannot decode using encoding "ascii", unexpected byte at position 55 (invalid-encoded-data)</string>
+                <string>W: 48,  0: Cannot decode using encoding "ascii", unexpected byte at position 55 (invalid-encoded-data)</string>
+                <string>W: 49,  0: Cannot decode using encoding "ascii", unexpected byte at position 55 (invalid-encoded-data)</string>
+                <string>W: 51,  0: Cannot decode using encoding "ascii", unexpected byte at position 55 (invalid-encoded-data)</string>
+                <string>W: 54,  0: Cannot decode using encoding "ascii", unexpected byte at position 53 (invalid-encoded-data)</string>
+                <string>W: 55,  0: Cannot decode using encoding "ascii", unexpected byte at position 55 (invalid-encoded-data)</string>
+                <string>W: 52,  4: Unused variable \'portal\' (unused-variable)</string>
+                <string>W: 84,  4: Unused variable \'timestamp\' (unused-variable)</string>
+                <string>W:110,  4: Unused variable \'document_to_delete_list\' (unused-variable)</string>
+                <string>W:257,  8: No exception type(s) specified (bare-except)</string>
+                <string>W:375,  4: Unused variable \'test_sim_dataframe\' (unused-variable)</string>
+                <string>W:372,  8: Unused variable \'data_array_line_names_sim_flight_list\' (unused-variable)</string>
+                <string>W:396,  8: Unused variable \'data_array_line_names_sim_flight_score_list\' (unused-variable)</string>
+                <string>W:443,  8: Unused variable \'data_array_line_names_sim_flight_score_list\' (unused-variable)</string>
+                <string>W: 31,  0: Unused numpy imported as np (unused-import)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
