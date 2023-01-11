@@ -30,7 +30,6 @@
         new URL(gadget.state.base_prefix, window.location.href).href
       ).href;
     }
-
     return gadget.declareGadget(url, {
       scope: MAIN_SCOPE
     })
@@ -376,7 +375,6 @@
       var gadget = this,
         setting_gadget,
         setting;
-
       this.props = {
         content_element: this.element.querySelector('.gadget-content'),
         is_declared_gadget_dict: {
@@ -515,7 +513,6 @@
         // If sub gadget has been dropped, no need to keep notification
         return;
       }
-
       return RSVP.all([
         route(this, "header", 'notifySubmitting'),
         this.deferChangeState({
@@ -533,7 +530,6 @@
         // If sub gadget has been dropped, no need to keep notification
         return;
       }
-
       return RSVP.all([
         route(this, "header", 'notifySubmitted'),
         this.deferChangeState({
@@ -552,7 +548,6 @@
         // If sub gadget has been dropped, no need to keep notification
         return;
       }
-
       return RSVP.all([
         route(this, "header", 'notifyChange'),
         this.deferChangeState({
@@ -685,7 +680,6 @@
         // If sub gadget has been dropped, no need to keep notification
         return;
       }
-
       // Force calling panel toggle
       return this.deferChangeState({
         panel_visible: new Date().getTime()
@@ -697,7 +691,6 @@
           // If sub gadget has been dropped, no need to keep notification
           return;
         }
-
         return this.deferChangeState({
           // Force calling editor panel render
           editor_panel_render_timestamp: new Date().getTime(),
@@ -780,12 +773,7 @@
     })
 
     .declareJob('deferChangeState', function deferChangeState(state) {
-      return this.changeState(state)
-        .push(function (result) {
-          return result;
-        }, function (error) {
-          throw error;
-        });
+      return this.changeState(state);
     })
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
@@ -911,7 +899,6 @@
       // Update the panel state
       if (modification_dict.hasOwnProperty('panel_visible')) {
         if (gadget.state.panel_visible !== false) {
-
           promise_list.push(route(this, 'panel', "toggle"));
         } else {
           promise_list.push(route(this, 'panel', "close"));
