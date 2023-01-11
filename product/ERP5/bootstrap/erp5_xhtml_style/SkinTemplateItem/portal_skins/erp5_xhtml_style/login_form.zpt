@@ -85,7 +85,7 @@
               </div>
             </tal:block>
           </fieldset>
-          <script type="text/javascript">setFocus()</script>
+          <script>setFocus()</script>
           <p i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</p>
           <p i18n:translate="" i18n:domain="ui">Do not forget to logout or exit your browser when you are done.</p>
         </div>
