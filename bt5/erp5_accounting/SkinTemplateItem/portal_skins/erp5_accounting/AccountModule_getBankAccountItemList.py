@@ -70,12 +70,14 @@ bank_account_list = [brain.getObject() for brain in sorted(
 )]
 
 
-def getItemList(bank_account):
+def getItemList(bank_account, warning=False):
   reference = bank_account.getReference()
   title = bank_account.getTitle() or bank_account.getSourceFreeText() or bank_account.getSourceTitle()
   label = title
   if reference != title:
     label = '{} - {}'.format(reference, title)
+  if warning:
+    label = '??? ({})'.format(label)
   return (label, bank_account.getRelativeUrl())
 
 
@@ -98,6 +100,6 @@ if base_category is not None:
       translateString(
         'Invalid bank account from ${entity_title}',
         mapping={'entity_title': current_value.getParentTitle()}), None))
-    item_list.append(getItemList(current_value))
+    item_list.append(getItemList(current_value, warning=True))
 
 return item_list

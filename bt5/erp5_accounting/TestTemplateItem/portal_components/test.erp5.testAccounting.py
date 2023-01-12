@@ -4988,7 +4988,7 @@ class TestTransactions(AccountingTestCase):
       [
         ('', ''),
         ('Invalid bank account from Client 1', None),
-        ('client_1 bank account', client_1_bank_account.getRelativeUrl()),
+        ('??? (client_1 bank account)', client_1_bank_account.getRelativeUrl()),
       ],
     )
 
@@ -5013,7 +5013,7 @@ class TestTransactions(AccountingTestCase):
       [
         ('', ''),
         ('Invalid bank account from Client 1', None),
-        ('client_1 bank account', client_1_bank_account.getRelativeUrl()),
+        ('??? (client_1 bank account)', client_1_bank_account.getRelativeUrl()),
       ],
     )
 
