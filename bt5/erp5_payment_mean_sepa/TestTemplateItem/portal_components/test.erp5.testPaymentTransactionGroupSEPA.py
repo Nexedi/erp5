@@ -198,6 +198,52 @@ class TestPaymentTransactionGroupPaymentSEPA(AccountingTestCase):
         ['PT-1', 'PT-2'],
     )
 
+  def test_PaymentTransactionGroup_viewAsSEPACreditTransferPain_001_001_02_with_person(self):
+    ptg = self._createPTG()
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+        first_name='John',
+        last_name='Doe',
+    )
+    bank_account_person = person.newContent(
+        portal_type='Bank Account',
+        iban='FR4610096000306768831487U66',
+        bic_code='TESTXXXX'
+    )
+    bank_account_person.validate()
+
+    self._makeOne(
+        portal_type='Payment Transaction',
+        simulation_state='delivered',
+        title='three',
+        reference='PT-3',
+        destination_section_value=self.section,
+        destination_payment_value=self.bank_account,
+        source_section_value=person,
+        source_payment_value=bank_account_person,
+        start_date=DateTime(2021, 1, 2),
+        lines=(
+            dict(
+                destination_value=self.portal.account_module.payable,
+                destination_debit=300),
+            dict(
+                destination_value=self.portal.account_module.bank,
+                destination_credit=300,
+                aggregate_value=ptg)))
+    self.tic()
+    pain = lxml.etree.fromstring(
+        getattr(ptg, 'PaymentTransactionGroup_viewAsSEPACreditTransferPain.001.001.02')().encode('utf-8'))
+
+    # this XML validates against the schema
+    xmlschema = lxml.etree.XMLSchema(
+        lxml.etree.fromstring(str(getattr(self.portal, 'pain.001.001.02.xsd').data)))
+    xmlschema.assertValid(pain)
+
+    self.assertEqual(
+        sorted([node.text for node in pain.findall('.//{*}InitgPty/{*}Nm')]),
+        ['John Doe', 'My Organisation Inc.'],
+    )
+
   def test_generate_sepa_credit_transfer_action(self):
     ptg = self._createPTG()
     ret = ptg.PaymentTransactionGroup_generateSEPACreditTransferFile(
