@@ -86,6 +86,7 @@ class _ERP5(ERP5TypeTestSuite):
         # glob('%s/bt5/erp5_oauth*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_js_style*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_performance_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_user_tutorial/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         []
       ):
       component_re_match = component_re.match(test_path)
