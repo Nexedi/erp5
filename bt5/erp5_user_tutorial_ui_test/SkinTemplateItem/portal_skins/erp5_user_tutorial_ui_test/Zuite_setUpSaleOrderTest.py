@@ -68,6 +68,7 @@ my_organisation.validate()
 bank_account = my_organisation.newContent(portal_type="Bank Account",
                            title=howto_dict["sale_howto_bank_account_title"],
                            reference=howto_dict["sale_howto_bank_account_reference"],)
+bank_account.validate()
 
 organisation = portal.organisation_module.newContent(portal_type='Organisation',
                                                      title=howto_dict['sale_howto_organisation2_title'],
