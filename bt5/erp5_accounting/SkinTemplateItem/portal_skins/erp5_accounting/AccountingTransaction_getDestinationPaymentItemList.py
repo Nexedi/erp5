@@ -1,4 +1,6 @@
-return context.AccountModule_getBankAccountItemList(
-        organisation=context.getDestinationSection(),
-        skip_invalidated_bank_accounts=
-                    (context.getSimulationState() != 'delivered'))
+section = context.getDestinationSection()
+if section:
+  return context.AccountModule_getBankAccountItemList(
+        organisation=section,
+        base_category='destination_payment')
+return [('', '')]

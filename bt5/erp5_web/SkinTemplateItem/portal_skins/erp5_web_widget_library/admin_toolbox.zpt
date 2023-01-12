@@ -135,7 +135,7 @@
 
       </fieldset>
 
-      <script type="text/javascript" tal:content="string:
+      <script tal:content="string:
         // preload action icons
         if (document.images) {
           clone_icon = new Image();

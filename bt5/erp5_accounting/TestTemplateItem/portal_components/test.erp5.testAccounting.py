@@ -694,8 +694,10 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
         accounting_transaction, 'stop_action')
-    # with bank account, it's OK
+    # with validated bank account, it's OK
     bank_account = self.section.newContent(portal_type='Bank Account')
+    bank_account.validate()
+    self.tic()
     accounting_transaction.setSourcePaymentValue(bank_account)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
@@ -704,6 +706,7 @@ class TestTransactionValidation(AccountingTestCase):
     # bank account
     bank_account = self.section.newContent(portal_type='Bank Account',
         price_currency_value=self.currency_module.euro)
+    bank_account.validate()
     accounting_transaction = self._makeOne(
                portal_type='Payment Transaction',
                start_date=DateTime('2007/01/02'),
@@ -724,6 +727,112 @@ class TestTransactionValidation(AccountingTestCase):
     # with same currency in bank account and transaction, it's OK
     accounting_transaction.setResourceValue(self.currency_module.euro)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationCheckBankAccountValidationState(self):
+    for section, mirror_section in (
+      (self.main_section, self.portal.organisation_module.client_1),
+      (self.main_section, self.portal.person_module.newContent()),
+      # with person member of section's group
+      (self.main_section, self.portal.person_module.john_smith),
+      (self.section, self.portal.organisation_module.client_1),
+      (self.main_section, self.portal.person_module.newContent()),
+      (self.main_section, self.section),
+    ):
+      section_bank_account = section.newContent(
+        title='section bank account',
+        portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+      mirror_section_bank_account = mirror_section.newContent(
+        title='mirror section bank account',
+        portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+
+      accounting_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        start_date=DateTime('2007/01/02'),
+        source_section_value=section,
+        source_payment_value=section_bank_account,
+        destination_section_value=mirror_section,
+        destination_payment_value=mirror_section_bank_account,
+        payment_mode='default',
+        resource_value=self.currency_module.euro,
+        lines=(
+          dict(source_value=self.account_module.bank, source_debit=500),
+          dict(source_value=self.account_module.receivable, source_credit=500)))
+
+      self.assertRaisesRegex(
+        ValidationFailed,
+        "Bank Account section bank account is invalid.",
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+      )
+      section_bank_account.validate()
+      self.tic()
+
+      self.assertRaisesRegex(
+        ValidationFailed,
+        "Bank Account mirror section bank account is invalid.",
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+      )
+      mirror_section_bank_account.validate()
+      self.tic()
+
+      self.portal.portal_workflow.doActionFor(
+        accounting_transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationCheckBankAccountOwner(self):
+    main_section_bank_account = self.main_section.newContent(
+      title='main section bank account',
+      portal_type='Bank Account',
+      price_currency_value=self.currency_module.euro)
+    main_section_bank_account.validate()
+    client_1_bank_account = self.portal.organisation_module.client_1.newContent(
+      title='client_1 bank account',
+      portal_type='Bank Account',
+      price_currency_value=self.currency_module.euro)
+    client_1_bank_account.validate()
+
+    # main_section_bank_account can be used by both main_section and section.
+    for section in self.main_section, self.section:
+      accounting_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        start_date=DateTime('2007/01/02'),
+        source_section_value=section,
+        source_payment_value=main_section_bank_account,
+        destination_section_value=self.portal.organisation_module.client_1,
+        destination_payment_value=client_1_bank_account,
+        payment_mode='default',
+        resource_value=self.currency_module.euro,
+        lines=(
+          dict(source_value=self.account_module.bank, source_debit=500),
+          dict(source_value=self.account_module.receivable,
+               source_credit=500)))
+      self.portal.portal_workflow.doActionFor(
+        accounting_transaction, 'stop_action')
+
+    # client_1's bank account can only be used with client 1, not with client 2
+    accounting_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      start_date=DateTime('2007/01/02'),
+      source_section_value=self.main_section,
+      source_payment_value=main_section_bank_account,
+      destination_section_value=self.portal.organisation_module.client_2,
+      destination_payment_value=client_1_bank_account,
+      payment_mode='default',
+      resource_value=self.currency_module.euro,
+      lines=(
+        dict(source_value=self.account_module.bank, source_debit=500),
+        dict(source_value=self.account_module.receivable, source_credit=500)))
+    self.assertRaisesRegex(
+      ValidationFailed,
+      "Bank Account client_1 bank account is invalid.",
+      self.portal.portal_workflow.doActionFor,
+      accounting_transaction,
+      'stop_action',
+    )
 
   def test_NonBalancedAccountingTransaction(self):
     # Accounting Transactions have to be balanced to be validated
@@ -3490,6 +3599,8 @@ class TestTransactions(AccountingTestCase):
   def test_Invoice_createRelatedPaymentTransactionSimple(self):
     # Simple case of creating a related payment transaction.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3507,6 +3618,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when grouping reference of
     # some lines is already set.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3528,6 +3641,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have two line for
     # 2 different destination sections.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3549,6 +3664,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have related
     # transactions.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3580,6 +3697,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have related
     # transactions with different side
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3610,6 +3729,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have related
     # transactions in draft/cancelled state (they are ignored)
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3644,6 +3765,8 @@ class TestTransactions(AccountingTestCase):
 
   def test_Invoice_createRelatedPaymentTransactionDifferentCurrency(self):
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                resource_value=self.portal.currency_module.usd,
@@ -3678,6 +3801,8 @@ class TestTransactions(AccountingTestCase):
     """Checks in case of deleted Payments related to invoice"""
     # Simple case of creating a related payment transaction.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -4644,6 +4769,58 @@ class TestTransactions(AccountingTestCase):
       ('BA-1', bank_account.getRelativeUrl()),
       at.AccountingTransaction_getDestinationPaymentItemList())
 
+  def test_AccountingTransaction_getSourcePaymentItemList_no_section(self):
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='BA-1'
+    )
+    bank_account.validate()
+    self.tic()
+
+    at = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    at.setSourceSectionValue(None)
+    at.setDestinationSectionValue(None)
+    self.assertEqual(
+      at.AccountingTransaction_getSourcePaymentItemList(), [('', '')])
+    self.assertEqual(
+      at.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
+
+  def test_AccountingTransaction_getSourcePaymentItemList_person_member_of_group(self):
+    bank_account = self.main_section.newContent(
+      portal_type='Bank Account',
+      reference='should not be displayed'
+    )
+    bank_account.validate()
+    self.tic()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.person_module.john_smith,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertEqual(
+      source_transaction.AccountingTransaction_getSourcePaymentItemList(), [('', '')])
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.person_module.john_smith,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  destination_credit=500)))
+    self.assertEqual(
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
+
   def test_AccountingTransaction_getSourcePaymentItemList_parent_section(self):
     # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList
     # allows to select bank accounts from parent groups of source section
@@ -4782,6 +4959,63 @@ class TestTransactions(AccountingTestCase):
     self.assertIn(
       ('from section', bank_account.getRelativeUrl()),
       destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
+
+  def test_AccountingTransaction_getSourcePaymentItemList_bank_accounts_from_other_entities(self):
+    client_1_bank_account = self.portal.organisation_module.client_1.newContent(
+      portal_type='Bank Account',
+      title='client_1 bank account'
+    )
+    client_1_bank_account.validate()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      # section is client 2 but account is for client 1
+      source_section_value=self.organisation_module.client_2,
+      source_payment_value=client_1_bank_account,
+      lines=(
+        dict(
+          destination_value=self.account_module.goods_purchase,
+          destination_debit=500),
+        dict(
+          destination_value=self.account_module.receivable,
+          destination_credit=500)))
+    self.assertEqual(
+      [
+        (str(label), value) for (label, value) in
+        source_transaction.AccountingTransaction_getSourcePaymentItemList()
+      ],
+      [
+        ('', ''),
+        ('Invalid bank account from Client 1', None),
+        ('client_1 bank account', client_1_bank_account.getRelativeUrl()),
+      ],
+    )
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      # section is client 2 but account is for client 1
+      destination_section_value=self.organisation_module.client_2,
+      destination_payment_value=client_1_bank_account,
+      lines=(
+        dict(
+          destination_value=self.account_module.goods_purchase,
+          destination_debit=500),
+        dict(
+          destination_value=self.account_module.receivable,
+          destination_credit=500)))
+    self.assertEqual(
+      [
+        (str(label), value) for (label, value) in destination_transaction.
+        AccountingTransaction_getDestinationPaymentItemList()
+      ],
+      [
+        ('', ''),
+        ('Invalid bank account from Client 1', None),
+        ('client_1 bank account', client_1_bank_account.getRelativeUrl()),
+      ],
+    )
 
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
@@ -5667,68 +5901,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     except ValidationFailed as err:
       raise AssertionError("Validation failed : %s" % err.msg)
 
-  def stepValidateNoPayment(self, sequence, sequence_list=None, **kw) :
-    """Check validation behaviour related to payment & mirror_payment.
-    If we use an account of type asset/cash/bank, we must use set a Bank
-    Account as source_payment or destination_payment.
-    This this source/destination payment must be a portal type from the
-    `payment node` portal type group. It can be defined on transaction
-    or line.
-    """
-    def useBankAccount(accounting_transaction):
-      """Modify the transaction, so that a line will use an account member of
-      account_type/cash/bank , which requires to use a payment category.
-      """
-      # get the default and replace income account by bank
-      income_account_found = 0
-      for line in accounting_transaction.getMovementList() :
-        source_account = line.getSourceValue()
-        if source_account.isMemberOf('account_type/income') :
-          income_account_found = 1
-          line.edit( source_value = sequence.get('bank_account'),
-                     destination_value = sequence.get('bank_account') )
-      self.assertTrue(income_account_found)
-    # XXX
-    accounting_transaction = sequence.get('transaction')
-    useBankAccount(accounting_transaction)
-    self.assertRaises(ValidationFailed,
-        self.getWorkflowTool().doActionFor,
-        accounting_transaction,
-        'stop_action')
-
-    source_section_value = accounting_transaction.getSourceSectionValue()
-    destination_section_value = accounting_transaction.getDestinationSectionValue()
-    for ptype in self.getPortal().getPortalPaymentNodeTypeList() :
-      source_payment_value = source_section_value.newContent(
-                                  portal_type = ptype, )
-      destination_payment_value = destination_section_value.newContent(
-                                  portal_type = ptype, )
-      accounting_transaction = self.createAccountingTransaction(
-                      destination_section_value=self.other_vendor)
-      useBankAccount(accounting_transaction)
-
-      # payment node have to be set on both sides if both sides have accounting
-      # lines
-      accounting_transaction.setSourcePaymentValue(source_payment_value)
-      accounting_transaction.setDestinationPaymentValue(None)
-      self.assertRaises(ValidationFailed,
-          self.getWorkflowTool().doActionFor,
-          accounting_transaction,
-          'stop_action')
-      accounting_transaction.setSourcePaymentValue(None)
-      accounting_transaction.setDestinationPaymentValue(destination_payment_value)
-      self.assertRaises(ValidationFailed,
-          self.getWorkflowTool().doActionFor,
-          accounting_transaction,
-          'stop_action')
-      accounting_transaction.setSourcePaymentValue(source_payment_value)
-      accounting_transaction.setDestinationPaymentValue(destination_payment_value)
-      try:
-        self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
-        self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-      except ValidationFailed as err:
-        self.fail("Validation failed : %s" % err.msg)
-
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
     """Check validating a transaction remove empty lines. """
     accounting_transaction = sequence.get('transaction')
@@ -5904,18 +6076,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       stepCreateAccounts
       stepCreateValidAccountingTransaction
       stepValidateNotBalanced""", quiet=quiet)
-
-  def test_AccountingTransactionValidationPayment(self, quiet=QUIET,
-                                             run=RUN_ALL_TESTS):
-    """Transaction validation and payment"""
-    if not run : return
-    self.playSequence("""
-      stepCreateEntities
-      stepCreateCurrencies
-      stepCreateAccounts
-      stepCreateValidAccountingTransaction
-      stepValidateNoPayment
-    """, quiet=quiet)
 
   def test_AccountingTransactionValidationRemoveEmptyLines(self, quiet=QUIET,
                                              run=RUN_ALL_TESTS):

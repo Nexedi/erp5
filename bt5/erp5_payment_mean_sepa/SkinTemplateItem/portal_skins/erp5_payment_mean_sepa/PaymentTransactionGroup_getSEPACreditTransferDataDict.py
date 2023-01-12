@@ -78,7 +78,7 @@ for brain in context.PaymentTransactionGroup_getAccountingTransactionLineList():
         'Ustrd': transaction_line.AccountingTransactionLine_getSEPACreditTransferRemittanceInformation(),
       },
       'Cdtr': {
-        'Nm': creditor_entity.getCorporateName() or creditor_entity.getTitle(),
+        'Nm': creditor_entity.getProperty('corporate_name') or creditor_entity.getTitle(),
         'PstlAdr': (creditor_entity.getDefaultAddressText() or '').splitlines(),
         'Ctry': creditor_entity.getDefaultAddressRegion() and creditor_entity.getDefaultAddressValue().getRegionReference(),
       },

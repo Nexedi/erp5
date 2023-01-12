@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.AccountModule_getBankAccountItemList(organisation=context.getSourceSection(), skip_invalidated_bank_accounts=(context.getValidationState() != \'validated\'))</string> </value>
+            <value> <string>python: context.AccountModule_getBankAccountItemList(organisation=context.getSourceSection(), base_category=\'source_payment\')</string> </value>
         </item>
       </dictionary>
     </pickle>

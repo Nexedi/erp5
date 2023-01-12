@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>organisation=None, skip_invalidated_bank_accounts=0, section_category=None, section_category_strict_membership=False</string> </value>
+            <value> <string>organisation=None, section_category=None, section_category_strict_membership=False, base_category=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
