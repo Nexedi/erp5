@@ -169,6 +169,7 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
     preference.setPreferredProductOptionalVariationBaseCategory(value)
     preference.setPreferredServiceOptionalVariationBaseCategory(value)
     preference.setPreferredComponentOptionalVariationBaseCategory(value)
+    self.preference = preference
 
     # all this available to catalog
 
@@ -701,6 +702,26 @@ class TestResourceVariation(ResourceVariationTestCase):
               optional_variation_base_category='option_colour',
               individual_variation_base_category='individual_aspect')
     self._testResourceVariation(component)
+
+  def testResourceGetVariationBaseCategoryValueAfterChangePreference(self):
+    # Resource Variation test.
+    self.logMessage('testResourceGetVariationBaseCategoryValueAfterChangePreference')
+    product = self._makeOneResource(
+              id='6',
+              portal_type='Product',
+              title='Product Six',
+              validation_state='validated')
+    self.tic()
+    self.assertEqual([('Individual Aspect', 'individual_aspect')], product.Resource_getIndividualVariationBaseCategoryItemList())
+    self.assertEqual([('Optional Colour', 'option_colour')], product.Resource_getOptionalVariationBaseCategoryItemList())
+    self.assertEqual([('Required Size', 'required_size')], product.Resource_getVariationBaseCategoryItemList())
+    self.preference.setPreferredProductIndividualVariationBaseCategoryList([])
+    self.preference.setPreferredProductVariationBaseCategoryList([])
+    self.preference.setPreferredProductOptionalVariationBaseCategoryList([])
+    self.tic()
+    self.assertEqual([], product.Resource_getIndividualVariationBaseCategoryItemList())
+    self.assertEqual([], product.Resource_getOptionalVariationBaseCategoryItemList())
+    self.assertEqual([], product.Resource_getVariationBaseCategoryItemList())
 
 def test_suite():
   suite = unittest.TestSuite()
