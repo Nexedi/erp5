@@ -1612,6 +1612,33 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertNotIn(b'<h1>Hello !</h1>', resp.getBody())
 
 
+  def test_web_section_get_resource_item(self):
+    portal = self.getPortalObject()
+    preference = getattr(portal.portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = portal.portal_preferences.newContent(portal_type='System Preference',
+                                title='Default Site Preference',
+                                id='test_site_preference')
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
+    for category_id in ['test_use_category', 'test_use_category_2']:
+      if not getattr(portal.portal_categories.use, category_id, None):
+        portal.portal_categories.use.newContent(portal_type='Category', title=category_id, id=category_id)
+
+    test_product = getattr(portal.product_module, 'test_product', None)
+    if not test_product:
+      test_product = portal.newContent(portal_type='Product', id='test_product', title='Test Product', use='test_use_category')
+    if test_product.getValidationState() == "draft":
+      test_product.validate()
+
+    preference.setPreferredEventUseList(['test_use_category'])
+    web_site = self.web_site_module.newContent(portal_type='Web Site')
+    self.tic()
+    self.assertEqual(web_site.WebSection_getEventResourceItemList(), [('', ''),('Test Product','test_product')])
+    preference.setPreferredEventUseList(['test_use_category_2'])
+    self.tic()
+    self.assertEqual(web_site.WebSection_getEventResourceItemList(), [('', '')])
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
