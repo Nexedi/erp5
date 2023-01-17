@@ -164,6 +164,26 @@ class TestApparelModel(ERP5TypeTestCase):
     self.assertIn('composition/elasthane', index)
     self.assertIn('composition/acrylique', index)
 
+  def test_apparel_model_content_init(self):
+    portal = self.getPortalObject()
+    preference = getattr(portal.portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = portal.portal_preferences.newContent(portal_type='System Preference',
+                                title='Default Site Preference',
+                                id='test_site_preference')
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(['size'])
+    self.tic()
+    apparel_model_module = portal.getDefaultModule('Apparel Model')
+    apparel_model = apparel_model_module.newContent(portal_type='Apparel Model')
+    colour_variation = apparel_model.newContent(portal_type='Apparel Model Colour Variation')
+    self.assertEqual(colour_variation.getVariationBaseCategoryList(), [])
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(['colour'])
+    self.tic()
+    colour_variation = apparel_model.newContent(portal_type='Apparel Model Colour Variation')
+    self.assertEqual(colour_variation.getVariationBaseCategoryList(), ['colour'])
+
   def test_checkCopyColourRangeVariation(self):
     '''
     Check that it's possible to copy colour range variation from a model, and
