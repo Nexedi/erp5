@@ -228,7 +228,6 @@ class PeriodicityMixin:
           next_start_date = next_start_date.toZone(timezone)
         return next_start_date
 
-  # XXX May be we should create a Date class for following methods ???
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')
   def getWeekDayList(self):
     """

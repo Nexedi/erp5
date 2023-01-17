@@ -594,3 +594,40 @@ class TestPeriodicity(AlarmTestCase):
     self.tic()
     alarm.setNextAlarmDate(current_date=date)
     self.assertEqual(alarm.getAlarmDate(),date)
+
+  def test_week_day_list(self):
+    alarm = self.newAlarm()
+    self.assertEqual(
+      alarm.getWeekDayList(),
+      ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    )
+    self.assertEqual(
+      [(label.message, label.domain, value)
+       for (label, value) in alarm.getWeekDayItemList()],
+      [
+        ('Monday', 'erp5_ui', 'Monday'),
+        ('Tuesday', 'erp5_ui', 'Tuesday'),
+        ('Wednesday', 'erp5_ui', 'Wednesday'),
+        ('Thursday', 'erp5_ui', 'Thursday'),
+        ('Friday', 'erp5_ui', 'Friday'),
+        ('Saturday', 'erp5_ui', 'Saturday'),
+        ('Sunday', 'erp5_ui','Sunday'), ])
+
+  def test_month_list(self):
+    alarm = self.newAlarm()
+    self.assertEqual(
+      [(label.message, label.domain, value)
+      for (label, value) in alarm.getMonthItemList()],
+      [
+        ('January', 'erp5_ui', 1),
+        ('February', 'erp5_ui', 2),
+        ('March', 'erp5_ui', 3),
+        ('April', 'erp5_ui', 4),
+        ('May', 'erp5_ui', 5),
+        ('June', 'erp5_ui', 6),
+        ('July', 'erp5_ui', 7),
+        ('August', 'erp5_ui', 8),
+        ('September', 'erp5_ui', 9),
+        ('October', 'erp5_ui', 10),
+        ('November', 'erp5_ui', 11),
+        ('December', 'erp5_ui', 12),])
