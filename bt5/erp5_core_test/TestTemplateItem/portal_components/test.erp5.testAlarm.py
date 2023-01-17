@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from AccessControl.SecurityManagement import newSecurityManager, \
         getSecurityManager, setSecurityManager
@@ -36,26 +35,13 @@ from AccessControl import Unauthorized
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate
 
-class TestAlarm(ERP5TypeTestCase):
+
+class AlarmTestCase(ERP5TypeTestCase):
   # year/month/day hour:minute:second
   date_format = '%i/%i/%i %i:%i:%d GMT+0100'
 
-  def getTitle(self):
-    return "Alarm"
-
   def getBusinessTemplateList(self):
     return ('erp5_base',)
-
-  def afterSetUp(self):
-    # add a dummy mailhost to capture alarm notifications
-    if 'MailHost' in self.portal.objectIds():
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
-
-    self.login()
-
-  def beforeTearDown(self):
-    del self.portal.MailHost._message_list[:]
 
   def newAlarm(self, **kw):
     """
@@ -70,6 +56,8 @@ class TestAlarm(ERP5TypeTestCase):
     finally:
       setSecurityManager(sm)
 
+
+class TestAlarm(AlarmTestCase):
 
   def test_01_HasEverything(self):
     # Test if portal_alarms was created
@@ -91,223 +79,6 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setEnabled(True)
     self.assertEqual(alarm.getAlarmDate(), date)
     alarm.setNextAlarmDate(current_date=now) # This should not do change the alarm date
-    self.assertEqual(alarm.getAlarmDate(),date)
-
-  def test_03_EveryHour(self):
-    alarm = self.newAlarm(enabled=True)
-    now = DateTime()
-    date = addToDate(now, day=2)
-    alarm.setPeriodicityStartDate(date)
-    alarm.setPeriodicityHourFrequency(1)
-    self.tic()
-    alarm.setNextAlarmDate(current_date=now)
-    self.assertEqual(alarm.getAlarmDate(), date)
-    now = addToDate(now,day=2)
-    alarm.setNextAlarmDate(current_date=now)
-    next_date = addToDate(date,hour=1)
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-    now = addToDate(now,hour=1,minute=5)
-    alarm.setNextAlarmDate(current_date=now)
-    next_date = addToDate(next_date,hour=1)
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-    # check if manual invoking does not break getAlarmDate() result.
-    alarm.activeSense()
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-
-  def test_04_Every3Hours(self):
-    alarm = self.newAlarm(enabled=True)
-    now = DateTime().toZone('UTC')
-    hour_to_remove = now.hour() % 3
-    now = addToDate(now,hour=-hour_to_remove)
-    date = addToDate(now,day=2)
-    alarm.setPeriodicityStartDate(date)
-    alarm.setPeriodicityHourFrequency(3)
-    self.tic()
-    alarm.setNextAlarmDate(current_date=now)
-    self.assertEqual(alarm.getAlarmDate(),date)
-    now = addToDate(now,day=2)
-    alarm.setNextAlarmDate(current_date=now)
-    next_date = addToDate(date,hour=3)
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-    now = addToDate(now,hour=3,minute=7,second=4)
-    alarm.setNextAlarmDate(current_date=now)
-    next_date = addToDate(next_date,hour=3)
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-
-  def test_05_SomeHours(self):
-    right_first_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
-    now = DateTime(self.date_format               % (2006,10,6,15,00,00))
-    right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,7,6,00,00))
-    right_fourth_date = DateTime(self.date_format % (2006,10,7,10,00,00))
-    alarm = self.newAlarm(enabled=True)
-    hour_list = (6,10,15,21)
-    alarm.setPeriodicityStartDate(now)
-    alarm.setPeriodicityHourList(hour_list)
-    self.tic()
-    self.assertEqual(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEqual(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEqual(alarm.getAlarmDate(),right_third_date)
-    alarm.setNextAlarmDate(current_date=right_third_date)
-    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
-
-  def test_06_EveryDayOnce(self):
-    now = DateTime(self.date_format               % (2006,10,6,10,00,00))
-    right_first_date = DateTime(self.date_format  % (2006,10,6,10,00,00))
-    right_second_date = DateTime(self.date_format % (2006,10,7,10,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,8,10,00,00))
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(now)
-    alarm.setPeriodicityDayFrequency(1)
-    alarm.setPeriodicityHourList((10,))
-    self.tic()
-    self.assertEqual(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEqual(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEqual(alarm.getAlarmDate(),right_third_date)
-
-  def test_07_Every3DaysSomeHours(self):
-    """- every 3 days at 14 and 15 and 17"""
-    right_first_date = DateTime(self.date_format % (2006,10,6,14,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,6,17,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,9,14,00,00))
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(right_first_date)
-    alarm.setPeriodicityDayFrequency(3)
-    alarm.setPeriodicityHourList((14,15,17))
-    self.tic()
-    self.assertEqual(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEqual(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEqual(alarm.getAlarmDate(),right_third_date)
-    alarm.setNextAlarmDate(current_date=right_third_date)
-    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
-
-  def test_07a_Every4DaysSomeHours(self):
-    """- every 4 days at 14 and 15 and 17"""
-    right_first_date = DateTime(self.date_format % (2006,10,7,13,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,8,14,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,8,15,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,8,17,00,00))
-    right_fifth_date = DateTime(self.date_format  % (2006,10,12,14,00,00))
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(right_first_date)
-    alarm.setPeriodicityDayFrequency(4)
-    alarm.setPeriodicityHourList((14,15,17))
-    self.tic()
-    self.assertEqual(alarm.getAlarmDate(),right_first_date)
-    alarm.setNextAlarmDate(current_date=right_first_date)
-    self.assertEqual(alarm.getAlarmDate(),right_second_date)
-    alarm.setNextAlarmDate(current_date=right_second_date)
-    self.assertEqual(alarm.getAlarmDate(),right_third_date)
-    alarm.setNextAlarmDate(current_date=right_third_date)
-    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
-    alarm.setNextAlarmDate(current_date=right_fourth_date)
-    self.assertEqual(alarm.getAlarmDate(),right_fifth_date)
-
-  def test_08_SomeWeekDaysSomeHours(self):
-    """- every monday and friday, at 6 and 15"""
-    right_first_date = DateTime(self.date_format  % (2006,9,27,6,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,9,29,6,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
-    alarm = self.newAlarm(enabled=True)
-    self.tic()
-    alarm.setPeriodicityStartDate(right_first_date)
-    alarm.setPeriodicityWeekDayList(('Monday','Friday'))
-    alarm.setPeriodicityHourList((6,15))
-    self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
-
-  def checkDate(self,alarm,*args):
-    """
-    the basic test
-    """
-    for date in args[:-1]:
-      self.assertEqual(alarm.getAlarmDate(),date)
-      alarm.setNextAlarmDate(current_date=date)
-    self.assertEqual(alarm.getAlarmDate(),args[-1])
-
-  def test_09_SomeMonthDaysSomeHours(self):
-    """- every 1st and 15th every month, at 12 and 14"""
-    right_first_date = DateTime(self.date_format  % (2006,10,1,12,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,1,14,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,15,14,00,00))
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(right_first_date)
-    alarm.setPeriodicityMonthDayList((1,15))
-    alarm.setPeriodicityHourList((12,14))
-    self.tic()
-    self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
-
-  def test_10_OnceEvery2Month(self):
-    """- every 1st day of every 2 month, at 6"""
-    right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,12,1,6,00,00))
-    right_third_date = DateTime(self.date_format  % (2007,2,1,6,00,00))
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(right_first_date)
-    alarm.setPeriodicityMonthDayList((1,))
-    alarm.setPeriodicityMonthFrequency(2)
-    alarm.setPeriodicityHourList((6,))
-    self.tic()
-    self.checkDate(alarm, right_first_date, right_second_date, right_third_date)
-
-  def test_11_EveryDayOnceWeek41And42(self):
-    right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,9,6,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,10,6,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,11,6,00,00))
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(right_first_date)
-    alarm.setPeriodicityHourList((6,))
-    alarm.setPeriodicityWeekList((41,43))
-    self.tic()
-    self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
-
-  def test_week_and_month_impossible_combination(self):
-    alarm = self.newAlarm(enabled=True)
-    alarm.setPeriodicityStartDate(DateTime(2000, 1, 1))
-    # week 41 can not be in January
-    alarm.setPeriodicityWeekList((41, ))
-    alarm.setPeriodicityMonthList((1, ))
-    self.tic()
-    # next alarm date never advance
-    self.checkDate(alarm, DateTime(2000, 1, 1), DateTime(2000, 1, 1), DateTime(2000, 1, 1),)
-
-  def test_12_Every5Minutes(self):
-    alarm = self.newAlarm(enabled=True)
-    now = DateTime()
-    minute_to_remove = now.minute() % 5
-    now = addToDate(now,minute=-minute_to_remove)
-    date = addToDate(now,day=2)
-    alarm.setPeriodicityStartDate(date)
-    alarm.setPeriodicityMinuteFrequency(5)
-    self.tic()
-    alarm.setNextAlarmDate(current_date=now)
-    self.assertEqual(alarm.getAlarmDate(),date)
-    now = addToDate(now,day=2)
-    alarm.setNextAlarmDate(current_date=now)
-    next_date = addToDate(date,minute=5)
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-    now = addToDate(now,minute=5,second=14)
-    alarm.setNextAlarmDate(current_date=now)
-    next_date = addToDate(next_date,minute=5)
-    self.assertEqual(alarm.getAlarmDate(),next_date)
-
-  def test_13_EveryMinute(self):
-    alarm = self.newAlarm(enabled=True)
-    now = DateTime()
-    date = addToDate(now,hour=2)
-    alarm.setPeriodicityStartDate(now)
-    alarm.setPeriodicityMinuteFrequency(1)
-    self.tic()
-    alarm.setNextAlarmDate(current_date=date)
     self.assertEqual(alarm.getAlarmDate(),date)
 
   def test_14_NewActiveProcess(self):
@@ -602,3 +373,223 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
     self.assertEqual(date.toZone('UTC'), alarm_list[0].alarm_date)
+
+
+class TestPeriodicity(AlarmTestCase):
+
+  def checkDate(self,alarm,*args):
+    """
+    the basic test
+    """
+    for date in args[:-1]:
+      self.assertEqual(alarm.getAlarmDate(),date)
+      alarm.setNextAlarmDate(current_date=date)
+    self.assertEqual(alarm.getAlarmDate(),args[-1])
+
+  def test_03_EveryHour(self):
+    alarm = self.newAlarm(enabled=True)
+    now = DateTime()
+    date = addToDate(now, day=2)
+    alarm.setPeriodicityStartDate(date)
+    alarm.setPeriodicityHourFrequency(1)
+    self.tic()
+    alarm.setNextAlarmDate(current_date=now)
+    self.assertEqual(alarm.getAlarmDate(), date)
+    now = addToDate(now,day=2)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(date,hour=1)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+    now = addToDate(now,hour=1,minute=5)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(next_date,hour=1)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+    # check if manual invoking does not break getAlarmDate() result.
+    alarm.activeSense()
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+
+  def test_04_Every3Hours(self):
+    alarm = self.newAlarm(enabled=True)
+    now = DateTime().toZone('UTC')
+    hour_to_remove = now.hour() % 3
+    now = addToDate(now,hour=-hour_to_remove)
+    date = addToDate(now,day=2)
+    alarm.setPeriodicityStartDate(date)
+    alarm.setPeriodicityHourFrequency(3)
+    self.tic()
+    alarm.setNextAlarmDate(current_date=now)
+    self.assertEqual(alarm.getAlarmDate(),date)
+    now = addToDate(now,day=2)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(date,hour=3)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+    now = addToDate(now,hour=3,minute=7,second=4)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(next_date,hour=3)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+
+  def test_05_SomeHours(self):
+    right_first_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
+    now = DateTime(self.date_format               % (2006,10,6,15,00,00))
+    right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,7,6,00,00))
+    right_fourth_date = DateTime(self.date_format % (2006,10,7,10,00,00))
+    alarm = self.newAlarm(enabled=True)
+    hour_list = (6,10,15,21)
+    alarm.setPeriodicityStartDate(now)
+    alarm.setPeriodicityHourList(hour_list)
+    self.tic()
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
+    alarm.setNextAlarmDate(current_date=right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
+    alarm.setNextAlarmDate(current_date=right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
+    alarm.setNextAlarmDate(current_date=right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
+
+  def test_06_EveryDayOnce(self):
+    now = DateTime(self.date_format               % (2006,10,6,10,00,00))
+    right_first_date = DateTime(self.date_format  % (2006,10,6,10,00,00))
+    right_second_date = DateTime(self.date_format % (2006,10,7,10,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,8,10,00,00))
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(now)
+    alarm.setPeriodicityDayFrequency(1)
+    alarm.setPeriodicityHourList((10,))
+    self.tic()
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
+    alarm.setNextAlarmDate(current_date=right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
+    alarm.setNextAlarmDate(current_date=right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
+
+  def test_07_Every3DaysSomeHours(self):
+    """- every 3 days at 14 and 15 and 17"""
+    right_first_date = DateTime(self.date_format % (2006,10,6,14,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,6,17,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,9,14,00,00))
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityDayFrequency(3)
+    alarm.setPeriodicityHourList((14,15,17))
+    self.tic()
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
+    alarm.setNextAlarmDate(current_date=right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
+    alarm.setNextAlarmDate(current_date=right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
+    alarm.setNextAlarmDate(current_date=right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
+
+  def test_07a_Every4DaysSomeHours(self):
+    """- every 4 days at 14 and 15 and 17"""
+    right_first_date = DateTime(self.date_format % (2006,10,7,13,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,8,14,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,8,15,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,8,17,00,00))
+    right_fifth_date = DateTime(self.date_format  % (2006,10,12,14,00,00))
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityDayFrequency(4)
+    alarm.setPeriodicityHourList((14,15,17))
+    self.tic()
+    self.assertEqual(alarm.getAlarmDate(),right_first_date)
+    alarm.setNextAlarmDate(current_date=right_first_date)
+    self.assertEqual(alarm.getAlarmDate(),right_second_date)
+    alarm.setNextAlarmDate(current_date=right_second_date)
+    self.assertEqual(alarm.getAlarmDate(),right_third_date)
+    alarm.setNextAlarmDate(current_date=right_third_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fourth_date)
+    alarm.setNextAlarmDate(current_date=right_fourth_date)
+    self.assertEqual(alarm.getAlarmDate(),right_fifth_date)
+
+  def test_08_SomeWeekDaysSomeHours(self):
+    """- every monday and friday, at 6 and 15"""
+    right_first_date = DateTime(self.date_format  % (2006,9,27,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,9,29,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
+    alarm = self.newAlarm(enabled=True)
+    self.tic()
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityWeekDayList(('Monday','Friday'))
+    alarm.setPeriodicityHourList((6,15))
+    self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
+
+  def test_09_SomeMonthDaysSomeHours(self):
+    """- every 1st and 15th every month, at 12 and 14"""
+    right_first_date = DateTime(self.date_format  % (2006,10,1,12,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,1,14,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,15,14,00,00))
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityMonthDayList((1,15))
+    alarm.setPeriodicityHourList((12,14))
+    self.tic()
+    self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
+
+  def test_10_OnceEvery2Month(self):
+    """- every 1st day of every 2 month, at 6"""
+    right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,12,1,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2007,2,1,6,00,00))
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityMonthDayList((1,))
+    alarm.setPeriodicityMonthFrequency(2)
+    alarm.setPeriodicityHourList((6,))
+    self.tic()
+    self.checkDate(alarm, right_first_date, right_second_date, right_third_date)
+
+  def test_11_EveryDayOnceWeek41And42(self):
+    right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,9,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,10,6,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,11,6,00,00))
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(right_first_date)
+    alarm.setPeriodicityHourList((6,))
+    alarm.setPeriodicityWeekList((41,43))
+    self.tic()
+    self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
+
+  def test_week_and_month_impossible_combination(self):
+    alarm = self.newAlarm(enabled=True)
+    alarm.setPeriodicityStartDate(DateTime(2000, 1, 1))
+    # week 41 can not be in January
+    alarm.setPeriodicityWeekList((41, ))
+    alarm.setPeriodicityMonthList((1, ))
+    self.tic()
+    # next alarm date never advance
+    self.checkDate(alarm, DateTime(2000, 1, 1), DateTime(2000, 1, 1), DateTime(2000, 1, 1),)
+
+  def test_12_Every5Minutes(self):
+    alarm = self.newAlarm(enabled=True)
+    now = DateTime()
+    minute_to_remove = now.minute() % 5
+    now = addToDate(now,minute=-minute_to_remove)
+    date = addToDate(now,day=2)
+    alarm.setPeriodicityStartDate(date)
+    alarm.setPeriodicityMinuteFrequency(5)
+    self.tic()
+    alarm.setNextAlarmDate(current_date=now)
+    self.assertEqual(alarm.getAlarmDate(),date)
+    now = addToDate(now,day=2)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(date,minute=5)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+    now = addToDate(now,minute=5,second=14)
+    alarm.setNextAlarmDate(current_date=now)
+    next_date = addToDate(next_date,minute=5)
+    self.assertEqual(alarm.getAlarmDate(),next_date)
+
+  def test_13_EveryMinute(self):
+    alarm = self.newAlarm(enabled=True)
+    now = DateTime()
+    date = addToDate(now,hour=2)
+    alarm.setPeriodicityStartDate(now)
+    alarm.setPeriodicityMinuteFrequency(1)
+    self.tic()
+    alarm.setNextAlarmDate(current_date=date)
+    self.assertEqual(alarm.getAlarmDate(),date)
