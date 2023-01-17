@@ -27,18 +27,11 @@
 #
 ##############################################################################
 
-import contextlib
-import os
-from datetime import datetime
-from string import zfill
-import sys
-import time
 import warnings
 
-import mock
-import pytz
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
+from datetime import datetime
 import six
 
 security = ModuleSecurityInfo(__name__)
@@ -530,35 +523,3 @@ def copyDate(date, year=None, month=None, day=None,
   return DateTime('%i/%i/%i %i:%i:%d %s' % (year, month, day,
                                             hour, minute, second,
                                             timezone))
-
-
-@contextlib.contextmanager
-def timeZoneContext(timezone):
-  """Context manager to change timezone in tests.
-  """
-  saved_TZ = os.environ.get('TZ')
-  os.environ['TZ'] = timezone
-  time.tzset()
-  if timezone in pytz.all_timezones:
-    _multipleZones = time.daylight
-    _localzone0 = time.tzname[0]
-    _localzone1 = time.tzname[1] if time.daylight else time.tzname[0]
-  else:
-    _multipleZones = False
-    _localzone0 = _localzone1 = timezone
-  if hasattr(sys.modules['DateTime.DateTime'].DateTime, '_localzone0'):
-    patch_target = sys.modules['DateTime.DateTime'].DateTime
-  else:
-    # BBB DateTime 2
-    patch_target = sys.modules['DateTime.DateTime']
-
-  try:
-    with mock.patch.object(patch_target, '_localzone0', new=_localzone0), \
-        mock.patch.object(patch_target, '_localzone1', new=_localzone1), \
-        mock.patch.object(patch_target, '_multipleZones', new=_multipleZones):
-      yield
-  finally:
-    os.environ.pop('TZ')
-    if saved_TZ:
-      os.environ['TZ'] = saved_TZ
-    time.tzset()

@@ -234,11 +234,7 @@ class PeriodicityMixin:
     """
     returns something like ['Sunday','Monday',...]
     """
-    try:
-      from DateTime.DateTime import _DAYS
-      return _DAYS
-    except ImportError: # BBB DateTime 2.12
-      return DateTime._days
+    return DateTime._days
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
   def getWeekDayItemList(self):
