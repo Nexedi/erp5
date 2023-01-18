@@ -259,18 +259,3 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
-if __name__ == '__main__':
-  for i in ('2007/01/02 12:34:56.789',
-            '2007/01/02 12:34:56.789 GMT+0200',
-            '2007/01/02 12:34:56.789 JST',
-            '2007/01/02 12:34:56.789 +0300',
-            '2007/01/02 12:34:56.789 +0430',
-            '2007/01/02 12:34:56.789 +1237',
-            ):
-    a = DateTimeKlass(i)
-    b = DateTimeKlass()
-    b.__setstate__(a.__getstate__())
-    print(a, a.__dict__ == b.__dict__)
-    for i in a.__dict__.keys():
-      if a.__dict__[i] != b.__dict__[i]:
-        print(i, a.__dict__[i], b.__dict__[i])
