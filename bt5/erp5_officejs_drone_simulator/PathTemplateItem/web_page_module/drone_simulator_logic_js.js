@@ -56,6 +56,7 @@ var DroneManager = /** @class */ (function () {
     }
   }
   DroneManager.prototype._swapAxe = function (vector) {
+    // swap y and z axis so z axis represents altitude
     return new BABYLON.Vector3(vector.x, vector.z, vector.y);
   };
   Object.defineProperty(DroneManager.prototype, "leader_id", {
@@ -88,6 +89,7 @@ var DroneManager = /** @class */ (function () {
     enumerable: true,
     configurable: true
   });
+  // swap y and z axis so z axis represents altitude
   Object.defineProperty(DroneManager.prototype, "position", {
     get: function () {
       if (this._controlMesh !== null) {
@@ -103,6 +105,7 @@ var DroneManager = /** @class */ (function () {
     enumerable: true,
     configurable: true
   });
+  // swap y and z axis so z axis represents altitude
   Object.defineProperty(DroneManager.prototype, "direction", {
     get: function () { return this._swapAxe(this._direction); },
     enumerable: true,
@@ -267,6 +270,7 @@ var DroneManager = /** @class */ (function () {
     if (isNaN(x) || isNaN(y) || isNaN(z)) {
       throw new Error('Direction coordinates must be numbers');
     }
+    // swap y and z axis so z axis represents altitude
     this._direction = new BABYLON.Vector3(x, z, y).normalize();
   };
   //TODO rotation
@@ -341,6 +345,7 @@ var DroneManager = /** @class */ (function () {
   };
   DroneManager.prototype.getCurrentPosition = function () {
     if (this._controlMesh) {
+      // swap y and z axis so z axis represents altitude
       return this._API.getCurrentPosition(
         this._controlMesh.position.x,
         this._controlMesh.position.z,
@@ -737,6 +742,7 @@ var GameManager = /** @class */ (function () {
               position_obj = BABYLON.MeshBuilder.CreateBox("obs_" + seconds,
                                                            { size: 1 },
                                                            game_manager._scene);
+              // swap y and z axis so z axis represents altitude
               position_obj.position = new BABYLON.Vector3(drone_position.x,
                                                           drone_position.z,
                                                           drone_position.y);
