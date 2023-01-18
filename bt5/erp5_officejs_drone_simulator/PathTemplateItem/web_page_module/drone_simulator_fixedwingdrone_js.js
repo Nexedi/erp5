@@ -44,7 +44,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     var _this = this, drone_position = drone.getCurrentPosition(), drone_info;
     if (drone_position) {
       drone_info = {
-        'altitudeRel' : drone_position.z,
+        'altitudeRel' : drone_position.z,
         'altitudeAbs' : this._mapManager.getMapInfo().start_AMSL +
         drone_position.z,
         'latitude' : drone_position.x,
@@ -339,9 +339,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
     return Math.PI / 4;
   };
-  FixedWingDroneAPI.prototype.getYaw = function () {
-    //TODO
-    return 0;
+  FixedWingDroneAPI.prototype.getYaw = function (drone) {
+    var direction = drone.worldDirection;
+    return Math.atan2(direction.x, direction.z) * 180 / Math.PI;
   };
   FixedWingDroneAPI.prototype.getSinkRate = function () {
     //TODO
