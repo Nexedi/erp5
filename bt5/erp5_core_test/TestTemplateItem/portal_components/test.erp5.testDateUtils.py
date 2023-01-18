@@ -30,6 +30,7 @@
 import os
 import unittest
 
+import zodbpickle.fastpickle as pickle
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate, getIntervalListBetweenDates, \
     atTheEndOfPeriod, getClosestDate
@@ -244,9 +245,68 @@ class TestTimeZoneContext(ERP5TypeTestCase):
     self.assertEqual(os.environ.get('TZ'), self.actual_environ_tz)
 
 
+class TestDateTimePatch(ERP5TypeTestCase):
+  """Tests for monkey patches in Products.ERP5Type.patches.DateTimePatch
+  """
+  def _test_pickle(self, dt, data):
+    """Assert pickle `data` when loaded is equal to DateTime `dt`
+    """
+    new = pickle.loads(data)
+    if hasattr(DateTime, '__slots__'):
+      for key in DateTime.__slots__:
+        self.assertEqual(getattr(dt, key), getattr(new, key))
+    else:
+      # BBB DateTime 2
+      self.assertEqual(dt.__dict__, new.__dict__)
+
+  # pickles from "current" ERP5
+  # around commit fcaa5dddbd (Zelenium: update html2canvas to version 1.4.1, 2022-04-18)
+  def test_pickle_europe_paris(self):
+    dt = DateTime('2001/02/03 04:05:06 Europe/Paris')
+    data = b'(cDateTime.DateTime\nDateTime\nq\x01Noq\x02(GA\xcd=\xba\xb1\x00\x00\x00U\x0cEurope/Parisq\x03tb.'
+    self._test_pickle(dt, data)
+
+  def test_pickle_UTC(self):
+    dt = DateTime('2001/02/03 04:05:06 UTC')
+    data = b'(cDateTime.DateTime\nDateTime\nq\x01Noq\x02(GA\xcd=\xc1\xb9\x00\x00\x00U\x03UTCq\x03tb.'
+    self._test_pickle(dt, data)
+
+  # "r15569" was an old patch to DateTime.__getstate__ that we keep compatibility with.
+  # It was a svn commit that was convert to git commit 7b89b86838 (Tweak DateTime pickle
+  # representation to avoid using 370 bytes per DateTime, but ~80 bytes instead.
+  # Retain backward compatibility with regular DateTime default serialisation., 2007-08-08)
+  def test_pickle_europe_paris_r15569(self):
+    dt = DateTime('2001/02/03 04:05:06 Europe/Paris')
+    data = b'(cDateTime.DateTime\nDateTime\nq\x01Noq\x02}q\x03U\x03strq\x04U 2001/02/03 04:05:06 Europe/Parissb.'
+    self._test_pickle(dt, data)
+
+  def test_pickle_UTC_r15569(self):
+    dt = DateTime('2001/02/03 04:05:06 UTC')
+    data = b'(cDateTime.DateTime\nDateTime\nq\x01Noq\x02}q\x03U\x03strq\x04U\x172001/02/03 04:05:06 UTCsb.'
+    self._test_pickle(dt, data)
+
+  def test_pickle_protocol_3(self):
+    dt = DateTime()
+    data = pickle.dumps(dt, 3)
+    self._test_pickle(dt, data)
+
+  def test_pickle_dumps_loads(self):
+    for i in (
+      '2007/01/02 12:34:56.789',
+      '2007/01/02 12:34:56.789 GMT+0200',
+      '2007/01/02 12:34:56.789 JST',
+      '2007/01/02 12:34:56.789 +0300',
+      '2007/01/02 12:34:56.789 +0430',
+      '2007/01/02 12:34:56.789 +1237',
+    ):
+      dt = DateTime(i)
+      self._test_pickle(dt, pickle.dumps(dt, 1))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDateUtils))
   suite.addTest(unittest.makeSuite(TestPinDateTime))
   suite.addTest(unittest.makeSuite(TestTimeZoneContext))
+  suite.addTest(unittest.makeSuite(TestDateTimePatch))
   return suite
