@@ -35,6 +35,15 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+# DateTime 3 changed the __eq__ behavior and d1 == d2 only if they have the same same
+# timezone. With DateTime 2 two dates from different timezones representing the same
+# time were equal. This patch keeps the behavior from DateTime 2.
+# See zopefoundation/DateTime commit fff6d04 (Various cleanups, improve unpickling
+# speed and distinguish between equal representations and references to equal points
+# in time., 2011-05-06)
+DateTimeKlass.__eq__ = DateTimeKlass.equalTo
+
+
 # ERP5 Patch for different pickle implementation, to optimize for disk usage.
 # We had different __getstate__ implementations, so we need __setstate__ to support
 # loading these formats that might be present in ZODBs.
