@@ -35,10 +35,20 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+# ERP5 Patch for different pickle implementation, to optimize for disk usage.
+# We had different __getstate__ implementations, so we need __setstate__ to support
+# loading these formats that might be present in ZODBs.
+# This patch does not have support for timezone naive flag, because we don't need it
+# so far and also probably because we did not notice that it was added in original
+# DateTime.
 original_DateTime__setstate__ = DateTimeKlass.__setstate__
 
 def DateTime__setstate__(self, state):
-  self.__dict__.clear()
+  try: # BBB DateTime 2.12.8
+    self.__dict__.clear()
+  except AttributeError:
+    pass
+  self._timezone_naive = False
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
