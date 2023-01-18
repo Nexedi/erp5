@@ -66,6 +66,7 @@ from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import parseListeningAddress
+from Products.ERP5Type.tests.utils import timeZoneContext
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -376,15 +377,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       self.pinDateTime(None)
 
     def setTimeZoneToUTC(self):
-      # Make sure tests runs with UTC timezone. Some tests are checking values
-      # based on now, and this could give unexpected results:
-      # DateTime("2016/10/31") - DateTime("2016/10/30") = 1.0416666666666667 if
-      # you are running on a timezone like Europe/Paris, while it return 1.0 for
-      # UTC
-      os.environ['TZ'] = "UTC"
-      time.tzset()
-      DateTime._isDST = False
-      DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = "UTC"
+      # Deprecated, prefer using `timeZoneContext` context manager instead.
+      timezone = timeZoneContext('UTC')
+      timezone.__enter__()
+      self.addCleanup(timezone.__exit__, None, None, None)
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
