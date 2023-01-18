@@ -371,7 +371,7 @@ var DroneManager = /** @class */ (function () {
     return null;
   };
   DroneManager.prototype.getYaw = function () {
-    return this._API.getYaw();
+    return this._API.getYaw(this);
   };
   DroneManager.prototype.getSpeed = function () {
     return this._speed;
@@ -712,54 +712,54 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._updateTimeAndLog =
     function (delta_time) {
     this._game_duration += delta_time;
-    var seconds = Math.floor(this._game_duration / 1000), drone,
-      drone_position, map_info, geo_coordinates, position_obj, material, color;
+    var seconds = Math.floor(this._game_duration / 1000), drone_position, map_info, geo_coordinates, position_obj, material, color, game_manager = this;
     if (GAMEPARAMETERS.log_drone_flight || GAMEPARAMETERS.draw_flight_path) {
-      for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone+=1) {
-        if (this._droneList[drone].can_play) {
-          drone_position = this._droneList[drone].position;
+      this._droneList.forEach(function (drone, index) {
+        if (drone.can_play) {
+          drone_position = drone.position;
           if (GAMEPARAMETERS.log_drone_flight) {
-            map_info = this._mapManager.getMapInfo();
-            if (this._log_count[drone] === 0 ||
-                this._game_duration / this._log_count[drone] > 1) {
-              this._log_count[drone] += GAMEPARAMETERS.log_interval_time;
-              geo_coordinates = this._mapManager.convertToGeoCoordinates(
+            map_info = game_manager._mapManager.getMapInfo();
+            if (game_manager._log_count[index] === 0 ||
+                game_manager._game_duration / game_manager._log_count[index] > 1) {
+              game_manager._log_count[index] += GAMEPARAMETERS.log_interval_time;
+              geo_coordinates = game_manager._mapManager.convertToGeoCoordinates(
                 drone_position.x, drone_position.y, drone_position.z, map_info);
-              this._flight_log[drone].push(
-                [this._game_duration, geo_coordinates.x, geo_coordinates.y,
-                 map_info.start_AMSL + drone_position.z, drone_position.z]);
+              game_manager._flight_log[index].push(
+                [game_manager._game_duration, geo_coordinates.x, geo_coordinates.y,
+                 map_info.start_AMSL + drone_position.z, drone_position.z,
+                 drone.getYaw()]);
             }
           }
           if (GAMEPARAMETERS.draw_flight_path) {
             //draw drone position every some seconds
-            if (seconds - this._last_position_drawn[drone] > 0.2) {
-              this._last_position_drawn[drone] = seconds;
+            if (seconds - game_manager._last_position_drawn[index] > 0.2) {
+              game_manager._last_position_drawn[index] = seconds;
               position_obj = BABYLON.MeshBuilder.CreateBox("obs_" + seconds,
                                                            { size: 1 },
-                                                           this._scene);
+                                                           game_manager._scene);
               position_obj.position = new BABYLON.Vector3(drone_position.x,
                                                           drone_position.z,
                                                           drone_position.y);
               position_obj.scaling = new BABYLON.Vector3(4, 4, 4);
-              material = new BABYLON.StandardMaterial(this._scene);
+              material = new BABYLON.StandardMaterial(game_manager._scene);
               material.alpha = 1;
               color = new BABYLON.Color3(255, 0, 0);
-              if (this._colors[drone]) {
-                color = this._colors[drone];
+              if (game_manager._colors[index]) {
+                color = game_manager._colors[index];
               }
               material.diffuseColor = color;
               position_obj.material = material;
               if (GAMEPARAMETERS.temp_flight_path) {
-                if (this._trace_objects_per_drone[drone].length === 10) {
-                  this._trace_objects_per_drone[drone][0].dispose();
-                  this._trace_objects_per_drone[drone].splice(0, 1);
+                if (game_manager._trace_objects_per_drone[index].length === 10) {
+                  game_manager._trace_objects_per_drone[index][0].dispose();
+                  game_manager._trace_objects_per_drone[index].splice(0, 1);
                 }
-                this._trace_objects_per_drone[drone].push(position_obj);
+                game_manager._trace_objects_per_drone[index].push(position_obj);
               }
             }
           }
         }
-      }
+      });
     }
   };
 
