@@ -278,3 +278,11 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
+
+# DateTime 3 removed exceptions as class attributes (since
+# zopefoundation/DateTime commit 8114618 ), but we have some code expecting
+# these attributes, so undo this patch for convenience.
+DateTimeKlass.DateTimeError = DateTimeError
+DateTimeKlass.SyntaxError = SyntaxError
+DateTimeKlass.DateError = DateError
+DateTimeKlass.TimeError = TimeError
