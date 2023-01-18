@@ -27,12 +27,15 @@
 #
 ##############################################################################
 
+import os
 import unittest
 
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate, getIntervalListBetweenDates, \
     atTheEndOfPeriod, getClosestDate
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import timeZoneContext
+
 
 class TestDateUtils(unittest.TestCase):
   """
@@ -199,8 +202,51 @@ class TestPinDateTime(ERP5TypeTestCase):
     self.assertGreaterEqual(DateTime(), actual_begin_date)
 
 
+class TestTimeZoneContext(ERP5TypeTestCase):
+  def afterSetUp(self):
+    self.reference_date_in_utc = DateTime('2001/02/03 00:00:00 UTC')
+    self.actual_timezone = DateTime().timezone()
+    self.actual_environ_tz = os.environ.get('TZ')
+
+  def test_timezone_context_UTC(self):
+    with timeZoneContext('UTC'):
+      self.assertEqual(DateTime().timezone(), 'UTC')
+      self.assertEqual(
+        DateTime(2001, 2, 3).toZone('UTC'), self.reference_date_in_utc)
+    self.assertEqual(DateTime().timezone(), self.actual_timezone)
+    self.assertEqual(os.environ.get('TZ'), self.actual_environ_tz)
+
+  def test_timezone_context_with_dst(self):
+    with timeZoneContext('Europe/Paris'):
+      self.assertEqual(DateTime(2021, 2, 1).timezone(), 'CET')
+      self.assertEqual(DateTime(2021, 7, 1).timezone(), 'CEST')
+      self.assertEqual(
+        DateTime(2001, 2, 3, 1, 0, 0).toZone('UTC'),
+        self.reference_date_in_utc)
+    self.assertEqual(DateTime().timezone(), self.actual_timezone)
+    self.assertEqual(os.environ.get('TZ'), self.actual_environ_tz)
+
+  def test_timezone_context_without_dst(self):
+    with timeZoneContext('Asia/Tokyo'):
+      self.assertEqual(DateTime().timezone(), 'JST')
+      self.assertEqual(
+        DateTime(2001, 2, 3, 9, 0, 0).toZone('UTC'), self.reference_date_in_utc)
+    self.assertEqual(DateTime().timezone(), self.actual_timezone)
+    self.assertEqual(os.environ.get('TZ'), self.actual_environ_tz)
+
+  def test_timezone_abbreviation(self):
+    with timeZoneContext('GMT-7'):
+      self.assertEqual(DateTime(2021, 2, 1).timezone(), 'GMT-7')
+      self.assertEqual(DateTime(2021, 7, 1).timezone(), 'GMT-7')
+      self.assertEqual(
+        DateTime(2001, 2, 2, 17, 0, 0).toZone('UTC'), self.reference_date_in_utc)
+    self.assertEqual(DateTime().timezone(), self.actual_timezone)
+    self.assertEqual(os.environ.get('TZ'), self.actual_environ_tz)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDateUtils))
   suite.addTest(unittest.makeSuite(TestPinDateTime))
+  suite.addTest(unittest.makeSuite(TestTimeZoneContext))
   return suite
