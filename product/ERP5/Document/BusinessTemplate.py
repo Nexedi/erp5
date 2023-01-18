@@ -223,19 +223,6 @@ def removeAll(entry):
   shutil.rmtree(entry, True)
 
 def fixZSQLMethod(portal, method):
-  """Make sure the ZSQLMethod uses a valid connection.
-  """
-  if not isinstance(getattr(portal, method.connection_id, None),
-                      RDBConnection):
-    # if not valid, we assign to the first valid connection found
-    sql_connection_list = portal.objectIds(
-                          spec=('Z MySQL Database Connection',))
-    if (method.connection_id not in sql_connection_list) and \
-       (len(sql_connection_list) != 0):
-      LOG('BusinessTemplate', WARNING,
-          'connection_id for Z SQL Method %s is invalid, using %s' % (
-                    method.getId(), sql_connection_list[0]))
-      method.connection_id = sql_connection_list[0]
   # recompile the method
   method._arg = Aqueduct.parse(method.arguments_src)
   method.template = method.template_class(method.src)
