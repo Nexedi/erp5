@@ -70,6 +70,13 @@ def DateTime__getstate__(self):
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
 
+
+# ERP5 Patch to have different parsing rules.
+# We have a patch since e0eba4791a (Authorised date manipulation before
+# year 1000, 2008-01-28), which replaced the method with an implementation
+# that did not change since, so we don't have new behaviors of DateTime
+# the most visible change might be that we don't have "timezone naive"
+# support.
 def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   # Parse date-time components from a string
   month=year=tz=tm=None
@@ -91,6 +98,9 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   if tz and (tz.lower() in ValidZones): st=' '.join(sp[:-1])
   else: tz = None  # Decide later, since the default time zone
   # could depend on the date.
+
+  # XXX we don't support timezone naive in this patch
+  self._timezone_naive = False
 
   ints,dels=[],[]
   i,l=0,len(st)
