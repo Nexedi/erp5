@@ -104,6 +104,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   */
   FixedWingDroneAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
     function (drone, x, y, z) {
+    // swap y and z axis so z axis represents altitude
     x -= drone._controlMesh.position.x;
     y -= drone._controlMesh.position.z;
     z -= drone._controlMesh.position.y;
