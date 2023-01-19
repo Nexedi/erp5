@@ -407,6 +407,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("disableGraphic", "disableGraphic")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
@@ -544,6 +545,16 @@
             gadget.getUrlParameter("only_graphic")
           ]))
             .push(function (parameter_list) {
+              var only_graphic,
+                enable_graphic = option_list.length > 0 && options.enable_graphic;
+
+              if (!enable_graphic) {
+                only_graphic = false;
+              } else if (parameter_list[1] === undefined || parameter_list[1] === "true") {
+                only_graphic = true;
+              } else {
+                only_graphic = false;
+              }
               return gadget.changeState({
                 jio_key: options.jio_key,
                 key: field_json.key,
@@ -601,9 +612,9 @@
                 show_clipboard_action: false,
 
                 // graphic
-                enable_graphic: option_list.length > 0 && options.enable_graphic,
+                enable_graphic: enable_graphic,
                 graphic_type: parameter_list[0] || getDefaultGraphicType(option_list),
-                only_graphic: parameter_list[1] === undefined ? true : parameter_list[1] === "true"
+                only_graphic: only_graphic
               });
             });
         });
@@ -693,6 +704,7 @@
           (modification_dict.hasOwnProperty('sort_class')) ||
           (modification_dict.hasOwnProperty('hide_class')) ||
           (modification_dict.hasOwnProperty('configure_class')) ||
+          (modification_dict.hasOwnProperty('only_graphic')) ||
           (modification_dict.hasOwnProperty('extended_search'))) {
 
         // display sorting arrow inside correct columns
@@ -937,7 +949,8 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-             if (!gadget.state.only_graphic || !gadget.state.enable_graphic) {
+            console.log("CONDITION", !gadget.state.only_graphic || !gadget.state.enable_graphic);
+            if (!gadget.state.only_graphic || !gadget.state.enable_graphic) {
               domsugar(container, [
                 domsugar('div', {
                   "class": 'ui-table-header ui-header'
@@ -1391,16 +1404,9 @@
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
         .push(function (result) {
+          console.log("gadget.state.only_graphic", gadget.state.only_graphic);
           if (result.count == 0 && gadget.state.only_graphic) {
-            return gadget.redirect({
-              command: "display",
-              options: {
-                jio_key: gadget.state.jio_key,
-                graphic_type: gadget.state.graphic_type,
-                extended_search: gadget.state.extended_search,
-                only_graphic: false
-              }
-            });
+            return gadget.disableGraphic();
           }
           return gadget.changeState({
             allDocs_result: JSON.stringify(result)
