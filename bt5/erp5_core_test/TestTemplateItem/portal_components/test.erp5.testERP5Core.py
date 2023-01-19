@@ -243,6 +243,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     'title': 'View Historical Diff'}],
                 'object_jio_action': [{'id': 'post_query', 'title': 'Post a Query'}],
                 'object_jio_jump': [{'id': 'jump_query', 'title': 'Queries'}],
+                'object_jio_report': [{'id': 'zodb_history', 'title': 'ZODB History'}],
                 'object_jump': [{'id': 'jump_related_object', 'title': 'Related Objects'}],
                 'object_search': [{'title': 'Search', 'id': 'search'}],
                 'object_sort': [{'title': 'Sort', 'id': 'sort_on'}],
