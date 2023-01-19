@@ -1391,6 +1391,17 @@
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
         .push(function (result) {
+          if (result.count == 0 && gadget.state.only_graphic) {
+            return gadget.redirect({
+              command: "display",
+              options: {
+                jio_key: gadget.state.jio_key,
+                graphic_type: gadget.state.graphic_type,
+                extended_search: gadget.state.extended_search,
+                only_graphic: false
+              }
+            });
+          }
           return gadget.changeState({
             allDocs_result: JSON.stringify(result)
           });
