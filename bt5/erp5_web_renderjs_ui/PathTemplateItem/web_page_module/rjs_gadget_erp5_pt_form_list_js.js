@@ -113,9 +113,10 @@
         });
     })
 
-    .onStateChange(function onStateChange() {
+    .onStateChange(function onStateChange(modification_dict) {
       var erp5_form,
         graphic_type,
+        enable_graphic = false,
         form_gadget = this;
 
       // render the erp5 form
@@ -142,13 +143,17 @@
           if (form_gadget.state.extended_search) {
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
-
-          form_options.enable_graphic = false;
-          if (
+          console.log("modification_dict", modification_dict);
+          if (modification_dict.hasOwnProperty("enable_graphic")) {
+            enable_graphic = modification_dict.enable_graphic;
+          } else if (
             graphic_type || (!form_gadget.state.extended_search && !graphic_type)
           ) {
-            form_options.enable_graphic = true;
+            enable_graphic = true;
           }
+          console.log("enable_graphic", enable_graphic);
+          form_options.enable_graphic = enable_graphic;
+
           return erp5_form.render(form_options);
         })
 
@@ -166,13 +171,7 @@
           if (form_gadget.state.extended_search) {
             search_options.extended_search = form_gadget.state.extended_search;
           }
-          search_options.enable_graphic = false;
-          if (
-            graphic_type || (!form_gadget.state.extended_search && !graphic_type)
-          ) {
-            search_options.enable_graphic = true;
-          }
-
+          search_options.enable_graphic = enable_graphic;
           search_options.graphic_type = result_list[1];
           search_options.jio_key = form_gadget.state.jio_key;
           return search_gadget.render(search_options);
@@ -253,6 +252,12 @@
 
     }, false, true)
 
+    .allowPublicAcquisition("disableGraphic", function disableGraphic() {
+      console.log("I am here");
+      this.changeState({
+        "enable_graphic": false
+      });
+    })
     // Handle listbox custom button
     .allowPublicAcquisition("getListboxSelectActionList", function getListboxSelectActionList() {
       var gadget = this;
