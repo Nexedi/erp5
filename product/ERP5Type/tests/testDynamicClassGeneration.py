@@ -3162,6 +3162,12 @@ class Test(ERP5TypeTestCase):
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
 
+    request = self.portal.REQUEST
+    self.assertIsNone(request.get('foo'))
+
+    request.set('foo', 'bar')
+    self.assertEqual(request.get('foo'), 'bar')
+
   def afterClear(self):
     super(Test, self).afterClear()
 
@@ -3205,6 +3211,9 @@ class Test(ERP5TypeTestCase):
     self.assertModuleImportable('testRunLiveTest')
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
+
+    # set a request key, that should not be set from the test request
+    self.portal.REQUEST.set('foo', 'something from main request')
 
     # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
     # needs to be restored after calling runLiveTest
