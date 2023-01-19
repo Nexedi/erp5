@@ -35,6 +35,7 @@ import shutil
 import tempfile
 import unittest
 import warnings
+import re
 import sys
 
 import transaction
@@ -3215,12 +3216,9 @@ class Test(ERP5TypeTestCase):
       ERP5TypeTestCase.__bases__ = base_tuple
       ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
 
-    # assertRegexpMatches is only available from Python >= 2.7
-    import re
     output = self._component_tool.readTestOutput()
-    self.assertNotEqual(re.search('Ran 1 test.*OK', output, re.DOTALL), None,
-                        "Expected 'Ran 1 test.*OK' in '%s'" % output)
-
+    expected_msg_re = re.compile('Ran 1 test.*OK', re.DOTALL)
+    self.assertRegex(output, expected_msg_re)
 
     # Secondly, add a test which will always fail
     source_code += '''
@@ -3244,12 +3242,9 @@ class Test(ERP5TypeTestCase):
       ERP5TypeTestCase.__bases__ = base_tuple
       ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
 
-    # assertRegexpMatches is only available from Python >= 2.7
-    import re
     output = self._component_tool.readTestOutput()
-    expected_msg_re_str = 'Ran 2 tests.*FAILED \(failures=1\)'
-    self.assertNotEqual(re.search(expected_msg_re_str, output, re.DOTALL), None,
-                        "Expected '%s' in '%s'" % (expected_msg_re_str, output))
+    expected_msg_re = re.compile('Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
+    self.assertRegex(output, expected_msg_re)
 
   def testERP5Broken(self):
     # Create a broken ghost object
