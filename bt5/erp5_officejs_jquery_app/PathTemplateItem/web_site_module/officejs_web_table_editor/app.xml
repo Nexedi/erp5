@@ -680,7 +680,7 @@ WebSection_getJexcelEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1000.61481.3626.18739</string> </value>
+                      <value> <string>1005.49131.55146.46899</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -698,7 +698,7 @@ WebSection_getJexcelEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1673981510.49</float>
+                              <float>1674143936.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
