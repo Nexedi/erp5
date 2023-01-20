@@ -126,7 +126,6 @@
                     <value>
                       <list>
                         <string>my_guard_permission_list</string>
-                        <string>my_guard_role_list</string>
                         <string>my_guard_group_list</string>
                         <string>my_guard_expression</string>
                         <string>my_comment</string>
