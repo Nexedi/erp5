@@ -584,8 +584,8 @@ var GameManager = /** @class */ (function () {
     if (GAMEPARAMETERS.draw_flight_path) {
       this._last_position_drawn = [];
       this._trace_objects_per_drone = [];
-      header_list = ["timestamp;", "latitude;", "longitude;", "AMSL (m);",
-                     "rel altitude (m);", "yaw(°);", "air speed (m/s);",
+      header_list = ["timestamp", "latitude", "longitude", "AMSL (m)",
+                     "rel altitude (m)", "yaw(°)", "air speed (m/s)",
                      "climb rate(m/s)"];
       for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone+=1) {
         this._flight_log[drone] = [];
