@@ -6,7 +6,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
   "use strict";
 
   // var TAKEOFF_RADIUS = 60,
-  var LOITER_LIMIT = 30,
+  var EARTH_GRAVITY = 9.81,
+    LOITER_LIMIT = 30,
     LOITER_RADIUS_FACTOR = 0.60,
     LOITER_SPEED_FACTOR = 1.5;
 
@@ -84,35 +85,14 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
   };
   FixedWingDroneAPI.prototype.internal_setTargetCoordinates =
-    function (drone, x, y, z, loiter) {
-    //this._start_altitude = 0;
-    //convert real geo-coordinates to virtual x-y coordinates
-    var coordinates = this.processCoordinates(x, y, z);
-    if (!loiter) {
-      this._loiter_mode = false;
-      drone._maxSpeed = this.getMaxSpeed();
-      //save last target point to use as next loiter center
-      this._last_target = coordinates;
-    }
-    this.internal_setVirtualPlaneTargetCoordinates(drone,
-                                                   coordinates.x,
-                                                   coordinates.y,
-                                                   coordinates.z);
-  };
-  /*
-  ** This expects x,y plane coordinates (not geo latitude-longitud)
-  */
-  FixedWingDroneAPI.prototype.internal_setVirtualPlaneTargetCoordinates =
-    function (drone, x, y, z) {
-    // swap y and z axis so z axis represents altitude
-    x -= drone._controlMesh.position.x;
-    y -= drone._controlMesh.position.z;
-    z -= drone._controlMesh.position.y;
-    drone.setDirection(x, y, z);
-    drone.setAcceleration(drone._maxAcceleration);
-    return;
-  };
-
+    function (drone, coordinates, loiter) {
+      if (!loiter) {
+        this._loiter_mode = false;
+        drone._maxSpeed = this.getMaxSpeed();
+        //save last target point to use as next loiter center
+        this._last_target = coordinates;
+      }
+    };
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
     var _this = this,
         droneList = _this._gameManager._droneList;
@@ -215,8 +195,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       //loiter
       next_point =
         this._loiter_coordinates[this._last_loiter_point_reached + 1];
-      this.internal_setTargetCoordinates(
-        drone, next_point.x, next_point.y, next_point.z, true);
+      this.internal_setTargetCoordinates(drone, next_point, true);
       if (this._mapManager.latLonDistance([drone_pos.x, drone_pos.y],
                                           [next_point.x, next_point.y]) < 1) {
         this._last_loiter_point_reached += 1;
@@ -225,53 +204,14 @@ var FixedWingDroneAPI = /** @class */ (function () {
           return;
         }
         next_point = this._loiter_coordinates[
-          this._last_loiter_point_reached + 1];
-        this.internal_setTargetCoordinates(
-          drone, next_point.x, next_point.y, next_point.z, true);
+          this._last_loiter_point_reached + 1
+        ];
+        this.internal_setTargetCoordinates(drone, next_point, true);
       }
     }
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;
-  };
-  FixedWingDroneAPI.prototype.setAltitude = function (altitude, drone) {
-    /*if (this._start_altitude === 0) {
-      this._start_altitude = 1;
-    }
-    this.takeoff_path = [];
-    if (skip_loiter) {*/
-    var drone_pos = drone.getCurrentPosition();
-    this.internal_setVirtualPlaneTargetCoordinates(drone,
-                                                   drone_pos.x,
-                                                   drone_pos.y,
-                                                   altitude);
-    return;
-    /*}
-    var x1, y1,
-      LOOPS = 1,
-      CIRCLE_ANGLE = 8,
-      current_point = 0,
-      total_points = 360/CIRCLE_ANGLE*LOOPS,
-      initial_altitude = drone.getAltitudeAbs(),
-      center = {
-        x: drone.position.x,
-        y: drone.position.y,
-        z: drone.position.z
-      };
-    for (var l = 0; l <= LOOPS; l+=1){
-      for (var angle = 360; angle > 0; angle-=CIRCLE_ANGLE){ //clockwise sense
-        current_point++;
-        x1 = TAKEOFF_RADIUS * Math.cos(angle * (Math.PI / 180)) + center.x;
-        y1 = TAKEOFF_RADIUS * Math.sin(angle * (Math.PI / 180)) + center.y;
-        if (current_point < total_points/3) {
-          var FACTOR = 0.5;
-          x1 = center.x*FACTOR + x1*(1-FACTOR);
-          y1 = center.y*FACTOR + y1*(1-FACTOR);
-        }
-        this.takeoff_path.push({x: x1, y: y1, z: initial_altitude +
-          current_point * (altitude-initial_altitude)/total_points});
-      }
-    }*/
   };
   /*FixedWingDroneAPI.prototype.reachAltitude = function (drone) {
     function distance(p1, p2) {
@@ -327,11 +267,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getMaxPitchAngle = function () {
     return this._flight_parameters.drone.maxPitchAngle;
   };
-  FixedWingDroneAPI.prototype.getMinRollAngle = function () {
-    return this._flight_parameters.drone.minRollAngle;
-  };
   FixedWingDroneAPI.prototype.getMaxRollAngle = function () {
-    return this._flight_parameters.drone.maxRollAngle;
+    return this._flight_parameters.drone.maxRoll;
   };
   FixedWingDroneAPI.prototype.getMinVerticalSpeed = function () {
     return this._flight_parameters.drone.minVerticalSpeed;
@@ -343,9 +280,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
     return Math.PI / 4;
   };
-  FixedWingDroneAPI.prototype.getYaw = function (drone) {
-    var direction = drone.worldDirection;
-    return Math.atan2(direction.x, direction.z) * 180 / Math.PI;
+  FixedWingDroneAPI.prototype.getYawVelocity = function (drone) {
+    return 360 * EARTH_GRAVITY
+      * Math.tan(this.getMaxRollAngle() * Math.PI / 180)
+      / (2 * Math.PI * drone.getSpeed());
   };
   FixedWingDroneAPI.prototype.getSinkRate = function () {
     //TODO
@@ -357,7 +295,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    this.internal_setTargetCoordinates(drone, drone_pos.x, drone_pos.y, 5);
+    this.internal_setTargetCoordinates(drone, drone_pos, 5); //5 ?!
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
