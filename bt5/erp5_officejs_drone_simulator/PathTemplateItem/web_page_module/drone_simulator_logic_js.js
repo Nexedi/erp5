@@ -124,6 +124,7 @@ var DroneManager = /** @class */ (function () {
       this._maxAcceleration = this._API.getMaxAcceleration();
       this._minSpeed = this._API.getMinSpeed();
       this._maxSpeed = this._API.getMaxSpeed();
+      this._speed = this._API.getInitialSpeed();
       this._minPitchAngle = this._API.getMinPitchAngle();
       this._maxPitchAngle = this._API.getMaxPitchAngle();
       this._minRollAngle = this._API.getMinRollAngle();
@@ -188,8 +189,8 @@ var DroneManager = /** @class */ (function () {
       if (context._speed > context._maxSpeed) {
         context._speed = context._maxSpeed;
       }
-      if (context._speed < -context._maxSpeed) {
-        context._speed = -context._maxSpeed;
+      if (context._speed < context._minSpeed) {
+        context._speed = context._minSpeed;
       }
       updateSpeed = context._speed * delta_time / 1000;
       if (context._direction.x !== 0 ||

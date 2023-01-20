@@ -312,6 +312,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getMaxSpeed = function () {
     return this._flight_parameters.drone.maxSpeed;
   };
+   FixedWingDroneAPI.prototype.getInitialSpeed = function () {
+    return this._flight_parameters.drone.speed;
+  };
   FixedWingDroneAPI.prototype.getMinAcceleration = function () {
     return this._flight_parameters.drone.minAcceleration;
   };
