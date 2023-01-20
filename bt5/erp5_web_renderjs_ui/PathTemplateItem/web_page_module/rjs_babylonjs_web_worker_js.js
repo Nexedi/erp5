@@ -52,10 +52,16 @@ function mainToWorker(evt) {
       })
       .push(function () {
         return postMessage({'type': 'updated'});
+      }, function (error) {
+        console.log("ERROR:", error);
+        return postMessage({'type': 'error', 'error': error});
       });
   case 'event':
-    handleEvent(evt.data);
-    break;
+    return new RSVP.Queue(handleEvent(evt.data))
+      .push(undefined, function (error) {
+        console.log("ERROR:", error);
+        return postMessage({'type': 'error', 'error': error});
+      });
   default:
     throw new Error('Unsupported message ' + JSON.stringify(evt.data));
   }
