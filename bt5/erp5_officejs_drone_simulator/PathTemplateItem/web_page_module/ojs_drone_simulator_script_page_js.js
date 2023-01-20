@@ -10,6 +10,7 @@
     DEFAULT_SPEED = 16,
     MAX_SPEED = 26,
     MAX_ACCELERATION = 1,
+    MAX_ROLL = 35,
     min_lat = 45.6364,
     max_lat = 45.65,
     min_lon = 14.2521,
@@ -226,6 +227,17 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
+                "my_drone_max_roll": {
+                  "description": "",
+                  "title": "Drone max roll",
+                  "default": MAX_ROLL,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_max_roll",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
                 "my_minimum_latitud": {
                   "description": "",
                   "title": "Minimum latitude",
@@ -358,9 +370,9 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"],
+                [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
                   ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                  ["my_drone_acceleration"], ["my_number_of_drones"], ["my_map_height"]]
+                  ["my_drone_acceleration"], ["my_drone_max_roll"], ["my_map_height"]]
               ], [
                 "right",
                 [["my_minimum_latitud"], ["my_maximum_latitud"],
@@ -397,7 +409,8 @@
           "maxAcceleration": parseInt(options.drone_acceleration, 10),
           "minSpeed": parseInt(options.drone_min_speed, 10),
           "speed": parseInt(options.drone_speed, 10),
-          "maxSpeed": parseInt(options.drone_max_speed, 10)
+          "maxSpeed": parseInt(options.drone_max_speed, 10),
+          "maxRoll": parseInt(options.drone_max_roll, 10)
         },
         "gameTime": parseInt(options.simulation_time, 10),
         "simulation_speed": parseInt(options.simulation_speed, 10),
