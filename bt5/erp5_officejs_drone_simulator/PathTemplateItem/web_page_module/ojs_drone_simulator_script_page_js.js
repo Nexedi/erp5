@@ -6,7 +6,9 @@
   //Default values
   var SIMULATION_SPEED = 200,
     SIMULATION_TIME = 1500,
-    MAX_SPEED = 7.5, //16.666667,
+    MIN_SPEED = 12,
+    DEFAULT_SPEED = 16,
+    MAX_SPEED = 26,
     MAX_ACCELERATION = 1,
     min_lat = 45.6364,
     max_lat = 45.65,
@@ -180,14 +182,36 @@
                   "hidden": 0,
                   "type": "StringField"
                 },
+                "my_drone_min_speed": {
+                  "description": "",
+                  "title": "Drone min speed",
+                  "default": MIN_SPEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_min_speed",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_drone_speed": {
                   "description": "",
                   "title": "Drone speed",
-                  "default": MAX_SPEED,
+                  "default": DEFAULT_SPEED,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
                   "key": "drone_speed",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
+                "my_drone_max_speed": {
+                  "description": "",
+                  "title": "Drone max speed",
+                  "default": MAX_SPEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_max_speed",
                   "hidden": 0,
                   "type": "StringField"
                 },
@@ -335,13 +359,13 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"],
-                  ["my_drone_speed"], ["my_drone_acceleration"],
-                  ["my_number_of_drones"], ["my_map_height"], ["my_start_AMSL"]]
+                  ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                  ["my_drone_acceleration"], ["my_number_of_drones"], ["my_map_height"]]
               ], [
                 "right",
                 [["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
-                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"]]
+                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"], ["my_start_AMSL"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -371,7 +395,9 @@
       game_parameters_json = {
         "drone": {
           "maxAcceleration": parseFloat(options.drone_acceleration),
-          "maxSpeed": parseFloat(options.drone_speed)
+          "minSpeed": parseFloat(options.drone_min_speed),
+          "speed": parseFloat(options.drone_speed),
+          "maxSpeed": parseFloat(options.drone_max_speed)
         },
         "gameTime": parseFloat(options.simulation_time),
         "simulation_speed": parseFloat(options.simulation_speed),
