@@ -6,7 +6,9 @@
   //Default values
   var SIMULATION_SPEED = 200,
     SIMULATION_TIME = 1500,
-    MAX_SPEED = 7.5, //16.666667,
+    MIN_SPEED = 12,
+    DEFAULT_SPEED = 16,
+    MAX_SPEED = 26,
     MAX_ACCELERATION = 1,
     min_lat = 45.6364,
     max_lat = 45.65,
@@ -167,7 +169,7 @@
                   "editable": 1,
                   "key": "simulation_speed",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
                 },
                 "my_simulation_time": {
                   "description": "Duration of the simulation (in seconds)",
@@ -178,18 +180,40 @@
                   "editable": 1,
                   "key": "simulation_time",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
+                },
+                "my_drone_min_speed": {
+                  "description": "",
+                  "title": "Drone min speed",
+                  "default": MIN_SPEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_min_speed",
+                  "hidden": 0,
+                  "type": "IntegerField"
                 },
                 "my_drone_speed": {
                   "description": "",
                   "title": "Drone speed",
-                  "default": MAX_SPEED,
+                  "default": DEFAULT_SPEED,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
                   "key": "drone_speed",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
+                },
+                "my_drone_max_speed": {
+                  "description": "",
+                  "title": "Drone max speed",
+                  "default": MAX_SPEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "drone_max_speed",
+                  "hidden": 0,
+                  "type": "IntegerField"
                 },
                 "my_drone_acceleration": {
                   "description": "",
@@ -200,7 +224,7 @@
                   "editable": 1,
                   "key": "drone_acceleration",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
                 },
                 "my_minimum_latitud": {
                   "description": "",
@@ -211,7 +235,7 @@
                   "editable": 1,
                   "key": "min_lat",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "FloatField"
                 },
                 "my_maximum_latitud": {
                   "description": "",
@@ -222,7 +246,7 @@
                   "editable": 1,
                   "key": "max_lat",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "FloatField"
                 },
                 "my_minimum_longitud": {
                   "description": "",
@@ -233,7 +257,7 @@
                   "editable": 1,
                   "key": "min_lon",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "FloatField"
                 },
                 "my_maximum_longitud": {
                   "description": "",
@@ -244,7 +268,7 @@
                   "editable": 1,
                   "key": "max_lon",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "FloatField"
                 },
                 "my_start_AMSL": {
                   "description": "",
@@ -255,7 +279,7 @@
                   "editable": 1,
                   "key": "start_AMSL",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
                 },
                 "my_map_height": {
                   "description": "",
@@ -266,7 +290,7 @@
                   "editable": 1,
                   "key": "map_height",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
                 },
                 "my_init_pos_lon": {
                   "description": "",
@@ -277,7 +301,7 @@
                   "editable": 1,
                   "key": "init_pos_lon",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "FloatField"
                 },
                 "my_init_pos_lat": {
                   "description": "",
@@ -288,7 +312,7 @@
                   "editable": 1,
                   "key": "init_pos_lat",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "FloatField"
                 },
                 "my_init_pos_z": {
                   "description": "",
@@ -299,7 +323,7 @@
                   "editable": 1,
                   "key": "init_pos_z",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
                 },
                 "my_number_of_drones": {
                   "description": "",
@@ -310,7 +334,7 @@
                   "editable": 1,
                   "key": "number_of_drones",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "IntegerField"
                 },
                 "my_script": {
                   "default": DEFAULT_SCRIPT_CONTENT,
@@ -335,13 +359,13 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"],
-                  ["my_drone_speed"], ["my_drone_acceleration"],
-                  ["my_number_of_drones"], ["my_map_height"], ["my_start_AMSL"]]
+                  ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                  ["my_drone_acceleration"], ["my_number_of_drones"], ["my_map_height"]]
               ], [
                 "right",
                 [["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
-                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"]]
+                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"], ["my_start_AMSL"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -370,11 +394,13 @@
       }
       game_parameters_json = {
         "drone": {
-          "maxAcceleration": parseFloat(options.drone_acceleration),
-          "maxSpeed": parseFloat(options.drone_speed)
+          "maxAcceleration": parseInt(options.drone_acceleration, 10),
+          "minSpeed": parseInt(options.drone_min_speed, 10),
+          "speed": parseInt(options.drone_speed, 10),
+          "maxSpeed": parseInt(options.drone_max_speed, 10)
         },
-        "gameTime": parseFloat(options.simulation_time),
-        "simulation_speed": parseFloat(options.simulation_speed),
+        "gameTime": parseInt(options.simulation_time, 10),
+        "simulation_speed": parseInt(options.simulation_speed, 10),
         "latency": {
           "information": 0,
           "communication": 0
@@ -384,13 +410,13 @@
           "max_lat": parseFloat(options.max_lat),
           "min_lon": parseFloat(options.min_lon),
           "max_lon": parseFloat(options.max_lon),
-          "height": parseFloat(options.map_height),
-          "start_AMSL": parseFloat(options.start_AMSL)
+          "height": parseInt(options.map_height, 10),
+          "start_AMSL": parseInt(options.start_AMSL, 10)
         },
         "initialPosition": {
           "longitude": parseFloat(options.init_pos_lon),
           "latitude": parseFloat(options.init_pos_lat),
-          "z": parseFloat(options.init_pos_z)
+          "z": parseInt(options.init_pos_z, 10)
         },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
