@@ -159,6 +159,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
     if 'Geek Object' in self.getTypeTool().objectIds():
       self.getTypeTool().manage_delObjects(['Geek Object', 'Geek Module'])
+    if 'Dummy Type' in self.getTypeTool().objectIds():
+      self.getTypeTool().manage_delObjects(['Dummy Type'])
     if 'geek_module' in self.getPortal().objectIds():
       self.getPortal().manage_delObjects(['geek_module'])
     if 'geek_workflow' in self.getWorkflowTool().objectIds():
@@ -6554,6 +6556,59 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.tic()
     self.assertNotEqual(None,
         self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
+
+  def test_role_information_stable_export(self):
+    dummy_type = self.portal.portal_types.newContent(
+      portal_type='Base Type',
+      id='Dummy Type',
+      type_class='Folder'
+    )
+
+    for i in range(20):
+      dummy_type.newContent(
+        portal_type='Role Information',
+        title='Dummy Role Definition',
+        description='Role %s' % i,
+        role_name_list=('Assignee', ),
+        role_base_category_list=('group',),
+        role_category_list=('group/g1',))
+
+    bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      template_portal_type_id_list=('Dummy Type',),
+      template_portal_type_role_list=('Dummy Type', ))
+    self.tic()
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    self.addCleanup(shutil.rmtree, export_dir)
+    bt.export(path=export_dir, local=True)
+
+    with open(os.path.join(export_dir, 'PortalTypeRolesTemplateItem', 'Dummy%20Type.xml')) as f:
+      role_content = f.read()
+    self.tic()
+    new_bt = self.portal.portal_templates.download(url='file://%s' % export_dir)
+
+    self.portal.portal_types.manage_delObjects(['Dummy Type'])
+    self.tic()
+    new_bt.install()
+
+    dummy_type = self.portal.portal_types['Dummy Type']
+    self.assertEqual(
+      [rd.getRoleNameList() for rd in dummy_type.contentValues(portal_type='Role Information')],
+      [['Assignee']] * 20
+    )
+
+    # rebuild and check the output is same
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    self.addCleanup(shutil.rmtree, export_dir)
+    bt.export(path=export_dir, local=True)
+
+    with open(os.path.join(export_dir, 'PortalTypeRolesTemplateItem', 'Dummy%20Type.xml')) as f:
+      self.assertEqual(f.read(), role_content)
 
   def test_indexation_of_updated_path_item(self):
     """Tests indexation on updated paths item.
