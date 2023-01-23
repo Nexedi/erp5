@@ -575,7 +575,8 @@ class BaseTemplateItem(Implicit, Persistent):
 
     attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
                 'last_id', 'uid',
-                '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+                '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
+                '_erp5_coverage_filename'}
     if export:
       if keep_workflow_history_last_history_only:
         self._removeAllButLastWorkflowHistory(obj)
