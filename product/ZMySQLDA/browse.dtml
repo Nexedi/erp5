@@ -1,12 +1,22 @@
-<html>
-  <head><title><!--#var title_or_id--> tables</title></head>
-  <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
-    <!--#var manage_tabs-->
-    <!--#tree header=info-->
-      <IMG SRC="<!--#var BASEPATH1-->/misc_/ZMySQLDA/<!--#var icon-->"
-       ALT="<!--#var Type-->" BORDER="0">
-      <!--#var Name--><!--#var Description-->
-    <!--#/tree-->
+<dtml-var manage_page_header>
 
-  </body>
-</html>
+  <dtml-with "_(management_view='Browse')">
+    <dtml-var manage_tabs>
+  </dtml-with>
+
+  <main class="container-fluid">
+
+  <dtml-tree header=info>
+    <img src="&dtml-SCRIPT_NAME;/misc_/ZMySQLDA/&dtml-icon;" alt="&dtml-Type;" title="&dtml-Type;" style="height:16px;width:20px;" />
+    <b><dtml-var Name></b>&nbsp;&nbsp;<code><dtml-var description></code>
+  </dtml-tree>
+
+  </main>
+
+  <style>
+    img:not([alt=table]) {
+      opacity:.35;
+    }
+  </style>
+
+<dtml-var manage_page_footer>
