@@ -54,6 +54,7 @@ else:
       person.Person_getUserId(),
       login_reference,
       password,
+      request=context.REQUEST,
     )
     portal_status_message = "Password changed."
 
