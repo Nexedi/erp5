@@ -1,48 +1,96 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html lang="en">
-  <head><title>Edit <dtml-var title_or_id></title></head>
-  <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
-    <dtml-var manage_tabs>
-    
-    <h2>Edit <dtml-var title_or_id></h2>
-    
-    <form action="manage_edit" method="POST">
-      <table cellspacing="2">
+<dtml-var manage_page_header>
 
-        <tr>
-	  <th align="LEFT" valign="TOP">Id</th>
-	  <td align="LEFT" valign="TOP"><dtml-var id></td>
-	</tr>
+  <dtml-var manage_tabs>
 
-	<tr>
-	  <th align="LEFT" valign="TOP"><em>Title</em></th>
-	  <td align="LEFT" valign="TOP">
-	    <input type="TEXT" name="title" size="40"
-                   value="<dtml-var title html_quote>">
-	  </td>
-	</tr>
+  <main class="container-fluid">
 
-	<tr>
-	  <th align="LEFT" valign="TOP">Database Connection String</th>
-	  <td align="LEFT" valign="TOP">
-	    <input type="TEXT" name="connection_string" size="40"
-                   value="<dtml-var connection_string html_quote>">
-	  </td>
-	</tr>
-	<tr>
-	  <th align="LEFT" valign="TOP">Connect immediately</th>
-	  <td align="LEFT" valign="TOP">
-            <input name="check:int" type="CHECKBOX" value="1" CHECKED>
-          </td>
-	</tr>
+  <div class="form-group row">
+    <label for="status" class="col-sm-4 col-md-3">
+      Status
+    </label>
+    <div class="col-sm-8 col-md-9">
+      <div id="status" class="btn-group">
+        <button type="button" class="form-control mr-2" disabled="disabled">
+          The database connection is &nbsp;
+          <dtml-if connected>
+            <span class="badge badge-success">OPEN</span>
+          <dtml-else>
+            <span class="badge badge-danger">CLOSED</span>
+          </dtml-if>
+        </button>
+        <dtml-if connected>
+          <form action="manage_close_connection" method="get">
+            <input class="btn btn-primary" type="submit" name="submit" value="Close Connection" />
+          </form>
+        <dtml-else>
+          <form action="manage_open_connection" method="get">
+            <input class="btn btn-primary" type="submit" name="submit" value="Open Connection" />
+          </form>
+        </dtml-if>
+      </div>
+    </div>
+  </div>
 
-        <tr>
-	  <td></td>
-	  <td><br><input type="SUBMIT" value="Change"></td>
-	</tr>
 
-      </table>
-    </form>
+  <form action="manage_edit" method="post" title="">
 
-  </body>
-</html>
+    <div class="form-group row">
+      <label for="id" class="col-sm-4 col-md-3">
+        Id
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="id" class="form-control" disabled="disabled" value="<dtml-var id>" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="title" class="col-sm-4 col-md-3">
+        Title
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input name="title" id="title" type="text" class="form-control"
+          value="<dtml-var title html_quote>" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="connection_string" class="col-sm-4 col-md-3">
+        Database Connection String&nbsp;<a href="#1"><sup>1</sup></a>
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="connection_string" type="text" name="connection_string" class="form-control"
+          value="<dtml-var connection_string html_quote>" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="check" class="col-sm-4 col-md-3">
+        Connect immediately
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input name="check" type="checkbox" value="yes" checked="checked" />
+      </div>
+    </div>
+
+    <div class="zmi-controls">
+      <input type="submit" class="btn btn-primary" value="Change">
+    </div>
+
+  </form>
+
+  <hr class="my-5" />
+
+  <dl>
+    <dt><a name="1"><sup>1</sup></a>
+      Database Connection String
+    </dt>
+    <dd>
+      Information about how to format the connection string can be found
+      in the <a href="https://zmysqlda.readthedocs.io/en/latest/connstring.html">
+      documentation</a>.
+    </dd>
+  <dl>
+
+  </main>
+
+  <dtml-var manage_page_footer>
