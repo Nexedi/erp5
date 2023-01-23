@@ -117,17 +117,15 @@ class TestZODBHistory(ERP5TypeTestCase):
     """
     self.loginByUserName('tatuya')
     document = self.addOrganisation('document')
+    report_id_list = [x['id'] for x in self.portal.portal_actions.listFilteredActionsFor(document).get('object_jio_report',[])]
 
-    # by default, users have a link to view ZODB history in history tab
-    self.assertIn(
-        'your_zodb_history',
-        [field.getId() for field in document.Base_viewHistory.get_fields()])
+    self.assertIn('zodb_history', report_id_list)
 
     # when user does not have "View History" permission, the link is not displayed
     document.manage_permission('View History', [], 0)
-    self.assertNotIn(
-        'your_zodb_history',
-        [field.getId() for field in document.Base_viewHistory.get_fields()])
+    report_id_list = [x['id'] for x in self.portal.portal_actions.listFilteredActionsFor(document).get('object_jio_report',[])]
+
+    self.assertNotIn('zodb_history', report_id_list)
 
     # accessing the form directly is not allowed either
     from zExceptions import Unauthorized

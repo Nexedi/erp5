@@ -1187,10 +1187,6 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['form_id']['required'], 1)
     self.assertEqual(result_dict['_embedded']['_view']['form_id']['type'], 'StringField')
 
-    self.assertEqual(result_dict['_embedded']['_view']['your_zodb_history']['title'], 'View ZODB History')
-    self.assertEqual(result_dict['_embedded']['_view']['your_zodb_history']['key'], 'field_your_zodb_history')
-    self.assertEqual(result_dict['_embedded']['_view']['your_zodb_history']['type'], 'LinkField')
-
     # Check embedded report section rendering
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['default'], 'Base_viewWorkflowHistory')
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['form_id']['editable'], 0)
@@ -1205,14 +1201,6 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_core/Base_viewWorkflowHistory')
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['form_definition']['name'], 'Base_viewWorkflowHistory')
-    self.assertEqual(
-      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][0],
-      'center'
-    )
-    self.assertEqual(
-      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][1][0],
-      ['your_zodb_history', {'meta_type': 'LinkField'}]
-    )
     self.assertEqual(
       result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
       'report_view'
