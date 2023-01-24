@@ -649,13 +649,18 @@ var GameManager = /** @class */ (function () {
             triggerUpdateIfPossible();
           })
           .push(undefined, function(error) {
-            console.log("ERROR on update:", error);
-            console.log("rejecting finish_deferred promise...");
+            console.log("ERROR on Game Manager update:", error);
             _this.finish_deferred.reject.bind(_this.finish_deferred);
           });
       }
     }
-    triggerUpdateIfPossible();
+    try {
+      triggerUpdateIfPossible();
+    } catch (error) {
+      console.log("ERROR on Game Manager update:", error);
+      _this.finish_deferred.reject.bind(_this.finish_deferred);
+      throw error;
+    }
   };
 
   GameManager.prototype.delay = function (callback, millisecond) {
