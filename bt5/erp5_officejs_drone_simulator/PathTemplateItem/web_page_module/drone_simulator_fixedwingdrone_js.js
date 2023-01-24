@@ -6,10 +6,15 @@ var FixedWingDroneAPI = /** @class */ (function () {
   "use strict";
 
   // var TAKEOFF_RADIUS = 60,
-  var EARTH_GRAVITY = 9.81,
+  var DEFAULT_SPEED = 16,
+    EARTH_GRAVITY = 9.81,
     LOITER_LIMIT = 30,
     LOITER_RADIUS_FACTOR = 0.60,
-    LOITER_SPEED_FACTOR = 1.5;
+    LOITER_SPEED_FACTOR = 1.5,
+    MAX_ACCELERATION = 1,
+    MIN_SPEED = 12,
+    MAX_SPEED = 26,
+    MAX_ROLL = 35;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -250,19 +255,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
   };*/
   FixedWingDroneAPI.prototype.getMinSpeed = function () {
-    return this._flight_parameters.drone.minSpeed;
+    return this._flight_parameters.drone.minSpeed || MIN_SPEED;
   };
   FixedWingDroneAPI.prototype.getMaxSpeed = function () {
-    return this._flight_parameters.drone.maxSpeed;
+    return this._flight_parameters.drone.maxSpeed || MAX_SPEED;
   };
   FixedWingDroneAPI.prototype.getInitialSpeed = function () {
-    return this._flight_parameters.drone.speed;
+    return this._flight_parameters.drone.speed || DEFAULT_SPEED;
   };
   FixedWingDroneAPI.prototype.getMinAcceleration = function () {
     return this._flight_parameters.drone.minAcceleration;
   };
   FixedWingDroneAPI.prototype.getMaxAcceleration = function () {
-    return this._flight_parameters.drone.maxAcceleration;
+    return this._flight_parameters.drone.maxAcceleration || MAX_ACCELERATION;
   };
   FixedWingDroneAPI.prototype.getMinPitchAngle = function () {
     return this._flight_parameters.drone.minPitchAngle;
@@ -271,7 +276,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return this._flight_parameters.drone.maxPitchAngle;
   };
   FixedWingDroneAPI.prototype.getMaxRollAngle = function () {
-    return this._flight_parameters.drone.maxRoll;
+    return this._flight_parameters.drone.maxRoll || MAX_ROLL;
   };
   FixedWingDroneAPI.prototype.getMinVerticalSpeed = function () {
     return this._flight_parameters.drone.minVerticalSpeed;
