@@ -11,7 +11,7 @@ if appcache_reference:
   appcache_manifest_modification_date = appcache_manifest.getObject().getModificationDate()
 
   if url_list:
-    for referenced_document in context.getDocumentValueList(reference=url_list):
+    for referenced_document in context.getPortalObject().portal_catalog.getDocumentValueList(reference=url_list):
       if referenced_document.getModificationDate() > appcache_manifest_modification_date:
         error_list.append(
           "Document {} is newer than cache manifest".format(referenced_document.getReference()))
