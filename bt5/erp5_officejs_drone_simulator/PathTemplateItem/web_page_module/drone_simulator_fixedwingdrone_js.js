@@ -1,5 +1,5 @@
 /*global console*/
-/*jslint nomen: true, indent: 2, maxlen: 80, white: true */
+/*jslint nomen: true, indent: 2, maxlen: 80, todo: true */
 
 /************************** FIXED WING DRONE API ****************************/
 var FixedWingDroneAPI = /** @class */ (function () {
@@ -47,7 +47,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       drone_info = {
         'altitudeRel' : drone_position.z,
         'altitudeAbs' : this._mapManager.getMapInfo().start_AMSL +
-        drone_position.z,
+          drone_position.z,
         'latitude' : drone_position.x,
         'longitude' : drone_position.y
       };
@@ -74,13 +74,14 @@ var FixedWingDroneAPI = /** @class */ (function () {
       this._last_loiter_point_reached = -1;
       var x1, y1, angle;
       //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
-      for (angle = 360; angle > 0; angle-=8){ //clockwise
+      for (angle = 360; angle > 0; angle -= 8) { //clockwise
         x1 = this._loiter_radius *
           Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
         y1 = this._loiter_radius *
           Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
         this._loiter_coordinates.push(
-          this.getCurrentPosition(x1, y1, this._loiter_center.z));
+          this.getCurrentPosition(x1, y1, this._loiter_center.z)
+        );
       }
     }
   };
@@ -95,7 +96,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     };
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
     var _this = this,
-        droneList = _this._gameManager._droneList;
+      droneList = _this._gameManager._droneList;
     _this._gameManager.delay(function () {
       if (to < 0) {
         // Send to all drones
@@ -103,21 +104,18 @@ var FixedWingDroneAPI = /** @class */ (function () {
           if (drone.infosMesh) {
             try {
               drone.onGetMsg(msg);
-            }
-            catch (error) {
+            } catch (error) {
               console.warn('Drone crashed on sendMsg due to error:', error);
               drone._internal_crash();
             }
           }
         });
-      }
-      else {
+      } else {
         // Send to specific drone
         if (droneList[to].infosMesh) {
           try {
             droneList[to].onGetMsg(msg);
-          }
-          catch (error) {
+          } catch (error) {
             console.warn('Drone crashed on sendMsg due to error:', error);
             droneList[to]._internal_crash();
           }
@@ -137,7 +135,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Converts geo latitude-longitud coordinates (º) to x,y plane coordinates (m)
   */
   FixedWingDroneAPI.prototype.processCoordinates = function (lat, lon, z) {
-    if(isNaN(lat) || isNaN(lon) || isNaN(z)){
+    if (isNaN(lat) || isNaN(lon) || isNaN(z)) {
       throw new Error('Target coordinates must be numbers');
     }
     var x = this._mapManager.longitudToX(lon, this._map_dict.width),
@@ -162,12 +160,16 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.loiter = function (drone) {
     if (this._loiter_radius > LOITER_LIMIT) {
       var drone_pos = drone.getCurrentPosition(),
-        min = 9999, min_i, i, d, next_point;
+        min = 9999,
+        min_i,
+        i,
+        d,
+        next_point;
       //shift loiter circle to nearest point
       if (this._last_loiter_point_reached === -1) {
         if (!this.shifted) {
           drone._maxSpeed = drone._maxSpeed * LOITER_SPEED_FACTOR;
-          for (i = 0; i < this._loiter_coordinates.length; i+=1){
+          for (i = 0; i < this._loiter_coordinates.length; i += 1) {
             d = this._mapManager.latLonDistance([drone_pos.x, drone_pos.y],
                                                 [this._loiter_coordinates[i].x,
                                                 this._loiter_coordinates[i].y]);
@@ -177,7 +179,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
             }
           }
           this._loiter_coordinates = this._loiter_coordinates.concat(
-            this._loiter_coordinates.splice(0,min_i));
+            this._loiter_coordinates.splice(0, min_i)
+          );
           this.shifted = true;
         }
       } else {
@@ -252,7 +255,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getMaxSpeed = function () {
     return this._flight_parameters.drone.maxSpeed;
   };
-   FixedWingDroneAPI.prototype.getInitialSpeed = function () {
+  FixedWingDroneAPI.prototype.getInitialSpeed = function () {
     return this._flight_parameters.drone.speed;
   };
   FixedWingDroneAPI.prototype.getMinAcceleration = function () {
