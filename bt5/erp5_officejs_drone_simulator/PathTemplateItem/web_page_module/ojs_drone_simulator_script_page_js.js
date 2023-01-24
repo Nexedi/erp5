@@ -394,7 +394,7 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      var gadget = this, simulator, i,
+      var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
@@ -457,10 +457,10 @@
                   "url": "babylonjs.gadget.html",
                   "sandbox": "public",
                   "renderjs_extra": '{"autorun": false, "width": ' + WIDTH + ', ' +
-                  '"height": ' + HEIGHT + ', ' +
-                  '"logic_file_list": ' + JSON.stringify(LOGIC_FILE_LIST) + ', ' +
-                  '"game_parameters": ' + JSON.stringify(game_parameters_json) +
-                  '}'
+                    '"height": ' + HEIGHT + ', ' +
+                    '"logic_file_list": ' + JSON.stringify(LOGIC_FILE_LIST) + ', ' +
+                    '"game_parameters": ' + JSON.stringify(game_parameters_json) +
+                    '}'
                 }
               }},
               "_links": {
@@ -484,27 +484,25 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var i = 0,
-            log_content,
-            blob,
-            a,
-            log,
-            div;
-          for (var key in result) {
-            log_content = result[key].join('\n').replaceAll(",", ";");
-            blob = new Blob([log_content], {type: 'text/plain'});
-            a = domsugar('a', {
-              text: 'Download Simulation LOG ' + i,
-              download: 'simulation_log_' + i + '.txt',
-              href: window.URL.createObjectURL(blob)
-            });
-            log = domsugar('textarea', { value: log_content });
-            div = domsugar('div', [a]);
-            a.dataset.downloadurl =  ['text/plain', a.download,
-                                      a.href].join(':');
-            document.querySelector('.container').appendChild(div);
-            document.querySelector('.container').appendChild(log);
-            i++;
+          var a, blob, div, key, log, log_content;
+          i = 0;
+          for (key in result) {
+            if (result.hasOwnProperty(key)) {
+              log_content = result[key].join('\n').replaceAll(",", ";");
+              blob = new Blob([log_content], {type: 'text/plain'});
+              a = domsugar('a', {
+                text: 'Download Simulation LOG ' + i,
+                download: 'simulation_log_' + i + '.txt',
+                href: window.URL.createObjectURL(blob)
+              });
+              log = domsugar('textarea', { value: log_content });
+              div = domsugar('div', [a]);
+              a.dataset.downloadurl =  ['text/plain', a.download,
+                                        a.href].join(':');
+              document.querySelector('.container').appendChild(div);
+              document.querySelector('.container').appendChild(log);
+              i += 1;
+            }
           }
         });
     });
