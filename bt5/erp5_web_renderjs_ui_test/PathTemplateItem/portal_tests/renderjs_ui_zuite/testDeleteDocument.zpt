@@ -135,7 +135,22 @@
                                                            'text': 'Document deleted'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-
+<tr>
+  <td>waitForElementPresent</td>
+ 	<td>//div[@class="graphic-button-section"]/button[@class="ui-btn-icon-notext ui-icon-list-alt switch-listbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+ 	<td>//div[@class="graphic_section"]/div[@data-gadget-scope="gadget_graphic"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+ 	<td>//div[@class="graphic-button-section"]/button[@class="ui-btn-icon-notext ui-icon-list-alt switch-listbox"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <!-- Deletion of a Foo Document will still show it in Module View but with "deleted" state -->
 <tr><td>waitForElementPresent</td>
  	  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope="field_listbox"]//a[text()="deleted"]</td><td></td></tr>
