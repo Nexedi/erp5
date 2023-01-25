@@ -28,12 +28,16 @@
 
 """Utility functions and classes for unit testing
 """
+import contextlib
+from datetime import datetime
 import errno
 import os
 import logging
+import mock
 import random
 import socket
 import sys
+import time
 import unittest
 import ZODB
 import zLOG
@@ -49,6 +53,7 @@ from email import message_from_string
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ZSQLCatalog.SQLCatalog import Catalog
+import pytz
 import six
 
 class FileUpload(file):
@@ -707,3 +712,35 @@ class SubcontentReindexingWrapper(object):
       self.assertEqual(expected_path_set, catalogged_object_path_set)
     finally:
       Catalog.catalogObjectList = orig_catalogObjectList
+
+
+@contextlib.contextmanager
+def timeZoneContext(timezone):
+  """Context manager to change timezone in tests.
+  """
+  saved_TZ = os.environ.get('TZ')
+  os.environ['TZ'] = timezone
+  time.tzset()
+  if timezone in pytz.all_timezones:
+    _multipleZones = time.daylight
+    _localzone0 = time.tzname[0]
+    _localzone1 = time.tzname[1] if time.daylight else time.tzname[0]
+  else:
+    _multipleZones = False
+    _localzone0 = _localzone1 = timezone
+  if hasattr(sys.modules['DateTime.DateTime'].DateTime, '_localzone0'):
+    patch_target = sys.modules['DateTime.DateTime'].DateTime
+  else:
+    # BBB DateTime 2
+    patch_target = sys.modules['DateTime.DateTime']
+
+  try:
+    with mock.patch.object(patch_target, '_localzone0', new=_localzone0), \
+        mock.patch.object(patch_target, '_localzone1', new=_localzone1), \
+        mock.patch.object(patch_target, '_multipleZones', new=_multipleZones):
+      yield
+  finally:
+    os.environ.pop('TZ')
+    if saved_TZ:
+      os.environ['TZ'] = saved_TZ
+    time.tzset()
