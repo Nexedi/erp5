@@ -46,11 +46,6 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>assertTextPresent</td>
-  <td>View ZODB History</td>
-  <td></td>
-</tr>
 
 <!-- Header has a link to the action page -->
 <tr>
