@@ -13,6 +13,16 @@
     <!-- reuse listbox suite reset to clear modules. -->
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
+      <td>openAndWait</td>
+      <td>${base_url}/bar_module/BarModule_configureViewHistoryPermission?value:int=0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+    <tr>
       <td>open</td>
       <td>${base_url}/bar_module/ListBoxZuite_reset</td>
       <td></td>
@@ -66,6 +76,17 @@
   <td></td>
 </tr>
 
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/bar_module/BarModule_configureViewHistoryPermission?value:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

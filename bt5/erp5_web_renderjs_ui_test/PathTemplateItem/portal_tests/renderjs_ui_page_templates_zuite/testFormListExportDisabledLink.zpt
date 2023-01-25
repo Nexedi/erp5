@@ -12,6 +12,18 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 
 <tr>
+  <td>openAndWait</td>
+  <td>${base_url}/bar_module/BarModule_configureViewHistoryPermission?value:int=0</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>open</td>
   <td>${base_url}/web_site_module/renderjs_runner/#/bar_module</td>
   <td></td>
@@ -29,6 +41,18 @@
 <tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@class, 'ui-disabled')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/bar_module/BarModule_configureViewHistoryPermission?value:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done</td>
   <td></td>
 </tr>
 
