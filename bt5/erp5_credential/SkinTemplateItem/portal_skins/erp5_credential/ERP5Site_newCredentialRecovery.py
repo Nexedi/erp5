@@ -33,7 +33,7 @@ if default_email_text is not None:
   message = "We have sent you an email containing your username(s). Please check your inbox and your junk/spam mail for this email."
   if web_site:
     document_reference = web_site.getCredentialUsernameRecoveryMessageReference()
-  createCredentialRecovery(default_email_text=default_email_text,
+  createCredentialRecovery(default_email_coordinate_text=default_email_text,
                            destination_decision_value_list=person_list,
                            document_reference=document_reference,
                            language=portal.Localizer.get_selected_language())
