@@ -1,6 +1,6 @@
 """
   This script is used in parallel list fields
-  to implement a new 'multi list field behaviour' 
+  to implement a new 'multi list field behaviour'
   (it repeats category items
   in such way that it is possible to select multiple
   categories for the same document )

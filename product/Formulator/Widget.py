@@ -6,7 +6,7 @@ import string
 from .DummyField import fields
 from DocumentTemplate.DT_Util import html_quote
 from DateTime import DateTime, Timezones
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 import types
 from DocumentTemplate.ustr import ustr
 from six.moves.urllib.parse import urljoin
@@ -441,7 +441,7 @@ class TextWidget(Widget):
       old_value = [str(value)]
     value = []
     for line in old_value:
-      value.append(escape(line))
+      value.append(html_quote(line))
     value = '<br/>'.join(value)
 
     extra = field.get_value('extra')
@@ -686,7 +686,7 @@ class TextAreaWidget(Widget):
                 value = str(value)
             value = value.split('\n')
         line_separator = '<br/>'
-        value_list = [escape(part).replace('\n', line_separator) for part in value]
+        value_list = [html_quote(part).replace('\n', line_separator) for part in value]
         value = line_separator.join(value_list)
         return render_element("div",
                               css_class=field.get_value('css_class'),
@@ -751,7 +751,7 @@ class LinesTextAreaWidget(TextAreaWidget):
       value = value.split('\n')
     line_separator = field.get_value('view_separator')
 
-    value_list = [escape(convertToString(part)).replace('\n', line_separator) for part in value]
+    value_list = [html_quote(convertToString(part)).replace('\n', line_separator) for part in value]
     value = line_separator.join(value_list)
     return render_element("div",
                           css_class=field.get_value('css_class'),
@@ -898,14 +898,14 @@ class SingleItemsWidget(ItemsWidget):
         item_value = item
 
       if item_value == value and not selected_found:
-        rendered_item = self.render_selected_item(escape(ustr(item_text)),
+        rendered_item = self.render_selected_item(html_quote(ustr(item_text)),
                                                   item_value,
                                                   key,
                                                   css_class,
                                                   extra_item)
         selected_found = 1
       else:
-        rendered_item = self.render_item(escape(ustr(item_text)),
+        rendered_item = self.render_item(html_quote(ustr(item_text)),
                                           item_value,
                                           key,
                                           css_class,
@@ -915,7 +915,7 @@ class SingleItemsWidget(ItemsWidget):
 
     # XXX We want to make sure that we always have the current value in items. -yo
     if not selected_found and value:
-      value = escape(ustr(value))
+      value = html_quote(ustr(value))
       rendered_item = self.render_selected_item('??? (%s)' % value,
                                                 value,
                                                 key,
@@ -934,7 +934,7 @@ class SingleItemsWidget(ItemsWidget):
         return ''
     title_list = [x[0] for x in field.get_value("items", REQUEST=REQUEST) if x[1]==value]
     if len(title_list) == 0:
-      return "??? (%s)" % escape(value)
+      return "??? (%s)" % html_quote(value)
     else:
       return title_list[0]
     return value
@@ -1029,7 +1029,7 @@ class MultiItemsWidget(ItemsWidget):
 
       if item_value in value:
         rendered_item = self.render_selected_item(
-            escape(ustr(item_text)),
+            html_quote(ustr(item_text)),
             item_value,
             key,
             css_class,
@@ -1039,7 +1039,7 @@ class MultiItemsWidget(ItemsWidget):
         selected_found[index] = 1
       else:
         rendered_item = self.render_item(
-            escape(ustr(item_text)),
+            html_quote(ustr(item_text)),
             item_value,
             key,
             css_class,
@@ -1050,7 +1050,7 @@ class MultiItemsWidget(ItemsWidget):
     for index in range(len(value)):
       v = value[index]
       if index not in selected_found and v:
-        v = escape(v)
+        v = html_quote(v)
         rendered_item = self.render_selected_item('??? (%s)' % v,
                                                   v,
                                                   key,

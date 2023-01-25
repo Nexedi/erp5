@@ -42,7 +42,7 @@ gap_text = \
      * [131] Rachunek bieżący
      * [132] Rachunek walutowy
      * [133] Kredyty bankowe
-     * [134] Inne rachunki bankowe 
+     * [134] Inne rachunki bankowe
        * [1341] Rachunek bankowy wyodrębnionych środków pieniężnych ZFŚS
        * [1342] Rachunek bankowy lokat terminowych (według poszczególnych lokat)
        * [1343] Rachunek bankowy akredytywy (według poszczególnych kontrahentów}
@@ -65,19 +65,19 @@ gap_text = \
      * [223] Rozrachunki z urzędem skarbowym z tytułu VAT naliczonego
        * [2231] rozliczenie naliczonego VAT
        * [2232] korekty naliczonego VAT
-     * [224] Pozostałe rozrachunki publicznoprawne 
-       * [2241] Rozrachunki publicznoprawne z urzędem skarbowym 
+     * [224] Pozostałe rozrachunki publicznoprawne
+       * [2241] Rozrachunki publicznoprawne z urzędem skarbowym
          * [22411] podatek dochodowy
          * [22412] podatek od czynności cywilnoprawnych
        * [2242] Rozrachunki publicznoprawne z urzędem miasta/gminy
          * [22421] Podatek od nieruchomości
          * [22422] podatek od środków transportowych
        * [2243] Rozrachunki publicznoprawne z urzędem celnym
-       * [2244] Rozrachunki publicznoprawne z ZUS 
+       * [2244] Rozrachunki publicznoprawne z ZUS
        * [2245]  Rozrachunki publicznoprawne z PFRON
    * [23] Rozrachunki z tytułu wynagrodzeń i innych świadczeń na rzecz pracowników
      * [231] Rozrachunki z tytułu wynagrodzeń
-       * [2311] umowa o pracę 
+       * [2311] umowa o pracę
        * [2312] umowy cywilnoprawne
      * [232] Rozrachunki z pracownikami
        * [2321] zaliczki
@@ -86,7 +86,7 @@ gap_text = \
      * [242] Rozrachunki z udziałowcami
    * [25] Pozostałe rozrachunki
      * [251] Inne rozrachunki z kontrahentami
-   * [26] Pożyczki 
+   * [26] Pożyczki
      * [261] Pożyczki otrzymane
      * [262]  Pożyczki udzielone
    * [27] Rozliczenie niedoborów i nadwyżek
@@ -116,7 +116,7 @@ gap_text = \
      * [336] Nieruchomości i prawa majątkowe przeznaczone do obrotu
    * [34] Odchylenia od cen ewidencyjnych materiałów i towarów
      * [341] Odchylenia od cen ewidencyjnych materiałów
-     * [342] Odchylenia od cen ewidencyjnych towarów 
+     * [342] Odchylenia od cen ewidencyjnych towarów
        * [3421] Odchylenia od cen ewidencyjnych towarów w hurcie
        * [3422] Odchylenia od cen ewidencyjnych towarów w detalu
        * [3423] Odchylenia od cen ewidencyjnych towarów w zakładach gastronomicznych
@@ -129,8 +129,8 @@ gap_text = \
      * [401] Amortyzacja
        * [4011] amortyzacja urządzeń technicznych
        * [4012] amortyzacja środków transportu
-     * [402] Zużycie materiałów i energii 
-       * [4021] Zużycie surowców do wytwarzania produktów 
+     * [402] Zużycie materiałów i energii
+       * [4021] Zużycie surowców do wytwarzania produktów
        * [4022] Zużycie energii
        * [4023] Zużycie paliwa dla środków transportu
          * [40231] Zużycie Oleju napędowego
@@ -142,7 +142,7 @@ gap_text = \
        * [4033] Pozostałe usługi obce
      * [404] Podatki i opłaty
        * [4041] Podatek od nieruchomości
-       * [4042]  Podatek od środków transportowych 
+       * [4042]  Podatek od środków transportowych
        * [4043] Podatek akcyzowy
        * [4045] VAT niepodlegający odliczeniu
        * [4046] Pozostałe podatki i opłaty
@@ -151,7 +151,7 @@ gap_text = \
        * [4052] Wynagrodzenia osób doraźnie zatrudnionych
      * [406] Ubezpieczenia społeczne i inne świadczenia
        * [4061]  Składki na ubezpieczenia społeczne, FP, FGŚP
-       * [4062] Odpisy na zakładowy fundusz świadczeń socjalnych lub świadczenia urlopowe 
+       * [4062] Odpisy na zakładowy fundusz świadczeń socjalnych lub świadczenia urlopowe
        * [4063] Pozostałe świadczenia
      * [407] Pozostałe koszty rodzajowe
    * [49] Rozliczenie kosztów
@@ -163,10 +163,10 @@ gap_text = \
      * [504] Koszty usług podstawowych
      * [509] Koszty braków
    * [52] Koszty działalności podstawowej - handlowej
-     * [522] Koszty działalności podstawowej - handlowej 
-       * [5221] Koszty hurtu 
-       * [5222] Koszty detalu 
-       * [5223] Koszty zakładów gastronomicznych 
+     * [522] Koszty działalności podstawowej - handlowej
+       * [5221] Koszty hurtu
+       * [5222] Koszty detalu
+       * [5223] Koszty zakładów gastronomicznych
        * [5224] Koszty skupu
      * [523] Koszty wydziałowe
      * [529] Koszty sprzedaży
@@ -176,7 +176,7 @@ gap_text = \
  * [6] Produkty i rozliczenia międzyokresowe
    * [60] Produkty gotowe i półprodukty
      * [601] Produkty gotowe
-       * [6011]  Produkty gotowe w magazynie 
+       * [6011]  Produkty gotowe w magazynie
        * [6012] Produkty gotowe poza jednostką
      * [602] Półprodukty
    * [62] Odchylenia od cen ewidencyjnych produktów
@@ -216,7 +216,7 @@ gap_text = \
  * [8] Kapitały (fundusze) własne, fundusze specjalne i wynik finansowy
    * [80] Kapitały własne
      * [801] Kapitał (fundusz) podstawowy
-     * [802] Kapitał (fundusz) zapasowy 
+     * [802] Kapitał (fundusz) zapasowy
      * [803] Kapitał (fundusz) rezerwowy
      * [804] Kapitał (fundusz) z aktualizacji wyceny
      * [805] Kapitały  (fundusze)  wydzielone w jednostce statutowej  i  zakładach  (oddziałach) samodzielnie sporządzających bilans
@@ -228,8 +228,8 @@ gap_text = \
    * [84] Fundusze specjalne
      * [841] Zakładowy fundusz świadczeń socjalnych
      * [842] Inne fundusze specjalne
-       * [8421] Zakładowy fundusz rehabilitacji osób niepełnosprawnych 
-       * [8422] Fundusz nagród 
+       * [8421] Zakładowy fundusz rehabilitacji osób niepełnosprawnych
+       * [8422] Fundusz nagród
        * [8423]  Fundusz na remonty zasobów mieszkaniowych
    * [86] Wynik finansowy
    * [87] Podatek dochodowy i inne obowiązkowe obciążenia wyniku finansowego
@@ -253,8 +253,8 @@ for line in gap_text.splitlines():
     parent = gap.restrictedTraverse('/'.join(path))
     print 'Added to ',parent
 
-  parent.newContent(id=num, title=descr)  
-  
+  parent.newContent(id=num, title=descr)
+
 
 
 return printed

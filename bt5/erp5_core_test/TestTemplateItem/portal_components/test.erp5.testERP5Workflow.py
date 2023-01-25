@@ -131,6 +131,22 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     history = doc.workflow_history['wf']
     self.assertEqual(len(history), 2)# create, transition1
+    
+    transition_variable = transition1.newContent(
+      portal_type='Workflow Transition Variable',
+      causality_value=variable1,
+      variable_default_expression='string:Set by transition variable',
+    )
+    workflow._executeTransition(doc,transition1)
+    self.assertEqual(
+      workflow.getCurrentStatusDict(doc)['variable1'],
+      "Set by transition variable")
+
+    # Without an expression, the variable is set to None
+    transition_variable.setVariableDefaultExpression(None)
+    workflow._executeTransition(doc,transition1)
+    self.assertEqual(workflow.getCurrentStatusDict(doc)['variable1'], None)
+
 
 
   def test_afterScript(self):
@@ -222,20 +238,6 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
   def test_InteractionGuards(self):
     self.test_TransitionGuards(transition_type='Interaction Workflow Interaction')
-
-  def test_Base_viewDict(self):
-    """
-    verify that Base_viewDict view can be accessed
-    """
-    workflow = self.workflow_module.newContent(portal_type='Workflow')
-    state = workflow.newContent(portal_type='Workflow State', title='Some State')
-    state.Base_viewDict()
-    transition = workflow.newContent(portal_type='Workflow Transition',
-                                     title='Some Transition')
-    transition.setReference('change_something')
-    transition.setGuardRoleList(['Assignee', 'Assignor'])
-    transition.setCategoryList('destination/' + transition.getPath())
-    transition.Base_viewDict()
 
   # XXX: When ERP5Workflow was designed for Configurator, it was deemed
   #      necessary for WorkflowTool to not be viewable by Anonymous but

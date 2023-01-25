@@ -128,7 +128,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     career.start()
     self.tic()
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
-    self.assertFalse(person in [x.getSourceValue() for x in portal.external_account_module.objectValues()])
+    self.assertNotIn(person, [x.getSourceValue() for x in portal.external_account_module.objectValues()])
 
 
 def test_suite():

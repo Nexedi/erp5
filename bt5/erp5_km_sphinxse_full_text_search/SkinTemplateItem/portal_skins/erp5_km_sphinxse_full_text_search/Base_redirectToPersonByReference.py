@@ -10,5 +10,5 @@ else:
   # logged in user (or anonymous) can't access or no such user exists
   context.Base_redirect(
     form_id = 'view',
-    keep_items = {'portal_status_message': 
+    keep_items = {'portal_status_message':
                      context.Base_translateString('You can not access person object.')})

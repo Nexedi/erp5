@@ -39,14 +39,14 @@ if to_currency is not None:
     temp_object.edit(**temp_kw)
     object_ = temp_object
     mapped_value = context.portal_domains.generateMappedValue(object_,
-                                                      has_cell_content=0, 
+                                                      has_cell_content=0,
                                                       validation_state='validated',
                                                       sort_method=sort_by_date)
     base_price = getattr(mapped_value, 'base_price', None)
     discount = getattr(mapped_value, 'discount', None)
     if base_price is None and discount is None:
       mapped_value = context.portal_domains.generateMappedValue(object_,
-                                                      has_cell_content=1, 
+                                                      has_cell_content=1,
                                                       validation_state='validated',
                                                       sort_method=sort_by_date)
       base_price = getattr(mapped_value, 'base_price', None)
@@ -54,7 +54,7 @@ if to_currency is not None:
     result = [base_price, discount]
     return result
   # The cache duration must not be too long, 300 is the maximum
-  calculateExchangeFromParameters = CachingMethod(calculateExchangeFromParameters, 
+  calculateExchangeFromParameters = CachingMethod(calculateExchangeFromParameters,
                       id = 'calculateExchangeFromParameters', cache_factory = 'erp5_ui_short')
   result = calculateExchangeFromParameters(start_date=start_date,
                        currency_exchange_type=currency_exchange_type,
@@ -64,16 +64,16 @@ else:
     if getattr(context,'isDelivery',None):
       start_date = context.getStartDate()
   mapped_value = context.portal_domains.generateMappedValue(object_,
-                                                   has_cell_content=0, 
+                                                   has_cell_content=0,
                                                    validation_state='validated',
                                                    sort_method=sort_by_date)
   base_price = getattr(mapped_value, 'base_price', None)
   discount = getattr(mapped_value, 'discount', None)
   if base_price is None and discount is None:
     mapped_value = context.portal_domains.generateMappedValue(object_,
-                                                   has_cell_content=1, 
+                                                   has_cell_content=1,
                                                    validation_state='validated',
-                                                   sort_method=sort_by_date)  
+                                                   sort_method=sort_by_date)
     base_price = getattr(mapped_value, 'base_price', None)
     discount = getattr(mapped_value, 'discount', None)
   result = [base_price, discount]

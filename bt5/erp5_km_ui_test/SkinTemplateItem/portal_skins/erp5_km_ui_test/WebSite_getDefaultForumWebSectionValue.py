@@ -1,7 +1,7 @@
 """
   Every site should have one forum as theme uses it to get latest discussion posts.
   Forum relative url is taken from web site configuration itself.
-  
+
   This is all arbitrary...
 """
 

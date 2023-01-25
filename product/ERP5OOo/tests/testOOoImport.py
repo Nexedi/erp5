@@ -65,17 +65,17 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     gender_bc = self.gender_base_cat_id
     if gender_bc not in portal_categories.objectIds():
       portal_categories.newContent(portal_type='Base Category', id=gender_bc)
-    if not portal_categories[gender_bc].has_key('male'):
+    if 'male' not in portal_categories[gender_bc]:
       portal_categories[gender_bc].newContent(id='male', portal_type='Category', title='Male')
-    if not portal_categories[gender_bc].has_key('female'):
+    if 'female' not in portal_categories[gender_bc]:
       portal_categories[gender_bc].newContent(id='female', portal_type='Category', title='Female')
 
     function_bc = self.function_base_cat_id
     if function_bc not in portal_categories.objectIds():
       portal_categories.newContent(portal_type='Base Category', id=function_bc)
-    if not portal_categories[function_bc].has_key('director'):
+    if 'director' not in portal_categories[function_bc]:
       portal_categories[function_bc].newContent(id='director', portal_type='Category', title='Director')
-    if not portal_categories[function_bc].has_key('manager'):
+    if 'manager' not in portal_categories[function_bc]:
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
 
     self.portal.portal_caches.clearCache()
@@ -635,9 +635,9 @@ class TestOOoImport(TestOOoImportMixin):
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
@@ -655,9 +655,9 @@ class TestOOoImport(TestOOoImportMixin):
         existing_category_list='delete')
     self.tic()
     self.assertEqual(2, len(region))
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
@@ -679,7 +679,7 @@ class TestOOoImport(TestOOoImportMixin):
     self.tic()
     self.assertEqual(3, len(region))
     # dummy region is in used so it was not deleted
-    self.assertTrue('dummy_region' in region.objectIds())
+    self.assertIn('dummy_region', region.objectIds())
 
   def test_CategoryTool_importCategoryFileForcedDeletionSupportForCategoriesInUse(self):
     region = self.portal.portal_categories.region
@@ -694,7 +694,7 @@ class TestOOoImport(TestOOoImportMixin):
         existing_category_list='force_delete')
     self.tic()
     self.assertEqual(2, len(region))
-    self.assertFalse('dummy_region' in region.objectIds())
+    self.assertNotIn('dummy_region', region.objectIds())
 
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
@@ -706,10 +706,10 @@ class TestOOoImport(TestOOoImportMixin):
         existing_category_list='expire')
     self.tic()
     self.assertEqual(3, len(region))
-    self.assertTrue('dummy_region' in region.objectIds())
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('dummy_region', region.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))
@@ -724,9 +724,9 @@ class TestOOoImport(TestOOoImportMixin):
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('France', france.getTitle())
     self.assertEqual('A Country', france.getDescription())
@@ -740,9 +740,9 @@ class TestOOoImport(TestOOoImportMixin):
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('France', france.getTitle())
     self.assertEqual('A Country', france.getDescription())
@@ -758,9 +758,9 @@ class TestOOoImport(TestOOoImportMixin):
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('Frànce', france.getTitle())
     self.assertEqual('A Country', france.getDescription())
@@ -821,7 +821,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       # 'france' is the duplicate ID in this spreadsheet
       self.assertTrue('france' in str(error), str(error))
     else:
@@ -840,7 +840,7 @@ class TestOOoImport(TestOOoImportMixin):
          invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
 
     self.assertEqual(1, len(message_list))
-    self.assertTrue('france' in str(message_list[0]))
+    self.assertIn('france', str(message_list[0]))
 
   def test_Base_getCategoriesSpreadSheetMapping_WrongHierarchy(self):
     # tests Base_getCategoriesSpreadSheetMapping when the spreadsheet has an
@@ -850,7 +850,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       # 'wrong_hierarchy' is the ID of the category where the problem happens
       self.assertTrue('wrong_hierarchy' in str(error), str(error))
     else:
@@ -864,7 +864,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       self.assertTrue('More that one path is defined' in str(error), str(error))
     else:
       self.fail('ValueError not raised')
@@ -951,13 +951,13 @@ class TestOOoImportWeb(TestOOoImportMixin):
         existing_category_list='expire')
     self.tic()
     self.assertEqual(4, len(region))
-    self.assertTrue('dummy_region' in region.objectIds())
+    self.assertIn('dummy_region', region.objectIds())
     self.assertEqual(region.dummy_region.getValidationState(), 'expired')
-    self.assertTrue('dummy_expired_region' in region.objectIds())
+    self.assertIn('dummy_expired_region', region.objectIds())
     self.assertEqual(region.dummy_expired_region.getValidationState(), 'expired')
-    self.assertTrue('europe' in region.objectIds())
-    self.assertTrue('germany' in region.europe.objectIds())
-    self.assertTrue('france' in region.europe.objectIds())
+    self.assertIn('europe', region.objectIds())
+    self.assertIn('germany', region.europe.objectIds())
+    self.assertIn('france', region.europe.objectIds())
     france = region.europe.france
     self.assertEqual('France', france.getTitle())
     self.assertTrue(france.hasProperty('title'))

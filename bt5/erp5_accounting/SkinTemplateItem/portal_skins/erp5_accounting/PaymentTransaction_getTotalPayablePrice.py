@@ -2,7 +2,7 @@ if brain is not None:
   transaction = brain.getObject()
 else:
   transaction = context
-    
+
 def getTotalPrice(transaction_path):
   is_source = transaction.AccountingTransaction_isSourceView()
   total_price = 0

@@ -54,7 +54,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>content</string>
+                        <string>your_content</string>
                       </list>
                     </value>
                 </item>
@@ -62,7 +62,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>override_document_description</string>
+                        <string>your_override_document_description</string>
                       </list>
                     </value>
                 </item>
@@ -76,16 +76,17 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>format</string>
-                        <string>include_history_table</string>
-                        <string>include_content_table</string>
-                        <string>include_reference_table</string>
-                        <string>include_linked_content</string>
-                        <string>include_report_content</string>
-                        <string>display_svg</string>
-                        <string>document_save</string>
-                        <string>portal_skin</string>
-                        <string>margin15mm</string>
+                        <string>your_format</string>
+                        <string>your_include_history_table</string>
+                        <string>your_include_content_table</string>
+                        <string>your_include_reference_table</string>
+                        <string>your_include_linked_content</string>
+                        <string>your_include_report_content</string>
+                        <string>your_display_svg</string>
+                        <string>your_document_save</string>
+                        <string>your_portal_skin</string>
+                        <string>your_margin15mm</string>
+                        <string>your_theme</string>
                       </list>
                     </value>
                 </item>
@@ -93,13 +94,13 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>override_document_title</string>
-                        <string>override_document_short_title</string>
-                        <string>override_document_reference</string>
-                        <string>override_logo_reference</string>
-                        <string>override_source_organisation_title</string>
-                        <string>override_source_person_title</string>
-                        <string>override_document_version</string>
+                        <string>your_override_document_title</string>
+                        <string>your_override_document_short_title</string>
+                        <string>your_override_document_reference</string>
+                        <string>your_override_logo_reference</string>
+                        <string>your_override_source_organisation_title</string>
+                        <string>your_override_source_person_title</string>
+                        <string>your_override_document_version</string>
                       </list>
                     </value>
                 </item>

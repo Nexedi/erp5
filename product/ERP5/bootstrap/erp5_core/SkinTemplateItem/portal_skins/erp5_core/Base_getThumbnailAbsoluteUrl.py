@@ -1,6 +1,6 @@
 """
   This script tries to produce a thumbnail for any
-  document which supports thumbnails. If more document 
+  document which supports thumbnails. If more document
   types provide a thumbnail, this script must be extended.
 
   TODO:

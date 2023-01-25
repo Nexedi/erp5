@@ -3,7 +3,7 @@
   For example:
 
   search_text = DMS reference:bt5-dms version:001 language:bg mine:yes (portal_type:Presentation OR portal_type:File) created:12m contributor_title:%tyagov%
-  
+
   will parse search_text and generate a complexQuery which will return all documents which:
   - have full_text searchable text containing "DMS"
   - have reference equal to bt5-dms

@@ -12,11 +12,11 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
                      close_fds=True)
     output, _ = process.communicate(input=data)
   elif barcode_type == 'ean13':
-    from hubarcode.ean13 import EAN13Encoder 
+    from hubarcode.ean13 import EAN13Encoder
     encoder = EAN13Encoder(data)
     output = encoder.get_imagedata()
   elif barcode_type == 'code128':
-    from hubarcode.code128 import Code128Encoder 
+    from hubarcode.code128 import Code128Encoder
     encoder = Code128Encoder(data)
     encoder.text = '' # get barcode image only
     output = encoder.get_imagedata()

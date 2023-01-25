@@ -100,7 +100,8 @@ class TransactionThread(threading.Thread):
       # Login
       newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
       self.payload(portal_value=portal_value)
-    except Exception as self.exception: # pylint: disable=redefine-in-handler
+    except Exception as e: # pylint: disable=redefine-in-handler
+      self.exception = e # pylint: disable=redefine-in-handler
       if six.PY2:
         self.exception.__traceback__ = sys.exc_info()[2]
 
@@ -275,11 +276,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self.assertFalse(path_base + url in path_list, url)
 
   def test_01_HasEverything(self):
-    self.assertNotEquals(self.getCategoryTool(), None)
-    self.assertNotEquals(self.getSimulationTool(), None)
-    self.assertNotEquals(self.getTypeTool(), None)
-    self.assertNotEquals(self.getSQLConnection(), None)
-    self.assertNotEquals(self.getCatalogTool(), None)
+    self.assertNotEqual(self.getCategoryTool(), None)
+    self.assertNotEqual(self.getSimulationTool(), None)
+    self.assertNotEqual(self.getTypeTool(), None)
+    self.assertNotEqual(self.getSQLConnection(), None)
+    self.assertNotEqual(self.getCatalogTool(), None)
 
   def test_02_EverythingCatalogued(self):
     portal_catalog = self.getCatalogTool()
@@ -588,7 +589,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     for _ in xrange(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
       self.assertTrue(isinstance(uid, long))
-      self.assertFalse(uid in uid_dict)
+      self.assertNotIn(uid, uid_dict)
       uid_dict[uid] = None
 
   def test_17_CreationDate_ModificationDate(self):
@@ -811,7 +812,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person_module.newContent(portal_type='Person', title='A Person')
     self.tic()
-    self.assertNotEquals([], self.getCatalogTool().searchResults(
+    self.assertNotEqual([], self.getCatalogTool().searchResults(
                                      portal_type='Person', title=u'A Person'))
 
   def test_23_DeleteObjectRaiseErrorWhenQueryFail(self):
@@ -833,15 +834,15 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.abort()
 
   def test_24_SortOn(self):
-    self.assertTrue(
+    self.assertIn(
             self.getCatalogTool().buildSQLQuery(
-            sort_on=(('catalog.title', 'ascending'),))['order_by_expression'] in \
+            sort_on=(('catalog.title', 'ascending'),))['order_by_expression'], \
             ('catalog.title', '`catalog`.`title` ASC', 'catalog.title ASC'))
 
   def test_25_SortOnDescending(self):
-    self.assertTrue(
+    self.assertIn(
             self.getCatalogTool().buildSQLQuery(
-            sort_on=(('catalog.title', 'descending'),))['order_by_expression'] in \
+            sort_on=(('catalog.title', 'descending'),))['order_by_expression'], \
             ('catalog.title DESC', '`catalog`.`title` DESC'))
 
   def test_26_SortOnUnknownKeys(self):
@@ -852,9 +853,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_27_SortOnAmbigousKeys(self):
     # if the sort key is found on the catalog table, it will use that catalog
     # table.
-    self.assertTrue(
+    self.assertIn(
           self.getCatalogTool().buildSQLQuery(
-          sort_on=(('title', 'ascending'),))['order_by_expression'] in \
+          sort_on=(('title', 'ascending'),))['order_by_expression'], \
           ('catalog.title', '`catalog`.`title` ASC'))
 
     # if not found on catalog, it won't do any filtering
@@ -863,18 +864,18 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           sort_on=(('start_date', 'ascending'),))
 
     # of course, in that case, it's possible to prefix with table name
-    self.assertTrue(
+    self.assertIn(
           self.getCatalogTool().buildSQLQuery(
           sort_on=(('delivery.start_date', 'ascending'),
-                    ))['order_by_expression'] in \
+                    ))['order_by_expression'], \
           ('delivery.start_date', 'delivery.start_date ASC'))
 
   def test_28_SortOnMultipleKeys(self):
-    self.assertTrue(
+    self.assertIn(
               self.getCatalogTool().buildSQLQuery(
               sort_on=(('catalog.title', 'ascending'),
                        ('catalog.id', 'asc')))
-                       ['order_by_expression'].replace(' ', '') in \
+                       ['order_by_expression'].replace(' ', ''), \
               ('catalog.title,catalog.id', '`catalog`.`title`ASC,`catalog`.`id`ASC', 'catalog.titleASC,catalog.idASC'))
 
   def test_29_SortOnRelatedKey(self):
@@ -952,7 +953,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                        src)
 
     self.tic()
-    self.assertNotEquals(0, len(portal.portal_catalog(
+    self.assertNotEqual(0, len(portal.portal_catalog(
       portal_type='Address',
       sort_on=[('grand_parent_portal_type', 'ascending')])))
 
@@ -1372,7 +1373,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Catalog structure changed, so we should be able to build new queries
     # with new table columns
     # Check that column map is updated according new structure of catalog.
-    self.assertTrue('dummy.dummy_title' in portal_catalog.getSQLCatalog().getColumnMap())
+    self.assertIn('dummy.dummy_title', portal_catalog.getSQLCatalog().getColumnMap())
     # Check more cached methods of SQLCatalog by building SQLQuery
     query = portal_catalog.getSQLCatalog().buildQuery(kw={'dummy.dummy_title': 'Foo'})
     self.assertTrue(query.query_list)
@@ -1393,7 +1394,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEqual(portal_catalog.getSQLCatalog().getId(), new_catalog_id)
     # Check that column map is updated according new structure of catalog.
-    self.assertTrue('dummy.dummy_title' in portal_catalog.getSQLCatalog().getColumnMap())
+    self.assertIn('dummy.dummy_title', portal_catalog.getSQLCatalog().getColumnMap())
     # Check more cached methods of SQLCatalog by building SQLQuery
     query = portal_catalog.getSQLCatalog().buildQuery(kw={'dummy.dummy_title': 'Foo'})
     self.assertTrue(query.query_list)
@@ -3755,7 +3756,7 @@ VALUES
     person_id = person.getId()
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertTrue(person_id in folder_object_list)
+    self.assertIn(person_id, folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
     self.assertEqual([person_id],folder_object_list)
@@ -3773,7 +3774,7 @@ VALUES
     person_id = person.getId()
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertTrue(person_id in folder_object_list)
+    self.assertIn(person_id, folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(**{'catalog.title':title})]
     self.assertEqual([person_id],folder_object_list)
@@ -3788,7 +3789,7 @@ VALUES
     person_id = person.getId()
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertTrue(person_id in folder_object_list)
+    self.assertIn(person_id, folder_object_list)
     folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
     self.assertEqual([person_id],folder_object_list)
@@ -3831,14 +3832,14 @@ VALUES
     person = erp5.portal_type.Person(person_id)
     person.setDefaultReindexParameters(activate_kw={'after_tag': self.id()})
     person = person_module[person_module._setObject(person_id, person)]
-    self.assertFalse('uid' in person.__dict__)
+    self.assertNotIn('uid', person.__dict__)
     person.uid = None
 
     assignment_id = person.generateNewId()
     assignment = erp5.portal_type.Assignment(assignment_id)
     assignment.setDefaultReindexParameters(activate_kw={'tag': self.id()})
     assignment = person[person._setObject(assignment_id, assignment)]
-    self.assertFalse('uid' in assignment.__dict__)
+    self.assertNotIn('uid', assignment.__dict__)
     assignment.uid = None
     self.commit()
 
@@ -4117,7 +4118,34 @@ VALUES
     # but a proper page
     self.assertIn('<title>Catalog Tool - portal_catalog', ret.getBody())
 
+  def testSearchNonAsciiWithTheInitUser(self):
+    """
+    Test non ascii search with the inituser given by the inituser-login from slapos 
+    (typically the 'zope' user)
+    """
+    person_module = self.getPersonModule()
+    person_title = 'abcdé'
+    person_module.newContent(portal_type='Person', title=person_title)
+    self.tic()
+    
+    uf = self.getPortal().acl_users
+    # The inituser is decoded by `decode('utf-8')` on Zope4 startup, and it is unicode on py2
+    # see:
+    # https://github.com/zopefoundation/AccessControl/commit/9a9c57f1c6311251a6e51a326751cf81e2810e2c
+    
+    # imitate the inituser handling
+    inituser_login = b'zope_testSearchNonAsciiWithLegacyUserFolderUser'
+    inituser_str = inituser_login.decode('utf-8')
+    self.assertTrue(isinstance(inituser_str, six.text_type))
+    uf._doAddUser(inituser_str, '', ['Member', 'Assignor'], [])
+    self.loginByUserName(inituser_str)
 
+    folder_object_list = [x.getObject().getId() for x in
+                              person_module.searchFolder(title=person_title)]
+    search_result = person_module.searchFolder(title=person_title)
+    self.assertTrue(len(search_result) > 0)
+    self.assertEqual('abcdé', search_result[0].getObject().getTitle())
+  
 class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
   """Tests for "upgrade schema" feature of ERP5 Catalog.
   """
@@ -4240,13 +4268,13 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     self.query_connection_2("SELECT b from table2")
     self.query_connection_2("SELECT b from table_deferred2")
 
-    with self.assertRaisesRegexp(ProgrammingError,
+    with self.assertRaisesRegex(ProgrammingError,
                                  r"Table '.*\.table2' doesn't exist"):
       self.query_connection_1("SELECT b from table2")
-    with self.assertRaisesRegexp(ProgrammingError,
+    with self.assertRaisesRegex(ProgrammingError,
                                  r"Table '.*\.table_deferred2' doesn't exist"):
       self.query_connection_1("SELECT b from table_deferred2")
-    with self.assertRaisesRegexp(ProgrammingError,
+    with self.assertRaisesRegex(ProgrammingError,
                                  r"Table '.*\.table1' doesn't exist"):
       self.query_connection_2("SELECT b from table1")
 

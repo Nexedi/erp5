@@ -18,11 +18,11 @@ for person in sorted(
       key=display_method):
   domain = parent.generateTempDomain(id=person.getId())
   domain.edit(title = display_method(person),
-              membership_criterion_base_category = ('source', 'destination'), 
+              membership_criterion_base_category = ('source', 'destination'),
               membership_criterion_category = (person.getRelativeUrl(),),
               domain_generator_method_id = script.id,
               uid = person.getUid())
-                
+
   domain_list.append(domain)
 
 return domain_list

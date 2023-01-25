@@ -38,7 +38,7 @@ if len(use_list) == 0:
     portal_status_message=translateString('Use preference must be defined.'),
     portal_status_level='error',
   ))
-  
+
 if section_uid is None:
   from Products.ERP5Type.Message import translateString
   return context.Base_redirect('view', keep_items=dict(

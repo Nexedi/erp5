@@ -34,6 +34,7 @@
 from OFS.SimpleItem import SimpleItem
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
 from AccessControl import ClassSecurityInfo
+from ZTUtils import make_query
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -730,15 +731,17 @@ class SelectionTool( BaseTool, SimpleItem ):
           url = REQUEST.getURL()
       else:
         url = REQUEST.getURL()
-      ignore_layout = int(REQUEST.get('ignore_layout', 0))
       if form_id != 'view':
         url += '/%s' % form_id
-      url += '?selection_index=%s&selection_name=%s' % (selection_index, selection_name)
-      if ignore_layout:
-        url += '&ignore_layout:int=1'
+      query_kw = {
+        'selection_index': selection_index,
+        'selection_name': selection_name,
+      }
+      if int(REQUEST.get('ignore_layout', 0)):
+        query_kw['ignore_layout'] = 1
       if self.isAnonymous():
-        url += '&selection_key=%s' % self.getAnonymousSelectionKey(selection_name, REQUEST=REQUEST)
-      REQUEST.RESPONSE.redirect(url)
+        query_kw['selection_key'] = self.getAnonymousSelectionKey(selection_name, REQUEST=REQUEST)
+      REQUEST.RESPONSE.redirect('%s?%s' % (url, make_query(query_kw)))
 
     # ListBox related methods
 

@@ -68,7 +68,7 @@ class MilestoneReportingMixin:
     report_html = \
         self.portal.project_module.ProjectModule_generateMilestoneReport(
              from_date=from_date, at_date=at_date)
-    self.assertFalse('Site Error' in report_html)
+    self.assertNotIn('Site Error', report_html)
 
     line_list = self.portal.sale_order_module.\
         ProjectModule_viewMilestoneReport.listbox.\

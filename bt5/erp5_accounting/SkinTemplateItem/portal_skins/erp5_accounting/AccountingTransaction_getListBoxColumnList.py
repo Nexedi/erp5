@@ -53,14 +53,14 @@ if context.AccountingTransactionLine_getFunctionItemList(source=source):
     a(('source_function', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))
   else:
     a(('destination_function', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()))
-    
+
 if context.AccountingTransactionLine_getFundingItemList(source=source):
   if source:
     a(('source_funding', context.AccountingTransactionLine_getFundingBaseCategoryTitle()))
   else:
     a(('destination_funding', context.AccountingTransactionLine_getFundingBaseCategoryTitle()))
 
-  
+
 if multiple_sections:
   if source:
     a(('getDestinationSectionTitle', 'Third Party'))

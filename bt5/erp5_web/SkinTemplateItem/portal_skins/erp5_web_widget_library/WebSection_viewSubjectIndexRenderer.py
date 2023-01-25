@@ -1,6 +1,6 @@
 """
   XXX This script does not work after the change of subject table in r40057.
-  
+
   This Widget lists all documents of the current section
   by subject. For each subject, it creates a title (<h1>)
   then lists all documents which meet the section predicate
@@ -48,7 +48,7 @@ def buildIndex(language=None):
   return '\n'.join(result)
 
 from Products.ERP5Type.Cache import CachingMethod
-buildIndex = CachingMethod(buildIndex, 
+buildIndex = CachingMethod(buildIndex,
                    id=('WebSection_viewSubjectIndexRenderer', web_section_url))
 language = context.Localizer.get_selected_language()
 return buildIndex(language=language)

@@ -21,13 +21,13 @@ ConfigUserFilesPath=""
 fckParams=context.getFck_params()
 
 
-# special review_states 
+# special review_states
 # (unpublished states for contents which need to be hidden to local_roles
 # not in fck prefs rolesSeeUnpublishedContent even with View permission )
 unpublishedStates=fckParams['fck_unpublished_states']
 
 # special local_roles who can see unpublished contents according to permissions
-# by default set to fck unpublished view roles (fck prefs) 
+# by default set to fck unpublished view roles (fck prefs)
 rolesSeeUnpublishedContent = fckParams['fck_unpublished_view_roles']
 
 # PloneArticle based meta_types
@@ -86,7 +86,7 @@ ConfigDeniedExtensions =  {"File":("py",
                           "Flash":None,
                           "Media":None}
 
-# set link by UID for AT content Types 
+# set link by UID for AT content Types
 linkbyuid=test(fckParams['allow_link_byuid'],1,0)
 
 # check if upload allowed for Links Image and internal links
@@ -102,7 +102,7 @@ file_portal_type = test(fckParams['file_portal_type'],fckParams['file_portal_typ
 image_portal_type = test(fckParams['image_portal_type'],fckParams['image_portal_type'],'Image')
 flash_portal_type = test(fckParams['flash_portal_type'],fckParams['flash_portal_type'],'File')
 
-# find Plone Site charset 
+# find Plone Site charset
 
 try:
   prop   = getToolByName(context, "portal_properties")
@@ -156,7 +156,7 @@ def RemoveExtension( fileName ):
    return '.'.join(sprout[:len(sprout)-1])
 
 def  IsAllowedExt( extension, resourceType ) :
-  
+
    sAllowed = ConfigAllowedExtensions[resourceType]
    sDenied = ConfigDeniedExtensions[resourceType]
 
@@ -170,7 +170,7 @@ def FindExtension (fileName):
    sprout=fileName.split(RemoveExtension(fileName))
    return ''.join(sprout).lstrip('.')
 
-  
+
 
 
 
@@ -202,7 +202,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
     if isPA ==0:
         for result in results :
             titre = result.title_or_id()
-            if linkbyuid and hasattr(result.aq_explicit, 'UID'):               
+            if linkbyuid and hasattr(result.aq_explicit, 'UID'):
                tagLinkbyuid="yes"
                uid = result.UID()
             else :
@@ -270,7 +270,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
                 image_size = context.plonearticle_format_size(image.get_size())
                 tagPhoto= "no"
                 isAttach = "no"
-                if linkbyuid and hasattr(image.aq_explicit, 'UID'):               
+                if linkbyuid and hasattr(image.aq_explicit, 'UID'):
                     tagLinkbyuid="yes"
                     uid = image.UID()
                 else:
@@ -286,7 +286,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
                   type="%s"
                   isPA3img="yes"
                   isattach="%s"
-                  attachid="%s" />'''%(ConvertToXmlAttribute(image_id), 
+                  attachid="%s" />'''%(ConvertToXmlAttribute(image_id),
                                        image_size,
                                        ConvertToXmlAttribute(image_title),
                                        tagPhoto,
@@ -307,7 +307,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
                     attach_size = context.plonearticle_format_size(attach.get_size())
                     tagPhoto= "no"
                     isAttach = "no"
-                    if linkbyuid and hasattr(attach.aq_explicit, 'UID'):               
+                    if linkbyuid and hasattr(attach.aq_explicit, 'UID'):
                         tagLinkbyuid="yes"
                         uid = attach.UID()
                     else:
@@ -333,7 +333,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
                                        isAttach,
                                        ConvertToXmlAttribute(attach_name)))
 
-                
+
         # PloneArticle v2.x
         else:
             tagLinkbyuid="no"
@@ -373,7 +373,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
                                        uid,
                                        resourceType,
                                        isAttach,
-                                       ConvertToXmlAttribute(attachId)))            
+                                       ConvertToXmlAttribute(attachId)))
 
             # files and other ressources types
             if len(results.listAttachments())>0 and resourceType!='Image':
@@ -410,7 +410,7 @@ def xmlString(results, resourceType, foldersOnly, isPA):
                                        uid,
                                        resourceType,
                                        isAttach,
-                                       ConvertToXmlAttribute(attachId)))            
+                                       ConvertToXmlAttribute(attachId)))
 
 
 
@@ -467,7 +467,7 @@ def GetFoldersAndFiles( resourceType, currentFolder ):
 
     # objet Plone article find attachements and images
     else:
-        # oblige d'envoyer l'objet car trop specifique 
+        # oblige d'envoyer l'objet car trop specifique
         return xmlString(obj,resourceType,0,1)
 
 
@@ -528,7 +528,7 @@ def CreateFolder(currentFolder, folderName ):
         sErrorDescription = "folder creation forbidden"
 
     return CreateXmlErrorNode(sErrorNumber,sErrorDescription)
-       
+
 
 
 
@@ -543,7 +543,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
             obj = context.portal_url.getPortalObject()
         error=""
         idObj=""
-        
+
         if obj.meta_type != 'PloneArticle':
             # define Portal Type to add
 
@@ -560,7 +560,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
                     typeToAdd = 'ATPhoto'
                 else:
                     typeToAdd = image_portal_type
-        
+
 
             if not user.has_permission('Add portal content', obj) and not user.has_permission('Modify portal content', obj):
                error = "103"
@@ -575,7 +575,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
                error = "103"
 
             if not data:
-              #pas de fichier 
+              #pas de fichier
               error= "202"
 
 
@@ -584,18 +584,18 @@ def UploadFile(resourceType, currentFolder, data, title) :
             titre_data=filename[max(string.rfind(filename, '/'),
                             string.rfind(filename, '\\'),
                             string.rfind(filename, ':'),
-                            )+1:]                  
+                            )+1:]
 
             idObj=fckCreateValidZopeId(utf8Encode(titre_data))
 
             if title :
                titre_data=title
-            
+
 
             if not IsAllowedExt( FindExtension(idObj), resourceType ):
                   error= "202"
 
-            if not error :              
+            if not error :
                 error="0"
                 indice=0
                 exemple_titre=idObj
@@ -626,22 +626,22 @@ def UploadFile(resourceType, currentFolder, data, title) :
                 versionPA=2
 
             if not data:
-                #pas de fichier 
-                error= "1"        
+                #pas de fichier
+                error= "1"
                 customMsg="no file uploaded"
             else :
                 filename=utf8Decode(getattr(data,'filename', ''))
                 titre_data=filename[max(string.rfind(filename, '/'),
                                 string.rfind(filename, '\\'),
                                 string.rfind(filename, ':'),
-                                )+1:]                  
+                                )+1:]
 
                 # idObj can't be cleaned with PloneArticle attachements
                 # it's a problem but we do the job
                 idObj=fckCreateValidZopeId(utf8Encode(titre_data))
                 if title :
                     titre_data=title
-                
+
                 if resourceType == 'Image' :
                     # Upload file
                     if not user.has_permission('Modify portal content', obj):
@@ -649,7 +649,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
                     elif not allow_image_upload:
                         error = "103"
                     elif not IsAllowedExt( FindExtension(idObj), resourceType ):
-                        error= "202"        
+                        error= "202"
                         customMsg="Invalid file type"
                     elif obj.portal_article.checkImageSize(data):
                         if versionPA==2 :
@@ -672,7 +672,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
                     elif not allow_file_upload:
                         error = "103"
                     elif not IsAllowedExt( FindExtension(idObj), resourceType ):
-                        error= "202"        
+                        error= "202"
                         customMsg="Invalid file type"
                     elif obj.portal_article.checkAttachmentSize(data):
                         if versionPA==2 :
@@ -697,7 +697,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
         return d
 
 
-#7. connector 
+#7. connector
 
 
 request = context.REQUEST

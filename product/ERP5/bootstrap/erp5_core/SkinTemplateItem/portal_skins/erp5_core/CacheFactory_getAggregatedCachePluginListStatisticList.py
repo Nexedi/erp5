@@ -6,7 +6,7 @@ result = []
 for ram_cache_plugin in context.getPortalObject().portal_catalog(
                                              portal_type = 'Ram Cache',
                                              path ='%' + context.getRelativeUrl() +'%'):
-  result.append(ReportSection(path = ram_cache_plugin.getRelativeUrl(), 
+  result.append(ReportSection(path = ram_cache_plugin.getRelativeUrl(),
                               form_id = 'RamCache_viewStatisticList',
                               title = '%s/%s' %(ram_cache_plugin.getParentValue().getTitle(),
                                                 ram_cache_plugin.getTitle()),))

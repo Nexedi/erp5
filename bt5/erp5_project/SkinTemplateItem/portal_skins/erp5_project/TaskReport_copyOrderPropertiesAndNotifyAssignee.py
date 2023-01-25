@@ -47,7 +47,7 @@ if (
 
 This task is named: %(title)s
 
-Description: 
+Description:
 %(description)s
 
 Start Date: %(start_date)s
@@ -64,8 +64,8 @@ Please visit ERP5: %(url)s
        'stop_date': task_report.getStopDate().Date(),
       }
     portal.portal_notifications.sendMessage(sender=destination_decision_person,
-                                            recipient=source_person, 
-                                            subject="[ERP5 Task] %s" % task_report.getTitle(), 
+                                            recipient=source_person,
+                                            subject="[ERP5 Task] %s" % task_report.getTitle(),
                                             message=message)
 
 task_report.Delivery_confirm()

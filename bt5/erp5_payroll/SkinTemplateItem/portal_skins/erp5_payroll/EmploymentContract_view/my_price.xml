@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
                 <string>css_class</string>
-                <string>input_style</string>
+                <string>description</string>
                 <string>display_width</string>
+                <string>input_style</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -88,6 +88,10 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>The price paid for the one unit of quantity</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

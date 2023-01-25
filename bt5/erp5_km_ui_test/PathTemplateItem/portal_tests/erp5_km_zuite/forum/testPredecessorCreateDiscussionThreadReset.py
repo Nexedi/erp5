@@ -1,4 +1,4 @@
-""" 
+"""
   Make sure the objects about to be created do not exist already
 """
 

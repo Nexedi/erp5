@@ -23,12 +23,12 @@
 """
 from DateTime import DateTime
 now = DateTime()
-allowed_field_list = ('summary', 'description', 'created', 
-                      'last-modified', 'uid', 'dtstamp', 
-                      'dtstart', 'dtend', 'component', 'url', 
-                      'location', 'categories', 'status', 
+allowed_field_list = ('summary', 'description', 'created',
+                      'last-modified', 'uid', 'dtstamp',
+                      'dtstart', 'dtend', 'component', 'url',
+                      'location', 'categories', 'status',
                       'completed', 'percent-complete')
-allowed_status_list_todo = ('COMPLETED', 'IN-PROCESS', 
+allowed_status_list_todo = ('COMPLETED', 'IN-PROCESS',
                             'CANCELLED', 'NEEDS-ACTION')
 
 # mapping listbox column headers with iCalendar properties
@@ -44,7 +44,7 @@ related_column_map = {
 def convertDate(value):
   """ Format dates. """
   if hasattr(value, 'toZone'):
-    # we dont specify time zone in the file, 
+    # we dont specify time zone in the file,
     # but recalculate everything into UTC
     value = value.toZone('UTC')
     value = value.HTML4()

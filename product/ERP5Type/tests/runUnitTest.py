@@ -12,10 +12,7 @@ import errno
 import random
 import transaction
 from glob import glob
-try:
-  from coverage import coverage
-except ImportError:
-  coverage = None
+
 
 WIN = os.name == 'nt'
 
@@ -27,8 +24,6 @@ Options:
   -v, --verbose              produce verbose output
   -h, --help                 this help screen
   -p, --profile              print profiling results at the end
-  --coverage=STRING          Use the given path as a coverage config file and
-                             thus enable code coverateg report
   --portal_id=STRING         force id of the portal. Useful when using
                              --data_fs_path to run tests on an existing
                              Data.fs
@@ -141,8 +136,18 @@ Options:
                              activities.
   --zeo_server=[[HOST:]PORT] Bind the ZEO server to the given host/port.
   --zeo_client=[HOST:]PORT   Use specified ZEO server as storage.
+  --processing_node_loop=LOOP
+                             Make ZEO clients execute the given loop, one of:
+                               - processing_node: process activities only.
+                                 this is the default.
+                               - timerserver: start a timer server thread,
+                                 which will typically execute activities,
+                                 alarms and everything else registered on
+                                 timer service.
+                             This option only makes sense with --activity_node=
+                             or when not specifying a test to run.
   --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
-                             Adresses can be given in the following syntaxs:
+                             Addresses can be given in the following syntaxs:
                                - HOST:PORT
                                - PORT in this case, host will be 127.0.0.1
                                - HOST in this case a free port will be assigned
@@ -458,9 +463,6 @@ class DebugTestResult:
     self.result = result
 
   def _start_debugger(self, tb):
-    import Lifetime
-    if Lifetime._shutdown_phase:
-      return
     try:
       # try ipython if available
       import IPython
@@ -492,7 +494,7 @@ _print = sys.stderr.write
 
 def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
-    _print("conflicting options: --zeo_client and --zeo_server")
+    _print("conflicting options: --zeo_client and --zeo_server\n")
     sys.exit(1)
   instance_home =  os.environ['INSTANCE_HOME']
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(log_directory, 'zLOG.log'))
@@ -541,14 +543,20 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # Set debug mode after importing ZopeLite that resets it to 0
   cfg.debug_mode = debug
 
+  from ZPublisher.HTTPRequest import HTTPRequest
+  HTTPRequest.retry_max_count = 3
+
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
   root_logger = logging.getLogger()
   # On recent Zope, ZopeTestCase does not have any logging facility.
   # So we must emulate the usual Zope startup code to catch log messages.
   from ZConfig.matcher import SectionValue
+  logging_format = '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s'
+  if os.environ.get('activity_node'):
+    logging_format = '%(process)d ' + logging_format
   section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
-                          'format': '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s',
+                          'format': logging_format,
                           'level': logging.INFO,
                           'path': os.environ['EVENT_LOG_FILE'],
                           'max_size': None,
@@ -556,6 +564,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
                           'when': None,
                           'interval': None,
                           'formatter': None,
+                          # Zope4 config
+                          'style': 'classic',
+                          'arbitrary_fields': False,
+                          'encoding': None,
+                          'delay': None,
                           },
                          None, None)
   section.handlers = [handlers.FileHandlerFactory(section)]
@@ -580,7 +593,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
 
-  from Products.ERP5Type.patches import noZopeHelp
   from OFS.Application import AppInitializer
   AppInitializer.install_session_data_manager = lambda self: None
 
@@ -609,11 +621,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   TestRunner = unittest.TextTestRunner
 
-  import Lifetime
   from Zope2.custom_zodb import Storage, save_mysql, \
       node_pid_list, neo_cluster, zeo_server_pid, wcfs_server
   def shutdown(signum, frame, signum_set=set()):
-    Lifetime.shutdown(0)
     signum_set.add(signum)
     if node_pid_list is None and len(signum_set) > 1:
       # in case of ^C, a child should also receive a SIGHUP from the parent,
@@ -625,11 +635,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     signal.signal(signal.SIGINT, shutdown)
   signal.signal(signal.SIGHUP, shutdown)
 
-  coverage_config = os.environ.get('coverage', None)
-  if coverage_config:
-    coverage_process = coverage(config_file=coverage_config)
-    coverage_process.start()
-
   try:
     save = int(os.environ.get('erp5_save_data_fs', 0))
     load = int(os.environ.get('erp5_load_data_fs', 0))
@@ -638,11 +643,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     if zeo_server_pid == 0:
       suite = ZEOServerTestCase('asyncore_loop')
     elif node_pid_list is None or not test_list:
-      suite = ProcessingNodeTestCase('processing_node')
+      processing_node_loop = os.environ.get('processing_node_loop', 'processing_node')
+      suite = ProcessingNodeTestCase(processing_node_loop)
       if not (dummy or load):
         _print('WARNING: either --save or --load should be used because static'
                ' files are only reloaded by the node installing business'
-               ' templates.')
+               ' templates.\n')
     else:
       if dummy:
         # Skip all tests and monkeypatch PortalTestCase to skip
@@ -668,7 +674,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         ERP5TypeTestLoader.filter_test_list = None
 
     if node_pid_list is None:
-      result = suite()
+      result = suite.debug()
     else:
       if not test_list:
         root_logger.handlers.append(loghandler.StreamHandler(sys.stderr))
@@ -703,11 +709,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       # disconnected from it.
       wcfs_server.stop()
 
-  if coverage_config:
-    coverage_process.stop()
-    coverage_process.save()
-    coverage_process.html_report()
-
   if save and save_mysql:
     save_mysql(verbosity)
 
@@ -733,7 +734,7 @@ def main(argument_list=None):
   sys.argv.extend(old_argv[1:])
   try:
     opts, args = getopt.getopt(sys.argv[1:],
-        "hpvD", ["help", "verbose", "profile", "coverage=", "portal_id=",
+        "hpvD", ["help", "verbose", "profile", "portal_id=",
         "data_fs_path=",
         "bt5_path=",
         "firefox_bin=",
@@ -763,6 +764,7 @@ def main(argument_list=None):
         "live_instance=",
         "zeo_client=",
         "zeo_server=",
+        "processing_node_loop=",
         "zserver=",
         "zserver_frontend_url=",
         "neo_storage",
@@ -772,7 +774,7 @@ def main(argument_list=None):
         "log_directory=",
         "with_wendelin_core"
         ])
-  except getopt.GetoptError, msg:
+  except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
     sys.exit(2)
 
@@ -795,11 +797,6 @@ def main(argument_list=None):
     elif opt == '-D':
       debug = 1
       os.environ["erp5_debug_mode"] = str(debug)
-    elif opt == "--coverage":
-      if coverage:
-        os.environ['coverage'] = arg
-      else:
-        _print("WARNING Coverage module not found")
     elif opt in ("-p", "--profile"):
       os.environ['PROFILE_TESTS'] = "1"
       # profiling of setup and teardown is disabled by default, just set
@@ -878,6 +875,8 @@ def main(argument_list=None):
       os.environ["zeo_client"] = arg
     elif opt == "--zeo_server":
       os.environ["zeo_server"] = arg
+    elif opt == "--processing_node_loop":
+      os.environ["processing_node_loop"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
     elif opt == "--zserver_frontend_url":

@@ -4,7 +4,7 @@ try:
   now =  DateTime()
   date = DateTime(date)
 except Exception:
-  return ''  
+  return ''
 Base_translateString = context.Base_translateString
 diff = now - date
 if diff < 1:
@@ -15,7 +15,7 @@ if diff < 1:
       seconds = minutes*60.0
       if seconds < 1:
         return Base_translateString('Now')
-      if 2 > seconds > 1: 
+      if 2 > seconds > 1:
         return Base_translateString('${timedif} second ago', mapping={'timedif':int(seconds)})
       return Base_translateString('${timedif} seconds ago', mapping={'timedif':int(seconds)})
     if 2 > minutes > 1:

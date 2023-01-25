@@ -12,7 +12,7 @@ If no error_callback is given, the default action is to raise a ValueError on
 the first error encountered.
 
 The returned mapping has the following structure:
-  
+
   { 'base_category_id':
        # list of category info
        ( { 'path': 'bc/1',
@@ -236,7 +236,7 @@ for table_name in spreadsheet_list.keys():
                       translateString("The ID ${id} in ${table} at line ${line} is invalid, it's a reserved property name",
                         mapping=dict(id=path_element_id, table=table_name, line=line_index)))
             if not cont:
-              return 
+              return
 
           # Detect duplicate IDs
           for element in path_element_list[::-1]:

@@ -14,7 +14,7 @@ for document in document_list:
   portal_type = document.getPortalType()
   if portal_type not in portal_type_property_mapping:
     continue
-  
+
   uid = document.getUid()
   for property_name in portal_type_property_mapping[portal_type]:
     temporary_result = []

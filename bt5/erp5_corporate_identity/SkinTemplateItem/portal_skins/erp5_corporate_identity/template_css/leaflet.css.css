@@ -122,9 +122,14 @@ html{
   box-sizing: border-box;
   }
 }
+h1 {
+  padding-left: 33% /* width left-summary + padding main-content */;
+}
+p + h1 {
+  padding-left: 0;
+}
 .ci-leaflet h1 {
   text-align: left;
-  padding-left: 33% /* width left-summary + padding main-content */;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -176,6 +181,11 @@ html{
   box-sizing: border-box;
   position: absolute;
   left: 0;
+}
+html .ci-leaflet #left-summary:before {
+  max-width: 12em;
+  text-align: center;
+  margin: 0 auto;
 }
 @media(max-width: 720px) {
   .ci-leaflet #left-summary {

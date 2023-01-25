@@ -3,7 +3,7 @@ https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccounting
 
 The test operates on 'today' transactions.
 
-:param with_ledger: if true then data are prepared for 
+:param with_ledger: if true then data are prepared for
     testOtherPartiesReportLedger unittest rather than testOtherPartiesReport
 """
 

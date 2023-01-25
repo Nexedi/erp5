@@ -43,14 +43,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:151,  2: Arguments number differs from overridden \'login\' method (arguments-differ)</string>
-                <string>W:331, 28: Redefining built-in \'slice\' (redefined-builtin)</string>
-                <string>W:591,  4: Unused variable \'movement_to_add\' (unused-variable)</string>
-                <string>W:1543,  4: Unused variable \'sub_object_list\' (unused-variable)</string>
-                <string>W:1610,  4: Unused variable \'portal_type_list\' (unused-variable)</string>
-                <string>W:1957,  6: Unused variable \'result\' (unused-variable)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

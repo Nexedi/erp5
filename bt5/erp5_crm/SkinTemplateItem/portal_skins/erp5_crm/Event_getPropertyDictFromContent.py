@@ -1,14 +1,14 @@
 """
   This script is called during the metadata discovery process
   for each event which has been ingested through the email interface
-  by portal contributions. It tries to analyse the text content 
+  by portal contributions. It tries to analyse the text content
   to define the different event parameters.
 
   This version provides only early support.
 
   TODO:
   - support forwarded messages
-  - support incoming / outgoing messages (in releation with 
+  - support incoming / outgoing messages (in releation with
     Event_finishIngestion)
 """
 
@@ -29,7 +29,7 @@ text_search_list = []
 for text, prop_dict in context.getSearchableReferenceList():
   if text:
     text_search_list.append(text)
-  if prop_dict.has_key('reference'):
+  if 'reference' in prop_dict:
     reference_search_list.append(prop_dict['reference'])
 
 # Search reference ticket or project

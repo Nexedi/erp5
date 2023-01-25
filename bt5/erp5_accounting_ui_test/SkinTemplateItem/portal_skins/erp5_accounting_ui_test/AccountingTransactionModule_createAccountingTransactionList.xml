@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0, keep_grouping_reference=0, set_ledger=0</string> </value>
+            <value> <string>month_count=1, add_draft_transactions=1, transaction_state=\'validated\', add_related_payments=0, keep_grouping_reference=0, set_ledger=0, both_sections=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

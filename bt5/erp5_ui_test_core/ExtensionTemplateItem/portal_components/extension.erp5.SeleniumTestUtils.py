@@ -38,5 +38,5 @@ def Zuite_getTestDocumentsHome(self):
                os.path.abspath(
                   os.path.dirname(tests.__file__)),'test_data')
 
-  
-  
+
+

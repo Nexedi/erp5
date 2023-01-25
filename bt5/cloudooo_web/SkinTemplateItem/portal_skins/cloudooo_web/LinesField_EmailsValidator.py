@@ -4,7 +4,7 @@ def hasError(email):
   email_parts = email.split('@')
   if len(email_parts) != 2:
     return True
-  
+
   suffix_parts = email_parts[1].split('.')
   if len(suffix_parts) < 2:
     return True

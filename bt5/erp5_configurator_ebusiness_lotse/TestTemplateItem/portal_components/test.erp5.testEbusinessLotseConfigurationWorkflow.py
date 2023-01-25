@@ -35,11 +35,11 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   """
     Test Live eBusiness Lotse Configuration Workflow
   """
-                       
+
   def getSampleOrganisation(self):
     return self.portal.portal_catalog.getResultValue(portal_type="Organisation",
                                                      title="ISIH GmbH")
-  
+
   def getSampleBankAccount(self):
     return self.portal.portal_catalog.getResultValue(portal_type="Bank Account",
                                                      title="ISIH Bank")
@@ -79,7 +79,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
     person_list = self.portal.person_module.searchFolder()
-    self.assertNotEquals(0, len(person_list))
+    self.assertNotEqual(0, len(person_list))
 
     for entity in person_list:
       for username in self.all_username_list:
@@ -89,7 +89,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   def stepViewCreatedOrganisations(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
     organisation_list = self.portal.organisation_module.searchFolder()
-    self.assertNotEquals(0, len(organisation_list))
+    self.assertNotEqual(0, len(organisation_list))
 
     for entity in organisation_list:
       for username in self.all_username_list:
@@ -99,7 +99,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
   def stepViewCreatedAssignemnts(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
     person_list = self.portal_person_module.searchFolder()
-    self.assertNotEquals(0, len(person_list))
+    self.assertNotEqual(0, len(person_list))
 
     for person in person_list:
       for assignment in person.contentValues(portal_type='Assignment'):
@@ -112,7 +112,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     person = self.portal.portal_catalog.getResultValue(portal_type="Person",
     reference="user")
 
-    self.assertNotEquals(person.Person_getAvailableAssignmentValueList(), [])
+    self.assertNotEqual(person.Person_getAvailableAssignmentValueList(), [])
     self.assertEqual(person.getTitle(), "Herr Admin")
     self.assertEqual(person.getDefaultEmailText(), 'herradmin@isih-gmbh.de')
     self.assertEqual(person.getFunction(), 'company')
@@ -141,7 +141,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     self.assertEqual(bank_account.aq_parent, organisation)
     self.assertEqual(bank_account.getTitle(), "ISIH Bank")
     self.assertEqual(bank_account.getValidationState(), "validated")
-    
+
   def stepCheckPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """ Check if purchase trade condition is created in appropiate state """
     trade_condition = self.portal.portal_catalog.getResultValue(
@@ -150,7 +150,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     organisation = self.getSampleOrganisation()
     bank_account = self.getSampleBankAccount()
     business_process = self.getSampleBusinessProcess()
-    
+
     self.assertEqual(trade_condition.getTitle(), "General Purchase Trade Condition")
     self.assertEqual(trade_condition.getSpecialiseValue(), business_process)
     self.assertEqual(trade_condition.getDestinationValue(), organisation)
@@ -160,7 +160,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     self.assertEqual(trade_condition.getDestinationPaymentValue(), bank_account)
     self.assertEqual(trade_condition.getPriceCurrency(), "currency_module/EUR")
     self.assertEqual(trade_condition.getValidationState(), "validated")
-    
+
   def stepCheckSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """ Check if sale trade condition is created in appropiate state """
     trade_condition = self.portal.portal_catalog.getResultValue(
@@ -169,7 +169,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
     organisation = self.getSampleOrganisation()
     bank_account = self.getSampleBankAccount()
     business_process = self.getSampleBusinessProcess()
-                                
+
     self.assertEqual(trade_condition.getTitle(), "General Sale Trade Condition")
     self.assertEqual(trade_condition.getSpecialiseValue(), business_process)
     self.assertEqual(trade_condition.getSourceValue(), organisation)
@@ -204,7 +204,7 @@ class TestEbusinessLotseConfigurationWorkflow(StandardConfigurationMixin):
       stepCheckPurchaseTradeCondition
       stepCheckSaleTradeCondition
       """
-      
+
   def afterSetUp(self):
     TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
     self.all_username_list = ["user"]

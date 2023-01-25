@@ -1,0 +1,197 @@
+<html>
+<head><title>Grouping with multiple pages and section selection</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Grouping with multiple pages and section selection
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingTransactionModule_createAccountingTransactionList?add_draft_transactions:int=0&month_count:int=6&add_related_payments:int=1&both_sections:int=1">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- title -->
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>  
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Client 1 Organisation and use grouping fast input -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<!-- The mode should be 'grouping' by default -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>0.00</td>
+</tr>
+<tr>
+  <td>verifySelectedLabel</td>
+  <td>field_your_node</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_node</td>
+  <td>label=41 - Receivable</td>
+</tr>
+<tr>
+  <td>verifySelectedLabel</td>
+  <td>field_your_section_category</td>
+  <td>Demo Group</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>24 records</td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>Demo Group</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>12 records</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class='listbox_next_page']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class='listbox-current-page-total-number']</td>
+  <td>12 records</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class='listbox_previous_page']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class='listbox-current-page-total-number']</td>
+  <td>12 records</td>
+</tr>
+
+<tr>
+  <td>assertChecked</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>24 records</td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>Demo Group/Subsidiairy #1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>12 records</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class='listbox_next_page']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class='listbox-current-page-total-number']</td>
+  <td>12 records</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

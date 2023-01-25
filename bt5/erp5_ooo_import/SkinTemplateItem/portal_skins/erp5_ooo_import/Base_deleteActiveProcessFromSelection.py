@@ -1,3 +1,3 @@
 '''
-delete an active process from the selection 
+delete an active process from the selection
 '''

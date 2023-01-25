@@ -1,8 +1,8 @@
 """
 This script is part of erp5_ingestion bt5.
-It is used to define the preference order of data sources used when 
+It is used to define the preference order of data sources used when
 ingesting a document.
- 
+
 Data source listed first is preferred over one listed later.
 
 Possible data sources:

@@ -34,7 +34,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
   """
    Basic Test for internal implementation of RunMyDocs
   """
-
+  maxDiff = None
   def getTitle(self):
     return "Run My Doc"
 
@@ -86,7 +86,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     document = website.WebSection_getDocumentValue(test_page_reference)
 
-    self.assertNotEquals(None, document)
+    self.assertNotEqual(None, document)
     self.assertEqual(document.getRelativeUrl(),
                       test_page.getRelativeUrl())
 
@@ -96,7 +96,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
       update screenshots of the documents.
     """
     image_upload = makeFileUpload('TEST-en-002.png')
-    self.assertNotEquals(None, image_upload)
+    self.assertNotEqual(None, image_upload)
 
     # Create a web page, and check if the content is not overwriten
     web_page_reference = "WEB-PAGE-REFERENCE"
@@ -120,10 +120,10 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     self.portal.REQUEST.form['data_uri'] = image_upload
     fake_image_reference = "DO-NOT-EXISTANT-IMAGE"
-    self.assertNotEquals(None,
+    self.assertNotEqual(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, fake_image_reference))
 
-    self.assertNotEquals(None,
+    self.assertNotEqual(None,
                    self.portal.Zuite_uploadScreenshot(image_upload, web_page_reference))
 
     self.assertEqual(None,
@@ -141,37 +141,37 @@ class TestRunMyDoc(ERP5TypeTestCase):
       Test the script that extracts Selenium Test from HTML body.
     """
     test_page_html = """<section><h1>TITLE</h1><details>DETAILS<details>
-    <test><table class="test" style="display: none;"> <tbody> </tbody></table> </test> 
-    </section> 
+    <test><table class="test" style="display: none;"> <tbody> </tbody></table> </test>
+    </section>
     <section><h1>TITLE</h1><details>DETAILS<details><test>
       <table class="test" style="display: none;">
-        <tbody> 
-          <tr> 
-            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;</td> 
-          </tr> 
-          <tr> 
-            <td>selectAndWait</td> 
-            <td>name=select_module</td> 
-            <td>label=Test Pages</td> 
-          </tr> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br /> </td> 
-          </tr> 
-          <tr style="opacity: 1;"> 
-            <td>clickAndWait</td> 
-            <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br /> </td> 
-          </tr> </tbody></table> </test> 
-    </section> 
+        <tbody>
+          <tr>
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;</td>
+          </tr>
+          <tr>
+            <td>selectAndWait</td>
+            <td>name=select_module</td>
+            <td>label=Test Pages</td>
+          </tr>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br /> </td>
+          </tr>
+          <tr style="opacity: 1;">
+            <td>clickAndWait</td>
+            <td>css=a.fast_input &gt; span.image</td>
+            <td> <br /> </td>
+          </tr> </tbody></table> </test>
+    </section>
     <section><h1>TITLE</h1><details>DETAILS<details><test>
-      <table class="test" style="display: none;"> <tbody> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br /> </td> 
-          </tr> </tbody></table> </test> 
+      <table class="test" style="display: none;"> <tbody>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br /> </td>
+          </tr> </tbody></table> </test>
     </section>"""
 
     expected_test_html = u"""<html>
@@ -198,25 +198,25 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_password</td>
          </tr>
-        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr> 
-            <td>selectAndWait</td> 
-            <td>name=select_module</td> 
-            <td>label=Test Pages</td> 
-          </tr> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
-          <tr style="opacity: 1;"> 
-            <td>clickAndWait</td> 
-            <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br> </td> 
-          </tr> <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr>
+            <td>selectAndWait</td>
+            <td>name=select_module</td>
+            <td>label=Test Pages</td>
+          </tr>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
+          <tr style="opacity: 1;">
+            <td>clickAndWait</td>
+            <td>css=a.fast_input &gt; span.image</td>
+            <td> <br> </td>
+          </tr> <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
       </tbody>
     </table>
   </body>
@@ -232,10 +232,10 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page.TestPage_runSeleniumTest()
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
-    self.assertNotEquals(zuite, None)
+    self.assertNotEqual(zuite, None)
 
     zptest = getattr(zuite, "TEST", None)
-    self.assertNotEquals(zptest, None)
+    self.assertNotEqual(zptest, None)
 
     expected_html = expected_test_html % ("ERP5TypeTestCase", "")
 
@@ -270,25 +270,25 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_password</td>
          </tr>
-        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr> 
-            <td>selectAndWait</td> 
-            <td>name=select_module</td> 
-            <td>label=Test Pages</td> 
-          </tr> 
-          <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
-          <tr style="opacity: 1;"> 
-            <td>clickAndWait</td> 
-            <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br> </td> 
-          </tr> <tr> 
-            <td>verifyTextPresent</td> 
-            <td>Test Pages</td> 
-            <td> <br> </td> 
-          </tr> 
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr>
+            <td>selectAndWait</td>
+            <td>name=select_module</td>
+            <td>label=Test Pages</td>
+          </tr>
+          <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
+          <tr style="opacity: 1;">
+            <td>clickAndWait</td>
+            <td>css=a.fast_input &gt; span.image</td>
+            <td> <br> </td>
+          </tr> <tr>
+            <td>verifyTextPresent</td>
+            <td>Test Pages</td>
+            <td> <br> </td>
+          </tr>
       </tbody>
     </table>
   </body>
@@ -306,10 +306,10 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page.TestPage_runSeleniumTest()
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
-    self.assertNotEquals(zuite, None)
+    self.assertNotEqual(zuite, None)
 
     zptest = getattr(zuite, "TEST", None)
-    self.assertNotEquals(zptest, None)
+    self.assertNotEqual(zptest, None)
 
     expected_html = expected_test_html % ("http://toto.com", "toto", "toto")
 

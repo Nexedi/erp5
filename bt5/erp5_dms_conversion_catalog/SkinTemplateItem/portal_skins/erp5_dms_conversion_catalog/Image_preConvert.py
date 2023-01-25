@@ -8,7 +8,7 @@ if quality is None:
 
 if not context.getContentType("").startswith('image/'):
   context.log('Image_preConvert', '%s is not an image, skipping preconversion' % context.getRelativeUrl())
-  return 
+  return
 
 # UI uses 'large' display
 display_list.append('large')

@@ -258,7 +258,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   if not inventory.total_price:
     continue
   existing_section_dict[key] = True
-  
+
   selection_params = default_selection_params.copy()
   selection_params['from_date'] = from_date
   selection_params['at_date'] = at_date

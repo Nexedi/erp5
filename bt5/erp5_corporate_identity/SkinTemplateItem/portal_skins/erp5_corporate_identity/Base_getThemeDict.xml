@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>doc_format=None, css_path=None, skin=None</string> </value>
+            <value> <string>doc_format=None, css_path=None, skin=None, theme_reference=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Assignment</type>
+  <workflow>oauth2_session_refresh_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>OAuth2 Authorisation Server Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>OAuth2 Client</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>OAuth2 Session</type>
+  <workflow>edit_workflow, oauth2_session_refresh_interaction_workflow, validation_workflow</workflow>
+ </chain>
+</workflow_chain>

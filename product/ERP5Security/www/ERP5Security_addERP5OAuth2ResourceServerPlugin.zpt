@@ -1,0 +1,65 @@
+<tal:block
+  tal:replace="structure here/manage_page_header"
+/>
+<ta:block
+  tal:define="form_title string:Add ERP5 OAuth2 Resource Server Plugin"
+  tal:replace="structure here/manage_form_title"
+/>
+<p class="form-help">
+  ERP5 OAuth2 Resource Server Plugin allows setting and extracting OAuth2
+  tokens from client's cookies.
+</p>
+<form action="addERP5OAuth2ResourceServerPlugin" method="post">
+<table cellspacing="0" cellpadding="2" border="0">
+  <tr>
+    <td align="left" valign="top">
+      <div class="form-label">
+        Id
+      </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="id" size="40"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+      <div class="form-label">
+        Access Token cookie name
+      </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="access_cookie_name" size="40" value="__Host-at"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+      <div class="form-optional">
+        Refresh Token cookie name
+      </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="refresh_cookie_name" size="40" value="__Host-rt"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+      <div class="form-optional">
+        Title
+      </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="title" size="40"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+      <div class="form-element">
+        <input class="form-element" type="submit" name="submit" value="Add"/>
+      </div>
+    </td>
+  </tr>
+</table>
+</form>
+<tal:block tal:replace="structure here/manage_page_footer"/>

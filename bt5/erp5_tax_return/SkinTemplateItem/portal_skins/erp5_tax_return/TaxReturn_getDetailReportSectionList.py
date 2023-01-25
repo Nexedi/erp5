@@ -21,7 +21,7 @@ for section_info in context.TaxReturn_getSectionInformationList():
   section_title = section_info['section_title']
   common_selection_params = section_info['selection_params']
   base_amount_relative_url_list=common_selection_params['base_amount_relative_url_list']
-  
+
   base_amount_uid_list = []
   for base_amount_relative_url in base_amount_relative_url_list:
     base_amount_uid_list.append(
@@ -33,7 +33,7 @@ for section_info in context.TaxReturn_getSectionInformationList():
                         base_amount_relative_url_list=base_amount_relative_url_list,
                         sign=common_selection_params['sign'],
                         total_price=common_selection_params['total_price'], )
-    
+
   for journal, journal_name in common_selection_params['journal_list']:
     # get all resources that have been used with this inventory parameters
     resource_list = [brain.resource_relative_url for brain in
@@ -57,5 +57,5 @@ for section_info in context.TaxReturn_getSectionInformationList():
         form_id='TaxReturn_viewDetailReportSection',
         selection_name='tax_return_detail_report_section_selection',
         selection_params=selection_params.copy()))
-  
+
 return report_section_list

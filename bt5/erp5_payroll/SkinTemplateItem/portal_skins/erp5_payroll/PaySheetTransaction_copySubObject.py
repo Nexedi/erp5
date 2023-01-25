@@ -1,4 +1,4 @@
-'''This script copies sub objects of models (corresponding to the 
+'''This script copies sub objects of models (corresponding to the
 portal_type_list) in the paysheet.
 '''
 

@@ -9,7 +9,7 @@ pad = context.restrictedTraverse(pad_relative_url)
 # render Pad's html
 body = pad.KnowledgePad_viewDashboardWidget(real_context=context)
 
-# toggle new active pad 
+# toggle new active pad
 context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False)
 
 # generate needed JavaScript code
@@ -22,7 +22,7 @@ for box in pad.searchFolder(portal_type='Knowledge Box',
   if gadget_type=='asynchronous' and gadget.getValidationState()!='invisible':
     edit_form_id=gadget.getEditFormId()
     view_form_id=gadget.getViewFormId()
-    base_url = '%s/%s' %(context.absolute_url(), view_form_id) 
+    base_url = '%s/%s' %(context.absolute_url(), view_form_id)
     box_dom_id = box.getRelativeUrl().replace('/', '_')
     view_form_dom_id = '%s_content' %box_dom_id;
     javascript_code = pad.KnowledgePad_generateAjaxCall(base_url, box, \

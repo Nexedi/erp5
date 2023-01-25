@@ -14,7 +14,7 @@ for item in object_list:
       new_item['gap'] = new_item.pop(k)
       if ('title_%s' % gap_id) in new_item:
         new_item['title'] = new_item['title_%s' % gap_id]
-      
+
       # clean all localisation columns
       for k in list(new_item.keys()):
         if k.startswith('gap_') or k.startswith('title_'):

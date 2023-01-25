@@ -21,7 +21,7 @@ def getSkinHash(skin, skin_container):
       content = skin.formXML()
       if isinstance(content, unicode):
         content = content.encode('utf8', 'repr')
-    except AttributeError, e:
+    except AttributeError as e:
       # This can happen with dead proxy fields.
       content = "broken form %s" % e
     content = 'ignore'

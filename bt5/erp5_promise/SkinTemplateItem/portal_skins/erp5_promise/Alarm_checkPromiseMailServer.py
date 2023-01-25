@@ -40,8 +40,8 @@ else:
   detail = ""
 
 active_result.edit(
-  summary=summary, 
-  severity=severity, 
+  summary=summary,
+  severity=severity,
   detail=detail)
 
 context.newActiveProcess().postResult(active_result)

@@ -7,7 +7,7 @@ if object_path is None:
 domain_list = []
 
 if depth == 0:
-  category_list = [ context.task_report_module.getObject() ]  
+  category_list = [ context.task_report_module.getObject() ]
 
 # XXX this is usefull but Breaks the edition
 #elif depth == 1:
@@ -21,11 +21,11 @@ else:
 for category in category_list:
   domain = parent.generateTempDomain(id = 'sub' + category.getId() )
   domain.edit(title = category.getTitle(),
-              membership_criterion_base_category = ('parent', ), 
+              membership_criterion_base_category = ('parent', ),
               membership_criterion_category = (category.getRelativeUrl(),),
               domain_generator_method_id = script.id,
               uid = category.getUid())
-                
+
   domain_list.append(domain)
 
 #log("%s on %s" % (script.getId(), context.getPath()), "%d objects domain" %  len(domain_list))

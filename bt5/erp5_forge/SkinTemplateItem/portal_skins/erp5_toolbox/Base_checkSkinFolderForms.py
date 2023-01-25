@@ -1,4 +1,4 @@
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 portal = context.getPortalObject()
 skin_folder = portal.portal_skins[original_skin_name]
 new_skin_folder = portal.portal_skins[new_skin_name]
@@ -38,7 +38,7 @@ for original_form in skin_folder.objectValues():
           original_field.absolute_url(), new_field.absolute_url()))
 
       output_list += ("<tr><td>%s</td></tr>" % "</td><td>".join(
-            map(escape, ('[%s]' % key if T else key, str(old), str(new[key]))))
+            map(html_quote, ('[%s]' % key if T else key, str(old), str(new[key]))))
         for T, old, new in ((0, original_value_dict, new_value_dict),
                             (1, original_value_tales, new_value_tales))
         for key, old in old.iteritems()

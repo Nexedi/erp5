@@ -30,7 +30,7 @@ if variation_list is not None and len(variation_list) > 0:
 
 if from_date is None or at_date is None or node is None:
   return []
- 
+
 # Lower by one, to be include from_date and at_date
 sampling_delta = ( DateTime(at_date) - DateTime(from_date) ) / (sampling_amount - 1)
 
@@ -68,7 +68,7 @@ for i in range(0,sampling_amount):
   )
   inventory_tuple_list.append(internal_tuple)
 
-return_list = [] 
+return_list = []
 for a in range(0, len(inventory_tuple_list)):
   data = inventory_tuple_list[a]
   return_list.append(

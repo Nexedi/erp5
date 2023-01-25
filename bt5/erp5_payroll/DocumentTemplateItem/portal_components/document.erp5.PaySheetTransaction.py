@@ -199,7 +199,7 @@ class PaySheetTransaction(Invoice):
         if movement.getTotalPrice() not in (0, None):
           # remove movement with 0 total_price
           trade_phase = movement.getTradePhase()
-          if not movement_list_trade_phase_dic.has_key(trade_phase):
+          if trade_phase not in movement_list_trade_phase_dic:
             movement_list_trade_phase_dic[trade_phase] = []
           movement_list_trade_phase_dic[trade_phase].append(movement)
       for trade_phase in movement_list_trade_phase_dic.keys():

@@ -21,16 +21,16 @@ context.BusinessConfiguration_setupOrganisation(
   default_address_region = 'region/europe/western_europe/germany',
   price_currency = price_currency
   )
-  
+
 # Setup Bank Account
 configuration_save.addConfigurationItem(
   "Bank Account Configurator Item",
   title = 'ISIH Bank',
   )
-  
+
 # Setup Employee
 configuration_save.addConfigurationItem(
-  "Person Configurator Item", 
+  "Person Configurator Item",
   organisation_id = context.getGlobalConfigurationAttr('organisation_id'),
   group_id = group_id,
   first_name = 'Herr',
@@ -50,7 +50,7 @@ context.BusinessConfiguration_setupAccounting(
   period_stop_date = DateTime(DateTime().year(), 12, 31),
   period_title = DateTime().year()
   )
-  
+
 # Setup Preferences
 context.BusinessConfiguration_setupPreferences(
   configuration_save_url = configuration_save_url,

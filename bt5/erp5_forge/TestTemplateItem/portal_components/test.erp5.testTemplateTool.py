@@ -91,10 +91,10 @@ class TestTemplateTool(ERP5TypeTestCase):
                                                                  strict=True)
     erp5_base._setRevision('')
 
-    self.assertTrue("erp5_base" in (bt.getTitle() for bt in
+    self.assertIn("erp5_base", (bt.getTitle() for bt in
       self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)))
     erp5_base.replace()
-    self.assertFalse("erp5_base" in (bt.getTitle() for bt in
+    self.assertNotIn("erp5_base", (bt.getTitle() for bt in
       self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)))
     self.abort()
 
@@ -104,6 +104,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(test_web.getPortalType(), 'Business Template')
     self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertEqual(len(test_web.getRevision()), 28)
+    self.assertEqual(
+      test_web.getPublicationUrl(),
+      'http://www.erp5.org/dists/snapshot/test_bt5/test_web.bt5')
 
   def _svn_setup_ssl(self):
     """
@@ -139,6 +142,8 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(test_web.getPortalType(), 'Business Template')
     self.assertEqual(test_web.getTitle(), 'test_web')
     self.assertEqual(len(test_web.getRevision()), 28)
+    self.assertEqual(
+      test_web.getPublicationUrl(), bt5_url)
 
   def test_00_updateBusinessTemplateFromUrl_simple(self):
     """
@@ -185,7 +190,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     url = self._getBTPathAndIdList(('erp5_csv_style',))[0][0]
 
     new_bt = template_tool.updateBusinessTemplateFromUrl(url)
-    self.assertNotEquals(old_bt, new_bt)
+    self.assertNotEqual(old_bt, new_bt)
     self.assertEqual('erp5_csv_style', new_bt.getTitle())
 
     # Test Another time with definning an ID
@@ -193,7 +198,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     old_bt.setRevision('')
     template_tool.updateBusinessTemplateFromUrl(url, id="new_erp5_csv_style")
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
-    self.assertNotEquals(old_bt, new_bt)
+    self.assertNotEqual(old_bt, new_bt)
     self.assertEqual('erp5_csv_style', new_bt.getTitle())
     self.assertEqual('new_erp5_csv_style', new_bt.getId())
 
@@ -261,7 +266,7 @@ class TestTemplateTool(ERP5TypeTestCase):
                                    before_triggered_bt5_id_list=before_triggered_bt5_id_list,
                                    after_triggered_bt5_id_list=after_triggered_bt5_id_list)
     bt = template_tool.getInstalledBusinessTemplate('test_html_style')
-    self.assertNotEquals(None, bt)
+    self.assertNotEqual(None, bt)
     self.assertEqual(bt.getDescription(), 'MODIFIED')
     self.assertEqual(bt.getChangeLog(), 'MODIFIED')
     self.assertEqual(portal.getTitle(), 'MODIFIED')
@@ -410,7 +415,7 @@ class TestTemplateTool(ERP5TypeTestCase):
                        if i.getInstallationState() == 'installed']
     self.assertEqual(len(bt5_list), len(another_bt_list))
     for bt in bt5_list:
-      self.assertTrue(bt in another_bt_list)
+      self.assertIn(bt, another_bt_list)
 
     self.assertEqual(bt5_list,
                       templates_tool._getInstalledBusinessTemplateList())
@@ -424,7 +429,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     another_bt_list.sort()
     self.assertEqual(bt5_list, another_bt_list)
     for bt in bt5_list:
-      self.assertTrue(bt in another_bt_list)
+      self.assertIn(bt, another_bt_list)
 
     new_list = templates_tool._getInstalledBusinessTemplateList(only_title=1)
     new_list.sort()
@@ -545,10 +550,11 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(bt, None)
     operation_log = \
       self.templates_tool.installBusinessTemplateListFromRepository([bt5_name])
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
+    self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
     bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
-    self.assertNotEquals(bt, None)
+    self.assertNotEqual(bt, None)
     self.assertEqual(bt.getTitle(), bt5_name)
+    self.assertEqual(bt.getPublicationUrl(), self._getBTPathAndIdList([bt5_name])[0][0])
 
     # Repeat operation, the bt5 should be ignored
     self.templates_tool.installBusinessTemplateListFromRepository([bt5_name])
@@ -559,10 +565,10 @@ class TestTemplateTool(ERP5TypeTestCase):
     operation_log = self.templates_tool.installBusinessTemplateListFromRepository(
           [bt5_name], only_different=False)
 
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
+    self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
     bt_new = self.templates_tool.getInstalledBusinessTemplate(bt5_name,
                                                               strict=True)
-    self.assertNotEquals(bt.getId(), bt_new.getId())
+    self.assertNotEqual(bt.getId(), bt_new.getId())
 
   def test_installBusinessTemplatesFromRepository_update_catalog(self):
     """ Test if update catalog is trigger when needed.
@@ -583,9 +589,9 @@ class TestTemplateTool(ERP5TypeTestCase):
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_different=False, update_catalog=0)
 
-      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      self.assertIn("Installed %s with" % bt5_name, operation_log[0])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertNotEquals(bt.getId(), None)
+      self.assertNotEqual(bt.getId(), None)
       self.commit()
       self.assertFalse(has_cleared_catalog)
       # Before launch activities make sure email table is created even
@@ -598,7 +604,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt5_name = 'erp5_odt_style'
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_different=False, update_catalog=1)
-      self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
+      self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEqual(bt.getTitle(), bt5_name)
       self.commit()
@@ -609,9 +615,9 @@ class TestTemplateTool(ERP5TypeTestCase):
       # Install again should not force catalog to be updated
       operation_log = template_tool.installBusinessTemplateListFromRepository(
                 [bt5_name], only_different=False)
-      self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
+      self.assertIn("Installed %s with" % bt5_name, operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertNotEquals(bt, None)
+      self.assertNotEqual(bt, None)
       self.assertEqual(bt.getTitle(), bt5_name)
       self.commit()
       self.assertFalse(has_cleared_catalog)
@@ -645,7 +651,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.tic()
     for bt5_name in bt5_name_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertNotEquals(bt, None)
+      self.assertNotEqual(bt, None)
       self.assertEqual(bt.getTitle(), bt5_name)
 
   def test_installBusinessTemplatesFromRepository_install_dependency(self):
@@ -682,16 +688,16 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertEqual(bt, None)
       dependency_list = template_tool.getDependencyList(
                    (repository, bt5_name))
-      self.assertNotEquals(dependency_list, [])
+      self.assertNotEqual(dependency_list, [])
 
     template_tool.installBusinessTemplateListFromRepository(
                             bt5_name_list, install_dependency=True)
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertNotEquals(bt, None)
+      self.assertNotEqual(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertNotEquals(bt, None)
+    self.assertNotEqual(bt, None)
     self.abort()
 
     # Same as above but also check that dependencies are properly resolved if
@@ -702,10 +708,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       install_dependency=True)
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertNotEquals(bt, None)
+      self.assertNotEqual(bt, None)
 
     bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
-    self.assertNotEquals(bt, None)
+    self.assertNotEqual(bt, None)
     self.abort()
 
   def test_installBusinessTemplateListFromRepository_ignore_when_installed(self):

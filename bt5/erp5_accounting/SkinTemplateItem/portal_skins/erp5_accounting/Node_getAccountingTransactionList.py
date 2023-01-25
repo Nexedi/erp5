@@ -37,7 +37,7 @@ for category_uid in category_uid_list:
       # on project, can select a project which means only transactions for
       # that specific project, or select a special value "None" which means
       # transactions that are not related to a project. For that we need a
-      # query that will be translated as stock.project_uid IS NULL.      
+      # query that will be translated as stock.project_uid IS NULL.
       params[category_uid] = SimpleQuery(**{category_uid: None})
     else:
       params[category_uid] = category_uid_value
@@ -148,10 +148,10 @@ if from_date or is_pl_account:
              from_date=period_start_date,
              to_date=initial_balance_from_date,
              **get_inventory_kw) - max(-period_openning_balance, 0)
-  
+
       if previous_total_credit != 0:
         previous_total_credit = - previous_total_credit
-    
+
       # Show the previous balance if not empty
       if previous_total_credit != 0 or previous_total_debit != 0:
         net_balance = previous_total_debit - previous_total_credit

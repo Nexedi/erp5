@@ -28,7 +28,7 @@ sale_opportunity_module?reset:int=1&simulation_state=draft&local_roles=Owner
         </item>
         <item>
             <key> <string>action_name</string> </key>
-            <value> <string>Sale Opportunities to Validate (%(count)s)</string> </value>
+            <value> <string>Sale Opportunities to Open (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -42,14 +42,20 @@ sale_opportunity_module?reset:int=1&simulation_state=draft&local_roles=Owner
             <key> <string>criterion_property</string> </key>
             <value>
               <tuple>
-                <string>portal_type</string>
                 <string>simulation_state</string>
                 <string>local_roles</string>
+                <string>portal_type</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
             <value>
               <none/>
             </value>
@@ -102,25 +108,25 @@ sale_opportunity_module?reset:int=1&simulation_state=draft&local_roles=Owner
                 <item>
                     <key> <string>local_roles</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Owner</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Sale Opportunity</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>simulation_state</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>draft</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

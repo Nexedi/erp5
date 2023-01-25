@@ -6,8 +6,8 @@
 from Products.ERP5Type.Cache import CachingMethod
 
 def sortDictByValues(adict):
-  """ 
-    Sort a dictionary by maximal values. 
+  """
+    Sort a dictionary by maximal values.
     Return sorted list of tuples [(key, value),...]
   """
   items = adict.items()
@@ -77,8 +77,8 @@ def calculateStatistics():
   return statistics
 
 # cache statistics for a short period
-cached_method = CachingMethod(calculateStatistics, 
-                              script.id, 
+cached_method = CachingMethod(calculateStatistics,
+                              script.id,
                               'erp5_content_short')
 stats = cached_method() #calculateStatistics()
 

@@ -420,6 +420,9 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
+    # unsubscribe from activities, we'll use Zuite_waitForActivities to
+    # process activities
+    self.portal.portal_activities.unsubscribe()
     self.commit()
     self.setSystemPreference()
     # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
@@ -474,7 +477,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     error = []
     try:
       iframe = self.runner.test(debug=debug)
-    except TimeoutError, e:
+    except TimeoutError as e:
       error.append(repr(e))
     try:
       self.tic()

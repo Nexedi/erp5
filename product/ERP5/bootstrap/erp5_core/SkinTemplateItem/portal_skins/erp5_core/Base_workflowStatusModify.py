@@ -4,7 +4,7 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 o = context.getObject()
 
 if 1: # keep indentation
-  try : 
+  try :
     context.portal_workflow.doActionFor( o,
      workflow_action,
      comment=comment,

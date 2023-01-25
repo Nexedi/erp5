@@ -3,7 +3,7 @@
 <dtml-in get_groups>
 <dtml-let group=sequence-item fields="get_fields_in_group(group)">
   <dtml-if fields>
-    <h4><i><dtml-var "_.string.capitalize(group)"> properties</i></h4>
+    <h4><i><dtml-var group capitalize> properties</i></h4>
   <dtml-in fields>
   <dtml-let field=sequence-item>
    <b><dtml-var "field.get_value('title')"> (<dtml-var "field.id">)</b>

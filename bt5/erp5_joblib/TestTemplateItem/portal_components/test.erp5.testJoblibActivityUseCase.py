@@ -29,7 +29,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class Test(ERP5TypeTestCase):
   """
-  Test joblib usecases with CMFActivity 
+  Test joblib usecases with CMFActivity
   """
 
   def getTitle(self):
@@ -47,5 +47,5 @@ class Test(ERP5TypeTestCase):
     self.tic()
     active_process = self.portal.portal_activities.unrestrictedTraverse(path)
     result = active_process.getResultList()
-    self.assertEquals([0.0, 1.0, 2.0, 3.0, 4.0], result[0].result)
+    self.assertEqual([0.0, 1.0, 2.0, 3.0, 4.0], result[0].result)
 

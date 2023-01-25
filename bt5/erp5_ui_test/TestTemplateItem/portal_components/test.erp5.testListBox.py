@@ -52,6 +52,7 @@ class DummyFieldStorage:
     self.file = StringIO()
     self.filename = '<dummy field storage>'
     self.headers = {}
+    self.name = "Dummy Field Storage"
 
 class TestListBox(ERP5TypeTestCase):
   """
@@ -84,7 +85,7 @@ class TestListBox(ERP5TypeTestCase):
     portal.ListBoxZuite_reset()
 
     message = portal.foo_module.FooModule_createObjects()
-    self.assertTrue('Created Successfully' in message)
+    self.assertIn('Created Successfully', message)
 
   def stepModifyListBoxForStat(self, sequence = None, sequence_list = None, **kw):
     portal = self.getPortal()
@@ -92,7 +93,7 @@ class TestListBox(ERP5TypeTestCase):
     message = listbox.ListBox_setPropertyList(
       field_stat_columns = 'id|FooModule_statId\ntitle|FooModule_statTitle',
       field_stat_method = 'portal_catalog')
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
 
   def stepRenderList(self, sequence = None, sequence_list = None, **kw):
     portal = self.getPortal()
@@ -239,7 +240,7 @@ class TestListBox(ERP5TypeTestCase):
     request['here'] = portal.foo_module
     try:
       listbox.get_value('default', render_format='list', REQUEST=request)
-    except UnicodeError, e:
+    except UnicodeError as e:
       self.fail('Rendering failed: %s' % e)
     self.assertIn(u"\xe9lisa", listbox.render(REQUEST=request))
 
@@ -269,7 +270,7 @@ class TestListBox(ERP5TypeTestCase):
     request['here'] = portal.foo_module
     try:
       listbox.get_value('default', render_format='list', REQUEST=request)
-    except UnicodeError, e:
+    except UnicodeError as e:
       self.fail('Rendering failed: %s' % e)
     self.assertIn(u"\xe9lisa", listbox.render(REQUEST=request))
 
@@ -303,7 +304,7 @@ class TestListBox(ERP5TypeTestCase):
     request['here'] = portal.foo_module
     try:
       listbox.get_value('default', render_format='list', REQUEST=request)
-    except UnicodeError, e:
+    except UnicodeError as e:
       self.fail('Rendering failed: %s' % e)
     self.assertIn(u"http://example.com/?\xe9lisa", listbox.render(REQUEST=request))
 
@@ -337,7 +338,7 @@ class TestListBox(ERP5TypeTestCase):
     request['here'] = portal.foo_module
     try:
       listbox.get_value('default', render_format='list', REQUEST=request)
-    except UnicodeError, e:
+    except UnicodeError as e:
       self.fail('Rendering failed: %s' % e)
     self.assertIn(u"http://example.com/?\xe9lisa", listbox.render(REQUEST=request))
 
@@ -359,7 +360,7 @@ class TestListBox(ERP5TypeTestCase):
     listbox.get_value('default', render_format='list', REQUEST=request)
     try:
       self.commit()
-    except TypeError, e:
+    except TypeError as e:
       self.fail('Unable to commit transaction: %s' % e)
 
   def test_06_LineFields(self, quiet=0, run=run_all_test):

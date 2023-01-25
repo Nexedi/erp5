@@ -15,7 +15,7 @@ configuration_save.addConfigurationItem("Category Configurator Item",
                                         object_id=group_id,
                                         title=kw['title'])
 
-# store globally group_id 
+# store globally group_id
 context.setGlobalConfigurationAttr(group_id=group_id)
 
 # store globally company's email

@@ -24,7 +24,7 @@ else:
   elif field_my_payment_mode.lower() == 'paypal':
     return context.getWebSectionValue().SaleOrder_viewAsWebConfirmPayPalPayment()
   else:
-    msg = translateString("This payment mode is actually not activated, sorry: ${payment_mode}", 
+    msg = translateString("This payment mode is actually not activated, sorry: ${payment_mode}",
                           mapping=dict(payment_mode=field_my_payment_mode))
 
 context.Base_redirect('SaleOrder_viewAsWeb', \

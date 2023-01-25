@@ -3,20 +3,20 @@
 current_web_section = context.REQUEST.get('current_web_section', context)
 product_list = []
 
-if not kw.has_key('portal_type'):
+if 'portal_type' not in kw:
   kw['portal_type'] = 'Product'
-		 
-if not kw.has_key('limit'):		 
-  kw['limit'] = limit		 
-		 
-if not kw.has_key('all_versions'):		 
-  kw['all_versions'] = 1		 
-		 
-if not kw.has_key('all_languages'):		 
-  kw['all_languages'] = 1		 
-		 
-for key in ['limit','all_versions','all_languages']:		 
-  kw[key] = int(kw[key])		 
-		 
+		
+if 'limit' not in kw:		
+  kw['limit'] = limit		
+		
+if 'all_versions' not in kw:		
+  kw['all_versions'] = 1		
+		
+if 'all_languages' not in kw:		
+  kw['all_languages'] = 1		
+		
+for key in ['limit','all_versions','all_languages']:		
+  kw[key] = int(kw[key])		
+		
 product_list = current_web_section.getDocumentValueList(**kw)
 return product_list

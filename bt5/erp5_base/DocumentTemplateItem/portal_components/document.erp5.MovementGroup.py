@@ -96,7 +96,7 @@ class MovementGroup(XMLObject):
       # XXX it can be wrong. we need a good way to get hash value, or
       # we should compare for all pairs.
       key = repr(property_dict)
-      if tmp_dict.has_key(key):
+      if key in tmp_dict:
         tmp_dict[key][0].append(movement)
       else:
         tmp_dict[key] = [[movement], property_dict]

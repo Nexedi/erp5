@@ -31,7 +31,7 @@ from Products.CMFCore.utils import UniqueObject
 
 class CallableTool(UniqueObject, Folder):
   """
-  A tool that can be used to add scripts and other callable methods (including 
+  A tool that can be used to add scripts and other callable methods (including
   ZSQL templates and HTML templates) to ERP5. It replaces portal_skins.
   """
 

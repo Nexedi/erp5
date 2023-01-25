@@ -76,12 +76,12 @@ if portal_type == 'Web Section':
 
   result.append('}')
   result.append('</script>')
-  
+
 return '\n'.join(result)
 
 
 
-"""    
+"""
 I could use categories, if we would have
 schema/WebSite
 schema/WebPage
@@ -102,7 +102,7 @@ jobs = ~ CheckoutPage
 contact = ContactPage
 Solution = CollectionPage & Item = Product/Software
 Service = CollectionPage & Item = Service
-Press = CollectionPage 
+Press = CollectionPage
 Blog = CollectionPage
 Team = CheckoutPage
 
@@ -121,7 +121,7 @@ Team = CheckoutPage
 
 #def generateOpenGraphMeta(my_title, my_url, my_description, my_image):
 #  result = []
-  
+
 #  result.append('<!-- OpenGraph -->')
 #  result.append('<meta property="og:type" content="website"/>')
 #  result.append('<meta property="og:site_name" content="%s"/>' % (website_name))
@@ -137,7 +137,7 @@ Team = CheckoutPage
 #  result.append('<meta name="twitter:url" content="%s"/>' % (my_url))
 #  result.append('<meta name="twitter:description" content="%s"/>' % (my_description))
 #  result.append('<meta name="twitter:image" content="%s"/>' % (my_image))
-  
+
 #  return '\n'.join(result)
 
 #def generateOpenGraphParamaters(my_context, has_text_content=None):
@@ -151,7 +151,7 @@ Team = CheckoutPage
 #    document_content = document.getProperty("text_content")
 #    document_image_list = re.findall("<img(.*?)/>", document_content)
 #    document_image = generateImageUrl(website_url, website_fallback_image, "xsmall")
-    
+
 #    for image_candidate in document_image_list:
 #      if "data-open-graph-image" in image_candidate:
 #        match = re.search('src="([^"]+)"', image_candidate)
@@ -159,7 +159,7 @@ Team = CheckoutPage
 #          document_image = match.group(1).split("?")[0]
 #  else:
 #    document_background = document.getProperty('layout_content_background')
-    
+
 #    if document_background is not None:
 #      document_image = generateImageUrl(document_url, document_background, "xlarge")
 #    else:
@@ -167,7 +167,7 @@ Team = CheckoutPage
 
 #  return generateOpenGraphMeta(
 #    document_title,
-#    document_url, 
+#    document_url,
 #    document_description,
 #    document_image
 #  )
@@ -186,7 +186,7 @@ Team = CheckoutPage
 
 #if portal_type == 'Web Site':
 #  default_document = website.getDefaultDocumentValue()
-  
+
 #  if default_document is not None:
 #    return generateOpenGraphParamaters(default_document, True)
 #  else:

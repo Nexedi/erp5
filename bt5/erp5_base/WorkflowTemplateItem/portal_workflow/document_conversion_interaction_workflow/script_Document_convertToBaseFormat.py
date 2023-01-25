@@ -4,7 +4,7 @@ document = state_change['object']
 document.processFile()
 
 if document.getMetaType() == 'ERP5 OOo Document':
-  # XXX How to filter documents which are implementing base_convertable 
+  # XXX How to filter documents which are implementing base_convertable
   # and not text_document
   # Clear base_data
   document.setBaseData(None)

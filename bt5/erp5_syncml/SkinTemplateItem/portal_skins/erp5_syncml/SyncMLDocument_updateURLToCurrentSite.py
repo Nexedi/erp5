@@ -1,4 +1,4 @@
-# This script will update the url of pub/sub on which it is called to 
+# This script will update the url of pub/sub on which it is called to
 # the current site URL
 url = context.getPortalObject().absolute_url()
 if context.getPortalType() == "SyncML Subscription":

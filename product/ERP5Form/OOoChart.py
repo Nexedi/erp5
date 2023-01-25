@@ -28,6 +28,8 @@
 ##############################################################################
 
 from __future__ import absolute_import
+import json
+import lxml.etree
 from ZTUtils import make_query
 from Products.Formulator import Widget
 from Products.Formulator import Widget, Validator
@@ -430,10 +432,9 @@ class OOoChartWidget(Widget.Widget):
     REQUEST.set('render_prefix', render_prefix)
     #needed to update REQUEST
     argument_dict = self.getArgumentDict(field, REQUEST)
-    from xml.marshal.generic import dumps
-    dump_args = dumps(argument_dict)
-    #remove xml declaration (first processing node)
-    dump_args = dump_args[dump_args.index('?>')+2:]
+    marshal = lxml.etree.Element('marshal')
+    marshal.set('argument-dict-json', json.dumps(argument_dict))
+    dump_args = lxml.etree.tostring(marshal)
     content = '''<office:include path="%s/ERP5Site_buildChart"
                                  xlink:type="simple" xlink:actuate="onLoad"
                                  xlink:show="embed">%s</office:include>

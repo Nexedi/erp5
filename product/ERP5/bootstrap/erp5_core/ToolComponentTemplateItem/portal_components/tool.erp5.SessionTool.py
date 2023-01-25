@@ -92,11 +92,11 @@ class Session(UserDict):
   # used to set duration of session
   session_duration = None
 
-  # a handle to current aquisition context
+  # a handle to current acquisition context
   _aq_context = None
 
   def __getstate__(self):
-    """filter out acqusition wrappers when serializing.
+    """filter out acquisition wrappers when serializing.
     """
     state = {
         'session_duration': self.session_duration,
@@ -107,12 +107,12 @@ class Session(UserDict):
     return state
 
   def _updatecontext(self, aq_context):
-    """ Update current aquisition context. """
+    """ Update current acquisition context. """
     self._aq_context = aq_context
 
   def __getitem__(self, key):
     if key in self.data:
-      # returned it wrapped in aquisition context
+      # returned it wrapped in acquisition context
       return restore_acquisition_wrapper(self.data[key], self._aq_context)
     raise KeyError(key)
 
@@ -213,10 +213,10 @@ class SessionTool(BaseTool):
       shopping_cart = session['shopping_cart']
 
       Please note that:
-        - developer is responsible for handling an unique sessiond_id (using cookies for example).
+        - developer is responsible for handling an unique session_id (using cookies for example).
         - it's not recommended to store in portal_sessions ZODB persistent objects because in order
-      to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get"
-      request they'll be returend wrapped.
+      to store them in Local RAM portal_sessions tool will remove acquisition wrapper. At "get"
+      request they'll be returned wrapped.
         - developer can store temporary ERP5 documents like 'TempOrder', but keep
       in mind that after making changes to temporary documents they need to be
       saved again in portal_sessions, so:

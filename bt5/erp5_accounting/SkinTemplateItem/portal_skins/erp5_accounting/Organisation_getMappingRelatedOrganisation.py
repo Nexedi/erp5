@@ -10,7 +10,7 @@ def getOrganisationForSectionCategory(section):
                            checked_permission='Access contents information')
   if mapping is not None:
     return mapping
-  
+
   organisation_list = section.getGroupRelatedValueList(portal_type='Organisation',
                               strict_membership=1,
                               checked_permission='Access contents information')
@@ -33,7 +33,7 @@ for group in group_chain:
   organisation = getOrganisationForSectionCategory(group)
   if organisation is not None and (
       len(organisation.contentValues(
-              filter=dict(portal_type='Accounting Period'))) or 
+              filter=dict(portal_type='Accounting Period'))) or
       organisation.getMapping()):
     return organisation
 

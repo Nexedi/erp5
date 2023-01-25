@@ -8,7 +8,7 @@ if keep:
 
 try:
   new_bt = context.getVcsTool().update(commit_dict['keep'])
-except Exception, error:
+except Exception as error:
   return context.BusinessTemplate_handleException(
     error, script.id, commit_dict)
 

@@ -8,7 +8,7 @@ def makeContext(doc, **kw):
     if v:
       categories.append('%s/%s' % (k,v))
   return doc.asContext(categories=categories)
-  
+
 financial_section = ''
 budget_section = ''
 group = ''

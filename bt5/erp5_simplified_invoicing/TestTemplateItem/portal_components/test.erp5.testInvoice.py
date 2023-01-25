@@ -253,14 +253,14 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(other_entity,
             invoice_movement.getDestinationFunctionValue())
 
-    self.assertNotEquals(123, order_line.getPrice())
+    self.assertNotEqual(123, order_line.getPrice())
     order_line.setPrice(123)
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEqual(123,
             invoice_movement.getPrice())
 
-    self.assertNotEquals(456, order_line.getQuantity())
+    self.assertNotEqual(456, order_line.getQuantity())
     order_line.setQuantity(456)
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
@@ -281,16 +281,16 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(other_resource,
             invoice_movement.getResourceValue())
 
-    order_line.setStartDate(DateTime(2001, 02, 03))
+    order_line.setStartDate(DateTime(2001, 2, 3))
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEqual(DateTime(2001, 02, 03),
+    self.assertEqual(DateTime(2001, 2, 3),
                  invoice_movement.getStartDate())
 
-    order_line.setStopDate(DateTime(2002, 03, 04))
+    order_line.setStopDate(DateTime(2002, 3, 4))
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
-    self.assertEqual(DateTime(2002, 03, 04),
+    self.assertEqual(DateTime(2002, 3, 4),
                  invoice_movement.getStopDate())
 
   @newSimulationExpectedFailure
@@ -478,20 +478,20 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual(456,
             invoice_transaction_movement.getQuantity())
 
-    order_line.setStartDate(DateTime(2001, 02, 03))
+    order_line.setStartDate(DateTime(2001, 2, 3))
     self.tic()
     self.assertEqual(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEqual(DateTime(2001, 02, 03),
+    self.assertEqual(DateTime(2001, 2, 3),
                  invoice_transaction_movement.getStartDate())
 
-    order_line.setStopDate(DateTime(2002, 03, 04))
+    order_line.setStopDate(DateTime(2002, 3, 4))
     self.tic()
     self.assertEqual(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
                                         invoice_transaction_applied_rule)
-    self.assertEqual(DateTime(2002, 03, 04),
+    self.assertEqual(DateTime(2002, 3, 4),
                  invoice_transaction_movement.getStopDate())
 
   def test_Invoice_viewAsODT(self):
@@ -637,7 +637,7 @@ class TestInvoice(TestInvoiceMixin):
     parser = OOoParser()
     parser.openFromString(odt)
     style_xml = parser.oo_files['styles.xml']
-    self.assert_('<draw:image' not in style_xml)
+    self.assertNotIn('<draw:image', style_xml)
 
   def test_Invoice_viewAsODT_invalid_image(self):
     resource = self.portal.getDefaultModule(
@@ -786,7 +786,7 @@ class TestInvoice(TestInvoiceMixin):
 
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
 
     related_packing_list.start()
     related_packing_list.stop()
@@ -796,7 +796,7 @@ class TestInvoice(TestInvoiceMixin):
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
 
     line_list = related_invoice.contentValues(
                      portal_type=self.invoice_line_portal_type)
@@ -809,20 +809,20 @@ class TestInvoice(TestInvoiceMixin):
           len(invoice_line.getCellValueList(base_id='movement')))
 
     cell_baby = invoice_line.getCell('size/Baby', base_id='movement')
-    self.assertNotEquals(cell_baby, None)
+    self.assertNotEqual(cell_baby, None)
     self.assertEqual(resource, cell_baby.getResourceValue())
     self.assertEqual(10, cell_baby.getQuantity())
     self.assertEqual(4, cell_baby.getPrice())
-    self.assertTrue('size/Baby' in
+    self.assertIn('size/Baby',
                     cell_baby.getVariationCategoryList())
     self.assertTrue(cell_baby.isMemberOf('size/Baby'))
 
     cell_child_32 = invoice_line.getCell('size/Child/32', base_id='movement')
-    self.assertNotEquals(cell_child_32, None)
+    self.assertNotEqual(cell_child_32, None)
     self.assertEqual(resource, cell_child_32.getResourceValue())
     self.assertEqual(20, cell_child_32.getQuantity())
     self.assertEqual(5, cell_child_32.getPrice())
-    self.assertTrue('size/Child/32' in
+    self.assertIn('size/Child/32',
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
 
@@ -882,7 +882,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                        mapped_value_property_list=['quantity', 'price'],)
     no_order_packing_list.confirm()
     self.tic()
-    self.assertNotEquals(no_order_packing_list, None)
+    self.assertNotEqual(no_order_packing_list, None)
 
     no_order_packing_list.start()
     no_order_packing_list.stop()
@@ -892,7 +892,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_invoice = no_order_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
 
     line_list = related_invoice.contentValues(
                      portal_type=self.invoice_line_portal_type)
@@ -905,20 +905,20 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
           len(invoice_line.getCellValueList(base_id='movement')))
 
     cell_baby = invoice_line.getCell('size/Baby', base_id='movement')
-    self.assertNotEquals(cell_baby, None)
+    self.assertNotEqual(cell_baby, None)
     self.assertEqual(resource, cell_baby.getResourceValue())
     self.assertEqual(10, cell_baby.getQuantity())
     self.assertEqual(4, cell_baby.getPrice())
-    self.assertTrue('size/Baby' in
+    self.assertIn('size/Baby',
                     cell_baby.getVariationCategoryList())
     self.assertTrue(cell_baby.isMemberOf('size/Baby'))
 
     cell_child_32 = invoice_line.getCell('size/Child/32', base_id='movement')
-    self.assertNotEquals(cell_child_32, None)
+    self.assertNotEqual(cell_child_32, None)
     self.assertEqual(resource, cell_child_32.getResourceValue())
     self.assertEqual(20, cell_child_32.getQuantity())
     self.assertEqual(5, cell_child_32.getPrice())
-    self.assertTrue('size/Child/32' in
+    self.assertIn('size/Child/32',
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
 
@@ -978,7 +978,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
 
     related_packing_list.start()
     related_packing_list.stop()
@@ -988,7 +988,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
 
     line_list = related_invoice.contentValues(
                      portal_type=self.invoice_line_portal_type)
@@ -1001,20 +1001,20 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
           len(invoice_line.getCellValueList(base_id='movement')))
 
     cell_baby = invoice_line.getCell('size/Baby', base_id='movement')
-    self.assertNotEquals(cell_baby, None)
+    self.assertNotEqual(cell_baby, None)
     self.assertEqual(resource, cell_baby.getResourceValue())
     self.assertEqual(10, cell_baby.getQuantity())
     self.assertEqual(4, cell_baby.getPrice())
-    self.assertTrue('size/Baby' in
+    self.assertIn('size/Baby',
                     cell_baby.getVariationCategoryList())
     self.assertTrue(cell_baby.isMemberOf('size/Baby'))
 
     cell_child_32 = invoice_line.getCell('size/Child/32', base_id='movement')
-    self.assertNotEquals(cell_child_32, None)
+    self.assertNotEqual(cell_child_32, None)
     self.assertEqual(resource, cell_child_32.getResourceValue())
     self.assertEqual(20, cell_child_32.getQuantity())
     self.assertEqual(5, cell_child_32.getPrice())
-    self.assertTrue('size/Child/32' in
+    self.assertIn('size/Child/32',
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
 
@@ -1069,7 +1069,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
 
     movement_list = related_packing_list.getMovementList()
     self.assertEqual(2, len(movement_list))
@@ -1086,7 +1086,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
 
     movement_list = related_invoice.getMovementList(
                               portal_type=self.invoice_line_portal_type)
@@ -1110,11 +1110,11 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     cb_data = accounting_module.manage_copyObjects([invoice.getId()])
     copied, = accounting_module.manage_pasteObjects(cb_data)
     new_invoice = accounting_module[copied['new_id']]
-    self.assertNotEquals(invoice.getReference(),
+    self.assertNotEqual(invoice.getReference(),
                          new_invoice.getReference())
-    self.assertNotEquals(invoice.getSourceReference(),
+    self.assertNotEqual(invoice.getSourceReference(),
                          new_invoice.getSourceReference())
-    self.assertNotEquals(invoice.getDestinationReference(),
+    self.assertNotEqual(invoice.getDestinationReference(),
                          new_invoice.getDestinationReference())
 
   def test_delivery_mode_and_incoterm_on_invoice(self):
@@ -1161,7 +1161,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type=self.packing_list_portal_type)
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     self.assertEqual(related_packing_list.getDeliveryMode(),
                          order.getDeliveryMode())
     self.assertEqual(related_packing_list.getIncoterm(),
@@ -1173,7 +1173,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
     self.assertEqual(related_invoice.getDeliveryMode(),
                          order.getDeliveryMode())
     self.assertEqual(related_invoice.getIncoterm(),
@@ -1240,7 +1240,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type=self.packing_list_portal_type)
-    self.assertNotEquals(related_packing_list, None)
+    self.assertNotEqual(related_packing_list, None)
     movement_list = related_packing_list.getMovementList()
     self.assertEqual(len(movement_list),2)
     movement_list = sorted(movement_list, key=lambda x: x.getQuantity())
@@ -1259,7 +1259,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                 portal_type=self.invoice_portal_type)
-    self.assertNotEquals(related_invoice, None)
+    self.assertNotEqual(related_invoice, None)
     movement_list = related_invoice.getMovementList()
     self.assertEqual(len(movement_list),2)
     movement_list = sorted(movement_list, key=lambda x: x.getQuantity())
@@ -1293,7 +1293,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     invoice = packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
+    self.assertNotEqual(invoice, None)
     invoice_line_list = invoice.getMovementList()
     self.assertEqual(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]
@@ -1352,7 +1352,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     invoice = packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
+    self.assertNotEqual(invoice, None)
     invoice_line_list = invoice.getMovementList()
     self.assertEqual(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]
@@ -1390,7 +1390,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     self.assertEqual([], packing_list.getDivergenceList())
     self.assertEqual('solved', packing_list.getCausalityState())
-  
+
   def test_merge_accounting_invoice(
                 self, quiet=quiet):
     sequence_list = SequenceList()
@@ -1428,8 +1428,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                   portal_type=self.invoice_portal_type)
     invoice_2 = packing_list_2.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
-    self.assertNotEquals(invoice_2, None)
+    self.assertNotEqual(invoice, None)
+    self.assertNotEqual(invoice_2, None)
     self.tic()
     error_list = self.portal.portal_simulation.mergeDeliveryList([invoice, invoice_2])
     self.tic()
@@ -1571,20 +1571,20 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     receivable_line = [m for m in movement_list \
       if m.getSourceValue().getAccountType() == \
         "asset/receivable"][0]
-    self.assertEquals(0.03, receivable_line.getSourceDebit())
+    self.assertEqual(0.03, receivable_line.getSourceDebit())
     data = invoice.Invoice_getODTDataDict()
     precision = invoice.getQuantityPrecisionFromResource(
       invoice.getResource())
-    self.assertEquals(round(data['total_price'], precision),
+    self.assertEqual(round(data['total_price'], precision),
       receivable_line.getSourceDebit())
     vat_line = [m for m in movement_list \
       if m.getSourceValue().getAccountType() == \
         "liability/payable/collected_vat"][0]
-    self.assertEquals(0.0, vat_line.getSourceDebit())
+    self.assertEqual(0.0, vat_line.getSourceDebit())
     income_line = [m for m in movement_list \
       if m.getSourceValue().getAccountType() == \
         "income"][0]
-    self.assertEquals(0.03, income_line.getSourceCredit())
+    self.assertEqual(0.03, income_line.getSourceCredit())
 
   def test_AccountingTransaction_roundDebitCredit(self):
     """
@@ -2481,7 +2481,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     invoice = packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
+    self.assertNotEqual(invoice, None)
     invoice_line_list = invoice.getMovementList()
     self.assertEqual(1, len(invoice_line_list))
     invoice_line = invoice_line_list[0]

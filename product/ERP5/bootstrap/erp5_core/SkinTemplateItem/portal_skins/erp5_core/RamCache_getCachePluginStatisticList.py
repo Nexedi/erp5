@@ -1,10 +1,10 @@
 """
-This script will dynamically get cache statistics information and 
+This script will dynamically get cache statistics information and
 format it so it can be used in a listbox field.
 """
 from Products.ERP5Type.Document import newTempBase
 
-# get all cache statistics 
+# get all cache statistics
 cache_stats = context.getPortalObject().portal_caches.getCacheTotalMemorySize()
 cache_factory_list_stats = cache_stats['stats']
 cache_factory_id = context.getParentValue().getId()
@@ -21,7 +21,7 @@ if statistics_criteria == 'total':
 result = []
 counter = 0
 for cache_key,cache_key_memory in cache_plugin_stats_data.items():
-  obj = newTempBase(context, 
+  obj = newTempBase(context,
                     'temp_translation_%d' %counter,
                     cache_key = cache_key,
                     cache_key_memory = cache_key_memory)

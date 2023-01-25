@@ -33,7 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctiona
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "erp5_web_e5g_ecommerce_ui_zuite"
-  
+
   def getBusinessTemplateList(self):
     return (
       'erp5_web_renderjs_ui',

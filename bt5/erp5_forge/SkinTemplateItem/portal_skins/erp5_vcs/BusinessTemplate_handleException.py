@@ -4,15 +4,15 @@ import json
 
 try:
   raise exception
-except SubversionSSLTrustError, e:
+except SubversionSSLTrustError as e:
   message = 'SSL Certificate was not recognized'
   kw = dict(trust_dict=e.getTrustDict())
   method = 'BusinessTemplate_viewSvnSSLTrustDialog'
-except SubversionLoginError, e:
+except SubversionLoginError as e:
   message = 'Server needs authentication, no cookie found'
   kw = dict(realm=e.getRealm(), username=context.getVcsTool().getPreferredUsername())
   method = 'BusinessTemplate_viewSvnLoginDialog'
-except GitLoginError, e:
+except GitLoginError as e:
   message = str(e)
   kw = dict(remote_url=context.getVcsTool().getRemoteUrl())
   method = 'BusinessTemplate_viewGitLoginDialog'

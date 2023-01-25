@@ -39,18 +39,18 @@ def createReturnLine(uid, list_):
   new_dic['uid']=uid
   list_.append(new_dic)
   return len(list_)-1
-  
+
 # Prepare the parameters to filter
 query_dict = {}
 if request_start_date:
   query_dict['delivery.start_date'] = dict(range='min', query=request_start_date)
 if request_stop_date:
-  query_dict['delivery.stop_date'] = dict(range='ngt', 
+  query_dict['delivery.stop_date'] = dict(range='ngt',
                                      query=request_stop_date.latestTime())
 #Get objects with request parameters
 event_list=portal.portal_catalog(portal_type=portal.getPortalEventTypeList(),
                                             **query_dict)
-for r_event in event_list:  
+for r_event in event_list:
   event=r_event.getObject()
   if event.getSimulationState() in state_item_list:
     #Follow-up has priority
@@ -62,8 +62,8 @@ for r_event in event_list:
         column_list[i][event.getSimulationState()]=column_list[i][event.getSimulationState()]+1
         column_list[i]['total']=column_list[i]['total']+1
         if column_list[i]['ticket_type']=="":
-          column_list[i]['ticket_title']=ticket.getTitle() 
-          column_list[i]['ticket_type']=ticket.getTranslatedPortalType() 
+          column_list[i]['ticket_title']=ticket.getTitle()
+          column_list[i]['ticket_type']=ticket.getTranslatedPortalType()
           column_list[i]['resource']=ticket.getResourceTranslatedTitle()
     else:
       if not event.getCausalityUid() == None:
@@ -77,8 +77,8 @@ for r_event in event_list:
             column_list[i][event.getSimulationState()]=column_list[i][event.getSimulationState()]+1
             column_list[i]['total']=column_list[i]['total']+1
             if column_list[i]['ticket_type']=="":
-              column_list[i]['ticket_title']=ticket.getTitle() 
-              column_list[i]['ticket_type']=ticket.getTranslatedPortalType() 
+              column_list[i]['ticket_title']=ticket.getTitle()
+              column_list[i]['ticket_type']=ticket.getTranslatedPortalType()
               column_list[i]['resource']=ticket.getResourceTranslatedTitle()
         else:
           #Unassigned
@@ -110,7 +110,7 @@ for row in column_list:
     obj[event_state]=row[event_state]
     default_dic[event_state]=default_dic[event_state]+row[event_state]
   line_list.append(obj)
-                          
+
 #Totals count line
 obj = Object(uid="new_")
 obj['ticket_title']=portal.Base_translateString('Total')

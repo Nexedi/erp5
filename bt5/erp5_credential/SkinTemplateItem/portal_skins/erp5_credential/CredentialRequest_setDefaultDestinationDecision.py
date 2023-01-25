@@ -26,13 +26,13 @@ if "Organisation" in create_portal_type:
   #be sure we have the same title and no %title%
   organisation_list = [x.getObject() for x in organisation_list if x.getObject().getTitle() == organisation_title ]
   if organisation_list:
-    destination_list.append(organisation_list[0]) 
+    destination_list.append(organisation_list[0])
     create_portal_type.remove("Organisation")
     update_destination_list = True
 
 for portal_type in create_portal_type:
   update_destination_list = True
-  module = context.getDefaultModule(portal_type)  
+  module = context.getDefaultModule(portal_type)
   obj = module.newContent(portal_type=portal_type)
   destination_list.append(obj)
 

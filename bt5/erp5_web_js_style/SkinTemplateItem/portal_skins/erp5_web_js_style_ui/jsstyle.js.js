@@ -1,7 +1,7 @@
-/*globals window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
+/*globals window, document, RSVP, rJS, XMLHttpRequest, URL,
           history, console */
 /*jslint indent: 2, maxlen: 80*/
-(function (window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
+(function (window, document, RSVP, rJS, XMLHttpRequest, URL,
           loopEventListener, history, console) {
   "use strict";
 
@@ -295,7 +295,7 @@
       style_gadget: gadget.getDeclaredGadget('renderer')
     }))
       .push(function (result_dict) {
-        var dom_parser = (new DOMParser()).parseFromString(
+        var dom_parser = rJS.parseDocumentStringOrFail(
           result_dict.xhr.responseText,
           'text/html'
         ),
@@ -472,5 +472,5 @@
   // with browsers without javascript
   hidePage();
 
-}(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
+}(window, document, RSVP, rJS, XMLHttpRequest, URL,
   rJS.loopEventListener, history, console));

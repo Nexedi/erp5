@@ -278,13 +278,13 @@ class TestAccounts(AccountingTestCase):
 
     # non regression: this constraint is also properly verified during workflow
     account.setAccountType(None)
-    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+    with self.assertRaisesRegex(ValidationFailed, 'Account Type must be set'):
       self.portal.portal_workflow.doActionFor(account, 'validate_action')
     account.setAccountType('equity')
     self.portal.portal_workflow.doActionFor(account, 'validate_action')
     self.portal.portal_workflow.doActionFor(account, 'invalidate_action')
     account.setAccountType(None)
-    with self.assertRaisesRegexp(ValidationFailed, 'Account Type must be set'):
+    with self.assertRaisesRegex(ValidationFailed, 'Account Type must be set'):
       self.portal.portal_workflow.doActionFor(account, 'validate_action')
 
   def test_AccountWorkflow(self):
@@ -694,8 +694,10 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
         accounting_transaction, 'stop_action')
-    # with bank account, it's OK
+    # with validated bank account, it's OK
     bank_account = self.section.newContent(portal_type='Bank Account')
+    bank_account.validate()
+    self.tic()
     accounting_transaction.setSourcePaymentValue(bank_account)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
@@ -704,6 +706,7 @@ class TestTransactionValidation(AccountingTestCase):
     # bank account
     bank_account = self.section.newContent(portal_type='Bank Account',
         price_currency_value=self.currency_module.euro)
+    bank_account.validate()
     accounting_transaction = self._makeOne(
                portal_type='Payment Transaction',
                start_date=DateTime('2007/01/02'),
@@ -724,6 +727,112 @@ class TestTransactionValidation(AccountingTestCase):
     # with same currency in bank account and transaction, it's OK
     accounting_transaction.setResourceValue(self.currency_module.euro)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationCheckBankAccountValidationState(self):
+    for section, mirror_section in (
+      (self.main_section, self.portal.organisation_module.client_1),
+      (self.main_section, self.portal.person_module.newContent()),
+      # with person member of section's group
+      (self.main_section, self.portal.person_module.john_smith),
+      (self.section, self.portal.organisation_module.client_1),
+      (self.main_section, self.portal.person_module.newContent()),
+      (self.main_section, self.section),
+    ):
+      section_bank_account = section.newContent(
+        title='section bank account',
+        portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+      mirror_section_bank_account = mirror_section.newContent(
+        title='mirror section bank account',
+        portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+
+      accounting_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        start_date=DateTime('2007/01/02'),
+        source_section_value=section,
+        source_payment_value=section_bank_account,
+        destination_section_value=mirror_section,
+        destination_payment_value=mirror_section_bank_account,
+        payment_mode='default',
+        resource_value=self.currency_module.euro,
+        lines=(
+          dict(source_value=self.account_module.bank, source_debit=500),
+          dict(source_value=self.account_module.receivable, source_credit=500)))
+
+      self.assertRaisesRegex(
+        ValidationFailed,
+        "Bank Account section bank account is invalid.",
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+      )
+      section_bank_account.validate()
+      self.tic()
+
+      self.assertRaisesRegex(
+        ValidationFailed,
+        "Bank Account mirror section bank account is invalid.",
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction,
+        'stop_action',
+      )
+      mirror_section_bank_account.validate()
+      self.tic()
+
+      self.portal.portal_workflow.doActionFor(
+        accounting_transaction, 'stop_action')
+
+  def test_PaymentTransactionValidationCheckBankAccountOwner(self):
+    main_section_bank_account = self.main_section.newContent(
+      title='main section bank account',
+      portal_type='Bank Account',
+      price_currency_value=self.currency_module.euro)
+    main_section_bank_account.validate()
+    client_1_bank_account = self.portal.organisation_module.client_1.newContent(
+      title='client_1 bank account',
+      portal_type='Bank Account',
+      price_currency_value=self.currency_module.euro)
+    client_1_bank_account.validate()
+
+    # main_section_bank_account can be used by both main_section and section.
+    for section in self.main_section, self.section:
+      accounting_transaction = self._makeOne(
+        portal_type='Payment Transaction',
+        start_date=DateTime('2007/01/02'),
+        source_section_value=section,
+        source_payment_value=main_section_bank_account,
+        destination_section_value=self.portal.organisation_module.client_1,
+        destination_payment_value=client_1_bank_account,
+        payment_mode='default',
+        resource_value=self.currency_module.euro,
+        lines=(
+          dict(source_value=self.account_module.bank, source_debit=500),
+          dict(source_value=self.account_module.receivable,
+               source_credit=500)))
+      self.portal.portal_workflow.doActionFor(
+        accounting_transaction, 'stop_action')
+
+    # client_1's bank account can only be used with client 1, not with client 2
+    accounting_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      start_date=DateTime('2007/01/02'),
+      source_section_value=self.main_section,
+      source_payment_value=main_section_bank_account,
+      destination_section_value=self.portal.organisation_module.client_2,
+      destination_payment_value=client_1_bank_account,
+      payment_mode='default',
+      resource_value=self.currency_module.euro,
+      lines=(
+        dict(source_value=self.account_module.bank, source_debit=500),
+        dict(source_value=self.account_module.receivable, source_credit=500)))
+    self.assertRaisesRegex(
+      ValidationFailed,
+      "Bank Account client_1 bank account is invalid.",
+      self.portal.portal_workflow.doActionFor,
+      accounting_transaction,
+      'stop_action',
+    )
 
   def test_NonBalancedAccountingTransaction(self):
     # Accounting Transactions have to be balanced to be validated
@@ -932,7 +1041,7 @@ class TestTransactionValidation(AccountingTestCase):
                            source_credit=1/3.0),
                       dict(source_value=self.account_module.receivable,
                            source_credit=1/3.0),))
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'Transaction is not balanced for',
         self.portal.portal_workflow.doActionFor,
@@ -961,7 +1070,7 @@ class TestTransactionValidation(AccountingTestCase):
                            destination_credit=1/3.0),
                       dict(destination_value=self.account_module.receivable,
                            destination_credit=1/3.0),))
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
         ValidationFailed,
         'Transaction is not balanced for',
         self.portal.portal_workflow.doActionFor,
@@ -977,7 +1086,7 @@ class TestTransactionValidation(AccountingTestCase):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems
     category = self.section.getGroupValue()
-    self.assertNotEquals(category, None)
+    self.assertNotEqual(category, None)
     accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
@@ -1052,6 +1161,22 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertEqual('delivered', accounting_transaction.getSimulationState())
     self.assertFalse(_checkPermission('Modify portal content',
       accounting_transaction))
+
+    another_accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           source_credit=500)))
+
+    doActionFor(another_accounting_transaction, 'cancel_action')
+    self.assertEqual('cancelled', another_accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      another_accounting_transaction))
 
   def test_UneededSourceAssetPrice(self):
     # It is refunsed to validate an accounting transaction if lines have an
@@ -1146,6 +1271,33 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertEqual([], accounting_transaction.checkConsistency())
     self.portal.portal_workflow.doActionFor(accounting_transaction,
                                             'stop_action')
+
+  def test_AccountingTransaction_checkConsistency(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2008/12/31'),
+               destination_section_value=self.organisation_module.supplier,
+               lines=(dict(id='line_with_wrong_quantity',
+                           source_value=self.account_module.goods_purchase,
+                           source_debit=400),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    self.assertRaisesRegex(
+      ValidationFailed,
+      'Transaction is not balanced',
+      accounting_transaction.AccountingTransaction_checkConsistency,
+    )
+
+    accounting_transaction.line_with_wrong_quantity.setSourceDebit(500)
+    self.assertRaisesRegex(
+      ValidationFailed,
+      'Date is not in a started Accounting Period',
+      accounting_transaction.AccountingTransaction_checkConsistency,
+    )
+
+    accounting_transaction.setStartDate(DateTime('2007/11/11'))
+    accounting_transaction.AccountingTransaction_checkConsistency()
 
 
 class TestClosingPeriod(AccountingTestCase):
@@ -1873,7 +2025,7 @@ class TestClosingPeriod(AccountingTestCase):
                       client1_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_1,
                       client1_movement.getSourceSectionValue())
-    self.assertAlmostEquals(1.1,
+    self.assertAlmostEqual(1.1,
           client1_movement.getDestinationInventoriatedTotalAssetCredit(),
           accounting_currency_precision)
     self.assertEqual(None, client1_movement.getSourceTotalAssetPrice())
@@ -1891,7 +2043,7 @@ class TestClosingPeriod(AccountingTestCase):
                       client2_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_2,
                       client2_movement.getSourceSectionValue())
-    self.assertAlmostEquals(2.2,
+    self.assertAlmostEqual(2.2,
         client2_movement.getDestinationInventoriatedTotalAssetCredit(),
         accounting_currency_precision)
     self.assertEqual(None, client2_movement.getSourceTotalAssetPrice())
@@ -1909,7 +2061,7 @@ class TestClosingPeriod(AccountingTestCase):
                       pl_movement.getSourceSection())
     self.assertEqual(None, pl_movement.getDestinationTotalAssetPrice())
     self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
-    self.assertAlmostEquals(3.3,
+    self.assertAlmostEqual(3.3,
                   pl_movement.getDestinationDebit(),
                   accounting_currency_precision)
 
@@ -1921,11 +2073,11 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT total_price FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT quantity FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
@@ -2030,7 +2182,7 @@ class TestClosingPeriod(AccountingTestCase):
                       yen_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_1,
                       yen_movement.getSourceSectionValue())
-    self.assertAlmostEquals(1.1,
+    self.assertAlmostEqual(1.1,
           yen_movement.getDestinationInventoriatedTotalAssetCredit(),
           accounting_currency_precision)
     self.assertEqual(None, yen_movement.getSourceTotalAssetPrice())
@@ -2044,7 +2196,7 @@ class TestClosingPeriod(AccountingTestCase):
                       dollar_movement.getDestinationValue())
     self.assertEqual(organisation_module.client_1,
                       dollar_movement.getSourceSectionValue())
-    self.assertAlmostEquals(2.2,
+    self.assertAlmostEqual(2.2,
           dollar_movement.getDestinationInventoriatedTotalAssetCredit(),
           accounting_currency_precision)
     self.assertEqual(None, dollar_movement.getSourceTotalAssetPrice())
@@ -2057,11 +2209,11 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT total_price FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
-    self.assertAlmostEquals(3.3, q(
+    self.assertAlmostEqual(3.3, q(
       "SELECT quantity FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0],
       accounting_currency_precision)
@@ -2607,9 +2759,9 @@ class TestClosingPeriod(AccountingTestCase):
     # Maybe we want to add line for each account in that case ?
     line, = balance_transaction.contentValues()
 
-    self.assertEquals(line.getDestinationValue(), pl)
-    self.assertEquals(line.getQuantity(), 0)
-    self.assertEquals(line.getDestinationTotalAssetPrice(), None)
+    self.assertEqual(line.getDestinationValue(), pl)
+    self.assertEqual(line.getQuantity(), 0)
+    self.assertEqual(line.getDestinationTotalAssetPrice(), None)
 
 
   def test_InventoryIndexingNodeAndMirrorSection(self):
@@ -3157,7 +3309,7 @@ class TestClosingPeriod(AccountingTestCase):
            period, 'stop_action',
            profit_and_loss_account=pl.getRelativeUrl())
 
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Previous accounting periods has to be closed first.*'):
       self.getPortal().portal_workflow.doActionFor(
         period2, 'stop_action')
@@ -3183,7 +3335,7 @@ class TestClosingPeriod(AccountingTestCase):
              dict(source_value=self.account_module.receivable,
                   source_debit=100)))
 
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValidationFailed,
        'All Accounting Transactions for this organisation during'
        ' the period have to be closed first'):
@@ -3242,9 +3394,9 @@ class TestAccountingExport(AccountingTestCase):
         '40 - Payable',
         self.account_module.payable.Account_getFormattedTitle())
     # check that this account name can be found in the content
-    self.assertTrue('40 - Payable' in content_xml)
+    self.assertIn('40 - Payable', content_xml)
     # check that we don't have unknown categories
-    self.assertFalse('???' in content_xml)
+    self.assertNotIn('???', content_xml)
 
 
 class TestTransactions(AccountingTestCase):
@@ -3393,9 +3545,9 @@ class TestTransactions(AccountingTestCase):
                                 description="A description",
                                 comment="Some comments")
     searchable_text = accounting_transaction.SearchableText()
-    self.assertTrue('A new Transaction' in searchable_text)
-    self.assertTrue('A description' in searchable_text)
-    self.assertTrue('Some comments' in searchable_text)
+    self.assertIn('A new Transaction', searchable_text)
+    self.assertIn('A description', searchable_text)
+    self.assertIn('Some comments', searchable_text)
 
 
   def test_Organisation_getMappingRelatedOrganisation(self):
@@ -3422,7 +3574,7 @@ class TestTransactions(AccountingTestCase):
   def _checkRelatedSalePayment(self, invoice, payment, payment_node, quantity):
     """Check payment of a Sale Invoice.
     """
-    eq = self.assertEquals
+    eq = self.assertEqual
     eq('Payment Transaction', payment.getPortalTypeName())
     eq([invoice], payment.getCausalityValueList())
     eq(invoice.getSourceSection(), payment.getSourceSection())
@@ -3447,6 +3599,8 @@ class TestTransactions(AccountingTestCase):
   def test_Invoice_createRelatedPaymentTransactionSimple(self):
     # Simple case of creating a related payment transaction.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3464,6 +3618,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when grouping reference of
     # some lines is already set.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3485,6 +3641,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have two line for
     # 2 different destination sections.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3506,6 +3664,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have related
     # transactions.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3537,6 +3697,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have related
     # transactions with different side
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3567,6 +3729,8 @@ class TestTransactions(AccountingTestCase):
     # Simple creating a related payment transaction when we have related
     # transactions in draft/cancelled state (they are ignored)
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3601,6 +3765,8 @@ class TestTransactions(AccountingTestCase):
 
   def test_Invoice_createRelatedPaymentTransactionDifferentCurrency(self):
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                resource_value=self.portal.currency_module.usd,
@@ -3635,6 +3801,8 @@ class TestTransactions(AccountingTestCase):
     """Checks in case of deleted Payments related to invoice"""
     # Simple case of creating a related payment transaction.
     payment_node = self.section.newContent(portal_type='Bank Account')
+    payment_node.validate()
+    self.tic()
     invoice = self._makeOne(
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
@@ -3785,6 +3953,61 @@ class TestTransactions(AccountingTestCase):
     invoice.manage_delObjects([line.getId() for line in invoice.contentValues()])
     self.tic()
     self.assertFalse(payment.line_with_grouping_reference.getGroupingReference())
+
+  def test_grouping_reference_rounding(self):
+    """Reproduction of a bug that grouping was not possible because of rounding error
+
+    >>> 0.1 + 0.2 - 0.3 == 0
+    False
+    """
+    invoice = self._makeOne(
+               title='Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                          source_debit=0.3),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.1,
+                           id='line_1'),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=0.2,
+                           id='line_2')))
+    payment = self._makeOne(
+               title='Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_3',
+                           source_debit=0.3),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=0.3,)))
+    self.tic()
+    grouped = invoice.AccountingTransaction_guessGroupedLines(
+      accounting_transaction_line_uid_list=(
+        invoice.line_1.getUid(),
+        invoice.line_2.getUid(),
+        payment.line_3.getUid(),
+    ))
+    self.assertEqual(
+      sorted(grouped),
+      sorted([
+        invoice.line_1.getRelativeUrl(),
+        invoice.line_2.getRelativeUrl(),
+        payment.line_3.getRelativeUrl(),
+    ]))
+    self.tic()
+
+  def test_grouping_reference_rounding_without_accounting_currency_on_section(self):
+    accounting_currency = self.section.getPriceCurrency()
+    self.assertTrue(accounting_currency)
+    self.section.setPriceCurrency(None)
+    try:
+      self.test_grouping_reference_rounding()
+    finally:
+      self.abort()
+      self.section.setPriceCurrency(accounting_currency)
+      self.tic()
 
   def test_automatically_setting_grouping_reference(self):
     invoice = self._makeOne(
@@ -4546,6 +4769,58 @@ class TestTransactions(AccountingTestCase):
       ('BA-1', bank_account.getRelativeUrl()),
       at.AccountingTransaction_getDestinationPaymentItemList())
 
+  def test_AccountingTransaction_getSourcePaymentItemList_no_section(self):
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='BA-1'
+    )
+    bank_account.validate()
+    self.tic()
+
+    at = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    at.setSourceSectionValue(None)
+    at.setDestinationSectionValue(None)
+    self.assertEqual(
+      at.AccountingTransaction_getSourcePaymentItemList(), [('', '')])
+    self.assertEqual(
+      at.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
+
+  def test_AccountingTransaction_getSourcePaymentItemList_person_member_of_group(self):
+    bank_account = self.main_section.newContent(
+      portal_type='Bank Account',
+      reference='should not be displayed'
+    )
+    bank_account.validate()
+    self.tic()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.person_module.john_smith,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertEqual(
+      source_transaction.AccountingTransaction_getSourcePaymentItemList(), [('', '')])
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.person_module.john_smith,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  destination_credit=500)))
+    self.assertEqual(
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList(), [('', '')])
+
   def test_AccountingTransaction_getSourcePaymentItemList_parent_section(self):
     # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList
     # allows to select bank accounts from parent groups of source section
@@ -4685,6 +4960,63 @@ class TestTransactions(AccountingTestCase):
       ('from section', bank_account.getRelativeUrl()),
       destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
 
+  def test_AccountingTransaction_getSourcePaymentItemList_bank_accounts_from_other_entities(self):
+    client_1_bank_account = self.portal.organisation_module.client_1.newContent(
+      portal_type='Bank Account',
+      title='client_1 bank account'
+    )
+    client_1_bank_account.validate()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      # section is client 2 but account is for client 1
+      source_section_value=self.organisation_module.client_2,
+      source_payment_value=client_1_bank_account,
+      lines=(
+        dict(
+          destination_value=self.account_module.goods_purchase,
+          destination_debit=500),
+        dict(
+          destination_value=self.account_module.receivable,
+          destination_credit=500)))
+    self.assertEqual(
+      [
+        (str(label), value) for (label, value) in
+        source_transaction.AccountingTransaction_getSourcePaymentItemList()
+      ],
+      [
+        ('', ''),
+        ('Invalid bank account from Client 1', None),
+        ('??? (client_1 bank account)', client_1_bank_account.getRelativeUrl()),
+      ],
+    )
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      # section is client 2 but account is for client 1
+      destination_section_value=self.organisation_module.client_2,
+      destination_payment_value=client_1_bank_account,
+      lines=(
+        dict(
+          destination_value=self.account_module.goods_purchase,
+          destination_debit=500),
+        dict(
+          destination_value=self.account_module.receivable,
+          destination_credit=500)))
+    self.assertEqual(
+      [
+        (str(label), value) for (label, value) in destination_transaction.
+        AccountingTransaction_getDestinationPaymentItemList()
+      ],
+      [
+        ('', ''),
+        ('Invalid bank account from Client 1', None),
+        ('??? (client_1 bank account)', client_1_bank_account.getRelativeUrl()),
+      ],
+    )
+
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
@@ -4778,7 +5110,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -4957,7 +5289,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     for account in self.account_list :
       account.validate()
-      self.assertTrue('Site Error' not in account.view())
+      self.assertNotIn('Site Error', account.view())
       self.assertEqual(account.getValidationState(), 'validated')
     self.tic()
 
@@ -5201,10 +5533,10 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     portal = self.getPortal()
     accounting_module = portal.accounting_module
-    self.assertTrue('Site Error' not in accounting_module.view())
-    self.assertNotEquals(
+    self.assertNotIn('Site Error', accounting_module.view())
+    self.assertNotEqual(
           len(portal.getPortalAccountingMovementTypeList()), 0)
-    self.assertNotEquals(
+    self.assertNotEqual(
           len(portal.getPortalAccountingTransactionTypeList()), 0)
     for accounting_portal_type in accounting_module.allowedContentTypes():
       accounting_transaction = accounting_module.newContent(
@@ -5212,14 +5544,14 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
             source_section_value = source_section_value,
             destination_section_value = destination_section_value,
             resource_value = resource_value )
-      self.assertTrue('Site Error' not in accounting_transaction.view())
+      self.assertNotIn('Site Error', accounting_transaction.view())
       self.assertEqual( accounting_transaction.getSourceSectionValue(),
                          source_section_value )
       self.assertEqual( accounting_transaction.getDestinationSectionValue(),
                          destination_section_value )
       self.assertEqual( accounting_transaction.getResourceValue(),
                          resource_value )
-      self.assertNotEquals(
+      self.assertNotEqual(
               len(accounting_transaction.allowedContentTypes()), 0)
       tested_line_portal_type = 0
       for line_portal_type in portal.getPortalAccountingMovementTypeList():
@@ -5228,7 +5560,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         if line_portal_type in allowed_content_types :
           line = accounting_transaction.newContent(
             portal_type = line_portal_type, )
-          self.assertTrue('Site Error' not in line.view())
+          self.assertNotIn('Site Error', line.view())
           # section and resource is acquired from parent transaction.
           self.assertEqual( line.getDestinationSectionValue(),
                              destination_section_value )
@@ -5241,7 +5573,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
           self.assertEqual( line.getResourceValue(),
                              resource_value )
           tested_line_portal_type = 1
-      self.assert_(tested_line_portal_type, ("No lines tested ... " +
+      self.assertTrue(tested_line_portal_type, ("No lines tested ... " +
                           "getPortalAccountingMovementTypeList = %s " +
                           "<%s>.allowedContentTypes = %s") %
                           (portal.getPortalAccountingMovementTypeList(),
@@ -5569,68 +5901,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     except ValidationFailed as err:
       raise AssertionError("Validation failed : %s" % err.msg)
 
-  def stepValidateNoPayment(self, sequence, sequence_list=None, **kw) :
-    """Check validation behaviour related to payment & mirror_payment.
-    If we use an account of type asset/cash/bank, we must use set a Bank
-    Account as source_payment or destination_payment.
-    This this source/destination payment must be a portal type from the
-    `payment node` portal type group. It can be defined on transaction
-    or line.
-    """
-    def useBankAccount(accounting_transaction):
-      """Modify the transaction, so that a line will use an account member of
-      account_type/cash/bank , which requires to use a payment category.
-      """
-      # get the default and replace income account by bank
-      income_account_found = 0
-      for line in accounting_transaction.getMovementList() :
-        source_account = line.getSourceValue()
-        if source_account.isMemberOf('account_type/income') :
-          income_account_found = 1
-          line.edit( source_value = sequence.get('bank_account'),
-                     destination_value = sequence.get('bank_account') )
-      self.assertTrue(income_account_found)
-    # XXX
-    accounting_transaction = sequence.get('transaction')
-    useBankAccount(accounting_transaction)
-    self.assertRaises(ValidationFailed,
-        self.getWorkflowTool().doActionFor,
-        accounting_transaction,
-        'stop_action')
-
-    source_section_value = accounting_transaction.getSourceSectionValue()
-    destination_section_value = accounting_transaction.getDestinationSectionValue()
-    for ptype in self.getPortal().getPortalPaymentNodeTypeList() :
-      source_payment_value = source_section_value.newContent(
-                                  portal_type = ptype, )
-      destination_payment_value = destination_section_value.newContent(
-                                  portal_type = ptype, )
-      accounting_transaction = self.createAccountingTransaction(
-                      destination_section_value=self.other_vendor)
-      useBankAccount(accounting_transaction)
-
-      # payment node have to be set on both sides if both sides have accounting
-      # lines
-      accounting_transaction.setSourcePaymentValue(source_payment_value)
-      accounting_transaction.setDestinationPaymentValue(None)
-      self.assertRaises(ValidationFailed,
-          self.getWorkflowTool().doActionFor,
-          accounting_transaction,
-          'stop_action')
-      accounting_transaction.setSourcePaymentValue(None)
-      accounting_transaction.setDestinationPaymentValue(destination_payment_value)
-      self.assertRaises(ValidationFailed,
-          self.getWorkflowTool().doActionFor,
-          accounting_transaction,
-          'stop_action')
-      accounting_transaction.setSourcePaymentValue(source_payment_value)
-      accounting_transaction.setDestinationPaymentValue(destination_payment_value)
-      try:
-        self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
-        self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-      except ValidationFailed as err:
-        self.fail("Validation failed : %s" % err.msg)
-
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
     """Check validating a transaction remove empty lines. """
     accounting_transaction = sequence.get('transaction')
@@ -5806,18 +6076,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       stepCreateAccounts
       stepCreateValidAccountingTransaction
       stepValidateNotBalanced""", quiet=quiet)
-
-  def test_AccountingTransactionValidationPayment(self, quiet=QUIET,
-                                             run=RUN_ALL_TESTS):
-    """Transaction validation and payment"""
-    if not run : return
-    self.playSequence("""
-      stepCreateEntities
-      stepCreateCurrencies
-      stepCreateAccounts
-      stepCreateValidAccountingTransaction
-      stepValidateNoPayment
-    """, quiet=quiet)
 
   def test_AccountingTransactionValidationRemoveEmptyLines(self, quiet=QUIET,
                                              run=RUN_ALL_TESTS):
@@ -6000,7 +6258,7 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
       source_value=self.portal.account_module.goods_sales,
       source_credit=101)
 
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Transaction is not balanced.*'):
       self.portal.portal_workflow.doActionFor(
         internal_invoice, 'start_action')
@@ -6017,7 +6275,7 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
       destination_value=self.portal.account_module.refundable_vat,
       destination_debit=101)
 
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '.*Transaction is not balanced.*'):
       self.portal.portal_workflow.doActionFor(
         internal_invoice, 'stop_action')
@@ -6113,6 +6371,208 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
     self.assertEqual(stat_internal_transaction.destination_asset_debit, 0.44) # line2
     self.assertEqual(stat_internal_transaction.destination_credit, 1) # line1
     self.assertEqual(stat_internal_transaction.destination_asset_credit, 0.22) # line1
+
+  def test_grouping_reference_both_sides(self):
+    # Group together lines from two internal invoices:
+    #
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | receivable     | 10    |        | A        |                     |       |        |          |
+    # | sales          |       | 10     |          | purchase            | 10    |        |          |
+    # |                |       |        |          | payable             |       | 10     | B        |
+    # and
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | sales          | 10    |        |          | purchase            |       | 10     |          |
+    # | receivable     |       | 10     | A        |                     |       |        |          |
+    # |                |       |        |          | payable             | 10    |        | B        |
+    # This example does not really make sense from usage of internal invoices, because we usually
+    # use the same line for receivable and purchase in such a case, but it reproduces a case that did
+    # not group automatically.
+
+    internal_invoice1 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice1',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      created_by_builder=True,
+    )
+    # start before creating lines, because we don't want our lines to
+    # be initialized with mirror accounts.
+    internal_invoice1.start()
+    internal_invoice1.newContent(
+      id='line_a',
+      source_value=self.portal.account_module.receivable,
+      source_debit=10,
+    )
+    internal_invoice1.newContent(
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_credit=10,
+    )
+    internal_invoice1.newContent(
+      id='line_b',
+      destination_value=self.portal.account_module.payable,
+      destination_credit=10,
+    )
+    internal_invoice1.stop()
+    self.tic()
+
+    internal_invoice2 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice2',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      causality_value=internal_invoice1,
+      created_by_builder=True,
+    )
+    internal_invoice2.start()
+    internal_invoice2.newContent(
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_debit=10,
+    )
+    internal_invoice2.newContent(
+      id='line_a',
+      source_value=self.portal.account_module.receivable,
+      source_credit=10,
+    )
+    internal_invoice2.newContent(
+      id='line_b',
+      destination_value=self.portal.account_module.payable,
+      destination_debit=10,
+    )
+    internal_invoice2.stop()
+    self.tic()
+    self.assertTrue(internal_invoice1.line_a.getGroupingReference())
+    self.assertEqual(
+      internal_invoice1.line_a.getGroupingReference(),
+      internal_invoice2.line_a.getGroupingReference(),
+    )
+    self.assertTrue(internal_invoice1.line_b.getGroupingReference())
+    self.assertEqual(
+      internal_invoice1.line_b.getGroupingReference(),
+      internal_invoice2.line_b.getGroupingReference(),
+    )
+
+  def test_grouping_reference_no_group_when_mirror_accounts_are_different(self):
+    # Does not together lines from two internal invoices:
+    #
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | receivable     | 10    |        |  no  ->  | payable             |       | 10     |          |
+    # | sales          |       | 10     |          | purchase            | 10    |        |          |
+    # and
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | sales          | 10    |        |          | payable             |       | 10     |          |
+    # | receivable     |       | 10     |  no  ->  | purchase            | 10    |        |          |
+
+    internal_invoice1 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice1',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      created_by_builder=True,
+    )
+    internal_invoice1.start()
+    internal_invoice1.newContent(
+      id='line1',
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.payable,
+      source_debit=10,
+    )
+    internal_invoice1.newContent(
+      id='line2',
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_credit=10,
+    )
+    internal_invoice1.stop()
+    self.tic()
+
+    internal_invoice2 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice2',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      causality_value=internal_invoice1,
+      created_by_builder=True,
+    )
+    internal_invoice2.start()
+    internal_invoice2.newContent(
+      id='line1',
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.payable,
+      source_debit=10,
+    )
+    internal_invoice2.newContent(
+      id='line2',
+      source_value=self.portal.account_module.receivable,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_debit=10,
+    )
+    internal_invoice2.stop()
+    self.tic()
+    self.assertFalse(internal_invoice1.line1.getGroupingReference())
+    self.assertFalse(internal_invoice1.line2.getGroupingReference())
+    self.assertFalse(internal_invoice2.line1.getGroupingReference())
+    self.assertFalse(internal_invoice2.line2.getGroupingReference())
+
+  def test_grouping_reference_both_sides_with_line_for_0(self):
+    # Lines for 0 are automatically grouped, but this takes care that the
+    # amount is also 0 for the mirror side.
+    # | Source Account | Debit | Credit | Grouping | Destination Account | Debit | Credit | Grouping |
+    # |----------------|-------|--------|----------|---------------------|-------|--------|----------|
+    # | receivable     | 0     |        | A        |                     |       |        |          |
+    # | sales          |       | 0      |          | purchase            | 10    |        |          |
+    # |                |       |        |          | payable             |       | 10     |          |
+    # |                |       |        |          | receivable          |       |  0     |  A       |
+    #
+    internal_invoice1 = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='internal_invoice1',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+      created_by_builder=True,
+    )
+    # start before creating lines, because we don't want our lines to
+    # be initialized with mirror accounts.
+    internal_invoice1.start()
+    internal_invoice1.newContent(
+      id='line_1',
+      source_value=self.portal.account_module.receivable,
+      source_debit=0,
+    )
+    internal_invoice1.newContent(
+      id='line_2',
+      source_value=self.portal.account_module.goods_sales,
+      destination_value=self.portal.account_module.goods_purchase,
+      source_credit=0,
+      destination_asset_debit=10,
+    )
+    internal_invoice1.newContent(
+      id='line_3',
+      destination_value=self.portal.account_module.payable,
+      destination_asset_credit=10,
+    )
+    internal_invoice1.newContent(
+      id='line_4',
+      destination_value=self.portal.account_module.receivable,
+      destination_credit=0,
+    )
+    internal_invoice1.stop()
+    self.tic()
+
+    self.assertTrue(internal_invoice1.line_1.getGroupingReference())
+    self.assertFalse(internal_invoice1.line_2.getGroupingReference())
+    self.assertFalse(internal_invoice1.line_3.getGroupingReference())
+    self.assertTrue(internal_invoice1.line_4.getGroupingReference())
 
 
 class TestAccountingAlarms(AccountingTestCase):
@@ -6234,7 +6694,7 @@ class TestAccountingPeriod(AccountingTestCase):
         portal_type='Accounting Period',
         start_date=DateTime('2021/01/01'),
         stop_date=DateTime('2020/12/31'),)
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         'Start date is after stop date'):
       self.portal.portal_workflow.doActionFor(first_accounting_period, 'start_action')
 
@@ -6248,13 +6708,13 @@ class TestAccountingPeriod(AccountingTestCase):
         portal_type='Accounting Period',
         start_date=DateTime('2021/01/01'),
         stop_date=DateTime('2022/12/31'),)
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         '2021/01/01 00:00:00 .* is already in an open accounting period.'):
       self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
 
     # check there are no "holes" between dates
     second_accounting_period.setStartDate('2022/01/02')
-    with self.assertRaisesRegexp(ValidationFailed,
+    with self.assertRaisesRegex(ValidationFailed,
         'Last opened period ends on 2021/12/31.*, this period starts on 2022/01/02.*. Accounting Periods must be consecutive.'):
       self.portal.portal_workflow.doActionFor(second_accounting_period, 'start_action')
 

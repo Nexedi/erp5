@@ -3,4 +3,4 @@
 """
 from random import choice
 import string
-return  ''.join([choice(string.letters) for i in range(max_long)])
+return  ''.join([choice(string.ascii_letters) for i in range(max_long)])

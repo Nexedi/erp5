@@ -163,7 +163,7 @@ class StrippingParser( SGMLParser ):
 
     def handle_entityref(self, name):
 
-        if self.entitydefs.has_key(name):
+        if name in self.entitydefs:
             x = ';'
         else:
             # this breaks unstandard entities that end with ';'
@@ -175,7 +175,7 @@ class StrippingParser( SGMLParser ):
 
         """ Delete all tags except for legal ones.
         """
-        if VALID_TAGS.has_key(tag):
+        if tag in VALID_TAGS:
 
             self.result = self.result + '<' + tag
 

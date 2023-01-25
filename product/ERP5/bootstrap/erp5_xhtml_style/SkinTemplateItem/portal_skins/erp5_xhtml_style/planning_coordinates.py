@@ -35,13 +35,13 @@ groups of moved blocks
 # special constraints (big fonts for example)
 
 # caracter height
-car_height = 10 
+car_height = 10
 # caracter width
-car_width = 6 
+car_width = 6
 # space to insert between each depth
-depth_width = 10 
+depth_width = 10
 # the same over the vertical axis
-depth_height = 10 
+depth_height = 10
 
 size_planning_width = basic.field.get_value('size_planning_width')
 size_x_axis_height = basic.field.get_value('size_x_axis_height')
@@ -69,7 +69,7 @@ properties_structure = {
 # getting number of elements to display on the main axis
 if planning.report_axis.size != basic.report_axis_info['bound_axis_groups']:
   # number of groups to display over the main axis is different from the expected
-  # value : updating planning size to fit exactly the number of groups 
+  # value : updating planning size to fit exactly the number of groups
   if planning.report_axis == planning.Y:
     # updating Y axis
     report_axis_step = float(size_planning_height) / float(basic.report_axis_info['bound_axis_groups'])
@@ -525,13 +525,13 @@ for block_object in planning.content:
   # XXX Define the frozen Blocs
   if context.PlanningBox_isFrozenBlock(block=block_object):
     block_dict['border-width'] = 0
-  
+
   block_dict['height'] = block_object.position_y.relative_range * size_planning_height
   if block_object.parent_activity.height is not None:
     block_dict['height'] = block_dict['height']*block_object.parent_activity.height
-  
+
   # the width - border width * 2 (left and right)
-  # When you edit one object, border was added as a part of size. So 2*border-width pixels 
+  # When you edit one object, border was added as a part of size. So 2*border-width pixels
   # was added every edition. 2 is because left and right.
   # the width - border-width * 2 (left and right)
   block_dict['width'] = (block_object.position_x.relative_range * size_planning_width) - \
@@ -660,8 +660,8 @@ for block_object in planning.content:
 planning_box_dict=None
 planning_box_dict={}
 planning_box_dict['position']='absolute'
-planning_box_dict['width'] = 
-planning_box_dict['height'] = 
+planning_box_dict['width'] =
+planning_box_dict['height'] =
 properties_structure['base']['planning_box'] = planning_box_dict
 """
 return properties_structure

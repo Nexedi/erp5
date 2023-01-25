@@ -193,44 +193,44 @@ class CrmTestCase(ERP5ReportTestCase):
     self.portal_categories = self.portal.portal_categories
 
     # create group category
-    if not self.portal_categories['group'].has_key('demo_group'):
+    if 'demo_group' not in self.portal_categories['group']:
       group=self.portal_categories.group
       group.newContent(portal_type='Category',
                                 title='demo_group',
                                 reference='demo_group',
                                 id='demo_group')
     # create users and organisations
-    if not self.person_module.has_key('Person_1'):
+    if 'Person_1' not in self.person_module:
       self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
-    if not self.person_module.has_key('Person_2'):
+    if 'Person_2' not in self.person_module:
       self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
                               title='Person_2',
                               id='Person_2')
-    if not self.person_module.has_key('Person_3'):
+    if 'Person_3' not in self.person_module:
       self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_3',
                               title='Person_3',
                               id='Person_3')
-    if not self.organisation_module.has_key('Organisation_1'):
+    if 'Organisation_1' not in self.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1')
-    if not self.organisation_module.has_key('Organisation_2'):
+    if 'Organisation_2' not in self.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
                               title='Organisation_2',
                               id='Organisation_2')
-    if not self.organisation_module.has_key('My_organisation'):
+    if 'My_organisation' not in self.organisation_module:
       self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='My_organisation',

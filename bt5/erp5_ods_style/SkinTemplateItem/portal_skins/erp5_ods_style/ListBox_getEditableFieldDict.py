@@ -28,5 +28,5 @@ for column, _ in editable_columns:
   field = getEditableField(column)
   if field is not None:
     editable_fields[column] = field
-  
+
 return editable_fields

@@ -7,7 +7,7 @@ Base_translateString = portal.Base_translateString
 psm = Base_translateString('Nothing matches.')
 request = container.REQUEST
 
-# update selected uids 
+# update selected uids
 portal.portal_selections.updateSelectionCheckedUidList(
     list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)
 uids = portal.portal_selections.getSelectionCheckedUidsFor(list_selection_name)
@@ -30,7 +30,7 @@ portal.portal_selections.setSelectionParamsFor(
                           grouping=grouping,
                           mirror_section=mirror_section))
 
-# calculate total selected amount 
+# calculate total selected amount
 total_selected_amount = 0
 if uids:
   for line in portal.portal_catalog(uid=uids):

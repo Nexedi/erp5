@@ -8,7 +8,7 @@ if object == None:
 
 # activity doesn't support security rights yet...
 for key in ['uid','id']:
-  if object_property_dict.has_key(key):
+  if key in object_property_dict:
     object_property_dict.pop(key)
 
 object.edit(**object_property_dict)

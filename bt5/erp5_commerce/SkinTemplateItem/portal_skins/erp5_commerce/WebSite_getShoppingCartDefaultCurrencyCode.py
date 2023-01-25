@@ -1,4 +1,4 @@
-""" 
+"""
   Return reference of the default currency used in Shopping Cart.
 """
 website = context.getWebSiteValue()

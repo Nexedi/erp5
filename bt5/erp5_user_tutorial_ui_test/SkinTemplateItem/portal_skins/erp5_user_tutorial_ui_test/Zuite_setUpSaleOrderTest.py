@@ -52,7 +52,7 @@ if isTransitionPossible(sale_order_trade_condition, 'validate'):
 
 product = portal.product_module.newContent(portal_type='Product',
                                            title=howto_dict['sale_howto_product_title'])
-product.setSupplyLinePriceCurrency(currency.getRelativeUrl())                                
+product.setSupplyLinePriceCurrency(currency.getRelativeUrl())
 product.setBasePrice(1.0)
 product.setQuantityUnit('unit/piece')
 product.setBaseContribution('base_amount/taxable')
@@ -68,6 +68,7 @@ my_organisation.validate()
 bank_account = my_organisation.newContent(portal_type="Bank Account",
                            title=howto_dict["sale_howto_bank_account_title"],
                            reference=howto_dict["sale_howto_bank_account_reference"],)
+bank_account.validate()
 
 organisation = portal.organisation_module.newContent(portal_type='Organisation',
                                                      title=howto_dict['sale_howto_organisation2_title'],
@@ -90,7 +91,7 @@ if isTransitionPossible(pref, 'enable'):
 pref.setPreferredAccountingTransactionSourceSection(my_organisation.getRelativeUrl())
 
 # Disabling save form warning
-# this is bad but needed quickly to disable save form warning 
+# this is bad but needed quickly to disable save form warning
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)
 
 my_organisation.activate(

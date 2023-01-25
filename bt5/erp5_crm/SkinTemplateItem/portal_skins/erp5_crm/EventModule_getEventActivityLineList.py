@@ -15,13 +15,13 @@ column_totals['unassigned'] = 0
 for ticket_type in ticket_type_list:
   column_totals[ticket_type] = 0
 total_count = 0
-    
+
 # Prepare the parameters to filter
 query_dict = {}
 if request_start_date:
   query_dict['delivery.start_date'] = dict(range='min', query=request_start_date)
 if request_stop_date:
-  query_dict['delivery.stop_date'] = dict(range='ngt', 
+  query_dict['delivery.stop_date'] = dict(range='ngt',
                                      query=request_stop_date.latestTime())
 
 for state in portal.ERP5Site_getWorkflowStateItemList(
@@ -36,7 +36,7 @@ for state in portal.ERP5Site_getWorkflowStateItemList(
   #add all ticket types columns
   for ticket_type in ticket_type_list:
     obj[ticket_type] = 0
-  #search all events in actual state  
+  #search all events in actual state
   event_list = portal.portal_catalog.searchResults(
                                 portal_type=portal.getPortalEventTypeList(),
                                 simulation_state=state[1],

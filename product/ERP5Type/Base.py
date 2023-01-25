@@ -88,7 +88,6 @@ from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
-from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
 from zope.interface import classImplementsOnly, implementedBy
@@ -728,7 +727,6 @@ class Base(
             ActiveObject,
             OFS.History.Historical,
             PropertyTranslatableBuiltInDictMixIn,
-            JSONRepresentableMixin,
             ):
   """
     This is the base class for all ERP5 Zope objects.
@@ -1898,7 +1896,7 @@ class Base(
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
                                   checked_permission=None):
     getRelativeUrl = self.getPortalObject().portal_url.getRelativeUrl
-        
+
     def cleanupCategory(path):
       # prevent duplicating base categories and storing "portal_categories/"
       for start_string in ("portal_categories/", "%s/" % id):
@@ -2936,8 +2934,11 @@ class Base(
   def immediateReindexObject(self, *args, **kw):
     if self.isAncestryIndexable():
       with super_user():
-        PortalContent.reindexObject(self, *args, **kw)
+        self._immediateReindexObject(*args, **kw)
   _reindexOnCreation = immediateReindexObject
+
+  def _immediateReindexObject(self, *args, **kw):
+    self.getPortalObject().portal_catalog.reindexCatalogObject(self, *args, **kw)
 
   security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):
@@ -3531,7 +3532,11 @@ class Base(
 
     # Use meta transition to jump from one state to another
     # without existing transitions.
-    from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+    if WITH_LEGACY_WORKFLOW:
+      from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
+    else:
+      InteractionWorkflowDefinition = None.__class__
     from Products.ERP5Type.Core.InteractionWorkflow import InteractionWorkflow
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow

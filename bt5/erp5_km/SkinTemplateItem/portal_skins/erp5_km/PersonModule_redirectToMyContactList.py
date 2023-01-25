@@ -6,6 +6,6 @@ if search_area_web_section_id:
 else:
   search_section = web_site
 
-search_section.Base_redirect(form_id='PersonModule_viewMyContactList', 
+search_section.Base_redirect(form_id='PersonModule_viewMyContactList',
                 keep_items=dict(reset=1,
                                 search_section_path=context.getRelativeUrl()))

@@ -10,7 +10,7 @@ items = []
 
 # get the user information
 for inputline in listbox:
-  if inputline.has_key('listbox_key'):
+  if 'listbox_key' in inputline:
     scenario = {}
     scenario['id'] = int(inputline['listbox_key'])
     scenario['title'] = inputline['scenario_title']
@@ -55,7 +55,7 @@ for item in items:
     new_1st_level_item.append(new_2nd_level_item)
 
   if has_1st_level == True:
-    if clean_input_lines.has_key(new_1st_level_key):
+    if new_1st_level_key in clean_input_lines:
       new_1st_level_item = clean_input_lines[new_1st_level_key] + new_1st_level_item
     clean_input_lines[new_1st_level_key] = new_1st_level_item
 

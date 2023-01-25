@@ -31,7 +31,7 @@ search_params = dict(
     group_by_node=True,
     grouping_reference=None,
     )
-    
+
 
 for brain in portal.portal_simulation.getInventoryList(**search_params):
   if round(brain.total_price, precision) == 0:
@@ -54,10 +54,10 @@ for brain in portal.portal_simulation.getInventoryList(**search_params):
         print 'FIXED', grouped_line_list
       else:
         print 'NOT FIXED'
-        
+
 active_result = ActiveResult(
   summary=context.getTitle(),
   severity=str(printed) and 100 or 0,
   detail=printed,)
-  
+
 active_process.postResult(active_result)

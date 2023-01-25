@@ -128,7 +128,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
         if test_node.getValidationState() != 'validated':
           try:
             test_node.validate()
-          except Exception, e:
+          except Exception as e:
             LOG('Test Node Validate',ERROR,'%s' %e)
       return test_node
     return None

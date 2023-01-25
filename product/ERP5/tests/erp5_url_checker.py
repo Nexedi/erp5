@@ -89,7 +89,7 @@ class URLOpener(FancyURLopener):
             urltype, rest = splittype(selector)
             url = rest
             user_passwd = None
-            if string.lower(urltype) != 'http':
+            if urltype.lower() != 'http':
                 realhost = None
             else:
                 realhost, rest = splithost(rest)
@@ -101,7 +101,7 @@ class URLOpener(FancyURLopener):
         if not host: raise IOError('http error', 'no host given')
         if user_passwd:
             import base64
-            auth = string.strip(base64.encodestring(user_passwd))
+            auth = base64.encodestring(user_passwd).strip()
         else:
             auth = None
         h = httplib.HTTP(host)
@@ -116,12 +116,12 @@ class URLOpener(FancyURLopener):
 
         if auth: h.putheader('Authorization', 'Basic %s' % auth)
         if realhost: h.putheader('Host', realhost)
-        for args in self.addheaders: apply(h.putheader, args)
+        for args in self.addheaders: h.putheader(*args)
         h.endheaders()
         if data is not None:
             h.send(data + '\r\n')
         errcode, errmsg, headers = h.getreply()
-        if headers and headers.has_key('set-cookie'):
+        if headers and 'set-cookie' in headers:
             cookies = headers.getallmatchingheaders('set-cookie')
             for cookie in cookies: self.cookies.load(cookie)
 
@@ -147,13 +147,15 @@ class Checker(URLOpener):
       while thread.isAlive():
         sleep(0.5)
       print "Connection to %s went fine" % url
-    except IOError, (errno, strerror):
+    except IOError as err:
+      (errno, strerror) = err.args
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
   def SearchUrl(self, url=None):
     try:
       conn = self.open_http(url)
-    except IOError, (errno, strerror):
+    except IOError as err:
+      (errno, strerror) = err.args
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
 

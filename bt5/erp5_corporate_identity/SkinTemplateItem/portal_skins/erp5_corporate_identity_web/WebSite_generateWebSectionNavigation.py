@@ -30,8 +30,8 @@ def buildWebSectionMenu(element_list, depth):
       has_index = section.getProperty('int_index') is not None
 
       if is_accessible and is_visible and has_index:
-        display_list.append(section) 
-    
+        display_list.append(section)
+
     if len(display_list):
       display_list.sort(key=lambda x: x.getProperty('int_index'), reverse=False)
 

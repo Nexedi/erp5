@@ -1,43 +1,28 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
   <tal:block metal:define-macro="login_as_super_user">
-    <tr>
-      <td>openAndWait</td>
-      <td>${base_url}/login_form</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>//input[@name="__ac_name"]</td>
-      <td>super_user</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>//input[@name="__ac_password"]</td>
-      <td>super_user</td>
-    </tr>
-    <tr>
-      <td>clickAndWait</td>
-      <td>//input[@value="Login"]</td>
-      <td></td>
-    </tr>
+    <tal:block metal:define-macro="logout">
+      <tr>
+       <td>openAndWait</td>
+       <td>${base_url}/logout</td>
+       <td></td>
+      </tr>
+      <tr>
+       <td>waitForTextPresent</td>
+       <td>Log in</td>
+       <td></td>
+      </tr>
+    </tal:block>
+    <tal:block tal:define="submit_name python:'//input[@value=\'Login\']'">
+      <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+        <tal:block metal:fill-slot="username">super_user</tal:block>
+        <tal:block metal:fill-slot="password">super_user</tal:block>
+      </tal:block>
+    </tal:block>
     <tr>
       <td>verifyTextPresent</td>
       <td>Welcome to ERP5</td>
       <td></td>
-    </tr>
-  </tal:block>
-
-  <tal:block metal:define-macro="logout">
-    <tr>
-     <td>openAndWait</td>
-     <td>${base_url}/logout</td>
-     <td></td>
-    </tr>
-    <tr>
-     <td>waitForTextPresent</td>
-     <td>Log in</td>
-     <td></td>
     </tr>
   </tal:block>
 

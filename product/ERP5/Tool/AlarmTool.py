@@ -29,7 +29,7 @@
 import time
 import threading
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, SpecialUsers
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
 from Products.CMFActivity.ActivityTool import getCurrentNode
@@ -50,7 +50,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
   """
     This tool manages alarms.
 
-    It is used as a central managment point for all alarms.
+    It is used as a central management point for all alarms.
 
     Inside this tool we have a way to retrieve all reports coming
     from Alarms,...
@@ -133,10 +133,19 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       if so then we will activate them.
     """
     security_manager = getSecurityManager()
+    system_user = None
     try:
       for alarm in self.getAlarmList(to_active=1):
         if alarm is not None:
-          user = alarm.getWrappedOwner()
+          udb, owner_user_id = alarm.getOwnerTuple()
+          if owner_user_id == SpecialUsers.system.getUserName():
+            if system_user is None:
+              # build this wrapped system user only once per tic
+              system_user = SpecialUsers.system.__of__(
+                self.getPhysicalRoot().unrestrictedTraverse(udb, None))
+            user = system_user
+          else:
+            user = alarm.getWrappedOwner()
           newSecurityManager(self.REQUEST, user)
           if alarm.isActive() or not alarm.isEnabled():
             # do nothing if already active, or not enabled

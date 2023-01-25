@@ -1,6 +1,6 @@
 '''
   return the amount composed by all amount of paysheet line wich category of
-  category_list parameter is in variation_category_list of the PaySheet line 
+  category_list parameter is in variation_category_list of the PaySheet line
   and wich has a base_contribution in the base_contribution_list
 '''
 if excluded_reference_list is None:

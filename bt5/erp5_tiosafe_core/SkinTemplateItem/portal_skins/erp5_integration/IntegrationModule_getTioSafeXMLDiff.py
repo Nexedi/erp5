@@ -24,7 +24,7 @@ def tiosafe_sort(a,b):
     return cmp(a.title, b.title)
   else:
     return cmp(a.id, b.id)
-  
+
 
 if pub_method is not None and sub_method is not None:
   pub_object = pub_method(context_document=im.getSourceSectionValue())

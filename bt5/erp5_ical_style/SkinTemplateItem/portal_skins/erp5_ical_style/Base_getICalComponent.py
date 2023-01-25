@@ -1,6 +1,6 @@
 """
   Figure out if it is an journal, event or a todo.
-  Sample implementation: Task is a todo, event is an event, 
+  Sample implementation: Task is a todo, event is an event,
   anything else is an journal.
 """
 portal_type = None

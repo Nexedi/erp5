@@ -346,7 +346,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     uid_list = self.getSqlUidList()
     obj_to_check = sequence.get('obj_to_check')
-    self.assertFalse(obj_to_check.getUid() in uid_list)
+    self.assertNotIn(obj_to_check.getUid(), uid_list)
 
   def stepCheckCatalogued(self, sequence=None,
                           sequence_list=None, **kw):
@@ -355,7 +355,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     uid_list = self.getSqlUidList()
     obj_to_check = sequence.get('obj_to_check')
-    self.assertTrue(obj_to_check.getUid() in uid_list)
+    self.assertIn(obj_to_check.getUid(), uid_list)
 
 #     self.assertEqual(len(obj_to_check.getDatePeriodList()),
 #                       uid_list.count(obj_to_check.getUid()))
@@ -367,7 +367,7 @@ class TestCalendar(ERP5ReportTestCase):
     """
     uid_list = self.getSqlMovementUidList()
     obj_to_check = sequence.get('obj_to_check')
-    self.assertTrue(obj_to_check.getUid() in uid_list)
+    self.assertIn(obj_to_check.getUid(), uid_list)
 #     self.assertEqual(len(obj_to_check.getDatePeriodList()),
 #                       uid_list.count(obj_to_check.getUid()))
 
@@ -1973,7 +1973,7 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar_period.setPeriodicityMonthList((2, ))
     group_calendar_period.setPeriodicityWeekDayList(['Friday'])
     self.assertEqual(
-        [m.getStartDate() for m in assignment.asMovementList()], 
+        [m.getStartDate() for m in assignment.asMovementList()],
         [DateTime('2003/02/28 09:00:00 UTC'),
          DateTime('2004/02/27 09:00:00 UTC'),
          DateTime('2008/02/29 09:00:00 UTC'),

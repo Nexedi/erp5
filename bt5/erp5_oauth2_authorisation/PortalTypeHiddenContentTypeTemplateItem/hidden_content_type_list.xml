@@ -1,0 +1,5 @@
+<hidden_content_type_list>
+ <portal_type id="Session Module">
+  <item>OAuth2 Session</item>
+ </portal_type>
+</hidden_content_type_list>

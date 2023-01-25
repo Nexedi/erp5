@@ -52,5 +52,5 @@ try:
     modified=commit_dict['modified'],
     removed=commit_dict['removed']
   )
-except Exception, error:
+except Exception as error:
   return context.BusinessTemplate_handleException(error, script.id, commit_dict)

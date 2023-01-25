@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>items</string>
                 <string>size</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -112,6 +112,14 @@
                         <tuple>
                           <string>sub_variation</string>
                           <string>sub_variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Source Arrow</string>
+                          <string>source_arrow</string>
+                        </tuple>
+                        <tuple>
+                          <string>Destination Arrow</string>
+                          <string>destination_arrow</string>
                         </tuple>
                       </list>
                     </value>

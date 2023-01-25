@@ -14,7 +14,7 @@ def cleanupDescription(requirement):
     new_description += char
 
   requirement.edit(description=new_description)
-  
+
   # continue recursively
   for sub_requirement in requirement.contentValues(
                checked_permission='Modify portal content'):

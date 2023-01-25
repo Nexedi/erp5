@@ -13,7 +13,7 @@ if password:
 
 #Get message from catalog
 notification_reference = 'credential_request-confirmation-%s' % notification_type
-notification_message = portal.portal_notifications.getDocumentValue(reference=notification_reference, 
+notification_message = portal.portal_notifications.getDocumentValue(reference=notification_reference,
                                                                     language=recipient.getLanguage())
 if notification_message is None:
   raise ValueError('Unable to found Notification Message with reference "%s".' % notification_reference)

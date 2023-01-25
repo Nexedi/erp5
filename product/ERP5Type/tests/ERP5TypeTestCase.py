@@ -21,13 +21,15 @@ import traceback
 import urllib
 import ConfigParser
 from contextlib import contextmanager
-from cStringIO import StringIO
+from io import BytesIO
+from functools import partial
+from six.moves.urllib.parse import unquote_to_bytes
 from cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
-from ExtensionClass import pmc_init_of
 from DateTime import DateTime
+import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
@@ -56,16 +58,17 @@ getRequest.__code__ = (lambda: get_request()).__code__
 from zope.site.hooks import setSite
 
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase import PortalTestCase, user_name
+from Testing.makerequest import makerequest
+from Testing.ZopeTestCase import PortalTestCase, user_name, ZopeLite, functional
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
-from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress
+from Products.ERP5Type.tests.utils import parseListeningAddress
 
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
@@ -99,6 +102,15 @@ from AccessControl.SecurityManagement import newSecurityManager, noSecurityManag
 from Products.ZSQLCatalog.SQLCatalog import Query
 
 from Acquisition import aq_base
+
+if six.PY2:
+  from contextlib import contextmanager
+  @contextmanager
+  def nullcontext(enter_result=None):
+      yield enter_result
+else:
+  from contextlib import nullcontext
+
 
 portal_name = 'erp5_portal'
 
@@ -177,7 +189,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
 
   if bt5_repository_path_list is not None:
     promise_config.add_section('portal_templates')
-    promise_config.set('portal_templates', 'repository', 
+    promise_config.set('portal_templates', 'repository',
                                    ' '.join(bt5_repository_path_list))
 
   if os.environ.get('TEST_CA_PATH') is not None:
@@ -215,7 +227,7 @@ def _parse_args(self, *args, **kw):
 _parse_args._original = DateTime._original_parse_args
 DateTime._parse_args = _parse_args
 
-class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
+class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.Functional):
     """Mixin class for ERP5 based tests.
     """
     def __init__(self, *args, **kw):
@@ -249,7 +261,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     def newPassword(self):
       """ Generate a password """
-      return ''.join(random.SystemRandom().sample(string.letters + string.digits, 20))
+      return ''.join(random.SystemRandom().sample(string.ascii_letters + string.digits, 20))
 
     def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
@@ -354,23 +366,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       if not uf.getUserById(user_name):
         uf._doAddUser(user_name, self.newPassword(), ['Member'], [])
 
-    def _setUpDummyMailHost(self):
-      """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
-      """
-      cls = self.portal.MailHost.__class__
-      if not issubclass(cls, DummyMailHostMixin):
-        cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
-        pmc_init_of(cls)
-
-    def _restoreMailHost(self):
-      """Restore original Mail Host
-      """
-      if self.portal is not None:
-        cls = self.portal.MailHost.__class__
-        if cls.__bases__[0] is DummyMailHostMixin:
-          cls.__bases__ = cls.__bases__[1:]
-          pmc_init_of(cls)
-
     def pinDateTime(self, date_time):
       # pretend time has stopped at a certain date (i.e. the test runs
       # infinitely fast), for example to avoid errors on tests that are started
@@ -400,8 +395,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       # UTC
       os.environ['TZ'] = "UTC"
       time.tzset()
-      DateTime._isDST = False
-      DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = "UTC"
+
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone0', new='UTC').start()
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_localzone1', new='UTC').start()
+      mock.patch.object(sys.modules['DateTime.DateTime'], '_multipleZones', new=False).start()
+
 
     def getDefaultSystemPreference(self):
       id = 'default_system_preference'
@@ -562,7 +560,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         User password is the reference.
       """
       user = self.createUser(reference, person_kw=dict(title=title))
-      assignment = self.createUserAssignement(user, assignment_kw=dict(function=function))
+      assignment = self.createUserAssignment(user, assignment_kw=dict(function=function))
       return user
 
     def createUser(self, reference, password=None, person_kw=None):
@@ -608,25 +606,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
 
       def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
-        if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
-          h.putrequest('HEAD', selector)
-          h.putheader('Host', host)
-          if user_passwd:
-            h.putheader('Authorization',
-                        'Basic %s' % base64.b64encode(user_passwd).strip())
-          h.endheaders()
-          errcode, errmsg, headers = h.getreply()
-          if errcode == 200:
-            return urltype + ':' + url
-        else:
-          path_list = glob(os.path.join(path, template))
-          if path_list:
-            return path_list[0]
+        path_list = glob(os.path.join(path, template))
+        if path_list:
+          return path_list[0]
 
       not_found_list = []
       new_template_list = []
@@ -712,6 +694,15 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
 
+    # BBB backport methods from python3.
+    # We use this tricky getattr syntax so that lib2to3.fixers.fix_asserts
+    # do not fix this code.
+    if six.PY2:
+      def assertRaisesRegex(self, *args, **kwargs):
+        return getattr(self, 'assertRaisesRegexp')(*args, **kwargs)
+      def assertRegex(self, *args, **kwargs):
+        return getattr(self, 'assertRegexpMatches')(*args, **kwargs)
+
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
       try: # try ipython if available
@@ -775,95 +766,45 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing ... ', DEBUG, message)
 
-    def publish(self, path, basic=None, env=None, extra=None, user=None,
-                request_method='GET', stdin=None, handle_errors=True):
-        '''Publishes the object at 'path' returning a response object.'''
+    def publish(self, path, basic=None, env=None, extra=None,
+                request_method='GET', stdin=None, handle_errors=True,
+                user=None):
+      '''Publishes the object at 'path' returning a response object.
 
-        from ZPublisher.Response import Response
-        from ZPublisher.Publish import publish_module_standard
+      This is from Testing.ZopeTestCase.Functional, extended to support passing
+      a user id directly.
+      '''
+      if user:
+        assert not basic
+        from six.moves._thread import get_ident
+        me = get_ident()
+        def _extractUserIds(pas, request, plugins):
+          if me == get_ident():
+            info = pas._verifyUser(plugins, user)
+            return [(info['id'], info['login'])] if info else ()
+          return mock.DEFAULT
+        user_context = mock.patch(
+          'Products.PluggableAuthService.PluggableAuthService.PluggableAuthService._extractUserIds',
+          side_effect=_extractUserIds,
+          autospec=True)
+      else:
+         user_context = nullcontext()
 
-        from AccessControl.SecurityManagement import getSecurityManager
-        from AccessControl.SecurityManagement import setSecurityManager
-
-        # Save current security manager
-        sm = getSecurityManager()
-
-        # Commit the sandbox for good measure
-        self.commit()
-
-        if env is None:
-            env = {}
-
-        request = self.app.REQUEST
-
-        env['SERVER_NAME'] = request['SERVER_NAME']
-        env['SERVER_PORT'] = request['SERVER_PORT']
-        env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
-        env['REQUEST_METHOD'] = request_method
-
-        p = path.split('?')
-        if len(p) == 1:
-            env['PATH_INFO'] = p[0]
-        elif len(p) == 2:
-            [env['PATH_INFO'], env['QUERY_STRING']] = p
-        else:
-            raise TypeError('')
-
-        if basic:
-          assert not user, (basic, user)
-          env['HTTP_AUTHORIZATION'] = "Basic %s" % \
-            base64.encodestring(basic).replace('\n', '')
-        elif user:
-          PAS = self.portal.acl_users.__class__
-          orig_extractUserIds = PAS._extractUserIds
-          from thread import get_ident
-          me = get_ident()
-          def _extractUserIds(pas, request, plugins):
-            if me == get_ident():
-              info = pas._verifyUser(plugins, user)
-              return [(info['id'], info['login'])] if info else ()
-            return orig_extractUserIds(pas, request, plugins)
-
-        if stdin is None:
-            stdin = StringIO()
-
-        outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
-
-        try:
-          if user:
-            PAS._extractUserIds = _extractUserIds
-
-          # The following `HTTPRequest` object would be created anyway inside
-          # `publish_module_standard` if no `request` argument was given.
-          request = request.__class__(stdin, env, response)
-          # However, we need to inject the content of `extra` inside the
-          # request.
-          if extra:
-            for k, v in six.iteritems(extra): request[k] = v
-
-          publish_module_standard('Zope2',
-                         request=request,
-                         response=response,
-                         stdin=stdin,
-                         environ=env,
-                         debug=not handle_errors,
-                        )
-        finally:
-          if user:
-            PAS._extractUserIds = orig_extractUserIds
-          # Restore security manager
-          setSecurityManager(sm)
-          # Restore site removed by closing of request
-          setSite(self.portal)
-
-
-
+      try:
+        with user_context:
+          return super(ERP5TypeTestCaseMixin, self).publish(
+            path,
+            basic=basic,
+            env=env,
+            extra=extra,
+            request_method=request_method,
+            stdin=stdin,
+            handle_errors=handle_errors,
+          )
+      finally:
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
         self.changeSkin(self.portal.getCurrentSkinName())
-
-        return ResponseWrapper(response, outstream, path)
 
     def getConsistencyMessageList(self, obj):
         return sorted([ str(message.getMessage())
@@ -1026,9 +967,25 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     def _app(self):
       '''Opens a ZODB connection and returns the app object.
 
-      We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
-      unicode conflict resolver to work properly'''
-      app = PortalTestCase._app(self)
+      We override this method so that the request knows about the address of
+      our http server and also to set HTTP_ACCEPT_CHARSET set in REQUEST, to
+      get the zpt unicode conflict resolver to
+      work properly.
+
+      We reimplement PortalTestCase._app instead of calling it, because it
+      opens a ZODB connection and wrap the root object a request to
+      http://nohost, but we prefer to create directly a connection to the
+      app wrapped in a request to our web server.
+      '''
+      app = ZopeLite.app()
+      environ = {}
+      if self._server_address:
+        host, port = self._server_address
+        environ['SERVER_NAME'] = host
+        environ['SERVER_PORT'] = port
+
+      app = makerequest(app, environ=environ)
+      registry.register(app)
       app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
       return app
 
@@ -1101,7 +1058,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def loadPromise(self, searchable_business_template_list=None):
       """ Create promise configuration file and load it into configuration
-          
+
       """
       bt5_repository_path_list = self._getBusinessRepositoryPathList(
                                         searchable_business_template_list)
@@ -1331,7 +1288,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               sql = kw.get('erp5_sql_connection_string')
               if sql:
                 app[portal_name]._setProperty('erp5_site_global_id',
-                                              base64.standard_b64encode(sql))
+                                              base64.standard_b64encode(str2bytes(sql)))
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
@@ -1453,45 +1410,6 @@ ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
   ERP5TypeCommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
 
-class ResponseWrapper:
-    '''Decorates a response object with additional introspective methods.'''
-
-    _headers_separator_re = re.compile('(?:\r?\n){2}')
-
-    def __init__(self, response, outstream, path):
-        self._response = response
-        self._outstream = outstream
-        self._path = path
-
-    def __getattr__(self, name):
-        return getattr(self._response, name)
-
-    def getOutput(self):
-        '''Returns the complete output, headers and all.'''
-        return self._outstream.getvalue()
-
-    def getBody(self):
-        '''Returns the page body, i.e. the output par headers.'''
-        output = self.getOutput()
-        try:
-            headers, body = self._headers_separator_re.split(output, 1)
-            return body
-        except ValueError:
-            # not enough values to unpack: no body
-            return None
-
-    def getPath(self):
-        '''Returns the path used by the request.'''
-        return self._path
-
-    def getHeader(self, name):
-        '''Returns the value of a response header.'''
-        return self.headers.get(name.lower())
-
-    def getCookie(self, name):
-        '''Returns a response cookie.'''
-        return self.cookies.get(name)
-
 class ERP5ReportTestCase(ERP5TypeTestCase):
   """Base class for testing ERP5 Reports
   """
@@ -1576,7 +1494,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:
@@ -1593,7 +1511,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       pass
 
   def tearDown(self):
-    self.zeo_server.close_server()
+    self.zeo_server.close()
 
 
 class lazy_func_prop(object):

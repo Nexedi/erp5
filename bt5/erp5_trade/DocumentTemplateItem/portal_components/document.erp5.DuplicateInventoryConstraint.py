@@ -61,7 +61,7 @@ class DuplicateInventoryConstraint(ConstraintMixin):
   def _checkConsistency(self, obj, fixit = 0):
     """
       Implement here the consistency checker
-      whenever fixit is not 0, object data should be updated to 
+      whenever fixit is not 0, object data should be updated to
       satisfy the constraint
     """
 
@@ -114,5 +114,5 @@ class DuplicateInventoryConstraint(ConstraintMixin):
           # Now we must reindex with some particular tags
           activate_kw = {'tag': tag}
           movement.reindexObject(activate_kw=activate_kw)
-    
+
     return errors

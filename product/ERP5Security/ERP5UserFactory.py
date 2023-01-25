@@ -24,6 +24,12 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IUserFactoryPlugin
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from Products import ERP5Security
+from Products.ERP5Security.ERP5OAuth2ResourceServerPlugin import (
+  USER_PROPERTY_TYPE_KEY,
+  USER_PROPERTY_TYPE_VALUE,
+  USER_PROPERTY_CLIENT_ID_KEY,
+  USER_PROPERTY_CLIENT_REFERENCE_KEY,
+)
 
 manage_addERP5UserFactoryForm = PageTemplateFile(
     'www/ERP5Security_addERP5UserFactory', globals(),
@@ -105,6 +111,63 @@ class ERP5User(PropertiedUser):
     }
     unrestrictedTraverse = self.getPortalObject().unrestrictedTraverse
     return [unrestrictedTraverse(x) for x in user_path_set]
+
+  def _iterPropertySheetSetWith(self, key, value):
+    """
+    Iterate property sheets and yield those whose property <key> has the value
+    <value>.
+    """
+    for property_sheet_id in self.listPropertysheets():
+      property_sheet = self.getPropertysheet(property_sheet_id)
+      if property_sheet.getProperty(
+        USER_PROPERTY_TYPE_KEY,
+      ) == USER_PROPERTY_TYPE_VALUE:
+        yield property_sheet
+
+  def isFromOAuth2Token(self):
+    """
+    Return whether this user is authenticated using an OAuth2 token.
+    """
+    for _ in self._iterPropertySheetSetWith(
+      key=USER_PROPERTY_TYPE_KEY,
+      value=USER_PROPERTY_TYPE_VALUE,
+    ):
+      return True
+    return False
+
+  def getClientId(self):
+    """
+    Return the OAuth2 Client ID for the current session.
+    Returns None if the user is not authenticated using OAuth2.
+    """
+    # propertied user API is weird...
+    client_id_list = []
+    for property_sheet in self._iterPropertySheetSetWith(
+      key=USER_PROPERTY_TYPE_KEY,
+      value=USER_PROPERTY_TYPE_VALUE,
+    ):
+      client_id_list.append(property_sheet.getProperty(
+        USER_PROPERTY_CLIENT_ID_KEY,
+      ))
+    result, = client_id_list or [None]
+    return result
+
+  def getClientReference(self):
+    """
+    Return the OAuth2 Client ID for the current session.
+    Returns None if the user is not authenticated using OAuth2.
+    """
+    # propertied user API is weird...
+    client_reference_list = []
+    for property_sheet in self._iterPropertySheetSetWith(
+      key=USER_PROPERTY_TYPE_KEY,
+      value=USER_PROPERTY_TYPE_VALUE,
+    ):
+      client_reference_list.append(property_sheet.getProperty(
+        USER_PROPERTY_CLIENT_REFERENCE_KEY,
+      ))
+    result, = client_reference_list or [None]
+    return result
 
 InitializeClass(ERP5User)
 

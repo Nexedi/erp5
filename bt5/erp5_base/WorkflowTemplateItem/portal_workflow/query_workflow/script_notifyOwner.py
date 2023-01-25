@@ -41,8 +41,8 @@ ${question}
 Answer:
 
 ${answer}
-""" 
-msg = translateString(msg, 
+"""
+msg = translateString(msg,
              mapping=dict(id=document.getId(),
                           subject=subject,
                           user=user_value.getTitle(),

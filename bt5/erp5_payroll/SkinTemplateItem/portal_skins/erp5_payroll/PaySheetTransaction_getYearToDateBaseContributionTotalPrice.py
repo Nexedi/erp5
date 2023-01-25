@@ -8,7 +8,7 @@
 # are not in stock table due to the lack of source/destination definition
 
 if paysheet is None:
-    paysheet = context
+  paysheet = context
 
 # test the list parameters
 if base_contribution_list is None:
@@ -17,7 +17,7 @@ elif not (same_type(base_contribution_list, []) or
           same_type(base_contribution_list, ())):
   base_contribution_list = [base_contribution_list]
 
-portal = context.getPortalObject();
+portal = context.getPortalObject()
 portal_simulation = portal.portal_simulation
 
 base_amount = portal.portal_categories.base_amount

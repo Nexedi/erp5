@@ -21,7 +21,7 @@ if not len(img_src):
   return img_string # There is no image source, return as is
 img_src = img_src[0]
 
-if img_src.startswith('data:image/'):
+if img_src.startswith('data:image/') or img_src.startswith('data:application'):
   return img_string
 
 # START user ignoring guidelines:

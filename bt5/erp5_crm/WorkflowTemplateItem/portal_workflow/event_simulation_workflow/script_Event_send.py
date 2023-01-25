@@ -12,5 +12,5 @@ for key in parameter_list:
   state_change_arg = state_change['kwargs'].get(key)
   if state_change_arg:
     kwargs[key] = state_change_arg
-  
+
 event.send(**kwargs) # will call type based method

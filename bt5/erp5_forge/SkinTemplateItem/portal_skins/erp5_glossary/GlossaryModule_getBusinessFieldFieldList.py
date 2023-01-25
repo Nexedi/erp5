@@ -40,7 +40,7 @@ for business_field in business_field_list:
     term_list = get_term_list(business_field, reference)
     #if not term_list:
     #  continue
-    if item_dict.has_key(field):
+    if field in item_dict:
       continue
     item_dict[field] = True
 

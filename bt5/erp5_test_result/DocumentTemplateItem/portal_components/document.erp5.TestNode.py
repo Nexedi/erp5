@@ -7,7 +7,7 @@ class TestNode(XMLObject):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 'setPingDate')
   def setPingDate(self):
     """
@@ -28,4 +28,4 @@ class TestNode(XMLObject):
     return portal.portal_task_distribution.getMemcachedDict().get(
        "%s_ping_date" % (self.getRelativeUrl()))
 
-       
+

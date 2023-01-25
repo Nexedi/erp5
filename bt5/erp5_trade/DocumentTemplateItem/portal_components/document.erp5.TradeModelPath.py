@@ -114,22 +114,7 @@ class TradeModelPath(Path):
       Returns all categories which are used to define the source
       of this Arrow
     """
-    # Naive implementation - we must use category groups instead - XXX
-    return ('source',
-            'source_account',
-            'source_administration',
-            #'source_advice',
-            'source_carrier',
-            'source_decision',
-            'source_function',
-            'source_funding',
-            'source_payment',
-            'source_project',
-            'source_referral',
-            'source_section',
-            'source_trade',
-            #'source_transport'
-            )
+    return self.getPortalObject().getPortalSourceArrowBaseCategoryList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDestinationArrowBaseCategoryList')
@@ -138,22 +123,7 @@ class TradeModelPath(Path):
       Returns all categories which are used to define the destination
       of this Arrow
     """
-    # Naive implementation - we must use category groups instead - XXX-JPS review this later
-    return ('destination',
-            'destination_account',
-            'destination_administration',
-            #'destination_advice',
-            #'destination_carrier',
-            'destination_decision',
-            'destination_function',
-            'destination_funding',
-            'destination_payment',
-            'destination_project',
-            'destination_referral',
-            'destination_section',
-            'destination_trade',
-            #'destination_transport'
-            )
+    return self.getPortalObject().getPortalDestinationArrowBaseCategoryList()
 
   # XXX-JPS UNkonwn ?
   security.declareProtected(Permissions.AccessContentsInformation,

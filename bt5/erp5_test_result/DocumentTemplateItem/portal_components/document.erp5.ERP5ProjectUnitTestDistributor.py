@@ -271,7 +271,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         if test_node.getValidationState() != 'validated':
           try:
             test_node.validate()
-          except Exception, e:
+          except Exception as e:
             LOG('Test Node Validate',ERROR,'%s' %e)
       if test_node is None:
         test_node = test_node_module.newContent(portal_type="Test Node", title=title, computer_guid=computer_guid,

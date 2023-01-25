@@ -17,7 +17,7 @@ Edit <dtml-var meta_type> properties here.
 <dtml-if fields>
 <tr>
 <td colspan="4" class="form-title">
-  <dtml-var "_.string.capitalize(group)"> properties
+  <dtml-var group capitalize> properties
 </td>
 </tr>
 

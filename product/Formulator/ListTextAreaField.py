@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-import string
 from .DummyField import fields
 from . import Widget, Validator
 from .Field import ZMIField
@@ -17,7 +16,7 @@ class ListTextAreaWidget(Widget.TextAreaWidget):
         for element_text, element_value in value:
             lines.append("%s | %s" % (element_text, element_value))
         return Widget.TextAreaWidget.render(self, field, key,
-                                            string.join(lines, '\n'),
+                                            '\n'.join(lines),
                                             REQUEST)
 
 ListTextAreaWidgetInstance = ListTextAreaWidget()
@@ -30,14 +29,14 @@ class ListLinesValidator(Validator.LinesValidator):
         value = Validator.LinesValidator.validate(self, field, key, REQUEST)
         result = []
         for line in value:
-            elements = string.split(line, "|")
+            elements = line.split("|")
             if len(elements) >= 2:
                 text, value = elements[:2]
             else:
                 text = line
                 value = line
-            text = string.strip(text)
-            value = string.strip(value)
+            text = text.strip()
+            value = value.strip()
             result.append((text, value))
         return result
 

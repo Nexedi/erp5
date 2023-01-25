@@ -1,0 +1,79 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  <script src="gadget_erp5_eci_provider_widget.js"></script>
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive provider-content">
+      <ul class="grid-elements custom-software-profile provider-header">
+        <li>
+          {{#if logo_url}}
+            <div class="image-wrapper"><a href="{{entry_url}}"><img src="{{logo_url}}"></a></div>
+          {{/if}}
+        </li>
+        <li class="provider-header">
+          <a href="{{entry_url}}" class="provider-title">{{title}}</a>
+          <span class="fi fi-{{location.country_code}}"></span>
+          <a href={{country_search_url}}>{{selection_domain_country}}</a>
+          <a href="{{website_url}}" target="_blank">Website</a>
+          <hr>
+          <span class="provider-info"><span>Type:</span><span>{{type}}</span></span>
+          <span class="provider-info"><span>Staff:</span>{{#if staff_quantity}}<span>{{staff_quantity}}</span>{{else}}<span>-</span>{{/if}}
+          <span class="provider-info"><span>Turnover:</span>{{#if price}}<span>{{price}} EUR</span>{{else}}<span>-</span>{{/if}}
+          <span class="provider-info"><a class="provider-url" href="{{entry_url}}">View full provider profile</a></span>
+        </li>
+      </ul>
+      <div class="provider-table">
+        <table>
+          <tr>
+            <th>Solutions</th>
+            <th>Type</th>
+            <th>Similar solutions</th>
+            <th>Success casess</th>
+            <th>References</th>
+         </tr>
+         {{#each solution_list}}
+           <tr>
+             <td><a href="{{solution_url}}">{{title}}</a></td>
+             <td>
+             {{#each category_search_url_list}}
+               <a href="{{type_search_url}}">{{title}}</a>
+             {{/each}}
+             </td>
+             <td>
+             {{#each similar_solution_list}}
+               <span>{{title}}</span>
+             {{/each}}
+             </td>
+             <td>
+               {{#if success_case_list}}
+                 <a href={{solution_url}}>Success cases</a>
+               {{else}}
+                 <span>-</span>
+               {{/if}}
+             </td>
+             <td>
+               {{#if reference_list}}
+                 <a href={{solution_url}}>References</a>
+               {{else}}
+                 <span>-</span>
+               {{/if}}
+             </td>
+           </tr>
+         {{/each}}
+        </table>
+      </div>
+
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-widget-in-listbox"></div>
+  </body>
+</html>

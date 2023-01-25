@@ -11,7 +11,7 @@ if ptg.getSourcePayment() == context.getSourcePayment():
 else:
   third_party = context.getSourceSectionValue()
 
-third_party_name = third_party.getCorporateName() or third_party.getTitle()
+third_party_name = third_party.getProperty('corporate_name') or third_party.getTitle()
 
 return "{invoice_reference} {third_party_name}".format(
   invoice_reference=context.getParentValue().getCausalityReference() or '',

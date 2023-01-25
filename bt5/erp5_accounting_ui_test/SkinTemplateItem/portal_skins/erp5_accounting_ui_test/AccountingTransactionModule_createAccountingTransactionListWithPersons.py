@@ -25,7 +25,7 @@ if 1:
     module = portal[module_id]
     module.manage_delObjects(list(module.objectIds()))
 
-# XXX copy & paste 
+# XXX copy & paste
 def getAccountByTitle(title):
   account_list = [x.getObject().getRelativeUrl() for x in
     portal.portal_catalog(portal_type='Account',

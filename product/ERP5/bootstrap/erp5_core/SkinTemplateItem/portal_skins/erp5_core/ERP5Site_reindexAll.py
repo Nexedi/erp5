@@ -116,7 +116,7 @@ portal.portal_activities.activate(
   final_activity_tag=last_inventory_tag,
 )
 
-# restore alarm node 
+# restore alarm node
 if clear_catalog and is_subscribed:
   portal.portal_alarms.activate(
     after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag),

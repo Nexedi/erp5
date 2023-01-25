@@ -32,6 +32,7 @@ from unittest import expectedFailure
 from lxml import etree
 from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
+from zExceptions import BadRequest
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.ERP5Form.ProxyField import BrokenProxyField
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -57,7 +58,10 @@ class TestProxyField(ERP5TypeTestCase):
     """Remove objects created in tests."""
     # Remove forms
     custom_folder = self.getSkinsTool().custom
-    custom_folder.manage_delObjects(custom_folder.objectIds())
+    try:
+      custom_folder.manage_delObjects(custom_folder.objectIds())
+    except BadRequest:
+      pass
 
     # Remove skin folders
     if 'erp5_geek' in self.getSkinsTool().objectIds():
@@ -398,9 +402,9 @@ return printed
         'Base_viewGeek',
         'View')
     form = skin_folder._getOb('Base_viewGeek', None)
-    form.manage_addField('my_title', 'Title', 'ProxyField')
+    form.manage_addField('my_proxy_field', 'Proxy', 'ProxyField')
 
-    field = form.my_title
+    field = form.my_proxy_field
 
     self.assertFalse(form.get_fields())
     self.assertEqual([field], form.get_fields(include_disabled=True))
@@ -409,10 +413,22 @@ return printed
     self.assertEqual('', field.get_tales('default'))
 
     regexp = '^%s$' % re.escape("Can't find the template field of"
-      " <ProxyField at /%s/portal_skins/erp5_geek/Base_viewGeek/my_title>"
+      " <ProxyField at /%s/portal_skins/erp5_geek/Base_viewGeek/my_proxy_field>"
       % self.portal.getId())
     for func in ( field.render
                 , partial(field.get_value, 'default')
                 , partial(field.get_recursive_tales, 'default')
                 ):
-      self.assertRaisesRegexp(BrokenProxyField, regexp, func)
+      self.assertRaisesRegex(BrokenProxyField, regexp, func)
+
+    # we can still view the field in ZMI
+    form.manage_main()
+    field.manage_main()
+    #  and repair it
+    form.manage_addField('my_field', 'Title', 'StringField')
+    field.manage_edit(
+      {
+        'field_form_id': 'Base_viewGeek',
+        'field_field_id': 'my_field',
+      })
+    self.assertEqual(field.getTemplateField(), form.my_field)

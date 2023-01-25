@@ -1,4 +1,4 @@
-"""Close all person assignment 
+"""Close all person assignment
 Parameters:
 role -- Role category item (List of String, default: [])
 comment -- Workflow transition comment (String, default: "")

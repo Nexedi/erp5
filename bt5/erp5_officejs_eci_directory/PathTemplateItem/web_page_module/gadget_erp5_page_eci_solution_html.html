@@ -1,0 +1,200 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story List</title>
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <link rel="stylesheet" href="css/flag-icons.css" type="text/css" />
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  <script src="gadget_erp5_page_eci_solution.js"></script>
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <div class="custom-software-container">
+        <ul class="grid-elements custom-software-profile">
+          <li>
+            {{#if logo_url}}
+              <div class="custom-software-profile-image-wrapper"><img src="{{logo_url}}"></a></div>
+            {{/if}}
+          </li>
+          <li>
+            <div class="widget-header">
+              {{#if display_provider}}
+                <span>{{publisher}}</span>
+                <span class="fi fi-{{country_code}}"></span>
+                <span><a href="{{country_search_url}}">{{selection_domain_country}}</a></span>
+              {{/if}}
+              <h1>{{title}}</h1>
+           </div>
+
+            {{#if description}}
+              <p>{{description}}</p>
+              <br/>
+            {{/if}}
+            <div>
+              <span>Similar Solutions:</span>
+              {{#each similar_solution_list}}
+                <span>{{this.title}}</span>
+              {{/each}}
+            </div>
+            <div>
+             {{#if wikipedia_url}}
+               <span>Read more on:</span>
+                <a class="link_like" href={{wikipedia_url}} target="_blank">Wikipedia</a>
+             {{/if}}
+            </div>
+            <div>
+              <span>Source code:</span>
+              {{#if source_code_download}}
+                <a class="link_like" href={{source_code_download}} target="_blank">Download</a>
+              {{/if}}
+              {{#if source_code_profile}}
+                <a class="link_like" href={{source_code_profile}} target="_blank">Profile</a>
+              {{/if}}
+            </div>
+            <br>
+            {{#each category_with_url_list}}
+              <a class="category" href={{this.url}}>{{this.title}}</a>
+            {{/each}}
+          </li>
+        </ul>
+        <div class="custom-software-info">
+          <div class="custom-software-info-column">
+            <h2>Info</h2>
+            <div class="content">
+              <span>Publisher:</span>
+              <a class="link_like" href={{publisher_website}} target="_blank">{{this.publisher_website}}</a>
+            </div>
+            <div class="content">
+              <span>Solution:</span>
+              <a class="link_like" href={{website_url}} target="_blank">{{this.website_url}}</a>
+            </div>
+            <div class="content">
+              <span>Created:</span>
+              <span class="link_like">{{created_year}}</span>
+            </div>
+            <div class="content">
+              <san>Licences:</span>
+              {{#each licence_list}}
+                <span class="link_like">{{this}}</a>
+              {{/each}}
+            </div>
+          </div>
+          <div class="custom-software-info-column">
+            <h2>Support</h2>
+            <div class="content">
+              <span>Support available:</span>
+              {{#if commercial_support_available}}
+                 <span>Yes</span>
+              {{else}}
+                 <span>No</span>
+              {{/if}}
+            </div>
+            {{#if commercial_support_url}}
+              <div class="content">
+                <span>Support:</span>
+                <a class="link_like" target="_blank" href={{commercial_support_url}} >{{commercial_support_url}}</a>
+              </div>
+            {{/if}}
+
+            <div class="content">
+              <span>Open source:</span>
+               {{#if floss_software}}
+                 <span>Yes</span>
+               {{else}}
+                 <span>No</span>
+               {{/if}}
+            </div>
+
+            <div class="content">
+              <span>Support for open source:</span>
+               {{#if commercial_support_open_source_version}}
+                 <span>Yes</span>
+               {{else}}
+                 <span>No</span>
+               {{/if}}
+            </div>
+
+          </div>
+        </div>
+      </div>
+       {{#if reference_list}}
+        <div class="reference-container">
+          <h2>References</h2>
+          {{#each reference_list}}
+           <div class="single-reference">
+            <img src="{{logo_url}}" alt={{title}}></img>
+            <span>{{title}}</span>
+            <span class="fi fi-{{country_code}}"></span>
+            <span>{{industry}}</span>
+          </div>
+          {{/each}}
+       </div>
+       {{/if}}
+       {{#if success_case_list}}
+        <div class="custom-software-container">
+        <section class="ui-content-header-plain ui-bar-c">
+          <h2>Success cases</h2>
+        </section>
+        <ul class="grid-items custom-success-story-list">
+          {{#each success_case_list}}
+            <li>
+              {{#if image_url}}
+                <div class="custom-success-story-image-wrapper {{image_class}}">
+                  <a href="{{success_case_url}}" target="_blank"><img src="{{image_url}}"/></a>
+                </div>
+              {{else}}
+                <div>&nbsp;</div>
+              {{/if}}
+              <p class="custom-success-story-title">{{title}}</a></p>
+              <p class="custom-success-story-description">{{description}}
+                {{#if success_case_url}}
+                  <a href="{{success_case_url}}" target="_blank">Read full success case</a>
+                {{/if}}
+             </p>
+              <table class="custom-link-table">
+                <tbody>
+                  <tr>
+                    <td class="custom-success-story-client">Customer</td>
+                    <td><b>{{customer}}</b></td>
+                  </tr>
+                  <tr>
+                    <td>Industry</td>
+                    <td>{{industry}}</td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td>
+                      <span class="fi fi-{{country_code}} flag-icon"></span>
+                      <span class="flag-name">{{country}}</span></td>
+                  </tr>
+                  <tr>
+                    <td>Language</td>
+                    <td>{{language}}</td>
+                  </tr>
+                  <tr>
+                    <td>Product Site</td>
+                    <td><a href="{{software_website}}">{{software_website}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Provider Site</td>
+                    <td><a href="{{publisher_website}}">{{publisher_website}}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </li>
+          {{/each}}
+        </ul>
+    </section>
+   </div>
+   {{/if}}
+
+
+  </script>
+  </head>
+  <body>
+    <div class="display-widget"></div>
+  </body>
+</html>

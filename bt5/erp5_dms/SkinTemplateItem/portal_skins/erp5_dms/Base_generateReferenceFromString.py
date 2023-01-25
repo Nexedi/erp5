@@ -4,7 +4,7 @@
 """
 transliterate_list = ['?', ':', ';', '/', '&', '=', '^', '@', '>', '<', ']', '[', '^', '\\']
 
-def removeNonAscii(s): 
+def removeNonAscii(s):
   return "".join(i for i in s if ord(i)>44 and ord(i)<123)
 
 # reference can be used for permanent URL so be friendly to spaces (SEO)

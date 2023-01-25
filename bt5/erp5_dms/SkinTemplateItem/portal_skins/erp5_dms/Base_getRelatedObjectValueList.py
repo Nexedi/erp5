@@ -9,7 +9,7 @@ if category_list is None:
 
 def getValueIfAvailable(category):
   ob = context.restrictedTraverse(category, None)
-  return ob 
+  return ob
 
 object_list = [getValueIfAvailable(category) for category in category_list]
 object_list = [o for o in object_list if o is not None]

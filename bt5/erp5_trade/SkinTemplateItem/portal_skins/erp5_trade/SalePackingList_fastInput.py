@@ -101,9 +101,9 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
                                             line_variation_base_category_list)
             cell.edit(quantity=quantity)
 
-url_params = make_query(selection_name=selection_name, 
-                        dialog_category=dialog_category, 
-                        form_id=form_id, 
+url_params = make_query(selection_name=selection_name,
+                        dialog_category=dialog_category,
+                        form_id=form_id,
                         cancel_url=cancel_url,
                         portal_status_message='%s container(s) created.' %\
                                                                 container_count)

@@ -185,7 +185,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue(len(message_list) > 0)
     self.assertTrue(len(message_list) < 3)
     for method_id in method_id_list:
-      self.assertTrue(method_id in ["immediateReindexObject"])
+      self.assertIn(method_id, ["immediateReindexObject"])
 
   def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None,
                                     **kw):
@@ -966,19 +966,23 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Add a non-existent workflow.
     pw = self.getWorkflowTool()
-    dummy_simulation_worlflow_id = 'fake_simulation_workflow'
-    dummy_validation_worlflow_id = 'fake_validation_workflow'
+    dummy_simulation_workflow_id = 'fake_simulation_workflow'
+    dummy_validation_workflow_id = 'fake_validation_workflow'
     #Assume that erp5_styles workflow Manage permissions with acquired Role by default
-    addWorkflowByType(pw, 'erp5_workflow', dummy_simulation_worlflow_id)
-    addWorkflowByType(pw, 'erp5_workflow', dummy_validation_worlflow_id)
-    dummy_simulation_worlflow = pw[dummy_simulation_worlflow_id]
-    dummy_validation_worlflow = pw[dummy_validation_worlflow_id]
-    dummy_validation_worlflow.variables.setStateVar('validation_state')
+    dummy_simulation_workflow = pw.newContent(
+      portal_type='Workflow',
+      reference=dummy_simulation_workflow_id,
+    )
+    dummy_validation_workflow = pw.newContent(
+      portal_type='Workflow',
+      reference=dummy_validation_workflow_id,
+      state_variable='validation_state',
+    )
     organisation_type = portal.portal_types.getTypeInfo(portal_type)
     organisation_initial_workflow_list = organisation_type.getTypeWorkflowList()
-    organisation_type.setTypeWorkflowList([dummy_validation_worlflow_id,
-                                           dummy_simulation_worlflow_id])
-    permission_list = list(dummy_simulation_worlflow.permissions)
+    organisation_type.setTypeWorkflowList([dummy_validation_workflow_id,
+                                           dummy_simulation_workflow_id])
+    permission_list = dummy_simulation_workflow.getWorkflowManagedPermissionList()
     manager_has_permission = {}
     for permission in permission_list:
       manager_has_permission[permission] = ('Manager',)
@@ -989,7 +993,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     user = getSecurityManager().getUser()
     try:
       self.assertTrue(permission_list)
-      self.assertFalse(dummy_simulation_worlflow.states.draft.permission_roles)
+      self.assertFalse(dummy_simulation_workflow['state_draft'].getStatePermissionRoleListDict())
       #1
       obj = module.newContent(portal_type=portal_type)
       #No role is defined by default on workflow
@@ -999,28 +1003,28 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
       #2 Now configure both workflow with same configuration
-      dummy_simulation_worlflow.states.draft.permission_roles = manager_has_permission.copy()
-      dummy_validation_worlflow.states.draft.permission_roles = manager_has_permission.copy()
-      dummy_simulation_worlflow.updateRoleMappingsFor(obj)
-      dummy_validation_worlflow.updateRoleMappingsFor(obj)
+      dummy_simulation_workflow['state_draft'].setStatePermissionRoleListDict(manager_has_permission.copy())
+      dummy_validation_workflow['state_draft'].setStatePermissionRoleListDict(manager_has_permission.copy())
+      dummy_simulation_workflow.updateRoleMappingsFor(obj)
+      dummy_validation_workflow.updateRoleMappingsFor(obj)
 
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
-      #3 change only dummy_simulation_worlflow
-      dummy_simulation_worlflow.states.draft.permission_roles = manager_has_no_permission.copy()
-      dummy_simulation_worlflow.updateRoleMappingsFor(obj)
+      #3 change only dummy_simulation_workflow
+      dummy_simulation_workflow['state_draft'].setStatePermissionRoleListDict(manager_has_no_permission.copy())
+      dummy_simulation_workflow.updateRoleMappingsFor(obj)
 
       for permission in permission_list:
         self.assertFalse(user.has_permission(permission, obj))
-      #4 enable acquisition for dummy_simulation_worlflow
-      dummy_simulation_worlflow.states.draft.permission_roles = None
-      dummy_simulation_worlflow.updateRoleMappingsFor(obj)
+      #4 enable acquisition for dummy_simulation_workflow
+      dummy_simulation_workflow['state_draft'].setAcquirePermissionList(permission_list)
+      dummy_simulation_workflow.updateRoleMappingsFor(obj)
       for permission in permission_list:
         self.assertTrue(user.has_permission(permission, obj))
     finally:
       # Make sure that the artificial workflow is not referred to any longer.
       organisation_type.setTypeWorkflowList(organisation_initial_workflow_list)
-      pw.manage_delObjects([dummy_simulation_worlflow_id, dummy_validation_worlflow_id])
+      pw.manage_delObjects([dummy_simulation_workflow_id, dummy_validation_workflow_id])
 
   def test_getViewPermissionOwnerDefault(self):
     """Test getViewPermissionOwner method behaviour"""
@@ -1166,7 +1170,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                     portal_type='Organisation',
                                                     temp_object=True)
     user = getSecurityManager().getUser()
-    self.assertTrue('Owner' in user.getRolesInContext(organisation))
+    self.assertIn('Owner', user.getRolesInContext(organisation))
     from AccessControl.ZopeGuards import guarded_getattr
     property_map_dict = organisation.propertyMap()
     property_id_list = ('edit', 'setProperty', 'getProperty') + \
@@ -1189,7 +1193,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                     portal_type='Organisation',
                                                     temp_object=True)
     user = getSecurityManager().getUser()
-    self.assertTrue('Owner' in user.getRolesInContext(organisation))
+    self.assertIn('Owner', user.getRolesInContext(organisation))
     from AccessControl.ZopeGuards import guarded_getattr
     property_map_dict = organisation.propertyMap()
     property_id_list = ('edit', 'setProperty', 'getProperty') + \
@@ -1302,7 +1306,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     ob._setProperty('a_dummy_property', dummy_property_value)
 
     # the property appears in property map
-    self.assertTrue('a_dummy_property' in [x['id'] for x in ob.propertyMap()])
+    self.assertIn('a_dummy_property', [x['id'] for x in ob.propertyMap()])
     # the value and can be retrieved using getProperty
     self.assertEqual(ob.getProperty('a_dummy_property'), dummy_property_value)
     # the value is also stored as a class attribute
@@ -1312,7 +1316,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     """_setProperty raises an error if the property already exists."""
     ob = self._makeOne('ob')
     # make sure that title property exists
-    self.assertTrue('title' in [x['id'] for x in ob.propertyMap()])
+    self.assertIn('title', [x['id'] for x in ob.propertyMap()])
     # trying to call _setProperty will with an existing property raises:
     #         BadRequest: Invalid or duplicate property id: title
     self.assertRaises(BadRequest, ob._setProperty, 'title', 'property value')
@@ -1322,7 +1326,7 @@ class TestERP5PropertyManager(unittest.TestCase):
     """
     ob = self._makeOne('ob')
     # make sure that title property exists
-    self.assertTrue('title' in [x['id'] for x in ob.propertyMap()])
+    self.assertIn('title', [x['id'] for x in ob.propertyMap()])
     prop_value = 'title value'
     ob._updateProperty('title', prop_value)
     self.assertEqual(ob.getProperty('title'), prop_value)

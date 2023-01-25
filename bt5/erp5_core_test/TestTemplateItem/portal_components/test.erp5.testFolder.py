@@ -188,7 +188,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                                             to_class, test_script)
     self.commit()
     self.assertEqual(self.folder[obj.getId()].__class__, to_class)
-    self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+    self.assertNotEqual(self.folder[obj.getId()].__class__, from_class)
     self.assertEqual([1], result)
 
   def test_upgradeObjectClassOnlyTest(self):
@@ -202,7 +202,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
     result = self.folder.upgradeObjectClass(test_script, from_class,
                                       to_class, test_script, test_only=1)
     self.commit()
-    self.assertNotEquals(self.folder[obj.getId()].__class__, to_class)
+    self.assertNotEqual(self.folder[obj.getId()].__class__, to_class)
     self.assertEqual(self.folder[obj.getId()].__class__, from_class)
     self.assertEqual([1], result)
 
@@ -219,7 +219,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                                             to_class, test_script)
     self.commit()
     self.assertEqual(subfolder[obj.getId()].__class__, to_class)
-    self.assertNotEquals(subfolder[obj.getId()].__class__, from_class)
+    self.assertNotEqual(subfolder[obj.getId()].__class__, from_class)
     self.assertEqual([1], result)
 
   def test_upgradeObjectClassWithSubObject(self):
@@ -235,9 +235,9 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                                             to_class, test_script)
     self.commit()
     self.assertEqual(self.folder[subobject.getId()].__class__, to_class)
-    self.assertNotEquals(self.folder[subobject.getId()].__class__, from_class)
+    self.assertNotEqual(self.folder[subobject.getId()].__class__, from_class)
     self.assertEqual(self.folder[subobject.getId()][obj.getId()].__class__, to_class)
-    self.assertNotEquals(self.folder[subobject.getId()][obj.getId()].__class__, from_class)
+    self.assertNotEqual(self.folder[subobject.getId()][obj.getId()].__class__, from_class)
     self.assertEqual([1, 1], result)
 
   def test_upgradeObjectClassWithStrings(self):
@@ -254,7 +254,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
                                             to_class_as_string, test_script)
     self.commit()
     self.assertEqual(self.folder[obj.getId()].__class__, to_class)
-    self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+    self.assertNotEqual(self.folder[obj.getId()].__class__, from_class)
     self.assertEqual([1], result)
 
   def test_FolderMixinSecurity(self):
@@ -265,7 +265,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     response = self.publish('%s/deleteContent?id=%s' % (
             self.folder.absolute_url(relative=True), obj.getId()))
-    self.assertTrue(obj.getId() in self.folder.objectIds())
+    self.assertIn(obj.getId(), self.folder.objectIds())
     self.assertEqual(302, response.getStatus())
 
   def test_fragmentedLength(self):

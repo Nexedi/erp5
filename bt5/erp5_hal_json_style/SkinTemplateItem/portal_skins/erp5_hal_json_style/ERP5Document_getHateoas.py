@@ -827,7 +827,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
 #       for property, title in columns:
 #         prop = document.getProperty(property)
 #         if same_type(prop, DateTime()):
-#           prop = "XXX Serialize DateTime"  
+#           prop = "XXX Serialize DateTime"
 #         line[title] = prop
 #         line["_relative_url"] = document.getRelativeUrl()
 #       line_list.append(line)
@@ -997,7 +997,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # ... so we can do some magic with it (especially embedded listbox if exists)!
     try:
       if last_form_id:
-        last_form = getattr(context, last_form_id)
+        last_form = getattr(traversed_document, last_form_id)
         last_listbox = last_form.Base_getListbox()
     except AttributeError:
       pass
@@ -1096,7 +1096,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
                                               selection_params=selection_params,
                                               request_field=not use_relation_form_page_template,
                                               form_relative_url=form_relative_url)
-        if field_errors.has_key(field.id):
+        if field.id in field_errors:
           response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
         # Do not crash if field configuration is wrong.
@@ -1546,10 +1546,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(
-              translateWorklistActionName(view_action['title'])
-              if 'worklist_id' in view_action
-              else view_action['title']),
+          'title': translateWorklistActionName(
+            view_action['title']
+            ) if 'worklist_id' in view_action else Base_translateString(
+              view_action['title']
+            ),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
@@ -1595,10 +1596,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # XXX Custom slapos code
     ##############
     if is_site_root:
-  
+
       result_dict['default_view'] = 'view'
       REQUEST.set("X-HATEOAS-CACHE", 1)
-  
+
       # Global action users for the jIO plugin
       # XXX Would be better to not hardcode them but put them as portal type
       # "actions" (search could be on portal_catalog document, traverse on all
@@ -1639,19 +1640,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'method': 'POST',
         'name': 'Bulk'
       }
-  
+
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
       if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": person.getRelativeUrl(), 
+            "relative_url": person.getRelativeUrl(),
             "script_id": script.id
           },
   #         '_relative_url': person.getRelativeUrl()
         }
-  
+
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
@@ -2110,7 +2111,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             value=default_field_value,
             key='field_%s_%s' % (editable_field.id, brain_uid))
           # Include cell error text in case of form validation
-          if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
+          if '%s_%s' % (editable_field.id, brain_uid) in field_errors:
             contents_item[select]['field_gadget_param']["error_text"] = \
               Base_translateString(field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text)
 
@@ -2318,7 +2319,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         "script_id": script.id
       })
     return ''
-  
+
   elif mode == 'bulk':
     #################################################
     # Return multiple documents in one request
@@ -2327,7 +2328,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setStatus(405)
       return ""
     result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in byteify(json.loads(bulk_list))]
-  
+
   elif mode == 'worklist':
     #################################################
     # Return all worklist jio urls
@@ -2380,7 +2381,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
-  
+
   return result_dict
 
 

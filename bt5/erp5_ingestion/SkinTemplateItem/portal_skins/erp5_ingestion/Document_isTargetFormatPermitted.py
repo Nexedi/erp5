@@ -10,7 +10,7 @@ This script provides a facility to permit conversion by format.
 from AccessControl import getSecurityManager
 user = getSecurityManager().getUser()
 role_list = user.getRolesInContext(context)
-## 
+##
 
 # Users involved in the document may view it in editable mode
 if "Associate" in role_list or "Assignee" in role_list or\
@@ -20,7 +20,7 @@ if "Associate" in role_list or "Assignee" in role_list or\
 if format is None:
   return False
 ##
-# All users with view permission may view the document 
+# All users with view permission may view the document
 # in read only mode
 if format in ('html', 'stripped-html', 'text', 'txt', 'pdf', 'png', 'jpg', 'gif'):
   return True

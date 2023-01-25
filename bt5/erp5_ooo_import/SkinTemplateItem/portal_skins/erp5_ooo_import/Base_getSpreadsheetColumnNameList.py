@@ -31,5 +31,5 @@ for spreadsheet in spreadsheets.keys():
           spreadsheet_column=column
       )
       listbox_lines.append(o)
-  
+
 return listbox_lines

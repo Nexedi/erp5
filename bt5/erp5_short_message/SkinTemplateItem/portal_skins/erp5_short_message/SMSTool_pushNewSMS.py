@@ -1,5 +1,5 @@
 """Create new SMS from a push of the sms gateway
-Parameter: 
+Parameter:
 message_id -- Reference of the message in gateway side (String)
 sender -- Phone number of the sender (String)
 recipient -- Phone number of the recipient (String)
@@ -25,7 +25,7 @@ event.receive()
 #Search sender and recipient
 def searchParentOfTelephoneNumber(phone_number):
   getResultValue = context.portal_catalog.getResultValue
- 
+
   phone = getResultValue(url_string={'query':phone_number, 'key':'ExactMatch'}, portal_type='Telephone', parent_portal_type='Person')
   if phone is None:
     phone = getResultValue(url_string={'query':phone_number, 'key':'ExactMatch'}, portal_type='Telephone', parent_portal_type='Organisation')

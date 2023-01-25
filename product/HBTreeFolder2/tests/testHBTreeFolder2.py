@@ -86,7 +86,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.assertEqual(len(values), 1)
         self.assertEqual(values[0].id, 'item')
         # Make sure the object is wrapped.
-        self.assert_(values[0] is not self.getBase(values[0]))
+        self.assertTrue(values[0] is not self.getBase(values[0]))
 
     def testObjectItems(self):
         items = self.f.objectItems()
@@ -95,11 +95,11 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.assertEqual(id, 'item')
         self.assertEqual(val.id, 'item')
         # Make sure the object is wrapped.
-        self.assert_(val is not self.getBase(val))
+        self.assertTrue(val is not self.getBase(val))
 
     def testHasKey(self):
-        self.assert_(self.f.hasObject('item'))  # Old spelling
-        self.assert_(self.f.has_key('item'))  # New spelling
+        self.assertTrue(self.f.hasObject('item'))  # Old spelling
+        self.assertIn('item', self.f)  # New spelling
 
     def testDelete(self):
         self.f._delOb('item')
@@ -117,7 +117,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
     def testSetObject(self):
         f2 = HBTreeFolder2('item2')
         self.f._setObject(f2.id, f2)
-        self.assert_(self.f.has_key('item2'))
+        self.assertIn('item2', self.f)
         self.assertEqual(self.f.objectCount(), 2)
 
     def testWrapped(self):
@@ -153,7 +153,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         old_f._setObject(inner_f.id, inner_f)
         self.ff._populateFromFolder(old_f)
         self.assertEqual(self.ff.objectCount(), 1)
-        self.assert_(self.ff.has_key('inner'))
+        self.assertIn('inner', self.ff)
         self.assertEqual(self.getBase(self.ff._getOb('inner')), inner_f)
 
     def testObjectListing(self):
@@ -166,26 +166,26 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.assertEqual(info['b_end'], 2)
         self.assertEqual(info['prev_batch_url'], '')
         self.assertEqual(info['next_batch_url'], '')
-        self.assert_(info['formatted_list'].find('</select>') > 0)
-        self.assert_(info['formatted_list'].find('item') > 0)
-        self.assert_(info['formatted_list'].find('somefolder') > 0)
+        self.assertTrue(info['formatted_list'].find('</select>') > 0)
+        self.assertTrue(info['formatted_list'].find('item') > 0)
+        self.assertTrue(info['formatted_list'].find('somefolder') > 0)
 
         # Ensure batching is working.
         info = self.f.getBatchObjectListing({'b_count': 1})
         self.assertEqual(info['b_start'], 1)
         self.assertEqual(info['b_end'], 1)
         self.assertEqual(info['prev_batch_url'], '')
-        self.assert_(info['next_batch_url'] != '')
-        self.assert_(info['formatted_list'].find('item') > 0)
-        self.assert_(info['formatted_list'].find('somefolder') < 0)
+        self.assertTrue(info['next_batch_url'] != '')
+        self.assertTrue(info['formatted_list'].find('item') > 0)
+        self.assertTrue(info['formatted_list'].find('somefolder') < 0)
 
         info = self.f.getBatchObjectListing({'b_start': 2})
         self.assertEqual(info['b_start'], 2)
         self.assertEqual(info['b_end'], 2)
-        self.assert_(info['prev_batch_url'] != '')
+        self.assertTrue(info['prev_batch_url'] != '')
         self.assertEqual(info['next_batch_url'], '')
-        self.assert_(info['formatted_list'].find('item') < 0)
-        self.assert_(info['formatted_list'].find('somefolder') > 0)
+        self.assertTrue(info['formatted_list'].find('item') < 0)
+        self.assertTrue(info['formatted_list'].find('somefolder') > 0)
 
     def testObjectListingWithSpaces(self):
         # The option list must use value attributes to preserve spaces.
@@ -195,7 +195,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.f.absolute_url = str
         info = self.f.getBatchObjectListing()
         expect = '<option value="%s">%s</option>' % (name, name)
-        self.assert_(info['formatted_list'].find(expect) > 0)
+        self.assertTrue(info['formatted_list'].find(expect) > 0)
 
     def testIterItems(self):
         h = HBTreeFolder2()
@@ -244,7 +244,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           h = HBTreeFolder2()
           # whatever value, as long as it has an __of__
           h._setOb('foo', HBTreeFolder2())
-          script = PythonScript('script')
+          script = PythonScript('test_script')
           script.ZPythonScript_edit('h', dedent("""
             for dummy in h.objectIds():
               pass

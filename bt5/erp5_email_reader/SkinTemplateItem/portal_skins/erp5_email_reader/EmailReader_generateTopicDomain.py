@@ -1,5 +1,5 @@
 """
-  Generate a tree of 
+  Generate a tree of
   depth, parent, **kw
 """
 
@@ -19,7 +19,7 @@ def getAvailableSubjectList(subject_list=(), container_uid=None):
     NOTE: for now only 3 levels of subject are available
   """
   #log("In getAvailableSubjectList with container: %s subject_list: %s" % (container_uid, subject_list))
-  kw = dict(subject="!=", 
+  kw = dict(subject="!=",
             select_list=["subject.subject"],
             group_by=["subject.subject"],
             #src__=1
@@ -28,7 +28,7 @@ def getAvailableSubjectList(subject_list=(), container_uid=None):
   subject_len = len(subject_list)
   for i in range(0,3):
     if subject_len > i:
-      kw['subject_filter_%s' % i] = subject_list[i]    
+      kw['subject_filter_%s' % i] = subject_list[i]
   result_list = context.portal_catalog(**kw)
   #return result_list
   result = filter(lambda x: x not in subject_list,
@@ -48,8 +48,8 @@ portal = context.getPortalObject()
 external_source = portal.restrictedTraverse(object_path)
 external_source_uid = external_source.getUid()
 
-getAvailableSubjectList = CachingMethod(getAvailableSubjectList, 
-      id=('%s_%s' % (script.id, ''), 
+getAvailableSubjectList = CachingMethod(getAvailableSubjectList,
+      id=('%s_%s' % (script.id, ''),
           ''),
       cache_factory='erp5_ui_short')
 

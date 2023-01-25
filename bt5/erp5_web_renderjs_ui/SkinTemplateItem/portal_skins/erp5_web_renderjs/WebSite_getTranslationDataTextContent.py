@@ -13,12 +13,18 @@ Base_translateString = context.Base_translateString
 translatable_message_set = set([])
 
 web_page_reference_list = context.Base_getTranslationSourceFileList(only_html=1)
+
+web_page_by_reference = {}
+if web_page_reference_list:
+  web_page_list = [
+    b.getObject() for b in
+    context.getDocumentValueList(reference=web_page_reference_list)]
+  web_page_by_reference = {wp.getReference(): wp.getTextContent() for wp in web_page_list}
+
 for web_page_reference in web_page_reference_list:
   # Web pages can be in web page module ...
-  web_page = context.getDocumentValue(web_page_reference)
-  if web_page is not None:
-    web_page_text_content = web_page.getTextContent()
-  else:
+  web_page_text_content = web_page_by_reference.get(web_page_reference)
+  if web_page_text_content is None:
     # ... or in skin folders
     web_page = context.restrictedTraverse(web_page_reference, None)
     if web_page is not None and hasattr(web_page, 'PrincipiaSearchSource'):

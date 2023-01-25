@@ -6,6 +6,9 @@ url_list = [
   "gadget_officejs_jio_image_view.js",
   "gadget_officejs_image_editor.json",
   "image_editor_app_logo.svg",
+  "gadget_erp5_page_ojs_image_editor_about.html",
+  "gadget_erp5_page_ojs_image_editor_about.js",
+  "gadget_erp5_page_ojs_about.css",
 
   #image editor
   "minipaint.gadget.html",

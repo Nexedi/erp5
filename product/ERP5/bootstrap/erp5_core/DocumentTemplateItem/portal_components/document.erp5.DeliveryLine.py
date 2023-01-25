@@ -333,14 +333,14 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
   def manage_afterAdd(self, item, container):
     "if the container is a line too, reindex it"
     if self.meta_type == container.meta_type:
-      container.reindexObject()
+      container.activate(activity="SQLDict").reindexObject()
     return Movement.manage_afterAdd(self, item, container)
 
   security.declarePrivate('manage_beforeDelete')
   def manage_beforeDelete(self, item, container):
     "if the container is a line too, reindex it"
     if self.meta_type == container.meta_type:
-      container.reindexObject()
+      container.activate(activity="SQLDict").reindexObject()
     return Movement.manage_beforeDelete(self, item, container)
 
 # divergence support with solving

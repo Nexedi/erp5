@@ -5,7 +5,7 @@ action_list = context.portal_actions.listFilteredActionsFor(context.getObject())
 
 
 # Javascript code
-hide_and_process_js = """javascript:xmlHttp=new XMLHttpRequest(); 
+hide_and_process_js = """javascript:xmlHttp=new XMLHttpRequest();
 xmlHttp.open("GET", "%s/EmailThread_processAction?action=%s", false);
 xmlHttp.send(null);
 this.parentNode.parentNode.style.display = 'none';
@@ -19,7 +19,7 @@ return false;
 
 # This part must be cached and optimised - XXX
 # Idea: get the state, retrieve standard action string for the state
-# if not available, call getObject, portal_actions, etc. 
+# if not available, call getObject, portal_actions, etc.
 # build the standard action string - last, fead the action string with
 # params through %
 for action in action_list:

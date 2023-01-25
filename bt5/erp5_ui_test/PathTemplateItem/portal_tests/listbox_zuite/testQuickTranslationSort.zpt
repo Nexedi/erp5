@@ -17,7 +17,7 @@
 
 <tr>
   <td>open</td>
-  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test/Base_createUITestLanguages"></td>
+  <td tal:content="string: ${here/portal_url}/Base_createUITestLanguages"></td>
   <td></td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 ]">
   <tr tal:define="dummy python: param_dict.update({'root': here.portal_url()})">
     <td>open</td>
-    <td tal:content="python: '%(root)s/portal_skins/erp5_ui_test/Base_addUITestTranslation?message=%(message)s&translation=%(translation)s&language=%(language)s' % param_dict"></td>
+    <td tal:content="python: '%(root)s/Base_addUITestTranslation?message=%(message)s&translation=%(translation)s&language=%(language)s' % param_dict"></td>
     <td></td>
   </tr>
   <tr>

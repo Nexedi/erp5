@@ -6,6 +6,7 @@ Generate leaflet legalese
 """
 </tal:comment>
 <tal:block tal:define="leaflet_organisation                   python: options.get('leaflet_organisation');
+                       leaflet_organisation_corporate         python: options.get('leaflet_organisation_corporate');
                        leaflet_logo_url                       python: options.get('leaflet_logo_url');
                        leaflet_address                        python: options.get('leaflet_address');
                        leaflet_postal_code                    python: options.get('leaflet_postal_code');
@@ -19,7 +20,7 @@ Generate leaflet legalese
   <div id="legalese">
     <p class="top"><span>&copy;</span><span tal:content="python: ''.join([leaflet_organisation, ' ', leaflet_year])"></span></p>
     <p>
-      <span tal:content="python: leaflet_organisation"></span><br />
+      <span tal:content="python: leaflet_organisation_corporate"></span><br />
       <span tal:content="python: leaflet_address"></span><br />
       <span tal:content="python: ''.join([leaflet_postal_code, ' ', leaflet_city])"></span><br />
       <span tal:content="python: leaflet_country"></span><br />

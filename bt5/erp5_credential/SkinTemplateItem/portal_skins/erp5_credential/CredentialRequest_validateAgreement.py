@@ -1,4 +1,4 @@
-""" Use as validator method for a checkbox. 
+""" Use as validator method for a checkbox.
 Return True if checked.
 Parameters:
 value -- State of checking (default:None,boolean)

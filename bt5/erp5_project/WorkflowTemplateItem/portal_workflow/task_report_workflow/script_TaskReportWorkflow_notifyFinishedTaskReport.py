@@ -7,7 +7,7 @@ destination_decision_person = task_report.getDestinationDecisionValue(portal_typ
 if destination_decision_person is None:
   destination_decision_person = task_report.getDestinationValue(portal_type="Person")
 
-# We send a message only if the requester have an email and 
+# We send a message only if the requester have an email and
 # the assignee is a user that can view the task report.
 if source_person is not None \
      and destination_decision_person is not None \

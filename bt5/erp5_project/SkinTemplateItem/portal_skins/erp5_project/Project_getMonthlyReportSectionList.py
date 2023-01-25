@@ -127,7 +127,7 @@ for task_line in result_list:
   project_relative_url = project_dict['relative_url']
   full_date_total_worker_quantity_dict[source_relative_url] = \
     full_date_total_worker_quantity_dict.get(source_relative_url, 0) + quantity
-  if not full_date_total_object_dict.has_key(project_relative_url):
+  if project_relative_url not in full_date_total_object_dict:
     temp_object = temp_object_container.newContent(portal_type = 'Project Line',
                 temp_object=1,
                 string_index = full_date_string,
@@ -140,7 +140,7 @@ for task_line in result_list:
   # diff in day between the begin and the end of the task
   diff_day = stop_date_task - start_date_task + 1
 
-  fillDictWithParentAndChildRelativeUrls(full_date_total_project_to_display_dict, 
+  fillDictWithParentAndChildRelativeUrls(full_date_total_project_to_display_dict,
      project_relative_url)
 
   timekeeper = start_date_task
@@ -148,12 +148,12 @@ for task_line in result_list:
     next_timekeeper = getNextMonthStart(timekeeper)
     string_index = "%s-%s" % ( timekeeper.year(), timekeeper.month())
     quantity_dict = object_dict.setdefault(string_index, {})
-    
+
     worker_quantity_dict = monthly_worker_quantity_dict.setdefault(string_index, {})
     project_to_display_dict = monthly_project_to_display_dict.setdefault(string_index, {})
     fillDictWithParentAndChildRelativeUrls(project_to_display_dict, project_relative_url)
-    
-    if not quantity_dict.has_key(project_relative_url):
+
+    if project_relative_url not in quantity_dict:
       temp_object = temp_object_container.newContent(portal_type = 'Project Line',
                   temp_object=1,
                   string_index = string_index,

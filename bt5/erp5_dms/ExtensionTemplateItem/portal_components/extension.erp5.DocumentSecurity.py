@@ -27,7 +27,7 @@
 
 
 def getPersonRoleList(self, person, object):  # pylint: disable=redefined-builtin
-  """ 
+  """
   Get list of local roles for user.
   """
   user_id = person.Person_getUserId()

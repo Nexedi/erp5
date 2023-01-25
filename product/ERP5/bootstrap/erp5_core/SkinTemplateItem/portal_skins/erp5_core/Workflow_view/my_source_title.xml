@@ -108,8 +108,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>State</string>
-                          <string>State</string>
+                          <string>Workflow State</string>
+                          <string>Workflow State</string>
                         </tuple>
                       </list>
                     </value>

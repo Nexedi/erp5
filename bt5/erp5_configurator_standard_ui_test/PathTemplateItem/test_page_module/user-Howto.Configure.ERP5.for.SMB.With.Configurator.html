@@ -1561,25 +1561,9 @@
                 <td>${base_url}/logout</td>
                 <td></td>
               </tr>
-              <tr>
-                <td>openAndWait</td>
-                <td>${base_url}/login_form</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="__ac_name"]</td>
-                <td>PERSON_USER_REFERENCE</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="__ac_password"]</td>
-                <td>secret</td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//input[@name="logged_in:method"]</td>
-                <td></td>
+              <tr metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+                <td tal:omit-tag="" metal:fill-slot="username">PERSON_USER_REFERENCE</td>
+                <td tal:omit-tag="" metal:fill-slot="password">secret</td>
               </tr>
               <tr>
                 <td>openAndWait</td>
@@ -1608,23 +1592,12 @@
               </tr>
               <tr>
                 <td>openAndWait</td>
-                <td>${base_url}/login_form</td>
+                <td>${base_url}/logout</td>
                 <td></td>
               </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="__ac_name"]</td>
-                <td>${base_user}</td>
-              </tr>
-              <tr>
-                <td>type</td>
-                <td>//input[@name="__ac_password"]</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>clickAndWait</td>
-                <td>//input[@name="logged_in:method"]</td>
-                <td></td>
+              <tr metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+                <td tal:omit-tag="" metal:fill-slot="username">${base_user}</td>
+                <td tal:omit-tag="" metal:fill-slot="password"></td>
               </tr>
             </tbody>
           </table>

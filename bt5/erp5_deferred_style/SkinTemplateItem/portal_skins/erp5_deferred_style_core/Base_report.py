@@ -14,7 +14,7 @@ with portal.Localizer.translationContext(localizer_language):
   report_section_list = [r.getResult() for r in ap.getResultList()]
   assert len(report_section_list) == report_section_count
   report_section_list.sort(key=lambda x: x[0])
-  
+
   def dummyReportMethod():
     return report_section_list
 

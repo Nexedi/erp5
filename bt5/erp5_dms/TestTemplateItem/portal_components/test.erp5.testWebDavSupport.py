@@ -120,7 +120,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
     self.assertEqual(response.getStatus(), httplib.CREATED)
     document_module = self.getDocumentModule()
-    self.assertTrue(filename in document_module.objectIds())
+    self.assertIn(filename, document_module.objectIds())
     self.assertEqual(document_module[filename].getPortalType(), 'Presentation')
     file_object.seek(0)
     self.assertEqual(document_module[filename].getData(), file_object.read())
@@ -170,7 +170,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
     self.assertEqual(response.getStatus(), httplib.CREATED)
     web_page_module = self.getWebPageModule()
-    self.assertTrue(filename in web_page_module.objectIds())
+    self.assertIn(filename, web_page_module.objectIds())
     self.assertEqual(web_page_module[filename].getPortalType(), 'Web Page')
 
     # Edit a new document via FTP/DAV
@@ -261,7 +261,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     self.assertEqual(DateTime(xml_metadata.find('{DAV:}response/'\
                       '{DAV:}propstat/{DAV:}prop/{DAV:}getlastmodified')\
                       .text).ISO8601(),
-                      document.bobobase_modification_time().toZone('UTC').ISO8601())
+                      DateTime(document._p_mtime).toZone('UTC').ISO8601())
 
   @expectedFailure
   def test_PROPFIND_on_document_bis(self):

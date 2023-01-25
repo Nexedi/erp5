@@ -68,7 +68,7 @@ class NewEchoDictTarget:
         self.current_parser = subtag
       else:
         if self._current_object is not None and \
-               not self._current_object.has_key(value):
+               value not in self._current_object:
           # Create default value
           self._current_object[value] = ""
           self._current_key = value
@@ -102,7 +102,7 @@ class NewEchoDictTarget:
   def data(self, data):
     if self._current_key and len(data.strip()):
       # for the element browsed several time
-      if self._current_object.has_key(self._current_key):
+      if self._current_key in self._current_object:
         data = self._current_object[self._current_key] + data
       self._current_object[self._current_key] = data
 
@@ -148,7 +148,7 @@ class EchoDictTarget:
       if root:
         self._current_object = {}
       if self._current_object is not None and \
-             not self._current_object.has_key(value):
+             value not in self._current_object:
         self._current_object[value] = ""
         self._current_key = value
       else:
@@ -171,7 +171,7 @@ class EchoDictTarget:
   def data(self, data):
     if self._current_key and len(data.strip()):
       # for the element browsed several time
-      if self._current_object.has_key(self._current_key):
+      if self._current_key in self._current_object:
         data = self._current_object[self._current_key] + data
       self._current_object[self._current_key] = data
 

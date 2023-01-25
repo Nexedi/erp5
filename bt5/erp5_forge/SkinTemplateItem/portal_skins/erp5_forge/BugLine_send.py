@@ -72,7 +72,7 @@ for to_url in to_url_list:
   mail_message = str(multipart)
   # Bug Message not send email it self.
   #context.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
-  
+
 context.setData(mail_message)
 context.deliver()
 

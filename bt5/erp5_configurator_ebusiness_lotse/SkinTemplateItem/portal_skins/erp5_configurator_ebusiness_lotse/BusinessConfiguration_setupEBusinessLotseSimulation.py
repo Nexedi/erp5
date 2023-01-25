@@ -15,7 +15,7 @@ configuration_save.addConfigurationItem("Advanced Purchase Trade Condition Confi
                                          title="General Purchase Trade Condition",
                                          reference="PTC-General")
 
-rule_simulation_list = context.ConfigurationTemplate_readOOCalcFile("standard_simulation_rule.ods", 
+rule_simulation_list = context.ConfigurationTemplate_readOOCalcFile("standard_simulation_rule.ods",
                           data=getattr(context,'standard_simulation_rule.ods').data)
 
 for rule_dict in rule_simulation_list:
@@ -24,7 +24,7 @@ for rule_dict in rule_simulation_list:
                                           reference = rule_dict['reference'],
                                           trade_phase = rule_dict['trade_phase'])
 
-# Create alarms to launch builders. 
+# Create alarms to launch builders.
 configuration_save.addConfigurationItem("Alarm Configurator Item",
                              title="Invoice Builder Alarm",
                              id="invoice_builder_alarm",
@@ -32,7 +32,7 @@ configuration_save.addConfigurationItem("Alarm Configurator Item",
                              # A clever solution should be provided for the script
                              # bellow
                              active_sense_method_id="Alarm_buildConfiguratorStandardInvoice")
-                             
+
 configuration_save.addConfigurationItem("Alarm Configurator Item",
                              title="Packing List Builder Alarm",
                              id="packing_list_builder_alarm",

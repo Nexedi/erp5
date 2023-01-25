@@ -94,7 +94,7 @@ class PaypalService(XMLObject):
     param_dict = REQUEST.form
     LOG("PaypalService", DEBUG, param_dict)
     param_dict["cmd"] = "_notify-validate"
-    if param_dict.has_key("service"):
+    if "service" in param_dict:
       param_dict.pop("service")
     param_list = urlencode(param_dict)
     paypal_url = self.getLinkUrlString()

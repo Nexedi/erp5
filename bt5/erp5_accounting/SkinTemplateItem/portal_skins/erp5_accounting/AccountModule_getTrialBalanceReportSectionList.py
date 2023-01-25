@@ -77,7 +77,7 @@ for analytic in group_analytic:
         uid_key = 'strict_%s' % analytic_column[0].replace('_translated_title', '_uid')
         group_analytic_uid += (uid_key, )
         extra_columns += ((uid_key, analytic_column[1]),)
-    
+
 
 if show_detailed_balance_columns:
   selection_columns = (

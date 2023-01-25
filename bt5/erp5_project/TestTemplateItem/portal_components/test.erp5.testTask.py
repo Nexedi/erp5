@@ -428,7 +428,7 @@ class TestTaskMixin:
     task = sequence.get('task')
     task_report = sequence.get('task_report')
     task_content_list = task.contentValues()
-    self.assertNotEquals(len(task_content_list), 0)
+    self.assertNotEqual(len(task_content_list), 0)
     self.assertEqual(len(task_report.contentValues()),
                       len(task_content_list))
 
@@ -442,14 +442,14 @@ class TestTaskMixin:
             [line.getQuantity() for line in task_report.contentValues()]
       task_report_price_list = \
             [line.getPrice() for line in task_report.contentValues()]
-      self.assertTrue(task_line.getResource() in task_report_resource_list)
-      self.assertTrue(task_line.getQuantity() in task_report_quantity_list)
-      self.assertTrue(task_line.getPrice() in task_report_price_list)
+      self.assertIn(task_line.getResource(), task_report_resource_list)
+      self.assertIn(task_line.getQuantity(), task_report_quantity_list)
+      self.assertIn(task_line.getPrice(), task_report_price_list)
 
     for task_report_line in task_report.contentValues(portal_type='Task Report Line'):
       simulation_movement = task_report_line.getDeliveryRelatedValue()
       task_line = simulation_movement.getDeliveryValue()
-      self.assert_(task_line.getDescription())
+      self.assertTrue(task_line.getDescription())
       self.assertEqual(task_line.getDescription(),
                        task_report_line.getDescription())
 

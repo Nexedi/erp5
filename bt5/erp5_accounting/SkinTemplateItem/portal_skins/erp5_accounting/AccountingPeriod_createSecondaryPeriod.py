@@ -30,6 +30,6 @@ while date < context.getStopDate():
     period.start()
 
   date = end_date
-  
+
 return context.Base_redirect(form_id,
      keep_items=dict(portal_status_message=translateString('Accounting periods created.')))

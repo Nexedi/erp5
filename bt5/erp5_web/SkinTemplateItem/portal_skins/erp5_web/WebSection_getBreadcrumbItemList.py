@@ -39,9 +39,9 @@
  Typical behaviours include:
 
  - CMS like breadcrumb (hierarchy of contents)
- 
+
  - Wiki like breadcrumb (history of navigation)
- 
+
  - or any other behaviour
 
  The default implementation is hierarchical.
@@ -77,7 +77,7 @@ for chain_index in xrange(0, chain_list_length):
     else:
       title = crumb.Base_getTitle()
   except Unauthorized:
-    # We should ignore any item in the chain which raises 
+    # We should ignore any item in the chain which raises
     # a security exception. We use a catchall except here
     # because there is no way to import Unauthorized permission
     title = None

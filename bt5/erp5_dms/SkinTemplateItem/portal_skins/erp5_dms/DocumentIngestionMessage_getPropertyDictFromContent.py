@@ -1,7 +1,7 @@
 """
   This script is called during the metadata discovery process
   for each document which has been ingested through the email interface
-  by portal contributions. It tries to analyse the text content 
+  by portal contributions. It tries to analyse the text content
   to define the different event parameters.
 
   This version provides only early support.
@@ -27,7 +27,7 @@ reference_search_list = []
 text_search_list = []
 for text, prop_dict in context.getSearchableReferenceList():
   if text: text_search_list.append(text)
-  if prop_dict.has_key('reference'): reference_search_list.append(prop_dict['reference'])
+  if 'reference' in prop_dict: reference_search_list.append(prop_dict['reference'])
 
 # Search reference ticket or project
 follow_up_type_list = context.getPortalProjectTypeList() + context.getPortalTicketTypeList()

@@ -86,7 +86,7 @@ def getPaymentConditionText(order):
       return translateString("${days} Days End of Month", mapping=dict(days=days))
     return translateString("${days} Days", mapping=dict(days=days))
   elif end_of_month:
-    return translateString("End of Month") 
+    return translateString("End of Month")
   return getOrderedDate(order.getStartDate())
 
 def getTaxLineList(order):
@@ -290,7 +290,7 @@ if context.getPortalType() in portal.getPortalOrderTypeList():
   report_title = context.getSimulationState() == "draft" and "Draft Order" or "Order"
 else:
   report_title = context.getSimulationState() == "draft" and "Draft Packing List" or "Packing List"
-  
+
 data_dict = {
   'report_title' : report_title,
   'source_section_title': source_section.getProperty('corporate_name') or\
@@ -317,7 +317,7 @@ data_dict = {
   'source_section_registeredcapital': getSocialCapital(getattr(source_section, 'getSocialCapital', None)\
                            is not None and\
                            source_section.getSocialCapital() or ''),
-                          
+
   'source_administration_title': \
       source_administration.getProperty('corporate_name') \
       or source_administration.getTitle(),
@@ -357,7 +357,7 @@ data_dict = {
           and context.getSourceDecisionValue(portal_type='Organisation').getDefaultImageHeight() \
               * inch_cm_ratio or '',
   'source_decision_address':getOneLineAddress(
-          source_decision is not None and 
+          source_decision is not None and
               source_decision.getDefaultAddressText() or '',
           source_decision is not None and \
               source_decision.getDefaultAddressRegionTitle() or ''),

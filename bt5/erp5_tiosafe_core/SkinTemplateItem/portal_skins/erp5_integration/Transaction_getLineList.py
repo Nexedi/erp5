@@ -46,7 +46,7 @@ for movement in context.getMovementList():
             value = '%.6f' % value
           elif getter == 'getQuantity':
             value = '%.2f' % value
-    
+
     if value is not None:
       movement_dict[key] = value
       property_list.append(value)

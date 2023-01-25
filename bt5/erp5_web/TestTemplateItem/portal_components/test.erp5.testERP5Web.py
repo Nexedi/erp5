@@ -59,7 +59,7 @@ class WebTraversalHookTestMixin(object):
   def test_TraversalHook_on_newContent(self):
     """a WebSiteTraversalHook is added on websections and websites automatically.
     """
-    self.assertEquals(1, len(self.web_section.__before_traverse__))
+    self.assertEqual(1, len(self.web_section.__before_traverse__))
     self.assertIsInstance(
       self.web_section.__before_traverse__.values()[0],
       self.traversal_hook_class)
@@ -68,14 +68,14 @@ class WebTraversalHookTestMixin(object):
     """a WebSiteTraversalHook is correctly updated after cloning a websection/website.
     """
     cloned_web_section = self.web_section.Base_createCloneDocument(batch_mode=True)
-    self.assertEquals(1, len(cloned_web_section.__before_traverse__))
+    self.assertEqual(1, len(cloned_web_section.__before_traverse__))
 
   def test_TraversalHook_on_change_id(self):
     """a TraversalHook is correctly updated after changing websection id.
     """
     self.tic()
     self.web_section.setId("new_id")
-    self.assertEquals(1, len(self.web_section.__before_traverse__))
+    self.assertEqual(1, len(self.web_section.__before_traverse__))
 
   def test_TraversalHook_cleanup_on_edit(self):
     """Old traversal hooks from cloned objects are automatically cleaned up
@@ -91,15 +91,15 @@ class WebTraversalHookTestMixin(object):
       self.web_section,
       DummyTraversalHook(),
       'unrelated_traversal_hook_that_should_be_kept')
-    self.assertEquals(3, len(self.web_section.__before_traverse__))
+    self.assertEqual(3, len(self.web_section.__before_traverse__))
 
     self.tic()
     self.web_section.edit(title=self.id())
     # We have cleaned up the useless before traversal hook, but keep the unrelated one
-    self.assertEquals(2, len(self.web_section.__before_traverse__))
-    self.assertEquals(1, len([hook for hook in
+    self.assertEqual(2, len(self.web_section.__before_traverse__))
+    self.assertEqual(1, len([hook for hook in
       self.web_section.__before_traverse__.values() if isinstance(hook, self.traversal_hook_class)]))
-    self.assertEquals(1, len([hook for hook in
+    self.assertEqual(1, len([hook for hook in
       self.web_section.__before_traverse__.values() if isinstance(hook, DummyTraversalHook)]))
 
 
@@ -329,12 +329,12 @@ Hé Hé Hé!""", page.asText().strip())
     # test redirection to person oobject
     path = website.absolute_url_path() + '/WebSite_redirectToUserView'
     response = self.publish(path, '%s:%s' % (kw['reference'], kw['password']))
-    self.assertTrue(person.getRelativeUrl() in response.getHeader("Location"))
+    self.assertIn(person.getRelativeUrl(), response.getHeader("Location"))
 
     # test redirecting to new Person preference
     path = website.absolute_url_path() + '/WebSite_redirectToUserPreference'
     response = self.publish(path, '%s:%s' % (kw['reference'], kw['password']))
-    self.assertTrue('portal_preferences' in response.getHeader("Location"))
+    self.assertIn('portal_preferences', response.getHeader("Location"))
     # one preference should be created for user
     self.assertEqual(1,
         self.portal.portal_catalog.countResults(**{'portal_type': 'Preference',
@@ -418,7 +418,7 @@ Hé Hé Hé!""", page.asText().strip())
       appropriate language of that default document.
 
       Note: due to generic ERP5 Web implementation this test highly depends
-      on WebSection_geDefaulttDocumentValueList
+      on WebSection_geDefaultDocumentValueList
     """
     self.setupWebSite()
     websection = self.setupWebSection()
@@ -727,16 +727,16 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Obtain documens in various ways.
     default_document = websection.getDefaultDocumentValue()
-    self.assertNotEquals(default_document, None)
+    self.assertNotEqual(default_document, None)
 
     document1 = websection.getDocumentValue('test1')
-    self.assertNotEquals(document1, None)
+    self.assertNotEqual(document1, None)
     document2 = websection.getDocumentValue('test2')
-    self.assertNotEquals(document2, None)
+    self.assertNotEqual(document2, None)
 
     document_list = websection.getDocumentValueList()
-    self.assertNotEquals(document_list, None)
-    self.assertNotEquals(len(document_list), 0)
+    self.assertNotEqual(document_list, None)
+    self.assertNotEqual(len(document_list), 0)
 
     # Check if they have good acquisition wrappers.
     for doc in (default_document, document1, document2) + tuple(document_list):
@@ -766,7 +766,7 @@ Hé Hé Hé!""", page.asText().strip())
       ps.manage_skinLayers(del_skin=1, chosen=('Test ERP5 Web',))
 
     path = ps.getSkinPath(ps.getDefaultSkin())
-    self.assertNotEquals(path, None)
+    self.assertNotEqual(path, None)
     ps.manage_skinLayers(add_skin=1, skinname='Test ERP5 Web',
             skinpath=['test_erp5_web'] + path.split(','))
 
@@ -1052,12 +1052,12 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(content), -1)
+    self.assertNotEqual(response.getBody().find(content), -1)
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(content), -1)
+    self.assertNotEqual(response.getBody().find(content), -1)
 
     # modified the web_page content
     document.edit(text_content=new_content)
@@ -1068,12 +1068,12 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(new_content), -1)
+    self.assertNotEqual(response.getBody().find(new_content), -1)
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(new_content), -1)
+    self.assertNotEqual(response.getBody().find(new_content), -1)
 
   def test_13a_DocumentMovedCache(self):
     """
@@ -1137,11 +1137,11 @@ Hé Hé Hé!""", page.asText().strip())
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(content), -1)
+    self.assertNotEqual(response.getBody().find(content), -1)
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(content), -1)
+    self.assertNotEqual(response.getBody().find(content), -1)
 
     # Modify the web_page content
     # Use unrestrictedTraverse (XXX-JPS reason unknown)
@@ -1171,14 +1171,14 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(web_document.asText().strip(), 'modified text')
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(new_content), -1)
+    self.assertNotEqual(response.getBody().find(new_content), -1)
 
     # Through a web_site.
     web_document = website.restrictedTraverse('NXD-Document.Cache')
     self.assertEqual(web_document.asText().strip(), 'modified text')
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     response = self.publish(path, self.credential)
-    self.assertNotEquals(response.getBody().find(new_content), -1)
+    self.assertNotEqual(response.getBody().find(new_content), -1)
 
   def test_14_AccessWebSiteForWithDifferentUserPreferences(self):
     """Check that Ram Cache Manager do not mix websection
@@ -1240,18 +1240,18 @@ Hé Hé Hé!""", page.asText().strip())
 
     # connect as administrator and check that only developper_mode is enable
     response = self.publish(websection_url, 'administrator:administrator')
-    self.assertTrue('manage_main' in response.getBody())
-    self.assertTrue('manage_messages' not in response.getBody())
+    self.assertIn('manage_main', response.getBody())
+    self.assertNotIn('manage_messages', response.getBody())
 
     # connect as webeditor and check that only translator_mode is enable
     response = self.publish(websection_url, 'webeditor:webeditor')
-    self.assertTrue('manage_main' not in response.getBody())
-    self.assertTrue('manage_messages' in response.getBody())
+    self.assertNotIn('manage_main', response.getBody())
+    self.assertIn('manage_messages', response.getBody())
 
     # anonymous user doesn't exists, check anonymous access without preferences
     response = self.publish(websection_url, 'anonymous:anonymous')
-    self.assertTrue('manage_main' not in response.getBody())
-    self.assertTrue('manage_messages' not in response.getBody())
+    self.assertNotIn('manage_main', response.getBody())
+    self.assertNotIn('manage_messages', response.getBody())
 
   def test_15_Check_LastModified_Header(self):
     """Checks that Last-Modified header set by caching policy manager
@@ -1322,7 +1322,7 @@ Hé Hé Hé!""", page.asText().strip())
     request = portal.REQUEST
 
     # Check a Not Found page is returned
-    self.assertTrue('Not Found' in request.traverse(path)())
+    self.assertIn('Not Found', request.traverse(path)())
     # Check that we try to display a page with 404.error.page reference
     self.assertEqual(request.traverse(path).absolute_url().split('/')[-1],
     '404.error.page')
@@ -1344,7 +1344,7 @@ Hé Hé Hé!""", page.asText().strip())
     website = self.setupWebSite()
     # Check that language in defined in the URL
     self.assertEqual(True, website.getStaticLanguageSelection())
-    self.assertNotEquals(language, website.getDefaultAvailableLanguage())
+    self.assertNotEqual(language, website.getDefaultAvailableLanguage())
 
     websection = self.setupWebSection()
     self.assertEqual(websection.getId(), websection.getTitle())
@@ -1375,7 +1375,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
-    self.assertTrue("Data updated." in response.getBody())
+    self.assertIn("Data updated.", response.getBody())
 
     self.tic()
 
@@ -1400,7 +1400,7 @@ Hé Hé Hé!""", page.asText().strip())
     website = self.setupWebSite()
     # Check that language in defined in the URL
     self.assertEqual(True, website.getStaticLanguageSelection())
-    self.assertNotEquals(language, website.getDefaultAvailableLanguage())
+    self.assertNotEqual(language, website.getDefaultAvailableLanguage())
 
     self.assertEqual(website.getId(), website.getTitle())
 
@@ -1431,7 +1431,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
-    self.assertTrue("Data updated." in response.getBody())
+    self.assertIn("Data updated.", response.getBody())
 
     self.tic()
 
@@ -1466,8 +1466,8 @@ Hé Hé Hé!""", page.asText().strip())
     web_page = self.portal.web_page_module.newContent(portal_type='Web Page',
                                                       content_type='text/x-rst')
     web_page.edit(text_content="`foo`")
-    self.assertTrue('<cite>foo</cite>' in web_page.asEntireHTML(charset='utf-8'))
-    self.assertTrue('<cite>foo</cite>' in web_page.asEntireHTML())
+    self.assertIn('<cite>foo</cite>', web_page.asEntireHTML(charset='utf-8'))
+    self.assertIn('<cite>foo</cite>', web_page.asEntireHTML())
 
   def test_21_WebSiteMap(self):
     """
@@ -1578,6 +1578,66 @@ Hé Hé Hé!""", page.asText().strip())
     # document2 is visible & listed at and above date2
     check(document2, date2)
     check(document2, date3)
+
+  def test_default_page_displayed(self):
+    web_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      text_content='<h1>Hello !</h1>',
+      content_type='text/html',
+      reference=self.id()
+    )
+    web_page.publish()
+    web_site = self.portal.web_site_module.newContent(
+      portal_type='Web Site',
+      aggregate_value=web_page,
+    )
+    web_site.publish()
+    web_section = web_site.newContent(
+      portal_type='Web Section',
+      aggregate_value=web_page,
+    )
+    self.tic()
+
+    for context in web_site, web_section:
+      self.assertTrue(context.getDefaultPageDisplayed())
+      resp = self.publish(context.getPath(), handle_errors=False)
+      self.assertEqual(resp.getStatus(), 200)
+      self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
+      self.assertIn(b'<h1>Hello !</h1>', resp.getBody())
+
+      context.setDefaultPageDisplayed(False)
+      resp = self.publish(context.getPath(), handle_errors=False)
+      self.assertEqual(resp.getStatus(), 200)
+      self.assertEqual(resp.getHeader('Content-type'), 'text/html; charset=utf-8')
+      self.assertNotIn(b'<h1>Hello !</h1>', resp.getBody())
+
+
+  def test_web_section_get_resource_item(self):
+    portal = self.getPortalObject()
+    preference = getattr(portal.portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = portal.portal_preferences.newContent(portal_type='System Preference',
+                                title='Default Site Preference',
+                                id='test_site_preference')
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
+    for category_id in ['test_use_category', 'test_use_category_2']:
+      if not getattr(portal.portal_categories.use, category_id, None):
+        portal.portal_categories.use.newContent(portal_type='Category', title=category_id, id=category_id)
+
+    test_product = getattr(portal.product_module, 'test_product', None)
+    if not test_product:
+      test_product = portal.newContent(portal_type='Product', id='test_product', title='Test Product', use='test_use_category')
+    if test_product.getValidationState() == "draft":
+      test_product.validate()
+
+    preference.setPreferredEventUseList(['test_use_category'])
+    web_site = self.web_site_module.newContent(portal_type='Web Site')
+    self.tic()
+    self.assertEqual(web_site.WebSection_getEventResourceItemList(), [('', ''),('Test Product','test_product')])
+    preference.setPreferredEventUseList(['test_use_category_2'])
+    self.tic()
+    self.assertEqual(web_site.WebSection_getEventResourceItemList(), [('', '')])
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """

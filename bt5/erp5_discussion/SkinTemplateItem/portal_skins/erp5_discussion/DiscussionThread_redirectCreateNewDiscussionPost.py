@@ -4,7 +4,7 @@ preferred_forum_quote_original_message= portal.ERP5Site_getUserPreferredForumSet
 if discussion_post_uid is not None:
   # set title & text_content
   discussion_post = getattr(context, discussion_post_uid)
-  
+
   title = discussion_post.getTitle()
   if not title.lower().startswith('re:'):
     # stop exploding "Re: Re: .." to one level

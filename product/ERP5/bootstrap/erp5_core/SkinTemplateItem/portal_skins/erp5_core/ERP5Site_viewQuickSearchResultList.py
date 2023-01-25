@@ -21,9 +21,9 @@ else:
   search_context = context.getPortalObject()
 
 if field_your_search_text in ('', None):
-  # no search criteria specified, refuse to conduct any search and 
+  # no search criteria specified, refuse to conduct any search and
   # show a message to user
   kw['portal_status_message'] = 'Please specify search criteria.'
   return search_context.Base_redirect('view', keep_items=kw)
-  
+
 return search_context.Base_redirect(field_your_search_form_id, keep_items=kw)

@@ -6,6 +6,9 @@ url_list = [
   "gadget_officejs_jio_pdf_view.js",
   "gadget_officejs_pdf_viewer.json",
   "pdf_viewer_app_logo.svg",
+  "gadget_erp5_page_ojs_pdf_viewer_about.html",
+  "gadget_erp5_page_ojs_pdf_viewer_about.js",
+  "gadget_erp5_page_ojs_about.css",
 
   #pdf_js
   "pdf_js/pdfjs.gadget.html",

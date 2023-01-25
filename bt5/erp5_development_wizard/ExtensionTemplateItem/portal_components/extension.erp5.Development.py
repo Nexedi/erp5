@@ -9,11 +9,11 @@ from Products.PythonScripts.PythonScript import PythonScript
 
 def getMethodObject(self, method_id):
   return Method(method_id)
-  
+
 def editForm(self, form, update_dicts):
   for key, value in update_dicts.items():
     setattr(form, key, value)
-    
+
 def Base_runPythonCode(self, code):
   """
     Run python code
@@ -28,7 +28,7 @@ def Base_runPythonCode(self, code):
   exec(compile(python_wrapper_code,"-","exec"))
   wrapper = CodeWrapper()
   return wrapper.runMethod(self)
-  
+
 
 def Base_runPythonScript(self, code):
   script = PythonScript('Python Shell Script').__of__(self)
@@ -48,7 +48,7 @@ def getPythonCodeExecutionError(self):
     raise
   except :
     result = sys.exc_info()
-  
+
   return result[1]
 
 
@@ -58,7 +58,7 @@ def updateCodeWithMainContent(self, html_code, div_class):
    main_content = """
        <div class="%s">
         __REPLACE_MAIN_CONTENT__
-      </div>      
+      </div>
    """ % (div_class)
    document = lxml.html.fromstring(html_code)
    element_list = document.find_class(div_class)
@@ -71,5 +71,5 @@ def updateCodeWithMainContent(self, html_code, div_class):
      new_element.set('id', element.get('id'))
    element.getparent().replace(element, new_element)
    new_html_code = lxml.html.tostring(document, pretty_print=True)
-   return new_html_code.replace("__REPLACE_MAIN_CONTENT__", 
+   return new_html_code.replace("__REPLACE_MAIN_CONTENT__",
                                 '<tal:block metal:define-slot="main"/>')

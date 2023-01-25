@@ -70,7 +70,9 @@
         <item>
             <key> <string>category_type</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>source_arrow</string>
+              </tuple>
             </value>
         </item>
         <item>

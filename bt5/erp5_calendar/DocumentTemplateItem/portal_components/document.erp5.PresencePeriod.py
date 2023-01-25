@@ -184,7 +184,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
 
     # We use 366*28 below, because gregorian calendar repeat itself every 28 years, so we
     # don't need to loop more than this if we don't find a date, because it might be an
-    # impossible combination of week and month (eg. week number 30 can not be in January) 
+    # impossible combination of week and month (eg. week number 30 can not be in January)
     for _ in range(366 * 28):
       if (self._validateDay(next_start_date)) and \
          (self._validateWeek(next_start_date)) and \

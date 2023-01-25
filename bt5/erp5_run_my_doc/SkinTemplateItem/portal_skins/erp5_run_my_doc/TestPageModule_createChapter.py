@@ -11,7 +11,7 @@ if image_caption in [None, ""]:
   image_caption = chapter_title
 
 session = context.ERP5Site_acquireRunMyDocsSession()
-if session.has_key('listbox') and len(session['listbox']) > 0:
+if 'listbox' in session and len(session['listbox']) > 0:
   listbox = session['listbox']
   int_index = listbox[-1].int_index + 1
 else:
@@ -46,5 +46,5 @@ listbox.append(newTempBase(context.getPortalObject(),
                  ))
 
 session['listbox'] = listbox
-return context.Base_redirect('TestPageModule_viewChapterCreationWizardDialog', 
+return context.Base_redirect('TestPageModule_viewChapterCreationWizardDialog',
                              keep_items = dict(portal_status_message=portal_status_message))

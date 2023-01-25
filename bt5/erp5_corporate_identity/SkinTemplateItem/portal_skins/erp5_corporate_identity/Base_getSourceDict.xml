@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source=None, override_logo_reference=None, override_source_person_title=None, override_source_organisation_title=None, theme_logo_url=None</string> </value>
+            <value> <string>source=None, override_logo_reference=None, override_source_person_title=None, override_source_organisation_title=None, theme_logo_url=None, letter_context=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

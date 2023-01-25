@@ -1,5 +1,5 @@
 # Only save basic personal information for an ecommerce website
-translateString = context.Base_translateString 
+translateString = context.Base_translateString
 
 context.Base_edit(form_id='Person_viewAsWeb')
 

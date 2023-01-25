@@ -95,9 +95,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     return getattr(self.portal, 'portal_categories', None)
 
   def test_00_HasEverything(self):
-    self.assertNotEquals(self.getCategoriesTool(), None)
-    self.assertNotEquals(self.getPersonModule(), None)
-    self.assertNotEquals(self.getOrganisationModule(), None)
+    self.assertNotEqual(self.getCategoriesTool(), None)
+    self.assertNotEqual(self.getPersonModule(), None)
+    self.assertNotEqual(self.getOrganisationModule(), None)
 
   def afterSetUp(self):
     self.login()
@@ -489,7 +489,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.portal.portal_categories.resolveCategory('region/europe/ouest'))
     # documents using this category are updated
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
-    self.assertTrue(p1 in west.getRegionRelatedValueList())
+    self.assertIn(p1, west.getRegionRelatedValueList())
     # category itself is also updated
     self.assertEqual(['region/europe/ouest'], west.getCategoryList())
     self.assertEqual(['region/europe/ouest/france'], west.france.getCategoryList())
@@ -513,7 +513,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.portal.portal_categories.resolveCategory('region/west'))
     # documents using this category are updated
     self.assertEqual(p1.getRegion(), 'west/france')
-    self.assertTrue(p1 in west.getRegionRelatedValueList())
+    self.assertIn(p1, west.getRegionRelatedValueList())
     # category itself is also updated ( but we need to get it in its new acquisition context )
     self.assertEqual(['region/west'], self.portal.portal_categories.region.west.getCategoryList())
 
@@ -536,8 +536,8 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.portal.portal_categories.resolveCategory('region/europe/west'))
     self.assertEqual(p1.getRegion(), 'europe/west/france')
     # documents using the category are not member of the copy
-    self.assertTrue('west/france' not in p1.getRegionList())
-    self.assertTrue(p1 in west.getRegionRelatedValueList())
+    self.assertNotIn('west/france', p1.getRegionList())
+    self.assertIn(p1, west.getRegionRelatedValueList())
 
   def test_14_MultiplePortalTypes(self):
     """ Checks that categories support different value per portal_type,
@@ -650,7 +650,7 @@ class TestCMFCategory(ERP5TypeTestCase):
           portal_type = 'Organisation')
     obj.setCategoryList(['test_base_cat/test_cat'])
     self.tic()
-    self.assert_(obj in [x.getObject() for x in test.getCategoryMemberValueList()])
+    self.assertIn(obj, [x.getObject() for x in test.getCategoryMemberValueList()])
 
   def test_18_CategoryIsMemberOfSelf(self):
     """
@@ -916,7 +916,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     else:
       o1 = organisation_module._getOb(self.id1)
 
-    self.assertRaisesRegexp(
+    self.assertRaisesRegex(
       TypeError,
       'This method only takes a string or an iterable of strings as parameter.',
       p1.setCareerSubordination,
@@ -1217,11 +1217,11 @@ class TestCMFCategory(ERP5TypeTestCase):
     category_tool = portal.portal_categories
     module = portal.sale_order_module
     order = module.newContent(id='foo', portal_type='Sale Order')
-    self.assertNotEquals(order, None)
+    self.assertNotEqual(order, None)
     line = order.newContent(id='bar', portal_type='Sale Order Line')
-    self.assertNotEquals(line, None)
+    self.assertNotEqual(line, None)
     cell = line.newContent(id='baz', portal_type='Sale Order Cell')
-    self.assertNotEquals(cell, None)
+    self.assertNotEqual(cell, None)
     self.tic()
 
     for relative_url, value in (
@@ -1281,11 +1281,11 @@ class TestCMFCategory(ERP5TypeTestCase):
   def test_CategoryTool_FolderInterface(self):
     # minimal tests for Folder methods on Category Tool
     category_tool = self.portal.portal_categories
-    self.assertNotEquals([], list(category_tool.contentValues()))
-    self.assertNotEquals([], list(category_tool.contentIds()))
-    self.assertNotEquals([], list(category_tool.objectValues()))
-    self.assertNotEquals([], list(category_tool.objectIds()))
-    self.assertNotEquals([], list(category_tool.searchFolder()))
+    self.assertNotEqual([], list(category_tool.contentValues()))
+    self.assertNotEqual([], list(category_tool.contentIds()))
+    self.assertNotEqual([], list(category_tool.objectValues()))
+    self.assertNotEqual([], list(category_tool.objectIds()))
+    self.assertNotEqual([], list(category_tool.searchFolder()))
 
   def test_duplicate_base_category_id_in_categories_list_properties(self):
     """check that stored values like 'region/region/west' on categories property
@@ -1395,7 +1395,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     category_tool.test1._setRelatedLocallyIndexed(True)
     check()
     related_list = sorted(a.getTest1RelatedList())
-    self.assertTrue(person.getRelativeUrl() in related_list)
+    self.assertIn(person.getRelativeUrl(), related_list)
     self.assertEqual(related_list, sorted(x.getRelativeUrl()
       for x in self.portal.portal_catalog(test1_uid=a.getUid())))
     related = organisation._related_index
@@ -1416,25 +1416,25 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(list(related), [person.getRelativeUrl()])
     person._setTest1Value(a)
     self.assertEqual(list(related), [])
-    
+
   def test_Category_setCategoryValue(self):
     # Test all case of setting categories values
     region_value = self.portal.portal_categories.resolveCategory('region/europe')
     region_value2 = self.portal.portal_categories.resolveCategory('region/europe/west')
     self.assertNotEqual(None,region_value)
     self.assertNotEqual(None,region_value2)
-    
+
     newPerson = self.getPersonModule().newContent
     person = newPerson()
     person.setRegionValue(region_value)
     person2 = newPerson(region_value=region_value2)
-    
+
     self.tic()
-    
+
     self.assertEqual(person.getRegion(), 'europe')
-    self.assertTrue('region/europe' in person.getCategoryList())
+    self.assertIn('region/europe', person.getCategoryList())
     self.assertEqual(person2.getRegion(), 'europe/west')
-    self.assertTrue('region/europe/west' in person2.getCategoryList())
+    self.assertIn('region/europe/west', person2.getCategoryList())
 
 
 def test_suite():

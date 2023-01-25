@@ -6,7 +6,7 @@ search_list = context.getCausalityValueList(
 selection_uid_list = [x.getUid() for x in search_list]
 
 request=context.REQUEST
-if len(selection_uid_list) != 0 : 
+if len(selection_uid_list) != 0 :
   kw = {'uid': selection_uid_list}
   context.portal_selections.setSelectionParamsFor('Base_jumpToRelatedObjectList', kw)
   request.set('uids', selection_uid_list)

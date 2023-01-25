@@ -79,7 +79,8 @@
 .ci-book .ci-book-box-offer-milestone div,
 .ci-book .ci-book-box-offer div b,
 .ci-book .ci-book-box-offer-line div b,
-.ci-book .ci-book-box-offer-milestone div b {
+.ci-book .ci-book-box-offer-milestone div b,
+.ci-book table tr td pre {
   font-size: 3.704167mm; /* 10.5pt; */ /* 14px; */ /* 8px; */
 }
 

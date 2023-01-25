@@ -67,7 +67,7 @@ class TestApparelModel(ERP5TypeTestCase):
           path = path[cat_id]
     # check categories have been created
     for cat_string in self.getNeededCategoryList():
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -149,20 +149,40 @@ class TestApparelModel(ERP5TypeTestCase):
     acrylique = apparel_model.getCell(
         'composition/acrylique',
         base_id = 'composition')
-    self.assertNotEquals(acrylique, None)
+    self.assertNotEqual(acrylique, None)
     self.assertEqual(acrylique.getProperty('quantity'), 0.88)
 
     elasthane = apparel_model.getCell(
         'composition/elasthane',
         base_id = 'composition')
-    self.assertNotEquals(elasthane, None)
+    self.assertNotEqual(elasthane, None)
     self.assertEqual(elasthane.getProperty('quantity'), 0.12)
 
     # check indexes are present
-    self.assertTrue(apparel_model.index.has_key('composition'))
+    self.assertIn('composition', apparel_model.index)
     index = apparel_model.index['composition'][0]
-    self.assertTrue(index.has_key('composition/elasthane'))
-    self.assertTrue(index.has_key('composition/acrylique'))
+    self.assertIn('composition/elasthane', index)
+    self.assertIn('composition/acrylique', index)
+
+  def test_apparel_model_content_init(self):
+    portal = self.getPortalObject()
+    preference = getattr(portal.portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = portal.portal_preferences.newContent(portal_type='System Preference',
+                                title='Default Site Preference',
+                                id='test_site_preference')
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(['size'])
+    self.tic()
+    apparel_model_module = portal.getDefaultModule('Apparel Model')
+    apparel_model = apparel_model_module.newContent(portal_type='Apparel Model')
+    colour_variation = apparel_model.newContent(portal_type='Apparel Model Colour Variation')
+    self.assertEqual(colour_variation.getVariationBaseCategoryList(), [])
+    preference.setPreferredApparelModelIndividualVariationBaseCategoryList(['colour'])
+    self.tic()
+    colour_variation = apparel_model.newContent(portal_type='Apparel Model Colour Variation')
+    self.assertEqual(colour_variation.getVariationBaseCategoryList(), ['colour'])
 
   def test_checkCopyColourRangeVariation(self):
     '''

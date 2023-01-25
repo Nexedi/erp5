@@ -8,5 +8,5 @@ for method in amortisation_method_list:
   display = method[1].title or id
   display = context.Base_translateString(display, 'content')
   return_list.append( ('(%s) %s' % (method[0], display), '%s/%s' % (method[0], id) ) )
-    
+
 return [(context.Base_translateString('Default Amortisation Data'),'')] + return_list

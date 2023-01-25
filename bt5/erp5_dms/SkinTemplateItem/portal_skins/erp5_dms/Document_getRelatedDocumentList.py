@@ -18,14 +18,14 @@ def getRelatedLatest(category):
   funcname = 'get%sValueList' % convertToUpperCase(category)
   func = getattr(context, funcname)
   return [o.getLatestVersionValue() for o in func()]
-  
+
 relation_id = kw.get('relation_id') # XXX-JPS Change 'what' to more explicit name and include in API of script
 
 if relation_id == 'wiki_predecessor':
   return [i.getObject()
           for i in context.getImplicitPredecessorValueList()]
 if relation_id == 'wiki_successor':
-  return [i.getObject() 
+  return [i.getObject()
           for i in context.getImplicitSuccessorValueList()]
 if relation_id.startswith('related'):
   return getRelatedLatest(relation_id[8:])

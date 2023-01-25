@@ -18,7 +18,7 @@ ordered_global_action_list = portal.getOrderedGlobalActionList(global_action_lis
 # Initialise query
 query_list = []
 
-# Assemble query 
+# Assemble query
 for action in ordered_global_action_list:
   workflow_id = action.get('workflow_id', None)
   worklist_id = action.get('worklist_id', None)

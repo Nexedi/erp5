@@ -91,7 +91,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
 
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
     self.tic()
@@ -113,7 +113,7 @@ class TestPredicateMixIn(ERP5TypeTestCase):
       predicate_folder = self.getPortal().newContent(
                                         portal_type = 'Folder',
                                         id = PREDICATE_FOLDER_NAME)
-    self.assertTrue('Predicate' in [x.id for x in
+    self.assertIn('Predicate', [x.id for x in
                     predicate_folder.allowedContentTypes()])
     return predicate_folder
 
@@ -521,13 +521,13 @@ class TestPredicates(TestPredicateMixIn):
 
     predicate_without_membership_values = self.createPredicate(
       membership_criterion_base_category_list=['group'])
-    self.assert_(test(predicate_without_membership_values.searchResults))
+    self.assertTrue(test(predicate_without_membership_values.searchResults))
 
     predicate_with_membership_values = self.createPredicate(
       membership_criterion_base_category_list=['group'],
       membership_criterion_category_list=GROUP_STOREVER_PATH,
       )
-    self.assert_(test(predicate_with_membership_values.searchResults))
+    self.assertTrue(test(predicate_with_membership_values.searchResults))
 
   def test_MultiValuedMembershipCriterion_SQLQuery(self, quiet=QUIET, run=RUN_ALL_TESTS):
     """
@@ -542,13 +542,13 @@ class TestPredicates(TestPredicateMixIn):
 
     predicate_without_membership_values = self.createPredicate(
       multimembership_criterion_base_category_list=['group'])
-    self.assert_(test(predicate_without_membership_values.searchResults))
+    self.assertTrue(test(predicate_without_membership_values.searchResults))
 
     predicate_with_membership_values = self.createPredicate(
       multimembership_criterion_base_category_list=['group'],
       membership_criterion_category_list=GROUP_STOREVER_PATH,
       )
-    self.assert_(test(predicate_with_membership_values.searchResults))
+    self.assertTrue(test(predicate_with_membership_values.searchResults))
 
   def test_PropertyCriterion(self):
     movement = self.portal.newContent(temp_object=True, portal_type='Movement', id='tmp')
@@ -654,7 +654,7 @@ class TestPredicates(TestPredicateMixIn):
     self.assertFalse(getattr(predicate, '_identity_criterion', None) is None)
     self.assertFalse(getattr(predicate, '_range_criterion', None) is None)
 
-    
+
   def test_predicateIndexation(self):
     predicate = self.createPredicate(
       membership_criterion_base_category_list = ['region'],

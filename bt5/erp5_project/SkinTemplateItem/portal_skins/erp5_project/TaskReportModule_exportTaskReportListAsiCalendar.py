@@ -2,7 +2,7 @@
 """
 from zExceptions import Unauthorized
 # XXX bypass CookieCrumbler
-if context.REQUEST.AUTHENTICATED_USER.getUserName() == 'Anonymous User': 
+if context.REQUEST.AUTHENTICATED_USER.getUserName() == 'Anonymous User':
   if context.REQUEST.get('disable_cookie_login__', 0) \
           or context.REQUEST.get('no_infinite_loop', 0)  :
     raise Unauthorized(context)
@@ -57,10 +57,10 @@ PRIORITY:%(priority)s""" % ( {
   return printed
 
 print """BEGIN:VCALENDAR
-PRODID:-//ERP5//NONSGML Task Report Module//EN 
+PRODID:-//ERP5//NONSGML Task Report Module//EN
 VERSION:2.0"""
 obj_list = context.getPortalObject().portal_selections.callSelectionFor("task_report_module_selection")
-for obj in obj_list : 
+for obj in obj_list :
   print printTask(obj.getObject())
 print "END:VCALENDAR"
 

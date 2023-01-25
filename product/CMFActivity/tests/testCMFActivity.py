@@ -450,11 +450,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     active_process = activity_tool.newActiveProcess()
     self.assertEqual(self.title1,organisation.getTitle())
 
-    # Post SQLjoblib tasks with explicit signature 
+    # Post SQLjoblib tasks with explicit signature
     organisation.activate(activity=activity,active_process=active_process, signature=1).getTitle()
     organisation.activate(activity=activity,active_process=active_process, signature=2).getTitle()
     organisation.activate(activity=activity,active_process=active_process, signature=3).getTitle()
-    
+
     self.commit()
     activity_tool.distribute()
     activity_tool.tic()
@@ -1546,7 +1546,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # on REQUEST information when the method was activated.
     request = self.portal.REQUEST
 
-    request.setServerURL('http', 'test.erp5.org', '9080')
+    request.setServerURL('http', 'test.erp5.org', 9080)
     request.other['PARENTS'] = [self.portal.organisation_module]
     request.setVirtualRoot('virtual_root')
 
@@ -1565,7 +1565,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
       # REQUEST, such as TimerServer.
-      request.setServerURL('https', 'anotherhost.erp5.org', '443')
+      request.setServerURL('https', 'anotherhost.erp5.org', 443)
       request.other['PARENTS'] = [self.app]
       request.setVirtualRoot('')
       # obviously, the object url is different
@@ -2470,7 +2470,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = self.portal.MailHost._message_list
     del message_list[:]
     activity_tool = self.portal.portal_activities
-        
+
     kw = {}
     self._catch_log_errors(subsystem='CMFActivity')
     try:
@@ -2835,3 +2835,44 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
     finally:
       setSecurityManager(initial_security_manager)
       del Organisation.checkUserGroupAndRole
+
+  @for_each_activity
+  def test_dummyGroupMethodUser(self, activity):
+    activity_tool = self.portal.portal_activities
+    user_folder = self.portal.acl_users
+    expected_user_list = [
+      PropertiedUser(id='user1', login='user1').__of__(user_folder),
+      PropertiedUser(id='user2', login='user2').__of__(user_folder),
+    ]
+    for index, user in enumerate(expected_user_list):
+      user._addGroups(groups=['role %i' % index])
+    context_list = [
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+      for _ in expected_user_list
+    ]
+    self.tic()
+    user_list = [None for _ in expected_user_list]
+    def doSomething(self, index):
+      user_list[index] = getSecurityManager().getUser()
+    Organisation.doSomething = doSomething
+    try:
+      initial_security_manager = getSecurityManager()
+      try:
+        for index, (context, user) in enumerate(zip(
+          context_list,
+          expected_user_list,
+        )):
+          newSecurityManager(None, user)
+          context.activate(
+            activity=activity,
+            group_method_id=None,
+          ).doSomething(index=index)
+      finally:
+        setSecurityManager(initial_security_manager)
+      self.tic()
+    finally:
+      del Organisation.doSomething
+    self.assertEqual(
+      [x.getRoles() for x in user_list],
+      [x.getRoles() for x in expected_user_list],
+    )

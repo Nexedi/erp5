@@ -6,4 +6,4 @@ import string
 import random
 
 
-return str(DateTime().millis()) + '-' + ''.join(random.sample(string.letters+string.digits, random.randint(min_len,max_len)))
+return str(DateTime().millis()) + '-' + ''.join(random.sample(string.ascii_letters+string.digits, random.randint(min_len,max_len)))

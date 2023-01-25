@@ -16,19 +16,19 @@
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string>python: context.getPortalType() in (\'Email\', \'Fax\', \'Telephone\',)</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>expression_cache_key</string> </key>
             <value>
-              <tuple>
-                <string>portal_type</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>filtered</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

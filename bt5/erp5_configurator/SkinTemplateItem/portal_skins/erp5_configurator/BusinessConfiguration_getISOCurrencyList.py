@@ -4,7 +4,7 @@ if empty_first_element:
   result = [['', ''],]
 
 filename = "standard_currency_list.ods"
-rows = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, 
+rows = CachingMethod(context.ConfigurationTemplate_readOOCalcFile,
                       script.getId(),
                       cache_factory="erp5_content_long")(filename)
 

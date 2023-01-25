@@ -1,5 +1,5 @@
 """
-  This script gets list of Discussion Thread for a Forum using catalog. 
+  This script gets list of Discussion Thread for a Forum using catalog.
   Due to asynchronous nature of catalog it can use
   passed from REQUEST not index yet threads.
 """

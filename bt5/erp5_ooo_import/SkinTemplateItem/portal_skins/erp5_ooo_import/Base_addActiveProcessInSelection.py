@@ -1,5 +1,5 @@
 '''
-  Add an active process in the selection 
+  Add an active process in the selection
 '''
 user_name = context.portal_membership.getAuthenticatedMember().getId()
 

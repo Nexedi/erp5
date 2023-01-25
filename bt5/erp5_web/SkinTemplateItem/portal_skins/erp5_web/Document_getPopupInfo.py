@@ -1,5 +1,5 @@
-""" 
-    Generate current document's information structure needed to be rendered 
+"""
+    Generate current document's information structure needed to be rendered
     by web widget Document_viewPopupTemplate.
 """
 from zExceptions import Unauthorized
@@ -9,27 +9,27 @@ doc_info['owner_list'] = context.Base_getOwnerInfoList()
 
 if context.getModificationDate() is not None:
   doc_info['modification_date'] = context.Base_getDiffBetweenDateAndNow(context.getModificationDate())
-  
+
 publication_date = context.Document_getLastWorkflowStateEntryDate(state=('public,'),
                                                                   state_name='validation_state')
 if publication_date is not None:
   doc_info['publication_date'] = context.Base_getDiffBetweenDateAndNow(publication_date)
-  
+
 release_date = context.Document_getLastWorkflowStateEntryDate(state=('released,'),
                                                               state_name='validation_state')
 if release_date is not None:
   doc_info['release_date'] = context.Base_getDiffBetweenDateAndNow(release_date)
-  
+
 try:
   doc_info['status'] = context.getTranslatedValidationStateTitle() or ''
 except AttributeError:
   doc_info['status'] = ''
-  
+
 try:
   doc_info['group'] = context.getGroupTitle() or ''
 except AttributeError:
   doc_info['group'] = ''
-  
+
 try:
   doc_info['project'] = context.getFollowUpTitle(checked_permission='View') or ''
 except (AttributeError, Unauthorized):

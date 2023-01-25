@@ -1,5 +1,5 @@
 """
-  This script redirects the current user to its 
+  This script redirects the current user to its
   active preference. If a user has no preference
   yet, then it creates a new preference and redirects
   to it. In case a failure, a message is displayed.
@@ -22,7 +22,7 @@ if not len(user_preference_list):
   # if no preference exists
   try:
     user_preference = portal_preferences.newContent(
-                                         portal_type='Preference', 
+                                         portal_type='Preference',
                                          title='Preference for %s' %user)
     user_preference.enable()
   except Unauthorized:

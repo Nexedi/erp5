@@ -43,9 +43,9 @@ js_string = """
                         "portal_configurator/getInstallationStatusReport?active_process_id=%s",
                         true);
        //xhr_object.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-       xhr_object.setRequestHeader("Content-Type", "text/html");  
-       xhr_object.setRequestHeader("Cache-Control", "no-cache" ) 
-       xhr_object.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT" ) 
+       xhr_object.setRequestHeader("Content-Type", "text/html");
+       xhr_object.setRequestHeader("Cache-Control", "no-cache" )
+       xhr_object.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT" )
        xhr_object.send(null);
     }
 

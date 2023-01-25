@@ -16,7 +16,7 @@ form = getattr(box, form_id)
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix=form_fields_main_prefix)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
@@ -25,7 +25,7 @@ except FormValidationError, validation_errors:
   # Make sure editors are pushed back as values into the REQUEST object
   for f in form.get_fields():
     field_id = f.id
-    if request.has_key(field_id):
+    if field_id in request:
       value = request.get(field_id)
       if callable(value):
         value(request)
@@ -59,9 +59,9 @@ if not synchronous_mode:
 
 # determine redirect URL as passed from gadget preference form
 if gadget_redirect_url is None:
-  # taking URL1 as the base of the original URL. 
+  # taking URL1 as the base of the original URL.
   # it works for both synchronous and  asynchronous gadgets
   gadget_redirect_url = request['URL1']
 request.RESPONSE.redirect('%s?portal_status_message=%s'
-                           %(gadget_redirect_url, 
+                           %(gadget_redirect_url,
                              context.Base_translateString('Preference updated.')))

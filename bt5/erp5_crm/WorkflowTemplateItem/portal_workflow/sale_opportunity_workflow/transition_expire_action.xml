@@ -19,7 +19,6 @@
             <value>
               <tuple>
                 <string>action_type/workflow</string>
-                <string>before_script/portal_workflow/sale_opportunity_workflow/script_SaleOpportunity_checkConsistency</string>
                 <string>after_script/portal_workflow/sale_opportunity_workflow/transition_expire</string>
               </tuple>
             </value>

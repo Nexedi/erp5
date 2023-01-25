@@ -10,7 +10,7 @@ import re
 import getopt
 import glob
 import cgi
-import six.moves import .urllib
+from six.moves import urllib
 import multifile
 if six.PY2:
     from email import message_from_file as message_from_bytes

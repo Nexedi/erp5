@@ -17,12 +17,14 @@
             <loc tal:content="menu_item/url" />
           </url>
           <tal:block metal:define-macro="generateTree">
-            <url tal:repeat="item menu_item/subsection">
-              <loc tal:content="item/url" />
+            <tal:block tal:repeat="item menu_item/subsection">
+              <url>
+                <loc tal:content="item/url" />
+              </url>
               <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">
-                <metal:call use-macro="here/WebSection_viewSiteMapAsXML/macros/generateTree" />
+                <metal:call use-macro="here/WebSite_viewSiteMapAsXML/macros/generateTree" />
               </tal:recurse>
-            </url>
+            </tal:block>
           </tal:block>
         </tal:block>
       </tal:block>

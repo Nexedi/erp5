@@ -123,7 +123,7 @@
             submit_action: true
           });
         });
-    })
+    }, {mutex: 'render'})
 
     /////////////////////////////////////////
     // Form submit
@@ -141,7 +141,7 @@
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
+    }, {mutex: 'render'})
 
     .declareService(function () {
       var gadget = this;

@@ -679,7 +679,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:used_ALREADY_1234',
     )
-    self.assertTrue('Welcome to ERP5' in response.getBody())
+    self.assertIn('Welcome to ERP5', response.getBody())
     self.assertFalse(login.isLoginBlocked())
 
     publish = partial(
@@ -750,7 +750,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:used_ALREADY_1234',
     )
-    self.assertTrue('Welcome to ERP5' in response.getBody())
+    self.assertIn('Welcome to ERP5', response.getBody())
 
     # test external redirection prevention
     response = self.publish(

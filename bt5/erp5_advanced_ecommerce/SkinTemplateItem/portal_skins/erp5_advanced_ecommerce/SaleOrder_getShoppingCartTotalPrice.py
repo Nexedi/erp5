@@ -1,11 +1,11 @@
-""" 
+"""
   Calculate total price of temporary RAM based Sale Order.
 
   Price is based on three main components:
     - shopping cart items
     - shipping costs (same as applicable taxes including type of shopping cart item
       for example online materials doesn't require shipping)
-  
+
   Script can optionally include currency.
 """
 web_site = context.getWebSiteValue()

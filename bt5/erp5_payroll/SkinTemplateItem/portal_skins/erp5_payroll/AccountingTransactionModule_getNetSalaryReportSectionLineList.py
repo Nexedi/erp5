@@ -3,7 +3,6 @@ from DateTime import DateTime
 
 request = context.REQUEST
 portal = context.getPortalObject()
-translateString = portal.Base_translateString
 
 net_salary_base_amount_uid = \
               portal.portal_categories.base_amount.payroll.report.salary.net.getUid()

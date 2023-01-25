@@ -1,5 +1,0 @@
-TODO:
-- move external source categories and update parameters to erp5_dms
-- use text_content for content rather than description
-- review code
-- verify catalog configuration (result table versioning) and presence of appropriate dates in versioning table

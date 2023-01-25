@@ -1,6 +1,6 @@
 '''
   this script return a list of catorgory Items
-  It's used in the Pay Sheet Model to return all category slices 
+  It's used in the Pay Sheet Model to return all category slices
   corresponding to childs of the selection of the base category in the view
 '''
 

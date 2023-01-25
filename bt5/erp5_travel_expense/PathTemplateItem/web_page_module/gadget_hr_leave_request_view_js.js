@@ -32,7 +32,8 @@
         return gadget.allDocs({
           query: 'portal_type:"Service" AND use:"hr/leave%"',
           select_list: ['relative_url', 'title'],
-          limit: [0, 100]
+          limit: [0, 100],
+          sort_on: [['title', 'descending']]
         });
       })
       .push(function (result) {

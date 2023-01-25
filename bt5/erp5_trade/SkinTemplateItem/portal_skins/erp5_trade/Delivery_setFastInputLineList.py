@@ -1,6 +1,6 @@
 """
-  This script creates or updates trade document lines based on the fast 
-  input information.It should take into account any trade document line 
+  This script creates or updates trade document lines based on the fast
+  input information.It should take into account any trade document line
   which were already created so that they are not duplicated.
 """
 from Products.ERP5Type.Message import translateString

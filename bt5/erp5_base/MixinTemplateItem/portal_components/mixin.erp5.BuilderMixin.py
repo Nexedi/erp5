@@ -254,7 +254,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           delta = inventory_item.inventory - min_stock
           node_uid = inventory_item.node_uid
           # if node_uid is provided, we have to look at all provided nodes
-          if kw.has_key('node_uid'):
+          if 'node_uid' in kw:
             node_uid = kw['node_uid']
           optimized_kw = {}
           if kw.get('group_by_variation', 1):

@@ -110,7 +110,7 @@ def generateConfigurationList(self, test_suite_title):
   remaining_nodes = list(available_nodes)
   launcher_nodes = []
   launcher_nodes.append( remaining_nodes.pop() )
-  
+
   # Make list with only the computer_guid property of each node (to be used directly by template)
   remaining_nodes_computer_guid = [unvalid_node] + [ node.getReference() for node in remaining_nodes ] + [unvalid_node]
   launcher_nodes_computer_guid = [ node.getReference() for node in launcher_nodes ]
@@ -149,6 +149,6 @@ def generateConfigurationList(self, test_suite_title):
     computer_guid = node.getReference()
     if _isInMyDictOrListRec(return_dict, computer_guid):
       involved_nodes_computer_guid.append(computer_guid)
-    
+
   return_dict['involved_nodes_computer_guid'] = involved_nodes_computer_guid
   return return_dict

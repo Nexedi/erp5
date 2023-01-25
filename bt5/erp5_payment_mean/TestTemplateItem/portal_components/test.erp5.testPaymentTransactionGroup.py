@@ -75,7 +75,7 @@ class TestPaymentTransactionGroupConstraint(ERP5TypeTestCase):
     ti.setTypePropertySheetList(
         [ps for ps in ti.getTypePropertySheetList() if ps != 'PaymentTransactionGroupConstraint'])
     self.commit()
-  
+
   def test_constraints(self):
     ptg = self.portal.payment_transaction_group_module.newContent(
         portal_type='Payment Transaction Group',
@@ -293,7 +293,7 @@ class TestPaymentTransactionGroupPaymentSelection(AccountingTestCase):
         'default',
         render_format='list',)
     self.assertEqual(
-        sorted([(line.is_stat_line, line['Movement_getMirrorSectionTitle'], line['total_quantity']) 
+        sorted([(line.is_stat_line, line['Movement_getMirrorSectionTitle'], line['total_quantity'])
                  for line in line_list if not line.is_title_line]),
         [(0, 'Client 1', 100.0), (0, 'Client 2', 200.0), (1, None, 300.0)],
     )

@@ -290,7 +290,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell</string> </value>
+            <value> <string>python: str(cell)</string> </value>
         </item>
       </dictionary>
     </pickle>

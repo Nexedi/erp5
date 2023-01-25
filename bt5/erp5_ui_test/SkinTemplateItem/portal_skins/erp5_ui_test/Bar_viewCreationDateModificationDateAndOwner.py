@@ -18,6 +18,7 @@ def format_date(date):
 creation_date = format_date(context.getCreationDate())
 modification_date = format_date(context.getModificationDate())
 owner = context.Base_getOwnerTitle()
+container.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
 return """
 <html>
   <body>

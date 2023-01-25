@@ -2,7 +2,7 @@
   This script just returns what the user entered in
   the fast input form, searches for the product whose
   reference or title has been just entered and updates
-  the total price and the stock corresponding to the 
+  the total price and the stock corresponding to the
   product
 """
 no_inventory = False

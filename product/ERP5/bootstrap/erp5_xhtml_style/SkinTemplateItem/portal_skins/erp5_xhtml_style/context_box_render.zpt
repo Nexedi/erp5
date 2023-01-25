@@ -159,7 +159,7 @@
           <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>
         </button>
         <tal:block tal:condition="not: list_mode">
-          <tal:block tal:condition="request/selection_index | nothing">
+          <tal:block tal:condition="request/selection_name | nothing">
             <span class="separator"><!--separator--></span>
             <a class="jump_first" title="First"
                tal:attributes="href string:portal_selections/viewFirst?$http_parameters"

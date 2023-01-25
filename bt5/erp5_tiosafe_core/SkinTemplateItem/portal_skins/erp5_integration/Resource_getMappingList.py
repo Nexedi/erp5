@@ -23,7 +23,7 @@ for mapping in context.contentValues(portal_type="Mapped Property Type"):
     value = getter()
     mapping_dict[str(lcat_list)] = {'category' : lcat_list,}
     mapping_dict[str(lcat_list)][prop] = value
-    
+
 ordered_key_list = mapping_dict.keys()
 ordered_key_list.sort()
 

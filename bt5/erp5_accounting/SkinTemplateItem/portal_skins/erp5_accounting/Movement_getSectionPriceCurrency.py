@@ -12,5 +12,5 @@ def getAccountingCurrencyReference(section_relative_url):
         reference = section.getProperty('price_currency_reference')
     accounting_currency_reference_cache[section_relative_url] = reference
     return reference
-    
+
 return getAccountingCurrencyReference(brain.section_relative_url)

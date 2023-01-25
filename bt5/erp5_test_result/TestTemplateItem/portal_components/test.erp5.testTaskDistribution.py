@@ -1,6 +1,6 @@
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import json 
+import json
 from time import sleep
 from DateTime import DateTime
 import responses
@@ -75,7 +75,7 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
     original_class = self.distributor.__class__
     original_scalability_class = self.scalability_distributor.__class__
     original_performance_class = self.performance_distributor.__class__
-    
+
     original_class._getTestNodeModule = self._original_getTestNodeModule
     original_class._getTestSuiteModule = self._original_getTestSuiteModule
     original_scalability_class._getTestNodeModule = self._original_getTestNodeModule
@@ -164,9 +164,9 @@ class TaskDistributionTestCase(ERP5TypeTestCase):
     self.assertEqual(test_result.getSimulationState(), "started")
     self.tic()
     if stop_count == 2:
-      self.assertEquals(test_result.getSimulationState(), "stopped")
+      self.assertEqual(test_result.getSimulationState(), "stopped")
     else:
-      self.assertEquals(test_result.getSimulationState(), "started")
+      self.assertEqual(test_result.getSimulationState(), "started")
 
   def _cleanupTestResult(self):
     self.tic()
@@ -209,16 +209,16 @@ class TestTaskDistribution(TaskDistributionTestCase):
   def test_02_createTestSuite(self):
     # Test Test Suite
     test_suite = self._createTestSuite()[0]
-    self.assertEquals(test_suite.getPortalType(), "Test Suite")
-    self.assertEquals(test_suite.getSpecialise(), self.distributor.getRelativeUrl())
+    self.assertEqual(test_suite.getPortalType(), "Test Suite")
+    self.assertEqual(test_suite.getSpecialise(), self.distributor.getRelativeUrl())
     # Test Scalability Test Suite
     scalability_test_suite  = self._createTestSuite(
                                  portal_type="Scalability Test Suite",
                                  specialise_value = self.scalability_distributor
                                )[0]
-    self.assertEquals(scalability_test_suite.getPortalType(),
+    self.assertEqual(scalability_test_suite.getPortalType(),
                        "Scalability Test Suite")
-    self.assertEquals(scalability_test_suite.getSpecialise(),
+    self.assertEqual(scalability_test_suite.getSpecialise(),
                        self.scalability_distributor.getRelativeUrl())
 
   def test_02b_checkConsistencyOnTestSuite(self):
@@ -338,7 +338,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
                              title="COMP42-Node1"))
       return ["%s" % x["test_suite_title"] for x in config_list]
     # By default we have random order between test suites
-    self.assertEquals(set(["test suite 1", "test suite 2", "test suite 3"]),
+    self.assertEqual(set(["test suite 1", "test suite 2", "test suite 3"]),
                       set(getTestSuiteList()))
 
     # Check that if test suite 1 and test suite 2 are recently processed,
@@ -349,19 +349,19 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.processTest("test suite 2", "r0=b")
     self.tic()
     sleep(1)
-    self.assertEquals(getTestSuiteList()[0], "test suite 3")
+    self.assertEqual(getTestSuiteList()[0], "test suite 3")
     self.processTest("test suite 3", "r0=b")
     # after test suite 3, we now have to process test suite 1
     # since it is the oldest one
     self.tic()
     sleep(1)
-    self.assertEquals(getTestSuiteList()[0], "test suite 1")
+    self.assertEqual(getTestSuiteList()[0], "test suite 1")
     self.processTest("test suite 1", "r0=c")
     # after test suite 1, we now have to process test suite 2
     # since it is the oldest one
     self.tic()
     sleep(1)
-    self.assertEquals(getTestSuiteList()[0], "test suite 2")
+    self.assertEqual(getTestSuiteList()[0], "test suite 2")
     self.processTest("test suite 2", "r0=d")
     self.tic()
     sleep(1)
@@ -370,20 +370,20 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.tic()
     sleep(1)
     # we should then have by order 3, 2, 1
-    self.assertEquals(["test suite 3", "test suite 2", "test suite 1"],
+    self.assertEqual(["test suite 3", "test suite 2", "test suite 1"],
                       getTestSuiteList())
     # now launch all test of test 3, even if they are not finished yet
     self.processTest("test suite 3", "r0=f", stop_count=1)
     self.tic()
     sleep(1)
-    self.assertEquals(["test suite 2", "test suite 1", "test suite 3"],
+    self.assertEqual(["test suite 2", "test suite 1", "test suite 3"],
                       getTestSuiteList())
     # now launch partially tests of suite 2, it must have priority over
     # test 3, even if test 3 is older because all tests of test 3 are ongoing
     self.processTest("test suite 2", "r0=g", start_count=1, stop_count=0)
     self.tic()
     sleep(1)
-    self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+    self.assertEqual(["test suite 1", "test suite 2", "test suite 3"],
                       getTestSuiteList())
 
   def test_04c_startTestSuiteOrderWithManyTestNodes(self):
@@ -435,9 +435,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
       self.pinDateTime(now + 2.0/86400)
       self.processTest("test suite 3", "r0=a", node_title="COMP1-Node1")
       # so by default, when no test is running, older test suite is given first
-      self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+      self.assertEqual(["test suite 1", "test suite 2", "test suite 3"],
             getTestSuiteList("COMP0-Node1"))
-      self.assertEquals(["test suite 2", "test suite 3"],
+      self.assertEqual(["test suite 2", "test suite 3"],
             getTestSuiteList("COMP5-Node1"))
       # Start some work
       self.pinDateTime(now + 3.0/86400)
@@ -445,9 +445,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP1-Node1 : test suite 2
       # suite 1 is now the newest, it is checked last, test suite 3 has priority on test suite 2
       # since no test is running for it
-      self.assertEquals(["test suite 1", "test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 1", "test suite 3", "test suite 2"],
             getTestSuiteList("COMP0-Node1"))
-      self.assertEquals(["test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 3", "test suite 2"],
             getTestSuiteList("COMP5-Node1"))
       # Now let's say test suite 3 is starting too
       self.pinDateTime(now + 4.0/86400)
@@ -456,7 +456,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP6-Node1 : test suite 3
       # test suite 3 still should have the priority other test suite 2, because it
       # has higher priority
-      self.assertEquals(["test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 3", "test suite 2"],
             getTestSuiteList("COMP5-Node1"))
       # another test node working on test suite 3
       self.processTest("test suite 3", "r0=b", node_title="COMP7-Node1", start_count=0, stop_count=0)
@@ -465,9 +465,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP7-Node1 : test suite 3
       # Now we have 2 testnodes for test suite 3, and only 1 for test suite 2, time to give
       # more priority to test suite 2
-      self.assertEquals(["test suite 2", "test suite 3"],
+      self.assertEqual(["test suite 2", "test suite 3"],
             getTestSuiteList("COMP5-Node1"))
-      self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+      self.assertEqual(["test suite 1", "test suite 2", "test suite 3"],
             getTestSuiteList("COMP0-Node1"))
       # so now a testnode working on test suite 2
       self.processTest("test suite 2", "r0=b", node_title="COMP2-Node1", start_count=0, stop_count=0)
@@ -477,7 +477,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP7-Node1 : test suite 3
       # Now we have 2 testnodes for test suite 3, and 2 for test suite 2, time to give
       # more priority to test suite 3
-      self.assertEquals(["test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 3", "test suite 2"],
             getTestSuiteList("COMP5-Node1"))
       self.processTest("test suite 3", "r0=b", node_title="COMP8-Node1", start_count=0, stop_count=0)
       # COMP1-Node1 : test suite 2
@@ -487,7 +487,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP8-Node1 : test suite 3
       # Now we have 3 testnodes for test suite 3, and 2 for test suite 2, test suite 3 still
       # need priority due to higher priority
-      self.assertEquals(["test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 3", "test suite 2"],
             getTestSuiteList("COMP5-Node1"))
       self.processTest("test suite 3", "r0=b", node_title="COMP9-Node1", start_count=0, stop_count=0)
       # COMP1-Node1 : test suite 2
@@ -498,9 +498,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP9-Node1 : test suite 3
       # Now we have 4 testnodes for test suite 3, and 2 for test suite 2, test suite 2 will
       # have again priority
-      self.assertEquals(["test suite 2", "test suite 3"],
+      self.assertEqual(["test suite 2", "test suite 3"],
             getTestSuiteList("COMP5-Node1"))
-      self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+      self.assertEqual(["test suite 1", "test suite 2", "test suite 3"],
             getTestSuiteList("COMP0-Node1"))
       self.processTest("test suite 2", "r0=b", node_title="COMP3-Node1", start_count=0, stop_count=0)
       # COMP1-Node1 : test suite 2
@@ -512,7 +512,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP9-Node1 : test suite 3
       # Now we have 4 testnodes for test suite 3, and 3 for test suite 2, test suite 3 will
       # have again priority
-      self.assertEquals(["test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 3", "test suite 2"],
             getTestSuiteList("COMP5-Node1"))
       self.processTest("test suite 3", "r0=b", node_title="COMP4-Node1", start_count=0, stop_count=0)
       # COMP1-Node1 : test suite 2
@@ -523,9 +523,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
       # COMP7-Node1 : test suite 3
       # COMP8-Node1 : test suite 3
       # COMP9-Node1 : test suite 3
-      self.assertEquals(["test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 3", "test suite 2"],
             getTestSuiteList("COMP5-Node1"))
-      self.assertEquals(["test suite 1", "test suite 3", "test suite 2"],
+      self.assertEqual(["test suite 1", "test suite 3", "test suite 2"],
             getTestSuiteList("COMP0-Node1"))
     finally:
       self.unpinDateTime()
@@ -654,7 +654,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.tic()
     next_test_result_path, _ = self._createTestResult(
       test_list=['testFoo', 'testBar'], revision="r0=a,r1=b")
-    self.assertNotEquals(next_test_result_path, test_result_path)
+    self.assertNotEqual(next_test_result_path, test_result_path)
     line_url, test = self.tool.startUnitTest(next_test_result_path)
     next_line_url, next_test = self.tool.startUnitTest(next_test_result_path)
     self.assertEqual(['testFoo', 'testBar'], [test, next_test])
@@ -861,7 +861,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
 
     Is this really useful and used ?
     """
-    self._checkCreateTestResultAndAllowRestart()    
+    self._checkCreateTestResultAndAllowRestart()
 
   def test_09b_checkCreateTestResultAndAllowRestartWithTic(self):
     """
@@ -881,15 +881,15 @@ class TestTaskDistribution(TaskDistributionTestCase):
     """
     test_suite, = self._createTestSuite(cluster_configuration=None) # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
-    self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    self.assertEqual('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
     test_suite.setClusterConfiguration("{'foo': 3}")
-    self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    self.assertEqual('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
     test_suite.setClusterConfiguration('{"foo": 3}')
-    self.assertEquals('{"configuration_list": [{"foo": 3}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    self.assertEqual('{"configuration_list": [{"foo": 3}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
     # make sure generateConfiguration does not fail if test suite is invalidated
     test_suite.invalidate()
     self.tic()
-    self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    self.assertEqual('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
 
   def _checkTestSuiteAggregateList(self, *args):
     self.tic()
@@ -916,7 +916,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     check = self._checkTestSuiteAggregateList
     check([test_node_one, ["one"]],
           [test_node_two, ["two"]])
-    # first test suite is invalidated, so it should be removed from nodes, 
+    # first test suite is invalidated, so it should be removed from nodes,
     # but this should not change assignment of second test suite
     test_suite_one.invalidate()
     check([test_node_one, []],
@@ -1042,7 +1042,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.tool.TestTaskDistribution.setMaxTestSuite(10)
     self._callOptimizeAlarm()
     self.assertEqual(5, len(set(test_node.getAggregateList())))
-    self.assertEqual(set(test_node.getAggregateList()), 
+    self.assertEqual(set(test_node.getAggregateList()),
                      set([x.getRelativeUrl() for x in test_suite_list]))
 
   def test_12_checkCloudPerformanceOptimizationIsStable(self):
@@ -1062,7 +1062,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     check = self._checkTestSuiteAggregateList
     check([test_node_one, ["one", "two"]],
           [test_node_two, ["one", "two"]])
-    # first test suite is invalidated, so it should be removed from nodes, 
+    # first test suite is invalidated, so it should be removed from nodes,
     # but this should not change assignment of second test suite
     test_suite_one.invalidate()
     check([test_node_one, ["two"]],
@@ -1130,7 +1130,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     Check test node subscription.
     """
     test_node_module = self.test_node_module
-    
+
     # Generate informations for nodes to subscribe
     nodes = dict([("COMP%d-Scalability-Node_test14" %i, "COMP-%d" %i) for i in range(0,5)])
     # Subscribe nodes
@@ -1143,7 +1143,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     test_node_titles = [x.getTitle() for x in test_nodes]
     # Check subscription
     for node_title in nodes.keys():
-      self.assertTrue(node_title in test_node_titles)
+      self.assertIn(node_title, test_node_titles)
     # Check ping date
     # TODO..
 
@@ -1153,7 +1153,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
      - Check the master election
     """
     test_node_module = self.test_node_module
-    
+
     ## 1 (check election, classic)
     # Subscribe nodes
     self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
@@ -1175,13 +1175,13 @@ class TestTaskDistribution(TaskDistributionTestCase):
     master_test_node_list, slave_test_node_list = getMasterAndSlaveNodeList()
 
     # -Only one master must be elected
-    self.assertEquals(1, len(master_test_node_list))
+    self.assertEqual(1, len(master_test_node_list))
     # -Others test node must not be the matser
-    self.assertEquals(3, len(slave_test_node_list))
-    
-    # Get the current master test node 
+    self.assertEqual(3, len(slave_test_node_list))
+
+    # Get the current master test node
     current_master_test_node_1 = master_test_node_list[0]
-    
+
     ## 2 (check election, with adding new nodes)
     # Add new nodes
     self.scalability_distributor.subscribeNode("COMP5-Scalability-Node5", computer_guid="COMP-5")
@@ -1190,14 +1190,14 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Check test node election
     master_test_node_list, slave_test_node_list = getMasterAndSlaveNodeList()
     # -Only one master must be elected
-    self.assertEquals(1, len(master_test_node_list))
+    self.assertEqual(1, len(master_test_node_list))
     # -Others test node must not be the matser
-    self.assertEquals(5, len(slave_test_node_list))
+    self.assertEqual(5, len(slave_test_node_list))
 
     # Get the current master test node
     current_master_test_node_2 =  master_test_node_list[0]
     # Master test node while he is alive
-    self.assertEquals(current_master_test_node_1.getTitle(),
+    self.assertEqual(current_master_test_node_1.getTitle(),
                       current_master_test_node_2.getTitle())
 
     ## 3 (check election, with master deletion)
@@ -1206,16 +1206,16 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Check test node election
     master_test_node_list, slave_test_node_list = getMasterAndSlaveNodeList()
     # -Only one master must be elected
-    self.assertEquals(1, len(master_test_node_list))
+    self.assertEqual(1, len(master_test_node_list))
     # -Others test node must not be the matser
-    self.assertEquals(4, len(slave_test_node_list))
+    self.assertEqual(4, len(slave_test_node_list))
 
-    # Get the current master test node 
+    # Get the current master test node
     current_master_test_node_3 = master_test_node_list[0]
     # Master test node must be an other test node than previously
-    self.assertNotEquals(current_master_test_node_2.getTitle(), 
+    self.assertNotEqual(current_master_test_node_2.getTitle(),
                          current_master_test_node_3.getTitle())
-    
+
 
   def test_16_startTestSuiteERP5ScalabilityDistributor(self):
     """
@@ -1231,12 +1231,12 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")
     # Create test suite
     self._createTestSuite(quantity=1,priority=1, reference_correction=0,
-                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")  
+                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")
     self.tic()
     self._callOptimizeAlarm()
     # Get current master test node
     master_test_nodes = [x for x in test_node_module.searchFolder()\
-                         if (x.getMaster() == True and x.getValidationState() == "validated")]     
+                         if (x.getMaster() == True and x.getValidationState() == "validated")]
     current_master_test_node = master_test_nodes[0]
     self.tic()
     # Each node run startTestSuite
@@ -1255,12 +1255,12 @@ class TestTaskDistribution(TaskDistributionTestCase):
                                    title="COMP4-Scalability-Node4"))
                    }
     # Check if master has got a non empty configuration
-    self.assertNotEquals(config_nodes[current_master_test_node.getTitle()], [])
+    self.assertNotEqual(config_nodes[current_master_test_node.getTitle()], [])
     # -Delete master test node suite from dict
     del config_nodes[current_master_test_node.getTitle()]
     # Check if slave test node have got empty list
     for suite in config_nodes.values():
-      self.assertEquals(suite, [])
+      self.assertEqual(suite, [])
 
   def test_16A_startTestSuiteERP5ScalabilityDistributorWithRunningTestResult(self):
     # Subscribe nodes
@@ -1277,7 +1277,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     test_result.start()
     self.tic()
     configuration = self.scalability_distributor.startTestSuite(title="COMP1-Scalability-Node1")
-    self.assertNotEquals(configuration, [])
+    self.assertNotEqual(configuration, [])
 
 
   def test_17_isMasterTestnodeERP5ScalabilityDistributor(self):
@@ -1296,7 +1296,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
     # Optimize configuration
     self.scalability_distributor.optimizeConfiguration()
     self.tic()
-    # Get test nodes 
+    # Get test nodes
     master_test_nodes = [x for x in test_node_module.searchFolder()
                          if (x.getMaster() == True and x.getValidationState() == 'validated')]
     slave_test_nodes = [x for x in test_node_module.searchFolder()
@@ -1330,7 +1330,7 @@ class TestTaskDistribution(TaskDistributionTestCase):
         partition_dict += ' "instance-count": {{ count }},\n'
         partition_dict += ' "family": "%s",\n' %family_name
         partition_dict += ' "computer_guid": "%s"\n' %node_list[j][0]
-        partition_dict += '}' 
+        partition_dict += '}'
         if j != i-1:
           partition_dict += ',\n'
         else:
@@ -1363,9 +1363,9 @@ class TestTaskDistribution(TaskDistributionTestCase):
 #        break
 #    # Get configuration list generated from test suite
 ##    configuration_list = self.scalability_distributor.generateConfiguration(test_suite_title)
-#   
+#
 #    # logs
-##    log(configuration_list)    
+##    log(configuration_list)
 
   def test_19_testMultiDistributor(self):
     pass

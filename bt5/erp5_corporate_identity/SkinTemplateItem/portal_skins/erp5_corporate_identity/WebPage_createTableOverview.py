@@ -28,20 +28,21 @@ def digestCaption(my_caption, my_caption_title, my_count, my_shift):
     match_doubles[my_caption_title] = my_count
     caption_relevant_count = my_count
     my_count += 1
-  else:
-    caption_relevant_count = match_doubles[my_caption_title]
-  caption_id = caption_abbreviation + "-" + str(caption_relevant_count)
-  caption_dict = {}
-  caption_dict["input"] = my_caption
-  caption_dict["item"] = {}
-  caption_dict["item"]["id"] = caption_id
-  caption_dict["item"]["title"] = my_caption_title
-  caption_dict["output"] = setTableCaption(
-    caption_id,
-    my_caption_title,
-    my_shift
-  )
-  caption_list.append(caption_dict)
+
+    #caption_relevant_count = match_doubles[my_caption_title]
+    caption_id = caption_abbreviation + "-" + str(caption_relevant_count)
+    caption_dict = {}
+    caption_dict["input"] = my_caption
+    caption_dict["item"] = {}
+    caption_dict["item"]["id"] = caption_id
+    caption_dict["item"]["title"] = my_caption_title
+    caption_dict["output"] = setTableCaption(
+      caption_id,
+      my_caption_title,
+      my_shift
+    )
+    caption_list.append(caption_dict)
+
   return my_count
 
 # XXX single quotes?

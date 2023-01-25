@@ -5,7 +5,7 @@ from_date=DateTime(context.getStartDate().year(), 1, 1)
 to_date=context.getStartDate()
 
 search_params = \
-  { 
+  {
    'portal_type'         : 'Pay Sheet Transaction',
    'delivery.start_date' : {'range': "minmax", 'query': (from_date, to_date)},
    'delivery.source_section_uid' : context.getSourceSectionUid(),

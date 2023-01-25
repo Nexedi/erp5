@@ -8,15 +8,15 @@
     field reusability and property validation
 """
 portal = context.getPortalObject()
-translateString = portal.Base_translateString 
+translateString = portal.Base_translateString
 if field_my_buy_quantity is None:
   field_my_buy_quantity = context.REQUEST.get("field_my_buy_quantity", None)
 
 if field_my_shipping_method is None:
-  field_my_shipping_method=context.REQUEST.get("field_my_shipping_method", None) 
+  field_my_shipping_method=context.REQUEST.get("field_my_shipping_method", None)
 
 if field_my_payment_mode is None:
-  field_my_payment_mode = context.REQUEST.get("field_my_payment_mode", None) 
+  field_my_payment_mode = context.REQUEST.get("field_my_payment_mode", None)
 
 quantity = field_my_buy_quantity
 
@@ -48,9 +48,9 @@ if field_my_shipping_method not in ['', None]:
   shipping = portal.restrictedTraverse(field_my_shipping_method)
   # create new shipping method order line
   shopping_cart.newContent(
-                 id='shipping_method', 
-                 portal_type='Sale Order Line', 
-                 resource_value=shipping, 
+                 id='shipping_method',
+                 portal_type='Sale Order Line',
+                 resource_value=shipping,
                  quantity=1)
 
 # Handle payment mode and comment

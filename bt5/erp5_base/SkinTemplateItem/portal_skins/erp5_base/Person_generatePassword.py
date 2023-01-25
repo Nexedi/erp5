@@ -1,1 +1,1 @@
-return ''.join(random.SystemRandom().sample(string.letters + string.digits, length))
+return ''.join(random.SystemRandom().sample(string.ascii_letters + string.digits, length))

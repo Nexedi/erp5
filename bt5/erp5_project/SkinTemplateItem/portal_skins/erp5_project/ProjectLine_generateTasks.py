@@ -14,7 +14,7 @@ task_items = []
 
 # get the user information
 for task in listbox:
-  if task.has_key('listbox_key'):
+  if 'listbox_key' in task:
     task_id = int(task['listbox_key'])
     task_dict = {}
     task_dict['id'] = task_id
@@ -41,7 +41,7 @@ task_items.sort(key=lambda x: x['id'])
 
 
 for item in task_items:
-   
+
   if item['title'] != '':
     task = task_module.newContent( portal_type = document_type
                                      , title = item['title']
@@ -58,10 +58,10 @@ for item in task_items:
                                      , destination_section = item['destination_section']
                                      , destination = item['destination']
                                      )
-      
+
     if item['reference'] == '':
       task.setReference('T-' + str(task.getId()))
-      
+
     if item['requirement'] is not None:
       if isinstance(item['requirement'],str):
         task.setTaskLineRequirement(item['requirement'])

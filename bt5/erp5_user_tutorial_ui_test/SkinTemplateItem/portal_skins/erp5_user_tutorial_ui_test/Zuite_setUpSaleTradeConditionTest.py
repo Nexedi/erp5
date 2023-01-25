@@ -47,7 +47,7 @@ if isTransitionPossible(pref, 'enable'):
 pref.setPreferredAccountingTransactionSourceSection(my_organisation.getRelativeUrl())
 
 # Disabling save form warning
-# this is bad but needed quickly to disable save form warning 
+# this is bad but needed quickly to disable save form warning
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)
 
 # Clear cache

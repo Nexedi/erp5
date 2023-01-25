@@ -131,7 +131,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
         explanation_start + 'is less than ${value}.',
         getMappingDict(value=absolute_tolerance_min))
     if tolerance_base is None:
-      absolute_tolerance_max = self.getProperty('quantity_range_max') or epsilon 
+      absolute_tolerance_max = self.getProperty('quantity_range_max') or epsilon
     else:
       absolute_tolerance_max = self.getProperty('quantity_range_max')
     if absolute_tolerance_max is not None and \

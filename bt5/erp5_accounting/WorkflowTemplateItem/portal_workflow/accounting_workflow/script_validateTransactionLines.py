@@ -13,41 +13,48 @@ section_portal_type_list = ['Person', 'Organisation']
 invalid_state_list = ['invalidated', 'deleted']
 
 # first of all, validate the transaction itself
-container.validateTransaction(state_change)
+container.script_validateTransaction(state_change)
 
 
 # Check that all lines uses open accounts, and doesn't use invalid third
 # parties or bank accounts
 transaction_lines = transaction.objectValues(portal_type=transaction.getPortalAccountingMovementTypeList())
 id_to_delete_list = []
+getBankAccountItemList = portal.AccountModule_getBankAccountItemList
 for line in transaction_lines:
-
-  for account, third_party, bank_account in (
-    ( line.getSourceValue(portal_type='Account'),
+  for account, third_party, bank_account, bank_account_relative_url_list_getter in (
+    (
+      line.getSourceValue(portal_type='Account'),
       line.getDestinationSectionValue(portal_type=section_portal_type_list),
-      line.getSourcePaymentValue(portal_type=bank_account_portal_type),),
-    ( line.getDestinationValue(portal_type='Account'),
+      line.getSourcePaymentValue(portal_type=bank_account_portal_type),
+      lambda: (x[1] for x in getBankAccountItemList(
+        organisation=line.getSourceSection(portal_type=section_portal_type_list))),
+    ),
+    (
+      line.getDestinationValue(portal_type='Account'),
       line.getSourceSectionValue(portal_type=section_portal_type_list),
-      line.getDestinationPaymentValue(portal_type=bank_account_portal_type),),
-    ):
-
+      line.getDestinationPaymentValue(portal_type=bank_account_portal_type),
+      lambda: (x[1] for x in getBankAccountItemList(
+        organisation=line.getDestinationSection(portal_type=section_portal_type_list))),
+    ),
+  ):
     if account is not None and account.getValidationState() != 'validated':
       raise ValidationFailed(translateString(
           "Account ${account_title} is not validated.",
            mapping=dict(account_title=account.Account_getFormattedTitle())))
-      
+
     if third_party is not None and\
         third_party.getValidationState() in invalid_state_list:
       raise ValidationFailed(translateString(
           "Third party ${third_party_name} is invalid.",
            mapping=dict(third_party_name=third_party.getTitle())))
-      
+
     if bank_account is not None:
-      if bank_account.getValidationState() in invalid_state_list:
+      if bank_account.getRelativeUrl() not in bank_account_relative_url_list_getter():
         raise ValidationFailed(translateString(
             "Bank Account ${bank_account_reference} is invalid.",
              mapping=dict(bank_account_reference=bank_account.getReference())))
-      
+
       if account is not None and account.isMemberOf('account_type/asset/cash/bank'):
         # also check that currencies are consistent if we use this quantity for
         # accounting.

@@ -12,6 +12,6 @@ return"""<!DOCTYPE html>
     <!-- Your Slides -->
   </head>
   <body>
-%s   
+%s
   </body>
 </html>""" % (css_link, context.getTitle(), context.getTextContent())

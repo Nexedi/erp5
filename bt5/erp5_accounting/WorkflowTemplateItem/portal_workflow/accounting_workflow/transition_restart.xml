@@ -50,6 +50,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
               </tuple>
             </value>
         </item>

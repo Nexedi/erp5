@@ -36,7 +36,6 @@ from Acquisition import aq_base
 from MethodObject import Method
 from zLOG import LOG, WARNING
 
-from Products.CMFCore.Skinnable import SKINDATA
 
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -55,7 +54,7 @@ allow_class(BrokenProxyField)
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
   """
-  func_code = None
+  __code__ = func_code = None
 
   def __init__(self, method_id, default=''):
     self._method_id = method_id
@@ -69,7 +68,7 @@ class WidgetDelegatedMethod(Method):
       try:
         return proxied_method(field, *args, **kw)
       finally:
-        self.func_code = getattr(proxied_method, 'func_code', None)
+        self.__code__ = self.func_code = getattr(proxied_method, '__code__', None)
     return self._default
 
 
@@ -172,8 +171,9 @@ class ProxyField(ZMIField):
     Surcharged values from proxied field.
     """
     # Edit template field attributes
-    template_field = self.getRecursiveTemplateField()
+    template_field = self.getTemplateField()
     if template_field is not None:
+      template_field = self.getRecursiveTemplateField()
 
       # Check the surcharged checkboxes
       surcharge_list = []
@@ -439,11 +439,8 @@ class ProxyField(ZMIField):
           # priority.
           # This should return no field if the skin folder name is defined in
           # form_id.
-          skin_info = SKINDATA.get(get_ident())
-
-          if skin_info is not None:
-            _, skin_selection_name, ignore, resolve = skin_info
-
+          skin_selection_name = object.getCurrentSkinName()
+          if skin_selection_name is not None:
             selection_dict = portal_skins._getSelections()
             candidate_folder_id_list = selection_dict[skin_selection_name].split(',')
 
@@ -584,6 +581,14 @@ class ProxyField(ZMIField):
       # FIXME: should show some error message
       # ("form_id and field_id don't define a valid template")
       pass
+
+  security.declareProtected('View', 'title')
+  def title(self):
+    """The title of this field."""
+    try:
+      return super(ProxyField, self).title()
+    except BrokenProxyField:
+      return 'broken'
 
   security.declareProtected('Access contents information', 'has_value')
   def has_value(self, id):

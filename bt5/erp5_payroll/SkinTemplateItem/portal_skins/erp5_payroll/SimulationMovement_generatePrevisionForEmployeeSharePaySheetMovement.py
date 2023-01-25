@@ -4,7 +4,7 @@ for base_category in context.getSourceArrowBaseCategoryList():
     category = "source_section/"+movement.getDefaultAcquiredCategoryMembership("destination", base=0)
   else:
     category = context.getDefaultAcquiredCategoryMembership(base_category, base=1) # This should be moved to degault implementation of business path - XXX-JPS
-  
+
   if category is None:
     category = movement.getDefaultAcquiredCategoryMembership(base_category, base=1)
 

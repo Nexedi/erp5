@@ -41,8 +41,8 @@ getattr(js_folder, js_id).write(js_body)
 css_tales = "'%%s/%s_css/%s' %% portal_path," % (theme_id, css_id)
 js_tales = "'%%s/%s_js/%s' %% portal_path," % (theme_id, js_id)
 
-context.Base_createNewWebSiteMainTemplateTheme(html_text, main_template_id, 
-                                               skin_folder.getId(), 
+context.Base_createNewWebSiteMainTemplateTheme(html_text, main_template_id,
+                                               skin_folder.getId(),
                                                css_tales, js_tales,
                                                main_div_class_name)
 
@@ -78,10 +78,10 @@ layout_form.rename_group('left', default_form_group)
 context.editForm(layout_form, {'pt': main_template_id})
 
 if apply_web_site_theme:
-  web_site.edit(content_layout=content_layout_form_id, 
+  web_site.edit(content_layout=content_layout_form_id,
                 container_layout=layout_form_id,
                 layout_configuration_form_id=configuration_form_id)
 
 portal_status_message = "New Theme successfuly created, See: %s/manage_main" % (skin_folder.absolute_url())
-return web_site.Base_redirect("view", 
+return web_site.Base_redirect("view",
                               keep_items=dict(portal_status_message=portal_status_message))

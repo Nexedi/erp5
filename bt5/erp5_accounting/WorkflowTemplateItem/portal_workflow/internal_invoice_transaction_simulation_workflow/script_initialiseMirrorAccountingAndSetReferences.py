@@ -1,2 +1,2 @@
 state_change['object'].AccountingTransaction_setDefaultMirrorAccountList()
-return container.setReferences(state_change)
+return container.script_setReferences(state_change)

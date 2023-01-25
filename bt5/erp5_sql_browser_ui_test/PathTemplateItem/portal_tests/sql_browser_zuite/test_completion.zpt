@@ -1,0 +1,57 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>open</td>
+        <td tal:content="string: ${here/portal_url}/erp5_sql_connection/ZMySQLDAConnection_viewQueryBrowser"></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=div.monaco-editor.vs</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=#query.initialized</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertEval</td>
+        <td>
+          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'type', {'text': 'select cat'})
+        </td>
+        <td>null</td>
+      </tr>
+      <tr>
+        <td>assertEval</td>
+        <td>
+          selenium.browserbot.getCurrentWindow().monaco_editor.trigger('', 'editor.action.triggerSuggest')
+        </td>
+        <td>null</td>
+      </tr>
+      <!-- suggestion drop down -->
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@aria-label="catalog"]</td>
+        <td></td>
+      </tr>
+
+    </tbody>
+  </table>
+</body>
+
+</html>

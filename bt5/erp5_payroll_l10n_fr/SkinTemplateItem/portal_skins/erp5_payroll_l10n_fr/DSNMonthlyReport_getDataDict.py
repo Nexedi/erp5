@@ -18,7 +18,7 @@ def getCountryCode(target):
 
 def formatDate(datetime):
   return "%02d%02d%04d" % (datetime.day(), datetime.month(), datetime.year()) if datetime else ''
-  
+
 
 def formatFloat(number):
   return "{:.02f}".format(float(number))
@@ -462,5 +462,5 @@ if block_id == 'S21.G00.86':
 if block_id == 'S90.G00.90':
   rubric_value_dict['S90.G00.90.001'] = int(kw['length']) + 2
   rubric_value_dict['S90.G00.90.002'] = kw['dsn_record_counter']
-  
+
 return rubric_value_dict

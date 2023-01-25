@@ -37,7 +37,7 @@ from Products.ERP5Type.Message import translateString
 from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Globals import get_request
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 import json
 
 # Max. number of catalog result
@@ -311,8 +311,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         value = value,
       html_string = '<br />'.join(
         '<a class="relationfieldlink" href="%s">%s</a>' % (
-          escape(jump_reference.absolute_url()),
-          escape(display_value),
+          html_quote(jump_reference.absolute_url()),
+          html_quote(display_value),
         )
         for jump_reference, display_value in zip(
           getattr(
@@ -345,7 +345,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     css_class = field.get_value('css_class')
     if css_class not in ('', None):
       html_string = '<span class="%s">%s</span>' % (
-        escape(css_class),
+        html_quote(css_class),
         html_string,
       )
     return html_string
@@ -363,9 +363,9 @@ $(document).ready(function() {
                                           search_catalog_key: "%s"});
 });
 </script>""" % (
-      escape(key),
-      escape(json.dumps([x[0] for x in field.get_value('portal_type')])),
-      escape(field.get_value('catalog_index')),
+      html_quote(key),
+      html_quote(json.dumps([x[0] for x in field.get_value('portal_type')])),
+      html_quote(field.get_value('catalog_index')),
     )
 
   def render_wheel(self, field, value, REQUEST, relation_index=0,
@@ -383,10 +383,10 @@ $(document).ready(function() {
       'src="%s/images/exec16.png" alt="update..." ' \
       'name="%s/viewSearchRelatedDocumentDialog%s%s' \
       ':method"/>' % (
-      escape(portal_url()),
-      escape(portal_url.getRelativeContentURL(here.portal_selections)),
-      escape(str(relation_index)),
-      escape(sub_index_string),
+      html_quote(portal_url()),
+      html_quote(portal_url.getRelativeContentURL(here.portal_selections)),
+      html_quote(str(relation_index)),
+      html_quote(sub_index_string),
     )
 
   def render_relation_link(self, field, value, REQUEST, render_prefix=None):
@@ -408,8 +408,8 @@ $(document).ready(function() {
       selection_name = REQUEST.get('selection_name')
       if selection_name is not None:
         selection_name_html = '&amp;selection_name=%s&amp;selection_index=%s' % (
-          escape(selection_name),
-          escape(str(REQUEST.get('selection_index', 0))),
+          html_quote(selection_name),
+          html_quote(str(REQUEST.get('selection_index', 0))),
         )
       else:
         selection_name_html = ''
@@ -420,12 +420,12 @@ $(document).ready(function() {
       return '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
         '<img src="%s/images/jump.png" alt="jump" />' \
       '</a>' % (
-        escape(here.absolute_url()),
-        escape(field.get_value('jump_method')),
-        escape(field.id),
-        escape(field.aq_parent.id),
-        escape(selection_name_html),
-        escape(here.getPortalObject().portal_url()),
+        html_quote(here.absolute_url()),
+        html_quote(field.get_value('jump_method')),
+        html_quote(field.id),
+        html_quote(field.aq_parent.id),
+        html_quote(selection_name_html),
+        html_quote(here.getPortalObject().portal_url()),
       )
     return ''
 

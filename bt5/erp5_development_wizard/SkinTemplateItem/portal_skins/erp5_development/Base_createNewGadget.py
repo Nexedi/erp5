@@ -25,7 +25,7 @@ kw = {'id': gadget_id,
       'edit_form_id': edit_form_id,
       'render_type': render_type,
       'gadget_type': ['erp5_front','web_front', 'web_section']}
- 
+
 gadget = portal_gadgets.newContent(**kw)
 gadget.visible()
 
@@ -53,5 +53,5 @@ elif gadget_code_type=='python':
   script = getattr(skin_folder, edit_form_id)
   script.ZPythonScript_edit('**kw', 'return "Replace this script (%s) with your code."' % edit_form_id)
 
-return gadget.Base_redirect('view', 
+return gadget.Base_redirect('view',
                               keep_items=dict(portal_status_message="Gadget successfuly created"))

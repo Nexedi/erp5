@@ -54,7 +54,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>content</string>
+                        <string>your_content</string>
                       </list>
                     </value>
                 </item>
@@ -74,11 +74,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>format</string>
-                        <string>display_svg</string>
-                        <string>display_about</string>
-                        <string>document_save</string>
-                        <string>portal_skin</string>
+                        <string>your_format</string>
+                        <string>your_display_svg</string>
+                        <string>your_display_about</string>
+                        <string>your_document_save</string>
+                        <string>your_portal_skin</string>
+                        <string>your_theme</string>
                       </list>
                     </value>
                 </item>
@@ -86,8 +87,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>override_source_organisation_title</string>
-                        <string>override_source_person_title</string>
+                        <string>your_override_source_organisation_title</string>
+                        <string>your_override_source_person_title</string>
                       </list>
                     </value>
                 </item>

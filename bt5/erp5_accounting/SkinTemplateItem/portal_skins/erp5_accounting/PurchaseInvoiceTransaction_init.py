@@ -1,4 +1,4 @@
-if kw.get('created_by_builder', 0): 
+if kw.get('created_by_builder', 0):
   return
 
 preference_tool = context.getPortalObject().portal_preferences

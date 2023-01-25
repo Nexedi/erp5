@@ -1,0 +1,72 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_eci.css" />
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  <script src="gadget_erp5_eci_financial_widget.js"></script>
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+     <section class="ui-content-header-plain ui-bar-c">
+        <table class="financial-table">
+          <tr>
+            {{#if display_header}}
+              <th>Type/Year</th>
+              {{#each kpi_list}}
+                <th>{{year}}</th>
+              {{/each}}
+            {{/if}}
+          </tr>
+          <tr>
+            <td>Staff</td>
+            {{#each kpi_list}}
+              {{#if staff}}
+                <td>{{staff}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Turnover</td>
+            {{#each kpi_list}}
+              {{#if revenues}}
+                <td>{{revenues}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Profit</td>
+            {{#each kpi_list}}
+              {{#if earnings}}
+                <td>{{earnings}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Total assets</td>
+            {{#each kpi_list}}
+              {{#if total_assets}}
+                <td>{{total_assets}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+        </table>
+      </section>
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-financial-widget-in-listbox"></div>
+  </body>
+</html>

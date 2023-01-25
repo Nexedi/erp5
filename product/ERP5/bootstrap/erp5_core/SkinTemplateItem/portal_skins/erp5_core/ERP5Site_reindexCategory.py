@@ -15,7 +15,7 @@ for error in error_list:
       nb_types[portal_type] = nb_types[portal_type] + 1
     else:
       nb_types[portal_type] = 1
-  else: 
+  else:
     #print error
     return_list.append(error)
 

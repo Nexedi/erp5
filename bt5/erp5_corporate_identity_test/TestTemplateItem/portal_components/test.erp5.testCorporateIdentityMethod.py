@@ -116,13 +116,13 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     document_content = '<div><img src="http://test.png" /></div>'
     expected_dict ={'figure_list': []}
     output_dict = web_page.WebPage_createImageOverview(document_content)
-    self.assertEquals(output_dict, expected_dict)
+    self.assertEqual(output_dict, expected_dict)
     document_content = '<div><img src="http://test.png" alt="test" /></div>'
     expected_dict ={'figure_list': [{'input': '<img src="http://test.png" alt="test" />',
                                      'item': {'id': 'Figure-1', 'title': 'test'},
                                      'output': '<a href="#Figure-1"></a><img src="http://test.png" alt="test" /><span>Figure-1 - test</span>'}]}
     output_dict = web_page.WebPage_createImageOverview(document_content)
-    self.assertEquals(output_dict, expected_dict)
+    self.assertEqual(output_dict, expected_dict)
 
 
   def test_validateImage(self):
@@ -150,7 +150,7 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
 
     img_string = '<img src="test.png?version=1">'
     output_string = web_page.WebPage_validateImage(img_string=img_string)
-    self.assertTrue('The following image could not be found in erp5 OR is not following' in output_string)
+    self.assertIn('The following image could not be found in erp5 OR is not following', output_string)
 
     img_string ='<img src="/Template.Test.Image.Map?version=1">'
     output_string = web_page.WebPage_validateImage(img_string=img_string)
@@ -201,7 +201,7 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     self.assertEqual(output, doc_content)
 
     output =web_page_with_follow_up.WebPage_embedReportDocumentList(doc_content)
-    self.assertEqual(output, '<div>%s</div>' % web_page_with_follow_up.Base_generateCorporareIdentityTestReport()[0])
+    self.assertEqual(output, '<div>%s</div>' % web_page_with_follow_up.Base_generateCorporareIdentityTestReport(display_comment=True)[0])
 
     # it has no matter with/without follow up
     doc_content = '<div> <a href="sale_opportunity_module/template_test_embed_sale_opportunity?report=Base_generateCorporareIdentityTestReport&amp;test=23"></a> </div>'

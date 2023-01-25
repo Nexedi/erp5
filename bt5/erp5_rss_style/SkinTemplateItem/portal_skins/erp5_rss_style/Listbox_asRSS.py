@@ -4,7 +4,7 @@
   and passes on column labels and listbox renderer lines. Returns a list
   of items as a piece of xml (because we have to manipulate tag names).
 
-  The implementation is based on RSS 2.0 specification, in a somewhat simplified way 
+  The implementation is based on RSS 2.0 specification, in a somewhat simplified way
   (e.g. enclosure and source are not implemented, and every guid is a permalink).
 
   User can limit number of entries by passing "max_articles" in the url (default is 30).
@@ -23,7 +23,7 @@
   - pubDate
   - source
   All elements of an item are optional, however at least one of title or description must be
-  present. 
+  present.
   The way an object is presented should be defined in the listbox - the RSS skin passes on
   what is in the listbox, as is. So you can produce your own description, author information
   or publication date. A partial exception to this rule is dates - RSS protocol requires
@@ -43,7 +43,7 @@ request = context.REQUEST
 required_field_list = ('title', 'description', 'link')
 
 # required + optional channel elements
-allowed_field_list = ('title', 'description', 'link', 'author', 
+allowed_field_list = ('title', 'description', 'link', 'author',
                       'category', 'comments', 'guid', 'pubdate',
                       'thumbnail', )
 
@@ -82,7 +82,7 @@ for line in line_list:
       continue
     rss_item_string += ('\t\t\t<%s>%s</%s>\n' % (key,value or '',key))
 
-  # if required fields not present in listbox columns as label we 
+  # if required fields not present in listbox columns as label we
   # added theirs appropriate xml dynamically
   for required_field in required_field_list:
     if required_field not in rss_item_dict.keys():

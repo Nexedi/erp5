@@ -156,8 +156,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   def callWithNewRequestAcceptLanguage(self, *args, **kw):
     """
-    Call 'doSomething' with '*args' and '**kw' after setting 
-    'REQUEST["AcceptLanguage"]' to '"*"' and finally restores it to its 
+    Call 'doSomething' with '*args' and '**kw' after setting
+    'REQUEST["AcceptLanguage"]' to '"*"' and finally restores it to its
     original value.
     """
     has_original_accept_language = "AcceptLanguage" in self.app.REQUEST
@@ -1654,6 +1654,24 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_image_source_pdf",
       **dict(
         page_number=3,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_reference_table = 1
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBookImageAltSpan(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_image_alt_span_html",
+      "template_test_book_image_alt_span_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=1,
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",

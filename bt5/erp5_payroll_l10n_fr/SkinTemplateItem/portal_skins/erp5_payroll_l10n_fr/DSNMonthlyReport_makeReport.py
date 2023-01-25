@@ -218,7 +218,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   employee_list.append(employee)
 
   dsn_file.append(employee_data_dict['person'])
-  
+
   change_block_dict = context.DSNMonthlyReport_getChangeBlockDict()
 
   contract_change_block_list = []
@@ -226,7 +226,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
     for rubric_root, change_date_block in change_block_dict[employee].iteritems():
       if rubric_root == 'S21.G00.31':
         for date, change_block in change_date_block.iteritems():
-          dsn_file.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date)) 
+          dsn_file.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date))
       elif rubric_root == 'S21.G00.41':
         for date, change_block in change_date_block.iteritems():
           contract_change_block_list.append(getDSNBlockDict(block_id=rubric_root, change_block=change_block, change_date=date))
@@ -237,7 +237,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
 
   if employee in leave_period_dict:
     for leave_period in leave_period_dict[employee]:
-      leave_block = {rubric: leave_period.get(rubric, None) 
+      leave_block = {rubric: leave_period.get(rubric, None)
                       for rubric in ('S21.G00.60.001',
                                      'S21.G00.60.002',
                                      'S21.G00.60.003',
@@ -259,7 +259,7 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
                                      'S21.G00.62.016',
                                      'S21.G00.62.017')})
 
-  # All employees don't share all the insurance contract, so here we need to 
+  # All employees don't share all the insurance contract, so here we need to
   # know to which the employee contributes. Let's loop over the keys of
   # paysheet_data_dict['taxable_base'],
   # which are of the form : (contribution_category, contract_id)
@@ -407,7 +407,7 @@ last_block = ''
 rubric_counter = 0
 
 # DEBUG MODE
-# 
+#
 # for block in dsn_file:
 #   for rubric in sorted(block.keys()):
 #     if block[rubric]:

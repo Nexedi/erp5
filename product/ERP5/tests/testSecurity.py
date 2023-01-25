@@ -72,21 +72,19 @@ class TestSecurityMixin(ERP5TypeTestCase):
     i.e. those who have a docstring but have no security declaration.
     """
     self._prepareDocumentList()
-    white_method_id_list = ['om_icons',]
+    allowed_method_id_list = ['om_icons',]
     app = self.portal.aq_parent
-    meta_type_dict = {}
-    error_dict = {}
-    for idx, obj in app.ZopeFind(app, search_sub=1):
+    meta_type_set = set([None])
+    error_set = set()
+    for _, obj in app.ZopeFind(app, search_sub=1):
       meta_type = getattr(obj, 'meta_type', None)
-      if meta_type is None:
+      if meta_type in meta_type_set:
         continue
-      if meta_type in meta_type_dict:
-        continue
-      meta_type_dict[meta_type] = True
+      meta_type_set.add(meta_type)
       if '__roles__' in obj.__class__.__dict__:
         continue
       for method_id in dir(obj):
-        if method_id.startswith('_') or method_id in white_method_id_list or not callable(getattr(obj, method_id, None)):
+        if method_id.startswith('_') or method_id in allowed_method_id_list or not callable(getattr(obj, method_id, None)):
           continue
         method = getattr(obj, method_id)
         if isinstance(method, MethodType) and \
@@ -96,16 +94,19 @@ class TestSecurityMixin(ERP5TypeTestCase):
           method.__module__:
           if method.__module__ == 'Products.ERP5Type.Accessor.WorkflowState' and method.func_code.co_name == 'serialize':
             continue
-          func_code = method.func_code
-          error_dict[(func_code.co_filename, func_code.co_firstlineno, method_id)] = True
-    error_list = error_dict.keys()
-    if os.environ.get('erp5_debug_mode', None):
-      pass
-    else:
-      error_list = filter(lambda x:'/erp5/' in x[0], error_list)
+          func_code = method.__code__
+          error_set.add((func_code.co_filename, func_code.co_firstlineno, method_id))
+
+    error_list = []
+    for filename, lineno, method_id in sorted(error_set):
+      # ignore security problems with non ERP5 documents, unless running in debug mode.
+      if os.environ.get('erp5_debug_mode') or '/erp5/' in filename or '<portal_components' in filename:
+        error_list.append('%s:%s %s' % (filename, lineno, method_id))
+      else:
+        print('Ignoring missing security definition for %s in %s:%s ' % (method_id, filename, lineno))
     if error_list:
       message = '\nThe following %s methods have a docstring but have no security assertions.\n\t%s' \
-                    % (len(error_list), '\n\t'.join(['%s:%s %s' % x for x in sorted(error_list)]))
+                    % (len(error_list), '\n\t'.join(error_list))
       self.fail(message)
 
   def test_workflow_transition_protection(self):

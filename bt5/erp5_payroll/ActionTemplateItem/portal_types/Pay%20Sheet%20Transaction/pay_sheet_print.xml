@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/PaySheet_viewODTPrintDialog</string> </value>
+            <value> <string>string:${object_url}/PaySheetTransaction_viewODTPrintDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

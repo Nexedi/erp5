@@ -26,7 +26,7 @@ column_list.append(('base', 'Base'))
 for model_line in context.contentValues(portal_type='Pay Sheet Line'):
   for contribution_share in model_line.getContributionShareValueList():
     price = (contribution_share.getId()+'_price', contribution_share.getTitle()+' Share Rate')
-    quantity = (contribution_share.getId()+'_total_price', 
+    quantity = (contribution_share.getId()+'_total_price',
                 contribution_share.getTitle()+' Share Amount')
     if price not in column_list:
       column_list.append(price)

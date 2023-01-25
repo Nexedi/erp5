@@ -14,7 +14,7 @@ result = []
 variation_category_dict = {}
 for variation_category in reference_variation_category_list:
   base_category = variation_category.split('/',1)[0]
-  if variation_category_dict.has_key( base_category ):
+  if base_category in variation_category_dict:
     variation_category_dict[base_category].append( variation_category )
   else:
     variation_category_dict[base_category] = [variation_category]
@@ -23,21 +23,21 @@ variation_key_list = cartesianProduct( variation_category_dict.values() )
 
 
 for variation_key in variation_key_list:
-  params =  { 
+  params =  {
     'reference_variation_category_list' : variation_key,
   }
 
   result.append(
     # Context is report form
-    ReportSection(path=context.getPhysicalPath(), 
-                  title='Resource variation',   
+    ReportSection(path=context.getPhysicalPath(),
+                  title='Resource variation',
                   level=1,
                   form_id='Transformation_viewExpanded',
                   selection_name='transformation_expanded_selection',
                   selection_params=params,
 #                  selection_columns="Id",
                   listbox_display_mode='FlatListMode'
-    )             
+    )
   )
 
 return result

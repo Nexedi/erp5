@@ -20,7 +20,7 @@ for key in sorted(request.form.keys()):
   if value is None:
     request.form.pop(key)
     continue
-  
+
   # workaround the bogus case where a value is passed ?value=None
   if value == 'None':
     value = None
@@ -49,7 +49,7 @@ for key in sorted(request.form.keys()):
       # Build a negated query
       nq_kw = {'strict_%s' % key : value}
       q_kw = {key : None}
-      left_join_list.append(key) 
+      left_join_list.append(key)
       left_join_list.append('strict_%s' % key)
       query_list.append(ComplexQuery(NegatedQuery(Query(**nq_kw)), Query(**q_kw), logical_operator="OR"))
       new_mapping[key] = ""
@@ -63,7 +63,7 @@ for key in sorted(request.form.keys()):
         new_mapping[key] = value
         new_mapping['dialog_%s' % key] = value
 
-      
+
 new_mapping["query"] = ComplexQuery(query_list)
 new_mapping['left_join_list'] = left_join_list
 

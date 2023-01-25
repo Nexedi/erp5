@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, grouping=\'grouping\', node=\'\', mirror_section=\'\', ledger=\'\', title=None, delivery_reference=None, debit_price=None, credit_price=None, date=None, **kw</string> </value>
+            <value> <string>selection=None, grouping=\'grouping\', node=\'\', mirror_section=\'\', ledger=\'\', title=None, delivery_reference=None, debit_price=None, credit_price=None, date=None, section_category=\'\', section_category_strict=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

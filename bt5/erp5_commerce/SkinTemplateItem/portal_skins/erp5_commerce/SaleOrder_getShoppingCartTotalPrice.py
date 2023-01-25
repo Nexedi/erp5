@@ -1,4 +1,4 @@
-""" 
+"""
   Calculate total price of temporary RAM based Sale Order.
 
   Price is based on three main components:
@@ -6,7 +6,7 @@
     - applicable taxes (based on Person's location and shop's location)
     - shipping costs (same as applicable taxes including type of shopping cart item
       for example online materials doesn't require shipping)
-  
+
   Script can optionally include currency.
 """
 
@@ -24,7 +24,7 @@ if include_taxes:
   if tax_info is not None:
     for tax in tax_info.values():
       total += total*(tax['percent']/100)
-    
+
 if include_currency:
   currency = web_site.WebSite_getShoppingCartDefaultCurrency()
   return '%s %s' %(total, currency.getReference())

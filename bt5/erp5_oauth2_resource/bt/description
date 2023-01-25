@@ -1,0 +1,1 @@
+Implementation of an OAuth2 Resource Server in ERP5, for authentification from tokens emitted by an ERP5 Authorisation Server.

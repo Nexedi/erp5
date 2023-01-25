@@ -1,8 +1,7 @@
 '''
-  this script is the conductor. All other scripts that permit to create a 
+  this script is the conductor. All other scripts that permit to create a
   paysheet are called here
 '''
-import pprint
 
 # Delete all objects in the paysheet
 id_list = []
@@ -15,7 +14,7 @@ context.manage_delObjects(id_list)
 # create Pay Sheet Lines
 context.createPaySheetLineList(listbox=listbox)
 
-if not(kw.has_key('skip_redirect') and kw['skip_redirect'] == True):
+if not('skip_redirect' in kw and kw['skip_redirect'] == True):
   # Return to pay sheet default view
   from ZTUtils import make_query
   redirect_url = '%s/%s?%s' % (context.absolute_url(), 'view', make_query())

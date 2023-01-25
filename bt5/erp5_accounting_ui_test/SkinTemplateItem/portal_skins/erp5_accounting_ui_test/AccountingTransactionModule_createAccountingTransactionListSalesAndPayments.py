@@ -21,7 +21,7 @@ if accounting_module.getProperty('current_content_script',
 if 1:
   accounting_module.manage_delObjects(list(accounting_module.objectIds()))
 
-# XXX copy & paste 
+# XXX copy & paste
 def getAccountByTitle(title):
   account_list = [x.getObject().getRelativeUrl() for x in
     portal.portal_catalog(portal_type='Account',
@@ -98,8 +98,8 @@ for month in range(1, month_count + 1):
             source_payment=getBankAccountByTitle('My default bank account'),
             destination_section=getOrganisationByTitle(client_title),
             created_by_builder=1,
-            start_date=DateTime(year, month, day, 01, 01) + 10,
-            stop_date=DateTime(year, month, day, 01, 01) + 10,
+            start_date=DateTime(year, month, day, 1, 1) + 10,
+            stop_date=DateTime(year, month, day, 1, 1) + 10,
             causality_value=tr,
             resource=euro_resource,
         )

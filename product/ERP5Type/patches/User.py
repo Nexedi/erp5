@@ -15,30 +15,11 @@
 
 from threading import local
 from Acquisition import aq_inner, aq_parent
-from AccessControl.PermissionRole import _what_not_even_god_should_do
-from AccessControl.User import BasicUser, SimpleUser
+from AccessControl.User import SimpleUser
 from App.config import getConfiguration
 from ..TransactionalVariable import TransactionalVariable
 
 DEVELOPER_ROLE_ID = 'Developer'
-
-BasicUser_allowed = BasicUser.allowed
-def allowed(self, object, object_roles=None):
-  """
-  Check if the user has Developer role which allows to modify ZODB source code
-  and remove it, as it should never be acquired anyhow, before calling the
-  original method
-  """
-  # Skip "self._check_context(object)"
-  if (
-    object_roles is not _what_not_even_god_should_do and
-    object_roles is not None and
-    DEVELOPER_ROLE_ID in set(object_roles or ()).intersection(self.getRoles())
-  ):
-    return 1
-  return BasicUser_allowed(self, object, object_roles)
-
-BasicUser.allowed = allowed
 
 SimpleUser_getRoles = SimpleUser.getRoles
 def getRoles(self, _transactional_variable_pool=local()):

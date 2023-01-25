@@ -1,4 +1,5 @@
 context_obj = context.getObject()
+translateString = context.Base_translateString
 
 requirement_module_type   = 'Requirement Module'
 requirement_document_type = 'Requirement Document'
@@ -14,14 +15,18 @@ if context_obj.getPortalType() == requirement_module_type:
 elif context_obj.getPortalType() in (requirement_document_type, requirement_type):
   destination_obj = context_obj
 else:
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '/view?portal_status_message=Error:+bad+context.')
+  return context.Base_redirect(
+    form_id,
+    keep_items=dict(
+      portal_status_level='error',
+      portal_status_message=translateString('Error: bad context')))
 
 # this list contain all requirements items
 requirements_items = []
 
 # get the user information
 for requirement_line in listbox:
-  if requirement_line.has_key('listbox_key'):
+  if 'listbox_key' in requirement_line:
     requirement_line_id = int(requirement_line['listbox_key'])
     requirement = {}
     requirement['id'] = requirement_line_id
@@ -49,10 +54,10 @@ for requirement_item in requirements_items:
     new_1st_level_requirement_title = requirement_item['title']
   else:
     has_1st_level_requirement = False
-  
+
   if has_1st_level_requirement:
     description_dict[new_1st_level_requirement_title] = ''
-  
+
   # the item has a second level requirement, built it
   if requirement_item['sub_title'] not in ('', None):
     has_2nd_level_requirement = True
@@ -71,7 +76,7 @@ for requirement_item in requirements_items:
     new_1st_level_requirement.append(new_2nd_level_feat)
 
   if has_1st_level_requirement:
-    if clean_requirements.has_key(new_1st_level_requirement_title):
+    if new_1st_level_requirement_title in clean_requirements:
       new_1st_level_requirement = clean_requirements[new_1st_level_requirement_title] + new_1st_level_requirement
     clean_requirements[new_1st_level_requirement_title] = new_1st_level_requirement
     clean_requirements_key_list.append(new_1st_level_requirement_title)
@@ -101,6 +106,5 @@ for key in clean_requirements_key_list:
                                                 , int_index   = sub_requirement_int_index
                                                 )
 # return to the requirement
-translateString = context.Base_translateString
 return context.Base_redirect(form_id,
  keep_items=dict(portal_status_message=translateString('Requirement document added.')))

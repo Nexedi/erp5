@@ -11,7 +11,7 @@ if group_list:
   for group in group_list:
     group_level = len(group.split("/"))
     group_level_dict[group] = group_level
-  
+
   #Get the highest levels groups of the assignments
   ##if group_list = ['g1', 'g1/g1.1', 'g1/g1.2'] returns ['g1']
   ##if group_list = ['g1/g1.1', 'g1/g1.2'] returns ['g1/g1.1', 'g1/g1.2']

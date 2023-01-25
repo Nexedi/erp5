@@ -37,7 +37,7 @@ import warnings
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
-from Products.ERP5Type.tests.utils import LogInterceptor
+from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     """
@@ -261,7 +261,7 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
 
       # but they can not be saved in ZODB accidentally
       self.portal.person_module.oops = temp_object
-      self.assertRaisesRegexp(Exception, "Temporary objects can't be pickled", self.commit)
+      self.assertRaisesRegex(Exception, "Temporary objects can't be pickled", self.commit)
       self.abort()
 
     def test_temp_object_persistent(self):
@@ -283,6 +283,12 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       warnings.warn('user warning', DeprecationWarning)
       self.assertEqual(self.logged[-1].name, 'DeprecationWarning')
 
+    def test_objectValues(self):
+      person = self.portal.person_module.newContent(portal_type='Person')
+      createZODBPythonScript(person, 'test_script', '', '')
+      script = person['test_script']
+      self.assertIn(script, person.objectValues())
+      self.assertNotIn(script, person.objectValues(portal_type='Person'))
 
 def test_suite():
   suite = unittest.TestSuite()

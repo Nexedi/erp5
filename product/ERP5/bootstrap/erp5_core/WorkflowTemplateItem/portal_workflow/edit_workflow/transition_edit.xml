@@ -49,6 +49,10 @@
             <value> <string>action called when editing a document</string> </value>
         </item>
         <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: object.getPortalObject().portal_membership.checkPermission(\'Modify portal content\', object) or object.isTempObject()</string> </value>
+        </item>
+        <item>
             <key> <string>guard_group</string> </key>
             <value>
               <tuple/>
@@ -57,9 +61,7 @@
         <item>
             <key> <string>guard_permission</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

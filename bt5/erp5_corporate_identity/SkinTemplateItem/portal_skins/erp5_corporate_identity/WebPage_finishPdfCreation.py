@@ -38,7 +38,7 @@ if doc_save or get_doc_after_save:
     document.setContentType("application/pdf")
 
     # setting aggregate in case context is an event
-    if context.portal_type != 'Web Page' and not context.isModuleType():
+    if context.portal_type not in ('Web Page', 'Pay Sheet Transaction') and not context.isModuleType():
       context.setAggregate(document.getRelativeUrl())
 
     # try setting predecessor/related document to later distinguish this

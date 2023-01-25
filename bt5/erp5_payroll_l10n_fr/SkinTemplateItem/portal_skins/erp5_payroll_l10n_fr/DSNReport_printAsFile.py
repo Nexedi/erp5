@@ -13,7 +13,7 @@ data = '\n'.join(dsn_line_list)
 filename = context.getTitle()
 
 RESPONSE.setHeader("Content-Type", "text/plain; charset=iso-8859-1")
-RESPONSE.setHeader("Content-Length", len(data)) 
+RESPONSE.setHeader("Content-Length", len(data))
 RESPONSE.setHeader("Content-Disposition", "attachment;filename='%s.dsn'" % filename)
 
 return data

@@ -96,7 +96,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
   def launchConfigurator(self):
     self.logMessage('OfficeJS Development launchConfigurator')
     self.login()
-    # Create new Configuration 
+    # Create new Configuration
     business_configuration  = self.getBusinessConfiguration()
 
     response_dict = {}
@@ -104,7 +104,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       response_dict = self.portal.portal_configurator._next(
                             business_configuration, {})
 
-    self.tic() 
+    self.tic()
     self.portal.portal_configurator.startInstallation(
                  business_configuration,REQUEST=self.portal.REQUEST)
 
@@ -194,6 +194,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_core_proxy_field_legacy',
       'erp5_crm',
       'erp5_dms',
+      'erp5_dms_ui_test',
       'erp5_font',
       'erp5_forge',
       'erp5_full_text_mroonga_catalog',
@@ -218,6 +219,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_monaco_editor',
       'erp5_multimedia',
       'erp5_notebook',
+      'erp5_oauth2_resource',
       'erp5_officejs',
       'erp5_officejs_connector',
       'erp5_officejs_jquery_app',
@@ -236,6 +238,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_travel_expense',
       'erp5_ui_test',
       'erp5_ui_test_core',
+      'erp5_ui_test_data',
       'erp5_upgrader',
       'erp5_upgrader_officejs_sdk',
       'erp5_web',

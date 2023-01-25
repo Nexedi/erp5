@@ -8,9 +8,9 @@ portal_workflow = context.getPortalObject().portal_workflow
 workflow_id_list = [x[0] for x in context.getWorkflowStateItemList()]
 
 for history_name in history_name_list:
-  
+
   for wf_id in workflow_id_list:
-    
+
     list_history_item = None
     try:
       list_history_item = portal_workflow.getInfoFor(ob=context, name=history_name, wf_id=wf_id)
@@ -20,7 +20,7 @@ for history_name in history_name_list:
       pass
 
     if list_history_item not in ((), None):
-      
+
       history_element_title_list = []
       for history_element_title in list_history_item[-1].keys():
         if history_element_title != history_name:

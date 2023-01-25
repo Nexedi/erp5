@@ -34,7 +34,7 @@ def callback(o,seldict):
             form_name = o.absolute_url() # TODO it could be done much better
             # assumes that name of form is unique enough
             form_name = form_name[form_name.rfind('/')+1:]
-            if seldict.has_key(field.get_value('selection_name')):
+            if field.get_value('selection_name') in seldict:
               old_list = seldict[field.get_value('selection_name')]
               if form_name not in old_list:
                 old_list.append(form_name)

@@ -38,7 +38,16 @@
     }
   </style>
 </tal:block>
-
+<style tal:condition="not: options/field_id | nothing">
+  /* Adjust ZMI style for Zope 4's ace editor */
+  #editor_container:after {
+    /* This says "press F10 for full screen but our monaco patch does not support this" */
+    content: "" !important;
+  }
+  .ace_editor {
+    display: none;
+  }
+</style>
 <div id="monaco-container" style="width:100%;height:800px;border:1px solid grey;"></div>
 
 <script tal:content='python: "var portal_url=" + modules["json"].dumps(options.get("portal_url"))'></script>
@@ -97,19 +106,22 @@ $script.onload = function() {
   if (mode === "htmlmixed") {
     mode = "html";
   }
- 
+
   var editor = monaco.editor.create(
     document.getElementById("monaco-container"),
     {
       value: $textarea.value,
       language: mode,
-
-      /* because Alt+Click is LeftClick on ChromeOS */
-      multiCursorModifier: "ctrlCmd",
-
-      autoIndent: true
+      autoIndent: true,
+      experimental: {
+        stickyScroll: {
+          enabled: true,
+          maxLineCount: 3,
+        }
+      }
     }
   );
+
   if (mode == "python") {
     editor.getModel().updateOptions({ tabSize: 2 });
   }
@@ -153,7 +165,8 @@ $script.onload = function() {
         plugins: [prettierPlugins.babel],
         // see http://json.schemastore.org/prettierrc for supported options.
         singleQuote: true,
-        tabWidth: 2
+        tabWidth: 2,
+        trailingComma: 'none'
       });
 
       return [
@@ -270,7 +283,7 @@ $script.onload = function() {
   editor.addAction({
     id: "save",
     label: "Save",
-    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
+    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
     precondition: null,
     keybindingContext: null,
     contextMenuGroupId: "navigation",

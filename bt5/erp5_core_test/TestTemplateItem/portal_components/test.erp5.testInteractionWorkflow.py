@@ -33,7 +33,6 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Workflow import addWorkflowByType
 
 
 class TestInteractionWorkflow(ERP5TypeTestCase):
@@ -76,20 +75,26 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def _createInteractionWorkflowWithId(self, wf_id):
     wf_tool = self.getWorkflowTool()
-    return addWorkflowByType(wf_tool, "interaction_workflow", wf_id)
+    return wf_tool.newContent(
+      portal_type='Interaction Workflow',
+      reference=wf_id,
+    )
 
   def createInteractionWorkflow(self):
     if getattr(self.getWorkflowTool(), 'test_workflow', None) is None:
       self._createInteractionWorkflowWithId('test_workflow')
     wf = self.getWorkflowTool()['test_workflow']
     self.wf = wf
-    if getattr(wf.scripts, 'afterEdit', None) is None:
-      wf.scripts.manage_addProduct['PythonScripts']\
-                    .manage_addPythonScript(id='afterEdit')
-    self.script = wf.scripts['afterEdit']
-    if getattr(wf.interactions, 'edit_interaction', None) is None:
-      wf.interactions.addInteraction(id='edit_interaction')
-    self.interaction = wf.interactions['edit_interaction']
+    if getattr(wf, 'script_afterEdit', None) is None:
+      wf.manage_addProduct['PythonScripts']\
+                    .manage_addPythonScript(id='script_afterEdit')
+    self.script = wf.script_afterEdit
+    if getattr(wf, 'interactions_edit_interaction', None) is None:
+      wf.newContent(
+        portal_type='Interaction Workflow Interaction',
+        reference='edit_interaction',
+    )
+    self.interaction = wf.interaction_edit_interaction
     type_object = self.portal.portal_types.getTypeInfo(self.portal_type)
     type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
@@ -97,16 +102,24 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def createInteractionWorkflowWithTwoInteractions(self):
     wf = self._createInteractionWorkflowWithId('test_workflow')
     self.wf = wf
-    wf.scripts.manage_addProduct['PythonScripts']\
-                  .manage_addPythonScript(id='afterEditA')
-    self.scriptA = wf.scripts['afterEditA']
-    wf.interactions.addInteraction(id='editA')
-    self.interactionA = wf.interactions['editA']
-    wf.scripts.manage_addProduct['PythonScripts']\
-                  .manage_addPythonScript(id='afterEditB')
-    self.scriptB = wf.scripts['afterEditB']
-    wf.interactions.addInteraction(id='editB')
-    self.interactionB = wf.interactions['editB']
+    wf.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id='script_afterEditA')
+    self.scriptA = wf.script_afterEditA
+    if getattr(wf, 'interactions_editA', None) is None:
+      wf.newContent(
+        portal_type='Interaction Workflow Interaction',
+        reference='editA',
+    )
+    self.interactionA = wf.interaction_editA
+    wf.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id='script_afterEditB')
+    self.scriptB = wf.script_afterEditB
+    if getattr(wf, 'interactions_editB', None) is None:
+      wf.newContent(
+        portal_type='Interaction Workflow Interaction',
+        reference='editB',
+    )
+    self.interactionB = wf.interaction_editB
     type_object = self.portal.portal_types.getTypeInfo(self.portal_type)
     type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
@@ -118,10 +131,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_edit_interaction(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='edit',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('edit',),
+      after_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
@@ -133,10 +146,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_interaction_on_edit(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='edit',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('edit',),
+      after_script_value=self.script,
+    )
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
@@ -148,10 +161,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_interaction_on_method(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='doSomethingStupid',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('doSomethingStupid',),
+      after_script_value=self.script,
+    )
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
@@ -163,10 +176,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_interaction_on_category_setter(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='setSizeList _setSizeList',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('setSizeList', '_setSizeList',),
+      after_script_value=self.script,
+    )
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
@@ -178,10 +191,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_interaction_executed_once(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='edit',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('edit',),
+      after_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "description = context.getDescription()\n" +\
@@ -195,10 +208,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_returned_value(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='newContent',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('newContent',),
+      after_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "return 3\n"
@@ -207,15 +220,15 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     dummy_bank_account = organisation.newContent(
           portal_type='Bank Account',
           id='dummy_bank_account')
-    self.assertNotEquals(dummy_bank_account, 3)
+    self.assertNotEqual(dummy_bank_account, 3)
     self.assertEqual(dummy_bank_account.getPortalType(), 'Bank Account')
 
   def test_multiple_methods(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='setCorporateName setActivityCode',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('setCorporateName', 'setActivityCode',),
+      after_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "description = context.getDescription()\n" +\
@@ -229,14 +242,14 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_same_method_two_interactions(self):
     self.createInteractionWorkflowWithTwoInteractions()
-    self.interactionA.setProperties(
-            'afterEditA',
-            method_id='edit',
-            after_script_name=('afterEditA',))
-    self.interactionB.setProperties(
-            'afterEditB',
-            method_id='edit',
-            after_script_name=('afterEditB',))
+    self.interactionA.edit(
+      trigger_method_id_list=('edit',),
+      after_script_value=self.scriptA,
+    )
+    self.interactionB.edit(
+      trigger_method_id_list=('edit',),
+      after_script_value=self.scriptB,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_09 in script', 'a')\n" +\
@@ -247,20 +260,20 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
     organisation = self.organisation
     organisation.edit()
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
     organisation.setCorporateName("this should not change anything")
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
 
   def test_multiple_scripts(self):
     self.createInteractionWorkflowWithTwoInteractions()
-    self.interactionA.setProperties(
-            'afterEdit',
-            method_id='edit',
-            after_script_name=('afterEditA', 'afterEditB'))
+    self.interactionA.edit(
+      trigger_method_id_list=('edit',),
+      after_script_value_list=(self.scriptA, self.scriptB),
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_10 in script', 'a')\n" +\
@@ -271,24 +284,24 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
     organisation = self.organisation
     organisation.edit()
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
     organisation.setCorporateName("this should not change anything")
-    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+    self.assertTrue(organisation.getDescription() in ('ab', 'ba'),
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
 
   def test_private_accessor(self):
     self.createInteractionWorkflowWithTwoInteractions()
-    self.interactionA.setProperties(
-            'afterEditA',
-            method_id='_setVatCode',
-            after_script_name=('afterEditA',))
-    self.interactionB.setProperties(
-            'afterEditB',
-            method_id='setVatCode',
-            after_script_name=('afterEditB',))
+    self.interactionA.edit(
+      trigger_method_id_list=('_setVatCode',),
+      after_script_value=self.scriptA,
+    )
+    self.interactionB.edit(
+      trigger_method_id_list=('setVatCode',),
+      after_script_value=self.scriptB,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_11 in script', 'a')\n" +\
@@ -309,14 +322,14 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_private_accessor_on_acquired_property(self):
     self.createInteractionWorkflowWithTwoInteractions()
-    self.interactionA.setProperties(
-            'afterEditA',
-            method_id='_setDefaultEmailText',
-            after_script_name=('afterEditA',))
-    self.interactionB.setProperties(
-            'afterEditB',
-            method_id='setDefaultEmailText',
-            after_script_name=('afterEditB',))
+    self.interactionA.edit(
+      trigger_method_id_list=('_setDefaultEmailText',),
+      after_script_value=self.scriptA,
+    )
+    self.interactionB.edit(
+      trigger_method_id_list=('setDefaultEmailText',),
+      after_script_value=self.scriptB,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "context.log('InteractionWF.test_12 in script', 'a')\n" +\
@@ -341,10 +354,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     # Check that edit does not detect the property modified in interaction
     # script as modified by user
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='_setTitle',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('_setTitle',),
+      after_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "vat_code = context.getVatCode()\n" +\
@@ -383,10 +396,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
 
   def test_BeforeScriptParameters(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='getProperty',
-            script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('getProperty',),
+      before_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = """\
 context = sci['object']
@@ -404,10 +417,10 @@ context.setDescription('%s,%s,%s' % (d, args, result))
 
   def test_AfterScriptParameters(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'afterEdit',
-            method_id='getProperty',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('getProperty',),
+      after_script_value=self.script,
+    )
     params = 'sci,**kw'
     body = """\
 context = sci['object']
@@ -426,10 +439,10 @@ context.setDescription('%s,%s,%s' % (d, args, result))
 
   def test_BeforeCommitParameters(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'beforeCommit',
-            method_id='getProperty',
-            before_commit_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('getProperty',),
+      before_commit_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = """\
 context = sci['object']
@@ -459,11 +472,11 @@ context.setDescription('%s,%s,%s' % (d, args, result))
   def test_activity_interaction(self):
     # Tests for Later Script (in activity)
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'editObject',
-            once_per_transaction=1,
-            method_id='_setGroup.*',
-            activate_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_once_per_transaction=1,
+      trigger_method_id_list=('_setGroup.*',),
+      activate_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = """\
 context = sci['object']
@@ -481,11 +494,11 @@ context.setTitle('Bar')
 
   def test_skip_temp_object(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'editObject',
-            temporary_document_disallowed=False,
-            method_id='_setGroup.*',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      temporary_document_disallowed=0,
+      trigger_method_id_list=('_setGroup.*',),
+      after_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = """\
 context = sci['object']
@@ -500,22 +513,22 @@ context.setTitle('Bar')
     self.assertEqual(temp.getTitle(), 'Bar')
     # but not if it has been forbidden
     temp.setTitle('Foo')
-    self.interaction.setProperties(
-            'editObject',
-            temporary_document_disallowed=True,
-            method_id='_setGroup.*',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      temporary_document_disallowed=1,
+      trigger_method_id_list=('_setGroup.*',),
+      after_script_value=self.script,
+    )
     temp.setGroupValue(None)
     self.assertEqual(temp.getTitle(), 'Foo')
 
   def test_temp_object_doesnt_skip_normal(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'editObject',
-            once_per_transaction=True,
-            temporary_document_disallowed=True,
-            method_id='_setGroup.*',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_once_per_transaction=1,
+      temporary_document_disallowed=1,
+      trigger_method_id_list=('_setGroup.*',),
+      after_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = """\
 context = sci['object']
@@ -544,12 +557,12 @@ context.setTitle('Bar')
 
   def test_temp_object_does_skip_normal(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'editObject',
-            once_per_transaction=True,
-            temporary_document_disallowed=False,
-            method_id='_setGroup.*',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_once_per_transaction=1,
+      temporary_document_disallowed=0,
+      trigger_method_id_list=('_setGroup.*',),
+      after_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = """\
 context = sci['object']
@@ -586,10 +599,10 @@ context.setTitle('Bar')
     # test that we can add an interaction by defining methods using regular
     # expression
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'regexp',
-            method_id='_set.* set.*',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('_set.*', 'set.*'),
+      after_script_value=self.script,
+    )
 
     call_list = self.portal.REQUEST['call_list'] = []
     self.script.ZPythonScript_edit('sci',
@@ -614,10 +627,10 @@ context.setTitle('Bar')
     # wrapping a method in an interaction workflow adds a default security to
     # this method if the method does not exists.
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'default',
-            method_id='nonExistantMethod',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('nonExistantMethod',),
+      after_script_value=self.script,
+    )
     self.script.ZPythonScript_edit('sci', '')
     # the default security is "Access contents information"
     self.organisation.manage_permission(
@@ -629,10 +642,10 @@ context.setTitle('Bar')
     # wrapping a method in an interaction workflow adds a default security to
     # this method, but does not override existing security definition
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'default',
-            method_id='setDescription',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('setDescription',),
+      after_script_value=self.script,
+    )
     self.script.ZPythonScript_edit('sci', '')
     # This rely on the fact that 'setDescription' is protected with 'Modify
     # portal content'
@@ -651,20 +664,20 @@ context.setTitle('Bar')
     security.apply(Organisation)
 
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'default',
-            method_id='doSomethingStupid',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('doSomethingStupid',),
+      after_script_value=self.script,
+    )
     self.script.ZPythonScript_edit('sci', '')
 
     self.assertEqual(self.organisation.doSomethingStupid__roles__, ())
 
   def test_wrap_workflow_transition(self):
     self.createInteractionWorkflow()
-    self.interaction.setProperties(
-            'default',
-            method_id='validate',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      trigger_method_id_list=('validate',),
+      after_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = "context = sci[\'object\']\n" +\
            "context.setDescription('titi')"
@@ -678,12 +691,12 @@ context.setTitle('Bar')
     self.createInteractionWorkflow()
     type_object = self.portal.portal_types.getTypeInfo('Bank Account')
     type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
-    self.interaction.setProperties(
-            'default',
-            # only for bank accounts
-            portal_type_filter=['Bank Account'],
-            method_id='getReference',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      # only for bank accounts
+      portal_type_filter_list=['Bank Account'],
+      trigger_method_id_list=('getReference',),
+      after_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = "context = sci[\'object\']\n" +\
            "context.setDescription('modified')"
@@ -703,12 +716,12 @@ context.setTitle('Bar')
     self.createInteractionWorkflow()
     type_object = self.portal.portal_types.getTypeInfo('Bank Account')
     type_object.setTypeWorkflowList(['test_workflow', 'validation_workflow'])
-    self.interaction.setProperties(
-            'default',
-            # only for payment nodes portal type group (ie. bank account)
-            portal_type_group_filter=['payment_node'],
-            method_id='getReference',
-            after_script_name=('afterEdit',))
+    self.interaction.edit(
+      # only for bank accounts
+      portal_type_group_filter_list=['payment_node'],
+      trigger_method_id_list=('getReference',),
+      after_script_value=self.script,
+    )
     params = 'sci, **kw'
     body = "context = sci[\'object\']\n" +\
            "context.setDescription('modified')"

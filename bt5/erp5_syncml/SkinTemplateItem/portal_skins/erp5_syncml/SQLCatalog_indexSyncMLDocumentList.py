@@ -26,7 +26,7 @@ def generateParameterList():
       getter = lambda obj, property=property: getattr(obj, property)()
     append((parameter_value_list, getter))
   return parameter_dict, parameter_append_list
-  
+
 MAX_PER_QUERY = 1000
 
 for path in path_list:

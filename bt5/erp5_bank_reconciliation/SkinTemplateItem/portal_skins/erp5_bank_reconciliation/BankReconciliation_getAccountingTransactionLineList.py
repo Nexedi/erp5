@@ -44,7 +44,7 @@ if listbox_kw.get('date'):
 if portal.REQUEST.get('reconciled_uid_list'):
   # This is to prevent showing again the lines that we just reconciled
   kw['workaround_catalog_lag_query'] = NegatedQuery(SimpleQuery(uid=portal.REQUEST['reconciled_uid_list']))
-  
+
 if context.getSourcePayment():
   # As we are showing quantities and not asset prices, we use the precision
   # from this bank account currency.

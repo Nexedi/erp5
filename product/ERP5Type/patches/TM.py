@@ -29,3 +29,6 @@ def TM__register(self):
         #except: pass
 
 TM._register = TM__register
+
+# sortKey should return str in transaction 1.4.1 or later.
+TM._sort_key = '1'

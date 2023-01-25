@@ -2,7 +2,7 @@
 # The Bloc is frozen when:
 # - it's a Simulation Movement
 # - The user is not allowed to edit it
-# - it's a part of a block 
+# - it's a part of a block
 # - the object is from secondary layer
 
 return (not context.portal_membership.checkPermission('Modify portal content', block.parent_activity.object)) or \

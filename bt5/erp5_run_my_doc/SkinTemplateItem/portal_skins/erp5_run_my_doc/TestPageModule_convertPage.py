@@ -1,5 +1,5 @@
 """
-XXX (rafael) I believe KM has a much better way to do this, 
+XXX (rafael) I believe KM has a much better way to do this,
  clone web page, maybe using Base_createCloneDocument from erp5_base
 """
 
@@ -25,7 +25,7 @@ for uid in uids:
   conv_obj = conv_obj.manage_pasteObjects(
                          obj.manage_copyObjects(list(obj.objectIds())))
 
-return conv_obj_module.Base_redirect('', 
+return conv_obj_module.Base_redirect('',
     dict(portal_status_message=context.Base_translateString(
         "${document_count} documents converted.",
         mapping={'document_count': counter})))

@@ -1,0 +1,284 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Requirement Fast Input</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Requirement Fast Input</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/requirement_module</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- action on requirement module -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//dd[@class="document-listview"]//a[text()="Requirement Document Fast Input"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//dd[@class="document-listview"]//a[text()="Requirement Document Fast Input"]</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_requirement_document_title"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_requirement_document_title"]</td>
+  <td>Test Require Document Title</td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//textarea[@name="field_my_requirement_document_description"]</td>
+  <td>Test Require Document Description</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_listbox_requirement_title_new_001"]</td>
+  <td>Requirement</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_listbox_requirement_title_new_001"]</td>
+  <td>Requirement</td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_listbox_sub_requirement_title_new_001"]</td>
+  <td>Sub Requirement</td>
+</tr>
+
+ <tr>
+  <td>type</td>
+  <td>//textarea[@name="field_listbox_sub_requirement_description_new_001"]</td>
+  <td>Sub Requirement Description</td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Requirement document added.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>storeLocation</td>
+  <td>url</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${url}</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//a[text()="Test Require Document Title"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@class="document_table"]//a[text()="Test Require Document Title"]</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//a[text()="Requirement"]</td>
+  <td></td>
+</tr>
+
+<!-- action on requirement document -->
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//dd[@class="document-listview"]//a[text()="Requirement Fast Input"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//dd[@class="document-listview"]//a[text()="Requirement Fast Input"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_listbox_requirement_title_new_001"]</td>
+  <td>Requirement2</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_listbox_requirement_title_new_001"]</td>
+  <td>Requirement2</td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_listbox_sub_requirement_title_new_001"]</td>
+  <td>Sub Requirement2</td>
+</tr>
+
+ <tr>
+  <td>type</td>
+  <td>//textarea[@name="field_listbox_sub_requirement_description_new_001"]</td>
+  <td>Sub Requirement Description2</td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Requirement document added.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>storeLocation</td>
+  <td>url</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${url}</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//a[text()="Requirement2"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@class="document_table"]//a[text()="Requirement2"]</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//a[text()="Sub Requirement2"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="document_table"]//p[text()="Sub Requirement Description2"]</td>
+  <td></td>
+</tr>
+
+
+<!-- action on requirement -->
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//dd[@class="document-listview"]//a[text()="Requirement Fast Input"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//dd[@class="document-listview"]//a[text()="Requirement Fast Input"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_listbox_requirement_title_new_001"]</td>
+  <td>Requirement3</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_listbox_requirement_title_new_001"]</td>
+  <td>Requirement3</td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_listbox_sub_requirement_title_new_001"]</td>
+  <td>Sub Requirement3</td>
+</tr>
+
+ <tr>
+  <td>type</td>
+  <td>//textarea[@name="field_listbox_sub_requirement_description_new_001"]</td>
+  <td>Sub Requirement Description3</td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Requirement document added.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>storeLocation</td>
+  <td>url</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${url}</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]//a[text()="Requirement3"]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

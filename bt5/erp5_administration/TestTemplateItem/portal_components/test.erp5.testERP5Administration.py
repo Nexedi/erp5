@@ -211,6 +211,26 @@ class TestERP5Administration(InventoryAPITestCase):
       'Category group/level1/test_group on object %s is missing.' % person.getRelativeUrl(),
       str(consistency_error.getTranslatedMessage()))
 
+  def test_Base_viewDict(self):
+    # modules and documents
+    self.assertTrue(self.portal.person_module.Base_viewDict())
+    self.assertTrue(self.portal.person_module.newContent().Base_viewDict())
+    # base categories and categories
+    base_category = self.portal.portal_categories.contentValues()[0]
+    self.assertTrue(base_category.Base_viewDict())
+    self.assertTrue(base_category.newContent().Base_viewDict())
+    self.assertTrue(base_category.Base_viewDict()) # base category with content
+    # workflows
+    workflow = self.portal.portal_workflow.newContent(portal_type='Workflow')
+    state = workflow.newContent(portal_type='Workflow State', title='Some State')
+    self.assertTrue(state.Base_viewDict())
+    transition = workflow.newContent(portal_type='Workflow Transition',
+                                     title='Some Transition')
+    transition.setReference('change_something')
+    transition.setGuardRoleList(['Assignee', 'Assignor'])
+    transition.setCategoryList('destination/' + transition.getPath())
+    self.assertTrue(transition.Base_viewDict())
+
 
 def test_suite():
   suite = unittest.TestSuite()

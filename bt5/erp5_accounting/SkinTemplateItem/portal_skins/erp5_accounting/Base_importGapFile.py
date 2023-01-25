@@ -27,7 +27,7 @@ def splitCsvLine(str_line):
         clean_item = clean_item[:-1]
         clean_item = clean_item.replace('""', '"')
     else:
-      if len(clean_item) > 0:      
+      if len(clean_item) > 0:
         if clean_item.find('.') != -1:
           clean_item = float(clean_item)
         else:

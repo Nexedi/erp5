@@ -199,7 +199,8 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
-    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
+    # Zope4 add charset=utf-8
+    self.assertTrue('text/html' in request.RESPONSE.getHeader('content-type'))
     self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
@@ -339,7 +340,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -378,7 +379,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     self.assertEqual(listbox.get_value('columns'),
                      [('id', 'ID'), ('title', 'Title'), ('quantity', 'Quantity')])
     listboxline_list = listbox.get_value('default', render_format = 'list',
@@ -421,7 +422,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\n'
                       'start_date|Date\nstatus|Status',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -457,7 +458,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = '',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     for line in listboxline_list:
@@ -484,7 +485,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     last_row = odf_table_rows[-1]
     last_row_columns = last_row.getchildren()
     span_attribute = "{%s}number-columns-spanned" % content.nsmap['table']
-    self.assertFalse(first_row_columns[0].attrib.has_key(span_attribute))
+    self.assertNotIn(span_attribute, first_row_columns[0].attrib)
     self.assertEqual(int(last_row_columns[0].attrib[span_attribute]), 2)
     self._validate(odf_document)
 
@@ -517,7 +518,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox2.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -576,7 +577,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox3.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -613,7 +614,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       field_stat_method = 'portal_catalog',
       field_stat_columns = 'quantity | Foo_statQuantity',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
@@ -637,7 +638,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     first_row_columns = first_row.getchildren()
     date_column = first_row_columns[3]
     date_value_attrib = "{%s}date-value" % content.nsmap['office']
-    self.assertTrue(date_column.attrib.has_key(date_value_attrib))
+    self.assertIn(date_value_attrib, date_column.attrib)
     self.assertEqual(date_column.attrib[date_value_attrib], '2009-04-20')
     self._validate(odf_document)
 
@@ -654,7 +655,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test1.foo_1.setTitle('foo_title_8')
     message = listbox.ListBox_setPropertyList(
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
     # title line only
@@ -714,7 +715,7 @@ for n in xrange(6, 0, -1):
       field_portal_types = 'Foo Line | Foo Line',
       field_row_css_method = 'Foo_getRowCssList',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     listboxline_list = listbox4.get_value('default', render_format = 'list',
                                           REQUEST = request)
     self.assertEqual(len(listboxline_list), 7)
@@ -800,7 +801,7 @@ return foo_list
       field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     createZODBPythonScript(
       self.portal.portal_skins.custom,
       'FooReport_getReportSectionList',
@@ -904,7 +905,7 @@ return foo_list
       field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
     createZODBPythonScript(
       self.portal.portal_skins.custom,
       'FooReport_getReportSectionList',
@@ -1006,7 +1007,7 @@ return foo_list
       field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
-    self.assertTrue('Set Successfully' in message)
+    self.assertIn('Set Successfully', message)
 
     # report box
     foo2_view = erp5form.addERP5Form(id='Foo2_view', title='Foo2 View')
@@ -1128,9 +1129,9 @@ return []
     self.assertTrue(len(image_frame_list) > 0)
     image_frame = image_frame_list[0]
     height = image_frame.attrib['{%s}height' % content.nsmap['svg']]
-    self.assertTrue(height in ('0.838cm', '0.3299in'))
+    self.assertIn(height, ('0.838cm', '0.3299in'))
     width = image_frame.attrib['{%s}width' % content.nsmap['svg']]
-    self.assertTrue(width in ('0.838cm', '0.3299in'))
+    self.assertIn(width, ('0.838cm', '0.3299in'))
     self._validate(odf_document)
 
     # 02: no image data

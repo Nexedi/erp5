@@ -35,7 +35,7 @@ SVG_DEFAULT_NAMESPACE = "http://www.w3.org/2000/svg"
 def getDataURI(url):
   try:
     data = urllib2.urlopen(url)
-  except Exception, e:
+  except Exception as e:
     raise ConversionError("Error to transform url (%s) into data uri. ERROR = %s" % (url, Exception(e)))
   return 'data:%s;base64,%s' % (data.info()["content-type"],
                                 data.read().encode("base64").replace('\n', ""))

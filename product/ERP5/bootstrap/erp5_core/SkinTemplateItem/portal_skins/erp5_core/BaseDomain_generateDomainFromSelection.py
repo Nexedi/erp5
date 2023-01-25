@@ -22,7 +22,7 @@ for category in category_list:
               membership_criterion_category=(category.getRelativeUrl(),),
               domain_generator_method_id=script_id,
               uid=category.getUid())
-                
+
   domain_list.append(domain)
 
 return domain_list

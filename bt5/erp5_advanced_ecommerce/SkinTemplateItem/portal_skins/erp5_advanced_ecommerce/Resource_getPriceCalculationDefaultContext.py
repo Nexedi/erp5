@@ -11,7 +11,7 @@
 # Try to find out the current web site
 web_site_value = context.REQUEST.get('current_web_site', None)
 if web_site_value is None:
-  web_site_value = context.getWebSiteValue()  
+  web_site_value = context.getWebSiteValue()
 
 # If this resource is variated, initialize the default
 # variation context

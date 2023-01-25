@@ -15,7 +15,7 @@ request = portal.REQUEST
 here = request.get('here', None)
 if here is None:
   # Sometimes the object is not in the request, when you edit for example.
-  here = request['PUBLISHED'].aq_parent 
+  here = request['PUBLISHED'].aq_parent
 
 for category in (here, ):
   domain = parent.generateTempDomain(id=category.getId())
@@ -24,7 +24,7 @@ for category in (here, ):
               membership_criterion_category=(category.getRelativeUrl(),),
               domain_generator_method_id=script_id,
               uid=category.getUid())
-                
+
   domain_list.append(domain)
 
 return domain_list

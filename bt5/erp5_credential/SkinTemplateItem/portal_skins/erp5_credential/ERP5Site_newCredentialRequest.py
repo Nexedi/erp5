@@ -3,6 +3,8 @@ Paramameter list :
 reference -- User login is mandatory (String)
 default_email_text -- Email is mandatory (String)"""
 # create the credential request
+import binascii
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 portal = context.getPortalObject()
 module = portal.getDefaultModule(portal_type='Credential Request')
 portal_preferences = portal.portal_preferences
@@ -11,7 +13,7 @@ category_list = portal_preferences.getPreferredSubscriptionAssignmentCategoryLis
 if not context.CredentialRequest_checkLoginAvailability(reference):
   message_str = "Selected login is already in use, please choose different one."
   return portal.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
- 
+
 credential_request = module.newContent(
                 portal_type="Credential Request",
                 first_name=first_name,
@@ -39,7 +41,7 @@ credential_request = module.newContent(
 credential_request.setCategoryList(category_list)
 # Same tag is used as in ERP5 Login._setReference, in order to protect against
 # concurrency between Credential Request and Person object too
-tag = 'set_login_%s' % reference.encode('hex')
+tag = 'set_login_%s' % bytes2str(binascii.hexlify(str2bytes(reference)))
 credential_request.reindexObject(activate_kw={'tag': tag})
 
 #We attach the current user to the credential request if not anonymous
@@ -67,7 +69,7 @@ else:
     # no email verification is needed
     credential_request.submit("Automatic submit")
     message_str = "Credential Request Created."
-    
 
-return portal.Base_redirect(form_id='login_form', 
+
+return portal.Base_redirect(form_id='login_form',
                      keep_items = dict(portal_status_message=context.Base_translateString(message_str)))

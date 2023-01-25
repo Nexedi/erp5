@@ -589,8 +589,8 @@ class TestDocument(TestDocumentMixin):
   def testTempOOoDocument_get_size(self):
     # test get_size on temporary OOoDocument
     doc = self.portal.newContent(temp_object=True, portal_type='OOo Document', id='tmp')
-    doc.edit(data='OOo')
-    self.assertEqual(len('OOo'), doc.get_size())
+    doc.edit(data=b'OOo')
+    self.assertEqual(len(b'OOo'), doc.get_size())
 
   def testOOoDocument_hasData(self):
     # test hasData on OOoDocument
@@ -629,12 +629,22 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="TEST-en-002.doc"',
                       response.headers['content-disposition'])
+
     response = self.publish('%s/OOoDocument_getOOoFile' % doc.getPath(),
                             basic='member_user1:secret')
     self.assertEqual('application/vnd.oasis.opendocument.text',
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="TEST-en-002.odt"',
                       response.headers['content-disposition'])
+
+    # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    doc.setFilename('テスト-jp-002.doc')
+    self.tic()
+    response = self.publish('%s/Base_download' % doc.getPath(), basic='member_user1:secret')
+    self.assertEqual(
+      response.headers['content-disposition'],
+      'attachment; filename="-jp-002.doc"; filename*=UTF-8\'\'%E3%83%86%E3%82%B9%E3%83%88-jp-002.doc',
+    )
 
   def test_Member_download_pdf_format(self):
     # tests that members can download OOo documents in pdf format (at least in
@@ -670,6 +680,15 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.headers['content-disposition'])
+
+    # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    doc.setFilename('PDFファイル.ods')
+    self.tic()
+    response = self.publish('%s?format=pdf' % doc.getPath(), basic='member_user2:secret')
+    self.assertEqual(
+      response.headers['content-disposition'],
+      'attachment; filename="PDF.pdf"; filename*=UTF-8\'\'PDF%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.pdf',
+    )
 
   def test_05_getCreationDate(self):
     """
@@ -1246,8 +1265,8 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('I use reference to look up TEST\n',
                       document._convertToText())
     html_data = re.sub(self.re_html_nbsp, ' ', document._convertToHTML())
-    self.assert_('I use reference to look up TEST' in html_data)
-    self.assert_('I use reference to look up TEST' in
+    self.assertIn('I use reference to look up TEST', html_data)
+    self.assertIn('I use reference to look up TEST',
                  document.SearchableText())
 
   def test_PDFToPng(self):
@@ -1260,7 +1279,7 @@ class TestDocument(TestDocumentMixin):
                                      display='thumbnail')
     self.assertEqual(mime, 'image/png')
     # it's a valid PNG
-    self.assertEqual(image_data[1:4], 'PNG')
+    self.assertEqual(image_data[1:4], b'PNG')
 
   def test_PDFToJpg(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1271,7 +1290,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/jpeg')
-    self.assertEqual(image_data[6:10], 'JFIF')
+    self.assertEqual(image_data[6:10], b'JFIF')
 
   def test_PDFToGif(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1282,7 +1301,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/gif')
-    self.assertEqual(image_data[0:4], 'GIF8')
+    self.assertEqual(image_data[0:4], b'GIF8')
 
   def test_PDFToTiff(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1293,7 +1312,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/tiff')
-    self.assertIn(image_data[0:2], ('II', 'MM'))
+    self.assertIn(image_data[0:2], (b'II', b'MM'))
 
 
   def test_PDF_content_information(self):
@@ -1372,7 +1391,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEqual(pdf.getValidationState(), "shared")
     result = pdf.getContentInformation()
-    self.assertNotEquals(result, None)
+    self.assertNotEqual(result, None)
 
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1450,7 +1469,7 @@ class TestDocument(TestDocumentMixin):
     )
     self.tic()
     content_type, png = presentation.convert(format="png")
-    self.assertEquals(content_type, "image/png")
+    self.assertEqual(content_type, "image/png")
     image = self.portal.image_module.newContent(
       portal_type="Image",
       data=png,
@@ -1458,7 +1477,7 @@ class TestDocument(TestDocumentMixin):
     )
     self.tic()
     content_type, txt = image.convert(format="txt")
-    self.assertEquals(content_type, "text/plain")
+    self.assertEqual(content_type, "text/plain")
     self.assertIn("ERP5 DMS page 1", txt)
 
   def test_Document_getStandardFilename(self):
@@ -1493,7 +1512,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual('Image', document.getPortalType())
     resized_image = document.convert(format='png', display='small')[1]
     identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
-    self.assertFalse('1-bit' in identify_output)
+    self.assertNotIn('1-bit', identify_output)
     self.assertEqual('ERP5 is a free software.', document.asText())
 
   def test_Base_showFoundText(self):
@@ -1538,7 +1557,7 @@ class TestDocument(TestDocumentMixin):
                                           str(pdf_data),
                                           object=web_page, context=web_page,
                                           filename='test.pdf')
-    self.assertTrue(string_to_test in text_content)
+    self.assertIn(string_to_test, text_content)
 
   def test_HTML_to_ODT_conversion_keep_related_image_list(self):
     """This test create a Web Page and an Image.
@@ -1710,39 +1729,39 @@ class TestDocument(TestDocumentMixin):
 
     # Check that outputted stripped html is safe
     safe_html = web_page.asStrippedHTML()
-    self.assertTrue('My splendid title' in safe_html)
+    self.assertIn('My splendid title', safe_html)
     self.assertTrue('script' not in safe_html, safe_html)
     self.assertTrue('something.js' not in safe_html, safe_html)
-    self.assertTrue('<body>' not in safe_html)
-    self.assertTrue('<head>' not in safe_html)
-    self.assertTrue('<style' not in safe_html)
-    self.assertTrue('#FFAA44' not in safe_html)
-    self.assertTrue('5;url=http://example.com/' not in safe_html)
-    self.assertTrue('Set-Cookie' not in safe_html)
-    self.assertTrue('javascript' not in safe_html)
-    self.assertTrue('alert("da");' not in safe_html)
-    self.assertTrue('javascript:DosomethingNasty()' not in safe_html)
-    self.assertTrue('onclick' not in safe_html)
-    self.assertTrue('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAIAAAACtmMCAAAG' in safe_html)
-    self.assertTrue('7CcvP/PS8U90/wv0LRSL/rwEwgAAAABJRU5ErkJggg=="' in safe_html)
+    self.assertNotIn('<body>', safe_html)
+    self.assertNotIn('<head>', safe_html)
+    self.assertNotIn('<style', safe_html)
+    self.assertNotIn('#FFAA44', safe_html)
+    self.assertNotIn('5;url=http://example.com/', safe_html)
+    self.assertNotIn('Set-Cookie', safe_html)
+    self.assertNotIn('javascript', safe_html)
+    self.assertNotIn('alert("da");', safe_html)
+    self.assertNotIn('javascript:DosomethingNasty()', safe_html)
+    self.assertNotIn('onclick', safe_html)
+    self.assertIn('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAIAAAACtmMCAAAG', safe_html)
+    self.assertIn('7CcvP/PS8U90/wv0LRSL/rwEwgAAAABJRU5ErkJggg=="', safe_html)
 
     # Check that outputed entire html is safe
     entire_html = web_page.asEntireHTML()
-    self.assertTrue('My splendid title' in entire_html)
+    self.assertIn('My splendid title', entire_html)
     self.assertTrue('script' not in entire_html, entire_html)
     self.assertTrue('something.js' not in entire_html, entire_html)
-    self.assertTrue('<title>' in entire_html)
-    self.assertTrue('<body>' in entire_html)
-    self.assertTrue('<head>' in entire_html)
-    self.assertTrue('<style' not in entire_html)
-    self.assertTrue('#FFAA44' not in entire_html)
-    self.assertTrue('charset=utf-8' in entire_html)
-    self.assertTrue('javascript' not in entire_html)
-    self.assertTrue('alert("da");' not in entire_html)
-    self.assertTrue('javascript:DosomethingNasty()' not in entire_html)
-    self.assertTrue('onclick' not in entire_html)
-    self.assertTrue('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAIAAAACtmMCAAAG' in safe_html)
-    self.assertTrue('7CcvP/PS8U90/wv0LRSL/rwEwgAAAABJRU5ErkJggg=="' in safe_html)
+    self.assertIn('<title>', entire_html)
+    self.assertIn('<body>', entire_html)
+    self.assertIn('<head>', entire_html)
+    self.assertNotIn('<style', entire_html)
+    self.assertNotIn('#FFAA44', entire_html)
+    self.assertIn('charset=utf-8', entire_html)
+    self.assertNotIn('javascript', entire_html)
+    self.assertNotIn('alert("da");', entire_html)
+    self.assertNotIn('javascript:DosomethingNasty()', entire_html)
+    self.assertNotIn('onclick', entire_html)
+    self.assertIn('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAIAAAACtmMCAAAG', safe_html)
+    self.assertIn('7CcvP/PS8U90/wv0LRSL/rwEwgAAAABJRU5ErkJggg=="', safe_html)
 
     # now check converted value is stored in cache
     format_ = 'html'
@@ -1805,9 +1824,9 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     """
     web_page.edit(text_content=html_content)
     safe_html = web_page.asStrippedHTML()
-    self.assertTrue('inside very broken HTML code' in safe_html)
-    self.assertTrue('AZERTYY' not in safe_html)
-    self.assertTrue('#FFAA44' not in safe_html)
+    self.assertIn('inside very broken HTML code', safe_html)
+    self.assertNotIn('AZERTYY', safe_html)
+    self.assertNotIn('#FFAA44', safe_html)
 
     filename = 'broken_html.html'
     file_object = makeFileUpload(filename)
@@ -1853,8 +1872,8 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     </html>"""
     web_page.edit(text_content=html_content)
     safe_html = web_page.convert('html')[1]
-    self.assertTrue('unicode' not in safe_html)
-    self.assertTrue('utf-8' in safe_html)
+    self.assertNotIn('unicode', safe_html)
+    self.assertIn('utf-8', safe_html)
 
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
@@ -1977,7 +1996,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     my_utf_eight_token = 'ùééàçèîà'
     text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
     web_page.edit(text_content=text_content)
-    self.assertTrue(my_utf_eight_token in web_page.asStrippedHTML())
+    self.assertIn(my_utf_eight_token, web_page.asStrippedHTML())
     self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
 
   def test_PDFDocument_asTextConversion(self):
@@ -2085,12 +2104,12 @@ return 1
       for credential in ['ERP5TypeTestCase:', 'zope_user:']:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertTrue('Status: 200 OK' in response.getOutput())
+        self.assertIn('200 OK', response.getOutput())
         # OOod produced HTML navigation, test it
-        self.assertTrue('First page' in response.getBody())
-        self.assertTrue('Back' in response.getBody())
-        self.assertTrue('Continue' in response.getBody())
-        self.assertTrue('Last page' in response.getBody())
+        self.assertIn('First page', response.getBody())
+        self.assertIn('Back', response.getBody())
+        self.assertIn('Continue', response.getBody())
+        self.assertIn('Last page', response.getBody())
 
   def test_getTargetFormatItemList(self):
     """
@@ -2105,14 +2124,14 @@ return 1
     upload_file = makeFileUpload('TEST.Large.Document.pdf')
     pdf = module.newContent(portal_type=portal_type, file=upload_file)
 
-    self.assertTrue('html' in pdf.getTargetFormatList())
-    self.assertTrue('png' in pdf.getTargetFormatList())
-    self.assertTrue('txt' in pdf.getTargetFormatList())
+    self.assertIn('html', pdf.getTargetFormatList())
+    self.assertIn('png', pdf.getTargetFormatList())
+    self.assertIn('txt', pdf.getTargetFormatList())
 
     web_page=self.portal.web_page_module.newContent(portal_type='Web Page',
                                                     content_type='text/html')
-    self.assertTrue('odt' in web_page.getTargetFormatList())
-    self.assertTrue('txt' in web_page.getTargetFormatList())
+    self.assertIn('odt', web_page.getTargetFormatList())
+    self.assertIn('txt', web_page.getTargetFormatList())
 
     image=self.portal.image_module.newContent(portal_type='Image',
                                                     content_type='image/png')
@@ -2126,9 +2145,9 @@ return 1
     upload_file = makeFileUpload('Foo_001.odg')
     presentation.edit(file=upload_file)
     self.tic()
-    self.assertTrue('odg' in presentation.getTargetFormatList())
-    self.assertTrue('jpg' in presentation.getTargetFormatList())
-    self.assertTrue('png' in presentation.getTargetFormatList())
+    self.assertIn('odg', presentation.getTargetFormatList())
+    self.assertIn('jpg', presentation.getTargetFormatList())
+    self.assertIn('png', presentation.getTargetFormatList())
 
   def test_convertWebPageWithEmbeddedZODBImageToImageOnTraversal(self):
     """
@@ -2308,24 +2327,24 @@ return 1
     self.tic()
 
     response = getURL(image_document.absolute_url(), **{'format':''})
-    self.assertTrue('Content-Type: image/png\r\n'  in response.info().headers)
-    self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-002.png') in response.info().headers)
+    self.assertIn('Content-Type: image/png\r\n', response.info().headers)
+    self.assertIn('Content-Length: %s\r\n' %getFileSize('TEST-en-002.png'), response.info().headers)
 
     response = getURL(ooo_document.absolute_url(), **{'format':''})
-    self.assertTrue('Content-Type: application/vnd.oasis.opendocument.presentation\r\n'  in response.info().headers)
-    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n' in response.info().headers)
-    self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp') in response.info().headers)
+    self.assertIn('Content-Type: application/vnd.oasis.opendocument.presentation\r\n', response.info().headers)
+    self.assertIn('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n', response.info().headers)
+    self.assertIn('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp'), response.info().headers)
 
     response = getURL(pdf_document.absolute_url(), **{'format':''})
-    self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
-    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
+    self.assertIn('Content-Type: application/pdf\r\n', response.info().headers)
+    self.assertIn('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n', response.info().headers)
 
     response = getURL(pdf_document.absolute_url(), **{'format':'pdf'})
-    self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
-    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
+    self.assertIn('Content-Type: application/pdf\r\n', response.info().headers)
+    self.assertIn('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n', response.info().headers)
 
     response = getURL(web_page_document.absolute_url(), **{'format':''})
-    self.assertTrue('Content-Type: text/html; charset=utf-8\r\n'  in response.info().headers)
+    self.assertIn('Content-Type: text/html; charset=utf-8\r\n', response.info().headers)
 
   def test_checkConversionFormatPermission(self):
     """
@@ -2530,9 +2549,9 @@ return 1
     self.tic()
     # full text indexation
     full_text_result = portal.erp5_sql_connection.manage_test('select * from full_text where uid="%s"' %document.getUid())
-    self.assertTrue('subject2' in full_text_result[0]['searchabletext'])
-    self.assertTrue('subject1' in full_text_result[0]['searchabletext'])
-    self.assertTrue(document.getReference() in full_text_result[0]['searchabletext'])
+    self.assertIn('subject2', full_text_result[0]['SearchableText'])
+    self.assertIn('subject1', full_text_result[0]['SearchableText'])
+    self.assertIn(document.getReference(), full_text_result[0]['SearchableText'])
 
     # subject indexation
     for subject_list in (['subject1',], ['subject2',],
@@ -2569,9 +2588,9 @@ return 1
     document.edit(data=makeFileUpload('TEST-en-002.odt').read())
     self.tic()
     self.assertTrue(document.hasBaseData())
-    self.assertNotEquals(previous_base_data, document.getBaseData(),
+    self.assertNotEqual(previous_base_data, document.getBaseData(),
                          'base data is not refreshed')
-    self.assertNotEquals(previous_md5, document.getContentMd5())
+    self.assertNotEqual(previous_md5, document.getContentMd5())
     self.assertEqual(document.getExternalProcessingState(), 'converted')
     previous_md5 = document.getContentMd5()
     previous_base_data = document.getBaseData()
@@ -2581,9 +2600,9 @@ return 1
     document.edit(file=makeFileUpload('TEST-en-002.doc'))
     self.tic()
     self.assertTrue(document.hasBaseData())
-    self.assertNotEquals(previous_base_data, document.getBaseData(),
+    self.assertNotEqual(previous_base_data, document.getBaseData(),
                          'base data is not refreshed')
-    self.assertNotEquals(previous_md5, document.getContentMd5())
+    self.assertNotEqual(previous_md5, document.getContentMd5())
     self.assertEqual(document.getExternalProcessingState(), 'converted')
 
   # Currently, 'empty' state in processing_status_workflow is only set
@@ -2884,7 +2903,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
 
     self.tic()
 
-    self.assert_('I use reference to look up TEST' in preview_html)
+    self.assertIn('I use reference to look up TEST', preview_html)
 
   def test_DownloadableDocumentSize(self):
     '''Check that once the document is converted and cached, its size is
@@ -2993,11 +3012,91 @@ class TestDocumentPerformance(TestDocumentMixin):
         req_time)
 
 
+class DocumentConsistencyTestCase(ERP5TypeTestCase):
+  portal_type = NotImplemented
+  content_type = NotImplemented
+  filename = NotImplemented
+
+  def _getDocumentModule(self):
+    return self.portal.document_module
+
+  def afterSetUp(self):
+    self.document = self._getDocumentModule().newContent(portal_type=self.portal_type)
+    self.file_upload = makeFileUpload(self.filename)
+    with open(makeFilePath(self.filename)) as f:
+      self.file_data = f.read()
+    self.file_size = len(self.file_data)
+
+  def _checkDocument(self):
+    self.assertEqual(self.document.checkConsistency(), [])
+    from Products.ERP5Type.Constraint import PropertyTypeValidity
+    self.assertEqual(
+      PropertyTypeValidity(
+        id='type_check',
+        description='Type Validity Check',
+      ).checkConsistency(self.document),
+      [],
+    )
+    self.assertEqual(self.document.getData(), self.file_data)
+    self.assertEqual(self.document.getSize(), self.file_size)
+    self.assertEqual(self.document.getContentType(), self.content_type)
+    self.assertEqual(self.document.getFilename(), self.filename)
+
+  def test_set_file(self):
+    self.document.edit(file=self.file_upload)
+    self._checkDocument()
+
+  def test_set_data(self):
+    self.document.edit(data=self.file_data)
+    # when setting data, we have to set the content type and filename ourselves
+    self.document.setContentType(self.content_type)
+    self.document.setFilename(self.filename)
+    self._checkDocument()
+
+
+class DrawingConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Drawing'
+  filename = 'Foo_001.odg'
+  content_type = 'application/vnd.oasis.opendocument.graphics'
+
+class FileConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'File'
+  filename = 'dummy.bin'
+  content_type = 'application/octet-stream'
+
+class PDFConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'PDF'
+  filename = 'TEST.Large.Document.pdf'
+  content_type = 'application/pdf'
+
+class PresentationConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Presentation'
+  filename = 'TEST-en-003.odp'
+  content_type = 'application/vnd.oasis.opendocument.presentation'
+
+class SpreadsheetConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Spreadsheet'
+  filename = 'import_big_spreadsheet.ods'
+  content_type = 'application/vnd.oasis.opendocument.spreadsheet'
+
+class TextConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Text'
+  filename = 'REF-en-001.odt'
+  content_type = 'application/vnd.oasis.opendocument.text'
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
   suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  suite.addTest(unittest.makeSuite(DrawingConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(FileConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(PDFConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(PresentationConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(SpreadsheetConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(TextConsistencyTestCase))
+
   # Run erp5_base's TestImage with dms installed (because dms has specific interactions)
   from erp5.component.test.testERP5Base import TestImage
   suite.addTest(unittest.makeSuite(TestImage))

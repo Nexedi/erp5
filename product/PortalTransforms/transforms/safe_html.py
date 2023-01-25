@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from six import unichr
 from zLOG import ERROR
-from six.moves.html_parser import HTMLParser
+from six.moves.html_parser import HTMLParser, HTMLParseError
 import re
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 import codecs
 
 from Products.PortalTransforms.interfaces import ITransform
@@ -220,7 +220,7 @@ class StrippingParser(HTMLParser):
 
     def handle_data(self, data):
         if self.suppress: return
-        data = escape(data)
+        data = html_quote(data)
         if self.original_charset and isinstance(data, str):
             data = data.decode(self.original_charset)
         self.result.append(data)
@@ -244,7 +244,7 @@ class StrippingParser(HTMLParser):
             from six.moves.html_entities import name2codepoint
             entitydefs = HTMLParser.entitydefs = {'apos':u"'"}
             for k, v in six.iteritems(name2codepoint):
-                entitydefs[k] = chr(v)
+                entitydefs[k] = unichr(v)
         # (end) copied from Python-2.6's HTMLParser.py
         if name in self.entitydefs:
             x = ';'
@@ -294,7 +294,7 @@ class StrippingParser(HTMLParser):
                             self.original_charset = charset
                         v = charset_parser.sub(
                             CharsetReplacer(self.default_encoding), v)
-                    self.result.append(' %s="%s"' % (k, escape(v, True)))
+                    self.result.append(' %s="%s"' % (k, html_quote(v)))
 
             #UNUSED endTag = '</%s>' % tag
             if safeToInt(self.valid.get(tag)):

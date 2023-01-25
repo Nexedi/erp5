@@ -24,5 +24,5 @@ for paysheet in paysheet_list:
     aggregate_list.append(context.getRelativeUrl())
     paysheet.edit(aggregate_list=aggregate_list)
 
-context.REQUEST.response.redirect("%s?portal_status_message=%s" % 
+context.REQUEST.response.redirect("%s?portal_status_message=%s" %
   (context.absolute_url(), "Pay Sheet Transactions have been aggregated, DSN Report can be generated now."))

@@ -1,4 +1,4 @@
-alarm_id_list = ['packing_list_builder_alarm', 
+alarm_id_list = ['packing_list_builder_alarm',
                  'invoice_builder_alarm']
 
 for alarm_id in alarm_id_list:
@@ -6,6 +6,6 @@ for alarm_id in alarm_id_list:
   if alarm is not None:
     alarm.activeSense()
   elif strict:
-    raise ValueError("Alarm %s not found" % alarm_id) 
+    raise ValueError("Alarm %s not found" % alarm_id)
 
 return "Done."

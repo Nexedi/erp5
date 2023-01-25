@@ -21,7 +21,7 @@ if context.getVariationCategoryList():
 for tracking_brain in portal.portal_simulation.getCurrentTrackingList(
                             **tracking_parameters):
   item = tracking_brain.getObject()
- 
+
   item_dict = "%s : %s"% ( item.getReference(),
                            item.getQuantity(at_date=at_date) )
   result_list.append(item_dict)

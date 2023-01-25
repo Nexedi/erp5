@@ -16,7 +16,7 @@ return 1
 ## from AccessControl import getSecurityManager
 ## user = getSecurityManager().getUser()
 ## role_list = user.getRolesInContext(context)
-## 
+##
 ## # Users involved in the document may view it in editable mode
 ## if "Associate" in role_list or "Assignee" in role_list or\
 ##    "Assignor" in role_list or "Manager" in role_list or "Owner" in role_list:
@@ -26,7 +26,7 @@ return 1
 ## if format is None:
 ##   return 0
 ##
-## # All users with view permission may view the document 
+## # All users with view permission may view the document
 ## # in read only mode
 ## if format in ('html', 'stripped-html', 'text', 'txt', 'pdf', 'png', 'jpg', 'gif'):
 ##   return 1

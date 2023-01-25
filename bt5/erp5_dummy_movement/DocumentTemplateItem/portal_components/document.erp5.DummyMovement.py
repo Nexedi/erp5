@@ -72,7 +72,7 @@ class DummyMovement(Movement):
     parent = self.getParentValue()
     if isinstance(parent, DummyDelivery):
       self = parent
-    return DummyDelivery.getSimulationState.im_func(self)
+    return DummyDelivery.getSimulationState.__func__(self)
 
   def getDeliveryValue(self):
     """

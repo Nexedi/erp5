@@ -1,7 +1,7 @@
 /*jslint indent: 2, nomen: true */
-/*global window, rJS, RSVP, PDFJS, webViewerLoad, Uint8Array,
-        ArrayBuffer, PDFViewerApplication, FileReader */
-(function (window, rJS, RSVP, PDFJS, webViewerLoad) {
+/*global window, rJS, RSVP, PDFJS, configure, webViewerInitialized,
+        PDFViewerApplication, FileReader, PasswordPrompt */
+(function (window, rJS, RSVP, PDFJS, configure, webViewerInitialized, PDFViewerApplication, PasswordPrompt) {
   "use strict";
 
   rJS(window)
@@ -13,23 +13,29 @@
         });
     })
     .declareMethod("render", function (options) {
-      [].forEach.call(window.document.head.querySelectorAll("base"), function (el) {
-        // XXX GadgetField adds <base> tag to fit to the parent page location, it's BAD to remove them.
-        //     In the case of pdf.js, all component are loaded dynamicaly through ajax requests in
-        //     pdf-js "folder". By setting a <base> tag, we change the url resolution behavior, and
-        //     we break all dynamic links. So, deleting <base> is required.
-        window.document.head.removeChild(el);
+      var gadget = this;
+      gadget.props.key = options.key;
+      configure(PDFJS);
+      PDFJS.locale = options.language;
+      if (options.password) {
+        PasswordPrompt._original_open = PasswordPrompt.open;
+        var retries = 0;
+        PasswordPrompt.open = function () {
+          if (retries) {
+            return this._original_open();
+          }
+          retries++;
+          return this.updatePassword(options.password);
+        };
+      }
+      return PDFViewerApplication.initialize().then(function() {
+        webViewerInitialized(options.value);
+        // hide some buttons that do not make sense for us 
+        gadget.props.element.querySelector('#viewBookmark').hidden = true;
+        gadget.props.element.querySelector('#documentProperties').hidden = true;
+        gadget.props.element.querySelector('#download').hidden = true;
+        gadget.props.element.querySelector('#openFile').hidden = true;
       });
-      this.props.key = options.key;
-      webViewerLoad(options.value);
-
-      // hide few buttons for now
-      this.props.element.querySelector('#viewBookmark').hidden = true;
-      this.props.element.querySelector('#documentProperties').hidden = true;
-      this.props.element.querySelector('#documentProperties').hidden = true;
-      this.props.element.querySelector('#download').hidden = true;
-      
-      return;
     })
     .declareMethod("getContent", function () {
       var form_data = {};
@@ -57,4 +63,4 @@
         return form_data;
       });
     });
-}(window, rJS, RSVP, PDFJS, webViewerLoad, PDFViewerApplication));
+}(window, rJS, RSVP, PDFJS, configure, webViewerInitialized, PDFViewerApplication, PasswordPrompt));

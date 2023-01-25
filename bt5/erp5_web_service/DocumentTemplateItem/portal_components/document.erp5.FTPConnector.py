@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import posixpath
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -64,6 +66,7 @@ class FTPConnector(XMLObject):
       # XXX Must manage in the future ftp and ftps protocol
       raise NotImplementedError("Protocol %s is not yet implemented" %(self.getUrlProtocol(),))
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'renameFile')
   def renameFile(self, old_path, new_path):
     """ Move a file """
     conn = self.getConnection()
@@ -72,6 +75,7 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'removeFile')
   def removeFile(self, filepath):
     """Delete the file"""
     conn = self.getConnection()
@@ -80,6 +84,7 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'listFiles')
   def listFiles(self, path=".", sort_on=None):
     """ List file of a directory """
     conn = self.getConnection()
@@ -88,6 +93,7 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFile')
   def getFile(self, filepath, binary=True):
     """ Try to get a file on the remote server """
     conn = self.getConnection()
@@ -99,22 +105,33 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'putFile')
   def putFile(self, filename, data, remotepath='.', confirm=True):
     """ Send file to the remote server """
     conn = self.getConnection()
+    # This API is misleading, and in reality filename often contains a path.
+    # So let's use python posixpath API to try to reconstruct the path in a
+    # robust way (ie: what if remotepath is './a' and filename is 'b/c.txt' ?),
+    # and recompute the correct remotepath and filename
+    remotepath, filename = posixpath.split(
+      posixpath.join(remotepath, filename)
+    )
     try:
       if self.isUseTemporaryFileOnWrite():
         temp_filename = '_%s.tmp' % filename
         # Simulation transaction system
         conn.writeFile(remotepath, temp_filename, data, confirm=confirm)
-        self.activate(activity='SQLQueue').renameFile('%s/%s' % (remotepath, temp_filename),
-                                                      '%s/%s' % (remotepath, filename))
+        self.activate(activity='SQLQueue').renameFile(
+          posixpath.join(remotepath, temp_filename),
+          posixpath.join(remotepath, filename)
+        )
       else:
-        conn.writeFile(remotepath, '%s' % filename, data, confirm=confirm)
+        conn.writeFile(remotepath, filename, data, confirm=confirm)
     finally:
       conn.logout()
 
-  def createDirectory(self, path, mode=0777):
+  security.declareProtected(Permissions.AccessContentsInformation, 'createDirectory')
+  def createDirectory(self, path, mode=0o777):
     """Create a directory `path`, with file mode `mode`.
 
     The directory is created immediatly, even if transaction is aborted.
@@ -125,6 +142,7 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'removeDirectory')
   def removeDirectory(self, path):
     """Create a directory `path`, with file mode `mode`.
 

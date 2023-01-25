@@ -8,7 +8,7 @@
   with same reference, version, language. Pretty messages
   are provided to the user.
 """
-context.Base_createCloneDocument(web_mode=1, 
-                                                                    clone=clone, 
-                                                                    form_id=form_id, 
+context.Base_createCloneDocument(web_mode=1,
+                                                                    clone=clone,
+                                                                    form_id=form_id,
                                                                     editable_mode=editable_mode)

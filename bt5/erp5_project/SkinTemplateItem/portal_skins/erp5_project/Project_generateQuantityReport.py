@@ -26,8 +26,8 @@ def getMonthDict(line):
       while previous_current_date.month()==current_date.month() and current_date < stop_date:
         current_date = current_date + 1
       month_dict[year_and_month] = quantity / nb_days * (current_date-previous_current_date) * 86400
-      
-      
+
+
   return month_dict
 
 def getTotalQuantity(line,worker):
@@ -37,7 +37,7 @@ def getTotalQuantity(line,worker):
     for child in child_list:
       child_quantity = getTotalQuantity(child,worker)
       for key,value in child_quantity.items():
-        if not quantity.has_key(key):
+        if key not in quantity:
           quantity[key] = 0
         quantity[key] = quantity[key] + value
   else:
@@ -62,7 +62,7 @@ while getYearAndMonth(current_date)!=getYearAndMonth(context.getStopDate()):
   while current_date.day() != start_date_day and current_date-previous_current_date<31:
     current_date = current_date + 1
   month_list.append(getYearAndMonth(current_date))
-   
+
 month_list.append((None,None))
 total_dict = {}
 total_dict['year'] = 'Total'
@@ -73,14 +73,14 @@ for year,month in month_list:
   listbox_line['month'] = month
   for worker in worker_list:
     quantity = 0
-    if worker_quantity[worker].has_key((year,month)):
+    if (year,month) in worker_quantity[worker]:
       quantity = worker_quantity[worker][(year,month)]
     worker_title = 'unknown'
     if worker is not None:
       worker_title = worker.getTitle()
     total_dict[worker_title] = total_dict.get(worker_title,0) + quantity
     listbox_line[worker_title] = quantity
-  listbox.append(listbox_line)  
+  listbox.append(listbox_line)
 listbox.append(total_dict)
 
 

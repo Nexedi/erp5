@@ -4,7 +4,7 @@
   on, at maximum, bundle_object_count objects.
 
   bundle_object_count
-    Maximum number of objects to deal with in one transaction. 
+    Maximum number of objects to deal with in one transaction.
     An activity is started after each successfull execution which
     found bundle_object_count to work on.
   property_override_method_id
@@ -142,7 +142,7 @@ else:
       reference_dict = getattr(context, property_override_method_id)(instance=actual_object)
     do_reindex = False
     for attribute_id in attribute_id_list:
-      if not reference_dict.has_key(attribute_id):
+      if attribute_id not in reference_dict:
         reference_value = actual_object.getProperty(attribute_id)
       else:
         reference_value = reference_dict[attribute_id]
@@ -177,7 +177,7 @@ else:
                      severity=severity,
                      detail='\n'.join(result_list))
   activate(active_process=active_process,
-            activity='SQLQueue', 
+            activity='SQLQueue',
             priority=2,
             tag=tag).ERP5Site_saveCheckCatalogTableResult(active_result)
 

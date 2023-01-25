@@ -55,9 +55,9 @@ for brain in context.PaymentTransactionGroup_getAccountingTransactionLineList():
   else:
     assert brain.payment_uid == transaction_line.getDestinationPaymentUid()
     creditor_entity = transaction_line.getSourceSectionValue()
-    creditor_bank_account = transaction_line.getSourcePaymentValue() 
+    creditor_bank_account = transaction_line.getSourcePaymentValue()
   assert creditor_bank_account.getValidationState() == 'validated', \
-    '%s is not validated' % creditor_bank_account.getRelativeUrl() 
+    '%s is not validated' % creditor_bank_account.getRelativeUrl()
 
   assert transaction_line.AccountingTransactionLine_checkPaymentBelongToSection(source=True), \
     'source bank account on %s does not belong to section' % transaction_line.getRelativeUrl()
@@ -78,7 +78,7 @@ for brain in context.PaymentTransactionGroup_getAccountingTransactionLineList():
         'Ustrd': transaction_line.AccountingTransactionLine_getSEPACreditTransferRemittanceInformation(),
       },
       'Cdtr': {
-        'Nm': creditor_entity.getCorporateName() or creditor_entity.getTitle(),
+        'Nm': creditor_entity.getProperty('corporate_name') or creditor_entity.getTitle(),
         'PstlAdr': (creditor_entity.getDefaultAddressText() or '').splitlines(),
         'Ctry': creditor_entity.getDefaultAddressRegion() and creditor_entity.getDefaultAddressValue().getRegionReference(),
       },

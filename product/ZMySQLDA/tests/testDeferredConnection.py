@@ -136,7 +136,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     try:
       try:
         self.commit()
-      except OperationalError, m:
+      except OperationalError as m:
         if m[0] not in hosed_connection:
           raise
       else:

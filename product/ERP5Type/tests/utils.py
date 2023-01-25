@@ -136,7 +136,7 @@ class DummyMessageCatalog:
     else:
       return default
   def translate(self, msgid, mapping=None, context=None,
-                target_language=None, default=None):
+                target_language=None, default=None, *args, **kw):
     return default
 
 class DummyLocalizer:
@@ -399,7 +399,7 @@ def createZServer(log=os.devnull, zserver_type='http'):
       hs.__init__(ip, port, resolver=None, logger_object=lg)
       hs.install_handler(zhandler_class(module='Zope2', uri_base=''))
       return hs
-    except socket.error, e:
+    except socket.error as e:
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()

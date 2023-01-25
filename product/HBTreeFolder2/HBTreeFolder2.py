@@ -13,7 +13,7 @@
 ##############################################################################
 
 import operator
-from cgi import escape
+from Products.PythonScripts.standard import html_quote
 from itertools import chain, islice
 import six
 try:
@@ -309,8 +309,8 @@ class HBTreeFolder2Base (Persistent):
 
         formatted = [listtext0 % pref_rows]
         for optID in islice(self.objectIds(), b_start - 1, b_end):
-            optID = escape(optID)
-            formatted.append(listtext1 % (escape(optID, quote=1), optID))
+            optID = html_quote(optID)
+            formatted.append(listtext1 % (html_quote(optID), optID))
         formatted.append(listtext2)
         return {'b_start': b_start, 'b_end': b_end,
                 'prev_batch_url': prev_url,

@@ -14,7 +14,7 @@ if depth == 0:
     key = person.uid
     if key not in person_dict:
       person_dict[key] = None
-      category_dict = {'relative_url':person.relative_url, 
+      category_dict = {'relative_url':person.relative_url,
                        'portal_type': 'Person',
                        'id':person.id,
                        'title':person.title,
@@ -26,11 +26,11 @@ else:
 for person in person_list:
   domain = parent.generateTempDomain(id = 'sub' + person['id'] )
   domain.edit(title = person['title'],
-              membership_criterion_base_category = ('source', ), 
+              membership_criterion_base_category = ('source', ),
               membership_criterion_category = (person['relative_url'],),
               domain_generator_method_id = script.id,
               uid = person['uid'])
-                
+
   domain_list.append(domain)
 
 return domain_list

@@ -10,15 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>stat_columns</string>
+                <string>anchor</string>
+                <string>columns</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>stat_columns</string>
                 <string>stat_method</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>list_method</string>
-                <string>anchor</string>
-                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -153,6 +153,12 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -68,7 +68,7 @@ This tab can therefore not be used.
 
 <!-- XXX Loop until find not a proxy field -->
 <dtml-let proxy_field="this()"
-          current_field="proxy_field.getRecursiveTemplateField()">
+          current_field="None if proxy_field.getTemplateField() is None else proxy_field.getRecursiveTemplateField()">
 
   <dtml-if "current_field is not None">
     <dtml-let form="current_field.tales_form">
@@ -78,7 +78,7 @@ This tab can therefore not be used.
       <dtml-if fields>
         <tr>
           <td colspan="3" class="form-title">
-            <dtml-var "_.string.capitalize(group)"> properties
+            <dtml-var group capitalize> properties
           </td>
         </tr>
 

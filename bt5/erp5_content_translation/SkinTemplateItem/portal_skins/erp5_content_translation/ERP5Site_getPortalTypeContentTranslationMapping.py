@@ -11,6 +11,6 @@ def getPortalTypeContentTranslationMapping():
 
 getPortalTypeContentTranslationMapping = CachingMethod(
   getPortalTypeContentTranslationMapping,
-      id=script.id, 
+      id=script.id,
       cache_factory='erp5_content_long')
 return getPortalTypeContentTranslationMapping()

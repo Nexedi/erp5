@@ -52,7 +52,7 @@ def isFullMonthPaysheet(paysheet):
                                  paysheet_date.month(),
                                  1)
   return first_date_of_month == paysheet.getStartDate() and last_date_of_month == paysheet.getStopDate()
-  
+
 ZIP_CODE = context.getDestinationSectionValue().getDefaultAddressZipCode()
 INSEE_CODE = getINSEECode(ZIP_CODE)
 
@@ -161,7 +161,7 @@ for movement in context.PaySheetTransaction_getMovementList():
       result['ctp'][category]['quantity'] = result['ctp'][category]['quantity'] + contribution_dict['quantity']
     else:
       result['ctp'][category] = contribution_dict
-  
+
   taxable_base_set = all_taxable_base_set.intersection(contribution_set)
   for category in taxable_base_set:
     category = category.getCodification()

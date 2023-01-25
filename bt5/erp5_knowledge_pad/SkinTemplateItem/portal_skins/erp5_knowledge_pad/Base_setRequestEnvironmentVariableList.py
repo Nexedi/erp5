@@ -15,7 +15,7 @@ if is_asynchronous_gadget and \
     current_web_section = context.getWebSectionValue()
   request.set('current_web_section', current_web_section)
 
-  # current_web_document 
+  # current_web_document
   if request.get('current_web_document', None) is None:
     if context.getDefaultDocumentValue() is not None:
       current_web_document = context.getDefaultDocumentValue()

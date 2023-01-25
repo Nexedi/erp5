@@ -2,7 +2,7 @@ from erp5.component.module.Log import log
 log('Deprecated: use Base_getPreferredSectionItemList instead.')
 
 section_cat = context.portal_preferences.getPreferredSectionCategory()
-if section_cat in (None, '') : 
+if section_cat in (None, '') :
   section_cat = context.getPortalDefaultSectionCategory()
 
 section_cat_obj = None

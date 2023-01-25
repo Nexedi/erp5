@@ -10,18 +10,18 @@ if form_id is not None:
   form = getattr(context, form_id, None)
   quantity = int(request.get('field_your_buy_quantity'))
   # FIXME:
-  # this handling of validation errors should be automatically handled by the 
+  # this handling of validation errors should be automatically handled by the
   # button itself
   try:
     params = form.validate_all_to_request(request)
-  except FormValidationError, validation_errors:
+  except FormValidationError as validation_errors:
     # Pack errors into the request
     field_errors = form.ErrorFields(validation_errors)
     request.set('field_errors', field_errors)
     # Make sure editors are pushed back as values into the REQUEST object
     for f in form.get_fields():
       field_id = f.id
-      if request.has_key(field_id):
+      if field_id in request:
         value = request.get(field_id)
         if callable(value):
           value(request)

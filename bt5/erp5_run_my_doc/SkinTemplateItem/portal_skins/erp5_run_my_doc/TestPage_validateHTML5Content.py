@@ -8,5 +8,5 @@ if len(error_list) > 0:
 else:
   portal_status_message = translateString("No error was found.")
 
-return context.Base_redirect(context.REQUEST.get("form_id", ""), 
+return context.Base_redirect(context.REQUEST.get("form_id", ""),
                              keep_items=dict(portal_status_message=portal_status_message))

@@ -24,8 +24,8 @@ if hour_minute or seconds:
     hour_minute_text = "%02dh%02dmn%02ds" % (date.hour(), date.minute(), date.second())
   else:
     hour_minute_text = "%02dh%02dmn" % (date.hour(), date.minute())
-  result = context.Base_translateString("${date} at ${hour_minute_text}", 
+  result = context.Base_translateString("${date} at ${hour_minute_text}",
               mapping = {'date' : result, 'hour_minute_text' : hour_minute_text  })
-  
+
 
 return result

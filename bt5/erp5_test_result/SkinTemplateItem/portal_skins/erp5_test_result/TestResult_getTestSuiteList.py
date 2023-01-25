@@ -3,7 +3,7 @@
 """
 test_suite_list = []
 test_result_line_list = context.objectValues(
-                          portal_type = 'Test Result Line', 
+                          portal_type = 'Test Result Line',
                           sort_on="int_index")
 
 if len(test_result_line_list) > 0:

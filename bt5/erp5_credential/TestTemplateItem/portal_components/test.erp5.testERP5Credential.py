@@ -126,7 +126,7 @@ class TestERP5Credential(ERP5TypeTestCase):
           base_cat_value = base_cat_value[cat]
     # check categories have been created
     for cat_string in self.getNeededCategoryList():
-      self.assertNotEquals(None,
+      self.assertNotEqual(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
 
@@ -357,7 +357,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     # logout to be annonymous
     self.logout()
     # check annonymous can access subscription form
-    self.assertTrue("Desired Login Name" in request.traverse(form_url)())
+    self.assertIn("Desired Login Name", request.traverse(form_url)())
     # fill in and submit the subscription form
     credential_reference = 'homie'
     result = self.portal.ERP5Site_newCredentialRequest(\
@@ -472,8 +472,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_credential_question_question='credential/library_card_number',
         default_credential_question_answer='923R4293'
         )
-    self.assertTrue('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.'\
-        in result)
+    self.assertIn('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.', result)
 
     self.tic()
     credential_request_module = self.portal.getDefaultModule('Credential Request')
@@ -512,8 +511,7 @@ class TestERP5Credential(ERP5TypeTestCase):
             'car model do you have ?',
         default_credential_question_answer='Renault 4L'
         )
-    self.assertTrue('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.'\
-        in result)
+    self.assertIn('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.', result)
 
     self.tic()
     credential_request_module = self.portal.getDefaultModule('Credential Request')
@@ -678,7 +676,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_credential_question_answer='ABCDeF',
         )
     message_str = "You%20didn%27t%20enter%20the%20correct%20answer."
-    self.assertTrue(message_str not in result)
+    self.assertNotIn(message_str, result)
     self.tic()
     self.login()
     result_list = self.portal.portal_catalog(
@@ -734,7 +732,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     match_obj = re.search(rawstr, body_message)
 
     # check the reset password link is in the mail
-    self.assertNotEquals(match_obj, None)
+    self.assertNotEqual(match_obj, None)
 
     # check the mail is sent to the requester :
     send_to = decoded_message['headers']['to']
@@ -770,14 +768,14 @@ class TestERP5Credential(ERP5TypeTestCase):
     body_message = decoded_message['body']
     match_obj = re.search(rawstr, body_message)
     # check the reset password link is in the mail
-    self.assertNotEquals(match_obj, None)
+    self.assertNotEqual(match_obj, None)
     url = None
     for line in body_message.splitlines():
       match_obj = re.search(rawstr, line)
       if match_obj is not None:
         url = line[line.find('http'):]
     url = url.strip()
-    self.assertNotEquals(url, None)
+    self.assertNotEqual(url, None)
     self.publish(url)
     parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
     self.assertTrue(
@@ -837,7 +835,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                         default_follow_up_uid=credential_reference.getUid())
     self.assertEqual(mail_message.getSimulationState(), "started")
-    self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
+    self.assertIn("key=%s" % mail_message.getReference(), mail_message.getTextContent())
 
   def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
     sequence.edit(automatic_call=False)
@@ -892,7 +890,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_recovery = self.portal.portal_catalog.getResultValue(
        portal_type="Credential Recovery", sort_on=(("creation_date", "DESC"),),
        validation_state="submitted")
-    self.assertNotEquals(None, credential_recovery.getDestinationDecisionValue())
+    self.assertNotEqual(None, credential_recovery.getDestinationDecisionValue())
 
   def test_01_simpleSubscriptionRequest(self):
     '''
@@ -1065,15 +1063,15 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Mail Message",
         default_follow_up_uid=credential_request.getUid())
     last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    self.assertNotEqual((), last_message)
     mfrom, mto, message_text = last_message
     self.assertEqual(mfrom, 'Portal Administrator <postmaster@localhost>')
     self.assertEqual(['Vifib Test <barney@duff.com>'], mto)
-    self.assertNotEquals(re.search(r"Subject\:.*Welcome", message_text), None)
-    self.assertNotEquals(re.search(r"Hello\ Vifib\ Test\,", message_text), None)
+    self.assertNotEqual(re.search(r"Subject\:.*Welcome", message_text), None)
+    self.assertNotEqual(re.search(r"Hello\ Vifib\ Test\,", message_text), None)
     decoded_message = self.decode_email(last_message[2])
     body_message = decoded_message['body']
-    self.assertNotEquals(re.search("key=%s" % mail_message.getReference(),
+    self.assertNotEqual(re.search("key=%s" % mail_message.getReference(),
                                    body_message), None)
 
   def testAssignmentCreationUsingSystemPreferenceProperty(self):
@@ -1119,7 +1117,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     person = self.portal.acl_users.getUser('barney').getUserValue()
     assignment_list = person.objectValues(portal_type="Assignment")
-    self.assertNotEquals(assignment_list, [])
+    self.assertNotEqual(assignment_list, [])
     self.assertEqual(len(assignment_list), 1)
     assignment = assignment_list[0]
     self.assertEqual(assignment.getValidationState(), "open")
@@ -1150,7 +1148,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
     response = self._createCredentialRequest()
-    self.assertTrue('Credential%20Request%20Created.' in response)
+    self.assertIn('Credential%20Request%20Created.', response)
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
         portal_type="Credential Request", reference="barney")
@@ -1165,8 +1163,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual('accepted', credential_request.getValidationState())
 
     response = self._createCredentialRequest()
-    self.assertTrue('Selected%20login%20is%20already%20in%20use%2C%20pl'
-      'ease%20choose%20different%20one' in  response)
+    self.assertIn('Selected%20login%20is%20already%20in%20use%2C%20pl'
+      'ease%20choose%20different%20one',  response)
 
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     self.tic()
@@ -1180,18 +1178,20 @@ class TestERP5Credential(ERP5TypeTestCase):
     reference = self._testMethodName
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
-        default_email_text='some@one.com',)
+        default_email_text='some@one.com',
+        password="secret")
     self.login()
-    self.assertTrue('Credential%20Request%20Created.' in response)
+    self.assertIn('Credential%20Request%20Created.', response)
     self.commit()
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
-        default_email_text='some@one.com',)
+        default_email_text='some@one.com',
+        password="secret")
     self.login()
     # Now is time to assert that even if no reindexation was done yet, another
     # request will already refuse to create new credential request.
-    self.assertTrue('Selected%20login%20is%20already%20in%20use%2C%20pl'
-      'ease%20choose%20different%20one' in response)
+    self.assertIn('Selected%20login%20is%20already%20in%20use%2C%20pl'
+      'ease%20choose%20different%20one', response)
     self.tic()
     # just to be sure that last response not resulted with creation of object
     self.assertEqual(1, self.portal.portal_catalog.countResults(
@@ -1358,12 +1358,12 @@ class TestERP5Credential(ERP5TypeTestCase):
     result = self.portal.ERP5Site_viewCredentialRequestForm()
     # but check as superuser
     self.login()
-    self.assertTrue('%s/asStrippedHTML' % self.contract.getRelativeUrl() in result)
+    self.assertIn('%s/asStrippedHTML' % self.contract.getRelativeUrl(), result)
 
     # check if really contract has been correctly rendered
     self.logout()
     rendered = self.contract.asStrippedHTML()
-    self.assertTrue(self.contract_content in rendered)
+    self.assertIn(self.contract_content, rendered)
 
   def test_ERP5Site_viewCredentialRequestForm_contract_web(self):
     """Check that if contract document is configured and it is published it
@@ -1380,21 +1380,21 @@ class TestERP5Credential(ERP5TypeTestCase):
     result = web_site.ERP5Site_viewCredentialRequestForm()
     # but check as superuser
     self.login()
-    self.assertTrue(self.contract_reference in result)
+    self.assertIn(self.contract_reference, result)
 
     # check if really contract has been correctly rendered
     self.logout()
     rendered = self.portal.unrestrictedTraverse('%s/%s' % (
         web_site.getRelativeUrl(), self.contract_reference)).getTextContent()
-    self.assertTrue(self.contract_content in rendered)
+    self.assertIn(self.contract_content, rendered)
 
   def test_ERP5Site_viewCredentialRequestForm_no_contract(self):
     """Check that if no contract is configured none is shown nor it is not
        required to accept it"""
     self.logout()
     result = self.portal.ERP5Site_viewCredentialRequestForm()
-    self.assertFalse('Contract' in result)
-    self.assertFalse('your_term_confirmation' in result)
+    self.assertNotIn('Contract', result)
+    self.assertNotIn('your_term_confirmation', result)
 
   def test_ERP5Site_newCredentialRecovery_using_default_email_text(self):
     """
@@ -1432,7 +1432,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     )
     person.setDefaultEmailCoordinateText(None)
     # Execute alarm, it will fail because this person has no email
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         RuntimeError,
         "An email has been sent to you"):
       self.tic()

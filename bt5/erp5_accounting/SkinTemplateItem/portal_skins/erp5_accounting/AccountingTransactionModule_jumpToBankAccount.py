@@ -8,7 +8,7 @@ organisation = portal.restrictedTraverse(
 if organisation is not None :
   selection_uid_list = [ bank_account.getUid() for bank_account \
      in organisation.searchFolder(portal_type=portal.getPortalPaymentNodeTypeList()) ]
-  if len(selection_uid_list) != 0 : 
+  if len(selection_uid_list) != 0 :
     kw = {'uid': selection_uid_list}
     portal.portal_selections.setSelectionParamsFor('Base_jumpToRelatedObjectList', kw)
     request.set('object_uid', context.getUid())

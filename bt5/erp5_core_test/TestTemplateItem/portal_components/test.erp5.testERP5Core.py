@@ -74,7 +74,7 @@ if 1: # BBB
     # class
     sm = zope.component.getSiteManager()
     portal = Acquisition.aq_parent(sm)
-    from zope.component.interfaces import ComponentLookupError
+    from zope.interface.interfaces import ComponentLookupError
     try:
       ui_domain = sm.getUtility(ITranslationDomain, name='ui')
     except ComponentLookupError:
@@ -171,22 +171,21 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                       self.portal._getOb(module_id).getTitle())
     self.assertNotEqual(types_tool.getTypeInfo(module_portal_type), None)
     self.assertNotEqual(types_tool.getTypeInfo(object_portal_type), None)
-    self.assertTrue(module_portal_type
-                      in self.portal.getPortalModuleTypeList())
+    self.assertIn(module_portal_type, self.portal.getPortalModuleTypeList())
 
     skin_folder = skins_tool._getOb(portal_skins_folder, None)
     self.assertNotEqual(skin_folder, None)
-    self.assert_('UnitTest_view' in skin_folder.objectIds())
+    self.assertIn('UnitTest_view', skin_folder.objectIds())
     view_form = skin_folder.UnitTest_view
     self.assertEqual('form_view', view_form.pt)
     self.assertEqual('Base_edit', view_form.action)
 
-    self.assert_('UnitTestModule_viewUnitTestList' in skin_folder.objectIds())
+    self.assertIn('UnitTestModule_viewUnitTestList', skin_folder.objectIds())
     list_form = skin_folder.UnitTestModule_viewUnitTestList
     self.assertEqual('form_list', list_form.pt)
     self.assertEqual('Base_doSelect', list_form.action)
-    self.assert_('listbox' in [x.getId() for x in list_form.get_fields()])
-    self.assert_('listbox' in
+    self.assertIn('listbox', [x.getId() for x in list_form.get_fields()])
+    self.assertIn('listbox',
             [x.getId() for x in list_form.get_fields_in_group('bottom')])
 
     # make sure we can use our module
@@ -201,8 +200,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.portal.unittest_module.getShortTitleTranslationDomain())
 
     type_information = self.portal.portal_types[module_portal_type]
-    self.assertTrue('business_application'
-                    in type_information.getTypeBaseCategoryList())
+    self.assertIn('business_application', type_information.getTypeBaseCategoryList())
 
   def check_actions(self, target, expected):
     actions = self.portal.portal_actions.listFilteredActionsFor(target)
@@ -335,10 +333,9 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish('%s/portal_templates' %
                                 self.portal_id, self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
-    self.assertTrue(('Business Template', {})
-                    in translation_service._translated['ui'])
-    self.assertTrue(
-      ('Add ${portal_type}', {'portal_type': 'Business Template'}) in
+    self.assertIn(('Business Template', {}), translation_service._translated['ui'])
+    self.assertIn(
+      ('Add ${portal_type}', {'portal_type': 'Business Template'}),
       translation_service._translated['ui'])
 
   def test_jump_action_translated(self):
@@ -355,13 +352,13 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish('%s/portal_templates' %
                             self.portal_id, self.auth)
     self.assertEqual(HTTP_OK, response.getStatus())
-    self.assertTrue(('Dummy Jump Action', {}) in
+    self.assertIn(('Dummy Jump Action', {}),
                       translation_service._translated['ui'])
 
   def test_error_log(self):
-    self.assertTrue('error_log' in self.portal.objectIds())
+    self.assertIn('error_log', self.portal.objectIds())
     self.assertTrue(self.portal.error_log.getProperties()['copy_to_zlog'])
-    self.assertFalse('Unauthorized' in
+    self.assertNotIn('Unauthorized',
                 self.portal.error_log.getProperties()['ignored_exceptions'])
 
   def test_03_getDefaultModule(self, quiet=quiet, run=run_all_test):
@@ -519,7 +516,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_2 = module.newContent(portal_type='Folder', id='2')
     self.tic()
     redirect = self._Folder_delete(document_1, document_2)
-    self.assert_('Deleted.' in redirect, redirect)
+    self.assertTrue('Deleted.' in redirect, redirect)
     self.assertEqual(module.objectCount(), 0)
 
   def test_Folder_delete_related_object(self):
@@ -567,7 +564,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_1.manage_permission('View', [], acquire=0)
     document_1.manage_permission('Access contents information', [], acquire=0)
     redirect = self._Folder_delete(document_2)
-    self.assert_(urllib.quote('Sorry, 1 item is in use.') in redirect, redirect)
+    self.assertTrue(urllib.quote('Sorry, 1 item is in use.') in redirect, redirect)
     self.assertEqual(module.objectCount(), 2)
 
   def test_getPropertyForUid(self):
@@ -722,3 +719,59 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 *,bar,Bar,SBar,,,3,desc
 *,foo,Foo,,Rfoo,CFoo,,
 """, csv_data)
+
+  def test_ERP5Site_reindexLatestIndexedObjects(self):
+    module = self.portal.newContent(portal_type='Folder', id='test_folder')
+    # simulate a state where we have:
+    #  - a document that has a more recent state in catalog
+    reindexed = module.newContent(portal_type='Folder', id='reindexed', title="zodb")
+    #  - a document that is only in catalog
+    only_in_catalog = module.newContent(portal_type='Folder', id='only_in_catalog')
+    #  - an old document that should not be touched
+    old = module.newContent(portal_type='Folder', id='old')
+    self.tic()
+    self.portal.erp5_sql_connection().query(
+      'update catalog set title="catalog" where uid=%s' % reindexed.getUid())
+    self.portal.erp5_sql_connection().query(
+      'update catalog set path="not/exist", indexation_timestamp=subdate(current_date, 1) where uid=%s'
+      % only_in_catalog.getUid())
+    self.portal.erp5_sql_connection().query(
+      'update catalog set indexation_timestamp=subdate(current_date, 5) where uid=%s'
+      % old.getUid())
+    self.tic()
+
+    # check we have correctly simulated the state
+    self.assertEqual(
+      [
+        b.title for b in self.portal.portal_catalog(
+          select_list=('title', ), uid=reindexed.getUid(),)
+      ], ['catalog'])
+    brain, = self.portal.portal_catalog(uid=only_in_catalog.getUid())
+    self.assertRaises(KeyError, brain.getObject)
+
+    old_indexation_timestamp, = [
+      b.indexation_timestamp for b in self.portal.portal_catalog(
+        select_list=('indexation_timestamp', ), uid=old.getUid(),)
+    ]
+    output = self.portal.ERP5Site_reindexLatestIndexedObjects()
+    self.assertIn(", 1 object unindexed", output)
+    self.tic()
+
+    # the document that has a more recent state in catalog now have
+    # the same state in zodb and catalog (the zodb state)
+    self.assertEqual(
+      [
+        b.title for b in self.portal.portal_catalog(
+          select_list=('title', ), uid=reindexed.getUid())
+      ], ['zodb'])
+    # the document that was only in catalog has been removed from catalog
+    self.assertFalse(
+      list(self.portal.portal_catalog(uid=only_in_catalog.getUid())))
+    # old was not reindexed
+    self.assertEqual(
+      [
+        b.indexation_timestamp for b in self.portal.portal_catalog(
+          select_list=('indexation_timestamp', ),
+          uid=old.getUid(),
+        )
+      ], [old_indexation_timestamp])

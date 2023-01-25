@@ -161,7 +161,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
       self.commit()
 
-      self.assertNotEquals(getattr(person, 'asText', None), None)
+      self.assertNotEqual(getattr(person, 'asText', None), None)
     finally:
       # reset the type
       person_type.setTypeMixin(None)
@@ -186,7 +186,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
       self.commit()
 
-      self.assertNotEquals(getattr(person, 'getCorporateName', None), None)
+      self.assertNotEqual(getattr(person, 'getCorporateName', None), None)
     finally:
       # reset the type
       person_type.setTypeClass('Person')
@@ -227,10 +227,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # a new interface
     class IForTest(Interface):
       pass
-    self.assertFalse('IForTest' in self.portal.portal_types.getInterfaceTypeList())
+    self.assertNotIn('IForTest', self.portal.portal_types.getInterfaceTypeList())
     from Products.ERP5Type import interfaces
     interfaces.IForTest = IForTest
-    self.assertTrue('IForTest' in self.portal.portal_types.getInterfaceTypeList())
+    self.assertIn('IForTest', self.portal.portal_types.getInterfaceTypeList())
 
     # one new type
     dummy_type = types_tool.newContent('InterfaceTestType',
@@ -245,7 +245,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # it's necessary to load the class
     # to have a correct list of interfaces
     implemented_by = list(implementedBy(InterfaceTestType))
-    self.assertFalse(IForTest in implemented_by)
+    self.assertNotIn(IForTest, implemented_by)
     InterfaceTestType.loadClass()
 
     implemented_by = list(implementedBy(InterfaceTestType))
@@ -254,7 +254,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     InterfaceTestType.restoreGhostState()
     implemented_by = list(implementedBy(InterfaceTestType))
-    self.assertFalse(IForTest in implemented_by)
+    self.assertNotIn(IForTest, implemented_by)
 
   def testClassHierarchyAfterReset(self):
     """
@@ -313,19 +313,19 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     synchronizeDynamicModules(self.portal, force=True)
     self.assertTrue(erp5.portal_type.Person.__isghost__)
-    self.assertTrue('constraints' not in erp5.portal_type.Person.__dict__)
+    self.assertNotIn('constraints', erp5.portal_type.Person.__dict__)
 
     getattr(erp5.portal_type.Person, 'constraints')
     self.assertTrue(not erp5.portal_type.Person.__isghost__)
-    self.assertTrue('constraints' in erp5.portal_type.Person.__dict__)
+    self.assertIn('constraints', erp5.portal_type.Person.__dict__)
 
     synchronizeDynamicModules(self.portal, force=True)
     self.assertTrue(erp5.portal_type.Person.__isghost__)
-    self.assertTrue('_categories' not in erp5.portal_type.Person.__dict__)
+    self.assertNotIn('_categories', erp5.portal_type.Person.__dict__)
 
     getattr(erp5.portal_type.Person, '_categories')
     self.assertTrue(not erp5.portal_type.Person.__isghost__)
-    self.assertTrue('_categories' in erp5.portal_type.Person.__dict__)
+    self.assertIn('_categories', erp5.portal_type.Person.__dict__)
 
   def testWorkflowHistoryAccessor(self):
     person = self.portal.person_module.newContent(portal_type='Person')
@@ -708,7 +708,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     portal = self.portal
     person_type = portal.portal_types.Person
 
-    self.assertFalse('TestMigration' in person_type.getTypePropertySheetList())
+    self.assertNotIn('TestMigration', person_type.getTypePropertySheetList())
 
     new_person = None
     try:
@@ -719,7 +719,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       self.commit()
 
-      self.assertTrue('TestMigration' in person_type.getTypePropertySheetList())
+      self.assertIn('TestMigration', person_type.getTypePropertySheetList())
 
       # The accessor holder will be generated once the new Person will
       # be created as Person type has test Property Sheet
@@ -732,7 +732,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self.assertHasAttribute(erp5.accessor_holder.property_sheet,
                               'TestMigration')
 
-      self.assertTrue(erp5.accessor_holder.property_sheet.TestMigration in \
+      self.assertIn(erp5.accessor_holder.property_sheet.TestMigration, \
                       erp5.portal_type.Person.mro())
 
       # Check that the accessors have been properly created for all
@@ -801,7 +801,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # unassigned by creating a new person in Person module
     self.commit()
 
-    self.assertFalse('TestMigration' in person_type.getTypePropertySheetList())
+    self.assertNotIn('TestMigration', person_type.getTypePropertySheetList())
 
     try:
       new_person = portal.person_module.newContent(
@@ -1237,7 +1237,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     setSite(old_site)
 
     # Call checkConsistency and make sure that ConnectionStateError does not occur.
-    self.assert_(self.test_module.checkConsistency())
+    self.assertTrue(self.test_module.checkConsistency())
 
   def testAddEmptyProperty(self):
     """
@@ -1257,7 +1257,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     accessor = getattr(property_sheet_tool, "setTitle", None)
     # sites used to break at this point
-    self.assertNotEquals(None, accessor)
+    self.assertNotEqual(None, accessor)
     # try to create a Career, which uses Arrow Property Sheet
     try:
       person.newContent(portal_type="Career")
@@ -1552,7 +1552,7 @@ class TestZodbModuleComponent(SecurityTestCase):
       module_name,
       fromlist=[self._document_class._getDynamicModuleNamespace()],
       level=0)
-    self.assertTrue(module_name in sys.modules)
+    self.assertIn(module_name, sys.modules)
     return module
 
   def testValidateInvalidateDelete(self):
@@ -1750,7 +1750,7 @@ class TestZodbModuleComponent(SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEqual(component.getValidationState(), 'modified')
-      self.assertTrue(error_message in [m.getMessage().translate()
+      self.assertIn(error_message, [m.getMessage().translate()
                                         for m in component.checkConsistency()])
       self.assertEqual(component.getTextContentErrorMessageList(), [])
       self.assertEqual(component.getTextContentWarningMessageList(), [])
@@ -2015,7 +2015,7 @@ def foo(*args, **kwargs):
 
     # Create a new Component which uses a specific version of the previously
     # created Component
-    reference = self._generateReference('TestImportVersionedComponentOnly') 
+    reference = self._generateReference('TestImportVersionedComponentOnly')
     component_import = self._newComponent(
       reference,
       self._getValidSourceCode(reference) + """
@@ -2285,12 +2285,39 @@ class FooBar(ValidationFailed):
   def __init__(self, *args, **kw):
     super(FooBar, self).__init__(*args, **kw)
 
+# Test for various pylint fixes
+
 # Transforms for Zope which should ideally be upstream'ed
 from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, imPermissionRole, _what_not_even_god_should_do # pylint: disable=unused-import
 
 # Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
 # Shared.DC was not considered a namespace package
 from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
+
+import lxml.etree
+lxml.etree.Element('test')
+
+from BTrees.OOBTree import OOBTree
+OOBTree()
+
+from cryptography.hazmat.primitives.asymmetric import rsa
+rsa.generate_private_key(
+  public_exponent=65537,
+  key_size=2048,
+).public_key()
+
+def xmlsec_decrypt():
+  # from https://xmlsec.readthedocs.io/en/stable/examples.html#decrypt
+  import xmlsec
+  manager = xmlsec.KeysManager()
+  key = xmlsec.Key.from_file('rsakey.pem', xmlsec.constants.KeyDataFormatPem)
+  manager.add_key(key)
+  enc_ctx = xmlsec.EncryptionContext(manager)
+  root = lxml.etree.parse("enc1-res.xml").getroot()
+  enc_data = xmlsec.tree.find_child(root, "EncryptedData", xmlsec.constants.EncNs)
+  decrypted = enc_ctx.decrypt(enc_data)
+  print(lxml.etree.tostring(decrypted))
+
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
@@ -2514,8 +2541,8 @@ ModuleSecurityInfo(__name__).declarePublic('TestModuleSecurityInfoException')
     self.assertModuleImportable(reference,
                                 expected_default_version='erp5_version',
                                 reset=True)
-    self.assertFalse(module_versioned in _moduleSecurity)
-    self.assertFalse(module_versioned in _appliedModuleSecurity)
+    self.assertNotIn(module_versioned, _moduleSecurity)
+    self.assertNotIn(module_versioned, _appliedModuleSecurity)
 
     # Define another ZODB Component to check that not importing the module
     # beforehand works
@@ -2544,12 +2571,12 @@ ModuleSecurityInfo(__name__).declarePublic('TestModuleSecurityInfoException2')
     ## Import module from non-'Restricted Code': it must be only in
     ## _moduleSecurity
     self._importModule('erp5_version.%s' % reference)
-    self.assertFalse(module in MNAME_MAP)
-    self.assertTrue(module_versioned in _moduleSecurity)
-    self.assertFalse(module in _appliedModuleSecurity)
-    self.assertFalse(module2 in MNAME_MAP)
-    self.assertFalse(module2 in _moduleSecurity)
-    self.assertFalse(module2 in _appliedModuleSecurity)
+    self.assertNotIn(module, MNAME_MAP)
+    self.assertIn(module_versioned, _moduleSecurity)
+    self.assertNotIn(module, _appliedModuleSecurity)
+    self.assertNotIn(module2, MNAME_MAP)
+    self.assertNotIn(module2, _moduleSecurity)
+    self.assertNotIn(module2, _appliedModuleSecurity)
 
     ## Import module from 'Restricted Code': it must be in
     ## _appliedModuleSecurity and no longer in _moduleSecurity
@@ -2566,25 +2593,25 @@ return 'OK'
        module_versioned2, module2))
     self.assertEqual(self.portal.TestModuleSecurityInfoPythonScript(), 'OK')
     self.assertEqual(MNAME_MAP.get(module), module_versioned)
-    self.assertFalse(module_versioned in _moduleSecurity)
-    self.assertTrue(module_versioned in _appliedModuleSecurity)
+    self.assertNotIn(module_versioned, _moduleSecurity)
+    self.assertIn(module_versioned, _appliedModuleSecurity)
     self.assertEqual(MNAME_MAP.get(module2), module_versioned2)
-    self.assertFalse(module_versioned2 in _moduleSecurity)
-    self.assertTrue(module_versioned2 in _appliedModuleSecurity)
+    self.assertNotIn(module_versioned2, _moduleSecurity)
+    self.assertIn(module_versioned2, _appliedModuleSecurity)
 
     ## Reset must clear everything including the version package as this is
     ## dynamic (no need to clear erp5.component.XXX though)...
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
     self.tic()
-    self.assertFalse(version_package in _moduleSecurity)
-    self.assertFalse(version_package in _appliedModuleSecurity)
-    self.assertFalse(module in MNAME_MAP)
-    self.assertFalse(module_versioned in _moduleSecurity)
-    self.assertFalse(module_versioned in _appliedModuleSecurity)
-    self.assertFalse(module2 in MNAME_MAP)
-    self.assertFalse(module_versioned2 in _moduleSecurity)
-    self.assertFalse(module_versioned2 in _appliedModuleSecurity)
+    self.assertNotIn(version_package, _moduleSecurity)
+    self.assertNotIn(version_package, _appliedModuleSecurity)
+    self.assertNotIn(module, MNAME_MAP)
+    self.assertNotIn(module_versioned, _moduleSecurity)
+    self.assertNotIn(module_versioned, _appliedModuleSecurity)
+    self.assertNotIn(module2, MNAME_MAP)
+    self.assertNotIn(module_versioned2, _moduleSecurity)
+    self.assertNotIn(module_versioned2, _appliedModuleSecurity)
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
@@ -2668,7 +2695,7 @@ def foobar(self, a, b="portal_type"):
     test_component.invalidate()
     self.commit()
 
-    self.assertRaisesRegexp(NotFound, "The specified module,"
+    self.assertRaisesRegex(NotFound, "The specified module,"
         " '%s', couldn't be found." % module, external_method, 'portal_ids')
 
     # Check fallback on FS, and also callable objects.
@@ -2782,7 +2809,7 @@ class TestGC(XMLObject):
     import gc
     initial_gc_debug_flags = gc.get_debug()
     initial_stderr = sys.stderr
-    from cStringIO import StringIO
+    from six.moves import cStringIO as StringIO
     stderr = StringIO()
     try:
       gc.disable()
@@ -2915,7 +2942,7 @@ class TestPortalType(Person):
     person_module = self.portal.person_module
     person = person_module.newContent(id='Foo Bar', portal_type='Person')
     from erp5.component.document.Person import Person as PersonDocument
-    self.assertTrue(PersonDocument in person.__class__.mro())
+    self.assertIn(PersonDocument, person.__class__.mro())
 
     # There is no reason that TestPortalType Document Component has been
     # assigned to a Person
@@ -2933,9 +2960,9 @@ class TestPortalType(Person):
       # The Portal Type class should not be in ghost state by now as we tried
       # to access test42() defined in TestPortalType Document Component
       self.assertHasAttribute(self._module, 'TestPortalType')
-      self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
+      self.assertIn(self._module.TestPortalType.TestPortalType, person.__class__.mro())
       from erp5.component.document.Person import Person as PersonDocument
-      self.assertTrue(PersonDocument in person.__class__.mro())
+      self.assertIn(PersonDocument, person.__class__.mro())
       self.assertTrue(ITestPortalType.providedBy(person))
       self.assertTrue(ITestPortalType.implementedBy(person.__class__))
 
@@ -2943,7 +2970,7 @@ class TestPortalType(Person):
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=False)
     # TestPortalType must be available in type class list
-    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
+    self.assertIn('TestPortalType', person_type.getDocumentTypeList())
     try:
       person_type.setTypeClass('TestPortalType')
       self.commit()
@@ -3084,7 +3111,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       'ERP5TypeTestCase:')
     self.assertEqual(response.getStatus(), 200)
-    self.assertFalse('ERP5 Test Hook After Load Tool' in response.getBody())
+    self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
 
     component.validate()
     self.tic()
@@ -3096,7 +3123,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       'ERP5TypeTestCase:')
     self.assertEqual(response.getStatus(), 200)
-    self.assertTrue('ERP5 Test Hook After Load Tool' in response.getBody())
+    self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -3340,26 +3367,26 @@ class %s(Interface):
     component = self._newComponent('ITestPortalType')
     self.tic()
     self.failIfModuleImportable('ITestPortalType')
-    self.assertFalse('ITestPortalType' in person_type.getInterfaceTypeList())
+    self.assertNotIn('ITestPortalType', person_type.getInterfaceTypeList())
     self.failIfHasAttribute(erp5.accessor_holder.BaseAccessorHolder,
                             'providesITestPortalType')
 
     component.validate()
     self.assertModuleImportable('ITestPortalType')
-    self.assertTrue('ITestPortalType' in person_type.getInterfaceTypeList())
+    self.assertIn('ITestPortalType', person_type.getInterfaceTypeList())
 
     from erp5.component.interface.ITestPortalType import ITestPortalType
 
     person_type_class.loadClass()
     implemented_by_list = list(implementedBy(person_type_class))
-    self.assertFalse(ITestPortalType in implemented_by_list)
+    self.assertNotIn(ITestPortalType, implemented_by_list)
     self.assertHasAttribute(erp5.accessor_holder.BaseAccessorHolder,
                             'providesITestPortalType')
     self.assertHasAttribute(person_type_class, 'providesITestPortalType')
     new_person = self.portal.person_module.newContent(portal_type='Person')
-    self.assertFalse('providesITestPortalType' in person_type_class.__dict__)
+    self.assertNotIn('providesITestPortalType', person_type_class.__dict__)
     self.assertFalse(new_person.providesITestPortalType())
-    self.assertTrue('providesITestPortalType' in person_type_class.__dict__)
+    self.assertIn('providesITestPortalType', person_type_class.__dict__)
     # Called again to check the alias created on erp5.portal_type.Person on
     # the first call of providesITestPortalType() (optimization)
     self.assertFalse(new_person.providesITestPortalType())
@@ -3372,11 +3399,11 @@ class %s(Interface):
 
       person_type_class.loadClass()
       implemented_by_list = list(implementedBy(person_type_class))
-      self.assertTrue(ITestPortalType in implemented_by_list)
+      self.assertIn(ITestPortalType, implemented_by_list)
 
-      self.assertFalse('providesITestPortalType' in person_type_class.__dict__)
+      self.assertNotIn('providesITestPortalType', person_type_class.__dict__)
       self.assertTrue(new_person.providesITestPortalType())
-      self.assertTrue('providesITestPortalType' in person_type_class.__dict__)
+      self.assertIn('providesITestPortalType', person_type_class.__dict__)
       self.assertTrue(new_person.providesITestPortalType())
 
     finally:
@@ -3418,17 +3445,17 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
     component = self._newComponent('TestPortalTypeMixin')
     self.tic()
     self.failIfModuleImportable('TestPortalTypeMixin')
-    self.assertFalse('TestPortalTypeMixin' in person_type.getMixinTypeList())
+    self.assertNotIn('TestPortalTypeMixin', person_type.getMixinTypeList())
 
     component.validate()
     self.assertModuleImportable('TestPortalTypeMixin')
-    self.assertTrue('TestPortalTypeMixin' in person_type.getMixinTypeList())
+    self.assertIn('TestPortalTypeMixin', person_type.getMixinTypeList())
 
     from erp5.component.mixin.TestPortalTypeMixin import TestPortalTypeMixin
 
     person_type_class.loadClass()
     person_type_class_mro_list = person_type_class.__mro__
-    self.assertFalse(TestPortalTypeMixin in person_type_class_mro_list)
+    self.assertNotIn(TestPortalTypeMixin, person_type_class_mro_list)
     person_original_mixin_type_list = list(person_type.getTypeMixinList())
     try:
       person_type.setTypeMixinList(person_original_mixin_type_list +
@@ -3439,7 +3466,7 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       person_type_class.loadClass()
       person_type_class_mro_list = person_type_class.__mro__
       from erp5.component.mixin.TestPortalTypeMixin import TestPortalTypeMixin
-      self.assertTrue(TestPortalTypeMixin in person_type_class_mro_list)
+      self.assertIn(TestPortalTypeMixin, person_type_class_mro_list)
 
     finally:
       person_type.setTypeMixinList(person_original_mixin_type_list)

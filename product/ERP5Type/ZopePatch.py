@@ -37,13 +37,11 @@ if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
   from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import WorkflowTool
+from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import Expression
 from Products.ERP5Type.patches import sqltest
 from Products.ERP5Type.patches import sqlvar
-from Products.ERP5Type.patches import CMFCatalogAware
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
 if WITH_LEGACY_WORKFLOW:
@@ -52,26 +50,21 @@ from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
+from Products.ERP5Type.patches import BaseRequest
 from Products.ERP5Type.patches import CookieCrumbler
 from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
-from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-if six.PY2:
-  # No more ZServer
-  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
-if WITH_LEGACY_WORKFLOW:
-  from Products.ERP5Type.patches import StateChangeInfoPatch
+from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
-from Products.ERP5Type.patches import make_hidden_input
 from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
@@ -91,21 +84,13 @@ from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
-  # Not needed with Zope4 and new ZMI
-  from Products.ERP5Type.patches import DTMLMethod
-  from Products.ERP5Type.patches import DTMLDocument
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
-from Products.ERP5Type.patches import DTMLMethod
-from Products.ERP5Type.patches import DTMLDocument
 from Products.ERP5Type.patches import CMFCoreUtils
-from Products.ERP5Type.patches import ZopePageTemplate
+from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
-if six.PY2:
-  # No ZServer
-  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 if six.PY2:
   # XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)

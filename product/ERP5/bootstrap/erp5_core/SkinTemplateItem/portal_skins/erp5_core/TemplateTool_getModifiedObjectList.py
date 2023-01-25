@@ -1,3 +1,4 @@
+import six
 REQUEST = container.REQUEST
 Base_translateString = context.Base_translateString
 
@@ -16,7 +17,7 @@ from Products.ERP5Type.Cache import CachingMethod
 def getModifiedObjectList(bt):
   return bt.preinstall(check_dependencies = check_dependencies)
 
-getModifiedObjectList = CachingMethod(getModifiedObjectList, 
+getModifiedObjectList = CachingMethod(getModifiedObjectList,
                                       id='BusinessTemplate_getModifiedObjectList',
                                       cache_factory='erp5_ui_medium')
 
@@ -27,11 +28,11 @@ for bt_id in bt_id_list:
   bt_object_dict[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]
 
 object_list = []
-no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document', 
-                 'PropertySheet', 'Extension', 'Test', 'Product', 
-                 'Role', 'CatalogResultKey', 'CatalogRelatedKey', 
-                 'CatalogResultTable', 'MessageTranslation', 'LocalRoles', 
-                 'PortalTypeAllowedContentType', 'PortalTypeHiddenContentType', 
+no_backup_list = ['Action', 'SiteProperty', 'Module', 'Document',
+                 'PropertySheet', 'Extension', 'Test', 'Product',
+                 'Role', 'CatalogResultKey', 'CatalogRelatedKey',
+                 'CatalogResultTable', 'MessageTranslation', 'LocalRoles',
+                 'PortalTypeAllowedContentType', 'PortalTypeHiddenContentType',
                  'PortalTypePropertySheet', 'PortalTypeBaseCategory']
 no_backup_dict = {}
 for i in no_backup_list:
@@ -45,10 +46,8 @@ save_and_remove_title = Base_translateString('Backup And Remove')
 
 for bt in bt_id_list:
   bt_title, modified_object_list = bt_object_dict[bt]
-  keys = modified_object_list.keys()
-  keys.sort()
-  for i, object_id in enumerate(keys):    
-    object_state, object_class = modified_object_list[object_id]
+  for i, (object_id, value) in enumerate(sorted(six.iteritems(modified_object_list))):
+    object_state, object_class = value
     object_id = bt+'|'+object_id
     line = newTempBase(context, 'tmp_install_%s' % i)
 
@@ -66,9 +65,9 @@ for bt in bt_id_list:
       choice_item_list = [[install_title, 'install']]
 
     line.edit(object_id=object_id,
-              bt_title = bt_title, 
-              object_state=object_state, 
-              object_class=object_class, 
+              bt_title = bt_title,
+              object_state=object_state,
+              object_class=object_class,
               choice_item_list=choice_item_list)
     line.setUid('new_%s' % object_id)
     object_list.append(line)

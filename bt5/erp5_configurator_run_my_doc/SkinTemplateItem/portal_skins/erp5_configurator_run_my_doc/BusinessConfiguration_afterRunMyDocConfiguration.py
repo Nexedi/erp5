@@ -58,7 +58,7 @@ if business_template is not None:
     obj = context.getPortalObject().restrictedTraverse(path, None)
     if obj is not None and hasattr(obj, 'getPortalType'):
       # XXX This hardcoded list is a bit inconvinient.
-      if obj.getPortalType() in ('Person', 
+      if obj.getPortalType() in ('Person',
                                  'Organisation'):
         if isTransitionPossible(obj, 'validate'):
           obj.validate()

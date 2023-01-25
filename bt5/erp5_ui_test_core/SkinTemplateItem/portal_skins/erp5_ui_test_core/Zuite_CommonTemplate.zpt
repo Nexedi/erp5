@@ -36,4 +36,68 @@
   <tal:block tal:condition="here/portal_selections/isAnonymous"> (expected failure)</tal:block>
 </tal:block>
 
+<!--
+Environment variables:
+- client_id (str, None)
+  String to use as OAuth2 client id. Default: None.
+- login_form_url (str)
+  URL of the login form to open. Default: ${base_url}/login_form .
+  Must not contain a query nor a fragment).
+- submit_name (str)
+  Name of the submit element to click to submit the form.
+  Hint: probably ends with ":method"
+- username_field_name (str)
+  Name of the field the username should be typed in.
+- password_field_name (str)
+  Name of the field the password should be typed in.
+- wait (bool)
+  Whether to use click or clickAndWait to submit the login form.
+  True by default.
+
+Macro slots:
+- username
+- password
+-->
+<tal:block metal:define-macro="login">
+  <tal:block tal:define="
+    wait                wait | python: True;
+    client_id           client_id | nothing;
+    login_form_url      login_form_url | python: '${base_url}/login_form';
+    has_oauth2          python: getattr(context, 'ERP5Site_getOAuth2AuthorisationClientConnectorValue', lambda client_id: None)(client_id=client_id) is not None;
+    ERP5Site            python: modules['Products.ERP5.ERP5Site'];
+    auto_username_field_name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME if has_oauth2 else '__ac_name';
+    auto_password_field_name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME if has_oauth2 else '__ac_password';
+    username_field_name      username_field_name | auto_username_field_name;
+    password_field_name      password_field_name | auto_password_field_name;
+  ">
+  <tal:block tal:condition="python: login_form_url is not None">
+    <tr>
+      <td>openAndWait</td>
+      <td tal:content="python: login_form_url + ('?client_id=' + client_id if client_id else '')"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td tal:content="python: username_field_name"></td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tr>
+    <td>type</td>
+    <td tal:content="python: username_field_name"></td>
+    <td><tal:block metal:define-slot="username"/></td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td tal:content="python: password_field_name"></td>
+    <td><tal:block metal:define-slot="password"/></td>
+  </tr>
+  <tr>
+    <td tal:content="python: 'clickAndWait' if wait else 'click'"></td>
+    <td tal:content="submit_name | python: 'logged_in_once:method' if has_oauth2 else 'logged_in:method'"></td>
+    <td></td>
+  </tr>
+  </tal:block>
+</tal:block>
+
 </tal:block>

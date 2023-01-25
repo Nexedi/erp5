@@ -51,7 +51,7 @@
     </tr>
     <tr>
       <td>uncheck</td>
-      <td>name=field_include_content_table</td>
+      <td>name=field_your_include_content_table</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
@@ -76,68 +76,68 @@
 
     <tr>
       <td>type</td>
-      <td>name=field_override_logo_reference</td>
+      <td>name=field_your_override_logo_reference</td>
       <td>Template.Test.Image.Erp5.Logo</td>
     </tr>
 
     <tr>
       <td>check</td>
-      <td>name=field_include_history_table</td>
+      <td>name=field_your_include_history_table</td>
       <td></td>
     </tr>
     <tr>
       <td>check</td>
-      <td>name=field_include_content_table</td>
+      <td>name=field_your_include_content_table</td>
       <td></td>
     </tr>
     <tr>
       <td>check</td>
-      <td>name=field_include_reference_table</td>
+      <td>name=field_your_include_reference_table</td>
       <td></td>
     </tr>
     <tr>
       <td>check</td>
-      <td>name=field_include_linked_content</td>
+      <td>name=field_your_include_linked_content</td>
       <td></td>
     </tr>
     <tr>
       <td>check</td>
-      <td>name=field_include_report_content</td>
+      <td>name=field_your_include_report_content</td>
       <td></td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_document_description</td>
+      <td>name=field_your_override_document_description</td>
       <td>foobar</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_document_title</td>
+      <td>name=field_your_override_document_title</td>
       <td>Couscous</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_document_short_title</td>
+      <td>name=field_your_override_document_short_title</td>
       <td>Cous</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_document_reference</td>
+      <td>name=field_your_override_document_reference</td>
       <td>P-XYZ-Foobar</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_organisation_title</td>
+      <td>name=field_your_override_source_organisation_title</td>
       <td>Test Organisation</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_source_person_title</td>
+      <td>name=field_your_override_source_person_title</td>
       <td>Test Sender</td>
     </tr>
     <tr>
       <td>type</td>
-      <td>name=field_override_document_version</td>
+      <td>name=field_your_override_document_version</td>
       <td>333</td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
@@ -180,7 +180,7 @@
 
   <tr>
     <td>type</td>
-    <td>//select[@name='field_format']</td>
+    <td>//select[@name='field_your_format']</td>
     <td>pdf</td>
   </tr>
 

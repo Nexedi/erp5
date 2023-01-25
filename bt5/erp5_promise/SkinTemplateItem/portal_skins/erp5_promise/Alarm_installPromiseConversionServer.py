@@ -8,7 +8,7 @@ promise_url_list = json.loads(promise_url_list_string.replace('\'', '\"'))
 system_preference = portal_preferences.getActiveSystemPreference()
 if system_preference is None:
   system_preference = portal_preferences.newContent(
-                 portal_type="System Preference", 
+                 portal_type="System Preference",
                  title="Created by Promise Alarms")
   system_preference.enable()
 

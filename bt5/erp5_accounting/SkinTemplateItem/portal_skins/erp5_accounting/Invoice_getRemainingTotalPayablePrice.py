@@ -14,7 +14,7 @@ The `account_id` parameter can be use to filter receivable / payable lines to a
 specific account.
 
 The `simulation_state` parameter is a list that can be used to take into account
-only transactions in those states. By default it will use all but 'draft', 
+only transactions in those states. By default it will use all but 'draft',
 , 'rejected', 'cancelled' and 'deleted'.
 
 The `mirror_section_relative_url` parameter must be passed explicitly if the

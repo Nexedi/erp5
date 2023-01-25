@@ -14,7 +14,7 @@ except:
 
 # get the user information
 for line in listbox:
-  if line.has_key('listbox_key') and line['title'] not in ('', None):
+  if 'listbox_key' in line and line['title'] not in ('', None):
     line_id = int(line['listbox_key'])
     item = {}
     item['id'] = line_id

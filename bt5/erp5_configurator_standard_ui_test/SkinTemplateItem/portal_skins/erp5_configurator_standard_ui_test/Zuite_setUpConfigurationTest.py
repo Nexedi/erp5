@@ -32,7 +32,7 @@ if business_configuration is not None:
 
 business_configuration = context.business_configuration_module.newContent(
                             portal_type="Business Configuration",
-                            id=bc_id, 
+                            id=bc_id,
                             title=bc_id)
 
 business_configuration.setResource(workflow_path)

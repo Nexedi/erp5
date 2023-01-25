@@ -62,7 +62,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>PaySheet_getODTStyleSheet</string> </value>
+            <value> <string>PaySheetTransaction_getODTStyleSheet</string> </value>
         </item>
         <item>
             <key> <string>ooo_xml_file_id</string> </key>

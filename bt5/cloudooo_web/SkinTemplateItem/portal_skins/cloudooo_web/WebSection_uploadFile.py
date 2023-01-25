@@ -51,7 +51,7 @@ document.releaseAlive()
 #Get param and key to connect the user
 param, key = person.Person_getEncryptedLogin()
 
-#Store real path in session for Document_getJSONInformation 
+#Store real path in session for Document_getJSONInformation
 portal_sessions = context.portal_sessions
 session = portal_sessions[reference]
 session['document_url'] = document.getRelativeUrl()

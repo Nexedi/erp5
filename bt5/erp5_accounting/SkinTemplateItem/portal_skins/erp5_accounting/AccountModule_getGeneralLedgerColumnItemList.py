@@ -15,15 +15,15 @@ return (
   ('credit_price', 'Credit'),
   ('total_price', 'Balance'),
   ('Movement_getSectionPriceCurrency', 'Accounting Currency'),
-  
+
   ('debit', 'Transaction Currency Debit'),
   ('credit', 'Transaction Currency Credit'),
   ('total_quantity', 'Transaction Currency Balance'),
   ('resource_reference', 'Transaction Currency'),
-  
+
   ('Movement_getPaymentTitle', 'Section Bank Account',),
   ('payment_mode_translated_title', 'Payment Mode',),
-  
+
   ('grouping_reference', 'Grouping Reference'),
   ('grouping_date', 'Grouping Date'),
   ('getTranslatedSimulationStateTitle', 'State'),

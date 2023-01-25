@@ -30,7 +30,7 @@ tag = 'incoming_web_message'
 edit_kw['activate_kw'] = {'tag': tag}
 module.activate(tag=tag, activity='SQLQueue').EventModule_addWebMessage(**edit_kw)
 
-# Trigger explicitly the alarm which will run discoverMetadata on created event, then 
+# Trigger explicitly the alarm which will run discoverMetadata on created event, then
 # Fill in discoverable properties (sender, recipient, ...) and change workflow states.
 # XXX hardcoded id, must be picked up by reference and version API
 portal.portal_alarms.fetch_incoming_web_message_list.activate(after_tag=tag).activeSense()

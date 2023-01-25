@@ -108,7 +108,7 @@ else:
 
       portal_type, property = portal_type_property.split('.', 1)
 
-      if not mapping.has_key(spreadsheet_name):
+      if spreadsheet_name not in mapping:
         mapping[spreadsheet_name] = (portal_type, {})
       mapping[spreadsheet_name][1][column_name] = property
 
@@ -147,14 +147,14 @@ else:
       imported_line_property_dict = {}
 
       for line_property_index in range(len(line)):
-        if column_mapping.has_key(line_property_index):
+        if line_property_index in column_mapping:
           property_value = line[line_property_index]
           if property_value:
             # Create a new property value
             property_id = column_mapping[line_property_index]
             imported_line_property_dict[property_id] = property_value.encode('UTF-8')
-      
-       
+
+
       # If the line is not empty, activate an activity for it
       if imported_line_property_dict not in [{}, None]:
         tag = "OOo_import_%s" % active_process_value.getId()
@@ -163,7 +163,7 @@ else:
                          priority=1,
                          activity="SQLQueue",
                          active_process=active_process_path)
- 
+
         if getattr(context, import_file_line_script, None) is None:
           raise AttributeError('specified script "%s" does not exists' % import_file_line_script)
 

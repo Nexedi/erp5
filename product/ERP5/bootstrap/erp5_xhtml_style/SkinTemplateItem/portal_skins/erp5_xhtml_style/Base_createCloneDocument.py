@@ -36,7 +36,7 @@ if web_mode:
   if script is not None:
     msg = script(**form_data)
     if msg is not None:
-      return context.Base_redirect(form_id, 
+      return context.Base_redirect(form_id,
                           editable_mode=editable_mode,
                           keep_items={'portal_status_message': msg})
 
@@ -63,7 +63,7 @@ if web_mode:
   # Define a list of field name to take into account in the cloning process
   ACCEPTABLE_FORM_ID_LIST = [ 'clone_reference' , 'clone_language'
                              , 'clone_version' , 'clone_revision'
-                             , 'clone_title' , 'clone_short_title' ] 
+                             , 'clone_title' , 'clone_short_title' ]
 
   # Set properties to the new object
   edit_kw = {}
@@ -76,9 +76,9 @@ if web_mode:
 if batch_mode:
   return new_object
 else:
-  if web_mode and not editable_mode: 
+  if web_mode and not editable_mode:
     form_id = 'view'
   msg = translateString("Created %s ${portal_type}." % message_kind, mapping = kw)
-  return new_object.Base_redirect(form_id, 
+  return new_object.Base_redirect(form_id,
                                   editable_mode=1,
                                   keep_items={'portal_status_message': msg})

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11,16 +11,16 @@
             <value> <string>ajax.html</string> </value>
         </item>
         <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,6 +1,6 @@
 # XXX: This does not show anything for folders.
 #      A recursive diff should be displayed instead.
-# XXX: Consider merging BusinessTemplate_{do,view}VcsMultiDiff 
+# XXX: Consider merging BusinessTemplate_{do,view}VcsMultiDiff
 # TODO: handle Svn SSL/login exceptions, preferably reusing vcs_dialog(_error)
 # TODO: Git support
 

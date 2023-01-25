@@ -36,7 +36,7 @@ try:
   user = context.WebSite_createUser(**kwargs)
   log(user)
   msg = 'Thank you for registering. Your password will be sent to the email address that you provided once your account has been validated by the appropriate department.'
-except Exception, e:
+except Exception as e:
   msg = str(e)
 
 return req.RESPONSE.redirect(context.absolute_url() + '?portal_status_message='+msg)

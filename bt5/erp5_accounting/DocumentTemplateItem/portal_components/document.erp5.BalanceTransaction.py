@@ -440,16 +440,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
 
     return factory
 
-
-  security.declarePrivate('alternateReindexObject')
-  def alternateReindexObject(self, **kw):
-    """This method is called when an inventory object is included in a
-    group of catalogged objects.
-    """
-    return self.immediateReindexObject(**kw)
-
-
-  def immediateReindexObject(self, **kw):
+  def _immediateReindexObject(self, **kw):
     """Reindexes the object.
     This is different indexing that the default Inventory indexing, because
     we want to take into account that lines in this balance transaction to

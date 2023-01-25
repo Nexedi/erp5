@@ -3,14 +3,14 @@ import errno, logging, os, socket, time
 import itertools
 from threading import Thread
 from UserDict import IterableUserDict
-import Lifetime
 import transaction
 from Testing import ZopeTestCase
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
-  addUserToDeveloperRole, createZServer, parseListeningAddress
+  addUserToDeveloperRole, createZServer, DummyMailHostMixin, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
@@ -74,7 +74,7 @@ def patchActivityTool():
     def __init__(self, ob):
       self._ob = ob
     def __getattr__(self, attr):
-      m = getattr(self._ob, attr).im_func
+      m = getattr(self._ob, attr).__func__
       return lambda *args, **kw: m(self, *args, **kw)
   @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):
@@ -112,7 +112,7 @@ def Application_resolveConflict(self, old_state, saved_state, new_state):
   new_state['test_distributing_node'] = test_distributing_node_set.pop()
 
   old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
-                     for state in old_state, saved_state, new_state]
+                     for state in (old_state, saved_state, new_state)]
   # The value of these attributes don't have proper __eq__ implementation.
   for attr in '__before_traverse__', '__before_publishing_traverse__':
     del old_state[attr], saved_state[attr]
@@ -137,23 +137,15 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   the node running the unit tests to tell other nodes on which portal activities
   should be processed.
   """
-
-  @staticmethod
-  def asyncore_loop():
-    try:
-      Lifetime.lifetime_loop()
-    except KeyboardInterrupt:
-      pass
-    Lifetime.graceful_shutdown_loop()
+  _server_address = None # (host, port) of the http server if it was started, None otherwise
 
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
-    utils = ZopeTestCase.utils
-    if utils._Z2HOST is None:
+    if self._server_address is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
-      if int(os.environ.get('erp5_wsgi', 0)):
+      if True:
         from Products.ERP5.bin.zopewsgi import app_wrapper, createServer
         sockets = []
         server_type = 'HTTP'
@@ -191,25 +183,8 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           logger.propagate = False
           hs = createServer(app_wrapper(webdav_ports=webdav_ports),
             logger, sockets=sockets)
-          utils._Z2HOST, utils._Z2PORT = hs.addr
+          ProcessingNodeTestCase._server_address = hs.addr
           t = Thread(target=hs.run)
-          t.setDaemon(1)
-          t.start()
-      else:
-        _print = lambda hs: verbose and ZopeTestCase._print(
-          message % (hs.server_protocol, hs.server_name, hs.server_port))
-        try:
-          hs = createZServer(log)
-        except RuntimeError as e:
-          ZopeTestCase._print(str(e))
-        else:
-          utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
-          _print(hs)
-          try:
-            _print(createZServer(log, zserver_type='webdav'))
-          except RuntimeError as e:
-            ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
-          t = Thread(target=Lifetime.loop)
           t.setDaemon(1)
           t.start()
       from Products.CMFActivity import ActivityTool
@@ -219,7 +194,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         if ActivityTool.currentNode == ActivityTool._server_address:
           ActivityTool.currentNode = None
         ActivityTool._server_address = None
-    return utils._Z2HOST, utils._Z2PORT
+    return self._server_address
 
   def _registerNode(self, distributing, processing):
     """Register node to process and/or distribute activities"""
@@ -240,7 +215,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   @classmethod
   def unregisterNode(cls):
-    if ZopeTestCase.utils._Z2HOST is not None:
+    if cls._server_address is not None:
       self = cls('unregisterNode')
       self.app = self._app()
       self._registerNode(distributing=0, processing=0)
@@ -304,9 +279,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
         portal_activities.process_timer(None, None)
-        if Lifetime._shutdown_phase:
-          # XXX CMFActivity contains bare excepts
-          raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
         if time.time() >= deadline or message_count and any(x.processing_node == -2
@@ -318,7 +290,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()
-          except AssertionError, e:
+          except AssertionError as e:
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages
@@ -334,7 +306,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
     This aborts current transaction.
     """
-    for i in xrange(30):
+    for i in xrange(60):
       node_list = list(self.portal.portal_activities.getProcessingNodeList())
       if len(node_list) >= node_count:
         node_list.remove(getCurrentNode())
@@ -354,20 +326,61 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     self._registerNode(distributing=not cluster, processing=1)
     self.commit()
 
+  def _setUpDummyMailHost(self):
+    """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
+    """
+    cls = self.portal.MailHost.__class__
+    if not issubclass(cls, DummyMailHostMixin):
+      cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
+      pmc_init_of(cls)
+
+  def _restoreMailHost(self):
+    """Restore original Mail Host
+    """
+    if self.portal is not None:
+      cls = self.portal.MailHost.__class__
+      if cls.__bases__[0] is DummyMailHostMixin:
+        cls.__bases__ = cls.__bases__[1:]
+        pmc_init_of(cls)
+
   def processing_node(self):
     """Main loop for nodes that process activities"""
     try:
-      while not Lifetime._shutdown_phase:
+      while True:
         time.sleep(.3)
         transaction.begin()
         try:
-          portal = self.app[self.app.test_portal_name]
+          portal = self.portal = self.app[self.app.test_portal_name]
         except (AttributeError, KeyError):
           continue
+        self._setUpDummyMailHost()
         if portal.portal_activities.isSubscribed():
           try:
             portal.portal_activities.process_timer(None, None)
           except Exception:
             LOG('Invoking Activity Tool', ERROR, '', error=True)
+    except KeyboardInterrupt:
+      pass
+
+  def timerserver(self):
+    """Main loop using timer server.
+    """
+    import Products.TimerService
+
+    timerserver_thread = None
+    try:
+      while True:
+        time.sleep(.3)
+        transaction.begin()
+        try:
+          self.portal = self.app[self.app.test_portal_name]
+        except (AttributeError, KeyError):
+          continue
+        self._setUpDummyMailHost()
+        if not timerserver_thread:
+          timerserver_thread = Products.TimerService.timerserver.TimerServer.TimerServer(
+            module='Zope2',
+            interval=0.1,
+          )
     except KeyboardInterrupt:
       pass

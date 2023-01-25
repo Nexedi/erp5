@@ -1,6 +1,6 @@
 """
   Generate a HTML Summary of an object.
-  Use "No ZODB" approach if possible.  
+  Use "No ZODB" approach if possible.
 """
 request = context.REQUEST
 portal = context.getPortalObject()

@@ -1,7 +1,7 @@
 '''
 This script will call the PaySheetTransaction_getMovementTotalPriceFromCategory
 script to get the year to date summed amount of paysheet lines wich category of
-category_list parameter is in variation_category_list of the PaySheet line and 
+category_list parameter is in variation_category_list of the PaySheet line and
 wich has a base_contribution in the base_contribution_list
 '''
 
@@ -33,5 +33,5 @@ script_params = {'base_contribution': base_contribution,
 for paysheet in paysheet_list :
   monthly_amount = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(**script_params)
   yearly_amount += monthly_amount
-  
+
 return yearly_amount * -1

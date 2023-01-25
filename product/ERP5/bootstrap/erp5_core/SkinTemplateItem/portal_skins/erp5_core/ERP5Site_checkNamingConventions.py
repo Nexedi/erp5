@@ -23,8 +23,8 @@ LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'i
 
 # List of words that should not be modified
 SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",
-  "JavaScript", "LibreOffice", "OAuth", "OpenAM", "OpenOffice", "SyncML",
-  "TioSafe", "will"))
+  "JavaScript", "LibreOffice", "OAuth", "OAuth2", "OpenAM", "OpenOffice",
+  "SyncML", "TioSafe", "will"))
 
 CLOSED_CLASS_WORD_LIST = """
   a about above across after against all along alongside already although

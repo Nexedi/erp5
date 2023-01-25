@@ -5,7 +5,7 @@ if dms_module is not None:
   for uid in uids:
     # Maybe select Line can be improved later
     line = [ l for l in listbox if l['listbox_key'].split('/')[-1] ==  uid][0]
-    # index is numeric and comes with uid 
+    # index is numeric and comes with uid
     attachment_index = int(uid.split('index_')[-1])
     attachment_info = [i for i in attachment_info_list if i['index'] == attachment_index][0]
     file_ = context.getAttachmentData(index=attachment_index)

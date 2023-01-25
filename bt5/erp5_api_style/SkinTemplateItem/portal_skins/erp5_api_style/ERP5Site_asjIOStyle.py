@@ -112,7 +112,7 @@ for erp5_action_key in erp5_action_dict.keys():
         if mode != "allDocs":
           return result
         result_list += result
-      except ValueError, e:
+      except ValueError as e:
         try:
           error_dict.update(json.loads(str(e)))
         except ValueError:

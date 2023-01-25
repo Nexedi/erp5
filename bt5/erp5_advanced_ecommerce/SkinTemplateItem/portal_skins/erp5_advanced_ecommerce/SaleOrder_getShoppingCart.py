@@ -8,7 +8,7 @@
     (is it really useful to create a new shopping cart here)
 """
 request = context.REQUEST
-if session_id in [None, '']: 
+if session_id in [None, '']:
   session_id = request.get('session_id', None)
 
 if session_id in [None, '']:

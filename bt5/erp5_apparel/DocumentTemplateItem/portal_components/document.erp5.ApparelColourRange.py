@@ -36,7 +36,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 class ApparelColourRange(Resource):
     """
       A apparel colour range
-      
+
       It is considered here as a resource because planification can
       eventually consider the sales of a certain quantity of items of a given ApparelColourRange
     """

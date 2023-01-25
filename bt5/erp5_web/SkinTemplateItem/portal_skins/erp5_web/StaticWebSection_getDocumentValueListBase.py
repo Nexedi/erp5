@@ -40,7 +40,7 @@
  SUGGESTIONS:
 
  - Prevent showing duplicate references
- 
+
  - Add documents associated to this section through 'aggregate'.
 
  - Display only the latest version and the appropriate language.
@@ -67,8 +67,8 @@ try:
   if validation_state is None:
     # XXX hardcoded validation state list.
     # Use predicate or layout property instead
-    validation_state = ('released', 'released_alive', 'published', 
-                        'published_alive', 'shared', 'shared_alive', 
+    validation_state = ('released', 'released_alive', 'published',
+                        'published_alive', 'shared', 'shared_alive',
                         'public', 'validated')
   kw['validation_state'] = validation_state
 

@@ -8,6 +8,9 @@ url_list = [
   "action_web_table_clone.js",
   "gadget_officejs_web_table.json",
   "web_table_app_logo.svg",
+  "gadget_erp5_page_ojs_web_table_editor_about.html",
+  "gadget_erp5_page_ojs_web_table_editor_about.js",
+  "gadget_erp5_page_ojs_about.css",
 ]
 
 return url_list

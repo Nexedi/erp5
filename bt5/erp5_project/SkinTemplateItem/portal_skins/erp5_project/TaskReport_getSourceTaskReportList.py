@@ -3,7 +3,7 @@ log('task_list','starting')
 task_module = context.getDefaultModule('Task Report')
 log('task_list','next1')
 task_list = []
-if not kw.has_key('parent_uid'):
+if 'parent_uid' not in kw:
   kw['parent_uid'] = task_module.getUid()
 log('task_list','next2')
 log('context.getPath()',context.getPath())

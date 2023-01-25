@@ -1,6 +1,6 @@
 """
 Returns a random page in a given Web Section. This Gadget
-renderer can be used asynchronously only for now. 
+renderer can be used asynchronously only for now.
 
 web_section_url -- a relative URL to the web section
                     (relative to portal or to site)
@@ -10,7 +10,7 @@ request = context.REQUEST
 portal = context.getPortalObject()
 
 # Find the box if this gadget is asynchronous
-#   XXX-JPS: this could show that the script is 
+#   XXX-JPS: this could show that the script is
 #            not called on the appropriate context
 #            ie. the box. Discussion is needed here
 #            in order to make widgets and gadgets
@@ -24,11 +24,11 @@ portal = context.getPortalObject()
 if box_relative_url:
   box = portal.restrictedTraverse(box_relative_url)
 
-# Get the preferences (some casting of preferences would 
+# Get the preferences (some casting of preferences would
 # probably be a good thing here so that there is no need
 # to cas them later)
-# 
-# Prevent fail if no box is provided. 
+#
+# Prevent fail if no box is provided.
 if box is not None:
   preferences = box.KnowledgeBox_getDefaultPreferencesDict()
 else:

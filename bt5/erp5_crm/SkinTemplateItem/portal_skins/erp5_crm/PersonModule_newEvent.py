@@ -19,9 +19,9 @@ if not single_event:
   count = 0
   for person in person_list:
     # Create a new event
-    event = module.newContent(portal_type=portal_type, 
-                            description=description, 
-                            title=title, 
+    event = module.newContent(portal_type=portal_type,
+                            description=description,
+                            title=title,
                             follow_up=follow_up,
                             text_content=text_content) # text_format is set by Event_init
     count += 1
@@ -41,9 +41,9 @@ else:
              "The single event option can only be used with outgoing messages.")
     return context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message, selection_name=selection_name), **kw)
   # Proceed to event creation
-  event = module.newContent(portal_type=portal_type, 
-                            description=description, 
-                            title=title, 
+  event = module.newContent(portal_type=portal_type,
+                            description=description,
+                            title=title,
                             follow_up=follow_up,
                             text_content=text_content) # text_format is set by Event_init
   event.setDestinationValueList([person.getObject() for person in person_list])
@@ -55,7 +55,7 @@ else:
 if batch_mode:
   return event_list
 
-portal_status_message = translateString("Created and associated ${count} new events to the selected ticket.", 
+portal_status_message = translateString("Created and associated ${count} new events to the selected ticket.",
                                         mapping=dict(count=count))
 kw['keep_items'] = dict(portal_status_message=portal_status_message,
                         selection_name=selection_name)

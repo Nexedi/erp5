@@ -107,7 +107,7 @@ context = context.asContext(column_list=column_list,
                             ledger=ledger,
                             multiplier=multiplier,
                             listbox_line_list=listbox_line_list)
-                            
+
 if batch_mode:
   return context
 return context.ResearchItemModule_viewResearchSummaryReportData()

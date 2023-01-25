@@ -74,9 +74,6 @@ class MovementGeneratorMixin(object):
       - implement rounding appropriately (True or False seems
         simplistic)
     """
-    # Default implementation below can be overriden by subclasses
-    # however it should be generic enough not to be overriden
-    # by most classes
     # Results will be appended to result
     result = []
     # Build a list of movement and business path
@@ -89,9 +86,13 @@ class MovementGeneratorMixin(object):
       explanation = self._applied_rule # We use applied rule as local explanation
       trade_phase = self._getTradePhaseList(input_movement, business_process) # XXX-JPS not convenient to handle
       update_property_dict = self._getUpdatePropertyDict(input_movement)
-      result.extend(business_process.getTradePhaseMovementList(explanation, input_movement,
-                                                 trade_phase=trade_phase, delay_mode=None,
-                                                 update_property_dict=update_property_dict))
+      generated_movement_list = business_process.getTradePhaseMovementList(
+        explanation,
+        input_movement,
+        trade_phase=trade_phase,
+        delay_mode=None,
+        update_property_dict=update_property_dict)
+      result.extend(self._updateGeneratedMovementList(input_movement, generated_movement_list))
 
     # And return list of generated movements
     return result
@@ -101,6 +102,9 @@ class MovementGeneratorMixin(object):
     #     Below code is mainly for root applied rules.
     #     Other movement generators usually want to reset delivery.
     return {'delivery': input_movement.getRelativeUrl()}
+
+  def _updateGeneratedMovementList(self, input_movement, generated_movement_list):
+    return generated_movement_list
 
   def _getTradePhaseList(self, input_movement, business_process): # XXX-JPS WEIRD
     if self._trade_phase_list:

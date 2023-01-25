@@ -3,7 +3,7 @@ box_relative_url = context.REQUEST.get('box_relative_url', None)
 if box_relative_url is not None:
   box = context.restrictedTraverse(box_relative_url)
   preferences = box.KnowledgeBox_getDefaultPreferencesDict()
-  # check if in preferences we explicitly define the section we want 
+  # check if in preferences we explicitly define the section we want
   if preferences.get('preferred_section_relative_url', None) is not None:
     web_section_relative_url = preferences['preferred_section_relative_url']
     web_section = context.restrictedTraverse(web_section_relative_url, None)

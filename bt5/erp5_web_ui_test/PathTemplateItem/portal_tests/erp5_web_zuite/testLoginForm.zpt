@@ -35,29 +35,16 @@
   <td></td>
 </tr>
 <tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/test_web_site/login_form</td>
+  <td>openAndWait</td>
+  <td>${base_url}/logout</td>
   <td></td>
-  <td>Login into the site</td>
 </tr>
-<tr>
-  <td>type</td>
-  <td>__ac_name</td>
-  <td>test_webmaster</td>
-  <td>Enter login</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>__ac_password</td>
-  <td>test_webmaster</td>
-  <td>Enter password</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>name=logged_in:method</td>
-  <td></td>
-  <td>Click login</td>
-</tr>
+<tal:block tal:define="login_form_url python:'${base_url}/web_site_module/test_web_site'">
+  <tal:block metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+    <tal:block metal:fill-slot="username">test_webmaster</tal:block>
+    <tal:block metal:fill-slot="password">test_webmaster</tal:block>
+  </tal:block>
+</tal:block>
 <tr>
   <td>verifyText</td>
   <td>//span[@class='headline']</td>

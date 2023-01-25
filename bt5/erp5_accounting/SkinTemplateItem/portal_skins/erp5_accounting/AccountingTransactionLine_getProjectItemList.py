@@ -22,7 +22,7 @@ if context.getPortalType() == 'Accounting Transaction Module':
   if not project_list:
     return [] # returning an empty list, not to add project column on reports
   return [('', ''), (str(translateString('No Project')), 'None')] + project_list
-  
+
 # case 2: script is used on custom listfields.
 #  for now the script has to be customized in such case.
 # [(x.getTitle(), x.getRelativeUrl()) for x in context.project_module.searchFolder()]

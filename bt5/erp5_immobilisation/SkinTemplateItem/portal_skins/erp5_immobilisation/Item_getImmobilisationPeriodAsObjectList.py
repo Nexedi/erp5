@@ -8,7 +8,7 @@ except ImmobilisationCalculationError:
   error = 'A calculation error occured'
 except ImmobilisationValidityError:
   error = 'A movement validity error occured'
-  
+
 if return_errors:
   return context.Base_translateString(error)
 

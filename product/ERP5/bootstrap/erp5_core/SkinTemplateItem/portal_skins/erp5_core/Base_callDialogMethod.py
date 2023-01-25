@@ -2,6 +2,7 @@
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
 """
+import six
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
@@ -131,10 +132,8 @@ if len(listbox_id_list):
   for listbox_id in listbox_id_list:
     listbox_line_list = []
     listbox = kw[listbox_id]
-    listbox_keys = listbox.keys()
-    listbox_keys.sort()
-    for key in listbox_keys:
-      listbox_line = listbox[key]
+    for key, value in sorted(six.iteritems(listbox)):
+      listbox_line = value
       listbox_line['listbox_key'] = key
       listbox_line_list.append(listbox_line)
     listbox_line_list = tuple(listbox_line_list)
@@ -176,10 +175,10 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
   clean_kw['deferred_portal_skin'] = clean_kw.get('portal_skin', None)
   # XXX Hardcoded Deferred style name
   clean_kw['portal_skin'] = 'Deferred'
-  
+
   dialog_form = getattr(context, dialog_method)
   page_template = getattr(dialog_form, 'pt', None)
-  # If the action form has report_view as it's method, it 
+  # If the action form has report_view as it's method, it
   if page_template != 'report_view':
     # use simple wrapper
     clean_kw['deferred_style_dialog_method'] = dialog_method

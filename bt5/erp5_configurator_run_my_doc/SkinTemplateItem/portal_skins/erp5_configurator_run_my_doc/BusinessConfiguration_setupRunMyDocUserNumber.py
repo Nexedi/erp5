@@ -6,7 +6,7 @@ if user_number > 1:
   # mark next transition  as multiple
   context.setMultiEntryTransition(next_transition, user_number)
 else:
-  # explicitly reset next transition as not multiple because 
+  # explicitly reset next transition as not multiple because
   # we may have already set it as multiple
   context.setMultiEntryTransition(next_transition, 0)
 

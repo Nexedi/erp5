@@ -1,0 +1,122 @@
+<!Doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publisher</title>
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="gadget_erp5_eci.css" />
+  <link rel="stylesheet" href="css/flag-icons.css" type="text/css" />
+
+  <script src="gadget_erp5_page_eci_publisher.js"></script>
+
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <ul class="grid-elements custom-software-profile">
+        <li>
+          <div class="custom-software-profile-image-wrapper"><img src="{{logo_url}}" alt></a></div>
+        </li>
+        <li>
+          <h2>{{title}}</h2>
+          <p class="fi fi-{{location.country_code}} flag-icon"></p>
+          <p class="flag-name"><a href="{{country_search_url}}">{{selection_domain_country}}</a></p>
+
+          {{#if wikipedia_description}}
+            <p>{{wikipedia_description}}</p>
+          {{/if}}
+          <br/>
+          {{#if wikipedia_url}}
+            <p><a href="{{wikipedia_url}}" class="">Read more on Wikipedia</a></p>
+          {{/if}}
+          <ul class="provider-profile">
+            <li>
+              <p>Info</p>
+              <p>Type: {{type}}</p>
+              <p>Founded: {{founded_year}}</p>
+              <p>Country: {{location.country}}</p>
+              <p>Website: <a href="{{website_url}}">{{website_url}}</a></p>
+              <span>Subsidaries:</span>
+              {{#each subsidiary_location_dict}}
+                <span class="fi fi-{{country_code}} flag-icon"></span><span class="flag-name">{{country}}</span>
+              {{/each}}
+            </li>
+            <li>
+              <p>Contact</p>
+              <p>{{location.title}}</p>
+              <p>{{location.address}}</p>
+              <p>{{location.postal_code}} {{location.city}}</p>
+              <p>{{location.country}}</p>
+              <p>{{location.phone_contact}}</p>
+              <p>{{location.mail_contact}}</p>
+            </li>
+            <li>
+              <div class="map_container" style="height:30vh;"></div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <section class="ui-content-header-plain ui-bar-c">
+        <h3>Financial Indicators</h3>
+        <table>
+          <tr>
+            <th>Type/Year</th>
+            {{#each kpi_list}}
+              <th>{{year}}</th>
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Staff</td>
+            {{#each kpi_list}}
+              {{#if staff}}
+                <td>{{staff}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Turnover</td>
+            {{#each kpi_list}}
+              {{#if revenues}}
+                <td>{{revenues}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Profit</td>
+            {{#each kpi_list}}
+              {{#if earnings}}
+                <td>{{earnings}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+          <tr>
+            <td>Total assets</td>
+            {{#each kpi_list}}
+              {{#if total_assets}}
+                <td>{{total_assets}}</td>
+              {{else}}
+                <td>-</td>
+              {{/if}}
+            {{/each}}
+          </tr>
+        </table>
+      </section>
+       <section class="solution-container">
+       <h3>Solutions</h3>
+       </section>
+    </section>
+  </script>
+  </head>
+  <body>
+    <article class="display-widget ui-content"></article>
+  </body>
+</html>

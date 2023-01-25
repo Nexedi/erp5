@@ -1,0 +1,1 @@
+Module containing representations of user authenticated sessions (from login to logout). Sessions implementations being dependent of the authentication mechanism, this business template does not contain any.

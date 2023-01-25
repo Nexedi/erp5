@@ -18,7 +18,7 @@ def getCurrencyItemList(include_empty=1, validation_state=validation_state):
         # for currency, we intentionaly use reference (EUR) not title (Euros).
         result.append((currency.getReference() or currency.getTitleOrId(),
                        currency.getRelativeUrl()))
-  
+
   result.sort(key=lambda x: x[0])
   return result
 
@@ -27,6 +27,6 @@ getCurrencyItemList = CachingMethod(
                           getCurrencyItemList,
                           id='CurrencyModule_getCurrencyItemList',
                           cache_factory = 'erp5_ui_short')
-                             
+
 return getCurrencyItemList(include_empty=include_empty,
                            validation_state=validation_state)

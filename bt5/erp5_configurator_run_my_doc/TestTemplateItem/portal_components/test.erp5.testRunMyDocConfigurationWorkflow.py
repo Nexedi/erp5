@@ -193,7 +193,7 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     self.portal.ERP5Site_createDefaultKnowledgePadListForUser()
     self.tic()
     current_user = self.portal.portal_membership.getAuthenticatedMember().getIdOrUserName()
-    pad = self.portal.portal_catalog.getResultValue(portal_type="Knowledge Pad", 
+    pad = self.portal.portal_catalog.getResultValue(portal_type="Knowledge Pad",
                                              owner=current_user)
     gadget_uid = self.portal.portal_gadgets.test_wizard_gadget.getUid()
     self.portal.KnowledgePad_addBoxList(uids=[gadget_uid],

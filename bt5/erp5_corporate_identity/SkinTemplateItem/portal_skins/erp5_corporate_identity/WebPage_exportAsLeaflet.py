@@ -27,6 +27,7 @@ return context.WebPage_viewAsLeaflet(
   override_leaflet_header_title=override_leaflet_header_title,
   override_source_organisation_title=override_source_organisation_title,
   override_source_person_title=override_source_person_title,
+  override_logo_reference = override_logo_reference,
   document_save=document_save,
   document_download=document_download,
   batch_mode=batch_mode,

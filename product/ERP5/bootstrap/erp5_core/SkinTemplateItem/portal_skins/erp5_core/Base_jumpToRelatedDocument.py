@@ -16,8 +16,8 @@ if len(jump_reference_list)==1:
 else:
   selection_uid_list = [x.getUid() for x in jump_reference_list] or None
   kw = {'uid': selection_uid_list}
-  # We need to reset the selection. Indeed, some sort columns done in another 
-  # jump could be meaningless for this particular jump. The consequence could 
+  # We need to reset the selection. Indeed, some sort columns done in another
+  # jump could be meaningless for this particular jump. The consequence could
   # be an empty list
   context.portal_selections.setSelectionFor('Base_jumpToRelatedObjectList', None)
   context.portal_selections.setSelectionParamsFor('Base_jumpToRelatedObjectList',kw)

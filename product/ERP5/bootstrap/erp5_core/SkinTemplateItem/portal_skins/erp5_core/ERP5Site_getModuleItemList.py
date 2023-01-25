@@ -26,7 +26,7 @@ if request is not None:
 else:
   virtual_root_url = portal.portal_url()  # does not end with a slash
 
-getModuleItemList = CachingMethod(getModuleItemList,  
+getModuleItemList = CachingMethod(getModuleItemList,
   id=('ERP5Site_getModuleItemList', portal.Localizer.get_selected_language(), virtual_root_url),
       cache_factory='erp5_ui_short')
 

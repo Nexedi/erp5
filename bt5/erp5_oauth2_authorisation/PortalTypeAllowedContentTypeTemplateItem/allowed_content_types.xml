@@ -1,0 +1,11 @@
+<allowed_content_type_list>
+ <portal_type id="OAuth2 Authorisation Server Connector">
+  <item>OAuth2 Client</item>
+ </portal_type>
+ <portal_type id="Session Module">
+  <item>OAuth2 Session</item>
+ </portal_type>
+ <portal_type id="Web Service Tool">
+  <item>OAuth2 Authorisation Server Connector</item>
+ </portal_type>
+</allowed_content_type_list>

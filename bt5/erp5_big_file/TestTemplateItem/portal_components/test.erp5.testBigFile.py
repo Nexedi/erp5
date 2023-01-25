@@ -76,14 +76,6 @@ def request_function(method_name):
 get = request_function('GET')
 put = request_function('PUT')
 
-
-# FIXME Zope translates 308 to 500
-# https://github.com/zopefoundation/Zope/blob/2.13/src/ZPublisher/HTTPResponse.py#L223
-# https://github.com/zopefoundation/Zope/blob/2.13/src/ZPublisher/HTTPResponse.py#L64
-R308 = 500
-
-
-
 class TestBigFile(ERP5TypeTestCase):
   """Tests for ERP5.Document.BigFile"""
 
@@ -138,7 +130,7 @@ class TestBigFile(ERP5TypeTestCase):
 
                                              #  result body status headers
     check(get(), {'format': 'raw'},                 '', '', 200, {'Content-Length': '0'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',R308, {                                  'Range': 'bytes 0--1'})  # XXX 0--1 ok?
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '', 308, {                                  'Range': 'bytes 0--1'})  # XXX 0--1 ok?
     check(get({        'Range': 'bytes=0-0'}),{},   '', '', 416, {'Content-Length': '0',    'Content-Range': 'bytes */0'})
 
 
@@ -148,7 +140,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getData(), '')
 
     check(get(), {'format': 'raw'},                 '', '', 200, {'Content-Length': '0'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',R308, {                                  'Range': 'bytes 0--1'})  # XXX 0--1 ok?
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '', 308, {                                  'Range': 'bytes 0--1'})  # XXX 0--1 ok?
     check(get({        'Range': 'bytes=0-0'}),{},   '', '', 416, {                          'Content-Range': 'bytes */0'})
 
 
@@ -158,7 +150,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getData(), 'x')
 
     check(get(), {'format': 'raw'},                 '', 'x', 200, {'Content-Length': '1'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '', R308, {                                'Range': 'bytes 0-0'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',  308, {                                'Range': 'bytes 0-0'})
     check(get({        'Range': 'bytes=0-0'}),{},   '', 'x', 206, {'Content-Length': '1',  'Content-Range': 'bytes 0-0/1'})
 
 
@@ -168,7 +160,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getData(), 'xyz')
 
     check(get(), {'format': 'raw'},                 '', 'xyz',  200, {'Content-Length': '3'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',    R308, {                                'Range': 'bytes 0-2'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',     308, {                                'Range': 'bytes 0-2'})
     check(get({        'Range': 'bytes=0-0'}),{},   '', 'x'  ,  206, {'Content-Length': '1',  'Content-Range': 'bytes 0-0/3'})
     check(get({        'Range': 'bytes=1-1'}),{},   '',  'y' ,  206, {'Content-Length': '1',  'Content-Range': 'bytes 1-1/3'})
     check(get({        'Range': 'bytes=2-2'}),{},   '',   'z',  206, {'Content-Length': '1',  'Content-Range': 'bytes 2-2/3'})
@@ -181,7 +173,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getSize(), 5)
     self.assertEqual(f.getData(), 'xyz01')
     check(get(), {'format': 'raw'},                 '', 'xyz01',200, {'Content-Length': '5'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',    R308, {                                'Range': 'bytes 0-4'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',     308, {                                'Range': 'bytes 0-4'})
     check(get({        'Range': 'bytes=0-4'}),{},   '', 'xyz01',206, {'Content-Length': '5',  'Content-Range': 'bytes 0-4/5'})
     check(get({        'Range': 'bytes=1-3'}),{},   '',  'yz0' ,206, {'Content-Length': '3',  'Content-Range': 'bytes 1-3/5'})
     check(get({        'Range': 'bytes=1-2'}),{},   '',  'yz'  ,206, {'Content-Length': '2',  'Content-Range': 'bytes 1-2/5'})
@@ -193,21 +185,21 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getSize(), 3)
     self.assertEqual(f.getData(), 'abc')
     check(get(), {'format': 'raw'},                 '', 'abc',  200, {'Content-Length': '3'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',    R308, {                                'Range': 'bytes 0-2'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',     308, {                                'Range': 'bytes 0-2'})
 
     # append via PUT with range (again)
     check(put({'Content-Range': 'bytes 3-7/8', 'Content-Length': '5'}, 'defgh'),{},  '', '', 204, {})
     self.assertEqual(f.getSize(), 8)
     self.assertEqual(f.getData(), 'abcdefgh')
     check(get(), {'format': 'raw'},                 '', 'abcdefgh', 200, {'Content-Length': '8'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',        R308, {                            'Range': 'bytes 0-7'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',         308, {                            'Range': 'bytes 0-7'})
 
     # append via ._appendData()  (again)
     f._appendData('ij')
     self.assertEqual(f.getSize(), 10)
     self.assertEqual(f.getData(), 'abcdefghij')
     check(get(), {'format': 'raw'},                 '', 'abcdefghij', 200, {'Content-Length': '10'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',          R308, {                          'Range': 'bytes 0-9'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',           308, {                          'Range': 'bytes 0-9'})
 
     # make sure PUT with incorrect/non-append range is rejected
     check(put({'Content-Range': 'bytes 10-10/10', 'Content-Length': '1'}, 'k'),{}, '', '', 400, {'X-Explanation': 'Total size unexpected'})
@@ -251,7 +243,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getSize(), 0)
     self.assertEqual(f.getData(), '')
     check(get(), {'format': 'raw'},                 '', '', 200, {'Content-Length': '0'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',R308, {                                'Range': 'bytes 0--1'})  # XXX 0--1 ok?
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '', 308, {                                'Range': 'bytes 0--1'})  # XXX 0--1 ok?
     check(get({        'Range': 'bytes=0-0'}),{},   '', '', 416, {'Content-Length': '0',  'Content-Range': 'bytes */0'})
 
 
@@ -263,7 +255,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getSize(), 3)
     self.assertEqual(f.getData(), 'abc')
     check(get(), {'format': 'raw'},                 'abc', '',    200, {'Content-Length': '3'})
-    check(put({'Content-Range': 'bytes */*'}),{},   ''   , '',   R308, {                                'Range': 'bytes 0-2'})
+    check(put({'Content-Range': 'bytes */*'}),{},   ''   , '',    308, {                                'Range': 'bytes 0-2'})
     check(get({        'Range': 'bytes=0-2'}),{},   ''   , 'abc', 206, {'Content-Length': '3',  'Content-Range': 'bytes 0-2/3'})
 
     # and .data should remain str after access (though later this could be
@@ -280,7 +272,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getSize(), 4)
     self.assertEqual(f.getData(), 'abcd')
     check(get(), {'format': 'raw'},                 '', 'abcd', 200, {'Content-Length': '4'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',    R308, {                                'Range': 'bytes 0-3'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',     308, {                                'Range': 'bytes 0-3'})
     check(get({        'Range': 'bytes=0-3'}),{},   '', 'abcd', 206, {'Content-Length': '4',  'Content-Range': 'bytes 0-3/4'})
 
 
@@ -304,14 +296,14 @@ class TestBigFile(ERP5TypeTestCase):
     # NOTE this change is automatically reverted back in calling helper
     self.assertIsInstance(f._baseGetData._default, str)
     self.assertEqual(f._baseGetData._default, '')
-    f._baseGetData.im_func._default = None  # NOTE not possible to do on just f._baseGetData
+    f._baseGetData.__func__._default = None  # NOTE not possible to do on just f._baseGetData
     self.assertIs(f._baseGetData._default, None)
     self.assertIs(f._baseGetData(), None)   # <- oops
 
     self.assertEqual(f.getSize(), 0)
     self.assertIs   (f.getData(), None)
     check(get(), {'format': 'raw'},                 '', '', 200, {'Content-Length': '0'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',R308, {                                'Range': 'bytes 0--1'})  # XXX 0--1 ok?
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '', 308, {                                'Range': 'bytes 0--1'})  # XXX 0--1 ok?
     check(get({        'Range': 'bytes=0-0'}),{},   '', '', 416, {'Content-Length': '0',  'Content-Range': 'bytes */0'})
 
 
@@ -322,7 +314,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(f.getSize(), 1)
     self.assertEqual(f.getData(), 'x')
     check(get(), {'format': 'raw'},                 '', 'x',    200, {'Content-Length': '1'})
-    check(put({'Content-Range': 'bytes */*'}),{},   '', '',    R308, {                                'Range': 'bytes 0-0'})
+    check(put({'Content-Range': 'bytes */*'}),{},   '', '',     308, {                                'Range': 'bytes 0-0'})
     check(get({        'Range': 'bytes=0-3'}),{},   '', 'x',    206, {'Content-Length': '1',  'Content-Range': 'bytes 0-0/1'})
 
 
@@ -338,7 +330,7 @@ class TestBigFile(ERP5TypeTestCase):
     self.assertEqual(_, '')
 
     # NOTE obtaining getter is not possible via BigFile._baseGetData
-    g = f._baseGetData.im_func
+    g = f._baseGetData.__func__
     self.assertIsInstance(g._default, str)
     self.assertEqual(g._default, '')
 

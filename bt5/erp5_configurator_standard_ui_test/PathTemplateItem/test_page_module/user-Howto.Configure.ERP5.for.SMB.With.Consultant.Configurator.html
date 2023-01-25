@@ -1434,26 +1434,10 @@
             <td>${base_url}/logout</td> 
             <td> </td> 
           </tr> 
-          <tr> 
-            <td>openAndWait</td> 
-            <td>${base_url}/login_form</td> 
-            <td> </td> 
-          </tr> 
-          <tr> 
-            <td>type</td> 
-            <td>//input[@name=&quot;__ac_name&quot;]</td> 
-            <td>${base_user}</td> 
-          </tr> 
-          <tr> 
-            <td>type</td> 
-            <td>//input[@name=&quot;__ac_password&quot;]</td> 
-            <td>${base_password}</td> 
-          </tr> 
-          <tr> 
-            <td>clickAndWait</td> 
-            <td>//input[@name=&quot;logged_in:method&quot;]</td> 
-            <td> </td> 
-          </tr> 
+          <tr metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+            <td tal:omit-tag="" metal:fill-slot="username">${base_user}</td>
+            <td tal:omit-tag="" metal:fill-slot="password">${base_password}</td>
+          </tr>
           <tr> 
             <td>openAndWait</td> 
             <td>${base_url}/view</td> 
@@ -1489,26 +1473,10 @@
             <td>${base_url}/logout</td> 
             <td> </td> 
           </tr> 
-          <tr> 
-            <td>openAndWait</td> 
-            <td>${base_url}/login_form</td> 
-            <td> </td> 
-          </tr> 
-          <tr> 
-            <td>type</td> 
-            <td>//input[@name=&quot;__ac_name&quot;]</td> 
-            <td>PERSON_USER_REFERENCE</td> 
-          </tr> 
-          <tr> 
-            <td>type</td> 
-            <td>//input[@name=&quot;__ac_password&quot;]</td> 
-            <td>secret</td> 
-          </tr> 
-          <tr> 
-            <td>clickAndWait</td> 
-            <td>//input[@name=&quot;logged_in:method&quot;]</td> 
-            <td> </td> 
-          </tr> 
+          <tr metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+            <td tal:omit-tag="" metal:fill-slot="username">PERSON_USER_REFERENCE</td>
+            <td tal:omit-tag="" metal:fill-slot="password">secret</td>
+          </tr>
           <tr> 
             <td>openAndWait</td> 
             <td>${base_url}/view</td> 
@@ -1534,26 +1502,15 @@
             <td>30000</td> 
             <td> </td> 
           </tr> 
-          <tr> 
-            <td>openAndWait</td> 
-            <td>${base_url}/login_form</td> 
-            <td> </td> 
-          </tr> 
-          <tr> 
-            <td>type</td> 
-            <td>//input[@name=&quot;__ac_name&quot;]</td> 
-            <td>${base_user}</td> 
-          </tr> 
-          <tr> 
-            <td>type</td> 
-            <td>//input[@name=&quot;__ac_password&quot;]</td> 
-            <td>${base_password}</td> 
-          </tr> 
-          <tr> 
-            <td>clickAndWait</td> 
-            <td>//input[@name=&quot;logged_in:method&quot;]</td> 
-            <td> </td> 
-          </tr> 
+          <tr>
+            <td>openAndWait</td>
+            <td>${base_url}/logout</td>
+            <td></td>
+          </tr>
+          <tr metal:use-macro="python: context.Zuite_CommonTemplate.macros['login']">
+            <td tal:omit-tag="" metal:fill-slot="username">${base_user}</td>
+            <td tal:omit-tag="" metal:fill-slot="password">${base_password}</td>
+          </tr>
         </tbody> 
       </table> </test> </section><section class="screenshot"> 
     <h1>Login</h1> <img alt="Login Form" title="Login Form" type="image/svg+xml" src="user-ERP5.Login.Form.Screenshot?format=png" /> <details open="open"> 

@@ -42,7 +42,7 @@ for business_field in template_list:
     term_list = get_term_list(business_field, reference)
     #if not term_list:
     #  continue
-    if item_dict.has_key(wf_item):
+    if wf_item in item_dict:
       continue
     item_dict[wf_item] = True
 

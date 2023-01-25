@@ -1,4 +1,4 @@
-translateString = context.Base_translateString 
+translateString = context.Base_translateString
 
 if (context.getPortalType() != 'Web Site'):
   context.Base_redirect('', keep_items={

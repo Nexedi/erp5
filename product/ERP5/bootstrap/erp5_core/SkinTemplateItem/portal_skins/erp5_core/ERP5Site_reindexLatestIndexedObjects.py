@@ -18,7 +18,7 @@ for candidate in candidate_list:
     # Object is unreachable, remove it from catalog
     # Use SQLQueue because all activities are triggered on the same object,
     # and SQLDict keeps only one.
-    catalog.activate(activity="SQLQueue").unindexObject(uid=candidate['uid'])
+    catalog.activate(activity="SQLQueue").uncatalogObject(uid=candidate['uid'])
     unindex_count += 1
   else:
     obj.reindexObject()

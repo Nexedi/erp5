@@ -36,11 +36,11 @@ context.activate(
     after_tag=after_tag,
     priority=priority,
 ).Base_computeReportSection(
-    form=form.getId(), 
+    form=form.getId(),
     report_request=report_request,
     user_name=user.getId(),
     tag=tag,
-    skin_name=skin_name, 
+    skin_name=skin_name,
     format=format_,
     priority=priority,
     localizer_language=localizer_language,

@@ -22,7 +22,7 @@ return context.getPortalObject()\
   #request.RESPONSE.setCookie('session_id', session_id, expires=(now +expire_timeout_days).fCommon(), path='/')
 
 #if action=='reset':
-  ### reset cart 
+  ### reset cart
   #portal_sessions.manage_delObjects(session_id)
 #else:
   ### take payment transaction for this customer

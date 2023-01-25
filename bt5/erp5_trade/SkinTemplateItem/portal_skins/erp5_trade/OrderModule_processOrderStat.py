@@ -35,13 +35,13 @@ for result in document_list:
     else:
       client_title = result['source_section_title']
     # FIXME: if two clients have the same title, do we want to group ?
-    if not client_dict.has_key(client_title):
+    if client_title not in client_dict:
       client_dict[client_title] = {}
-    if client_dict[client_title].has_key(period):
+    if period in client_dict[client_title]:
       client_dict[client_title][period]['amount'] = client_dict[client_title][period]['amount'] + (total_price or 0)
     else:
       client_dict[client_title][period] = {'amount' : total_price or 0}
-    if not product_dict.has_key(client_title):
+    if client_title not in product_dict:
       line_dict = product_dict[client_title] = {}
     else:
       line_dict = product_dict[client_title]
@@ -54,12 +54,12 @@ for result in document_list:
     for line in line_list:
       # FIXME: if two resources have the same title, do we want to group ?
       product_title = line.resource_title
-      if not line_dict.has_key(product_title):
+      if product_title not in line_dict:
         line_dict[product_title] = {period :{"amount" : line.total_price or 0,
                                              "quantity" : line.quantity or 0,
                                              "quantity_unit" : translate(line.strict_quantity_unit_title)}}
       else:
-        if not line_dict[product_title].has_key(period):
+        if period not in line_dict[product_title]:
           line_dict[product_title][period] = {"amount" : line.total_price or 0,
                                                "quantity" : line.quantity or 0,
                                                "quantity_unit" : translate(line.strict_quantity_unit_title)}

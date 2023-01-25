@@ -58,14 +58,14 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
 
   def test_getChildCount(self):
     self.assertEqual(0, self.person_1.Person_getChildCount())
-    
+
     self.person_2.setNaturalParentValue(self.person_1)
     self.tic()
     self.assertEqual(1, self.person_1.Person_getChildCount())
-    
+
     self.assertEqual(1, self.person_1.Person_getChildCount(max_age=1000))
     self.assertEqual(0, self.person_1.Person_getChildCount(max_age=2))
-  
+
 
   def test_SocialContract(self):
     self.assertEqual(0, self.person_1.Person_getPartnerCount())
@@ -87,11 +87,11 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
 
     self.tic()
     self.assertEqual(2, self.person_1.Person_getPartnerCount())
-    
+
     # you can specify a date
     self.assertEqual(1,
       self.person_1.Person_getPartnerCount(at_date=DateTime(3000, 1, 2)))
-    
+
     # you can restrict to some social contracts types only
     self.assertEqual(1, self.person_1.Person_getPartnerCount(
                       valid_social_contract_type_list=('marriage', )))

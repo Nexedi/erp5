@@ -1,4 +1,4 @@
-# -*- coding: latin-1 -*-
+# -*- coding: utf-8 -*-
 # Copyright (c) 2005-2006 Simplistix Ltd
 #
 # This Software is released under the MIT License:
@@ -14,7 +14,7 @@ except ImportError:
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import system as SystemUser, SimpleUser
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from difflib import unified_diff
 from Products.MailHost.MailHost import MailHost
 from Testing.makerequest import makerequest
@@ -325,7 +325,7 @@ class TestMailTemplate(TestCase):
         from zExceptions import Redirect
         try:
             self.assertRaises(self.mt.manage_workspace(self.r))
-        except Redirect,r:
+        except Redirect as r:
             # this may appear to be incorrect, but http://foo/test_mt
             # is what we set as REQUEST['URL1']
             self.assertEqual(r.args,('http://foo/test_mt/pt_editForm',))
@@ -378,7 +378,7 @@ class TestMailTemplate(TestCase):
         self.test_add('Test Body')
         try:
             self.mt.send(**params)
-        except TypeError,e:
+        except TypeError as e:
             self.assertEqual(e.args[0],error)
         else:
             self.fail('Mail sent even though params missing')
@@ -703,7 +703,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££'.encode('utf-8'),
+            unicode=u'Â£Â£Â£'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -719,7 +719,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££'.encode('utf-8'),
+            unicode=u'Â£Â£Â£'.encode('utf-8'),
             encoding='utf-8'
             )
 
@@ -732,7 +732,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££',
+            unicode=u'Â£Â£Â£',
             encoding='utf-8'
             )
 
@@ -753,7 +753,7 @@ class TestMailTemplate(TestCase):
             mfrom='from@example.com',
             mto=('to@example.com',),
             subject='Test Subject',
-            unicode=u'£££',
+            unicode=u'Â£Â£Â£',
             encoding='utf-8'
             )
 

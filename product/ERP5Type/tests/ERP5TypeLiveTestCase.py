@@ -32,6 +32,8 @@ import sys
 import imp
 import re
 
+from zope.site.hooks import setSite
+from Acquisition import aq_base
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
@@ -78,19 +80,29 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
 
-      Rewrap the portal in an independant request for this test.
+      Rewrap the portal in an independent request for this test.
       """
       if self.portal is not None:
         return self.portal
 
       from Products.ERP5.ERP5Site import getSite
       site = getSite()
-      # reconstruct the acquistion chain with an independant request.
+      # reconstruct the acquisition chain with an independent request.
       #   RequestContainer -> Application -> Site
-      from Testing.ZopeTestCase.utils import makerequest
-      portal = getattr(makerequest(site.aq_parent), site.getId())
+      from Testing.makerequest import makerequest
+      environ = {}
+      if self._server_address:
+        host, port = self._server_address
+        environ={
+          'SERVER_NAME': host,
+          'SERVER_PORT': port,
+        }
+      portal = getattr(
+        makerequest(aq_base(site.aq_parent), environ=environ),
+        site.getId())
 
       # Make the various get_request patches return this request.
+      # TODO: check this is still needed
       # This is for ERP5TypeTestCase patch
       from Testing.ZopeTestCase.connections import registry
       if registry:
@@ -106,6 +118,8 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         request['SERVER_URL'] = _request_server_url
         request._resetURLS()
 
+      portal.setupCurrentSkin(request)
+      setSite(portal)
       self.portal = portal
       return portal
 
@@ -129,6 +143,8 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       if getattr(self, "activity_tool_subscribed", False):
         self.portal.portal_activities.subscribe()
         self.commit()
+      if self.portal is not None:
+        self.portal.REQUEST.close()
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test

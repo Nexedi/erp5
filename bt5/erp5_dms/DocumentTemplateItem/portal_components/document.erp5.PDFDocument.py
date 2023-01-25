@@ -280,7 +280,7 @@ class PDFDocument(Image):
                  '-noframes', '-i', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
+      except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdftohtml was not found')
         raise
@@ -309,7 +309,7 @@ class PDFDocument(Image):
       command = ['pdf2djvu', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
+      except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdf2djvu was not found')
         raise
@@ -338,7 +338,7 @@ class PDFDocument(Image):
       command = ['pdfinfo', '-meta', '-box', tmp.name]
       try:
         command_result = Popen(command, stdout=PIPE).communicate()[0]
-      except OSError, e:
+      except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdfinfo was not found')
         raise

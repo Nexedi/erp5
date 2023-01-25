@@ -45,8 +45,7 @@ for form in (real_form, target_form):
     listbox_line_list = []
     listbox = getattr(request,'listbox',None) # XXX: hardcoded field name
     listbox_keys = listbox.keys()
-    listbox_keys.sort()
-    for key in listbox_keys:
+    for key in sorted(listbox_keys):
       listbox_line = listbox[key]
       listbox_line['listbox_key'] = key
       listbox_line_list.append(listbox[key])
@@ -85,7 +84,7 @@ for i in xrange(0, path_list_len, batch_size):
 # something is happening in the background
 context.activate(after_tag=tag).getTitle()
 
-# reset selection checked uids 
+# reset selection checked uids
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])
 
 return context.Base_redirect(form_id,

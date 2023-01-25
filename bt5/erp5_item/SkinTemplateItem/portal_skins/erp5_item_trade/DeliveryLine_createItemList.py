@@ -21,7 +21,7 @@ if dialog.has_field('your_item_extra_property_list'):
 
 for line in kw.get('listbox'):
 
-  if line.has_key('listbox_key'):
+  if 'listbox_key' in line:
     item_reference = line.get('reference')
     if item_reference:
       item = context.portal_catalog.getResultValue(
@@ -67,7 +67,7 @@ for line in kw.get('listbox'):
                                              *line_variation_category_list)
         movement_to_update.edit(mapped_value_property_list=('quantity', 'price'),
                                 variation_category_list=line_variation_category_list)
- 
+
     else:
       # no variation, we'll update the line itself
       movement_to_update = context

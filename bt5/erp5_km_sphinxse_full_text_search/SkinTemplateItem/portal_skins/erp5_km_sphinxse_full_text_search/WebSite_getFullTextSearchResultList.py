@@ -1,7 +1,7 @@
 """
   Return the result list of all documents found by specified agruments.
-  Include an optimisation for 'search' mode which returns all documents info like 
-  (reference, state, web sections ...) without getting a ZODB object (i.e. get everything from 
+  Include an optimisation for 'search' mode which returns all documents info like
+  (reference, state, web sections ...) without getting a ZODB object (i.e. get everything from
   MySQL - "No ZODB" approach).
 """
 from Products.ERP5Type.Document import newTempBase
@@ -34,8 +34,8 @@ if not all_languages:
 if validation_state is None:
   # XXX hardcoded validation state list.
   # Use predicate or layout property instead
-  validation_state = ('released', 'released_alive', 'published', 
-                      'published_alive', 'shared', 'shared_alive', 
+  validation_state = ('released', 'released_alive', 'published',
+                      'published_alive', 'shared', 'shared_alive',
                       'public', 'validated')
 kw['validation_state'] = validation_state
 
@@ -48,7 +48,7 @@ if list_style != 'search':
 else:
   # search mode requires optimization, use catalog to get more data from it
   result_list = []
-  result_set_dict_list = [] 
+  result_set_dict_list = []
   repeating_uid_category_map = {}
   portal_types = portal.portal_types
 
@@ -65,12 +65,12 @@ else:
   for line in found_result_list:
     uid = line['uid']
     if uid not in repeating_uid_category_map.keys():
-      # first time 
+      # first time
       repeating_uid_category_map[uid] = []
     category_relative_url = line['category_relative_url']
     if category_relative_url is not None:
       # exactly matches, document("group/nexedi") belongs to section("group/nexedi")
-      sections = category_section_map.get(category_relative_url, []) 
+      sections = category_section_map.get(category_relative_url, [])
       if not len(sections):
         # try to find by similarity if no exact match so if document belongs to 'group/nexedi/hq'
         # and we have a section 'group/nexedi' it will belong to this section
@@ -93,7 +93,7 @@ else:
                                 'version': line['version'],
                                 'language': line['language'],
                                 'web_site': web_site.getRelativeUrl()})
-  
+
   # one document can belong to n categories, we need show only one doc
   # and all sections it belongs to
   found_uids = []

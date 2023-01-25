@@ -1,10 +1,10 @@
 task_list = [x.getObject() for x in \
-  context.portal_catalog(selection_report=selection_report, 
+  context.portal_catalog(selection_report=selection_report,
                          portal_type='Task',
                          simulation_state=context.getPortalDraftOrderStateList()+
                                           context.getPortalPlannedOrderStateList())]
 task_list.extend([x.getObject() for x in \
-  context.portal_catalog(selection_report=selection_report, 
+  context.portal_catalog(selection_report=selection_report,
                          portal_type='Task Report',
                          simulation_state=context.getPortalReservedInventoryStateList()+
                                           context.getPortalCurrentInventoryStateList())])

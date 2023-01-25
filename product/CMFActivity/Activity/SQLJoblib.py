@@ -42,7 +42,7 @@ from six.moves import xrange
 class SQLJoblib(SQLDict):
   """
     An extention of SQLDict, It is non transatactional and follow always-excute paradigm.
-    It uses a dictionary to store results and with hash of arguments as keys  
+    It uses a dictionary to store results and with hash of arguments as keys
   """
   sql_table = 'message_job'
   uid_group = 'portal_activity_job'

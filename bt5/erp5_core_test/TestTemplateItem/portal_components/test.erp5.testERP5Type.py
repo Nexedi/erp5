@@ -176,10 +176,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
   # erp5_core tests
   def testERP5CoreHasParentBaseCategory(self):
     # Test if erp5_core parent base category was imported successfully
-    self.assertNotEquals(getattr(self.getCategoryTool(), 'parent', None), None)
+    self.assertNotEqual(getattr(self.getCategoryTool(), 'parent', None), None)
 
   def testERP5CoreHasImageType(self):
-    self.assertNotEquals(getattr(self.getTypeTool(), 'Image', None), None)
+    self.assertNotEqual(getattr(self.getTypeTool(), 'Image', None), None)
 
   # Business Template Tests
   def testBusinessTemplate(self):
@@ -274,9 +274,25 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     o = portal.organisation_module.newContent(portal_type='Organisation',
                                               temp_object=1)
     self.assertEqual(o.isTempObject(), 1)
-    a = o.newContent(portal_type = 'Telephone')
+    guarded_getattr(o, 'edit')(title='temp object')
+    self.assertEqual(guarded_getattr(o, 'getTitle')(), 'temp object')
+
+    # a temp object which acquire local roles, in temp container
+    o.manage_permission('Modify portal content', [])
+    o.manage_permission('Add portal content', [])
+    a = o.newContent(portal_type='Telephone')
     self.assertEqual(a.isTempObject(), 1)
     self.assertEqual(a, guarded_getattr(o, a.getId()))
+    guarded_getattr(a, 'edit')(title='temp object')
+    self.assertEqual(guarded_getattr(a, 'getTitle')(), 'temp object')
+
+    # a temp object which does not acquire local roles, in a temp container
+    b = o.newContent(portal_type='Telephone')
+    self.assertEqual(b.isTempObject(), 1)
+    self.assertEqual(b, guarded_getattr(o, b.getId()))
+    guarded_getattr(b, 'edit')(title='temp object')
+    self.assertEqual(guarded_getattr(b, 'getTitle')(), 'temp object')
+
     self.logout()
     self.login()
 
@@ -472,16 +488,16 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # double-check that they also have group accessors
     category_tool = self.portal.portal_categories.aq_inner
     method = getattr(category_tool, 'getRegionRelatedList', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
 
     region_category = category_tool.region.aq_inner
     method = getattr(region_category, 'getRegionRelatedList', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
 
     property_sheet_tool = self.portal.portal_property_sheets
     person_property_sheet = property_sheet_tool.Person.aq_inner
     method = getattr(person_property_sheet, 'getRegionRelatedList', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
 
 
   def test_05_setProperty(self):
@@ -1006,7 +1022,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person = self.getPersonModule().newContent(id='1', portal_type='Person')
     wf = self.getWorkflowTool().validation_workflow
     # those are assumptions for this test.
-    self.assertTrue(wf in self.getWorkflowTool().getWorkflowValueListFor('Person'))
+    self.assertIn(wf, self.getWorkflowTool().getWorkflowValueListFor('Person'))
     self.assertEqual('validation_state', wf.getStateVariable())
     initial_state = wf.getSourceValue()
     other_state = wf.getStateValueByReference('validated')
@@ -1091,7 +1107,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # an organisation is created inside the person.
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('Organisation',
                       default_organisation.getPortalTypeName())
     self.assertEqual('The organisation title',
@@ -1155,7 +1171,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDefaultOrganisationReference('The organisation ref')
 
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('Organisation',
                       default_organisation.getPortalTypeName())
     self.assertEqual('The organisation ref',
@@ -1218,11 +1234,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDefaultOrganisationTitle('The organisation title')
     # here we want to make sure we didn't modify this 'default_organisation'
     # we could have get by acquisition.
-    self.assertNotEquals(another_person_title,
+    self.assertNotEqual(another_person_title,
                          person.getDefaultOrganisationTitle())
     # an organisation is created inside the person.
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('The organisation title',
                       person.getDefaultOrganisationTitle())
 
@@ -1302,11 +1318,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person.setDefaultOrganisationTitle('The organisation title')
     # here we want to make sure we didn't modify this 'default_organisation'
     # we could have get by acquisition.
-    self.assertNotEquals(another_person_title,
+    self.assertNotEqual(another_person_title,
                          person.getDefaultOrganisationTitle())
     # an organisation is created inside the person.
     default_organisation = person._getOb('default_organisation', None)
-    self.assertNotEquals(None, default_organisation)
+    self.assertNotEqual(None, default_organisation)
     self.assertEqual('The organisation title',
                       person.getDefaultOrganisationTitle())
 
@@ -1590,19 +1606,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     action_tool = self.portal.portal_actions
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action1' not in action_id_list)
+    self.assertNotIn('action1', action_id_list)
     obj.setDescription('foo')
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action1' in action_id_list)
+    self.assertIn('action1', action_id_list)
     addCustomAction('action2',"python: portal_url not in (None,'')")
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action2' in action_id_list)
+    self.assertIn('action2', action_id_list)
     addCustomAction('action3',"python: object_url not in (None,'')")
     actions = action_tool.listFilteredActionsFor(obj)
     action_id_list = [x['id'] for x in actions.get('object_action',[])]
-    self.assertTrue('action3' in action_id_list)
+    self.assertIn('action3', action_id_list)
 
 
   def test_21bis_getDefaultViewFor(self):
@@ -1702,7 +1718,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     # The user may not view the person object.
     self.tic()
-    self.assertTrue('Auditor' not in user.getRolesInContext(person))
+    self.assertNotIn('Auditor', user.getRolesInContext(person))
     self.logout()
     newSecurityManager(None, user)
     self.assertEqual(len(person_module.searchFolder(id=person.getId())), 0)
@@ -1717,7 +1733,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # reindexed, and Jean-Paul believes that this should not be
     # automatic.
     self.tic()
-    self.assertTrue('Auditor' in user.getRolesInContext(person))
+    self.assertIn('Auditor', user.getRolesInContext(person))
     self.logout()
     newSecurityManager(None, user)
     self.assertEqual(len(person_module.searchFolder(id=person.getId())), 0)
@@ -1728,7 +1744,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     # synchronized.
     person_module.recursiveReindexObject()
     self.tic()
-    self.assertTrue('Auditor' in user.getRolesInContext(person))
+    self.assertIn('Auditor', user.getRolesInContext(person))
     self.logout()
     newSecurityManager(None, user)
     self.assertEqual(len(person_module.searchFolder(id=person.getId())), 1)
@@ -1742,7 +1758,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person')
     self.assertFalse(person.hasTitle())
-    self.assertFalse(person.__dict__.has_key('title'))
+    self.assertNotIn('title', person.__dict__)
 
   def test_24_relatedValueAccessor(self):
     """
@@ -2760,22 +2776,22 @@ return True''')
 
     self.assertTrue(getSecurityManager().getUser().has_permission(
                     'Add portal content', container))
-    self.assertTrue(type_info in container.allowedContentTypes())
+    self.assertIn(type_info, container.allowedContentTypes())
     container.newContent(portal_type=object_portal_type)
 
     container.manage_permission('Add portal content', [], 0)
-    self.assertFalse(type_info in container.allowedContentTypes())
+    self.assertNotIn(type_info, container.allowedContentTypes())
     self.assertRaises(Unauthorized, container.newContent,
                       portal_type=object_portal_type)
 
     type_info.permission = 'Manage portal'
     container.manage_permission('Manage portal', [], 0)
-    self.assertFalse(type_info in container.allowedContentTypes())
+    self.assertNotIn(type_info, container.allowedContentTypes())
     self.assertRaises(Unauthorized, container.newContent,
                       portal_type=object_portal_type)
 
     container.manage_permission('Manage portal', ['Anonymous'], 0)
-    self.assertTrue(type_info in container.allowedContentTypes())
+    self.assertIn(type_info, container.allowedContentTypes())
     doc = container.newContent(portal_type=object_portal_type)
 
     # we can also clone such documents only with the permission registered on
@@ -2955,10 +2971,10 @@ return True''')
     """
     person = self.getPersonModule().newContent(portal_type='Person')
     method = getattr(person, 'isDeliveryType', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertEqual(0, method())
     method = getattr(person, 'isNodeType', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertEqual(1, method())
 
   def test_providesAccessors(self):
@@ -2968,10 +2984,10 @@ return True''')
     """
     person = self.getPersonModule().newContent(portal_type='Person')
     method = getattr(person, 'providesIMovement', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertEqual(False, method())
     method = getattr(person, 'providesICategoryAccessProvider', None)
-    self.assertNotEquals(None, method)
+    self.assertNotEqual(None, method)
     self.assertTrue(method())
 
   def test_dynamic_accessor_mockable(self):
@@ -3010,8 +3026,8 @@ return True''')
     self.commit()
 
     # our type is available from types tool
-    self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
-    self.assertTrue('Dummy Type' in [ti.getId() for ti in
+    self.assertNotEqual(None, types_tool.getTypeInfo('Dummy Type'))
+    self.assertIn('Dummy Type', [ti.getId() for ti in
                                       types_tool.listTypeInfo()])
 
     # not existing types are not an error
@@ -3066,7 +3082,7 @@ return True''')
       self.assertEqual(final_action_list[0]['id'], 'test_before')
       self.assertEqual(final_action_list[-1]['id'], 'test_after')
       # check that we have another portal types action in the middle
-      self.assertTrue('view' in [x['id'] for x in final_action_list[1:-1]])
+      self.assertIn('view', [x['id'] for x in final_action_list[1:-1]])
     finally:
       index_list = []
       action_list = portal_actions._cloneActions()
@@ -3102,7 +3118,7 @@ return True''')
     for x in "id", "address_city", "function":
       self.assertTrue(x in result_set, "%s not in %s" % (x, result_set))
     # Values from which acquired properties are fetched are not returned.
-    self.assertFalse("address" in result_set)
+    self.assertNotIn("address", result_set)
 
   def test_callable_guards(self):
     skin = self.getSkinsTool().custom
@@ -3242,6 +3258,13 @@ class TestAccessControl(ERP5TypeTestCase):
   def test(self):
     self.portal.person_module.newContent(immediate_reindex=True)
 
+def add_tests(suite, module):
+  if hasattr(module, 'test_suite'):
+    return suite.addTest(module.test_suite())
+  for obj in vars(module).values():
+    if isinstance(obj, type) and issubclass(obj, unittest.TestCase):
+      suite.addTest(unittest.makeSuite(obj))
+
 
 def test_suite():
   suite = unittest.TestSuite()
@@ -3250,91 +3273,42 @@ def test_suite():
 
   # run tests for monkey patched ZPublisher modules
   import ZPublisher.tests.testBaseRequest
-  suite.addTest(ZPublisher.tests.testBaseRequest.test_suite())
+  add_tests(suite, ZPublisher.tests.testBaseRequest)
 
   import ZPublisher.tests.testBeforeTraverse
-  suite.addTest(ZPublisher.tests.testBeforeTraverse.test_suite())
+  add_tests(suite, ZPublisher.tests.testBeforeTraverse)
 
   import ZPublisher.tests.testHTTPRangeSupport
-  suite.addTest(ZPublisher.tests.testHTTPRangeSupport.test_suite())
+  add_tests(suite, ZPublisher.tests.testHTTPRangeSupport)
 
   import ZPublisher.tests.testHTTPRequest
-  # ERP5 processes requests as utf-8 by default, but we adjust this test assuming that
-  # default is iso-8859-15
-  def forceISO885915DefaultRequestCharset(method):
-    def wrapped(self):
-      from ZPublisher import HTTPRequest as module
-      old_encoding = module.default_encoding
-      module.default_encoding = 'iso-8859-15'
-      try:
-        return method(self)
-      finally:
-        module.default_encoding = old_encoding
-    return wrapped
-  ZPublisher.tests.testHTTPRequest.HTTPRequestTests.test_processInputs_w_unicode_conversions = forceISO885915DefaultRequestCharset(
-      ZPublisher.tests.testHTTPRequest.HTTPRequestTests.test_processInputs_w_unicode_conversions)
-  suite.addTest(ZPublisher.tests.testHTTPRequest.test_suite())
+  add_tests(suite, ZPublisher.tests.testHTTPRequest)
 
   import ZPublisher.tests.testHTTPResponse
-  # ERP5 forces utf-8 responses by default, but we adjust these tests so that they run
-  # with iso-8859-15 as default response charset
-  def forceISO885915DefaultResponseCharset(method):
-    def wrapped(self):
-      # here we can use this utility method which clean up at teardown
-      self._setDefaultEncoding('iso-8859-15')
-      return method(self)
-    return wrapped
-  HTTPResponseTests = ZPublisher.tests.testHTTPResponse.HTTPResponseTests
-  HTTPResponseTests.test___str__w_body = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test___str__w_body)
-  HTTPResponseTests.test_ctor_charset_no_content_type_header = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_ctor_charset_no_content_type_header)
-  HTTPResponseTests.test_ctor_charset_text_header_no_charset_defaults_latin1 = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_ctor_charset_text_header_no_charset_defaults_latin1)
-  HTTPResponseTests.test_ctor_charset_unicode_body_application_header = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_ctor_charset_unicode_body_application_header)
-  HTTPResponseTests.test_listHeaders_w_body = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_listHeaders_w_body)
-  HTTPResponseTests.test_setBody_2_tuple_w_is_error_converted_to_Site_Error = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_setBody_2_tuple_w_is_error_converted_to_Site_Error)
-  HTTPResponseTests.test_setBody_2_tuple_wo_is_error_converted_to_HTML = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_setBody_2_tuple_wo_is_error_converted_to_HTML)
-  HTTPResponseTests.test_setBody_object_with_asHTML = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_setBody_object_with_asHTML)
-  HTTPResponseTests.test_setBody_object_with_unicode = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_setBody_object_with_unicode)
-  HTTPResponseTests.test_setBody_string_HTML = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_setBody_string_HTML)
-  HTTPResponseTests.test_setBody_string_not_HTML = forceISO885915DefaultResponseCharset(
-      HTTPResponseTests.test_setBody_string_not_HTML)
-  suite.addTest(ZPublisher.tests.testHTTPResponse.test_suite())
+  add_tests(suite, ZPublisher.tests.testHTTPResponse)
 
   import ZPublisher.tests.testIterators
-  suite.addTest(ZPublisher.tests.testIterators.test_suite())
+  add_tests(suite, ZPublisher.tests.testIterators)
 
   import ZPublisher.tests.testPostTraversal
-  suite.addTest(ZPublisher.tests.testPostTraversal.test_suite())
-
-  import ZPublisher.tests.testPublish
-  suite.addTest(ZPublisher.tests.testPublish.test_suite())
+  add_tests(suite, ZPublisher.tests.testPostTraversal)
 
   import ZPublisher.tests.test_Converters
-  suite.addTest(ZPublisher.tests.test_Converters.test_suite())
+  add_tests(suite, ZPublisher.tests.test_Converters)
 
-  # XXX don't run test_WSGIPublisher for now because too many failures
-  # import ZPublisher.tests.test_WSGIPublisher
-  # suite.addTest(ZPublisher.tests.test_WSGIPublisher.test_suite())
-
-  # XXX don't run test_exception_handling because we have incompatible zope.testbrowser version
-  # import ZPublisher.tests.test_exception_handling
+  import ZPublisher.tests.test_WSGIPublisher
+  add_tests(suite, ZPublisher.tests.test_WSGIPublisher)
 
   import ZPublisher.tests.test_mapply
-  suite.addTest(ZPublisher.tests.test_mapply.test_suite())
+  add_tests(suite, ZPublisher.tests.test_mapply)
+
+  import ZPublisher.tests.test_pubevents
+  add_tests(suite, ZPublisher.tests.test_pubevents)
+
+  import ZPublisher.tests.test_utils
+  add_tests(suite, ZPublisher.tests.test_utils)
 
   import ZPublisher.tests.test_xmlrpc
-  suite.addTest(ZPublisher.tests.test_xmlrpc.test_suite())
-
-  import ZPublisher.tests.testpubevents
-  suite.addTest(ZPublisher.tests.testpubevents.test_suite())
+  add_tests(suite, ZPublisher.tests.test_xmlrpc)
 
   return suite

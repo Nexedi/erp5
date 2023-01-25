@@ -38,7 +38,6 @@ from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
-from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
 
 
 from Products.ERP5Type.Base import Base
@@ -76,7 +75,7 @@ class AssertPermissionMethod(object):
                       document.rolesOfPermission(self._permission_name)
                       if x['selected']]),
            pformat(document.get_local_roles()),
-           ', '.join(groups)))
+           ', '.join(sorted(groups))))
     finally:
       setSecurityManager(sm)
 
@@ -133,7 +132,7 @@ class SecurityTestCase(ERP5TypeTestCase):
     else:
       uf = self.portal.acl_users
       user = uf.getUserById(user_id)
-      self.assertNotEquals(user, None, 'No user %s' % user_id)
+      self.assertNotEqual(user, None, 'No user %s' % user_id)
       newSecurityManager(None, user.__of__(uf))
 
   # Permission methods
@@ -269,7 +268,7 @@ class SecurityTestCase(ERP5TypeTestCase):
         self.fail("User %s does not have worklist %s.\nWorklists: %s" % (
           user_id, worklist_id, pformat(global_action_list)))
       worklist_action, = worklist_action_list
-      self.assertEquals(document_count, worklist_action['count'],
+      self.assertEqual(document_count, worklist_action['count'],
         "User %s has %s documents in her %s worklist, not %s" % (
           user_id, worklist_action['count'], worklist_id, document_count))
     finally:

@@ -31,6 +31,7 @@
 """
 from __future__ import absolute_import
 
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys
@@ -88,3 +89,10 @@ def initialize( context ):
 # backward compatibility names
 XML = None
 UI = None
+
+ModuleSecurityInfo('Products.ERP5.ERP5Site').declarePublic(
+  'ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME',
+  'ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE',
+  'ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME',
+  'ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME',
+)

@@ -96,12 +96,12 @@ if error is None:
           current_column = (source_trade, source_trade_value.getTitle())
           worker_column_list.append(current_column)
           untranslatable_column_list.append(current_column)
-        # For the line displaying total quantity 
+        # For the line displaying total quantity
         quantity = line.getQuantity()
         total_quantity_dict[resource] = total_quantity_dict.get(resource, 0) + quantity
         if quantity_unit == default_quantity_unit:
           total_quantity_dict[source_trade] = total_quantity_dict.get(source_trade, 0) + quantity
-        # For the line displaying total price 
+        # For the line displaying total price
         total_price_dict[resource] = total_price_dict.get(resource, 0) + total_price
         if quantity_unit == default_quantity_unit:
           total_price_dict[source_trade] = total_price_dict.get(source_trade, 0) + total_price
@@ -110,7 +110,7 @@ if error is None:
         line_kw[resource] = quantity
         if quantity_unit == default_quantity_unit:
           line_kw[source_trade] = quantity
-          # Add the column wich is a summary between column of resources and column 
+          # Add the column wich is a summary between column of resources and column
           # of source_trades
           line_kw['summary_quantity'] = quantity
     line = line.asContext(**line_kw)

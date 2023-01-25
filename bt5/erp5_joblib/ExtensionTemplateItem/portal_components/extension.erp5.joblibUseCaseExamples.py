@@ -44,7 +44,7 @@ from sklearn.datasets import load_digits
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
 
-# 
+#
 # Example: simple sqrt calculator
 #
 
@@ -63,7 +63,7 @@ def example_simple_function(self, active_process_path):
   log("joblib activity result", result)
   return result
 
-# 
+#
 # Example: random forest function
 #
 
@@ -119,7 +119,7 @@ def example_random_forest_function(self, active_process_path):
   log('ok', len(final_model.estimators_))
   return 'ok', len(final_model.estimators_), score
 
-# 
+#
 # Example: grid search function
 #
 

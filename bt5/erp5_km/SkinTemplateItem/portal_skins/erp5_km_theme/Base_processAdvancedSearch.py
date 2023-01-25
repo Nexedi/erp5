@@ -1,6 +1,6 @@
 """
-  Puts all the arguments from advanced search dialog form together as 
-  a parse-able search string. 
+  Puts all the arguments from advanced search dialog form together as
+  a parse-able search string.
 """
 kw['reset'] = 1
 kw['language'] = ''

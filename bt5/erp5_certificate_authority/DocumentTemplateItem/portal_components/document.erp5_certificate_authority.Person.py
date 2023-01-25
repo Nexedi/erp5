@@ -10,7 +10,7 @@ class Person(ERP5Person):
           portal_type=["ERP5 Login"]):
       if _erp5_login.getValidationState() == "validated" and \
         _erp5_login.getReference() == self.getUserId():
-        # The user already created a Login document as UserId, so 
+        # The user already created a Login document as UserId, so
         # So just use this one.
         return _erp5_login
 
@@ -18,12 +18,12 @@ class Person(ERP5Person):
          portal_type=["Certificate Login"]):
       if _certificate_login.getValidationState() == "validated":
         return _certificate_login
-    
+
     certificate_login = self.newContent(
       portal_type="Certificate Login",
       # For now use UserId as easy way.
       reference=self.getUserId()
-    )    
+    )
     certificate_login.validate()
     return certificate_login
 

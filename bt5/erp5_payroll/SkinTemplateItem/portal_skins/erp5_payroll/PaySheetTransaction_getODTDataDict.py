@@ -1,5 +1,4 @@
 translateString = context.Base_translateString
-specialise_value = context.getSpecialiseValue()
 
 
 def getFieldAsString(field):
@@ -11,14 +10,6 @@ def getFieldAsLineList(field):
   text = field.replace('\r', '')
   text_list = text.split('\n')
   return [x for x in text_list if x]
-
-def getProductAndLineDesc(prod_desc, line_desc):
-  line_list = []
-  if line_desc:
-    line_list.extend(getFieldAsLineList(line_desc))
-  elif prod_desc:
-    line_list.extend(getFieldAsLineList(prod_desc))
-  return line_list
 
 def getOneLineAddress(text, region):
   text_list = [getFieldAsString(text)]
@@ -117,7 +108,6 @@ def getSocialOrganisationValue():
 
 line_list = []
 total_price = 0.0
-total_vat = 0.0
 
 def unicodeDict(d):
   for k, v in d.items():
@@ -224,7 +214,7 @@ data_dict = {
   'source_address': getOneLineAddress(
           context.getSource() and
               context.getSourceValue().getDefaultAddressText() or '',
-          context.getSource() and 
+          context.getSource() and
               context.getSourceValue().getDefaultAddressRegionTitle() or ''),
   'source_telfax': getPhoneAndFax(context.getSource() and \
                         context.getSourceValue().getTelephoneText() or '',
@@ -247,7 +237,7 @@ data_dict = {
           and context.getSourceDecisionValue(portal_type='Organisation').getDefaultImageHeight() \
               * inch_cm_ratio or '',
   'source_decision_address':getOneLineAddress(
-          context.getSourceDecision() and 
+          context.getSourceDecision() and
               context.getSourceDecisionValue().getDefaultAddressText() or '',
           context.getSourceDecision() and \
               context.getSourceDecisionValue().getDefaultAddressRegionTitle() or ''),

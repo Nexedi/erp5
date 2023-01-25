@@ -26,30 +26,17 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
+from Products.ERP5Type.UnrestrictedMethod import super_user
 from AccessControl.SecurityManagement import newSecurityManager, \
         getSecurityManager, setSecurityManager
+from AccessControl.User import nobody
 from AccessControl import Unauthorized
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate
 
 class TestAlarm(ERP5TypeTestCase):
-  """
-  This is the list of test
-
-  test setNextStartDate :
-  - every hour
-  - at 6, 10, 15, 21 every day
-  - every day at 10
-  - every 3 days at 14 and 15 and 17
-  - every monday and friday, at 6 and 15
-  - every 1st and 15th every month, at 12 and 14
-  - every 1st day of every 2 month, at 6
-  """
-
   # year/month/day hour:minute:second
   date_format = '%i/%i/%i %i:%i:%d GMT+0100'
 
@@ -72,15 +59,22 @@ class TestAlarm(ERP5TypeTestCase):
 
   def newAlarm(self, **kw):
     """
-    Create an empty alarm
+    Create an empty alarm, owned by system user, like when the alarm is
+    installed from a business template.
     """
-    a_tool = self.getAlarmTool()
-    return a_tool.newContent(**kw)
+    sm = getSecurityManager()
+    newSecurityManager(None, nobody)
+    try:
+      with super_user():
+        return self.getAlarmTool().newContent(**kw)
+    finally:
+      setSecurityManager(sm)
+
 
   def test_01_HasEverything(self):
     # Test if portal_alarms was created
-    self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
-    self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
+    self.assertNotEqual(self.portal._getOb('portal_alarms', None), None)
+    self.assertNotEqual(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
     # ... and that it should be subscribed by default
     self.assertTrue(self.portal.portal_alarms.isSubscribed())
 
@@ -144,7 +138,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_first_date = DateTime(self.date_format  % (2006,10,6,15,00,00))
     now = DateTime(self.date_format               % (2006,10,6,15,00,00))
     right_second_date = DateTime(self.date_format % (2006,10,6,21,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,7,06,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,7,6,00,00))
     right_fourth_date = DateTime(self.date_format % (2006,10,7,10,00,00))
     alarm = self.newAlarm(enabled=True)
     hour_list = (6,10,15,21)
@@ -240,8 +234,8 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_09_SomeMonthDaysSomeHours(self):
     """- every 1st and 15th every month, at 12 and 14"""
-    right_first_date = DateTime(self.date_format  % (2006,10,01,12,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,01,14,00,00))
+    right_first_date = DateTime(self.date_format  % (2006,10,1,12,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,1,14,00,00))
     right_third_date = DateTime(self.date_format  % (2006,10,15,12,00,00))
     right_fourth_date = DateTime(self.date_format  % (2006,10,15,14,00,00))
     alarm = self.newAlarm(enabled=True)
@@ -253,9 +247,9 @@ class TestAlarm(ERP5TypeTestCase):
 
   def test_10_OnceEvery2Month(self):
     """- every 1st day of every 2 month, at 6"""
-    right_first_date = DateTime(self.date_format  % (2006,10,01,6,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,12,01,6,00,00))
-    right_third_date = DateTime(self.date_format  % (2007,2,01,6,00,00))
+    right_first_date = DateTime(self.date_format  % (2006,10,1,6,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,12,1,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2007,2,1,6,00,00))
     alarm = self.newAlarm(enabled=True)
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,))
@@ -354,7 +348,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.activeSense()
     self.tic()
     # Chen that the second alarm execution did happen
-    self.assertNotEquals(alarm.getLastActiveProcess(), None)
+    self.assertNotEqual(alarm.getLastActiveProcess(), None)
 
   def test_16_uncatalog(self):
     """
@@ -408,7 +402,7 @@ class TestAlarm(ERP5TypeTestCase):
     # Nothing should happens yet
     alarm_tool.tic()
     self.tic()
-    self.assertTrue(alarm.getDescription() in (None, ''))
+    self.assertIn(alarm.getDescription(), (None, ''))
     now = DateTime()
     date = addToDate(now, day=-1)
     alarm.setPeriodicityStartDate(date)
@@ -524,7 +518,7 @@ class TestAlarm(ERP5TypeTestCase):
     # Now, check that everybody can invoke an enabled alarm manually.
     setSecurityManager(sm)
     correct_answer = str(alarm.showPermissions())
-    self.assertNotEquals(correct_answer, None)
+    self.assertNotEqual(correct_answer, None)
 
     alarm.activeSense()
     self.tic()
@@ -608,9 +602,3 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
     self.assertEqual(date.toZone('UTC'), alarm_list[0].alarm_date)
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAlarm))
-  return suite
-

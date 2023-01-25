@@ -23,7 +23,7 @@ expected_title = context.getTitle()
 for tr in context.portal_catalog(**query_params):
   line_found = False
   tr = tr.getObject()
-  
+
   # Optimisation: the test result line probably have the same id in the previous
   # test result.
   line = getattr(tr, expected_id, None)
@@ -45,5 +45,5 @@ for tr in context.portal_catalog(**query_params):
   # return as many test result line as the count method returns.
   if not line_found:
     result_list.append(tr.asContext(string_index='NOT_EXECUTED'))
-    
+
 return result_list

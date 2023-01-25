@@ -10,7 +10,7 @@ result_dict = {}
 for base_category_name, category in category_dict.items():
   category_object = \
     context.getPortalObject().portal_categories[base_category_name]
-  
+
   category_value = category_object.restrictedTraverse(category, None)
   if category_value is None:
     query = ComplexQuery(

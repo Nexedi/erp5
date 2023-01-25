@@ -6,7 +6,7 @@ that will create a document of this target content type.
 if not content_type:
   # By default, everthing related to EditorField is HTML
   content_type = 'text/html'
-  
+
   # If this document has a content type we use this information
   if getattr(context, 'getContentType', None) is not None:
     content_type = context.getContentType() or 'text/html'

@@ -2,7 +2,7 @@
 Script used by PlanningBox validator to round the bound dates to the
 closest full day.
 """
-if full_date.hour() > 12: 
+if full_date.hour() > 12:
   return DateTime(full_date.Date()) + 1
 else:
   return DateTime(full_date.Date())

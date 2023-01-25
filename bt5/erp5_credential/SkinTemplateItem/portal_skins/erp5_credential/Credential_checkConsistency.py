@@ -1,6 +1,6 @@
 """Check credential consistency. Usefull before make some actions
 By default, just a related person is required, please override this script if you want more.
-Parameter: 
+Parameter:
 destination_decision_type - List of portal type required in destination decision value list
 Proxy:
 Assignee -- allow to check credential informations"""

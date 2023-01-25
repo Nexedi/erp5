@@ -16,7 +16,7 @@ if not mission_account:
 
 transaction =  portal.accounting_module.newContent(
   portal_type="Purchase Invoice Transaction",
-  title="""Frais %s""" % (context.getReference()), 
+  title="""Frais %s""" % (context.getReference()),
   source_section=context.getDestinationDecision(),
   destination_project=context.getSourceProject(),
   destination_section=context.getSourceSection(),
@@ -47,7 +47,7 @@ from Products.ERP5Type.Core.Workflow import ValidationFailed
 from zExceptions import Redirect
 try:
   transaction.Base_checkConsistency()
-except ValidationFailed, error_message:
+except ValidationFailed as error_message:
   if getattr(error_message, 'msg', None):
     # use of Message class to store message+mapping+domain
     message = error_message.msg

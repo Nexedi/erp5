@@ -7,7 +7,7 @@ if button_title is not None:
 wf_actions =  context.portal_actions.portal_actions.listFilteredActionsFor(context)['workflow']
 workflow_action = request.get('workflow_action', None) or request.get('field_my_workflow_action', None)
 if workflow_action:
-  for action in wf_actions: 
+  for action in wf_actions:
     if action['id'] == workflow_action:
       return action['name']
 

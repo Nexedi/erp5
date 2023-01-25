@@ -59,5 +59,5 @@ class PolishAddressDetails:
 	      'type'        : 'string',
 	      'mode'        : 'w' },
     )
-  
+
 

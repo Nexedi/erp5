@@ -12,7 +12,7 @@ def getPreferredForumSignature(username):
                                        portal_type='Preference',
                                        owner = username,
                                          )
-  for preference in preference_list: 
+  for preference in preference_list:
     if preference.getPreferenceState() == "enabled":
       result['preferred_forum_signature'] = preference.getPreferredForumSignature()
       result['preferred_forum_quote_original_message'] = preference.getPreferredForumQuoteOriginalMessage()

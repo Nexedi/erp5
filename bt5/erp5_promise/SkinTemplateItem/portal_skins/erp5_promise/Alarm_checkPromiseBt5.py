@@ -18,7 +18,7 @@ try:
   message_list = template_tool.upgradeSite(bt5_list, dry_run=True,
                                  update_catalog=CATALOG_UPDATABLE)
   severity = len(message_list)
-except BusinessTemplateUnknownError, error:
+except BusinessTemplateUnknownError as error:
   severity = -1
   detail = str(error)
 
@@ -34,7 +34,7 @@ else:
 
 
 active_result.edit(
-  summary=summary, 
+  summary=summary,
   severity=severity,
   detail=detail)
 

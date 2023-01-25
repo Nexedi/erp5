@@ -29,7 +29,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Delete a draft sale opportunity (logical deletion)</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>guard_group</string> </key>

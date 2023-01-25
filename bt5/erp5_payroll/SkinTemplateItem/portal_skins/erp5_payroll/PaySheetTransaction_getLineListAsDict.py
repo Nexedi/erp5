@@ -5,8 +5,8 @@
 line_list = context.PaySheetTransaction_getMovementList(sort_on=[('int_index',
                                                                   'ascending')])
 def addProperties(line, line_dict, property_list):
-  for property in property_list:
-    line_dict[property] = getattr(line, property, None)
+  for prop in property_list:
+    line_dict[prop] = getattr(line, prop, None)
   return line_dict
 
 line_dict_list = []

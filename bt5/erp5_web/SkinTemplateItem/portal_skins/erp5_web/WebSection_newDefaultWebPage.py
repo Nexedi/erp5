@@ -7,7 +7,7 @@ web_page_module = portal.getDefaultModule('Web Page')
 language = portal.Localizer.get_selected_language()
 
 # Create a new empty page
-web_page = web_page_module.newContent(portal_type = 'Web Page', 
+web_page = web_page_module.newContent(portal_type = 'Web Page',
                                       title="Default Page for Section %s" % title,
                                       reference="default-%s" % context.getId(),
                                       version="1", language=language)

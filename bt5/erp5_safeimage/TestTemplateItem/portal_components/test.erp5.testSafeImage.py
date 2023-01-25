@@ -79,7 +79,7 @@ class TestSafeImage(ERP5TypeTestCase):
     self.assertTrue(image.hasData())
     transaction.commit()
     self.tic()
-    self.assertNotEqual(image,None) 
+    self.assertNotEqual(image,None)
 
   def test_02_CreateTileImage(self):
      """"
@@ -100,15 +100,15 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(image_property, None)
      self.assertEqual("Embedded File", image_property.getPortalType())
      image_group = getattr(tile, "TileGroup0", None)
-     self.assertNotEquals(image_group, None)
+     self.assertNotEqual(image_group, None)
      self.assertEqual("Image Tile Group",image_group.getPortalType())
      splitted_image_list = image_group.objectValues(portal_type="Image")
      self.assertEqual(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
                        set([x.getId() for x in splitted_image_list]))
      for x in splitted_image_list:
         self.assertTrue(x.hasData())
-     self.assertEqual(123,image_group['0-0-0'].getHeight()) 
-     self.assertEqual(165,image_group['0-0-0'].getWidth()) 
+     self.assertEqual(123,image_group['0-0-0'].getHeight())
+     self.assertEqual(165,image_group['0-0-0'].getWidth())
 
   def test_03_CreateTileImageTransformed(self):
      """"
@@ -134,14 +134,14 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(image_transform, None)
      self.assertEqual("Embedded File", image_transform.getPortalType())
      image_group = getattr(tile_transformed, "TileGroup0", None)
-     self.assertNotEquals(image_group, None)
+     self.assertNotEqual(image_group, None)
      self.assertEqual("Image Tile Group",image_group.getPortalType())
      splitted_image_list = image_group.objectValues(portal_type="Image")
      self.assertEqual(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
                        set([x.getId() for x in splitted_image_list]))
      for x in splitted_image_list:
         self.assertTrue(x.hasData())
-     self.assertEqual(123,image_group['0-0-0'].getHeight()) 
+     self.assertEqual(123,image_group['0-0-0'].getHeight())
      self.assertEqual(165,image_group['0-0-0'].getWidth())
      if getattr(self.image_module,'testTileTransformed',None) is not None:
       self.image_module.manage_delObjects(ids=['testTileTransformed'])

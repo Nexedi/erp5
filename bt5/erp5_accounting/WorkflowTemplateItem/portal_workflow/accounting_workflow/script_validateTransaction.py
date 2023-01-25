@@ -28,7 +28,7 @@ transaction.Base_checkConsistency()
 skip_period_validation = state_change['kwargs'].get(
                               'skip_period_validation', 0)
 transition = state_change['transition']
-if transition.id in ('plan_action', 'confirm_action') :
+if transition.getReference() in ('plan_action', 'confirm_action') :
   skip_period_validation = 1
 
 source_section = transaction.getSourceSectionValue(
@@ -95,7 +95,7 @@ if not skip_period_validation :
       raise ValidationFailed(translateString("Date is not in a started Accounting Period "
                                              "for source section."))
 
-  # do the same for destination section 
+  # do the same for destination section
   if destination_section is not None:
     # if we don't have any accounts on this side, we don't enforce date checks
     valid_date = False

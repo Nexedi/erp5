@@ -1,6 +1,6 @@
 """
   This script creates a list of empty lines when called with
-  read_document_lines to False. Otherwise, it displays on 
+  read_document_lines to False. Otherwise, it displays on
   the fast input all documents lines already added
 """
 request = context.REQUEST

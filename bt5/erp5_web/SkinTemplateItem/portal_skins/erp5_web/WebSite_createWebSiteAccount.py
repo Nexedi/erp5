@@ -1,11 +1,11 @@
 """
   This script is a sample script skeleton (part of erp5_web)
-  which can be used to create user (Person object) 
+  which can be used to create user (Person object)
 
   Notes:
-    - the script is normally executed by anonymous user with Manager proxy roles which 
+    - the script is normally executed by anonymous user with Manager proxy roles which
       you have to turn on after adjusting this script to your needs.
-    - you have to decide if assignment should be opened automatically or 
+    - you have to decide if assignment should be opened automatically or
       verified and opened by administrator first
     - you need to adjust group, function and site to your needs
 """
