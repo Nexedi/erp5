@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import calendar
+
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -228,13 +230,14 @@ class PeriodicityMixin:
           next_start_date = next_start_date.toZone(timezone)
         return next_start_date
 
-  # XXX May be we should create a Date class for following methods ???
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')
   def getWeekDayList(self):
     """
     returns something like ['Sunday','Monday',...]
     """
-    return DateTime._days
+    return [
+      calendar.day_name[i]
+      for i in calendar.Calendar(calendar.SUNDAY).iterweekdays()]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayItemList')
   def getWeekDayItemList(self):
@@ -249,9 +252,10 @@ class PeriodicityMixin:
     """
     returns something like [('January', 1), ('February', 2),...]
     """
-    # DateTime._months return '' as first item
-    return [(Message(domain='erp5_ui', message=DateTime._months[i]), i) \
-            for i in range(1, len(DateTime._months))]
+    # calendar.month_name return '' as first item
+    month_name = list(calendar.month_name)
+    return [(Message(domain='erp5_ui', message=month_name[i]), i) \
+            for i in range(1, len(month_name))]
 
   security.declareProtected(Permissions.AccessContentsInformation,'getPeriodicityWeekDayList')
   def getPeriodicityWeekDayList(self):

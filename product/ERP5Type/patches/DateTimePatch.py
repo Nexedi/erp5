@@ -35,10 +35,29 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+# DateTime 3 changed the __eq__ behavior and d1 == d2 only if they have the same same
+# timezone. With DateTime 2 two dates from different timezones representing the same
+# time were equal. This patch keeps the behavior from DateTime 2.
+# See zopefoundation/DateTime commit fff6d04 (Various cleanups, improve unpickling
+# speed and distinguish between equal representations and references to equal points
+# in time., 2011-05-06)
+DateTimeKlass.__eq__ = DateTimeKlass.equalTo
+
+
+# ERP5 Patch for different pickle implementation, to optimize for disk usage.
+# We had different __getstate__ implementations, so we need __setstate__ to support
+# loading these formats that might be present in ZODBs.
+# This patch does not have support for timezone naive flag, because we don't need it
+# so far and also probably because we did not notice that it was added in original
+# DateTime.
 original_DateTime__setstate__ = DateTimeKlass.__setstate__
 
 def DateTime__setstate__(self, state):
-  self.__dict__.clear()
+  try: # BBB DateTime 2.12.8
+    self.__dict__.clear()
+  except AttributeError:
+    pass
+  self._timezone_naive = False
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
@@ -60,6 +79,13 @@ def DateTime__getstate__(self):
 
 DateTimeKlass.__getstate__ = DateTime__getstate__
 
+
+# ERP5 Patch to have different parsing rules.
+# We have a patch since e0eba4791a (Authorised date manipulation before
+# year 1000, 2008-01-28), which replaced the method with an implementation
+# that did not change since, so we don't have new behaviors of DateTime
+# the most visible change might be that we don't have "timezone naive"
+# support.
 def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   # Parse date-time components from a string
   month=year=tz=tm=None
@@ -81,6 +107,9 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
   if tz and (tz.lower() in ValidZones): st=' '.join(sp[:-1])
   else: tz = None  # Decide later, since the default time zone
   # could depend on the date.
+
+  # XXX we don't support timezone naive in this patch
+  self._timezone_naive = False
 
   ints,dels=[],[]
   i,l=0,len(st)
@@ -249,18 +278,11 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
-if __name__ == '__main__':
-  for i in ('2007/01/02 12:34:56.789',
-            '2007/01/02 12:34:56.789 GMT+0200',
-            '2007/01/02 12:34:56.789 JST',
-            '2007/01/02 12:34:56.789 +0300',
-            '2007/01/02 12:34:56.789 +0430',
-            '2007/01/02 12:34:56.789 +1237',
-            ):
-    a = DateTimeKlass(i)
-    b = DateTimeKlass()
-    b.__setstate__(a.__getstate__())
-    print(a, a.__dict__ == b.__dict__)
-    for i in a.__dict__.keys():
-      if a.__dict__[i] != b.__dict__[i]:
-        print(i, a.__dict__[i], b.__dict__[i])
+
+# DateTime 3 removed exceptions as class attributes (since
+# zopefoundation/DateTime commit 8114618 ), but we have some code expecting
+# these attributes, so undo this patch for convenience.
+DateTimeKlass.DateTimeError = DateTimeError
+DateTimeKlass.SyntaxError = SyntaxError
+DateTimeKlass.DateError = DateError
+DateTimeKlass.TimeError = TimeError
