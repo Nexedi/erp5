@@ -1,0 +1,1 @@
+return context.ConfiguratorTool_getBusinessConfigurationList("installed")
