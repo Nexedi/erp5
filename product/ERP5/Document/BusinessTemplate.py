@@ -5607,7 +5607,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       The method is defined explicitly for upgrade purpose.
       """
       try:
-        return self.getPropertyList('template_portal_type_type_mixin')
+        return self._baseGetTemplatePortalTypeTypeMixinList()
       # This property may not be defined if erp5_property_sheets has not been
       # upgraded yet
       except AttributeError:
