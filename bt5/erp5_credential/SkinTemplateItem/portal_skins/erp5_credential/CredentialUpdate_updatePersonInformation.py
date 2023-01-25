@@ -13,7 +13,7 @@ person_mapping = (
     ('date_of_birth', 'birthday'),
     ('nationality', 'nationality'),
     ('language', 'language'),
-    ('default_email_text', 'default_email_text'),
+    ('default_email_coordinate_text', 'default_email_coordinate_text'),
     ('default_telephone_telephone_country', 'default_telephone_telephone_country'),
     ('default_telephone_text', 'default_telephone_text'),
     ('default_fax_text', 'default_fax_text'),
