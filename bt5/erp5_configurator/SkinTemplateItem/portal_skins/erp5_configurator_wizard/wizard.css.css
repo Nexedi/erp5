@@ -105,3 +105,17 @@
 .box button:hover {
   border: 1px solid #d4e8ec;
 }
+
+.box button.bc-installed {
+  border: 1px solid #35b800;
+  background: -moz-linear-gradient(
+    top,
+    #fff3db 0%,
+    #1dc11a 25%,
+    #0dc31a);
+  background: -webkit-gradient(
+    linear, left top, left bottom,
+    from(#fff3db),
+    color-stop(0.25, #1dc11a),
+    to(#0dc31a))
+}
