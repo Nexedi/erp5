@@ -31,7 +31,6 @@ from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
-from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
