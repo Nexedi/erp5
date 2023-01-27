@@ -203,14 +203,7 @@ var DroneManager = /** @class */ (function () {
     if (isNaN(x) || isNaN(y) || isNaN(z)) {
       throw new Error('Position coordinates must be numbers');
     }
-    if (!this._canPlay) {
-      if (z <= 0.05) {
-        z = 0.05;
-      }
-      this._controlMesh.position = new BABYLON.Vector3(x, z, y);
-    }
-    this._controlMesh.computeWorldMatrix(true);
-    this._mesh.computeWorldMatrix(true);
+    return this._API.setStartingPosition(this, x, y, z);
   };
   DroneManager.prototype.setAcceleration = function (factor) {
     if (!this._canPlay) {
@@ -219,26 +212,19 @@ var DroneManager = /** @class */ (function () {
     if (isNaN(factor)) {
       throw new Error('Acceleration must be a number');
     }
-    if (factor > this._maxAcceleration) {
-      factor = this._maxAcceleration;
-    }
-    this._acceleration = factor;
+    return this._API.setAcceleration(this, factor);
   };
-  //TODO rotation
   DroneManager.prototype.setRotation = function (x, y, z) {
     if (!this._canPlay) {
       return;
     }
-    this._rotationTarget = new BABYLON.Vector3(x, z, y);
+    return this._API.setRotation(this, x, y, z);
   };
-  //TODO rotation
   DroneManager.prototype.setRotationBy = function (x, y, z) {
     if (!this._canPlay) {
       return;
     }
-    this._rotationTarget = new BABYLON.Vector3(this.rotation.x + x,
-                                                this.rotation.y + z,
-                                                this.rotation.z + y);
+    return this._API.setRotation(this, x, y, z);
   };
 
   /**
@@ -309,7 +295,7 @@ var DroneManager = /** @class */ (function () {
     if (!this._canPlay) {
       return;
     }
-    this._targetCoordinates.y = altitude;
+    return this._API.setAltitude(this, altitude);
   };
   /**
    * Make the drone loiter (circle with a set radius)
@@ -326,20 +312,8 @@ var DroneManager = /** @class */ (function () {
     }
     return null;
   };
-  DroneManager.prototype.computeYawDiff = function (yaw1, yaw2) {
-    var diff = yaw2 - yaw1;
-    diff += (diff > 180) ? -360 : (diff < -180) ? 360 : 0;
-    return diff;
-  };
-  DroneManager.prototype.computeBearing = function (x1, z1, x2, z2) {
-    return Math.atan2(x2 - x1, z2 - z1) * 180 / Math.PI;
-  };
-  DroneManager.prototype.computeYaw = function (x, z) {
-    return this.computeBearing(0, 0, x, z);
-  };
   DroneManager.prototype.getYaw = function () {
-    var direction = this.worldDirection;
-    return this.computeYaw(direction.x, direction.z);
+    return this._API.getYaw(this);
   };
   DroneManager.prototype.getSpeed = function () {
     return this._speed;
@@ -365,6 +339,7 @@ var DroneManager = /** @class */ (function () {
    * @param checkpoint to be set
    */
   DroneManager.prototype.setCheckpoint = function (checkpoint) {
+    //TODO
     return checkpoint;
   };
   /**
@@ -636,7 +611,8 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._checkDroneRules = function (drone) {
-    //TODO move this to API methods
+    //TODO move this to API methods.
+    //each type of drone should define its rules
     if (drone.getCurrentPosition()) {
       return drone.getCurrentPosition().z > 1;
     }
