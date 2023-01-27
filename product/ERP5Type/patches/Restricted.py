@@ -34,7 +34,6 @@ def checkNameLax(self, node, name=_MARKER, allow_magic_methods=False):
 
   If ``allow_magic_methods is True`` names in `ALLOWED_FUNC_NAMES`
   are additionally allowed although their names start with `_`.
-
   """
   if name is None:
     return
@@ -260,13 +259,39 @@ ModuleSecurityInfo('collections').declarePublic('defaultdict')
 from collections import Counter
 ModuleSecurityInfo('collections').declarePublic('Counter')
 
+
+def allow_full_write(t):
+  """Allow setattr, setitem, delattr and delitem for this type.
+
+  This supports both RestrictedPython-3.6.0, where the safetype is implemented as:
+
+      safetype = {dict: True, list: True}.has_key
+      ...
+      safetype(t)
+
+  and RestrictedPython-5.1, where the safetype is implemented as:
+
+      safetypes = {dict, list}
+      ...
+      safetype(t)
+
+  """
+  # Modify 'safetype' dict in full_write_guard function of RestrictedPython
+  # (closure) directly to allow write access (using __setattr__ and __delattr__)
+  from RestrictedPython.Guards import full_write_guard
+  safetype = full_write_guard.func_closure[1].cell_contents
+  if isinstance(safetype, set): # 5.1
+    safetype.add(t)
+  else: # 3.6
+    safetype.__self__.update({t: True})
+
+
 from AccessControl.ZopeGuards import _dict_white_list
 
-# Attributes cannot be set on defaultdict, thus modify 'safetype' dict
-# (closure) directly to ignore defaultdict like dict/list
+# Attributes cannot be set on defaultdict, thus ignore defaultdict like dict/list
 from RestrictedPython.Guards import full_write_guard
 ContainerAssertions[defaultdict] = _check_access_wrapper(defaultdict, _dict_white_list)
-#XXXfull_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
+allow_full_write(defaultdict)
 
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
@@ -495,17 +520,9 @@ allow_type(
   type(np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])['date'])
 )
 
-# Modify 'safetype' dict in full_write_guard function of RestrictedPython
-# (closure) directly to allow  write access to ndarray
-# (and pandas DataFrame below).
-
-from RestrictedPython.Guards import full_write_guard
-safetype = full_write_guard.func_closure[1].cell_contents.__self__
-safetype.update(dict.fromkeys((
-  np.ndarray,
-  np.core.records.recarray,
-  np.core.records.record,
-), True))
+allow_full_write(np.ndarray)
+allow_full_write(np.core.records.recarray)
+allow_full_write(np.core.records.record)
 
 def restrictedMethod(s,name):
   def dummyMethod(*args, **kw):
@@ -563,20 +580,17 @@ else:
   ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
     pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
 
+  allow_full_write(pd.DataFrame)
+  allow_full_write(pd.Series)
   try:                    # for pandas >= 0.20.x
     pd_DatetimeIndex = pd.DatetimeIndex
   except AttributeError:  # BBB for pandas < 0.20.x
     pd_DatetimeIndex = pd.tseries.index.DatetimeIndex
-
-  safetype.update(dict.fromkeys((
-    pd.DataFrame,
-    pd.Series,
-    pd_DatetimeIndex,
-    pd.core.indexing._iLocIndexer,
-    pd.core.indexing._LocIndexer,
-    pd.MultiIndex,
-    pd.Index,
-  ), True))
+  allow_full_write(pd_DatetimeIndex)
+  allow_full_write(pd.core.indexing._iLocIndexer)
+  allow_full_write(pd.core.indexing._LocIndexer)
+  allow_full_write(pd.MultiIndex)
+  allow_full_write(pd.Index)
 
 import ipaddress
 allow_module('ipaddress')
