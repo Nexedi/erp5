@@ -162,86 +162,9 @@ var DroneManager = /** @class */ (function () {
     );
   };
   DroneManager.prototype.internal_update = function (delta_time) {
-    var bearing, context = this, diff, newrot, orientationValue, rotStep,
-      updateSpeed, yaw, yawDiff, yawUpdate;
+    var context = this;
     if (this._controlMesh) {
-      //TODO rotation
-      if (context._rotationTarget) {
-        rotStep = BABYLON.Vector3.Zero();
-        diff = context._rotationTarget.subtract(context._controlMesh.rotation);
-        rotStep.x = (diff.x >= 1) ? 1 : diff.x;
-        rotStep.y = (diff.y >= 1) ? 1 : diff.y;
-        rotStep.z = (diff.z >= 1) ? 1 : diff.z;
-        if (rotStep === BABYLON.Vector3.Zero()) {
-          context._rotationTarget = null;
-          return;
-        }
-        newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
-                                      (rotStep.x * context._rotationSpeed),
-                                      context._controlMesh.rotation.y +
-                                      (rotStep.y * context._rotationSpeed),
-                                      context._controlMesh.rotation.z +
-                                      (rotStep.z * context._rotationSpeed)
-                                    );
-        context._controlMesh.rotation = newrot;
-      }
-
-      context._speed += context._acceleration * delta_time / 1000;
-      if (context._speed > context._maxSpeed) {
-        context._speed = context._maxSpeed;
-      }
-      if (context._speed < context._minSpeed) {
-        context._speed = context._minSpeed;
-      }
-
-      // swap y and z axis so z axis represents altitude
-      bearing = context.computeBearing(
-        context.position.x,
-        context.position.y,
-        context._targetCoordinates.x,
-        context._targetCoordinates.y
-      );
-      yawUpdate = context._API.getYawVelocity(context) * delta_time / 1000;
-      yaw = context.getYaw();
-      yawDiff = context.computeYawDiff(yaw, bearing);
-      if (yawUpdate >= Math.abs(yawDiff)) {
-        yawUpdate = yawDiff;
-      } else if (yawDiff < 0) {
-        yawUpdate *= -1;
-      }
-      yaw += yawUpdate;
-      // trigonometric circle is east oriented, yaw angle is clockwise
-      yaw = -yaw + 90;
-      context._direction.x = Math.cos(yaw * Math.PI / 180);
-      context._direction.z = Math.sin(yaw * Math.PI / 180);
-
-      // swap y and z axis so z axis represents altitude
-      context._direction.y =
-        (context._targetCoordinates.z - context.position.z) / context._speed;
-      if (Math.abs(context._direction.y) > 1) {
-        context._direction.y /= Math.abs(context._direction.y);
-      }
-
-      updateSpeed = context._speed * delta_time / 1000;
-      if (context._direction.x !== 0 ||
-          context._direction.y !== 0 ||
-          context._direction.z !== 0) {
-        context._controlMesh.position.addInPlace(
-          new BABYLON.Vector3(
-            context._direction.x * updateSpeed,
-            context._direction.y * updateSpeed,
-            context._direction.z * updateSpeed
-          )
-        );
-      }
-      //TODO rotation
-      orientationValue = context._maxOrientation *
-        (context._speed / context._maxSpeed);
-      context._mesh.rotation =
-        new BABYLON.Vector3(orientationValue * context._direction.z, 0,
-                            -orientationValue * context._direction.x);
-      context._controlMesh.computeWorldMatrix(true);
-      context._mesh.computeWorldMatrix(true);
+      context._API.internal_update(context, delta_time);
       if (context._canUpdate) {
         context._canUpdate = false;
         return new RSVP.Queue()
@@ -255,7 +178,11 @@ var DroneManager = /** @class */ (function () {
             context._internal_crash(error);
           })
           .push(function () {
-            context._API.internal_update(context);
+            context._API.internal_post_update(context);
+          })
+          .push(undefined, function (error) {
+            console.warn('Drone crashed on update due to error:', error);
+            context._internal_crash(error);
           });
       }
       return;
@@ -301,9 +228,6 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.setRotation = function (x, y, z) {
     if (!this._canPlay) {
       return;
-    }
-    if (this._team === "R") {
-      y += Math.PI;
     }
     this._rotationTarget = new BABYLON.Vector3(x, z, y);
   };
