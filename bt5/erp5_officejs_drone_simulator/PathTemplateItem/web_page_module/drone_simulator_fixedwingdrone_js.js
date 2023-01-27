@@ -272,7 +272,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
   };
   FixedWingDroneAPI.prototype.internal_setTargetCoordinates =
-    function (coordinates, loiter) {
+    function (drone, coordinates, loiter) {
       if (!loiter) {
         this._loiter_mode = false;
         //save last target point to use as next loiter center
@@ -383,7 +383,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       //loiter
       next_point =
         this._loiter_coordinates[this._last_loiter_point_reached + 1];
-      this.internal_setTargetCoordinates(next_point, true);
+      this.internal_setTargetCoordinates(drone, next_point, true);
       if (this._mapManager.latLonDistance([drone_pos.x, drone_pos.y],
                                           [next_point.x, next_point.y]) < 1) {
         this._last_loiter_point_reached += 1;
@@ -394,7 +394,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         next_point = this._loiter_coordinates[
           this._last_loiter_point_reached + 1
         ];
-        this.internal_setTargetCoordinates(next_point, true);
+        this.internal_setTargetCoordinates(drone, next_point, true);
       }
     }
   };
@@ -503,7 +503,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    this.internal_setTargetCoordinates(drone_pos, true);
+    drone.setTargetCoordinates(drone_pos.x, drone_pos.y, 5);
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
