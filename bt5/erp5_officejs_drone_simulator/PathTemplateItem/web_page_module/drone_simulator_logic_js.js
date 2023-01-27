@@ -125,18 +125,7 @@ var DroneManager = /** @class */ (function () {
     configurable: true
   });
   DroneManager.prototype.internal_start = function (initial_position) {
-    this._minAcceleration = this._API.getMinAcceleration();
-    this._maxAcceleration = this._API.getMaxAcceleration();
-    this._minSpeed = this._API.getMinSpeed();
-    this._maxSpeed = this._API.getMaxSpeed();
-    this._speed = this._API.getInitialSpeed();
-    this._minPitchAngle = this._API.getMinPitchAngle();
-    this._maxPitchAngle = this._API.getMaxPitchAngle();
-    this._maxRollAngle = this._API.getMaxRollAngle();
-    this._minVerticalSpeed = this._API.getMinVerticalSpeed();
-    this._maxVerticalSpeed = this._API.getMaxVerticalSpeed();
-    this._maxOrientation = this._API.getMaxOrientation();
-    this._API.internal_start();
+    this._API.internal_start(this);
     this._canPlay = true;
     this._canCommunicate = true;
     this._targetCoordinates = initial_position;

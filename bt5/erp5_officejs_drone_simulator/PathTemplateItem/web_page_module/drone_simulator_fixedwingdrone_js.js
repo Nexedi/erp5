@@ -34,7 +34,18 @@ var FixedWingDroneAPI = /** @class */ (function () {
   /*
   ** Function called on start phase of the drone, just before onStart AI script
   */
-  FixedWingDroneAPI.prototype.internal_start = function () {
+  FixedWingDroneAPI.prototype.internal_start = function (drone) {
+    drone._minAcceleration = this.getMinAcceleration();
+    drone._maxAcceleration = this.getMaxAcceleration();
+    drone._minSpeed = this.getMinSpeed();
+    drone._maxSpeed = this.getMaxSpeed();
+    drone._speed = this.getInitialSpeed();
+    drone._minPitchAngle = this.getMinPitchAngle();
+    drone._maxPitchAngle = this.getMaxPitchAngle();
+    drone._maxRollAngle = this.getMaxRollAngle();
+    drone._minVerticalSpeed = this.getMinVerticalSpeed();
+    drone._maxVerticalSpeed = this.getMaxVerticalSpeed();
+    drone._maxOrientation = this.getMaxOrientation();
     return;
   };
   /*
