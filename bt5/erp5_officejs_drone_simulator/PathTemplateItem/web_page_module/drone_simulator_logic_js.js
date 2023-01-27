@@ -125,18 +125,7 @@ var DroneManager = /** @class */ (function () {
     configurable: true
   });
   DroneManager.prototype.internal_start = function (initial_position) {
-    this._minAcceleration = this._API.getMinAcceleration();
-    this._maxAcceleration = this._API.getMaxAcceleration();
-    this._minSpeed = this._API.getMinSpeed();
-    this._maxSpeed = this._API.getMaxSpeed();
-    this._speed = this._API.getInitialSpeed();
-    this._minPitchAngle = this._API.getMinPitchAngle();
-    this._maxPitchAngle = this._API.getMaxPitchAngle();
-    this._maxRollAngle = this._API.getMaxRollAngle();
-    this._minVerticalSpeed = this._API.getMinVerticalSpeed();
-    this._maxVerticalSpeed = this._API.getMaxVerticalSpeed();
-    this._maxOrientation = this._API.getMaxOrientation();
-    this._API.internal_start();
+    this._API.internal_start(this);
     this._canPlay = true;
     this._canCommunicate = true;
     this._targetCoordinates = initial_position;
@@ -162,86 +151,9 @@ var DroneManager = /** @class */ (function () {
     );
   };
   DroneManager.prototype.internal_update = function (delta_time) {
-    var bearing, context = this, diff, newrot, orientationValue, rotStep,
-      updateSpeed, yaw, yawDiff, yawUpdate;
+    var context = this;
     if (this._controlMesh) {
-      //TODO rotation
-      if (context._rotationTarget) {
-        rotStep = BABYLON.Vector3.Zero();
-        diff = context._rotationTarget.subtract(context._controlMesh.rotation);
-        rotStep.x = (diff.x >= 1) ? 1 : diff.x;
-        rotStep.y = (diff.y >= 1) ? 1 : diff.y;
-        rotStep.z = (diff.z >= 1) ? 1 : diff.z;
-        if (rotStep === BABYLON.Vector3.Zero()) {
-          context._rotationTarget = null;
-          return;
-        }
-        newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
-                                      (rotStep.x * context._rotationSpeed),
-                                      context._controlMesh.rotation.y +
-                                      (rotStep.y * context._rotationSpeed),
-                                      context._controlMesh.rotation.z +
-                                      (rotStep.z * context._rotationSpeed)
-                                    );
-        context._controlMesh.rotation = newrot;
-      }
-
-      context._speed += context._acceleration * delta_time / 1000;
-      if (context._speed > context._maxSpeed) {
-        context._speed = context._maxSpeed;
-      }
-      if (context._speed < context._minSpeed) {
-        context._speed = context._minSpeed;
-      }
-
-      // swap y and z axis so z axis represents altitude
-      bearing = context.computeBearing(
-        context.position.x,
-        context.position.y,
-        context._targetCoordinates.x,
-        context._targetCoordinates.y
-      );
-      yawUpdate = context._API.getYawVelocity(context) * delta_time / 1000;
-      yaw = context.getYaw();
-      yawDiff = context.computeYawDiff(yaw, bearing);
-      if (yawUpdate >= Math.abs(yawDiff)) {
-        yawUpdate = yawDiff;
-      } else if (yawDiff < 0) {
-        yawUpdate *= -1;
-      }
-      yaw += yawUpdate;
-      // trigonometric circle is east oriented, yaw angle is clockwise
-      yaw = -yaw + 90;
-      context._direction.x = Math.cos(yaw * Math.PI / 180);
-      context._direction.z = Math.sin(yaw * Math.PI / 180);
-
-      // swap y and z axis so z axis represents altitude
-      context._direction.y =
-        (context._targetCoordinates.z - context.position.z) / context._speed;
-      if (Math.abs(context._direction.y) > 1) {
-        context._direction.y /= Math.abs(context._direction.y);
-      }
-
-      updateSpeed = context._speed * delta_time / 1000;
-      if (context._direction.x !== 0 ||
-          context._direction.y !== 0 ||
-          context._direction.z !== 0) {
-        context._controlMesh.position.addInPlace(
-          new BABYLON.Vector3(
-            context._direction.x * updateSpeed,
-            context._direction.y * updateSpeed,
-            context._direction.z * updateSpeed
-          )
-        );
-      }
-      //TODO rotation
-      orientationValue = context._maxOrientation *
-        (context._speed / context._maxSpeed);
-      context._mesh.rotation =
-        new BABYLON.Vector3(orientationValue * context._direction.z, 0,
-                            -orientationValue * context._direction.x);
-      context._controlMesh.computeWorldMatrix(true);
-      context._mesh.computeWorldMatrix(true);
+      context._API.internal_update(context, delta_time);
       if (context._canUpdate) {
         context._canUpdate = false;
         return new RSVP.Queue()
@@ -255,7 +167,11 @@ var DroneManager = /** @class */ (function () {
             context._internal_crash(error);
           })
           .push(function () {
-            context._API.internal_update(context);
+            context._API.internal_post_update(context);
+          })
+          .push(undefined, function (error) {
+            console.warn('Drone crashed on update due to error:', error);
+            context._internal_crash(error);
           });
       }
       return;
@@ -276,14 +192,7 @@ var DroneManager = /** @class */ (function () {
     if (isNaN(x) || isNaN(y) || isNaN(z)) {
       throw new Error('Position coordinates must be numbers');
     }
-    if (!this._canPlay) {
-      if (z <= 0.05) {
-        z = 0.05;
-      }
-      this._controlMesh.position = new BABYLON.Vector3(x, z, y);
-    }
-    this._controlMesh.computeWorldMatrix(true);
-    this._mesh.computeWorldMatrix(true);
+    return this._API.setStartingPosition(this, x, y, z);
   };
   DroneManager.prototype.setAcceleration = function (factor) {
     if (!this._canPlay) {
@@ -292,10 +201,7 @@ var DroneManager = /** @class */ (function () {
     if (isNaN(factor)) {
       throw new Error('Acceleration must be a number');
     }
-    if (factor > this._maxAcceleration) {
-      factor = this._maxAcceleration;
-    }
-    this._acceleration = factor;
+    return this._API.setAcceleration(this, factor);
   };
   DroneManager.prototype.setDirection = function (x, y, z) {
     if (!this._canPlay) {
@@ -313,19 +219,13 @@ var DroneManager = /** @class */ (function () {
     if (!this._canPlay) {
       return;
     }
-    if (this._team === "R") {
-      y += Math.PI;
-    }
-    this._rotationTarget = new BABYLON.Vector3(x, z, y);
+    return this._API.setRotation(this, x, y, z);
   };
-  //TODO rotation
   DroneManager.prototype.setRotationBy = function (x, y, z) {
     if (!this._canPlay) {
       return;
     }
-    this._rotationTarget = new BABYLON.Vector3(this.rotation.x + x,
-                                                this.rotation.y + z,
-                                                this.rotation.z + y);
+    return this._API.setRotation(this, x, y, z);
   };
 
   /**
@@ -396,7 +296,7 @@ var DroneManager = /** @class */ (function () {
     if (!this._canPlay) {
       return;
     }
-    this._targetCoordinates.y = altitude;
+    return this._API.setAltitude(this, altitude);
   };
   /**
    * Make the drone loiter (circle with a set radius)
@@ -413,20 +313,8 @@ var DroneManager = /** @class */ (function () {
     }
     return null;
   };
-  DroneManager.prototype.computeYawDiff = function (yaw1, yaw2) {
-    var diff = yaw2 - yaw1;
-    diff += (diff > 180) ? -360 : (diff < -180) ? 360 : 0;
-    return diff;
-  };
-  DroneManager.prototype.computeBearing = function (x1, z1, x2, z2) {
-    return Math.atan2(x2 - x1, z2 - z1) * 180 / Math.PI;
-  };
-  DroneManager.prototype.computeYaw = function (x, z) {
-    return this.computeBearing(0, 0, x, z);
-  };
   DroneManager.prototype.getYaw = function () {
-    var direction = this.worldDirection;
-    return this.computeYaw(direction.x, direction.z);
+    return this._API.getYaw(this);
   };
   DroneManager.prototype.getSpeed = function () {
     return this._speed;
@@ -452,6 +340,7 @@ var DroneManager = /** @class */ (function () {
    * @param checkpoint to be set
    */
   DroneManager.prototype.setCheckpoint = function (checkpoint) {
+    //TODO
     return checkpoint;
   };
   /**
@@ -723,7 +612,8 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._checkDroneRules = function (drone) {
-    //TODO move this to API methods
+    //TODO move this to API methods.
+    //each type of drone should define its rules
     if (drone.getCurrentPosition()) {
       return drone.getCurrentPosition().z > 1;
     }
