@@ -183,8 +183,12 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           logger = logging.getLogger("access")
           logger.addHandler(logging.FileHandler(log))
           logger.propagate = False
-          hs = createServer(app_wrapper(webdav_ports=webdav_ports),
-            logger, sockets=sockets)
+          hs = createServer(
+            app_wrapper(
+              large_file_threshold=10<<20,
+              webdav_ports=webdav_ports),
+            logger,
+            sockets=sockets)
           ProcessingNodeTestCase._server_address = hs.addr
           t = Thread(target=hs.run)
           t.setDaemon(1)
