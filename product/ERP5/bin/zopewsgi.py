@@ -84,7 +84,7 @@ class TransLogger(object):
         self.logger.info(message)
 
 
-def app_wrapper(large_file_threshold=10<<20, webdav_ports=()):
+def app_wrapper(large_file_threshold, webdav_ports):
     try:
         from Products.DeadlockDebugger.dumper import dump_threads, dump_url
     except Exception:
@@ -163,6 +163,7 @@ def createServer(application, logger, **kw):
     return server
 
 def runwsgi():
+    type_registry = ZConfig.datatypes.Registry()
     parser = argparse.ArgumentParser()
     parser.add_argument('--event-log-file', help='Event log file')
     parser.add_argument('--access-log-file', help='Access log file')
@@ -171,12 +172,19 @@ def runwsgi():
     parser.add_argument('address', help='<ip>:<port>')
     parser.add_argument('zope_conf', help='path to zope.conf')
     parser.add_argument('--timerserver-interval', help='Interval for timerserver', type=float)
+    parser.add_argument('--threads', help='Number of threads', default=4, type=int)
+    parser.add_argument(
+      '--large-file-threshold',
+      help='Requests bigger than this size in bytes get saved into a temporary file '
+      'instead of being read completely into memory.',
+      type=type_registry.get('byte-size'),
+      default=type_registry.get('byte-size')("10MB"))
     args = parser.parse_args()
 
     startup = os.path.dirname(Zope2.Startup.__file__)
     if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
       schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
-    else: # BBB
+    else: # BBB Zope2
       schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
 
@@ -238,11 +246,11 @@ def runwsgi():
     port = int(port)
     createServer(
         app_wrapper(
-          large_file_threshold=getattr(conf, 'large_file_threshold', None),
+          large_file_threshold=args.large_file_threshold,
           webdav_ports=[port] if args.webdav else ()),
-          listen=args.address,
-          logger=access_log_logger,
-          threads=getattr(conf, 'zserver_threads', 4),
+        listen=args.address,
+        logger=access_log_logger,
+        threads=args.threads,
         asyncore_use_poll=True,
         # Prevent waitress from adding its own Via and Server response headers.
         ident=None,
