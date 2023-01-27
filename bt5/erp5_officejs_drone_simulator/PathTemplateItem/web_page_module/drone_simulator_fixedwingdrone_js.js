@@ -1,4 +1,4 @@
-/*global console*/
+/*global BABYLON, console*/
 /*jslint nomen: true, indent: 2, maxlen: 80, todo: true */
 
 /************************** FIXED WING DRONE API ****************************/
@@ -34,36 +34,161 @@ var FixedWingDroneAPI = /** @class */ (function () {
   /*
   ** Function called on start phase of the drone, just before onStart AI script
   */
-  FixedWingDroneAPI.prototype.internal_start = function () {
+  FixedWingDroneAPI.prototype.internal_start = function (drone) {
+    drone._minAcceleration = this.getMinAcceleration();
+    drone._maxAcceleration = this.getMaxAcceleration();
+    drone._minSpeed = this.getMinSpeed();
+    drone._maxSpeed = this.getMaxSpeed();
+    drone._speed = this.getInitialSpeed();
+    drone._minPitchAngle = this.getMinPitchAngle();
+    drone._maxPitchAngle = this.getMaxPitchAngle();
+    drone._maxRollAngle = this.getMaxRollAngle();
+    drone._minVerticalSpeed = this.getMinVerticalSpeed();
+    drone._maxVerticalSpeed = this.getMaxVerticalSpeed();
+    drone._maxOrientation = this.getMaxOrientation();
     return;
+  };
+  /*
+  ** Function called on every drone update, right before onUpdate AI script
+  */
+  FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
+    var bearing, diff, newrot, orientationValue, rotStep,
+      updateSpeed, yaw, yawDiff, yawUpdate;
+    //TODO rotation
+    if (context._rotationTarget) {
+      rotStep = BABYLON.Vector3.Zero();
+      diff = context._rotationTarget.subtract(context._controlMesh.rotation);
+      rotStep.x = (diff.x >= 1) ? 1 : diff.x;
+      rotStep.y = (diff.y >= 1) ? 1 : diff.y;
+      rotStep.z = (diff.z >= 1) ? 1 : diff.z;
+      if (rotStep === BABYLON.Vector3.Zero()) {
+        context._rotationTarget = null;
+        return;
+      }
+      newrot = new BABYLON.Vector3(context._controlMesh.rotation.x +
+                                    (rotStep.x * context._rotationSpeed),
+                                    context._controlMesh.rotation.y +
+                                    (rotStep.y * context._rotationSpeed),
+                                    context._controlMesh.rotation.z +
+                                    (rotStep.z * context._rotationSpeed)
+                                  );
+      context._controlMesh.rotation = newrot;
+    }
+
+    context._speed += context._acceleration * delta_time / 1000;
+    if (context._speed > context._maxSpeed) {
+      context._speed = context._maxSpeed;
+    }
+    if (context._speed < context._minSpeed) {
+      context._speed = context._minSpeed;
+    }
+
+    // swap y and z axis so z axis represents altitude
+    bearing = this.computeBearing(
+      context.position.x,
+      context.position.y,
+      context._targetCoordinates.x,
+      context._targetCoordinates.y
+    );
+    yawUpdate = context._API.getYawVelocity(context) * delta_time / 1000;
+    yaw = context.getYaw();
+    yawDiff = this.computeYawDiff(yaw, bearing);
+    if (yawUpdate >= Math.abs(yawDiff)) {
+      yawUpdate = yawDiff;
+    } else if (yawDiff < 0) {
+      yawUpdate *= -1;
+    }
+    yaw += yawUpdate;
+    // trigonometric circle is east oriented, yaw angle is clockwise
+    yaw = -yaw + 90;
+    context._direction.x = Math.cos(yaw * Math.PI / 180);
+    context._direction.z = Math.sin(yaw * Math.PI / 180);
+
+    // swap y and z axis so z axis represents altitude
+    context._direction.y =
+      (context._targetCoordinates.z - context.position.z) / context._speed;
+    if (Math.abs(context._direction.y) > 1) {
+      context._direction.y /= Math.abs(context._direction.y);
+    }
+    updateSpeed = context._speed * delta_time / 1000;
+    if (context._direction.x !== 0 ||
+        context._direction.y !== 0 ||
+        context._direction.z !== 0) {
+      context._controlMesh.position.addInPlace(new BABYLON.Vector3(
+          context._direction.x * updateSpeed,
+          context._direction.y * updateSpeed,
+          context._direction.z * updateSpeed));
+    }
+    //TODO rotation
+    orientationValue = context._maxOrientation *
+      (context._speed / context._maxSpeed);
+    context._mesh.rotation =
+      new BABYLON.Vector3(orientationValue * context._direction.z, 0,
+                          -orientationValue * context._direction.x);
+    context._controlMesh.computeWorldMatrix(true);
+    context._mesh.computeWorldMatrix(true);
   };
   /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  FixedWingDroneAPI.prototype.internal_update = function (drone) {
-    if (this._loiter_mode) {
-      this.loiter(drone);
-    }
-    /*if (this._start_altitude > 0) { //TODO move start_altitude here
-      this.reachAltitude(drone);
-    }*/
+  FixedWingDroneAPI.prototype.internal_post_update = function (drone) {
     var _this = this, drone_position = drone.getCurrentPosition(), drone_info;
+    if (_this._loiter_mode) {
+      _this.loiter(drone);
+    }
+    /*if (_this._start_altitude > 0) { //TODO move start_altitude here
+      _this.reachAltitude(drone);
+    }*/
     if (drone_position) {
       drone_info = {
         'altitudeRel' : drone_position.z,
-        'altitudeAbs' : this._mapManager.getMapInfo().start_AMSL +
+        'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
           drone_position.z,
         'latitude' : drone_position.x,
         'longitude' : drone_position.y
       };
-      this._drone_dict_list[this._id] = drone_info;
+      _this._drone_dict_list[_this._id] = drone_info;
       //broadcast drone info using internal msg
-      this._gameManager._droneList.forEach(function (drone) {
+      _this._gameManager._droneList.forEach(function (drone) {
         if (drone.id !== _this._id) {
           drone.internal_getMsg(drone_info, _this._id);
         }
       });
     }
+  };
+
+  FixedWingDroneAPI.prototype.setAcceleration = function (drone, factor) {
+    if (factor > drone._maxAcceleration) {
+      factor = drone._maxAcceleration;
+    }
+    drone._acceleration = factor;
+  };
+
+  FixedWingDroneAPI.prototype.setRotation = function (drone, x, y, z) {
+    //TODO rotation
+    drone._rotationTarget = new BABYLON.Vector3(x, z, y);
+  };
+
+  FixedWingDroneAPI.prototype.setRotationBy = function (drone, x, y, z) {
+    //TODO rotation
+    drone._rotationTarget = new BABYLON.Vector3(drone.rotation.x + x,
+                                                drone.rotation.y + z,
+                                                drone.rotation.z + y);
+  };
+
+  FixedWingDroneAPI.prototype.setAltitude = function (drone, altitude) {
+    drone._targetCoordinates.z = altitude;
+  };
+
+  FixedWingDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
+    if (!drone._canPlay) {
+      if (z <= 0.05) {
+        z = 0.05;
+      }
+      drone._controlMesh.position = new BABYLON.Vector3(x, z, y);
+    }
+    drone._controlMesh.computeWorldMatrix(true);
+    drone._mesh.computeWorldMatrix(true);
   };
 
   FixedWingDroneAPI.prototype.internal_getMsg = function (msg, id) {
@@ -296,6 +421,18 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getSinkRate = function () {
     //TODO
     return 0;
+  };
+  FixedWingDroneAPI.prototype.getYaw = function (drone) {
+    var direction = drone.worldDirection;
+    return this.computeBearing(0, 0, direction.x, direction.z);
+  };
+  FixedWingDroneAPI.prototype.computeBearing = function (x1, z1, x2, z2) {
+    return Math.atan2(x2 - x1, z2 - z1) * 180 / Math.PI;
+  };
+  FixedWingDroneAPI.prototype.computeYawDiff = function (yaw1, yaw2) {
+    var diff = yaw2 - yaw1;
+    diff += (diff > 180) ? -360 : (diff < -180) ? 360 : 0;
+    return diff;
   };
   FixedWingDroneAPI.prototype.getClimbRate = function () {
     //TODO
