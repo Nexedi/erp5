@@ -1,6 +1,6 @@
 <table>
   <tbody>
-    <tal:block define="business_configuration_list python: here.ConfiguratorTool_getAvailableBusinessConfigurationList()">
+    <tal:block define="business_configuration_list python: here.ConfiguratorTool_getAvailableBusinessConfigurationList() + here.ConfiguratorTool_getInstalledBusinessConfigurationList()">
 
       <div tal:condition="python: not business_configuration_list">
         <h3 i18n:translate="" i18n:domain="ui"> There is no Business Configuration Available. </h3>
@@ -30,9 +30,14 @@
                           tal:attributes="title bc_description"
                           tal:content="bc_description" />
 
-                    <button tal:attributes="value python: bc.getRelativeUrl()"
-                            type="submit"
-                            name="field_your_business_configuration">Configure</button>
+                    <tal:block tal:condition="python: bc.getSimulationState() == 'draft'">
+                      <button tal:attributes="value python: bc.getRelativeUrl()"
+                              type="submit"
+                              name="field_your_business_configuration">Configure</button>
+                    </tal:block>
+                    <tal:block tal:condition="python: bc.getSimulationState() == 'installed'">
+                      <button class="bc-installed" i18n:translate="" i18n:domain="ui" disabled>Installed</button>
+                    </tal:block>
                   </div>
                 </td>
               </tal:block>
