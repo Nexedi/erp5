@@ -1,10 +1,11 @@
-/*global console*/
+/*global BABYLON, console*/
 /*jslint nomen: true, indent: 2, maxlen: 80, white: true */
 
 /**************************** DRONE LOG FOLLOWER ******************************/
 
 var DroneLogAPI = /** @class */ (function () {
   "use strict";
+  var TOP_SPEED = 3000; //so fast that it virtually "teleports" to target
   //** CONSTRUCTOR
   function DroneLogAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
@@ -15,7 +16,12 @@ var DroneLogAPI = /** @class */ (function () {
   /*
   ** Function called at start phase of the drone, just before onStart AI script
   */
-  DroneLogAPI.prototype.internal_start = function () {
+  DroneLogAPI.prototype.internal_start = function (drone) {
+    drone._minAcceleration = this.getMinAcceleration();
+    drone._maxAcceleration = this.getMaxAcceleration();
+    drone._minSpeed = this.getMinSpeed();
+    drone._maxSpeed = this.getMaxSpeed();
+    drone._speed = TOP_SPEED;
     function getLogEntries(log) {
       var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
         log_header_found;
@@ -96,6 +102,16 @@ var DroneLogAPI = /** @class */ (function () {
       return this._gameManager.gameParameter[name];
     }
   };
+  DroneLogAPI.prototype.setStartingPosition = function (drone, x, y, z) {
+    if (!drone._canPlay) {
+      if (z <= 0.05) {
+        z = 0.05;
+      }
+      drone._controlMesh.position = new BABYLON.Vector3(x, z, y);
+    }
+    drone._controlMesh.computeWorldMatrix(true);
+    drone._mesh.computeWorldMatrix(true);
+  };
   DroneLogAPI.prototype.processCoordinates = function (x, y, z) {
     if(isNaN(x) || isNaN(y) || isNaN(z)){
       throw new Error('Target coordinates must be numbers');
@@ -172,10 +188,10 @@ var DroneLogAPI = /** @class */ (function () {
     return;
   };
   DroneLogAPI.prototype.getMinSpeed = function () {
-    return 3000;
+    return TOP_SPEED;
   };
   DroneLogAPI.prototype.getMaxSpeed = function () {
-    return 3000;
+    return TOP_SPEED;
   };
   DroneLogAPI.prototype.getMinAcceleration = function () {
     return -1;
