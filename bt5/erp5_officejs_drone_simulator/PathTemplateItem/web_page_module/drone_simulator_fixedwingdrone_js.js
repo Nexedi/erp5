@@ -11,7 +11,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     LOITER_LIMIT = 30,
     LOITER_RADIUS_FACTOR = 0.60,
     LOITER_SPEED_FACTOR = 1.5,
-    MAX_ACCELERATION = 1,
+    MAX_ACCELERATION = 6,
+    MAX_DECELERATION = 1,
     MIN_SPEED = 12,
     MAX_SPEED = 26,
     MAX_ROLL = 35,
@@ -39,11 +40,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
-    drone._minAcceleration = this.getMinAcceleration();
+    drone._maxDeceleration = this.getMaxDeceleration();
     drone._maxAcceleration = this.getMaxAcceleration();
     drone._minSpeed = this.getMinSpeed();
     drone._maxSpeed = this.getMaxSpeed();
-    drone._speed = this.getInitialSpeed();
+    drone._speed = drone._targetSpeed = this.getInitialSpeed();
     drone._minPitchAngle = this.getMinPitchAngle();
     drone._maxPitchAngle = this.getMaxPitchAngle();
     drone._maxRollAngle = this.getMaxRollAngle();
@@ -56,9 +57,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on every drone update, right before onUpdate AI script
   */
   FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
-    var altitudeDiff, bearing, diff, horizontalCoeff,
-      newrot, orientationValue, rotStep, updateSpeed, verticalSpeed,
-      yaw, yawDiff, yawUpdate;
+    var diff, newrot, orientationValue, rotStep, updateSpeed;
+
     //TODO rotation
     if (context._rotationTarget) {
       rotStep = BABYLON.Vector3.Zero();
@@ -80,73 +80,18 @@ var FixedWingDroneAPI = /** @class */ (function () {
       context._controlMesh.rotation = newrot;
     }
 
-    context._speed += context._acceleration * delta_time / 1000;
-    if (context._speed > context._maxSpeed) {
-      context._speed = context._maxSpeed;
-    }
-    if (context._speed < context._minSpeed) {
-      context._speed = context._minSpeed;
-    }
-
-    // swap y and z axis so z axis represents altitude
-    bearing = this._computeBearing(
-      context.position.x,
-      context.position.y,
-      context._targetCoordinates.x,
-      context._targetCoordinates.y
-    );
-    yawUpdate = context._API.getYawVelocity(context) * delta_time / 1000;
-    yaw = context.getYaw();
-    yawDiff = this._computeYawDiff(yaw, bearing);
-    if (yawUpdate >= Math.abs(yawDiff)) {
-      yawUpdate = yawDiff;
-    } else if (yawDiff < 0) {
-      yawUpdate *= -1;
-    }
-    yaw += yawUpdate;
-    // trigonometric circle is east oriented, yaw angle is clockwise
-    yaw = this._toRad(-yaw + 90);
-    context._direction.x = Math.cos(yaw);
-    context._direction.z = Math.sin(yaw);
-
-    // swap y and z axis so z axis represents altitude
-    altitudeDiff = context._targetCoordinates.z - context.position.z;
-    if (altitudeDiff >= 0) {
-      verticalSpeed = this._computeVerticalSpeed(
-        altitudeDiff,
-        context._maxClimbRate,
-        context.getSpeed(),
-        context._maxPitchAngle
-      );
-    } else {
-      verticalSpeed = -this._computeVerticalSpeed(
-        Math.abs(altitudeDiff),
-        context._maxSinkRate,
-        context.getSpeed(),
-        -context._minPitchAngle
-      );
-    }
-    context._direction.y = verticalSpeed;
-
-    horizontalCoeff = Math.sqrt(
-      (
-        Math.pow(context.getSpeed(), 2) - Math.pow(verticalSpeed, 2)
-      ) / (
-        Math.pow(context._direction.x, 2) + Math.pow(context._direction.z, 2)
-      )
-    );
-    context._direction.x *= horizontalCoeff;
-    context._direction.z *= horizontalCoeff;
-    context._direction = context._direction.normalize();
+    this._updateSpeed(context, delta_time);
+    this._updateDirection(context, delta_time);
 
     updateSpeed = context._speed * delta_time / 1000;
     if (context._direction.x !== 0 ||
         context._direction.y !== 0 ||
         context._direction.z !== 0) {
       context._controlMesh.position.addInPlace(new BABYLON.Vector3(
-          context._direction.x * updateSpeed,
-          context._direction.y * updateSpeed,
-          context._direction.z * updateSpeed));
+        context._direction.x * updateSpeed,
+        context._direction.y * updateSpeed,
+        context._direction.z * updateSpeed
+      ));
     }
     //TODO rotation
     orientationValue = context._maxOrientation *
@@ -186,11 +131,83 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
   };
 
-  FixedWingDroneAPI.prototype.setAcceleration = function (drone, factor) {
-    if (factor > drone._maxAcceleration) {
-      factor = drone._maxAcceleration;
+  FixedWingDroneAPI.prototype._updateSpeed = function (drone, delta_time) {
+    var speed = drone.getSpeed(), speedDiff, speedUpdate;
+    if (speed !== this._targetSpeed) {
+      speedDiff = this._targetSpeed - speed;
+      speedUpdate = drone._acceleration * delta_time / 1000;
+      if (Math.abs(speedDiff) < Math.abs(speedUpdate)) {
+        drone._speed = this._targetSpeed;
+        drone._acceleration = 0;
+      } else {
+        drone._speed += speedUpdate;
+      }
     }
-    drone._acceleration = factor;
+  };
+
+  FixedWingDroneAPI.prototype._updateDirection = function (drone, delta_time) {
+    var horizontalCoeff, newX, newY, newZ;
+    [newX, newZ] = this._getNewYaw(drone, delta_time);
+    newY = this._getNewAltitude(drone);
+
+    horizontalCoeff = Math.sqrt(
+      (
+        Math.pow(drone.getSpeed(), 2) - Math.pow(newY, 2)
+      ) / (
+        Math.pow(newX, 2) + Math.pow(newZ, 2)
+      )
+    );
+    newX *= horizontalCoeff;
+    newZ *= horizontalCoeff;
+    // swap y and z axis so z axis represents altitude
+    drone.setDirection(newX, newZ, newY);
+  };
+
+  FixedWingDroneAPI.prototype._getNewYaw = function (drone, delta_time) {
+    // swap y and z axis so z axis represents altitude
+    var bearing = this._computeBearing(
+        drone.position.x,
+        drone.position.y,
+        drone._targetCoordinates.x,
+        drone._targetCoordinates.y
+      ),
+      yaw = drone.getYaw(),
+      yawDiff = this._computeYawDiff(yaw, bearing),
+      yawUpdate = this.getYawVelocity(drone) * delta_time / 1000;
+
+    if (yawUpdate >= Math.abs(yawDiff)) {
+      yawUpdate = yawDiff;
+    } else if (yawDiff < 0) {
+      yawUpdate *= -1;
+    }
+    yaw += yawUpdate;
+
+    // trigonometric circle is east oriented, yaw angle is clockwise
+    yaw = this._toRad(-yaw + 90);
+    return [Math.cos(yaw), Math.sin(yaw)];
+  };
+
+  FixedWingDroneAPI.prototype._getNewAltitude = function (drone) {
+    // swap y and z axis so z axis represents altitude
+    var altitudeDiff = drone._targetCoordinates.z - drone.position.z,
+      verticalSpeed;
+
+    if (altitudeDiff >= 0) {
+      verticalSpeed = this._computeVerticalSpeed(
+        altitudeDiff,
+        this.getMaxClimbRate(),
+        drone.getSpeed(),
+        this.getMaxPitchAngle()
+      );
+    } else {
+      verticalSpeed = -this._computeVerticalSpeed(
+        Math.abs(altitudeDiff),
+        this.getMaxSinkRate(),
+        drone.getSpeed(),
+        -this.getMinPitchAngle()
+      );
+    }
+    return verticalSpeed;
   };
 
   FixedWingDroneAPI.prototype.setRotation = function (drone, x, y, z) {
@@ -207,6 +224,16 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
   FixedWingDroneAPI.prototype.setAltitude = function (drone, altitude) {
     drone._targetCoordinates.y = altitude;
+  };
+
+  FixedWingDroneAPI.prototype.setSpeed = function (drone, speed) {
+    this._targetSpeed = Math.max(
+      Math.min(speed, this.getMaxSpeed()),
+      this.getMinSpeed()
+    );
+
+    drone._acceleration = (this._targetSpeed > drone.getSpeed())
+      ? this.getMaxAcceleration() : -this.getMaxDeceleration();
   };
 
   FixedWingDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
@@ -245,10 +272,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
   };
   FixedWingDroneAPI.prototype.internal_setTargetCoordinates =
-    function (drone, coordinates, loiter) {
+    function (coordinates, loiter) {
       if (!loiter) {
         this._loiter_mode = false;
-        drone._maxSpeed = this.getMaxSpeed();
         //save last target point to use as next loiter center
         this._last_target = coordinates;
       }
@@ -357,7 +383,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       //loiter
       next_point =
         this._loiter_coordinates[this._last_loiter_point_reached + 1];
-      this.internal_setTargetCoordinates(drone, next_point, true);
+      this.internal_setTargetCoordinates(next_point, true);
       if (this._mapManager.latLonDistance([drone_pos.x, drone_pos.y],
                                           [next_point.x, next_point.y]) < 1) {
         this._last_loiter_point_reached += 1;
@@ -368,7 +394,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         next_point = this._loiter_coordinates[
           this._last_loiter_point_reached + 1
         ];
-        this.internal_setTargetCoordinates(drone, next_point, true);
+        this.internal_setTargetCoordinates(next_point, true);
       }
     }
   };
@@ -417,8 +443,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getInitialSpeed = function () {
     return this._flight_parameters.drone.speed || DEFAULT_SPEED;
   };
-  FixedWingDroneAPI.prototype.getMinAcceleration = function () {
-    return this._flight_parameters.drone.minAcceleration;
+  FixedWingDroneAPI.prototype.getMaxDeceleration = function () {
+    return this._flight_parameters.drone.maxDeceleration || MAX_DECELERATION;
   };
   FixedWingDroneAPI.prototype.getMaxAcceleration = function () {
     return this._flight_parameters.drone.maxAcceleration || MAX_ACCELERATION;
@@ -477,7 +503,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    this.internal_setTargetCoordinates(drone, drone_pos, 5); //5 ?!
+    this.internal_setTargetCoordinates(drone_pos, 5); //5 ?!
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
