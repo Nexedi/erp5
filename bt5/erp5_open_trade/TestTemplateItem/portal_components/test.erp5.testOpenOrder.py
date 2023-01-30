@@ -25,8 +25,6 @@
 #
 ##############################################################################
 import unittest
-import os
-import time
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
