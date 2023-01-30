@@ -14,7 +14,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
     MAX_ACCELERATION = 1,
     MIN_SPEED = 12,
     MAX_SPEED = 26,
-    MAX_ROLL = 35;
+    MAX_ROLL = 35,
+    MIN_PITCH = -20,
+    MAX_PITCH = 25,
+    MAX_CLIMB_RATE = 8,
+    MAX_SINK_RATE = 3;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -43,8 +47,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     drone._minPitchAngle = this.getMinPitchAngle();
     drone._maxPitchAngle = this.getMaxPitchAngle();
     drone._maxRollAngle = this.getMaxRollAngle();
-    drone._minVerticalSpeed = this.getMinVerticalSpeed();
-    drone._maxVerticalSpeed = this.getMaxVerticalSpeed();
+    drone._maxSinkRate = this.getMaxSinkRate();
+    drone._maxClimbRate = this.getMaxClimbRate();
     drone._maxOrientation = this.getMaxOrientation();
     return;
   };
@@ -52,8 +56,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on every drone update, right before onUpdate AI script
   */
   FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
-    var bearing, diff, newrot, orientationValue, rotStep,
-      updateSpeed, yaw, yawDiff, yawUpdate;
+    var altitudeDiff, bearing, diff, horizontalCoeff,
+      newrot, orientationValue, rotStep, updateSpeed, verticalSpeed,
+      yaw, yawDiff, yawUpdate;
     //TODO rotation
     if (context._rotationTarget) {
       rotStep = BABYLON.Vector3.Zero();
@@ -84,7 +89,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
 
     // swap y and z axis so z axis represents altitude
-    bearing = this.computeBearing(
+    bearing = this._computeBearing(
       context.position.x,
       context.position.y,
       context._targetCoordinates.x,
@@ -92,7 +97,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     );
     yawUpdate = context._API.getYawVelocity(context) * delta_time / 1000;
     yaw = context.getYaw();
-    yawDiff = this.computeYawDiff(yaw, bearing);
+    yawDiff = this._computeYawDiff(yaw, bearing);
     if (yawUpdate >= Math.abs(yawDiff)) {
       yawUpdate = yawDiff;
     } else if (yawDiff < 0) {
@@ -100,16 +105,40 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
     yaw += yawUpdate;
     // trigonometric circle is east oriented, yaw angle is clockwise
-    yaw = -yaw + 90;
-    context._direction.x = Math.cos(yaw * Math.PI / 180);
-    context._direction.z = Math.sin(yaw * Math.PI / 180);
+    yaw = this._toRad(-yaw + 90);
+    context._direction.x = Math.cos(yaw);
+    context._direction.z = Math.sin(yaw);
 
     // swap y and z axis so z axis represents altitude
-    context._direction.y =
-      (context._targetCoordinates.z - context.position.z) / context._speed;
-    if (Math.abs(context._direction.y) > 1) {
-      context._direction.y /= Math.abs(context._direction.y);
+    altitudeDiff = context._targetCoordinates.z - context.position.z;
+    if (altitudeDiff >= 0) {
+      verticalSpeed = this._computeVerticalSpeed(
+        altitudeDiff,
+        context._maxClimbRate,
+        context.getSpeed(),
+        context._maxPitchAngle
+      );
+    } else {
+      verticalSpeed = -this._computeVerticalSpeed(
+        Math.abs(altitudeDiff),
+        context._maxSinkRate,
+        context.getSpeed(),
+        -context._minPitchAngle
+      );
     }
+    context._direction.y = verticalSpeed;
+
+    horizontalCoeff = Math.sqrt(
+      (
+        Math.pow(context.getSpeed(), 2) - Math.pow(verticalSpeed, 2)
+      ) / (
+        Math.pow(context._direction.x, 2) + Math.pow(context._direction.z, 2)
+      )
+    );
+    context._direction.x *= horizontalCoeff;
+    context._direction.z *= horizontalCoeff;
+    context._direction = context._direction.normalize();
+
     updateSpeed = context._speed * delta_time / 1000;
     if (context._direction.x !== 0 ||
         context._direction.y !== 0 ||
@@ -206,9 +235,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
       //for (var angle = 0; angle <360; angle+=8){ //counter-clockwise
       for (angle = 360; angle > 0; angle -= 8) { //clockwise
         x1 = this._loiter_radius *
-          Math.cos(angle * (Math.PI / 180)) + this._loiter_center.x;
+          Math.cos(this._toRad(angle)) + this._loiter_center.x;
         y1 = this._loiter_radius *
-          Math.sin(angle * (Math.PI / 180)) + this._loiter_center.y;
+          Math.sin(this._toRad(angle)) + this._loiter_center.y;
         this._loiter_coordinates.push(
           this.getCurrentPosition(x1, y1, this._loiter_center.z)
         );
@@ -395,19 +424,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return this._flight_parameters.drone.maxAcceleration || MAX_ACCELERATION;
   };
   FixedWingDroneAPI.prototype.getMinPitchAngle = function () {
-    return this._flight_parameters.drone.minPitchAngle;
+    return this._flight_parameters.drone.minPitchAngle || MIN_PITCH;
   };
   FixedWingDroneAPI.prototype.getMaxPitchAngle = function () {
-    return this._flight_parameters.drone.maxPitchAngle;
+    return this._flight_parameters.drone.maxPitchAngle || MAX_PITCH;
   };
   FixedWingDroneAPI.prototype.getMaxRollAngle = function () {
     return this._flight_parameters.drone.maxRoll || MAX_ROLL;
   };
-  FixedWingDroneAPI.prototype.getMinVerticalSpeed = function () {
-    return this._flight_parameters.drone.minVerticalSpeed;
+  FixedWingDroneAPI.prototype.getMaxSinkRate = function () {
+    return this._flight_parameters.drone.maxSinkRate || MAX_SINK_RATE;
   };
-  FixedWingDroneAPI.prototype.getMaxVerticalSpeed = function () {
-    return this._flight_parameters.drone.maxVerticalSpeed;
+  FixedWingDroneAPI.prototype.getMaxClimbRate = function () {
+    return this._flight_parameters.drone.maxClimbRate || MAX_CLIMB_RATE;
   };
   FixedWingDroneAPI.prototype.getMaxOrientation = function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
@@ -415,28 +444,36 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getYawVelocity = function (drone) {
     return 360 * EARTH_GRAVITY
-      * Math.tan(this.getMaxRollAngle() * Math.PI / 180)
+      * Math.tan(this._toRad(this.getMaxRollAngle()))
       / (2 * Math.PI * drone.getSpeed());
-  };
-  FixedWingDroneAPI.prototype.getSinkRate = function () {
-    //TODO
-    return 0;
   };
   FixedWingDroneAPI.prototype.getYaw = function (drone) {
     var direction = drone.worldDirection;
-    return this.computeBearing(0, 0, direction.x, direction.z);
+    return this._computeBearing(0, 0, direction.x, direction.z);
   };
-  FixedWingDroneAPI.prototype.computeBearing = function (x1, z1, x2, z2) {
-    return Math.atan2(x2 - x1, z2 - z1) * 180 / Math.PI;
+  FixedWingDroneAPI.prototype._computeBearing = function (x1, z1, x2, z2) {
+    return this._toDeg(Math.atan2(x2 - x1, z2 - z1));
   };
-  FixedWingDroneAPI.prototype.computeYawDiff = function (yaw1, yaw2) {
+  FixedWingDroneAPI.prototype._computeYawDiff = function (yaw1, yaw2) {
     var diff = yaw2 - yaw1;
     diff += (diff > 180) ? -360 : (diff < -180) ? 360 : 0;
     return diff;
   };
-  FixedWingDroneAPI.prototype.getClimbRate = function () {
-    //TODO
-    return 0;
+  FixedWingDroneAPI.prototype._computeVerticalSpeed =
+    function (altitude_diff, max_climb_rate, speed, max_pitch) {
+      var maxVerticalSpeed = Math.min(altitude_diff, max_climb_rate);
+      return (this._toDeg(Math.asin(maxVerticalSpeed / speed)) > max_pitch)
+        ? speed * Math.sin(this._toRad(max_pitch))
+        : maxVerticalSpeed;
+    };
+  FixedWingDroneAPI.prototype._toRad = function (angle) {
+    return angle * Math.PI / 180;
+  };
+  FixedWingDroneAPI.prototype._toDeg = function (angle) {
+    return angle * 180 / Math.PI;
+  };
+  FixedWingDroneAPI.prototype.getClimbRate = function (drone) {
+    return drone.worldDirection.y * drone.getSpeed();
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();

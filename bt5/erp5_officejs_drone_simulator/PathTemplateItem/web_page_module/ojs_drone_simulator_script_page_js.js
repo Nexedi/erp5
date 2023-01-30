@@ -228,6 +228,26 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
+                "my_drone_min_pitch": {
+                  "description": "",
+                  "title": "Drone min pitch",
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "drone_min_pitch",
+                  "hidden": 0,
+                  "type": "FloatField"
+                },
+                "my_drone_max_pitch": {
+                  "description": "",
+                  "title": "Drone max pitch",
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "drone_max_roll",
+                  "hidden": 0,
+                  "type": "FloatField"
+                },
                 "my_minimum_latitud": {
                   "description": "",
                   "title": "Minimum latitude",
@@ -360,14 +380,15 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                  ["my_drone_acceleration"], ["my_drone_max_roll"], ["my_map_height"]]
-              ], [
-                "right",
-                [["my_minimum_latitud"], ["my_maximum_latitud"],
+                [["my_number_of_drones"], ["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
                   ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"], ["my_start_AMSL"]]
+              ], [
+                "right",
+                [["my_simulation_speed"], ["my_simulation_time"],
+                  ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                  ["my_drone_acceleration"],
+                  ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -400,7 +421,9 @@
           "minSpeed": parseInt(options.drone_min_speed, 10),
           "speed": parseFloat(options.drone_speed),
           "maxSpeed": parseInt(options.drone_max_speed, 10),
-          "maxRoll": parseFloat(options.drone_max_roll)
+          "maxRoll": parseFloat(options.drone_max_roll),
+          "minPitchAngle": parseFloat(options.drone_min_pitch),
+          "maxPitchAngle": parseFloat(options.drone_max_pitch)
         },
         "gameTime": parseInt(options.simulation_time, 10),
         "simulation_speed": parseInt(options.simulation_speed, 10),
