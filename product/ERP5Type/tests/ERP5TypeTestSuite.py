@@ -149,6 +149,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
     # Use same portal id for all tests run by current instance
     # but keep it (per-run) random.
     self._portal_id = 'portal_%i' % (random.randint(0, sys.maxint), )
+    self._setup_failed = False
     super(SavedTestSuite, self).__init__(*args, **kw)
 
   def getLogDirectoryPath(self, *args, **kw):
@@ -164,13 +165,22 @@ class SavedTestSuite(ERP5TypeTestSuite):
       *args, **kw)
 
   def runUnitTest(self, *args, **kw):
+    if self._setup_failed:
+      return self._setup_failed
     return self.__runUnitTest(
       '--load',
       *args, **kw)
 
   def setup(self):
     super(SavedTestSuite, self).setup()
-    self.__runUnitTest('--save', self._saved_test_id)
+    status_dict = self.__runUnitTest(
+      '--save', self._saved_test_id)
+    if status_dict['status_code']:
+      status_dict['stderr'] = \
+        b'Not running tests because setup failed\n' \
+        + status_dict['stderr']
+      self._setup_failed = status_dict
+
 
 sys.modules['test_suite'] = module = imp.new_module('test_suite')
 for var in SubprocessError, TestSuite, ERP5TypeTestSuite, ProjectTestSuite, \
