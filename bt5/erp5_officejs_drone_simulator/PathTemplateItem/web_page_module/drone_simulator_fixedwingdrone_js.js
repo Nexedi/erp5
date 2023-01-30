@@ -477,7 +477,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
-    this.internal_setTargetCoordinates(drone, drone_pos, 5); //5 ?!
+    drone_pos.z = 5;
+    this.internal_setTargetCoordinates(drone, drone_pos, true);
   };
   FixedWingDroneAPI.prototype.landed = function (drone) {
     var drone_pos = drone.getCurrentPosition();
