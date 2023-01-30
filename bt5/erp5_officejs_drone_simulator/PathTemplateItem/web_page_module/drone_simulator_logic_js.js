@@ -308,7 +308,7 @@ var DroneManager = /** @class */ (function () {
     return this._speed;
   };
   DroneManager.prototype.getClimbRate = function () {
-    return this._API.getClimbRate();
+    return this._API.getClimbRate(this);
   };
   DroneManager.prototype.getSinkRate = function () {
     return this._API.getSinkRate();
@@ -675,7 +675,8 @@ var GameManager = /** @class */ (function () {
                 game_manager._flight_log[index].push([
                   game_manager._game_duration, geo_coordinates.x,
                   geo_coordinates.y, map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw()
+                  drone_position.z, drone.getYaw(), drone.getSpeed(),
+                  drone.getClimbRate()
                 ]);
               }
             }
