@@ -208,13 +208,23 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
-                "my_drone_acceleration": {
+                "my_drone_max_acceleration": {
                   "description": "",
-                  "title": "Drone Acceleration",
+                  "title": "Drone max Acceleration",
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
-                  "key": "drone_acceleration",
+                  "key": "drone_max_acceleration",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
+                "my_drone_max_deceleration": {
+                  "description": "",
+                  "title": "Drone max Deceleration",
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "drone_max_deceleration",
                   "hidden": 0,
                   "type": "IntegerField"
                 },
@@ -362,12 +372,13 @@
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
                   ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                  ["my_drone_acceleration"], ["my_drone_max_roll"], ["my_map_height"]]
+                  ["my_drone_acceleration"], ["my_drone_max_roll"], ["my_drone_max_deceleration"]]
               ], [
                 "right",
                 [["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
-                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"], ["my_start_AMSL"]]
+                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
+                  ["my_map_height"], ["my_start_AMSL"]]
               ], [
                 "bottom",
                 [["my_script"]]
@@ -396,7 +407,8 @@
       }
       game_parameters_json = {
         "drone": {
-          "maxAcceleration": parseInt(options.drone_acceleration, 10),
+          "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
+          "maxDeceleration": parseInt(options.drone_max_deceleration, 10),
           "minSpeed": parseInt(options.drone_min_speed, 10),
           "speed": parseInt(options.drone_speed, 10),
           "maxSpeed": parseInt(options.drone_max_speed, 10),
