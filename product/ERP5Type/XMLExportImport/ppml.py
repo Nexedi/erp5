@@ -709,22 +709,17 @@ def save_put(self, v, attrs):
 def save_string(self, tag, data):
     a = data[1]
     v = b''.join(data[2:])
-    encoding = a.get('encoding', 'repr') # JPS: repr is default encoding
+    encoding = a.get('encoding', 'repr')
+    is_bytes = a.get('binary') == 'true' # XXX zope4py2: we don't use binary yet
     if encoding is not '':
         v = unconvert(encoding, v)
     if self.binary:
         l = len(v)
         if l < 256:
-            if encoding == 'base64':
-              op = SHORT_BINBYTES
-            else:
-              op = SHORT_BINSTRING
+            op = SHORT_BINBYTES if is_bytes else SHORT_BINSTRING
             v = op + six.int2byte(l) + v
         else:
-            if encoding == 'base64':
-              op = BINBYTES
-            else:
-              op = BINSTRING
+            op = BINBYTES if is_bytes else BINSTRING
             v = op + struct.pack('<i', l) + v
     else:
         v = STRING + repr(v) + '\n'
