@@ -14,7 +14,7 @@ var DroneManager = /** @class */ (function () {
     this._controlMesh = null;
     this._canPlay = false;
     this._canCommunicate = false;
-    this._minAcceleration = 0; //deceleration
+    this._maxDeceleration = 0;
     this._maxAcceleration = 0;
     this._minSpeed = 0;
     this._maxSpeed = 0;
@@ -194,14 +194,14 @@ var DroneManager = /** @class */ (function () {
     }
     return this._API.setStartingPosition(this, x, y, z);
   };
-  DroneManager.prototype.setAcceleration = function (factor) {
+  DroneManager.prototype.setSpeed = function (speed) {
     if (!this._canPlay) {
       return;
     }
-    if (isNaN(factor)) {
-      throw new Error('Acceleration must be a number');
+    if (isNaN(speed)) {
+      throw new Error('Speed must be a number');
     }
-    return this._API.setAcceleration(this, factor);
+    return this._API.setSpeed(this, speed);
   };
   DroneManager.prototype.setDirection = function (x, y, z) {
     if (!this._canPlay) {
