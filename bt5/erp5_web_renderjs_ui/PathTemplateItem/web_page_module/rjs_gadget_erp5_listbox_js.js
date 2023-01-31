@@ -7,21 +7,21 @@
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
 
-  function getDefaultGraphicType(option_list) {
+  function getDefaultGraphicType(gadget, option_list) {
     var i,
       default_option_list = [
         "translated_simulation_state_title",
         "translated_validation_state_title"
       ];
     if (!option_list.length) {
-      return;
+      return gadget.disableGraphic();
     }
     for (i = 0; i < option_list.length; i += 1) {
       if (default_option_list.indexOf(option_list[i][0]) !== -1) {
         return option_list[i][0];
       }
     }
-    return option_list[0][0];
+    return gadget.disableGraphic();
   }
 
   function buildFieldGadgetParam(value) {
@@ -613,7 +613,7 @@
 
                 // graphic
                 enable_graphic: enable_graphic,
-                graphic_type: parameter_list[0] || getDefaultGraphicType(option_list),
+                graphic_type: parameter_list[0] || getDefaultGraphicType(gadget, option_list),
                 only_graphic: only_graphic
               });
             });
@@ -949,7 +949,6 @@
             }
 
             domsugar(table_element.querySelector('tr'), th_element_list);
-            console.log("CONDITION", !gadget.state.only_graphic || !gadget.state.enable_graphic);
             if (!gadget.state.only_graphic || !gadget.state.enable_graphic) {
               domsugar(container, [
                 domsugar('div', {
@@ -1404,7 +1403,6 @@
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
         .push(function (result) {
-          console.log("gadget.state.only_graphic", gadget.state.only_graphic);
           if (result.count == 0 && gadget.state.only_graphic) {
             return gadget.disableGraphic();
           }
