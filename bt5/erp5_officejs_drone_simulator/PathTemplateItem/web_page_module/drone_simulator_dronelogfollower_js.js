@@ -5,7 +5,7 @@
 
 var DroneLogAPI = /** @class */ (function () {
   "use strict";
-  var TOP_SPEED = 3000; //so fast that it virtually "teleports" to target
+  var TOP_SPEED = 250; //so fast that it virtually "teleports" to target
   //** CONSTRUCTOR
   function DroneLogAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
@@ -21,6 +21,7 @@ var DroneLogAPI = /** @class */ (function () {
     drone._maxAcceleration = this.getMaxAcceleration();
     drone._minSpeed = this.getMinSpeed();
     drone._maxSpeed = this.getMaxSpeed();
+    drone._acceleration = 10;
     drone._speed = TOP_SPEED;
     function getLogEntries(log) {
       var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
@@ -75,22 +76,43 @@ var DroneLogAPI = /** @class */ (function () {
     this._flight_parameters.converted_log_point_list = converted_log_point_list;
   };
   /*
+  ** Function called on every drone update, right before onUpdate AI script
+  */
+  DroneLogAPI.prototype.internal_update = function (context, delta_time) {
+    var updateSpeed;
+    context._speed += context._acceleration * delta_time / 1000;
+    if (context._speed > context._maxSpeed) {
+      context._speed = context._maxSpeed;
+    }
+    if (context._speed < -context._maxSpeed) {
+      context._speed = -context._maxSpeed;
+    }
+    updateSpeed = context._speed * delta_time / 1000;
+    if (context._direction.x !== 0 ||
+        context._direction.y !== 0 ||
+        context._direction.z !== 0) {
+      context._controlMesh.position.addInPlace(new BABYLON.Vector3(
+        context._direction.x * updateSpeed,
+        context._direction.y * updateSpeed,
+        context._direction.z * updateSpeed));
+    }
+    context._controlMesh.computeWorldMatrix(true);
+    context._mesh.computeWorldMatrix(true);
+  };
+  /*
   ** Function called on every drone update, right after onUpdate AI script
   */
-  DroneLogAPI.prototype.internal_update = function () {
+  DroneLogAPI.prototype.internal_post_update = function (drone) {
     return;
   };
   DroneLogAPI.prototype.internal_setTargetCoordinates =
-    function (drone, x, y, z) {
-    var coordinates = this.processCoordinates(x, y, z);
+    function (drone, coordinates) {
     coordinates.x -= drone._controlMesh.position.x;
     coordinates.y -= drone._controlMesh.position.z;
     coordinates.z -= drone._controlMesh.position.y;
     drone.setDirection(coordinates.x, coordinates.y, coordinates.z);
-    drone.setAcceleration(drone._maxAcceleration);
     return;
   };
-
   DroneLogAPI.prototype.sendMsg = function (msg, to) {
     return;
   };
@@ -142,12 +164,11 @@ var DroneLogAPI = /** @class */ (function () {
       'me.setTargetCoordinates(me.checkpoint_list[0][0], ' +
       'me.checkpoint_list[0][1], me.checkpoint_list[0][2]);' +
       'me.last_checkpoint_reached = -1;' +
-      'me.setAcceleration(10);' +
       '};' +
       'me.onUpdate = function(timestamp) {' +
       'var next_checkpoint = me.checkpoint_list' +
       '[me.last_checkpoint_reached+1];' +
-      'if (distance([me.position.x, me.position.y], next_checkpoint) < 12) {' +
+      'if (distance([me.position.x, me.position.y], next_checkpoint) < 10) {' +
       'me.going = false;' +
       'var log_elapsed = next_checkpoint[3] - me.initTimestamp,' +
       'time_elapsed = new Date() - me.startTime;' +
