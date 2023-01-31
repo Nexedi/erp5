@@ -9,7 +9,7 @@ if context.getPriority() != 3: # XXX 3 is Priority.USER
   return
 
 for preference in portal.portal_preferences.searchFolder(
-    viewable_owner={'query': str(portal.portal_membership.getAuthenticatedMember()), 'key': 'ExactMatch'},
+    viewable_owner={'query': portal.portal_membership.getAuthenticatedMember().getId(), 'key': 'ExactMatch'},
     portal_type=context.getPortalType()):
   preference = preference.getObject()
   assert portal.portal_membership.getAuthenticatedMember().allowed(preference, ['Owner', ]), preference
