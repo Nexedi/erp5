@@ -68,12 +68,12 @@
 <!-- Check simulator gadget and babylon lib -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
   <td></td>
 <tr>
 <tr>
@@ -151,12 +151,12 @@
 <!-- Check simulator gadget and babylon lib -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_drone_simulator_gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
+  <td>//div[contains(@data-gadget-url, 'babylonjs.gadget.html')]//canvas[contains(@data-engine, 'Babylon.js')]</td>
   <td></td>
 <tr>
 </tbody></table>
