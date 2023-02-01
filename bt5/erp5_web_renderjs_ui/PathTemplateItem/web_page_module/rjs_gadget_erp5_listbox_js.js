@@ -11,7 +11,9 @@
     var i,
       default_option_list = [
         "translated_simulation_state_title",
-        "translated_validation_state_title"
+        "simulation_state",
+        "translated_validation_state_title",
+        "validation_state"
       ];
     if (!option_list.length) {
       return gadget.disableGraphic();
