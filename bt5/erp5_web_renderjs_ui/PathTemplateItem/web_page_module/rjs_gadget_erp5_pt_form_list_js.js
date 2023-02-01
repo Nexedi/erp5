@@ -143,7 +143,6 @@
           if (form_gadget.state.extended_search) {
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
-          console.log("modification_dict", modification_dict);
           if (modification_dict.hasOwnProperty("enable_graphic")) {
             enable_graphic = modification_dict.enable_graphic;
           } else if (
@@ -151,7 +150,6 @@
           ) {
             enable_graphic = true;
           }
-          console.log("enable_graphic", enable_graphic);
           form_options.enable_graphic = enable_graphic;
 
           return erp5_form.render(form_options);
@@ -253,7 +251,6 @@
     }, false, true)
 
     .allowPublicAcquisition("disableGraphic", function disableGraphic() {
-      console.log("I am here");
       this.changeState({
         "enable_graphic": false
       });
