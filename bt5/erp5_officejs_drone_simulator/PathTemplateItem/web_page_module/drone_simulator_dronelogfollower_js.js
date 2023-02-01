@@ -17,10 +17,10 @@ var DroneLogAPI = /** @class */ (function () {
   ** Function called at start phase of the drone, just before onStart AI script
   */
   DroneLogAPI.prototype.internal_start = function (drone) {
-    drone._minAcceleration = this.getMinAcceleration();
-    drone._maxAcceleration = this.getMaxAcceleration();
-    drone._minSpeed = this.getMinSpeed();
-    drone._maxSpeed = this.getMaxSpeed();
+    drone._minAcceleration = -1;
+    drone._maxAcceleration = 1;
+    drone._minSpeed = TOP_SPEED;
+    drone._maxSpeed = TOP_SPEED;
     drone._acceleration = 10;
     drone._speed = TOP_SPEED;
     function getLogEntries(log) {
@@ -201,69 +201,6 @@ var DroneLogAPI = /** @class */ (function () {
       y: y,
       z: z
     };
-  };
-  DroneLogAPI.prototype.set_loiter_mode = function (radius, drone) {
-    return;
-  };
-  DroneLogAPI.prototype.setAltitude = function (altitude, drone) {
-    return;
-  };
-  DroneLogAPI.prototype.getMinSpeed = function () {
-    return TOP_SPEED;
-  };
-  DroneLogAPI.prototype.getMaxSpeed = function () {
-    return TOP_SPEED;
-  };
-  DroneLogAPI.prototype.getMinAcceleration = function () {
-    return -1;
-  };
-  DroneLogAPI.prototype.getMaxAcceleration = function () {
-    return 1;
-  };
-  DroneLogAPI.prototype.getMinPitchAngle = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMaxPitchAngle = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMinRollAngle = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMaxRollAngle = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMinVerticalSpeed = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMaxVerticalSpeed = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMaxOrientation = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getYaw = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getClimbRate = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getSinkRate = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getInitialAltitude = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getAltitudeAbs = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMinHeight = function () {
-    return 0;
-  };
-  DroneLogAPI.prototype.getMaxHeight = function () {
-    return 220;
-  };
-  DroneLogAPI.prototype.triggerParachute = function (drone) {
-    return;
   };
   DroneLogAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
