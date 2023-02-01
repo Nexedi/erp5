@@ -4,7 +4,10 @@
   it tries to render the error from the web site root. If no web site
   root is defined then it renders the error from portal.
 """
-from zExceptions import Unauthorized
+from zExceptions import Redirect, Unauthorized
+
+if isinstance(kw.get('error_value'), Redirect):
+  return ''
 
 try:
   # Adjust exception context for Zope 4.
