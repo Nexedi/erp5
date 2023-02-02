@@ -1045,25 +1045,6 @@ CECadppPpFymU6Ojr2Mas1GKUuSSWkfDoWSWF0X0/ZH/2Q==</string> </value>
             <value> <string>default_image</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1219402687.03</float>
-                    <string>GMT+3</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Embedded File</string> </value>
         </item>
