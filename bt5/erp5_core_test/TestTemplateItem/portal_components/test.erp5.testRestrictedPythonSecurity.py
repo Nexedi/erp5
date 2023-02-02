@@ -854,6 +854,7 @@ def test_suite():
 
   # Also run original tests of RestrictedPython, to confirm that our patches did not break
   # original functionality
+  # pylint:disable=no-name-in-module
   try:
     import RestrictedPython.tests
   except ImportError:
@@ -868,6 +869,7 @@ def test_suite():
     add_tests(suite, RestrictedPython.tests.testREADME)
     import RestrictedPython.tests.testRestrictions
     add_tests(suite, RestrictedPython.tests.testRestrictions)
+  # pylint:enable=no-name-in-module
 
   import AccessControl.tests.test_requestmethod
   add_tests(suite, AccessControl.tests.test_requestmethod)
