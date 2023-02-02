@@ -13,33 +13,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>modification_date</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>creation_date</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <dictionary/>
@@ -52,25 +25,6 @@
                 <string>trade_phase/trade/accounting</string>
                 <string>trade_date/trade_phase/trade/accounting</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>creation_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1280786400.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
             </value>
         </item>
         <item>
@@ -95,23 +49,6 @@
             <key> <string>membership_criterion_category</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1280786400.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
             </value>
         </item>
         <item>
