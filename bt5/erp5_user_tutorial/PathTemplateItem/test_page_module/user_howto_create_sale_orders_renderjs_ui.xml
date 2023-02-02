@@ -219,9 +219,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="3.1" name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global id="3.2" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="3.3" name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -261,6 +263,8 @@
                         <object>
                           <klass> <reference id="3.1"/> </klass>
                           <tuple>
+                            <reference id="3.2"/>
+                            <reference id="3.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -325,9 +329,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="4.1" name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global id="4.2" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="4.3" name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -373,6 +379,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -418,6 +426,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -463,6 +473,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -508,6 +520,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -553,6 +567,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -598,6 +614,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -643,6 +661,8 @@
                         <object>
                           <klass> <reference id="4.1"/> </klass>
                           <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -701,9 +721,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
