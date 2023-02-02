@@ -11,12 +11,13 @@
             <value>
               <object>
                 <klass>
-                  <global name="CPMCache" module="Products.CMFCore.CachingPolicyManager"/>
+                  <global name="_reconstructor" module="copy_reg"/>
                 </klass>
-                <tuple/>
-                <state>
-                  <dictionary/>
-                </state>
+                <tuple>
+                  <global name="CPMCache" module="Products.CMFCore.CachingPolicyManager"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
               </object>
             </value>
         </item>
