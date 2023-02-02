@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Script_magic</string> </key>
-            <value> <int>3</int> </value>
-        </item>
-        <item>
             <key> <string>_Cacheable__manager_id</string> </key>
             <value>
               <none/>
@@ -21,9 +17,13 @@
             <value>
               <object>
                 <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="_reconstructor" module="copy_reg"/>
                 </klass>
-                <tuple/>
+                <tuple>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
