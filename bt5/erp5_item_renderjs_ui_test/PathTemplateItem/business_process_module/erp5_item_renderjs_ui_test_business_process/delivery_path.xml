@@ -19,26 +19,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>modification_date</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>creation_date</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>wait_time</string> </value>
                   </item>
                   <item>
@@ -76,25 +56,6 @@
             </value>
         </item>
         <item>
-            <key> <string>creation_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1280440800.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>RJS-TEST-DELIVERY</string> </value>
         </item>
@@ -115,23 +76,6 @@
         <item>
             <key> <string>lead_time</string> </key>
             <value> <float>2.0</float> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1280440800.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>payment_additional_term</string> </key>

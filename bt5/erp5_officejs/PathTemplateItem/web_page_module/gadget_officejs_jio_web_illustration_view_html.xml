@@ -108,25 +108,6 @@
             </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284351.31</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
         </item>

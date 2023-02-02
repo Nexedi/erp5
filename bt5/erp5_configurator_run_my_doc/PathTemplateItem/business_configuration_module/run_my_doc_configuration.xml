@@ -59,33 +59,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>modification_date</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>creation_date</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -122,25 +95,6 @@
             <value> <string>BusinessConfiguration_afterRunMyDocConfiguration</string> </value>
         </item>
         <item>
-            <key> <string>creation_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1323385200.0</float>
-                    <string>GMT+1</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>RunMyDoc doubles the productivity of documentation by making marketers and developers collaborate automatically.</string> </value>
         </item>
@@ -152,23 +106,6 @@
             <key> <string>language</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1323730800.0</float>
-                    <string>GMT+1</string>
-                  </tuple>
-                </state>
-              </object>
             </value>
         </item>
         <item>

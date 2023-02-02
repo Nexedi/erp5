@@ -91,25 +91,6 @@
             <value> <string>My Organisation Inc.</string> </value>
         </item>
         <item>
-            <key> <string>creation_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1155592800.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
