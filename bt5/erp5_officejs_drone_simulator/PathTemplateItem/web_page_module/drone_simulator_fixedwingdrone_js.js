@@ -401,39 +401,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;
   };
-  /*FixedWingDroneAPI.prototype.reachAltitude = function (drone) {
-    function distance(p1, p2) {
-      return Math.sqrt(Math.pow(p1[0] - p2[0], 2) +
-                       Math.pow(p1[1] - p2[1], 2));
-    }
-    //stop
-    if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
-      this._last_altitude_point_reached = -1;
-      this.takeoff_path = [];
-      this._start_altitude = 0;
-      drone.setDirection(0, 0, 0);
-      return;
-    }
-    //loiter
-    var drone_pos = {
-      x: drone.position.x,
-      y: drone.position.y,
-      z: drone.position.z
-    };
-    var next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-    this.internal_setVirtualPlaneTargetCoordinates(
-      next_point.x, next_point.y, next_point.z);
-    if (distance([drone_pos.x, drone_pos.y],
-      [next_point.x, next_point.y]) < 1) {
-      this._last_altitude_point_reached += 1;
-      if (this._last_altitude_point_reached === this.takeoff_path.length - 1) {
-        return;
-      }
-      next_point = this.takeoff_path[this._last_altitude_point_reached + 1];
-      this.internal_setVirtualPlaneTargetCoordinates(
-        next_point.x, next_point.y, next_point.z);
-    }
-  };*/
   FixedWingDroneAPI.prototype.getMinSpeed = function () {
     return this._flight_parameters.drone.minSpeed || MIN_SPEED;
   };
