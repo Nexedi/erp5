@@ -65,9 +65,11 @@ Web Message can be created by Anonymous Users</string> </value>
             <value>
               <object>
                 <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                  <global id="1.1" name="_reconstructor" module="copy_reg"/>
                 </klass>
                 <tuple>
+                  <global id="1.2" name="DateTime" module="DateTime.DateTime"/>
+                  <global id="1.3" name="object" module="__builtin__"/>
                   <none/>
                 </tuple>
                 <state>
@@ -85,6 +87,8 @@ Web Message can be created by Anonymous Users</string> </value>
               <object>
                 <klass> <reference id="1.1"/> </klass>
                 <tuple>
+                  <reference id="1.2"/>
+                  <reference id="1.3"/>
                   <none/>
                 </tuple>
                 <state>
