@@ -4127,12 +4127,12 @@ VALUES
     person_title = 'abcdé'
     person_module.newContent(portal_type='Person', title=person_title)
     self.tic()
-    
+
     uf = self.getPortal().acl_users
     # The inituser is decoded by `decode('utf-8')` on Zope4 startup, and it is unicode on py2
     # see:
     # https://github.com/zopefoundation/AccessControl/commit/9a9c57f1c6311251a6e51a326751cf81e2810e2c
-    
+
     # imitate the inituser handling
     inituser_login = b'zope_testSearchNonAsciiWithLegacyUserFolderUser'
     inituser_str = inituser_login.decode('utf-8')
@@ -4140,8 +4140,6 @@ VALUES
     uf._doAddUser(inituser_str, '', ['Member', 'Assignor'], [])
     self.loginByUserName(inituser_str)
 
-    folder_object_list = [x.getObject().getId() for x in
-                              person_module.searchFolder(title=person_title)]
     search_result = person_module.searchFolder(title=person_title)
     self.assertTrue(len(search_result) > 0)
     self.assertEqual('abcdé', search_result[0].getObject().getTitle())
