@@ -318,8 +318,7 @@ class TestPackingListMixin(TestOrderMixin):
       Do the split and defer action
     """
     packing_list = sequence.get('packing_list')
-    solver_process_tool = self.portal.portal_solver_processes
-    solver_process = solver_process_tool.newSolverProcess(packing_list)
+    solver_process = packing_list.Delivery_getSolverProcess()
     quantity_solver_decision, = [x for x in solver_process.contentValues()
       if x.getCausalityValue().getTestedProperty() == 'quantity']
     # use Quantity Split Solver.
@@ -1718,8 +1717,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence = Sequence(context=self)
     sequence_string = self.default_sequence_with_two_lines
     sequence(sequence_string)
-    sale_packing_list_list = self.getCreatedTypeList(
-      self.packing_list_portal_type)
     sale_packing_list1, = self.getCreatedTypeList(
       self.packing_list_portal_type)
     movement_list = sale_packing_list1.getMovementList()
@@ -1732,22 +1729,23 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
       self.packing_list_portal_type) if x.getUid() != sale_packing_list1.getUid()]
     # now decide to move the two lines
     solver_process_tool = self.portal.portal_solver_processes
-    def moveTwoLines():
-      movement_list = sale_packing_list1.getMovementList()
+    def moveTwoLines(from_delivery, to_delivery):
+      movement_list = from_delivery.getMovementList()
       self.assertEqual(2, len(movement_list))
       for movement in movement_list:
         movement.setQuantity(movement.getQuantity()-1)
       self.tic()
-      solver_process = solver_process_tool.newSolverProcess(sale_packing_list1)
-      quantity_solver_decision_list = [x for x in solver_process.contentValues()
+      self.assertEqual("draft", from_delivery.getSolverValueList()[-1].getValidationState())
+      quantity_solver_decision_list = [x for x in from_delivery.Delivery_getSolverDecisionList()
         if 'quantity' in x.getCausalityValue().getTestedPropertyList()]
       # use Quantity Split Solver.
       for quantity_solver_decision in quantity_solver_decision_list:
         quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Move Solver'])
         # configure for Quantity Split Solver.
         kw = {'delivery_solver':'FIFO Delivery Solver',
-              'delivery_url': sale_packing_list2.getRelativeUrl()}
+              'delivery_url': to_delivery.getRelativeUrl()}
         quantity_solver_decision.updateConfiguration(**kw)
+      solver_process = quantity_solver_decision.getParentValue()
       solver_process.buildTargetSolverList()
       solver_process.solve()
       self.tic()
@@ -1757,18 +1755,86 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
     self.assertEqual({98, 99}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
-    moveTwoLines()
+    moveTwoLines(sale_packing_list1, sale_packing_list2)
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
     self.assertEqual({97, 98}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1, 2}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     # move two lines again. This time, the sale packing list already have 2 lines,
     # thus they will be just completed
-    moveTwoLines()
+    moveTwoLines(sale_packing_list1, sale_packing_list2)
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
     self.assertEqual({96, 97}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
+    # Now Split again first SPL to create a 3rd SPL
+    def splitSalePackingList():
+      movement_list = sale_packing_list1.getMovementList()
+      self.assertEqual(2, len(movement_list))
+      for movement in movement_list:
+        movement.setQuantity(movement.getQuantity()-1)
+      self.tic()
+      self.assertEqual("draft", sale_packing_list1.getSolverValueList()[-1].getValidationState())
+      quantity_solver_decision_list = [x for x in sale_packing_list1.Delivery_getSolverDecisionList()
+        if 'quantity' in x.getCausalityValue().getTestedPropertyList()]
+      # use Quantity Split Solver.
+      for quantity_solver_decision in quantity_solver_decision_list:
+        quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
+        # configure for Quantity Split Solver.
+        kw = {'delivery_solver':'FIFO Delivery Solver',
+              'start_date':self.datetime + 36,
+              'stop_date':self.datetime + 46}
+        quantity_solver_decision.updateConfiguration(**kw)
+      solver_process = quantity_solver_decision.getParentValue()
+      solver_process.buildTargetSolverList()
+      solver_process.solve()
+      self.tic()
+      self.callPackingListBuilderList(sale_packing_list1)
+      self.tic()
+    splitSalePackingList()
+    sale_packing_list3, = [x for x in self.getCreatedTypeList(
+      self.packing_list_portal_type) if not(x.getUid() in (sale_packing_list1.getUid(),
+                                                           sale_packing_list2.getUid()))]
+    self.assertEqual({95, 96}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({1, 1}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual("solved", sale_packing_list3.getCausalityState())
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    def getSolverProcessStateList(delivery):
+      return [x.getValidationState() for x in delivery.getSolverValueList()]
+    # we should have as many solver process as we had split
+    self.assertEqual(["solved"]*4, getSolverProcessStateList(sale_packing_list1))
+    # Now try to move quantities several times and make sure all quantities are correct
+    moveTwoLines(sale_packing_list2, sale_packing_list3)
+    self.assertEqual({95, 96}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({1, 2}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
+    self.assertEqual({2, 2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    self.assertEqual("solved", sale_packing_list2.getCausalityState())
+    self.assertEqual("solved", sale_packing_list3.getCausalityState())
+    moveTwoLines(sale_packing_list1, sale_packing_list2)
+    sale_packing_list2.start()
+    self.tic()
+    sale_packing_list2.deliver()
+    self.assertEqual({94, 95}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
+    self.assertEqual({2, 2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    self.assertEqual("solved", sale_packing_list2.getCausalityState())
+    self.assertEqual("solved", sale_packing_list3.getCausalityState())
+    moveTwoLines(sale_packing_list1, sale_packing_list3)
+    # There was 6 split of sale packing list #
+    self.assertEqual(["solved"]*6, getSolverProcessStateList(sale_packing_list1))
+    # 4 solver process (2 adopt since we were destination of split move, 1 split and move,
+    # and 1 adopt again since we were again destination of split move
+    self.assertEqual(["solved"]*4, getSolverProcessStateList(sale_packing_list2))
+    # 2 times adopt since we were destination of split move 2 times
+    self.assertEqual(["solved"]*2, getSolverProcessStateList(sale_packing_list3))
+    self.assertEqual({93, 94}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
+    self.assertEqual({3, 3}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
+    self.assertEqual("solved", sale_packing_list1.getCausalityState())
+    self.assertEqual("solved", sale_packing_list2.getCausalityState())
+    self.assertEqual("solved", sale_packing_list3.getCausalityState())
 
   def test_SplitAndDeferDoNothing(self, quiet=quiet, run=run_all_test):
     """
