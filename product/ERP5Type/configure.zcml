@@ -1,4 +1,4 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure xmlns="http://namespaces.zope.org/zope" xmlns:zcml="http://namespaces.zope.org/zcml">
   <include package="Products.PageTemplates" />
-  <includeOverrides file="overrides.zcml" />
+  <includeOverrides zcml:condition="installed chameleon" file="overrides.zcml" />
 </configure>
