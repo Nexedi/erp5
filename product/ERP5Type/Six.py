@@ -42,7 +42,11 @@ integer_types = _six.integer_types
 # ContainerAssertions cannot be used here (like for dict) because the following
 # functions are defined on `six` module directly and ContainerAssertions has a
 # type() as key
-from Products.ERP5Type.patches.Restricted import SafeIterItems
+from Products.ERP5Type import IS_ZOPE4
+if IS_ZOPE4:
+  from Products.ERP5Type.patches.Restricted import SafeIterItems
+else:
+  from Products.ERP5Type.patches.RestrictedZope2 import SafeIterItems
 iteritems = lambda d: SafeIterItems(_six.iteritems(d), d)
 from AccessControl.ZopeGuards import SafeIter
 iterkeys = lambda d: SafeIter(_six.iterkeys(d), d)

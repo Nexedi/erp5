@@ -21,21 +21,24 @@
 ##############################################################################
 import six
 
-from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW, IS_ZOPE4
 
 # Load all monkey patches
-try:
-  from ZPublisher.HTTPResponse import WSGIResponse
-except ImportError: # BBB Zope2
-  from Products.ERP5Type.patches import WSGIPublisherZope2
-else: # Zope4
+if IS_ZOPE4:
   from Products.ERP5Type.patches import WSGIPublisher
+else:
+  from Products.ERP5Type.patches import WSGIPublisherZope2
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
-from Products.ERP5Type.patches import Restricted
+if IS_ZOPE4:
+  from Products.ERP5Type.patches import Restricted
+else:
+  from Products.ERP5Type.patches import RestrictedZope2
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
+if not IS_ZOPE4:
+  from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
@@ -90,6 +93,10 @@ from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
+if not IS_ZOPE4:
+  from Products.ERP5Type.patches import DTMLMethod
+  from Products.ERP5Type.patches import DTMLDocument
+  from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import CMFCoreUtils
 from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
