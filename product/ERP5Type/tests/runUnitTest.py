@@ -463,9 +463,6 @@ class DebugTestResult:
     self.result = result
 
   def _start_debugger(self, tb):
-    import Lifetime
-    if Lifetime._shutdown_phase:
-      return
     try:
       # try ipython if available
       import IPython
@@ -546,6 +543,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # Set debug mode after importing ZopeLite that resets it to 0
   cfg.debug_mode = debug
 
+  from ZPublisher.HTTPRequest import HTTPRequest
+  HTTPRequest.retry_max_count = 3
+
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
   root_logger = logging.getLogger()
@@ -564,6 +564,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
                           'when': None,
                           'interval': None,
                           'formatter': None,
+                          # Zope4 config
+                          'style': 'classic',
+                          'arbitrary_fields': False,
+                          'encoding': None,
+                          'delay': None,
                           },
                          None, None)
   section.handlers = [handlers.FileHandlerFactory(section)]
@@ -588,7 +593,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
 
-  from Products.ERP5Type.patches import noZopeHelp
   from OFS.Application import AppInitializer
   AppInitializer.install_session_data_manager = lambda self: None
 
@@ -617,11 +621,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
 
   TestRunner = unittest.TextTestRunner
 
-  import Lifetime
   from Zope2.custom_zodb import Storage, save_mysql, \
       node_pid_list, neo_cluster, zeo_server_pid, wcfs_server
   def shutdown(signum, frame, signum_set=set()):
-    Lifetime.shutdown(0)
     signum_set.add(signum)
     if node_pid_list is None and len(signum_set) > 1:
       # in case of ^C, a child should also receive a SIGHUP from the parent,

@@ -575,7 +575,8 @@ class BaseTemplateItem(Implicit, Persistent):
 
     attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
                 'last_id', 'uid',
-                '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+                '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
+                '_erp5_coverage_filename'}
     if export:
       if keep_workflow_history_last_history_only:
         self._removeAllButLastWorkflowHistory(obj)
@@ -3468,7 +3469,15 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           type_role_dict[k] = v
         if 'id' in type_role_dict:
           type_role_list.append(type_role_dict)
-      type_role_list.sort(key=lambda x: (x.get('title'), x['object_id'],))
+
+      def sort_key(o):
+        try:
+          int_id = int(o['object_id'])
+        except ValueError:
+          # When the container does not use numerical ids
+          int_id = obj[o['object_id']].getCreationDate()
+        return (o.get('title'), int_id)
+      type_role_list.sort(key=sort_key)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):

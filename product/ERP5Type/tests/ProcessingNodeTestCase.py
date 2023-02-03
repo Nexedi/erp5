@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import errno, logging, os, socket, time
+import errno, logging, mock, os, socket, time
 import itertools
 from threading import Thread
 from UserDict import IterableUserDict
-import Lifetime
 import transaction
 from Testing import ZopeTestCase
 from ZODB.POSException import ConflictError
@@ -108,9 +107,11 @@ def Application_resolveConflict(self, old_state, saved_state, new_state):
       saved_state.pop('test_distributing_node', ''),
       new_state.pop('test_distributing_node', '')}
   test_distributing_node_set.discard('')
-  if len(test_distributing_node_set) != 1:
-    raise ConflictError
-  new_state['test_distributing_node'] = test_distributing_node_set.pop()
+  new_state['test_distributing_node'] = ''
+  if test_distributing_node_set:
+    if len(test_distributing_node_set) != 1:
+      raise ConflictError
+    new_state['test_distributing_node'] = test_distributing_node_set.pop()
 
   old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
                      for state in (old_state, saved_state, new_state)]
@@ -138,23 +139,15 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   the node running the unit tests to tell other nodes on which portal activities
   should be processed.
   """
-
-  @staticmethod
-  def asyncore_loop():
-    try:
-      Lifetime.lifetime_loop()
-    except KeyboardInterrupt:
-      pass
-    Lifetime.graceful_shutdown_loop()
+  _server_address = None # (host, port) of the http server if it was started, None otherwise
 
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
-    utils = ZopeTestCase.utils
-    if utils._Z2HOST is None:
+    if self._server_address is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
-      if int(os.environ.get('erp5_wsgi', 0)):
+      if True:
         from Products.ERP5.bin.zopewsgi import app_wrapper, createServer
         sockets = []
         server_type = 'HTTP'
@@ -190,27 +183,14 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           logger = logging.getLogger("access")
           logger.addHandler(logging.FileHandler(log))
           logger.propagate = False
-          hs = createServer(app_wrapper(webdav_ports=webdav_ports),
-            logger, sockets=sockets)
-          utils._Z2HOST, utils._Z2PORT = hs.addr
+          hs = createServer(
+            app_wrapper(
+              large_file_threshold=10<<20,
+              webdav_ports=webdav_ports),
+            logger,
+            sockets=sockets)
+          ProcessingNodeTestCase._server_address = hs.addr
           t = Thread(target=hs.run)
-          t.setDaemon(1)
-          t.start()
-      else:
-        _print = lambda hs: verbose and ZopeTestCase._print(
-          message % (hs.server_protocol, hs.server_name, hs.server_port))
-        try:
-          hs = createZServer(log)
-        except RuntimeError as e:
-          ZopeTestCase._print(str(e))
-        else:
-          utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
-          _print(hs)
-          try:
-            _print(createZServer(log, zserver_type='webdav'))
-          except RuntimeError as e:
-            ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
-          t = Thread(target=Lifetime.loop)
           t.setDaemon(1)
           t.start()
       from Products.CMFActivity import ActivityTool
@@ -220,7 +200,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         if ActivityTool.currentNode == ActivityTool._server_address:
           ActivityTool.currentNode = None
         ActivityTool._server_address = None
-    return utils._Z2HOST, utils._Z2PORT
+    return self._server_address
 
   def _registerNode(self, distributing, processing):
     """Register node to process and/or distribute activities"""
@@ -241,7 +221,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   @classmethod
   def unregisterNode(cls):
-    if ZopeTestCase.utils._Z2HOST is not None:
+    if cls._server_address is not None:
       self = cls('unregisterNode')
       self.app = self._app()
       self._registerNode(distributing=0, processing=0)
@@ -305,9 +285,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
         portal_activities.process_timer(None, None)
-        if Lifetime._shutdown_phase:
-          # XXX CMFActivity contains bare excepts
-          raise KeyboardInterrupt
         message_list = getMessageList()
         message_count = len(message_list)
         if time.time() >= deadline or message_count and any(x.processing_node == -2
@@ -375,7 +352,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   def processing_node(self):
     """Main loop for nodes that process activities"""
     try:
-      while not Lifetime._shutdown_phase:
+      while True:
         time.sleep(.3)
         transaction.begin()
         try:
@@ -396,20 +373,28 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     """
     import Products.TimerService
 
-    timerserver_thread = None
-    try:
-      while not Lifetime._shutdown_phase:
-        time.sleep(.3)
-        transaction.begin()
-        try:
-          self.portal = self.app[self.app.test_portal_name]
-        except (AttributeError, KeyError):
-          continue
-        self._setUpDummyMailHost()
-        if not timerserver_thread:
-          timerserver_thread = Products.TimerService.timerserver.TimerServer.TimerServer(
-            module='Zope2',
-            interval=0.1,
-          )
-    except KeyboardInterrupt:
-      pass
+    # AlarmTool uses alarmNode='' as a way to bootstrap an alarm node, but
+    # during these tests we don't want the first node to start executing
+    # alarms directly, because this usually cause conflicts when other
+    # nodes register.
+    with mock.patch(
+      'Products.ERP5.Tool.AlarmTool.AlarmTool.getAlarmNode',
+      return_value='bootstrap_disabled_in_test'):
+
+      timerserver_thread = None
+      try:
+        while True:
+          time.sleep(.3)
+          transaction.begin()
+          try:
+            self.portal = self.app[self.app.test_portal_name]
+          except (AttributeError, KeyError):
+            continue
+          self._setUpDummyMailHost()
+          if not timerserver_thread:
+            timerserver_thread = Products.TimerService.timerserver.TimerServer.TimerServer(
+              module='Zope2',
+              interval=0.1,
+            )
+      except KeyboardInterrupt:
+        pass

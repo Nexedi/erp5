@@ -589,8 +589,8 @@ class TestDocument(TestDocumentMixin):
   def testTempOOoDocument_get_size(self):
     # test get_size on temporary OOoDocument
     doc = self.portal.newContent(temp_object=True, portal_type='OOo Document', id='tmp')
-    doc.edit(data='OOo')
-    self.assertEqual(len('OOo'), doc.get_size())
+    doc.edit(data=b'OOo')
+    self.assertEqual(len(b'OOo'), doc.get_size())
 
   def testOOoDocument_hasData(self):
     # test hasData on OOoDocument
@@ -629,12 +629,22 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="TEST-en-002.doc"',
                       response.headers['content-disposition'])
+
     response = self.publish('%s/OOoDocument_getOOoFile' % doc.getPath(),
                             basic='member_user1:secret')
     self.assertEqual('application/vnd.oasis.opendocument.text',
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="TEST-en-002.odt"',
                       response.headers['content-disposition'])
+
+    # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    doc.setFilename('テスト-jp-002.doc')
+    self.tic()
+    response = self.publish('%s/Base_download' % doc.getPath(), basic='member_user1:secret')
+    self.assertEqual(
+      response.headers['content-disposition'],
+      'attachment; filename="-jp-002.doc"; filename*=UTF-8\'\'%E3%83%86%E3%82%B9%E3%83%88-jp-002.doc',
+    )
 
   def test_Member_download_pdf_format(self):
     # tests that members can download OOo documents in pdf format (at least in
@@ -670,6 +680,15 @@ class TestDocument(TestDocumentMixin):
                       response.headers['content-type'])
     self.assertEqual('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.headers['content-disposition'])
+
+    # Non ascii filenames are encoded as https://www.rfc-editor.org/rfc/rfc6266#appendix-D
+    doc.setFilename('PDFファイル.ods')
+    self.tic()
+    response = self.publish('%s?format=pdf' % doc.getPath(), basic='member_user2:secret')
+    self.assertEqual(
+      response.headers['content-disposition'],
+      'attachment; filename="PDF.pdf"; filename*=UTF-8\'\'PDF%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB.pdf',
+    )
 
   def test_05_getCreationDate(self):
     """
@@ -1260,7 +1279,7 @@ class TestDocument(TestDocumentMixin):
                                      display='thumbnail')
     self.assertEqual(mime, 'image/png')
     # it's a valid PNG
-    self.assertEqual(image_data[1:4], 'PNG')
+    self.assertEqual(image_data[1:4], b'PNG')
 
   def test_PDFToJpg(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1271,7 +1290,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/jpeg')
-    self.assertEqual(image_data[6:10], 'JFIF')
+    self.assertEqual(image_data[6:10], b'JFIF')
 
   def test_PDFToGif(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1282,7 +1301,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/gif')
-    self.assertEqual(image_data[0:4], 'GIF8')
+    self.assertEqual(image_data[0:4], b'GIF8')
 
   def test_PDFToTiff(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1293,7 +1312,7 @@ class TestDocument(TestDocumentMixin):
                                      frame=0,
                                      display='thumbnail')
     self.assertEqual(mime, 'image/tiff')
-    self.assertIn(image_data[0:2], ('II', 'MM'))
+    self.assertIn(image_data[0:2], (b'II', b'MM'))
 
 
   def test_PDF_content_information(self):
@@ -2085,7 +2104,7 @@ return 1
       for credential in ['ERP5TypeTestCase:', 'zope_user:']:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
-        self.assertIn('Status: 200 OK', response.getOutput())
+        self.assertIn('200 OK', response.getOutput())
         # OOod produced HTML navigation, test it
         self.assertIn('First page', response.getBody())
         self.assertIn('Back', response.getBody())
@@ -2530,9 +2549,9 @@ return 1
     self.tic()
     # full text indexation
     full_text_result = portal.erp5_sql_connection.manage_test('select * from full_text where uid="%s"' %document.getUid())
-    self.assertIn('subject2', full_text_result[0]['searchabletext'])
-    self.assertIn('subject1', full_text_result[0]['searchabletext'])
-    self.assertIn(document.getReference(), full_text_result[0]['searchabletext'])
+    self.assertIn('subject2', full_text_result[0]['SearchableText'])
+    self.assertIn('subject1', full_text_result[0]['SearchableText'])
+    self.assertIn(document.getReference(), full_text_result[0]['SearchableText'])
 
     # subject indexation
     for subject_list in (['subject1',], ['subject2',],
@@ -2993,11 +3012,91 @@ class TestDocumentPerformance(TestDocumentMixin):
         req_time)
 
 
+class DocumentConsistencyTestCase(ERP5TypeTestCase):
+  portal_type = NotImplemented
+  content_type = NotImplemented
+  filename = NotImplemented
+
+  def _getDocumentModule(self):
+    return self.portal.document_module
+
+  def afterSetUp(self):
+    self.document = self._getDocumentModule().newContent(portal_type=self.portal_type)
+    self.file_upload = makeFileUpload(self.filename)
+    with open(makeFilePath(self.filename)) as f:
+      self.file_data = f.read()
+    self.file_size = len(self.file_data)
+
+  def _checkDocument(self):
+    self.assertEqual(self.document.checkConsistency(), [])
+    from Products.ERP5Type.Constraint import PropertyTypeValidity
+    self.assertEqual(
+      PropertyTypeValidity(
+        id='type_check',
+        description='Type Validity Check',
+      ).checkConsistency(self.document),
+      [],
+    )
+    self.assertEqual(self.document.getData(), self.file_data)
+    self.assertEqual(self.document.getSize(), self.file_size)
+    self.assertEqual(self.document.getContentType(), self.content_type)
+    self.assertEqual(self.document.getFilename(), self.filename)
+
+  def test_set_file(self):
+    self.document.edit(file=self.file_upload)
+    self._checkDocument()
+
+  def test_set_data(self):
+    self.document.edit(data=self.file_data)
+    # when setting data, we have to set the content type and filename ourselves
+    self.document.setContentType(self.content_type)
+    self.document.setFilename(self.filename)
+    self._checkDocument()
+
+
+class DrawingConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Drawing'
+  filename = 'Foo_001.odg'
+  content_type = 'application/vnd.oasis.opendocument.graphics'
+
+class FileConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'File'
+  filename = 'dummy.bin'
+  content_type = 'application/octet-stream'
+
+class PDFConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'PDF'
+  filename = 'TEST.Large.Document.pdf'
+  content_type = 'application/pdf'
+
+class PresentationConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Presentation'
+  filename = 'TEST-en-003.odp'
+  content_type = 'application/vnd.oasis.opendocument.presentation'
+
+class SpreadsheetConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Spreadsheet'
+  filename = 'import_big_spreadsheet.ods'
+  content_type = 'application/vnd.oasis.opendocument.spreadsheet'
+
+class TextConsistencyTestCase(DocumentConsistencyTestCase):
+  portal_type = 'Text'
+  filename = 'REF-en-001.odt'
+  content_type = 'application/vnd.oasis.opendocument.text'
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
   suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  suite.addTest(unittest.makeSuite(DrawingConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(FileConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(PDFConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(PresentationConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(SpreadsheetConsistencyTestCase))
+  suite.addTest(unittest.makeSuite(TextConsistencyTestCase))
+
   # Run erp5_base's TestImage with dms installed (because dms has specific interactions)
   from erp5.component.test.testERP5Base import TestImage
   suite.addTest(unittest.makeSuite(TestImage))

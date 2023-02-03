@@ -25,18 +25,10 @@
 #
 ##############################################################################
 import unittest
-import os
-import time
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
-# explicitly set Europe/Paris timezone
-os.environ['TZ']='Europe/Paris'
-time.tzset()
-DateTime._localzone0 = 'GMT+1'
-DateTime._localzone1 = 'GMT+2'
-DateTime._multipleZones = True
 
 class TestOpenOrder(ERP5TypeTestCase):
   """
@@ -47,6 +39,11 @@ class TestOpenOrder(ERP5TypeTestCase):
     return 'Test Open Order'
 
   def afterSetUp(self):
+    from Products.ERP5Type.tests.utils import timeZoneContext
+    timezone = timeZoneContext('Europe/Paris')
+    timezone.__enter__()
+    self.addCleanup(timezone.__exit__, None, None, None)
+
     if getattr(self.portal, '_run_after_setup', None) is not None:
       return
 
