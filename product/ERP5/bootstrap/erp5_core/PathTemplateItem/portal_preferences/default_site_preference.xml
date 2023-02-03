@@ -140,42 +140,6 @@
 It\'s the lowest priority one; ie. managers can create higher priority preference for a group of users and users can create individals (per user) preferences that will be top level priority.</string> </value>
         </item>
         <item>
-            <key> <string>effective_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>978325200.0</float>
-                    <string>US/Eastern</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>expiration_date</string> </key>
-            <value>
-              <object>
-                <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>2.53402146e+11</float>
-                    <string>US/Eastern</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>format</string> </key>
             <value>
               <none/>
