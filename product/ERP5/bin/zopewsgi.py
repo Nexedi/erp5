@@ -26,7 +26,7 @@ try:
   from ZPublisher.httpexceptions import HTTPExceptionHandler
 except ImportError:
   # BBB Zope2
-  from Products.ERP5Type.patches.WSGIPublisher import publish_module
+  from Products.ERP5Type.patches.WSGIPublisherZope2 import publish_module
   HTTPExceptionHandler = lambda app: app
 
 
