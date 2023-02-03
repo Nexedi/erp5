@@ -289,7 +289,6 @@ def DateTime_parse(self, st, datefmt=getDefaultDateFormat()):
 
 DateTimeKlass._parse = DateTime_parse
 
-
 # DateTime 3 removed exceptions as class attributes (since
 # zopefoundation/DateTime commit 8114618 ), but we have some code expecting
 # these attributes, so undo this patch for convenience.
@@ -297,3 +296,13 @@ DateTimeKlass.DateTimeError = DateTimeError
 DateTimeKlass.SyntaxError = SyntaxError
 DateTimeKlass.DateError = DateError
 DateTimeKlass.TimeError = TimeError
+
+# BBB undo patch from DateTime 2.12 , which patches
+# copy_reg._reconstructor with a function that appears as
+# `DateTime.DateTime._dt_reconstructor` in pickles.
+# See https://github.com/zopefoundation/DateTime/blob/2.12.8/src/DateTime/DateTime.py#L1863-L1874
+# This patch is no longer needed once we are using DateTime >= 3 so
+# it is not needed on python3 (copy_reg does not exist on python3)
+import copy_reg
+copy_reg._reconstructor.__module__ = 'copy_reg'
+copy_reg._reconstructor.__name__ = '_reconstructor'
