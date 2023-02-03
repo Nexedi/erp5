@@ -1,4 +1,4 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure xmlns="http://namespaces.zope.org/zope" xmlns:zcml="http://namespaces.zope.org/zcml" zcml:condition="installed chameleon">
   <utility
     provides="zope.pagetemplate.interfaces.IPageTemplateEngine"
     component="zope.pagetemplate.pagetemplate.PageTemplateEngine"/>
