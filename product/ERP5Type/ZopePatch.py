@@ -21,16 +21,21 @@
 ##############################################################################
 import six
 
-from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW, IS_ZOPE2
 
 # Load all monkey patches
-from Products.ERP5Type.patches import WSGIPublisher
+if IS_ZOPE2: # BBB Zope2
+  from Products.ERP5Type.patches import WSGIPublisherZope2
+else:
+  from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
 from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
+if IS_ZOPE2: # BBB Zope2
+  from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 if WITH_LEGACY_WORKFLOW:
   from Products.ERP5Type.patches import DCWorkflow
