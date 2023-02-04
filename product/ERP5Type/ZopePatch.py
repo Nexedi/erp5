@@ -21,16 +21,10 @@
 ##############################################################################
 import six
 
-from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+from Products.ERP5Type import WITH_LEGACY_WORKFLOW, IS_ZOPE4
 
 # Load all monkey patches
-try:
-  from ZPublisher.HTTPResponse import WSGIResponse
-except ImportError: # BBB Zope2
-  isZope4 = False
-else: # Zope4
-  isZope4 = True
-if isZope4:
+if IS_ZOPE4:
   from Products.ERP5Type.patches import WSGIPublisher
 else:
   from Products.ERP5Type.patches import WSGIPublisherZope2
@@ -46,7 +40,7 @@ from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import Expression
-if isZope4:
+if IS_ZOPE4:
   from Products.ERP5Type.patches import Restricted
   from Products.ERP5Type.patches import DA
   from Products.ERP5Type.patches import sqltest
@@ -95,7 +89,7 @@ from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
-if isZope4:
+if IS_ZOPE4:
   from Products.ERP5Type.patches import CookieCrumbler
   from Products.ERP5Type.patches import ExternalMethod
   from Products.ERP5Type.patches import OFSFile

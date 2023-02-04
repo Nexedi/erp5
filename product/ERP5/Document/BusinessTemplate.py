@@ -68,7 +68,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import IS_ZOPE4, Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
@@ -1515,7 +1515,10 @@ class ObjectTemplateItem(BaseTemplateItem):
             # XXX Calling obj._setData() would call Interaction Workflow such
             # as document_conversion_interaction_workflow which would update
             # mime_type too...
-            from Products.ERP5Type.patches.OFSFile import _setData
+            if IS_ZOPE4:
+              from Products.ERP5Type.patches.OFSFile import _setData
+            else:
+              from Products.ERP5Type.patches.OFSFileZope2 import _setData
             _setData(obj, obj.data)
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):

@@ -45,6 +45,13 @@ if six.PY3:
 else:
   WITH_LEGACY_WORKFLOW = True
 
+try:
+  from ZPublisher.HTTPResponse import WSGIResponse
+except ImportError: # BBB Zope2
+  IS_ZOPE4 = False
+else: # Zope4
+  IS_ZOPE4 = True
+
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
 # property, and category accessors (similar to getSourceValue().getReference())

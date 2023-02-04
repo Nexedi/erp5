@@ -39,13 +39,16 @@ from six import reraise
 import coverage
 from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5.ERP5Site import getSite
-from Products.ERP5Type import product_path as ERP5Type_product_path
+from Products.ERP5Type import IS_ZOPE4, product_path as ERP5Type_product_path
 from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
 from Acquisition import aq_base
 from importlib import import_module
-from Products.ERP5Type.patches.Restricted import MNAME_MAP
+if IS_ZOPE4:
+  from Products.ERP5Type.patches.Restricted import MNAME_MAP
+else:
+  from Products.ERP5Type.patches.RestrictedZope2 import MNAME_MAP
 from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
 
 class ComponentVersionPackage(ModuleType):

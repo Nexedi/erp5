@@ -2516,7 +2516,11 @@ namedtuple('NamedTuple', 'foo bar')(1, 2)
     """
     from AccessControl.SecurityInfo import (_moduleSecurity,
                                             _appliedModuleSecurity)
-    from Products.ERP5Type.patches.Restricted import MNAME_MAP
+    from Products.ERP5Type import IS_ZOPE4
+    if IS_ZOPE4:
+      from Products.ERP5Type.patches.Restricted import MNAME_MAP
+    else:
+      from Products.ERP5Type.patches.RestrictedZope2 import MNAME_MAP
 
     reference = self._generateReference('TestModuleSecurityInfo')
     component = self._newComponent(reference)
