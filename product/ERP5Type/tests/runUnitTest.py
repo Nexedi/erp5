@@ -656,9 +656,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         ERP5TypeTestLoader._testMethodPrefix = 'dummy_test'
         PortalTestCase.setUp = dummy_setUp
         PortalTestCase.tearDown = dummy_tearDown
-      elif debug:
-        # Hack the profiler to run only specified test methods,
-        # and wrap results when running in debug mode.
+      if debug:
         class DebugTextTestRunner(TestRunner):
           def _makeResult(self):
             result = super(DebugTextTestRunner, self)._makeResult()

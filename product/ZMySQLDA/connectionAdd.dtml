@@ -1,99 +1,104 @@
-<html>
-  <head><title>Add Z MySQL Database Connection</title></head>
-  <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
-  
-    <h2>Add Z MySQL Database Connection</h2>
-    
-    <form action="manage_addZMySQLConnection" method="POST">
-      <table cellspacing="2">
-	<tr>
-	  <th align="LEFT" valign="TOP">Id</th>
-	  <td align="LEFT" valign="TOP">
-            <input type="TEXT" name="id" size="40"
-                value="MySQL_database_connection">
-          </td>
-	</tr>
-	<tr>
-	  <th align="LEFT" valign="TOP"><em>Title</em></th>
-	  <td align="LEFT" valign="TOP">
-            <input type="TEXT" name="title" size="40"
-                value="Z MySQL Database Connection">
-          </td>
-	</tr>
-	<tr>
-	  <th align="LEFT" valign="TOP">
-             Enter a Database Connection String
-	     <a href="#1"><sup>1</sup></a></th>
-	  <td align="LEFT" valign="TOP">
-            <input type="TEXT" name="connection_string" size="40">
-          </td>
-	</tr>
-        <tr>
-          <th align="LEFT" valign="TOP">Create Deferred Connection</th>
-          <td align="LEFT" valign="TOP">
-            <input name="deferred:int" type="CHECKBOX" value="1">
-          </td>
-        </tr>
-	<tr>
-	  <th align="LEFT" valign="TOP">Connect immediately</th>
-	  <td align="LEFT" valign="TOP">
-            <input name="check:int" type="CHECKBOX" value="1" CHECKED>
-          </td>
-	</tr>
-	<tr>
-	  <td></td>
-	  <td><br><input type="SUBMIT" value="Add"></td>
-	</tr>
-      </table>
-    </form>
+<dtml-var manage_page_header>
 
+  <main class="container-fluid">
 
+  <dtml-var "manage_form_title(this(), _, form_title='Add Z MySQL Database Connection')">
 
-<dt><a hname="1"><sup>1</sup></a> Connection Strings</dt>
-<dd>
-<p>
-    The connection string used for Z MySQL Database Connection
-    is of the form:
-<pre>
-    [~] [*lock] [+|-][database][@unix_socket|@host[:port]] [user [password]]
-</pre>
-    or typically:
-<pre>
-       database user password
-</pre>
-    to use a MySQL server on localhost via the standard UNIX socket.
-    Only specify host if the server is on a remote system. You can
-    use a non-standard port, if necessary. Hint: To use a non-standard
-    port on the local system, use 127.0.0.1 for the host instead of
-    localhost.
-<p>
-    IPv6 are supported and must be surrounded with brackets.
-    A UNIX socket absolute path can be specified in place of a TCP address.
-<p>
-    A '-' in front of the database tells ZMySQLDA to not use Zope's
-    Transaction Manager, even if the server supports transactions. A
-    '+' in front of the database tells ZMySQLDA that it must use
-    transactions; an exception will be raised if they are not
-    supported by the server. If neither '-' or '+' are present, then
-    transactions will be enabled if the server supports them.  If you
-    are using non-transaction safe tables (TSTs) on a server that
-    supports TSTs, use '-'. If you require transactions, use '+'. If
-    you aren't sure, don't use either.
-<p>
-    A '~' at the begining of the connection string enables client-server
-    exchange compression (if supported by both client and server).
-<p>
-    *<em>lock</em> means to
-    psuedo-transactional. When the transaction begins, it will acquire
-    a lock on the server named <em>lock</em> (i.e. MYLOCK). When the
-    transaction commits, the lock will be released. If the transaction
-    is aborted and restarted, which can happen due to a ConflictError,
-    you'll get an error in the logs, and inconsistent data. In this
-    respect, it's equivalent to transactions turned off.
-<p>
-    Transactions are highly recommended. Using a named lock in
-    conjunctions with transactions is probably pointless.  
-</dd></dl>
+  <form action="manage_addZMySQLConnection" method="post">
+    <div class="form-group row">
+      <label for="id" class="col-sm-4 col-md-3">
+        Id
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="id" name="id" class="form-control" value="" />
+      </div>
+    </div>
 
-  </body>
-</html>
+    <div class="form-group row">
+      <label for="title" class="col-sm-4 col-md-3">
+        Title
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="title" name="title" type="text" class="form-control" value="" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="connection_string" class="col-sm-4 col-md-3">
+        Database Connection String&nbsp;<a href="#1"><sup>1</sup></a>
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input id="connection_string" name="connection_string" type="text" class="form-control" value="" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="check" class="col-sm-4 col-md-3">
+        Connect immediately
+      </label>
+      <div class="col-sm-8 col-md-9">
+        <input name="check" type="checkbox" value="yes" checked="checked" class="mr-1" />
+        <small>Open the database connection after instantiation.</small>
+      </div>
+    </div>
+
+    <div class="zmi-controls">
+      <input type="submit" class="btn btn-primary" value="Add" />
+    </div>
+  </form>
+
+  <hr class="my-5" />
+
+  <dl>
+    <dt><a name="1"><sup>1</sup></a>
+      Database Connection String
+    </dt>
+    <dd>
+      The connection string used for Z MySQL Database Connection is of the form:
+      <br />
+      <code>[*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]</code>
+      <br />
+      or typically:
+      <br />
+      <code>database user password</code>
+      <br />
+      to use a MySQL server on localhost via the standard UNIX socket.
+      Only specify host if the server is on a remote system. You can
+      use a non-standard port, if necessary. Hint: To use a non-standard
+      port on the local system, use 127.0.0.1 for the host instead of
+      localhost.
+    </dd>
+    <dd>
+      Either a database or a host or both must be specified.
+      If the UNIX socket is in a non-standard location, you can specify
+      the full path to it after the password.
+    </dd>
+    <dd>
+      A '-' in front of the database tells ZMySQLDA to not use Zope's
+      Transaction Manager, even if the server supports transactions. A
+      '+' in front of the database tells ZMySQLDA that it must use
+      transactions; an exception will be raised if they are not
+      supported by the server. If neither '-' or '+' are present, then
+      transactions will be enabled if the server supports them.  If you
+      are using non-transaction safe tables (TSTs) on a server that
+      supports TSTs, use '-'. If you require transactions, use '+'. If
+      you aren't sure, don't use either.
+      </dd>
+    <dd>
+      *<em>lock</em> at the begining of the connection string means to
+      pseudo-transactional. When the transaction begins, it will acquire
+      a lock on the server named <em>lock</em> (i.e. MYLOCK). When the
+      transaction commits, the lock will be released. If the transaction
+      is aborted and restarted, which can happen due to a ConflictError,
+      you'll get an error in the logs, and inconsistent data. In this
+      respect, it's equivalent to transactions turned off.
+    </dd>
+    <dd>
+      Transactions are highly recommended. Using a named lock in
+      conjunctions with transactions is probably pointless.
+    </dd>
+  <dl>
+
+  </main>
+
+  <dtml-var manage_page_footer>

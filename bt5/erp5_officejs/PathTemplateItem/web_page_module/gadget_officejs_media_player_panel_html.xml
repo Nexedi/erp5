@@ -104,25 +104,6 @@
             <value> <string>en</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.46</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
         </item>
@@ -223,9 +204,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -290,9 +273,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -351,9 +336,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>

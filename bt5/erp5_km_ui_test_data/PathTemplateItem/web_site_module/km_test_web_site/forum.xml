@@ -58,9 +58,13 @@
             <value>
               <object>
                 <klass>
-                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
+                  <global name="_reconstructor" module="copy_reg"/>
                 </klass>
-                <tuple/>
+                <tuple>
+                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -310,9 +314,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="6.1" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="6.1" name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global id="6.2" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="6.3" name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -358,6 +364,8 @@
                         <object>
                           <klass> <reference id="6.1"/> </klass>
                           <tuple>
+                            <reference id="6.2"/>
+                            <reference id="6.3"/>
                             <none/>
                           </tuple>
                           <state>
@@ -403,6 +411,8 @@
                         <object>
                           <klass> <reference id="6.1"/> </klass>
                           <tuple>
+                            <reference id="6.2"/>
+                            <reference id="6.3"/>
                             <none/>
                           </tuple>
                           <state>
