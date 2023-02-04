@@ -65,6 +65,7 @@ from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
+from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
 from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
@@ -96,7 +97,6 @@ if IS_ZOPE4:
   from Products.ERP5Type.patches import OFSFolder
   from Products.ERP5Type.patches import OFSItem
   from Products.ERP5Type.patches import PropertySheets
-  from Products.ERP5Type.patches import PythonScript
 else:
   from Products.ERP5Type.patches import CookieCrumblerZope2
   from Products.ERP5Type.patches import ExternalMethodZope2
@@ -104,7 +104,6 @@ else:
   from Products.ERP5Type.patches import OFSFolderZope2
   from Products.ERP5Type.patches import OFSItemZope2
   from Products.ERP5Type.patches import PropertySheetsZope2
-  from Products.ERP5Type.patches import PythonScriptZope2
   from Products.ERP5Type.patches import DTMLMethod
   from Products.ERP5Type.patches import DTMLDocument
   from Products.ERP5Type.patches import ZopePageTemplate
