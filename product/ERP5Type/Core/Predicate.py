@@ -181,7 +181,10 @@ class Predicate(XMLObject):
           try:
             result = method(self)
           except TypeError:
-            if method.__code__.co_argcount != isinstance(method, MethodType):
+            func_code = method.__code__
+            if func_code is None: # BBB Zope2
+              func_code = method.func_code
+            if func_code.co_argcount != isinstance(method, MethodType):
               raise
             # backward compatibilty with script that takes no argument
             warn('Predicate %s uses an old-style method (%s) that does not'
