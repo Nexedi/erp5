@@ -40,7 +40,7 @@ class CausalityAssignmentMovementGroup(MovementGroup):
   portal_type = 'Causality Assignment Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    return self._addCausalityToEdit(movement)
+    return self._addCausalityToEdit(movement, {})
 
   def _separate(self, movement_list, **kw):
     if not movement_list:
@@ -51,13 +51,17 @@ class CausalityAssignmentMovementGroup(MovementGroup):
     return [[movement_list, property_dict]]
 
   def test(self, movement, property_dict, **kw):
-    # We can always update.
+    causality_list = movement.getCausalityList()
+    if causality_list:
+      property_dict = property_dict.copy()
+      for causality in property_dict.get('causality_list', ()):
+        if causality not in causality_list:
+          causality_list.append(causality)
+      property_dict['causality_list'] = causality_list
     return True, property_dict
 
-  def _addCausalityToEdit(self, movement, property_dict=None):
-    if property_dict is None:
-      property_dict = {}
-    causality_list = property_dict.get('causality_list', [])
+  def _addCausalityToEdit(self, movement, property_dict):
+    causality_list = property_dict.setdefault('causality_list', [])
     root_movement = movement.getRootSimulationMovement()
     # 'order' category is deprecated. it is kept for compatibility.
     movement_list = root_movement.getOrderList() or \
@@ -65,5 +69,4 @@ class CausalityAssignmentMovementGroup(MovementGroup):
     for delivery_movement in movement_list:
       if delivery_movement not in causality_list:
         causality_list.append(delivery_movement)
-    property_dict['causality_list'] = causality_list
     return property_dict
