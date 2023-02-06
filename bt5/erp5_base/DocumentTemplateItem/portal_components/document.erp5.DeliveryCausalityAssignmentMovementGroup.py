@@ -36,9 +36,7 @@ class DeliveryCausalityAssignmentMovementGroup(CausalityAssignmentMovementGroup)
   meta_type = 'ERP5 Delivery Causality Assignment Movement Group'
   portal_type = 'Delivery Causality Assignment Movement Group'
 
-  def _addCausalityToEdit(self, movement, property_dict=None):
-    if property_dict is None:
-      property_dict = {}
+  def _addCausalityToEdit(self, movement, property_dict):
     if movement.getParentValue().isRootAppliedRule():
       # Here movement probably comes from invoice rule, in that situation, we
       # are not able to go up and find a delivery.
@@ -51,10 +49,9 @@ class DeliveryCausalityAssignmentMovementGroup(CausalityAssignmentMovementGroup)
     delivery_movement = parent.getDeliveryValue()
     if delivery_movement is not None:
       delivery = delivery_movement.getExplanationValue()
-      causality = property_dict.get('causality_list', [])
+      causality = property_dict.setdefault('causality_list', [])
       delivery_url = delivery.getRelativeUrl()
       if delivery_url not in causality:
         causality.append(delivery_url)
-        property_dict['causality_list'] = causality
     return property_dict
 
