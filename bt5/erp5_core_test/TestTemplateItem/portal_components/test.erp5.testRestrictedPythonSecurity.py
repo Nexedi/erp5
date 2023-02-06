@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type.patches.Restricted import allow_class_attribute
 from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_black_list, series_black_list)
+from Products.ERP5Type import IS_ZOPE2
 from AccessControl import Unauthorized
 from AccessControl.ZopeGuards import Unauthorized as ZopeGuardsUnauthorized
 
@@ -877,8 +878,12 @@ def test_suite():
   add_tests(suite, AccessControl.tests.test_safeiter)
   import AccessControl.tests.test_tainted
   add_tests(suite, AccessControl.tests.test_tainted)
-  import AccessControl.tests.test_safe_formatter
-  add_tests(suite, AccessControl.tests.test_safe_formatter)
+  if IS_ZOPE2: # BBB Zope2
+    import AccessControl.tests.test_formatter # pylint:disable=no-name-in-module,import-error
+    add_tests(suite, AccessControl.tests.test_formatter)
+  else:
+    import AccessControl.tests.test_safe_formatter
+    add_tests(suite, AccessControl.tests.test_safe_formatter)
   import AccessControl.tests.test_userfolder
   add_tests(suite, AccessControl.tests.test_userfolder)
   import AccessControl.tests.test_users

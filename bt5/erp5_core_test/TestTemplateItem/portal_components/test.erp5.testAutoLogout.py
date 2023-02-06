@@ -34,8 +34,10 @@ import unittest
 import urllib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-from ZPublisher.cookie import normalizeCookieParameterName
-
+try:
+  from ZPublisher.cookie import normalizeCookieParameterName
+except ImportError: # BBB Zope2
+  normalizeCookieParameterName = lambda s: s
 
 class TestAuoLogout(ERP5TypeTestCase):
   """

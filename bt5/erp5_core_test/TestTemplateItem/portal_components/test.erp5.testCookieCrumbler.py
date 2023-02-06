@@ -23,7 +23,10 @@ from AccessControl.User import UserFolder
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 from Products.CMFCore.tests.test_CookieCrumbler import makerequest
 from Products.CMFCore.tests.test_CookieCrumbler import CookieCrumblerTests
-from Products.CMFCore.tests.test_CookieCrumbler import normalizeCookieParameterName
+try:
+  from Products.CMFCore.tests.test_CookieCrumbler import normalizeCookieParameterName
+except ImportError: # BBB Zope2
+  normalizeCookieParameterName = lambda s: s
 
 class ERP5CookieCrumblerTests (CookieCrumblerTests):
   """ Modify original CMFCore Cookie Crumbler unit test to test long login """

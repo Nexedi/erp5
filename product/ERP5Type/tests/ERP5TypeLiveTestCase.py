@@ -95,7 +95,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         host, port = self._server_address
         environ={
           'SERVER_NAME': host,
-          'SERVER_PORT': port,
+          'SERVER_PORT': str(port),
         }
       portal = getattr(
         makerequest(aq_base(site.aq_parent), environ=environ),
