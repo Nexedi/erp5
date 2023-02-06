@@ -165,6 +165,8 @@ class Alarm(XMLObject, PeriodicityMixin):
         tag = activate_kw['tag']
         method = getattr(self, method_id)
         func_code = method.__code__
+        if func_code is None: # BBB Zope2
+          func_code = method.func_code
         try:
           has_kw = func_code.co_flags & CO_VARKEYWORDS
         except AttributeError:
