@@ -975,7 +975,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if self._server_address:
         host, port = self._server_address
         environ['SERVER_NAME'] = host
-        environ['SERVER_PORT'] = port
+        environ['SERVER_PORT'] = str(port)
 
       app = makerequest(app, environ=environ)
       registry.register(app)
