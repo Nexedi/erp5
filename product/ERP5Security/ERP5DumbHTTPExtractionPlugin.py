@@ -55,6 +55,9 @@ class ERP5DumbHTTPExtractionPlugin(BasePlugin):
   security.declarePrivate('extractCredentials')
   @UnrestrictedMethod
   def extractCredentials(self, request):
+    # Fix possibly broken _auth
+    if getattr(request, '_auth', '').lower().startswith('basic '):
+      request._auth = request._auth.replace('\n', '')
     return DumbHTTPExtractor().extractCredentials(request);
 
 #Form for new plugin in ZMI
