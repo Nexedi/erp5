@@ -1,5 +1,6 @@
 from AccessControl import ClassSecurityInfo
 from OFS.SimpleItem import SimpleItem
+from Products.ERP5Type import IS_ZOPE4
 
 """
 Very simple volatile-attribute-based caching.
@@ -44,7 +45,10 @@ def volatileCached(self, func):
     self._v_SimpleItem_Item_vCache = cache_dict = {}
   # Use whole func_code as a key, as it is the only reliable way to identify a
   # function.
-  key = func.__code__
+  if IS_ZOPE4:
+    key = func.__code__
+  else: # BBB
+    key = func.func_code
   try:
     return cache_dict[key]
   except KeyError:

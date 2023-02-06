@@ -57,8 +57,11 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import BaseRequest
+from Products.ERP5Type.patches import CookieCrumbler
+from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
+from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
@@ -74,6 +77,8 @@ from Products.ERP5Type.patches import ZODBConnection
 if six.PY2:
   from Products.ERP5Type.patches import ZopePageTemplateUtils
 from Products.ERP5Type.patches import OFSHistory
+from Products.ERP5Type.patches import OFSItem
+from Products.ERP5Type.patches import ExternalMethod
 from Products.ERP5Type.patches import User
 from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
@@ -87,24 +92,12 @@ from Products.ERP5Type.patches import ExceptionFormatter
 if six.PY2:
   # No ZServer, so no webdav
   from Products.ERP5Type.patches import WebDAV
-if IS_ZOPE4:
-  from Products.ERP5Type.patches import CookieCrumbler
-  from Products.ERP5Type.patches import ExternalMethod
-  from Products.ERP5Type.patches import OFSFile
-  from Products.ERP5Type.patches import OFSFolder
-  from Products.ERP5Type.patches import OFSItem
-  from Products.ERP5Type.patches import PropertySheets
-else:
-  from Products.ERP5Type.patches import CookieCrumblerZope2
-  from Products.ERP5Type.patches import ExternalMethodZope2
-  from Products.ERP5Type.patches import OFSFileZope2
-  from Products.ERP5Type.patches import OFSFolderZope2
-  from Products.ERP5Type.patches import OFSItemZope2
-  from Products.ERP5Type.patches import PropertySheetsZope2
+if not IS_ZOPE4:
   from Products.ERP5Type.patches import DTMLMethod
   from Products.ERP5Type.patches import DTMLDocument
   from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import CMFCoreUtils
+from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
