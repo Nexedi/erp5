@@ -42,15 +42,12 @@ from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import Expression
 if IS_ZOPE4:
   from Products.ERP5Type.patches import Restricted
-  from Products.ERP5Type.patches import DA
-  from Products.ERP5Type.patches import sqltest
-  from Products.ERP5Type.patches import sqlvar
 else:
   from Products.ERP5Type.patches import RestrictedZope2
   from Products.ERP5Type.patches import TM
-  from Products.ERP5Type.patches import DAZope2
-  from Products.ERP5Type.patches import sqltestZope2
-  from Products.ERP5Type.patches import sqlvarZope2
+from Products.ERP5Type.patches import DA
+from Products.ERP5Type.patches import sqltest
+from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
 if WITH_LEGACY_WORKFLOW:
