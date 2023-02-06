@@ -495,10 +495,7 @@ import Products.CMFCore.CachingPolicyManager
 _CPMCache = Products.CMFCore.CachingPolicyManager.CPMCache
 if not isinstance(_CPMCache, type):
   class CPMCache(_CPMCache, object):
-    def __init__(self, mapping=None):
-      if mapping is None:
-        mapping = {}
-      _CPMCache.__init__(self, mapping)
+    pass
   CPMCache.__module__ = _CPMCache.__module__
 
   Products.CMFCore.CachingPolicyManager.CPMCache = CPMCache
