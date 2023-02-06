@@ -3302,8 +3302,12 @@ def test_suite():
   import ZPublisher.tests.test_mapply
   add_tests(suite, ZPublisher.tests.test_mapply)
 
-  import ZPublisher.tests.test_pubevents
-  add_tests(suite, ZPublisher.tests.test_pubevents)
+  try:
+    import ZPublisher.tests.test_pubevents
+    add_tests(suite, ZPublisher.tests.test_pubevents)
+  except ImportError: # BBB Zope2
+    import ZPublisher.tests.testpubevents
+    add_tests(suite, ZPublisher.tests.testpubevents)
 
   import ZPublisher.tests.test_utils
   add_tests(suite, ZPublisher.tests.test_utils)

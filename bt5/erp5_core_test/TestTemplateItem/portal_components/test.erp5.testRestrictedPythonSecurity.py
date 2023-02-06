@@ -849,8 +849,12 @@ def test_suite():
   add_tests(suite, AccessControl.tests.test_safeiter)
   import AccessControl.tests.test_tainted
   add_tests(suite, AccessControl.tests.test_tainted)
-  import AccessControl.tests.test_safe_formatter
-  add_tests(suite, AccessControl.tests.test_safe_formatter)
+  try:
+    import AccessControl.tests.test_safe_formatter
+    add_tests(suite, AccessControl.tests.test_safe_formatter)
+  except ImportError: # BBB Zope2
+    import AccessControl.tests.test_formatter
+    add_tests(suite, AccessControl.tests.test_formatter)
   import AccessControl.tests.test_userfolder
   add_tests(suite, AccessControl.tests.test_userfolder)
   import AccessControl.tests.test_users
