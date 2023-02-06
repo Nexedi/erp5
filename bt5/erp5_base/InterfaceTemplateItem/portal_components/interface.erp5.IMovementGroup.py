@@ -37,9 +37,17 @@ class IMovementGroup(Interface):
   """
   def test(document, property_dict, **kw):
     """Returns a tuple of 2 values.
-    First one is True if document contains identical values than some
-    contained property_dict.
-    Second one is a modified version of property_dict.
+    First one is True if processed movements can be built to 'document'.
+    Second one is a dict of properties that are set to 'document' if the
+    latter is actually chosen: it can be 'property_dict', which was the dict
+    returned by 'separate' for the considered movements.
+
+    'property_dict' shall be treated as immutable recursively. A modified
+    copy (deeply if necessary) can be returned.
+
+    A common implementation is to return a 2-tuple whose first value
+    is True when properties of 'document' are same as 'property_dict',
+    then there's usually no property to set and the second value is {}.
 
     TODO:
       - take into account the possibility to use Divergence Testers
