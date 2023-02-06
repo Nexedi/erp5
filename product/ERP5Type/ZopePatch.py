@@ -102,6 +102,8 @@ from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
+if not IS_ZOPE4:
+  from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
 if six.PY2:
   # XXX-zope4py3: urllib2 removed (see future/backports/urllib/request.py)
