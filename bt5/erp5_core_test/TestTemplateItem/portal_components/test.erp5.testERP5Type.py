@@ -3309,8 +3309,11 @@ def test_suite():
     import ZPublisher.tests.testpubevents
     add_tests(suite, ZPublisher.tests.testpubevents)
 
-  import ZPublisher.tests.test_utils
-  add_tests(suite, ZPublisher.tests.test_utils)
+  try:
+    import ZPublisher.tests.test_utils
+    add_tests(suite, ZPublisher.tests.test_utils)
+  except ImportError: # BBB Zope2
+    pass
 
   import ZPublisher.tests.test_xmlrpc
   add_tests(suite, ZPublisher.tests.test_xmlrpc)
