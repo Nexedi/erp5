@@ -43,8 +43,8 @@ class OrderMovementGroup(MovementGroup):
 
   def test(self, movement, property_dict, **kw):
     if set(property_dict['causality_list']).issubset(movement.getCausalityList()):
-      property_dict['causality_list'] = movement.getCausalityList()
-      return True, property_dict
+      return True, dict(property_dict,
+        causality_list=movement.getCausalityList())
     else:
       return False, property_dict
 

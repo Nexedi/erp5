@@ -164,8 +164,14 @@ class MovementGroupNode:
           if not property_list:
             return True, {}
         # else update anyway (eg. CausalityAssignmentMovementGroup etc.)
-      return self._movement_group.test(movement, self._property_dict,
-                                               property_list=property_list)
+      result, property_dict = self._movement_group.test(
+        movement, self._property_dict, property_list=property_list)
+      # The following check is partial because it does not check mutable values
+      # recursively.
+      if property_dict is self._property_dict != property_dict:
+        raise ValueError(
+          "Movement Group must not modify the passed 'property_dict':"
+          " copy it, deeply if necessary, before editing properties")
     else:
       return True, {}
 
