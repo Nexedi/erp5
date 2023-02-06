@@ -1546,7 +1546,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # on REQUEST information when the method was activated.
     request = self.portal.REQUEST
 
-    request.setServerURL('http', 'test.erp5.org', 9080)
+    request.setServerURL('http', 'test.erp5.org', '9080')
     request.other['PARENTS'] = [self.portal.organisation_module]
     request.setVirtualRoot('virtual_root')
 
