@@ -323,18 +323,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     root_group_node.append(movement_list)
     return root_group_node
 
-  def _test(self, instance, movement_group_node_list,
-                    divergence_list):
-    result = True
-    new_property_dict_list = []
-    for movement_group_node in movement_group_node_list:
-      tmp_result, tmp_property_dict = movement_group_node.test(
-        instance, divergence_list)
-      if not tmp_result:
-        result = tmp_result
-      new_property_dict_list.append(tmp_property_dict)
-    return result, new_property_dict_list
-
   @staticmethod
   def _getSortedPropertyDict(property_dict_list):
     # Sort the edit keywords according to the order of their movement
@@ -357,7 +345,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
   def _findUpdatableObject(self, instance_list, movement_group_node_list,
                            divergence_list):
-    instance = None
     if instance_list:
       # we want to check the original delivery first.
       # so sort instance_list by that current is exists or not.
@@ -371,16 +358,19 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           current = current.getParentValue()
       except AttributeError:
         pass
-      for instance_to_update in instance_list:
-        result, property_dict_list = self._test(
-          instance_to_update, movement_group_node_list, divergence_list)
-        if result:
-          instance = instance_to_update
-          break
-    else:
-      property_dict_list = [movement_group_node.getGroupEditDict()
-                            for movement_group_node in movement_group_node_list]
-    return instance, self._getSortedPropertyDict(property_dict_list)
+      for instance in instance_list:
+        property_dict_list = []
+        for movement_group_node in movement_group_node_list:
+          result, property_dict = movement_group_node.test(
+            instance, divergence_list)
+          if not result:
+            break
+          property_dict_list.append(property_dict)
+        else:
+          return instance, self._getSortedPropertyDict(property_dict_list)
+    return None, self._getSortedPropertyDict(
+      movement_group_node.getGroupEditDict()
+      for movement_group_node in movement_group_node_list)
 
   security.declarePrivate('buildDeliveryList')
   @UnrestrictedMethod

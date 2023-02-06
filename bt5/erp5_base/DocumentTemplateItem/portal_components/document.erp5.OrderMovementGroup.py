@@ -42,11 +42,8 @@ class OrderMovementGroup(MovementGroup):
     return {'causality_list': [self._getOrderRelativeUrl(movement)]}
 
   def test(self, movement, property_dict, **kw):
-    if set(property_dict['causality_list']).issubset(movement.getCausalityList()):
-      property_dict['causality_list'] = movement.getCausalityList()
-      return True, property_dict
-    else:
-      return False, property_dict
+    return set(property_dict['causality_list']
+               ).issubset(movement.getCausalityList()), {}
 
   def _getOrderRelativeUrl(self, movement):
     try:
