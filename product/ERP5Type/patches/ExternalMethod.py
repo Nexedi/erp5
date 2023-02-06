@@ -17,7 +17,6 @@ from inspect import getargs
 from types import MethodType
 from Products.ExternalMethod.ExternalMethod import *
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import IS_ZOPE4
 from zLOG import LOG, WARNING
 from . import PatchClass
 from .PythonScript import addGuard
@@ -70,13 +69,7 @@ class _(PatchClass(ExternalMethod)):
                         last_read = None
                         path = getPath('Extensions', self._module,
                                        suffixes=('', 'py', 'pyc'))
-                    if IS_ZOPE4:
-                        if path:
-                            ts = os.stat(path)[stat.ST_MTIME]
-                            if last_read != ts:
-                                self._v_fs = ts, path
-                                reload = True
-                    else: # BBB Zope2
+                    if path:
                         ts = os.stat(path)[stat.ST_MTIME]
                         if last_read != ts:
                             self._v_fs = ts, path
