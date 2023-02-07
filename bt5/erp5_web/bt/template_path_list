@@ -1,5 +1,6 @@
 portal_alarms/fetch_incoming_web_message_list
 portal_categories/caching_policy/**
+portal_categories/display_domain/**
 portal_contribution_registry/web_page_by_content
 portal_contribution_registry/webpage_extension
 portal_contribution_registry/webpage_mimetype

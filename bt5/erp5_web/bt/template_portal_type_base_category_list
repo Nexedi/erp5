@@ -2,6 +2,11 @@ Static Web Section | aggregate
 Static Web Section | caching_policy
 Static Web Site | aggregate
 Static Web Site | caching_policy
+Web Campaign | aggregate
+Web Campaign | causality
+Web Campaign | display_domain
+Web Campaign | follow_up
+Web Campaign | publication_section
 Web Page Module | business_application
 Web Page | predecessor
 Web Page | publication_section
