@@ -137,6 +137,7 @@ url_list = [
   'gadget_erp5_search_editor.js',
   'gadget_erp5_searchfield.html',
   'gadget_erp5_searchfield.js',
+  'gadget_erp5_searchfield.css',
   'gadget_erp5_sort_editor.html',
   'gadget_erp5_sort_editor.js',
   'gadget_global.js',
