@@ -7,6 +7,13 @@
   <item>aggregate</item>
   <item>caching_policy</item>
  </portal_type>
+ <portal_type id="Web Campaign">
+  <item>aggregate</item>
+  <item>causality</item>
+  <item>display_domain</item>
+  <item>follow_up</item>
+  <item>publication_section</item>
+ </portal_type>
  <portal_type id="Web Page">
   <item>predecessor</item>
   <item>publication_section</item>
