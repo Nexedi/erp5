@@ -3286,6 +3286,7 @@ def test_suite():
 
   import ZPublisher.tests.testHTTPResponse
   if not IS_ZOPE4:
+    # ERP5 forces utf-8 responses by default, but we adjust these tests so that they run
     # with iso-8859-15 as default response charset
     def forceISO885915DefaultResponseCharset(method):
       def wrapped(self):
