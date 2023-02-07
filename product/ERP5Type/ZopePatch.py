@@ -30,10 +30,7 @@ else:
   from Products.ERP5Type.patches import WSGIPublisherZope2
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
-if IS_ZOPE4:
-  from Products.ERP5Type.patches import Restricted
-else:
-  from Products.ERP5Type.patches import RestrictedZope2
+from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager

@@ -36,12 +36,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import IS_ZOPE4
-if IS_ZOPE4:
-  from Products.ERP5Type.patches.Restricted import allow_class_attribute
-  from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_black_list, series_black_list)
-else:
-  from Products.ERP5Type.patches.RestrictedZope2 import allow_class_attribute
-  from Products.ERP5Type.patches.RestrictedZope2 import (pandas_black_list, dataframe_black_list, series_black_list)
+from Products.ERP5Type.patches.Restricted import allow_class_attribute
+from Products.ERP5Type.patches.Restricted import (pandas_black_list, dataframe_black_list, series_black_list)
 from AccessControl import Unauthorized
 from AccessControl.ZopeGuards import Unauthorized as ZopeGuardsUnauthorized
 
