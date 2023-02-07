@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
-
+import hashlib
 import httplib
 import urlparse
 import json
 import random
+from base64 import b64encode
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
@@ -214,17 +215,15 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation()
     self.tic()
 
-    urlmd5_2 = 'anotherurlmd5' + str(random.random())
-    sha512_2 = 'anothersha512_2' + str(random.random())
+    sha512_2 = hashlib.sha512(str(random.random())).hexdigest()
     key_2 = 'another_key' + str(random.random())
-    data_list_2 = [json.dumps({'file': self.file_name,
-                      'urlmd5': urlmd5_2,
+    data_list_2 = [json.dumps({
                       'sha512': sha512_2,
                       'creation_date': str(self.creation_date),
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      "User SIGNATURE goes here."]
+                      b64encode("User SIGNATURE goes here.")]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)
     self.tic()

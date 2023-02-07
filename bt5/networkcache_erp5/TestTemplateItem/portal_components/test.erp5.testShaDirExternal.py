@@ -146,14 +146,10 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     self.assertEqual(302, result.status)
 
   def test_external_post_with_wrong_data(self):
-    """
-      The data which is sent to the server must follow a JSON schema.
-      If the data does not follow the schema it must return the error.
-    """
     # Removing a required property
     data = json.loads(self.data)
     data[0] = json.loads(data[0])
-    data[0].pop('file')
+    del data[0]['sha512']
     data[0] = json.dumps(data[0])
     data = json.dumps(data)
 
@@ -165,7 +161,6 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertTrue("Required field 'file' is missing" in data, data)
-    self.assertEqual(500, result.status)
+    self.assertEqual(400, result.status)
     self.assertEqual('text/html; charset=utf-8',
                                          result.getheader("content-type"))
