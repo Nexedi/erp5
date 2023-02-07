@@ -1,0 +1,4 @@
+<tal:block metal:define-macro="master"
+           tal:define="web_campaign python: here.Base_getWebCampaignValue()">
+  <tal:block tal:condition="python: web_campaign" tal:content="structure python: web_campaign.WebCampaign_render()"/>
+</tal:block>
