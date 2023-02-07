@@ -3282,6 +3282,23 @@ def test_suite():
   add_tests(suite, ZPublisher.tests.testHTTPRangeSupport)
 
   import ZPublisher.tests.testHTTPRequest
+  if not IS_ZOPE4:
+    # ERP5 processes requests as utf-8 by default, but we adjust this test assuming that
+    # default is iso-8859-15
+    def forceISO885915DefaultRequestCharset(method):
+      def wrapped(self):
+        from ZPublisher import HTTPRequest as module
+        old_encoding = module.default_encoding
+        module.default_encoding = 'iso-8859-15'
+        try:
+          return method(self)
+        finally:
+          module.default_encoding = old_encoding
+      return wrapped
+    HTTPRequestTests = ZPublisher.tests.testHTTPRequest.HTTPRequestTests
+    for e in dir(HTTPRequestTests):
+      if e.startswith('test_'):
+        setattr(HTTPRequestTests, e, forceISO885915DefaultRequestCharset(getattr(HTTPRequestTests, e)))
   add_tests(suite, ZPublisher.tests.testHTTPRequest)
 
   import ZPublisher.tests.testHTTPResponse
