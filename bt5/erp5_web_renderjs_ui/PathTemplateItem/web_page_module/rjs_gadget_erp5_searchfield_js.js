@@ -283,7 +283,7 @@
         if (evt.target.classList.contains("switch-listbox")) {
           evt.target.classList.add("ui-screen-hidden");
           return gadget.redirect({
-            command: "display",
+            command: "change",
             options: {
               jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type,
@@ -295,7 +295,7 @@
         if (evt.target.classList.contains("switch-graph")) {
           evt.target.classList.add("ui-screen-hidden");
           return gadget.redirect({
-            command: "display",
+            command: "change",
             options: {
               jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type,
