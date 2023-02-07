@@ -27,11 +27,11 @@
 #
 ##############################################################################
 
-import base64
 import hashlib
 import json
 import platform
 import random
+from base64 import b64encode
 from DateTime import DateTime
 
 
@@ -65,14 +65,14 @@ class ShaDirMixin(object):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      "User SIGNATURE goes here."]
+                      b64encode("User SIGNATURE goes here.")]
 
     self.data = json.dumps(self.data_list)
     self.sha512sum = hashlib.sha512(self.data).hexdigest()
 
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:').strip())
+      'Authorization': 'Basic ' + b64encode('ERP5TypeTestCase:'),
     }
 
     module = self.portal.web_site_module
