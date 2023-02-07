@@ -7,6 +7,10 @@
   <item>WebSectionUpgradeConstraint</item>
   <item>WebSitePreference</item>
  </portal_type>
+ <portal_type id="Web Campaign">
+  <item>Task</item>
+  <item>WebCampaign</item>
+ </portal_type>
  <portal_type id="Web Page">
   <item>Reference</item>
   <item>SortIndex</item>
