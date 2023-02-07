@@ -32,6 +32,7 @@ from zope.globalrequest import clearRequest, setRequest
 from zope.globalrequest import getRequest as get_request
 
 # Flag
+from Products.ERP5Type import IS_ZOPE4
 patch = False
 Z_DEBUG_MODE = os.environ.get('Z_DEBUG_MODE') == '1'
 
@@ -68,6 +69,17 @@ def get_new_publish(zope_publish):
 
 if patch is False:
     patch = True
+
+    if not IS_ZOPE4: # BBB Zope2 (ZServer-specific patch)
+      logger.info('Install "Globals.get_request".')
+
+      # Apply the patch
+      from ZPublisher import Publish
+      Publish.publish = get_new_publish(Publish.publish)
+
+      # Add to Globals for backwards compatibility
+      import Globals
+      Globals.get_request = get_request
 
 # PATCH 2: Accept
 #
