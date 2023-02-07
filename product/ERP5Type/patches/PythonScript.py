@@ -22,7 +22,6 @@ from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
-from Products.ERP5Type import IS_ZOPE4
 
 ### Guards
 
@@ -166,12 +165,6 @@ class _(PatchClass(PythonScript)):
   p_.PythonScript_ProxyRole_icon = \
     ImageFile('pyscript_proxyrole.gif', globals())
 
-  if not IS_ZOPE4:
-    # Patch for displaying textearea in full window instead of
-    # remembering a quantity of lines to display in a cookie
-    manage = manage_editDocument = manage_main = ZPythonScriptHTML_editForm = \
-    manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
-    manage_editForm._setName('manage_editForm')
 
   # Guards
 
