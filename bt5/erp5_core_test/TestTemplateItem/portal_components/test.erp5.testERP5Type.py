@@ -3323,6 +3323,10 @@ def test_suite():
   import ZPublisher.tests.testPostTraversal
   add_tests(suite, ZPublisher.tests.testPostTraversal)
 
+  if not IS_ZOPE4:
+    import ZPublisher.tests.testPublish
+    add_tests(suite, ZPublisher.tests.testPublish)
+
   import ZPublisher.tests.test_Converters
   add_tests(suite, ZPublisher.tests.test_Converters)
 
