@@ -27,11 +27,11 @@
 #
 ##############################################################################
 
-import base64
 import hashlib
 import json
 import platform
 import random
+from base64 import b64encode
 from DateTime import DateTime
 
 
@@ -47,8 +47,6 @@ class ShaDirMixin(object):
     self.portal = self.getPortal()
 
     self.key = 'mykey' + str(random.random())
-    self.file_name = 'file.txt'
-    self.urlmd5 = hashlib.md5(self.key).hexdigest()
     self.file_content = 'This is the content.'
     self.file_sha512sum = hashlib.sha512(self.file_content).hexdigest()
     self.distribution = 'pypi'
@@ -58,21 +56,20 @@ class ShaDirMixin(object):
     libc_version = '%s %s' % (platform.libc_ver()[0], platform.libc_ver()[1])
     self.architecture = '%s %s' % (platform.machine(), libc_version)
 
-    self.data_list = [json.dumps({'file': self.file_name,
-                      'urlmd5': self.urlmd5,
+    self.data_list = [json.dumps({
                       'sha512': self.file_sha512sum,
                       'creation_date': str(self.creation_date),
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      "User SIGNATURE goes here."]
+                      b64encode("User SIGNATURE goes here.")]
 
     self.data = json.dumps(self.data_list)
     self.sha512sum = hashlib.sha512(self.data).hexdigest()
 
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:').strip())
+      'Authorization': 'Basic ' + b64encode('ERP5TypeTestCase:'),
     }
 
     module = self.portal.web_site_module
