@@ -488,7 +488,8 @@ CachingPolicyManager._addPolicy = _addPolicy
 CachingPolicyManager.manage_cachingPolicies = DTMLFile( 'cachingPolicies', _dtmldir )
 CachingPolicyManager.getModTimeAndETag = getModTimeAndETag
 
-# Make # Make CachingPolicyManager.CPMCache a new style classes already on
+# BBB Zope2
+# Make CachingPolicyManager.CPMCache a new style classes already on
 # Zope2, so that we can install business templates exported on Zope4 in
 # Zope2 instances.
 import Products.CMFCore.CachingPolicyManager
