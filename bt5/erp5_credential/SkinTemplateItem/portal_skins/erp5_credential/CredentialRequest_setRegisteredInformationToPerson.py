@@ -30,7 +30,7 @@ person_mapping = (
     ('gender', 'gender'),
     ('default_telephone_text', 'default_telephone_text'),
     ('default_mobile_telephone_text', 'default_mobile_telephone_text'),
-    ('default_email_text', 'default_email_text'),
+    ('default_email_coordinate_text', 'default_email_coordinate_text'),
     ('date_of_birth', 'start_date'),
     ('nationality', 'nationality'),
     ('skill_list', 'default_career_skill_list'),
