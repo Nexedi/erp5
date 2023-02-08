@@ -29,6 +29,10 @@
 
 from erp5.component.mixin.TestWorkflowMixin import TestWorkflowMixin
 from Products.ERP5Type.tests.utils import todo_erp5
+from Products.ERP5Type.Tool.WorkflowTool import ExclusionList
+from Products.ERP5Type.Tool.WorkflowTool import sumCatalogResultByWorklist
+from Shared.DC.ZRDB.Results import Results
+from copy import deepcopy
 
 class TestWorklist(TestWorkflowMixin):
 
@@ -162,6 +166,8 @@ class TestWorklist(TestWorkflowMixin):
     # add new workflow compatibility
     workflow_value = self.getWorkflowTool()[workflow_id]
     if workflow_value.__class__.__name__ == 'Workflow':
+      if ("worklist_%s" % worklist_id) in workflow_value.objectIds():
+        workflow_value.manage_delObjects(ids=["worklist_%s" % worklist_id])
       worklist_value = workflow_value.newContent(portal_type='Worklist')
       worklist_value.setReference(worklist_id)
       # Configure new workflow:
@@ -545,3 +551,42 @@ class TestWorklist(TestWorkflowMixin):
 
     finally:
       self.removeWorklist(self.checked_workflow, ['region_worklist'])
+
+  def test_05_sumCatalogResultByWorklist(self):
+    """
+    Check complex cases of criterion ids having sometimes an ExclusionList
+    and sometimes not.
+    """
+    foo_grouped_worklist_dict = {"foo_workflow/validated": {"portal_type": ["Foo"],
+                                                        "simulation_state": ["validated"],
+                                                        "security_uid": [1, 2],
+                                                        "group_security_uid": ExclusionList([5, 6])}}
+    # We have to copy, sumCatalogResultByWorklist alter passed parameters
+    copy_foo_grouped_worklist_dict = deepcopy(foo_grouped_worklist_dict)
+    bar_grouped_worklist_dict = {"bar_workflow/validated": {"portal_type": ["Bar"],
+                                                        "simulation_state": ["validated"],
+                                                        "security_uid": ExclusionList([1, 2]),
+                                                        "group_security_uid": [3, 4]}}
+    copy_bar_grouped_worklist_dict = deepcopy(bar_grouped_worklist_dict)
+    catalog_result = Results(([{'name':'portal_type', 'type': 't'},
+                               {'name':'simulation_state', 'type': 't'},
+                               {'name': 'security_uid', 'type': 'i'},
+                               {'name': 'group_security_uid', 'type': 'i'},
+                               {'name': 'count', 'type': 'i'}],
+                              [['Foo', 'validated', 2, 3, 11],
+                               ['Bar','validated', 3, 4, 12]]))
+    # Validate that the two grouped worklist works individually
+    worklist_result_dict = sumCatalogResultByWorklist(copy_foo_grouped_worklist_dict, catalog_result)
+    self.assertEqual({'foo_workflow/validated': 11}, worklist_result_dict)
+    worklist_result_dict = sumCatalogResultByWorklist(copy_bar_grouped_worklist_dict, catalog_result)
+    self.assertEqual({'bar_workflow/validated': 12}, worklist_result_dict)
+    #And make sure they works also if they are passed together
+    copy_foo_grouped_worklist_dict = deepcopy(foo_grouped_worklist_dict)
+    copy_bar_grouped_worklist_dict = deepcopy(bar_grouped_worklist_dict)
+    full_grouped_worklist_dict = {}
+    full_grouped_worklist_dict.update(**(foo_grouped_worklist_dict))
+    full_grouped_worklist_dict.update(**(bar_grouped_worklist_dict))
+    worklist_result_dict = sumCatalogResultByWorklist(full_grouped_worklist_dict, catalog_result)
+    self.assertEqual({'bar_workflow/validated': 12,
+                      'foo_workflow/validated': 11},
+                     worklist_result_dict)
