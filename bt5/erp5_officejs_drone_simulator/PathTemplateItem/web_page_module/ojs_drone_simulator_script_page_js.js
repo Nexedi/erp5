@@ -517,7 +517,12 @@
               blob = new Blob([log_content], {type: 'text/plain'});
               a = domsugar('a', {
                 text: 'Download Simulation LOG ' + i,
-                download: 'simulation_log_' + i + '.txt',
+                download: 'simulation_log_' + i
+                  + '_speed_' + game_parameters_json.speed
+                  + '_max-roll_' + game_parameters_json.maxRoll
+                  + '_min-pitch_' + game_parameters_json.minPitchAngle
+                  + '_max-pitch_' + game_parameters_json.maxPitchAngle
+                  + '.txt',
                 href: window.URL.createObjectURL(blob)
               });
               log = domsugar('textarea', { value: log_content });
