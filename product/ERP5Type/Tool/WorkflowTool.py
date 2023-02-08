@@ -780,8 +780,10 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         applied_security_criterion_dict = {}
         # TODO: make security criterions be examined in the same order for all
         # worklists if possible at all.
+        security_items = [x for x in six.iteritems(role_column_dict)]
+        security_items.sort(key=lambda x: x[0])
         for security_column_id, security_column_value in \
-            six.iteritems(role_column_dict):
+            security_items:
           valid_criterion_dict, metadata = getValidCriterionDict(
             worklist_match_dict=worklist_match_dict,
             sql_catalog=sql_catalog,
@@ -960,24 +962,26 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   worklist_result_dict = {}
   if len(catalog_result) > 0:
     # Transtype all worklist definitions where needed
-    criterion_id_list = []
+    criterion_id_set = set()
     class_dict = {name: _sql_cast_dict.get(x['type'], _sql_cast_fallback)
       for name, x in six.iteritems(catalog_result.data_dictionary())}
     for criterion_dict in six.itervalues(grouped_worklist_dict):
       for criterion_id, criterion_value_list in six.iteritems(criterion_dict):
         if type(criterion_value_list) is not ExclusionList:
-          criterion_id_list.append(criterion_id)
+          criterion_id_set.add(criterion_id)
           expected_class = class_dict[criterion_id]
           if type(criterion_value_list[0]) is not expected_class:
             criterion_dict[criterion_id] = frozenset([expected_class(x) for x in criterion_value_list])
           elif type(criterion_value_list) is not frozenset:
             criterion_dict[criterion_id] = frozenset(criterion_dict[criterion_id])
+        else:
+          assert criterion_id not in criterion_id_set, "Unexpected mix of ExclusionList and List"
     # Read catalog result and distribute to matching worklists
     for result_line in catalog_result:
       result_count = int(result_line[COUNT_COLUMN_TITLE])
       for worklist_id, criterion_dict in six.iteritems(grouped_worklist_dict):
         is_candidate = True
-        for criterion_id in criterion_id_list:
+        for criterion_id in criterion_id_set:
           criterion_value_set = criterion_dict[criterion_id]
           if result_line[criterion_id] not in criterion_value_set:
             is_candidate = False
