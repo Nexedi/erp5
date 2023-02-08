@@ -3347,7 +3347,7 @@ def test_suite():
     import ZPublisher.tests.test_pubevents
     add_tests(suite, ZPublisher.tests.test_pubevents)
 
-  if not IS_ZOPE2: # BBB Zope2
+  if IS_ZOPE2: # BBB Zope2
     pass
   else:
     import ZPublisher.tests.test_utils
