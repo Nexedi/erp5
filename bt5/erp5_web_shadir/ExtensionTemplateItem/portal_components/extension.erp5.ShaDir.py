@@ -25,10 +25,11 @@
 #
 ##############################################################################
 
-
 import hashlib
 import json
-import validictory
+from base64 import b64decode
+from binascii import a2b_hex
+from zExceptions import BadRequest
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
@@ -39,16 +40,9 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
 
      - POST /<key>
         + parameters required:
-           * file: the name of the file
-           * urlmd5: mdsum of orginal url
            * sha512: the hash (sha512) of the file content
 
-        + parameters not required:
-           * valid-until: the date which the file must be expired
-           * architecture: computer architecture
-
        Used to add information on shadir server.
-
 
      - GET /<key>
        Return list of information for a given key
@@ -83,16 +77,17 @@ def WebSection_setObject(self, id, ob, **kw):
   """
   portal = self.getPortalObject()
   data = self.REQUEST.get('BODY')
-  schema = self.WebSite_getJSONSchema()
-  structure = json.loads(data)
-  # 0 elementh in structure is json in json
-  # 1 elementh is just signature
-  structure = [json.loads(structure[0]), structure[1]]
+  try:
+    metadata, signature = json.loads(data)
+    metadata = json.loads(metadata)
+    # a few basic checks
+    b64decode(signature)
+    if len(a2b_hex(metadata['sha512'])) != 64:
+      raise Exception('sha512: invalid length')
+  except Exception as e:
+    raise BadRequest(str(e))
 
-  validictory.validate(structure, schema)
-
-  file_name = structure[0].get('file', None)
-  expiration_date = structure[0].get('expiration_date', None)
+  expiration_date = metadata.get('expiration_date')
 
   data_set = portal.portal_catalog.getResultValue(portal_type='Data Set',
                                                   reference=id)
@@ -105,7 +100,6 @@ def WebSection_setObject(self, id, ob, **kw):
 
 
   reference = hashlib.sha512(data).hexdigest()
-  ob.setFilename(file_name)
   ob.setFollowUp(data_set.getRelativeUrl())
   ob.setContentType('application/json')
   ob.setReference(reference)
@@ -131,4 +125,3 @@ def WebSection_putFactory(self, name, typ, body):
                                                     filename=name,
                                                     discover_metadata=False)
   return document
-
