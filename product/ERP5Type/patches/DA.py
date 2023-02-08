@@ -24,7 +24,7 @@ try: # BBB Zope 2.12
   from App.Extensions import getBrain
 except ImportError:
   from Shared.DC.ZRDB.DA import getBrain
-from AccessControl import ClassSecurityInfo, getSecurityManager 
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
