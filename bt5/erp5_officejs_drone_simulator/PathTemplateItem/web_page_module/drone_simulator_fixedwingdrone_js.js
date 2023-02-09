@@ -44,12 +44,27 @@ var FixedWingDroneAPI = /** @class */ (function () {
     drone._maxAcceleration = this.getMaxAcceleration();
     drone._minSpeed = this.getMinSpeed();
     drone._maxSpeed = this.getMaxSpeed();
+    if (drone._minSpeed > drone._maxSpeed) {
+      throw new Error('min speed cannot be superior to max speed');
+    }
     drone._speed = drone._targetSpeed = this.getInitialSpeed();
+    if (drone._speed < drone._minSpeed || drone._speed > drone._maxSpeed) {
+      throw new Error('Drone speed must be between min speed and max speed');
+    }
     drone._minPitchAngle = this.getMinPitchAngle();
     drone._maxPitchAngle = this.getMaxPitchAngle();
+    if (drone._minPitchAngle > drone._maxPitchAngle) {
+      throw new Error('min pitch angle cannot be superior to max pitch angle');
+    }
     drone._maxRollAngle = this.getMaxRollAngle();
     drone._maxSinkRate = this.getMaxSinkRate();
+    if (drone._maxSinkRate > drone._maxSpeed) {
+      throw new Error('max sink rate cannot be superior to max speed');
+    }
     drone._maxClimbRate = this.getMaxClimbRate();
+    if (drone._maxClimbRate > drone._maxSpeed) {
+      throw new Error('max climb rate cannot be superior to max speed');
+    }
     drone._maxOrientation = this.getMaxOrientation();
     return;
   };
