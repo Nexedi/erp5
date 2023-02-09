@@ -518,10 +518,10 @@
               a = domsugar('a', {
                 text: 'Download Simulation LOG ' + i,
                 download: 'simulation_log_' + i
-                  + '_speed_' + game_parameters_json.speed
-                  + '_max-roll_' + game_parameters_json.maxRoll
-                  + '_min-pitch_' + game_parameters_json.minPitchAngle
-                  + '_max-pitch_' + game_parameters_json.maxPitchAngle
+                  + '_speed_' + game_parameters_json.drone.speed
+                  + '_max-roll_' + game_parameters_json.drone.maxRoll
+                  + '_min-pitch_' + game_parameters_json.drone.minPitchAngle
+                  + '_max-pitch_' + game_parameters_json.drone.maxPitchAngle
                   + '.txt',
                 href: window.URL.createObjectURL(blob)
               });
