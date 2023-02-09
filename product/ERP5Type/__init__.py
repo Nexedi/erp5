@@ -45,9 +45,8 @@ if six.PY3:
 else:
   WITH_LEGACY_WORKFLOW = True
 
-try:
-  from ZPublisher.HTTPResponse import WSGIResponse
-except ImportError: # BBB Zope2
+from App.version_txt import getZopeVersion
+if  getZopeVersion()[0] == 2: # BBB Zope2
   IS_ZOPE2 = True
 else:
   IS_ZOPE2 = False
