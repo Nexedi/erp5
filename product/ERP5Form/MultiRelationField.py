@@ -80,6 +80,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Update Method',
                              description=(
       "The method to call to set the relation. Required."),
+                             css_class="form-control",
                              default="Base_validateRelation",
                              required=1)
 
@@ -87,6 +88,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Jump Method',
                              description=(
       "The method to call to jump to the relation. Required."),
+                             css_class="form-control",
                              default="Base_jumpToRelatedDocument",
                              required=1)
 
@@ -94,6 +96,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Allow Jump',
                              description=(
       "Do we allow to jump to the relation ?"),
+                             css_class="form-check-input",
                              default=1,
                              required=0)
 
@@ -101,6 +104,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Base Category',
                              description=(
       "The method to call to set the relation. Required."),
+                             css_class="form-control",
                              default="",
                              required=1)
 
@@ -108,6 +112,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Portal Type',
                              description=(
       "The method to call to set the relation. Required."),
+                             css_class="form-control",
                              default="",
                              required=0)
 
@@ -115,6 +120,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Allow Creation',
                              description=(
       "Do we allow to create new objects ?"),
+                             css_class="form-check-input",
                              default=1,
                              required=0)
 
@@ -122,6 +128,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Container Getter Method',
                              description=(
       "The method to call to get a container object."),
+                             css_class="form-control",
                              default="",
                              required=0)
 
@@ -129,6 +136,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Context Getter Method',
                              description=(
       "The method to call to get the context."),
+                             css_class="form-control",
                              default="",
                              required=0)
 
@@ -136,6 +144,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Catalog Index',
                              description=(
       "The method to call to set the relation. Required."),
+                             css_class="form-control",
                              default="",
                              required=1)
 
@@ -145,6 +154,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Relation Update Method',
                              description=(
       "The method to invoke in order to update the relation"),
+                             css_class="form-control",
                              default="",
                              required=0)
 
@@ -152,6 +162,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Relation Form',
                              description=(
       "Form to display relation choices"),
+                             css_class="form-control",
                              default="",
                              required=0)
 
@@ -161,6 +172,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       "The display size in rows of the field. If set to 1, the "
       "widget will be displayed as a drop down box by many browsers, "
       "if set to something higher, a list will be shown. Required."),
+                             css_class="form-control",
                              default=1,
                              required=1)
 
@@ -168,12 +180,14 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                title="Columns",
                                description=(
       "A list of attributes names to display."),
+                             css_class="form-control",
                                default=[],
                                required=0)
 
   sort = fields.ListTextAreaField('sort',
                                title='Default Sort',
                                description=('The default sort keys and order'),
+                               css_class="form-control",
                                default=[],
                                required=0)
 
@@ -181,6 +195,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                title="Parameter List",
                                description=(
       "A list of paramters used for the portal_catalog."),
+                             css_class="form-control",
                                default=[],
                                required=0)
 
@@ -188,12 +203,14 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                title='List Method',
                                description=('The method to use to list'
                                             'objects'),
+                                             css_class="form-control",
                                default='',
                                required=0)
 
   proxy_listbox_ids = fields.ListTextAreaField('proxy_listbox_ids',
                                title='Proxy Listbox IDs',
                                description=('A list of listbox that can be used as proxy'),
+                               css_class="form-control",
                                default='',
                                required=0)
 
