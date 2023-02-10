@@ -129,6 +129,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
@@ -557,6 +558,9 @@
               i += 1;
             }
           }
+        }, function (error) {
+          return gadget.notifySubmitted({message: "Error: " + error.message,
+                                         status: 'error'});
         });
     });
 
