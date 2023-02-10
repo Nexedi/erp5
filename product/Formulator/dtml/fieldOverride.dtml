@@ -1,19 +1,20 @@
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
+<main class="container-fluid">
 
-<p class="form-help">
+<p class="form-help lead">
 Edit <dtml-var meta_type> method overrides here.
 </p>
 
 <form action="manage_override" method="POST">
-<table cellspacing="0" cellpadding="2" border="0">
+<table class="table table-striped table-hover table-sm">
 
 <dtml-in "override_form.get_groups()">
 <dtml-let group=sequence-item fields="override_form.get_fields_in_group(group)">
 
 <dtml-if fields>
 <tr>
-<td colspan="3" class="form-title">
+<td colspan="3" class="font-weight-bold">
   <dtml-var group capitalize> properties
 </td>
 </tr>
@@ -24,19 +25,18 @@ Edit <dtml-var meta_type> method overrides here.
 <dtml-in fields>
 <dtml-let field=sequence-item field_id="field.id"
           value="current_field.get_override(field.id)">
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
+<tr>
+  <td>
     <dtml-var "field.title()">
-    </div>
-    </td>
-    <td align="left" valign="top">
+  </td>
+  <td>
     <dtml-var "field.render(value)">
-    </td>
-    <td valign="top"><div class="form-element">
+  </td>
+  <td>
     <dtml-var "current_field.form.get_field(field.id).meta_type">
-    </div></td>
-  </tr>
+  </td>
+</tr>
+
 </dtml-let>
 </dtml-in>
 </dtml-let>
@@ -44,15 +44,12 @@ Edit <dtml-var meta_type> method overrides here.
 </dtml-let>
 </dtml-in>
 
-  <tr>
-    <td align="left" valign="top">
-    <div class="form-element">
-    <input class="form-element" type="submit" name="submit" 
-     value="Save Changes" /> 
-    </div>
-    </td>
-  </tr>
 </table>
-</form>
 
+<div class="zmi-controls">
+  <input class="btn btn-primary" type="submit" name="submit" value="Save Changes" />
+</div>
+
+</form>
+</main>
 <dtml-var manage_page_footer>

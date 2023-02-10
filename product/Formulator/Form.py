@@ -878,9 +878,12 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         if (len(field_ids) == 1 and
             self.move_field_up(field_ids[0], group)):
             message = "Field %s moved up." % field_ids[0]
+            manage_tabs_type = "success"
         else:
             message = "Can't move field up."
+            manage_tabs_type = "danger"
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -892,9 +895,12 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         if (len(field_ids) == 1 and
             self.move_field_down(field_ids[0], group)):
             message = "Field %s moved down." % field_ids[0]
+            manage_tabs_type = "success"
         else:
             message = "Can't move field down."
+            manage_tabs_type = "danger"
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -909,9 +915,13 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
             message = "Fields %s transferred from %s to %s." % (fields,
                                                                 group,
                                                                 to_group)
+            manage_tabs_type = "success"
         else:
             message = "Can't transfer fields."
+            manage_tabs_type = "danger"
+
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -923,9 +933,12 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         if (group and group != 'Select group' and
             self.add_group(group)):
             message = "Group %s created." % (group)
+            manage_tabs_type = "success"
         else:
             message = "Can't create group."
+            manage_tabs_type = "danger"
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -935,9 +948,12 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         if self.remove_group(group):
             message = "Group %s removed." % (group)
+            manage_tabs_type = "success"
         else:
             message = "Can't remove group."
+            manage_tabs_type = "danger"
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -949,12 +965,16 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
             new_name = REQUEST['new_name'].strip()
             if self.rename_group(group, new_name):
                 message = "Group %s renamed to %s." % (group, new_name)
+                manage_tabs_type = "success"
             else:
                 message = "Can't rename group."
+                manage_tabs_type = "danger"
         else:
             message = "No new name supplied."
+            manage_tabs_type = "danger"
 
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -964,9 +984,12 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         if self.move_group_up(group):
             message = "Group %s moved up." % group
+            manage_tabs_type = "success"
         else:
             message = "Can't move group %s up" % group
+            manage_tabs_type = "danger"
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
     security.declareProtected('Change Formulator Forms',
@@ -976,9 +999,12 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         if self.move_group_down(group):
             message = "Group %s moved down." % group
+            manage_tabs_type = "success"
         else:
             message = "Can't move group %s down" % group
+            manage_tabs_type = "danger"
         return self.formOrder(self, REQUEST,
+                              manage_tabs_type=manage_tabs_type,
                               manage_tabs_message=message)
 
 PythonForm = ZMIForm # NOTE: backwards compatibility

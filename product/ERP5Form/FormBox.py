@@ -93,6 +93,7 @@ class FormBoxWidget(Widget.Widget):
                                 title='Form ID',
                                 description=(
     "ID of the form which must be rendered in this box."),
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
@@ -101,6 +102,7 @@ class FormBoxWidget(Widget.Widget):
                                 title='Context method ID',
                                 description=(
     "ID of the method that returns a context for this box."),
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
@@ -109,6 +111,7 @@ class FormBoxWidget(Widget.Widget):
                                 title='Default',
                                 description=(
     "A default value (not used)."),
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
@@ -179,6 +182,7 @@ class FormBoxValidator(Validator.Validator):
     'validator_form_field_prefix',
     title='Validator Form Field Prefix',
     description= "Field prefix value used when validating fields",
+    css_class="form-control",
     default="my_",
     display_width=40,
     required=1

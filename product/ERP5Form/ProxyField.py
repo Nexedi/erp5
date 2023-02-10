@@ -90,6 +90,7 @@ class ProxyWidget(Widget.Widget):
                                 title='Form ID',
                                 description= \
                                   "ID of the master form.",
+                                css_class="form-control",
                                 default="",
                                 display_width=40,
                                 required=1)
@@ -99,6 +100,7 @@ class ProxyWidget(Widget.Widget):
                                 title='Field ID',
                                 description= \
                                   "ID of the field in the master form.",
+                                css_class="form-control",
                                 default="",
                                 display_width=40,
                                 required=1)

@@ -1,8 +1,8 @@
-<style>form td:not(:last-child) { padding-right: 1em; }</style>
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<p class="form-help">
+<main class="container-fluid">
+<p class="form-help lead">
 Edit <dtml-var meta_type> method TALES expressions here.
 <dtml-if "not isTALESAvailable()"><br>
 <span style="color: #FF0000;">
@@ -14,7 +14,7 @@ This tab can therefore not be used.
 
 
 <form action="manage_tales" method="POST">
-<table cellspacing="0" cellpadding="2" border="0">
+<table class="table table-striped table-hover table-sm">
 
 
   <dtml-in "override_form.get_groups()">
@@ -22,7 +22,7 @@ This tab can therefore not be used.
 
   <dtml-if fields>
   <tr>
-  <td colspan="3" class="form-title">
+  <td colspan="3" class="font-weight-bold">
     Proxy Widget properties
   </td>
   </tr>
@@ -34,17 +34,15 @@ This tab can therefore not be used.
   <dtml-let field=sequence-item field_id="field.id"
             value="current_field.get_tales(field.id)">
     <tr>
-      <td align="left" valign="top">
-      <div class="form-label">
-      <dtml-var "field.title()">
-      </div>
+      <td>
+        <dtml-var "field.title()">
       </td>
-      <td align="left" valign="top">
-      <dtml-var "field.render(value)">
+      <td>
+        <dtml-var "field.render(value)">
       </td>
-      <td><div class="form-element">
-      <dtml-var "current_field.form.get_field(field.id).meta_type">
-      </div></td>
+      <td>
+        <dtml-var "current_field.form.get_field(field.id).meta_type">
+      </td>
     </tr>
   </dtml-let>
   </dtml-in>
@@ -54,17 +52,17 @@ This tab can therefore not be used.
   </dtml-in>
 
     <tr>
-      <td align="left" valign="top">
-        <div class="form-label">Proxy Target</div>
+      <td>
+        <div>Proxy Target</div>
       </td>
-      <td align="left" valign="top">
-        <a href="manage_tales_target">Click to edit the target</a>
+      <td>
+        <a href="manage_tales_target" class="btn btn-info">Click to edit the target</a>
       </td>
       <td></td>
     </tr>
 
 </table>
-<table cellspacing="0" cellpadding="2" border="0">
+<table class="table table-striped table-hover table-sm">
 
 <!-- XXX Loop until find not a proxy field -->
 <dtml-let proxy_field="this()"
@@ -77,7 +75,7 @@ This tab can therefore not be used.
     <dtml-let group=sequence-item fields="form.get_fields_in_group(group)">
       <dtml-if fields>
         <tr>
-          <td colspan="3" class="form-title">
+          <td colspan="4" class="font-weight-bold">
             <dtml-var group capitalize> properties
           </td>
         </tr>
@@ -86,11 +84,10 @@ This tab can therefore not be used.
 
         <dtml-in fields>
 
-
           <dtml-let field=sequence-item field_id="field.id"
                     value="proxy_field.get_recursive_tales(field_id)">
             <tr>
-              <td align="left" valign="top">
+              <td>
                 <dtml-let checkbox_key="'surcharge_%s' % field_id" >
                   <dtml-if "proxy_field.is_delegated(field_id)">
                     <input type="checkbox" 
@@ -105,25 +102,21 @@ This tab can therefore not be used.
                 </dtml-let >
               </td>
 
-
-
-              <td align="left" valign="top">
-              <div class="form-label">
-              <dtml-var "field.title()">
-              </div>
+              <td>
+                <dtml-var "field.title()">
               </td>
               <dtml-if "proxy_field.is_delegated(field_id)">
-                <td align="left" valign="top" class="to_disable delegated">
+                <td class="to_disable delegated">
                 <dtml-var "field.render(value)">
                 </td>
               <dtml-else >
-                <td align="left" valign="top" class="to_disable">
-                <dtml-var "field.render(value)">
+                <td class="to_disable">
+                  <dtml-var "field.render(value)">
                 </td>
               </dtml-if>
-              <td><div class="form-element">
-              <dtml-var "current_field.form.get_field(field.id).meta_type">
-              </div></td>
+              <td>
+                <dtml-var "current_field.form.get_field(field.id).meta_type">
+              </td>
             </tr>
           </dtml-let>
 
@@ -138,12 +131,14 @@ This tab can therefore not be used.
   </dtml-let>
 </table>
 
-    <div class="form-element">
-    <input class="form-element" type="submit" name="submit" 
-     value="Save Changes" /> 
-    </div>
+
+<div class="zmi-controls">
+  <input class="btn btn-primary" type="submit" name="submit" value="Save Changes" />
+</div>
+
 
 </form>
+</main>
 <script type="text/javascript">
 function isClass(object, className) {
         if (object.className != undefined){

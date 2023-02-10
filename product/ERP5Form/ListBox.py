@@ -185,6 +185,7 @@ class ListBoxWidget(Widget.Widget):
                                 title='Lines',
                                 description=(
         "The number of lines of this list. Required."),
+                                css_class="form-control",
                                 default=20,
                                 required=1)
     property_names.append('lines')
@@ -193,6 +194,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Columns",
                                  description=(
         "A list of attributes names to display. Required."),
+                                 css_class="form-control",
                                  default=[],
                                  required=1)
     property_names.append('columns')
@@ -201,6 +203,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="More Columns",
                                  description=(
         "An optional list of attributes names to display."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('all_columns')
@@ -209,6 +212,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="List Style Columns",
                                  description=(
         "An optional list of list style columns to display."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('style_columns')
@@ -217,6 +221,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Searchable Columns",
                                  description=(
         "An optional list of columns to search."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('search_columns')
@@ -225,6 +230,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Sortable Columns",
                                  description=(
         "An optional list of columns to sort."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('sort_columns')
@@ -232,6 +238,7 @@ class ListBoxWidget(Widget.Widget):
     sort = fields.ListTextAreaField('sort',
                                  title='Default Sort',
                                  description=('The default sort keys and order'),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('sort')
@@ -240,6 +247,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='List Method',
                                  description=('The method to use to list '
                                               'objects'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('list_method')
@@ -248,6 +256,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='Count Method',
                                  description=('The method to use to count '
                                               'objects'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('count_method')
@@ -256,6 +265,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='Stat Method',
                                  description=('The method to use to stat '
                                               'objects'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('stat_method')
@@ -264,6 +274,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='Row CSS Method',
                                  description=('The method to set the css '
                                               'class name of a row'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('row_css_method')
@@ -272,6 +283,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='Selection Name',
                                  description=('The name of the selection to '
                                               'store selection parameters'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('selection_name')
@@ -280,6 +292,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Meta Types",
                                  description=(
         "Meta Types of objects to list."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('meta_types')
@@ -288,6 +301,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Portal Types",
                                  description=(
         "Portal Types of objects to list."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('portal_types')
@@ -296,6 +310,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Default Parameters",
                                  description=(
         "Default Parameters for the List Method."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('default_params')
@@ -303,6 +318,7 @@ class ListBoxWidget(Widget.Widget):
     search = fields.CheckBoxField('search',
                                  title='Search Row',
                                  description=('Search Row'),
+                                 css_class="form-check-input",
                                  default=0,
                                  required=0)
     property_names.append('search')
@@ -310,6 +326,7 @@ class ListBoxWidget(Widget.Widget):
     select = fields.CheckBoxField('select',
                                  title='Select Column',
                                  description=('Select Column'),
+                                 css_class="form-check-input",
                                  default=0,
                                  required=0)
     property_names.append('select')
@@ -318,6 +335,7 @@ class ListBoxWidget(Widget.Widget):
                                   title='Anchor Column',
                                   description=(
       'An optional anchor column which can always clickable.'),
+                                  css_class="form-check-input",
                                   default=0,
                                   required=0)
     property_names.append('anchor')
@@ -327,6 +345,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='Hide Rows (On No Search Criterion)',
                                  description=('Hide listbox rows if no search '
                                              'criterion is provided by user'),
+                                 css_class="form-check-input",
                                                 default=0,
                                                 required=0)
     property_names.append('hide_rows_on_no_search_criterion')
@@ -335,6 +354,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Editable Columns",
                                  description=(
         "An optional list of columns which can be modified."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('editable_columns')
@@ -343,6 +363,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Stat Columns",
                                  description=(
         "An optional list of columns which can be used for statistics."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('stat_columns')
@@ -351,6 +372,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="URL Columns",
                                  description=(
         "An optional list of columns which can provide a custom URL."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('url_columns')
@@ -359,6 +381,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Untranslatable Columns",
                                  description=(
         "An optional list of columns titles which should not be translated."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('untranslatable_columns')
@@ -369,6 +392,7 @@ class ListBoxWidget(Widget.Widget):
                                  description=(
         "An optional list of attributes which are set by hidden fields and "
         "which are applied to each editable column."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('global_attributes')
@@ -376,6 +400,7 @@ class ListBoxWidget(Widget.Widget):
     domain_tree = fields.CheckBoxField('domain_tree',
                                  title='Domain Tree',
                                  description=('Selection Tree'),
+                                 css_class="form-check-input",
                                  default=0,
                                  required=0)
     property_names.append('domain_tree')
@@ -384,6 +409,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Domain Root",
                                  description=(
         "A list of domains which define the possible root."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('domain_root_list')
@@ -391,6 +417,7 @@ class ListBoxWidget(Widget.Widget):
     report_tree = fields.CheckBoxField('report_tree',
                                  title='Report Tree',
                                  description=('Report Tree'),
+                                 css_class="form-check-input",
                                  default=0,
                                  required=0)
     property_names.append('report_tree')
@@ -399,6 +426,7 @@ class ListBoxWidget(Widget.Widget):
                                  title="Report Root",
                                  description=(
         "A list of domains which define the possible root."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
     property_names.append('report_root_list')
@@ -407,6 +435,7 @@ class ListBoxWidget(Widget.Widget):
                                 title="Display style",
                                 description=(
         "A list of styles which change the listbox rendering."),
+                                css_class="form-control",
                                 default=[],
                                 required=0)
     property_names.append('display_style_list')
@@ -415,6 +444,7 @@ class ListBoxWidget(Widget.Widget):
                                 title="Default display style",
                                 description=(
         "A default display style for listbox rendering."),
+                                css_class="form-control",
                                 default=DEFAULT_LISTBOX_DISPLAY_STYLE,
                                 required=0)
     property_names.append('default_display_style')
@@ -422,6 +452,7 @@ class ListBoxWidget(Widget.Widget):
     global_search_column = fields.StringField('global_search_column',
                                 title="Global search column",
                                 description=("Global search column make query."),
+                                css_class="form-control",
                                 default=None,
                                 required=0)
     property_names.append('global_search_column')
@@ -429,6 +460,7 @@ class ListBoxWidget(Widget.Widget):
     page_navigation_template = fields.StringField('page_navigation_template',
                                 title="Page Navigation Template",
                                 description=("Page Navigation Template used to render listbox page navigation."),
+                                css_class="form-control",
                                 default=DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE,
                                 required=0)
     property_names.append('page_navigation_template')
@@ -437,6 +469,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='List Action',
                                  description=('The id of the object action'
                                               ' to display the current list'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('list_action')
@@ -445,6 +478,7 @@ class ListBoxWidget(Widget.Widget):
                                  title='Page Template',
                                  description=('The id of a Page Template'
                                               ' to render the ListBox'),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     property_names.append('page_template')
