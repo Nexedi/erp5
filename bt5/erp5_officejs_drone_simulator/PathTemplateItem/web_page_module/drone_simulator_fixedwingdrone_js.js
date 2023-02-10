@@ -469,7 +469,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype._computeVerticalSpeed =
     function (altitude_diff, max_climb_rate, speed, max_pitch) {
-      var maxVerticalSpeed = Math.min(altitude_diff, max_climb_rate);
+      var maxVerticalSpeed = Math.min(altitude_diff, Math.min(max_climb_rate, speed));
       return (this._toDeg(Math.asin(maxVerticalSpeed / speed)) > max_pitch)
         ? speed * Math.sin(this._toRad(max_pitch))
         : maxVerticalSpeed;
