@@ -1322,6 +1322,7 @@
       }
       return result_queue;
     })
+
     .declareMethod('getGraphicType', function getGraphicType() {
       return this.state.graphic_type;
     })
@@ -1405,7 +1406,7 @@
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
         .push(function (result) {
-          if (result.count == 0 && gadget.state.only_graphic) {
+          if (result.count === 0 && gadget.state.only_graphic) {
             return gadget.disableGraphic();
           }
           return gadget.changeState({
