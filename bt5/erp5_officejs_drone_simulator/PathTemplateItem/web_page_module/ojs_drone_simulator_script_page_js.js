@@ -3,7 +3,7 @@
 (function (window, rJS, domsugar, document, Blob) {
   "use strict";
 
-  //Default values
+  //Default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 200,
     SIMULATION_TIME = 1500,
     min_lat = 45.6364,
@@ -12,6 +12,17 @@
     max_lon = 14.2766,
     map_height = 100,
     start_AMSL = 595,
+    DEFAULT_SPEED = 16,
+    MAX_ACCELERATION = 6,
+    MAX_DECELERATION = 1,
+    MIN_SPEED = 12,
+    MAX_SPEED = 26,
+    MAX_ROLL = 35,
+    MIN_PITCH = -20,
+    MAX_PITCH = 25,
+    MAX_CLIMB_RATE = 8,
+    MAX_SINK_RATE = 3,
+  
     INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.2658,
@@ -182,6 +193,7 @@
                 "my_drone_min_speed": {
                   "description": "",
                   "title": "Drone min speed",
+                  "default": MIN_SPEED,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -192,6 +204,7 @@
                 "my_drone_speed": {
                   "description": "",
                   "title": "Drone speed",
+                  "default": DEFAULT_SPEED,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -202,6 +215,7 @@
                 "my_drone_max_speed": {
                   "description": "",
                   "title": "Drone max speed",
+                  "default": MAX_SPEED,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -212,6 +226,7 @@
                 "my_drone_max_acceleration": {
                   "description": "",
                   "title": "Drone max Acceleration",
+                  "default": MAX_ACCELERATION,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -222,6 +237,7 @@
                 "my_drone_max_deceleration": {
                   "description": "",
                   "title": "Drone max Deceleration",
+                  "default": MAX_DECELERATION,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -232,6 +248,7 @@
                 "my_drone_max_roll": {
                   "description": "",
                   "title": "Drone max roll",
+                  "default": MAX_ROLL,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -242,6 +259,7 @@
                 "my_drone_min_pitch": {
                   "description": "",
                   "title": "Drone min pitch",
+                  "default": MIN_PITCH,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -252,6 +270,7 @@
                 "my_drone_max_pitch": {
                   "description": "",
                   "title": "Drone max pitch",
+                  "default": MAX_PITCH,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -262,6 +281,7 @@
                 "my_drone_max_sink_rate": {
                   "description": "",
                   "title": "Drone max sink rate",
+                  "default": MAX_SINK_RATE,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -272,6 +292,7 @@
                 "my_drone_max_climb_rate": {
                   "description": "",
                   "title": "Drone max climb rate",
+                  "default": MAX_CLIMB_RATE,
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -415,10 +436,10 @@
                   ["my_minimum_latitud"], ["my_maximum_latitud"],
                   ["my_minimum_longitud"], ["my_maximum_longitud"],
                   ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
-                  ["my_map_height"], ["my_start_AMSL"]]
+                  ["my_map_height"]]
               ], [
                 "right",
-                [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
                   ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
                   ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
