@@ -1,24 +1,18 @@
-<tr class="list-header">
-  <td align="left" valign="top">
-  <div class="form-label">
+<thead class="thead-light">
+<tr>
+  <th>
   Name
-  </div>
-  </td>
-  <td align="left" valign="top">
-  <div class="form-label">
+  </th>
+  <th class="w-50">
   Value
-  </div>
-  </td>
-  <td align="left" valign="top">
-  <div class="form-label">
+  </th>
+  <th>
   Field
-  </div>
-  </td>
+  </th>
   <dtml-if "_['URL'].endswith(('/manage_main', '/manage_edit'))">
-  <td align="left" valign="top">
-  <div class="form-label">
+  <th>
   Description
-  </div>
-  </td>
+  </th>
   </dtml-if>
 </tr>
+</thead>
