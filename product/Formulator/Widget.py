@@ -100,6 +100,7 @@ class Widget:
                               description=(
       "The title of this field. This is the title of the field that "
       "will appear in the form when it is displayed. Required."),
+                              css_class="form-control",
                               default="",
                               required=1)
 
@@ -109,6 +110,7 @@ class Widget:
       "Description of this field. The description property can be "
       "used to add a short description of what a field does; such as "
       "this one."),
+                                      css_class="form-control",
                                       default="",
                                       width="20", height="3",
                                       required=0)
@@ -118,6 +120,7 @@ class Widget:
                                   description=(
       "The CSS class of the field. This can be used to style your "
       "formulator fields using cascading style sheets. Not required."),
+                                  css_class="form-control",
                                   default="",
                                   required=0)
 
@@ -128,6 +131,7 @@ class Widget:
       "the result dictionary when doing validation, and in the REQUEST "
       "if validation goes to request. This can be used to support names "
       "that cannot be used as Zope ids."),
+                                      css_class="form-control",
                                       default="",
                                       required=0)
 
@@ -137,6 +141,7 @@ class Widget:
       "This field will be on the form, but as a hidden field. The "
       "contents of the hidden field will be the default value. "
       "Hidden fields are not visible but will be validated."),
+                                css_class="form-check-input",
                                 default=0)
 
   # NOTE: for ordering reasons (we want extra at the end),
@@ -149,6 +154,7 @@ class Widget:
       "string will be literally included in the rendered field."
       "This property can be useful if you want "
       "to add an onClick attribute to use with JavaScript, for instance."),
+                              css_class="form-control",
                               default="",
                               required=0)
 
@@ -375,6 +381,7 @@ class TextWidget(Widget):
       "You can place text here that will be used as the default "
       "value of the field, unless the programmer supplies an override "
       "when the form is being generated."),
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
@@ -382,6 +389,7 @@ class TextWidget(Widget):
                                       title='Display width',
                                       description=(
       "The width in characters. Required."),
+                                      css_class="form-control",
                                       default=20,
                                       required=1)
 
@@ -391,6 +399,7 @@ class TextWidget(Widget):
       "The maximum input in characters that the widget will allow. "
       "Required. If set to 0 or is left empty, there is no maximum. "
       "Note that is client side behavior only."),
+                                          css_class="form-control",
                                           default="",
                                           required=0)
 
@@ -400,6 +409,7 @@ class TextWidget(Widget):
       "The type of the input field like 'color', 'date', 'email' etc."
       "Note input types, not supported by old web browsers, will behave "
       "as input type text."),
+                                  css_class="form-control",
                                   default="text",
                                   required=0)
 
@@ -505,6 +515,7 @@ class CheckBoxWidget(Widget):
                                   description=(
       "Default setting of the widget; either checked or unchecked. "
       "(true or false)"),
+                                  css_class="form-check-input",
                                   default=0)
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
@@ -648,6 +659,7 @@ class TextAreaWidget(Widget):
                                    title='Default',
                                    description=(
         "Default value of the text in the widget."),
+                                   css_class="form-control",
                                    default="",
                                    width=20, height=3,
                                    required=0)
@@ -656,6 +668,7 @@ class TextAreaWidget(Widget):
                                 title='Width',
                                 description=(
         "The width (columns) in characters. Required."),
+                                css_class="form-control",
                                 default=40,
                                 required=1)
 
@@ -663,6 +676,7 @@ class TextAreaWidget(Widget):
                                  title="Height",
                                  description=(
         "The height (rows) in characters. Required."),
+                                 css_class="form-control",
                                  default=5,
                                  required=1)
 
@@ -718,6 +732,7 @@ class LinesTextAreaWidget(TextAreaWidget):
                               title='Default',
                               description=(
       "Default value of the lines in the widget."),
+                              css_class="form-control",
                               default=[],
                               width=20, height=3,
                               required=0)
@@ -727,6 +742,7 @@ class LinesTextAreaWidget(TextAreaWidget):
                                       description=(
       "When called with render_view, this separator will be used to "
       "render individual items."),
+                                      css_class="form-control",
                                       width=20,
                                       default='<br />\n',
                                       whitespace_preserve=1,
@@ -818,7 +834,7 @@ class ItemsWidget(Widget):
         "element of the tuple should be the value that will be submitted. "
         "If you want to override this property you will therefore have "
         "to return such a list."),
-
+                                     css_class="form-control",
                                      default=[],
                                      width=20,
                                      height=5,
@@ -835,6 +851,7 @@ class ItemsWidget(Widget):
         "field. This property can be useful if you want "
         "to add a disabled attribute to disable all contained items, for "
         "instance."),
+                               css_class="form-control",
                                default="",
                                required=0)
 
@@ -858,6 +875,7 @@ class SingleItemsWidget(ItemsWidget):
                                 description=(
       "The default value of the widget; this should be one of the "
       "elements in the list of items."),
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
@@ -866,6 +884,7 @@ class SingleItemsWidget(ItemsWidget):
                                     description=(
       "If checked, the first item will always be selected if "
       "no initial default value is supplied."),
+                                    css_class="form-check-input",
                                     default=0)
 
   def render_items(self, field, key, value, REQUEST, render_prefix=None):
@@ -986,6 +1005,7 @@ class MultiItemsWidget(ItemsWidget):
       "The initial selections of the widget. This is a list of "
       "zero or more values. If you override this property from Python "
       "your code should return a Python list."),
+                              css_class="form-control",
                               width=20, height=3,
                               default=[],
                               required=0)
@@ -995,6 +1015,7 @@ class MultiItemsWidget(ItemsWidget):
                                       description=(
       "When called with render_view, this separator will be used to "
       "render individual items."),
+                                      css_class="form-control",
                                       width=20,
                                       default='<br />\n',
                                       whitespace_preserve=1,
@@ -1169,6 +1190,7 @@ class ListWidget(SingleItemsWidget):
         "The display size in rows of the field. If set to 1, the "
         "widget will be displayed as a drop down box by many browsers, "
         "if set to something higher, a list will be shown. Required."),
+                               css_class="form-control",
                                default=5,
                                required=1)
 
@@ -1216,6 +1238,7 @@ class MultiListWidget(MultiItemsWidget):
         "The display size in rows of the field. If set to 1, the "
         "widget will be displayed as a drop down box by many browsers, "
         "if set to something higher, a list will be shown. Required."),
+                               css_class="form-control",
                                default=5,
                                required=1)
 
@@ -1262,6 +1285,7 @@ class RadioWidget(SingleItemsWidget):
                                   description=(
       "Orientation of the radio buttons. The radio buttons will "
       "be drawn either vertically or horizontally."),
+                                  css_class="form-control",
                                   default="vertical",
                                   required=1,
                                   size=1,
@@ -1313,6 +1337,7 @@ class MultiCheckBoxWidget(MultiItemsWidget):
                                    description=(
         "Orientation of the check boxes. The check boxes will "
         "be drawn either vertically or horizontally."),
+                                   css_class="form-control",
                                    default="vertical",
                                    required=1,
                                    size=1,
@@ -1375,6 +1400,7 @@ class DateTimeWidget(Widget):
                                 description=(
       "The day will be hidden on the output. Instead the default"
       "Day will be taken"),
+                                css_class="form-check-input",
                                 default=0)
 
   hidden_day_is_last_day = fields.CheckBoxField('hidden_day_is_last_day',
@@ -1382,16 +1408,19 @@ class DateTimeWidget(Widget):
                                 description=(
       "Defines wether hidden day means, you want the last day of the month"
       "Else it will be the first day"),
+                                css_class="form-check-input",
                                 default=0)
 
   timezone_style = fields.CheckBoxField('timezone_style',
                                     title="Display timezone",
                                     description=("Display timezone"),
+                                    css_class="form-check-input",
                                     default=0)
 
   default = fields.DateTimeField('default',
                                    title="Default",
                                    description=("The default datetime."),
+                                   css_class="form-control",
                                    default=None,
                                    display_style="text",
                                    display_order="ymd",
@@ -1403,12 +1432,14 @@ class DateTimeWidget(Widget):
                                       description=(
       "Default date and time will be the date and time at showing of "
       "the form (if the default is left empty)."),
+                                     css_class="form-check-input",
                                       default=0)
 
   date_separator = fields.StringField('date_separator',
                                       title='Date separator',
                                       description=(
       "Separator to appear between year, month, day."),
+                                      css_class="form-control",
                                       default="/",
                                       required=0,
                                       display_width=2,
@@ -1419,6 +1450,7 @@ class DateTimeWidget(Widget):
                                       title='Time separator',
                                       description=(
       "Separator to appear between hour and minutes."),
+                                      css_class="form-control",
                                       default=":",
                                       required=0,
                                       display_width=2,
@@ -1430,6 +1462,7 @@ class DateTimeWidget(Widget):
                                   description=(
       "The type of input used. 'text' will show the date part "
       "as text, while 'list' will use dropdown lists instead."),
+                                  css_class="form-control",
                                   default="text",
                                   items=[("text", "text"),
                                         ("list", "list"),
@@ -1440,6 +1473,7 @@ class DateTimeWidget(Widget):
                                   title="Default Timezone",
                                   description=(
       "The default timezone display when inputing a new date"),
+                                  css_class="form-control",
                                   default="GMT",
                                   items=gmt_timezones,
                                   required=1,
@@ -1450,6 +1484,7 @@ class DateTimeWidget(Widget):
                                   description=(
       "The order in which date input should take place. Either "
       "year/month/day, day/month/year or month/day/year."),
+                                  css_class="form-control",
                                   default="ymd",
                                   items=[("year/month/day", "ymd"),
                                         ("day/month/year", "dmy"),
@@ -1461,12 +1496,14 @@ class DateTimeWidget(Widget):
                                     title="Display date only",
                                     description=(
       "Display the date only, not the time."),
+                                    css_class="form-check-input",
                                     default=0)
 
   ampm_time_style = fields.CheckBoxField('ampm_time_style',
                                            title="AM/PM time style",
                                            description=(
         "Display time in am/pm format."),
+                                           css_class="form-check-input",
                                            default=0)
 
   property_names = Widget.property_names +\
@@ -1900,6 +1937,7 @@ class FloatWidget(TextWidget):
                                   title="Input style",
                                   description=(
       "The type of float we should enter. "),
+                                  css_class="form-control",
                                   default="-1234.5",
                                   items=[("-1234.5",  "-1234.5"),
                                          ("-1 234.5", "-1 234.5"),
@@ -1914,6 +1952,7 @@ class FloatWidget(TextWidget):
                                       title='Precision',
                                       description=(
       "Number of digits after the decimal point"),
+                                      css_class="form-control",
                                       default='',
                                       required=0)
 

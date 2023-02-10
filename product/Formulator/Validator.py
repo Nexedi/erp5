@@ -28,6 +28,7 @@ class ValidatorBase:
         "a user could submit a field that since got disabled, or "
         "get a validation error as a field suddenly got enabled that "
         "wasn't there when the form was drawn."),
+                                   css_class="form-check-input",
                                    default=1)
 
     editable = fields.CheckBoxField('editable',
@@ -36,6 +37,7 @@ class ValidatorBase:
         "If a field is not editable, then the user can only see"
         "the value. This allows to drawn very different forms depending"
         "on use permissions."),
+                                   css_class="form-check-input",
                                    default=1)
 
     def raise_error(self, error_key, field):
@@ -64,6 +66,7 @@ class Validator(ValidatorBase):
         "arguments to this method. Your method should return true if the "
         "validation succeeded. Anything else will cause "
         "'external_validator_failed' to be raised."),
+                                            css_class="form-control",
                                             default="",
                                             required=0)
 
@@ -88,6 +91,7 @@ class StringBaseValidator(Validator):
                                                description=(
         "Checked if the field preserves whitespace. This means even "
         "just whitespace input is considered to be data."),
+                                               css_class="form-check-input",
                                                default=0)
 
     message_names = Validator.message_names + ['required_not_found']
@@ -123,6 +127,7 @@ class StringValidator(StringBaseValidator):
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
         "8-bit string."),
+                                   css_class="form-check-input",
                                    default=0)
 
     max_length = fields.IntegerField('max_length',
@@ -131,6 +136,7 @@ class StringValidator(StringBaseValidator):
         "The maximum amount of characters that can be entered in this "
         "field. If set to 0 or is left empty, there is no maximum. "
         "Note that this is server side validation."),
+                                     css_class="form-control",
                                      default="",
                                      required=0)
 
@@ -140,6 +146,7 @@ class StringValidator(StringBaseValidator):
         "If checked, truncate the field if it receives more input than is "
         "allowed. The normal behavior in this case is to raise a validation "
         "error, but the text can be silently truncated instead."),
+                                    css_class="form-check-input",
                                     default=0)
 
     message_names = StringBaseValidator.message_names +\
@@ -208,7 +215,8 @@ class PatternValidator(StringValidator):
         "should appear literally in the value in that place. Internal "
         "whitespace is checked as well but may be included in any amount. "
         "Example: 'dddd ee' is a Dutch zipcode (postcode). "
-        "NOTE: currently experimental and details may change!")
+        "NOTE: currently experimental and details may change!"),
+                                 css_class="form-control",
                                  )
 
     message_names = StringValidator.message_names +\
@@ -235,6 +243,7 @@ class BooleanValidator(Validator):
                                 title='Required',
                                 description=(
     "Checked if the field is required; the user has to check."),
+                                css_class="form-check-input",
                                 default=0)
 
     message_names = Validator.message_names + ['required_not_found']
@@ -264,6 +273,7 @@ class IntegerValidator(StringBaseValidator):
                                 description=(
         "The integer entered by the user must be larger than or equal to "
         "this value. If left empty, there is no minimum."),
+                                css_class="form-control",
                                 default="",
                                 required=0)
 
@@ -272,6 +282,7 @@ class IntegerValidator(StringBaseValidator):
                               description=(
         "The integer entered by the user must be smaller than this "
         "value. If left empty, there is no maximum."),
+                              css_class="form-control",
                               default="",
                               required=0)
 
@@ -381,6 +392,7 @@ class LinesValidator(StringBaseValidator):
                                   description=(
       "Checked if the field delivers a unicode string instead of an "
       "8-bit string."),
+                                  css_class="form-check-input",
                                   default=0)
 
   max_lines = fields.IntegerField('max_lines',
@@ -388,6 +400,7 @@ class LinesValidator(StringBaseValidator):
                                   description=(
       "The maximum amount of lines a user can enter. If set to 0, "
       "or is left empty, there is no maximum."),
+                                  css_class="form-control",
                                   default="",
                                   required=0)
 
@@ -396,6 +409,7 @@ class LinesValidator(StringBaseValidator):
                                         description=(
       "The maximum length of a line. If set to 0 or is left empty, there "
       "is no maximum."),
+                                        css_class="form-control",
                                         default="",
                                         required=0)
 
@@ -404,6 +418,7 @@ class LinesValidator(StringBaseValidator):
                                     description=(
       "The maximum total length in characters that the user may enter. "
       "If set to 0 or is left empty, there is no maximum."),
+                                    css_class="form-control",
                                     default="",
                                     required=0)
 
@@ -474,6 +489,7 @@ class SelectionValidator(StringBaseValidator):
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
         "8-bit string."),
+                                   css_class="form-check-input",
                                    default=0)
 
     message_names = StringBaseValidator.message_names +\
@@ -522,6 +538,7 @@ class MultiSelectionValidator(Validator):
                                     description=(
         "Checked if the field is required; the user has to fill in some "
         "data."),
+                                    css_class="form-check-input",
                                     default=1)
 
     unicode = fields.CheckBoxField('unicode',
@@ -529,6 +546,7 @@ class MultiSelectionValidator(Validator):
                                    description=(
         "Checked if the field delivers a unicode string instead of an "
         "8-bit string."),
+                                   css_class="form-check-input",
                                    default=0)
 
     message_names = Validator.message_names + ['required_not_found',
@@ -600,6 +618,7 @@ class FileValidator(Validator):
                                     description=(
                                       "Checked if the field is required; the "
                                       "user has to fill in some data."),
+                                    css_class="form-check-input",
                                     default=0)
     property_names = Validator.property_names + ['required']
 
@@ -640,17 +659,20 @@ class LinkValidator(StringValidator):
                                       title='Check Link',
                                       description=(
         "Check whether the link is not broken."),
+                                      css_class="form-check-input",
                                       default=0)
 
     check_timeout = fields.FloatField('check_timeout',
                                       title='Check Timeout',
                                       description=(
         "Maximum amount of seconds to check link. Required"),
+                                      css_class="form-control",
                                       default=7.0,
                                       required=1)
 
     link_type = fields.ListField('link_type',
                                  title='Type of Link',
+                                 css_class="form-control",
                                  default="external",
                                  size=1,
                                  items=[('External Link', 'external'),
@@ -716,6 +738,7 @@ class DateTimeValidator(Validator):
                                   description=(
       "Checked if the field is required; the user has to enter something "
       "in the field."),
+                                  css_class="form-check-input",
                                   default=1)
 
   start_datetime = fields.DateTimeField('start_datetime',
@@ -723,6 +746,7 @@ class DateTimeValidator(Validator):
                                         description=(
       "The date and time entered must be later than or equal to "
       "this date/time. If left empty, no check is performed."),
+                                        css_class="form-control",
                                         default=None,
                                         input_style="text",
                                         required=0)
@@ -732,6 +756,7 @@ class DateTimeValidator(Validator):
                                       description=(
       "The date and time entered must be earlier than "
       "this date/time. If left empty, no check is performed."),
+                                      css_class="form-control",
                                       default=None,
                                       input_style="text",
                                       required=0)
@@ -741,6 +766,7 @@ class DateTimeValidator(Validator):
                                           description=(
       "Allow time to be left empty. Time will default to midnight "
       "on that date."),
+                                          css_class="form-check-input",
                                           default=0)
 
   message_names = Validator.message_names + ['required_not_found',
