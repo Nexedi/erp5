@@ -1,15 +1,23 @@
-<style>form td:not(:last-child) { padding-right: 1em; }</style>
 <dtml-var manage_page_header>
+<style>
+textarea.form-control {
+  resize: both;
+}
+textarea.form-control, input[type=text].form-control {
+  font-family: monospace;
+}
+</style>
 <dtml-let help_product="'Formulator'" help_topic=meta_type>
 <dtml-var manage_tabs>
 </dtml-let>
 
-<p class="form-help">
+<main class="container-fluid">
+<p class="form-help lead">
 Surcharge <dtml-var meta_type> properties here.
 </p>
 
 <form action="manage_edit" method="POST">
-<table cellspacing="0" cellpadding="2" border="0">
+<table class="table table-striped table-hover table-sm">
 <dtml-let proxy_field="this()"
           current_field="None if proxy_field.getTemplateField() is None else proxy_field.getRecursiveTemplateField()">
 
@@ -20,7 +28,7 @@ Surcharge <dtml-var meta_type> properties here.
 
   <dtml-if fields>
   <tr>
-  <td colspan="3" class="form-title">
+  <td colspan="4" class="font-weight-bold">
     Proxy Widget properties <dtml-if "current_field is not None">(<dtml-var expr="current_field.meta_type">)</dtml-if>
   </td>
   </tr>
@@ -32,20 +40,20 @@ Surcharge <dtml-var meta_type> properties here.
             override="current_field.get_override(field_id)"
             tales="current_field.get_tales(field_id)">
     <tr>
-      <td align="left" valign="top">
-      <div class="form-label">
+      <td>
       <dtml-if "tales or override">[</dtml-if><dtml-var "field.title()"><dtml-if "field.has_value('required') and field.get_value('required')">*</dtml-if><dtml-if "tales or override">]</dtml-if>
-      </div>
       </td>
-      <td align="left" valign="top">
-      <dtml-var "field.render(value)">
+      <td>
+        <dtml-var "field.render(value)">
       </td>
-      <td><div class="form-element">
-      <dtml-var "field.meta_type">
-      </div></td>
-      <td><div class="form-element">
-      <dtml-var "field.get_value('description')">
-      </div></td>
+      <td>
+        <dtml-var "field.meta_type">
+      </td>
+      <td>
+        <p class="form-text">
+          <small><dtml-var "field.get_value('description')"></small>
+        </p>
+      </td>
     </tr>
   </dtml-let>
   </dtml-in>
@@ -55,19 +63,19 @@ Surcharge <dtml-var meta_type> properties here.
   </dtml-in>
 
     <tr>
-      <td align="left" valign="top">
-        <div class="form-label">Proxy Target</div>
+      <td>
+        <div>Proxy Target</div>
       </td>
-      <td align="left" valign="top">
-        <a href="manage_edit_target">Click to edit the target</a>
+      <td>
+        <a href="manage_edit_target" class="btn btn-info">Click to edit the target</a>
       </td>
       <td></td><td></td>
     </tr>
 
 </table>
-<table cellspacing="0" cellpadding="2" border="0">
+<table class="table table-striped table-hover table-sm">
 <!-- Then, display Template Field properties -->
-  
+
   <dtml-if "current_field is not None">
     <dtml-let form="current_field.form">
 
@@ -75,7 +83,7 @@ Surcharge <dtml-var meta_type> properties here.
     <dtml-let group=sequence-item fields="form.get_fields_in_group(group)">
       <dtml-if fields>
         <tr>
-          <td colspan="3" class="form-title">
+          <td colspan="5" class="font-weight-bold">
             <dtml-var group capitalize> properties
           </td>
         </tr>
@@ -84,11 +92,12 @@ Surcharge <dtml-var meta_type> properties here.
 
         <dtml-in fields>
         <dtml-let field=sequence-item field_id="field.id"
+                  is_datetime_field="field.meta_type == 'DateTimeField'"
                   value="proxy_field.get_recursive_orig_value(field_id)"
                   override="proxy_field.get_recursive_override(field_id)"
                   tales="proxy_field.get_recursive_tales(field_id)">
           <tr>
-            <td align="left" valign="top">
+            <td>
               <dtml-let checkbox_key="'surcharge_%s' % field_id" >
                 <dtml-if "proxy_field.is_delegated(field_id)">
                   <input type="checkbox" 
@@ -102,8 +111,7 @@ Surcharge <dtml-var meta_type> properties here.
                 </dtml-if >
               </dtml-let >
             </td>
-            <td align="left" valign="top">
-            <div class="form-label">
+            <td>
               <dtml-if "tales or override">[
                 </dtml-if>
                 <dtml-var "field.title()">
@@ -111,23 +119,24 @@ Surcharge <dtml-var meta_type> properties here.
                 </dtml-if>
                 <dtml-if "tales or override">]
               </dtml-if>
-            </div>
             </td>
             <dtml-if "proxy_field.is_delegated(field_id)">
-              <td align="left" valign="top" class="to_disable delegated">
+              <td class="to_disable delegated <dtml-if is_datetime_field>form-inline</dtml-if>">
               <dtml-var "field.render(value)">
               </td>
             <dtml-else >
-              <td align="left" valign="top" class="to_disable">
+              <td class="to_disable <dtml-if is_datetime_field>form-inline</dtml-if>">
               <dtml-var "field.render(value)">
               </td>
             </dtml-if>
-            <td><div class="form-element">
-            <dtml-var "field.meta_type">
-            </div></td>
-            <td><div class="form-element">
-            <dtml-var "field.get_value('description')">
-            </div></td>
+            <td>
+              <dtml-var "field.meta_type">
+            </td>
+            <td>
+              <p class="form-text">
+                <small><dtml-var "field.get_value('description')"></small>
+              </p>
+            </td>
           </tr>
         </dtml-let>
         </dtml-in>
@@ -140,13 +149,13 @@ Surcharge <dtml-var meta_type> properties here.
   </dtml-let>
 </table>
 
-      <div class="form-element">
-      <input class="form-element" type="submit" name="submit" 
-       value="Save Changes" /> 
-      </div>
+<div class="zmi-controls">
+  <input class="btn btn-primary" type="submit" name="submit" value="Save Changes" />
+</div>
+
 
 </form>
-
+</main>
 <script type="text/javascript">
 function isClass(object, className) {
         if (object.className != undefined){
