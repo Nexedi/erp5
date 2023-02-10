@@ -22,7 +22,6 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-  
     INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.2658,
@@ -274,7 +273,7 @@
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
-                  "key": "drone_max_roll",
+                  "key": "drone_max_pitch",
                   "hidden": 0,
                   "type": "FloatField"
                 },
