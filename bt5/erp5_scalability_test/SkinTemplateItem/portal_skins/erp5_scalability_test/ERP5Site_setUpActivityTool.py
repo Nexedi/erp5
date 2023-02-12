@@ -20,6 +20,7 @@ if distribution_node_list:
 
 if distribution_node is None:
   distribution_node = activity_node_list[0]
+  activity_node_list = activity_node_list[1:]
   # default ERP5 instanciation uses following schema for naming all zope nodes
   # activities-0..9 when number of nodes <= 10
   # activites-01..09 (or n) when number of nodes > 10
