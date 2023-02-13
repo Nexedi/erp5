@@ -32,14 +32,13 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
-from Products.ERP5Type.Cache import CachingMethod
 from zLOG import LOG, INFO
 
 
 @zope.interface.implementer(IConfiguratorItem)
 class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
-  """ This class will install standard ERP5 template from a repository to
-  fake site. """
+  """Install standard ERP5 business template from a repository
+  """
 
   meta_type = 'ERP5 Standard BT5 Configurator Item'
   portal_type = 'Standard BT5 Configurator Item'
@@ -61,29 +60,32 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _checkConsistency(self, fixit=False, **kw):
     template_tool = self.getPortalObject().portal_templates
-    bt5_id = self.getBt5Id().split('.')[0]
+    
+    bt5_id_list = self.getBt5IdList()
+    # BBB this used to be a string property
+    if isinstance(bt5_id_list, str):
+      bt5_id_list = [bt5_id_list]
+    bt5_id_set = {bt.split('.')[0] for bt in bt5_id_list}
 
-    if bt5_id in template_tool.getInstalledBusinessTemplateTitleList():
+    if not bt5_id_set.difference(template_tool.getInstalledBusinessTemplateTitleList()):
       LOG("StandardBT5ConfiguratorItem", INFO,
-        "Business Template already Installed: %s for %s" % (bt5_id, self.getRelativeUrl()))
+        "Business Templates already Installed: %s for %s" % (bt5_id_set, self.getRelativeUrl()))
       return []
 
-    def _getRepositoryBusinessTemplateTitleList():
-      return [bt.getTitle() for bt in \
-              template_tool.getRepositoryBusinessTemplateList()]
-    repository_bt_title_list = CachingMethod(
-                         _getRepositoryBusinessTemplateTitleList,
-                         id='StandardBT5_getRepositoryBusinessTemplateTitleList',
-                         cache_factory='erp5_content_long')()
+    repository_bt_title_set = {bt.getTitle() for bt in \
+              template_tool.getRepositoryBusinessTemplateList()}
 
-    if bt5_id in repository_bt_title_list:
-      if fixit:
-        template_tool.installBusinessTemplateListFromRepository([bt5_id],
-                                  update_catalog=self.getUpdateCatalog(0),
-                                  install_dependency=self.getInstallDependency(1),
-                                  activate=True)
+    not_found_bt_set = bt5_id_set.difference(repository_bt_title_set)
+    if not_found_bt_set:
+      raise ValueError("Business template %s not found on available \
+                        sources." % not_found_bt_set)
+    if fixit:
+      template_tool.installBusinessTemplateListFromRepository(
+          list(bt5_id_set),
+          update_catalog=self.getUpdateCatalog(0),
+          install_dependency=self.getInstallDependency(1),
+          activate=True)
 
-      return [self._createConstraintMessage('%s should be installed' % bt5_id),]
+    return [self._createConstraintMessage('%s should be installed' % bt5_id_list),]
 
-    raise ValueError("The business template %s was not found on available \
-                         sources." % bt5_id)
+
