@@ -19,11 +19,10 @@ bt5_installation_list = ('erp5_dhtml_style',
                          'erp5_osoe_web_renderjs_ui',
                         )
 
-bt5_update_catalog = ('erp5_ingestion_mysql_innodb_catalog', 'erp5_accounting', )
-
-for name in bt5_installation_list:
-  configuration_save.addConfigurationItem("Standard BT5 Configurator Item",
-                                          title=name, bt5_id=name,
-                                          update_catalog=(name in bt5_update_catalog),
-                                          install_dependency=True,
-                                          )
+configuration_save.addConfigurationItem(
+  "Standard BT5 Configurator Item",
+  title="Standard business templates",
+  bt5_id_list=bt5_installation_list,
+  update_catalog=True,
+  install_dependency=True,
+)
