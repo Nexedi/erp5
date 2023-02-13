@@ -194,7 +194,7 @@
                   "title": "Drone min speed",
                   "default": MIN_SPEED,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_min_speed",
                   "hidden": 0,
@@ -205,7 +205,7 @@
                   "title": "Drone speed",
                   "default": DEFAULT_SPEED,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_speed",
                   "hidden": 0,
@@ -216,7 +216,7 @@
                   "title": "Drone max speed",
                   "default": MAX_SPEED,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_speed",
                   "hidden": 0,
@@ -227,7 +227,7 @@
                   "title": "Drone max Acceleration",
                   "default": MAX_ACCELERATION,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_acceleration",
                   "hidden": 0,
@@ -238,7 +238,7 @@
                   "title": "Drone max Deceleration",
                   "default": MAX_DECELERATION,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_deceleration",
                   "hidden": 0,
@@ -249,7 +249,7 @@
                   "title": "Drone max roll",
                   "default": MAX_ROLL,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_roll",
                   "hidden": 0,
@@ -260,7 +260,7 @@
                   "title": "Drone min pitch",
                   "default": MIN_PITCH,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_min_pitch",
                   "hidden": 0,
@@ -271,7 +271,7 @@
                   "title": "Drone max pitch",
                   "default": MAX_PITCH,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_pitch",
                   "hidden": 0,
@@ -282,7 +282,7 @@
                   "title": "Drone max sink rate",
                   "default": MAX_SINK_RATE,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_sink_rate",
                   "hidden": 0,
@@ -293,7 +293,7 @@
                   "title": "Drone max climb rate",
                   "default": MAX_CLIMB_RATE,
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "drone_max_climb_rate",
                   "hidden": 0,
@@ -563,9 +563,15 @@
                 text: 'Download Simulation LOG ' + i,
                 download: 'simulation_log_' + i
                   + '_speed_' + game_parameters_json.drone.speed
+                  + '_min-speed_' + game_parameters_json.drone.minSpeed
+                  + '_max-speed_' + game_parameters_json.drone.maxSpeed
+                  + '_max-accel_' + game_parameters_json.drone.maxAcceleration
+                  + '_max-decel_' + game_parameters_json.drone.maxDeceleration
                   + '_max-roll_' + game_parameters_json.drone.maxRoll
                   + '_min-pitch_' + game_parameters_json.drone.minPitchAngle
                   + '_max-pitch_' + game_parameters_json.drone.maxPitchAngle
+                  + '_max-sink_' + game_parameters_json.drone.maxSinkRate
+                  + '_max-climb_' + game_parameters_json.drone.maxClimbRate
                   + '.txt',
                 href: window.URL.createObjectURL(blob)
               });

@@ -41,8 +41,17 @@ var FixedWingDroneAPI = /** @class */ (function () {
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
     drone._maxDeceleration = this.getMaxDeceleration();
+    if (drone._maxDeceleration <= 0) {
+      throw new Error('max deceleration must be superior to 0');
+    }
     drone._maxAcceleration = this.getMaxAcceleration();
+    if (drone._maxAcceleration <= 0) {
+      throw new Error('max acceleration must be superior to 0');
+    }
     drone._minSpeed = this.getMinSpeed();
+    if (drone._minSpeed <= 0) {
+      throw new Error('min speed must be superior to 0');
+    }
     drone._maxSpeed = this.getMaxSpeed();
     if (drone._minSpeed > drone._maxSpeed) {
       throw new Error('min speed cannot be superior to max speed');
@@ -52,16 +61,31 @@ var FixedWingDroneAPI = /** @class */ (function () {
       throw new Error('Drone speed must be between min speed and max speed');
     }
     drone._minPitchAngle = this.getMinPitchAngle();
+    if (drone._minPitchAngle >= 0) {
+      throw new Error('min pitch angle must be inferior to 0');
+    }
     drone._maxPitchAngle = this.getMaxPitchAngle();
+    if (drone._maxPitchAngle <= 0) {
+      throw new Error('max pitch angle must be superior to 0');
+    }
     if (drone._minPitchAngle > drone._maxPitchAngle) {
       throw new Error('min pitch angle cannot be superior to max pitch angle');
     }
     drone._maxRollAngle = this.getMaxRollAngle();
+    if (drone._maxRollAngle <= 0) {
+      throw new Error('max roll angle must be superior to 0');
+    }
     drone._maxSinkRate = this.getMaxSinkRate();
+    if (drone._maxSinkRate <= 0) {
+      throw new Error('max sink rate must be superior to 0');
+    }
     if (drone._maxSinkRate > drone._maxSpeed) {
       throw new Error('max sink rate cannot be superior to max speed');
     }
     drone._maxClimbRate = this.getMaxClimbRate();
+    if (drone._maxClimbRate <= 0) {
+      throw new Error('max climb rate must be superior to 0');
+    }
     if (drone._maxClimbRate > drone._maxSpeed) {
       throw new Error('max climb rate cannot be superior to max speed');
     }
@@ -417,34 +441,34 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return null;
   };
   FixedWingDroneAPI.prototype.getMinSpeed = function () {
-    return this._flight_parameters.drone.minSpeed || MIN_SPEED;
+    return this._flight_parameters.drone.minSpeed;
   };
   FixedWingDroneAPI.prototype.getMaxSpeed = function () {
-    return this._flight_parameters.drone.maxSpeed || MAX_SPEED;
+    return this._flight_parameters.drone.maxSpeed;
   };
   FixedWingDroneAPI.prototype.getInitialSpeed = function () {
-    return this._flight_parameters.drone.speed || DEFAULT_SPEED;
+    return this._flight_parameters.drone.speed;
   };
   FixedWingDroneAPI.prototype.getMaxDeceleration = function () {
-    return this._flight_parameters.drone.maxDeceleration || MAX_DECELERATION;
+    return this._flight_parameters.drone.maxDeceleration;
   };
   FixedWingDroneAPI.prototype.getMaxAcceleration = function () {
-    return this._flight_parameters.drone.maxAcceleration || MAX_ACCELERATION;
+    return this._flight_parameters.drone.maxAcceleration;
   };
   FixedWingDroneAPI.prototype.getMinPitchAngle = function () {
-    return this._flight_parameters.drone.minPitchAngle || MIN_PITCH;
+    return this._flight_parameters.drone.minPitchAngle;
   };
   FixedWingDroneAPI.prototype.getMaxPitchAngle = function () {
-    return this._flight_parameters.drone.maxPitchAngle || MAX_PITCH;
+    return this._flight_parameters.drone.maxPitchAngle;
   };
   FixedWingDroneAPI.prototype.getMaxRollAngle = function () {
-    return this._flight_parameters.drone.maxRoll || MAX_ROLL;
+    return this._flight_parameters.drone.maxRoll;
   };
   FixedWingDroneAPI.prototype.getMaxSinkRate = function () {
-    return this._flight_parameters.drone.maxSinkRate || MAX_SINK_RATE;
+    return this._flight_parameters.drone.maxSinkRate;
   };
   FixedWingDroneAPI.prototype.getMaxClimbRate = function () {
-    return this._flight_parameters.drone.maxClimbRate || MAX_CLIMB_RATE;
+    return this._flight_parameters.drone.maxClimbRate;
   };
   FixedWingDroneAPI.prototype.getMaxOrientation = function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
