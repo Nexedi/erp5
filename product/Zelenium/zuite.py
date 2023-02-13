@@ -156,7 +156,6 @@ class Zuite( OrderedFolder ):
     security.declareObjectProtected( View )
 
     security.declareProtected( ManageSeleniumTestCases, 'manage_main' )
-    manage_main = DTMLFile( 'suiteMain', _WWW_DIR )
 
     security.declareProtected( View, 'index_html' )
     index_html = PageTemplateFile( 'suiteView', _WWW_DIR )

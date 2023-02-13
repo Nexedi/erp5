@@ -99,6 +99,7 @@ from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
 from Products.ERP5Type.mixin.component import ComponentMixin
+from OFS.Image import File as OFSFile
 
 CACHE_DATABASE_PATH = None
 try:
@@ -878,6 +879,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     # backward-compatibility
     elif six.PY3 and is_text:
       data = data.decode('utf-8')
+    if isinstance(obj, OFSFile) and property_name == "data":
+      data = obj._read_data(data)[0]
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
