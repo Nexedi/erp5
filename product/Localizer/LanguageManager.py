@@ -226,10 +226,6 @@ class LanguageManager(Tabs):
             RESPONSE.redirect("%s/manage_languages" % REQUEST['URL1'])
 
 
-    # Unicode support, custom ZMI
-    manage_page_header = LocalDTMLFile('ui/manage_page_header', globals())
-
-
     ########################################################################
     # Upgrade
     def _needs_upgrade(self):
