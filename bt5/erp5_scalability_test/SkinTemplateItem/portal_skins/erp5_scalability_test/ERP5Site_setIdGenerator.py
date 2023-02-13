@@ -1,4 +1,10 @@
 portal = context.getPortalObject()
 
+portal.sale_order_module.migrateToHBTree()
 portal.sale_order_module.setIdGenerator('_generatePerNodeId')
+portal.sale_packing_list_module.migrateToHBTree()
+portal.sale_packing_list_module.setIdGenerator('_generatePerNodeId')
+portal.portal_simulation.migrateToHBTree()
+portal.portal_simulation.setIdGenerator('_generatePerNodeId')
+portal.person_module.migrateToHBTree()
 portal.person_module.setIdGenerator('_generatePerNodeId')
