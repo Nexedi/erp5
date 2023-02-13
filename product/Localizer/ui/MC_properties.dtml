@@ -3,12 +3,10 @@
 
 
 <p class="form-help">
-  <dtml-gettext>
-    With this form you can change the title of the message catalog. The
-    title also is used as the value of the <tt>Project-Id-Version</tt>
-    field in the header of the PO files, which are generated when the
-    message catalog is exported.
-  </dtml-gettext>
+  With this form you can change the title of the message catalog. The
+  title also is used as the value of the <tt>Project-Id-Version</tt>
+  field in the header of the PO files, which are generated when the
+  message catalog is exported.
 </p>
 
 
@@ -50,12 +48,10 @@
 
 
 <p class="form-help">
-  <dtml-gettext>
-    Besides the title the header of a PO file stores more information;
-    the name and the email address of the last translator, the email
-    address of the translation team and the charset. The forms below
-    let you modify this information for each language.
-  </dtml-gettext>
+  Besides the title the header of a PO file stores more information;
+  the name and the email address of the last translator, the email
+  address of the translation team and the charset. The forms below
+  let you modify this information for each language.
 </p>
 
 <blockquote>
