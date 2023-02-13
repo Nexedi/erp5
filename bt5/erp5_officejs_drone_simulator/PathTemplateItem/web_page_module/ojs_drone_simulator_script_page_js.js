@@ -563,9 +563,15 @@
                 text: 'Download Simulation LOG ' + i,
                 download: 'simulation_log_' + i
                   + '_speed_' + game_parameters_json.drone.speed
+                  + '_min-speed_' + game_parameters_json.drone.minSpeed
+                  + '_max-speed_' + game_parameters_json.drone.maxSpeed
+                  + '_max-accel_' + game_parameters_json.drone.maxAcceleration
+                  + '_max-decel_' + game_parameters_json.drone.maxDeceleration
                   + '_max-roll_' + game_parameters_json.drone.maxRoll
                   + '_min-pitch_' + game_parameters_json.drone.minPitchAngle
                   + '_max-pitch_' + game_parameters_json.drone.maxPitchAngle
+                  + '_max-sink_' + game_parameters_json.drone.maxSinkRate
+                  + '_max-climb_' + game_parameters_json.drone.maxClimbRate
                   + '.txt',
                 href: window.URL.createObjectURL(blob)
               });
