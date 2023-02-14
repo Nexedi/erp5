@@ -417,34 +417,34 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return null;
   };
   FixedWingDroneAPI.prototype.getMinSpeed = function () {
-    return this._flight_parameters.drone.minSpeed || MIN_SPEED;
+    return this._flight_parameters.drone.minSpeed;
   };
   FixedWingDroneAPI.prototype.getMaxSpeed = function () {
-    return this._flight_parameters.drone.maxSpeed || MAX_SPEED;
+    return this._flight_parameters.drone.maxSpeed;
   };
   FixedWingDroneAPI.prototype.getInitialSpeed = function () {
-    return this._flight_parameters.drone.speed || DEFAULT_SPEED;
+    return this._flight_parameters.drone.speed;
   };
   FixedWingDroneAPI.prototype.getMaxDeceleration = function () {
-    return this._flight_parameters.drone.maxDeceleration || MAX_DECELERATION;
+    return this._flight_parameters.drone.maxDeceleration;
   };
   FixedWingDroneAPI.prototype.getMaxAcceleration = function () {
-    return this._flight_parameters.drone.maxAcceleration || MAX_ACCELERATION;
+    return this._flight_parameters.drone.maxAcceleration;
   };
   FixedWingDroneAPI.prototype.getMinPitchAngle = function () {
-    return this._flight_parameters.drone.minPitchAngle || MIN_PITCH;
+    return this._flight_parameters.drone.minPitchAngle;
   };
   FixedWingDroneAPI.prototype.getMaxPitchAngle = function () {
-    return this._flight_parameters.drone.maxPitchAngle || MAX_PITCH;
+    return this._flight_parameters.drone.maxPitchAngle;
   };
   FixedWingDroneAPI.prototype.getMaxRollAngle = function () {
-    return this._flight_parameters.drone.maxRoll || MAX_ROLL;
+    return this._flight_parameters.drone.maxRoll;
   };
   FixedWingDroneAPI.prototype.getMaxSinkRate = function () {
-    return this._flight_parameters.drone.maxSinkRate || MAX_SINK_RATE;
+    return this._flight_parameters.drone.maxSinkRate;
   };
   FixedWingDroneAPI.prototype.getMaxClimbRate = function () {
-    return this._flight_parameters.drone.maxClimbRate || MAX_CLIMB_RATE;
+    return this._flight_parameters.drone.maxClimbRate;
   };
   FixedWingDroneAPI.prototype.getMaxOrientation = function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
