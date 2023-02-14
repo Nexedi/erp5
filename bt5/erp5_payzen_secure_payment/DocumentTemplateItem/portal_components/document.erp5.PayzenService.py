@@ -8,6 +8,7 @@ import base64
 import datetime
 import os
 import time
+import six
 import requests
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 
@@ -153,12 +154,9 @@ class PayzenService(XMLObject, PayzenREST):
       vads_version=self.getPayzenVadsVersion()
     )
     # fetch all prepared vads_ values and remove them from dict
-    signature = self._getSignature(payzen_dict, sorted(payzen_dict.keys()))
+    signature = self._getSignature(payzen_dict, sorted(six.iterkeys(payzen_dict)))
     payzen_dict['signature'] = signature
-    field_list = []
-    for k,v in payzen_dict.iteritems():
-      field_list.append((k, v))
-    return field_list
+    return sorted(six.iteritems(payzen_dict))
 
   def navigate(self, page_template, payzen_dict, REQUEST=None, **kw):
     """Returns configured template used to do the payment"""
