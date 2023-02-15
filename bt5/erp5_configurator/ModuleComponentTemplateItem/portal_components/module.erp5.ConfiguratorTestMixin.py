@@ -163,7 +163,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     standard_bt5_config_save = business_configuration['1']
     self.assertEqual(
       set(self.standard_bt5_list),
-      set(sum(x.getBt5IdList() for x in standard_bt5_config_save.contentValues(), [])))
+      set(sum((x.getBt5IdList() for x in standard_bt5_config_save.contentValues()), [])))
 
     # third one: we create a business template to store customer configuration
     custom_bt5_config_save = business_configuration['2']
