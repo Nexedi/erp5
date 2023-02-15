@@ -1,5 +1,9 @@
 Releases
 ===
+1.0.307, 10.02.2023
+---
+  - various small improvements 
+
 1.0.181, 17.03.2021
 ---
   - added Selenium test for tutorial 
