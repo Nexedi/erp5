@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=form</td>
+  <td>${base_url}/ERP5Site_createWebJSStyleZuiteTestData?configuration=form_and_default_page</td>
   <td></td>
 </tr>
 <tr>
@@ -28,7 +28,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/erp5_web_js_style_test_site</td>
+  <td>${base_url}/web_site_module/erp5_web_js_style_test_site/erp5_web_js_style_test_section_form/</td>
   <td></td>
 </tr>
 <tr>
@@ -67,7 +67,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_form/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
@@ -78,12 +78,12 @@
 <tr>
   <td>assertValue</td>
   <td>field_your_id</td>
-  <td>erp5_web_js_style_test_site</td>
+  <td>erp5_web_js_style_test_frontpage</td>
 </tr>
 <tr>
   <td>assertValue</td>
   <td>field_your_title</td>
-  <td>Demo Form</td>
+  <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
@@ -153,7 +153,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_form/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
@@ -239,7 +239,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/jsstyle_demo.html')]</td>
+  <td>//p[@id='gadget_style_url'][contains(text(), 'erp5_web_js_style_test_site/erp5_web_js_style_test_section_form/jsstyle_demo.html')]</td>
   <td></td>
 </tr>
 <tr>
@@ -251,12 +251,12 @@
 <tr>
   <td>assertValue</td>
   <td>field_your_id</td>
-  <td>erp5_web_js_style_test_site</td>
+  <td>erp5_web_js_style_test_frontpage</td>
 </tr>
 <tr>
   <td>assertValue</td>
   <td>field_your_title</td>
-  <td>Demo Form</td>
+  <td></td>
 </tr>
 
 <tr>
