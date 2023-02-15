@@ -39,91 +39,91 @@
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:title' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:title' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:image' and @content='favicon.ico']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:image' and @content='favicon.ico']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='application-name' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:site_name' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='description' and @content='this is a form description']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:description' and @content='this is a form description']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:description' and @content='this is a form description']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='keywords' and @content='keyword1,keyword2']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:type' and @content='website']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:locale' and @content='en_US']</td>
   <td></td>
 </tr>
@@ -141,91 +141,91 @@
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site/fr']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:title' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:title' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:image' and @content='favicon.ico']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:image' and @content='favicon.ico']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='application-name' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:site_name' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='description' and @content='this is a form description']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:description' and @content='this is a form description']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:description' and @content='this is a form description']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='keywords' and @content='keyword1,keyword2']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:type' and @content='website']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:locale' and @content='fr_FR']</td>
   <td></td>
 </tr>
@@ -243,62 +243,62 @@
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:url' and @content='${base_url}/web_site_module/erp5_web_js_style_test_site']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:title' and @content='Demo Section 1']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:title' and @content='Demo Section 1']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:image' and @content='favicon.ico']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='twitter:image' and @content='favicon.ico']</td>
   <td></td>
 </tr>
 
  <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@name='application-name' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:site_name' and @content='Meta Tag Form']</td>
   <td></td>
 </tr>
 
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//meta[@property='og:type' and @content='website']</td>
   <td></td>
 </tr>

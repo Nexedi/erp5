@@ -92,7 +92,7 @@
 
     <form id="main_form"
           tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
-          action url;
+          action python: '%s/' % web_section.absolute_url() if request.get('is_web_section_default_document', False) else url;
           method python:str(path('form/method | string:post')).lower()">
 
       <input type="hidden" name="dialog_method" tal:attributes="value form/action" />

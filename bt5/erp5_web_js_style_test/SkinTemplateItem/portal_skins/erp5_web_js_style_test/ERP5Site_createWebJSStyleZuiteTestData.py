@@ -183,6 +183,12 @@ configuration_dict = {
     'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
     'site_map_section_parent': True
   },
+  'nostyleform_and_default_page': {
+    'title': "No Style Form",
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True,
+    'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id)
+  },
   'section': {
     'configuration_style_gadget_url': "jsstyle_demo.html",
     'title': "Demo Style",
@@ -254,6 +260,13 @@ configuration_dict = {
     'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
     'site_map_section_parent': True
   },
+  'form_and_default_page': {
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'title': "Demo Form",
+    'custom_render_method_id': 'WebSite_viewJSStyleTestDialog',
+    'site_map_section_parent': True,
+    'aggregate_value': module.restrictedTraverse(web_page_frontend_en_id)
+  },
   'empty_sitemap': {
     'title': 'Empty Sitemap',
     'configuration_style_gadget_url': "jsstyle_demo.html"
@@ -298,12 +311,13 @@ web_site.newContent(
   visible=True
 )
 
-if configuration == 'form':
+if configuration in ('form', 'form_and_default_page'):
   web_site.newContent(
     portal_type=web_section_portal_type,
     id='%sform' % web_section_id_prefix,
     title="Demo Section Form",
-    custom_render_method_id='WebSite_viewJSStyleTestDialog'
+    custom_render_method_id='WebSite_viewJSStyleTestDialog',
+    aggregate_value=web_site.getAggregateValue()
   )
 
 return "Web Site created."
