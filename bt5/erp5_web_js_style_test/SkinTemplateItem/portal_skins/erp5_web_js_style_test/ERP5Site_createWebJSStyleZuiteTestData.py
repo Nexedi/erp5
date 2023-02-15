@@ -199,6 +199,11 @@ configuration_dict = {
     'title': "Not Loading Style",
     'site_map_section_parent': True
   },
+  'not_rendering': {
+    'configuration_style_gadget_url': "jsstyle_demo_not_rendering.html",
+    'title': "Not Rendering Style",
+    'site_map_section_parent': True
+  },
   'favicon': {
     'title': 'Favicon',
     'configuration_favicon_url': "favicon.ico",

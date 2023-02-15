@@ -37,10 +37,20 @@
   <td>//head/link[@rel='prerender' and @href='jsstyle_demo.html']</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>css=html[hidden]</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>waitForElementPresent</td>
   <td>//header/h1[text()='JS Style Demo']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>css=html[hidden]</td>
   <td></td>
 </tr>
 <tr>

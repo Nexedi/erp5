@@ -453,6 +453,8 @@
           if (style_css_url === null) {
             // Compatibility with old html format (like in google cache)
             gadget.element.innerHTML = parsed_content.original_content;
+            // Ensure the page is visible in case of error
+            showPage();
             return;
           }
           return new RSVP.Queue(rJS.declareCSS(style_css_url, document.head))
@@ -460,6 +462,8 @@
               // Set again the page content after the css is loaded
               // to prevent ugly rendering
               gadget.element.innerHTML = parsed_content.original_content;
+              // Ensure the page is visible in case of error
+              showPage();
             });
         });
     });
