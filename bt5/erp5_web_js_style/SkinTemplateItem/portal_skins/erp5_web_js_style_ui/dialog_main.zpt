@@ -27,7 +27,7 @@
 <!DOCTYPE html>
 <html tal:attributes="lang current_language">
   <head>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/ https://video.app.nexedi.net/videos/embed/" />
   <meta name="referrer" content="same-origin">
   <meta http-equiv="Feature-Policy" content="accelerometer 'none'; ambient-light-sensor 'none'; autoplay: 'none'; battery: 'none'; camera: 'none'; display-capture: 'none'; document-domain: 'none'; encrypted-media: 'none'; geolocation: 'none'; gyroscope: 'none'; magnetometer: 'none'; microphone: 'none'; payment: 'none'; usb: 'none'" />
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
