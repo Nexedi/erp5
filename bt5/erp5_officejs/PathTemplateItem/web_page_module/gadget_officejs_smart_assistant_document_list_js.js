@@ -79,7 +79,7 @@
           var column_list = [
             ['title', 'Title'],
             ['modification_date', 'Modification Date'],
-            ['validation_state', 'State'],
+            ['state', 'State'],
             ['portal_type', 'Smart Assistant Type']
           ],
 
