@@ -25,7 +25,7 @@
         .push(function (result) {
           var i, date, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
-            result.data.rows[i].value.validation_state = {
+            result.data.rows[i].value.status = {
               field_gadget_param: {
                 description: "",
                 title: "State",
@@ -39,7 +39,7 @@
                   gadget_to_check_url: result.data.rows[i].value.url,
                   summary: true
                 }),
-                key: "field_my_validation_state",
+                key: "field_my_status",
                 hidden: 0,
                 type: "GadgetField"
               }
@@ -78,7 +78,7 @@
         .push(function (form_gadget) {
           var column_list = [
             ['url', 'Gadget'],
-            ['validation_state', 'State']
+            ['status', 'State']
           ];
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
@@ -107,13 +107,13 @@
                 }
               }
               },
-            form_definition: {
-              group_list: [[
-                "bottom",
-                [["listbox"]]
-              ]]
-            }
-          });
+              form_definition: {
+                group_list: [[
+                  "bottom",
+                  [["listbox"]]
+                ]]
+              }
+            });
         });
     });
 
