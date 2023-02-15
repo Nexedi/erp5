@@ -13,14 +13,19 @@ This tab can therefore not be used.
 </p>
 
 <form action="manage_tales" method="POST">
+<table class="table table-striped table-hover table-sm">
 
 <dtml-in "override_form.get_groups()">
 <dtml-let group=sequence-item fields="tales_form.get_fields_in_group(group)">
 
 <dtml-if fields>
-<h2>
+<tr>
+<td colspan="3" class="font-weight-bold">
   <dtml-var group capitalize> properties
-</h2>
+</td>
+</tr>
+
+<dtml-var fieldListHeader>
 
 
 <dtml-let current_field="this()">
@@ -28,17 +33,18 @@ This tab can therefore not be used.
 <dtml-let field=sequence-item field_id="field.id"
           value="current_field.get_tales(field.id)">
 
-<div class="form-group row">
-  <label
-    for='<dtml-var expr="field.id">'
-    class="form-label col-sm-3 col-md-2"><dtml-var "field.title()"></label>
-  <div class="col-sm-9 col-md-10">
+<tr>
+  <td>
+    <dtml-var "field.title()">
+  </td>
+  <td>
     <dtml-var "field.render(value)">
-    <small class="form-text text-muted">
-      <dtml-var "current_field.form.get_field(field.id).meta_type">
-    </small>
-  </div>
-</div>
+  </td>
+  <td>
+    <dtml-var "current_field.form.get_field(field.id).meta_type">
+  </td>
+</tr>
+
 </dtml-let>
 </dtml-in>
 </dtml-let>
@@ -47,6 +53,7 @@ This tab can therefore not be used.
 </dtml-in>
 </div>
 
+</table>
 
 <div class="zmi-controls">
   <input class="btn btn-primary" type="submit" name="submit" value="Save Changes" />
