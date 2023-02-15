@@ -489,14 +489,27 @@ else:
   allow_type(pd.DatetimeIndex)
   allow_type(pd.MultiIndex)
   allow_type(pd.Index)
-  allow_type(pd.indexes.range.RangeIndex)
-  allow_type(pd.indexes.numeric.Int64Index)
+  try:                    # for pandas >= 0.20.x
+    allow_type(pd.RangeIndex)
+  except AttributeError:  # BBB for pandas < 0.20.x
+    allow_type(pd.indexes.range.RangeIndex)
+  try:                    # for pandas >= 0.20.x
+    allow_type(pd.Int64Index)
+  except AttributeError:  # BBB for pandas < 0.20.x
+    allow_type(pd.indexes.numeric.Int64Index)
   allow_type(pd.core.groupby.DataFrameGroupBy)
   allow_type(pd.core.groupby.SeriesGroupBy)
-
-  allow_type(pd.tseries.resample.TimedeltaIndexResampler)
-  allow_type(pd.tseries.resample.DatetimeIndexResampler)
-  allow_type(pd.tseries.resample.PeriodIndexResampler)
+  try:                    # for pandas >= 0.20.x
+    from pandas.core.resample import (
+      TimedeltaIndexResampler, DatetimeIndexResampler, PeriodIndexResampler
+    )
+  except ImportError:  # BBB for pandas < 0.20.x
+    from pandas.tseries.resample import (
+      TimedeltaIndexResampler, DatetimeIndexResampler, PeriodIndexResampler
+    )
+  allow_type(TimedeltaIndexResampler)
+  allow_type(DatetimeIndexResampler)
+  allow_type(PeriodIndexResampler)
 
   allow_class(pd.DataFrame)
 
@@ -517,10 +530,15 @@ else:
   ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
     pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
 
+  try:                    # for pandas >= 0.20.x
+    pd_DatetimeIndex = pd.DatetimeIndex
+  except AttributeError:  # BBB for pandas < 0.20.x
+    pd_DatetimeIndex = pd.tseries.index.DatetimeIndex
+
   safetype.update(dict.fromkeys((
     pd.DataFrame,
     pd.Series,
-    pd.tseries.index.DatetimeIndex,
+    pd_DatetimeIndex,
     pd.core.indexing._iLocIndexer,
     pd.core.indexing._LocIndexer,
     pd.MultiIndex,
