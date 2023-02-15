@@ -67,7 +67,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_state</string>
+                      </list>
                     </value>
                 </item>
                 <item>
