@@ -60,9 +60,10 @@ def createExpressionContext(sci):
         'status':       sci.status,
         'kwargs':       sci.kwargs,
         'workflow':     wf,
-        # Patch:
-        'scripts':      {s.getReference(): s for s in wf.getScriptValueList()},
         }
+    # Patch:
+    if WITH_LEGACY_WORKFLOW:
+        data['scripts'] = wf.scripts
     return getEngine().getContext(data)
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
