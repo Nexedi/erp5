@@ -90,7 +90,7 @@
                   "title": name,
                   portal_type: portal_type,
                   parent_relative_url: parent_relative_url,
-                  validation_state: 'draft'
+                  state: 'draft'
                 });
               })
               .push(function (id) {
@@ -175,7 +175,7 @@
             ['agent_title', 'Title'],
             ['description', 'Reply'],
             ['modification_date', 'Modification Date'],
-            ['validation_state', 'Validation State']
+            ['state', 'Validation State']
           ],
 
             worklist_gadget = result[3],
@@ -299,7 +299,7 @@
                     "portal_type": [],
                     "search_column_list": column_list,
                     "sort_column_list": column_list,
-                    "sort": [['validation_state', 'descending'],
+                    "sort": [['state', 'descending'],
                              ['modification_date', 'descending']],
                     "title": "Notification",
                     "type": "ListBox"
