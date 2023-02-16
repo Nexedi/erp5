@@ -572,6 +572,39 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=999
     )
 
+  def testPandasDatetimeIndexResampler(self):
+    self.createAndRunScript('''
+        import pandas as pd
+        index = pd.date_range('1/1/2000', periods=9, freq='T')
+        series = pd.Series(range(9), index=index)
+        resampler = series.resample('3T')
+        return resampler.mean()[0]
+        ''',
+        expected=1
+    )
+
+  def testPandasPeriodIndexResampler(self):
+    self.createAndRunScript('''
+        import pandas as pd
+        index = pd.period_range(start='2017-01-01', end='2018-01-01', freq='M')
+        series = pd.Series(range(len(index)), index=index)
+        resampler = series.resample('3T')
+        return resampler.mean()[0]
+        ''',
+        expected=0.0
+    )
+
+  def testPandasTimedeltaIndexResampler(self):
+    self.createAndRunScript('''
+        import pandas as pd
+        index = pd.timedelta_range(start='1 day', periods=4)
+        series = pd.Series(range(len(index)), index=index)
+        resampler = series.resample('3T')
+        return resampler.mean()[0]
+        ''',
+        expected=0.0
+    )
+
   def testPandasIORead(self):
     # Test the black_list configuration validity
     for read_method in pandas_black_list:
