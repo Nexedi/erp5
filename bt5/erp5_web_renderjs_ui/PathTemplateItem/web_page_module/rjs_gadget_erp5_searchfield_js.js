@@ -272,7 +272,8 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
-      var gadget = this;
+      var gadget = this,
+        options;
       if (evt.target.tagName === 'BUTTON') {
         if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
             (evt.target.value)) {
@@ -280,27 +281,16 @@
           evt.preventDefault();
           return this.triggerSubmit({focus_on: parseInt(evt.target.value, 10)});
         }
-        if (evt.target.classList.contains("switch-listbox")) {
-          evt.target.classList.add("ui-screen-hidden");
+        if (evt.target.classList.contains("switch-listbox") ||
+            evt.target.classList.contains("switch-graph")) {
+          evt.target.disabled = true;
           return gadget.redirect({
             command: "change",
             options: {
               jio_key: gadget.state.jio_key,
               graphic_type: gadget.state.graphic_type,
               extended_search: gadget.state.extended_search,
-              only_graphic: false
-            }
-          });
-        }
-        if (evt.target.classList.contains("switch-graph")) {
-          evt.target.classList.add("ui-screen-hidden");
-          return gadget.redirect({
-            command: "change",
-            options: {
-              jio_key: gadget.state.jio_key,
-              graphic_type: gadget.state.graphic_type,
-              extended_search: gadget.state.extended_search,
-              only_graphic: true
+              only_graphic: evt.target.classList.contains("switch-graph") ? true : false
             }
           });
         }
