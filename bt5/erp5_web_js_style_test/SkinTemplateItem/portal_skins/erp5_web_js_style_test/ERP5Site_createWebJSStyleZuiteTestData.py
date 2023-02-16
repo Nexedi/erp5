@@ -194,6 +194,11 @@ configuration_dict = {
     'title': "Demo Style",
     'site_map_section_parent': True
   },
+  'iframe': {
+    'configuration_style_gadget_url': "jsstyle_demo.html",
+    'configuration_iframe_url_text': "https://example.org/foo\nhttps://example.org/bar\n \n",
+    'title': "Demo Style with iframe"
+  },
   'not_loading': {
     'configuration_style_gadget_url': "jsstyle_demo_not_loading.html",
     'title': "Not Loading Style",
