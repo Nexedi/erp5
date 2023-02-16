@@ -32,7 +32,7 @@
 """
 from __future__ import absolute_import
 from App.config import getConfiguration
-from .patches import python, globalrequest
+from .patches import python, globalrequest, pandas
 import six
 if six.PY2:
   from .patches import pylint
