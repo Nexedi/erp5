@@ -41,8 +41,17 @@ var FixedWingDroneAPI = /** @class */ (function () {
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
     drone._maxDeceleration = this.getMaxDeceleration();
+    if (drone._maxDeceleration <= 0) {
+      throw new Error('max deceleration must be superior to 0');
+    }
     drone._maxAcceleration = this.getMaxAcceleration();
+    if (drone._maxAcceleration <= 0) {
+      throw new Error('max acceleration must be superior to 0');
+    }
     drone._minSpeed = this.getMinSpeed();
+    if (drone._minSpeed <= 0) {
+      throw new Error('min speed must be superior to 0');
+    }
     drone._maxSpeed = this.getMaxSpeed();
     if (drone._minSpeed > drone._maxSpeed) {
       throw new Error('min speed cannot be superior to max speed');
@@ -52,16 +61,31 @@ var FixedWingDroneAPI = /** @class */ (function () {
       throw new Error('Drone speed must be between min speed and max speed');
     }
     drone._minPitchAngle = this.getMinPitchAngle();
+    if (drone._minPitchAngle >= 0) {
+      throw new Error('min pitch angle must be inferior to 0');
+    }
     drone._maxPitchAngle = this.getMaxPitchAngle();
+    if (drone._maxPitchAngle <= 0) {
+      throw new Error('max pitch angle must be superior to 0');
+    }
     if (drone._minPitchAngle > drone._maxPitchAngle) {
       throw new Error('min pitch angle cannot be superior to max pitch angle');
     }
     drone._maxRollAngle = this.getMaxRollAngle();
+    if (drone._maxRollAngle <= 0) {
+      throw new Error('max roll angle must be superior to 0');
+    }
     drone._maxSinkRate = this.getMaxSinkRate();
+    if (drone._maxSinkRate <= 0) {
+      throw new Error('max sink rate must be superior to 0');
+    }
     if (drone._maxSinkRate > drone._maxSpeed) {
       throw new Error('max sink rate cannot be superior to max speed');
     }
     drone._maxClimbRate = this.getMaxClimbRate();
+    if (drone._maxClimbRate <= 0) {
+      throw new Error('max climb rate must be superior to 0');
+    }
     if (drone._maxClimbRate > drone._maxSpeed) {
       throw new Error('max climb rate cannot be superior to max speed');
     }
