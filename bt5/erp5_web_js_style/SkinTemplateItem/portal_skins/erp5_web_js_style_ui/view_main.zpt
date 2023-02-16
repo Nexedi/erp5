@@ -24,7 +24,8 @@
       og_locale_dict python: web_site.WebSite_getOgLocaleDict();
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
       global_definitions_macros here/global_definitions/macros;
-      include_document python: web_section.isSiteMapDocumentParent() and ((here.getRelativeUrl() == web_section.getRelativeUrl()) or request.get('is_web_section_default_document', False));">
+      include_document python: web_section.isSiteMapDocumentParent() and ((here.getRelativeUrl() == web_section.getRelativeUrl()) or request.get('is_web_section_default_document', False));
+      content_security_policy python: web_section.WebSection_generateContentSecurityPolicy(no_style_gadget_url);">
   <tal:block tal:condition="python: is_unexpected_reference_access">
     <tal:block metal:use-macro="context/error_main/macros/master">
       <metal:slot metal:fill-slot="main" i18n:domain="erp5_ui">
@@ -47,7 +48,7 @@
 <!DOCTYPE html>
 <html tal:attributes="lang current_language">
   <head>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/" />
+  <meta http-equiv="Content-Security-Policy" tal:attributes="content content_security_policy"/>
   <meta name="referrer" content="same-origin">
   <meta http-equiv="Feature-Policy" content="accelerometer 'none'; ambient-light-sensor 'none'; autoplay: 'none'; battery: 'none'; camera: 'none'; display-capture: 'none'; document-domain: 'none'; encrypted-media: 'none'; geolocation: 'none'; gyroscope: 'none'; magnetometer: 'none'; microphone: 'none'; payment: 'none'; usb: 'none'" />
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />

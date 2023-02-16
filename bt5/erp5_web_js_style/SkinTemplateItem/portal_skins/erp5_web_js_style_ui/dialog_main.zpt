@@ -22,12 +22,13 @@
       keyword_list python: web_section.getSubjectList();
       og_locale_dict python: web_site.WebSite_getOgLocaleDict();
       current_language python: web_site.getPortalObject().Localizer.get_selected_language();
-      global_definitions_macros here/global_definitions/macros;">
+      global_definitions_macros here/global_definitions/macros;
+      content_security_policy python: web_section.WebSection_generateContentSecurityPolicy(no_style_gadget_url);">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <!DOCTYPE html>
 <html tal:attributes="lang current_language">
   <head>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/" />
+  <meta http-equiv="Content-Security-Policy" tal:attributes="content content_security_policy"/>
   <meta name="referrer" content="same-origin">
   <meta http-equiv="Feature-Policy" content="accelerometer 'none'; ambient-light-sensor 'none'; autoplay: 'none'; battery: 'none'; camera: 'none'; display-capture: 'none'; document-domain: 'none'; encrypted-media: 'none'; geolocation: 'none'; gyroscope: 'none'; magnetometer: 'none'; microphone: 'none'; payment: 'none'; usb: 'none'" />
   <base tal:attributes="href python: '%s/' % web_section.absolute_url()" />
