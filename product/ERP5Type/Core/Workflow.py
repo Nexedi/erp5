@@ -61,8 +61,9 @@ def createExpressionContext(sci):
         'kwargs':       sci.kwargs,
         'workflow':     wf,
         }
-    # Patch:
-    if WITH_LEGACY_WORKFLOW:
+    # BBB: support 'scripts.xxx' in TALES expression for legacy workflow,
+    # that should be 'workflow.script_xxx' instead in ERP5 Workflow.
+    if WITH_LEGACY_WORKFLOW and wf.meta_type == 'Workflow':
         data['scripts'] = wf.scripts
     return getEngine().getContext(data)
 
