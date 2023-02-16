@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccessToken_getUserValue</string> </value>
+            <value> <string>Delivery_tryToCancel</string> </value>
         </item>
       </dictionary>
     </pickle>
