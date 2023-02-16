@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; script-src 'none'"]</td>
+  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; img-src 'self' data:; script-src 'none'"]</td>
   <td></td>
 </tr>
 
@@ -54,7 +54,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; script-src 'none'"]</td>
+  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; img-src 'self' data:; script-src 'none'"]</td>
   <td></td>
 </tr>
 
@@ -79,7 +79,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/"]</td>
+  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; img-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com/embed/"]</td>
   <td></td>
 </tr>
 
@@ -101,7 +101,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; frame-src 'self' https://www.youtube-nocookie.com/embed/"]</td>
+  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; img-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com/embed/"]</td>
   <td></td>
 </tr>
 
@@ -115,7 +115,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; script-src 'none'"]</td>
+  <td>//head/meta[@http-equiv='Content-Security-Policy' and @content="default-src 'self'; img-src 'self' data:; script-src 'none'"]</td>
   <td></td>
 </tr>
 
