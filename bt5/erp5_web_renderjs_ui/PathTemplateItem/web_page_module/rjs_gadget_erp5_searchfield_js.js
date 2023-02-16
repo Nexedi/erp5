@@ -283,6 +283,7 @@
         }
         if (evt.target.classList.contains("switch-listbox") ||
             evt.target.classList.contains("switch-graph")) {
+          evt.target.disabled = true;
           return gadget.redirect({
             command: "change",
             options: {
