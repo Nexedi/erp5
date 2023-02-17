@@ -25,8 +25,7 @@
 #
 ##############################################################################
 
-from os import path
-from logging import getLogger, Formatter
+from logging import getLogger
 
 from AccessControl import ClassSecurityInfo
 
@@ -43,30 +42,7 @@ from Products.ERP5.ERP5Site import getSite
 synchronous_engine = SyncMLSynchronousEngine()
 asynchronous_engine = SyncMLAsynchronousEngine()
 
-# Logging channel definitions
-# Main logging channel
 syncml_logger = getLogger('ERP5SyncML')
-# Direct logging to "[instancehome]/log/ERP5SyncML.log", if this
-# directory exists. Otherwise, it will end up in root logging
-# facility (ie, event.log).
-from App.config import getConfiguration
-instancehome = getConfiguration().instancehome
-if instancehome is not None:
-  log_directory = path.join(instancehome, 'log')
-  if path.isdir(log_directory):
-    from Signals import Signals
-    from ZConfig.components.logger.loghandler import FileHandler
-    log_file_handler = FileHandler(path.join(log_directory,
-                                                'ERP5SyncML.log'))
-    # Default zope log format string borrowed from
-    # ZConfig/components/logger/factory.xml, but without the extra "------"
-    # line separating entries.
-    log_file_handler.setFormatter(Formatter(
-      "%(asctime)s %(levelname)s %(name)s %(message)s",
-      "%Y-%m-%dT%H:%M:%S"))
-    Signals.registerZopeSignals([log_file_handler])
-    syncml_logger.addHandler(log_file_handler)
-    syncml_logger.propagate = 0
 
 
 def checkAlertCommand(syncml_request):

@@ -98,24 +98,6 @@ activity_logger = logging.getLogger('CMFActivity')
 activity_tracking_logger = logging.getLogger('Tracking')
 activity_timing_logger = logging.getLogger('CMFActivity.TimingLog')
 
-# Direct logging to "[instancehome]/log/CMFActivity.log", if this directory exists.
-# Otherwise, it will end up in root logging facility (ie, event.log).
-from App.config import getConfiguration
-import os
-instancehome = getConfiguration().instancehome
-if instancehome is not None:
-  log_directory = os.path.join(instancehome, 'log')
-  if os.path.isdir(log_directory):
-    from Signals import Signals
-    from ZConfig.components.logger.loghandler import FileHandler
-    log_file_handler = FileHandler(os.path.join(log_directory, 'CMFActivity.log'))
-    # Default zope log format string borrowed from
-    # ZConfig/components/logger/factory.xml, but without the extra "------"
-    # line separating entries.
-    log_file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s", "%Y-%m-%dT%H:%M:%S"))
-    Signals.registerZopeSignals([log_file_handler])
-    activity_logger.addHandler(log_file_handler)
-    activity_logger.propagate = 0
 
 def activity_timing_method(method, args, kw):
   begin = time()
