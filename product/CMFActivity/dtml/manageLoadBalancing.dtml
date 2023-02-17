@@ -28,8 +28,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
+<main class="container-fluid">
 
-<p class="form-help">
+<p class="form-help leap">
   This tab defines the Load Balancing of Activities.
   To provide high performance, the activities are distributed over several ZEO clients, called <i>nodes</i>,
   so that they can be processed in parallel. Nodes can either run on different machines or on one machine
@@ -38,7 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   <code>IP-Address</code>:<code>Port-Number</code>.
 </p>
 
-<p class="form-help">
+<p class="form-help leap">
   The interval of distribution and activation of the activities is per default 5 seconds. This can be
   changed by altering the value of <i>interval</i> in the section <i>time-server</i> in the
   Zope Configuration File <i>zope.conf</i>.
@@ -193,13 +194,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       </table>
     </td>
     <td>
-      <p class="form-help">
+      <p class="form-help leap">
         Every node sharing the same ZODB will register itself to the idle
         node list - except the first one which will be automatically declared
         both <i>Processing node</i> and <i>Distributing node</i>. Registered
         nodes can then be made <i>Processing nodes</i> or <i>Idle nodes</i>.
       </p>
-      <p class="form-help">
+      <p class="form-help leap">
        <b>Important note:</b> Nodes can register themselves, but can not
        unregister themselves (for example, a node which IP has changed will
        be present twice in the list). It is up to the user to manually prune
@@ -207,7 +208,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
        <i>Processing node</i> list, activities will get balanced to those
        nodes and never be executed.
       </p>
-      <p class="form-help">
+      <p class="form-help leap">
        <b>Important note:</b>Adding or removing processing nodes while
        activities are processed causes undefined behaviour.
       </p>
@@ -288,4 +289,5 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   </tr>
 </table>
 </form>
+</main>
 <dtml-var manage_page_footer>
