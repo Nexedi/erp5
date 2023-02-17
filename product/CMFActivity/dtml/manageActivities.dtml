@@ -29,63 +29,65 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
+<main class="container-fluid">
+
 <h3>Queued Activities</h3>
 
 <dtml-let show_cancel_and_invoke_links="not isCancelAndInvokeLinksHidden()">
 <dtml-if show_cancel_and_invoke_links>
-  <p>Warning: Invoking or canceling activities will invoke/cancel all activities with both the same path and the same method_id.</p>
-  <p>Warning: Invoking an activity will <b>not</b> run any dependency check.</p>
+  <p class="lead">Warning: Invoking or canceling activities will invoke/cancel all activities with both the same path and the same method_id.</p>
+  <p class="lead">Warning: Invoking an activity will <b>not</b> run any dependency check.</p>
 </dtml-if>
 
-<table cellspacing="0" cellpadding="2" border="1">
+<table class="table table-striped table-hover table-sm"
   <tr>
     <dtml-if show_cancel_and_invoke_links>
-      <th align="left" valign="top"></th>
+      <th></th>
     </dtml-if>
-    <th align="left" valign="top">Uid</th>
-    <th align="left" valign="top">Object</th>
-    <th align="left" valign="top">Method Id</th>
-    <th align="left" valign="top">Activity Kw</th>
-    <th align="left" valign="top">Arguments</th>
-    <th align="left" valign="top">Named Parameters</th>
-    <th align="left" valign="top">Processing Node</th>
-    <th align="left" valign="top">Retry</th>
-    <th align="left" valign="top">Call Traceback</th>
+    <th>Uid</th>
+    <th>Object</th>
+    <th>Method Id</th>
+    <th>Activity Kw</th>
+    <th>Arguments</th>
+    <th>Named Parameters</th>
+    <th>Processing Node</th>
+    <th>Retry</th>
+    <th>Call Traceback</th>
   </tr>
   <dtml-in expr="getMessageList()">
     <dtml-let path="'/'.join(object_path)">
       <tr>
         <dtml-if show_cancel_and_invoke_links>
-          <td align="left" valign="top">
-            <a href="manageCancel?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Cancel</a>
-            <a href="manageInvoke?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Invoke</a>
+          <td>
+            <a class="btn btn-danger" href="manageCancel?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Cancel</a>
+            <a class="btn btn-warning" href="manageInvoke?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Invoke</a>
           </td>
         </dtml-if>
-        <td align="left" valign="top"><dtml-var uid>
+        <td><dtml-var uid>
           <dtml-var expr="{'SQLDict':'(dict)','SQLQueue':'(queue)','SQLJoblib':'(Joblib)'}[activity]">
         </td>
-        <td align="left" valign="top"><a href="<dtml-var expr="REQUEST.physicalPathToURL(path)">"><dtml-var path></a></td>
-        <td align="left" valign="top"><dtml-var method_id></td>
-        <td align="left" valign="top">
-          <dtml-if activity_kw><dtml-var expr="_.repr(activity_kw)[1:-1]" html_quote>
+        <td><code><a href="<dtml-var expr="REQUEST.physicalPathToURL(path)">"><dtml-var path></a></code></td>
+        <td><code><dtml-var method_id></code></td>
+        <td>
+          <dtml-if activity_kw><small><pre><dtml-var expr="_.repr(activity_kw)[1:-1]" html_quote></pre></small>
           <dtml-else>&nbsp;
           </dtml-if>
         </td>
-        <td align="left" valign="top">
-          <dtml-if args><dtml-var expr="_.repr(_.list(args))[1:-1]" html_quote>
+        <td>
+          <dtml-if args><small><pre><dtml-var expr="_.repr(_.list(args))[1:-1]" html_quote></pre></small>
           <dtml-else>&nbsp;
           </dtml-if>
         </td>
-        <td align="left" valign="top">
-          <dtml-if kw><dtml-var expr="_.repr(kw)[1:-1]" html_quote>
+        <td>
+          <dtml-if kw><small><pre><dtml-var expr="_.repr(kw)[1:-1]" html_quote></pre></small>
           <dtml-else>&nbsp;
           </dtml-if>
         </td>
-        <td align="left" valign="top"><dtml-var processing_node></td>
-        <td align="left" valign="top"><dtml-var retry></td>
-        <td align="left" valign="top">
+        <td><dtml-var processing_node></td>
+        <td><dtml-var retry></td>
+        <td>
           <dtml-if expr="call_traceback is not None">
-            <pre><dtml-var call_traceback></pre>
+            <small><pre><dtml-var call_traceback></pre></small>
           </dtml-if>
         </td>
       </tr>
@@ -93,5 +95,5 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   </dtml-in>
 </table>
 </dtml-let>
-
+</main>
 <dtml-var manage_page_footer>
