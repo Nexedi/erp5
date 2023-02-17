@@ -23,9 +23,12 @@ from Zope2.Startup.run import make_wsgi_app
 try:
   from ZPublisher.WSGIPublisher import _MODULES
   from ZPublisher.WSGIPublisher import publish_module
+  from ZPublisher.httpexceptions import HTTPExceptionHandler
 except ImportError:
   # BBB Zope2
   from Products.ERP5Type.patches.WSGIPublisher import publish_module
+  HTTPExceptionHandler = lambda app: app
+
 
 # this class licensed under the MIT license (stolen from pyramid_translogger)
 class TransLogger(object):
@@ -141,7 +144,7 @@ def app_wrapper(large_file_threshold, webdav_ports):
                 environ['PATH_INFO'] = path_info
 
         return publish_module(environ, start_response)
-    return app
+    return HTTPExceptionHandler(app)
 
 def createServer(application, logger, **kw):
     global server
