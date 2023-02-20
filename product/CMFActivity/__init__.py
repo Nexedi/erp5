@@ -43,7 +43,7 @@ document_classes = updateGlobals(this_module, globals(),
 def initialize( context ):
   # Define object classes and tools
   from . import ActivityTool, ActiveProcess, ActivityConnection
-  from .joblib import CMFActivityParallelBackend
+  #from .joblib import CMFActivityParallelBackend
   object_classes = (ActiveProcess.ActiveProcess,
                     #ActivityConnection.ActivityConnection
                     )
