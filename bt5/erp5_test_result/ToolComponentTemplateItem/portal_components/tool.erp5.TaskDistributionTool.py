@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
-from zLOG import LOG, DEBUG
+from zLOG import LOG, DEBUG, INFO
 from xmlrpclib import Binary
 
 class TaskDistributionTool(BaseTool):
@@ -89,7 +89,7 @@ class TaskDistributionTool(BaseTool):
 
       -> (test_result_path, revision) or None if already completed
     """
-    LOG('createTestResult', DEBUG, (name, revision, test_title, project_title))
+    LOG('tool.erp5.TaskDistributionTool.createTestResult', INFO, (name, revision, test_title, project_title))
     portal = self.getPortalObject()
     if test_title is None:
       test_title = name
@@ -215,6 +215,7 @@ class TaskDistributionTool(BaseTool):
     # following 2 functions only call 'newContent' on test_result
     createTestResultLineList(test_result, test_name_list)
     createNode(test_result, node_title)
+    LOG('createTestResult RESULT', INFO, (test_result.getRelativeUrl(), revision))
     return test_result.getRelativeUrl(), revision
 
   security.declarePublic('startUnitTest')
