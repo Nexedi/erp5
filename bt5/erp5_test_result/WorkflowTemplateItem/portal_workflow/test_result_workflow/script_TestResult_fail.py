@@ -15,4 +15,4 @@ if test_result.getPortalType() == 'Test Result Node':
       edit_kw[key] = key_value
   test_result.edit(**edit_kw)
 else:
-  container.script_TestResult_complete(sci)
+  context.TestResult_complete(sci)
