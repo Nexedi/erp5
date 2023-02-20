@@ -28,7 +28,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
 import json
 import random
-from zLOG import LOG,DEBUG,ERROR
+from zLOG import LOG,DEBUG,ERROR,INFO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
@@ -271,7 +271,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         if test_node.getValidationState() != 'validated':
           try:
             test_node.validate()
-          except Exception as e:
+          except Exception, e:
             LOG('Test Node Validate',ERROR,'%s' %e)
       if test_node is None:
         test_node = test_node_module.newContent(portal_type="Test Node", title=title, computer_guid=computer_guid,
@@ -384,7 +384,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         for x in to_delete_key_list:
           config.pop(x)
         config_list.append(config)
-    LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',DEBUG,config_list)
+    LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',INFO,config_list)
     if batch_mode:
       return config_list
     return json.dumps(config_list)
@@ -395,12 +395,13 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.createTestResult', DEBUG, (node_title, test_title))
+    LOG('ERP5ProjectUnitTestDistributor.createTestResult', INFO, (node_title, test_title))
     portal = self.getPortalObject()
     if node_title:
       test_node = self._getTestNodeFromTitle(node_title)
       test_node.setPingDate()
     test_suite = self._getTestSuiteFromTitle(test_title)
+    LOG('ERP5ProjectUnitTestDistributor.createTestResult 2', INFO, (test_suite))
     if test_suite is not None:
       if not allow_restart and test_suite.isEnabled():
         # in case if allow_restart is not enforced by client and test_node
@@ -430,6 +431,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     return test_node
 
   def _getTestSuiteFromTitle(self, suite_title):
+    LOG('ERP5ProjectUnitTestDistributor._getTestSuiteFromTitle', INFO, (suite_title, self._getTestSuiteModule()))
     test_suite_list = self._getTestSuiteModule().searchFolder(
       portal_type='Test Suite',
       title=SimpleQuery(comparison_operator='=', title=suite_title),
