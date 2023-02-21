@@ -239,7 +239,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>caching_policy/hateoas</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -495,7 +497,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>964.45855.48292.47786</string> </value>
+                      <value> <string>999.15498.14276.33109</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -513,7 +515,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1515504053.68</float>
+                              <float>1676985042.28</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
