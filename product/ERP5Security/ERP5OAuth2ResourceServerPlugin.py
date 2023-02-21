@@ -48,7 +48,6 @@ from Products.PluggableAuthService.interfaces.plugins import (
 )
 from Products.ERP5Security import _setUserNameForAccessLog
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions
 
 # Public constants. Must not change once deployed.
 
