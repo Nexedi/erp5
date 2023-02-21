@@ -214,7 +214,7 @@ class AutorisationExtractorBeforeTraverseHook(object):
   Which means that, to use such root user (which is required on any freshly
   created ERP5 instance) one would have to use their browser's basic
   authentication support (/manage_main, then input login and password).
-  As problem of basic authentication is that the action of logging out is both
+  A problem of basic authentication is that the action of logging out is both
   non-straightforward (get asked a login & password and cancel the request)
   and non-integred with ERP5's logout procedure.
   So, to stop using basic authentication while still being able to use these
