@@ -344,7 +344,7 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
       portal = client_value.getPortalObject()
       # HACK: add support for response_mode (which is not an OAuth2 feature
       # but an OpenID feature), as requested by Romain.
-      # oauthlib does not striclty separates both implementations, so this
+      # oauthlib does not strictly separates both implementations, so this
       # parameter works, but it is ignored by validate_authorization_request
       # and is hence missing in request_info_dict. Run the normal checks and
       # add it ourselves.
@@ -441,13 +441,13 @@ class _ERP5AuthorisationEndpoint(AuthorizationEndpoint):
             }
             for x in (
               portal.portal_categories.resolveCategory(
-                'oauth2_scope/' + x.encode('utf-8'),
+                'oauth2_scope/' + y.encode('utf-8'),
               )
-              for x in scope_list
+              for y in scope_list
             )
-            # scope is allowed for this client (_ERP5RequestValidator is not
-            # functionally required to follow the relation, so it may not
-            # have picked that) but the category does not exist.
+            # scope is allowed for this client but the category does not exist.
+            # _ERP5RequestValidator is not functionally required to follow the
+            # relation, so it may not have noticed.
             if x is not None
           ]
           other['server_connector_path'] = self.__server_connector_path
