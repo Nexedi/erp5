@@ -503,15 +503,13 @@ else:
     from pandas.core.resample import (
       TimedeltaIndexResampler, DatetimeIndexResampler, PeriodIndexResampler
     )
-    allow_type(TimedeltaIndexResampler)
-    allow_type(DatetimeIndexResampler)
-    allow_type(PeriodIndexResampler)
   except ImportError:  # BBB for pandas < 0.20.x
-    pass
-
-  allow_type(pd.tseries.resample.TimedeltaIndexResampler)
-  allow_type(pd.tseries.resample.DatetimeIndexResampler)
-  allow_type(pd.tseries.resample.PeriodIndexResampler)
+    from pandas.tseries.resample import (
+      TimedeltaIndexResampler, DatetimeIndexResampler, PeriodIndexResampler
+    )
+  allow_type(TimedeltaIndexResampler)
+  allow_type(DatetimeIndexResampler)
+  allow_type(PeriodIndexResampler)
 
   allow_class(pd.DataFrame)
 
