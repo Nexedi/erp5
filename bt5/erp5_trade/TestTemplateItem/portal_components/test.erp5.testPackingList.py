@@ -1721,14 +1721,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
       self.packing_list_portal_type)
     movement_list = sale_packing_list1.getMovementList()
     self.assertEqual(2, len(movement_list))
-    movement_list[0].setQuantity(98)
+    movement_list[0].setQuantity(self.default_quantity-1)
     self.tic()
     sequence("""SplitAndDeferPackingList
                 Tic""")
     sale_packing_list2, = [x for x in self.getCreatedTypeList(
       self.packing_list_portal_type) if x.getUid() != sale_packing_list1.getUid()]
     # now decide to move the two lines
-    solver_process_tool = self.portal.portal_solver_processes
     def moveTwoLines(from_delivery, to_delivery):
       movement_list = from_delivery.getMovementList()
       self.assertEqual(2, len(movement_list))
@@ -1753,19 +1752,22 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # will have two lines after the move
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
-    self.assertEqual({98, 99}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-1, self.default_quantity},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     moveTwoLines(sale_packing_list1, sale_packing_list2)
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
-    self.assertEqual({97, 98}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-2, self.default_quantity-1},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1, 2}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     # move two lines again. This time, the sale packing list already have 2 lines,
     # thus they will be just completed
     moveTwoLines(sale_packing_list1, sale_packing_list2)
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
     self.assertEqual("solved", sale_packing_list2.getCausalityState())
-    self.assertEqual({96, 97}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-3, self.default_quantity-2},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     # Now Split again first SPL to create a 3rd SPL
     def splitSalePackingList():
@@ -1795,7 +1797,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sale_packing_list3, = [x for x in self.getCreatedTypeList(
       self.packing_list_portal_type) if not(x.getUid() in (sale_packing_list1.getUid(),
                                                            sale_packing_list2.getUid()))]
-    self.assertEqual({95, 96}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-4, self.default_quantity-3},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1, 1}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list3.getCausalityState())
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
@@ -1805,7 +1808,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual(["solved"]*4, getSolverProcessStateList(sale_packing_list1))
     # Now try to move quantities several times and make sure all quantities are correct
     moveTwoLines(sale_packing_list2, sale_packing_list3)
-    self.assertEqual({95, 96}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-4, self.default_quantity-3},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({1, 2}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     self.assertEqual({2, 2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
@@ -1815,7 +1819,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sale_packing_list2.start()
     self.tic()
     sale_packing_list2.deliver()
-    self.assertEqual({94, 95}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-5, self.default_quantity-4},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     self.assertEqual({2, 2}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
@@ -1829,7 +1834,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual(["solved"]*4, getSolverProcessStateList(sale_packing_list2))
     # 2 times adopt since we were destination of split move 2 times
     self.assertEqual(["solved"]*2, getSolverProcessStateList(sale_packing_list3))
-    self.assertEqual({93, 94}, set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
+    self.assertEqual({self.default_quantity-6, self.default_quantity-5},
+                     set([x.getQuantity() for x in sale_packing_list1.getMovementList()]))
     self.assertEqual({2, 3}, set([x.getQuantity() for x in sale_packing_list2.getMovementList()]))
     self.assertEqual({3, 3}, set([x.getQuantity() for x in sale_packing_list3.getMovementList()]))
     self.assertEqual("solved", sale_packing_list1.getCausalityState())
