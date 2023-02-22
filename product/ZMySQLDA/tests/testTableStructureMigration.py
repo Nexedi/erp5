@@ -120,7 +120,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         dedent(
             """\
       CREATE TABLE `X` (
-        `a` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL
+        `a` varchar(10) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     # insterting 1 will be casted as string
     self.query("INSERT INTO X VALUES (1)")
@@ -147,12 +147,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `X` (
         `a` int(11) NOT NULL COMMENT 'old comment'
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""),
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
         `a` int(11) NOT NULL COMMENT 'new comment'
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""))
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.assertEqual(
         ('a', 'new comment'),
         self.query(
@@ -209,7 +209,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `table` (
         `and` int(11) DEFAULT NULL,
-        `alter` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'BETWEEN',
+        `alter` varchar(255) DEFAULT 'BETWEEN',
         KEY `use` (`alter`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         table_name='table')
@@ -222,12 +222,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8"""),
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8"""))
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
     self.assertEqual(
         ('X', 'InnoDB'),
         self.query(
@@ -245,12 +245,12 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='old comment'"""),
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='old comment'"""),
         dedent(
             """\
             CREATE TABLE `X` (
               `a` int(11) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='new comment'"""))
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='new comment'"""))
     self.assertEqual(
         ('X', 'new comment'),
         self.query(
