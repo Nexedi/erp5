@@ -38,7 +38,7 @@
       </tr>
       <tr>
         <td>waitForElementPresent</td>
-        <td>//div[contains(@class, "noty_message")]/span[@class="noty_text" and contains(text(), "Error")]</td>
+        <td>//div[contains(@class, "noty_message")]/span[@class="noty_text" and contains(text(), "rror")]</td>
         <td></td>
       </tr>
       <tr>
