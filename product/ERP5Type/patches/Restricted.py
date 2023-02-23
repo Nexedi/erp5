@@ -494,6 +494,10 @@ else:
   allow_type(pd.core.groupby.DataFrameGroupBy)
   allow_type(pd.core.groupby.SeriesGroupBy)
 
+  allow_type(pd.tseries.resample.TimedeltaIndexResampler)
+  allow_type(pd.tseries.resample.DatetimeIndexResampler)
+  allow_type(pd.tseries.resample.PeriodIndexResampler)
+
   allow_class(pd.DataFrame)
 
   # Note: These black_list methods are for pandas 0.19.2
