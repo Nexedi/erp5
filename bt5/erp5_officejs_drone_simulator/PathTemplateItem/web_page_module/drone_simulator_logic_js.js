@@ -319,6 +319,9 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getSpeed = function () {
     return this._speed;
   };
+  DroneManager.prototype.getGroundSpeed = function () {
+    return this._API.getGroundSpeed(this);
+  };
   DroneManager.prototype.getClimbRate = function () {
     return this._API.getClimbRate(this);
   };
@@ -524,9 +527,9 @@ var GameManager = /** @class */ (function () {
     if (GAMEPARAMETERS.draw_flight_path) {
       this._last_position_drawn = [];
       this._trace_objects_per_drone = [];
-      header_list = ["timestamp", "latitude", "longitude", "AMSL (m)",
-                     "rel altitude (m)", "yaw(°)", "air speed (m/s)",
-                     "climb rate(m/s)"];
+      header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)", "AMSL (m)",
+                     "rel altitude (m)", "yaw (°)", "ground speed (m/s)",
+                     "climb rate (m/s)"];
       for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
@@ -687,7 +690,7 @@ var GameManager = /** @class */ (function () {
                 game_manager._flight_log[index].push([
                   game_manager._game_duration, geo_coordinates.x,
                   geo_coordinates.y, map_info.start_AMSL + drone_position.z,
-                  drone_position.z, drone.getYaw(), drone.getSpeed(),
+                  drone_position.z, drone.getYaw(), drone.getGroundSpeed(),
                   drone.getClimbRate()
                 ]);
               }
