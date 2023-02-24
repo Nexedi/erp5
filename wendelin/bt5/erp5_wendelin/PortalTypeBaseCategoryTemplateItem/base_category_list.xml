@@ -75,4 +75,7 @@
  <portal_type id="Progress Indicator Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Sensor Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>
