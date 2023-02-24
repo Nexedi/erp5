@@ -575,7 +575,7 @@
                   + '.txt',
                 href: window.URL.createObjectURL(blob)
               });
-              log = domsugar('textarea', { value: log_content });
+              log = domsugar('textarea', { value: log_content, id: 'log_result_' + i });
               div = domsugar('div', [a]);
               a.dataset.downloadurl =  ['text/plain', a.download,
                                         a.href].join(':');
