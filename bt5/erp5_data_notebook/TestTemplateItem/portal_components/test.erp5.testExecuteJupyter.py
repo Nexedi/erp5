@@ -35,6 +35,8 @@ import jupyter_client
 import base64
 import random
 import string
+import pickle
+import pandas as pd
 
 
 class TestExecuteJupyter(ERP5TypeTestCase):
@@ -1067,3 +1069,16 @@ print os.path
     else:
       has_access_to_erp5_kernel = True
     self.assertTrue(has_access_to_erp5_kernel)
+
+  def testConvertedDataFramesArePicklableAndUnpicklable(self):
+    '''
+      Verify we can pickle + unpickle pd.DataFrames which were converted to np.recarrays
+    '''
+    self.assertEqual(
+      pickle.loads(
+        pickle.dumps(
+          pd.DataFrame(columns=[u"test"]).to_records()
+        )
+      ).dtype.descr[1][0],
+      "test"
+    )
