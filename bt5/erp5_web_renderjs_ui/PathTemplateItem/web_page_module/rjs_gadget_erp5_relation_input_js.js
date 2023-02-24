@@ -510,6 +510,7 @@
         data_explore,
         new_state = {},
         tag_name = evt.target.tagName.toLowerCase();
+
       if (tag_name === 'button') {
         // Go to the search listbox
         return redirectToTheSearchListbox(gadget);
@@ -557,7 +558,7 @@
       if (evt.key === "ArrowDown" || evt.key === "ArrowUp") {
         if (ul.childNodes.length > 0) {
           for (i = 0; i < ul.childNodes.length; i += 1) {
-            if (ul.childNodes[i].className.endsWith('active')) {
+            if (ul.childNodes[i].classList.contains('active')) {
               active_index = i;
             }
           }
@@ -582,14 +583,12 @@
           }
           for (i = 0; i < ul.childNodes.length; i += 1) {
             if (i === active_index) {
-              if (!ul.childNodes[i].className.endsWith("active")) {
-                ul.childNodes[i].className = ul.childNodes[i].className +
-                  " active";
+              if (!ul.childNodes[i].classList.contains('active')) {
+                ul.childNodes[i].classList.add('active');
               }
             } else {
-              if (ul.childNodes[i].className.endsWith("active")) {
-                ul.childNodes[i].className = ul.childNodes[i].className.replace(
-                  " active", "");
+              if (ul.childNodes[i].classList.contains('active')) {
+                ul.childNodes[i].classList.remove('active');
               }
             }
           }
@@ -597,7 +596,7 @@
         }
       } else if (evt.key === "Enter") {
         for (i = 0; i < ul.childNodes.length; i += 1) {
-          if (ul.childNodes[i].className.endsWith('active')) {
+          if (ul.childNodes[i].classList.contains('active')) {
             next_event = new MouseEvent('click', {
               view: window,
               bubbles: true,
@@ -618,13 +617,11 @@
                    ul = gadget.element.querySelector(".search_ul");
       if (evt.target.tagName.toLowerCase() === 'li') {
         for (i = 0; i < ul.childNodes.length; i += 1) {
-          ul.childNodes[i].className = ul.childNodes[i].className.replace(
-            " active", "");
+          ul.childNodes[i].classList.remove('active');
         }
-        evt.target.className = evt.target.className + " active";
+        evt.target.classList.add('active');
       }
     }, true, false)
-
     .declareAcquiredMethod("notifyBlur", "notifyBlur")
     .onEvent('blur', function (evt) {
       var gadget = this;

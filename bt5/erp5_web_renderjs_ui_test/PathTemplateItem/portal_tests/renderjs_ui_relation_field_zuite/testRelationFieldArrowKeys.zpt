@@ -77,14 +77,14 @@
 <!-- We have class "active" for every line that should be highlighted -->
 <!-- Initially, no lines are highlighted -->
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[0].className.endsWith("active")})()
-  <td>false</td>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=1 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[1].className.endsWith("active")})()
-  <td>false</td>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=2 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <!-- We do Arrow down key, then first line should be highlighted -->
 <tr>
@@ -94,14 +94,19 @@
   <td>true</td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[0].className.endsWith("active")})()
-  <td>true</td>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=1 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[1].className.endsWith("active")})()
-  <td>false</td>
+  <td>assertElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=1 and contains(@class,'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=2 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <!-- We do Arrow down key again, then second line should be highlighted -->
 <tr>
@@ -111,14 +116,19 @@
   <td>true</td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[0].className.endsWith("active")})()
-  <td>false</td>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=2 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[1].className.endsWith("active")})()
-  <td>true</td>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=1 and contains(@class,'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=2 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <!-- We do Arrow up key, then first line should be highlighted -->
 <tr>
@@ -128,14 +138,19 @@
   <td>true</td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[1].className.endsWith("active")})()
-  <td>false</td>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=1 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertEval</td>
-  <td>(function() {return selenium.browserbot.getCurrentWindow().document.querySelector("input[name='field_my_foo_category_title']").parentNode.querySelectorAll('li')[0].className.endsWith("active")})()
-  <td>true</td>
+  <td>assertElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=1 and contains(@class,'active')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_foo_category_title']/parent::*//li[position()=2 and contains(@class,'active')]</td>
+  <td></td>
 </tr>
 <!-- Make sure Enter key allows to validate the selected line and disable the list of choice -->
 <tr>
@@ -149,6 +164,12 @@
   <td>//li[@data-relative-url='portal_categories/divergence_scope/quantity']</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>Quantity</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
   <td>assertValue</td>
   <td>//input[@name='field_my_foo_category_title']</td>
