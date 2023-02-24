@@ -507,6 +507,13 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getClimbRate = function (drone) {
     return drone.worldDirection.y * drone.getSpeed();
   };
+  FixedWingDroneAPI.prototype.getGroundSpeed = function (drone) {
+    var direction = drone.worldDirection;
+    return Math.sqrt(
+      Math.pow(direction.x * drone.getSpeed(), 2)
+        + Math.pow(direction.z * drone.getSpeed(), 2)
+    );
+  };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
     drone.setTargetCoordinates(drone_pos.x, drone_pos.y, 5);
