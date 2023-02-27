@@ -91,20 +91,25 @@ if creation_date_range_min or creation_date_range_max:
                 query=(creation_date_range_max, ),
                 range='max')
 
-select_dict = params.get('select_dict') or {}
-select_dict['total_debit'] = None
-select_dict['total_credit'] = None
-# XXX: force mapping of reference column to catalog, to take advantage of (portal_type, reference) index.
-# Without this, ColumnMapper would choose to use accounting_transaction.reference, because a lot of
-# columns from that table are used. But it does not realise there is no portal_type column *and*
-# a (portal_type, reference) index exists on catalog.
-select_dict['reference'] = 'catalog.reference'
-select_dict['specific_reference'] = None
-select_dict['project_uid'] = None
-select_dict['payment_uid'] = None
-select_dict['mirror_section_uid'] = None
-select_dict['operation_date'] = None
-params['select_dict'] = select_dict
+# GRAPH JS: We propagate select_list from gadgets graph js.
+# GRAPH JS: If select_list is propagated in params, we should keep it,
+# GRAPH JS: we use count() and the parameters below breaks the graphs.
+if "select_list" not in params:
+  select_dict = params.get('select_dict') or {}
+  select_dict['total_debit'] = None
+  select_dict['total_credit'] = None
+  # XXX: force mapping of reference column to catalog, to take advantage of (portal_type, reference) index.
+  # Without this, ColumnMapper would choose to use accounting_transaction.reference, because a lot of
+  # columns from that table are used. But it does not realise there is no portal_type column *and*
+  # a (portal_type, reference) index exists on catalog.
+  #select_dict['reference'] = 'catalog.reference'
+  select_dict['specific_reference'] = None
+  select_dict['project_uid'] = None
+  select_dict['payment_uid'] = None
+  select_dict['mirror_section_uid'] = None
+  select_dict['operation_date'] = None
+  params['select_dict'] = select_dict
+
 
 # We group by uid to really filter duplicated lines, but this makes generated
 # query much slower, and in reality duplicated lines are transactions for which
