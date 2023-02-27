@@ -407,7 +407,12 @@
           }
           if (data_list.length === 0) {
             return domsugar(gadget.element, [
-              domsugar("p", {"text": "No data"})
+              domsugar("p", {"text": "No data"}),
+              domsugar("button", {
+                "class": "graph-button",
+                "type": "button",
+                "text": gadget.state.title
+              })
             ]);
           }
           gadget.element.querySelector(
