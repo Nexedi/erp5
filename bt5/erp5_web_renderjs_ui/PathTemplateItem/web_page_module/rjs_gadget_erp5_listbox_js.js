@@ -1245,15 +1245,16 @@
             .push(function (graphic_gadget) {
               var group_by,
                 group_by_title,
-                column_list_json = JSON.parse(gadget.state.column_list_json),
+                option_list = gadget.state.option_list,
                 domain_dict = JSON.parse(gadget.state.domain_dict_json),
                 domain_list = [],
                 domain_id,
                 domain;
-              for (i = 0; i < column_list_json.length; i += 1) {
-                if (column_list_json[i][0] === gadget.state.graphic_type) {
-                  group_by = column_list_json[i][0];
-                  group_by_title = column_list_json[i][1];
+              for (i = 0; i < option_list.length; i += 1) {
+                if (option_list[i][0] === gadget.state.graphic_type &&
+                    option_list[i][0].indexOf("_domain") === -1) {
+                  group_by = option_list[i][0];
+                  group_by_title = option_list[i][1];
                   return graphic_gadget.render({
                     jio_key: gadget.state.jio_key,
                     group_by: group_by,
@@ -1287,10 +1288,10 @@
                   domain_list.push(domain);
                 }
               }
-              for (i = 0; i < column_list_json.length; i += 1) {
-                if (column_list_json[i][0].indexOf("_state") !== -1) {
-                  group_by = column_list_json[i][0];
-                  group_by_title = column_list_json[i][1];
+              for (i = 0; i < option_list.length; i += 1) {
+                if (option_list[i][0].indexOf("_state") !== -1) {
+                  group_by = option_list[i][0];
+                  group_by_title = option_list[i][1];
                 }
               }
               for (i = 0; i < domain_list.length; i += 1) {
