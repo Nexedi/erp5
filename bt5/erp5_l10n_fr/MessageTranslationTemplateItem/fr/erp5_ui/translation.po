@@ -7936,6 +7936,9 @@ msgstr "Ouvert"
 msgid "Open [state in project_workflow]"
 msgstr "Ouvert"
 
+msgid "Open [state in sale_opportunity_workflow]"
+msgstr "Ouvert"
+
 msgid "Open [state in ticket_workflow]"
 msgstr "Ouvert"
 
