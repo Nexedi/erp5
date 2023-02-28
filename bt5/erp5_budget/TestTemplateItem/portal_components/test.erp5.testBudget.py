@@ -156,6 +156,72 @@ class TestBudget(ERP5TypeTestCase):
     # there is no budget transfer
     self.assertEqual(5, budget_cell.getCurrentBalance())
 
+  def test_budget_cell_node_variation_with_aggregate_using_category(self):
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='node_category',
+                    variation_base_category='account_type',
+                    aggregate_value_list=(
+                      self.portal.portal_categories.account_type.expense,
+                      self.portal.portal_categories.account_type.income,
+                    ))
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    specialise_value=budget_model)
+    budget_line = budget.newContent(portal_type='Budget Line')
+    self.assertEqual(['account_type'],
+                      budget_line.getVariationBaseCategoryList())
+    self.assertEqual(
+        [('Expense', 'account_type/expense'),
+         ('Income', 'account_type/income')],
+        budget_line.BudgetLine_getVariationRangeCategoryList())
+
+    budget_line.setVariationCategoryList(
+         ('account_type/expense',))
+    self.assertEqual(
+        ['account_type/expense'],
+        budget_line.getVariationCategoryList())
+
+    # This was a budget cell variation, so no criterion is set on budget line
+    self.assertEqual(budget_line.getMembershipCriterionCategoryList(), [])
+    self.assertEqual(
+        budget_line.getMembershipCriterionBaseCategoryList(), [])
+
+    # simuate a request and call Base_edit, which does all the work of creating
+    # cell and setting cell properties.
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="5",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[
+               'account_type/expense'],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEqual(1, len(budget_line.contentValues()))
+    budget_cell = budget_line.getCell('account_type/expense')
+    self.assertNotEqual(None, budget_cell)
+
+    self.assertEqual(['account_type/expense'],
+        budget_cell.getMembershipCriterionCategoryList())
+    self.assertEqual(5, budget_cell.getQuantity())
+
+    # there is no budget consumption
+    self.assertEqual(0, budget_cell.getConsumedBudget())
+    self.assertEqual(0, budget_cell.getEngagedBudget())
+    self.assertEqual(5, budget_cell.getAvailableBudget())
+    # there is no budget transfer
+    self.assertEqual(5, budget_cell.getCurrentBalance())
 
   def test_category_budget_cell_variation(self):
     budget_model = self.portal.budget_model_module.newContent(
