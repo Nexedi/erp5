@@ -89,19 +89,34 @@ class NodeBudgetVariation(BudgetVariation):
     node_title_method_id = self.getProperty('node_title_method_id', 'getTitle')
     return guarded_getattr(node, node_title_method_id)()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCellRangeForBudgetLine')
-  def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
-    """The cell range added by this variation
+  def _getNodeItemList(self, context, is_right_display=False):
+    """Returns a list of (title, relative URL) for all nodes of a node.
+
+    If `is_right_display` is true, returns a list of (relative URL, title), for
+    compatibility with matrixbox.
     """
     base_category = self.getProperty('variation_base_category')
     prefix = ''
     if base_category:
       prefix = '%s/' % base_category
+    def addPrefix(relative_url):
+      if relative_url.startswith(prefix):
+        return relative_url
+      return '%s%s' % (prefix, relative_url)
+    if is_right_display:
+      return [
+        (addPrefix(node.getRelativeUrl()), self._getNodeTitle(node))
+         for node in self._getNodeList(context)]
+    return [
+        (self._getNodeTitle(node), addPrefix(node.getRelativeUrl()))
+         for node in self._getNodeList(context)]
 
-    node_item_list = [('%s%s' % (prefix, node.getRelativeUrl()),
-                       self._getNodeTitle(node))
-                           for node in self._getNodeList(budget_line)]
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCellRangeForBudgetLine')
+  def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
+    """The cell range added by this variation
+    """
+    node_item_list = self._getNodeItemList(budget_line, is_right_display=True)
     variation_category_list = budget_line.getVariationCategoryList()
     if matrixbox:
       return [[i for i in node_item_list if i[0] in variation_category_list]]
@@ -115,15 +130,12 @@ class NodeBudgetVariation(BudgetVariation):
     cell_range = self.getCellRangeForBudgetLine(budget_line, matrixbox)
     if not self.getProperty('full_consumption_detail'):
       return cell_range
-
     base_category = self.getProperty('variation_base_category')
     prefix = ''
     if base_category:
       prefix = '%s/' % base_category
 
-    node_item_list = [('%s%s' % (prefix, node.getRelativeUrl()),
-                       self._getNodeTitle(node))
-                           for node in self._getNodeList(budget_line)]
+    node_item_list = self._getNodeItemList(budget_line, is_right_display=True)
     if matrixbox:
       used_node_item_set = {item[0] for item in cell_range[0]}
     else:
@@ -325,12 +337,7 @@ class NodeBudgetVariation(BudgetVariation):
     """Returns the Variation Range Category List that can be applied to this
     budget line.
     """
-    base_category = self.getProperty('variation_base_category')
-    prefix = ''
-    if base_category:
-      prefix = '%s/' % base_category
-    return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
-                for node in self._getNodeList(budget_line)]
+    return self._getNodeItemList(budget_line)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBudgetVariationRangeCategoryList')
@@ -338,12 +345,7 @@ class NodeBudgetVariation(BudgetVariation):
     """Returns the Variation Range Category List that can be applied to this
     budget.
     """
-    base_category = self.getProperty('variation_base_category')
-    prefix = ''
-    if base_category:
-      prefix = '%s/' % base_category
-    return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
-                for node in self._getNodeList(budget)]
+    return self._getNodeItemList(budget)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'initializeBudgetLine')
