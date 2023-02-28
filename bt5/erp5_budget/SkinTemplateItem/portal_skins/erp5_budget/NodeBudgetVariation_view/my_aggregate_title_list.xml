@@ -249,6 +249,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -298,6 +302,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -603,7 +611,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in (here.getPortalNodeTypeList() + here.getPortalPaymentNodeTypeList() + here.getPortalResourceTypeList() + here.getPortalProjectTypeList())]</string> </value>
+            <value> <string>python: [(x, x) for x in (here.getPortalNodeTypeList() + here.getPortalPaymentNodeTypeList() + here.getPortalResourceTypeList() + here.getPortalProjectTypeList() + (\'Category\',))]</string> </value>
         </item>
       </dictionary>
     </pickle>
