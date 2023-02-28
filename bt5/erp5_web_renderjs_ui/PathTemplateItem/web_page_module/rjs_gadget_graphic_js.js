@@ -14,7 +14,9 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("triggerListboxGraphicSelection", "triggerListboxGraphicSelection")
+    .declareAcquiredMethod("triggerListboxGraphicSelection",
+                           "triggerListboxGraphicSelection")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .allowPublicAcquisition("chartItemClick", function (params) {
       var gadget = this;
@@ -265,6 +267,7 @@
     .onStateChange(function (modification_dict) {
 
       var i,
+        translation_list,
         gadget = this,
         query_list = modification_dict.query_list || [],
         queue_list = [
@@ -281,7 +284,11 @@
       for (i = 0; i < query_list.length; i += 1) {
         queue_list.push(gadget.jio_allDocs(query_list[i]));
       }
-      return new RSVP.Queue(RSVP.all(queue_list))
+      return gadget.getTranslationList(["No data", "Quantity"])
+        .push(function (result_list) {
+          translation_list = result_list;
+          return RSVP.all(queue_list);
+        })
         .push(function (result_list) {
           var bar_chart = gadget.element.querySelector(".graph-section"),
             loader = gadget.element.querySelector(".graph-spinner"),
@@ -407,7 +414,7 @@
           }
           if (data_list.length === 0) {
             return domsugar(gadget.element, [
-              domsugar("p", {"text": "No data"}),
+              domsugar("p", {"text": translation_list[0]}),
               domsugar("button", {
                 "class": "graph-button",
                 "type": "button",
@@ -426,7 +433,7 @@
                 axis_dict : {
                   '0': {"title": gadget.state.x_title},
                   '1': {
-                    "title": gadget.state.y_title || "Quantity",
+                    "title": gadget.state.y_title || translation_list[1],
                     "value_type": "number"
                   }
                 },
