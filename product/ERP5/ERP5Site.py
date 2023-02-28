@@ -619,6 +619,16 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
       AutorisationExtractorBeforeTraverseHook.handle,
     )
 
+  security.declareProtected(Permissions.ManagePortal, 'disableAuthorisationExtractor')
+  def disableAuthorisationExtractor(self):
+    """
+    Disable AutorisationExtractorBeforeTraverseHook.
+    """
+    BeforeTraverse.unregisterBeforeTraverse(
+      self,
+      AutorisationExtractorBeforeTraverseHook.handle,
+    )
+
   security.declareProtected(Permissions.ManagePortal, 'isAuthorisationExtractorEnabled')
   def isAuthorisationExtractorEnabled(self):
     """
