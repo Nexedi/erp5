@@ -527,9 +527,12 @@ var GameManager = /** @class */ (function () {
     if (GAMEPARAMETERS.draw_flight_path) {
       this._last_position_drawn = [];
       this._trace_objects_per_drone = [];
-      header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)", "AMSL (m)",
-                     "rel altitude (m)", "yaw (°)", "ground speed (m/s)",
-                     "climb rate (m/s)"];
+      // ! Be aware that the following functions relies on this log format:
+      // - getLogEntries at Drone Simulator Log Page
+      // - getLogEntries at Dron Log Follower API
+      header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
+                     "AMSL (m)", "rel altitude (m)", "yaw (°)",
+                     "ground speed (m/s)", "climb rate (m/s)"];
       for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);

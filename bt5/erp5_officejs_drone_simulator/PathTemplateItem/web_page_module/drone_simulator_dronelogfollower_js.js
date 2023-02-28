@@ -27,7 +27,7 @@ var DroneLogAPI = /** @class */ (function () {
       var i, line_list = log.split('\n'), log_entry_list = [], log_entry,
         log_header_found;
       for (i = 0; i < line_list.length; i += 1) {
-        if (!log_header_found && !line_list[i].includes("timestamp;")) {
+        if (!log_header_found && !line_list[i].includes("timestamp (ms);")) {
           continue;
         }
         log_header_found = true;
