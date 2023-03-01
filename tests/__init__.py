@@ -38,19 +38,9 @@ class _ERP5(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        # glob('%s/product/Formulator/tests/test*.py' % path) +
-        # glob('%s/product/ERP5Form/tests/test*.py' % path) +
-        # ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
-        # glob('%s/product/ERP5/tests/test.*.py' % path) +
-        # ['%s/product/ERP5/tests/testXHTML.py' % path] +
-        # ['%s/product/ERP5/tests/testERP5Core.py' % path] +
-        # ['%s/product/ERP5/tests/testQueryModule.py' % path] +
-        # ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
-        # ['%s/product/ERP5Security/tests/testERP5Security.py' % path] +
-        # ['%s/product/ERP5Type/tests/testUpgradeInstanceWithOldDataFs.py' % path] +
-        # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
-        # ['%s/product/ERP5Type/tests/testFunctionalKM.py' % path] +
-        # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
+        #glob(path + '/product/*/tests/test*.py'),
+        #glob(path + '/bt5/*/TestTemplateItem/test*.py'),
+        #glob(path + '/bt5/*/TestTemplateItem/portal_components/test.*.test*.py'),
         glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_search_rank_catalog/TestTemplateItem/portal_components/test.*.test*.py' % path) +
@@ -58,7 +48,6 @@ class _ERP5(ERP5TypeTestSuite):
         glob('%s/bt5/erp5_osoe_web_renderjs_ui/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_token_login/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_trade_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_pdm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_crm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
@@ -75,18 +64,13 @@ class _ERP5(ERP5TypeTestSuite):
         glob('%s/bt5/erp5_officejs_support_request_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_officejs_afs_directory_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_configurator_standard/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_test_result/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_web_manifest_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_km_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_project_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_corporate_identity_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_run_my_doc*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_oauth*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_js_style*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_performance_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        []
+        glob('%s/bt5/erp5_user_tutorial/TestTemplateItem/portal_components/test.*.test*.py' % path)
       ):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
