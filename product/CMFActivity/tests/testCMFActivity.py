@@ -2472,7 +2472,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool = self.portal.portal_activities
 
     kw = {}
-    self._catch_log_errors(subsystem='CMFActivity')
+    self._catch_log_errors()
     try:
       activity_tool.activity_failure_mail_notification = True
       for kw['activity'] in ActivityTool.activity_dict:
@@ -2496,11 +2496,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.commit()
           self.assertEqual(1, activity_tool.countMessage())
           activity_tool.tic()
-          self.assertIn('no object found', self.logged.pop().getMessage())
+          cmf_activty_log, = [log for log in self.logged if 'CMFActivity' in log.name]
+          self.logged = []
+          self.assertIn('no object found', cmf_activty_log.getMessage())
     finally:
       self._ignore_log_errors()
-    self.assertFalse(self.logged)
-    self.assertFalse(message_list, message_list)
+    self.assertFalse(message_list)
 
   def test_activateByPath(self):
     organisation = self.getOrganisation()
