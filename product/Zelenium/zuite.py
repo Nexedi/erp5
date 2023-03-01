@@ -375,10 +375,6 @@ class Zuite( OrderedFolder ):
                               , reg( 'SERVER_SOFTWARE', 'unknown' )
                               )
 
-        result._updateProperty( 'product_info'
-                              , self._listProductInfo()
-                              )
-
         result._setObject( 'suite.html'
                          , File( 'suite.html'
                                , 'Test Suite'
@@ -563,23 +559,6 @@ class Zuite( OrderedFolder ):
 
         archive.close()
         return stream.getvalue()
-
-    security.declarePrivate('_listProductInfo')
-    def _listProductInfo( self ):
-        """ Return a list of strings of form '%(name)s %(version)s'.
-
-        o Each line describes one product installed in the Control_Panel.
-        """
-        result = []
-        cp = self.getPhysicalRoot().Control_Panel
-        products = cp.Products.objectItems()
-        products.sort()
-
-        for product_name, product in products:
-            version = product.version or 'unreleased'
-            result.append( '%s %s' % ( product_name, version ) )
-
-        return result
 
 
 InitializeClass( Zuite )
