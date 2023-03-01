@@ -1252,7 +1252,7 @@
                 domain;
               for (i = 0; i < option_list.length; i += 1) {
                 if (option_list[i][0] === gadget.state.graphic_type &&
-                    option_list[i][0].indexOf("_domain") === -1) {
+                    !domain_dict.hasOwnProperty(option_list[i][0])) {
                   group_by = option_list[i][0];
                   group_by_title = option_list[i][1];
                   return graphic_gadget.render({
