@@ -702,8 +702,7 @@ class ZuiteTests( unittest.TestCase ):
                                          user_agent='unknown',
                                          remote_addr='unknown',
                                          http_host='unknown',
-                                         server_software='unknown',
-                                         product_info=zuite._listProductInfo())
+                                         server_software='unknown')
         zresults._setObject( 'suite.html'
                            , File( 'suite.html'
                                  , 'Test Suite'
