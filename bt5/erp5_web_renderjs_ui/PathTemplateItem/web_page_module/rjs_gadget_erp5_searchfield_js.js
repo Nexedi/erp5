@@ -94,6 +94,8 @@
             "type": "button"
           })
         ]);
+      } else {
+        domsugar(graphic_container, []);
       }
 
       if (gadget.state.extended_search) {
