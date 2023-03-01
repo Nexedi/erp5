@@ -5233,9 +5233,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._portal_type_base_category_item = \
            PortalTypeBaseCategoryTemplateItem(
                self.getTemplatePortalTypeBaseCategoryList())
-      self._portal_type_type_mixin_item = \
-           PortalTypeTypeMixinTemplateItem(
-               self.getTemplatePortalTypeTypeMixinList())
       self._path_item = \
                PathTemplateItem(self.getTemplatePathList())
       self._preference_item = \
@@ -5289,6 +5286,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
           MixinTemplateItem(self.getTemplateMixinIdList())
       self._tool_component_item = \
           ToolComponentTemplateItem(self.getTemplateToolComponentIdList())
+      try:
+        self._portal_type_type_mixin_item = \
+           PortalTypeTypeMixinTemplateItem(
+               self.getTemplatePortalTypeTypeMixinList())
+        # This property may not be defined if erp5_property_sheets has not been
+        # upgraded yet
+      except AttributeError:
+        self._portal_type_type_mixin_item = PortalTypeTypeMixinTemplateItem(())
+
 
     security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self, no_action=0, update_revision=True):
