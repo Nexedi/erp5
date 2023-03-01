@@ -21,6 +21,7 @@
 ##############################################################################
 
 from cStringIO import StringIO
+import base64
 import binascii
 import msgpack
 import numpy as np
@@ -865,3 +866,15 @@ result = [x for x in data_bucket_stream.getBucketIndexKeySequenceByIndex()]
     self.assertEqual(diff_object_list, [['/usr/bin/2to3-2.7', 'ModifiedValue', 'fade8568285eb14146a7244', 'f631570af55ee08ecef78f3'],
                                         ['/usr/bin/R', 'b4c48d52345ae2eb7ca0455db', '59441ddbc00b6521da571', 'a92be1a7acc03f3846'],
                                         ['/usr/bin/Rscript', 'e97842e556f90be5f7e5', '806725443a01bcae802','1829d887e0c3380ec8f463527']])
+
+
+  def test_18_wendelinTextToNumpySecurity(self):
+    """
+      Test that we do not load pickles when converting encoded wendelin data to numpy.
+    """
+    portal = self.portal
+    ndarray = np.array([[0, 1], [2, object()]])
+    wendelin_text = base64.b64encode(portal.Base_numpyToWendelinData(ndarray))
+    self.assertRaises(ValueError,
+                      portal.Base_wendelinTextToNumpy,
+                      wendelin_text)

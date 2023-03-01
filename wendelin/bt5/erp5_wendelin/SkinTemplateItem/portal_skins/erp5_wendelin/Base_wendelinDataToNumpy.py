@@ -21,6 +21,6 @@ assert checksum == binascii.crc32(data[HEADER_LEN:])
 io = StringIO()
 io.write(data[HEADER_LEN:])
 io.seek(0)
-array = np.load(io)
+array = np.load(io, allow_pickle=False)
 io.close()
 return array
