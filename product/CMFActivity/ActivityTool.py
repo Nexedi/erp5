@@ -92,9 +92,6 @@ ROLE_PROCESSING = 1
 
 # Logging channel definitions
 import logging
-# Main logging channel
-activity_logger = logging.getLogger('CMFActivity')
-# Some logging subchannels
 activity_tracking_logger = logging.getLogger('Tracking')
 activity_timing_logger = logging.getLogger('CMFActivity.TimingLog')
 
