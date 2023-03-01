@@ -22,6 +22,7 @@
 
 from cStringIO import StringIO
 import binascii
+from httplib import NO_CONTENT
 import msgpack
 import numpy as np
 import string
@@ -35,6 +36,14 @@ from zExceptions import BadRequest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
+
+from App.version_txt import getZopeVersion
+if getZopeVersion() < (4, ): # BBB Zope2
+  # Zope set http status code 204 for empty response, but
+  # on Zope 2 this is not correctly reflected in ERP5TypeTestCase.publish,
+  # for such responses the status is set to 200 (but for "real" requests
+  # it is set to 204, this only affected the testing)
+  NO_CONTENT = 200
 
 
 def getRandomString():
@@ -97,12 +106,7 @@ class Test(ERP5TypeTestCase):
     publish_kw = dict(user='ERP5TypeTestCase', env=env,
       request_method='POST', stdin=StringIO(body))
     response = self.publish(path, **publish_kw)
-    # Due to inconsistencies in the Zope framework,
-    # a normal instance returns 204. As explained at
-    # http://blog.ploeh.dk/2013/04/30/rest-lesson-learned-avoid-204-responses/
-    # turning 200 into 204 automatically when the body is empty is questionable.
-    self.assertEqual(200, response.getStatus())
-
+    self.assertEqual(NO_CONTENT, response.getStatus())
     # at every ingestion if no specialised Data Ingestion exists it is created
     # thus it is needed to wait for server side activities to be processed
     self.tic()
@@ -388,7 +392,7 @@ class Test(ERP5TypeTestCase):
       request_method='POST', stdin=StringIO(body))
     response = self.publish(path, **publish_kw)
 
-    self.assertEqual(200, response.getStatus())
+    self.assertEqual(NO_CONTENT, response.getStatus())
 
     self.tic()
 
