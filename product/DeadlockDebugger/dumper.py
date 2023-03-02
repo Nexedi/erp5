@@ -96,25 +96,3 @@ secret = deadlockdebugger.get('secret', '')
 
 if dump_url and secret:
     dump_url += '?'+secret
-
-def match(self, request):
-    uri = request.uri
-
-    # added hook
-    if uri == dump_url:
-        dump = dump_threads()
-        request.channel.push('HTTP/1.0 200 OK\nContent-Type: text/plain\n\n')
-        request.channel.push(dump)
-        request.channel.close_when_done()
-        LOG('DeadlockDebugger', DEBUG, dump)
-        return 0
-    # end hook
-
-    if self.uri_regex.match(uri):
-        return 1
-    else:
-        return 0
-
-if six.PY2:
-  from ZServer.HTTPServer import zhttp_handler
-  zhttp_handler.match = match
