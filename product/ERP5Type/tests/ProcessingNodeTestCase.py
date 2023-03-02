@@ -156,7 +156,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
-      if int(os.environ.get('erp5_wsgi', 0)):
+      if True:
         from Products.ERP5.bin.zopewsgi import app_wrapper, createServer
         sockets = []
         server_type = 'HTTP'
@@ -196,23 +196,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
             logger, sockets=sockets)
           ProcessingNodeTestCase._server_address = hs.addr
           t = Thread(target=hs.run)
-          t.setDaemon(1)
-          t.start()
-      else:
-        _print = lambda hs: verbose and ZopeTestCase._print(
-          message % (hs.server_protocol, hs.server_name, hs.server_port))
-        try:
-          hs = createZServer(log)
-        except RuntimeError as e:
-          ZopeTestCase._print(str(e))
-        else:
-          ProcessingNodeTestCase._server_address = hs.server_name, hs.server_port
-          _print(hs)
-          try:
-            _print(createZServer(log, zserver_type='webdav'))
-          except RuntimeError as e:
-            ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
-          t = Thread(target=Lifetime.loop)
           t.setDaemon(1)
           t.start()
       from Products.CMFActivity import ActivityTool
