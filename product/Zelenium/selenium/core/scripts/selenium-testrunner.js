@@ -553,7 +553,11 @@ objectExtend(HtmlTestCaseRow.prototype, {
             )
             return convertDocumentToDataUrl(doc);
           }
-          aElement.href = recursiveConvertIframeToDataUrl(sel$('selenium_myiframe').contentWindow.document);
+          try {
+            aElement.href = recursiveConvertIframeToDataUrl(sel$('selenium_myiframe').contentWindow.document);
+          } catch (e) {
+            console.warn("Ignored error while dumping document");
+          }
           this.trElement.cells[2].appendChild(aElement);
         }
     },
