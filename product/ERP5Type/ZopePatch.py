@@ -61,9 +61,6 @@ from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
-if six.PY2:
-  # No more ZServer
-  from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
 from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
