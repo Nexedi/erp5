@@ -25,7 +25,7 @@ from DocumentTemplate.DT_String import String
 # Import from Localizer
 import six
 if six.PY2:
-  from .patches import get_request
+  from . import patches as _
 from . import Localizer, MessageCatalog
 from .LocalFiles import LocalDTMLFile
 

@@ -22,10 +22,6 @@ from .itools.i18n import AcceptLanguageType, init_language_selector
 # Import from Zope
 from App.Common import package_home
 
-# Import from Localizer
-from .patches import get_request
-
-
 # Package home
 ph = package_home(globals())
 
@@ -42,7 +38,8 @@ def lang_negotiator(available_languages):
     the list of available languages. Returns the first user pref.  language
     that is available, if none is available returns None.
     """
-    request = get_request()
+    from zope.globalrequest import getRequest
+    request = getRequest()
     if request is None:
         return None
 
