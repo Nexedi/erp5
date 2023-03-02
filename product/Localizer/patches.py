@@ -18,65 +18,15 @@
 This is a hotfix, it dynamically applies several patches to Zope.
 """
 
-# Import from the Standard Library
-import logging
-import os
-import six
-
 # Import from itools
 from .itools.i18n import AcceptLanguageType
 
 # Import from Zope
 from ZPublisher.HTTPRequest import HTTPRequest
-from zope.globalrequest import clearRequest, setRequest
-from zope.globalrequest import getRequest as get_request
 
-# Flag
 patch = False
-Z_DEBUG_MODE = os.environ.get('Z_DEBUG_MODE') == '1'
 
-
-logger = logging.getLogger('Localizer')
-
-
-# PATCH 1: Global Request
-#
-# This part is obsolete because, we now use zope.globalrequest
-#
-# The original purpose was to get the request object from places where the
-# acquisition was disabled (within the __of__ method for example). It was
-# inspired by the Tim McLaughlin's GlobalGetRequest proposal, see
-# http://dev.zope.org/Wikis/DevSite/Proposals/GlobalGetRequest
-#
-# Currently it keeps a Context instance, which wraps the request object,
-# but also other things, like the user's session, as it is required by
-# the ikaaro CMS.
-#
-# The request objects are stored in a dictionary in the Publish module,
-# whose keys are the thread id.
-#
-
-def get_new_publish(zope_publish):
-    def publish(request, *args, **kwargs):
-        try:
-            setRequest(request)
-            return zope_publish(request, *args, **kwargs)
-        finally:
-            clearRequest()
-    return publish
-
-
-if patch is False:
-    patch = True
-
-    if six.PY2: # ZServer-specific patch
-
-      # Apply the patch TODO: zope4py2 is this really needed ?
-      from ZPublisher import Publish
-      Publish.publish = get_new_publish(Publish.publish)
-
-
-# PATCH 2: Accept
+# Accept
 #
 # Adds the variable AcceptLanguage to the REQUEST.  It provides a higher
 # level interface than HTTP_ACCEPT_LANGUAGE.
@@ -105,7 +55,7 @@ def new_processInputs(self):
     self.other['AcceptLanguage'] = accept_language
 
 
-if patch:
+if not patch:
     HTTPRequest.old_processInputs = HTTPRequest.processInputs
     HTTPRequest.processInputs = new_processInputs
-
+    patch = True
