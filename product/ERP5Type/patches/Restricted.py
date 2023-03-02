@@ -458,9 +458,13 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
   allow_type(type(rz[0]))
   allow_type(type(rz))
 
+allow_type(np.dtype)
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
 allow_type(type(np.dtype('int16')))
+allow_type(
+  type(np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])['date'])
+)
 
 # Modify 'safetype' dict in full_write_guard function of RestrictedPython
 # (closure) directly to allow  write access to ndarray
