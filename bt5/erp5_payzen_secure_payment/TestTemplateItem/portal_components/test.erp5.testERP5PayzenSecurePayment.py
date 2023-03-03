@@ -156,14 +156,14 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
       result = self.service.navigate(pt_id, {"key": 'value'})
       signature = sha1('value+INTERACTIVE+ERP5+TEST+REGISTER+SINGLE+0123456+V2+'
         + self.service_password)
-      self.assertEqual(result, """key=vads_site_id value=0123456
-key=vads_payment_config value=SINGLE
+      self.assertEqual(result, """key=key value=value
+key=signature value=%s
 key=vads_action_mode value=INTERACTIVE
 key=vads_contrib value=ERP5
-key=vads_page_action value=REGISTER
 key=vads_ctx_mode value=TEST
-key=key value=value
-key=signature value=%s
+key=vads_page_action value=REGISTER
+key=vads_payment_config value=SINGLE
+key=vads_site_id value=0123456
 key=vads_version value=V2
 """ % signature)
     finally:
