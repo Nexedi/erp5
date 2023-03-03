@@ -317,32 +317,127 @@ register_module_extender(MANAGER, 'AccessControl.PermissionRole',
 ## Package dynamically extending the namespace of their modules with C
 ## extension symbols
 # astroid/brain/ added dynamically to sys.path by astroid __init__
-try:
-    from brain_gi import _gi_build_stub as build_stub
-except ImportError: # BBB: old version of astroid
-    from py2gi import _gi_build_stub as build_stub
+import re
+import inspect
+def build_stub(parent, identifier_re=r'^[A-Za-z_]\w*$'):
+    """
+    Inspect the passed module recursively and build stubs for functions,
+    classes, etc.
+
+    Import of _gi_build_stub from astroid/brain/py2gi.py module to add
+    identifier_re parameter. Use case: Implemented for fail_hook_BTrees: BTrees
+    has classes ending with 'Py' with attributes referencing itself and this
+    lead to a MaximumDepthRecursion as such use case is not implemented. TODO:
+    Implement properly recursion.
+    """
+    classes = {}
+    functions = {}
+    constants = {}
+    methods = {}
+    for name in dir(parent):
+        if name.startswith("__"):
+            continue
+        # Check if this is a valid name in python
+        if not re.match(identifier_re, name):
+            continue
+        try:
+            obj = getattr(parent, name)
+        except:
+            continue
+        if inspect.isclass(obj):
+            classes[name] = obj
+        elif (inspect.isfunction(obj) or
+              inspect.isbuiltin(obj)):
+            functions[name] = obj
+        elif (inspect.ismethod(obj) or
+              inspect.ismethoddescriptor(obj)):
+            methods[name] = obj
+        elif type(obj) in [int, str]:
+            constants[name] = obj
+        elif (str(obj).startswith("<flags") or
+              str(obj).startswith("<enum ") or
+              str(obj).startswith("<GType ") or
+              inspect.isdatadescriptor(obj)):
+            constants[name] = 0
+        elif callable(obj):
+            # Fall back to a function for anything callable
+            functions[name] = obj
+        else:
+            # Assume everything else is some manner of constant
+            constants[name] = 0
+    ret = ""
+    if constants:
+        ret += "# %s contants\n\n" % parent.__name__
+    for name in sorted(constants):
+        if name[0].isdigit():
+            # GDK has some busted constant names like
+            # Gdk.EventType.2BUTTON_PRESS
+            continue
+        val = constants[name]
+        strval = str(val)
+        if type(val) is str:
+            strval = '"%s"' % str(val).replace("\\", "\\\\")
+        ret += "%s = %s\n" % (name, strval)
+    if ret:
+        ret += "\n\n"
+    if functions:
+        ret += "# %s functions\n\n" % parent.__name__
+    for name in sorted(functions):
+        func = functions[name]
+        ret += "def %s(*args, **kwargs):\n" % name
+        ret += "    pass\n"
+    if ret:
+        ret += "\n\n"
+    if methods:
+        ret += "# %s methods\n\n" % parent.__name__
+    for name in sorted(methods):
+        func = methods[name]
+        ret += "def %s(self, *args, **kwargs):\n" % name
+        ret += "    pass\n"
+    if ret:
+        ret += "\n\n"
+    if classes:
+        ret += "# %s classes\n\n" % parent.__name__
+    for name in sorted(classes):
+        ret += "class %s(object):\n" % name
+        classret = build_stub(classes[name])
+        if not classret:
+            classret = "pass\n"
+        for line in classret.splitlines():
+            ret += "    " + line + "\n"
+        ret += "\n"
+    return ret
 def _register_module_extender_from_live_module(module_name, module):
     def transform():
         return AstroidBuilder(MANAGER).string_build(build_stub(module))
     register_module_extender(MANAGER, module_name, transform)
 
-# No name 'OOBTree' in module 'BTrees.OOBTree' (no-name-in-module)
+# Unable to import 'BTrees.OOBTree' (import-error)
 #
-# When the corresponding C Extension (BTrees._Foo) is available, update
-# BTrees.Foo namespace from the C extension, otherwise use Python definitions
-# by dropping the `Py` suffix in BTrees.Foo symbols.
-import BTrees
-import inspect
-for module_name, module in inspect.getmembers(BTrees, inspect.ismodule):
-    if module_name[0] != '_':
-        continue
-    try:
-        extended_module = BTrees.__dict__[module_name[1:]]
-    except KeyError:
-        continue
+# Submodules of BTrees are dynamically added C extensions.
+_inspected_modules = {}
+def fail_hook_BTrees(modname):
+    # Only consider BTrees.OOBTree pattern
+    if not modname.startswith('BTrees.') or len(modname.split('.')) != 2:
+        raise AstroidBuildingException()
+    if modname not in _inspected_modules:
+        try:
+            modcode = build_stub(
+              __import__(modname, {}, {}, [modname], level=0),
+              # Exclude all classes ending with 'Py' (no reason to not call the
+              # C version and not part of public API anyway)
+              identifier_re=r'^[A-Za-z_]\w*(?<!Py)$')
+        except ImportError:
+            astng = None
+        else:
+            astng = AstroidBuilder(MANAGER).string_build(modcode, modname)
+        _inspected_modules[modname] = astng
     else:
-        _register_module_extender_from_live_module(extended_module.__name__,
-                                                   module)
+        astng = _inspected_modules[modname]
+    if astng is None:
+        raise AstroidBuildingException('Failed to import module %r' % modname)
+    return astng
+MANAGER.register_failed_import_hook(fail_hook_BTrees)
 
 # No name 'ElementMaker' in module 'lxml.builder' (no-name-in-module)
 #
