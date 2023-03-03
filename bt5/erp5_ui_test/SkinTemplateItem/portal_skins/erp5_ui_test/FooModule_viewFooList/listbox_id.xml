@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/getId</string> </value>
+            <value> <string>cell/getId | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
