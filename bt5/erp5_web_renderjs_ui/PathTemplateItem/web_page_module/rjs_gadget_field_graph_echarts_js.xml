@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/1</string>
+                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -76,12 +76,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/plain</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_field_graph_echarts.appcache</string> </value>
+            <value> <string>gadget_field_graph_echarts.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,15 +87,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_field_graph_echarts_appcache</string> </value>
+            <value> <string>rjs_gadget_field_graph_echarts_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -108,31 +106,14 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# v1.1.1\n
-CACHE:\n
-gadget_field_graph_echarts.html/echarts-all.js\n
-gadget_field_graph_echarts.html/gadget_global.js\n
-gadget_field_graph_echarts.html/renderjs.js\n
-gadget_field_graph_echarts.html/rsvp.js\n
-gadget_field_graph_echarts.html/unsafe/gadget_field_graph_echarts.js\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs ECharts Cache</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Field Graph With Echarts</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -216,7 +197,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506525352.34</float>
+                              <float>1501592140.25</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -265,7 +246,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>962.25486.15124.29883</string> </value>
+                      <value> <string>995.31800.10757.38246</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -283,8 +264,8 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1538646068.83</float>
-                              <string>GMT+9</string>
+                              <float>1634317787.2</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
@@ -344,7 +325,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506524633.84</float>
+                              <float>1501508426.52</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,8 +76,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_field_graph_echarts.js</string> </value>
+            <value> <string>gadget_field_graph_echarts.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,17 +91,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_field_graph_echarts_js</string> </value>
+            <value> <string>rjs_gadget_field_graph_echarts_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -107,13 +109,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Field Graph With Echarts</string> </value>
+            <value> <string>Field Graph With Echarts HTML</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -197,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1501592140.25</float>
+                              <float>1501508529.86</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -232,7 +232,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>995.31800.10757.38246</string> </value>
+                      <value> <string>970.25483.20924.1058</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,8 +264,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1634317787.2</float>
-                              <string>UTC</string>
+                              <float>1538645729.6</float>
+                              <string>GMT+9</string>
                             </tuple>
                           </state>
                         </object>
@@ -325,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1501508426.52</float>
+                              <float>1501508471.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
