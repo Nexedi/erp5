@@ -222,7 +222,7 @@ class TALESValue(StaticValue):
       kw['CONTEXTS'] = kw
     try:
       value = self.tales_expr.__of__(field)(**kw)
-    except (ConflictError, RuntimeError, Redirect, NotFound):
+    except (ConflictError, RuntimeError, Redirect, NotFound, Unauthorized):
       raise
     except:
       # We add this safety exception to make sure we always get
