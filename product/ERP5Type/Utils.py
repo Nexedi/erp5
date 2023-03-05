@@ -234,7 +234,7 @@ def deprecated(message=''):
   @simple_decorator
   def _deprecated(wrapped):
     m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
-      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+      wrapped.__name__, wrapped.__module__, wrapped.__code__.co_firstlineno)
     def deprecated(*args, **kw):
       warnings.warn(m, DeprecationWarning, 2)
       return wrapped(*args, **kw)
@@ -1272,25 +1272,6 @@ def initializeProduct( context,
                       extra_constructors=tuple(content_constructors),
                       fti=contentFactoryTypeInformations,
                      ).initialize( context )
-
-  # Register Help and API Reference. This trick to make registerHelp works
-  # with 2 directories was taken originally from CMFCore, but it required at
-  # least a (possibly) help directory...
-  help = context.getProductHelp()
-  lastRegistered = help.lastRegistered
-
-  help_list = []
-  for d in 'help', 'interfaces':
-    if os.path.exists(os.path.join(this_module.__path__[0], d)):
-      context.registerHelp(directory=d, clear=1)
-      help_list.append(d)
-
-  if help.lastRegistered != lastRegistered and len(help_list) > 1:
-    for i, d in enumerate(help_list):
-      help.lastRegistered = None
-      context.registerHelp(directory=d, clear=not i)
-
-  context.registerHelpTitle('%s Help' % product_name)
 
   # Register Objets
   for c in object_classes:

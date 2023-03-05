@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import six
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -37,13 +38,6 @@ from Products.ERP5Type.Base import Base, removeIContentishInterface
 from OFS.Image import File as OFS_File
 from Products.ERP5Type.Utils import deprecated
 
-
-def _unpackData(data):
-  """
-  Unpack Pdata into string
-  OBSOLETED. use str(data) instead, because Pdata.__str__ is defined.
-  """
-  return str(data)
 
 _MARKER = object()
 
@@ -147,7 +141,7 @@ class File(Document, OFS_File):
     if data is None:
       return
     if self.hasData():
-      if str(data.read()) == str(self.getData()):
+      if bytes(data.read()) == bytes(self.getData()):
         # Same data as previous, no need to change its content
         return
     else:
@@ -156,6 +150,12 @@ class File(Document, OFS_File):
     if data.tell():
       data.seek(0)
       self.manage_upload(data)
+
+  security.declarePrivate('update_data')
+  def update_data(self, *args, **kw):
+    super(File, self).update_data(*args, **kw)
+    if six.PY2 and isinstance(self.size, long):
+      self.size = int(self.size)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
   def setFile(self, data, precondition=None):
@@ -180,13 +180,13 @@ class File(Document, OFS_File):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
-    """return Data as str."""
+    """return Data as bytes."""
     self._checkConversionFormatPermission(None)
     data = self._baseGetData()
     if data is None:
       return None
     else:
-      return str(data)
+      return bytes(data)
 
   # DAV Support
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
@@ -226,8 +226,8 @@ class File(Document, OFS_File):
       elif getattr(self, 'getBaseData', None) is not None:
         content = self.getBaseData()
 
-    if content and not isinstance(content, str):
-      content = str(content)
+    if content and not isinstance(content, bytes):
+      content = bytes(content)
 
     return (mime_type, content)
 

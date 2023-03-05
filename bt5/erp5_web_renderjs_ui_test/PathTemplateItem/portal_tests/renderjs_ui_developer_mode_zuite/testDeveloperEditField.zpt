@@ -21,18 +21,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
+  <td>clickAndWait</td>
   <td>//label/a[@href="portal_skins/erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_developper_mode/manage_main"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@href="fieldTest"]/span/strong</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//a[@href="fieldTest"]/span/strong</td>
+  <td>//a[@href="fieldTest"]/descendant-or-self::*[text()="Test"]</td>
   <td></td>
 </tr>
 <tr>

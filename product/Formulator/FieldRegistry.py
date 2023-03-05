@@ -2,7 +2,6 @@ from __future__ import absolute_import
 import os
 import OFS
 from App.ImageFile import ImageFile
-from .FieldHelpTopic import FieldHelpTopic
 
 class FieldRegistry:
     """A registry of fields, maintaining a dictionary with
@@ -74,6 +73,8 @@ def initializeFieldForm(field_class):
         tales_field = fields.TALESField(field.id,
                                         title=field.get_value('title'),
                                         description="",
+                                        css_class="form-control code",
+                                        extra='id="%s"' % field.id,
                                         default="",
                                         display_width=40,
                                         required=0)
@@ -82,6 +83,8 @@ def initializeFieldForm(field_class):
         method_field = fields.MethodField(field.id,
                                           title=field.get_value("title"),
                                           description="",
+                                          css_class="form-control code",
+                                          extra='id="%s"' % field.id,
                                           default="",
                                           required=0)
         override_form.add_field(method_field, "widget")
@@ -90,6 +93,8 @@ def initializeFieldForm(field_class):
         form.add_field(field, "validator")
         tales_field = fields.TALESField(field.id,
                                         title=field.get_value('title'),
+                                        css_class="form-control code",
+                                        extra='id="%s"' % field.id,
                                         description="",
                                         default="",
                                         display_with=40,
@@ -98,6 +103,8 @@ def initializeFieldForm(field_class):
 
         method_field = fields.MethodField(field.id,
                                           title=field.get_value("title"),
+                                          css_class="form-control code",
+                                          extra='id="%s"' % field.id,
                                           description="",
                                           default="",
                                           required=0)
