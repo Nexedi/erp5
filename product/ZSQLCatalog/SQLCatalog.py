@@ -1451,7 +1451,10 @@ class Catalog(Folder,
     if meta_type in self.HAS_ARGUMENT_SRC_METATYPE_SET:
       return method.arguments_src.split()
     elif meta_type in self.HAS_FUNC_CODE_METATYPE_SET:
-      return method.func_code.co_varnames[:method.func_code.co_argcount]
+      func_code = method.__code__
+      if func_code is None: # BBB Zope2
+        func_code = method.func_code
+      return func_code.co_varnames[:func_code.co_argcount]
     # Note: Raising here would completely prevent indexation from working.
     # Instead, let the method actually fail when called, so _catalogObjectList
     # can log the error and carry on.
@@ -1837,7 +1840,9 @@ class Catalog(Folder,
       else:
         search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      func_code = script.func_code
+      func_code = script.__code__
+      if func_code is None: # BBB Zope2
+        func_code = script.func_code
       search_key = (
         AdvancedSearchKeyWrapperForScriptableKey if (
           # 5: search_value (under any name), "search_key", "group",

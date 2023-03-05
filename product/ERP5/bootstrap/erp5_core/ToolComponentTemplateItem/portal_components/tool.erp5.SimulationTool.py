@@ -48,7 +48,12 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
-from App.Extensions import getBrain
+# pylint:disable=no-name-in-module
+try: # BBB Zope 2.12
+  from App.Extensions import getBrain
+except ImportError:
+  from Shared.DC.ZRDB.DA import getBrain
+# pylint:enable=no-name-in-module
 from MySQLdb import ProgrammingError
 from MySQLdb.constants.ER import NO_SUCH_TABLE
 

@@ -29,6 +29,7 @@ from cStringIO import StringIO
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type import IS_ZOPE2
 from erp5.component.module.BTreeData import BTreeData
 
 
@@ -76,13 +77,13 @@ def request_function(method_name):
 get = request_function('GET')
 put = request_function('PUT')
 
-
-# FIXME Zope translates 308 to 500
-# https://github.com/zopefoundation/Zope/blob/2.13/src/ZPublisher/HTTPResponse.py#L223
-# https://github.com/zopefoundation/Zope/blob/2.13/src/ZPublisher/HTTPResponse.py#L64
-R308 = 500
-
-
+if IS_ZOPE2: # BBB Zope2
+  # FIXME Zope translates 308 to 500
+  # https://github.com/zopefoundation/Zope/blob/2.13/src/ZPublisher/HTTPResponse.py#L223
+  # https://github.com/zopefoundation/Zope/blob/2.13/src/ZPublisher/HTTPResponse.py#L64
+  R308 = 500
+else:
+  R308 = 308
 
 class TestBigFile(ERP5TypeTestCase):
   """Tests for ERP5.Document.BigFile"""

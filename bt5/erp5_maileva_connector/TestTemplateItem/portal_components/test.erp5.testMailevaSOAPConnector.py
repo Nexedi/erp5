@@ -310,14 +310,13 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
 
   def test_maileva_xml(self):
     xml = self.maileva_connector.generateRequestXML(self.recipient, self.sender, self.document, 'test_track_id')
-    self.assertEqual(xml, '''  <SOAP-ENV:Envelope xmlns:ns0="http://connector.services.siclv2.maileva.fr/" xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:com="http://www.maileva.fr/CommonSchema" xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema" xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema">
+    self.assertEqual(etree.tostring(etree.fromstring(xml)), etree.tostring(etree.fromstring('''  <SOAP-ENV:Envelope xmlns:ns0="http://connector.services.siclv2.maileva.fr/" xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:com="http://www.maileva.fr/CommonSchema" xmlns:pjs="http://www.maileva.fr/MailevaPJSSchema" xmlns:spec="http://www.maileva.fr/MailevaSpecificSchema">
   <SOAP-ENV:Header/>
    <SOAP-ENV:Body>
       <ns0:submit>
         <campaign Version="5.0" Application="connecteur_Maileva">
           <pjs:Requests>
-            <pjs:Request MediaType="DIGITAL"
-                         TrackId="test_track_id">
+            <pjs:Request MediaType="DIGITAL" TrackId="test_track_id">
               <pjs:Recipients>
                 <pjs:Internal>
                   <pjs:Recipient Id="1">
@@ -411,7 +410,7 @@ class testMailevaSOAPConnector(ERP5TypeTestCase):
      </ns0:submit>
     </SOAP-ENV:Body>
   </SOAP-ENV:Envelope>
-''' %  (self.document.getTitle(),  self.document.getTitle())
+''' %  (self.document.getTitle(),  self.document.getTitle())))
 )
 
   def test_maileva_request_validation(self):

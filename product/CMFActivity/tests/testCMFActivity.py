@@ -1565,12 +1565,15 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
       # REQUEST, such as TimerServer.
-      request.setServerURL('https', 'anotherhost.erp5.org', '443')
+      # BBB Zope2: port argument below needs to be str in Zope2, but if we provide '443',
+      # Zope4 will return absolute_url() with ':443' and Zope2 will return without '443'.
+      # This is why we use '444' here.
+      request.setServerURL('https', 'anotherhost.erp5.org', '444')
       request.other['PARENTS'] = [self.app]
       request.setVirtualRoot('')
       # obviously, the object url is different
       self.assertEqual(o.absolute_url(),
-          'https://anotherhost.erp5.org/%s/organisation_module/test_obj'
+          'https://anotherhost.erp5.org:444/%s/organisation_module/test_obj'
            % self.portal.getId())
 
       # but activities are executed using the previous request information

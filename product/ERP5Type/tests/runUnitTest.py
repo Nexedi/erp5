@@ -546,6 +546,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # Set debug mode after importing ZopeLite that resets it to 0
   cfg.debug_mode = debug
 
+  from ZPublisher.HTTPRequest import HTTPRequest
+  HTTPRequest.retry_max_count = 3
+
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
   root_logger = logging.getLogger()
@@ -564,6 +567,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
                           'when': None,
                           'interval': None,
                           'formatter': None,
+                          # Zope4 config
+                          'style': 'classic',
+                          'arbitrary_fields': False,
+                          'encoding': None,
+                          'delay': None,
                           },
                          None, None)
   section.handlers = [handlers.FileHandlerFactory(section)]
@@ -588,7 +596,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
 
-  from Products.ERP5Type.patches import noZopeHelp
   from OFS.Application import AppInitializer
   AppInitializer.install_session_data_manager = lambda self: None
 

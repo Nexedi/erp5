@@ -140,6 +140,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
   the node running the unit tests to tell other nodes on which portal activities
   should be processed.
   """
+  _server_address = None # (host, port) of the http server if it was started, None otherwise
 
   @staticmethod
   def asyncore_loop():
@@ -151,12 +152,11 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   def startZServer(self, verbose=False):
     """Start HTTP ZServer in background"""
-    utils = ZopeTestCase.utils
-    if utils._Z2HOST is None:
+    if self._server_address is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
-      if int(os.environ.get('erp5_wsgi', 0)):
+      if True:
         from Products.ERP5.bin.zopewsgi import app_wrapper, createServer
         sockets = []
         server_type = 'HTTP'
@@ -192,27 +192,14 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           logger = logging.getLogger("access")
           logger.addHandler(logging.FileHandler(log))
           logger.propagate = False
-          hs = createServer(app_wrapper(webdav_ports=webdav_ports),
-            logger, sockets=sockets)
-          utils._Z2HOST, utils._Z2PORT = hs.addr
+          hs = createServer(
+            app_wrapper(
+              large_file_threshold=10<<20,
+              webdav_ports=webdav_ports),
+            logger,
+            sockets=sockets)
+          ProcessingNodeTestCase._server_address = hs.addr
           t = Thread(target=hs.run)
-          t.setDaemon(1)
-          t.start()
-      else:
-        _print = lambda hs: verbose and ZopeTestCase._print(
-          message % (hs.server_protocol, hs.server_name, hs.server_port))
-        try:
-          hs = createZServer(log)
-        except RuntimeError as e:
-          ZopeTestCase._print(str(e))
-        else:
-          utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
-          _print(hs)
-          try:
-            _print(createZServer(log, zserver_type='webdav'))
-          except RuntimeError as e:
-            ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
-          t = Thread(target=Lifetime.loop)
           t.setDaemon(1)
           t.start()
       from Products.CMFActivity import ActivityTool
@@ -222,7 +209,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         if ActivityTool.currentNode == ActivityTool._server_address:
           ActivityTool.currentNode = None
         ActivityTool._server_address = None
-    return utils._Z2HOST, utils._Z2PORT
+    return self._server_address
 
   def _registerNode(self, distributing, processing):
     """Register node to process and/or distribute activities"""
@@ -243,7 +230,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   @classmethod
   def unregisterNode(cls):
-    if ZopeTestCase.utils._Z2HOST is not None:
+    if cls._server_address is not None:
       self = cls('unregisterNode')
       self.app = self._app()
       self._registerNode(distributing=0, processing=0)

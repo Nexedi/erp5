@@ -15,8 +15,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from OFS.Folder import Folder
-from OFS.SimpleItem import Item
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import IS_ZOPE2, Permissions
 
 """
   This patch modifies OFS.Folder._setOb to update portal_skins cache when
@@ -62,9 +61,23 @@ Folder.isERP5SitePresent = Folder_isERP5SitePresent
 
 security = ClassSecurityInfo()
 security.declareProtected(Permissions.ManagePortal, 'isERP5SitePresent')
+
+if not IS_ZOPE2:
+  def Folder_zope_quick_start(self):
+    """Compatibility for old `zope_quick_start` that is referenced in
+    /index_html (at the root)
+    """
+    return 'OK'
+
+  Folder.zope_quick_start = Folder_zope_quick_start
+  security.declarePublic('zope_quick_start')
+
 Folder.security = security
 InitializeClass(Folder)
 
-# restore __repr__ after persistent > 4.4
-# https://github.com/zopefoundation/Zope/issues/379
-Folder.__repr__ = Item.__repr__
+if IS_ZOPE2: # BBB Zope2
+  from OFS.SimpleItem import Item
+
+  # restore __repr__ after persistent > 4.4
+  # https://github.com/zopefoundation/Zope/issues/379
+  Folder.__repr__ = Item.__repr__

@@ -134,9 +134,9 @@ class TestOpenIdConnectLogin(OpenIdConnectLoginTestCase):
     getUserEntry_mock.assert_called_once()
 
     ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_openidconnect_hash=' in v]
-    self.assertIn('; Secure', ac_cookie)
-    self.assertIn('; HTTPOnly', ac_cookie)
-    self.assertIn('; SameSite=Lax', ac_cookie)
+    self.assertIn('; secure', ac_cookie.lower())
+    self.assertIn('; httponly', ac_cookie.lower())
+    self.assertIn('; samesite=lax', ac_cookie.lower())
 
   def test_existing_user(self):
     state=uuid.uuid4().hex

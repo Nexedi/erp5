@@ -21,13 +21,15 @@ import traceback
 import urllib
 import ConfigParser
 from contextlib import contextmanager
-from six.moves import cStringIO as StringIO
+from io import BytesIO
+from functools import partial
 from six.moves.urllib.parse import unquote_to_bytes
 from cPickle import dumps
 from glob import glob
 from hashlib import md5
 from warnings import warn
 from DateTime import DateTime
+import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
@@ -56,7 +58,8 @@ getRequest.__code__ = (lambda: get_request()).__code__
 from zope.site.hooks import setSite
 
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase import PortalTestCase, user_name
+from Testing.makerequest import makerequest
+from Testing.ZopeTestCase import PortalTestCase, user_name, ZopeLite, functional
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -100,6 +103,15 @@ from AccessControl.SecurityManagement import newSecurityManager, noSecurityManag
 from Products.ZSQLCatalog.SQLCatalog import Query
 
 from Acquisition import aq_base
+
+if six.PY2:
+  from contextlib import contextmanager
+  @contextmanager
+  def nullcontext(enter_result=None):
+      yield enter_result
+else:
+  from contextlib import nullcontext
+
 
 portal_name = 'erp5_portal'
 
@@ -216,7 +228,7 @@ def _parse_args(self, *args, **kw):
 _parse_args._original = DateTime._original_parse_args
 DateTime._parse_args = _parse_args
 
-class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
+class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.Functional):
     """Mixin class for ERP5 based tests.
     """
     def __init__(self, *args, **kw):
@@ -747,96 +759,45 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing ... ', DEBUG, message)
 
-    def publish(self, path, basic=None, env=None, extra=None, user=None,
-                request_method='GET', stdin=None, handle_errors=True):
-        '''Publishes the object at 'path' returning a response object.'''
+    def publish(self, path, basic=None, env=None, extra=None,
+                request_method='GET', stdin=None, handle_errors=True,
+                user=None):
+      '''Publishes the object at 'path' returning a response object.
 
-        from ZPublisher.Response import Response
-        from ZPublisher.Publish import publish_module_standard
+      This is from Testing.ZopeTestCase.Functional, extended to support passing
+      a user id directly.
+      '''
+      if user:
+        assert not basic
+        from six.moves._thread import get_ident
+        me = get_ident()
+        def _extractUserIds(pas, request, plugins):
+          if me == get_ident():
+            info = pas._verifyUser(plugins, user)
+            return [(info['id'], info['login'])] if info else ()
+          return mock.DEFAULT
+        user_context = mock.patch(
+          'Products.PluggableAuthService.PluggableAuthService.PluggableAuthService._extractUserIds',
+          side_effect=_extractUserIds,
+          autospec=True)
+      else:
+         user_context = nullcontext()
 
-        from AccessControl.SecurityManagement import getSecurityManager
-        from AccessControl.SecurityManagement import setSecurityManager
-
-        # Save current security manager
-        sm = getSecurityManager()
-
-        # Commit the sandbox for good measure
-        self.commit()
-
-        if env is None:
-            env = {}
-
-        request = self.app.REQUEST
-
-        env['SERVER_NAME'] = request['SERVER_NAME']
-        env['SERVER_PORT'] = request['SERVER_PORT']
-        env['HTTP_ACCEPT_CHARSET'] = request['HTTP_ACCEPT_CHARSET']
-        env['REQUEST_METHOD'] = request_method
-
-        query = ''
-        if '?' in path:
-            path, query = path.split("?", 1)
-        if six.PY2:
-            env['PATH_INFO'] = unquote_to_bytes(path)
-        else:
-            env['PATH_INFO'] = unquote_to_bytes(path).decode('latin-1')
-        env['QUERY_STRING'] = query
-
-        if basic:
-          assert not user, (basic, user)
-          env['HTTP_AUTHORIZATION'] = "Basic %s" % \
-            base64.encodestring(basic).replace('\n', '')
-        elif user:
-          PAS = self.portal.acl_users.__class__
-          orig_extractUserIds = PAS._extractUserIds
-          from thread import get_ident
-          me = get_ident()
-          def _extractUserIds(pas, request, plugins):
-            if me == get_ident():
-              info = pas._verifyUser(plugins, user)
-              return [(info['id'], info['login'])] if info else ()
-            return orig_extractUserIds(pas, request, plugins)
-
-        if stdin is None:
-            stdin = StringIO()
-
-        outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
-
-        try:
-          if user:
-            PAS._extractUserIds = _extractUserIds
-
-          # The following `HTTPRequest` object would be created anyway inside
-          # `publish_module_standard` if no `request` argument was given.
-          request = request.__class__(stdin, env, response)
-          # However, we need to inject the content of `extra` inside the
-          # request.
-          if extra:
-            for k, v in six.iteritems(extra): request[k] = v
-
-          publish_module_standard('Zope2',
-                         request=request,
-                         response=response,
-                         stdin=stdin,
-                         environ=env,
-                         debug=not handle_errors,
-                        )
-        finally:
-          if user:
-            PAS._extractUserIds = orig_extractUserIds
-          # Restore security manager
-          setSecurityManager(sm)
-          # Restore site removed by closing of request
-          setSite(self.portal)
-
-
-
+      try:
+        with user_context:
+          return super(ERP5TypeTestCaseMixin, self).publish(
+            path,
+            basic=basic,
+            env=env,
+            extra=extra,
+            request_method=request_method,
+            stdin=stdin,
+            handle_errors=handle_errors,
+          )
+      finally:
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
         self.changeSkin(self.portal.getCurrentSkinName())
-
-        return ResponseWrapper(response, outstream, path)
 
     def getConsistencyMessageList(self, obj):
         return sorted([ str(message.getMessage())
@@ -999,9 +960,25 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     def _app(self):
       '''Opens a ZODB connection and returns the app object.
 
-      We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
-      unicode conflict resolver to work properly'''
-      app = PortalTestCase._app(self)
+      We override this method so that the request knows about the address of
+      our http server and also to set HTTP_ACCEPT_CHARSET set in REQUEST, to
+      get the zpt unicode conflict resolver to
+      work properly.
+
+      We reimplement PortalTestCase._app instead of calling it, because it
+      opens a ZODB connection and wrap the root object a request to
+      http://nohost, but we prefer to create directly a connection to the
+      app wrapped in a request to our web server.
+      '''
+      app = ZopeLite.app()
+      environ = {}
+      if self._server_address:
+        host, port = self._server_address
+        environ['SERVER_NAME'] = host
+        environ['SERVER_PORT'] = str(port)
+
+      app = makerequest(app, environ=environ)
+      registry.register(app)
       app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
       return app
 
@@ -1425,45 +1402,6 @@ from Products.ERP5 import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
   ERP5TypeCommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 
-
-class ResponseWrapper:
-    '''Decorates a response object with additional introspective methods.'''
-
-    _headers_separator_re = re.compile('(?:\r?\n){2}')
-
-    def __init__(self, response, outstream, path):
-        self._response = response
-        self._outstream = outstream
-        self._path = path
-
-    def __getattr__(self, name):
-        return getattr(self._response, name)
-
-    def getOutput(self):
-        '''Returns the complete output, headers and all.'''
-        return self._outstream.getvalue()
-
-    def getBody(self):
-        '''Returns the page body, i.e. the output par headers.'''
-        output = self.getOutput()
-        try:
-            headers, body = self._headers_separator_re.split(output, 1)
-            return body
-        except ValueError:
-            # not enough values to unpack: no body
-            return None
-
-    def getPath(self):
-        '''Returns the path used by the request.'''
-        return self._path
-
-    def getHeader(self, name):
-        '''Returns the value of a response header.'''
-        return self.headers.get(name.lower())
-
-    def getCookie(self, name):
-        '''Returns a response cookie.'''
-        return self.cookies.get(name)
 
 class ERP5ReportTestCase(ERP5TypeTestCase):
   """Base class for testing ERP5 Reports
