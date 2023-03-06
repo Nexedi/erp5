@@ -2319,6 +2319,11 @@ def xmlsec_decrypt():
   decrypted = enc_ctx.decrypt(enc_data)
   print(lxml.etree.tostring(decrypted))
 
+import numpy
+numpy.sin([])
+import pandas
+pandas.DataFrame([])
+
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
