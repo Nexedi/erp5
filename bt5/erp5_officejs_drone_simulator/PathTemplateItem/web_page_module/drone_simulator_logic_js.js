@@ -375,39 +375,44 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
+  var R = 6371e3;
   function calculateMapInfo(map, map_dict, initial_position) {
     var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                        [map_dict.min_lat, map_dict.max_lon]),
       max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                       [map_dict.max_lat, map_dict.min_lon]),
       map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6,
+      local_min = map.toLocalCoordinates(map_dict.min_lat, map_dict.min_lon),
+      local_max = map.toLocalCoordinates(map_dict.max_lat, map_dict.max_lon),
       map_info = {
         "depth": map_size,
         "height": map_dict.height,
         "width": map_size,
         "map_size": map_size,
-        "min_x": map.longitudToX(map_dict.min_lon, map_size),
-        "min_y": map.latitudeToY(map_dict.min_lat, map_size),
-        "max_x": map.longitudToX(map_dict.max_lon, map_size),
-        "max_y": map.latitudeToY(map_dict.max_lat, map_size),
-        "start_AMSL": map_dict.start_AMSL
-      },
-      position = map.normalize(
-        map.longitudToX(initial_position.longitude, map_size),
-        map.latitudeToY(initial_position.latitude, map_size),
-        map_info
-      );
-    map_info.initial_position = {
-      "x": position[0],
-      "y": position[1],
-      "z": initial_position.z
-    };
+        "min_x": local_min.x,
+        "min_y": local_min.y,
+        "max_x": local_max.x,
+        "max_y": local_max.y,
+        "start_AMSL": map_dict.start_AMSL,
+        "initial_position": {
+          "x": 0,
+          "y": 0,
+          "z": initial_position.z
+        }
+      };
     return map_info;
+  }
+  function toRad(angle) {
+    return angle * Math.PI / 180;
   }
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
       largeGroundBottom, width, depth, terrain, max;
+    _this.ref_lat_rad = toRad(GAMEPARAMETERS.initialPosition.latitude);
+    _this.ref_lon_rad = toRad(GAMEPARAMETERS.initialPosition.longitude);
+    _this.ref_sin_lat = Math.sin(_this.ref_lat_rad);
+    _this.ref_cos_lat = Math.cos(_this.ref_lat_rad);
     _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map,
                                       GAMEPARAMETERS.initialPosition);
     max = _this.map_info.width;
@@ -457,15 +462,31 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
-  MapManager.prototype.longitudToX = function (lon, map_size) {
-    return (map_size / 360.0) * (180 + lon);
+  MapManager.prototype.constraint = function (input, min, max) {
+    return (input > max) ? max : (input < min) ? min : input;
   };
-  MapManager.prototype.latitudeToY = function (lat, map_size) {
-    return (map_size / 180.0) * (90 - lat);
+  //azimuthal projection
+  MapManager.prototype.toLocalCoordinates = function (lat, lon) {
+    var lat_rad = toRad(lat),
+      lon_rad = toRad(lon),
+      sin_lat = Math.sin(lat_rad),
+      cos_lat = Math.cos(lat_rad),
+      cos_d_lon = Math.cos(lon_rad - this.ref_lon_rad),
+      c = Math.acos(this.constraint(
+        this.ref_sin_lat * sin_lat + this.ref_cos_lat * cos_lat * cos_d_lon,
+        -1,
+        1
+      )),
+      k = (Math.abs(c) > 0) ? (c / Math.sin(c)) : 1,
+      mul = k * R;
+
+    return {
+      "x": mul * (this.ref_cos_lat * sin_lat - this.ref_sin_lat * cos_lat * cos_d_lon),
+      "y": mul * cos_lat * Math.sin(lon_rad - this.ref_lon_rad)
+    };
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
-    var R = 6371e3,
-      q1 = c1[0] * Math.PI / 180,
+    var q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
       dq = (c2[0] - c1[0]) * Math.PI / 180,
       dl = (c2[1] - c1[1]) * Math.PI / 180,
@@ -475,26 +496,34 @@ var MapManager = /** @class */ (function () {
       c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-  MapManager.prototype.normalize = function (x, y, map_dict) {
-    var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
-      n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.width / 2,
-            n_y * 1000 - map_dict.depth / 2];
+  MapManager.prototype.toDeg = function (angle) {
+    return angle * 180 / Math.PI;
   };
-  MapManager.prototype.convertToGeoCoordinates = function (x, y, z, map_dict) {
-    var lon = x + map_dict.width / 2,
-      lat = y + map_dict.depth / 2;
-    lon = lon / 1000;
-    lon = lon * (map_dict.max_x - map_dict.min_x) +
-      map_dict.min_x;
-    lon = lon / (map_dict.width / 360.0) - 180;
-    lat = lat / 1000;
-    lat = lat * (map_dict.max_y - map_dict.min_y) +
-      map_dict.min_y;
-    lat = 90 - lat / (map_dict.depth / 180.0);
+  //azimuthal projection
+  MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
+    var x_rad = x / R,
+      y_rad = y / R,
+      c = Math.sqrt(Math.pow(x_rad, 2) + Math.pow(y_rad, 2)),
+      sin_c,
+      cos_c,
+      lat_rad = this.ref_lat_rad,
+      lon_rad = this.ref_lon_rad;
+
+    if (Math.abs(c) > 0) {
+      sin_c = Math.sin(c);
+      cos_c = Math.cos(c);
+      lat_rad = Math.asin(
+        cos_c * this.ref_sin_lat + (x_rad * sin_c * this.ref_cos_lat) / c
+      );
+      lon_rad = this.ref_lon_rad + Math.atan2(
+        y_rad * sin_c,
+        c * this.ref_cos_lat * cos_c - x_rad * this.ref_sin_lat * sin_c
+      );
+    }
+
     return {
-      x: lat,
-      y: lon,
+      x: this.toDeg(lat_rad),
+      y: this.toDeg(lon_rad),
       z: z
     };
   };
@@ -687,8 +716,7 @@ var GameManager = /** @class */ (function () {
                 geo_coordinates = map_manager.convertToGeoCoordinates(
                   drone_position.x,
                   drone_position.y,
-                  drone_position.z,
-                  map_info
+                  drone_position.z
                 );
                 game_manager._flight_log[index].push([
                   game_manager._game_duration, geo_coordinates.x,
