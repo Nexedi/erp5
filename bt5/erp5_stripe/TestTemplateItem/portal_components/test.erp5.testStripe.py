@@ -205,7 +205,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       return (200, {'content-type': 'application/json'}, json.dumps({
         "id": session_id,
         "status": status,
-        "object": "checkout.session"
+        "object": "checkout.session",
+        "url": "https://stripe.url"
       }))
     return _callback
 
@@ -382,13 +383,16 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         self.session_url,
         self._response_callback("abc123")
       )
-      stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
+      module.StripePaymentSessionModule_createStripeSession(
         connector,
         self.data.copy(),
         module.getRelativeUrl(),
-        batch_mode=True
       )
       self.tic()
+      stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference="abc123"
+      )
       self.assertEqual(connector, stripe_payment_session.getSourceValue())
       self._document_to_delete_list.append(stripe_payment_session)
       self.assertEqual(
@@ -415,8 +419,13 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         self.session_url,
         self._response_callback("abc321_expired")
       )
-      first_stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
-        connector, data, module.getRelativeUrl(), batch_mode=True)
+      module.StripePaymentSessionModule_createStripeSession(
+        connector, data, module.getRelativeUrl())
+      self.tic()
+      first_stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference="abc321_expired"
+      )
       first_stripe_payment_session.setExpirationDate(DateTime() - 1)
       self.tic()
 
@@ -426,8 +435,13 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         self.session_url,
         self._response_callback("abc321_completed")
       )
-      second_stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
-        connector, data, module.getRelativeUrl(), batch_mode=True)
+      module.StripePaymentSessionModule_createStripeSession(
+        connector, data, module.getRelativeUrl())
+      self.tic()
+      second_stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference="abc321_completed"
+      )
       second_stripe_payment_session.setExpirationDate(DateTime() - 1)
       self.tic()
 
@@ -449,6 +463,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         "%s/ERP5Site_receiveStripeWebHook" % self.portal.getPath(),
         stdin=BytesIO(urllib.parse.urlencode({
           "BODY": json.dumps({
+            "url": "https://stripe.url",
             "id": "evt_%s" % "abc321_expired",
             "object": "event",
             "data": {
@@ -490,7 +505,8 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         json={
           "id": "test_update_expiration_date",
           "status": "open",
-          "object": "checkout.session"
+          "object": "checkout.session",
+          "url": "https://stripe.url"
         },
       )
       rsps.add(
@@ -499,12 +515,17 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         json={
           "id": "test_update_expiration_date",
           "status": "open",
-          "object": "checkout.session"
+          "object": "checkout.session",
         },
       )
 
-      stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
-        connector, data, module.getRelativeUrl(), batch_mode=True)
+      module.StripePaymentSessionModule_createStripeSession(
+        connector, data, module.getRelativeUrl())
+      self.tic()
+      stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference="test_update_expiration_date"
+      )
       self.assertEqual("open", stripe_payment_session.getValidationState())
       stripe_payment_session.setExpirationDate(DateTime() - 1)
       self.tic()
@@ -531,10 +552,13 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector,
         self.data.copy(),
-        module.getRelativeUrl(),
-        batch_mode=True
+        module.getRelativeUrl()
       )
       self.tic()
+      stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference=session_id
+      )
       self._document_to_delete_list.append(stripe_payment_session)
 
     first_http_exchange, = stripe_payment_session.getFollowUpRelatedValueList(
@@ -550,7 +574,7 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       self.assertRaises(
         requests.HTTPError,
         stripe_payment_session.StripePaymentSession_retrieveSession,
-        connector, batch_mode=1
+        connector
       )
       self.tic()
 
@@ -565,13 +589,15 @@ class TestStripePaymentSession(ERP5TypeTestCase):
         self.session_url,
         self._response_callback(session_id)
       )
-      stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
+      module.StripePaymentSessionModule_createStripeSession(
         connector,
         self.data.copy(),
-        module.getRelativeUrl(),
-        batch_mode=True
+        module.getRelativeUrl()
       )
       self.tic()
+      stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference=session_id)
       self._document_to_delete_list.append(stripe_payment_session)
 
     with responses.RequestsMock() as rsps:
@@ -603,9 +629,11 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       stripe_payment_session = module.StripePaymentSessionModule_createStripeSession(
         connector,
         self.data.copy(),
-        batch_mode=True
       )
       self.tic()
+      stripe_payment_session = self.portal.portal_catalog.getResultValue(
+        portal_type="Stripe Payment Session",
+        reference=session_id)
       self._document_to_delete_list.append(stripe_payment_session)
     first_http_exchange, = stripe_payment_session.getFollowUpRelatedValueList(
       portal_type="HTTP Exchange")
