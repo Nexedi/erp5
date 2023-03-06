@@ -182,11 +182,9 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
+                            <global name="DateTime" module="DateTime.DateTime"/>
                           </klass>
                           <tuple>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -240,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1006.36731.10993.50739</string> </value>
+                      <value> <string>1006.56577.35273.580</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -251,16 +249,14 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="_reconstructor" module="copy_reg"/>
+                            <global name="DateTime" module="DateTime.DateTime"/>
                           </klass>
                           <tuple>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1677169724.0</float>
+                              <float>1678112527.37</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
