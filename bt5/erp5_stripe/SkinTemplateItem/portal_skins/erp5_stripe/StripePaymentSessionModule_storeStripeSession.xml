@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference, expiration_date, resource, source, causality, request, response, batch_mode=False</string> </value>
+            <value> <string>reference, expiration_date, resource, source, causality, request, response</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
