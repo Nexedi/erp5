@@ -486,6 +486,11 @@ else:
   _register_module_extender_from_live_module('xmlsec.tree', xmlsec.tree)
   _register_module_extender_from_live_module('xmlsec.template', xmlsec.template)
 
+
+import numpy.core
+_register_module_extender_from_live_module('numpy.core.umath', numpy.core.umath)
+
+
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
