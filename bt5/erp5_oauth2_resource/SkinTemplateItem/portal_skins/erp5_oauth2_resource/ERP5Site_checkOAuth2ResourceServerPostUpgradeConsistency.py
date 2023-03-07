@@ -8,6 +8,7 @@ for plugin_value in user_folder.objectValues():
   if getattr(plugin_value, 'meta_type', None) == 'ERP5 OAuth2 Resource Server Plugin':
     break
 else:
+  plugin_id = 'erp5_oauth2_resource' # XXX hardcoded
   error_list.append('PAS plugin %r does not exist' % (plugin_id, ))
   if fixit:
     user_folder.manage_addProduct['ERP5Security'].addERP5OAuth2ResourceServerPlugin(
