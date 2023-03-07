@@ -24,6 +24,7 @@ from .itools.i18n import AcceptLanguageType
 # Import from Zope
 from ZPublisher.HTTPRequest import HTTPRequest
 
+from Products.ERP5Type import IS_ZOPE2
 patch = False
 
 # Accept
@@ -59,3 +60,24 @@ if not patch:
     HTTPRequest.old_processInputs = HTTPRequest.processInputs
     HTTPRequest.processInputs = new_processInputs
     patch = True
+
+    if IS_ZOPE2: # BBB Zope2 (ZServer-specific patch)
+        from zope.globalrequest import clearRequest, setRequest
+        from zope.globalrequest import getRequest as get_request
+
+        def get_new_publish(zope_publish):
+            def publish(request, *args, **kwargs):
+                try:
+                    setRequest(request)
+                    return zope_publish(request, *args, **kwargs)
+                finally:
+                    clearRequest()
+            return publish
+
+        # Apply the patch
+        from ZPublisher import Publish
+        Publish.publish = get_new_publish(Publish.publish)
+
+        # Add to Globals for backwards compatibility
+        import Globals
+        Globals.get_request = get_request
