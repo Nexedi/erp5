@@ -20,6 +20,7 @@
 
 from __future__ import absolute_import
 import sys
+from Products.ERP5Type import IS_ZOPE2
 
 # TODO: make sure that trying to use it does not import isort, because the
 #       latter hacks Python in order to execute:
@@ -438,6 +439,25 @@ def fail_hook_BTrees(modname):
         raise AstroidBuildingException('Failed to import module %r' % modname)
     return astng
 MANAGER.register_failed_import_hook(fail_hook_BTrees)
+
+if IS_ZOPE2: # BBB Zope2
+    # No name 'OOBTree' in module 'BTrees.OOBTree' (no-name-in-module)
+    # Unable to import 'BTrees.OOBTree' (import-error)
+    #
+    # When the corresponding C Extension (BTrees._Foo) is available, update
+    # BTrees.Foo namespace from the C extension, otherwise use Python definitions
+    # by dropping the `Py` suffix in BTrees.Foo symbols.
+    import BTrees
+    for module_name, module in inspect.getmembers(BTrees, inspect.ismodule):
+        if module_name[0] != '_':
+            continue
+        try:
+            extended_module = BTrees.__dict__[module_name[1:]]
+        except KeyError:
+            continue
+        else:
+            _register_module_extender_from_live_module(extended_module.__name__,
+                                                       module)
 
 # No name 'ElementMaker' in module 'lxml.builder' (no-name-in-module)
 #

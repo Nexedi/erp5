@@ -33,6 +33,11 @@
 from __future__ import absolute_import
 from App.config import getConfiguration
 from .patches import python, globalrequest, Pandas
+from App.version_txt import getZopeVersion
+if  getZopeVersion()[0] == 2: # BBB Zope2
+  IS_ZOPE2 = True
+else:
+  IS_ZOPE2 = False
 import six
 if six.PY2:
   from .patches import pylint
@@ -44,12 +49,6 @@ if six.PY3:
   WITH_LEGACY_WORKFLOW = False
 else:
   WITH_LEGACY_WORKFLOW = True
-
-from App.version_txt import getZopeVersion
-if  getZopeVersion()[0] == 2: # BBB Zope2
-  IS_ZOPE2 = True
-else:
-  IS_ZOPE2 = False
 
 # We have a name conflict with source_reference and destination_reference,
 # which are at the same time property accessors for 'source_reference'
