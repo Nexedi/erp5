@@ -80,7 +80,9 @@ class SFTPConnection:
           break
       else:
         raise SFTPError('No suitable socket family found')
-      self.transport = Transport(sock)
+      self.transport = Transport(sock, disabled_algorithms={
+        'pubkeys': self.getDisabledPublicKeyAlgorithmList([]),
+      })
     else:
       raise SFTPError('Not a valid sftp url %s, type is %s' %(self.url, schema.scheme))
     # Add authentication to transport

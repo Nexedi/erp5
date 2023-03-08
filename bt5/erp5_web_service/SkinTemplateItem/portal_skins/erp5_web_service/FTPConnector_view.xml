@@ -86,6 +86,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                        <string>my_disabled_public_key_algorithm_list</string>
                       </list>
                     </value>
                 </item>
