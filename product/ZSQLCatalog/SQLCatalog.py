@@ -1451,7 +1451,7 @@ class Catalog(Folder,
     if meta_type in self.HAS_ARGUMENT_SRC_METATYPE_SET:
       return method.arguments_src.split()
     elif meta_type in self.HAS_FUNC_CODE_METATYPE_SET:
-      func_code = method.__code__
+      func_code = getattr(method, '__code__', None)
       if func_code is None: # BBB Zope2
         func_code = method.func_code
       return func_code.co_varnames[:func_code.co_argcount]
@@ -1840,7 +1840,7 @@ class Catalog(Folder,
       else:
         search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      func_code = script.__code__
+      func_code = getattr(script, '__code__', None)
       if func_code is None: # BBB Zope2
         func_code = script.func_code
       search_key = (
