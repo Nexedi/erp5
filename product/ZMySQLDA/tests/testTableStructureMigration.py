@@ -115,16 +115,16 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
         dedent(
             """\
       CREATE TABLE `X` (
-        `a` int(11) DEFAULT NULL
+        `a` varchar(10) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         dedent(
             """\
       CREATE TABLE `X` (
-        `a` varchar(10) DEFAULT NULL
+        `a` int(11) DEFAULT NULL
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""))
-    # insterting 1 will be casted as string
-    self.query("INSERT INTO X VALUES (1)")
-    self.assertEqual(('1',), self.query("SELECT a FROM X")[1][0])
+    # insterting '1' will be casted as int
+    self.query("INSERT INTO X VALUES ('1')")
+    self.assertEqual((1,), self.query("SELECT a FROM X")[1][0])
 
   def test_change_column_default(self):
     self.check_upgrade_schema(
@@ -209,7 +209,7 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
             """\
       CREATE TABLE `table` (
         `and` int(11) DEFAULT NULL,
-        `alter` varchar(255) DEFAULT 'BETWEEN',
+        `alter` varchar(255) CHARACTER SET cp1250 COLLATE cp1250_croatian_ci DEFAULT 'BETWEEN',
         KEY `use` (`alter`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
         table_name='table')
