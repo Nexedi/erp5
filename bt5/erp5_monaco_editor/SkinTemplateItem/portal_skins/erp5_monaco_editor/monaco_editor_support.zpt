@@ -44,6 +44,10 @@
     /* This says "press F10 for full screen but our monaco patch does not support this" */
     content: "" !important;
   }
+  #editor_container {
+    height: 100% !important;
+    min-height: 30rem;
+  }
   .ace_editor {
     display: none;
   }
@@ -70,6 +74,12 @@ var $script = document.createElement("script");
 $script.src =
   window.monacoEditorWebPackResourceBaseUrl + "/monaco-editor/app.bundle.min.js";
 document.head.appendChild($script);
+
+/* make "Parameter List" input on python scripts use a monospace font */
+var $params = document.getElementById("params");
+if ($params) {
+  $params.classList.add("code");
+}
 
 $script.onload = function() {
   var $textarea =
