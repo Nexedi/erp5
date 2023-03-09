@@ -263,6 +263,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
   FixedWingDroneAPI.prototype.setAltitude = function (drone, altitude) {
     drone._targetCoordinates.z = altitude;
+    this._last_target = drone._targetCoordinates;
   };
 
   FixedWingDroneAPI.prototype.setSpeed = function (drone, speed) {
