@@ -262,7 +262,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
 
   FixedWingDroneAPI.prototype.setAltitude = function (drone, altitude) {
-    drone._targetCoordinates.z = altitude;
+    drone._targetCoordinates.z = altitude - this._map_dict.start_AMSL;
+    this._last_target = drone._targetCoordinates;
   };
 
   FixedWingDroneAPI.prototype.setSpeed = function (drone, speed) {
@@ -526,10 +527,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return;
   };
   FixedWingDroneAPI.prototype.getInitialAltitude = function () {
-    return 0;
+    return this._map_dict.start_AMSL;
   };
   FixedWingDroneAPI.prototype.getAltitudeAbs = function (altitude) {
-    return altitude;
+    return altitude + this._map_dict.start_AMSL;
   };
   FixedWingDroneAPI.prototype.getMinHeight = function () {
     return 0;
