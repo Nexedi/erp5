@@ -194,7 +194,7 @@ var DroneManager = /** @class */ (function () {
     }
     return this._API.setStartingPosition(this, x, y, z);
   };
-  DroneManager.prototype.setSpeed = function (speed) {
+  DroneManager.prototype.setAirspeed = function (speed) {
     if (!this._canPlay) {
       return;
     }
@@ -316,7 +316,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getYaw = function () {
     return this._API.getYaw(this);
   };
-  DroneManager.prototype.getSpeed = function () {
+  DroneManager.prototype.getAirspeed = function () {
     return this._speed;
   };
   DroneManager.prototype.getGroundSpeed = function () {

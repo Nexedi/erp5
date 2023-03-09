@@ -171,7 +171,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
 
   FixedWingDroneAPI.prototype._updateSpeed = function (drone, delta_time) {
-    var speed = drone.getSpeed(), speedDiff, speedUpdate;
+    var speed = drone.getAirspeed(), speedDiff, speedUpdate;
     if (speed !== this._targetSpeed) {
       speedDiff = this._targetSpeed - speed;
       speedUpdate = drone._acceleration * delta_time / 1000;
@@ -191,7 +191,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
 
     horizontalCoeff = Math.sqrt(
       (
-        Math.pow(drone.getSpeed(), 2) - Math.pow(newY, 2)
+        Math.pow(drone.getAirspeed(), 2) - Math.pow(newY, 2)
       ) / (
         Math.pow(newX, 2) + Math.pow(newZ, 2)
       )
@@ -235,14 +235,14 @@ var FixedWingDroneAPI = /** @class */ (function () {
       verticalSpeed = this._computeVerticalSpeed(
         altitudeDiff,
         this.getMaxClimbRate(),
-        drone.getSpeed(),
+        drone.getAirspeed(),
         this.getMaxPitchAngle()
       );
     } else {
       verticalSpeed = -this._computeVerticalSpeed(
         Math.abs(altitudeDiff),
         this.getMaxSinkRate(),
-        drone.getSpeed(),
+        drone.getAirspeed(),
         -this.getMinPitchAngle()
       );
     }
@@ -272,7 +272,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       this.getMinSpeed()
     );
 
-    drone._acceleration = (this._targetSpeed > drone.getSpeed())
+    drone._acceleration = (this._targetSpeed > drone.getAirspeed())
       ? this.getMaxAcceleration() : -this.getMaxDeceleration();
   };
 
@@ -471,7 +471,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   FixedWingDroneAPI.prototype.getYawVelocity = function (drone) {
     return 360 * EARTH_GRAVITY
       * Math.tan(this._toRad(this.getMaxRollAngle()))
-      / (2 * Math.PI * drone.getSpeed());
+      / (2 * Math.PI * drone.getAirspeed());
   };
   FixedWingDroneAPI.prototype.getYaw = function (drone) {
     var direction = drone.worldDirection;
@@ -499,13 +499,13 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return angle * 180 / Math.PI;
   };
   FixedWingDroneAPI.prototype.getClimbRate = function (drone) {
-    return drone.worldDirection.y * drone.getSpeed();
+    return drone.worldDirection.y * drone.getAirspeed();
   };
   FixedWingDroneAPI.prototype.getGroundSpeed = function (drone) {
     var direction = drone.worldDirection;
     return Math.sqrt(
-      Math.pow(direction.x * drone.getSpeed(), 2)
-        + Math.pow(direction.z * drone.getSpeed(), 2)
+      Math.pow(direction.x * drone.getAirspeed(), 2)
+        + Math.pow(direction.z * drone.getAirspeed(), 2)
     );
   };
   FixedWingDroneAPI.prototype.triggerParachute = function (drone) {
