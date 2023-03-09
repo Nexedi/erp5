@@ -64,3 +64,8 @@ background color of the gutter (cosmetic) */
 .CodeMirror-line {
   background-color: transparent !important;
 }
+
+/* Hide Zope4's Ace editor */
+#editor_container {
+  display: none;
+}
