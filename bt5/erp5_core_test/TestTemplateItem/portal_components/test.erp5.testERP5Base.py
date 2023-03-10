@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# coding: utf-8
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Kevin Deldycke <kevin_AT_nexedi_DOT_com>
 #
@@ -1101,6 +1101,44 @@ class TestERP5Base(ERP5TypeTestCase):
         [x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      translated_portal_type='Personne')])
+    self.abort()
+
+  def test_standard_translated_related_keys_non_ascii(self):
+    # make sure we can search by "translated_validation_state_title" and
+    # "translated_portal_type" with non ascii translations
+    message_catalog = self.portal.Localizer.erp5_ui
+    lang = 'fr'
+    if lang not in [x['id'] for x in
+        self.portal.Localizer.get_languages_map()]:
+      self.portal.Localizer.manage_addLanguage(lang)
+
+    message_catalog.gettext('Draft', add=1)
+    message_catalog.gettext('Person', add=1)
+    message_catalog.message_edit('Draft', lang, 'Broüillon', '')
+    message_catalog.message_edit('Person', lang, 'Pérsonne', '')
+
+    self.portal.ERP5Site_updateTranslationTable()
+
+    person_1 = self.portal.person_module.newContent(portal_type='Person')
+    person_1.validate()
+    person_2 = self.portal.person_module.newContent(portal_type='Person')
+    organisation = self.portal.organisation_module.newContent(
+                            portal_type='Organisation')
+    self.tic()
+
+    # patch the method, we'll abort later
+    self.portal.Localizer.get_selected_language = lambda: lang
+
+    self.assertEqual({person_1, person_2}, {x.getObject()
+      for x in self.portal.portal_catalog(translated_portal_type='Pérsonne')})
+    self.assertEqual({person_2, organisation}, {x.getObject()
+      for x in self.portal.portal_catalog(
+        translated_validation_state_title='Broüillon',
+        portal_type=('Person', 'Organisation'))})
+    self.assertEqual([person_2],
+        [x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Broüillon',
+                                     translated_portal_type='Pérsonne')])
     self.abort()
 
   def test_Base_createCloneDocument(self):
