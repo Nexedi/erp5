@@ -32,6 +32,7 @@ import math
 from DateTime.DateTime import _calcSD, _calcDependentSecond, _calcYMDHMS,\
 getDefaultDateFormat, _correctYear, _calcHMS, _calcDependentSecond2, DateTimeError,\
 SyntaxError, DateError, TimeError, localtime, time
+from Products.ERP5Type import IS_ZOPE2
 
 STATE_KEY = 'str'
 
@@ -303,6 +304,7 @@ DateTimeKlass.TimeError = TimeError
 # See https://github.com/zopefoundation/DateTime/blob/2.12.8/src/DateTime/DateTime.py#L1863-L1874
 # This patch is no longer needed once we are using DateTime >= 3 so
 # it is not needed on python3 (copy_reg does not exist on python3)
-import copy_reg
-copy_reg._reconstructor.__module__ = 'copy_reg'
-copy_reg._reconstructor.__name__ = '_reconstructor'
+if IS_ZOPE2: # BBB Zope2
+  import copy_reg
+  copy_reg._reconstructor.__module__ = 'copy_reg'
+  copy_reg._reconstructor.__name__ = '_reconstructor'
