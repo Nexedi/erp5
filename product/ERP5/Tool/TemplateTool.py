@@ -67,7 +67,7 @@ from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
 import time
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes, unicode2str
 import json
 
 WIN = os.name == 'nt'
@@ -723,7 +723,7 @@ class TemplateTool (BaseTool):
         Return a repository and an id.
       """
       repository, id = json.loads(b64decode(uid))
-      return repository.encode('utf-8'), id.encode('utf-8')
+      return unicode2str(repository), unicode2str(id)
 
     security.declarePublic( 'encodeRepositoryBusinessTemplateUid' )
     def encodeRepositoryBusinessTemplateUid(self, repository, id):
@@ -731,7 +731,7 @@ class TemplateTool (BaseTool):
         encode the repository and the id of a business template.
         Return an uid.
       """
-      return b64encode(json.dumps((repository, id)))
+      return b64encode(str2bytes(json.dumps((repository, id))))
 
     security.declarePublic('compareVersionStrings')
     def compareVersionStrings(self, version, comparing_string):
