@@ -22,18 +22,13 @@ from . import persistent_migration
 from ZODB.POSException import ConflictError
 import six
 
-class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
-  # PersistentBroken can't be reused directly
-  # because its « layout differs from 'GhostPortalType' »
 
-  # This prevents serialize (ZODB) from reloading the class during commit
-  # (which would look for __Broken_newargs__ which is not present)
-  __getnewargs__ = None
-
-  def __metaclass__(name, base, d):
+class PersistentBrokenMetaClass(type):
+  def __new__(cls, name, bases, d):
     d = dict(PersistentBroken.__dict__, **d)
-    for x in '__dict__', '__metaclass__', '__weakref__':
-      del d[x]
+    del d['__dict__']
+    del d['__weakref__']
+
     def get(x):
       def get(self):
         d = self.__dict__
@@ -44,7 +39,17 @@ class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
       return property(get)
     for x in 'id', 'title':
       d[x] = get(x)
-    return type(name, base, d)
+    return type(name, bases, d)
+
+
+@six.add_metaclass(PersistentBrokenMetaClass)
+class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
+  # PersistentBroken can't be reused directly
+  # because its « layout differs from 'GhostPortalType' »
+
+  # This prevents serialize (ZODB) from reloading the class during commit
+  # (which would look for __Broken_newargs__ which is not present)
+  __getnewargs__ = None
 
   def __getattr__(self, name):
     try:
