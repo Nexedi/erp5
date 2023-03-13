@@ -149,6 +149,17 @@ def getCurrentNode():
       currentNode = getServerAddress()
     return currentNode
 
+def _getPrivilegedUser(user_folder):
+  # The following logic partly comes from unrestricted_apply()
+  # implementation in ERP5Type.UnrestrictedMethod but we get roles
+  # from the portal to have more roles.
+  return PrivilegedUser(
+    system_user.getUserName(),
+    None,
+    user_folder.valid_roles(),
+    (),
+  ).__of__(user_folder)
+
 # Here go ActivityBuffer instances
 # Structure:
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
@@ -306,24 +317,20 @@ class Message(BaseMessage):
       if user is None:
         user_folder = portal.aq_parent.acl_users
         user = user_folder.getUserById(user_name)
+      if user is not None:
+        user = user.__of__(user_folder)
       if user is None and user_name == system_user.getUserName():
         # The following logic partly comes from unrestricted_apply()
         # implementation in ERP5Type.UnrestrictedMethod but we get roles
         # from the portal to have more roles.
-        user_folder = portal_user_folder
-        user = PrivilegedUser(
-          user_name,
-          None,
-          user_folder.valid_roles(),
-          (),
-        )
+        user = _getPrivilegedUser(portal_user_folder)
     else:
       user_folder = portal.getPhysicalRoot().unrestrictedTraverse(
         self.user_folder_path,
       )
+      user = user.__of__(user_folder)
       user_name = user.getIdOrUserName()
     if user is not None:
-      user = user.__of__(user_folder)
       newSecurityManager(None, user)
       if annotate_transaction:
         transaction.get().setUser(user_name, '/'.join(user_folder.getPhysicalPath()))
@@ -1291,6 +1298,7 @@ class ActivityTool (BaseTool):
       """
       # Prevent TimerService from starting multiple threads in parallel
       if timerservice_lock.acquire(0):
+        portal = self.getPortalObject()
         try:
           # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
           # but on 2.2 it's by traversal, and our site probably wasn't traversed
@@ -1300,10 +1308,10 @@ class ActivityTool (BaseTool):
           self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
-            # get owner of portal_catalog, so normally we should be able to
-            # have the permission to invoke all activities
-            user = self.portal_catalog.getWrappedOwner()
-            newSecurityManager(self.REQUEST, user)
+            newSecurityManager(
+              self.REQUEST,
+              _getPrivilegedUser(portal.acl_users),
+            )
 
             currentNode = getCurrentNode()
             self.registerNode(currentNode)
@@ -1318,7 +1326,7 @@ class ActivityTool (BaseTool):
             # portals, we clear this cache to make sure the cache doesn't
             # contains skins from another portal.
             try:
-              self.getPortalObject().portal_skins.changeSkin(None)
+              portal.portal_skins.changeSkin(None)
             except AttributeError:
               pass
 
