@@ -78,7 +78,7 @@
       }
       return Query.objectToSearchText(query);
     })
-    .onEvent("click", function (evt) {
+    .onEvent("click", function () {
       return this.triggerListboxGraphicSelection();
     })
     /////////////////////////////////////////////////////////////////
@@ -104,11 +104,11 @@
           extended_search_mapping: {},
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
-        performance_mapping = {
+        /*performance_mapping = {
           "translated_simulation_state_title": [
             "simulation_state", "getTranslatedSimulationStateTitle"
           ]
-        },
+        },*/
         domain_list,
         i,
         j;
@@ -123,13 +123,16 @@
         group_by = options.group_by;
       }
 
-      for (i = 0; i < group_by.length; i += 1) {
+      /* XXX - Improve the perfomance changing the parameter in the select_list is not working properly 
+        For example, use getTranslatedSimulationStateTitle instead of translated_simulation_state_title
+      */
+      /*for (i = 0; i < group_by.length; i += 1) {
         if (performance_mapping.hasOwnProperty(group_by[i])) {
           options.layout.x.key = performance_mapping[group_by[i]][1];
           data.x = options.layout.x.key;
           group_by[i] = performance_mapping[group_by[i]][0];
         }
-      }
+      }*/
 
       data.y = "count(*)";
 
