@@ -348,12 +348,8 @@ class Alarm(XMLObject, PeriodicityMixin):
     result_list = [x for x in active_process.getResultList() if x is not None]
     attachment_list = []
     if len(result_list):
-      def sort_result_list(a, b):
-        result = - cmp(a.severity, b.severity)
-        if result == 0:
-          result = cmp(a.summary, b.summary)
-        return result
-      result_list.sort(sort_result_list)
+      # Here we assume that severity type is int or float and summary type is same for all entries.
+      result_list.sort(key=lambda e: (-e.severity, e.summary))
       rendered_alarm_result_list = ['%02i summary: %s\n%s\n----' %
         (int(getattr(x, 'severity', 0)), getattr(x, 'summary', ''), getattr(x, 'detail', ''))
         for x in result_list]
