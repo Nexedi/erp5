@@ -403,8 +403,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = person_result[0].getObject()
     self.assertEqual(person.getTitle(), 'Homer Simpson')
     self.assertEqual(person.getDefaultEmailText(), 'homer.simpson@fox.com')
-    # the obsolete email property is not used
-    self.assertFalse(person.hasDefaultEmailUrlString())
 
     # check homie can log in the system
     self._assertUserExists('homie', 'secret')
@@ -431,7 +429,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         last_name='Simpsons', # add a 's' to the end of the last_name
         reference='homie',
         password='new_password',
-        default_email_coordinate_text='homie.simpsons@fox.com',
+        default_email_text='homie.simpsons@fox.com',
         destination_decision=homie.getRelativeUrl())
 
     credential_update.submit()
@@ -458,7 +456,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual(related_person.getLastName(), 'Simpsons')
     self.assertEqual(related_person.getDefaultEmailText(),
     'homie.simpsons@fox.com')
-    self.assertFalse(related_person.hasDefaultEmailUrlString())
 
   def stepCreateSubscriptionRequestWithSecurityQuestionCategory(self, sequence=None,
       sequence_list=None, **kw):
@@ -547,7 +544,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = person_module.newContent(title='Barney',
                              reference='barney',
                              start_date=DateTime('1970/01/01'),
-                             default_email_coordinate_text='barney@duff.com')
+                             default_email_text='barney@duff.com')
     # create an assignment
     assignment = person.newContent(portal_type='Assignment',
                       function='member')
@@ -865,7 +862,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual("Homer", person.getFirstName())
     self.assertEqual("Simpson", person.getLastName())
     self.assertEqual("homer.simpson@fox.com", person.getDefaultEmailText())
-    self.assertFalse(person.hasDefaultEmailUrlString())
     self.assertEqual(DateTime('1970/01/01'), person.getStartDate())
     self.logout()
 
@@ -882,7 +878,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual("tom", person.getFirstName())
     self.assertEqual("Simpson", person.getLastName())
     self.assertEqual("tom@host.com", person.getDefaultEmailText())
-    self.assertFalse(person.hasDefaultEmailUrlString())
     self.assertEqual(DateTime('1970/01/01'), person.getStartDate())
 
   def stepCheckPersonWhenCredentialUpdateFail(self, sequence=None,
@@ -1143,7 +1138,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual(credential_request.getFirstName(), "Barney")
     self.assertEqual(credential_request.getDefaultEmailText(),
         "barney@duff.com")
-    self.assertFalse(credential_request.hasDefaultEmailUrlString())
     self.assertEqual(credential_request.getRole(), "internal")
     self.assertEqual(credential_request.getFunction(), "member")
 
