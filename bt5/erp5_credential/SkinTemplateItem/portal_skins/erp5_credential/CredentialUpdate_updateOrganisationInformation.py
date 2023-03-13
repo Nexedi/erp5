@@ -5,7 +5,7 @@ organisation = context.getDestinationDecisionValue(portal_type="Organisation")
 #Mapping
 organisation_mapping = (
     # (subscription, organisation)
-    ('default_email_coordinate_text', 'default_email_coordinate_text'),
+    ('default_email_text', 'default_email_text'),
     ('default_telephone_text', 'default_telephone_text'),
     ('default_fax_text', 'default_fax_text'),
     ('default_address_street_address', 'default_address_street_address'),
