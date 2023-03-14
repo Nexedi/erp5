@@ -90,12 +90,6 @@ BankAccount inherits from Base and from the mix-in Coordinate.</string> </value>
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
