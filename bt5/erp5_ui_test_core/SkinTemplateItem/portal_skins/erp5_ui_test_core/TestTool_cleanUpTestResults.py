@@ -10,5 +10,4 @@ try:
           for x in portal_tests.objectValues('Zuite Results')])
 except BadRequest:
   pass
-print "OK"
-return printed
+return "OK"
