@@ -111,6 +111,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
+from Products.ERP5Type.Utils import str2bytes
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -424,8 +425,8 @@ class DB(TM):
         """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None
-        if isinstance(query_string, six.text_type):
-          query_string = query_string.encode('utf-8')
+        if not isinstance(query_string, bytes):
+          query_string = str2bytes(query_string)
         # XXX deal with a typical mistake that the user appends
         # an unnecessary and rather harmful semicolon at the end.
         # Unfortunately, MySQLdb does not want to be graceful.
