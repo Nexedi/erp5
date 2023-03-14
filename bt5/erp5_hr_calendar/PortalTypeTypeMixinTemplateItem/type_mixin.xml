@@ -1,0 +1,8 @@
+<type_mixin>
+ <portal_type id="Public Holiday Line">
+  <item>PeriodicityMixin</item>
+ </portal_type>
+ <portal_type id="Time Table Line">
+  <item>PeriodicityMixin</item>
+ </portal_type>
+</type_mixin>

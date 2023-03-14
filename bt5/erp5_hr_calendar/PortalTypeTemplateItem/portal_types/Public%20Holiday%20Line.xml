@@ -56,14 +56,6 @@
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple>
-                <string>PeriodicityMixin</string>
-              </tuple>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
