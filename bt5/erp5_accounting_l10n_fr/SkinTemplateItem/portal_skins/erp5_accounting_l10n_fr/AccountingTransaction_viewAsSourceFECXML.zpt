@@ -6,7 +6,7 @@
   <PieceDate tal:content="python: context.getStartDate().strftime('%Y-%m-%d')"></PieceDate>
   <tal:block tal:replace="nothing"><EcritureLet></EcritureLet>
   <DateLet></DateLet></tal:block>
-  <ValidDate tal:content="python: context.getModificationDate().strftime('%Y-%m-%d')">Modification Date</ValidDate>
+  <ValidDate tal:content="python: context.AccountingTransaction_getDeliverDate().strftime('%Y-%m-%d')">Modification Date</ValidDate>
   <tal:block tal:repeat="line python:context.contentValues(portal_type=context.getPortalAccountingMovementTypeList())"><ligne
     tal:define="account python:line.getSourceValue(portal_type='Account')" tal:condition="python: account is not None">
       <CompteNum tal:content="account/Account_getGapId">Reference Compte (Account_getGapId)</CompteNum>
