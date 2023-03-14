@@ -29,6 +29,7 @@
 from collections import defaultdict
 import os
 
+import six
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -1143,6 +1144,32 @@ class TestERP5Base(ERP5TypeTestCase):
         [x.getObject() for x in
           self.portal.portal_catalog(title='名前',
                                      translated_portal_type='Pérsonne')])
+
+    if six.PY2:
+      # listbox (for example) searches catalog with unicode
+      self.assertEqual({person_1, person_2}, {x.getObject()
+        for x in self.portal.portal_catalog(translated_portal_type=u'Pérsonne')})
+      self.assertEqual({person_2, organisation}, {x.getObject()
+        for x in self.portal.portal_catalog(
+          translated_validation_state_title=u'Broüillon',
+          portal_type=('Person', 'Organisation'))})
+      self.assertEqual([person_2],
+          [x.getObject() for x in
+            self.portal.portal_catalog(translated_validation_state_title=u'Broüillon',
+                                       translated_portal_type=u'Pérsonne')])
+      self.assertEqual([person_1],
+          [x.getObject() for x in
+            self.portal.portal_catalog(title=u'名前',
+                                       translated_portal_type='Pérsonne')])
+      self.assertEqual([person_1],
+          [x.getObject() for x in
+            self.portal.portal_catalog(title='名前',
+                                       translated_portal_type=u'Pérsonne')])
+      self.assertEqual([person_1],
+          [x.getObject() for x in
+            self.portal.portal_catalog(title=u'名前',
+                                       translated_portal_type=u'Pérsonne')])
+
     self.abort()
 
   def test_Base_createCloneDocument(self):
