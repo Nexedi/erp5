@@ -406,8 +406,32 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(3, len(credit_list))
     self.assertEqual(185, sum([float(x.text) for x in credit_list]))
 
+  def test_ValidDate(self):
+    account_module = self.portal.account_module
+    invoice = self._makeOne(
+              portal_type='Purchase Invoice Transaction',
+              title='Première Écriture',
+              simulation_state='delivered',
+              reference='1',
+              source_section_value=self.organisation_module.supplier,
+              stop_date=DateTime(2014, 2, 2),
+              lines=(dict(destination_value=account_module.payable,
+                          destination_debit=132.00),
+                     dict(destination_value=account_module.refundable_vat,
+                          destination_credit=22.00),
+                     dict(destination_value=account_module.goods_purchase,
+                          destination_credit=110.00)))
+
+    assert invoice.workflow_history['accounting_workflow'][-1]['action'] == 'deliver'
+    invoice.workflow_history['accounting_workflow'][-1]['time'] = DateTime(2001, 2, 3)
+
+    tree = etree.fromstring(invoice.AccountingTransaction_viewAsSourceFECXML())
+    self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
+    tree = etree.fromstring(invoice.AccountingTransaction_viewAsDestinationFECXML())
+    self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccounting_l10n_fr))
   return suite
-
