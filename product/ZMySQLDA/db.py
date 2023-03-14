@@ -466,6 +466,8 @@ class DB(TM):
         return items, result
 
     def string_literal(self, s):
+        # This methods accepts bytes or str with only ASCII characters
+        # and return bytes.
         return self.db.string_literal(s)
 
     def _begin(self, *ignored):
