@@ -2462,6 +2462,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
                                       'property_sheet_list',
                                       'workflow_list',
                                       'base_category_list',
+                                      'type_mixin',
                                       'last_id', 'uid') or \
             (attr == 'workflow_history' and
              not self.isKeepWorkflowObject(relative_url)):
