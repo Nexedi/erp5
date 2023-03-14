@@ -117,12 +117,6 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

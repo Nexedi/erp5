@@ -74,12 +74,6 @@
             </value>
         </item>
         <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>type_zodb_property_sheet_list</string> </key>
             <value>
               <tuple/>
