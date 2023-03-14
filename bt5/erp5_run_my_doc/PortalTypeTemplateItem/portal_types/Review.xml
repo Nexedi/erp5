@@ -55,9 +55,7 @@
         <item>
             <key> <string>type_mixin</string> </key>
             <value>
-              <tuple>
-                <string>UrlMixin</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
       </dictionary>

@@ -1,0 +1,5 @@
+<type_mixin>
+ <portal_type id="Review">
+  <item>UrlMixin</item>
+ </portal_type>
+</type_mixin>
