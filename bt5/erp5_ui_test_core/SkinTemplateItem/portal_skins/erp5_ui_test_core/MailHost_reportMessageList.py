@@ -12,11 +12,11 @@ if getattr(context.MailHost, "getMessageList", None) is None:
 message_list = context.MailHost.getMessageList()
 for mail in message_list:
   for part in mail:
-    print part
-  print "="*79
-  print ""
+    print(part)
+  print("="*79)
+  print("")
 
-print "Total messages: %s" %len(message_list)
+print("Total messages: %s" %len(message_list))
 
 # If messages "looks like html", zope will set content type to text/html,
 # and the assertTextPresent from selenium will be applied after the emails
