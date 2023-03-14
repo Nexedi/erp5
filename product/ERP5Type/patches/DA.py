@@ -30,7 +30,6 @@ from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
 from io import BytesIO
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import str2bytes
 
 security = ClassSecurityInfo()
 DA.security = security
@@ -207,7 +206,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     security=getSecurityManager()
     security.addContext(self)
     try:
-        query = str2bytes(self.template(p, **argdata))
+        query = self.template(p, **argdata)
     except TypeError as msg:
         msg = str(msg)
         if 'client' in msg:
@@ -223,8 +222,6 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
         result=self._cached_result(DB__, query, self.max_rows_, c)
     else:
       try:
-#         if 'portal_ids' in query:
-#           LOG("DA query", INFO, "query = %s" %(query,))
         result=DB__.query(query, self.max_rows_)
       except:
         LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=True)
