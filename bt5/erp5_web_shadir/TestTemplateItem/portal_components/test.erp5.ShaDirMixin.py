@@ -44,10 +44,9 @@ class ShaDirMixin(object):
       Initialize the ERP5 site.
     """
     self.login()
-    self.portal = self.getPortal()
 
     self.key = 'mykey' + str(random.random())
-    self.file_content = 'This is the content.'
+    self.file_content = b'This is the content.'
     self.file_sha512sum = hashlib.sha512(self.file_content).hexdigest()
     self.distribution = 'pypi'
     self.creation_date = DateTime()
@@ -62,14 +61,14 @@ class ShaDirMixin(object):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      b64encode("User SIGNATURE goes here.")]
+                      b64encode(b"User SIGNATURE goes here.").decode()]
 
-    self.data = json.dumps(self.data_list)
+    self.data = json.dumps(self.data_list).encode()
     self.sha512sum = hashlib.sha512(self.data).hexdigest()
 
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + b64encode('ERP5TypeTestCase:'),
+      'Authorization': 'Basic ' + b64encode(b'ERP5TypeTestCase:').decode(),
     }
 
     module = self.portal.web_site_module
