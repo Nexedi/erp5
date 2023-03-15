@@ -383,14 +383,14 @@ class FunctionalTestRunner:
           test_table = tr[1].xpath('.//table')[0]
           status = tr.attrib.get('class')
           if 'status_failed' in status:
-            if etree.tostring(test_table).find("expected failure") != -1:
+            if "expected failure" in etree.tostring(test_table, encoding="unicode"):
               expected_failure_amount += 1
             else:
               failure_amount += 1
               error_title_list.append(test_name)
             detail_element = E.DIV()
             detail_element.append(E.DIV(E.P(test_name), E.BR, test_table))
-            detail += etree.tostring(detail_element)
+            detail += etree.tostring(detail_element, encoding="unicode")
       tr_count += 1
     sucess_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
