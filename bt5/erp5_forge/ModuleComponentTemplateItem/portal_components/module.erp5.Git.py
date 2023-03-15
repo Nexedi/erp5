@@ -64,6 +64,7 @@ class Git(WorkingCopy):
 
   def _git(self, *args, **kw):
     kw.setdefault('cwd', self.working_copy)
+    kw.setdefault('universal_newlines', True)
     argv = ['git']
     try:
       return subprocess.Popen(argv + list(args), **kw)
