@@ -139,14 +139,14 @@ class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
 
   def _getCookie(self, name, default=None):
     try:
-      return json.loads(b64decode(self.REQUEST[name]))
-    except StandardError:
+      return json.loads(b64decode(self.REQUEST[name]).decode())
+    except Exception:
       return default
 
   def _setCookie(self, name, value, days=30):
     portal = self.getPortalObject()
     request = portal.REQUEST
-    value = b64encode(json.dumps(value))
+    value = b64encode(json.dumps(value).encode()).decode()
     request.set(name, value)
     if days:
       expires = (DateTime() + days).toZone('GMT').rfc822()
