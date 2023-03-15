@@ -109,9 +109,9 @@ def buildEmailMessage(from_url, to_url, msg=None,
     sent by Zope MailHost.
 
     * attachment_list is a list of dictionaries with those keys:
-     - name : name of the attachment,
-     - content: data of the attachment
-     - mime_type: mime-type corresponding to the attachment
+     - name (str): name of the attachment
+     - content (bytes): data of the attachment
+     - mime_type (str): mime-type corresponding to the attachment
     * extra_headers is a dictionary of custom headers to add to the email.
       "X-" prefix is automatically added to those headers.
     * additional_headers is similar to extra_headers, but no prefix is added.

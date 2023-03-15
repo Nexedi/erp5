@@ -54,6 +54,7 @@ def decode_email(file_):
   for key, value in msg.items():
     decoded_value_list = decode_header(value)
     unicode_value = make_header(decoded_value_list)
+    # TODO PY3
     new_value = unicode_value.__unicode__().encode('utf-8')
     theMail['headers'][key.lower()] = new_value
   # Filter mail addresses
@@ -302,12 +303,12 @@ class TestNotificationTool(ERP5TypeTestCase):
         attachment_list=[
           {
             'name': 'Attachment 1',
-            'content': 'Text 1',
+            'content': b'Text 1',
             'mime_type': 'text/plain',
           },
           {
             'name': 'Attachment 2',
-            'content': 'Text 2',
+            'content': b'Text 2',
             'mime_type': 'application/octet-stream',
           },
         ])
@@ -322,8 +323,11 @@ class TestNotificationTool(ERP5TypeTestCase):
     mail_dict = decode_email(messageText)
     self.assertEqual(mail_dict['headers']['subject'], 'Subject')
     self.assertEqual(mail_dict['body'], 'Message')
+    # "Attachment 1" is decoded as str because there was a charset in the
+    # message, this is how this `decode_email` utility function from this
+    # test works.
     self.assertSameSet([('Attachment 1', 'text/plain', 'Text 1'),
-                        ('Attachment 2', 'application/octet-stream', 'Text 2')],
+                        ('Attachment 2', 'application/octet-stream', b'Text 2')],
                        mail_dict['attachment_list'])
 
   def test_07_AttachmentMessage(self):
