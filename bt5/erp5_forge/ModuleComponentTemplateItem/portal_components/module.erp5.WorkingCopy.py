@@ -43,6 +43,7 @@ from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5Type.Utils import simple_decorator
 from six import string_types as basestring
 from six.moves import range
+import six
 
 @simple_decorator
 def selfcached(func):
@@ -78,19 +79,18 @@ def issubdir(parent, child):
   return parent == child or child.startswith(parent + os.sep)
 
 ImplicitType = type(Implicit)
+class WorkingCopyMetaClass(ImplicitType):
+  def __init__(cls, name, bases, d): # pylint: disable=no-self-argument,super-init-not-called
+    ImplicitType.__init__(cls, name, bases, d) # pylint: disable=non-parent-init-called
+    if cls.reference:
+      cls._registry.append((cls.reference, cls))
 
-class WorkingCopy(Implicit):
+
+class WorkingCopy(six.with_metaclass(WorkingCopyMetaClass, Implicit)):
 
   __allow_access_to_unprotected_subobjects__ = 1
   _registry = []
   reference = None
-
-  class __metaclass__(ImplicitType):
-
-    def __init__(cls, name, bases, d): # pylint: disable=no-self-argument,super-init-not-called
-      ImplicitType.__init__(cls, name, bases, d) # pylint: disable=non-parent-init-called
-      if cls.reference:
-        cls._registry.append((cls.reference, cls))
 
   def __init__(self, path=None, restricted=False):
     if path:
