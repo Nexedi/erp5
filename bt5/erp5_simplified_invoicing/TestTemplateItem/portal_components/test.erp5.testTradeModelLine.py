@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from UserDict import UserDict
+from six.moves import UserDict
 import random
 import unittest
 from unittest import expectedFailure
@@ -60,6 +60,10 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   node_portal_type = 'Organisation'
   order_date = DateTime()
   amount_generator_line_portal_type = 'Trade Model Line'
+
+  # XXX so that unittest.suite._isnotsuite return False
+  def __iter__(self):
+    raise TypeError()
 
   def setBaseAmountQuantityMethod(self, base_amount_id, text):
     """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
@@ -97,10 +101,6 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     self.portal.portal_preferences.getActiveSystemPreference().setPreferredTaxUseList(['use/tax'])
     self.tic()
     return super(TestTradeModelLineMixin, self).afterSetUp()
-
-  def beforeTearDown(self):
-    UserDict.clear(self)
-    return super(TestTradeModelLineMixin, self).beforeTearDown()
 
   def clone(self, document):
     parent = document.getParentValue()
