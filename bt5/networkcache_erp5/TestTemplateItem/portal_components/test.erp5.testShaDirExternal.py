@@ -83,7 +83,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual('', data)
+    self.assertEqual(b'', data)
     self.assertEqual(201, result.status)
 
     # Check Data Set
@@ -121,7 +121,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(json.dumps([json.loads(self.data)]), data)
+    self.assertEqual(json.dumps([json.loads(self.data)]), data.decode())
     self.assertEqual(200, result.status)
     self.assertEqual(self.content_type, result.getheader("content-type"))
 
