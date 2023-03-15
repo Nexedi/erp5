@@ -26,8 +26,9 @@
 #
 ##############################################################################
 
-
-import hashlib, six.moves.http_client
+import hashlib
+import six
+import six.moves.http_client
 from Products.ERP5Type.UnrestrictedMethod import super_user
 
 
@@ -77,7 +78,7 @@ def File_viewAsWeb(self):
 
   # Shortcut if the file is not a Pdata.
   data=self.data
-  if isinstance(data, str):
+  if isinstance(data, bytes):
     # Do this way instead of 'return data'
     # to bypass default caching policy manager.
     RESPONSE.write(data)
@@ -85,7 +86,9 @@ def File_viewAsWeb(self):
 
   # For Pdata type, we must iterate and send chunk by chunk.
   # And no need to continue if the client closed the connection.
-  while data and not RESPONSE.stdout._channel.closed:
+  while data:
+    if six.PY2 and RESPONSE.stdout._channel.closed:
+      break
     # Send data to the client.
     RESPONSE.write(data.data)
     # Load next object without keeping previous chunks in memory.
