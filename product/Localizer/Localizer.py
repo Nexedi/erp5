@@ -27,6 +27,7 @@ from OFS.Folder import Folder
 from zLOG import LOG, ERROR, INFO, PROBLEM
 from zope.interface import implementer
 from zope.i18n import translate
+from zope.globalrequest import getRequest
 from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
      unregisterBeforeTraverse, queryBeforeTraverse, NameCaller
 
@@ -258,9 +259,7 @@ class Localizer(LanguageManager, Folder):
             LOG('Localizer', PROBLEM,
                'Cannot change language inside a translationContext', error=True)
       MARKER = []
-      from .patches import get_request # late import, as this is patched by
-                                      # unit tests
-      request = get_request() # Localizer always use this request internally
+      request = getRequest()
       old_accept_language = request.get('AcceptLanguage', MARKER)
       request.set('AcceptLanguage', ForcedLanguage(lang))
       try:

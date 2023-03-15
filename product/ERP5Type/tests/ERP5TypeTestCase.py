@@ -85,16 +85,6 @@ config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
 
 from Testing.ZopeTestCase.layer import onsetup
 
-try:
-  # Workaround Localizer >= 1.2 patch that doesn't work with
-  # ZopeTestCase REQUESTs
-  from Products.Localizer import patches, utils
-  # revert monkey patches from Localizer
-  patches.get_request = get_request
-  utils.get_request = get_request
-except ImportError:
-  pass
-
 from Products.ERP5Type.tests.ProcessingNodeTestCase import \
   ProcessingNodeTestCase, patchActivityTool
 onsetup(patchActivityTool)()

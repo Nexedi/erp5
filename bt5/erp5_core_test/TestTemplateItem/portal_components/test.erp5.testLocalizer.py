@@ -180,11 +180,6 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     self.assertEqual("This is 1€.",
       self.portal.Base_translateString("This is 1€."))
 
-  def test_get_request(self):
-    # check that Localizer's get_request hack works as expected
-    from Products.Localizer.utils import get_request
-    self.assertEqual(get_request(), self.portal.REQUEST)
-
   def test_default_not_changed(self):
     """
     When there is no translation available for a given message, the default
