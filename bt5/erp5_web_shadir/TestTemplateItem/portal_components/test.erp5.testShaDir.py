@@ -36,6 +36,8 @@ from base64 import b64encode
 from unittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.test.ShaDirMixin import ShaDirMixin
+from Products.ERP5Type.Utils import bytes2str
+
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
   """
@@ -63,7 +65,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     finally:
       connection.close()
     self.assertEqual(result.status, six.moves.http_client.CREATED)
-    self.assertEqual(data, '')
+    self.assertEqual(data, b'')
 
   def getInformation(self, key=None):
     """
@@ -103,19 +105,23 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     data_set = self.portal.portal_catalog.getResultValue(
       reference=self.key)
     self.assertEqual(self.key, data_set.getReference())
+    self.assertNotEqual(self.key, data_set.getId())
     self.assertEqual('published', data_set.getValidationState())
+    self.assertEqual(len(self.portal.data_set_module.contentValues()), 1)
 
     # Asserting Document
     document = self.portal.portal_catalog.getResultValue(
       reference=self.sha512sum)
     self.assertEqual(self.sha512sum, document.getTitle())
     self.assertEqual(self.sha512sum, document.getReference())
+    self.assertNotEqual(self.sha512sum, document.getId())
     self.assertEqual(self.data, document.getData())
     self.assertEqual(data_set, document.getFollowUpValue())
     self.assertEqual(str(self.expiration_date),
                                     str(document.getExpirationDate()))
     self.assertEqual('application/json', document.getContentType())
     self.assertEqual('Published', document.getValidationStateTitle())
+    self.assertEqual(len(self.portal.document_module.contentValues()), 1)
 
   def test_get_information(self):
     """
@@ -131,7 +137,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_post_information_more_than_once(self):
     """
@@ -162,7 +168,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_post_information_more_than_once_no_tic(self):
     """
@@ -200,7 +206,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     information_list = json.loads(data)
 
     self.assertEqual(1, len(information_list))
-    self.assertEqual(json.dumps(information_list[0]), self.data)
+    self.assertEqual(json.dumps(information_list[0]), bytes2str(self.data))
 
   def test_get_information_from_different_data_set(self):
     """
@@ -215,7 +221,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation()
     self.tic()
 
-    sha512_2 = hashlib.sha512(str(random.random())).hexdigest()
+    sha512_2 = hashlib.sha512(str(random.random()).encode()).hexdigest()
     key_2 = 'another_key' + str(random.random())
     data_list_2 = [json.dumps({
                       'sha512': sha512_2,
@@ -223,7 +229,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      b64encode("User SIGNATURE goes here.")]
+                      b64encode(b"User SIGNATURE goes here.").decode()]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)
     self.tic()
@@ -268,7 +274,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
             version="001",
             language="en",
             follow_up_value=person,
-            data="FILEDATA")
+            data=b"FILEDATA")
     doc.publish()
 
     self.tic()
