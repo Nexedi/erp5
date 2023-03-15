@@ -1,6 +1,7 @@
 # coding: utf-8
 import unicodedata
-from six.moves import cStringIO as StringIO
+import six
+from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
 
@@ -22,7 +23,7 @@ if test_compta_demat_compatibility:
     'NFKD', fec_file.replace(u"€", "EUR")
   ).encode('ascii', 'ignore')
 
-zipbuffer = StringIO()
+zipbuffer = BytesIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
 zipfileobj = zipfile.ZipFile(zipbuffer, 'w', compression=zipfile.ZIP_DEFLATED)
 filename = 'FEC.xml'
@@ -42,9 +43,15 @@ attachment_list = (
      'content': zipbuffer.getvalue(),
      'name': zipfilename, }, )
 
+subject = translateString('French Accounting Transaction File')
+if six.PY2:
+  subject = unicode(subject)
+else:
+  subject = str(subject)
+
 portal.ERP5Site_notifyReportComplete(
     user_name=user_name,
-    subject=unicode(translateString('French Accounting Transaction File')),
+    subject=subject,
     message='',
     attachment_list=attachment_list)
 
