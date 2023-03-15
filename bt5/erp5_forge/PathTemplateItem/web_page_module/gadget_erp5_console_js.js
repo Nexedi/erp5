@@ -23,6 +23,9 @@
         output = gadget.element.querySelector("output");
       return gadget.notifySubmitting()
         .push(function () {
+          if (!input_value.trim()) {
+            throw new Error("Command is empty");
+          }
           return jIO.util.ajax({
             url: gadget.state.context_url + "/" + input_value,
             xhrFields: {
