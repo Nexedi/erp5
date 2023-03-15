@@ -63,7 +63,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     finally:
       connection.close()
     self.assertEqual(result.status, six.moves.http_client.CREATED)
-    self.assertEqual(data, '')
+    self.assertEqual(data, b'')
 
   def getInformation(self, key=None):
     """
@@ -215,7 +215,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation()
     self.tic()
 
-    sha512_2 = hashlib.sha512(str(random.random())).hexdigest()
+    sha512_2 = hashlib.sha512(str(random.random()).encode()).hexdigest()
     key_2 = 'another_key' + str(random.random())
     data_list_2 = [json.dumps({
                       'sha512': sha512_2,
@@ -223,7 +223,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
                       'architecture': self.architecture}),
-                      b64encode("User SIGNATURE goes here.")]
+                      b64encode(b"User SIGNATURE goes here.").decode()]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)
     self.tic()
