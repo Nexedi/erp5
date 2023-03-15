@@ -63,7 +63,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     finally:
       connection.close()
     self.assertEqual(result.status, six.moves.http_client.CREATED)
-    self.assertEqual(data, '')
+    self.assertEqual(data, b'')
 
   def getInformation(self, key=None):
     """
