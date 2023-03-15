@@ -355,7 +355,7 @@ class Alarm(XMLObject, PeriodicityMixin):
         for x in result_list]
       rendered_alarm_result = '\n'.join(rendered_alarm_result_list)
       attachment_list.append({'name': 'alarm_result.txt',
-                              'content': rendered_alarm_result,
+                              'content': rendered_alarm_result.encode(),
                               'mime_type': 'text/plain'})
 
     notification_tool.sendMessage(recipient=candidate_list,
