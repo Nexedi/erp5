@@ -1,4 +1,5 @@
-from six.moves import cStringIO as StringIO
+import six
+from io import BytesIO
 import zipfile
 from Products.ERP5Type.Message import translateString
 
@@ -12,7 +13,7 @@ fec_file = context.AccountingTransactionModule_viewComptabiliteAsFECXML(
       at_date=at_date,
       result_list=result_list)
 
-zipbuffer = StringIO()
+zipbuffer = BytesIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
 zipfileobj = zipfile.ZipFile(zipbuffer, 'w', compression=zipfile.ZIP_DEFLATED)
 zipfileobj.writestr('FEC.xml', fec_file.encode('utf8'))
@@ -23,9 +24,15 @@ attachment_list = (
      'content': zipbuffer.getvalue(),
      'name': zipfilename, }, )
 
+subject = translateString('French Accounting Transaction File')
+if six.PY2:
+  subject = unicode(subject)
+else:
+  subject = str(subject)
+
 portal.ERP5Site_notifyReportComplete(
     user_name=user_name,
-    subject=unicode(translateString('French Accounting Transaction File')),
+    subject=subject,
     message='',
     attachment_list=attachment_list)
 
