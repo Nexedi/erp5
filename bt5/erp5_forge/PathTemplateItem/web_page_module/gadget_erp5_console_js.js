@@ -6,6 +6,7 @@
   "use strict";
 
   rJS(window)
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareMethod('render', function render(options) {
@@ -20,12 +21,21 @@
     })
     .onEvent("submit", function (evt) {
       var gadget = this,
+        translation_list,
         input_value = evt.target.querySelector("input").value,
         output = gadget.element.querySelector("output");
+
       return gadget.notifySubmitting()
         .push(function () {
+          return this.getTranslationList([
+            "Command is empty",
+            "Status"
+          ]);
+        })
+        .push(function (result_list) {
+          translation_list = result_list;
           if (!input_value.trim()) {
-            throw new Error("Command is empty");
+            throw new Error(translation_list[0]);
           }
           return jIO.util.ajax({
             url: gadget.state.context_url + "/" + input_value,
@@ -46,7 +56,7 @@
             }
           } else {
             // XXX - when response is empty, what we should display?
-            output.innerText = "Status: " + response.target.status;
+            output.innerText = translation_list[1] + ": " + response.target.status;
           }
         })
         .push(undefined, function (error) {
