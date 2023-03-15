@@ -12,7 +12,7 @@ from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
 
 from zope.interface import classImplements
-from ZODB.broken import PersistentBroken
+from ZODB.broken import Broken, PersistentBroken
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
@@ -22,7 +22,14 @@ from . import persistent_migration
 from ZODB.POSException import ConflictError
 import six
 
-class ERP5BaseBroken(ERP5Base, PersistentBroken):
+if six.PY2:
+  class ERP5BaseBroken_(Broken, ERP5Base, PersistentBroken):
+    pass
+else:
+  class ERP5BaseBroken_(ERP5Base, PersistentBroken):
+    pass
+
+class ERP5BaseBroken(ERP5BaseBroken_):
   # PersistentBroken can't be reused directly
   # because its « layout differs from 'GhostPortalType' »
 
