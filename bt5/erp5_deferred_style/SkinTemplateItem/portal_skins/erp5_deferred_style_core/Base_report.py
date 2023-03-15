@@ -51,7 +51,7 @@ with portal.Localizer.translationContext(localizer_language):
 
   attachment_list = (
     {'mime_type': (request.RESPONSE.getHeader('content-type') or 'application/octet-stream;').split(';')[0],
-     'content': '%s' % report_data,
+     'content': bytes(report_data),
      'name': attachment_name},)
 
 getattr(portal, notify_report_complete_script_id)(
