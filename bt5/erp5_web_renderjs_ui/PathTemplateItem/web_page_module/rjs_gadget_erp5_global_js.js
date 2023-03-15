@@ -1,8 +1,8 @@
 /*global window, RSVP, SimpleQuery, ComplexQuery, Query,
-         ensureArray, Array*/
+         ensureArray, Array, domsugar, Event, XMLHttpRequest, navigator*/
 /*jslint indent: 2, maxerr: 3, nomen: true, unparam: true, continue: true */
 (function (window, RSVP, SimpleQuery, ComplexQuery, Query,
-           ensureArray, Array) {
+           ensureArray, Array, domsugar, Event, XMLHttpRequest, navigator) {
   "use strict";
 
   ///////////////////////////////
@@ -292,6 +292,122 @@
     return url_mapping;
   }
 
+  function convertOriginalErrorToErrorDataList(original_error) {
+    return new RSVP.Queue()
+      .push(function () {
+        var error_list = [original_error],
+          i,
+          error,
+          error_response,
+          error_text = "";
+
+        // Do not break the application in case of errors.
+        // Display it to the user for now,
+        // and allow user to go back to the frontpage
+
+        // Add error handling stack
+        error_list.push(new Error('stopping ERP5JS'));
+
+        for (i = 0; i < error_list.length; i += 1) {
+          error = error_list[i];
+          if (error instanceof Event) {
+            error = {
+              string: error.toString(),
+              message: error.message,
+              type: error.type,
+              target: error.target
+            };
+            if (error.target !== undefined) {
+              error_list.splice(i + 1, 0, error.target);
+            }
+          }
+          if (error instanceof XMLHttpRequest) {
+            if ((error.getResponseHeader('Content-Type') || "")
+                  .indexOf('text/') === 0) {
+              error_response = error.response;
+            }
+            error = {
+              message: error.toString(),
+              readyState: error.readyState,
+              status: error.status,
+              statusText: error.statusText,
+              response: error.response,
+              responseUrl: error.responseUrl,
+              response_headers: (error.getAllResponseHeaders() ?
+                                 error.getAllResponseHeaders().split('\r\n')
+                                 : null)
+            };
+          }
+          if (error.constructor === Array ||
+              error.constructor === String ||
+              error.constructor === Object) {
+            try {
+              error = JSON.stringify(error, null, '  ');
+            } catch (ignore) {
+            }
+          }
+
+          error_text += error.message || error;
+          error_text += '\n';
+
+          if (error.fileName !== undefined) {
+            error_text += 'File: ' +
+              error.fileName +
+              ': ' + error.lineNumber + '\n';
+          }
+          if (error.stack !== undefined) {
+            error_text += 'Stack: ' + error.stack + '\n';
+          }
+          error_text += '---\n';
+        }
+        if (error_response && !error.response) {
+          error.response = error_response;
+        }
+        return [error, error_text];
+      });
+  }
+
+  function buildErrorElementFromErrorText(error_text) {
+    return new RSVP.Queue()
+      .push(function () {
+        return domsugar("section", [
+          domsugar("p", {
+            "text": 'Please report this unhandled error to the support ' +
+                    'team, and go back to the '
+          }, [
+            domsugar("a", {
+              "href": "#",
+              "text": "homepage"
+            })
+          ]),
+          domsugar("br"),
+          domsugar("p", {
+            "text": 'Location: '
+          }, [
+            domsugar("a", {
+              "href": window.location.toString(),
+              "text": window.location.toString()
+            })
+          ]),
+          domsugar("p", {
+            "text": 'User-agent: ' + navigator.userAgent
+          }),
+          domsugar("p", {
+            "text": 'Date: ' + new Date(Date.now()).toISOString()
+          }),
+          domsugar("p", {
+            "text": 'Online: ' + navigator.onLine
+          }),
+          domsugar("br"),
+          domsugar("pre", [
+            domsugar("code", {
+              "text": error_text
+            })
+          ])
+        ]);
+      });
+  }
+
   function getListboxClipboardActionList() {
     var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
       i,
@@ -441,7 +557,10 @@
   }
   window.mergeGlobalActionWithRawActionList = mergeGlobalActionWithRawActionList;
   window.triggerListboxClipboardAction = triggerListboxClipboardAction;
+  window.convertOriginalErrorToErrorDataList = convertOriginalErrorToErrorDataList;
+  window.buildErrorElementFromErrorText = buildErrorElementFromErrorText;
   window.declareGadgetClassCanHandleListboxClipboardAction =
     declareGadgetClassCanHandleListboxClipboardAction;
 
-}(window, RSVP, SimpleQuery, ComplexQuery, Query, ensureArray, Array));
+}(window, RSVP, SimpleQuery, ComplexQuery, Query, ensureArray, Array, domsugar,
+  Event, XMLHttpRequest, navigator));
