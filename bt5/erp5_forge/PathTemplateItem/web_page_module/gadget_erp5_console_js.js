@@ -4,6 +4,7 @@
 (function (window, rJS, jIO, convertOriginalErrorToErrorDataList,
            buildErrorElementFromErrorText) {
   "use strict";
+
   rJS(window)
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -34,11 +35,18 @@
           });
         })
         .push(function (response) {
-          var content_type = response.target.getResponseHeader("Content-Type");
-          if (content_type.indexOf("text/html") !== -1) {
-            output.innerHTML = response.target.responseText;
+          var content_type = response.target.getResponseHeader("Content-Type"),
+            response_text = response.target.responseText;
+
+          if (response_text) {
+            if (content_type.indexOf("text/html") !== -1) {
+              output.innerHTML = response_text;
+            } else {
+              output.innerText = response_text;
+            }
           } else {
-            output.value = response.target.responseText;
+            // XXX - when response is empty, what we should display?
+            output.innerText = "Status: " + response.target.status;
           }
         })
         .push(undefined, function (error) {
