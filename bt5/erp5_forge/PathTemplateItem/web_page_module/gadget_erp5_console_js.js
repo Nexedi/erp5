@@ -27,7 +27,7 @@
 
       return gadget.notifySubmitting()
         .push(function () {
-          return this.getTranslationList([
+          return gadget.getTranslationList([
             "Command is empty",
             "Status"
           ]);
