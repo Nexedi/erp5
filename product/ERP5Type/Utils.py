@@ -482,8 +482,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   message_list = []
   output_file = StringIO()
   try:
-    with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
-                                     suffix='.py') as input_file:
+    with tempfile.NamedTemporaryFile(
+        prefix='checkPythonSourceCode',
+        suffix='.py',
+        mode='w',
+      ) as input_file:
       input_file.write(source_code_str)
       input_file.flush()
 
