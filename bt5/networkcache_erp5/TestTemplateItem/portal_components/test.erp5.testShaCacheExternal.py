@@ -82,7 +82,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    self.assertEqual(self.key, data)
+    self.assertEqual(self.key, data.decode())
     self.assertEqual(six.moves.http_client.CREATED, result.status)
 
     # Check Document
