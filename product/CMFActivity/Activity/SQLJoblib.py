@@ -114,13 +114,13 @@ CREATE TABLE %s (
         active_process_uid = m.active_process_uid
         date = m.activity_kw.get('at_date')
         row = ','.join((
-          '@uid+%s' % i,
+          b'@uid+%s' % i,
           quote('/'.join(m.object_path)),
-          'NULL' if active_process_uid is None else str(active_process_uid),
-          "UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
+          b'NULL' if active_process_uid is None else str(active_process_uid),
+          b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
-          '-1' if hasDependency(m) else '0',
-          str(m.activity_kw.get('priority', 1)),
+          b'-1' if hasDependency(m) else b'0',
+          bytes(m.activity_kw.get('priority', 1)),
           quote(m.getGroupId()),
           quote(m.activity_kw.get('tag', '')),
           quote(m.activity_kw.get('signature', '')),
@@ -156,7 +156,7 @@ CREATE TABLE %s (
         m = Message.load(line.message, uid=uid, line=line)
         try:
           # Select duplicates.
-          result = db.query("SELECT uid FROM message_job"
+          result = db.query(b"SELECT uid FROM message_job"
             " WHERE processing_node = 0 AND path = %s AND signature = %s"
             " AND method_id = %s AND group_method_id = %s FOR UPDATE" % (
               quote(path), quote(line.signature),
