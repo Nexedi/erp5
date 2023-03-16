@@ -347,9 +347,11 @@ class BusinessTemplateArchive(object):
     try:
       write = self._writeFile
     except AttributeError:
-      if not isinstance(obj, str):
+      if not isinstance(obj, (bytes, str)):
         obj.seek(0)
         obj = obj.read()
+      elif not isinstance(obj, bytes):
+        obj = obj.encode('utf-8')
       self.revision.hash(path, obj)
       self._writeString(obj, path)
     else:
@@ -377,11 +379,8 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     object_path = os.path.join(self.path, path)
     path = os.path.dirname(object_path)
     os.path.exists(path) or os.makedirs(path)
-    f = open(object_path, 'wb')
-    try:
+    with open(object_path, 'wb') as f:
       f.write(obj)
-    finally:
-      f.close()
 
   def importFiles(self, item):
     """
