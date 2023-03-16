@@ -144,6 +144,19 @@ else:
 # Generic sort method
 #####################################################
 
+if six.PY2:
+  OrderableKey = lambda x: x
+else:
+  class OrderableKey(object):
+    def __init__(self, value):
+      self.value = value
+
+    def __lt__(self, other):
+      return cmp(self.value, other.value) != 1
+
+    def __repr__(self):
+      return 'OrderableKey(%r)' % self.value
+
 sort_kw_cache = {}
 
 def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
@@ -201,7 +214,10 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
               except TypeError:
                 pass
             value_list.append(x)
-          return value_list
+          if six.PY2:
+            return value_list
+          else:
+            return [OrderableKey(e) for e in value_list]
         sort_kw = {'key':sortValue, 'reverse':reverse}
         sort_kw_cache[(sort_on, sort_order)] = sort_kw
       else:
