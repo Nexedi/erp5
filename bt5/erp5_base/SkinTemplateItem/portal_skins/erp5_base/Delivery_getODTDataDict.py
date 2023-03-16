@@ -1,4 +1,5 @@
 # coding: utf-8
+import six
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
 request = context.REQUEST
@@ -110,9 +111,11 @@ total_tax_price = 0.0
 number_line_not_tax = 0
 
 def unicodeDict(d):
-  for k, v in d.items():
+  if six.PY3:
+    return d
+  for k, v in six.iteritems(d):
     if isinstance(v, str):
-      d.update({k:unicode(v, 'utf8')})
+      d.update({k: unicode(v, 'utf8')})
   return d
 
 
