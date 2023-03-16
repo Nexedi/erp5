@@ -1288,19 +1288,18 @@
                   domain_list.push(domain);
                 }
               }
-              for (i = 0; i < option_list.length; i += 1) {
-                if (option_list[i][0].indexOf("_state") !== -1) {
-                  group_by = option_list[i][0];
-                  group_by_title = option_list[i][1];
-                }
-              }
               for (i = 0; i < domain_list.length; i += 1) {
                 if (domain_list[i].domain_id === gadget.state.graphic_type) {
+                  for (j = 0; j < option_list.length; j += 1) {
+                    if (option_list[j][0] === gadget.state.graphic_type) {
+                      group_by_title = option_list[j][1];
+                    }
+                  }
                   return graphic_gadget.render({
                     jio_key: gadget.state.jio_key,
                     group_by: group_by,
                     query_by: {},
-                    title: gadget.state.title,
+                    title: group_by_title,
                     list_method_template: gadget.state.list_method_template,
                     list_method: gadget.state.list_method,
                     layout: {
