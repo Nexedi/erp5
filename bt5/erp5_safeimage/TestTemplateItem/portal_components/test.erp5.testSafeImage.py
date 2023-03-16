@@ -1,15 +1,16 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import transaction
+from io import FileIO
 import os
 
 
-class FileUpload(file):
+class FileUpload(FileIO):
   """Act as an uploaded file.
   """
   __allow_access_to_unprotected_subobjects__ = 1
   def __init__(self, path, name):
     self.filename = name
-    file.__init__(self, path)
+    super(FileUpload, self).__init__(path)
     self.headers = {}
 
 
