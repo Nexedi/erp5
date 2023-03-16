@@ -1907,11 +1907,18 @@ class TestZodbModuleComponent(SecurityTestCase):
     component.setTextContent("""import unexistent_module
 """ + valid_code)
     self.tic()
-    self.assertEqual(
-      [m.getMessage().translate() for m in component.checkConsistency()],
-      ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
-    self.assertEqual(component.getTextContentErrorMessageList(),
-                      ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    if six.PY2:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["F:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+    else:
+      self.assertEqual(
+        [m.getMessage().translate() for m in component.checkConsistency()],
+        ["Error in Source Code: E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
+      self.assertEqual(component.getTextContentErrorMessageList(),
+                        ["E:  1,  0: Unable to import 'unexistent_module' (import-error)"])
     self.assertEqual(component.getTextContentWarningMessageList(),
                       ["W:  1,  0: Unused import unexistent_module (unused-import)"])
 
@@ -2685,7 +2692,7 @@ foobar = foobar().f
     base = self.portal.getPath()
     for query in 'x:int=-24&y:int=66', 'x:int=41':
       path = '%s/TestExternalMethod?%s' % (base, query)
-      self.assertEqual(self.publish(path).getBody(), '42')
+      self.assertEqual(self.publish(path).getBody(), b'42')
 
     # Test from a Python Script
     createZODBPythonScript(self.portal.portal_skins.custom,
@@ -2819,8 +2826,8 @@ class TestWithImport(TestImported):
 from ITestGC import ITestGC
 import zope.interface
 
+@zope.interface.implementer(ITestGC)
 class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
   def foo(self):
       pass
 """)
@@ -2851,12 +2858,15 @@ class TestGC(XMLObject):
       self.assertEqual(gc.garbage, [])
 
       import erp5.component
-      gc.set_debug(
-        gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE |
-        gc.DEBUG_COLLECTABLE |
-        gc.DEBUG_OBJECTS |
-        gc.DEBUG_INSTANCES)
+      debug_flags = (
+        gc.DEBUG_STATS
+        | gc.DEBUG_UNCOLLECTABLE
+        | gc.DEBUG_COLLECTABLE )
+      if six.PY2:
+        debug_flags |= (
+          gc.DEBUG_OBJECTS
+          | gc.DEBUG_INSTANCES)
+      gc.set_debug(debug_flags)
       sys.stderr = stderr
       # Still not garbage collectable as RefManager still keeps a reference
       erp5.component.ref_manager.clear()
@@ -2939,11 +2949,11 @@ from erp5.component.document.Person import Person
 from ITestPortalType import ITestPortalType
 import zope.interface
 
+zope.interface.implementer(ITestPortalType)
 class TestPortalType(Person):
   def test42(self):
     return 42
 
-  zope.interface.implements(ITestPortalType)
   def foo(self):
     pass
 """)
@@ -3135,7 +3145,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       'ERP5TypeTestCase:')
     self.assertEqual(response.getStatus(), 200)
-    self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertNotIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
     component.validate()
     self.tic()
@@ -3147,7 +3157,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       'ERP5TypeTestCase:')
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -3371,9 +3381,9 @@ ImportError: No module named non.existing.module
     name = self._testMethodName
     types_tool = self.portal.portal_types
     ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
-    file = ptype.constructInstance(self.portal, name, data="foo")
+    file = ptype.constructInstance(self.portal, name, data=b"foo")
     file_uid = file.getUid()
-    self.assertEqual(file.size, len("foo"))
+    self.assertEqual(file.size, len(b"foo"))
     self.commit()
     try:
       self.portal._p_jar.cacheMinimize()
@@ -3389,7 +3399,7 @@ ImportError: No module named non.existing.module
       # Check that the class is unghosted before resolving __setattr__
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
       self.assertIsInstance(file, ERP5BaseBroken)
-      self.assertEqual(file.size, len("foo"))
+      self.assertEqual(file.size, len(b"foo"))
 
       # Now if we repair the portal type definition, instances will
       # no longer be broken and be modifiable again.
@@ -3399,9 +3409,9 @@ ImportError: No module named non.existing.module
       file = self.portal[name]
       self.assertNotIsInstance(file, ERP5BaseBroken)
       self.assertEqual(file.getUid(), file_uid)
-      self.assertEqual(file.getData(), "foo")
-      file.setData("something else")
-      self.assertEqual(file.getData(), "something else")
+      self.assertEqual(file.getData(), b"foo")
+      file.setData(b"something else")
+      self.assertEqual(file.getData(), b"something else")
       self.assertNotIn("__Broken_state__", file.__dict__)
     finally:
       self.portal._delObject(name)
