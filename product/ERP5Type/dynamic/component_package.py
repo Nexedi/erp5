@@ -363,7 +363,7 @@ class ComponentDynamicPackage(ModuleType):
           del sys.modules[module_fullname_filesystem]
 
         reraise(ImportError,
-          "%s: cannot load Component %s (%s)" % (fullname, name, error),
+          ImportError("%s: cannot load Component %s (%s)" % (fullname, name, error)),
                 sys.exc_info()[2])
 
       # Add the newly created module to the Version package and add it as an
