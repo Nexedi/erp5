@@ -178,10 +178,19 @@
             query =  Query.parseStringToObject(extended_search);
             if (query.type === "complex") {
               for (i = 0; i < query.query_list.length; i += 1) {
-                if (query.query_list[i].key.indexOf("selection_domain_") === 0) {
-                  extended_search_domain_list.push(query.query_list[i]);
-                } else {
-                  jio_query_list.push(new SimpleQuery(query.query_list[i]));
+                if (query.query_list.hasOwnProperty(i)) {
+                  if (
+                    query.query_list[i].key &&
+                      query.query_list[i].key.indexOf("selection_domain_") === 0
+                  ) {
+                    extended_search_domain_list.push(query.query_list[i]);
+                  } else {
+                    if (query.query_list[i].type === "complex") {
+                      jio_query_list.push(new ComplexQuery(query.query_list[i]));
+                    } else {
+                      jio_query_list.push(new SimpleQuery(query.query_list[i]));
+                    }
+                  }
                 }
               }
             } else {
