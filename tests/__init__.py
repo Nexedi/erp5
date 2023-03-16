@@ -46,6 +46,13 @@ class _ERP5(ERP5TypeTestSuite):
                                component_re_match.group(2))
       else:
         test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+      if sys.version_info[0] > 2:
+        # disable tests that are not compatible with Python 3.
+        if test_case in (
+          'erp5_workflow_test:testWorkflowAndDCWorkflow', # using legacy workflow
+          'testUpgradeInstanceWithOldDataFs', # using legacy workflow
+        ):
+          continue
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
       if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
