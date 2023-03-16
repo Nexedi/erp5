@@ -56,8 +56,6 @@
       var gadget = this,
         i,
         len,
-        listbox_button_class,
-        graphic_button_class,
         only_graphic = gadget.state.only_graphic,
         button_container = gadget.element.querySelector('div.search_parsed_value'),
         graphic_container = gadget.element.querySelector(".graphic-button-section"),
@@ -70,12 +68,11 @@
         sub_jio_query,
         parsed_value = '',
         input_value = '',
-        continue_full_text_query_search = true;
-
-      if (gadget.state.enable_graphic) {
-        listbox_button_class = "ui-btn-icon-notext ui-icon-list-alt switch-listbox";
+        continue_full_text_query_search = true,
+        listbox_button_class = "ui-btn-icon-notext ui-icon-list-alt switch-listbox",
         graphic_button_class = "ui-btn-icon-notext ui-icon-bar-chart-o switch-graph";
 
+      if (gadget.state.enable_graphic) {
         if (!only_graphic) {
           listbox_button_class = listbox_button_class + " " + hide_button_class;
         } else if (only_graphic) {
@@ -93,7 +90,13 @@
           })
         ]);
       } else {
-        domsugar(graphic_container, []);
+        domsugar(graphic_container, [
+          domsugar("button", {
+            "class": graphic_button_class,
+            "type": "button",
+            "disabled": true
+          })
+        ]);
       }
 
       if (gadget.state.extended_search) {
@@ -272,8 +275,7 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
-      var gadget = this,
-        options;
+      var gadget = this;
       if (evt.target.tagName === 'BUTTON') {
         if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
             (evt.target.value)) {

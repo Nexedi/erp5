@@ -4,6 +4,10 @@ div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section > b
   border-radius: 0.325em;
 }
 
-.graphic-button-section {
+div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section > button:disabled {
+  color: #808080;
+}
+
+div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section {
   float: left;
 }
