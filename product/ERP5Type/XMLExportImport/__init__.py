@@ -48,7 +48,7 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
-from base64 import standard_b64encode
+from base64 import standard_b64encode, encodebytes
 from hashlib import sha1
 from Products.ERP5Type.Utils import ensure_list
 #from zLOG import LOG
@@ -233,7 +233,6 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
 
 ## The code below was initially from OFS.XMLExportImport
 from six import string_types as basestring
-from base64 import encodebytes
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile, export_end_marker
 from ZODB.utils import p64
@@ -263,7 +262,6 @@ def reorderPickle(jar, p):
                         new_oid=storage.new_oid):
 
         "Remap a persistent id to an existing ID and create a ghost for it."
-
         if isinstance(ooid, tuple): ooid, klass = ooid
         else: klass=None
 
@@ -280,13 +278,23 @@ def reorderPickle(jar, p):
     unpickler.persistent_load=persistent_load
 
     newp=BytesIO()
-    pickler=OrderedPickler(newp,1)
+    pickler = OrderedPickler(newp, 3)
     pickler.persistent_id=persistent_id
 
     classdef = unpickler.load()
     obj = unpickler.load()
     pickler.dump(classdef)
     pickler.dump(obj)
+
+    if 0: # debug
+      debugp = BytesIO()
+      debugpickler = OrderedPickler(debugp, 3)
+      debugpickler.persistent_id = persistent_id
+      debugpickler.dump(obj)
+      import pickletools
+      print(debugp.getvalue())
+      print(pickletools.dis(debugp.getvalue()))
+
     p=newp.getvalue()
     return obj, p
 
@@ -300,14 +308,13 @@ def _mapOid(id_mapping, oid):
 
 def XMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
-    q=ppml.ToXMLUnpickler
-    f=BytesIO(p)
-    u=q(f)
+    f = BytesIO(p)
+    u = ppml.ToXMLUnpickler(f)
     u.idprefix, id, aka = _mapOid(id_mapping, oid)
-    p=u.load(id_mapping=id_mapping).__str__(4)
+    p = u.load(id_mapping=id_mapping).__str__(4)
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
-    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka, p)
+    String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka.decode(), p)
     return String
 
 def exportXML(jar, oid, file=None):
@@ -344,15 +351,21 @@ def exportXML(jar, oid, file=None):
 
     # Do real export
     if file is None:
-        file = TemporaryFile()
+        file = TemporaryFile(mode='w')
     elif isinstance(file, basestring):
-        file = open(file, 'w+b')
+        file = open(file, 'w')
     write = file.write
     write('<?xml version="1.0"?>\n<ZopeData>\n')
     for oid in reordered_oid_list:
         p = getReorderedPickle(oid)
         write(XMLrecord(oid, len(p), p, id_mapping))
     write('</ZopeData>\n')
+    if 0:
+      try:
+        print(file.getvalue())
+      except AttributeError:
+        pass
+      import pdb; pdb.set_trace()
     return file
 
 class zopedata:
