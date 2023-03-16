@@ -27,6 +27,7 @@
 ##############################################################################
 
 import time
+import six
 import numpy as np
 
 from copy import copy
@@ -38,8 +39,12 @@ from sklearn.base import clone
 from sklearn.utils import check_random_state
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.externals import joblib
-from sklearn.externals.joblib.parallel import parallel_backend, Parallel, delayed
+if six.PY2:
+  from sklearn.externals import joblib
+  from sklearn.externals.joblib.parallel import parallel_backend, Parallel, delayed
+else:
+  import joblib
+  from joblib.parallel import parallel_backend, Parallel, delayed
 from sklearn.datasets import load_digits
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
