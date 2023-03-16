@@ -2819,8 +2819,8 @@ class TestWithImport(TestImported):
 from ITestGC import ITestGC
 import zope.interface
 
+@zope.interface.implementer(ITestGC)
 class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
   def foo(self):
       pass
 """)
@@ -2939,11 +2939,11 @@ from erp5.component.document.Person import Person
 from ITestPortalType import ITestPortalType
 import zope.interface
 
+zope.interface.implementer(ITestPortalType)
 class TestPortalType(Person):
   def test42(self):
     return 42
 
-  zope.interface.implements(ITestPortalType)
   def foo(self):
     pass
 """)
@@ -3135,7 +3135,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       'ERP5TypeTestCase:')
     self.assertEqual(response.getStatus(), 200)
-    self.assertNotIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertNotIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
     component.validate()
     self.tic()
@@ -3147,7 +3147,7 @@ InitializeClass(%(class_name)s)
       '%s/manage_addProduct/ERP5/manage_addToolForm' % self.portal.getPath(),
       'ERP5TypeTestCase:')
     self.assertEqual(response.getStatus(), 200)
-    self.assertIn('ERP5 Test Hook After Load Tool', response.getBody())
+    self.assertIn(b'ERP5 Test Hook After Load Tool', response.getBody())
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -3371,9 +3371,9 @@ ImportError: No module named non.existing.module
     name = self._testMethodName
     types_tool = self.portal.portal_types
     ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
-    file = ptype.constructInstance(self.portal, name, data="foo")
+    file = ptype.constructInstance(self.portal, name, data=b"foo")
     file_uid = file.getUid()
-    self.assertEqual(file.size, len("foo"))
+    self.assertEqual(file.size, len(b"foo"))
     self.commit()
     try:
       self.portal._p_jar.cacheMinimize()
@@ -3389,7 +3389,7 @@ ImportError: No module named non.existing.module
       # Check that the class is unghosted before resolving __setattr__
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
       self.assertIsInstance(file, ERP5BaseBroken)
-      self.assertEqual(file.size, len("foo"))
+      self.assertEqual(file.size, len(b"foo"))
 
       # Now if we repair the portal type definition, instances will
       # no longer be broken and be modifiable again.
@@ -3399,9 +3399,9 @@ ImportError: No module named non.existing.module
       file = self.portal[name]
       self.assertNotIsInstance(file, ERP5BaseBroken)
       self.assertEqual(file.getUid(), file_uid)
-      self.assertEqual(file.getData(), "foo")
-      file.setData("something else")
-      self.assertEqual(file.getData(), "something else")
+      self.assertEqual(file.getData(), b"foo")
+      file.setData(b"something else")
+      self.assertEqual(file.getData(), b"something else")
       self.assertNotIn("__Broken_state__", file.__dict__)
     finally:
       self.portal._delObject(name)
