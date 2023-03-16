@@ -52,8 +52,6 @@
           return gadget.changeState(state_dict);
         });
     })
-    .declareAcquiredMethod("triggerListboxGraphicSelection",
-                           "triggerListboxGraphicSelection")
     .onStateChange(function () {
       var gadget = this,
         i,
