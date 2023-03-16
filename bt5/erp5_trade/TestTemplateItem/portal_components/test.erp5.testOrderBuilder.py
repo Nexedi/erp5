@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Utils import ensure_list
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -240,7 +241,7 @@ class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
     self.wanted_quantity_matrix = self.decrease_quantity_matrix.copy()
 
     packing_list_line.setVariationCategoryList(
-      self.decrease_quantity_matrix.keys(),
+      ensure_list(self.decrease_quantity_matrix.keys()),
     )
 
     self.tic()
