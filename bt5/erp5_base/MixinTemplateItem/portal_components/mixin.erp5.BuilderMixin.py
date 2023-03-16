@@ -36,6 +36,7 @@ from erp5.component.document.Amount import Amount
 from erp5.component.module.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Utils import OrderableKey
 from erp5.component.module.ExplanationCache import _getExplanationCache
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
@@ -783,8 +784,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
     def sort_movement_group_key(a):
       return (
-        category_index_dict.get(a.getCollectOrderGroup()),
-        a.getIntIndex(),
+        OrderableKey(category_index_dict.get(a.getCollectOrderGroup())),
+        OrderableKey(a.getIntIndex()),
       )
     if portal_type is None:
       portal_type = self.getPortalMovementGroupTypeList()
