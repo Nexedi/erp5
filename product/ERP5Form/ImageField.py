@@ -71,6 +71,7 @@ class ImageFieldWidget(Widget.TextWidget):
                                description=(
         "The format in which the image should be converted to. "
         "This is only used with ERP5 Images."),
+                               css_class="form-control",
                                default='',
                                required=0)
 
@@ -79,6 +80,7 @@ class ImageFieldWidget(Widget.TextWidget):
                                description=(
         "The quality used when converting the image. "
         "This is only used with ERP5 Images."),
+                               css_class="form-control",
                                default=75,
                                required=0)
 
@@ -87,6 +89,7 @@ class ImageFieldWidget(Widget.TextWidget):
                                description=(
         "Return image only if it is already pre converted in cache. "
         "This is only used with ERP5 Images."),
+                               css_class="form-control",
                                default=False,
                                required=0)
 

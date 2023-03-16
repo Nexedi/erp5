@@ -21,6 +21,7 @@ class GadgetWidget(Widget.Widget):
                           title="RenderJS extra",
                                  description=(
         "More parameters passed to the renderJS's render method."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
@@ -28,12 +29,14 @@ class GadgetWidget(Widget.Widget):
                          title='Gadget Url',
                          description=("The url of the html page containing the \
                                       gadget"),
+                         css_class="form-control",
                          default='',
                          required=0)
 
   js_sandbox = fields.StringField('js_sandbox',
                           title='Gadget Sandbox',
                           description=("Gadget sandbox"),
+                          css_class="form-control",
                           default='',
                           required=0)
 
@@ -83,12 +86,14 @@ class GadgetFieldValidator(Validator.Validator):
                                 title='Data Url',
                                 description=(
                                   "Checked if gadget return data url."),
+                                css_class="form-check-input",
                                 default=0)
 
     validator_form_id = fields.StringField(
       'validator_form_id',
       title='Validator Form ID',
       description= "ID of the validator field's form. Default is the current form",
+      css_class="form-control",
       default="",
       display_width=40,
       required=0
@@ -98,6 +103,7 @@ class GadgetFieldValidator(Validator.Validator):
       'validator_field_id',
       title='Validator Field ID',
       description= "ID of the validator field.",
+      css_class="form-control",
       default="",
       display_width=40,
       required=0
