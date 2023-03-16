@@ -372,8 +372,8 @@ class ComponentDynamicPackage(ModuleType):
 
         reraise(
           ComponentImportError,
-          "%s: cannot load Component %s :\n%s" % (
-            fullname, name, traceback.format_exc()),
+          ComponentImportError("%s: cannot load Component %s :\n%s" % (
+            fullname, name, traceback.format_exc())),
           sys.exc_info()[2])
 
       # Add the newly created module to the Version package and add it as an
