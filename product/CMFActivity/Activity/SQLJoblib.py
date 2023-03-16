@@ -120,7 +120,7 @@ CREATE TABLE %s (
           b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
-          bytes(m.activity_kw.get('priority', 1)),
+          str(m.activity_kw.get('priority', 1)).encode(),
           quote(m.getGroupId()),
           quote(m.activity_kw.get('tag', '')),
           quote(m.activity_kw.get('signature', '')),
