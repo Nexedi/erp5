@@ -63,6 +63,7 @@ class MatrixBoxWidget(Widget.Widget):
                                    title='Default',
                                    description=(
         "Default value of the text in the widget."),
+                                   css_class="form-control",
                                    default="",
                                    width=20, height=3,
                                    required=0)
@@ -72,6 +73,7 @@ class MatrixBoxWidget(Widget.Widget):
                                  description=(
         "Method returning columns, lines and tabs. The method is passed"
         " matrixbox=True, base_id=base_id as arguments."),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
     columns = fields.ListTextAreaField('columns',
@@ -83,6 +85,7 @@ class MatrixBoxWidget(Widget.Widget):
       "to the user.\n"
       "For example (('color/blue', 'Bleu'), ('color/red','Red')).\n"
       " Deprecated, use cell range method instead"),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
@@ -94,6 +97,7 @@ class MatrixBoxWidget(Widget.Widget):
       "to the user.\n"
       "For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')).\n"
       "Deprecated, use cell range method instead"),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
@@ -104,6 +108,7 @@ class MatrixBoxWidget(Widget.Widget):
       "and Columns.\n"
       "This is used only if you have more than 2 kinds of variations.\n"
       "Deprecated, use cell range method instead"),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
@@ -112,6 +117,7 @@ class MatrixBoxWidget(Widget.Widget):
                                            title="Cell Range",
                                            description=(
                 "This defines the range of the matrix."),
+                                           css_class="form-control",
                                            default=[],
                                            required=0)
     getter_method = fields.StringField('getter_method',
@@ -120,7 +126,7 @@ class MatrixBoxWidget(Widget.Widget):
         "You can specify a specific method in order to retrieve the context. "
         "This field can be empty, if so the MatrixBox will use the default "
         "context."),
-
+                                 css_class="form-control",
                                  default='',
                                  required=0)
 
@@ -130,6 +136,7 @@ class MatrixBoxWidget(Widget.Widget):
         "You can specify a method in order to retrieve cells. This field can "
         "be empty, if so the MatrixBox will use the default method : getCell."
        ),
+                                 css_class="form-control",
                                  default='',
                                  required=0)
 
@@ -139,7 +146,7 @@ class MatrixBoxWidget(Widget.Widget):
         "You can specify a specific method in order to create cells. "
         "This field can be empty, if so the MatrixBox will use the default "
         "method : newCell."),
-
+                                 css_class="form-control",
                                  default='',
                                  required=0)
 
@@ -149,6 +156,7 @@ class MatrixBoxWidget(Widget.Widget):
         "A list of attributes which are set by hidden fields called "
         "matrixbox_attribute_name. This is used "
         "when we want to specify a computed value for each cell"),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
@@ -158,6 +166,7 @@ class MatrixBoxWidget(Widget.Widget):
         "An optional list of globals attributes which are set by hidden "
         "fields and which are applied to each cell. "
         "This is used if we want to set the same value for every cell"),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
@@ -166,6 +175,7 @@ class MatrixBoxWidget(Widget.Widget):
                                  description=(
         "The Base id for cells : this is the name used to store cells, "
         "we usually use names like : 'movement', 'path', ... "),
+                                 css_class="form-control",
                                  default='cell',
                                  required=0)
 
@@ -174,6 +184,7 @@ class MatrixBoxWidget(Widget.Widget):
                                  description=(
         "The Portal Type for cells : This is the portal type used to "
         "create a new cell."),
+                                 css_class="form-control",
                                  default='Mapped Value',
                                  required=0)
 
@@ -181,6 +192,7 @@ class MatrixBoxWidget(Widget.Widget):
                                   title="Update Cell Range",
                                   description=(
         "The cell range should be updated upon edit."),
+                                  css_class="form-check-input",
                                   default=0)
 
     url_cells = fields.ListTextAreaField('url_cells',
@@ -188,6 +200,7 @@ class MatrixBoxWidget(Widget.Widget):
                                  description=(
         "An optional list of cells which can provide a custom URL."
         "If no url cell is used, then no link is displayed."),
+                                 css_class="form-control",
                                  default=[],
                                  required=0)
 
