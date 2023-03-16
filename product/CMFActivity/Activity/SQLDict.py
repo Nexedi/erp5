@@ -125,7 +125,7 @@ class SQLDict(SQLBase):
               b" WHERE processing_node = 0 AND (path = %s OR path LIKE %s)"
               b"%s FOR UPDATE" % (
                 quote(path), quote(path.replace('_', r'\_') + '/%'),
-                str2bytes(sql_method_id),
+                sql_method_id,
               ), 0)[1]
             reserve_uid_list = [x for x, in result]
             uid_list += reserve_uid_list
