@@ -79,6 +79,7 @@ from OFS import SimpleItem
 from OFS.Image import Pdata
 import coverage
 from io import BytesIO
+from six.moves import StringIO
 from copy import deepcopy
 from zExceptions import BadRequest
 from Products.ERP5Type.XMLExportImport import exportXML, customImporters
@@ -347,10 +348,11 @@ class BusinessTemplateArchive(object):
     try:
       write = self._writeFile
     except AttributeError:
-      if not isinstance(obj, (bytes, str)):
+      if hasattr(obj, 'read'):
         obj.seek(0)
         obj = obj.read()
-      elif not isinstance(obj, bytes):
+        #import pdb; pdb.set_trace()
+      if not isinstance(obj, bytes):
         obj = obj.encode('utf-8')
       self.revision.hash(path, obj)
       self._writeString(obj, path)
@@ -865,9 +867,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj = self.removeProperties(obj, 1, keep_workflow_history = True)
           transaction.savepoint(optimistic=True)
 
-        f = BytesIO()
+        f = StringIO()
         exportXML(obj._p_jar, obj._p_oid, f)
-        bta.addObject(f, key, path=path)
+        bta.addObject(f.getvalue().encode(), key, path=path)
 
       if catalog_method_template_item:
         # add all datas specific to catalog inside one file
@@ -1083,8 +1085,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     for path, old_object in upgrade_list:
       # compare object to see it there is changes
       new_object = self._objects[path]
-      new_io = BytesIO()
-      old_io = BytesIO()
+      new_io = StringIO()
+      old_io = StringIO()
       exportXML(new_object._p_jar, new_object._p_oid, new_io)
       new_obj_xml = new_io.getvalue()
       try:
