@@ -30,7 +30,7 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import cartesianProduct, INFINITE_SET
+from Products.ERP5Type.Utils import cartesianProduct, ensure_list, INFINITE_SET
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
@@ -163,7 +163,7 @@ class Matrix(object):
       else:
         delete = set()
         to_delete.append(delete)
-        for k, v in id_dict.items():
+        for k, v in ensure_list(id_dict.items()):
           try:
             axis.remove(k)
             if last_id < v:
