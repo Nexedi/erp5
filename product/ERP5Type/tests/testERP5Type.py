@@ -39,7 +39,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript
-from Products.ERP5Type.Utils import cmp
+from Products.ERP5Type.Utils import OrderableKey, cmp
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
     """
@@ -289,6 +289,16 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(cmp(None, 0), -1)
       self.assertEqual(cmp(None, ''), -1)
       self.assertEqual(cmp(0, ''), -1)
+
+    def test_OrderableKey(self):
+      self.assertEqual(
+        sorted([1, '', None], key=lambda x: OrderableKey(x)),
+        [None, 1, '']
+      )
+      o1 = [OrderableKey(e) for e in (None, 1)]
+      o2 = [OrderableKey(e) for e in (0, 0)]
+      self.assertEqual(sorted([o1, o2]), [o1, o2])
+      self.assertEqual(sorted([o2, o1]), [o1, o2])
 
 def test_suite():
   suite = unittest.TestSuite()
