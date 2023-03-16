@@ -2809,8 +2809,8 @@ class TestWithImport(TestImported):
 from ITestGC import ITestGC
 import zope.interface
 
+@zope.interface.implementer(ITestGC)
 class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
   def foo(self):
       pass
 """)
