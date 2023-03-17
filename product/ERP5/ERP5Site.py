@@ -486,6 +486,16 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
         setSite(old_site)
     else:
       self._registerMissingTools()
+
+    # Some old ERP5 Sites have ISiteRoot registered, which
+    # makes URLTool.getPortalObject() returns the portal in
+    # an incorrect acquisition context. We unregister this
+    # interface to have the fallback behavior from
+    # https://github.com/zopefoundation/Products.CMFCore/blob/c2b800e6/src/Products/CMFCore/URLTool.py#L75-L77
+    from Products.CMFCore.interfaces import ISiteRoot
+    if _components.unregisterUtility(provided=ISiteRoot):
+      LOG('ERP5Site', 0, 'Unregistered ISiteRoot Utility')
+
     return _components
 
   security.declareProtected(Permissions.View, 'view')
