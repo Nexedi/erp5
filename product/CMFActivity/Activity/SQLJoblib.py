@@ -116,7 +116,7 @@ CREATE TABLE %s (
         row = b','.join((
           b'@uid+%s' % str(i).encode(),
           quote('/'.join(m.object_path)),
-          b'NULL' if active_process_uid is None else str(active_process_uid),
+          b'NULL' if active_process_uid is None else str(active_process_uid).encode(),
           b"UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           b'-1' if hasDependency(m) else b'0',
