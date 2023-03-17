@@ -16,7 +16,7 @@ ConfigUserFilesPath=""
 # SECURITY TIP: Uncomment the 3 following code lines to force the Plone Member Home Folder as fixed path
 # You can do it as well with wysiwyg_support templates customization
 # it's just more secure
-# portal=context.portal_url.getPortalObject()
+# portal=context.getPortalObject()
 # portal_url=portal.absolute_url()
 # ConfigUserFilesPath = portal.portal_membership.getHomeUrl().replace(portal_url, '') + '/'
 
@@ -269,10 +269,10 @@ def GetFoldersAndFiles( resourceType, currentFolder ):
         obj = context.restrictedTraverse(currentFolder.lstrip('/'))
       except Exception as e:
 
-        obj = context.portal_url.getPortalObject()
+        obj = context.getPortalObject()
     else :
 
-      obj = context.portal_url.getPortalObject()
+      obj = context.getPortalObject()
 
 
     for object in obj.objectValues():
@@ -304,10 +304,10 @@ def GetFolders( resourceType, currentFolder ):
         obj = context.restrictedTraverse(currentFolder.lstrip('/'))
         #except Exception,e:
 
-        #   obj = context.portal_url.getPortalObject()
+        #   obj = context.getPortalObject()
 
     else :
-        #obj = context.portal_url.getPortalObject()
+        #obj = context.getPortalObject()
         return xmlString([],resourceType,1)
 
 
@@ -346,7 +346,7 @@ def CreateFolder(currentFolder, folderName ):
     if currentFolder != "/" :
         obj = context.restrictedTraverse(currentFolder.lstrip('/'))
     else :
-        obj = context.portal_url.getPortalObject()
+        obj = context.getPortalObject()
     sErrorNumber=""
 
     # error cases
@@ -382,7 +382,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
         if currentFolder != "/" :
             obj = context.restrictedTraverse(currentFolder.lstrip('/'))
         else :
-            obj = context.portal_url.getPortalObject()
+            obj = context.getPortalObject()
         error=""
         idObj=""
 
@@ -457,7 +457,7 @@ RESPONSE =  request.RESPONSE
 dicoRequest = request.form
 message_error=""
 
-portal_url=context.portal_url.getPortalObject().absolute_url()
+portal_url=context.getPortalObject().absolute_url()
 server_url = request.SERVER_URL
 portal_path = portal_url.replace(server_url,'')
 

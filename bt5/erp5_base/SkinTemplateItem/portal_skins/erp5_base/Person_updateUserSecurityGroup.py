@@ -2,7 +2,7 @@
 # XXX This script could be deleted after the full transition to PAS (don't forget to update assignment workflow too)
 
 # user_folder: NuxUserGroups or PluggableAuthService at the root of the ERP5Site.
-user_folder = context.portal_url.getPortalObject()['acl_users']
+user_folder = context.getPortalObject()['acl_users']
 
 # This script can be bypassed in the context of PAS use because user groups are
 #   automaticcaly managed and set by ERP5Security/ERP5GroupManage.py

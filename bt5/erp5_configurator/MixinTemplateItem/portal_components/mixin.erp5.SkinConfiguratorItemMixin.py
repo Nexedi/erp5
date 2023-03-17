@@ -78,5 +78,5 @@ class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
                   .manage_addPythonScript(id = script_id)
     script = container._getOb(script_id)
     script.ZPythonScript_edit(script_params, script_content)
-    container.portal_url.getPortalObject().changeSkin(None)
+    container.getPortalObject().changeSkin(None)
     return script
