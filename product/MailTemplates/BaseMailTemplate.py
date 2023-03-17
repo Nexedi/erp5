@@ -51,7 +51,7 @@ class BaseMailTemplate:
         # So I remove it.
         if text.endswith('\n'):
             text = text[:-1]
-        if not self.html() and isinstance(text, six.text_type):
+        if six.PY2 and not self.html() and isinstance(text, six.text_type):
             text = text.encode(encoding,'replace')
         # now turn the result into a MIMEText object
         msg = MIMEText(
