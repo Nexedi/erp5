@@ -139,12 +139,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # activity messages. We are testing CMFActivity so it's important to check
     # that everything works as expected on this subject.
     try:
-      if self._resultForDoCleanups.wasSuccessful():
-        getMessageList = self.portal.portal_activities.getMessageList
-        self.assertFalse(getMessageList())
-        # Also check if a test drop them without committing.
-        self.abort()
-        self.assertFalse(getMessageList())
+      getMessageList = self.portal.portal_activities.getMessageList
+      self.assertFalse(getMessageList())
+      # Also check if a test drop them without committing.
+      self.abort()
+      self.assertFalse(getMessageList())
     finally:
       ERP5TypeTestCase.tearDown(self)
 
