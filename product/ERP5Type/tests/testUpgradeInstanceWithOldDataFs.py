@@ -152,6 +152,10 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
       error_list, [],
       msg="The following Portal Type classes could not be loaded (see zLOG.log): %r" % error_list)
 
+    # XXX ISiteRoot bug
+    self.portal.portal_url.getPortalObject().restrictedTraverse('/').REQUEST
+
+
 def test_suite():
   suite = unittest.TestSuite()
   if WITH_LEGACY_WORKFLOW:
