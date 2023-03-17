@@ -28,6 +28,8 @@
 
 import unittest
 
+import six
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Persistence import PersistentMapping
@@ -50,12 +52,12 @@ class TestLocalizer(ERP5TypeTestCase):
     self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
                      "This is 1€.")
     # newly created key should be unicode.
-    self.assertNotIn('This is 1€.', self.message_catalog._messages)
+    self.assertNotIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertIn(u'This is 1€.', self.message_catalog._messages)
     self.message_catalog.message_edit(u'This is 1€.', 'fr', u"C'est 1€.", '')
     self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
                      "C'est 1€.")
-    self.assertNotIn('This is 1€.', self.message_catalog._messages)
+    self.assertNotIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertIn(u'This is 1€.', self.message_catalog._messages)
 
   def test_migrated_non_ascii_msgid(self):
@@ -66,23 +68,37 @@ class TestLocalizer(ERP5TypeTestCase):
     self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
                      "C'est 1€.")
     # translate() should not create a unicode key if str key already exists.
-    self.assertIn('This is 1€.', self.message_catalog._messages)
+    self.assertIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertNotIn(u'This is 1€.', self.message_catalog._messages)
     self.message_catalog.message_edit(u'This is 1€.', 'fr', u"Ceci est 1€.", '')
     self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
                      "Ceci est 1€.")
     # message_edit() should not create a unicode key if str key already exists.
-    self.assertIn('This is 1€.', self.message_catalog._messages)
+    self.assertIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertNotIn(u'This is 1€.', self.message_catalog._messages)
 
   def test_non_ascii_mapping(self):
     self.assertEqual(self.portal.Base_translateString('This is 1${currency}.', lang='fr',
-                                                      mapping={'currency':'€'}),
+                                                      mapping={'currency': '€'}),
                      "This is 1€.")
+    if six.PY2:
+      self.assertEqual(
+        self.portal.Base_translateString(
+          'This is 1${currency}.',
+          lang='fr',
+          mapping={'currency': u'€'}),
+        "This is 1€.")
     self.message_catalog.message_edit(u'This is 1${currency}.', 'fr', u"C'est 1${currency}.", '')
     self.assertEqual(self.portal.Base_translateString('This is 1${currency}.', lang='fr',
-                                                      mapping={'currency':'€'}),
+                                                      mapping={'currency': '€'}),
                      "C'est 1€.")
+    if six.PY2:
+      self.assertEqual(
+        self.portal.Base_translateString(
+          'This is 1${currency}.',
+          lang='fr',
+          mapping={'currency': u'€'}),
+        "C'est 1€.")
 
   def test_non_literal_mapping(self):
     self.assertEqual(self.portal.Base_translateString('This is ${obj}.', lang='fr',
@@ -104,7 +120,7 @@ class TestLocalizer(ERP5TypeTestCase):
     self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
                      "Ceci est 1€.")
     # po_import() converts existing str key to unicode key.
-    self.assertNotIn('This is 1€.', self.message_catalog._messages)
+    self.assertNotIn(u'This is 1€.'.encode('utf-8'), self.message_catalog._messages)
     self.assertIn(u'This is 1€.', self.message_catalog._messages)
 
   def test_localizer_transle_in_activity(self):
