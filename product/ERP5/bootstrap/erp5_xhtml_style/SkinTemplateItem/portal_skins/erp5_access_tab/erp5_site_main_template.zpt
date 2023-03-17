@@ -4,15 +4,15 @@
   <metal:block define-macro="master">
     <tal:block tal:define="title here/Title;
                            enctype string:multipart/form-data;
-                           portal context/portal_url/getPortalObject;
+                           portal context/getPortalObject;
                            global css_list python:['%s/tabber_style.css' % (portal.absolute_url(),)];
                            global js_list python:['%s/erp5_tabber.js' % (portal.absolute_url(),)]">
       <tal:block metal:use-macro="here/main_template/macros/master">
         <tal:block metal:fill-slot="main">
-          <tal:block tal:condition="here/portal_membership/isAnonymousUser">
+          <tal:block tal:condition="portal/portal_membership/isAnonymousUser">
             <tal:block tal:define="dummy python:request.RESPONSE.redirect('%s/login_form' % portal.absolute_url())" />
           </tal:block>
-          <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">
+          <tal:block tal:condition="python:not portal.portal_membership.isAnonymousUser()">
             <div class="index_html" style="margin:20px 40px 0 40px; padding:0; text-align:left;">
              <div class="document">
               <div class="actions">
@@ -24,7 +24,7 @@
               </div>
                 <p class="clear" />
               </div>
-              <tal:block tal:condition="python: here.getPortalObject().restrictedTraverse('portal_gadgets', None) is not None">
+              <tal:block tal:condition="python: portal.restrictedTraverse('portal_gadgets', None) is not None">
                   <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"
                             tal:replace="structure python: here.ERP5Site_viewHomeAreaRenderer(create_default_pad=True, 
                                                                                               make_security_check=True)" />

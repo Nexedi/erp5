@@ -2,7 +2,7 @@
 """
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.ERP5Form.Report import ReportSection
-portal   = context.portal_url.getPortalObject()
+portal   = context.getPortalObject()
 request  = portal.REQUEST
 
 cat_tool = portal.portal_categories

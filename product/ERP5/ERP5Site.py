@@ -185,7 +185,7 @@ class ReferCheckerBeforeTraverseHook:
       if user is not None and 'Manager' in user.getRoles():
         return
 
-    portal_url = container.portal_url.getPortalObject().absolute_url()
+    portal_url = container.getPortalObject().absolute_url()
     if http_referer != '':
       # if HTTP_REFERER is set, user can acces the object if referer is ok
       if http_referer.startswith(portal_url):
