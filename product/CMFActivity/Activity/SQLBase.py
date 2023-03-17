@@ -245,7 +245,7 @@ def getNow(db):
     Note that this value is not cached, and is not transactionnal on MySQL
     side.
   """
-  return db.query("SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+  return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
 
 class SQLBase(Queue):
   """
@@ -832,8 +832,8 @@ CREATE TABLE %s (
     """
       Put messages back in given processing_node.
     """
-    db.query("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
-      self.sql_table, state, ','.join(map(str, uid_list))))
+    db.query(("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+      self.sql_table, state, ','.join(map(str, uid_list)))).encode())
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything

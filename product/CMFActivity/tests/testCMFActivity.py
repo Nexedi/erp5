@@ -619,7 +619,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Monkey patch Queue to induce conflict errors artificially.
     def query(self, query_string,*args, **kw):
       # Not so nice, this is specific to zsql method
-      if "REPLACE INTO" in query_string:
+      if b"REPLACE INTO" in query_string:
         raise OperationalError
       return self.original_query(query_string,*args, **kw)
 
@@ -1026,7 +1026,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     activity_tool = self.getActivityTool()
     def delete_volatiles():
-      for property_id in activity_tool.__dict__.keys():
+      for property_id in list(six.iterkeys(activity_tool.__dict__)):
         if property_id.startswith('_v_'):
           delattr(activity_tool, property_id)
     organisation_module = self.getOrganisationModule()
@@ -1142,6 +1142,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.flushAllActivities(silent=1, loop_size=100)
       # Check there is a traceback in the email notification
       sender, recipients, mail = message_list.pop()
+      mail = mail.decode()
       self.assertIn("Module %s, line %s, in failingMethod" % (
         __name__, inspect.getsourcelines(failingMethod)[1]), mail)
       self.assertIn("ValueError:", mail)
@@ -1894,7 +1895,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       """
     original_query = six.get_unbound_function(DB.query)
     def query(self, query_string, *args, **kw):
-      if query_string.startswith('INSERT'):
+      if query_string.startswith(b'INSERT'):
         insert_list.append(len(query_string))
         if not n:
           raise Skip
@@ -2490,7 +2491,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.assertEqual(1, activity_tool.countMessage())
           self.flushAllActivities()
           sender, recipients, mail = message_list.pop()
-          self.assertIn('UID mismatch', mail)
+          self.assertIn(b'UID mismatch', mail)
           m, = activity_tool.getMessageList()
           self.assertEqual(m.processing_node, INVOKE_ERROR_STATE)
           obj.flushActivity()
