@@ -141,10 +141,10 @@ def sqltest_dict():
       if value is None: # XXX: see comment in SQLBase._getMessageList
         return column + b" IS NULL"
       for x in value:
-        return b"%s IN (%s)" % (column, str2bytes(', '.join(map(
+        return str2bytes("%s IN (%s)" % (column, ', '.join(map(
           str if isinstance(x, _SQLTEST_NO_QUOTE_TYPE_SET) else
           render_datetime if isinstance(x, DateTime) else
-          render_string, value))))
+          lambda v: bytes2str(render_string(v)), value))))
       return b"0"
     sqltest_dict[name] = render
   _('active_process_uid')
@@ -246,7 +246,7 @@ def getNow(db):
     Note that this value is not cached, and is not transactionnal on MySQL
     side.
   """
-  return db.query("SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+  return db.query(b"SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
 
 class SQLBase(Queue):
   """
@@ -284,7 +284,7 @@ CREATE TABLE %s (
     db = activity_tool.getSQLConnection()
     create = self.createTableSQL()
     if clear:
-      db.query("DROP TABLE IF EXISTS " + self.sql_table)
+      db.query(str2bytes("DROP TABLE IF EXISTS " + self.sql_table))
       db.query(create)
     else:
       src = db.upgradeSchema(create, create_if_not_exists=1,
@@ -790,7 +790,7 @@ CREATE TABLE %s (
           b"  %s%s"
           b" ORDER BY priority, date"
           b" LIMIT %i"
-        b")" % args).format(*a, *k))
+        b")" % args).format(*a, **k))
         result = Results(query(
           b"SELECT *"
           b" FROM (%s) AS t"
@@ -834,8 +834,8 @@ CREATE TABLE %s (
     """
       Put messages back in given processing_node.
     """
-    db.query("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
-      self.sql_table, state, ','.join(map(str, uid_list))))
+    db.query(("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+      self.sql_table, state, ','.join(map(str, uid_list)))).encode())
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -1042,16 +1042,16 @@ CREATE TABLE %s (
     return bool(message_list)
 
   def deleteMessageList(self, db, uid_list):
-    db.query("DELETE FROM %s WHERE uid IN (%s)" % (
-      self.sql_table, ','.join(map(str, uid_list))))
+    db.query(str2bytes("DELETE FROM %s WHERE uid IN (%s)" % (
+      self.sql_table, ','.join(map(str, uid_list)))))
 
   def reactivateMessageList(self, db, uid_list, delay, retry):
-    db.query("UPDATE %s SET"
+    db.query(str2bytes("UPDATE %s SET"
       " date = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL %s SECOND)"
       "%s WHERE uid IN (%s)" % (
         self.sql_table, delay,
         ", retry = retry + 1" if retry else "",
-        ",".join(map(str, uid_list))))
+        ",".join(map(str, uid_list)))))
 
   def finalizeMessageExecution(self, activity_tool, message_list,
                                uid_to_duplicate_uid_list_dict=None):
@@ -1208,8 +1208,8 @@ CREATE TABLE %s (
       To simulate time shift, we simply substract delay from
       all dates in message(_queue) table
     """
-    activity_tool.getSQLConnection().query("UPDATE %s SET"
+    activity_tool.getSQLConnection().query(("UPDATE %s SET"
       " date = DATE_SUB(date, INTERVAL %s SECOND)"
       % (self.sql_table, delay)
       + ('' if processing_node is None else
-         "WHERE processing_node=%s" % processing_node))
+         "WHERE processing_node=%s" % processing_node)).encode())
