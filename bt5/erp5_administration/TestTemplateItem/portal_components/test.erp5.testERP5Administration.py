@@ -29,6 +29,7 @@
 
 import unittest
 import time
+import six
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 
 class TestERP5Administration(InventoryAPITestCase):
@@ -105,8 +106,14 @@ class TestERP5Administration(InventoryAPITestCase):
     line_list = alarm.Alarm_viewConsistencyCheckReport.listbox.get_value(
                         'default', render_format='list')
     self.assertEqual(1, len([line for line in line_list if line.isDataLine()]))
-    self.assertEqual(str(line_list[-1].getColumnProperty('getTranslatedMessage')),
-      "Attribute title should be of type string but is of type <type 'int'>")
+    if six.PY2:
+      self.assertEqual(
+        str(line_list[-1].getColumnProperty('getTranslatedMessage')),
+        "Attribute title should be of type string but is of type <type 'int'>")
+    else:
+      self.assertEqual(
+        str(line_list[-1].getColumnProperty('getTranslatedMessage')),
+        "Attribute title should be of type string but is of type <class 'int'>")
 
     # this alarm can solve, as long as the constraints can solve, this is the
     # case of PropertyTypeValidity
