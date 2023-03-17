@@ -21,7 +21,13 @@ open_assignment_list = context.CredentialRequest_closePersonAssignment(old_role_
 #Initialisation
 assignment_duration = context.portal_preferences.getPreferredCredentialAssignmentDuration()
 today = DateTime()
-delay = today+assignment_duration
+if assignment_duration <= 0:
+  delay = None
+  start_date = None
+else:
+  delay = today+assignment_duration
+  start_date = today - 1
+
 
 current_assignment_list = {}
 for assignment in open_assignment_list:
@@ -54,7 +60,7 @@ for role in context.getRoleList():
         function = context.getFunctionList(),
         group = context.getGroupList(),
         destination = organisation_url,
-        start_date = today - 1,
+        start_date = start_date,
         stop_date = delay)
 
     assignment.open()

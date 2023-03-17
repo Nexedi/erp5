@@ -263,6 +263,18 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.logout()
 
+  def stepSetCredentialAssignmentDurationProperty(self, sequence=None):
+    if sequence is None:
+      sequence = {}
+    assignment_duration = sequence.get("assignment_duration",
+        20)
+    self.login()
+    preference = self._getPreference()
+    preference.edit(preferred_credential_assignment_duration=assignment_duration)
+    self._enablePreference()
+    self.tic()
+    self.logout()
+
   def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self,
       sequence=None, sequence_list=None, **kw):
     self.login()
@@ -310,6 +322,27 @@ class TestERP5Credential(ERP5TypeTestCase):
     assignment = assignment_list[0]
     self.assertEqual(assignment.getFunction(), assignment_function)
     self.assertEqual(assignment.getRole(), assignment_role)
+    
+  def stepCheckAssignmentWithoutStopDate(self, sequence):
+    reference = sequence["reference"]
+    person = self.portal.acl_users.getUser(reference).getUserValue()
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertEqual(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertEqual(assignment.getStartDate(), None)
+    self.assertEqual(assignment.getStopDate(), None)
+
+  def stepCheckAssignmentWithStopDate(self, sequence):
+    reference = sequence["reference"]
+    person = self.portal.acl_users.getUser(reference).getUserValue()
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertEqual(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertNotEqual(assignment.getStartDate(), None)
+    self.assertTrue(assignment.getStartDate() < DateTime())
+    assignment_duration = sequence['assignment_duration']
+    self.assertTrue(assignment.getStopDate() < DateTime()+assignment_duration)
+    self.assertTrue(assignment.getStopDate() > DateTime()+assignment_duration-1)
 
   def getUserFolder(self):
     """Returns the acl_users. """
@@ -1095,6 +1128,36 @@ class TestERP5Credential(ERP5TypeTestCase):
                    assignment_function="agent",
                    assignment_role="client")
     self.stepCheckAssignmentAfterActiveLogin(sequence)
+
+  def testAssignmentCreationUsingSystemPreferenceDurationProperty(self):
+    """
+      Check that the category list are used correctly to create a new
+      assignment
+    """
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
+    self.stepSetCredentialAssignmentDurationProperty(
+      dict(assignment_duration=0))
+    self._createCredentialRequest()
+    sequence = dict(reference="barney",
+                   assignment_function="member",
+                   assignment_role="internal")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
+    self.stepCheckAssignmentWithoutStopDate(sequence)
+    category_list = ["role/client", "function/agent"]
+    self.stepSetCredentialAssignmentPropertyList(
+        dict(category_list=category_list))
+    assignment_duration = 20
+    self.stepSetCredentialAssignmentDurationProperty(
+      dict(assignment_duration=assignment_duration))
+    self._createCredentialRequest(reference="credential_user")
+    sequence = dict(reference="credential_user",
+                   assignment_function="agent",
+                   assignment_role="client",
+                   assignment_duration=assignment_duration)
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
+    self.stepCheckAssignmentWithStopDate(sequence)
 
   def testERP5Site_activeLogin(self):
     """
