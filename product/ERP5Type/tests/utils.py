@@ -286,7 +286,7 @@ def createZODBPythonScript(container, script_id, script_params,
                 .manage_addPythonScript(id = script_id)
   script = container._getOb(script_id)
   script.ZPythonScript_edit(script_params, script_content)
-  container.portal_url.getPortalObject().changeSkin(None)
+  container.getPortalObject().changeSkin(None)
   return script
 
 def removeZODBPythonScript(container, script_id):
@@ -305,7 +305,7 @@ def createZODBFile(container, file_id, file_content_type, file_content):
                         content_type=file_content_type,
                         filedata=file_content)
 
-  container.portal_url.getPortalObject().changeSkin(None)
+  container.getPortalObject().changeSkin(None)
   return zodb_file
 
 # memcache tool

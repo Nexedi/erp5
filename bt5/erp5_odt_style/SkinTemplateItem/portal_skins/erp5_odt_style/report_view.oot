@@ -151,7 +151,7 @@
                 </tal:block>
                  
                  <tal:block tal:condition="not: rendered_report_item_list">
-                 <tal:block tal:define="portal_object here/portal_url/getPortalObject">
+                 <tal:block tal:define="portal_object here/getPortalObject">
                  <tal:block tal:repeat="report_item report_item_list">
                   <tal:block tal:define="here python:report_item.getObject(portal_object);
                 render_prefix python: 'x%s' % (repeat['report_item'].index, );

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <template bottommargin='2cm' showboundary='0' topmargin='2cm' 
-          rightmargin='2cm' tal:define='portal python:here.portal_url.getPortalObject()' 
+          rightmargin='2cm' tal:define='portal python:here.getPortalObject()' 
           filename='journal.pdf' pagesize='A4' allowsplitting='1' landscape='0' leftmargin='2cm'>
 
   <pagetemplate startframe='content' id='FirstPage'>

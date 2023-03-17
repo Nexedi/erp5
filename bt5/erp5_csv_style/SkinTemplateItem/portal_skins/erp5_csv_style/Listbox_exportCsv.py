@@ -2,7 +2,7 @@
 result = ''
 request = context.REQUEST
 
-translate = context.portal_url.getPortalObject().Localizer.erp5_ui.gettext
+translate = context.getPortalObject().Localizer.erp5_ui.gettext
 
 listboxline_list = context.get_value('default', render_format='list', REQUEST=request)
 

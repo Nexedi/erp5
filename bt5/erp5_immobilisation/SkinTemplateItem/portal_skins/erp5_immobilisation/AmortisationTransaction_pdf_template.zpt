@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<template bottommargin='0.665cm' showboundary='0' topmargin='0.635cm' rightmargin='0.665cm' tal:define='portal python:here.portal_url.getPortalObject()' filename='accounting_details.pdf' pagesize='A4' allowsplitting='1' landscape='0' leftmargin='0.635cm'>
+<template bottommargin='0.665cm' showboundary='0' topmargin='0.635cm' rightmargin='0.665cm' tal:define='portal python:here.getPortalObject()' filename='accounting_details.pdf' pagesize='A4' allowsplitting='1' landscape='0' leftmargin='0.635cm'>
   <pagetemplate startframe='content' id='FirstPage'>
     <static>
       <rectangle z='' height='1.452cm' width='19.701cm' stroke='(0.0,0.0,0.0)' y='27.613cm' x='0.635cm' linewidth='1' fill='(0.4,0.4,0.4)'/>

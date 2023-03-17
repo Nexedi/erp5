@@ -4,7 +4,7 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">
   <tal:block metal:define-macro="header_definitions">
     <tal:block tal:define="
-      global portal              here/portal_url/getPortalObject;
+      global portal              here/getPortalObject;
       global portal_path         portal_path | portal/absolute_url;
              local_parameter_list  local_parameter_list | python: {};
              action_context    python: portal.restrictedTraverse(request.get('object_path', '?'), here);
@@ -49,7 +49,7 @@
         title title | python:'ERP5';
         header_title header_title | nothing;
       "
-      tal:content="python: header_title or '%s | %s' % (title, here.getPortalObject().title_or_id())"
+      tal:content="python: header_title or '%s | %s' % (title, portal.title_or_id())"
     ></title>
     <link rel="icon" tal:attributes="href python: portal_path + '/favicon.ico'" type="image/x-icon" />
     <link rel="shortcut icon" tal:attributes="href python: portal_path + '/favicon.ico'" type="image/x-icon" />

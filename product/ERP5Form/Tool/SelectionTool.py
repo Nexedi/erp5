@@ -1695,7 +1695,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
 
   portal_categories = getattr(form, 'portal_categories', None)
   portal_domains = getattr(form, 'portal_domains', None)
-  portal_object = form.portal_url.getPortalObject()
+  portal_object = form.getPortalObject()
   if len(report_path):
     base_category = report_path[0]
 

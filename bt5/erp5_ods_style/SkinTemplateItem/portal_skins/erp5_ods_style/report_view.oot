@@ -18,7 +18,7 @@
             </tal:block>
           </tal:block>
         </tal:block>
-        <tal:block tal:define="portal_object here/portal_url/getPortalObject">
+        <tal:block tal:define="portal_object here/getPortalObject">
           <tal:block tal:condition="not: sheet_per_report_section">
             <table:table tal:attributes="table:name python:unicode(form.getProperty('title'), 'utf8')" i18n:attributes="table:name">
               <!-- at least one table-column element is required for ODF to validate -->
@@ -84,7 +84,7 @@
                         </tal:block>
                       </tal:block>
                     </tal:block>
-                    <tal:block tal:define="portal_object here/portal_url/getPortalObject;
+                    <tal:block tal:define="portal_object here/getPortalObject;
                                            dummy python:report_item.popReport(portal_object, render_prefix=render_prefix)"/>
                   </tal:block>
                 </tal:block>

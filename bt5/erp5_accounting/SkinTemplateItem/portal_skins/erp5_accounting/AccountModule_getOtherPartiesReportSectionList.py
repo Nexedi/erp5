@@ -1,6 +1,6 @@
 """Client & vendors accounts.
 """
-portal = context.portal_url.getPortalObject()
+portal = context.getPortalObject()
 
 from Products.ERP5Form.Report import ReportSection
 

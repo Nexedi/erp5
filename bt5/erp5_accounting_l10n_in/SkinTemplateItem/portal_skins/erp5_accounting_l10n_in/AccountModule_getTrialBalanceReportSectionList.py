@@ -4,7 +4,7 @@
 from Products.ERP5Form.Report import ReportSection
 
 request = context.REQUEST
-portal  = context.portal_url.getPortalObject()
+portal  = context.getPortalObject()
 
 at_date              = request['at_date']
 section_category     = request['transaction_section_category']
