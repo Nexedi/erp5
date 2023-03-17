@@ -142,10 +142,10 @@ class SQLDict(SQLBase):
           if reserve_uid_list:
             self.assignMessageList(db, processing_node, reserve_uid_list)
           else:
-            db.query("COMMIT") # XXX: useful ?
+            db.query(b"COMMIT") # XXX: useful ?
         except:
           self._log(WARNING, 'Failed to reserve duplicates')
-          db.query("ROLLBACK")
+          db.query(b"ROLLBACK")
           raise
         if uid_list:
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
