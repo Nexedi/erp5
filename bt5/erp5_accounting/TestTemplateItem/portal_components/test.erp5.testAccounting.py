@@ -4330,7 +4330,7 @@ class TestTransactions(AccountingTestCase):
            dict(source_value=self.account_module.receivable,
                 source_credit=100.000001)))
     invoice.newContent(portal_type='Invoice Line', quantity=1, price=100)
-    self.assertRaises(invoice.AccountingTransaction_roundDebitCredit)
+    self.assertRaises(Exception, invoice.AccountingTransaction_roundDebitCredit)
 
   def test_roundDebitCredit_when_payable_is_different_total_price(self):
     invoice = self._makeOne(
