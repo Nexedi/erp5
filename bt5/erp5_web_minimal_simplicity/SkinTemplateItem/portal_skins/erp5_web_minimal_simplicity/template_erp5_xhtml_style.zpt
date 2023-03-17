@@ -19,7 +19,7 @@
                            meta_reference             python: here.getProperty('reference') or '';
                            meta_description           python: here.getProperty('description') or '';
                            meta_title                 python: here.getProperty('title') or here.getPortalObject().title_or_id();
-                           global portal              here/portal_url/getPortalObject;
+                           global portal              here/getPortalObject;
                            global portal_path         portal_path | portal/absolute_url;
                            request                    python: context.REQUEST;
                            dynamic_path_url           python: request['PATH_INFO'];

@@ -487,7 +487,7 @@ fieldset {
 /* listbox */
 
 .ListSummary {
-  background: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/tab_left.png') top left no-repeat;
+  background: url('<dtml-var expr="getPortalObject().absolute_url()">/images/tab_left.png') top left no-repeat;
   color: #000;
   background-color: <dtml-var document_background_color>;
   padding-left: 10px;
@@ -585,28 +585,28 @@ fieldset {
 }
 
 #favourites button .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/favourite.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/favourite.png');
 }
 
 #modules button .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/appearance.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/appearance.png');
 }
 
 #language button .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/language.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/language.png');
 }
 
 #search button .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/search.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/search.png');
 }
 
 #actions button .image{
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/exec16.png');
   position: relative;
   background-repeat: no-repeat;
 }
 #jump button .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/jump.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/jump.png');
   position: relative;
   background-repeat: no-repeat;
 }
@@ -630,76 +630,76 @@ fieldset {
 }
 
 #context_bar .separator {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sepacla.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/sepacla.png');
   height: 16px;
 }
 
 #context_bar .tool_buttons .jump_first .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2leftarrowb.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/2leftarrowb.png');
 }
 
 #context_bar .tool_buttons .jump_previous .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1leftarrowb.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/1leftarrowb.png');
 }
 
 #context_bar .tool_buttons .jump_next .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/1rightarrowb.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/1rightarrowb.png');
 }
 
 #context_bar .tool_buttons .jump_last .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2rightarrowb.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/2rightarrowb.png');
 }
 
 #context_bar .tool_buttons .list_mode .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/text_block.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/text_block.png');
 }
 
 #context_bar .tool_buttons .new .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filenew.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/filenew.png');
 }
 
 #context_bar .tool_buttons .clone .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/fileclone.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/fileclone.png');
 }
 
 #context_bar .tool_buttons .cut .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcut.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/editcut.png');
 }
 
 #context_bar .tool_buttons .copy .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcopy.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/editcopy.png');
 }
 
 #context_bar .tool_buttons .paste .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editpaste.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/editpaste.png');
 }
 
 #context_bar .tool_buttons .delete .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editdelete.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/editdelete.png');
 }
 
 #context_bar .tool_buttons .find .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/find.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/find.png');
 }
 
 #context_bar .tool_buttons .show_all .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/showall.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/showall.png');
 }
 
 #context_bar .tool_buttons .filter .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/filter.png');
 }
 
 #context_bar .tool_buttons .filter_on .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter_on.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/filter_on.png');
 }
 
 #context_bar .tool_buttons .sort .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sort.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/sort.png');
 }
 
 #context_bar .tool_buttons .configure .image {
-  background-image: url('<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/configure.png');
+  background-image: url('<dtml-var expr="getPortalObject().absolute_url()">/images/configure.png');
 }
 
 #navigation_buttons {

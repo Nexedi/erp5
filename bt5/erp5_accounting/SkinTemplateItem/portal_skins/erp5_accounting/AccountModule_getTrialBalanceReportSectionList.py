@@ -3,7 +3,7 @@
 from Products.ERP5Form.Report import ReportSection
 
 request = context.REQUEST
-portal  = context.portal_url.getPortalObject()
+portal  = context.getPortalObject()
 
 at_date  = request['at_date']
 from_date = request.get('from_date', None)

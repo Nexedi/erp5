@@ -871,8 +871,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             return append
 
         def add_default_field_library():
-            portal_url = getToolByName(self, 'portal_url')
-            portal = portal_url.getPortalObject()
+            portal = self.getPortalObject()
             portal_skins = getToolByName(self, 'portal_skins')
 
             default_field_library_path = portal.getProperty(
