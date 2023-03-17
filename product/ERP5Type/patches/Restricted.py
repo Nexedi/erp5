@@ -507,9 +507,8 @@ allow_type(np.dtype)
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
 allow_type(type(np.dtype('int16')))
-allow_type(
-  type(np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])['date'])
-)
+sz = np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])
+allow_type(type(sz[0]['date']))
 
 allow_full_write(np.ndarray)
 allow_full_write(np.core.records.recarray)
