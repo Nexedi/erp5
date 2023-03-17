@@ -497,6 +497,17 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=99
     )
 
+  def testAstype(self):
+    self.createAndRunScript('''
+        import numpy as np
+        a = np.array([np.datetime64('1980')], dtype=[('date', '<M8[Y]')])
+        as_ms_type = a['date'][-1].astype('M8[ms]')
+        as_O_type = as_ms_type.astype('O')
+        return as_O_type.year
+        ''',
+        expected=1980
+    )
+
   def testPandasSeries(self):
     self.createAndRunScript('''
         import pandas as pd
