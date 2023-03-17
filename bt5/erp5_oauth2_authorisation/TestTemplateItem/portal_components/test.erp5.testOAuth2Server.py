@@ -422,7 +422,7 @@ class TestOAuth2(ERP5TypeTestCase):
           cookie_value, cookie_attributes = cookie_body.split(';', 1)
           cookie_value = cookie_value.strip('"')
           cookie_value_dict = {
-            'value': urllib.unquote(cookie_value),
+            'value': six.moves.urllib.parse.unquote(cookie_value),
           }
           for cookie_attribute in cookie_attributes.split(';'):
             cookie_attribute = cookie_attribute.lstrip()
