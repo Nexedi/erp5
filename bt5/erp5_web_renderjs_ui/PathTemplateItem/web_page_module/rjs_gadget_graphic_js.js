@@ -104,11 +104,17 @@
           extended_search_mapping: {},
           graph_gadget: "unsafe/gadget_field_graph_echarts.html"
         },
-        /*performance_mapping = {
+        performance_mapping = {
           "translated_simulation_state_title": [
             "simulation_state", "getTranslatedSimulationStateTitle"
+          ],
+          "translated_validation_state_title": [
+            "validation_state", "getTranslatedValidationStateTitle"
+          ],
+          "translated_causality_state_title": [
+            "causality_state", "getTranslatedCausalityStateTitle"
           ]
-        },*/
+        },
         domain_list,
         i,
         j;
@@ -123,16 +129,20 @@
         group_by = options.group_by;
       }
 
-      /* XXX - Improve the perfomance changing the parameter in the select_list is not working properly 
-        For example, use getTranslatedSimulationStateTitle instead of translated_simulation_state_title
+      /* Replace the key (group_by) using performance_mapping to use SQL indexes in a more efficient way.
+
+        Group by translated_simulation_state_title will increase the number of SQL join.
+      
+        For example, use getTranslatedSimulationStateTitle and simulation_state instead of
+        translated_simulation_state_title
       */
-      /*for (i = 0; i < group_by.length; i += 1) {
+      for (i = 0; i < group_by.length; i += 1) {
         if (performance_mapping.hasOwnProperty(group_by[i])) {
           options.layout.x.key = performance_mapping[group_by[i]][1];
           data.x = options.layout.x.key;
           group_by[i] = performance_mapping[group_by[i]][0];
         }
-      }*/
+      }
 
       data.y = "count(*)";
 
