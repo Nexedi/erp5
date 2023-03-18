@@ -18,12 +18,12 @@ assert WITH_LEGACY_WORKFLOW
 
 ## ERP5 Workflow: This must go before any Products.DCWorkflow imports as this
 ## patch createExprContext() from-imported in several of its modules
-from Products.ERP5Type.Core.Workflow import createExpressionContext
+from Products.ERP5Type.Core.Workflow import createExpressionContext, StateChangeInfo
 
 # Optimized rendering of global actions (cache)
 from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import Permissions, _dtmldir
-from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Acquisition import aq_inner, aq_parent
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
 from Products.DCWorkflow import DCWorkflow
