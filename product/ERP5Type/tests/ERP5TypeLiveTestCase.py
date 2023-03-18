@@ -44,6 +44,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCaseMixin, ERP5TypeTestCase, ERP5ReportTestCase
 from glob import glob
 import transaction
+import six
+if not six.PY2:
+  from importlib import reload
 
 from zLOG import LOG, DEBUG, INFO
 
