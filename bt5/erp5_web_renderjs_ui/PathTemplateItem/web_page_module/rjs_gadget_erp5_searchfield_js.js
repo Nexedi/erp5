@@ -72,31 +72,35 @@
         listbox_button_class = "ui-btn-icon-notext ui-icon-list-alt switch-listbox",
         graphic_button_class = "ui-btn-icon-notext ui-icon-bar-chart-o switch-graph";
 
-      if (gadget.state.enable_graphic) {
-        if (!only_graphic) {
-          listbox_button_class = listbox_button_class + " " + hide_button_class;
-        } else if (only_graphic) {
-          graphic_button_class = graphic_button_class + " " + hide_button_class;
-        }
+      if (gadget.state.hasOwnProperty("enable_graphic")) {
+        if (gadget.state.enable_graphic) {
+          if (!only_graphic) {
+            listbox_button_class = listbox_button_class + " " + hide_button_class;
+          } else if (only_graphic) {
+            graphic_button_class = graphic_button_class + " " + hide_button_class;
+          }
 
-        domsugar(graphic_container, [
-          domsugar("button", {
-            "class": listbox_button_class,
-            "type": "button"
-          }),
-          domsugar("button", {
-            "class": graphic_button_class,
-            "type": "button"
-          })
-        ]);
+          domsugar(graphic_container, [
+            domsugar("button", {
+              "class": listbox_button_class,
+              "type": "button"
+            }),
+            domsugar("button", {
+              "class": graphic_button_class,
+              "type": "button"
+            })
+          ]);
+        } else {
+          domsugar(graphic_container, [
+            domsugar("button", {
+              "class": graphic_button_class,
+              "type": "button",
+              "disabled": true
+            })
+          ]);
+        }
       } else {
-        domsugar(graphic_container, [
-          domsugar("button", {
-            "class": graphic_button_class,
-            "type": "button",
-            "disabled": true
-          })
-        ]);
+        domsugar(graphic_container, []);
       }
 
       if (gadget.state.extended_search) {
