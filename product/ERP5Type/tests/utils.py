@@ -61,6 +61,7 @@ if six.PY2:
   FileIO = file
 else:
   from io import FileIO
+  from importlib import reload
 
 
 def canonical_html(html):
