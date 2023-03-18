@@ -60,6 +60,7 @@ if six.PY2:
   FileIO = file
 else:
   from io import FileIO
+  from importlib import reload
 
 class FileUpload(FileIO):
   """Act as an uploaded file.
