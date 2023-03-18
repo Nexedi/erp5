@@ -27,19 +27,12 @@
 ##############################################################################
 
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
+assert WITH_LEGACY_WORKFLOW
 
-from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.DCWorkflow.Expression import StateChangeInfo as DCWorkflowStateChangeInfo
+from Products.ERP5Type.Core.Workflow import StateChangeInfo
+
 from Products.PythonScripts.Utility import allow_class
-allow_class(StateChangeInfo)
+allow_class(DCWorkflowStateChangeInfo)
 
-def setWorkflowVariable(self, **kw):
-  """
-    Allows to go through security checking and let a
-    script allows to modify a workflow variable
-  """
-  history = self.object.workflow_history[self.workflow.getReference()]
-  history[-1].update(kw)
-  history._p_changed = 1
-
-StateChangeInfo.setWorkflowVariable = setWorkflowVariable
-
+DCWorkflowStateChangeInfo.setWorkflowVariable = StateChangeInfo.setWorkflowVariable

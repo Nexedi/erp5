@@ -67,6 +67,106 @@ def createExpressionContext(sci):
         data['scripts'] = wf.scripts
     return getEngine().getContext(data)
 
+from MultiMapping import MultiMapping
+class SafeMapping(MultiMapping):
+  """
+  Mapping with security declarations and limited method exposure.
+
+  Since it subclasses MultiMapping, this class can be used to wrap
+  one or more mapping objects.  Restricted Python code will not be
+  able to mutate the SafeMapping or the wrapped mappings, but will be
+  able to read any value.
+
+  Imported from Products.DCWorkflow.Expression
+  """
+  __allow_access_to_unprotected_subobjects__ = 1
+  push = pop = None
+  _push = MultiMapping.push
+  _pop = MultiMapping.pop
+
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
+from AccessControl import ClassSecurityInfo
+class StateChangeInfo(object):
+  """
+  Provides information for expressions and scripts.
+
+  Imported from Products.DCWorkflow.Expression
+  """
+  _date = None
+
+  ObjectDeleted = ObjectDeleted
+  ObjectMoved = ObjectMoved
+
+  security = ClassSecurityInfo()
+  security.setDefaultAccess('allow')
+
+  def __init__(self, object, workflow, status=None, transition=None,
+               old_state=None, new_state=None, kwargs=None):
+    if kwargs is None:
+      kwargs = {}
+    else:
+      # Don't allow mutation
+      kwargs = SafeMapping(kwargs)
+    if status is None:
+      tool = aq_parent(aq_inner(workflow))
+      status = tool.getStatusOf(workflow.id, object)
+      if status is None:
+        status = {}
+    if status:
+      # Don't allow mutation
+      status = SafeMapping(status)
+    self.object = object
+    self.workflow = workflow
+    self.old_state = old_state
+    self.new_state = new_state
+    self.transition = transition
+    self.status = status
+    self.kwargs = kwargs
+
+  def __getitem__(self, name):
+    if name[:1] != '_' and hasattr(self, name):
+      return getattr(self, name)
+    raise KeyError(name)
+
+  def getHistory(self):
+    wf = self.workflow
+    tool = aq_parent(aq_inner(wf))
+    wf_id = wf.id
+    h = tool.getHistoryOf(wf_id, self.object)
+    if h:
+      return [d.copy() for d in h]  # Don't allow mutation
+    else:
+      return ()
+
+  def getPortal(self):
+    ob = aq_inner(self.object)
+    while ob is not None:
+      if ISiteRoot.providedBy(ob):
+        return ob
+      ob = aq_parent(ob)
+    return None
+
+  def getDateTime(self):
+    date = self._date
+    if not date:
+      date = self._date = DateTime()
+    return date
+
+  def setWorkflowVariable(self, **kw):
+    """
+    Allows to go through security checking and let a script allows to modify
+    a workflow variable
+    """
+    history = self.object.workflow_history[self.workflow.getReference()]
+    history[-1].update(kw)
+    history._p_changed = 1
+
+from Products.ERP5Type.Globals import InitializeClass
+InitializeClass(StateChangeInfo)
+from Products.PythonScripts.Utility import allow_class
+allow_class(StateChangeInfo)
+
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 if WITH_LEGACY_WORKFLOW:
   ## Patch for ERP5 Workflow: This must go before any Products.DCWorkflow
@@ -81,7 +181,6 @@ if WITH_LEGACY_WORKFLOW:
 import sys
 
 from collections import  defaultdict
-from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.Permission import Permission
 from Acquisition import aq_base
@@ -89,13 +188,11 @@ from copy import deepcopy
 from DateTime import DateTime
 from DocumentTemplate.DT_Util import TemplateDict
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.WorkflowCore import WorkflowException, ObjectDeleted,\
-                                          ObjectMoved
-from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.utils import Message as _
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Globals import PersistentMapping, InitializeClass
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.Utils import convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.WorkflowTransition import (TRIGGER_AUTOMATIC,

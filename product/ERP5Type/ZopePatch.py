@@ -64,7 +64,8 @@ from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailHost
 from Products.ERP5Type.patches import memcache_client
-from Products.ERP5Type.patches import StateChangeInfoPatch
+if WITH_LEGACY_WORKFLOW:
+  from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import DemoStorage
