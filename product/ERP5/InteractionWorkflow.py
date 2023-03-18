@@ -34,12 +34,11 @@ from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Core.Workflow import createExpressionContext
+from Products.ERP5Type.Core.Workflow import createExpressionContext, StateChangeInfo
 
 _MARKER = []
 

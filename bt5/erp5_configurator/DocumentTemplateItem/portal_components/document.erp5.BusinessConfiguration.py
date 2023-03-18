@@ -222,8 +222,7 @@ def execute(self, document, form_kw=None):
         expression = variable.getVariableDefaultExpressionInstance()
         if expression is not None:
           if expression_context is None:
-            from Products.ERP5Type.Core.Workflow import createExpressionContext
-            from Products.DCWorkflow.Expression import StateChangeInfo
+            from Products.ERP5Type.Core.Workflow import createExpressionContext, StateChangeInfo
             expression_context = createExpressionContext(StateChangeInfo(document, self, status_dict))
           status_dict[variable_title] = expression(expression_context)
 
