@@ -432,6 +432,9 @@ except ImportError:
   import_default_level = -1
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
     level=import_default_level):
+  # XXX workaround C-code calling PyImport_Import
+  if mname in ('numpy.core._dtype',):
+    return __import__(mname, globals, locals, fromlist)
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
@@ -494,6 +497,7 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
               'uint8', 'uint16', 'uint32', 'uint64', \
               'float16', 'float32', 'float64', \
               'complex64', 'complex128'):
+  allow_type(type(np.dtype(dtype)))
   z = np.array([0,], dtype = dtype)
   allow_type(type(z[0]))
   allow_type(type(z))
@@ -509,7 +513,6 @@ for dtype in ('int8', 'int16', 'int32', 'int64', \
 allow_type(np.dtype)
 allow_type(np.timedelta64)
 allow_type(type(np.c_))
-allow_type(type(np.dtype('int16')))
 sz = np.array([('2017-07-12T12:30:20',)], dtype=[('date', 'M8[s]')])
 allow_type(type(sz[0]['date']))
 
@@ -556,20 +559,26 @@ else:
 
   allow_class(pd.DataFrame)
 
-  # Note: These black_list methods are for pandas 0.19.2
+  # Note: These black_list methods are for pandas 0.19.2 on PY2 and 1.4.0 on PY3
   series_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
-                       'to_sql', 'to_msgpack')
+                       'to_sql',)
+  if six.PY2:
+    series_black_list += ('to_msgpack', )
   ContainerAssertions[pd.Series] = _check_access_wrapper(
     pd.Series, dict.fromkeys(series_black_list, restrictedMethod))
 
   pandas_black_list = ('read_pickle', 'read_hdf',
-                       'read_excel', 'read_html', 'read_msgpack',
+                       'read_excel', 'read_html',
                        'read_gbq', 'read_sas', 'read_stata')
+  if six.PY2:
+    pandas_black_list += ('read_msgpack', )
   ModuleSecurityInfo(MNAME_MAP['pandas']).declarePrivate(*pandas_black_list)
 
   dataframe_black_list = ('to_csv', 'to_json', 'to_pickle', 'to_hdf',
-                          'to_excel', 'to_html', 'to_sql', 'to_msgpack',
+                          'to_excel', 'to_html', 'to_sql',
                           'to_latex', 'to_gbq', 'to_stata')
+  if six.PY2:
+    dataframe_black_list += ('to_msgpack', )
   ContainerAssertions[pd.DataFrame] = _check_access_wrapper(
     pd.DataFrame, dict.fromkeys(dataframe_black_list, restrictedMethod))
 
