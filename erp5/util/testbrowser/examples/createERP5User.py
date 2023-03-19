@@ -45,7 +45,7 @@ zope_url = url.rsplit('/', 2)[0]
 import base64
 browser.mech_browser.addheaders.append(
     ('Authorization',
-     'Basic %s' % base64.encodebytes('%s:%s' % (username, password))))
+     'Basic %s' % base64.encodebytes(('%s:%s' % (username, password)).encode())).decode())
 
 for index in range(user_nbr):
   new_username = "%s%d" % (new_username_prefix, index)
