@@ -598,9 +598,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Is it good to do this only for ODT ?
       from Products.ERP5OOo.OOoUtils import OOoParser
       parser = OOoParser()
-      parser.openFromString(body)
+      parser.openFromBytes(body)
       content_xml = parser.oo_files['content.xml']
-      self.assertIn('&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
+      self.assertIn(b'&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
 
   def test_translation(self):
     def gettext(message, **kw):
@@ -632,7 +632,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(body)
+    parser.openFromBytes(body)
     content_xml = parser.oo_files['content.xml']
     self.assertIn(u'**àèüîó**', content_xml.decode('utf-8'))
 
@@ -682,7 +682,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(body)
+    parser.openFromBytes(body)
     content_xml = parser.oo_files['content.xml']
     self.assertIn(u'**àèüîó**', content_xml.decode('utf-8'))
 
