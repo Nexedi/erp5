@@ -547,7 +547,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # unused variables
            '--dummy-variables-rgx=_$|dummy|__traceback_info__|__traceback_supplement__',
       ]
-
+      if six.PY3:
+        args.append("--msg-template='{C}: {line},{column}: {msg} ({symbol})'")
       if portal_type == 'Interface Component':
         # __init__ method from base class %r is not called
         args.append('--disable=W0231')
@@ -571,8 +572,13 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         # dynamic modules from ZODB.
         Run(args, reporter=TextReporter(output_file), exit=False)
       finally:
-        from astroid.builder import MANAGER
-        MANAGER.astroid_cache.pop(
+        if six.PY2:
+          from astroid.builder import MANAGER
+          astroid_cache = MANAGER.astroid_cache
+        else:
+          from astroid.manager import AstroidManager
+          astroid_cache = AstroidManager().astroid_cache
+        astroid_cache.pop(
           os.path.splitext(os.path.basename(input_file.name))[0],
           None)
 
