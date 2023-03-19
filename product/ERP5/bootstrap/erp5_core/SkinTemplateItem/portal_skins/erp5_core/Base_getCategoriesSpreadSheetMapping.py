@@ -91,7 +91,7 @@ if not (content_type.startswith('application/vnd.sun.xml')
       content_type=content_type)
   tmp_ooo.convertToBaseFormat()
   _, import_file_content = tmp_ooo.convert('ods')
-  parser.openFromString(str(import_file_content))
+  parser.openFromBytes(bytes(import_file_content))
 else:
   parser.openFile(import_file)
 

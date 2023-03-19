@@ -50,6 +50,7 @@ from lxml.etree import Element, XMLSyntaxError
 from copy import deepcopy
 from warnings import warn
 from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import deprecated
 
 class CorruptedOOoFile(Exception): pass
 
@@ -234,8 +235,9 @@ class OOoParser(Implicit):
     self.pictures = {}
     self.filename = None
 
-  def openFromString(self, text_content):
-    return self.openFile(BytesIO(text_content))
+  def openFromBytes(self, bytes_content):
+    return self.openFile(BytesIO(bytes_content))
+  openFromString = deprecated("openFromString is deprecated, use openFromBytes instead")(openFromBytes)
 
   def openFile(self, file_descriptor):
     """
