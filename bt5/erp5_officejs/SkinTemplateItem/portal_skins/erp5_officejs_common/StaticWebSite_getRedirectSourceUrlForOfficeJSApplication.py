@@ -20,7 +20,7 @@ except KeyError:
 
 try:
   encoded = name.replace("definition_view/", "", 1)
-  name = base64.decodestring(encoded)
+  name = base64.decodebytes(encoded)
   base_64 = True
 except binascii.Error:
   pass
