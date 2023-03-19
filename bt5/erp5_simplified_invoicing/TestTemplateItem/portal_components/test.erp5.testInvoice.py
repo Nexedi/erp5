@@ -636,7 +636,7 @@ class TestInvoice(TestInvoiceMixin):
 
     # the <draw:image> should not be present, because there's no logo
     parser = OOoParser()
-    parser.openFromString(odt)
+    parser.openFromBytes(odt)
     style_xml = parser.oo_files['styles.xml']
     self.assertNotIn('<draw:image', style_xml)
 
