@@ -782,7 +782,7 @@ class TestOAuth2(ERP5TypeTestCase):
     """
     Get a token, renew it, terminate session.
     """
-    basic_auth = 'Basic ' + bytes2str(base64.encodestring(
+    basic_auth = 'Basic ' + bytes2str(base64.encodebytes(
       str2bytes(_TEST_USER_LOGIN + ':' + self.__password),
     )).rstrip()
     oauth2_server_connector = self.__oauth2_server_connector_value.getPath()
