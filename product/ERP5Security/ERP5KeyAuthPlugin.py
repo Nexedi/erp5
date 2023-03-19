@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from base64 import encodestring, decodestring
+from base64 import encodebytes, decodebytes
 from six.moves.urllib.parse import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
@@ -270,7 +270,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
             default_cookie = request.get(self.default_cookie_name, None)
             if default_cookie is not None:
               #Cookie is found
-              cookie_val = decodestring(unquote(default_cookie))
+              cookie_val = decodebytes(unquote(default_cookie))
               if cookie_val is not None:
                 login, password = cookie_val.split(':')
                 creds['login'] = login
@@ -305,7 +305,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       response.setCookie(self.cookie_name, quote(cookie_val), path='/')#, expires=expires)
       response.expireCookie(self.default_cookie_name, path='/')
     elif login is not None and new_password is not None:
-      cookie_val = encodestring('%s:%s' % (login, new_password))
+      cookie_val = encodebytes('%s:%s' % (login, new_password))
       cookie_val = cookie_val.rstrip()
       response.setCookie(self.default_cookie_name, quote(cookie_val), path='/')
       response.expireCookie(self.cookie_name, path='/')
