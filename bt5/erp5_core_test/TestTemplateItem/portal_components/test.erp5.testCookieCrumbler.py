@@ -73,7 +73,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.req = makerequest(root, self.responseOut)
 
     self.credentials = quote(
-        base64.encodebytes('abraham:pass-w').replace('\012', ''))
+        base64.encodebytes(b'abraham:pass-w').decode().replace('\012', ''))
 
   def testCookieLongLogin(self):
     # verify the user and auth cookie get set
@@ -88,7 +88,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
                          'abrahammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
     resp = self.req.response
     self.assertIn('__ac', resp.cookies)
-    self.credentials = base64.encodebytes('%s:%s' % (long_name, long_pass)).replace('\012', '')
+    self.credentials = base64.encodebytes(('%s:%s' % (long_name, long_pass)).encode()).decode().replace('\012', '')
     self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)
     self.assertEqual(resp.cookies['__ac'][normalizeCookieParameterName('path')], '/')
