@@ -37,7 +37,7 @@ from .BaseCache import BaseCache
 from .BaseCache import CacheEntry
 from Products.ERP5Type import interfaces
 import zope.interface
-from base64 import encodestring
+from base64 import encodebytes
 
 try:
   from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict, SharedDict
