@@ -75,7 +75,8 @@ def _setUserNameForAccessLog(username, REQUEST):
     except AttributeError:
       pass
     else:
-      medusa_headers['authorization'] = 'Basic %s' % encodebytes('%s:' % username).rstrip()
+      # BBB ZServer
+      medusa_headers['authorization'] = 'Basic %s' % encodebytes(('%s:' % username).encode()).decode().rstrip()
   else:
     REQUEST._orig_env['REMOTE_USER'] = username
 

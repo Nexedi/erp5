@@ -55,9 +55,9 @@ class PayzenREST:
 
   def callPayzenApi(self, URL, payzen_dict):
     base64string = base64.encodebytes(
-      '%s:%s' % (
+      ('%s:%s' % (
         self.getServiceUsername(),
-        self.getServiceApiKey())).replace('\n', '')
+        self.getServiceApiKey())).encode()).decode().replace('\n', '')
     header = {"Authorization": "Basic %s" % base64string}
     LOG('callPayzenApi', WARNING,
         "data = %s URL = %s" % (str(payzen_dict), URL), error=False)
