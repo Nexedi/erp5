@@ -60,7 +60,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # Define POST headers with Authentication
     self.content_type =  'application/json'
     authentication_string = 'lucas:lucas'
-    base64string = base64.encodestring(authentication_string).strip()
+    base64string = base64.encodebytes(authentication_string).strip()
     self.header_dict = {'Authorization': 'Basic %s' % base64string,
                         'Content-Type': self.content_type}
 

@@ -54,7 +54,7 @@ class PayzenREST:
   """
 
   def callPayzenApi(self, URL, payzen_dict):
-    base64string = base64.encodestring(
+    base64string = base64.encodebytes(
       '%s:%s' % (
         self.getServiceUsername(),
         self.getServiceApiKey())).replace('\n', '')
