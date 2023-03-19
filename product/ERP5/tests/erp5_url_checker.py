@@ -99,7 +99,7 @@ class URLOpener(FancyURLopener):
         if not host: raise IOError('http error', 'no host given')
         if user_passwd:
             import base64
-            auth = base64.encodestring(user_passwd).strip()
+            auth = base64.encodebytes(user_passwd).strip()
         else:
             auth = None
         h = six.moves.http_client.HTTP(host)

@@ -157,7 +157,7 @@ class _SimpleHTTPRequest(object):
 
   def _authUserPW(self):
     if self._auth.lower().startswith('basic '):
-      return bytes2str(base64.decodestring(
+      return bytes2str(base64.decodebytes(
         self._auth.split(None, 1)[1],
       )).split(':', 1)
 
