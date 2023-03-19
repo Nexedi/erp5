@@ -192,7 +192,7 @@ def credentialsChanged(self, user, name, pw, request=None):
   reponse = request['RESPONSE']
   # <patch>
   # We don't want new lines, so use base64.standard_b64encode instead of
-  # base64.encodestring
+  # base64.encodebytes
   ac = standard_b64encode('%s:%s' % (name, pw)).rstrip()
   # </patch>
   method = self.getCookieMethod('setAuthCookie',
