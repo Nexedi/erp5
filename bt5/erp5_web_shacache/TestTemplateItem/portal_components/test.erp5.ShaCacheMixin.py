@@ -48,7 +48,7 @@ class ShaCacheMixin(object):
     self.shacache.publish()
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic %s' % (base64.encodebytes('ERP5TypeTestCase:').strip())
+      'Authorization': 'Basic %s' % (base64.encodebytes(b'ERP5TypeTestCase:').decode().strip())
     }
     self.shacache_url = self.shacache.absolute_url()
     self.tic()
