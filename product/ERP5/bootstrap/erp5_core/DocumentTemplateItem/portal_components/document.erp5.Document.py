@@ -84,8 +84,8 @@ class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
 import base64
-enc = base64.encodestring
-dec = base64.decodestring
+enc = base64.encodebytes
+dec = base64.decodebytes
 DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT = 360
 DOCUMENT_CONVERSION_SERVER_RETRY = 0
 # store time (as int) where we had last failure in order
