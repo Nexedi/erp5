@@ -19,8 +19,8 @@ except KeyError:
   return result_dict
 
 try:
-  encoded = name.replace("definition_view/", "", 1)
-  name = base64.decodebytes(encoded)
+  encoded = name.replace("definition_view/", "", 1).encode()
+  name = base64.decodebytes(encoded).decode()
   base_64 = True
 except binascii.Error:
   pass
