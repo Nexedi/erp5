@@ -52,16 +52,17 @@ class TestOOoParser(unittest.TestCase):
     self.assertEqual(person_mapping[1],
        ['John Doe 0', 'John', 'Doe 0', 'john.doe0@foo.com'])
 
-  def test_openFromString(self):
+  def test_openFromBytes(self):
     parser = OOoParser()
-    parser.openFromString(
-        open(makeFilePath('import_data_list.ods'), 'rb').read())
+    with open(makeFilePath('import_data_list.ods'), 'rb') as f:
+      parser.openFromBytes(f.read())
     mapping = parser.getSpreadsheetsMapping()
     self.assertEqual(['Person'], mapping.keys())
 
   def test_getSpreadSheetMappingStyle(self):
     parser = OOoParser()
-    parser.openFile(open(makeFilePath('import_data_list_with_style.ods'), 'rb'))
+    with open(makeFilePath('import_data_list_with_style.ods'), 'rb') as f:
+      parser.openFile(f)
     mapping = parser.getSpreadsheetsMapping()
     self.assertEqual(['Feuille1'], mapping.keys())
     self.assertEqual(mapping['Feuille1'][1],
@@ -75,7 +76,8 @@ class TestOOoParser(unittest.TestCase):
 
   def test_getSpreadSheetMappingDataTypes(self):
     parser = OOoParser()
-    parser.openFile(open(makeFilePath('import_data_list_data_type.ods'), 'rb'))
+    with open(makeFilePath('import_data_list_data_type.ods'), 'rb') as f:
+      parser.openFile(f)
     mapping = parser.getSpreadsheetsMapping()
     self.assertEqual(['Feuille1'], mapping.keys())
     self.assertEqual(mapping['Feuille1'][0],

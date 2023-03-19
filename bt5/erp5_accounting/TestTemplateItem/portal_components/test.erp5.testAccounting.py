@@ -3387,7 +3387,7 @@ class TestAccountingExport(AccountingTestCase):
                     form_id='AccountingTransaction_view')
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(ods_data)
+    parser.openFromBytes(ods_data)
     content_xml = parser.oo_files['content.xml']
     # just make sure that we have the correct account name
     self.assertEqual(
