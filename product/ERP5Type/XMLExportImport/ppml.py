@@ -42,7 +42,7 @@ else:
 
 def escape(s, encoding='repr'):
     if binary(s) and isinstance(s, str):
-        s = base64.encodestring(s)[:-1]
+        s = base64.encodebytes(s)[:-1]
         encoding = 'base64'
     elif '>' in s or '<' in s or '&' in s:
         if not ']]>' in s:
@@ -56,7 +56,7 @@ def escape(s, encoding='repr'):
 
 def unescape(s, encoding):
     if encoding == 'base64':
-        return base64.decodestring(s)
+        return base64.decodebytes(s)
     else:
         s = s.replace(b'&lt;', b'<')
         s = s.replace(b'&gt;', b'>')
@@ -92,12 +92,12 @@ def convert(S):
         if not isinstance(S, six.text_type):
             S.decode('utf8')
     except UnicodeDecodeError:
-        return 'base64', base64.encodestring(S)[:-1]
+        return 'base64', base64.encodebytes(S)[:-1]
     else:
         new = reprs_re.sub(sub_reprs, S)
     ### patch end
     if len(new) > (1.4*len(S)):
-        return 'base64', base64.encodestring(S)[:-1]
+        return 'base64', base64.encodebytes(S)[:-1]
     elif '>' in new or '<' in S or '&' in S:
         if not ']]>' in S:
             return 'cdata', '<![CDATA[\n\n' + new + '\n\n]]>'
@@ -108,7 +108,7 @@ def convert(S):
 # For optimization.
 def unconvert(encoding,S):
     if encoding == 'base64':
-        return base64.decodestring(S)
+        return base64.decodebytes(S)
     else:
         return str2bytes(eval(b"'" + S.replace(b'\n', b'') + b"'"))
 
@@ -173,7 +173,7 @@ class String(Scalar):
                 # This is used when strings represent references which need to
                 # be converted.
                 encoding = 'base64'
-                v = base64.encodestring(self._v)[:-1]
+                v = base64.encodebytes(self._v)[:-1]
                 self._v = self.mapping.convertBase64(v)
             else:
                 encoding, self._v = convert(self._v)
