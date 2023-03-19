@@ -233,7 +233,7 @@ def Folder_asXML(object, omit_xml_declaration=True, root=None):
 
 ## The code below was initially from OFS.XMLExportImport
 from six import string_types as basestring
-from base64 import encodestring
+from base64 import encodebytes
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile, export_end_marker
 from ZODB.utils import p64
@@ -293,8 +293,8 @@ def reorderPickle(jar, p):
 def _mapOid(id_mapping, oid):
     idprefix = str(u64(oid))
     id = id_mapping[idprefix]
-    old_aka = encodestring(oid)[:-1]
-    aka=encodestring(p64(long_(id)))[:-1]  # Rebuild oid based on mapped id
+    old_aka = encodebytes(oid)[:-1]
+    aka=encodebytes(p64(long_(id)))[:-1]  # Rebuild oid based on mapped id
     id_mapping.setConvertedAka(old_aka, aka)
     return idprefix+'.', id, aka
 
