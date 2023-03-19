@@ -454,7 +454,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Is it good to do this only for ODT ?
       from Products.ERP5OOo.OOoUtils import OOoParser
       parser = OOoParser()
-      parser.openFromString(body)
+      parser.openFromBytes(body)
       content_xml = bytes2str(parser.oo_files['content.xml'])
       self.assertIn('&lt;Escape&gt;&amp;<text:line-break/>newline', content_xml)
 
@@ -484,7 +484,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
-    parser.openFromString(body)
+    parser.openFromBytes(body)
     content_xml = bytes2str(parser.oo_files['content.xml'])
     self.assertIn(message, content_xml)
 
