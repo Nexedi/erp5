@@ -18,7 +18,7 @@ from __future__ import absolute_import
 
 from copy import deepcopy
 from collections import defaultdict
-from base64 import encodestring
+from base64 import encodebytes
 
 from Acquisition import aq_inner, aq_parent
 from AccessControl.Permissions import manage_users as ManageUsers
@@ -77,7 +77,7 @@ if IS_ZOPE2: # BBB
       except AttributeError:
         pass
       else:
-        medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
+        medusa_headers['authorization'] = 'Basic %s' % encodebytes('%s:' % username).rstrip()
     else:
       REQUEST._orig_env['REMOTE_USER'] = username
 else: # zope4

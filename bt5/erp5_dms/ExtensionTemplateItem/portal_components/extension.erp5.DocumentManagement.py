@@ -58,8 +58,8 @@ def convertToOdf(self, name, data):
   to work with (and we for example have to figure out portal_type)
   """
   sp = mkProxy(self)
-  kw = sp.run_convert(name,base64.encodestring(data))
-  odf = base64.decodestring(kw['data'])
+  kw = sp.run_convert(name,base64.encodebytes(data))
+  odf = base64.decodebytes(kw['data'])
   return odf
 
 def mkProxy(self):
@@ -74,7 +74,7 @@ def mkProxy(self):
 def generateFile(self, name, data, format):  # pylint: disable=redefined-builtin
   sp = mkProxy(self)
   kw = sp.run_generate(name, data, None, format)
-  res = base64.decodestring(kw['data'])
+  res = base64.decodebytes(kw['data'])
   return res
 
 def getAttrFromFilename(self, fname):
