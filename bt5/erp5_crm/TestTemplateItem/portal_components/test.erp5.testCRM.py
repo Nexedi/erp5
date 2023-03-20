@@ -711,7 +711,8 @@ class TestCRMMailIngestion(BaseTestCRM):
 
   def _readTestData(self, filename):
     """read test data from data directory."""
-    return open(makeFilePath(filename)).read()
+    with open(makeFilePath(filename), 'rb') as f:
+      return f.read()
 
   def _ingestMail(self, filename=None, data=None):
     """ingest an email from the mail in data dir named `filename`"""
@@ -850,7 +851,7 @@ class TestCRMMailIngestion(BaseTestCRM):
         Subject: mail subject
 
         content
-        ''').splitlines()[1:]))
+        ''').splitlines()[1:].encode()))
 
     property_dict = event.getPropertyDictFromContent()
     # destination is set on the event. In this case it is kept as is.
@@ -1305,7 +1306,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # pdf
@@ -1315,7 +1316,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_filename()==filename:
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document.getData()))
+    self.assertEqual(part.get_payload(decode=True), bytes(document.getData()))
 
   def test_MailAttachmentText(self):
     """
@@ -1352,7 +1353,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # odt
@@ -1397,7 +1398,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # zip
@@ -1444,7 +1445,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # gif
@@ -1454,7 +1455,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_filename() == filename:
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document.getData()))
+    self.assertEqual(part.get_payload(decode=True), bytes(document.getData()))
 
   def test_MailAttachmentWebPage(self):
     """
@@ -1463,7 +1464,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
     filename = 'sample_attachment.html'
     document = self.portal.portal_contributions.newContent(
-                          data='<html><body>Hello world!</body></html>',
+                          data=b'<html><body>Hello world!</body></html>',
                           filename=filename)
     self.tic()
 
@@ -1491,7 +1492,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # html
@@ -1502,7 +1503,7 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_filename() == filename:
         part = i
     self.assertEqual(part.get_payload(decode=True),
-                     str(document.getTextContent()))
+                     document.getTextContent())
     self.assertEqual(part.get_content_type(), 'text/html')
 
   def test_AttachPdfToMailUsingNewEventDialog(self):
@@ -1542,7 +1543,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # pdf
@@ -1552,7 +1553,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_filename()==filename:
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document.getData()))
+    self.assertEqual(part.get_payload(decode=True), bytes(document.getData()))
 
   def test_AttachFileToMailUsingNewEventDialog(self):
     """
@@ -1590,7 +1591,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # zip
@@ -1604,7 +1605,7 @@ class TestCRMMailSend(BaseTestCRM):
 
   def test_testValidatorForAttachmentField(self):
     """
-    If an Event Type doesn't allow Emebedded Files in its sub portal types,
+    If an Event Type doesn't allow Embedded Files in its sub portal types,
     then the dialog should tell the user that attachment can't be uploaded
     """
     # Add a document which will be attached.
@@ -1722,7 +1723,7 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_content_type()=='text/plain':
         part = i
         break
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # txt
@@ -1779,7 +1780,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+    self.assertEqual(part.get_payload(decode=True).decode(), event.getTextContent())
 
     # Check attachment
     # gif
@@ -1789,11 +1790,11 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_filename() == filename:
         part = i
-    self.assertEqual(part.get_payload(decode=True), str(document_gif.getData()))
+    self.assertEqual(part.get_payload(decode=True), bytes(document_gif.getData()))
 
   def test_cloneEvent(self):
     """
-      All events uses after script and interaciton
+      All events uses after script and interaction
       workflow add a test for clone
     """
     # XXX in the case of title, getTitle ignores the title attribute,
@@ -1826,7 +1827,7 @@ class TestCRMMailSend(BaseTestCRM):
 
   def test_cloneTicketAndEventList(self):
     """
-      All events uses after script and interaciton
+      All events uses after script and interaction
       workflow add a test for clone
     """
     portal = self.portal
@@ -2052,7 +2053,7 @@ class TestCRMMailSend(BaseTestCRM):
                       attachment_list=[])
     self.tic()
     (from_url, to_url, last_message,), = self.portal.MailHost._message_list
-    self.assertIn("Body Simple Case", last_message)
+    self.assertIn(b"Body Simple Case", last_message)
     self.assertEqual('FG ER <eee@eee.com>', from_url)
     self.assertEqual(['Expert User <expert@in24.test>'], to_url)
 
