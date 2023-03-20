@@ -982,6 +982,7 @@
               loading_element.textContent = '';
               tbody_classList.add(disabled_class);
             }
+
             return gadget.fetchLineContent(false);
           });
 
@@ -1219,15 +1220,6 @@
                   loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
                   loading_element.textContent = '(' + pagination_message + ')';
                 }
-                // XXX if is duplicated. Look at line 1222
-                if (gadget.state.enable_graphic && ((
-                    gadget.state.graphic_type && !gadget.state.extended_search && gadget.state.only_graphic
-                  ) || (gadget.state.graphic_type && gadget.state.extended_search &&
-                        gadget.state.only_graphic))) {
-                  domsugar(gadget.element.querySelector(".graphic_section"), [
-                    domsugar("div", {"class": "graphic_area"})
-                  ]);
-                }
               });
           });
         if (gadget.state.enable_graphic && ((
@@ -1237,6 +1229,9 @@
           ))) {
           result_queue
             .push(function () {
+              domsugar(gadget.element.querySelector(".graphic_section"), [
+                domsugar("div", {"class": "graphic_area"})
+              ]);
               return gadget.declareGadget('gadget_graphic.html', {
                 scope: 'gadget_graphic',
                 element: gadget.element.querySelector(".graphic_area")
@@ -1393,6 +1388,17 @@
       }
       if (gadget.state.show_count === true) {
         aggregation_option_list.push("count");
+      }
+
+      if (gadget.state.only_graphic) {
+        return gadget.changeState({
+          allDocs_result: JSON.stringify({
+            "data": {
+              "rows": [],
+              "total_rows": 0
+            }
+          })
+        });
       }
 
       return gadget.jio_allDocs({
