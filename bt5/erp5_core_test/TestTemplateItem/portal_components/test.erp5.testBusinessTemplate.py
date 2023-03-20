@@ -7320,7 +7320,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     skin_folder = skin_tool._getOb(sequence.get('skin_folder_id'))
 
     file_id = 'fake_js_file'
-    file_content = """
+    file_content = b"""
    var
 
         debug =  [42
