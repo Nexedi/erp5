@@ -368,7 +368,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "application/octet-stream",
       portal_type = "File",
     ), '.bin')
@@ -380,7 +380,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "application/epub+zip",
       portal_type = "File",
     ), '.epub')
@@ -392,7 +392,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo.js",
-      data = "a test file",
+      data = b"a test file",
       portal_type = "File",
     ), '.js')
 
@@ -403,7 +403,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "<script> ... </script>",
+      data = b"<script> ... </script>",
       default_reference = "foo.js",
       portal_type = "File",
     ), '.js')
@@ -415,7 +415,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = None,
       portal_type = "File",
     ), '.bin')
@@ -429,7 +429,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "video/wavelet",
       portal_type = "File",
     ), '.bin')
@@ -443,7 +443,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo",
-      data = "a test file",
+      data = b"a test file",
       content_type = "text/x-uri",
       portal_type = "File",
     ), '.txt')
@@ -472,7 +472,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
       where extension (.xml, exported as ._xml to avoid conflict with the meta-data file)
       is identified by the title
     """
-    file_content = """<person>
+    file_content = b"""<person>
 <name>John</name>
 <surname>Doe</surname>
 </person>
@@ -524,7 +524,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     """Test Business Template Import And Export With A PDF Document"""
     self._checkTwoFileImportExportForDocumentInDocumentModule(dict(
       title = "foo.pdf",
-      data ="pdf content, maybe should update for base64 sample" ,
+      data =b"pdf content, maybe should update for base64 sample" ,
       portal_type = "PDF",
     ), '.pdf')
 
