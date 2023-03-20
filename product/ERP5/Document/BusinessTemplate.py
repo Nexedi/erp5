@@ -723,7 +723,7 @@ class ObjectTemplateItem(BaseTemplateItem):
   def __init__(self, id_list, tool_id=None, **kw):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     if tool_id is not None:
-      id_list = self._archive.keys()
+      id_list = ensure_list(self._archive.keys())
       self._archive.clear()
       for id in id_list :
         if id != '':
@@ -3510,14 +3510,14 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         prop_value = role.get(property)
         if prop_value:
           if isinstance(prop_value, str):
-            prop_value = escape(prop_value.decode('utf-8'))
+            prop_value = escape(prop_value)
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
       for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
-            prop_value = escape(prop_value.decode('utf-8'))
+            prop_value = escape(prop_value)
           xml_data += "\n   <multi_property "\
           "id='%s'>%s</multi_property>" % (property, prop_value)
       xml_data += "\n  </role>"
@@ -3970,7 +3970,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
     if not file_name.endswith('.py'):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
-    text = file.read()
+    text = file.read().decode('utf-8')
     self._objects[file_name[:-3]] = text
 
 class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
