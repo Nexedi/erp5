@@ -852,9 +852,8 @@ def save_string(self, tag, data):
               op = SHORT_BINSTRING
             v = op + six.int2byte(l) + v
         else:
-            if encoding == 'base64':
-              # TODO: zope4py3 see assumption above for SHORT_BINBYTES / SHORT_BINSTRING
-              op = BINSTRING
+            # TODO: zope4py3 see assumption above for SHORT_BINBYTES / SHORT_BINSTRING
+            op = BINSTRING
             v = op + struct.pack('<i', l) + v
     else:
         v = STRING + repr(v) + '\n'
