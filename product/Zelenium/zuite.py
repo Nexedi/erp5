@@ -41,8 +41,7 @@ _PINK_BACKGROUND = re.compile(b'bgcolor="#ffcfcf"')
 
 _EXCLUDE_NAMES = ( 'CVS', '.svn', '.objects' )
 
-#winzip awaits latin1
-_DEFAULTENCODING = 'latin1'
+_DEFAULTENCODING = 'utf-8'
 
 
 def _getNow():
