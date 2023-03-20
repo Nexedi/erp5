@@ -853,7 +853,12 @@ def save_string(self, tag, data):
             v = op + six.int2byte(l) + v
         else:
             # TODO: zope4py3 see assumption above for SHORT_BINBYTES / SHORT_BINSTRING
-            op = BINSTRING
+            # TODO no! check this more ...
+            # op = BINSTRING
+            if encoding == 'base64':
+              op = BINBYTES
+            else:
+              op = BINSTRING
             v = op + struct.pack('<i', l) + v
     else:
         v = STRING + repr(v) + '\n'
