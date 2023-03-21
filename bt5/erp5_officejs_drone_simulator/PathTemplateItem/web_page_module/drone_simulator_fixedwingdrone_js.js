@@ -520,7 +520,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return;
   };
   FixedWingDroneAPI.prototype.getInitialAltitude = function () {
-    return 0;
+    return this._map_dict.start_AMSL;
   };
   FixedWingDroneAPI.prototype.getAltitudeAbs = function (altitude) {
     return altitude;
