@@ -262,7 +262,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
 
   FixedWingDroneAPI.prototype.setAltitude = function (drone, altitude) {
-    drone._targetCoordinates.z = altitude;
+    drone._targetCoordinates.z = altitude - this._map_dict.start_AMSL;
     this._last_target = drone._targetCoordinates;
   };
 
