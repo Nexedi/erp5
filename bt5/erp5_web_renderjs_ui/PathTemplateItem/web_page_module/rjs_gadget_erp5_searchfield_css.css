@@ -5,7 +5,7 @@ div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section > b
 }
 
 div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section > button:disabled {
-  color: #808080;
+  color: #cecece;
 }
 
 div[data-gadget-url$="gadget_erp5_searchfield.html"] .graphic-button-section {
