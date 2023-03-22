@@ -3026,7 +3026,7 @@ class DocumentConsistencyTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
     self.document = self._getDocumentModule().newContent(portal_type=self.portal_type)
     self.file_upload = makeFileUpload(self.filename)
-    with open(makeFilePath(self.filename)) as f:
+    with open(makeFilePath(self.filename), 'rb') as f:
       self.file_data = f.read()
     self.file_size = len(self.file_data)
 
