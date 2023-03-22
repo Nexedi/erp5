@@ -214,8 +214,8 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       # suites required
       int_index = test_suite.getIntIndex()
       # we divide per 3 because we have 3 cores per node
-      node_quantity_min = PRIORITY_MAPPING[int_index][0]/3
-      node_quantity_max = PRIORITY_MAPPING[int_index][1]/3
+      node_quantity_min = PRIORITY_MAPPING[int_index][0]//3
+      node_quantity_max = PRIORITY_MAPPING[int_index][1]//3
       for x in range(0, node_quantity_min):
         score = float(x)/(x+1)
         all_test_suite_list.append((score, test_suite_url, title))
