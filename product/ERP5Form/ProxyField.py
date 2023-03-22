@@ -245,15 +245,15 @@ class ProxyField(ZMIField):
     # acquire get_unicode_mode and get_stored_encoding from form..
     if self.get_unicode_mode():
       new_result = {}
-      for key, value in result.items():
+      for key, value in six.iteritems(result):
         if isinstance(value, six.binary_type):
           # in unicode mode, Formulator UI always uses UTF-8
-          value = six.text_type(message, 'utf-8')
+          value = six.text_type(value, 'utf-8')
         new_result[key] = value
       result = new_result
 
     changed = []
-    for key, value in result.items():
+    for key, value in six.iteritems(result):
       # XXX Remove old values
       values.pop(key, None)
       # store keys for which we want to notify change
@@ -261,7 +261,7 @@ class ProxyField(ZMIField):
         changed.append(key)
 
     proxied_field = self.getTemplateField()
-    for key, value in result.items():
+    for key, value in list(six.iteritems(result)):
       if key not in surcharge_list:
         result.pop(key)
         if key in self.tales:
