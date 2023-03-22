@@ -111,21 +111,9 @@ class ERP5LoginUserManager(BasePlugin):
     if login_value is None:
       return
     user_value = login_value.getParentValue()
-    if not user_value.hasUserId():
+    if not self._isUserValueValid(user_value):
       return
-    if user_value.getValidationState() == 'deleted':
-      return
-    if user_value.getPortalType() in ('Person', ):
-      now = DateTime()
-      for assignment in user_value.contentValues(portal_type="Assignment"):
-        if assignment.getValidationState() == "open" and (
-          not assignment.hasStartDate() or assignment.getStartDate() <= now
-        ) and (
-          not assignment.hasStopDate() or assignment.getStopDate() >= now
-        ):
-          break
-      else:
-        return
+
     is_authentication_policy_enabled = self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled()
     if check_password:
       password = credentials.get('password')
@@ -147,6 +135,27 @@ class ERP5LoginUserManager(BasePlugin):
       if login_value.isLoginBlocked():
         return
     return (user_value.getUserId(), login_value.getReference())
+
+  def _isUserValueValid(self, user_value):
+    if not user_value.hasUserId():
+      return
+    if user_value.getValidationState() == 'deleted':
+      return
+    if user_value.getPortalType() in ('Person', ):
+      now = DateTime()
+      for assignment in user_value.contentValues(portal_type="Assignment"):
+        if assignment.getValidationState() == "open" and (
+          not assignment.hasStartDate() or assignment.getStartDate() <= now
+        ) and (
+          not assignment.hasStopDate() or assignment.getStopDate() >= now
+        ):
+          return True
+      else:
+        return
+    
+    return True
+
+
 
   def _getLoginValueFromLogin(self, login, login_portal_type=None):
     try:
@@ -286,26 +295,28 @@ class ERP5LoginUserManager(BasePlugin):
     ]
     
     tv = getTransactionalVariable()
-    person = tv.get("transactional_user", None) 
-    if person is not None:
-      erp5_login = person.objectValues("ERP5 Login")[0]
-      if (login is not None and erp5_login.getReference() == None) or \
-           (id is not None and person.getUserId() == id[0]):
+    user_value = tv.get("transactional_user", None) 
+    if user_value is not None and self._isUserValueValid(user_value):
+      login_value = [l for l in user_value.objectValues(login_portal_type)
+                      if l.getValidationState() == 'validated'][0]
+
+      if (login_value is not None and login_value.getReference() is not None) and \
+           (id is not None and user_value.getUserId() == id[0]):
         result.append({
-          'id': person.getUserId(),
+          'id': user_value.getUserId(),
           # Note: PAS forbids us from returning more than one entry per given id,
           # so take any available login.
-          'login': erp5_login.getReference(), 
+          'login': login_value.getReference(), 
           'pluginid': plugin_id,
 
           # Extra properties, specific to ERP5
-          'path': person.getPath(),
-          'uid': person.getUid(),
+          'path': user_value.getPath(),
+          'uid': user_value.getUid(),
           'login_list': [
             {
-              'reference': erp5_login.getReference(),
-              'path': erp5_login.getRelativeUrl(),
-              'uid': erp5_login.getPath(),
+              'reference': login_value.getReference(),
+              'path': login_value.getRelativeUrl(),
+              'uid': login_value.getPath(),
             }
           ],
         })
