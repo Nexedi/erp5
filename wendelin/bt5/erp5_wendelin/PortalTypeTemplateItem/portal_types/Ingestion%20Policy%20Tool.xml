@@ -81,12 +81,6 @@ http://erp5_site/portal_ingestion_policies/<INGESTION_POLICY_ID>/ingest
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
