@@ -97,6 +97,9 @@ def convert(S):
         new = reprs_re.sub(sub_reprs, S)
     ### patch end
     if len(new) > (1.4*len(S)):
+        if not isinstance(S, six.bytes_type):
+            # TODO zope4py3: is this the right place ? this supports Unicode('\n')
+            S = S.encode('ascii')
         return 'base64', base64.encodebytes(S)[:-1]
     elif '>' in new or '<' in S or '&' in S:
         if not ']]>' in S:
@@ -609,21 +612,18 @@ class ToXMLUnpickler(Unpickler):
     dispatch[TUPLE[0]] = load_tuple
 
     def load_tuple1(self):
-        k = self.marker()
         self.stack[-1] = Tuple(self.id_mapping, v=(self.stack[-1],))
     if six.PY2:
         dispatch[TUPLE1] = load_tuple1
     dispatch[TUPLE1[0]] = load_tuple1
 
     def load_tuple2(self):
-        k = self.marker()
         self.stack[-2:] = [Tuple(self.id_mapping, v=(self.stack[-2], self.stack[-1]))]
     if six.PY2:
         dispatch[TUPLE2] = load_tuple2
     dispatch[TUPLE2[0]] = load_tuple2
 
     def load_tuple3(self):
-        k = self.marker()
         self.stack[-3:] = [Tuple(self.id_mapping, v=(self.stack[-3], self.stack[-2], self.stack[-1]))]
     if six.PY2:
         dispatch[TUPLE3] = load_tuple3
@@ -699,7 +699,7 @@ class ToXMLUnpickler(Unpickler):
         cls = self.stack[-1]
         obj = Object(cls, args, self.id_mapping)
         self.stack[-1] = obj
-        print('load_newobj', self.stack)
+        #print('load_newobj', self.stack)
     if six.PY2:
         dispatch[NEWOBJ] = load_newobj
     dispatch[NEWOBJ[0]] = load_newobj
@@ -841,24 +841,49 @@ def save_string(self, tag, data):
         l = len(v)
         if l < 256:
             if encoding == 'base64':
-              # TODO: zope4py3
+              # TODO: zope4py3 (all this is unfinished)
               # We can be here for two reasons:
               # - the input was a string with \n or similar control characters
               # that are not allowed in XML, so the str was exported as base64.
               # - the input was a _p_oid exported from python2, in that case
-              # we want to get a zodb.binary back
-              op = SHORT_BINBYTES
+              # we want to get a zodbpickle.binary back
+              # XXX all this seems a bad idea, we need more context if we want
+              # to have such heuristics
+              if len(v) == 8:
+                  # looks like a _p_oid, assume it is a persistent_id -> bytes
+                  op = SHORT_BINBYTES
+              else:
+                  # if it's a valid UTF-8 string -> str
+                  try:
+                      v.decode('utf-8')
+                      # XXX maybe check with repr_re ?
+                      op = BINUNICODE
+                      v = op + struct.pack('<i', l) + v
+                      return save_put(self, v, a)
+                  except UnicodeDecodeError:
+                      # not valid utf-8 -> bytes
+                      op = SHORT_BINBYTES
             else:
+              # XXX this branch seems wrong
               op = SHORT_BINSTRING
+              try:
+                  v.decode('ascii')
+                  # XXX zope4py3 we could also create an unpickler with encoding utf-8 ?
+              except UnicodeDecodeError:
+                  op = BINUNICODE
+                  v = op + struct.pack('<i', l) + v
+                  return save_put(self, v, a)
+
             v = op + six.int2byte(l) + v
         else:
             # TODO: zope4py3 see assumption above for SHORT_BINBYTES / SHORT_BINSTRING
             # TODO no! check this more ...
             # op = BINSTRING
             if encoding == 'base64':
-              op = BINBYTES
+                op = BINBYTES
             else:
-              op = BINSTRING
+                op = BINSTRING if six.PY2 else BINUNICODE
+
             v = op + struct.pack('<i', l) + v
     else:
         v = STRING + repr(v) + '\n'
