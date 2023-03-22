@@ -315,7 +315,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       return text_content, message
 
     content_type = self.getContentType() or DEFAULT_CONTENT_TYPE
-    text_content = self.getData()
+    text_content = self.getData() # TODO: don't we need to convert to bytes here ? what if it is PData ?
     if content_type.endswith('xml'):
       try:
         tree = etree.fromstring(text_content)
@@ -324,7 +324,10 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
       except etree.XMLSyntaxError: # pylint: disable=catching-non-exception
         message = 'Conversion to base format without codec fails'
     elif content_type == 'text/html':
-      re_match = self.charset_parser.search(text_content)
+      re_match = self.charset_parser.search(
+        # we don't really care about decoding errors for searching this
+        # regexp
+        text_content.decode('ascii', 'replace') if six.PY3 else text_content)
       message = 'Conversion to base format succeeds'
       if re_match is not None:
         charset = re_match.group('charset')
@@ -374,6 +377,12 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     """Overriden method to check
     permission to access content in raw format
     """
+    # XXX Zope4py3: should this return str ??
+    # We probably have "legacy" documents where `text_content` is a python2
+    # str encoded as something else than utf-8.
+    # Maybe we should introduce a new text_content_encoding property and
+    # expose API to getRawTextContent (as bytes) and getTextContent would return
+    # the decoded string.
     self._checkConversionFormatPermission(None)
     if default is _MARKER:
       return self._baseGetTextContent()
@@ -406,6 +415,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
     return self._setContentType(value)
 
   def getData(self, default=_MARKER):
+    # type: () -> bytes | PData
     """getData must returns original content but TextDocument accepts
     data or text_content to store original content.
     Fallback on text_content property if data is not defined
