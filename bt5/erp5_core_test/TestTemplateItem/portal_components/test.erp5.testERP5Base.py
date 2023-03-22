@@ -2117,8 +2117,7 @@ class TestImage(ERP5TypeTestCase):
     image_type, image_data = image.convert('jpg', display='thumbnail')
     self.assertEqual('image/jpeg', image_type)
     # magic
-    self.assertEqual('\xff', image_data[0])
-    self.assertEqual('\xd8', image_data[1])
+    self.assertEqual(image_data[0:2], b'\xff\xd8')
 
   def test_ImageSize(self):
     for filename, size in (
