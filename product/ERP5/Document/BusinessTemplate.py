@@ -6199,7 +6199,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for tm_id in type_mixin_list:
           type_mixin_id = id+' | '+tm_id
           if type_mixin_id not in type_mixin_list:
-            bt_type_mixin_list.append(tm_id)
+            bt_type_mixin_list.append(type_mixin_id)
 
         for act_id in action_list:
           action_id = id+' | '+act_id
