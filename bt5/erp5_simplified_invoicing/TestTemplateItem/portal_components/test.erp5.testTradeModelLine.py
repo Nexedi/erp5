@@ -102,10 +102,6 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     self.tic()
     return super(TestTradeModelLineMixin, self).afterSetUp()
 
-  def beforeTearDown(self):
-    UserDict.clear(self)
-    return super(TestTradeModelLineMixin, self).beforeTearDown()
-
   def clone(self, document):
     parent = document.getParentValue()
     clone, = parent.manage_pasteObjects(
