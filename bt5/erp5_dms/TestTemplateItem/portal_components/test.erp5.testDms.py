@@ -234,10 +234,8 @@ class TestDocument(TestDocumentMixin):
     infile = urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
     filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format_)
-    f = open(filename, "w")
-    image_data = infile.read()
-    f.write(image_data)
-    f.close()
+    with open(filename, "wb") as f:
+      f.write(infile.read())
     infile.close()
     file_size = len(image_data)
     try:
@@ -246,6 +244,7 @@ class TestDocument(TestDocumentMixin):
       image_size = image.size
     except ImportError:
       identify_output = Popen(['identify', filename],
+                              universal_newlines=True,
                               stdout=PIPE).communicate()[0]
       image_size = tuple([int(x) for x in identify_output.split()[2].split('x')])
     os.remove(filename)
@@ -3180,7 +3179,7 @@ class DocumentConsistencyTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
     self.document = self._getDocumentModule().newContent(portal_type=self.portal_type)
     self.file_upload = makeFileUpload(self.filename)
-    with open(makeFilePath(self.filename)) as f:
+    with open(makeFilePath(self.filename), 'rb') as f:
       self.file_data = f.read()
     self.file_size = len(self.file_data)
 
