@@ -97,7 +97,7 @@ def convert(S):
         new = reprs_re.sub(sub_reprs, S)
     ### patch end
     if len(new) > (1.4*len(S)):
-        if not isinstance(S, six.bytes_type):
+        if not isinstance(S, six.binary_type):
             # TODO zope4py3: is this the right place ? this supports Unicode('\n')
             S = S.encode('ascii')
         return 'base64', base64.encodebytes(S)[:-1]
