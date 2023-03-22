@@ -1676,7 +1676,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           self.id(),
           body['name'])
-      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, '{}')
+      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, b'{}')
     return _callback
 
   def test_start_test(self):
@@ -1693,7 +1693,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       rsps.add(
           responses.POST,
           self.post_commit_status_url,
-          {})
+          b'{}')
       self.test_result.start()
       self.tic()
 
@@ -1831,7 +1831,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.assertEqual(
           'https://erp5js.example.com/#%s' % self.test_result.getRelativeUrl(),
           body['target_url'])
-      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, '{}')
+      return (six.moves.http_client.CREATED, {'content-type': 'application/json'}, b'{}')
 
     with responses.RequestsMock() as rsps:
       rsps.add_callback(
