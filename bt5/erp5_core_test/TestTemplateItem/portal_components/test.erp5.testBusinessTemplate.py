@@ -36,6 +36,7 @@ from Acquisition import aq_base
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
+from Testing import ZopeTestCase
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -201,6 +202,30 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
         property_sheet_tool.manage_delObjects([property_sheet])
     self.commit()
     self._ignore_log_errors()
+    self.cancelFailedActivities()
+
+  def cancelFailedActivities(self):
+    """Cancel failed activities and mark this test as failed if there was any.
+
+    We do this because we don't want a test which did not fail but left failing
+    activities to succeed. Test which failed and also left failing activities
+    will count as 2 failures, so with this method it may happen that the number
+    of failures is higher than the number of tests.
+    """
+    self.abort()
+    try:
+      self.tic()
+    except RuntimeError: # "tic is running forever"
+      activity_tool = self.portal.portal_activities
+      for message in activity_tool.getMessageList():
+        activity_tool.manageDelete(message.uid, message.activity)
+        ZopeTestCase._print('\nCancelling active message %s/%s\n'
+                            % ('/'.join(message.object_path), message.method_id) )
+      self.commit()
+      # if activity failed, it's most probably because of broken components,
+      # so try to reset to not leave broken components for next tests
+      self.portal.portal_components.reset(force=True)
+      self.fail("A previous Tic failed")
 
   def getBusinessTemplate(self,title):
     """
