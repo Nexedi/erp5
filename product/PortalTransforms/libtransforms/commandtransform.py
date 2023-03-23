@@ -35,7 +35,8 @@ class commandtransform:
         os.mkdir(tmpdir)
         filename = kwargs.get("filename", '')
         fullname = join(tmpdir, basename(filename))
-        filedest = open(fullname , "wb").write(data)
+        with open(fullname , "wb") as f:
+          f.write(data)
         return tmpdir, fullname
 
     def subObjects(self, tmpdir):
@@ -51,7 +52,8 @@ class commandtransform:
 
     def fixImages(self, path, images, objects):
         for image in images:
-            objects[image] = open(join(path, image), 'rb').read()
+            with  open(join(path, image), 'rb') as f:
+                objects[image] = f.read()
 
     def cleanDir(self, tmpdir):
         shutil.rmtree(tmpdir)
@@ -99,7 +101,7 @@ class popentransform:
             cin, couterr = os.popen4(command, 'b')
 
             if self.useStdin:
-                cin.write(str(data))
+                cin.write(bytes(data))
 
             status = cin.close()
 
