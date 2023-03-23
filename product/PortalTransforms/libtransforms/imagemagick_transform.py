@@ -36,9 +36,7 @@ class ImageMagickTransforms:
                              stderr=subprocess.PIPE,
                              close_fds=True)
         try:
-            # XXX: The only portable way is to pass what stdin.write can accept,
-            #      which is a string for PIPE.
-            image, err = p.communicate(str(orig))
+            image, err = p.communicate(bytes(orig))
         finally:
             del p
 
