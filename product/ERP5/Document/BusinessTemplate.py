@@ -5314,6 +5314,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         # This property may not be defined if erp5_property_sheets has not been
         # upgraded yet
       except AttributeError:
+        if getattr(self, '_portal_type_type_mixin_item', None) is not None:
+          raise
         self._portal_type_type_mixin_item = PortalTypeTypeMixinTemplateItem(())
 
 
