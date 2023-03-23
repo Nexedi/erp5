@@ -323,7 +323,7 @@ class ExplanationCache:
     try:
       result = cache[reference_date_key]
       if result is self: # use self as marker to detect infinite recursion
-        __traceback_info__ = (business_process.getPath(), trade_phase, # pylint: disable=unused-variable
+        __traceback_info__ = (business_process.getPath(), trade_phase,
                               reference_date_method_id, delay_mode)
         raise ValueError('No reference date is defined, probably due to missing Trade Model Path in Business Process')
       return result

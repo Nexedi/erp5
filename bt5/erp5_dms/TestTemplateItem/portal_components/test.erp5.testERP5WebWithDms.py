@@ -1320,7 +1320,7 @@ return True
           ("image/png", "", pngmessage, png, XSMALL_PNG_IMAGE_ICON_DATA),
           ("image/png", "png", svgtopngmessage, svg, None),
         ]:
-      __traceback_info__ = (content_type, "?format=" + ext) # pylint: disable=unused-variable
+      __traceback_info__ = (content_type, "?format=" + ext)
       self.assertEqual(
         message.get("Content-Location"),
         obj.absolute_url() + "?format=" + ext,
