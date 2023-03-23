@@ -188,7 +188,7 @@ def substituteRequest(
   request_from_container = request_container.REQUEST
   request_container.REQUEST = inner_request
   try:
-    __traceback_info__ = inner_request # pylint: disable=unused-variable
+    __traceback_info__ = inner_request
     yield inner_request
   finally:
     request_container.REQUEST = request_from_container

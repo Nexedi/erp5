@@ -23,7 +23,7 @@ for test_node in list_node:
       if ping_date <= old_date:
         test_node.invalidate()
   elif validation_state == 'invalidated':
-    __traceback_info__ = test_node # pylint:disable=unused-variable
+    __traceback_info__ = test_node
     if test_node.getSpecialise():
       test_node.getSpecialiseValue().cleanupInvalidatedTestNode(test_node)
 

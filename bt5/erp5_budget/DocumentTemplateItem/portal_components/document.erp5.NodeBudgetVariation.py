@@ -293,7 +293,7 @@ class NodeBudgetVariation(BudgetVariation):
     found = False
     for node_url in category_list:
       if node_url != '%s/budget_special_node/none' % base_category:
-        __traceback_info__ = (node_url, ) # pylint: disable=unused-variable
+        __traceback_info__ = (node_url, )
         if uid_based_axis:
           query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,

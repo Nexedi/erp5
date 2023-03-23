@@ -484,7 +484,7 @@ class SyncMLSubscription(XMLObject):
         signature.appendPartialData(incoming_data)
         incoming_data = signature.getPartialData()
         signature.setPartialData(None)
-      __traceback_info__ = (gid, document, incoming_data, action['command']) # pylint: disable=unused-variable
+      __traceback_info__ = (gid, document, incoming_data, action['command'])
       # Browse possible actions
       if action["command"] == 'Add':
         status_code = "item_added"  # Default status code for addition

@@ -514,6 +514,9 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # The default considers only six.moves, let's consider six module
            # completely to avoid `Redefining built-in 'basestring'` for example
            '--redefining-builtins-modules=six,six.moves,past.builtins,future.builtins,builtins,io',
+           # Don't report __traceback_info__ and __traceback_supplement__ as
+           # unused variables
+           '--dummy-variables-rgx=_$|dummy|__traceback_info__|__traceback_supplement__',
       ]
 
       if portal_type == 'Interface Component':
