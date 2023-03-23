@@ -651,6 +651,7 @@ class TestPreferences(PropertySheetTestCase):
     preference_tool.manage_permission(read_permission, [], 0)
     obj.manage_permission(read_permission, [], 0)
     self.assertFalse(guarded_hasattr(preference_tool, 'getPreferredToto'))
+    self.assertEqual(preference_tool.getPreference('toto'), None)
 
     preference_tool.manage_permission(read_permission, ['Manager'], 1)
 

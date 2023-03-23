@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
+from AccessControl.ZopeGuards import guarded_getattr
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
@@ -128,8 +129,8 @@ class PreferenceTool(BaseTool):
 
   security.declarePublic('getPreference')
   def getPreference(self, pref_name, default=_marker) :
-    """ get the preference on the most appopriate Preference object. """
-    method = getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
+    """ get the preference on the most appropriate Preference object. """
+    method = guarded_getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
     if method is not None:
       return method(default)
     if default is _marker:
