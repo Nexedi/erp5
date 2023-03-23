@@ -96,7 +96,7 @@ class StripeConnector(XMLObject):
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
     if not response.ok:
-      __traceback_info__ = ( # pylint:disable=unused-variable
+      __traceback_info__ = (
         response.request.url,
         response.request.body,
         response.text
@@ -117,7 +117,7 @@ class StripeConnector(XMLObject):
       auth=((self.getPassword() or "").strip(), ''),
       timeout=self.getTimeout() or TIMEOUT)
     if not response.ok:
-      __traceback_info__ = ( # pylint:disable=unused-variable
+      __traceback_info__ = (
         response.request.url,
         response.request.body,
         response.text
