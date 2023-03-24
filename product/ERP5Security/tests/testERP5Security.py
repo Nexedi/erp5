@@ -76,10 +76,10 @@ class UserManagementTestCase(ERP5TypeTestCase):
 
   def getUserFolder(self):
     """Returns the acl_users. """
-    return self.getPortal().acl_users
+    return self.portal.acl_users
 
   def loginAsUser(self, username):
-    uf = self.portal.acl_users
+    uf = self.getUserFolder()
     user = uf.getUserById(username).__of__(uf)
     newSecurityManager(None, user)
 
@@ -455,6 +455,20 @@ class TestUserManagement(UserManagementTestCase):
     person.setUserId(None)
     self.tic()
     self.assertEqual(None, person.Person_getUserId())
+
+  def test_DeletedPersonIsNotUser(self):
+    user_id, login, password = self._makePerson()
+    self._assertUserExists(login, password)
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    self.portal.restrictedTraverse(acl_user['path']).delete()
+    self.commit()
+    self._assertUserDoesNotExists(login, password)
+
+  def test_UnindexedPersonIsNotUser(self):
+    user_id, login, password = self._makePerson(tic=False)
+    self._assertUserDoesNotExists(login, password)
+    self.tic()
+    self._assertUserExists(login, password)
 
 
 class DuplicatePrevention(UserManagementTestCase):
