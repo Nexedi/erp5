@@ -297,16 +297,16 @@ class ERP5LoginUserManager(BasePlugin):
     tv = getTransactionalVariable()
     user_value = tv.get("transactional_user", None) 
     if user_value is not None and self._isUserValueValid(user_value):
-      login_value = [l for l in user_value.objectValues(login_portal_type)
-                      if l.getValidationState() == 'validated'][0]
+      login_value_list = [l for l in user_value.objectValues(login_portal_type)
+        if l.getValidationState() == 'validated' and l.getPassword() is not None]
 
-      if (login_value is not None and login_value.getReference() is not None) and \
-           (id is not None and user_value.getUserId() == id[0]):
+      if (login is not None and login in [(i.getReference(),) for i in login_value_list]) or \
+           (id is not None and user_value.getUserId() == id[0] and login_value_list):
         result.append({
           'id': user_value.getUserId(),
           # Note: PAS forbids us from returning more than one entry per given id,
           # so take any available login.
-          'login': login_value.getReference(), 
+          'login': login_value_list[0].getReference(), 
           'pluginid': plugin_id,
 
           # Extra properties, specific to ERP5
@@ -317,7 +317,7 @@ class ERP5LoginUserManager(BasePlugin):
               'reference': login_value.getReference(),
               'path': login_value.getRelativeUrl(),
               'uid': login_value.getPath(),
-            }
+            } for login_value in login_value_list
           ],
         })
 
