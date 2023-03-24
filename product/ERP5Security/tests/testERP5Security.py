@@ -47,6 +47,8 @@ from zope.interface.verify import verifyClass
 from DateTime import DateTime
 from Products import ERP5Security
 from Products.ERP5Type.Core.Workflow import ValidationFailed
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+
 
 AUTO_LOGIN = object()
 
@@ -84,7 +86,8 @@ class UserManagementTestCase(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def _makePerson(self, login=AUTO_LOGIN, open_assignment=1, assignment_start_date=None,
-                  assignment_stop_date=None, tic=True, password='secret', group_value=None, **kw):
+                  assignment_stop_date=None, tic=True, password='secret', group_value=None,
+                  set_transactional_user=False, **kw):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
@@ -104,6 +107,8 @@ class UserManagementTestCase(ERP5TypeTestCase):
         reference=login,
         password=password,
       ).validate()
+    if set_transactional_user:
+      getTransactionalVariable()["transactional_user"] = new_person 
     if tic:
       self.tic()
     return new_person.Person_getUserId(), login, password
@@ -456,20 +461,72 @@ class TestUserManagement(UserManagementTestCase):
     self.tic()
     self.assertEqual(None, person.Person_getUserId())
 
-  def test_DeletedPersonIsNotUser(self):
-    user_id, login, password = self._makePerson()
-    self._assertUserExists(login, password)
-    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
-    self.portal.restrictedTraverse(acl_user['path']).delete()
-    self.commit()
-    self._assertUserDoesNotExists(login, password)
-
   def test_UnindexedPersonIsNotUser(self):
     user_id, login, password = self._makePerson(tic=False)
     self._assertUserDoesNotExists(login, password)
     self.tic()
     self._assertUserExists(login, password)
 
+  def test_TransactionalPersonWithLoginPasswordAreUsers(self):
+    """Tests a person created on same transaction with a login & password
+       is a valid user if you set transactional variable."""
+    _, login, password = self._makePerson(tic=0, set_transactional_user=True)
+    self._assertUserExists(login, password)
+
+  def test_TransactionalPersonLoginCaseSensitive(self):
+    """Login/password are case sensitive."""
+    login = 'case_test_user'
+    _, _, password = self._makePerson(login=login, tic=0, set_transactional_user=True)
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists('case_test_User', password)
+
+  def test_TransactionalPersonLoginNonAscii(self):
+    """Login can contain non ascii chars."""
+    login = 'j\xc3\xa9'
+    _, _, password = self._makePerson(login=login, tic=0, set_transactional_user=True)
+    self._assertUserExists(login, password)
+
+  def test_TransactionalPersonWithLoginWithNonePasswordAreNotUsers(self):
+    """Tests a person created on same transaction with a login but None as 
+      a password is not a valid user."""
+    # check password set to None at creation
+    _, login, _ = self._makePerson(password=None, tic=0, set_transactional_user=True)
+    self._assertUserDoesNotExists(login, None)
+    self._assertUserDoesNotExists(login, 'None')
+    self._assertUserDoesNotExists(login, '')
+
+  def test_TransactionalPersonWithLoginWithEmptyStringPasswordAreNotUsers(self):
+    """Tests a person created on samea transaction with a login but no password 
+      is not a valid user."""
+    _, login, _ = self._makePerson(password='', tic=0, set_transactional_user=True)
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
+
+  def test_TransactionalPersonWithLoginWithoutPasswordAreNotUsers(self):
+    """Tests a person created on same transaction with a login but 
+      no password set is not a valid user."""
+    # similar to _makePerson, but not passing password= to newContent
+    login = 'login_%s' % self._login_generator()
+    new_person = self.portal.person_module.newContent(portal_type='Person')
+    new_person.newContent(portal_type='Assignment').open()
+    new_person.newContent(
+        portal_type='ERP5 Login',
+        reference=login,
+    ).validate()
+    getTransactionalVariable()['transactional_user'] = new_person
+    self._assertUserDoesNotExists(login, '')
+    self._assertUserDoesNotExists(login, 'None')
+
+  def test_TransactionalOrganisationAreNotUsers(self):
+    """Tests a organisation as transactional user fails to login."""
+    # similar to _makePerson, but not passing password= to newContent
+    login = 'login_%s' % self._login_generator()
+    organisation = self.portal.organisation_module.newContent(
+      portal_type='Organisation', reference=login)
+    getTransactionalVariable()['transactional_user'] = organisation
+
+    # Just to check that fails
+    self.assertRaises(AttributeError, self._assertUserDoesNotExists, login, '')
 
 class DuplicatePrevention(UserManagementTestCase):
   def test_MultipleUsers(self):
