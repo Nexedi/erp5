@@ -1205,6 +1205,8 @@ class ListBoxRenderer:
       # (i.e. do not update parameters in listboxes intended to show a previously defined selection.
       listbox_prefix = '%s_' % self.getId()
       for k, v in six.iteritems(self.request.form):
+        if not isinstance(k, str):
+          continue
         # Ignore selection keys.
         if k.endswith('selection_key'):
           continue
