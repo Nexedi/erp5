@@ -29,7 +29,7 @@ Note:
 </thead>
 <tbody>
   <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-  <tal:block tal:define="portal here/portal_url/getPortalObject;
+  <tal:block tal:define="portal here/getPortalObject;
                          caller python: getattr(context, 'Zuite_setSkipSave', None);
                          no_file_update python: caller() if caller is not None else True;">
     <tr>
