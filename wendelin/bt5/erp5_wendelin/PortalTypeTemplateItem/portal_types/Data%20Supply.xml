@@ -58,14 +58,6 @@ It is used by Ingestion Policy.</string> </value>
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple>
-                <string>CompositionMixin</string>
-              </tuple>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
