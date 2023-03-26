@@ -1,0 +1,9 @@
+<allowed_content_type_list>
+ <portal_type id="Open API Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>Open API Type</item>
+ </portal_type>
+</allowed_content_type_list>
