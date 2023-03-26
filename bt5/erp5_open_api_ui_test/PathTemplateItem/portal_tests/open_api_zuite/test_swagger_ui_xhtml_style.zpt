@@ -1,0 +1,106 @@
+<html>
+
+<head>
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="4" tal:content="template/title_and_id">
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>open</td>
+        <td tal:content="string:${here/portal_url}/portal_web_services"></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>selectAndWait</td>
+        <td>select_action</td>
+        <td>Add Pet Store Open API</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//button[@class="opblock-summary-control"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//button[contains(@class, "try-out__btn")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//button[contains(@class, "try-out__btn")]</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//tr[@data-param-name="tags"]//button[contains(@class, "json-schema-form-item-add")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//tr[@data-param-name="tags"]//button[contains(@class, "json-schema-form-item-add")]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//tr[@data-param-name="tags"]//input[@type="text"]</td>
+        <td></td>
+      </tr>
+
+      <!-- type "tag1" -->
+      <tr>
+        <td>assertEval</td>
+        <td>
+          var input = selenium.browserbot.findElement('//div[@id="operations-pet-findPetsByTags"]//tr[@data-param-name="tags"]//input[@type="text"]');
+          var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+          nativeInputValueSetter.call(input, "tag1");
+          var e = new Event("input", {bubbles: true});
+          input.dispatchEvent(e);
+        <td>true</td>
+      </tr>
+      <tr>
+        <td>pause</td>
+        <td>1000</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//div[@id="operations-pet-findPetsByTags"]//button[contains(@class, "execute")]</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//h4[text()="Server response"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//table[contains(@class, "live-responses-table")]/tbody//td[contains(@class, "response-col_status")]</td>
+        <td>200</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//table[contains(@class, "live-responses-table")]/tbody//td[contains(@class, "response-col_description")]</td>
+        <td>glob:*tag1*</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>

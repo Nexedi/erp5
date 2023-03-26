@@ -1,0 +1,68 @@
+<html>
+
+<head>
+  <title tal:content="template/title_and_id"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="4" tal:content="template/title_and_id">
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>open</td>
+        <td tal:content="string:${here/portal_url}/portal_types/Pet Store Open API"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>link=Open API</td>
+        <td></td>
+      </tr>
+      <!-- monaco editor can be loaded -->
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//div[@data-gadget-editable="field_my_text_content"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>//div[@data-gadget-editable="field_my_text_content"]//iframe</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>css=div.monaco-editor.vs</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>selectFrame</td>
+        <td>relative=top</td>
+        <td></td>
+      </tr>
+      <!-- there's a view of method definitions -->
+      <tr>
+        <td>clickAndWait</td>
+        <td>link=Open API Operations</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>link=PetStoreOpenAPI_findPetsByTags</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertValue</td>
+        <td>field_my_id</td>
+        <td>PetStoreOpenAPI_findPetsByTags</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+
+</html>

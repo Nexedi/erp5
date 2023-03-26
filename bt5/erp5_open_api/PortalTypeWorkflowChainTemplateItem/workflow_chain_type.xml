@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Open API Type</type>
+  <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
