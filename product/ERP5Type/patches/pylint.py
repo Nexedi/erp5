@@ -471,22 +471,25 @@ for filename in os.listdir(os.path.dirname(lxml.__file__)):
             module_name,
             __import__(module_name, fromlist=[module_name], level=0))
 
-# Wendelin is special namespace package which pylint fails to recognize, and so
+# Wendelin and XLTE are special namespace packages which pylint fails to recognize, and so
 # complains about things like `from wendelin.bigarray.array_zodb import ZBigArray`
 # with `No name 'bigarray' in module 'wendelin' (no-name-in-module)`.
 #
-# -> Teach pylint to properly understand wendelin package nature.
-try:
-    import wendelin
-except ImportError:
-    pass
-else:
-    def wendelin_transform(node):
-        m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
-        m.package = True
-        m.name = 'wendelin'
-        return m
-    MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
+# -> Teach pylint to properly understand such packages nature.
+def register_xpkg(pkgname):
+    try:
+        pkg = __import__(pkgname)
+    except ImportError:
+        pass
+    else:
+        def xpkg_transform(node):
+            m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % pkg.__path__)
+            m.package = True
+            m.name = pkgname
+            return m
+        MANAGER.register_transform(Module, xpkg_transform, lambda node: node.name == pkgname)
+register_xpkg('wendelin')
+register_xpkg('xlte')
 
 # prevent a crash with cryptography:
 #   File "develop-eggs/astroid-1.3.8+slapospatched001-py2.7.egg/astroid/raw_building.py", line 360, in _set_proxied
