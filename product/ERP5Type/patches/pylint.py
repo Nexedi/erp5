@@ -484,6 +484,7 @@ else:
     def wendelin_transform(node):
         m = AstroidBuilder(MANAGER).string_build('__path__ = %r' % wendelin.__path__)
         m.package = True
+        m.name = 'wendelin'
         return m
     MANAGER.register_transform(Module, wendelin_transform, lambda node: node.name == 'wendelin')
 
