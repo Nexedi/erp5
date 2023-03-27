@@ -57,12 +57,6 @@ An ingestion is usually as simple as saving a raw data passed to us from remote 
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

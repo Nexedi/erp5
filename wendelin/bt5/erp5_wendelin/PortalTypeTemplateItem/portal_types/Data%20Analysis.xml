@@ -60,12 +60,6 @@ An analyses is usually done on big parts of data (usually represented by special
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
