@@ -113,6 +113,9 @@
       } else if (options.content_type === 'application/json') {
         model_language = 'json';
         state_dict.json_schema_url = options.json_schema_url;
+      } else if (options.content_type === 'application/x-yaml') {
+        model_language = 'yaml';
+        state_dict.json_schema_url = options.json_schema_url;
       }
       state_dict.model_language = model_language;
       state_dict.value = options.value || '';
