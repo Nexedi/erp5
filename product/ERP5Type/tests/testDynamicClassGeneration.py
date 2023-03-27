@@ -2324,6 +2324,16 @@ numpy.sin([])
 import pandas
 pandas.DataFrame([])
 
+# wendelin is special top-level module for which we added custom pylint support
+import wendelin
+from wendelin import bigarray
+from wendelin.bigarray import array_zodb
+from wendelin.bigarray.array_zodb import ZBigArray
+_ = wendelin
+_ = bigarray
+_ = array_zodb
+_ = ZBigArray
+
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
