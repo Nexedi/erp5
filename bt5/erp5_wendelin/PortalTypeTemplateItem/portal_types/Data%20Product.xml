@@ -60,12 +60,6 @@ After ingestion and analyses the ready produced and analyzed data can be conside
               <tuple/>
             </value>
         </item>
-        <item>
-            <key> <string>type_mixin</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

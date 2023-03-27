@@ -1,0 +1,5 @@
+<type_mixin>
+ <portal_type id="Data Supply">
+  <item>CompositionMixin</item>
+ </portal_type>
+</type_mixin>
