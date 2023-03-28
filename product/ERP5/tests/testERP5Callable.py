@@ -55,6 +55,19 @@ class TestERP5PythonScript(ERP5TypeTestCase):
     self.portal.portal_skins.custom.manage_delObjects([self.id()])
     self.tic()
 
+  def test_default_params(self):
+    self.assertEqual(self.script.getParameterSignature(), '')
+
+  def test_set_params(self):
+    self.script.setParameterSignature('foo')
+    self.assertEqual(self.script.getParameterSignature(), 'foo')
+    self.script.setParameterSignature('')
+    self.assertEqual(self.script.getParameterSignature(), '')
+    self.script.setParameterSignature('bar')
+    self.assertEqual(self.script.getParameterSignature(), 'bar')
+    self.script.setParameterSignature(None) # Base_edit calls with None
+    self.assertEqual(self.script.getParameterSignature(), '')
+
   def test_manage_addPythonScriptThroughZMI(self):
     resp = self.publish(
       '/{}/portal_skins/manage_addProduct/ERP5/addPythonScriptThroughZMIForm'.format(self.portal.getId()),

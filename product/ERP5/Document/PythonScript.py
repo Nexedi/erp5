@@ -114,10 +114,10 @@ class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin('expression')):
       override to call ZopePythonScript methods to force compiling code
       and prevent setting to None
       """
-      if value is None:
-        self._params = ''
-      else:
+      if value:
         self._baseSetParameterSignature(value)
+      else:
+        self._params = ''
       self._compile()
 
     def _setProxyRoleList(self, value):
