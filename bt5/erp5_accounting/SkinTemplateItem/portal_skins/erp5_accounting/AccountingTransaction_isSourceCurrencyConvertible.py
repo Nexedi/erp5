@@ -1,4 +1,4 @@
-section_value = context.getSourceSectionValue()
+section_value = context.getSourceSectionValue(checked_permission='Access contents information')
 
 if section_value is None or \
    section_value.getProperty('price_currency', None) is None:
