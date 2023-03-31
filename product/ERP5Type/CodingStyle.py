@@ -211,6 +211,20 @@ ignored_skin_id_set = {
   'OrderMilestone_view',
   'TradeLine_viewProject',
   'ProductionDelivery_viewInventory',
+  'FiscalReport_doReport',
+  'FiscalReportCell_creditorAccountsSum',
+  'FiscalReportCell_creditorBankAccountsBalance',
+  'FiscalReportCell_debtorAccountsSum',
+  'FiscalReportCell_debtorBankAccountsBalance',
+  'FiscalReportCell_doGetInventory',
+  'FiscalReportCell_formatCell',
+  'FiscalReportCell_getBalance',
+  'FiscalReportCell_getBankAccountBalance',
+  'FiscalReportCell_getThirdPartyBalance',
+  'FiscalReportCell_getThirdPartyCreditorBalance',
+  'FiscalReportCell_getThirdPartyDebtorBalance',
+  'FiscalReportCell_roundBalance',
+  'GAPCategory_getURLFromId',
 }
 
 # TODO: ignore officejs skins for now, but these should probably be

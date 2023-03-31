@@ -28,7 +28,7 @@ if ledger is not None:
   else:
     kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
 
-sum = 0.0
+sum_ = 0.0
 for accountNumber in accounts:
   # we get all acounts strict member of this GAP category
   gap = context.restrictedTraverse("portal_categories/" + getURL(accountNumber))
@@ -36,6 +36,6 @@ for accountNumber in accounts:
     result = context.getPortalObject().portal_simulation.getInventoryAssetPrice(node_uid = account.getUid(), **kw)
     if (result < 0 and include_creditor) or \
        (result > 0 and include_debtor):
-      sum += result
+      sum_ += result
 
-return sum
+return sum_

@@ -27,7 +27,7 @@ if ledger is not None:
   else:
     kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
 
-sum = 0.0
+sum_ = 0.0
 for account in accounts:
   for bank in context.restrictedTraverse(request.get("organisation"))\
                        .searchFolder(portal_type=context.getPortalPaymentNodeTypeList()) :
@@ -38,5 +38,5 @@ for account in accounts:
                                        **kw )
     if (result < 0 and include_creditor) or \
        (result > 0 and include_debtor):
-      sum += result
-return sum
+      sum_ += result
+return sum_
