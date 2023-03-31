@@ -56,6 +56,13 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
   def afterSetUp(self):
     AccountingTestCase.afterSetUp(self)
+    # set a corporate registration code (siret) on our section organisation
+    # > Le numéro SIRET (ou système d'identification du répertoire des
+    # > établissements) identifie chaque établissement de l'entreprise.
+    # > Il se compose de 14 chiffres : les neuf chiffres du numéro SIREN +
+    # > les cinq chiffres correspondant à un numéro NIC (numéro interne de
+    # > classement).
+    self.section.setCorporateRegistrationCode('12345689 12345')
     # set a french gap on test accounts
     account_module = self.portal.account_module
     account_module.payable.setGap('fr/pcg/4/40/401')
@@ -122,7 +129,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
         zf = zipfile.ZipFile(StringIO(data))
-        return zf.open("FEC.xml").read()
+        self.assertIn("12345689FEC20141231.xml", zf.namelist())
+        return zf.open("12345689FEC20141231.xml").read()
     self.fail("Attachment not found")
 
   def test_FEC(self):
