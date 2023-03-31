@@ -101,6 +101,9 @@ def getSkinPrefixList(self):
     'ListBox',
     'PlanningBox',
     'OOoChart',
+
+    # Legacy names kept for compatibility
+    'FiscalReportCell',
   ))
 
   return set(skin_prefix_list)
