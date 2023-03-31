@@ -26,7 +26,16 @@ if test_compta_demat_compatibility:
 zipbuffer = StringIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
 zipfileobj = zipfile.ZipFile(zipbuffer, 'w', compression=zipfile.ZIP_DEFLATED)
-zipfileobj.writestr('FEC.xml', fec_file.encode('utf8'))
+filename = 'FEC.xml'
+if test_compta_demat_compatibility:
+  siren = ''
+  if section_uid_list:
+    siret_list = [b.getObject().getCorporateRegistrationCode() for b in portal.portal_catalog(uid=section_uid_list)]
+    siret_list = [siret for siret in siret_list if siret]
+    if len(siret_list) == 1:
+      siren = siret_list[0][:8]
+  filename = at_date.strftime('{siren}FEC%Y%m%d.xml').format(siren=siren)
+zipfileobj.writestr(filename, fec_file.encode('utf8'))
 zipfileobj.close()
 
 attachment_list = (
