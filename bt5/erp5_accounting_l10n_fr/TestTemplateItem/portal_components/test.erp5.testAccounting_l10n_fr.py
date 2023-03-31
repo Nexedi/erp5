@@ -533,6 +533,51 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         '//ecriture/PieceRef[text()="source"]/../ligne/Credit/text()'),
       ['0.00', '40.00', '200.00'])
 
+  def test_PieceRefDefaultValue(self):
+    account_module = self.portal.account_module
+    invoice = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='Première Écriture',
+      simulation_state='delivered',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=132.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=22.00),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=110.00)))
+
+    invoice.setSourceReference('source_reference')
+    invoice.setDestinationReference('destination_reference')
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=True))
+    self.assertEqual(tree.xpath('//EcritureNum/text()'), ['source_reference'])
+    self.assertEqual(tree.xpath('//PieceRef/text()'), ['source_reference'])
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsDestinationFECXML(
+        test_compta_demat_compatibility=True))
+    self.assertEqual(
+      tree.xpath('//EcritureNum/text()'), ['destination_reference'])
+    self.assertEqual(
+      tree.xpath('//PieceRef/text()'), ['destination_reference'])
+
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=False))
+    self.assertEqual(tree.xpath('//EcritureNum/text()'), ['source_reference'])
+    self.assertEqual([n.text for n in tree.xpath('//PieceRef')], [None])
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsDestinationFECXML(
+        test_compta_demat_compatibility=False))
+    self.assertEqual(
+      tree.xpath('//EcritureNum/text()'), ['destination_reference'])
+    self.assertEqual([n.text for n in tree.xpath('//PieceRef')], [None])
+
 
 def test_suite():
   suite = unittest.TestSuite()
