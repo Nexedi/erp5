@@ -90,6 +90,25 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     user = uf.getUser(self.username).__of__(uf)
     newSecurityManager(None, user)
 
+  def validateFECXML(self, tree):
+    # this "xsi:noNamespaceSchemaLocation" is used by xerces parser from
+    # https://github.com/DGFiP/Test-Compta-Demat/
+    noNamespaceSchemaLocation, = tree.xpath(
+      './@xsi:noNamespaceSchemaLocation',
+      namespaces={'xsi': 'http://www.w3.org/2001/XMLSchema-instance'})
+
+    import Products.ERP5.tests
+    with open(os.path.join(
+        os.path.dirname(Products.ERP5.tests.__file__),
+        'test_data',
+        noNamespaceSchemaLocation,
+    )) as f:
+      xmlschema_doc = etree.parse(f)
+      xmlschema = etree.XMLSchema(xmlschema_doc)
+
+    self.assertFalse(xmlschema.validate(etree.fromstring('<invalide/>')))
+    xmlschema.assertValid(tree)
+
   def test_FEC(self):
     account_module = self.portal.account_module
     self._makeOne(
@@ -145,14 +164,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     else:
       self.fail("Attachment not found")
 
-    # validate against official schema
-    import Products.ERP5.tests
-    schema = etree.XMLSchema(etree.XML(open(os.path.join(
-        os.path.dirname(Products.ERP5.tests.__file__), 'test_data',
-        'formatA47A-I-VII-1.xsd')).read()))
-
-    # this raise if invalid
-    tree = etree.fromstring(fec_xml, etree.XMLParser(schema=schema))
+    tree = etree.fromstring(fec_xml)
+    self.validateFECXML(tree)
 
     debit_list = tree.xpath("//Debit")
     self.assertEqual(6, len(debit_list))
@@ -238,14 +251,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     else:
       self.fail("Attachment not found")
 
-    # validate against official schema
-    import Products.ERP5.tests
-    schema = etree.XMLSchema(etree.XML(open(os.path.join(
-        os.path.dirname(Products.ERP5.tests.__file__), 'test_data',
-        'formatA47A-I-VII-1.xsd')).read()))
-
-    # this raise if invalid
-    tree = etree.fromstring(fec_xml, etree.XMLParser(schema=schema))
+    tree = etree.fromstring(fec_xml)
+    self.validateFECXML(tree)
 
     return tree
 
