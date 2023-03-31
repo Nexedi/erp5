@@ -109,6 +109,22 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertFalse(xmlschema.validate(etree.fromstring('<invalide/>')))
     xmlschema.assertValid(tree)
 
+  def getFECFromMailMessage(self):
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEqual((), last_message)
+    _, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      file_name = part.get_filename()
+      if file_name == 'FEC-20141231.zip':
+        self.assertEqual('application/zip', content_type)
+        data = part.get_payload(decode=True)
+        zf = zipfile.ZipFile(StringIO(data))
+        return zf.open("FEC.xml").read()
+    self.fail("Attachment not found")
+
   def test_FEC(self):
     account_module = self.portal.account_module
     self._makeOne(
@@ -146,23 +162,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         simulation_state=['delivered'])
     self.tic()
 
-    fec_xml = ''
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEqual((), last_message)
-    _, mto, message_text = last_message
-    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
-    for part in mail_message.walk():
-      content_type = part.get_content_type()
-      file_name = part.get_filename()
-      if file_name == 'FEC-20141231.zip':
-        self.assertEqual('application/zip', content_type)
-        data = part.get_payload(decode=True)
-        zf = zipfile.ZipFile(StringIO(data))
-        fec_xml = zf.open("FEC.xml").read()
-        break
-    else:
-      self.fail("Attachment not found")
+    fec_xml = self.getFECFromMailMessage()
 
     tree = etree.fromstring(fec_xml)
     self.validateFECXML(tree)
@@ -233,27 +233,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         ledger=ledger_list)
     self.tic()
 
-    fec_xml = ''
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEqual((), last_message)
-    _, mto, message_text = last_message
-    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
-    for part in mail_message.walk():
-      content_type = part.get_content_type()
-      file_name = part.get_filename()
-      if file_name == 'FEC-20141231.zip':
-        self.assertEqual('application/zip', content_type)
-        data = part.get_payload(decode=True)
-        zf = zipfile.ZipFile(StringIO(data))
-        fec_xml = zf.open("FEC.xml").read()
-        break
-    else:
-      self.fail("Attachment not found")
-
-    tree = etree.fromstring(fec_xml)
+    tree = etree.fromstring(self.getFECFromMailMessage())
     self.validateFECXML(tree)
-
     return tree
 
   def test_FECWithOneLedger(self):
@@ -436,6 +417,42 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
     tree = etree.fromstring(invoice.AccountingTransaction_viewAsDestinationFECXML())
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
+
+  def test_EscapeTestComptaDematUnsupportedCharacters(self):
+    # Workaround bugs with Test Compta Demat
+    # https://github.com/DGFiP/Test-Compta-Demat/issues/37
+    # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+
+    account_module = self.portal.account_module
+    self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='Des œufs, des Œufs, des Ÿ et des €',
+      simulation_state='delivered',
+      reference='1',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=132.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=22.00),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=110.00)))
+    self.tic()
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+      section_category='group/demo_group',
+      section_category_strict=False,
+      at_date=DateTime(2014, 12, 31),
+      simulation_state=['delivered'])
+    self.tic()
+
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
+    self.assertEqual(
+      tree.xpath('//EcritureLib/text()'),
+      [u'Des oeufs, des OEufs, des Y et des EUR'])
 
 
 def test_suite():
