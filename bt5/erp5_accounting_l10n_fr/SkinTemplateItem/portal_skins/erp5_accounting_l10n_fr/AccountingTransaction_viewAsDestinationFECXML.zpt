@@ -2,7 +2,7 @@
   <EcritureNum tal:content="context/getDestinationReference">Specific Reference</EcritureNum>
   <EcritureDate tal:content="python: context.getStopDate().strftime('%Y-%m-%d')">Specific Date</EcritureDate>
   <EcritureLib tal:content="context/getTitle">Title</EcritureLib>
-  <PieceRef tal:content="context/getReference">Reference</PieceRef>
+  <PieceRef tal:content="python: (context.getReference() or context.getDestinationReference() if options['test_compta_demat_compatibility'] else context.getReference())">Reference</PieceRef>
   <PieceDate tal:content="python: context.getStopDate().strftime('%Y-%m-%d')"></PieceDate>
   <tal:block tal:replace="nothing"><EcritureLet></EcritureLet>
   <DateLet></DateLet></tal:block>
