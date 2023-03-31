@@ -88,7 +88,11 @@ for journal_code, journal_lib, journal_search_kw in _groupedJournalTupleDict():
 
   portal.portal_catalog.searchAndActivate(
     method_id='AccountingTransaction_postFECResult',
-    method_kw=dict(section_uid_list=section_uid_list, active_process=this_journal_active_process.getRelativeUrl()),
+    method_kw=dict(
+      section_uid_list=section_uid_list,
+      active_process=this_journal_active_process.getRelativeUrl(),
+      test_compta_demat_compatibility=test_compta_demat_compatibility,
+    ),
     activate_kw=dict(tag=tag, priority=priority),
     **journal_search_kw)
 

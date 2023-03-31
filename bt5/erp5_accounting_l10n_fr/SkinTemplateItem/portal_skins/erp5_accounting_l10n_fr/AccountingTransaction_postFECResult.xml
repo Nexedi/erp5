@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process, section_uid_list</string> </value>
+            <value> <string>active_process, section_uid_list, test_compta_demat_compatibility</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

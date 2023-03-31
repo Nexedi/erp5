@@ -413,9 +413,13 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     assert invoice.workflow_history['accounting_workflow'][-1]['action'] == 'deliver'
     invoice.workflow_history['accounting_workflow'][-1]['time'] = DateTime(2001, 2, 3)
 
-    tree = etree.fromstring(invoice.AccountingTransaction_viewAsSourceFECXML())
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=True))
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
-    tree = etree.fromstring(invoice.AccountingTransaction_viewAsDestinationFECXML())
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsDestinationFECXML(
+        test_compta_demat_compatibility=True))
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
 
   def test_EscapeTestComptaDematUnsupportedCharacters(self):
@@ -453,6 +457,81 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(
       tree.xpath('//EcritureLib/text()'),
       [u'Des oeufs, des OEufs, des Y et des EUR'])
+
+  def test_Skip0QuantityLines(self):
+    # Don't include lines with 0 quantity in the output, because they are
+    # reported as invalid by Test Compta Demat
+    account_module = self.portal.account_module
+    destination_invoice = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='destination 0',
+      simulation_state='delivered',
+      reference='destination',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=132.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=22.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=0.00),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=110.00)))
+
+    self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      title='source 0',
+      simulation_state='delivered',
+      reference='source',
+      destination_section_value=self.organisation_module.client_2,
+      start_date=DateTime(2014, 3, 1),
+      lines=(
+        dict(source_value=account_module.receivable, source_debit=240.00),
+        dict(source_value=account_module.collected_vat, source_credit=0.00),
+        dict(source_value=account_module.collected_vat, source_credit=40.00),
+        dict(source_value=account_module.goods_sales, source_credit=200.00)))
+
+    self.tic()
+    # make sure we don't have interaction removing the lines
+    self.assertEqual(
+      sorted(
+        [
+          (line.getDestinationDebit(), line.getSourceDebit())
+          for line in destination_invoice.contentValues()
+        ]), [
+          (0.0, 0.0),
+          (0.0, 22.0),
+          (0.0, 110.0),
+          (132.0, 0.0),
+        ])
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+      section_category='group/demo_group',
+      section_category_strict=False,
+      at_date=DateTime(2014, 12, 31),
+      simulation_state=['delivered'])
+    self.tic()
+
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="destination"]/../ligne/Debit/text()'),
+      ['132.00', '0.00', '0.00'])
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="destination"]/../ligne/Credit/text()'),
+      ['0.00', '22.00', '110.00'])
+    self.assertEqual(
+      tree.xpath('//ecriture/PieceRef[text()="source"]/../ligne/Debit/text()'),
+      ['240.00', '0.00', '0.00'])
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="source"]/../ligne/Credit/text()'),
+      ['0.00', '40.00', '200.00'])
 
 
 def test_suite():
