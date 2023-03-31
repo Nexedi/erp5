@@ -105,4 +105,6 @@ for journal_code, journal_lib, journal_search_kw in _groupedJournalTupleDict():
 context.activate(after_tag=(tag, aggregate_tag)).AccountingTransactionModule_aggregateFrenchAccountingTransactionFile(
   at_date,
   active_process.getRelativeUrl(),
-  user_name=user_name)
+  user_name=user_name,
+  test_compta_demat_compatibility=test_compta_demat_compatibility,
+)

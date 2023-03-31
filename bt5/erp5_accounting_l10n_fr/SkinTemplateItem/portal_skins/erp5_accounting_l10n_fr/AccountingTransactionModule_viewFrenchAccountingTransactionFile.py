@@ -29,7 +29,9 @@ context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFi
   tag=tag,
   aggregate_tag=aggregate_tag,
   date_column=date_column,
-  search_kw=search_kw)
+  search_kw=search_kw,
+  test_compta_demat_compatibility=True
+)
 
 return context.Base_redirect(form_id, keep_items=dict(
               portal_status_message=translateString("Report Started")))
