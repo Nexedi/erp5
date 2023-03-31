@@ -111,4 +111,5 @@ context.activate(after_tag=(tag, aggregate_tag)).AccountingTransactionModule_agg
   active_process.getRelativeUrl(),
   user_name=user_name,
   test_compta_demat_compatibility=test_compta_demat_compatibility,
+  section_uid_list=section_uid_list,
 )
