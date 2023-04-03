@@ -56,6 +56,13 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
   def afterSetUp(self):
     AccountingTestCase.afterSetUp(self)
+    # set a corporate registration code (siret) on our section organisation
+    # > Le numéro SIRET (ou système d'identification du répertoire des
+    # > établissements) identifie chaque établissement de l'entreprise.
+    # > Il se compose de 14 chiffres : les neuf chiffres du numéro SIREN +
+    # > les cinq chiffres correspondant à un numéro NIC (numéro interne de
+    # > classement).
+    self.section.setCorporateRegistrationCode('12345689 12345')
     # set a french gap on test accounts
     account_module = self.portal.account_module
     account_module.payable.setGap('fr/pcg/4/40/401')
@@ -89,6 +96,42 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     uf.zodb_roles.assignRoleToPrincipal('Assignor', person.Person_getUserId())
     user = uf.getUser(self.username).__of__(uf)
     newSecurityManager(None, user)
+
+  def validateFECXML(self, tree):
+    # this "xsi:noNamespaceSchemaLocation" is used by xerces parser from
+    # https://github.com/DGFiP/Test-Compta-Demat/
+    noNamespaceSchemaLocation, = tree.xpath(
+      './@xsi:noNamespaceSchemaLocation',
+      namespaces={'xsi': 'http://www.w3.org/2001/XMLSchema-instance'})
+
+    import Products.ERP5.tests
+    with open(os.path.join(
+        os.path.dirname(Products.ERP5.tests.__file__),
+        'test_data',
+        noNamespaceSchemaLocation,
+    )) as f:
+      xmlschema_doc = etree.parse(f)
+      xmlschema = etree.XMLSchema(xmlschema_doc)
+
+    self.assertFalse(xmlschema.validate(etree.fromstring('<invalide/>')))
+    xmlschema.assertValid(tree)
+
+  def getFECFromMailMessage(self):
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEqual((), last_message)
+    _, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      file_name = part.get_filename()
+      if file_name == 'FEC-20141231.zip':
+        self.assertEqual('application/zip', content_type)
+        data = part.get_payload(decode=True)
+        zf = zipfile.ZipFile(StringIO(data))
+        self.assertIn("12345689FEC20141231.xml", zf.namelist())
+        return zf.open("12345689FEC20141231.xml").read()
+    self.fail("Attachment not found")
 
   def test_FEC(self):
     account_module = self.portal.account_module
@@ -127,32 +170,10 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         simulation_state=['delivered'])
     self.tic()
 
-    fec_xml = ''
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEqual((), last_message)
-    _, mto, message_text = last_message
-    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
-    for part in mail_message.walk():
-      content_type = part.get_content_type()
-      file_name = part.get_filename()
-      if file_name == 'FEC-20141231.zip':
-        self.assertEqual('application/zip', content_type)
-        data = part.get_payload(decode=True)
-        zf = zipfile.ZipFile(StringIO(data))
-        fec_xml = zf.open("FEC.xml").read()
-        break
-    else:
-      self.fail("Attachment not found")
+    fec_xml = self.getFECFromMailMessage()
 
-    # validate against official schema
-    import Products.ERP5.tests
-    schema = etree.XMLSchema(etree.XML(open(os.path.join(
-        os.path.dirname(Products.ERP5.tests.__file__), 'test_data',
-        'formatA47A-I-VII-1.xsd')).read()))
-
-    # this raise if invalid
-    tree = etree.fromstring(fec_xml, etree.XMLParser(schema=schema))
+    tree = etree.fromstring(fec_xml)
+    self.validateFECXML(tree)
 
     debit_list = tree.xpath("//Debit")
     self.assertEqual(6, len(debit_list))
@@ -220,33 +241,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         ledger=ledger_list)
     self.tic()
 
-    fec_xml = ''
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEqual((), last_message)
-    _, mto, message_text = last_message
-    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
-    mail_message = email.message_from_string(message_text)
-    for part in mail_message.walk():
-      content_type = part.get_content_type()
-      file_name = part.get_filename()
-      if file_name == 'FEC-20141231.zip':
-        self.assertEqual('application/zip', content_type)
-        data = part.get_payload(decode=True)
-        zf = zipfile.ZipFile(StringIO(data))
-        fec_xml = zf.open("FEC.xml").read()
-        break
-    else:
-      self.fail("Attachment not found")
-
-    # validate against official schema
-    import Products.ERP5.tests
-    schema = etree.XMLSchema(etree.XML(open(os.path.join(
-        os.path.dirname(Products.ERP5.tests.__file__), 'test_data',
-        'formatA47A-I-VII-1.xsd')).read()))
-
-    # this raise if invalid
-    tree = etree.fromstring(fec_xml, etree.XMLParser(schema=schema))
-
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
     return tree
 
   def test_FECWithOneLedger(self):
@@ -425,10 +421,170 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     assert invoice.workflow_history['accounting_workflow'][-1]['action'] == 'deliver'
     invoice.workflow_history['accounting_workflow'][-1]['time'] = DateTime(2001, 2, 3)
 
-    tree = etree.fromstring(invoice.AccountingTransaction_viewAsSourceFECXML())
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=True))
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
-    tree = etree.fromstring(invoice.AccountingTransaction_viewAsDestinationFECXML())
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsDestinationFECXML(
+        test_compta_demat_compatibility=True))
     self.assertEqual(tree.xpath('//ValidDate/text()'), ['2001-02-03'])
+
+  def test_EscapeTestComptaDematUnsupportedCharacters(self):
+    # Workaround bugs with Test Compta Demat
+    # https://github.com/DGFiP/Test-Compta-Demat/issues/37
+    # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+
+    account_module = self.portal.account_module
+    self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='Des œufs, des Œufs, des Ÿ et des €',
+      simulation_state='delivered',
+      reference='1',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=132.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=22.00),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=110.00)))
+    self.tic()
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+      section_category='group/demo_group',
+      section_category_strict=False,
+      at_date=DateTime(2014, 12, 31),
+      simulation_state=['delivered'])
+    self.tic()
+
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
+    self.assertEqual(
+      tree.xpath('//EcritureLib/text()'),
+      [u'Des oeufs, des OEufs, des Y et des EUR'])
+
+  def test_Skip0QuantityLines(self):
+    # Don't include lines with 0 quantity in the output, because they are
+    # reported as invalid by Test Compta Demat
+    account_module = self.portal.account_module
+    destination_invoice = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='destination 0',
+      simulation_state='delivered',
+      reference='destination',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=132.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=22.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=0.00),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=110.00)))
+
+    self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      title='source 0',
+      simulation_state='delivered',
+      reference='source',
+      destination_section_value=self.organisation_module.client_2,
+      start_date=DateTime(2014, 3, 1),
+      lines=(
+        dict(source_value=account_module.receivable, source_debit=240.00),
+        dict(source_value=account_module.collected_vat, source_credit=0.00),
+        dict(source_value=account_module.collected_vat, source_credit=40.00),
+        dict(source_value=account_module.goods_sales, source_credit=200.00)))
+
+    self.tic()
+    # make sure we don't have interaction removing the lines
+    self.assertEqual(
+      sorted(
+        [
+          (line.getDestinationDebit(), line.getSourceDebit())
+          for line in destination_invoice.contentValues()
+        ]), [
+          (0.0, 0.0),
+          (0.0, 22.0),
+          (0.0, 110.0),
+          (132.0, 0.0),
+        ])
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+      section_category='group/demo_group',
+      section_category_strict=False,
+      at_date=DateTime(2014, 12, 31),
+      simulation_state=['delivered'])
+    self.tic()
+
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="destination"]/../ligne/Debit/text()'),
+      ['132.00', '0.00', '0.00'])
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="destination"]/../ligne/Credit/text()'),
+      ['0.00', '22.00', '110.00'])
+    self.assertEqual(
+      tree.xpath('//ecriture/PieceRef[text()="source"]/../ligne/Debit/text()'),
+      ['240.00', '0.00', '0.00'])
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="source"]/../ligne/Credit/text()'),
+      ['0.00', '40.00', '200.00'])
+
+  def test_PieceRefDefaultValue(self):
+    account_module = self.portal.account_module
+    invoice = self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='Première Écriture',
+      simulation_state='delivered',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable, destination_debit=132.00),
+        dict(
+          destination_value=account_module.refundable_vat,
+          destination_credit=22.00),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=110.00)))
+
+    invoice.setSourceReference('source_reference')
+    invoice.setDestinationReference('destination_reference')
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=True))
+    self.assertEqual(tree.xpath('//EcritureNum/text()'), ['source_reference'])
+    self.assertEqual(tree.xpath('//PieceRef/text()'), ['source_reference'])
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsDestinationFECXML(
+        test_compta_demat_compatibility=True))
+    self.assertEqual(
+      tree.xpath('//EcritureNum/text()'), ['destination_reference'])
+    self.assertEqual(
+      tree.xpath('//PieceRef/text()'), ['destination_reference'])
+
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsSourceFECXML(
+        test_compta_demat_compatibility=False))
+    self.assertEqual(tree.xpath('//EcritureNum/text()'), ['source_reference'])
+    self.assertEqual([n.text for n in tree.xpath('//PieceRef')], [None])
+    tree = etree.fromstring(
+      invoice.AccountingTransaction_viewAsDestinationFECXML(
+        test_compta_demat_compatibility=False))
+    self.assertEqual(
+      tree.xpath('//EcritureNum/text()'), ['destination_reference'])
+    self.assertEqual([n.text for n in tree.xpath('//PieceRef')], [None])
 
 
 def test_suite():
