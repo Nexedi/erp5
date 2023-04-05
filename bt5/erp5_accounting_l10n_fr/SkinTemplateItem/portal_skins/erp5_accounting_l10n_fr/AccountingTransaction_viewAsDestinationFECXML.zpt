@@ -17,7 +17,7 @@
         <CompteAuxLib tal:content="third_party/getTitle"></CompteAuxLib></tal:block><tal:block>
       <Montantdevise></Montantdevise>
       <Idevise></Idevise></tal:block>
-      <Debit tal:content="python: '%0.2f' % (line.getDestinationAssetDebit() or line.getDestinationDebit())"></Debit>
-      <Credit tal:content="python: '%0.2f' % (line.getDestinationAssetCredit() or line.getDestinationCredit())"></Credit>
+      <Debit tal:content="python: '%0.2f' % (line.getDestinationAssetDebit() if line.hasDestinationTotalAssetPrice() else line.getDestinationDebit())"></Debit>
+      <Credit tal:content="python: '%0.2f' % (line.getDestinationAssetCredit() if line.hasDestinationTotalAssetPrice() else line.getDestinationCredit())"></Credit>
     </ligne></tal:block>
 </ecriture>

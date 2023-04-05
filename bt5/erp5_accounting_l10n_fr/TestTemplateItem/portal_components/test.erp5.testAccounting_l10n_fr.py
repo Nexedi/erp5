@@ -586,6 +586,72 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       tree.xpath('//EcritureNum/text()'), ['destination_reference'])
     self.assertEqual([n.text for n in tree.xpath('//PieceRef')], [None])
 
+  def test_AssetPriceAndQuantityEdgeCase(self):
+    # Edge case where we have an asset price and quantity of reverse sides.
+    account_module = self.portal.account_module
+    self._makeOne(
+      portal_type='Purchase Invoice Transaction',
+      title='destination 0',
+      simulation_state='delivered',
+      reference='destination',
+      source_section_value=self.organisation_module.supplier,
+      stop_date=DateTime(2014, 2, 2),
+      lines=(
+        dict(
+          destination_value=account_module.payable,
+          destination_debit=100,
+          destination_asset_credit=123,
+        ),
+        dict(
+          destination_value=account_module.goods_purchase,
+          destination_credit=100,
+          destination_asset_debit=123,
+        )))
+
+    self._makeOne(
+      portal_type='Sale Invoice Transaction',
+      title='source 0',
+      simulation_state='delivered',
+      reference='source',
+      destination_section_value=self.organisation_module.client_2,
+      start_date=DateTime(2014, 3, 1),
+      lines=(
+        dict(
+          source_value=account_module.receivable,
+          source_debit=200.00,
+          source_asset_debit=345,
+        ),
+        dict(
+          source_value=account_module.goods_sales,
+          source_credit=200.00,
+          source_asset_credit=345,
+        )))
+
+    self.tic()
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+      section_category='group/demo_group',
+      section_category_strict=False,
+      at_date=DateTime(2014, 12, 31),
+      simulation_state=['delivered'])
+    self.tic()
+
+    tree = etree.fromstring(self.getFECFromMailMessage())
+    self.validateFECXML(tree)
+    self.assertEqual(
+      tree.xpath('//ecriture/PieceRef[text()="destination"]/../ligne/Debit/text()'),
+      ['0.00', '123.00'])
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="destination"]/../ligne/Credit/text()'),
+      ['123.00', '0.00'])
+    self.assertEqual(
+      tree.xpath('//ecriture/PieceRef[text()="source"]/../ligne/Debit/text()'),
+      ['345.00', '0.00'])
+    self.assertEqual(
+      tree.xpath(
+        '//ecriture/PieceRef[text()="source"]/../ligne/Credit/text()'),
+      ['0.00', '345.00'])
+
 
 def test_suite():
   suite = unittest.TestSuite()
