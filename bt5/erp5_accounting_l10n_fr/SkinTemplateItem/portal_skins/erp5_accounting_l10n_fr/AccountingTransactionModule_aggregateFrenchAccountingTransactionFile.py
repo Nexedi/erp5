@@ -1,4 +1,5 @@
 # coding: utf-8
+import unicodedata
 from cStringIO import StringIO
 import zipfile
 from Products.ERP5Type.Message import translateString
@@ -13,15 +14,13 @@ fec_file = context.AccountingTransactionModule_viewComptabiliteAsFECXML(
       at_date=at_date,
       result_list=result_list)
 if test_compta_demat_compatibility:
-  fec_file = (fec_file
-    # https://github.com/DGFiP/Test-Compta-Demat/issues/37
-    .replace(u"’", u"'")
-    .replace(u"Œ", u"OE")
-    .replace(u"œ", u"oe")
-    .replace(u"Ÿ", u"Y")
-    # https://github.com/DGFiP/Test-Compta-Demat/issues/39
-    .replace(u"€", u"EUR")
-)
+  # normalize all non ascii characters (é => e), while still keeping
+  # some "important" characters such as €
+  # https://github.com/DGFiP/Test-Compta-Demat/issues/37
+  # https://github.com/DGFiP/Test-Compta-Demat/issues/39
+  fec_file = unicodedata.normalize(
+    'NFKD', fec_file.replace(u"€", "EUR")
+  ).encode('ascii', 'ignore')
 
 zipbuffer = StringIO()
 zipfilename = at_date.strftime('FEC-%Y%m%d.zip')

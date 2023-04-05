@@ -137,7 +137,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     account_module = self.portal.account_module
     self._makeOne(
               portal_type='Purchase Invoice Transaction',
-              title='Première Écriture',
+              title='Premiere Ecriture',
               simulation_state='delivered',
               reference='1',
               source_section_value=self.organisation_module.supplier,
@@ -151,7 +151,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
     self._makeOne(
               portal_type='Sale Invoice Transaction',
-              title='Seconde Écriture',
+              title='Seconde Ecriture',
               simulation_state='delivered',
               reference='2',
               destination_section_value=self.organisation_module.client_2,
@@ -188,7 +188,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     account_module = self.portal.account_module
     self._makeOne(
               portal_type='Purchase Invoice Transaction',
-              title='Première Écriture',
+              title='Premiere Ecriture',
               simulation_state='delivered',
               ledger='accounting/general',
               reference='1',
@@ -203,7 +203,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
     self._makeOne(
               portal_type='Sale Invoice Transaction',
-              title='Seconde Écriture',
+              title='Seconde Ecriture',
               simulation_state='delivered',
               ledger='accounting/general',
               reference='2',
@@ -218,7 +218,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
     self._makeOne(
               portal_type='Sale Invoice Transaction',
-              title='Troisième Écriture',
+              title='Troisieme Ecriture',
               simulation_state='delivered',
               ledger='accounting/detailed',
               reference='3',
@@ -254,7 +254,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Première Écriture'], ecriture_list)
+    self.assertEqual(['Premiere Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -270,7 +270,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Seconde Écriture'], ecriture_list)
+    self.assertEqual(['Seconde Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -290,7 +290,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Première Écriture'], ecriture_list)
+    self.assertEqual(['Premiere Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -306,7 +306,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Seconde Écriture', 'Troisième Écriture'], ecriture_list)
+    self.assertEqual(['Seconde Ecriture', 'Troisieme Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(6, len(debit_list))
@@ -325,7 +325,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Première Écriture', 'Seconde Écriture'], ecriture_list)
+    self.assertEqual(['Premiere Ecriture', 'Seconde Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(6, len(debit_list))
@@ -341,7 +341,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Troisième Écriture'], ecriture_list)
+    self.assertEqual(['Troisieme Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -360,7 +360,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Première Écriture'], ecriture_list)
+    self.assertEqual(['Premiere Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -376,7 +376,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Seconde Écriture'], ecriture_list)
+    self.assertEqual(['Seconde Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -392,7 +392,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     journal = journal_list[0]
 
     ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
-    self.assertEqual(['Troisième Écriture'], ecriture_list)
+    self.assertEqual(['Troisieme Ecriture'], ecriture_list)
 
     debit_list = journal.xpath(".//Debit")
     self.assertEqual(3, len(debit_list))
@@ -406,7 +406,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     account_module = self.portal.account_module
     invoice = self._makeOne(
               portal_type='Purchase Invoice Transaction',
-              title='Première Écriture',
+              title='Premiere Ecriture',
               simulation_state='delivered',
               reference='1',
               source_section_value=self.organisation_module.supplier,
@@ -438,7 +438,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     account_module = self.portal.account_module
     self._makeOne(
       portal_type='Purchase Invoice Transaction',
-      title='Des œufs, des Œufs, des Ÿ et des €',
+      title='Le libéllé c’est çà: œufs, des Œufs, des Ÿ et des €',
       simulation_state='delivered',
       reference='1',
       source_section_value=self.organisation_module.supplier,
@@ -464,7 +464,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.validateFECXML(tree)
     self.assertEqual(
       tree.xpath('//EcritureLib/text()'),
-      [u'Des oeufs, des OEufs, des Y et des EUR'])
+      [u'Le libelle cest ca: ufs, des ufs, des Y et des EUR'])
 
   def test_Skip0QuantityLines(self):
     # Don't include lines with 0 quantity in the output, because they are
@@ -545,7 +545,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     account_module = self.portal.account_module
     invoice = self._makeOne(
       portal_type='Purchase Invoice Transaction',
-      title='Première Écriture',
+      title='Premiere Ecriture',
       simulation_state='delivered',
       source_section_value=self.organisation_module.supplier,
       stop_date=DateTime(2014, 2, 2),
