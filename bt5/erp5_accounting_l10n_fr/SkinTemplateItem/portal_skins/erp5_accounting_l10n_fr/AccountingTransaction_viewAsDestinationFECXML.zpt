@@ -9,7 +9,7 @@
   <ValidDate tal:content="python: context.AccountingTransaction_getDeliverDate().strftime('%Y-%m-%d')">Modification Date</ValidDate>
   <tal:block tal:repeat="line python:context.contentValues(portal_type=context.getPortalAccountingMovementTypeList())"><ligne
     tal:define="account python:line.getDestinationValue(portal_type='Account')"
-    tal:condition="python: account is not None and (line.getQuantity() or line.getDestinationAssetDebit() or line.getDestinationAssetCredit() or not options['test_compta_demat_compatibility'])">
+    tal:condition="python: account is not None and ((line.getDestinationTotalAssetPrice() if line.hasDestinationTotalAssetPrice() else line.getQuantity()) or not options['test_compta_demat_compatibility'])">
       <CompteNum tal:content="account/Account_getGapId">Reference Compte (Account_getGapId)</CompteNum>
       <CompteLib tal:content="line/Movement_getDestinationCompteLib">Translated Title Compte</CompteLib>
       <tal:block tal:condition="python: account.getAccountType() in ('asset/receivable', 'liability/payable')"

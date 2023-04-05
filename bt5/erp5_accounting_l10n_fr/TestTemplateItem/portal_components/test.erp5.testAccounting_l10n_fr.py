@@ -481,6 +481,10 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         dict(
           destination_value=account_module.payable, destination_debit=132.00),
         dict(
+          destination_value=account_module.payable,
+          destination_debit=10000.00,
+          destination_asset_debit=0.00),
+        dict(
           destination_value=account_module.refundable_vat,
           destination_credit=22.00),
         dict(
@@ -499,6 +503,10 @@ class TestAccounting_l10n_fr(AccountingTestCase):
       start_date=DateTime(2014, 3, 1),
       lines=(
         dict(source_value=account_module.receivable, source_debit=240.00),
+        dict(
+          source_value=account_module.collected_vat,
+          source_credit=10000.00,
+          source_asset_credit=0.00),
         dict(source_value=account_module.collected_vat, source_credit=0.00),
         dict(source_value=account_module.collected_vat, source_credit=40.00),
         dict(source_value=account_module.goods_sales, source_credit=200.00)))
@@ -515,6 +523,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
           (0.0, 22.0),
           (0.0, 110.0),
           (132.0, 0.0),
+          (10000.0, 0.0),
         ])
     self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
       section_category='group/demo_group',
