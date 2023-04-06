@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>1061</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>1061</string> </value>
         </item>
