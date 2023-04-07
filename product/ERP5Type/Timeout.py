@@ -32,6 +32,8 @@ from AccessControl.SecurityInfo import ModuleSecurityInfo
 from ZPublisher.HTTPResponse import status_codes
 from Products.TimerService.timerserver.TimerServer import TimerRequest
 
+module_security = ModuleSecurityInfo(__name__)
+
 __all__ = (
   'TimeoutReachedError', 'Deadline', 'getDeadline', 'getTimeLeft',
   'getPublisherDeadlineValue',
@@ -42,6 +44,8 @@ class TimeoutReachedError(Exception):
   A deadline was reached.
   """
   pass
+
+module_security.declarePublic('TimeoutReachedError')
 
 # There is no appropriate status code for timeout.
 status_codes['timeoutreachederror'] = 500 # Internal Server Error
@@ -85,7 +89,7 @@ def Deadline(offset):
     finally:
       _site_local.deadline = old_deadline
 
-ModuleSecurityInfo('Products.ERP5Type.Timeout').declarePublic('Deadline')
+module_security.declarePublic('Deadline')
 
 def getDeadline():
   """
