@@ -43,6 +43,8 @@ class TimeoutReachedError(Exception):
   """
   pass
 
+ModuleSecurityInfo('Products.ERP5Type.Timeout').declarePublic('TimeoutReachedError')
+
 # There is no appropriate status code for timeout.
 status_codes['timeoutreachederror'] = 500 # Internal Server Error
 del status_codes
