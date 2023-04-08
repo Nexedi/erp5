@@ -1,10 +1,5 @@
 import json
 
-# if a graph has been saved, we use this info for node coordinates.
-position_graph = context.getProperty('jsplumb_graph')
-if position_graph:
-  position_graph = json.loads(position_graph)['graph']
-
 # TODO:
 #  select after script in edge properties
 #  checked box for validation ? or at least select before script
@@ -34,10 +29,16 @@ def getDCWorkflowGraph(dc_workflow):
                    transition_id=transition.getId() # used for edition.
                   ))
 
+  position_graph = context.getProperty('jsplumb_graph')
   if position_graph:
-    for state_id in graph['node'].keys():
-      if state_id in position_graph['node']:
-        graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
+    # if a graph has been saved, we use this info for node coordinates.
+    position_graph = json.loads(position_graph)['graph']
+  else:
+    position_graph = context.ERP5Site_getGraphEditorGraphLayout(graph)
+
+  for state_id in graph['node']:
+    if state_id in position_graph['node']:
+      graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
   return graph
 
 

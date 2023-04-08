@@ -2,11 +2,6 @@ from Products.ERP5Type.Message import translateString
 import json
 portal = context.getPortalObject()
 
-# if a graph has been saved, we use this info for node coordinates.
-position_graph = context.getProperty('jsplumb_graph')
-if position_graph:
-  position_graph = json.loads(position_graph)['graph']
-
 visited_business_process_set = set() # prevent infinite recurisions
 
 def getBusinessProcessGraph(business_process):
@@ -22,10 +17,6 @@ def getBusinessProcessGraph(business_process):
     graph['node'][state_id] = dict(
         _class='erp5.business_process.trade_state',
         name=trade_state.getTranslatedTitle())
-
-  for state_id in graph['node'].keys():
-    if position_graph and state_id in position_graph['node']:
-      graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
 
   if business_process in visited_business_process_set:
     return graph
@@ -53,6 +44,20 @@ def getBusinessProcessGraph(business_process):
       graph['node'].setdefault(node_id, node_data)
     for node_id, node_data in specialise_graph['edge'].items():
       graph['edge'].setdefault(node_id, node_data)
+
+
+  position_graph = context.getProperty('jsplumb_graph')
+  if position_graph:
+    # if a graph has been saved, we use this info for node coordinates.
+    position_graph = json.loads(position_graph)['graph']
+  else:
+    position_graph = context.ERP5Site_getGraphEditorGraphLayout(graph)
+
+  for state_id in graph['node']:
+    if position_graph and state_id in position_graph['node']:
+      graph['node'][state_id]['coordinate'] = position_graph['node'][state_id]['coordinate']
+
+
   return graph
 
 
