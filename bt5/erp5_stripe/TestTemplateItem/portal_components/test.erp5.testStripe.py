@@ -598,6 +598,14 @@ class TestStripePaymentSession(ERP5TypeTestCase):
       stripe_payment_session = self.portal.portal_catalog.getResultValue(
         portal_type="Stripe Payment Session",
         reference=session_id)
+      http_exchange, = stripe_payment_session.getFollowUpRelatedValueList(portal_type="HTTP Exchange")
+      self.assertIn("line_items", json.loads(http_exchange.getRequest()))
+      self.assertEqual({
+        'status': 'open',
+        'url': 'https://stripe.url', 
+        'object': 'checkout.session', 
+        'id': 'abc321'
+        }, json.loads(http_exchange.getResponse()))
       self._document_to_delete_list.append(stripe_payment_session)
 
     with responses.RequestsMock() as rsps:
