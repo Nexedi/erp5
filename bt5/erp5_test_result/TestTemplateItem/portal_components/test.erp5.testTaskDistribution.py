@@ -1916,3 +1916,57 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       )
       self.test_result.start()
       self.tic()
+
+
+class TestSlapOSParameterEditor(TaskDistributionTestCase):
+  def afterSetUp(self):
+    super(TestSlapOSParameterEditor, self).afterSetUp()
+    self.test_suite = self.portal.test_suite_module.newContent(
+      portal_type='Test Suite',
+      title=self.id(),
+    )
+
+  def test_getSlapOSInstanceParameterSchemaURL_empty(self):
+    with responses.RequestsMock():
+      self.assertIsNone(
+        self.test_suite.getSlapOSInstanceParameterSchemaURL())
+
+  def test_getSlapOSInstanceParameterSchemaURL_ok(self):
+    self.test_suite.newContent(
+      portal_type='Test Suite Repository',
+      branch='master',
+      git_url='https://lab.example.com/nexedi/test.git',
+      buildout_section_id='test',
+      profile_path='software-release/software.cfg')
+
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+        responses.GET,
+        'https://lab.example.com/nexedi/test/raw/master/software-release/software.cfg.json',
+        json={
+          "serialisation": "json-in-xml",
+          "software-type": {
+            "default": {
+              "request": "instance-input-schema.json",
+            }
+          }
+        })
+      self.assertEqual(
+        self.test_suite.getSlapOSInstanceParameterSchemaURL(),
+        'https://lab.example.com/nexedi/test/raw/master/software-release/instance-input-schema.json'
+      )
+
+  def test_getSlapOSInstanceParameterSchemaURL_404(self):
+    self.test_suite.newContent(
+      portal_type='Test Suite Repository',
+      branch='master',
+      git_url='https://lab.example.com/nexedi/test.git',
+      buildout_section_id='test',
+      profile_path='software-release/software.cfg')
+
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+        responses.GET,
+        'https://lab.example.com/nexedi/test/raw/master/software-release/software.cfg.json',
+        'not found')
+      self.assertIsNone(self.test_suite.getSlapOSInstanceParameterSchemaURL())
