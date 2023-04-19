@@ -33,13 +33,14 @@ import imp
 import re
 
 from zope.site.hooks import setSite
+from zope.globalrequest import getRequest
+from zope.globalrequest import setRequest
 from Acquisition import aq_base
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase import PortalTestCase, user_name
+from Testing.ZopeTestCase import connections, PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCaseMixin, ERP5TypeTestCase, ERP5ReportTestCase
 from glob import glob
@@ -101,22 +102,19 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         makerequest(aq_base(site.aq_parent), environ=environ),
         site.getId())
 
-      # Make the various get_request patches return this request.
-      # TODO: check this is still needed
-      # This is for ERP5TypeTestCase patch
-      from Testing.ZopeTestCase.connections import registry
-      if registry:
-        registry._conns[-1] = portal
+      class ERP5TypeLiveTestCaseRequest:
+        def __init__(self, request):
+          self._original_request = getRequest()
+          # Make live tests run under the same server URL than the host instance.
+          if _request_server_url:
+            request['SERVER_URL'] = _request_server_url
+            request._resetURLS()
+          setRequest(request)
+        def close(self):
+          setRequest(self._original_request)
 
-      # This is for Localizer patch
-      from zope.globalrequest import setRequest
       request = portal.REQUEST
-      setRequest(request)
-
-      # Make live tests run under the same server URL than the host instance.
-      if _request_server_url:
-        request['SERVER_URL'] = _request_server_url
-        request._resetURLS()
+      connections.register(ERP5TypeLiveTestCaseRequest(request))
 
       portal.setupCurrentSkin(request)
       setSite(portal)
@@ -143,8 +141,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       if getattr(self, "activity_tool_subscribed", False):
         self.portal.portal_activities.subscribe()
         self.commit()
-      if self.portal is not None:
-        self.portal.REQUEST.close()
+      connections.closeAll()
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test
