@@ -395,7 +395,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
           # otherwise the first tearDown of the live test would close it.
           # This connection will be closed when the database is closed at the end
           # of runUnitTestList.
-          connections.registry._conns.remove(self.portal.getPhysicalRoot())
+          from Testing.ZopeTestCase.connections import registry
+          registry._conns.remove(self.portal.getPhysicalRoot())
 
         @staticmethod
         def _getBTPathAndIdList(bt_list):
@@ -548,7 +549,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   else:
     products_home = os.path.join(instance_home, 'Products')
 
-  from Testing.ZopeTestCase import connections, layer, PortalTestCase, ZopeLite
+  from Testing.ZopeTestCase import layer, PortalTestCase, ZopeLite
   _apply_patches = layer._deferred_setup.pop(0)[0]
   assert _apply_patches.__name__ == '_apply_patches'
 
