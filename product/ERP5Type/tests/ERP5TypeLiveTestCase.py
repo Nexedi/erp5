@@ -33,15 +33,19 @@ import imp
 import re
 
 from zope.site.hooks import setSite
+from zope.globalrequest import getRequest
 from Acquisition import aq_base
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase import PortalTestCase, user_name
+from Testing.ZopeTestCase import connections, PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-from Products.ERP5Type.Globals import get_request
-from Products.ERP5Type.tests.ERP5TypeTestCase import \
-  ERP5TypeTestCaseMixin, ERP5TypeTestCase, ERP5ReportTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import (
+  ERP5TypeTestCase,
+  ERP5TypeTestCaseMixin,
+  ERP5TypeTestCaseRequestConnection,
+  ERP5ReportTestCase,
+)
 from glob import glob
 import transaction
 
@@ -101,22 +105,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         makerequest(aq_base(site.aq_parent), environ=environ),
         site.getId())
 
-      # Make the various get_request patches return this request.
-      # TODO: check this is still needed
-      # This is for ERP5TypeTestCase patch
-      from Testing.ZopeTestCase.connections import registry
-      if registry:
-        registry._conns[-1] = portal
-
-      # This is for Localizer patch
-      from zope.globalrequest import setRequest
       request = portal.REQUEST
-      setRequest(request)
-
-      # Make live tests run under the same server URL than the host instance.
       if _request_server_url:
         request['SERVER_URL'] = _request_server_url
         request._resetURLS()
+      self._request_connection = ERP5TypeTestCaseRequestConnection(request)
+      connections.register(self._request_connection)
 
       portal.setupCurrentSkin(request)
       setSite(portal)
@@ -144,7 +138,11 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         self.portal.portal_activities.subscribe()
         self.commit()
       if self.portal is not None:
+        # With a live test, we don't close all connections, because the ZODB connection
+        # was not opened by us. 
         self.portal.REQUEST.close()
+        self.portal = None
+        connections.close(self._request_connection)
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test
@@ -177,13 +175,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       pass
 
     def publish(self, *args, **kw):
-      from zope.security.management import thread_local
-      interaction = thread_local.interaction
+      from zope.security.management import endInteraction, restoreInteraction
+      endInteraction()
       try:
-        del thread_local.interaction
         return super(ERP5TypeLiveTestCase, self).publish(*args, **kw)
       finally:
-        thread_local.interaction = interaction
+        restoreInteraction()
 
 from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader

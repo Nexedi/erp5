@@ -3183,6 +3183,13 @@ class Test(ERP5TypeTestCase):
     request.set('foo', 'bar')
     self.assertEqual(request.get('foo'), 'bar')
 
+    from zope.globalrequest import getRequest
+    self.assertEqual(getRequest().get('foo'), 'bar')
+
+    self.publish(self.portal.getId())
+    self.assertEqual(self.portal.REQUEST.get('foo'), 'bar')
+    self.assertEqual(getRequest().get('foo'), 'bar')
+
   def afterClear(self):
     super(Test, self).afterClear()
 

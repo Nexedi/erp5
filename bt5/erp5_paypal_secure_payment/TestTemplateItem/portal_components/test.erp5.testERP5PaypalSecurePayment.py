@@ -26,7 +26,8 @@
 ##############################################################################
 
 import random
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, get_request
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from zope.globalrequest import getRequest
 
 
 def getMessageList(o):
@@ -102,5 +103,5 @@ business=business@sample.com""")
     self.tic()
     script_absolute_url = script.absolute_url()
     self.service.edit(link_url_string=script_absolute_url)
-    response = self.service.reportPaymentStatus(get_request())
+    response = self.service.reportPaymentStatus(getRequest())
     self.assertTrue(response)

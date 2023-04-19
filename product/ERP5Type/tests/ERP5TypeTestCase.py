@@ -32,34 +32,16 @@ from DateTime import DateTime
 import mock
 import Products.ZMySQLDA.DA
 from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
-
-# XXX make sure that get_request works.
-from new import function
+from zope.globalrequest import clearRequest
 from zope.globalrequest import getRequest
+from zope.globalrequest import setRequest
 import six
-original_get_request = function(getRequest.__code__, getRequest.__globals__)
-
-from Testing.ZopeTestCase.connections import registry
-def get_context():
-  if registry:
-    return registry._conns[-1]
-
-def get_request():
-  request = original_get_request()
-  if request is not None:
-    return request
-  current_app = get_context()
-  if current_app is not None:
-    return current_app.REQUEST
-
-sys.modules[getRequest.__module__].get_request = get_request
-getRequest.__code__ = (lambda: get_request()).__code__
 
 from zope.site.hooks import setSite
 
 from Testing import ZopeTestCase
 from Testing.makerequest import makerequest
-from Testing.ZopeTestCase import PortalTestCase, user_name, ZopeLite, functional
+from Testing.ZopeTestCase import connections, PortalTestCase, user_name, ZopeLite, functional
 from Products.ERP5Type.Core.Workflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -217,6 +199,21 @@ def _parse_args(self, *args, **kw):
 
 _parse_args._original = DateTime._original_parse_args
 DateTime._parse_args = _parse_args
+
+
+class ERP5TypeTestCaseRequestConnection(object):
+  """A "Connection" to ensure the test runs with an independent request
+  and that the original request is properly restored at the end of test.
+
+  This is used with Testing.ZopeTestCase.connection.registry
+  """
+  def __init__(self, request):
+    self._current_request = getRequest()
+    setRequest(request)
+
+  def close(self):
+    setRequest(self._current_request)
+
 
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.Functional):
     """Mixin class for ERP5 based tests.
@@ -773,6 +770,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
       else:
          user_context = nullcontext()
 
+      request = getRequest()
       try:
         with user_context:
           return super(ERP5TypeTestCaseMixin, self).publish(
@@ -788,6 +786,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.F
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
         self.changeSkin(self.portal.getCurrentSkinName())
+        setRequest(request)
 
     def getConsistencyMessageList(self, obj):
         return sorted([ str(message.getMessage())
@@ -960,6 +959,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       http://nohost, but we prefer to create directly a connection to the
       app wrapped in a request to our web server.
       '''
+      if hasattr(self, 'app'):
+        return self.app
       app = ZopeLite.app()
       environ = {}
       if self._server_address:
@@ -968,8 +969,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         environ['SERVER_PORT'] = str(port)
 
       app = makerequest(app, environ=environ)
-      registry.register(app)
-      app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
+      connections.register(app)
+
+      request = app.REQUEST
+      request['HTTP_ACCEPT_CHARSET'] = 'utf-8'
+      connections.register(ERP5TypeTestCaseRequestConnection(request))
       return app
 
     def __onConnect(self, connector):
