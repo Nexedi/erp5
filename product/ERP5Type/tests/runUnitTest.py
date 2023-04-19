@@ -388,6 +388,16 @@ class ERP5TypeTestLoader(unittest.TestLoader):
           """
           return [ test.split(':')[0] for test in self._test_list ]
 
+        def setUp(self):
+          super(_ZodbTestComponentBootstrapOnly, self).setUp()
+          # setUp opened a connection to the ZODB that we want to keep open for the
+          # duration of the test run, so we remove it from the connections registry,
+          # otherwise the first tearDown of the live test would close it.
+          # This connection will be closed when the database is closed at the end
+          # of runUnitTestList.
+          from Testing.ZopeTestCase.connections import registry
+          registry._conns.remove(self.portal.getPhysicalRoot())
+
         @staticmethod
         def _getBTPathAndIdList(bt_list):
           """
