@@ -395,7 +395,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
           # otherwise the first tearDown of the live test would close it.
           # This connection will be closed when the database is closed at the end
           # of runUnitTestList.
-          connections.registry._conns.remove(bootstrap.portal.getPhysicalRoot())
+          connections.registry._conns.remove(self.portal.getPhysicalRoot())
 
         @staticmethod
         def _getBTPathAndIdList(bt_list):
