@@ -103,7 +103,7 @@ class TestDataIngestion(SecurityTestCase):
   def stepIngest(self, extension, delimiter, randomize_ingestion_reference=False, data_set_reference=False):
     file_name = "file_name.csv"
     reference = self.getRandomReference()
-    array = [[random.random() for i in range(self.CHUNK_SIZE_CSV + 10)] for j in range(self.CHUNK_SIZE_CSV + 10)]
+    array = [[random.random() for _ in range(self.CHUNK_SIZE_CSV + 10)] for _ in range(self.CHUNK_SIZE_CSV + 10)]
     np.savetxt(file_name, array, delimiter=delimiter)
     chunk = []
     with open(file_name, 'r') as csv_file:

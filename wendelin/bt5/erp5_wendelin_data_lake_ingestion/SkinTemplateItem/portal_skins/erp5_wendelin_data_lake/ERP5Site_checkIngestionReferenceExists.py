@@ -44,7 +44,7 @@ if data_ingestion != None:
         # previous ingestion was interrumped
         log(''.join(["[WARNING] User has restarted an interrumpted ingestion for reference ", data_ingestion.getReference(), ". Previous split ingestions will be discarted and full ingestion restarted."]))
         portal.ERP5Site_invalidateSplitIngestions(data_ingestion.getReference(), success=False)
-  except:
+  except Exception:
     pass
   # the ingestion attemp corresponds to a split ingestion in course, accept
   return FALSE

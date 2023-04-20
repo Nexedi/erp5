@@ -1,11 +1,11 @@
 import warnings
 import numpy as np
-from keras import backend as K
-from keras import __version__ as keras_version
-from keras.models import Sequential
-from keras.models import model_from_config
-from keras.optimizers import optimizer_from_config
-from keras import optimizers
+from keras import backend as K # pylint:disable=import-error
+from keras import __version__ as keras_version # pylint:disable=import-error
+from keras.models import Sequential # pylint:disable=import-error
+from keras.models import model_from_config # pylint:disable=import-error
+from keras.optimizers import optimizer_from_config # pylint:disable=import-error
+from keras import optimizers # pylint:disable=import-error
 
 def save_model(model, model_store=None):
   data = {}
@@ -179,7 +179,6 @@ def load_model(data):
     else:
       model._make_train_function()
     optimizer_weights_dict = data['optimizer_weights']
-    optimizer_weight_names = optimizer_weights_dict['weight_names']
     optimizer_weight_values = optimizer_weights_dict['weight_values']
     model.optimizer.set_weights(optimizer_weight_values)
   return model

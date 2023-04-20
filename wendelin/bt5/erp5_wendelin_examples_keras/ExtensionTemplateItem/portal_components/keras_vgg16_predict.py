@@ -1,5 +1,5 @@
-from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
-from keras.preprocessing import image
+from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions # pylint:disable=import-error
+from keras.preprocessing import image # pylint:disable=import-error
 import numpy as np
 from cStringIO import StringIO
 import PIL.Image

@@ -79,5 +79,5 @@ if not batch_mode:
   return portal.Base_redirect(form_id='login_form', 
                      keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
 else:
-    return   json.dumps({'msg': message_str, 
+  return   json.dumps({'msg': message_str, 
                         'code':0})
