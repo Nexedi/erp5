@@ -1,7 +1,7 @@
 from DateTime import DateTime
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
-from erp5.component.module.Log import log
+
 now = DateTime()
 query_dict = {
   "portal_type": "Data Ingestion Line",

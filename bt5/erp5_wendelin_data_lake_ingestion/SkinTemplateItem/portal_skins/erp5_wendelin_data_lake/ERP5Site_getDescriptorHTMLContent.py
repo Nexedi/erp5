@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog

@@ -1,9 +1,9 @@
-""" 
-This script will be called to apply the customization. 
+"""
+This script will be called to apply the customization.
 """
 from erp5.component.module.Log import log
 
-# Activate the knowledge pads on portal home to enable later the Wendelin 
+# Activate the knowledge pads on portal home to enable later the Wendelin
 # Information gadget.
 portal = context.getPortalObject()
 default_site_preference = getattr(portal.portal_preferences,
@@ -39,7 +39,7 @@ if default_security_model_business_template is not None:
     portal_type_instance = getattr(portal.portal_types, portal_type)
     print "Updated Role Mappings for %s" %portal_type
     portal_type_instance.updateRoleMapping()
-      
+
 # updata local roles (if any)
 business_template = context.getSpecialiseValue()
 
