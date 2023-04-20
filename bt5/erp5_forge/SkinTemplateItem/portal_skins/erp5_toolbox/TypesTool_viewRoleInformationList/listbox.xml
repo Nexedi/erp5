@@ -12,6 +12,7 @@
               <list>
                 <string>columns</string>
                 <string>count_method</string>
+                <string>hide_rows_on_no_search_criterion</string>
                 <string>list_method</string>
                 <string>portal_types</string>
                 <string>sort</string>
@@ -112,6 +113,10 @@
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
+                        <tuple>
+                          <string>local_role_group_title</string>
+                          <string>Local Roles Group</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -128,6 +133,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
