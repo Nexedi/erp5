@@ -20,11 +20,11 @@ for data_set in portal_catalog(portal_type="Data Set", **catalog_kw):
       portal.ERP5Site_invalidateIngestionObjects(data_stream.getReference())
       try:
         data_stream.invalidate()
-      except:
+      except Exception:
         pass # fails if it's already invalidated, draft or if it doens't allow invalidation (e.g. DI)
   portal.ERP5Site_invalidateReference(data_set)
   try:
     data_set.invalidate()
-  except:
+  except Exception:
     pass # fails if it's already invalidated, draft or if it doens't allow invalidation (e.g. DI)
 return printed

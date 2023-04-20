@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
@@ -16,5 +16,5 @@ for document in portal_catalog(**kw_dict):
   portal.ERP5Site_invalidateReference(document)
   try:
     document.invalidate()
-  except:
+  except Exception:
     pass # fails if it's already invalidated, draft or if it doens't allow invalidation (e.g. DI)
