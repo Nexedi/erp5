@@ -188,10 +188,12 @@ class OpenAPIService(XMLObject):
       unquote(part) for part in request['URL']
       [1 + len(request.physicalPathToURL(root.getPhysicalPath())):].split('/')
     ]
-    # then strip everything corresponding to the "self" open api service
+    # then strip everything corresponding to the "self" open api service.
+    # Here, unlike getPhysicalPath(), we don't use the inner acquistion,
+    # but keep the acquisition chain from this request traversal.
     i = 0
-    for self_relative_url_part in self.getRelativeUrl().split('/'):
-      if self_relative_url_part == request_path_parts[i]:
+    for aq_parent in reversed(self.aq_chain[:self.aq_chain.index(root)]):
+      if aq_parent.id == request_path_parts[i]:
         i += 1
       else:
         break

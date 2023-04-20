@@ -1076,7 +1076,7 @@ class TestOpenAPIErrorHandling(OpenAPIPetStoreTestCase):
 class TestRestrictedAPI(OpenAPIPetStoreTestCase):
   _public_api = False
   def test_unauthorized(self):
-    # the connector can not be traversed by anonymous user because the API
+    # the connector can not be traversed by anonymous user because the connector
     # is not public in this test.
     self.addPythonScript(
       'TestPetStoreOpenAPI_findPetsByStatus', 'status',
@@ -1221,4 +1221,24 @@ class TestURLPathWithWebSiteAndVirtualHost(OpenAPIPetStoreTestCase):
        '/VirtualHostBase/https/example.com:443/{}/VirtualHostRoot/_vh_api/pet/789'.format(
         self.connector.getPath()
        ))
+    self.assertEqual(response.getBody(), b'"ok"')
+
+  def test_acquisition_path(self):
+    response = self.publish(
+       '/{}/person_module/{}/pet/789'.format(
+        self.portal.getId(),
+        self.connector.getRelativeUrl(),
+    ))
+    self.assertEqual(response.getBody(), b'"ok"')
+    response = self.publish(
+       '/VirtualHostBase/https/example.com:443/{}/VirtualHostRoot/person_module/{}/pet/789'.format(
+        self.portal.getId(),
+        self.connector.getRelativeUrl(),
+    ))
+    self.assertEqual(response.getBody(), b'"ok"')
+    response = self.publish(
+       '/VirtualHostBase/https/example.com:443/{}/VirtualHostRoot/_vh_vh1/_vh_vh2/person_module/{}/pet/789'.format(
+        self.portal.getId(),
+        self.connector.getRelativeUrl()
+    ))
     self.assertEqual(response.getBody(), b'"ok"')
