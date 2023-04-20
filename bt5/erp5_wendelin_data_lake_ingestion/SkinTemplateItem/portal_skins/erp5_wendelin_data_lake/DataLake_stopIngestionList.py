@@ -1,5 +1,5 @@
 from erp5.component.module.Log import log
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import Query
 import hashlib
 
 CHUNK_SIZE = 200000
@@ -14,7 +14,7 @@ def getHash(data_stream):
     end_offset = n_chunk*chunk_size+chunk_size
     try:
       data_stream_chunk = ''.join(data_stream.readChunkList(start_offset, end_offset))
-    except:
+    except Exception:
       # data stream is empty
       data_stream_chunk = ""
     hash_md5.update(data_stream_chunk)
@@ -24,7 +24,6 @@ def getHash(data_stream):
 
 def isInterruptedAbandonedSplitIngestion(reference):
   from DateTime import DateTime
-  now = DateTime()
   day_hours = 1.0/24/60*60*24
   # started split data ingestions for reference
   catalog_kw = {'portal_type': 'Data Ingestion',
@@ -90,8 +89,8 @@ for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
               portal.data_stream_module.deleteContent(data_stream.getId())
         if last_data_stream_id.endswith(reference_end_split):
           portal.ERP5Site_invalidateSplitIngestions(data_ingestion.getReference(), success=True)
-          hash = getHash(full_data_stream)
-          full_data_stream.setVersion(hash)
+          full_data_stream_hash = getHash(full_data_stream)
+          full_data_stream.setVersion(full_data_stream_hash)
           if full_data_stream.getValidationState() != "validated":
             full_data_stream.validate()
           related_split_ingestions = portal_catalog(portal_type = "Data Ingestion",

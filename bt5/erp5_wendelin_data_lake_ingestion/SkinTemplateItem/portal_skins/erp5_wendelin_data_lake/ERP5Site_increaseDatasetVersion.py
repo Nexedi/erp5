@@ -1,5 +1,4 @@
 portal = context.getPortalObject()
-portal_catalog = portal.portal_catalog
 
 data_set = portal.data_set_module.get(reference)
 if data_set is not None:
