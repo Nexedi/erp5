@@ -156,12 +156,12 @@ class DataArray(BigFile):
   # FIXME this duplicates a lot of code from ERP5's BigFile
   # -> TODO reuse BigFile streaming capability without copying its code
   def _range_request_handler(self, REQUEST, RESPONSE):
-    RESPONSE.setHeader("Content-Type", "application/octet-stream")
     # HTTP Range header handling: return True if we've served a range
     # chunk out of our data.
     # convert ranges from bytes to array indices
     slice_index = REQUEST.get('slice_index', None)
     if slice_index is not None:
+      RESPONSE.setHeader("Content-Type", "application/octet-stream")
       slice_index_list = []
       for index in slice_index:
         slice_index_list.append(slice(index.get('start'),
