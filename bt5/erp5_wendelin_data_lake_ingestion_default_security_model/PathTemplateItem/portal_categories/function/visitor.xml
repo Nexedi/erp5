@@ -148,9 +148,11 @@
                 <value>
                   <object>
                     <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
+                      <global name="_reconstructor" module="copy_reg"/>
                     </klass>
                     <tuple>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                      <global name="object" module="__builtin__"/>
                       <none/>
                     </tuple>
                     <state>
@@ -213,14 +215,63 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global id="4.1" name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global id="4.2" name="DateTime" module="DateTime.DateTime"/>
+                            <global id="4.3" name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
                             <tuple>
                               <float>1544007350.94</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <unicode>zope</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1007.36974.4866.15104</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass> <reference id="4.1"/> </klass>
+                          <tuple>
+                            <reference id="4.2"/>
+                            <reference id="4.3"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1682061236.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
