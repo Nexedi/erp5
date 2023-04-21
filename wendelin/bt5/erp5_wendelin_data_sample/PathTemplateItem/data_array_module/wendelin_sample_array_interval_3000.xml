@@ -2848,9 +2848,11 @@ QHFki0wTaz9AaxYwzeHfjUBiJNQ8UuCNQK7BnTnT4I1AiBo7lxj1NkAokubo9/c2QEkqBz48/jZA</st
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -2901,9 +2903,11 @@ QHFki0wTaz9AaxYwzeHfjUBiJNQ8UuCNQK7BnTnT4I1AiBo7lxj1NkAokubo9/c2QEkqBz48/jZA</st
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
