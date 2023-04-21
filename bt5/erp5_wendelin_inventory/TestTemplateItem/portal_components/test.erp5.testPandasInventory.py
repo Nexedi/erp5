@@ -197,5 +197,3 @@ class PandasInventoryTest(ERP5TypeTestCase):
     
     self.assertTrue(all(df['is_accountable'] == True))
     self.assertTrue(all(df['resource_uid'] == resource_uid))
-    
-    
