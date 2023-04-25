@@ -156,13 +156,11 @@
           .push(function () {
             return RSVP.hash({
               url_list: gadget.getUrlForList([
-                {command: 'display', options: {page: "drone_simulator_script_page"}},
-                {command: 'display', options: {page: "drone_simulator_log_page"}}
+                {command: 'display', options: {page: "drone_capture_flag_script_page"}}
               ]),
               translation_list: gadget.getTranslationList([
                 'Editable',
-                'Edit & Run Script',
-                'Run Logs'
+                'Run Game'
               ])
             });
           })
@@ -170,7 +168,6 @@
             var editable_value = [],
               element_list = [],
               icon_and_key_list = [
-                'edit', null,
                 'puzzle-piece', null
               ];
 
