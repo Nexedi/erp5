@@ -1,0 +1,12 @@
+{
+      "short_name": "Drone Capture Flag",
+      "name": "OfficeJS Drone Capture Flag",
+      "description": "Drone simulator to run Capture Flag game",
+      "icons": [{
+        "src": "drone_flag.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
