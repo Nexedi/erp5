@@ -1,0 +1,5 @@
+image_module/drone_flag_icon_png
+web_page_module/drone_capture_flag_*
+web_page_module/ojs_drone_capture_flag_*
+web_site_module/officejs_drone_capture_flag
+web_site_module/officejs_drone_capture_flag/*
