@@ -130,8 +130,8 @@
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
-      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
-      'gadget_erp5_page_drone_capture_flag_dronelogfollower.js'
+      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js'/*,
+      'gadget_erp5_page_drone_capture_flag_dronelogfollower.js'*/
     ];
 
   rJS(window)

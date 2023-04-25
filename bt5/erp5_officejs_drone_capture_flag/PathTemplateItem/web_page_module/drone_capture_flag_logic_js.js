@@ -1,4 +1,4 @@
-/*global BABYLON, RSVP, console, FixedWingDroneAPI, DroneLogAPI, document*/
+/*global BABYLON, RSVP, console, FixedWingDroneAPI, document*/
 /*jslint nomen: true, indent: 2, maxlen: 80, todo: true,
          unparam: true */
 
@@ -554,8 +554,8 @@ var GameManager = /** @class */ (function () {
       ];
     }
     this.APIs_dict = {
-      FixedWingDroneAPI: FixedWingDroneAPI,
-      DroneLogAPI: DroneLogAPI
+      FixedWingDroneAPI: FixedWingDroneAPI/*,
+      DroneLogAPI: DroneLogAPI*/
     };
   }
 
@@ -963,7 +963,7 @@ var GameManager = /** @class */ (function () {
       code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', api);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
-          " GameManager, DroneLogAPI, FixedWingDroneAPI, BABYLON, " +
+          " GameManager, FixedWingDroneAPI, BABYLON, " +
           "GAMEPARAMETERS) {" +
           "var start_time = (new Date(2070, 0, 0, 0, 0, 0, 0)).getTime();" +
           "Date.now = function () {" +
