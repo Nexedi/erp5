@@ -1,18 +1,12 @@
-#TODO build the assets list
-return []
-
 url_list = [
-  "gadget_erp5_page_drone_simulator_logic.js",
-  "gadget_erp5_page_drone_simulator_script_page.html",
-  "gadget_erp5_page_drone_simulator_script_page.js",
-  "gadget_erp5_page_drone_simulator_log_page.html",
-  "gadget_erp5_page_drone_simulator_log_page.js",
-  "gadget_erp5_panel_drone_simulator.html",
-  "gadget_erp5_panel_drone_simulator.js",
-  "gadget_erp5_page_drone_simulator_fixedwingdrone.js",
-  "gadget_erp5_page_drone_simulator_dronelogfollower.js",
-  "drone.png",
-  "gadget_officejs_drone_simulator.json",
+  "gadget_officejs_drone_capture_flag.json",
+  "drone_flag.png",
+  "gadget_erp5_page_drone_capture_flag_logic.js",
+  "gadget_erp5_page_drone_capture_flag_script_page.html",
+  "gadget_erp5_page_drone_capture_flag_script_page.js",
+  "gadget_erp5_panel_drone_capture_flag.html",
+  "gadget_erp5_panel_drone_capture_flag.js",
+  "gadget_erp5_page_drone_capture_flag_fixedwingdrone.js",
   "assets/map/terrain.jpg",
   "assets/map/map.babylon",
   "assets/drone/drone.babylon",
