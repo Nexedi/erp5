@@ -21,6 +21,7 @@ SELECT
   catalog.relative_url as relative_url,
   stock.date AS date_utc,
   stock.mirror_date AS mirror_date_utc,
+  stock.is_source,
 <dtml-if expr="precision is not None">
   <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,
   <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.total_price, <dtml-var precision>)) AS total_price,
