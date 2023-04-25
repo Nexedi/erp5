@@ -27,6 +27,7 @@ CREATE TABLE `stock` (
   `simulation_state` varchar(255) default '',
   `variation_text` VARCHAR(255),
   `sub_variation_text` VARCHAR(255),
+  `is_source` BOOLEAN,
   PRIMARY KEY (`uid`, `order_id`),
   KEY `quantity` (`quantity`),
   KEY `section_uid_portal_type_mirror_section_uid` (`section_uid`, `portal_type`, `mirror_section_uid`),
