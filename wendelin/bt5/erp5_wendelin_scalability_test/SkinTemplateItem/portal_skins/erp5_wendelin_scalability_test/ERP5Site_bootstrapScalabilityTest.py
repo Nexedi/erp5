@@ -4,7 +4,6 @@ import random
 import string
 import json
 
-request = context.REQUEST
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
