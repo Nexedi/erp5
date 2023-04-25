@@ -3,7 +3,6 @@
 # adds assignment and starts it
 # creates user (login credentials)
 # random password is given by parameter
-import json
 from DateTime import DateTime
 
 now = DateTime()
@@ -58,6 +57,4 @@ try:
     )
     user.validate()
 except Exception as e:
-  status_code = 1
-  error_message = str(e)
   raise e
