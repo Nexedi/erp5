@@ -2070,6 +2070,14 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(DateTime('2001/02/03 04:05 GMT+3'), brain.date)
     self.assertEqual('GMT+3', brain.date.timezone())
 
+    # this also works when `is_source` column is not set, which happens
+    # with lines that were indexed before `is_source` column was added
+    self.portal.erp5_sql_connection().query(
+      'UPDATE `stock` SET `is_source`=NULL WHERE `uid`=%s' % brain.uid)
+    brain, = getMovementHistoryList(section_uid=self.section.getUid())
+    self.assertEqual(DateTime('2001/02/03 04:05 GMT+3'), brain.date)
+    self.assertEqual('GMT+3', brain.date.timezone())
+
   def test_BrainDateTimeZoneStopDate(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100,
@@ -2079,6 +2087,14 @@ class TestMovementHistoryList(InventoryAPITestCase):
                         mirror_section_uid=self.section.getUid())
     self.assertEqual(len(movement_history_list), 1)
     brain = movement_history_list[0]
+    self.assertEqual(DateTime('2001/02/03 04:05 GMT+2'), brain.date)
+    self.assertEqual('GMT+2', brain.date.timezone())
+
+    # this also works when `is_source` column is not set, which happens
+    # with lines that were indexed before `is_source` column was added
+    self.portal.erp5_sql_connection().query(
+      'UPDATE `stock` SET `is_source`=NULL WHERE `uid`=%s' % brain.uid)
+    brain, = getMovementHistoryList(mirror_section_uid=self.section.getUid())
     self.assertEqual(DateTime('2001/02/03 04:05 GMT+2'), brain.date)
     self.assertEqual('GMT+2', brain.date.timezone())
 
@@ -2513,6 +2529,15 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(-2, mvt_history_list[1].credit)
     self.assertEqual(0, mvt_history_list[1].debit_price)
     self.assertEqual(-4, mvt_history_list[1].credit_price)
+
+  def test_is_source(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100)
+    brain, = getMovementHistoryList(mirror_node_uid=self.node.getUid())
+    self.assertTrue(brain.is_source)
+    brain, = getMovementHistoryList(node_uid=self.node.getUid())
+    self.assertFalse(brain.is_source)
+    self.assertIsNotNone(brain.is_source)
 
   def test_group_by_explanation(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList

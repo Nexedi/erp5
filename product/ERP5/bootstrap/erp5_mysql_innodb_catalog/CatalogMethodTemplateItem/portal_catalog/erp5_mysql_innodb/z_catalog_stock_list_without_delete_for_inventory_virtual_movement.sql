@@ -27,6 +27,7 @@
                     getSimulationState[loop_item],
                     getVariationText[loop_item],
                     getSubVariationText[loop_item],
+                    0,
         ])">
       </dtml-if>
       <dtml-if "getSourceUid[loop_item]">
@@ -55,6 +56,7 @@
                     getSimulationState[loop_item],
                     getVariationText[loop_item],
                     getSubVariationText[loop_item],
+                    1,
         ])">
       </dtml-if>
     </dtml-if>
@@ -88,7 +90,8 @@ VALUES
   <dtml-sqlvar expr="row_item[20]" type="string" optional>,
   <dtml-sqlvar expr="row_item[21]" type="string" optional>,
   <dtml-sqlvar expr="row_item[22]" type="string" optional>,
-  <dtml-sqlvar expr="row_item[23]" type="string" optional>
+  <dtml-sqlvar expr="row_item[23]" type="string" optional>,
+  <dtml-sqlvar expr="row_item[24]" type="int">
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>

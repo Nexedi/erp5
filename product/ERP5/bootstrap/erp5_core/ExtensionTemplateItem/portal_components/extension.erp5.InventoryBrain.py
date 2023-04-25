@@ -362,7 +362,10 @@ class MovementHistoryListBrain(InventoryListBrain):
     obj = self.getObject()
     if obj is not None:
       timezone = None
-      if self.node_uid == obj.getSourceUid(): # XXX we could expose an "are we source" property on brain
+      is_source = getattr(self, 'is_source', None)
+      if is_source is None:
+        is_source = self.node_uid == obj.getSourceUid()
+      if is_source:
         start_date = obj.getStartDate()
         if start_date is not None:
           timezone = start_date.timezone()
