@@ -3,4 +3,3 @@
   It is used from Deployment Tests.
 """
 return context.portal_templates.getInstalledBusinessTemplate("erp5_wendelin", strict=True) is not None
-0
