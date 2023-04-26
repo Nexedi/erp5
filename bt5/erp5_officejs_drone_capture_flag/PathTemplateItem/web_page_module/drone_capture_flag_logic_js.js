@@ -375,41 +375,85 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
-  function calculateMapInfo(map, map_dict, initial_position) {
-    var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                       [map_dict.min_lat, map_dict.max_lon]),
-      max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                      [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6,
+  //random geo-point:
+  var MIN_LAT = 45.64,
+      MIN_LON = 14.253,
+      START_Z = 15;
+  function calculateMapInfo(map, map_dict) {
+    var min_lat = map_dict.min_lat || MIN_LAT,
+      min_lon =  map_dict.min_lon || MIN_LON,
+      offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
+      max_lat = offset[0],
+      max_lon = offset[1],
+      starting_point = map_dict.map_size / 2 * 0.8,
       map_info = {
-        "depth": map_size,
+        "depth": map_dict.map_size,
+        "width": map_dict.map_size,
+        "map_size": map_dict.map_size,
+        "min_lat": min_lat,
+        "min_lon": min_lon,
+        "max_lat": max_lat,
+        "max_lon": max_lon,
+        "min_x": map.longitudToX(min_lon, map_dict.map_size),
+        "min_y": map.latitudeToY(min_lat, map_dict.map_size),
+        "max_x": map.longitudToX(max_lon, map_dict.map_size),
+        "max_y": map.latitudeToY(max_lat, map_dict.map_size),
         "height": map_dict.height,
-        "width": map_size,
-        "map_size": map_size,
-        "min_x": map.longitudToX(map_dict.min_lon, map_size),
-        "min_y": map.latitudeToY(map_dict.min_lat, map_size),
-        "max_x": map.longitudToX(map_dict.max_lon, map_size),
-        "max_y": map.latitudeToY(map_dict.max_lat, map_size),
-        "start_AMSL": map_dict.start_AMSL
-      },
-      position = map.normalize(
-        map.longitudToX(initial_position.longitude, map_size),
-        map.latitudeToY(initial_position.latitude, map_size),
-        map_info
-      );
-    map_info.initial_position = {
-      "x": position[0],
-      "y": position[1],
-      "z": initial_position.z
-    };
+        "start_AMSL": map_dict.start_AMSL,
+        //rename to base?
+        "initial_position": {
+          "teamA": {
+            "x": 0,
+            "y": -starting_point,
+            "z": START_Z
+          },
+          "teamB": {
+            "x": 0,
+            "y": starting_point,
+            "z": START_Z
+          }
+        }
+      };
+    //for DEBUG
+    /*var minxy = map.normalize(
+      map_info.min_x,
+      map_info.min_y,
+      map_info
+    );
+    var maxxy = map.normalize(
+      map_info.max_x,
+      map_info.max_y,
+      map_info
+    );
+    var check1 = map.normalize(
+      map.longitudToX(14.25334942966329, map_dict.map_size),
+      map.latitudeToY(45.64492790560583, map_dict.map_size),
+      map_info
+    );
+    var check2 = map.normalize(
+      map.longitudToX(14.26332880184475, map_dict.map_size),
+      map.latitudeToY(45.64316335436476, map_dict.map_size),
+      map_info
+    );
+    console.log("MAP LIMITS");
+    console.log("min_lon to X:", minxy[0], min_lon);
+    console.log("min_lat to Y:", minxy[1], min_lat);
+    console.log("max_lon to X:", maxxy[0], max_lon);
+    console.log("max_lat to Y:", maxxy[1], max_lat);
+    console.log("DRONE PATH");
+    console.log("init position x:", map_info.initial_position.x);
+    console.log("init position y:", map_info.initial_position.y);
+    console.log("checkpoint-1 x:", check1[0]);
+    console.log("checkpoint-1 y:", check1[1]);
+    console.log("checkpoint-2 x:", check2[0]);
+    console.log("checkpoint-2 y:", check2[1]);*/
     return map_info;
   }
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
       largeGroundBottom, width, depth, terrain, max;
-    _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map,
-                                      GAMEPARAMETERS.initialPosition);
+    _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -419,30 +463,31 @@ var MapManager = /** @class */ (function () {
     }
     max = max < _this.map_info.depth ? _this.map_info.depth : max;
     // Skybox
-    max_sky = (max * 10 < 20000) ? max * 10 : 20000;
-    skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
-    skybox.infiniteDistance = true;
-    skybox.renderingGroupId = 0;
+    max_sky =  (max * 15 < 20000) ? max * 15 : 20000; //skybox scene limit
+    
+    skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: max_sky }, scene);
     skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMat.backFaceCulling = false;
+    skyboxMat.disableLighting = true;
+    skybox.material = skyboxMat;
+    skybox.infiniteDistance = true;
     skyboxMat.disableLighting = true;
     skyboxMat.reflectionTexture = new BABYLON.CubeTexture("./assets/skybox/sky",
                                                           scene);
     skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMat.infiniteDistance = true;
-    skybox.material = skyboxMat;
+    skybox.renderingGroupId = 0;
+    
     // Plane from bottom
     largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat", scene);
     largeGroundMat.specularColor = BABYLON.Color3.Black();
     largeGroundMat.alpha = 0.4;
     largeGroundBottom = BABYLON.Mesh.CreatePlane("largeGroundBottom",
-                                                     max * 11, scene);
+                                                 max * 11, scene);
     largeGroundBottom.position.y = -0.01;
     largeGroundBottom.rotation.x = -Math.PI / 2;
     largeGroundBottom.rotation.y = Math.PI;
     largeGroundBottom.material = largeGroundMat;
-    // Camera
-    scene.activeCamera.upperRadiusLimit = max * 4;
+    largeGroundBottom.renderingGroupId = 1;
     // Terrain
     // Give map some margin from the flight limits
     width = _this.map_info.width * 1.10;
@@ -457,6 +502,13 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
+  MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
+    var R = 6371e3, //Earth radius
+      lat_offset = offset_in_mt / R,
+      lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
+    return [lat + lat_offset * 180 / Math.PI,
+            lon + lon_offset * 180 / Math.PI];
+  };
   MapManager.prototype.longitudToX = function (lon, map_size) {
     return (map_size / 360.0) * (180 + lon);
   };
@@ -464,7 +516,7 @@ var MapManager = /** @class */ (function () {
     return (map_size / 180.0) * (90 - lat);
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
-    var R = 6371e3,
+    var R = 6371e3, //Earth radius
       q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
       dq = (c2[0] - c1[0]) * Math.PI / 180,
@@ -478,17 +530,17 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.normalize = function (x, y, map_dict) {
     var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
       n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.width / 2,
-            n_y * 1000 - map_dict.depth / 2];
+    return [n_x * map_dict.map_size - map_dict.width / 2,
+            n_y * map_dict.map_size - map_dict.depth / 2];
   };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z, map_dict) {
     var lon = x + map_dict.width / 2,
       lat = y + map_dict.depth / 2;
-    lon = lon / 1000;
+    lon = lon / map_dict.map_size;
     lon = lon * (map_dict.max_x - map_dict.min_x) +
       map_dict.min_x;
     lon = lon / (map_dict.width / 360.0) - 180;
-    lat = lat / 1000;
+    lat = lat / map_dict.map_size;
     lat = lat * (map_dict.max_y - map_dict.min_y) +
       map_dict.min_y;
     lat = 90 - lat / (map_dict.depth / 180.0);
@@ -511,11 +563,13 @@ var GameManager = /** @class */ (function () {
   "use strict";
   // *** CONSTRUCTOR ***
   function GameManager(canvas, game_parameters_json) {
-    var drone, header_list;
+    var drone, header_list, drone_count;
     this._canvas = canvas;
     this._scene = null;
     this._engine = null;
     this._droneList = [];
+    this._droneList_teamA = [];
+    this._droneList_teamB = [];
     this._canUpdate = false;
     this._max_step_animation_frame = game_parameters_json.simulation_speed;
     if (!this._max_step_animation_frame) { this._max_step_animation_frame = 5; }
@@ -533,7 +587,9 @@ var GameManager = /** @class */ (function () {
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone += 1) {
+      drone_count = GAMEPARAMETERS.droneList.teamA.length +
+        GAMEPARAMETERS.droneList.teamB.length;
+      for (drone = 0; drone < drone_count; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
         this._log_count[drone] = 0;
@@ -617,13 +673,42 @@ var GameManager = /** @class */ (function () {
     this._flight_log[drone._id].push(error.stack);
   };
 
-  GameManager.prototype._checkDroneRules = function (drone) {
-    //TODO move this to API methods.
-    //each type of drone should define its rules
-    if (drone.getCurrentPosition()) {
-      return drone.getCurrentPosition().z > 1;
+  GameManager.prototype._checkDroneOut = function (drone) {
+    var drone_position = drone.getCurrentPosition();
+    if (drone_position) {
+      return (drone_position.z > 400) ||
+        (drone_position.x < this._mapManager.getMapInfo().min_lat) ||
+        (drone_position.x > this._mapManager.getMapInfo().max_lat) ||
+        (drone_position.y < this._mapManager.getMapInfo().min_lon) ||
+        (drone_position.y > this._mapManager.getMapInfo().max_lon);
     }
-    return false;
+  };
+
+  GameManager.prototype._checkCollision = function (drone, other) {
+    if (drone.colliderMesh && other.colliderMesh &&
+        drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
+      var angle = Math.acos(BABYLON.Vector3.Dot(drone.worldDirection,
+                                                other.worldDirection) /
+                            (drone.worldDirection.length() *
+                             other.worldDirection.length()));
+      //TODO is this parameter set? keep it or make 2 drones die when intersect?
+      if (angle < GAMEPARAMETERS.drone.collisionSector) {
+        if (drone.speed > other.speed) {
+          other._internal_crash(new Error('Drone ' + drone.id +
+                                ' bump drone ' + other.id + '.'));
+        }
+        else {
+          drone._internal_crash(new Error('Drone ' + other.id +
+                               ' bumped drone ' + drone.id + '.'));
+        }
+      }
+      else {
+        drone._internal_crash(new Error('Drone ' + drone.id +
+                             ' touched drone ' + other.id + '.'));
+        other._internal_crash(new Error('Drone ' + drone.id +
+                             ' touched drone ' + other.id + '.'));
+      }
+    }
   };
 
   GameManager.prototype._update = function (delta_time) {
@@ -644,12 +729,29 @@ var GameManager = /** @class */ (function () {
 
     this._droneList.forEach(function (drone) {
       queue.push(function () {
+        var msg = '';
         drone._tick += 1;
-        if (_this._checkDroneRules(drone)) {
-          return drone.internal_update(delta_time);
+        if (drone.can_play) {
+          if (drone.getCurrentPosition().z <= 1) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' touched the floor.'));
+          }
+          else if (_this._checkDroneOut(drone)) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' out of limits.'));
+          }
+          else {
+            _this._droneList.forEach(function (other) {
+              if (other.can_play && drone.id != other.id) {
+                _this._checkCollision(drone, other);
+              }
+            });
+            /*_this._mapManager.obstacles.forEach(function (obstacle) {
+              _this._checkCollisionWithObstacle(drone, obstacle);
+            });*/
+          }
         }
-        //TODO error must be defined by the api?
-        drone._internal_crash('Drone touched the floor');
+        return drone.internal_update(delta_time);
       });
     });
 
@@ -711,6 +813,7 @@ var GameManager = /** @class */ (function () {
                 position_obj.position = new BABYLON.Vector3(drone_position.x,
                                                             drone_position.z,
                                                             drone_position.y);
+                //TODO base it on map_size
                 position_obj.scaling = new BABYLON.Vector3(4, 4, 4);
                 material = new BABYLON.StandardMaterial(game_manager._scene);
                 material.alpha = 1;
@@ -763,7 +866,8 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._init = function () {
-    var _this = this, canvas, hemi_north, hemi_south, camera, on3DmodelsReady;
+    var _this = this,
+        canvas, hemi_north, hemi_south, camera, cam_radius, on3DmodelsReady;
     canvas = this._canvas;
     this._delayed_defer_list = [];
     this._dispose();
@@ -775,6 +879,9 @@ var GameManager = /** @class */ (function () {
       audioEngine: false
     });
     this._scene = new BABYLON.Scene(this._engine);
+    //for DEBUG - fondo negro
+    //this._scene.clearColor = BABYLON.Color3.Black();
+    //deep ground color - light blue simile sky
     this._scene.clearColor = new BABYLON.Color4(
       88 / 255,
       171 / 255,
@@ -797,13 +904,18 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, 800,
+    cam_radius = (GAMEPARAMETERS.map.map_size * 1.10 < 6000) ?
+      GAMEPARAMETERS.map.map_size * 1.10 : 6000; //skybox scene limit
+    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;
+    //zoom out limit
+    camera.upperRadiusLimit = GAMEPARAMETERS.map.map_size * 10;
+    //scene.activeCamera.upperRadiusLimit = max * 4;
     //changed for event handling
     //camera.attachControl(this._scene.getEngine().getRenderingCanvas()); //orig
     camera.attachControl(canvas, true);
-    camera.maxz = 40000;
+    camera.maxz = 400000;
     this._camera = camera;
 
     // Render loop
@@ -819,8 +931,10 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      ctx._spawnDrones(_this._mapManager.map_info.initial_position,
-                       GAMEPARAMETERS.droneList, ctx);
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamA,
+                       GAMEPARAMETERS.droneList.teamA, "teamA", ctx);
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamB,
+                       GAMEPARAMETERS.droneList.teamB, "teamB", ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -833,23 +947,27 @@ var GameManager = /** @class */ (function () {
         ctx._scene
       );
       document = documentTmp;
-      for (count = 0; count < GAMEPARAMETERS.droneList.length; count += 1) {
-        controlMesh = ctx._droneList[count].infosMesh;
-        rect = new BABYLON.GUI.Rectangle();
-        rect.width = "10px";
-        rect.height = "10px";
-        rect.cornerRadius = 20;
-        rect.color = "white";
-        rect.thickness = 0.5;
-        rect.background = "grey";
-        advancedTexture.addControl(rect);
-        label = new BABYLON.GUI.TextBlock();
-        label.text = count.toString();
-        label.fontSize = 7;
-        rect.addControl(label);
-        rect.linkWithMesh(controlMesh);
-        rect.linkOffsetY = 0;
+      function colourDrones(drone_list, colour) {
+        for (count = 0; count < drone_list.length; count += 1) {
+          controlMesh = drone_list[count].infosMesh;
+          rect = new BABYLON.GUI.Rectangle();
+          rect.width = "10px";
+          rect.height = "10px";
+          rect.cornerRadius = 20;
+          rect.color = "white";
+          rect.thickness = 0.5;
+          rect.background = colour;
+          advancedTexture.addControl(rect);
+          label = new BABYLON.GUI.TextBlock();
+          label.text = count.toString();
+          label.fontSize = 7;
+          rect.addControl(label);
+          rect.linkWithMesh(controlMesh);
+          rect.linkOffsetY = 0;
+        }
       }
+      colourDrones(ctx._droneList_teamA, "blue");
+      colourDrones(ctx._droneList_teamB, "red");
       console.log("on3DmodelsReady - advaced textures added");
       return ctx;
     };
@@ -862,6 +980,8 @@ var GameManager = /** @class */ (function () {
       })
       .push(function () {
         on3DmodelsReady(_this);
+        _this._droneList =
+          _this._droneList_teamA.concat(_this._droneList_teamB);
         var result = new RSVP.Queue();
         result.push(function () {
           return RSVP.delay(1000);
@@ -882,10 +1002,16 @@ var GameManager = /** @class */ (function () {
     return new RSVP.Queue()
       .push(function () {
         promise_list = [];
-        _this._droneList.forEach(function (drone) {
+        _this._droneList_teamA.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position
+            _this._mapManager.getMapInfo().initial_position.teamA
+          ));
+        });
+        _this._droneList_teamB.forEach(function (drone) {
+          drone._tick = 0;
+          promise_list.push(drone.internal_start(
+            _this._mapManager.getMapInfo().initial_position.teamB
           ));
         });
         return RSVP.all(promise_list);
@@ -941,7 +1067,8 @@ var GameManager = /** @class */ (function () {
     return parameter;
   };
 
-  GameManager.prototype._spawnDrones = function (center, drone_list, ctx) {
+  GameManager.prototype._spawnDrones = function (center, drone_list,
+                                                 team, ctx) {
     var position, i, position_list = [], max_collision = 10 * drone_list.length,
       collision_nb = 0, api;
     function checkCollision(position, list) {
@@ -980,8 +1107,8 @@ var GameManager = /** @class */ (function () {
       }
       base = code_eval;
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
-      base += "};ctx._droneList.push(drone)";
-      code_eval += "ctx._droneList.push(drone)";
+      base += "};ctx._droneList_" + team + ".push(drone)";
+      code_eval += "ctx._droneList_" + team + ".push(drone)";
       /*jslint evil: true*/
       try {
         eval(code_eval);
