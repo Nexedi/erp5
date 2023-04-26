@@ -21,8 +21,8 @@
                        editor_height      python: test('\x25' in editor_height, str(int(int(editor_height.replace('\x25',''))*780/100)), editor_height);
                        link_browser       python:site_root.restrictedTraverse('FCKeditor_viewDocumentSelectionDialog', None) is not None and 'true' or 'false';
                        image_browser      link_browser;">
-  <script type="text/javascript" tal:attributes="src string:${portal_url}/fckeditor.js"></script>
-  <script type="text/javascript" tal:content="structure string:
+  <script tal:attributes="src string:${portal_url}/fckeditor.js"></script>
+  <script tal:content="structure string:
 &lt;!--
 var oFCKeditor      = new FCKeditor('${inputname}');
 var pathUser        = '/${path_user}/';
