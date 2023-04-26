@@ -617,13 +617,42 @@ var GameManager = /** @class */ (function () {
     this._flight_log[drone._id].push(error.stack);
   };
 
-  GameManager.prototype._checkDroneRules = function (drone) {
-    //TODO move this to API methods.
-    //each type of drone should define its rules
-    if (drone.getCurrentPosition()) {
-      return drone.getCurrentPosition().z > 1;
+  GameManager.prototype._checkDroneOut = function (drone) {
+    var drone_position = drone.getCurrentPosition();
+    if (drone_position) {
+      return (drone_position.z > 400) ||
+        (drone_position.x < this.gameParameter.map.min_lat) ||
+        (drone_position.x > this.gameParameter.map.max_lat) ||
+        (drone_position.y < this.gameParameter.map.min_lon) ||
+        (drone_position.y > this.gameParameter.map.max_lon);
     }
-    return false;
+  };
+
+  GameManager.prototype._checkCollision = function (drone, other) {
+    if (drone.colliderMesh && other.colliderMesh &&
+        drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
+      var angle = Math.acos(BABYLON.Vector3.Dot(drone.worldDirection,
+                                                other.worldDirection) /
+                            (drone.worldDirection.length() *
+                             other.worldDirection.length()));
+      //TODO is this parameter set? keep it or make 2 drones die when intersect?
+      if (angle < GAMEPARAMETERS.drone.collisionSector) {
+        if (drone.speed > other.speed) {
+          other._internal_crash(new Error('Drone ' + drone.id +
+                                ' bump drone ' + other.id + '.'));
+        }
+        else {
+          drone._internal_crash(new Error('Drone ' + other.id +
+                               ' bumped drone ' + drone.id + '.'));
+        }
+      }
+      else {
+        drone._internal_crash(new Error('Drone ' + drone.id +
+                             ' touched drone ' + other.id + '.'));
+        other._internal_crash(new Error('Drone ' + drone.id +
+                             ' touched drone ' + other.id + '.'));
+      }
+    }
   };
 
   GameManager.prototype._update = function (delta_time) {
@@ -644,12 +673,29 @@ var GameManager = /** @class */ (function () {
 
     this._droneList.forEach(function (drone) {
       queue.push(function () {
+        var msg = '';
         drone._tick += 1;
-        if (_this._checkDroneRules(drone)) {
-          return drone.internal_update(delta_time);
+        if (drone.can_play) {
+          if (drone.getCurrentPosition().z <= 1) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' touched the floor.'));
+          }
+          else if (_this._checkDroneOut(drone)) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' out of limits.'));
+          }
+          else {
+            _this._droneList.forEach(function (other) {
+              if (other.can_play && drone.id != other.id) {
+                _this._checkCollision(drone, other);
+              }
+            });
+            /*_this._mapManager.obstacles.forEach(function (obstacle) {
+              _this._checkCollisionWithObstacle(drone, obstacle);
+            });*/
+          }
         }
-        //TODO error must be defined by the api?
-        drone._internal_crash('Drone touched the floor');
+        return drone.internal_update(delta_time);
       });
     });
 
