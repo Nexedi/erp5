@@ -5,7 +5,6 @@
 var FixedWingDroneAPI = /** @class */ (function () {
   "use strict";
 
-  // var TAKEOFF_RADIUS = 60,
   var DEFAULT_SPEED = 16,
     EARTH_GRAVITY = 9.81,
     LOITER_LIMIT = 30,
@@ -19,7 +18,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     MIN_PITCH = -20,
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
-    MAX_SINK_RATE = 3;
+    MAX_SINK_RATE = 3,
+    VIEW_SCOPE = 100;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -271,8 +271,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
       this.getMinSpeed()
     );
 
-    drone._acceleration = (this._targetSpeed > drone.getSpeed())
-      ? this.getMaxAcceleration() : -this.getMaxDeceleration();
+    drone._acceleration = (this._targetSpeed > drone.getSpeed()) ?
+      this.getMaxAcceleration() : -this.getMaxDeceleration();
   };
 
   FixedWingDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
@@ -436,6 +436,36 @@ var FixedWingDroneAPI = /** @class */ (function () {
         this.internal_setTargetCoordinates(drone, next_point, true);
       }
     }
+  };
+  FixedWingDroneAPI.prototype.getDroneViewInfo = function (drone) {
+    var context = this, result = { "obstacles": [], "drones": [] }, distance,
+      drone_position = drone.getCurrentPosition(true), other_position;
+    function calculateDistance(a, b) {
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
+                       Math.pow((a.z - b.z), 2));
+    }
+    context._gameManager._droneList.forEach(function (other) {
+      if (other.can_play && drone.id != other.id) {
+        other_position = other.getCurrentPosition(true);
+        distance = calculateDistance(drone_position, other_position);
+        if (distance <= VIEW_SCOPE) {
+          result.drones.push({
+            position: drone.position,
+            direction: drone.direction,
+            rotation: drone.rotation,
+            speed: drone.speed,
+            team: drone.team
+          });
+        }
+      }
+    });
+    context._map_dict.obstacle_list.forEach(function (obstacle) {
+      distance = calculateDistance(drone_position, obstacle.position);
+      if (distance <= VIEW_SCOPE) {
+        result.obstacles.push(obstacle);
+      }
+    });
+    return result;
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;
