@@ -263,12 +263,15 @@
     .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
-        container = domsugar('div');
+        container = domsugar('div'),
+        messages = domsugar('div');
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
+      messages.id = 'messages';
+      messages.className = 'messages';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, container]);
+      domsugar(gadget.element, [loading, container, messages]);
       canvas.width = options.width;
       canvas.height = options.height;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
