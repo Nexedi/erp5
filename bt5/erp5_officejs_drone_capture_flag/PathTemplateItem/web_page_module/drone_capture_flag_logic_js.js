@@ -375,26 +375,33 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
+  //random geo-point:
+  var MIN_LAT = 45.64,
+      MIN_LON = 14.253;
   function calculateMapInfo(map, map_dict, initial_position) {
-    var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                       [map_dict.min_lat, map_dict.max_lon]),
-      max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                      [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6,
+    var min_lat = map_dict.min_lat || MIN_LAT,
+      min_lon =  map_dict.min_lon || MIN_LON,
+      offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
+      max_lat = offset[0],
+      max_lon = offset[1],
       map_info = {
-        "depth": map_size,
+        "depth": map_dict.map_size,
+        "width": map_dict.map_size,
+        "map_size": map_dict.map_size,
+        "min_lat": min_lat,
+        "min_lon": min_lon,
+        "max_lat": max_lat,
+        "max_lon": max_lon,
+        "min_x": map.longitudToX(min_lon, map_dict.map_size),
+        "min_y": map.latitudeToY(min_lat, map_dict.map_size),
+        "max_x": map.longitudToX(max_lon, map_dict.map_size),
+        "max_y": map.latitudeToY(max_lat, map_dict.map_size),
         "height": map_dict.height,
-        "width": map_size,
-        "map_size": map_size,
-        "min_x": map.longitudToX(map_dict.min_lon, map_size),
-        "min_y": map.latitudeToY(map_dict.min_lat, map_size),
-        "max_x": map.longitudToX(map_dict.max_lon, map_size),
-        "max_y": map.latitudeToY(map_dict.max_lat, map_size),
         "start_AMSL": map_dict.start_AMSL
       },
       position = map.normalize(
-        map.longitudToX(initial_position.longitude, map_size),
-        map.latitudeToY(initial_position.latitude, map_size),
+        map.longitudToX(initial_position.longitude, map_dict.map_size),
+        map.latitudeToY(initial_position.latitude, map_dict.map_size),
         map_info
       );
     map_info.initial_position = {
@@ -419,7 +426,7 @@ var MapManager = /** @class */ (function () {
     }
     max = max < _this.map_info.depth ? _this.map_info.depth : max;
     // Skybox
-    max_sky = (max * 10 < 20000) ? max * 10 : 20000;
+    max_sky =  (max * 10 < 20000) ? max * 10 : 20000; //skybox scene limit
     skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
     skybox.infiniteDistance = true;
     skybox.renderingGroupId = 0;
@@ -457,6 +464,13 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
+  MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
+    var R = 6371e3, //Earth radius
+      lat_offset = offset_in_mt / R,
+      lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
+    return [lat + lat_offset * 180 / Math.PI,
+            lon + lon_offset * 180 / Math.PI];
+  };
   MapManager.prototype.longitudToX = function (lon, map_size) {
     return (map_size / 360.0) * (180 + lon);
   };
@@ -464,7 +478,7 @@ var MapManager = /** @class */ (function () {
     return (map_size / 180.0) * (90 - lat);
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
-    var R = 6371e3,
+    var R = 6371e3, //Earth radius
       q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
       dq = (c2[0] - c1[0]) * Math.PI / 180,
@@ -478,17 +492,17 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.normalize = function (x, y, map_dict) {
     var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
       n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.width / 2,
-            n_y * 1000 - map_dict.depth / 2];
+    return [n_x * map_dict.map_size - map_dict.width / 2,
+            n_y * map_dict.map_size - map_dict.depth / 2];
   };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z, map_dict) {
     var lon = x + map_dict.width / 2,
       lat = y + map_dict.depth / 2;
-    lon = lon / 1000;
+    lon = lon / map_dict.map_size;
     lon = lon * (map_dict.max_x - map_dict.min_x) +
       map_dict.min_x;
     lon = lon / (map_dict.width / 360.0) - 180;
-    lat = lat / 1000;
+    lat = lat / map_dict.map_size;
     lat = lat * (map_dict.max_y - map_dict.min_y) +
       map_dict.min_y;
     lat = 90 - lat / (map_dict.depth / 180.0);
@@ -617,13 +631,42 @@ var GameManager = /** @class */ (function () {
     this._flight_log[drone._id].push(error.stack);
   };
 
-  GameManager.prototype._checkDroneRules = function (drone) {
-    //TODO move this to API methods.
-    //each type of drone should define its rules
-    if (drone.getCurrentPosition()) {
-      return drone.getCurrentPosition().z > 1;
+  GameManager.prototype._checkDroneOut = function (drone) {
+    var drone_position = drone.getCurrentPosition();
+    if (drone_position) {
+      return (drone_position.z > 400) ||
+        (drone_position.x < this.gameParameter.map.min_lat) ||
+        (drone_position.x > this.gameParameter.map.max_lat) ||
+        (drone_position.y < this.gameParameter.map.min_lon) ||
+        (drone_position.y > this.gameParameter.map.max_lon);
     }
-    return false;
+  };
+
+  GameManager.prototype._checkCollision = function (drone, other) {
+    if (drone.colliderMesh && other.colliderMesh &&
+        drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
+      var angle = Math.acos(BABYLON.Vector3.Dot(drone.worldDirection,
+                                                other.worldDirection) /
+                            (drone.worldDirection.length() *
+                             other.worldDirection.length()));
+      //TODO is this parameter set? keep it or make 2 drones die when intersect?
+      if (angle < GAMEPARAMETERS.drone.collisionSector) {
+        if (drone.speed > other.speed) {
+          other._internal_crash(new Error('Drone ' + drone.id +
+                                ' bump drone ' + other.id + '.'));
+        }
+        else {
+          drone._internal_crash(new Error('Drone ' + other.id +
+                               ' bumped drone ' + drone.id + '.'));
+        }
+      }
+      else {
+        drone._internal_crash(new Error('Drone ' + drone.id +
+                             ' touched drone ' + other.id + '.'));
+        other._internal_crash(new Error('Drone ' + drone.id +
+                             ' touched drone ' + other.id + '.'));
+      }
+    }
   };
 
   GameManager.prototype._update = function (delta_time) {
@@ -644,12 +687,29 @@ var GameManager = /** @class */ (function () {
 
     this._droneList.forEach(function (drone) {
       queue.push(function () {
+        var msg = '';
         drone._tick += 1;
-        if (_this._checkDroneRules(drone)) {
-          return drone.internal_update(delta_time);
+        if (drone.can_play) {
+          if (drone.getCurrentPosition().z <= 1) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' touched the floor.'));
+          }
+          else if (_this._checkDroneOut(drone)) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' out of limits.'));
+          }
+          else {
+            _this._droneList.forEach(function (other) {
+              if (other.can_play && drone.id != other.id) {
+                _this._checkCollision(drone, other);
+              }
+            });
+            /*_this._mapManager.obstacles.forEach(function (obstacle) {
+              _this._checkCollisionWithObstacle(drone, obstacle);
+            });*/
+          }
         }
-        //TODO error must be defined by the api?
-        drone._internal_crash('Drone touched the floor');
+        return drone.internal_update(delta_time);
       });
     });
 
@@ -763,7 +823,8 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._init = function () {
-    var _this = this, canvas, hemi_north, hemi_south, camera, on3DmodelsReady;
+    var _this = this,
+        canvas, hemi_north, hemi_south, camera, cam_radius, on3DmodelsReady;
     canvas = this._canvas;
     this._delayed_defer_list = [];
     this._dispose();
@@ -775,6 +836,7 @@ var GameManager = /** @class */ (function () {
       audioEngine: false
     });
     this._scene = new BABYLON.Scene(this._engine);
+    //deep ground color - light blue simil sky
     this._scene.clearColor = new BABYLON.Color4(
       88 / 255,
       171 / 255,
@@ -797,7 +859,9 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, 800,
+    cam_radius = (GAMEPARAMETERS.map.map_size * 1.10 < 6000) ?
+      GAMEPARAMETERS.map.map_size * 1.10 : 6000; //skybox scene limit
+    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;
     //changed for event handling

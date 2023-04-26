@@ -4,12 +4,9 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 200,
+  var SIMULATION_SPEED = 15,
     SIMULATION_TIME = 1500,
-    min_lat = 45.6364,
-    max_lat = 45.65,
-    min_lon = 14.2521,
-    max_lon = 14.2766,
+    map_size = 1000,
     map_height = 100,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -24,7 +21,7 @@
     MAX_SINK_RATE = 3,
     INITIAL_POSITION = {
       "latitude": 45.6412,
-      "longitude": 14.2658,
+      "longitude": 14.26,
       "z": 15
     },
     NUMBER_OF_DRONES = 2,
@@ -42,36 +39,6 @@
       '      altitude: 589.8802607573035,\n' +
       '      latitude: 45.64316335436476,\n' +
       '      longitude: 14.26332880184475\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 608.6648153348965,\n' +
-      '      latitude: 45.64911917196595,\n' +
-      '      longitude: 14.26214792790128\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 606.1448368129072,\n' +
-      '      latitude: 45.64122685351364,\n' +
-      '      longitude: 14.26590493128597\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 630.0829598206344,\n' +
-      '      latitude: 45.64543355564817,\n' +
-      '      longitude: 14.27242391207985\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 616.1839898415284,\n' +
-      '      latitude: 45.6372792927328,\n' +
-      '      longitude: 14.27533492411138\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 598.0603137354178,\n' +
-      '      latitude: 45.64061299543953,\n' +
-      '      longitude: 14.26161958465814\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 607.1243119862851,\n' +
-      '      latitude: 45.64032340702919,\n' +
-      '      longitude: 14.2682896662383\n' +
       '    }\n' +
       '  ];\n' +
       '\n' +
@@ -299,47 +266,14 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_minimum_latitud": {
+                "my_map_size": {
                   "description": "",
-                  "title": "Minimum latitude",
-                  "default": min_lat,
+                  "title": "Map size",
+                  "default": map_size,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "min_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_maximum_latitud": {
-                  "description": "",
-                  "title": "Maximum latitude",
-                  "default": max_lat,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "max_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_minimum_longitud": {
-                  "description": "",
-                  "title": "Minimum longitude",
-                  "default": min_lon,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "min_lon",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_maximum_longitud": {
-                  "description": "",
-                  "title": "Maximum longitude",
-                  "default": max_lon,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "max_lon",
+                  "key": "map_size",
                   "hidden": 0,
                   "type": "FloatField"
                 },
@@ -432,13 +366,12 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_minimum_latitud"], ["my_maximum_latitud"],
-                  ["my_minimum_longitud"], ["my_maximum_longitud"],
+                  ["my_map_size"], ["my_map_height"],
                   ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
-                  ["my_map_height"]]
+                  ["my_start_AMSL"]]
               ], [
                 "right",
-                [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
                   ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
                   ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
@@ -468,6 +401,21 @@
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
       }
+
+      function randomizeMap(json_map) {
+        var random_seed = new Math.seedrandom(Math.random()),
+          map_size, sign_x, sign_y, pos_x, pos_y;
+        map_size = json_map.mapSize.depth;
+        sign_x = random_seed.quick() < 0.5 ? -1 : 1;
+        sign_y = random_seed.quick() < 0.5 ? -1 : 1;
+        pos_x = (random_seed.quick() *
+               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_x;
+        pos_y = (random_seed.quick() *
+               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_y;
+        json_map.random_init_pos = [pos_x, pos_y];
+        return json_map;
+      }
+
       game_parameters_json = {
         "drone": {
           "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
@@ -488,10 +436,7 @@
           "communication": 0
         },
         "map": {
-          "min_lat": parseFloat(options.min_lat),
-          "max_lat": parseFloat(options.max_lat),
-          "min_lon": parseFloat(options.min_lon),
-          "max_lon": parseFloat(options.max_lon),
+          "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
           "start_AMSL": parseFloat(options.start_AMSL)
         },
