@@ -1829,6 +1829,19 @@ div[data-gadget-scope='maximize'] button:active {
 .editor-maximize div[data-gadget-scope='editor'] iframe {
   height: 100%;
 }
+div[data-gadget-scope="babylonjs"] .fullscreen {
+  position: fixed;
+  left: 0;
+  top: 30pt;
+}
+div[data-gadget-scope="babylonjs"] .fullscreen-background {
+  position: fixed;
+  left: 0;
+  top: 30pt;
+  background-color: #FFFFFF;
+  width: 100vw;
+  height: calc(100vh -  30pt );
+}
 /**********************************************
 * Front page
 **********************************************/

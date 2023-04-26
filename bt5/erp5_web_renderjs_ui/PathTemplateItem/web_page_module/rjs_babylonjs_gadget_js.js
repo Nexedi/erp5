@@ -14,7 +14,11 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen;
+    ]), game_result, canvas, offscreen, game_manager, container, background,
+    fullscreen = false, fullscreen_delay,
+    //TODO. Drop hardcoded values
+    WIDTH = (window.innerWidth > 680) ? 680 : window.innerWidth * 0.96,
+    HEIGHT = 340;
 
   //////////////////////////////////////////
   // Webworker
@@ -117,6 +121,15 @@
     result: function resultGameManager() {
       return game_result;
     },
+    fullscreen: function fullScreenGameManager() {
+      return new RSVP.Queue()
+        .push(function () {
+          fullscreen = !fullscreen;
+        })
+        .push(function () {
+          return RSVP.delay(fullscreen_delay);
+        });
+    },
     play: function startGameManager(options) {
       if (this.hasOwnProperty('loop_promise')) {
         throw new Error('Can not start the game if already started');
@@ -139,7 +152,8 @@
               context.loop_promise
                 .push(function () {
                   worker.postMessage({
-                    type: 'update'
+                    type: 'update',
+                    fullscreen: fullscreen
                   });
                   update_defer = RSVP.defer();
                   return RSVP.all([
@@ -208,6 +222,8 @@
                   var loading =
                       context._gadget.element.querySelector('#loading');
                   if (loading) { loading.innerHTML = ""; }
+                  context._gadget.element.querySelector('#maximize')
+                    .style.visibility = 'visible';
                 }
                 context.unpause();
                 return step();
@@ -254,31 +270,75 @@
   };
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // Acquired methods
-    /////////////////////////////////////////////////////////////////
 
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-
+    .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
+    .allowPublicAcquisition('triggerMaximize', function (param_list) {
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          return game_manager.fullscreen();
+        })
+        .push(function () {
+          container.classList.toggle("fullscreen");
+          background.style.visibility = 'visible';
+          return gadget.triggerMaximize.apply(gadget, param_list);
+        })
+        .push(undefined, function (error) {
+          if (!(error instanceof RSVP.CancellationError)) {
+            throw error;
+          }
+          return game_manager.fullscreen()
+            .push(function () {
+              container.classList.toggle("fullscreen");
+              background.style.visibility = 'hidden';
+              container.scrollIntoView();
+            });
+        });
+    })
     .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
-        container = domsugar('div');
+        maximize = domsugar('div');
+      background = domsugar('div');
+      container = domsugar('div');
+      maximize.id = 'maximize';
+      maximize.style.visibility = 'hidden';
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
+      background.id = "background";
+      background.className = 'fullscreen-background';
+      background.style.visibility = 'hidden';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, container]);
-      canvas.width = options.width;
-      canvas.height = options.height;
+      domsugar(gadget.element, [loading, maximize, background, container]);
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
+      fullscreen_delay = 6.5 * options.game_parameters.simulation_speed + 40;
+      fullscreen_delay = 60; //TODO find a good calculation for this
+      options.game_parameters.fullscreen = {};
+      options.game_parameters.fullscreen.width = window.innerWidth;
+      if (window.innerHeight < window.innerWidth) {
+        options.game_parameters.fullscreen.height = window.innerHeight;
+      } else {
+        options.game_parameters.fullscreen.height = window.innerWidth * 0.6;
+      }
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
         game_parameters: options.game_parameters
       });
     })
+    .onStateChange(function () {
+      var gadget = this, div_max = gadget.element.querySelector('#maximize');
+      return gadget.declareGadget("gadget_button_maximize.html", {
+        scope: 'maximize',
+        element: div_max,
+        sandbox: 'public'
+      });
+    })
     .declareMethod('getContent', function getContent() {
+      container.scrollIntoView();
       var gadget = this;
       return gadget.runGame({
         logic_file_list: gadget.state.logic_file_list,
@@ -291,10 +351,11 @@
       options.width = canvas.width;
       options.height = canvas.height;
       options.logic_url_list = options.logic_file_list;
-      var gadget = this,
-        game_manager = new DroneGameManager(gadget);
+      var gadget = this;
+      game_manager = new DroneGameManager(gadget);
       return game_manager.play(options)
       .push(function () {
+        gadget.element.querySelector('#maximize').style.visibility = 'hidden';
         return game_manager.result();
       });
     });

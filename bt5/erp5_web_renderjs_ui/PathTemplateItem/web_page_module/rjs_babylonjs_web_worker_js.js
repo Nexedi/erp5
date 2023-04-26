@@ -48,7 +48,7 @@ function mainToWorker(evt) {
   case 'update':
     return new RSVP.Queue()
       .push(function () {
-        return updateGame();
+        return updateGame(evt.data.fullscreen);
       })
       .push(function () {
         return postMessage({'type': 'updated'});
@@ -111,8 +111,6 @@ function handleEvent(event) {
 function prepareCanvas(data) {
   var canvas = data.canvas, style;
   self.canvas = canvas;
-  canvas.clientWidth = data.width;
-  canvas.clientHeight = data.height;
   canvas.width = data.width;
   canvas.height = data.height;
   rect.right = rect.width = data.width;
