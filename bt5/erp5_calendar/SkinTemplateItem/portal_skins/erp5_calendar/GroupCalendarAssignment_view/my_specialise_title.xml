@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
                 <string>title</string>
               </list>
             </value>
@@ -91,6 +92,25 @@
                         <tuple>
                           <string>Time Table</string>
                           <string>Time Table</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>GroupCalendarModule_viewGroupCalendarList/listbox</string>
+                          <string>Group Calendars</string>
+                        </tuple>
+                        <tuple>
+                          <string>TimeTableModule_viewTimeTableList/listbox</string>
+                          <string>Time Tables</string>
+                        </tuple>
+                        <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
                         </tuple>
                       </list>
                     </value>
