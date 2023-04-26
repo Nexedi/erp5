@@ -4,13 +4,10 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 200,
+  var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 1500,
-    min_lat = 45.6364,
-    max_lat = 45.65,
-    min_lon = 14.2521,
-    max_lon = 14.2766,
-    map_height = 100,
+    MAP_SIZE = 600,
+    map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
@@ -22,96 +19,62 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    INITIAL_POSITION = {
-      "latitude": 45.6412,
-      "longitude": 14.2658,
-      "z": 15
-    },
-    NUMBER_OF_DRONES = 2,
+    NUMBER_OF_DRONES = 1,
+    FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var ALTITUDE = 100,\n' +
-      '  EPSILON = 9,\n' +
-      '  CHECKPOINT_LIST = [\n' +
-      '    {\n' +
-      '      altitude: 585.1806861589965,\n' +
-      '      latitude: 45.64492790560583,\n' +
-      '      longitude: 14.25334942966329\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 589.8802607573035,\n' +
-      '      latitude: 45.64316335436476,\n' +
-      '      longitude: 14.26332880184475\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 608.6648153348965,\n' +
-      '      latitude: 45.64911917196595,\n' +
-      '      longitude: 14.26214792790128\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 606.1448368129072,\n' +
-      '      latitude: 45.64122685351364,\n' +
-      '      longitude: 14.26590493128597\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 630.0829598206344,\n' +
-      '      latitude: 45.64543355564817,\n' +
-      '      longitude: 14.27242391207985\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 616.1839898415284,\n' +
-      '      latitude: 45.6372792927328,\n' +
-      '      longitude: 14.27533492411138\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 598.0603137354178,\n' +
-      '      latitude: 45.64061299543953,\n' +
-      '      longitude: 14.26161958465814\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 607.1243119862851,\n' +
-      '      latitude: 45.64032340702919,\n' +
-      '      longitude: 14.2682896662383\n' +
-      '    }\n' +
-      '  ];\n' +
+      'var EPSILON = 10;\n' +
       '\n' +
-      'function distance(lat1, lon1, lat2, lon2) {\n' +
-      '  var R = 6371e3, // meters\n' +
-      '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
-      '    la2 = lat2 * Math.PI / 180,\n' +
-      '    lo1 = lon1 * Math.PI / 180,\n' +
-      '    lo2 = lon2 * Math.PI / 180,\n' +
-      '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
-      '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
-      '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
-      '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
+      'function distance(a, b) {\n' +
+      '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
       '  me.direction_set = false;\n' +
+      '  me.dodging = false;\n' +
       '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
-      'me.onUpdate = function (timestamp) {' +
+      'me.onGetMsg = function (msg) {\n' +
+      '  if (msg && msg.flag_positions) {\n' +
+      '    me.flag_positions = msg.flag_positions\n' +
+      '  }\n' +
+      '};\n' +
+      '\n' +
+      'me.onUpdate = function (timestamp) {\n' +
+      '  if (!me.flag_positions) return;\n' +
+      '  if (me.dodging) {\n' +
+      '    var drone_view = me.getDroneViewInfo();\n' +
+      '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
+      '      return;\n' +
+      '    } else {\n' +
+      '      me.dodging = false;\n' +
+      '    }\n' +
+      '  }\n' +
       '  if (!me.direction_set) {\n' +
-      '    if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
+      '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id\n' +
+      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
       '    me.direction_set = true;\n' +
       '    return;\n' +
       '  }\n' +
-      '  if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
-      '    me.current_position = me.getCurrentPosition();\n' +
+      '  var drone_view = me.getDroneViewInfo();\n' +
+      //'  if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
+      //'    console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
+      //'    me.dodging = true;\n' +
+      //'    me.direction_set = false;\n' +
+      //'    me.setTargetCoordinates(0, 0, me.getCurrentPosition(true).z, true);\n' +
+      //'  }\n' +
+      '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
+      '    me.current_position = me.getCurrentPosition(true);\n' +
       '    me.distance = distance(\n' +
-      '      me.current_position.x,\n' +
-      '      me.current_position.y,\n' +
-      '      CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
-      '      CHECKPOINT_LIST[me.next_checkpoint].longitude\n' +
+      '      me.current_position,\n' +
+      '      me.flag_positions[me.next_checkpoint].position\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
@@ -120,9 +83,8 @@
       '    }\n' +
       '    return;\n' +
       '  }\n' +
-      '  me.exit(0);\n' +
       '};',
-    DRAW = true,
+    DRAW = false,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [],
@@ -130,8 +92,8 @@
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
-      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js'/*,
-      'gadget_erp5_page_drone_capture_flag_dronelogfollower.js'*/
+      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
+      'gadget_erp5_page_drone_capture_flag_enemydrone.js'
     ];
 
   rJS(window)
@@ -299,47 +261,14 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_minimum_latitud": {
+                "my_map_size": {
                   "description": "",
-                  "title": "Minimum latitude",
-                  "default": min_lat,
+                  "title": "Map size",
+                  "default": MAP_SIZE,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "min_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_maximum_latitud": {
-                  "description": "",
-                  "title": "Maximum latitude",
-                  "default": max_lat,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "max_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_minimum_longitud": {
-                  "description": "",
-                  "title": "Minimum longitude",
-                  "default": min_lon,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "min_lon",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_maximum_longitud": {
-                  "description": "",
-                  "title": "Maximum longitude",
-                  "default": max_lon,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "max_lon",
+                  "key": "map_size",
                   "hidden": 0,
                   "type": "FloatField"
                 },
@@ -364,39 +293,6 @@
                   "key": "map_height",
                   "hidden": 0,
                   "type": "IntegerField"
-                },
-                "my_init_pos_lon": {
-                  "description": "",
-                  "title": "Initial drone longitude",
-                  "default": INITIAL_POSITION.longitude,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "init_pos_lon",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_init_pos_lat": {
-                  "description": "",
-                  "title": "Initial drone latitude",
-                  "default": INITIAL_POSITION.latitude,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "init_pos_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_init_pos_z": {
-                  "description": "",
-                  "title": "Initial drone position Z",
-                  "default": INITIAL_POSITION.z,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "init_pos_z",
-                  "hidden": 0,
-                  "type": "FloatField"
                 },
                 "my_number_of_drones": {
                   "description": "",
@@ -432,13 +328,10 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_minimum_latitud"], ["my_maximum_latitud"],
-                  ["my_minimum_longitud"], ["my_maximum_longitud"],
-                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
-                  ["my_map_height"]]
+                  ["my_map_size"], ["my_map_height"], ["my_start_AMSL"]]
               ], [
                 "right",
-                [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
                   ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
                   ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
@@ -463,11 +356,25 @@
         game_parameters_json;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
-      DRONE_LIST = [];
       for (i = 0; i < options.number_of_drones; i += 1) {
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
       }
+
+      function randomizeMap(json_map) {
+        var random_seed = new Math.seedrandom(Math.random()),
+          map_size, sign_x, sign_y, pos_x, pos_y;
+        map_size = json_map.mapSize.depth;
+        sign_x = random_seed.quick() < 0.5 ? -1 : 1;
+        sign_y = random_seed.quick() < 0.5 ? -1 : 1;
+        pos_x = (random_seed.quick() *
+               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_x;
+        pos_y = (random_seed.quick() *
+               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_y;
+        json_map.random_init_pos = [pos_x, pos_y];
+        return json_map;
+      }
+
       game_parameters_json = {
         "drone": {
           "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
@@ -488,23 +395,150 @@
           "communication": 0
         },
         "map": {
-          "min_lat": parseFloat(options.min_lat),
-          "max_lat": parseFloat(options.max_lat),
-          "min_lon": parseFloat(options.min_lon),
-          "max_lon": parseFloat(options.max_lon),
+          "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
-          "start_AMSL": parseFloat(options.start_AMSL)
-        },
-        "initialPosition": {
-          "longitude": parseFloat(options.init_pos_lon),
-          "latitude": parseFloat(options.init_pos_lat),
-          "z": parseFloat(options.init_pos_z)
+          "start_AMSL": parseFloat(options.start_AMSL),
+          "flag_weight": FLAG_WEIGHT,
+          "flag_list": [{
+            "position": {
+              "x": -0.75 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
+              "z": 10
+            }
+          }, {
+            "position": {
+              "x": 0.75 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
+              "z": 10
+            }
+          }, {
+            "position": {
+              "x": 0.75 * options.map_size / 2,
+              "y": 0.75 * options.map_size / 2,
+              "z": 10
+            }
+          }, {
+            "position": {
+              "x": -0.75 * options.map_size / 2,
+              "y": 0.75 * options.map_size / 2,
+              "z": 10
+            }
+          }],
+          "obstacle_list" : [{
+            "type": "sphere",
+            "position": {
+              "x": 0.6 * options.map_size / 2,
+              "y": 0.4 * options.map_size / 2,
+              "z": 8
+            },
+            "scale": {
+              "x": 4,
+              "y": 4,
+              "z": 4
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }, {
+            "type": "cylinder",
+            "position": {
+              "x": -0.5 * options.map_size / 2,
+              "y": 0.5 * options.map_size / 2,
+              "z": 10
+            },
+            "scale": {
+              "x": 4.5,
+              "y": 4.5,
+              "z": 20
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }, {
+            "type": "box",
+            "position": {
+              "x": 0.25 * options.map_size / 2,
+              "y": -0.25 * options.map_size / 2,
+              "z": 10
+            },
+            "scale": {
+              "x": 150,
+              "y": 2.5,
+              "z": 30
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }/*, {
+            "type": "box",
+            "position": {
+              "x": -0.5 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
+              "z": 10
+            },
+            "scale": {
+              "x": 2.5,
+              "y": 50,
+              "z": 30
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }*/]
         },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME,
-        "droneList": DRONE_LIST
+        "drones": {
+          "user": DRONE_LIST,
+          "enemy": [
+            {
+              "id": 0 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": -0.70 * options.map_size / 2,
+                "y": -0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 1 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": 0.70 * options.map_size / 2,
+                "y": -0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 2 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": -0.70 * options.map_size / 2,
+                "y": 0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 3 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": 0.70 * options.map_size / 2,
+                "y": 0.70 * options.map_size / 2,
+                "z": 10
+              }
+            }
+          ]
+        }
       };
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
@@ -555,27 +589,30 @@
         .push(function (result) {
           var a, blob, div, key, log, log_content;
           i = 0;
-          for (key in result) {
-            if (result.hasOwnProperty(key)) {
-              log_content = result[key].join('\n').replaceAll(",", ";");
+          div = domsugar('div', { text: result.message });
+          document.querySelector('.container').appendChild(div);
+          for (key in result.content) {
+            if (result.content.hasOwnProperty(key)) {
+              log_content = result.content[key].join('\n').replaceAll(",", ";");
               blob = new Blob([log_content], {type: 'text/plain'});
               a = domsugar('a', {
                 text: 'Download Simulation LOG ' + i,
-                download: 'simulation_log_' + i
-                  + '_speed_' + game_parameters_json.drone.speed
-                  + '_min-speed_' + game_parameters_json.drone.minSpeed
-                  + '_max-speed_' + game_parameters_json.drone.maxSpeed
-                  + '_max-accel_' + game_parameters_json.drone.maxAcceleration
-                  + '_max-decel_' + game_parameters_json.drone.maxDeceleration
-                  + '_max-roll_' + game_parameters_json.drone.maxRoll
-                  + '_min-pitch_' + game_parameters_json.drone.minPitchAngle
-                  + '_max-pitch_' + game_parameters_json.drone.maxPitchAngle
-                  + '_max-sink_' + game_parameters_json.drone.maxSinkRate
-                  + '_max-climb_' + game_parameters_json.drone.maxClimbRate
-                  + '.txt',
+                download: 'simulation_log_' + i +
+                '_speed_' + game_parameters_json.drone.speed +
+                '_min-speed_' + game_parameters_json.drone.minSpeed +
+                '_max-speed_' + game_parameters_json.drone.maxSpeed +
+                '_max-accel_' + game_parameters_json.drone.maxAcceleration +
+                '_max-decel_' + game_parameters_json.drone.maxDeceleration +
+                '_max-roll_' + game_parameters_json.drone.maxRoll +
+                '_min-pitch_' + game_parameters_json.drone.minPitchAngle +
+                '_max-pitch_' + game_parameters_json.drone.maxPitchAngle +
+                '_max-sink_' + game_parameters_json.drone.maxSinkRate +
+                '_max-climb_' + game_parameters_json.drone.maxClimbRate +
+                '.txt',
                 href: window.URL.createObjectURL(blob)
               });
-              log = domsugar('textarea', { value: log_content, id: 'log_result_' + i });
+              log = domsugar('textarea',
+                             { value: log_content, id: 'log_result_' + i });
               div = domsugar('div', [a]);
               a.dataset.downloadurl =  ['text/plain', a.download,
                                         a.href].join(':');
