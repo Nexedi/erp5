@@ -3,7 +3,7 @@ import json
 response = connector.createSession(data=data)
 assert "id" in response, response
 
-context.activate().StripePaymentSessionModule_storeStripeSession(
+context.activate(activity='SQLQueue').StripePaymentSessionModule_storeStripeSession(
   reference=response["id"],
   expiration_date=context.getTypeBasedMethod('getStripePaymentSessionExpirationDate')(),
   resource=resource,
