@@ -620,16 +620,12 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._checkDroneOut = function (drone) {
     var drone_position = drone.getCurrentPosition();
     if (drone_position) {
-      //TODO use map/drone parameters limit
-      if (drone_position.z > 400) {
-        return true;
-      }
-      return false; //TODO use map limits
-      /*return BABYLON.Vector3.Distance(drone_position,
-                                      BABYLON.Vector3.Zero()) >
-        GAMEPARAMETERS.distances.control;*/
+      return (drone_position.z > 400) ||
+        (drone_position.x < this.gameParameter.map.min_lat) ||
+        (drone_position.x > this.gameParameter.map.max_lat) ||
+        (drone_position.y < this.gameParameter.map.min_lon) ||
+        (drone_position.y > this.gameParameter.map.max_lon);
     }
-
   };
 
   GameManager.prototype._checkCollision = function (drone, other) {
