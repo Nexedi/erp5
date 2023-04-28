@@ -297,6 +297,13 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     workflow.setWorkflowManagedPermissionList([])
     self.assertEqual(workflow.state_current.getAcquirePermissionList(), [])
 
+    # check the permissions are saved sorted in a canonical form: sorted and as
+    # tuple
+    workflow.state_current.setPermission(permission, ['Auditor', 'Assignor'])
+    self.assertEqual(
+      workflow.state_current.getStatePermissionRoleListDict().get(permission),
+      ('Assignor', 'Auditor'))
+
   def test_14_multiple_workflow_different_permission_roles(self):
     workflow1 = self.createERP5Workflow('edit_workflow', 'temporary_workflow1')
     workflow2 = self.createERP5Workflow('edit_workflow', 'temporary_workflow2')

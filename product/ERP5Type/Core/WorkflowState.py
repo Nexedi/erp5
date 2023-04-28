@@ -125,7 +125,7 @@ class WorkflowState(IdAsReferenceMixin("state_"),
     """
     if self.state_permission_role_list_dict is None:
       self.state_permission_role_list_dict = PersistentMapping()
-    self.state_permission_role_list_dict[permission] = tuple(roles)
+    self.state_permission_role_list_dict[permission] = tuple(sorted(roles))
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAvailableTypeList')
