@@ -52,4 +52,4 @@ class ProfitAndLoss(CopyToTarget):
       simulation_movement.edit(profit_quantity=added_quantity)
     tag = 'ProfitAndLoss_solve_' + simulation_movement.getPath()
     simulation_movement.reindexObject(activate_kw={'tag': tag})
-    delivery_line.activate(after_tag=tag).edit()
+    delivery_line.activate(activity='SQLDict', after_tag=tag).edit()

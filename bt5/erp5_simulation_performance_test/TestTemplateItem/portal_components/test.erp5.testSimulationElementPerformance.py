@@ -733,7 +733,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     for packing_list in module.contentValues(portal_type='Sale Packing List'):
       divergence = packing_list.getDivergenceList()[0]
       self.assertEqual(divergence.tested_property, solver_target)
-      packing_list.activate().SalePackingList_solveForTesting(
+      packing_list.activate(activity='SQLDict').SalePackingList_solveForTesting(
         solver_target, divergence.prevision_value)
       # XXX: Because divergence is ignored for 'destination_decision',
       #      its value is actually undefined after solving.
@@ -754,7 +754,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
     for packing_list in module.contentValues(portal_type='Sale Packing List'):
       divergence = packing_list.getDivergenceList()[0]
       self.assertEqual(divergence.tested_property, solver_target)
-      packing_list.activate().SalePackingList_solveForTesting(
+      packing_list.activate(activity='SQLDict').SalePackingList_solveForTesting(
         solver_target, divergence.decision_value)
     # Make sure that the same taget is not used again.
     sequence.edit(solver_target=None)

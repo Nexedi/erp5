@@ -357,8 +357,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     if calculate:
       path = self.getPath()
       self.activate(
+        activity='SQLDict',
         after_tag='build:'+path,
-        after_path_and_method_id=(path, '_localBuild'),
+        after_path_and_method_id=(path, '_localBuild')
         ).updateCausalityState()
     if kw:
       super(Delivery, self).updateSimulation(**kw)
@@ -402,7 +403,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     build_tag = '%s_splitAndDefer_build' % self.getRelativeUrl()
     # call solver and expand on deferrd movements
     for movement in movement_list:
-      movement.activate(tag=solver_tag).Movement_solveMovement(
+      movement.activate(activity='SQLDict', tag=solver_tag).Movement_solveMovement(
           delivery_solver, target_solver)
     tag_list.append(solver_tag)
     kw = {'after_tag': tag_list[:], 'tag': expand_tag}
@@ -420,14 +421,14 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       for s_m in movement.getDeliveryRelatedValueList():
         delivery_list = \
             [x for x in s_m.getDeliveryList() if x != movement_url]
-        s_m.activate(after_tag=tag_list[:], tag=detach_tag).setDeliveryList(
+        s_m.activate(activity='SQLDict', after_tag=tag_list[:], tag=detach_tag).setDeliveryList(
             delivery_list)
         detached_movement_url_list.append(s_m.getRelativeUrl())
     tag_list.append(detach_tag)
 
     #delete delivery movements
     # deleteContent uses the uid as a activity tag
-    self.activate(after_tag=tag_list[:]).deleteContent([movement.getId() for
+    self.activate(activity='SQLDict', after_tag=tag_list[:]).deleteContent([movement.getId() for
         movement in movement_list])
     tag_list.extend(deleted_movement_uid_list)
 
@@ -437,7 +438,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
     # call builder on detached movements
     builder = getattr(self.portal_deliveries, delivery_builder)
-    builder.activate(after_tag=tag_list[:], tag=build_tag).build(
+    builder.activate(activity='SQLDict', after_tag=tag_list[:], tag=build_tag).build(
         movement_relative_url_list=detached_movement_url_list)
 
 

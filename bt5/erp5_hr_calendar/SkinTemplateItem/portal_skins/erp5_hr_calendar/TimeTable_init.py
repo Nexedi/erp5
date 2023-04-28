@@ -12,4 +12,5 @@ for day in day_list[1:]:
                      activate_kw={"tag": tag})
 # after indexing, make sure to update periodicity stop date
 context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(
+  activity='SQLDict',
   after_tag=tag, priority=5).activeSense()

@@ -23,4 +23,4 @@ if document.hasBaseData():
   if new_metadata:
     # edit metadata via server
     after_tag = 'document_%s_convert' % document.getPath()
-    document.activate(after_tag=after_tag).Document_tryToUpdateBaseMetadata(**new_metadata)
+    document.activate(activity='SQLDict', after_tag=after_tag).Document_tryToUpdateBaseMetadata(**new_metadata)

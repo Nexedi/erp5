@@ -25,6 +25,7 @@ for builder_id in builder_id_list:
                           '_updateSimulation')
   activate_kw          = dict(tag=index_tag)
   builder.activate(
+    activity='SQLDict',
     limit=100,
     serialization_tag=serialization_tag,
     after_tag=after_tag,

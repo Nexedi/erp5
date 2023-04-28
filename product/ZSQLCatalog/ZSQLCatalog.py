@@ -345,14 +345,14 @@ class ZCatalog(Folder, Persistent, Implicit):
       # Re-schedule the same action in case there are remaining rows in the
       # table. This can happen if the database connector limits the number
       # of rows in the result.
-      self.activate(priority=5).\
+      self.activate(activity='SQLDict', priority=5).\
           playBackRecordedObjectList(sql_catalog_id=sql_catalog_id,
                                      catalog=catalog)
     else:
       # If there is nothing to do, go to next step.
       if catalog == 0:
         # If we were replaying unindex actions, time to replay index actions.
-        self.activate(priority=5).\
+        self.activate(activity='SQLDict', priority=5).\
             playBackRecordedObjectList(sql_catalog_id=sql_catalog_id,
                                        catalog=1)
       # If we were replaying index actions, there is nothing else to do.
@@ -498,18 +498,18 @@ class ZCatalog(Folder, Persistent, Implicit):
                              additional_priority=base_priority)
     # Once reindexing is finished, change the hot reindexing state so that
     # new catalog changes are applied in both catalogs.
-    self.activate(after_tag=final_activity_tag,
+    self.activate(activity='SQLDict', after_tag=final_activity_tag,
                   priority=base_priority)._setHotReindexingState(HOT_REINDEXING_DOUBLE_INDEXING_STATE,
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       archive_path=archive_path)
     # Once in double-indexing mode, planned reindex can be replayed.
-    self.activate(after_method_id='_setHotReindexingState',
+    self.activate(activity='SQLDict', after_method_id='_setHotReindexingState',
                   priority=base_priority).playBackRecordedObjectList(
                       sql_catalog_id=destination_sql_catalog_id)
     # Once there is nothing to replay, databases are sync'ed, so the new
     # catalog can become current.
-    self.activate(after_method_id=('playBackRecordedObjectList',
+    self.activate(activity='SQLDict', after_method_id=('playBackRecordedObjectList',
                                    'InventoryModule_reindexMovementList'),
                   after_tag='InventoryModule_reindexMovementList',
                   priority=base_priority)._finishHotReindexing(

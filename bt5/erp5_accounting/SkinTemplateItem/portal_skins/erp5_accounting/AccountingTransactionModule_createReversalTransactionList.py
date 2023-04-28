@@ -30,7 +30,7 @@ for obj in object_list:
         "portal_status_message": translateString('Reversal creation already in progress, abandon.'),
         "portal_status_level": 'error'
       })
-  obj.activate(tag=tag).AccountingTransaction_createReversalTransaction(
+  obj.activate(activity='SQLDict', tag=tag).AccountingTransaction_createReversalTransaction(
                                 cancellation_amount=cancellation_amount,
                                 date=date,
                                 plan=plan)
@@ -45,7 +45,7 @@ if not activated:
       ))
 
 # activate something on the folder
-context.activate(after_tag=tag).getTitle()
+context.activate(activity='SQLDict', after_tag=tag).getTitle()
 
 return context.Base_redirect(form_id,
      keep_items=dict(portal_status_message=

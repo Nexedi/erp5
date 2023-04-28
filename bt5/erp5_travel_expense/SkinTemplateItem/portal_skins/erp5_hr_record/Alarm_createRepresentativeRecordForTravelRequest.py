@@ -4,4 +4,4 @@ portal.portal_catalog.searchAndActivate(
   method_id='TravelRequest_createRepresentativeRecord',
   activate_kw={'tag': tag},
 )
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()

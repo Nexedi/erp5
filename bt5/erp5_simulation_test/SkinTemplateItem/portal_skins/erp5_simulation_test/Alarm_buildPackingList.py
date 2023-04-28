@@ -26,6 +26,7 @@ for builder_id in builder_id_list:
                           '_updateSimulation')
   activate_kw          = dict(tag=index_tag)
   builder.activate(
+    activity='SQLDict',
     limit=100,
     tag='packing_list_builder_alarm',
     serialization_tag=serialization_tag,
@@ -34,4 +35,4 @@ for builder_id in builder_id_list:
 
 # add a dummy activity so alarm calling can detect we still have a pending activity
 # and do not start this script again before previous call is finished
-context.activate(after_tag='packing_list_builder_alarm').getId()
+context.activate(activity='SQLDict', after_tag='packing_list_builder_alarm').getId()

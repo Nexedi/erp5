@@ -4,4 +4,4 @@ context.getPortalObject().portal_catalog.searchAndActivate(
   method_id='SoftwarePublication_submitSoftwarePublication',
   activate_kw={'tag': tag}
 )
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()

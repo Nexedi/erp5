@@ -351,6 +351,7 @@ class ConfiguratorTool(BaseTool):
     active_process = self.portal_activities.newActiveProcess()
     REQUEST.set('active_process_id', active_process.getId())
     business_configuration.activate(
+           activity='SQLDict',
            active_process=active_process, tag='initialERP5Setup'
         ).build()
     return self.ConfiguratorTool_viewInstallationStatus(REQUEST)

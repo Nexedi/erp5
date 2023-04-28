@@ -3,6 +3,7 @@ form_id='AccountingTransactionModule_viewAccountingTransactionList'
 message='Building of Amortisation Transactions in progress...'
 
 context.accounting_module.activate(
+           activity='SQLDict',
            after_tag='expand_amortisation'
          ).AccountingTransactionModule_buildAmortisationTransaction(item_uid_list=item_uid_list,at_date=at_date)
 

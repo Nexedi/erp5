@@ -29,4 +29,4 @@ for inventory in portal.portal_catalog(portal_type=portal_type_list,
 
 if final_activity_tag is not None and previous_tag is not None:
   # Dummy activity used to determine if the previously started activities are over.
-  context.activate(tag=final_activity_tag, after_tag=previous_tag).getId()
+  context.activate(activity='SQLDict', tag=final_activity_tag, after_tag=previous_tag).getId()

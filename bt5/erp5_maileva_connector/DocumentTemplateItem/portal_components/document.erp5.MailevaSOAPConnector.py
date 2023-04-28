@@ -69,13 +69,13 @@ class MailevaSOAPConnector(XMLObject):
         max_retry=0)
     try:
       response = suds.client.Client(url = self.getProperty('submit_url_string'), transport=authenticated).service.submit(__inject={'msg': maileva_exchange.getRequest()})
-      maileva_exchange.activate().MailevaExchange_processResponse(response)
+      maileva_exchange.activate(activity='SQLDict').MailevaExchange_processResponse(response)
     except socket.error as e:
       if e.errno == socket.errno.ECONNREFUSED:
         if runtime_environment:
           runtime_environment.edit(max_retry=None)
     except Exception as e:
-      maileva_exchange.activate().MailevaExchange_processResponse(str(e), failed = True)
+      maileva_exchange.activate(activity='SQLDict').MailevaExchange_processResponse(str(e), failed = True)
 
 
 

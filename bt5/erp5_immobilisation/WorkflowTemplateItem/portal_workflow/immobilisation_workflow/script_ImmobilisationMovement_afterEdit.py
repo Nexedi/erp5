@@ -5,4 +5,4 @@ for movement in pl.getAggregatedItemsNextImmobilisationMovementValueList():
   if movement.getImmobilisationState() != 'calculating':
     movement.calculateImmobilisationValidity()
 
-pl.activate(after_method_id=('recursiveReindexObject', 'immediateReindexObject',)).updateImmobilisationState()
+pl.activate(activity='SQLDict', after_method_id=('recursiveReindexObject', 'immediateReindexObject',)).updateImmobilisationState()

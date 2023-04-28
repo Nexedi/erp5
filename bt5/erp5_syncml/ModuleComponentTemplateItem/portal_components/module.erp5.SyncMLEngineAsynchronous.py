@@ -262,10 +262,10 @@ class SyncMLAsynchronousEngine(SyncMLEngineMixin):
       )
     # then send the final message of this sync part
     if pref.getPreferredCheckDeleteAtEnd():
-      subscription.activate(after_tag=tag,
+      subscription.activate(activity='SQLDict', after_tag=tag,
                           priority=ACTIVITY_PRIORITY+1).getDeletedSyncMLData()
     else:
-      subscription.activate(after_tag=tag,
+      subscription.activate(activity='SQLDict', after_tag=tag,
                             priority=ACTIVITY_PRIORITY+1)._sendFinalMessage()
     return True
 

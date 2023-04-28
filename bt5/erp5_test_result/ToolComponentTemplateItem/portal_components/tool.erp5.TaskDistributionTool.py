@@ -259,7 +259,7 @@ class TaskDistributionTool(BaseTool):
         line.stop(**status_dict)
       # Check by activity is all lines are finished. Do not check synchrnonously
       # in case another test line is stopped in parallel
-      test_result.activate().TestResult_stopIfFinished()
+      test_result.activate(activity='SQLDict').TestResult_stopIfFinished()
 
   def _extractXMLRPCDict(self, xmlrpc_dict):
     """

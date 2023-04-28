@@ -58,7 +58,7 @@ if test_result.getPortalType() == 'Test Result':
   else:
     status = 'PASS'
   test_result.edit(string_index=status, **edit_kw)
-  test_result.activate().TestResult_afterComplete()
+  test_result.activate(activity='SQLDict').TestResult_afterComplete()
 elif test_result.getPortalType() == 'Test Result Line':
   all_tests = kw.get('test_count')
   errors = kw.get('error_count', 0)

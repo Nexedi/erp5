@@ -92,7 +92,7 @@ class _Policy(object):
     self.test = self.activate
 
   def activate(self, context):
-    context.activate(merge_parent=self.merge_parent) \
+    context.activate(activity='SQLDict', merge_parent=self.merge_parent) \
            .expand(activate_kw=self.activate_kw)
 
   def __call__(self, *args):

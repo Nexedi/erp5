@@ -10,7 +10,7 @@ date_dict = {}
 # Shared function
 def updateDocumentList(**sql_kw):
   for document in context.portal_catalog(**sql_kw):
-    document.getObject().activate().updateContentFromURL()
+    document.getObject().activate(activity='SQLDict').updateContentFromURL()
 
 #Step1: convert the alarm date into hours
 alarm_date = convertDateToHour()

@@ -47,7 +47,7 @@ if fixit:
 
 
 # start another activity to collect the results from each upgrader step
-context.activate(after_tag=(upgrade_tag, post_upgrade_tag)).Alarm_postFullUpgradeNeed(
+context.activate(activity='SQLDict', after_tag=(upgrade_tag, post_upgrade_tag)).Alarm_postFullUpgradeNeed(
   active_process=active_process.getRelativeUrl())
 
 # Nothing else to do, so we can disable.

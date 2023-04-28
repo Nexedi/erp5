@@ -10,4 +10,4 @@ for path in path_list:
   filename = document.getFilename()
 
   # Now starts metadata discovery process
-  document.activate().discoverMetadata(filename=filename, input_parameter_dict=input_parameter_dict)
+  document.activate(activity='SQLDict').discoverMetadata(filename=filename, input_parameter_dict=input_parameter_dict)

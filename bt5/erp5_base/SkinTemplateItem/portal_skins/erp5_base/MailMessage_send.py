@@ -94,7 +94,7 @@ if use_activity:
     method_kw['extra_header_dict'] = extra_header_dict
   tag = script.id + '_reindex_' + context.getPath()
   context.reindexObject(activate_kw={'tag': tag})
-  context.activate(after_tag=tag).MailMessage_sendByActivity(
+  context.activate(activity='SQLDict', after_tag=tag).MailMessage_sendByActivity(
     method_kw=method_kw, **kw)
 
 if download:

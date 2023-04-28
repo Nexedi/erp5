@@ -52,7 +52,7 @@ portal.portal_catalog.searchAndActivate(
 
 # activate something on the module after everything, so that user can know that
 # something is happening in the background
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()
 
 return context.Base_redirect(form_id,
   keep_items=dict(portal_status_message=translate("Workflow modification in progress.")))

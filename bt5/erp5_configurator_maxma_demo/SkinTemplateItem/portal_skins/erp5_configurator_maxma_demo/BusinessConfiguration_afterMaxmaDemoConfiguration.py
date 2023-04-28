@@ -7,7 +7,7 @@ bt = portal.portal_templates.getInstalledBusinessTemplate("erp5_demo_maxma_sampl
 isTransitionPossible = portal.portal_workflow.isTransitionPossible
 
 for obj in portal.portal_catalog(path=["%%/%s" % i.replace("**", "%") for i in bt.getTemplatePathList()]):
-  obj.activate().updateLocalRolesOnSecurityGroups()
+  obj.activate(activity='SQLDict').updateLocalRolesOnSecurityGroups()
 
 for document in portal.portal_catalog(portal_type=bt.getTemplatePortalTypeRoleList()):
   document.updateLocalRolesOnSecurityGroups()

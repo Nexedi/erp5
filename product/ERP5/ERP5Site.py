@@ -1994,7 +1994,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
         tool_id = tool.id
         if tool_id not in ('portal_property_sheets', 'portal_components'):
           if tool_id in ('portal_categories', ):
-            tool = tool.activate()
+            tool = tool.activate(activity='SQLDict')
           tool.migrateToPortalTypeClass(tool_id not in (
             'portal_activities', 'portal_simulation', 'portal_templates',
             'portal_trash', 'portal_catalog'))
@@ -2159,14 +2159,17 @@ class ERP5Generator(PortalGenerator):
       if bt5:
         p.portal_templates.activate(
           # XXX: Is it useful to wait for indexing ?
+          activity='SQLDict',
+          # XXX: Is it useful to wait for indexing ?
           after_tag=reindex_all_tag,
-          tag=upgrade_tag,
+          tag=upgrade_tag
         ).upgradeSite(bt5.split(), update_catalog=True)
         # XXX: workaround for the above BT installation not using the upgrader,
         # and hence not triggering post-install constraints.
         if 'erp5_oauth2_authorisation' in bt5:
           p.portal_templates.activate(
-            after_tag=upgrade_tag,
+            activity='SQLDict',
+            after_tag=upgrade_tag
           ).ERP5Site_checkOAuth2AuthorisationServerPostUpgradeConsistency(fixit=True)
     if id_store_interval != '':
       id_store_interval = int(id_store_interval)

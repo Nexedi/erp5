@@ -134,7 +134,7 @@ class TestLocalizer(ERP5TypeTestCase):
       )
     tmp_obj = self.portal.portal_templates.newContent()
     self.tic()
-    tmp_obj.activate().test_activity()
+    tmp_obj.activate(activity='SQLDict').test_activity()
     # here we don't call self.tic() that calls self.portal that
     # reinvoke setSite(portal).
     setSite()
@@ -181,7 +181,7 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
 """)
 
     # normal activity
-    portal.portal_activities.activate().test_script()
+    portal.portal_activities.activate(activity='SQLDict').test_script()
     self.tic()
     # after activity execution we are still in english
     self.assertEqual('en', localizer.get_selected_language())
@@ -189,7 +189,7 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
       self.portal.Base_translateString("This is 1€."))
 
     # execute activity with group_method
-    portal.portal_activities.activate(group_method_id=None).test_script()
+    portal.portal_activities.activate(activity='SQLDict', group_method_id=None).test_script()
     self.tic()
     # after activity execution we are still in english
     self.assertEqual('en', localizer.get_selected_language())

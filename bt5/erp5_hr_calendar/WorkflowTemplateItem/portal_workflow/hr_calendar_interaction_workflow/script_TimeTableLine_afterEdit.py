@@ -18,4 +18,5 @@ if not(None in (day_of_week, quantity)):
   time_table_line.setStopDate(stop_date)
 # after change, make sure to update group calendars through the usual alarm
 context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(
+  activity='SQLDict',
   priority=5).activeSense()

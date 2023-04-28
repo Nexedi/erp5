@@ -82,7 +82,7 @@ for i in xrange(0, path_list_len, batch_size):
 
 # activate something on the module after everything, so that user can know that
 # something is happening in the background
-context.activate(after_tag=tag).getTitle()
+context.activate(activity='SQLDict', after_tag=tag).getTitle()
 
 # reset selection checked uids
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])

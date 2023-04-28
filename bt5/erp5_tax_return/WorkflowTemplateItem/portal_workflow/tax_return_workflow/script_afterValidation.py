@@ -1,2 +1,2 @@
 vat_return = sci['object']
-vat_return.activate().VatReturn_setAggregateList()
+vat_return.activate(activity='SQLDict').VatReturn_setAggregateList()

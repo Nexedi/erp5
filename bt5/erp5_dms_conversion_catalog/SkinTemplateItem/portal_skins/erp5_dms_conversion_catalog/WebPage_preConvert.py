@@ -7,7 +7,7 @@ format_kw = {'format': format,
             'quality': quality}
 for display in display_list:
   format_kw['display'] = display
-  context.activate(serialization_tag='pre_convert').convert(**format_kw)
+  context.activate(activity='SQLDict', serialization_tag='pre_convert').convert(**format_kw)
 
 # try to convert all relative referenced (i.e. by <img> tag) documents
-context.activate().WebPage_preConvertReferencedImageList(**format_kw)
+context.activate(activity='SQLDict').WebPage_preConvertReferencedImageList(**format_kw)

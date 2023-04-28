@@ -43,11 +43,11 @@ if configurator.getSimulationState() == "draft":
 # create users if installation is done
 try:
   if create_test_data:
-    context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
+    context.portal_categories.activate(activity='SQLDict', after_method_id=('ERP5Site_afterConfigurationSetup',
                                        'immediateReindexObject')
                                        ).ERP5Site_createTestData(user_quantity, password)
   if set_id_generator:
-    context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
+    context.portal_categories.activate(activity='SQLDict', after_method_id=('ERP5Site_afterConfigurationSetup',
                                        'immediateReindexObject')
                                        ).ERP5Site_setIdGenerator()
 except Exception as e:

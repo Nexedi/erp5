@@ -115,7 +115,7 @@ for name in zip_reader.namelist():
   if url in ("index.html", "index.htm"):
     default_page = document.getRelativeUrl()
     web_manifest_url = extractWebManifest(document.getData())
-  document.activate(tag=tag, after_tag=doc_tag).publish()
+  document.activate(activity='SQLDict', tag=tag, after_tag=doc_tag).publish()
 
 software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page, web_manifest = web_manifest_url)
 
@@ -123,4 +123,4 @@ if portal.portal_workflow.isTransitionPossible(zip_file, 'publish'):
   zip_file.publish()
 if portal.portal_workflow.isTransitionPossible(software_release, 'submit'):
   software_release.submit()
-software_publication.activate(after_tag=tag).submit()
+software_publication.activate(activity='SQLDict', after_tag=tag).submit()

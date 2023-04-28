@@ -6,4 +6,4 @@ accounting_period = sci['object']
 if accounting_period.getParentValue().getPortalType() == accounting_period.getPortalType():
   return
 
-accounting_period.activate().AccountingPeriod_deleteBalanceTransaction()
+accounting_period.activate(activity='SQLDict').AccountingPeriod_deleteBalanceTransaction()

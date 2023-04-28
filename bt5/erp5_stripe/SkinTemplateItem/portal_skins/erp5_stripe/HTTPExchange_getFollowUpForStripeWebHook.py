@@ -25,4 +25,4 @@ context.setFollowUpValue(stripe_payment_session)
 
 # activate alarm after the payment session is reindexed
 alarm = portal.portal_alarms.check_stripe_payment_session
-alarm.activate(queue='SQLQueue', after_tag=tag).activeSense()
+alarm.activate(activity='SQLDict', queue='SQLQueue', after_tag=tag).activeSense()

@@ -507,6 +507,7 @@ class AmortisationRule(RuleMixin):
       # Finally notify modified deliveries in order to update causality state
       for delivery_value in to_notify_delivery_list:
         delivery_value.activate(
+            activity='SQLDict',
             after_tag='disconnect_amortisation_transaction'
             ).AmortisationTransaction_afterBuild()
         delivery_value.edit()

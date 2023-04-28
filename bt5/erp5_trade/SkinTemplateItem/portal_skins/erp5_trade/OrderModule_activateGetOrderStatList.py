@@ -81,7 +81,7 @@ select_params = {
 active_process_value = portal.portal_activities.newContent(
   portal_type='Active Process',)
 catalog_params.update(select_params)
-portal.portal_catalog.activate(tag=tag).searchAndActivate(
+portal.portal_catalog.activate(activity='SQLDict', tag=tag).searchAndActivate(
   method_id="OrderModule_processOrderStat",
   method_kw = {'active_process' : active_process_value.getPath(),
                 'line_params' : line_params,

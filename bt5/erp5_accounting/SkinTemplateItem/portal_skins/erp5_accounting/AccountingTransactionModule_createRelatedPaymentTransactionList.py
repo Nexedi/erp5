@@ -42,7 +42,7 @@ for obj in object_list:
             'portal_status_message': translateString('Payment creation already in progress, abandon.'),
             'portal_status_level': 'error',
           })
-    obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(
+    obj.activate(activity='SQLDict', tag=tag).Invoice_createRelatedPaymentTransaction(
                                                   node=node,
                                                   payment_mode=payment_mode,
                                                   payment=payment,
@@ -58,7 +58,7 @@ if not activated:
       })
 
 # activate something on the folder
-context.activate(after_tag=tag).getTitle()
+context.activate(activity='SQLDict', after_tag=tag).getTitle()
 
 return context.Base_redirect(
     form_id,

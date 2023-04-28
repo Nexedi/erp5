@@ -6,5 +6,6 @@ tag = script.getId()
 sci['object'].reindexObject(activate_kw={'tag': tag})
 
 sci['object'].getPortalObject().account_module.activate(
+  activity='SQLDict',
   after_tag=tag
 ).newCacheCookie("account_list")

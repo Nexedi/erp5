@@ -18,6 +18,7 @@ for builder_id in builder_id_list:
                           'Delivery_updateAppliedRule')
   activate_kw          = dict(tag=index_tag)
   builder.activate(
+    activity='SQLDict',
     serialization_tag=serialization_tag,
     after_tag=after_tag,
     after_method_id=after_method_id).build(activate_kw=activate_kw)

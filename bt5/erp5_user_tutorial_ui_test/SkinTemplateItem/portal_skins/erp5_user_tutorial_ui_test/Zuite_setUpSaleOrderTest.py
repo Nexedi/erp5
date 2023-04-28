@@ -95,6 +95,7 @@ pref.setPreferredAccountingTransactionSourceSection(my_organisation.getRelativeU
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)
 
 my_organisation.activate(
+  activity='SQLDict',
   after_path_and_method_id=(
     my_organisation.getPath(), ('immediateRecusriveReindexObject', 'immediateReindexObject'))) \
   .Organisation_addConditionallyAccountingPeriod()

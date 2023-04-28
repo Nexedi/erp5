@@ -8,4 +8,4 @@ testnode will do the job.
 portal = context.getPortalObject()
 for test_result in portal.portal_catalog(portal_type="Test Result",
                                          simulation_state="started"):
-  test_result.getObject().activate(priority=5).TestResult_restartStuckLine()
+  test_result.getObject().activate(activity='SQLDict', priority=5).TestResult_restartStuckLine()

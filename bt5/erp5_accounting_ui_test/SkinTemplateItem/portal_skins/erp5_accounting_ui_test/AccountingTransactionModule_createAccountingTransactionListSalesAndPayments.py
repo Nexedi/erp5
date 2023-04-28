@@ -120,7 +120,7 @@ for month in range(1, month_count + 1):
         for line in ptr.getMovementList(
                           portal_type=ptr.getPortalAccountingMovementTypeList()):
           if line.getGroupingReference():
-            line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
+            line.activate(activity='SQLDict', after_tag=tag).AccountingTransactionLine_resetGroupingReference()
 
 
 accounting_module.setProperty('current_content_script',

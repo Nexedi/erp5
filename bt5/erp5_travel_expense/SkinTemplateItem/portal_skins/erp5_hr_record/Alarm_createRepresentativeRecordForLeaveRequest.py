@@ -9,4 +9,4 @@ portal.portal_catalog.searchAndActivate(
   creation_date = Query(creation_date=addToDate(DateTime(), to_add={'day': -90}), range="min"),
   activate_kw={'tag': tag},
 )
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()

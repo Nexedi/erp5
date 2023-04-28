@@ -28,4 +28,4 @@ portal.portal_catalog.searchAndActivate(
     activate_kw={'tag':tag, 'priority': 8},
     **kw)
 
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()

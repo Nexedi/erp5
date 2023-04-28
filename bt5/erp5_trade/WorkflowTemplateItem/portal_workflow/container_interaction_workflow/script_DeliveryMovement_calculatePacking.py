@@ -11,4 +11,4 @@ if getattr(delivery, 'calculatePacking', None) is not None:
     tag = script.id + '_' + container.getPath()
     # XXX: Tagged reindexation added to replace after_path_and_method_id. May be unnecessary.
     container.recursiveReindexObject(activate_kw={'tag': tag})
-  delivery.activate(after_tag=tag).calculatePacking()
+  delivery.activate(activity='SQLDict', after_tag=tag).calculatePacking()

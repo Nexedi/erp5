@@ -1081,6 +1081,7 @@ class ImmobilisableItem(Item, Amount):
         activate_kw={'tag': 'expand_amortisation'},
       )
     self.activate(
+      activity='SQLDict',
       after_path_and_method_id=(
         [x.getPath() for x in related_packing_list_list],
         ('updateImmobilisationState', ),
@@ -1103,7 +1104,7 @@ class ImmobilisableItem(Item, Amount):
       for delivery in delivery_list:
         if getattr(delivery, 'updateImmobilisationState', None) is not None:
           delivery.updateImmobilisationState()
-      self.activate().expandAmortisation(activate_kw=activate_kw)
+      self.activate(activity='SQLDict').expandAmortisation(activate_kw=activate_kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSectionMovementValueList')
   def getSectionMovementValueList(self, include_to_date=0, **kw):

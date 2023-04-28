@@ -17,7 +17,7 @@ if portal.portal_activities.countMessageWithTag(tag) or \
   return context.Base_redirect(form_id, keep_items=dict(
               portal_status_message=translateString("Report already in progress.")))
 
-context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFileActive(
+context.activate(activity='SQLDict').AccountingTransactionModule_viewFrenchAccountingTransactionFileActive(
   section_category,
   section_category_strict,
   from_date,

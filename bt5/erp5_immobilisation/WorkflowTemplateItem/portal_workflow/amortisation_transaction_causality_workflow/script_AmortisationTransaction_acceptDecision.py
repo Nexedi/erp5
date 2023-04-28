@@ -9,4 +9,4 @@ for movement in transaction.getMovementList():
                                              "ProfitAndLoss")
 
 # Automatic workflow
-transaction.activate().updateCausalityState()
+transaction.activate(activity='SQLDict').updateCausalityState()

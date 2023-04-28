@@ -572,7 +572,7 @@ class BusinessConfiguration(Item):
     self.activate(**kw).ERP5Site_afterConfigurationSetup()
 
     if self.portal_workflow.isTransitionPossible(self, 'install'):
-      self.activate(after_tag=kw["tag"]).install()
+      self.activate(activity='SQLDict', after_tag=kw["tag"]).install()
 
   # Business Configuration are Item, which inherits from Amount and expect the
   # resource category document to be an actual resource, but in the case of

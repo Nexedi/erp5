@@ -186,7 +186,7 @@ class Alarm(XMLObject, PeriodicityMixin):
           # Old API
           getattr(self.activate(**activate_kw), method_id)()
         if self.isAlarmNotificationMode():
-          self.activate(after_tag=tag).notify(include_active=True, params=params)
+          self.activate(activity='SQLDict', after_tag=tag).notify(include_active=True, params=params)
 
     # switch to nobody temporarily so that unrestricted _activeSense
     # is always invoked by system user.
@@ -294,7 +294,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     method_id = self.getSolveMethodId()
     if method_id not in (None, ''):
-      method = getattr(self.activate(), method_id)
+      method = getattr(self.activate(activity='SQLDict'), method_id)
       return method()
     return self.activeSense(fixit=1)
 

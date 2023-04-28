@@ -51,8 +51,9 @@ if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in
   # XXX contribution API should allow to call a method on the final ingested document
   # after ingestion is complete.
   document.activate(
+      activity='SQLDict',
       after_tag=ingest_document_tag,
-      tag=after_ingest_document_tag,
+      tag=after_ingest_document_tag
   ).Document_afterSupportRequestFilePostIngestion(
       post_relative_url=post.getRelativeUrl(), )
 else:
@@ -60,6 +61,7 @@ else:
   post.publish()
 
 post.activate(
+    activity='SQLDict',
     after_tag=after_ingest_document_tag
 # XXX This API is not agreed. Also, we need to consider the possibility
 # of ingesting posts through alarm, which is required when we want to ingest

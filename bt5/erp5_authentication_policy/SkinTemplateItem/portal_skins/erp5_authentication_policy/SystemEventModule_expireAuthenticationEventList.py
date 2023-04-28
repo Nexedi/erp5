@@ -20,5 +20,5 @@ failure_list = portal.portal_catalog(**kw)
 
 for failure in failure_list:
   tag = 'expire_%s' %failure.getUid()
-  failure.activate(tag = tag).expire(comment='System expire.')
-  failure.activate(after_tag = tag).reindexObject()
+  failure.activate(activity='SQLDict', tag=tag).expire(comment='System expire.')
+  failure.activate(activity='SQLDict', after_tag=tag).reindexObject()

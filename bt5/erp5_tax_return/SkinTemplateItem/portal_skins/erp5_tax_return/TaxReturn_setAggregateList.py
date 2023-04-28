@@ -34,4 +34,4 @@ for section_info in context.TaxReturn_getSectionInformationList():
     movement.getObject().edit(activate_kw=dict(tag=tag),
                               aggregate_value=context)
 
-context.activate(after_tag=tag).getTitle()
+context.activate(activity='SQLDict', after_tag=tag).getTitle()

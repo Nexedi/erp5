@@ -10,5 +10,6 @@ for brain in portal.portal_catalog(
 ):
   stripe_payment_session = brain.getObject()
   stripe_payment_session.activate(
-    tag=tag,
+    activity='SQLDict',
+    tag=tag
   ).StripePaymentSession_checkStripeSessionOpen()

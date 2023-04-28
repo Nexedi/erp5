@@ -426,7 +426,7 @@ class OldTypesTool(OFSFolder):
       parent.portal_categories._setObject(action_type.id, action_type)
     for type_info in self.objectValues():
       self._migratePortalType(types_tool, type_info)
-    types_tool.activate()._finalizeMigration()
+    types_tool.activate(activity='SQLDict')._finalizeMigration()
     LOG('OldTypesTool', WARNING, "... portal_types converted.")
     return types_tool
 

@@ -4,6 +4,7 @@ if web_page.getPublicationSection() == "application/landing_page":
   if software_product:
     # XXX Should be using an alarm
     software_product.activate(
+      activity='SQLDict',
       after_path_and_method_id=(
         (web_page.getPath(),),
         ("immediateReindexObject", )

@@ -9,7 +9,7 @@ if document.getMetaType() == 'ERP5 OOo Document':
   # Clear base_data
   document.setBaseData(None)
   tag = 'document_%s_convert' % document.getPath()
-  document.activate(tag=tag).Document_tryToConvertToBaseFormat()
+  document.activate(activity='SQLDict', tag=tag).Document_tryToConvertToBaseFormat()
 else:
   # do not run it in activity but not with try except statement
   # Transaction must fail, otherwise data will be lost

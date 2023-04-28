@@ -9,7 +9,7 @@ for movement in transaction.getMovementList():
 # Update from simulation, then adapt causality value
 transaction.getPortalObject().portal_deliveries.amortisation_transaction_builder.updateFromSimulation(transaction.getRelativeUrl())
 tag = relative_url + '_afterBuild'
-transaction.activate(tag=tag, after_tag=indexation_tag).AmortisationTransaction_afterBuild()
+transaction.activate(activity='SQLDict', tag=tag, after_tag=indexation_tag).AmortisationTransaction_afterBuild()
 
 # Automatic workflow
-transaction.activate(after_tag=tag).updateCausalityState()
+transaction.activate(activity='SQLDict', after_tag=tag).updateCausalityState()

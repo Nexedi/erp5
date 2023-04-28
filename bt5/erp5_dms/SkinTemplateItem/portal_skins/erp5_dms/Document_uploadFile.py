@@ -37,7 +37,7 @@ if candidate_type_list and current_type not in candidate_type_list:
     'cancel_url': cancel_url})
 
 context.edit(file=file)
-context.activate().Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)
+context.activate(activity='SQLDict').Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)
 
 # Return to view mode
 return context.Base_redirect(form_id, keep_items={'portal_status_message': translateString('File uploaded.')})

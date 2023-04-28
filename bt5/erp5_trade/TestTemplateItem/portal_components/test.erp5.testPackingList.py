@@ -986,9 +986,10 @@ class TestPackingListMixin(TestOrderMixin):
       if previous_tag:
         after_tag.append(previous_tag)
       delivery_builder.activate(
+        activity='SQLDict',
         after_method_id=('solve',
                          'immediateReindexObject'), # XXX too brutal.
-        after_tag=after_tag,
+        after_tag=after_tag
         ).build(explanation_uid=packing_list.getCausalityValue().getUid())
 
   def stepMergeSplittedPackingList(self, sequence=None):

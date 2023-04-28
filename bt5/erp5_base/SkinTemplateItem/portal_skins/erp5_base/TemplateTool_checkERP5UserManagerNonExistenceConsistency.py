@@ -12,5 +12,5 @@ if plugin_id in acl_users.plugins.getAllPlugins(plugin_type='IAuthenticationPlug
       method_id='Person_migrateToERP5Login',
       method_kw={'tag': tag},
     )
-    portal.portal_activities.activate(after_tag=tag).ERP5Site_disableERP5UserManager()
+    portal.portal_activities.activate(activity='SQLDict', after_tag=tag).ERP5Site_disableERP5UserManager()
 return error_list

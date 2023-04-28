@@ -6,6 +6,6 @@ if solver_process is not None:
   solver_process.buildTargetSolverList()
   solver_tag = '%s_solve' % delivery.getPath()
   solver_process.solve(activate_kw={'tag':solver_tag})
-  delivery.activate(after_tag=solver_tag).updateCausalityState(solve_automatically=False)
+  delivery.activate(activity='SQLDict', after_tag=solver_tag).updateCausalityState(solve_automatically=False)
 else:
   delivery.updateCausalityState(solve_automatically=False)

@@ -31,7 +31,7 @@ portal = context.getPortalObject()
 
 distributor_list = portal.portal_task_distribution.objectValues()
 for distributor in distributor_list:
-  distributor.activate(tag=tag).optimizeConfiguration()
+  distributor.activate(activity='SQLDict', tag=tag).optimizeConfiguration()
 
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()
 return list_node

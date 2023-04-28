@@ -719,7 +719,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     user = uf.getUserById('toto').__of__(uf)
     newSecurityManager(None, user)
     # Execute something as toto
-    organisation.activate().newContent(portal_type='Email',id='email')
+    organisation.activate(activity='SQLDict').newContent(portal_type='Email',id='email')
     # Then execute activities as seb
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
@@ -829,7 +829,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(activity_tool.getMessageList()), 0)
 
     # Insert a failing active object.
-    obj.activate().failingMethod()
+    obj.activate(activity='SQLDict').failingMethod()
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 1)
 
@@ -1030,7 +1030,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         if property_id.startswith('_v_'):
           delattr(activity_tool, property_id)
     organisation_module = self.getOrganisationModule()
-    active_organisation_module = organisation_module.activate()
+    active_organisation_module = organisation_module.activate(activity='SQLDict')
     delete_volatiles()
     # Cause a message to be created
     # If the buffer cannot be created, this will raise
@@ -1361,8 +1361,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ]
     def activate(serialization_tag='a'):
       organisation.activate(
+        activity='SQLDict',
         serialization_tag=serialization_tag,
-        group_method_id='portal_catalog/catalogObjectList',
+        group_method_id='portal_catalog/catalogObjectList'
       ).getTitle()
     organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
@@ -1560,7 +1561,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                     portal_type='Organisation', id='test_obj')
       self.assertEqual(o.absolute_url(),
           'http://test.erp5.org:9080/virtual_root/test_obj')
-      o.activate().checkAbsoluteUrl()
+      o.activate(activity='SQLDict').checkAbsoluteUrl()
 
       # Reset server URL and virtual root before executing messages.
       # This simulates the case of activities beeing executed with different
@@ -1864,7 +1865,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     from Products.ZMySQLDA.db import DB
     DB.original_query = DB.query
     try:
-      active_object.activate().getTitle()
+      active_object.activate(activity='SQLDict').getTitle()
       self.commit()
       self.assertTrue(active_object.hasActivity())
       # Make the sql request not working
@@ -2451,9 +2452,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_getMessageList(self):
     activity_tool = self.portal.portal_activities
     module = self.portal.person_module
-    module.activate(after_tag="foo").getUid()
+    module.activate(activity='SQLDict', after_tag="foo").getUid()
     module.activate(activity='SQLQueue', tag="foo").getId()
-    activity_tool.activate(priority=-1).getId()
+    activity_tool.activate(activity='SQLDict', priority=-1).getId()
     def check(expected, **kw):
       self.assertEqual(expected, len(activity_tool.getMessageList(**kw)))
     def test(check=lambda _, **kw: check(0, **kw)):
@@ -2518,13 +2519,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_activateOnZsqlBrain(self):
     organisation, = self.getOrganisationModule().searchFolder(
       id=self.company_id)
-    organisation.activate().getTitle()
+    organisation.activate(activity='SQLDict').getTitle()
     self.tic()
 
   def test_flushActivitiesOnDelete(self):
     organisation = self.getOrganisation()
     organisation.getParentValue()._delObject(organisation.getId())
-    organisation.activate().getTitle()
+    organisation.activate(activity='SQLDict').getTitle()
     self.tic()
 
   def test_flushActivitiesOnDeleteWithAcquierableObject(self):
@@ -2760,9 +2761,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
     activity_tool = self.getActivityTool()
-    organisation.activate(tag='1').getId()
-    organisation.activate(tag='2', after_tag=None).getId()
-    organisation.activate(tag='3', after_tag='foo').getId()
+    organisation.activate(activity='SQLDict', tag='1').getId()
+    organisation.activate(activity='SQLDict', tag='2', after_tag=None).getId()
+    organisation.activate(activity='SQLDict', tag='3', after_tag='foo').getId()
     self.commit()
     activity_tool.getMessageList()
     self.assertItemsEqual(
@@ -2790,7 +2791,7 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
     import Products.ERP5Type.Timeout
     Products.ERP5Type.Timeout.activity_timeout = 2.0
 
-    self.portal.portal_templates.activate().Base_getSlowObjectList()
+    self.portal.portal_templates.activate(activity='SQLDict').Base_getSlowObjectList()
     with self.assertRaises(RuntimeError):
       self.tic()
     message, = self.getMessageList('SQLDict')

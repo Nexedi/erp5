@@ -106,7 +106,7 @@ for journal_code, journal_lib, journal_search_kw in _groupedJournalTupleDict():
       # Proxy Role needed to create an 'Active Process'
       this_journal_active_process=this_journal_active_process.getRelativeUrl())
 
-context.activate(after_tag=(tag, aggregate_tag)).AccountingTransactionModule_aggregateFrenchAccountingTransactionFile(
+context.activate(activity='SQLDict', after_tag=(tag, aggregate_tag)).AccountingTransactionModule_aggregateFrenchAccountingTransactionFile(
   at_date,
   active_process.getRelativeUrl(),
   user_name=user_name,

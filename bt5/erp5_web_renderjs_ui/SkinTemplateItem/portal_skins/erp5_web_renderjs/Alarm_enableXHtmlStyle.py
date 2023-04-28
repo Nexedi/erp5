@@ -15,4 +15,4 @@ if portal_preferences.isPreferredHtmlStyleDisabled():
     preferred_html_style_disabled=False
   )
 
-context.activate(after_tag=tag).getId()
+context.activate(activity='SQLDict', after_tag=tag).getId()

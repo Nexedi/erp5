@@ -10,5 +10,5 @@ portal = accounting_period.getPortalObject()
 profit_and_loss_account = portal.portal_workflow.getInfoFor(
                             accounting_period, 'profit_and_loss_account')
 
-accounting_period.activate(after_method_id='unindexObject').AccountingPeriod_createBalanceTransaction(
+accounting_period.activate(activity='SQLDict', after_method_id='unindexObject').AccountingPeriod_createBalanceTransaction(
                        profit_and_loss_account=profit_and_loss_account)

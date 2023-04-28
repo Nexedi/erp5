@@ -29,6 +29,6 @@ maileva_exchange = context.system_event_module.newContent(
   request = xml
 )
 
-maileva_exchange.activate().MailevaExchange_submitMailevaRequest()
+maileva_exchange.activate(activity='SQLDict').MailevaExchange_submitMailevaRequest()
 
 context.send()

@@ -69,4 +69,4 @@ class MetaNode(Node):
         Lookup for capacities children of self and update capacity attributes
         by calling portal simulation (deferred)
       """
-      self.activate().immediateUpdateCapacity()
+      self.activate(activity='SQLDict').immediateUpdateCapacity()

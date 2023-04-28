@@ -5,5 +5,5 @@ with context.foo_module.defaultActivateParameterDict({'tag': activity_tag}, plac
   foo1.setTitle('hasAccessUnauthorized')
   foo1.setSuccessorValue(foo2)
 
-foo2.activate(after_tag=activity_tag).manage_permission('Access contents information', 'Manager', 0)
+foo2.activate(activity='SQLDict', after_tag=activity_tag).manage_permission('Access contents information', 'Manager', 0)
 return 'Done'

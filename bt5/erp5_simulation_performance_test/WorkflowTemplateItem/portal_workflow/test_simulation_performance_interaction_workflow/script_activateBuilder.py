@@ -13,6 +13,7 @@ after_method_id      = ('immediateReindexObject',
                         '_updateSimulation')
 activate_kw          = dict(tag=index_tag)
 builder.activate(
+  activity='SQLDict',
   serialization_tag=serialization_tag,
   after_tag=index_tag,
   after_method_id=after_method_id).build(activate_kw=activate_kw)

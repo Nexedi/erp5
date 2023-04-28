@@ -6,5 +6,5 @@ solver_process = state_change['object'].getParentValue()
 # could lead to the case where solver_process is never moved to succeeded
 # Instead of using serialize (which may lead to conflicts), just use
 # activities in queue.
-solver_process.activate(serialization_tag=solver_process.getRelativeUrl()
+solver_process.activate(activity='SQLDict', serialization_tag=solver_process.getRelativeUrl()
                         ).SolverProcess_tryToSucceed()

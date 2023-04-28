@@ -20,8 +20,9 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
     # pre-convert document before sending notification
     if format:
       document.activate(
+          activity='SQLDict',
           node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
-          tag=pre_convert_tag,
+          tag=pre_convert_tag
       ).convert(format=format)
 
   url_base = portal.ERP5Site_getAbsoluteUrl()

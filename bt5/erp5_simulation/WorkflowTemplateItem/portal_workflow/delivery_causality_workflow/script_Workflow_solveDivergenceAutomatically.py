@@ -5,4 +5,4 @@ if not (hasattr(portal, 'portal_solvers') and hasattr(portal, 'portal_solver_pro
   delivery.diverge()
 else:
   solver_tag = '%s_solve' % delivery.getPath()
-  delivery.activate(tag=solver_tag).Delivery_solveDivergenceAutomatically()
+  delivery.activate(activity='SQLDict', tag=solver_tag).Delivery_solveDivergenceAutomatically()

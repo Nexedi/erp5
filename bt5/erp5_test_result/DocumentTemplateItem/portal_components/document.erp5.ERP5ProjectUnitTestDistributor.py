@@ -277,7 +277,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         test_node = test_node_module.newContent(portal_type="Test Node", title=title, computer_guid=computer_guid,
                                       specialise=self.getRelativeUrl(),
                                       activate_kw={'tag': tag})
-        self.activate(after_tag=tag).optimizeConfiguration()
+        self.activate(activity='SQLDict', after_tag=tag).optimizeConfiguration()
       test_node.setPingDate()
     if batch_mode:
       return config
@@ -357,7 +357,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         test_node = test_node_module.newContent(portal_type="Test Node", title=title,
                                       specialise=self.getRelativeUrl(),
                                       activate_kw={'tag': tag})
-        self.activate(after_tag=tag).optimizeConfiguration()
+        self.activate(activity='SQLDict', after_tag=tag).optimizeConfiguration()
       test_node.setPingDate()
       choice_list = self._getSortedNodeTestSuiteToRun(test_node)
       for test_suite in choice_list:

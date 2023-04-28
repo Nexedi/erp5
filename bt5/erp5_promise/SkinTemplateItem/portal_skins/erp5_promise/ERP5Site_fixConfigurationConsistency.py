@@ -5,7 +5,7 @@ if len(uids):
   for alarm in context.portal_alarms.searchFolder(uid=uids):
     alarm.solve()
     # Invoke activiveSense a bit later
-    alarm.activate().activeSense()
+    alarm.activate(activity='SQLDict').activeSense()
   portal_status_message = N_("Site Configuration is going to be fixed by Activities.")
 else:
   portal_status_message = N_("No Site Configuration fix was request.")

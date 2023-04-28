@@ -290,8 +290,8 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
           document.portal_workflow.doActionFor(document, action)
         except WorkflowException:
           if current_state == 'draft':
-            document.activate().validate()
-          document.activate().invalidate()
+            document.activate(activity='SQLDict').validate()
+          document.activate(activity='SQLDict').invalidate()
 
     # Remove related line from sale supply
     sync_name = self.getIntegrationSite(kw['domain']).getTitle()

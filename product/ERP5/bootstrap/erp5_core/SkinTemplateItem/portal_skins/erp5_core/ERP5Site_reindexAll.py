@@ -20,9 +20,10 @@ def reindex(document_list, tag, after_tag):
   for document in document_list:
     print('#### Indexing %s ####')
     document.activate(
+      activity='SQLDict',
       priority=additional_priority,
       tag=tag,
-      after_tag=after_tag,
+      after_tag=after_tag
     ).recursiveReindexObject(
       activate_kw={
         'tag': tag,
@@ -110,7 +111,8 @@ print(reindex(
 ))
 
 portal.portal_activities.activate(
-  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag),
+  activity='SQLDict',
+  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag)
 ).InventoryModule_reindexMovementList(
   sql_catalog_id=sql_catalog_id,
   final_activity_tag=last_inventory_tag,
@@ -119,11 +121,13 @@ portal.portal_activities.activate(
 # restore alarm node
 if clear_catalog and is_subscribed:
   portal.portal_alarms.activate(
-    after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag),
+    activity='SQLDict',
+    after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag)
   ).subscribe()
 
 portal.portal_activities.activate(
+  activity='SQLDict',
   tag=final_activity_tag,
-  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag),
+  after_tag=(user_tag, category_tag, document_tag, preference_tag, inventory_tag, simulation_tag, last_inventory_tag)
 ).getId()
 return printed

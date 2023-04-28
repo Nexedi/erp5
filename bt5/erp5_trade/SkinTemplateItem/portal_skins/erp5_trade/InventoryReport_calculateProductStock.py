@@ -4,7 +4,7 @@ context.setTotalAssetPrice(0)
 context.calculate()
 
 
-context.activate().InventoryReport_recordProductStock()
+context.activate(activity='SQLDict').InventoryReport_recordProductStock()
 if not batch_mode:
   message = context.Base_translateString("Product Stock is creating")
   return context.Base_redirect('view',keep_items={'portal_status_message': message})

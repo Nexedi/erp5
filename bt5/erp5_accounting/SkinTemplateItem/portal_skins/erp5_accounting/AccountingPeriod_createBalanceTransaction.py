@@ -317,4 +317,4 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
 
 # make sure this Accounting Period has an activity pending during the indexing
 # of the balance transaction.
-context.activate(after_tag=activity_tag).getTitle()
+context.activate(activity='SQLDict', after_tag=activity_tag).getTitle()

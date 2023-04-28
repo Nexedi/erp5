@@ -8,4 +8,4 @@ if portal.portal_preferences.getPreferredDocumentConversionServerUrl():
     document_relative_url = getRelativeUrl[index_uid]
     document = portal.restrictedTraverse(document_relative_url)
     if document.Base_isConvertible():
-      document.activate(priority=4, tag="conversion").Base_callPreConvert()
+      document.activate(activity='SQLDict', priority=4, tag="conversion").Base_callPreConvert()

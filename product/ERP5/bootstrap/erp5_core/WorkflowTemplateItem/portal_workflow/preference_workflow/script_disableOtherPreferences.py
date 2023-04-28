@@ -1,1 +1,1 @@
-sci['object'].activate().Preference_disableOtherPreferences()
+sci['object'].activate(activity='SQLDict').Preference_disableOtherPreferences()

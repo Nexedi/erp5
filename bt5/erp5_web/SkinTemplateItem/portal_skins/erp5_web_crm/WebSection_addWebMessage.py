@@ -33,7 +33,7 @@ module.activate(tag=tag, activity='SQLQueue').EventModule_addWebMessage(**edit_k
 # Trigger explicitly the alarm which will run discoverMetadata on created event, then
 # Fill in discoverable properties (sender, recipient, ...) and change workflow states.
 # XXX hardcoded id, must be picked up by reference and version API
-portal.portal_alarms.fetch_incoming_web_message_list.activate(after_tag=tag).activeSense()
+portal.portal_alarms.fetch_incoming_web_message_list.activate(activity='SQLDict', after_tag=tag).activeSense()
 
 portal_status_message = translate('Your message has been successfully submitted.')
 context.getWebSectionValue().getParentValue().Base_redirect(keep_items={'portal_status_message': portal_status_message})

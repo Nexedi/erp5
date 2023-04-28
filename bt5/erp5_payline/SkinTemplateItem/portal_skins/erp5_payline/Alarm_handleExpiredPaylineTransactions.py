@@ -9,4 +9,4 @@ for payline_transaction in portal.payline_transaction_module.searchFolder(
 #      expiration_date=DateTime().strftime('<"%Y/%m/%d %H:%M:%S"'),
     ):
   if countMessage(tag=tag, path=payline_transaction.path) == 0 and now > payline_transaction.getExpirationDate():
-    payline_transaction.activate(tag=tag).PaylineTransaction_inquiry(http_exchange_value=None)
+    payline_transaction.activate(activity='SQLDict', tag=tag).PaylineTransaction_inquiry(http_exchange_value=None)

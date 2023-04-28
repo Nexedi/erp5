@@ -207,7 +207,7 @@ for section in section_list:
             for line in payment.getMovementList(
                             portal_type=payment.getPortalAccountingMovementTypeList()):
               if line.getGroupingReference():
-                line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
+                line.activate(activity='SQLDict', after_tag=tag).AccountingTransactionLine_resetGroupingReference()
 
         else:
           # other cases not supported for now

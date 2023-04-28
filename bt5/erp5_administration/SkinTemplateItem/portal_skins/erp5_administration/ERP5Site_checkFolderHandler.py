@@ -3,7 +3,7 @@ def checkTopLevel():
   for o in portal.objectValues():
     error_list = o.checkFolderHandler(fixit=fixit)
     if len(error_list):
-      portal.portal_activities.activate(active_process=active_process, priority=2) \
+      portal.portal_activities.activate(activity='SQLDict', active_process=active_process, priority=2) \
       .Base_makeActiveResult(title=o.absolute_url_path(), error_list=error_list)
 
 if 'tag' not in kwargs:

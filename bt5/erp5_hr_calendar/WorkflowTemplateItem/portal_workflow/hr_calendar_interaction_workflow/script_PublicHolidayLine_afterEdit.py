@@ -8,4 +8,4 @@ if public_holiday_line.getValidationState() == "validated":
   start_date = public_holiday_line.getStartDate()
   quantity = public_holiday_line.getQuantity()
   if not(None in (start_date, quantity)):
-    context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(priority=5).activeSense()
+    context.getPortalObject().portal_alarms.update_time_table_end_periodicity.activate(activity='SQLDict', priority=5).activeSense()

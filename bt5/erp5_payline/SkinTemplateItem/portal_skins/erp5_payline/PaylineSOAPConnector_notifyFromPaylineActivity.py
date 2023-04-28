@@ -14,4 +14,4 @@ http_exchange = container.newContent(
 http_exchange.confirm()
 tag = script.id + '-' + http_exchange.getId()
 http_exchange.reindexObject(activate_kw={'tag': tag})
-portal.portal_alarms.handle_confirmed_http_exchanges.activate(after_tag=tag).activeSense()
+portal.portal_alarms.handle_confirmed_http_exchanges.activate(activity='SQLDict', after_tag=tag).activeSense()

@@ -27,7 +27,8 @@ for inventory in inventory_list:
     total_asset_price=0
   )
   inventory_report_line.activate(
-    tag = line_tag
+    activity='SQLDict',
+    tag=line_tag
     ).InventoryReportLine_updateTotalAssetPrice(
       section_uid = section_uid,
       node_uid = node_uid,
@@ -39,5 +40,5 @@ for inventory in inventory_list:
     )
 
 tag = '%s:updateTotalAssetPrice' % relative_url
-context.activate(after_tag=line_tag, tag=tag).InventoryReport_updateTotalAssetPrice()
-context.activate(after_tag=tag).record()
+context.activate(activity='SQLDict', after_tag=line_tag, tag=tag).InventoryReport_updateTotalAssetPrice()
+context.activate(activity='SQLDict', after_tag=tag).record()

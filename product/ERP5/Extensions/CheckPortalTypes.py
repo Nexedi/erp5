@@ -127,7 +127,7 @@ def updateBalanceTransactionClass(self):
 
     # XXX 'something' activates some unindexObject calls, so activate our
     # reindexing after ...
-    newobj.activate(after_method_id='unindexObject').recursiveReindexObject()
+    newobj.activate(activity='SQLDict', after_method_id='unindexObject').recursiveReindexObject()
 
 
 def updateCareerValidationState(self):

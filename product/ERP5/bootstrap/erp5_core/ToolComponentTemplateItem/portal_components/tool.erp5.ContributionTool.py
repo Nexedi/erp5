@@ -212,7 +212,7 @@ class ContributionTool(BaseTool):
       # if _setObject is not called
       document = container.newContent(document_id, portal_type, **kw)
       if discover_metadata:
-        document.activate(after_path_and_method_id=(document.getPath(),
+        document.activate(activity='SQLDict', after_path_and_method_id=(document.getPath(),
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat')))\
               .discoverMetadata(filename=filename,
                                 user_login=user_login,
@@ -404,10 +404,11 @@ class ContributionTool(BaseTool):
           # be for user interface and should thus be handled by
           # ZODB scripts
           document.activate(
+            activity='SQLDict',
             after_path_and_method_id=(
               document.getPath(),
               ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'),
-            ),
+            )
           ).discoverMetadata(filename=filename,
                             user_login=user_login,
                             input_parameter_dict=input_parameter_dict)
@@ -552,7 +553,7 @@ class ContributionTool(BaseTool):
         if repeat == 0 or not batch_mode:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
           raise
-        content.activate(at_date=DateTime() + repeat_interval).updateContentFromURL(repeat=repeat - 1)
+        content.activate(activity='SQLDict', at_date=DateTime() + repeat_interval).updateContentFromURL(repeat=repeat - 1)
         return
 
       content._edit(file=file_object, content_type=content_type)
@@ -562,17 +563,17 @@ class ContributionTool(BaseTool):
                               # not here (look at _edit in Base)
       # Step 2: convert to base format
       if content.isSupportBaseDataConversion():
-        content.activate().Document_tryToConvertToBaseFormat()
+        content.activate(activity='SQLDict').Document_tryToConvertToBaseFormat()
       # Step 3: run discoverMetadata
-      content.activate(after_path_and_method_id=(content.getPath(),
+      content.activate(activity='SQLDict', after_path_and_method_id=(content.getPath(),
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
           .discoverMetadata(filename=filename)
       # Step 4: activate populate (unless interaction workflow does it)
-      content.activate().populateContent()
+      content.activate(activity='SQLDict').populateContent()
       # Step 5: activate crawlContent
       depth = content.getCrawlingDepth()
       if depth > 0:
-        content.activate().crawlContent()
+        content.activate(activity='SQLDict').crawlContent()
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
   def newContentFromURL(self, url, container_path=None, id=None, repeat=MAX_REPEAT,
@@ -593,10 +594,10 @@ class ContributionTool(BaseTool):
       document = self.newContent(container_path=container_path, url=url, **kw)
       if document.isIndexContent() and document.getCrawlingDepth() >= 0:
         # If this is an index document, keep on crawling even if crawling_depth is 0
-        document.activate().crawlContent()
+        document.activate(activity='SQLDict').crawlContent()
       elif document.getCrawlingDepth() > 0:
         # If this is an index document, stop crawling if crawling_depth is 0
-        document.activate().crawlContent()
+        document.activate(activity='SQLDict').crawlContent()
     except urllib.error.HTTPError:
       if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--

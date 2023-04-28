@@ -1146,7 +1146,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Call once more to check cache.
     self.assertEqual(pers.getDummyTypeBaseMethod(), pers.getId())
 
-    pers.activate().Person_getDummyTypeBaseMethodByActivity()
+    pers.activate(activity='SQLDict').Person_getDummyTypeBaseMethodByActivity()
     self.tic()
 
   def test_translate_table(self):

@@ -1,6 +1,7 @@
 ap = context.newActiveProcess()
 
 context.activate(
+  activity='SQLDict',
   active_process=ap.getRelativeUrl(),
-  tag=tag,
+  tag=tag
   ).Alarm_checkSkinCacheActive(fixit=fixit)

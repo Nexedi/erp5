@@ -410,7 +410,7 @@ class CopyContainer:
       # changed, so that it updates related objects.
       old_url = getattr(self, '_v_category_url_before_move', None)
       if old_url is not None:
-          self.activate(after_method_id='unindexObject').updateRelatedContent(
+          self.activate(activity='SQLDict', after_method_id='unindexObject').updateRelatedContent(
                                 old_url,
                                 self.getRelativeUrl())
     elif op == 0:

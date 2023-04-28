@@ -38,7 +38,7 @@ for sync in sync_list:
   portal_status_message = translateString("Synchronization started.")
 
 # Add to the integration site view the clock which show activities -Aurel : really necessary ?
-context.activate(after_tag=after_tag).getTitle()
+context.activate(activity='SQLDict', after_tag=after_tag).getTitle()
 
 if not batch_mode:
   context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))

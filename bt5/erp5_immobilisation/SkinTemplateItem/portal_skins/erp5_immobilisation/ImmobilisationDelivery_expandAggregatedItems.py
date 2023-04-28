@@ -11,4 +11,4 @@ for movement in movement_list:
     if item not in item_list:
       item_list.append(item)
 for item in item_list:
-  item.activate(tag='expand_amortisation', after_tag=tag, after_path_and_method_id=(movemement_path_list, ('updateImmobilisationState',) )).expandAmortisation()
+  item.activate(activity='SQLDict', tag='expand_amortisation', after_tag=tag, after_path_and_method_id=(movemement_path_list, ('updateImmobilisationState',) )).expandAmortisation()

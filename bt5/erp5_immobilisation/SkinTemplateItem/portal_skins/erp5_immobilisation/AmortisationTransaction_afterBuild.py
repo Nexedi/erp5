@@ -29,4 +29,4 @@ if context.getSimulationState() in context.getPortalUpdatableAmortisationTransac
   #Test Add by Nicolas
   if getattr(context, 'startBuilding', None) is not None:
     context.startBuilding()
-  context.activate(after_tag='after_amortisation_build').updateCausalityState()
+  context.activate(activity='SQLDict', after_tag='after_amortisation_build').updateCausalityState()

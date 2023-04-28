@@ -4,4 +4,4 @@
   that will update security groups.
 """
 role_definition_parent = state_change['object'].getParentValue()
-role_definition_parent.activate().updateLocalRolesOnSecurityGroups()
+role_definition_parent.activate(activity='SQLDict').updateLocalRolesOnSecurityGroups()

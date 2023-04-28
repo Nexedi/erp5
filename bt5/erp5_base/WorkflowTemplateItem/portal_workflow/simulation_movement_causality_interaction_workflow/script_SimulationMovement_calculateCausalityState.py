@@ -3,4 +3,4 @@ try:
   delivery.aq_explicit.getCausalityState
 except AttributeError:
   return
-delivery.activate(tag='build:'+delivery.getPath()).Delivery_calculate()
+delivery.activate(activity='SQLDict', tag='build:'+delivery.getPath()).Delivery_calculate()

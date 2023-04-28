@@ -15,7 +15,8 @@ if person_value.getDefaultEmailText('') in ('', None):
               portal_status_message=N_("You haven't defined your email address")))
 
 context.activate(
-  tag=script.id,
+  activity='SQLDict',
+  tag=script.id
 ).LetterPostModule_exportExportableLetterPostActivity(
   user.getUserId(),
   comment,
