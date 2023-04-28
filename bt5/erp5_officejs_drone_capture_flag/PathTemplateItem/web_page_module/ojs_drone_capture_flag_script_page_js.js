@@ -468,6 +468,21 @@
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
       }
+
+      function randomizeMap(json_map) {
+        var random_seed = new Math.seedrandom(Math.random()),
+          map_size, sign_x, sign_y, pos_x, pos_y;
+        map_size = json_map.mapSize.depth;
+        sign_x = random_seed.quick() < 0.5 ? -1 : 1;
+        sign_y = random_seed.quick() < 0.5 ? -1 : 1;
+        pos_x = (random_seed.quick() *
+               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_x;
+        pos_y = (random_seed.quick() *
+               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_y;
+        json_map.random_init_pos = [pos_x, pos_y];
+        return json_map;
+      }
+
       game_parameters_json = {
         "drone": {
           "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
