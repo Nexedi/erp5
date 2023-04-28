@@ -1516,20 +1516,22 @@ class TestInventoryList(InventoryAPITestCase):
 
   def test_inventory_asset_price(self):
     # examples from http://accountinginfo.com/study/inventory/inventory-120.htm
+    #                                               # total quantity
     movement_list = [
-        (1,  "Beginning Inventory", -700, 10),
-        (3,  "Purchase",            -100, 12),
-        (8,  "Sale",                 500, None),
-        (15, "Purchase",            -600, 14),
-        (19, "Purchase",            -200, 15),
-        (25, "Sale",                 400, None),
-        (27, "Sale",                 100, None),
+        (1,  "Beginning Inventory", -700, 10),      # 700
+        (3,  "Purchase",            -100, 12),      # 800
+        (8,  "Sale",                 500, None),    # 300
+        (15, "Purchase",            -600, 14),      # 900
+        (19, "Purchase",            -200, 15),      # 1100
+        (25, "Sale",                 400, None),    # 700
+        (27, "Sale",                 100, None),    # 600
     ]
     resource = self.getProductModule().newContent(
                                   title='My resource',
                                   portal_type='Product')
-    for m in movement_list:
-      self._makeMovement(resource_value=resource,
+    def makeMovementList(movement_list):
+      for m in movement_list:
+        self._makeMovement(resource_value=resource,
                          source_value=self.node,
                          destination_value=self.mirror_node,
                          start_date=DateTime('2000/1/%d 12:00 UTC' % m[0]),
@@ -1537,19 +1539,51 @@ class TestInventoryList(InventoryAPITestCase):
                          quantity=m[2],
                          price=m[3],
                          )
+    makeMovementList(movement_list)
 
     simulation_tool = self.getSimulationTool()
-    def valuate(method):
+    def valuate(method, lowest_value_test=False):
+      self.portal.person_module.log(simulation_tool.getInventoryAssetPrice(
+            src__=1,
+            valuation_method=method,
+            resource_uid=resource.getUid(),
+            node_uid=self.node.getUid(),
+            lowest_value_test=lowest_value_test))
       r = simulation_tool.getInventoryAssetPrice(
             valuation_method=method,
             resource_uid=resource.getUid(),
-            node_uid=self.node.getUid())
+            node_uid=self.node.getUid(),
+            lowest_value_test=lowest_value_test)
       return round(r)
 
 
     self.assertEqual(7895, valuate("MovingAverage"))
     self.assertEqual(7200, valuate("Filo"))
     self.assertEqual(8600, valuate("Fifo"))
+    # latest purchase price is 15, total quantity is 600
+    # average price of 13.15, thus lowest value test change nothing
+    self.assertEqual(7895, valuate("MovingAverage", lowest_value_test=True))
+    # average price of 12.15, thus lowest value test change nothing
+    self.assertEqual(7200, valuate("Filo", lowest_value_test=True))
+    # average price of 14.33, thus lowest value test change nothing
+    self.assertEqual(8600, valuate("Fifo", lowest_value_test=True))
+    movement_list = [
+        (28,  "Purchase",            -100, 11),      # 700
+        (29,  "Sale",                 100, None),    # 600
+    ]
+    makeMovementList(movement_list)
+    self.assertEqual(7710, valuate("MovingAverage"))
+    self.assertEqual(7200, valuate("Filo"))
+    self.assertEqual(8300, valuate("Fifo"))
+    self.assertEqual(7710, valuate("MovingAverage"))
+    self.assertEqual(7200, valuate("Filo"))
+    # latest purchase price is 11, total quantity is 600
+    # average price of 12.85, thus lowest value test change value
+    self.assertEqual(6600, valuate("MovingAverage", lowest_value_test=True))
+    # average price of 12, thus lowest value test change value
+    self.assertEqual(6600, valuate("Filo", lowest_value_test=True))
+    # average price of 13.83, thus lowest value test change value
+    self.assertEqual(6600, valuate("Fifo", lowest_value_test=True))
 
   def test_weighted_average_asset_price(self):
     def h(quantity, total_price):

@@ -9,7 +9,7 @@ during each period.
 Then perform a weighted average over all periods.
 */
 
-set @total_asset_price=0, @total_quantity=0
+set @total_asset_price=0.0, @total_quantity=0.0
 <dtml-var sql_delimiter>
 select
     byperiod.*,
@@ -45,19 +45,28 @@ order by d_year<dtml-if "'Monthly' in valuation_method">, d_month</dtml-if>
 Very similar to (Monthly)WeightedAverage except that we do not have to
 split the timeframe / fold movements and simply perform a weighted average
 on all single movements.
+
+Parameter lowest_value_test compares latest price and Moving average price and takes the
+smallest one.
 */
 
-set @total_asset_price=0, @total_quantity=0
+SET @total_asset_price=0, @total_quantity=0, @latest_price=null, @running_total_asset_price=0
 <dtml-var sql_delimiter>
 select
     (@incoming_total_price:=IF(quantity>0, total_price, 0)) as incoming_total_price,
+    @latest_price:=IF(quantity>0, total_price/quantity, @latest_price) as latest_price,
 
     @unit_price:=((@total_asset_price+@incoming_total_price)/(@total_quantity+GREATEST(0, quantity))) as unit_price,
-    (@total_asset_price:=
-        @total_asset_price +
+    (@running_total_asset_price:=
+        @running_total_asset_price +
         @incoming_total_price +
-        LEAST(0, quantity) * @unit_price) as total_asset_price,
-    (@total_quantity:=@total_quantity+quantity) as dummy
+        LEAST(0, quantity) * @unit_price) as running_total_asset_price,
+    (@total_quantity:=@total_quantity+quantity) as dummy,
+    <dtml-if "lowest_value_test">
+     (@total_asset_price:=LEAST(@running_total_asset_price, @total_quantity*@latest_price)) as total_asset_price
+    <dtml-else>
+     (@total_asset_price:= @running_total_asset_price) as total_asset_price
+    </dtml-if>
 from
    stock, catalog
 where
@@ -93,6 +102,9 @@ Thus, each movement has a value of:
 if @unbalanced_output is initialized to @total_output_quantity and reduced by
 quantity at each step:
   unbalanced_output=max(0, unbalanced_output-quantity)
+
+Parameter lowest_value_test compares latest price and FIFO price and takes the
+smallest one.
 */
 SET
  @unbalanced_output:=
@@ -105,16 +117,27 @@ SET
     AND
       <dtml-var where_expression>
     ),0),
- @total_asset_price=0
+ @total_asset_price=0.0,
+ @running_total_asset_price=0.0,
+ @running_quantity=0.0
 <dtml-var sql_delimiter>
 
 SELECT
 
- (@total_asset_price:=@total_asset_price + 
+ (@running_quantity:=@running_quantity +
+   GREATEST(0, quantity-@unbalanced_output)
+ ) AS running_quantity,
+ (@running_total_asset_price:=@running_total_asset_price +
    GREATEST(0, (quantity-@unbalanced_output) * total_price/quantity)
- ) AS total_asset_price,
- (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy
- 
+ ) AS running_total_asset_price,
+ (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy,
+ <dtml-if "lowest_value_test">
+  (@total_asset_price:=LEAST(@running_total_asset_price,
+                             @running_quantity * total_price/quantity)) as total_asset_price
+ <dtml-else>
+  (@total_asset_price:= @running_total_asset_price) as total_asset_price
+ </dtml-if>
+
 FROM
  stock, catalog
 WHERE
@@ -148,15 +171,26 @@ until we reach an incoming movement. Then:
    movement got out of inventory between t=current and T=END. These items are not
    present in the final inventory and can be discarded.
    @unbalanced_inventory=@unbalanced_inventory - quantity
+
+Parameter lowest_value_test compares latest price and FILO price and takes the
+smallest one.
+
 */
 
-SET @unbalanced_output=0, @total_asset_price=0
+SET @unbalanced_output=0.0, @total_asset_price=0.0, @running_total_asset_price=0.0, @latest_price=null, @running_quantity=0.0
 <dtml-var sql_delimiter>
 SELECT
-  (@total_asset_price:=@total_asset_price +
+  (IF(quantity <= 0, @latest_price, @latest_price:=IFNULL(@latest_price, total_price/quantity))) as dummy_latest_price,
+  (@running_total_asset_price:=@running_total_asset_price +
     IF(quantity <= 0, 0,
-    total_price/quantity * GREATEST(0, quantity-@unbalanced_output))) as total_asset_price,
-  (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy
+    total_price/quantity * GREATEST(0, quantity-@unbalanced_output))) as running_total_asset_price,
+  (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy,
+  (@running_quantity:=@running_quantity + quantity) as running_quantity,
+  <dtml-if "lowest_value_test">
+   (@total_asset_price:=LEAST(@running_total_asset_price, @running_quantity*@latest_price)) as total_asset_price
+  <dtml-else>
+   (@total_asset_price:= @running_total_asset_price) as total_asset_price
+  </dtml-if>
 FROM
  stock, catalog
 WHERE
