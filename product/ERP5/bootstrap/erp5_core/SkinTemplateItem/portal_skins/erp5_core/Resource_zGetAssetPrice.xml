@@ -9,7 +9,9 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>where_expression\n
-valuation_method</string> </value>
+valuation_method\n
+lowest_value_test\n
+</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
