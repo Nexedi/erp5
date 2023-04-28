@@ -1821,6 +1821,7 @@ class SimulationTool(BaseTool):
   def getInventoryAssetPrice(self, src__=0,
                              simulation_period='',
                              valuation_method=None,
+                             lowest_value_test=False,
                              **kw):
     """
     Same thing as getInventory but returns an asset
@@ -1836,6 +1837,10 @@ class SimulationTool(BaseTool):
       MovingAverage
     When using a specific valuation method, a resource_uid is expected
     as well as one of (section_uid or node_uid).
+
+    Parameter lowest_value_price compares latest price with price
+    calculated with valuation_method and takes the smallest one. This
+    is useful for accountants to avoid overestimating the price of a stock.
     """
     if valuation_method is None:
       method = getattr(self,'get%sInventoryList' % simulation_period)
@@ -1857,6 +1862,9 @@ class SimulationTool(BaseTool):
     if valuation_method not in ('Fifo', 'Filo', 'WeightedAverage',
       'MonthlyWeightedAverage', 'MovingAverage'):
       raise ValueError("Invalid valuation method: %s" % valuation_method)
+    if lowest_value_test and valuation_method not in ('Fifo', 'Filo',
+       'MovingAverage'):
+      raise NotImplementedError('lowest_value_test not implemented')
 
     assert 'node_uid' in kw or 'section_uid' in kw
     sql_kw = self._generateSQLKeywordDict(**kw)
@@ -1868,6 +1876,7 @@ class SimulationTool(BaseTool):
 
     result = self.Resource_zGetAssetPrice(
         valuation_method=valuation_method,
+        lowest_value_test=lowest_value_test,
         src__=src__,
         **sql_kw)
 
@@ -1875,7 +1884,10 @@ class SimulationTool(BaseTool):
       return result
 
     if len(result) > 0:
-      return result[-1].total_asset_price
+      asset_price = result[-1].total_asset_price
+      if asset_price:
+        asset_price = float(asset_price)
+      return asset_price
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCurrentInventoryAssetPrice')
