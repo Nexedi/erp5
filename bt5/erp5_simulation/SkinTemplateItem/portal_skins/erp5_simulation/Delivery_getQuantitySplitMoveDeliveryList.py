@@ -12,7 +12,8 @@ reserved_inventory_state_list = portal.getPortalReservedInventoryStateList()
 
 for causality_value in current_delivery.getCausalityValueList():
   for delivery in causality_value.getCausalityRelatedValueList(
-      portal_type=current_delivery_portal_type):
+      portal_type=current_delivery_portal_type,
+      checked_permission="Access contents information"):
     if delivery.getUid() != current_delivery_uid:
       if delivery.getSimulationState() in reserved_inventory_state_list:
         delivery_list.append(delivery)
