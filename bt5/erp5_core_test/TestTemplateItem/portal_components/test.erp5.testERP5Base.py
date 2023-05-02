@@ -1533,6 +1533,16 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual('text/xml', embedded_file.getContentType())
     self.assertEqual('text/xml', embedded_file.getProperty('content_type'))
 
+  def test_EmbeddedFile_workflow(self):
+    embedded_file = self.portal.person_module.newContent(
+        portal_type='Person'
+    ).newContent(
+        portal_type='Embedded File'
+    )
+    self.assertEqual('embedded', embedded_file.getValidationState())
+    self.portal.portal_workflow.doActionFor(embedded_file, 'delete_action')
+    self.assertEqual('deleted', embedded_file.getValidationState())
+
   def test_BankAccount_validateIBAN(self):
     self.assertTrue(
         self.portal.BankAccount_validateIBAN(

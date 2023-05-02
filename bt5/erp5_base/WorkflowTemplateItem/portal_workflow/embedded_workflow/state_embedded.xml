@@ -13,6 +13,21 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/embedded_workflow/transition_delete</string>
+                <string>destination/portal_workflow/embedded_workflow/transition_delete_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>This document is embedded (i.e. acquire its security from container)</string> </value>
         </item>
