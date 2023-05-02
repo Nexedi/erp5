@@ -3237,17 +3237,19 @@ class Test(ERP5TypeTestCase):
     # set a request key, that should not be set from the test request
     self.portal.REQUEST.set('foo', 'something from main request')
 
-    # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
-    # needs to be restored after calling runLiveTest
-    base_tuple = ERP5TypeTestCase.__bases__
-    ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
-    try:
-      self._component_tool.runLiveTest('testRunLiveTest')
-    finally:
-      ERP5TypeTestCase.__bases__ = base_tuple
-      ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
+    def runLiveTest(test_name):
+      # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
+      # needs to be restored after calling runLiveTest
+      base_tuple = ERP5TypeTestCase.__bases__
+      ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
+      try:
+        self._component_tool.runLiveTest(test_name)
+      finally:
+        ERP5TypeTestCase.__bases__ = base_tuple
+        ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
+      return self._component_tool.readTestOutput()
 
-    output = self._component_tool.readTestOutput()
+    output = runLiveTest('testRunLiveTest')
     expected_msg_re = re.compile('Ran 1 test.*OK', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
@@ -3265,16 +3267,33 @@ class Test(ERP5TypeTestCase):
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
-    base_tuple = ERP5TypeTestCase.__bases__
-    ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
-    try:
-      self._component_tool.runLiveTest('testRunLiveTest')
-    finally:
-      ERP5TypeTestCase.__bases__ = base_tuple
-      ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
-
-    output = self._component_tool.readTestOutput()
+    output = runLiveTest('testRunLiveTest')
     expected_msg_re = re.compile('Ran 2 tests.*FAILED \(failures=1\)', re.DOTALL)
+    self.assertRegex(output, expected_msg_re)
+
+    # Now try addCleanup
+    source_code = self._getValidSourceCode() +  '''
+  def test_02_addCleanup(self):
+    self.portal.portal_activities.setTitle("changed")
+    self.tic()
+    def cleanup():
+      self.portal.portal_activities.setTitle({activity_tool_title!r})
+      self.tic()
+    self.addCleanup(cleanup)
+
+  def test_03_checkAfterCleanUp(self):
+    self.assertEqual(self.portal.portal_activities.getTitle(), {activity_tool_title!r})
+'''.format(activity_tool_title=self.portal.portal_activities.getTitle())
+
+    component.setTextContent(source_code)
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertModuleImportable('testRunLiveTest')
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
+
+    output = runLiveTest('testRunLiveTest')
+    expected_msg_re = re.compile('Ran 3 test.*OK', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
   def testERP5Broken(self):
@@ -3517,39 +3536,30 @@ class TestZodbDocumentComponentReload(ERP5TypeTestCase):
   def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
     component = self.portal.portal_components['document.erp5.BusinessProcess']
     component_original_text_content = component.getTextContent()
+    self.addCleanup(
+      self._setBusinessProcessComponentTextContent,
+      component_original_text_content)
 
-    # Use try/finally to restore the content of
-    # document.erp5.BusinessProcess as using addCleanup function here raises
-    # with :
-    #   ConnectionStateError: Shouldn't load state for
-    #   Products.DCWorkflow.Scripts.Scripts 0x099ad38a68606074
-    #   when the connection is closed
-    try:
-      self._setBusinessProcessComponentTextContent(
-        component_original_text_content + """
+    self._setBusinessProcessComponentTextContent(
+      component_original_text_content + """
   def getVersion(self):
     return 1
         """
-      )
+    )
 
-      movement = self.portal.newContent(portal_type='Movement')
-      composed_movement = movement.asComposedDocument()
-      self.assertEqual(composed_movement.getVersion(), 1)
+    movement = self.portal.newContent(portal_type='Movement')
+    composed_movement = movement.asComposedDocument()
+    self.assertEqual(composed_movement.getVersion(), 1)
 
-      self._setBusinessProcessComponentTextContent(
-        component_original_text_content + """
+    self._setBusinessProcessComponentTextContent(
+      component_original_text_content + """
   def getVersion(self):
     return 2
         """
-      )
+    )
 
-      composed_movement = movement.asComposedDocument()
-      self.assertEqual(composed_movement.getVersion(), 2)
-
-    finally:
-      self._setBusinessProcessComponentTextContent(
-        component_original_text_content
-      )
+    composed_movement = movement.asComposedDocument()
+    self.assertEqual(composed_movement.getVersion(), 2)
 
 
 def test_suite():
