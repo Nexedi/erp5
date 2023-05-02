@@ -7,10 +7,7 @@
     warmup_list = [
       'gadget_erp5_label_field.html',
       'gadget_erp5_header.html',
-      'gadget_erp5_ojs_panel.html',
-      'gadget_html5_input.html',
-      'gadget_erp5_page_ojs_local_controller.html',
-      'gadget_officejs_common_util.html'
+      'gadget_html5_input.html'
     ],
     gadget_klass = rJS(window)
 
