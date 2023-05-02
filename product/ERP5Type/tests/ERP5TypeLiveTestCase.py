@@ -162,7 +162,10 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         self._setUpDummyMailHost()
 
     setUp = PortalTestCase.setUp
-    tearDown = PortalTestCase.tearDown
+
+    def tearDown(self):
+        self.doCleanups()
+        PortalTestCase.tearDown(self)
 
     def _app(self):
         '''Returns the app object for a test.'''

@@ -1346,6 +1346,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       '''Tears down the fixture. Do not override,
          use the hooks instead.
       '''
+      self.doCleanups()
       if not int(os.environ.get('erp5_save_data_fs', 0)):
         # Drop remaining activities if some of them failed.
         # However, we should not do more activity cleaning, because properly
