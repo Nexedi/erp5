@@ -51,7 +51,11 @@ class DataArrayViewLine(DataArray):
       createExpressionContext(None, portal=getindex),
       "python: portal[%s]" %self.getIndexExpression()
     )
-    zbigarray = self.getPredecessorValue().getArray()
+    # if missing predecessor return the default
+    predecessor_value = self.getPredecessorValue()
+    if predecessor_value is None:
+      return default
+    zbigarray = predecessor_value.getArray()
     try:
       array_view = zbigarray[index]
     except TypeError:
