@@ -32,10 +32,6 @@
                 <string>invalidate_action</string>
                 <string>publish</string>
                 <string>publish_action</string>
-                <string>release</string>
-                <string>release_action</string>
-                <string>share</string>
-                <string>share_action</string>
               </tuple>
             </value>
         </item>
