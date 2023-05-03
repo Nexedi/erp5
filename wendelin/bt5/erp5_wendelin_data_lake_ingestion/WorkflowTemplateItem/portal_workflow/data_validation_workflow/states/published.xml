@@ -28,10 +28,6 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>archive</string>
-                <string>archive_action</string>
-                <string>hide</string>
-                <string>hide_action</string>
                 <string>invalidate</string>
                 <string>invalidate_action</string>
               </tuple>
