@@ -4,12 +4,12 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 200,
+  var SIMULATION_SPEED = 15,
     SIMULATION_TIME = 1500,
-    min_lat = 45.6364,
-    max_lat = 45.65,
-    min_lon = 14.2521,
-    max_lon = 14.2766,
+    min_lat = 45.64,
+    max_lat = 45.645,
+    min_lon = 14.253,
+    max_lon = 14.264,
     map_height = 100,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -24,7 +24,7 @@
     MAX_SINK_RATE = 3,
     INITIAL_POSITION = {
       "latitude": 45.6412,
-      "longitude": 14.2658,
+      "longitude": 14.26,
       "z": 15
     },
     NUMBER_OF_DRONES = 2,
@@ -42,36 +42,6 @@
       '      altitude: 589.8802607573035,\n' +
       '      latitude: 45.64316335436476,\n' +
       '      longitude: 14.26332880184475\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 608.6648153348965,\n' +
-      '      latitude: 45.64911917196595,\n' +
-      '      longitude: 14.26214792790128\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 606.1448368129072,\n' +
-      '      latitude: 45.64122685351364,\n' +
-      '      longitude: 14.26590493128597\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 630.0829598206344,\n' +
-      '      latitude: 45.64543355564817,\n' +
-      '      longitude: 14.27242391207985\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 616.1839898415284,\n' +
-      '      latitude: 45.6372792927328,\n' +
-      '      longitude: 14.27533492411138\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 598.0603137354178,\n' +
-      '      latitude: 45.64061299543953,\n' +
-      '      longitude: 14.26161958465814\n' +
-      '    },\n' +
-      '    {\n' +
-      '      altitude: 607.1243119862851,\n' +
-      '      latitude: 45.64032340702919,\n' +
-      '      longitude: 14.2682896662383\n' +
       '    }\n' +
       '  ];\n' +
       '\n' +
