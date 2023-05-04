@@ -2,62 +2,62 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+      <global name="Workflow State" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
+            <key> <string>acquire_permission</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/data_validation_workflow/transition_delete</string>
+                <string>destination/portal_workflow/data_validation_workflow/transition_delete_action</string>
+                <string>destination/portal_workflow/data_validation_workflow/transition_validate</string>
+                <string>destination/portal_workflow/data_validation_workflow/transition_validate_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>Default state of the document</string> </value>
+            <value> <string>State of a document that has been invalidated in ERP5</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>state_invalidated</string> </value>
         </item>
         <item>
-            <key> <string>permission_roles</string> </key>
+            <key> <string>state_permission_role_list_dict</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
-        </item>
-        <item>
-            <key> <string>transitions</string> </key>
-            <value>
-              <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>validate</string>
-                <string>validate_action</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>type_list</string> </key>
+            <key> <string>state_type</string> </key>
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Invalidated</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -68,9 +68,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -81,9 +79,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -94,9 +90,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,9 +102,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
