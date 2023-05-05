@@ -6,10 +6,7 @@
   //Default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 15,
     SIMULATION_TIME = 1500,
-    min_lat = 45.64,
-    max_lat = 45.645,
-    min_lon = 14.253,
-    max_lon = 14.264,
+    map_size = 1000,
     map_height = 100,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -269,47 +266,14 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_minimum_latitud": {
+                "my_map_size": {
                   "description": "",
-                  "title": "Minimum latitude",
-                  "default": min_lat,
+                  "title": "Map size",
+                  "default": map_size,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "min_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_maximum_latitud": {
-                  "description": "",
-                  "title": "Maximum latitude",
-                  "default": max_lat,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "max_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_minimum_longitud": {
-                  "description": "",
-                  "title": "Minimum longitude",
-                  "default": min_lon,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "min_lon",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_maximum_longitud": {
-                  "description": "",
-                  "title": "Maximum longitude",
-                  "default": max_lon,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "max_lon",
+                  "key": "map_size",
                   "hidden": 0,
                   "type": "FloatField"
                 },
@@ -402,13 +366,12 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_minimum_latitud"], ["my_maximum_latitud"],
-                  ["my_minimum_longitud"], ["my_maximum_longitud"],
+                  ["my_map_size"], ["my_map_height"],
                   ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
-                  ["my_map_height"]]
+                  ["my_start_AMSL"]]
               ], [
                 "right",
-                [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
                   ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
                   ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
@@ -473,10 +436,7 @@
           "communication": 0
         },
         "map": {
-          "min_lat": parseFloat(options.min_lat),
-          "max_lat": parseFloat(options.max_lat),
-          "min_lon": parseFloat(options.min_lon),
-          "max_lon": parseFloat(options.max_lon),
+          "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
           "start_AMSL": parseFloat(options.start_AMSL)
         },

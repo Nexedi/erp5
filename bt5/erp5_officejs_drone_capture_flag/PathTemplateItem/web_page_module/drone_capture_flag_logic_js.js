@@ -375,32 +375,33 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
+  //random geo-point:
+  var MIN_LAT = 45.64,
+      MIN_LON = 14.253;
   function calculateMapInfo(map, map_dict, initial_position) {
-    //TODO move as game parameters
-    var map_size = 500,
-      min_lat = 45.64,
-      min_lon = 14.253,
-      offset = map.latLonOffset(min_lat, min_lon, map_size),
+    var min_lat = map_dict.min_lat || MIN_LAT,
+      min_lon =  map_dict.min_lon || MIN_LON,
+      offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
       max_lon = offset[1],
       map_info = {
-        "depth": map_size,
-        "width": map_size,
-        "map_size": map_size,
+        "depth": map_dict.map_size,
+        "width": map_dict.map_size,
+        "map_size": map_dict.map_size,
         "min_lat": min_lat,
         "min_lon": min_lon,
         "max_lat": max_lat,
         "max_lon": max_lon,
-        "min_x": map.longitudToX(min_lon, map_size),
-        "min_y": map.latitudeToY(min_lat, map_size),
-        "max_x": map.longitudToX(max_lon, map_size),
-        "max_y": map.latitudeToY(max_lat, map_size),
+        "min_x": map.longitudToX(min_lon, map_dict.map_size),
+        "min_y": map.latitudeToY(min_lat, map_dict.map_size),
+        "max_x": map.longitudToX(max_lon, map_dict.map_size),
+        "max_y": map.latitudeToY(max_lat, map_dict.map_size),
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL
       },
       position = map.normalize(
-        map.longitudToX(initial_position.longitude, map_size),
-        map.latitudeToY(initial_position.latitude, map_size),
+        map.longitudToX(initial_position.longitude, map_dict.map_size),
+        map.latitudeToY(initial_position.latitude, map_dict.map_size),
         map_info
       );
     map_info.initial_position = {
