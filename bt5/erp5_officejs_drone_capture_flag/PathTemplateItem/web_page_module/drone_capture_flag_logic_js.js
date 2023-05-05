@@ -376,19 +376,11 @@ var DroneManager = /** @class */ (function () {
 var MapManager = /** @class */ (function () {
   "use strict";
   function calculateMapInfo(map, map_dict, initial_position) {
-    //TODO move as mapmanager function
-    function latLonOffset(latitude, longitude, offset_in_mt) {
-      var R = 6371e3, //Earth radius
-        lat_offset = offset_in_mt / R,
-        lon_offset = offset_in_mt / (R * Math.cos(Math.PI * latitude / 180));
-      return [latitude + lat_offset * 180 / Math.PI,
-              longitude + lon_offset * 180 / Math.PI];
-    }
     //TODO move as game parameters
-    var map_size = 856,
+    var map_size = 500,
       min_lat = 45.64,
       min_lon = 14.253,
-      offset = latLonOffset(min_lat, min_lon, map_size),
+      offset = map.latLonOffset(min_lat, min_lon, map_size),
       max_lat = offset[0],
       max_lon = offset[1],
       map_info = {
@@ -470,6 +462,13 @@ var MapManager = /** @class */ (function () {
   }
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
+  };
+  MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
+    var R = 6371e3, //Earth radius
+      lat_offset = offset_in_mt / R,
+      lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
+    return [lat + lat_offset * 180 / Math.PI,
+            lon + lon_offset * 180 / Math.PI];
   };
   MapManager.prototype.longitudToX = function (lon, map_size) {
     return (map_size / 360.0) * (180 + lon);
