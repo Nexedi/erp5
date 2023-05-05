@@ -376,20 +376,34 @@ var DroneManager = /** @class */ (function () {
 var MapManager = /** @class */ (function () {
   "use strict";
   function calculateMapInfo(map, map_dict, initial_position) {
-    var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                       [map_dict.min_lat, map_dict.max_lon]),
-      max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                      [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6,
+    //TODO move as mapmanager function
+    function latLonOffset(latitude, longitude, offset_in_mt) {
+      var R = 6371e3, //Earth radius
+        lat_offset = offset_in_mt / R,
+        lon_offset = offset_in_mt / (R * Math.cos(Math.PI * latitude / 180));
+      return [latitude + lat_offset * 180 / Math.PI,
+              longitude + lon_offset * 180 / Math.PI];
+    }
+    //TODO move as game parameters
+    var map_size = 856,
+      min_lat = 45.64,
+      min_lon = 14.253,
+      offset = latLonOffset(min_lat, min_lon, map_size),
+      max_lat = offset[0],
+      max_lon = offset[1],
       map_info = {
         "depth": map_size,
-        "height": map_dict.height,
         "width": map_size,
         "map_size": map_size,
-        "min_x": map.longitudToX(map_dict.min_lon, map_size),
-        "min_y": map.latitudeToY(map_dict.min_lat, map_size),
-        "max_x": map.longitudToX(map_dict.max_lon, map_size),
-        "max_y": map.latitudeToY(map_dict.max_lat, map_size),
+        "min_lat": min_lat,
+        "min_lon": min_lon,
+        "max_lat": max_lat,
+        "max_lon": max_lon,
+        "min_x": map.longitudToX(min_lon, map_size),
+        "min_y": map.latitudeToY(min_lat, map_size),
+        "max_x": map.longitudToX(max_lon, map_size),
+        "max_y": map.latitudeToY(max_lat, map_size),
+        "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL
       },
       position = map.normalize(
@@ -464,7 +478,7 @@ var MapManager = /** @class */ (function () {
     return (map_size / 180.0) * (90 - lat);
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
-    var R = 6371e3,
+    var R = 6371e3, //Earth radius
       q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
       dq = (c2[0] - c1[0]) * Math.PI / 180,
@@ -478,17 +492,17 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.normalize = function (x, y, map_dict) {
     var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
       n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.width / 2,
-            n_y * 1000 - map_dict.depth / 2];
+    return [n_x * map_dict.map_size - map_dict.width / 2,
+            n_y * map_dict.map_size - map_dict.depth / 2];
   };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z, map_dict) {
     var lon = x + map_dict.width / 2,
       lat = y + map_dict.depth / 2;
-    lon = lon / 1000;
+    lon = lon / map_dict.map_size;
     lon = lon * (map_dict.max_x - map_dict.min_x) +
       map_dict.min_x;
     lon = lon / (map_dict.width / 360.0) - 180;
-    lat = lat / 1000;
+    lat = lat / map_dict.map_size;
     lat = lat * (map_dict.max_y - map_dict.min_y) +
       map_dict.min_y;
     lat = 90 - lat / (map_dict.depth / 180.0);
