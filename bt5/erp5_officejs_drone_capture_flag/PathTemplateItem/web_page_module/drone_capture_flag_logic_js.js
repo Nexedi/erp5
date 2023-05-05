@@ -426,7 +426,7 @@ var MapManager = /** @class */ (function () {
     }
     max = max < _this.map_info.depth ? _this.map_info.depth : max;
     // Skybox
-    max_sky = (max * 10 < 20000) ? max * 10 : 20000;
+    max_sky =  (max * 10 < 20000) ? max * 10 : 20000; //skybox scene limit
     skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
     skybox.infiniteDistance = true;
     skybox.renderingGroupId = 0;
@@ -823,7 +823,8 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._init = function () {
-    var _this = this, canvas, hemi_north, hemi_south, camera, on3DmodelsReady;
+    var _this = this,
+        canvas, hemi_north, hemi_south, camera, cam_radius, on3DmodelsReady;
     canvas = this._canvas;
     this._delayed_defer_list = [];
     this._dispose();
@@ -835,6 +836,7 @@ var GameManager = /** @class */ (function () {
       audioEngine: false
     });
     this._scene = new BABYLON.Scene(this._engine);
+    //deep ground color - light blue simil sky
     this._scene.clearColor = new BABYLON.Color4(
       88 / 255,
       171 / 255,
@@ -857,7 +859,9 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, 800,
+    cam_radius = (GAMEPARAMETERS.map.map_size * 1.10 < 6000) ?
+      GAMEPARAMETERS.map.map_size * 1.10 : 6000; //skybox scene limit
+    camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;
     //changed for event handling
