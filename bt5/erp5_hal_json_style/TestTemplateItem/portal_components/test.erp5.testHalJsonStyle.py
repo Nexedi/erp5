@@ -3180,7 +3180,7 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     )
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
-    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
     expected_csv = 'Title,Creation Date\nfoook2,XX/XX/XXXX XX:XX:XX\nfoook1,XX/XX/XXXX XX:XX:XX\n'
     self.assertEqual(len(result), len(expected_csv), result)
     prefix_length = len('Title,Creation Date\nfoook2,')
@@ -3241,7 +3241,7 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     )
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
-    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'text/csv; charset=utf-8')
     self.assertTrue('foook1' in result, result)
     self.assertTrue('foook2' in result, result)
     self.assertTrue('foonotok' not in result, result)
