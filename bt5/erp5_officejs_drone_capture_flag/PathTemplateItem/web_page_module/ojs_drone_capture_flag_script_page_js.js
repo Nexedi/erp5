@@ -19,11 +19,11 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    INITIAL_POSITION = {
+    /*INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.26,
       "z": 15
-    },
+    },*/
     NUMBER_OF_DRONES = 2,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
@@ -89,7 +89,7 @@
       '  }\n' +
       '  me.exit(0);\n' +
       '};',
-    DRAW = true,
+    DRAW = false,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [],
@@ -300,7 +300,7 @@
                   "type": "IntegerField"
                 },
                 //TODO drop initial position inputs
-                "my_init_pos_lon": {
+                /*"my_init_pos_lon": {
                   "description": "",
                   "title": "Initial drone longitude",
                   "default": INITIAL_POSITION.longitude,
@@ -332,7 +332,7 @@
                   "key": "init_pos_z",
                   "hidden": 0,
                   "type": "FloatField"
-                },
+                },*/
                 "my_number_of_drones": {
                   "description": "",
                   "title": "Number of drones",
@@ -368,7 +368,7 @@
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
                   ["my_map_size"], ["my_map_height"],
-                  ["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
+                  //["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
                   ["my_start_AMSL"]]
               ], [
                 "right",
@@ -441,18 +441,18 @@
           "height": parseInt(options.map_height, 10),
           "start_AMSL": parseFloat(options.start_AMSL)
         },
-        "initialPosition": {
+        /*"initialPosition": {
           "longitude": parseFloat(options.init_pos_lon),
           "latitude": parseFloat(options.init_pos_lat),
           "z": parseFloat(options.init_pos_z)
-        },
+        },*/
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME,
         "droneList": {
-          "teamA": DRONE_LIST,
-          "teamB": DRONE_LIST
+          "team_A": DRONE_LIST,
+          "team_B": DRONE_LIST
         }
       };
       return gadget.declareGadget("babylonjs.gadget.html",
