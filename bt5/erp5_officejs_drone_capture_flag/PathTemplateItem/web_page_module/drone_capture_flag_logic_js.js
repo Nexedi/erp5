@@ -458,7 +458,8 @@ var MapManager = /** @class */ (function () {
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
-      largeGroundBottom, width, depth, terrain, max, flag_team_A, flag_team_B;
+      largeGroundBottom, width, depth, terrain, max, flag_team_A, flag_team_B,
+      blue_material, red_material;
     _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
@@ -505,12 +506,24 @@ var MapManager = /** @class */ (function () {
     // Flags
     flag_team_A = BABYLON.MeshBuilder.CreateBox("flag_1", { 'size': 1 }, scene);
     flag_team_A.position = new BABYLON.Vector3(
-      _this.map_info.initial_position.team_A.x,
-      _this.map_info.initial_position.team_A.y,
-      1
+      _this.map_info.initial_position.team_A.x, 3, //swap
+      _this.map_info.initial_position.team_A.y
     );
-    //flag_team_A.rotation = new BABYLON.Vector3(0, 0, 0);
-    flag_team_A.scaling =   new BABYLON.Vector3(1, 1, 5);
+    flag_team_A.scaling =   new BABYLON.Vector3(1, 6, 1);
+    blue_material = new BABYLON.StandardMaterial("flag", scene);
+    blue_material.alpha = 1;
+    blue_material.diffuseColor = BABYLON.Color3.Blue();
+    flag_team_A.material = blue_material;
+    flag_team_B = BABYLON.MeshBuilder.CreateBox("flag_2", { 'size': 1 }, scene);
+    flag_team_B.position = new BABYLON.Vector3(
+      _this.map_info.initial_position.team_B.x, 3, //swap
+      _this.map_info.initial_position.team_B.y
+    );
+    flag_team_B.scaling =   new BABYLON.Vector3(1, 6, 1);
+    red_material = new BABYLON.StandardMaterial("flag", scene);
+    red_material.alpha = 1;
+    red_material.diffuseColor = BABYLON.Color3.Red();
+    flag_team_B.material = red_material;
   }
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
