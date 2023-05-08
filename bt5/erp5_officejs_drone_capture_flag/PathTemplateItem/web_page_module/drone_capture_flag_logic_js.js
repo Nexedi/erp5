@@ -377,13 +377,15 @@ var MapManager = /** @class */ (function () {
   "use strict";
   //random geo-point:
   var MIN_LAT = 45.64,
-      MIN_LON = 14.253;
-  function calculateMapInfo(map, map_dict, initial_position) {
+      MIN_LON = 14.253,
+      START_Z = 15;
+  function calculateMapInfo(map, map_dict) {
     var min_lat = map_dict.min_lat || MIN_LAT,
       min_lon =  map_dict.min_lon || MIN_LON,
       offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
       max_lon = offset[1],
+      starting_point = map_dict.map_size / 2 * 0.8,
       map_info = {
         "depth": map_dict.map_size,
         "width": map_dict.map_size,
@@ -397,26 +399,61 @@ var MapManager = /** @class */ (function () {
         "max_x": map.longitudToX(max_lon, map_dict.map_size),
         "max_y": map.latitudeToY(max_lat, map_dict.map_size),
         "height": map_dict.height,
-        "start_AMSL": map_dict.start_AMSL
-      },
-      position = map.normalize(
-        map.longitudToX(initial_position.longitude, map_dict.map_size),
-        map.latitudeToY(initial_position.latitude, map_dict.map_size),
-        map_info
-      );
-    map_info.initial_position = {
-      "x": position[0],
-      "y": position[1],
-      "z": initial_position.z
-    };
+        "start_AMSL": map_dict.start_AMSL,
+        //rename to base?
+        "initial_position": {
+          "teamA": {
+            "x": 0,
+            "y": -starting_point,
+            "z": START_Z
+          },
+          "teamB": {
+            "x": 0,
+            "y": starting_point,
+            "z": START_Z
+          }
+        }
+      };
+    //for DEBUG
+    /*var minxy = map.normalize(
+      map_info.min_x,
+      map_info.min_y,
+      map_info
+    );
+    var maxxy = map.normalize(
+      map_info.max_x,
+      map_info.max_y,
+      map_info
+    );
+    var check1 = map.normalize(
+      map.longitudToX(14.25334942966329, map_dict.map_size),
+      map.latitudeToY(45.64492790560583, map_dict.map_size),
+      map_info
+    );
+    var check2 = map.normalize(
+      map.longitudToX(14.26332880184475, map_dict.map_size),
+      map.latitudeToY(45.64316335436476, map_dict.map_size),
+      map_info
+    );
+    console.log("MAP LIMITS");
+    console.log("min_lon to X:", minxy[0], min_lon);
+    console.log("min_lat to Y:", minxy[1], min_lat);
+    console.log("max_lon to X:", maxxy[0], max_lon);
+    console.log("max_lat to Y:", maxxy[1], max_lat);
+    console.log("DRONE PATH");
+    console.log("init position x:", map_info.initial_position.x);
+    console.log("init position y:", map_info.initial_position.y);
+    console.log("checkpoint-1 x:", check1[0]);
+    console.log("checkpoint-1 y:", check1[1]);
+    console.log("checkpoint-2 x:", check2[0]);
+    console.log("checkpoint-2 y:", check2[1]);*/
     return map_info;
   }
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
       largeGroundBottom, width, depth, terrain, max;
-    _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map,
-                                      GAMEPARAMETERS.initialPosition);
+    _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -426,30 +463,31 @@ var MapManager = /** @class */ (function () {
     }
     max = max < _this.map_info.depth ? _this.map_info.depth : max;
     // Skybox
-    max_sky =  (max * 10 < 20000) ? max * 10 : 20000; //skybox scene limit
-    skybox = BABYLON.Mesh.CreateBox("skyBox", max_sky, scene);
-    skybox.infiniteDistance = true;
-    skybox.renderingGroupId = 0;
+    max_sky =  (max * 15 < 20000) ? max * 15 : 20000; //skybox scene limit
+    
+    skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: max_sky }, scene);
     skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMat.backFaceCulling = false;
+    skyboxMat.disableLighting = true;
+    skybox.material = skyboxMat;
+    skybox.infiniteDistance = true;
     skyboxMat.disableLighting = true;
     skyboxMat.reflectionTexture = new BABYLON.CubeTexture("./assets/skybox/sky",
                                                           scene);
     skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    skyboxMat.infiniteDistance = true;
-    skybox.material = skyboxMat;
+    skybox.renderingGroupId = 0;
+    
     // Plane from bottom
     largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat", scene);
     largeGroundMat.specularColor = BABYLON.Color3.Black();
     largeGroundMat.alpha = 0.4;
     largeGroundBottom = BABYLON.Mesh.CreatePlane("largeGroundBottom",
-                                                     max * 11, scene);
+                                                 max * 11, scene);
     largeGroundBottom.position.y = -0.01;
     largeGroundBottom.rotation.x = -Math.PI / 2;
     largeGroundBottom.rotation.y = Math.PI;
     largeGroundBottom.material = largeGroundMat;
-    // Camera
-    scene.activeCamera.upperRadiusLimit = max * 4;
+    largeGroundBottom.renderingGroupId = 1;
     // Terrain
     // Give map some margin from the flight limits
     width = _this.map_info.width * 1.10;
@@ -547,7 +585,8 @@ var GameManager = /** @class */ (function () {
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      for (drone = 0; drone < GAMEPARAMETERS.droneList.length; drone += 1) {
+      //TODO teams
+      for (drone = 0; drone < GAMEPARAMETERS.droneList.teamA.length; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
         this._log_count[drone] = 0;
@@ -635,10 +674,10 @@ var GameManager = /** @class */ (function () {
     var drone_position = drone.getCurrentPosition();
     if (drone_position) {
       return (drone_position.z > 400) ||
-        (drone_position.x < this.gameParameter.map.min_lat) ||
-        (drone_position.x > this.gameParameter.map.max_lat) ||
-        (drone_position.y < this.gameParameter.map.min_lon) ||
-        (drone_position.y > this.gameParameter.map.max_lon);
+        (drone_position.x < this._mapManager.getMapInfo().min_lat) ||
+        (drone_position.x > this._mapManager.getMapInfo().max_lat) ||
+        (drone_position.y < this._mapManager.getMapInfo().min_lon) ||
+        (drone_position.y > this._mapManager.getMapInfo().max_lon);
     }
   };
 
@@ -771,6 +810,7 @@ var GameManager = /** @class */ (function () {
                 position_obj.position = new BABYLON.Vector3(drone_position.x,
                                                             drone_position.z,
                                                             drone_position.y);
+                //TODO base it on map_size
                 position_obj.scaling = new BABYLON.Vector3(4, 4, 4);
                 material = new BABYLON.StandardMaterial(game_manager._scene);
                 material.alpha = 1;
@@ -843,6 +883,8 @@ var GameManager = /** @class */ (function () {
       217 / 255,
       255 / 255
     );
+    //for DEBUG - fondo negro
+    this._scene.clearColor = BABYLON.Color3.Black();
     //removed for event handling
     //this._engine.enableOfflineSupport = false;
     //this._scene.collisionsEnabled = true;
@@ -864,10 +906,13 @@ var GameManager = /** @class */ (function () {
     camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;
+    //zoom out limit
+    camera.upperRadiusLimit = GAMEPARAMETERS.map.map_size * 10;
+    //scene.activeCamera.upperRadiusLimit = max * 4;
     //changed for event handling
     //camera.attachControl(this._scene.getEngine().getRenderingCanvas()); //orig
     camera.attachControl(canvas, true);
-    camera.maxz = 40000;
+    camera.maxz = 400000;
     this._camera = camera;
 
     // Render loop
@@ -883,8 +928,9 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      ctx._spawnDrones(_this._mapManager.map_info.initial_position,
-                       GAMEPARAMETERS.droneList, ctx);
+      //TODO teams
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamA,
+                       GAMEPARAMETERS.droneList.teamA, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -897,7 +943,8 @@ var GameManager = /** @class */ (function () {
         ctx._scene
       );
       document = documentTmp;
-      for (count = 0; count < GAMEPARAMETERS.droneList.length; count += 1) {
+      //TODO teams
+      for (count = 0; count < GAMEPARAMETERS.droneList.teamA.length; count += 1) {
         controlMesh = ctx._droneList[count].infosMesh;
         rect = new BABYLON.GUI.Rectangle();
         rect.width = "10px";
@@ -946,10 +993,11 @@ var GameManager = /** @class */ (function () {
     return new RSVP.Queue()
       .push(function () {
         promise_list = [];
+        //TODO teams
         _this._droneList.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position
+            _this._mapManager.getMapInfo().initial_position.teamA
           ));
         });
         return RSVP.all(promise_list);
@@ -1044,6 +1092,7 @@ var GameManager = /** @class */ (function () {
       }
       base = code_eval;
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
+      //TODO teams (_droneList)
       base += "};ctx._droneList.push(drone)";
       code_eval += "ctx._droneList.push(drone)";
       /*jslint evil: true*/
