@@ -225,12 +225,13 @@ class SecurityTestCase(ERP5TypeTestCase):
           for wf_transition in wf._getWorkflowStateOf(document).getDestinationValueList():
             if wf_transition.getTriggerType() == TRIGGER_USER_ACTION:
               workflow_transitions_description.append(
-                "%s%s[%s]\n\t\tExpression: %s\n\t\tPermissions: %s\n\t\tGroups: %s" % (
+                "%s%s[%s]\n\t\tExpression: %s\n\t\tPermissions: %s\n\t\tRoles: %s\n\t\tGroups: %s" % (
                   wf_transition.getReference() == transition and "* " or "  ",
                   wf_transition.getReference(),
                   wf.getId(),
                   wf_transition.getGuardExpression() or '',
                   ', '.join(wf_transition.getGuardPermissionList()),
+                  ', '.join(wf_transition.getGuardRoleList()),
                   ', '.join(wf_transition.getGuardGroupList()),
                 )
               )
