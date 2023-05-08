@@ -117,6 +117,7 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
         connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context(), timeout=10)
       else:
         connection = httplib.HTTPConnection(netloc_to_check, timeout=10)
+      self.addCleanup(connection.close)
       connection.request(
         method="GET",
         url=url_to_check
