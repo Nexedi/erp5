@@ -693,6 +693,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     raise
   finally:
     ProcessingNodeTestCase.unregisterNode()
+    ProcessingNodeTestCase.stopHTTPServer()
     db_factory.close()
     Storage.close()
     if node_pid_list is not None:
