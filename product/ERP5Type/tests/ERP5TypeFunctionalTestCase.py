@@ -428,7 +428,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
-    host, port = self.startZServer()
+    host, port = self.startHTTPServer()
     self.runner = FunctionalTestRunner(host, port, self)
 
   def setSystemPreference(self):

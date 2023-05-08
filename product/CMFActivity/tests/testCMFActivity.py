@@ -2603,7 +2603,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(activity_node, current_node)
 
   def test_getServerAddress(self):
-    host, port = self.startZServer()
+    host, port = self.startHTTPServer()
     ip = socket.gethostbyname(host)
     server_address = '%s:%s' % (ip, port)
     address = getServerAddress()
