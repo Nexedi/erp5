@@ -151,9 +151,10 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
       pass
     Lifetime.graceful_shutdown_loop()
 
-  def startZServer(self, verbose=False):
-    """Start HTTP ZServer in background"""
-    if self._server_address is None:
+  @staticmethod
+  def startHTTPServer(verbose=False):
+    """Start HTTP Server in background"""
+    if ProcessingNodeTestCase._server_address is None:
       from Products.ERP5Type.tests.runUnitTest import log_directory
       log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
@@ -199,8 +200,11 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
               webdav_ports=webdav_ports),
             logger,
             sockets=sockets)
+          ProcessingNodeTestCase._server = hs
           ProcessingNodeTestCase._server_address = hs.addr
-          t = Thread(target=hs.run)
+          ProcessingNodeTestCase._server_thread = t = Thread(
+            target=hs.run,
+            name='ProcessingNodeTestCase.startHTTPServer')
           t.setDaemon(1)
           t.start()
       from Products.CMFActivity import ActivityTool
@@ -210,7 +214,15 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         if ActivityTool.currentNode == ActivityTool._server_address:
           ActivityTool.currentNode = None
         ActivityTool._server_address = None
-    return self._server_address
+    return ProcessingNodeTestCase._server_address
+  startZServer = startHTTPServer # BBB
+
+  @staticmethod
+  def stopHTTPServer():
+    if ProcessingNodeTestCase._server_address is not None:
+      ProcessingNodeTestCase._server_address = None
+      ProcessingNodeTestCase._server.close()
+      ProcessingNodeTestCase._server_thread.join(5)
 
   def _registerNode(self, distributing, processing):
     """Register node to process and/or distribute activities"""
@@ -338,7 +350,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
-    self.startZServer()
+    self.startHTTPServer()
     # Make sure to still have possibilities to edit components
     addUserToDeveloperRole('ERP5TypeTestCase')
     from Zope2.custom_zodb import cluster
