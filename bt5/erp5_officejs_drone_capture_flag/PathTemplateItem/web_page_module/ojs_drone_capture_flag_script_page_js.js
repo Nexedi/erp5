@@ -4,9 +4,9 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 15,
+  var SIMULATION_SPEED = 1,
     SIMULATION_TIME = 1500,
-    map_size = 1000,
+    map_size = 200,
     map_height = 100,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -299,6 +299,7 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
+                //TODO drop initial position inputs
                 "my_init_pos_lon": {
                   "description": "",
                   "title": "Initial drone longitude",
@@ -449,7 +450,10 @@
         "temp_flight_path": true,
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME,
-        "droneList": DRONE_LIST
+        "droneList": {
+          "teamA": DRONE_LIST,
+          "teamB": []
+        }
       };
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
