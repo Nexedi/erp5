@@ -452,7 +452,7 @@
         "log_interval_time": LOG_TIME,
         "droneList": {
           "teamA": DRONE_LIST,
-          "teamB": []
+          "teamB": DRONE_LIST
         }
       };
       return gadget.declareGadget("babylonjs.gadget.html",
