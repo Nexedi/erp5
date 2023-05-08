@@ -563,11 +563,13 @@ var GameManager = /** @class */ (function () {
   "use strict";
   // *** CONSTRUCTOR ***
   function GameManager(canvas, game_parameters_json) {
-    var drone, header_list;
+    var drone, header_list, drone_count;
     this._canvas = canvas;
     this._scene = null;
     this._engine = null;
     this._droneList = [];
+    this._droneList_teamA = [];
+    this._droneList_teamB = [];
     this._canUpdate = false;
     this._max_step_animation_frame = game_parameters_json.simulation_speed;
     if (!this._max_step_animation_frame) { this._max_step_animation_frame = 5; }
@@ -585,8 +587,9 @@ var GameManager = /** @class */ (function () {
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      //TODO teams
-      for (drone = 0; drone < GAMEPARAMETERS.droneList.teamA.length; drone += 1) {
+      drone_count = GAMEPARAMETERS.droneList.teamA.length +
+        GAMEPARAMETERS.droneList.teamB.length;
+      for (drone = 0; drone < drone_count; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
         this._log_count[drone] = 0;
@@ -876,15 +879,15 @@ var GameManager = /** @class */ (function () {
       audioEngine: false
     });
     this._scene = new BABYLON.Scene(this._engine);
-    //deep ground color - light blue simil sky
+    //for DEBUG - fondo negro
+    //this._scene.clearColor = BABYLON.Color3.Black();
+    //deep ground color - light blue simile sky
     this._scene.clearColor = new BABYLON.Color4(
       88 / 255,
       171 / 255,
       217 / 255,
       255 / 255
     );
-    //for DEBUG - fondo negro
-    this._scene.clearColor = BABYLON.Color3.Black();
     //removed for event handling
     //this._engine.enableOfflineSupport = false;
     //this._scene.collisionsEnabled = true;
@@ -928,9 +931,10 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      //TODO teams
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamA,
-                       GAMEPARAMETERS.droneList.teamA, ctx);
+                       GAMEPARAMETERS.droneList.teamA, "teamA", ctx);
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamB,
+                       GAMEPARAMETERS.droneList.teamB, "teamB", ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -943,24 +947,27 @@ var GameManager = /** @class */ (function () {
         ctx._scene
       );
       document = documentTmp;
-      //TODO teams
-      for (count = 0; count < GAMEPARAMETERS.droneList.teamA.length; count += 1) {
-        controlMesh = ctx._droneList[count].infosMesh;
-        rect = new BABYLON.GUI.Rectangle();
-        rect.width = "10px";
-        rect.height = "10px";
-        rect.cornerRadius = 20;
-        rect.color = "white";
-        rect.thickness = 0.5;
-        rect.background = "grey";
-        advancedTexture.addControl(rect);
-        label = new BABYLON.GUI.TextBlock();
-        label.text = count.toString();
-        label.fontSize = 7;
-        rect.addControl(label);
-        rect.linkWithMesh(controlMesh);
-        rect.linkOffsetY = 0;
+      function colourDrones(drone_list, colour) {
+        for (count = 0; count < drone_list.length; count += 1) {
+          controlMesh = drone_list[count].infosMesh;
+          rect = new BABYLON.GUI.Rectangle();
+          rect.width = "10px";
+          rect.height = "10px";
+          rect.cornerRadius = 20;
+          rect.color = "white";
+          rect.thickness = 0.5;
+          rect.background = colour;
+          advancedTexture.addControl(rect);
+          label = new BABYLON.GUI.TextBlock();
+          label.text = count.toString();
+          label.fontSize = 7;
+          rect.addControl(label);
+          rect.linkWithMesh(controlMesh);
+          rect.linkOffsetY = 0;
+        }
       }
+      colourDrones(ctx._droneList_teamA, "blue");
+      colourDrones(ctx._droneList_teamB, "red");
       console.log("on3DmodelsReady - advaced textures added");
       return ctx;
     };
@@ -973,6 +980,8 @@ var GameManager = /** @class */ (function () {
       })
       .push(function () {
         on3DmodelsReady(_this);
+        _this._droneList =
+          _this._droneList_teamA.concat(_this._droneList_teamB);
         var result = new RSVP.Queue();
         result.push(function () {
           return RSVP.delay(1000);
@@ -993,11 +1002,16 @@ var GameManager = /** @class */ (function () {
     return new RSVP.Queue()
       .push(function () {
         promise_list = [];
-        //TODO teams
-        _this._droneList.forEach(function (drone) {
+        _this._droneList_teamA.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
             _this._mapManager.getMapInfo().initial_position.teamA
+          ));
+        });
+        _this._droneList_teamB.forEach(function (drone) {
+          drone._tick = 0;
+          promise_list.push(drone.internal_start(
+            _this._mapManager.getMapInfo().initial_position.teamB
           ));
         });
         return RSVP.all(promise_list);
@@ -1053,7 +1067,8 @@ var GameManager = /** @class */ (function () {
     return parameter;
   };
 
-  GameManager.prototype._spawnDrones = function (center, drone_list, ctx) {
+  GameManager.prototype._spawnDrones = function (center, drone_list,
+                                                 team, ctx) {
     var position, i, position_list = [], max_collision = 10 * drone_list.length,
       collision_nb = 0, api;
     function checkCollision(position, list) {
@@ -1092,9 +1107,8 @@ var GameManager = /** @class */ (function () {
       }
       base = code_eval;
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
-      //TODO teams (_droneList)
-      base += "};ctx._droneList.push(drone)";
-      code_eval += "ctx._droneList.push(drone)";
+      base += "};ctx._droneList_" + team + ".push(drone)";
+      code_eval += "ctx._droneList_" + team + ".push(drone)";
       /*jslint evil: true*/
       try {
         eval(code_eval);
