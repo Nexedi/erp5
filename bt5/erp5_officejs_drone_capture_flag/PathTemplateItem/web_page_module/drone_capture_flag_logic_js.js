@@ -2,14 +2,14 @@
 /*jslint nomen: true, indent: 2, maxlen: 80, todo: true,
          unparam: true */
 
-var GAMEPARAMETERS = {};
+var GAMEPARAMETERS = {}, TEAM_A = "team_A", TEAM_B = "team_B";
 
 /******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
   "use strict";
 
   //** CONSTRUCTOR
-  function DroneManager(scene, id, API) {
+  function DroneManager(scene, id, API, team) {
     this._mesh = null;
     this._controlMesh = null;
     this._canPlay = false;
@@ -31,6 +31,7 @@ var DroneManager = /** @class */ (function () {
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
+    this._team = team;
     this._leader_id = 0;
     this._API = API; // var API created on AI evel
     // Create the control mesh
@@ -78,6 +79,11 @@ var DroneManager = /** @class */ (function () {
   });
   Object.defineProperty(DroneManager.prototype, "id", {
     get: function () { return this._id; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "team", {
+    get: function () { return this._team; },
     enumerable: true,
     configurable: true
   });
@@ -402,12 +408,12 @@ var MapManager = /** @class */ (function () {
         "start_AMSL": map_dict.start_AMSL,
         //rename to base?
         "initial_position": {
-          "teamA": {
+          "team_A": {
             "x": 0,
             "y": -starting_point,
             "z": START_Z
           },
-          "teamB": {
+          "team_B": {
             "x": 0,
             "y": starting_point,
             "z": START_Z
@@ -452,7 +458,7 @@ var MapManager = /** @class */ (function () {
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
-      largeGroundBottom, width, depth, terrain, max;
+      largeGroundBottom, width, depth, terrain, max, flag_team_A, flag_team_B;
     _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
@@ -464,7 +470,6 @@ var MapManager = /** @class */ (function () {
     max = max < _this.map_info.depth ? _this.map_info.depth : max;
     // Skybox
     max_sky =  (max * 15 < 20000) ? max * 15 : 20000; //skybox scene limit
-    
     skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: max_sky }, scene);
     skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMat.backFaceCulling = false;
@@ -476,7 +481,6 @@ var MapManager = /** @class */ (function () {
                                                           scene);
     skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     skybox.renderingGroupId = 0;
-    
     // Plane from bottom
     largeGroundMat = new BABYLON.StandardMaterial("largeGroundMat", scene);
     largeGroundMat.specularColor = BABYLON.Color3.Black();
@@ -498,6 +502,15 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
+    // Flags
+    flag_team_A = BABYLON.MeshBuilder.CreateBox("flag_1", { 'size': 1 }, scene);
+    flag_team_A.position = new BABYLON.Vector3(
+      _this.map_info.initial_position.team_A.x,
+      _this.map_info.initial_position.team_A.y,
+      1
+    );
+    //flag_team_A.rotation = new BABYLON.Vector3(0, 0, 0);
+    flag_team_A.scaling =   new BABYLON.Vector3(1, 1, 5);
   }
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
@@ -568,8 +581,8 @@ var GameManager = /** @class */ (function () {
     this._scene = null;
     this._engine = null;
     this._droneList = [];
-    this._droneList_teamA = [];
-    this._droneList_teamB = [];
+    this._droneList_team_A = [];
+    this._droneList_team_B = [];
     this._canUpdate = false;
     this._max_step_animation_frame = game_parameters_json.simulation_speed;
     if (!this._max_step_animation_frame) { this._max_step_animation_frame = 5; }
@@ -578,36 +591,40 @@ var GameManager = /** @class */ (function () {
     this._map_swapped = false;
     this._log_count = [];
     this._flight_log = [];
-    if (GAMEPARAMETERS.draw_flight_path) {
-      this._last_position_drawn = [];
-      this._trace_objects_per_drone = [];
+    if (GAMEPARAMETERS.log_drone_flight) {
       // ! Be aware that the following functions relies on this log format:
       // - getLogEntries at Drone Simulator Log Page
-      // - getLogEntries at Dron Log Follower API
+      // - getLogEntries at Drone Log Follower API
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      drone_count = GAMEPARAMETERS.droneList.teamA.length +
-        GAMEPARAMETERS.droneList.teamB.length;
+      drone_count = GAMEPARAMETERS.droneList.team_A.length +
+        GAMEPARAMETERS.droneList.team_B.length;
       for (drone = 0; drone < drone_count; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
         this._log_count[drone] = 0;
-        this._last_position_drawn[drone] = null;
-        this._trace_objects_per_drone[drone] = [];
       }
-      this._colors = [
-        new BABYLON.Color3(255, 165, 0),
-        new BABYLON.Color3(0, 0, 255),
-        new BABYLON.Color3(255, 0, 0),
-        new BABYLON.Color3(0, 255, 0),
-        new BABYLON.Color3(0, 128, 128),
-        new BABYLON.Color3(0, 0, 0),
-        new BABYLON.Color3(255, 255, 255),
-        new BABYLON.Color3(128, 128, 0),
-        new BABYLON.Color3(128, 0, 128),
-        new BABYLON.Color3(0, 0, 128)
-      ];
+      if (GAMEPARAMETERS.draw_flight_path) {
+        this._last_position_drawn = [];
+        this._trace_objects_per_drone = [];
+        for (drone = 0; drone < drone_count; drone += 1) {
+          this._last_position_drawn[drone] = null;
+          this._trace_objects_per_drone[drone] = [];
+        }
+        this._colors = [
+          new BABYLON.Color3(255, 165, 0),
+          new BABYLON.Color3(0, 0, 255),
+          new BABYLON.Color3(255, 0, 0),
+          new BABYLON.Color3(0, 255, 0),
+          new BABYLON.Color3(0, 128, 128),
+          new BABYLON.Color3(0, 0, 0),
+          new BABYLON.Color3(255, 255, 255),
+          new BABYLON.Color3(128, 128, 0),
+          new BABYLON.Color3(128, 0, 128),
+          new BABYLON.Color3(0, 0, 128)
+        ];
+      }
     }
     this.APIs_dict = {
       FixedWingDroneAPI: FixedWingDroneAPI/*,
@@ -931,10 +948,11 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamA,
-                       GAMEPARAMETERS.droneList.teamA, "teamA", ctx);
-      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.teamB,
-                       GAMEPARAMETERS.droneList.teamB, "teamB", ctx);
+      //TODO spawn base flags simil as drones (get a flag shape mesh)
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_A,
+                       GAMEPARAMETERS.droneList.team_A, TEAM_A, ctx);
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_B,
+                       GAMEPARAMETERS.droneList.team_B, TEAM_B, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -966,8 +984,8 @@ var GameManager = /** @class */ (function () {
           rect.linkOffsetY = 0;
         }
       }
-      colourDrones(ctx._droneList_teamA, "blue");
-      colourDrones(ctx._droneList_teamB, "red");
+      colourDrones(ctx._droneList_team_A, "blue");
+      colourDrones(ctx._droneList_team_B, "red");
       console.log("on3DmodelsReady - advaced textures added");
       return ctx;
     };
@@ -981,7 +999,7 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         on3DmodelsReady(_this);
         _this._droneList =
-          _this._droneList_teamA.concat(_this._droneList_teamB);
+          _this._droneList_team_A.concat(_this._droneList_team_B);
         var result = new RSVP.Queue();
         result.push(function () {
           return RSVP.delay(1000);
@@ -1002,16 +1020,16 @@ var GameManager = /** @class */ (function () {
     return new RSVP.Queue()
       .push(function () {
         promise_list = [];
-        _this._droneList_teamA.forEach(function (drone) {
+        _this._droneList_team_A.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position.teamA
+            _this._mapManager.getMapInfo().initial_position.team_A
           ));
         });
-        _this._droneList_teamB.forEach(function (drone) {
+        _this._droneList_team_B.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position.teamB
+            _this._mapManager.getMapInfo().initial_position.team_B
           ));
         });
         return RSVP.all(promise_list);
@@ -1080,7 +1098,10 @@ var GameManager = /** @class */ (function () {
       }
       return false;
     }
-    function spawnDrone(x, y, z, index, drone_info, api) {
+    function spawnDrone(x, y, z, index, drone_info, api, team) {
+      if (team == TEAM_B) {
+        index += GAMEPARAMETERS.droneList.team_A.length;
+      }
       var default_drone_AI = api.getDroneAI(), code, base, code_eval;
       if (default_drone_AI) {
         code = default_drone_AI;
@@ -1088,7 +1109,7 @@ var GameManager = /** @class */ (function () {
         code = drone_info.script_content;
       }
       code_eval = "let drone = new DroneManager(ctx._scene, " +
-          index + ', api);' +
+          index + ', api, team);' +
           "let droneMe = function(NativeDate, me, Math, window, DroneManager," +
           " GameManager, FixedWingDroneAPI, BABYLON, " +
           "GAMEPARAMETERS) {" +
@@ -1144,7 +1165,7 @@ var GameManager = /** @class */ (function () {
           i
         );
         spawnDrone(position.x, position.y, position.z, i,
-                   drone_list[i], api);
+                   drone_list[i], api, team);
       }
     }
   };
