@@ -28,7 +28,7 @@
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var ALTITUDE = 100,\n' +
+      'var ALTITUDE = 10,\n' +
       '  EPSILON = 9,\n' +
       '  CHECKPOINT_LIST = [\n' +
       '    {\n' +
@@ -66,7 +66,7 @@
       '      me.setTargetCoordinates(\n' +
       '        CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
       '        CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].altitude + ALTITUDE + ALTITUDE * me.id\n' +
+      '        ALTITUDE + me.id\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -513,9 +513,9 @@
               "z": 10
             },
             "scale": {
-              "x": 2,
+              "x": 200,
               "y": 2.5,
-              "z": 20
+              "z": 30
             },
             "rotation": {
               "x": 0,

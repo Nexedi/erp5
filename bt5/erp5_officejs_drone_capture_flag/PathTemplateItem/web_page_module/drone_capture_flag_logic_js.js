@@ -764,6 +764,31 @@ var GameManager = /** @class */ (function () {
     }
   };
 
+  GameManager.prototype._checkObstacleCollision = function (drone, obstacle) {
+    var closest = void 0, projected = BABYLON.Vector3.Zero();
+    if (drone.colliderMesh &&
+      drone.colliderMesh.intersectsMesh(obstacle, true)) {
+      /**
+       * Closest facet check is needed for sphere and cylinder,
+       * but just seemed bugged with the box
+       * So only need to check intersectMesh for the box
+       */
+      if (obstacle.type == "box") {
+        closest = true;
+      } else {
+        obstacle.updateFacetData();
+        closest = obstacle.getClosestFacetAtCoordinates(
+          drone.infosMesh.position.x,
+          drone.infosMesh.position.y,
+          drone.infosMesh.position.z, projected);
+      }
+      if (closest !== null) {
+        drone._internal_crash(new Error('Drone ' + drone.id +
+                                        ' touched an obstacle.'));
+      }
+    }
+  };
+
   GameManager.prototype._checkCollision = function (drone, other) {
     if (drone.colliderMesh && other.colliderMesh &&
         drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
@@ -826,9 +851,9 @@ var GameManager = /** @class */ (function () {
                 _this._checkCollision(drone, other);
               }
             });
-            /*_this._mapManager.obstacles.forEach(function (obstacle) {
-              _this._checkCollisionWithObstacle(drone, obstacle);
-            });*/
+            _this._mapManager._obstacle_list.forEach(function (obstacle) {
+              _this._checkObstacleCollision(drone, obstacle);
+            });
           }
         }
         return drone.internal_update(delta_time);
