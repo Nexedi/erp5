@@ -19,6 +19,7 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
+    FLAG_COUNT = 5,
     /*INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.26,
@@ -439,7 +440,60 @@
         "map": {
           "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
-          "start_AMSL": parseFloat(options.start_AMSL)
+          "start_AMSL": parseFloat(options.start_AMSL),
+          "flag_count": FLAG_COUNT,
+          "obstacle_list" : [{
+            "type": "sphere",
+            "position": {
+              "x": 50,
+              "y": 50,
+              "z": 8
+            },
+            "scale": {
+              "x": 3,
+              "y": 3,
+              "z": 3
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }, {
+            "type": "cylinder",
+            "position": {
+              "x": -50,
+              "y": -50,
+              "z": 10
+            },
+            "scale": {
+              "x": 2.5,
+              "y": 2.5,
+              "z": 20
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }, {
+            "type": "box",
+            "position": {
+              "x": -25,
+              "y": -25,
+              "z": 10
+            },
+            "scale": {
+              "x": 2,
+              "y": 2.5,
+              "z": 20
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }]
         },
         /*"initialPosition": {
           "longitude": parseFloat(options.init_pos_lon),

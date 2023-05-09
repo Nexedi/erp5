@@ -406,6 +406,8 @@ var MapManager = /** @class */ (function () {
         "max_y": map.latitudeToY(max_lat, map_dict.map_size),
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL,
+        "flag_count": map_dict.flag_count,
+        "obstacle_list": map_dict.obstacle_list,
         //rename to base?
         "initial_position": {
           "team_A": {
@@ -503,7 +505,53 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
+    //MAP ELEMENTS
+    // Obstacles
+    var count = 0, new_obstacle;
+    this._obstacle_list = [];
+    _this.map_info.obstacle_list.forEach(function (obstacle) {
+      switch (obstacle.type) {
+      case "box":
+        new_obstacle = BABYLON.MeshBuilder.CreateBox("obs_" + count,
+                                                     { 'size': 1 }, scene);
+        break;
+      case "cylinder":
+        new_obstacle = BABYLON.MeshBuilder.CreateCylinder("obs_" + count, {
+          'diameterBottom': obstacle.diameterBottom,
+          'diameterTop': obstacle.diameterTop,
+          'height': 1
+        }, scene);
+        break;
+      case "sphere":
+        new_obstacle = BABYLON.MeshBuilder.CreateSphere("obs_" + count, {
+          'diameterX': obstacle.scale.x,
+          'diameterY': obstacle.scale.z,
+          'diameterZ': obstacle.scale.y
+        }, scene);
+        break;
+      default:
+        return;
+      }
+      new_obstacle.type = obstacle.type;
+      var convertion = Math.PI / 180;
+      if ("position" in obstacle)
+        new_obstacle.position = new BABYLON.Vector3(obstacle.position.x,
+                                                    obstacle.position.z,
+                                                    obstacle.position.y);
+      if ("rotation" in obstacle)
+        new_obstacle.rotation =
+          new BABYLON.Vector3(obstacle.rotation.x * convertion,
+                              obstacle.rotation.z * convertion,
+                              obstacle.rotation.y * convertion);
+      if ("scale" in obstacle)
+        new_obstacle.scaling = new BABYLON.Vector3(obstacle.scale.x,
+                                                   obstacle.scale.z,
+                                                   obstacle.scale.y);
+      _this._obstacle_list.push(new_obstacle);
+      count++;
+    });
     // Flags
+    //_this.map_info.flag_count 
     flag_team_A = BABYLON.MeshBuilder.CreateBox("flag_1", { 'size': 1 }, scene);
     flag_team_A.position = new BABYLON.Vector3(
       _this.map_info.initial_position.team_A.x, 3, //swap
