@@ -459,8 +459,8 @@ var MapManager = /** @class */ (function () {
   }
   //** CONSTRUCTOR
   function MapManager(scene) {
-    var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
-      largeGroundBottom, width, depth, terrain, max, flag, flag_material,
+    var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
+      largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
       count = 0, new_obstacle;
     _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map);
     max = _this.map_info.width;
@@ -551,26 +551,47 @@ var MapManager = /** @class */ (function () {
     // Flags
     _this._flag_list = [];
     var FLAG_SIZE = {
-      'x': 1,
-      'y': 1,
+      'x': 0.5,
+      'y': 0.5,
       'z': 6
     };
     _this.map_info.flag_list.forEach(function (flag_info, index) {
-      flag = BABYLON.MeshBuilder.CreateBox("flag_" + index,
+      flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
+      flag_material.alpha = 1;
+      flag_material.diffuseColor = BABYLON.Color3.Green();
+      flag_a = BABYLON.MeshBuilder.CreateDisc("flag_a_" + index,
+                                              {radius: 3, tessellation: 3},
+                                              scene);
+      flag_a.material = flag_material;
+      flag_a.position = new BABYLON.Vector3(
+        flag_info.position.x + 1,
+        FLAG_SIZE.z + 1, //swap
+        flag_info.position.y - 1
+      );
+      flag_a.rotation = new BABYLON.Vector3(0, 1, 0);
+      flag_b = BABYLON.MeshBuilder.CreateDisc("flag_b_" + index,
+                                              {radius: 3, tessellation: 3},
+                                              scene);
+      flag_b.material = flag_material;
+      flag_b.position = new BABYLON.Vector3(
+        flag_info.position.x - 1,
+        FLAG_SIZE.z + 1, //swap
+        flag_info.position.y + 1
+      );
+      flag_b.rotation = new BABYLON.Vector3(0, 4, 0);
+      mast = BABYLON.MeshBuilder.CreateBox("mast_" + index,
                                            { 'size': 1 }, scene);
-      flag.position = new BABYLON.Vector3(
+      mast.position = new BABYLON.Vector3(
         flag_info.position.x,
         FLAG_SIZE.z / 2, //swap
         flag_info.position.y
       );
-      flag.scaling = new BABYLON.Vector3(
+      mast.scaling = new BABYLON.Vector3(
         FLAG_SIZE.x,
         FLAG_SIZE.z, //swap
         FLAG_SIZE.y);
-      flag_material = new BABYLON.StandardMaterial("flag", scene);
-      flag_material.alpha = 1;
-      flag_material.diffuseColor = BABYLON.Color3.Green();
-      flag.material = flag_material;
+      mast.material = flag_material;
+      flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
       flag.flag_weight = _this.map_info.flag_weight;
       _this._flag_list.push(flag);
     });
