@@ -406,7 +406,7 @@ var MapManager = /** @class */ (function () {
         "max_y": map.latitudeToY(max_lat, map_dict.map_size),
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL,
-        "flag_count": map_dict.flag_count,
+        "flag_list": map_dict.flag_list,
         "obstacle_list": map_dict.obstacle_list,
         //rename to base?
         "initial_position": {
@@ -460,8 +460,8 @@ var MapManager = /** @class */ (function () {
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat,
-      largeGroundBottom, width, depth, terrain, max, flag_team_A, flag_team_B,
-      blue_material, red_material;
+      largeGroundBottom, width, depth, terrain, max, flag, flag_material,
+      count = 0, new_obstacle;
     _this.map_info = calculateMapInfo(_this, GAMEPARAMETERS.map);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
@@ -505,10 +505,8 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
-    //MAP ELEMENTS
     // Obstacles
-    var count = 0, new_obstacle;
-    this._obstacle_list = [];
+    _this._obstacle_list = [];
     _this.map_info.obstacle_list.forEach(function (obstacle) {
       switch (obstacle.type) {
       case "box":
@@ -551,27 +549,31 @@ var MapManager = /** @class */ (function () {
       count++;
     });
     // Flags
-    //_this.map_info.flag_count 
-    flag_team_A = BABYLON.MeshBuilder.CreateBox("flag_1", { 'size': 1 }, scene);
-    flag_team_A.position = new BABYLON.Vector3(
-      _this.map_info.initial_position.team_A.x, 3, //swap
-      _this.map_info.initial_position.team_A.y
-    );
-    flag_team_A.scaling =   new BABYLON.Vector3(1, 6, 1);
-    blue_material = new BABYLON.StandardMaterial("flag", scene);
-    blue_material.alpha = 1;
-    blue_material.diffuseColor = BABYLON.Color3.Blue();
-    flag_team_A.material = blue_material;
-    flag_team_B = BABYLON.MeshBuilder.CreateBox("flag_2", { 'size': 1 }, scene);
-    flag_team_B.position = new BABYLON.Vector3(
-      _this.map_info.initial_position.team_B.x, 3, //swap
-      _this.map_info.initial_position.team_B.y
-    );
-    flag_team_B.scaling =   new BABYLON.Vector3(1, 6, 1);
-    red_material = new BABYLON.StandardMaterial("flag", scene);
-    red_material.alpha = 1;
-    red_material.diffuseColor = BABYLON.Color3.Red();
-    flag_team_B.material = red_material;
+    _this._flag_list = [];
+    var FLAG_SIZE = {
+      'x': 1,
+      'y': 1,
+      'z': 6
+    };
+    _this.map_info.flag_list.forEach(function (flag_info, index) {
+      flag = BABYLON.MeshBuilder.CreateBox("flag_" + index,
+                                           { 'size': 1 }, scene);
+      flag.position = new BABYLON.Vector3(
+        flag_info.position.x,
+        FLAG_SIZE.z / 2, //swap
+        flag_info.position.y
+      );
+      flag.scaling = new BABYLON.Vector3(
+        FLAG_SIZE.x,
+        FLAG_SIZE.z, //swap
+        FLAG_SIZE.y);
+      flag_material = new BABYLON.StandardMaterial("flag", scene);
+      flag_material.alpha = 1;
+      flag_material.diffuseColor = BABYLON.Color3.Green();
+      flag.material = flag_material;
+      flag.flag_weight = _this.map_info.flag_weight;
+      _this._flag_list.push(flag);
+    });
   }
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
@@ -1009,7 +1011,6 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      //TODO spawn base flags simil as drones (get a flag shape mesh)
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_A,
                        GAMEPARAMETERS.droneList.team_A, TEAM_A, ctx);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_B,

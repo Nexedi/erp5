@@ -19,13 +19,13 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    FLAG_COUNT = 5,
     /*INITIAL_POSITION = {
       "latitude": 45.6412,
       "longitude": 14.26,
       "z": 15
     },*/
     NUMBER_OF_DRONES = 2,
+    FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var ALTITUDE = 100,\n' +
@@ -441,12 +441,41 @@
           "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
           "start_AMSL": parseFloat(options.start_AMSL),
-          "flag_count": FLAG_COUNT,
+          "flag_weight": FLAG_WEIGHT,
+          "flag_list": [{
+            "team": 0,
+            "position": {
+              "x": -50,
+              "y": -80,
+              "z": 0
+            }
+          }, {
+            "team": 0,
+            "position": {
+              "x": 50,
+              "y": -80,
+              "z": 0
+            }
+          }, {
+            "team": 1,
+            "position": {
+              "x": 50,
+              "y": 80,
+              "z": 0
+            }
+          }, {
+            "team": 1,
+            "position": {
+              "x": -50,
+              "y": 80,
+              "z": 0
+            }
+          }],
           "obstacle_list" : [{
             "type": "sphere",
             "position": {
-              "x": 50,
-              "y": 50,
+              "x": 30,
+              "y": 20,
               "z": 8
             },
             "scale": {
