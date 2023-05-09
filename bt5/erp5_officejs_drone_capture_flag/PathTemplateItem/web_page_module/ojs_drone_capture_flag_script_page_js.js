@@ -28,7 +28,7 @@
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var ALTITUDE = 10,\n' +
+      'var ALTITUDE = 1000,\n' +
       '  EPSILON = 9,\n' +
       '  CHECKPOINT_LIST = [\n' +
       '    {\n' +
@@ -492,7 +492,7 @@
             "type": "cylinder",
             "position": {
               "x": -50,
-              "y": -50,
+              "y": 50,
               "z": 10
             },
             "scale": {
@@ -513,7 +513,7 @@
               "z": 10
             },
             "scale": {
-              "x": 200,
+              "x": 150,
               "y": 2.5,
               "z": 30
             },
