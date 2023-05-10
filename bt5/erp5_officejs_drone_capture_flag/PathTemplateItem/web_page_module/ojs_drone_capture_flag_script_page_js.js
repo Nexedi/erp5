@@ -4,10 +4,10 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 1,
+  var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 1500,
-    map_size = 200,
-    map_height = 100,
+    MAP_SIZE = 1000,
+    map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
@@ -24,7 +24,7 @@
       "longitude": 14.26,
       "z": 15
     },*/
-    NUMBER_OF_DRONES = 2,
+    NUMBER_OF_DRONES = 1,
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
@@ -64,9 +64,9 @@
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
-      '        ALTITUDE + me.id\n' +
+      '        50,//CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
+      '        80,//CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
+      '        10, true//ALTITUDE + me.id\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -270,7 +270,7 @@
                 "my_map_size": {
                   "description": "",
                   "title": "Map size",
-                  "default": map_size,
+                  "default": MAP_SIZE,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
@@ -445,43 +445,43 @@
           "flag_list": [{
             "team": 0,
             "position": {
-              "x": -50,
-              "y": -80,
+              "x": -0.8 * options.map_size / 2,
+              "y": -0.8 * options.map_size / 2,
               "z": 0
             }
           }, {
             "team": 0,
             "position": {
-              "x": 50,
-              "y": -80,
+              "x": 0.8 * options.map_size / 2,
+              "y": -0.8 * options.map_size / 2,
               "z": 0
             }
           }, {
             "team": 1,
             "position": {
-              "x": 50,
-              "y": 80,
+              "x": 0.8 * options.map_size / 2,
+              "y": 0.8 * options.map_size / 2,
               "z": 0
             }
           }, {
             "team": 1,
             "position": {
-              "x": -50,
-              "y": 80,
+              "x": -0.8 * options.map_size / 2,
+              "y": 0.8 * options.map_size / 2,
               "z": 0
             }
           }],
           "obstacle_list" : [{
             "type": "sphere",
             "position": {
-              "x": 30,
-              "y": 20,
+              "x": 0.6 * options.map_size / 2,
+              "y": 0.4 * options.map_size / 2,
               "z": 8
             },
             "scale": {
-              "x": 3,
-              "y": 3,
-              "z": 3
+              "x": 4,
+              "y": 4,
+              "z": 4
             },
             "rotation": {
               "x": 0,
@@ -491,13 +491,13 @@
           }, {
             "type": "cylinder",
             "position": {
-              "x": -50,
-              "y": 50,
+              "x": -0.5 * options.map_size / 2,
+              "y": 0.5 * options.map_size / 2,
               "z": 10
             },
             "scale": {
-              "x": 2.5,
-              "y": 2.5,
+              "x": 4.5,
+              "y": 4.5,
               "z": 20
             },
             "rotation": {
@@ -508,8 +508,8 @@
           }, {
             "type": "box",
             "position": {
-              "x": -25,
-              "y": -25,
+              "x": -0.25 * options.map_size / 2,
+              "y": -0.25 * options.map_size / 2,
               "z": 10
             },
             "scale": {

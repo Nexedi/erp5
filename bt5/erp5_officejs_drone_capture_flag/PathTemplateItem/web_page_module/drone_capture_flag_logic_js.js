@@ -149,14 +149,12 @@ var DroneManager = /** @class */ (function () {
     if (!this._canPlay) {
       return;
     }
-    console.log("cartesian:", cartesian);
     if (!cartesian) {
       //convert real geo-coordinates to virtual x-y coordinates
       this._targetCoordinates = this._API.processCoordinates(x, y, z);
     } else {
       this._targetCoordinates = { x: x, y: y, z: z };
     }
-    console.log("this._targetCoordinates:", this._targetCoordinates);
     return this._API.internal_setTargetCoordinates(
       this,
       this._targetCoordinates
@@ -397,6 +395,7 @@ var MapManager = /** @class */ (function () {
   //random geo-point:
   var MIN_LAT = 45.64,
       MIN_LON = 14.253,
+      EPSILON = 15,
       START_Z = 15;
   function calculateMapInfo(map, map_dict) {
     var min_lat = map_dict.min_lat || MIN_LAT,
@@ -420,6 +419,8 @@ var MapManager = /** @class */ (function () {
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL,
         "flag_list": map_dict.flag_list,
+        "flag_weight": map_dict.flag_weight,
+        "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
         "obstacle_list": map_dict.obstacle_list,
         //rename to base?
         "initial_position": {
@@ -564,16 +565,17 @@ var MapManager = /** @class */ (function () {
     // Flags
     _this._flag_list = [];
     var FLAG_SIZE = {
-      'x': 0.5,
-      'y': 0.5,
+      'x': 0.9,
+      'y': 0.9,
       'z': 6
     };
+    console.log("_this.map_info.flag_list:", _this.map_info.flag_list);
     _this.map_info.flag_list.forEach(function (flag_info, index) {
       flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
       flag_material.alpha = 1;
       flag_material.diffuseColor = BABYLON.Color3.Green();
       flag_a = BABYLON.MeshBuilder.CreateDisc("flag_a_" + index,
-                                              {radius: 3, tessellation: 3},
+                                              {radius: 4.5, tessellation: 3},
                                               scene);
       flag_a.material = flag_material;
       flag_a.position = new BABYLON.Vector3(
@@ -605,7 +607,10 @@ var MapManager = /** @class */ (function () {
         FLAG_SIZE.y);
       mast.material = flag_material;
       flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
+      flag.id = index;
       flag.flag_weight = _this.map_info.flag_weight;
+      flag.location = flag_info.position;
+      flag.drone_collider_list = [];
       _this._flag_list.push(flag);
     });
   }
@@ -790,7 +795,7 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._checkDroneOut = function (drone) {
     var drone_position = drone.getCurrentPosition();
     if (drone_position) {
-      return (drone_position.z > 400) ||
+      return (drone_position.z > this._mapManager.getMapInfo().height) ||
         (drone_position.x < this._mapManager.getMapInfo().min_lat) ||
         (drone_position.x > this._mapManager.getMapInfo().max_lat) ||
         (drone_position.y < this._mapManager.getMapInfo().min_lon) ||
@@ -819,6 +824,25 @@ var GameManager = /** @class */ (function () {
       if (closest !== null) {
         drone._internal_crash(new Error('Drone ' + drone.id +
                                         ' touched an obstacle.'));
+      }
+    }
+  };
+
+  GameManager.prototype._checkFlagCollision = function (drone, flag) {
+    function distance(a, b) {
+      return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
+    }
+    var drone_position = drone.getCurrentPosition(true);
+    if (drone_position) {
+      //TODO epsilon distance is 15 because of fixed wing loiter flights
+      //there is not a proper collision
+      if (distance(drone_position, flag.location) <=
+        this._mapManager.getMapInfo().flag_distance_epsilon) {
+        if (!flag.drone_collider_list.includes(drone.id)) {
+          //TODO notify the drone somehow? Or the AI script is in charge?
+          console.log("flag " + flag.id + " hit by drone " + drone.id);
+          flag.drone_collider_list.push(drone.id);
+        }
       }
     }
   };
@@ -887,6 +911,9 @@ var GameManager = /** @class */ (function () {
             });
             _this._mapManager._obstacle_list.forEach(function (obstacle) {
               _this._checkObstacleCollision(drone, obstacle);
+            });
+            _this._mapManager._flag_list.forEach(function (flag) {
+              _this._checkFlagCollision(drone, flag);
             });
           }
         }
