@@ -88,7 +88,7 @@
       '    }\n' +
       '    return;\n' +
       '  }\n' +
-      '  me.exit(0);\n' +
+      //'  me.exit(0);\n' +
       '};',
     DRAW = false,
     LOG = true,
