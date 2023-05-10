@@ -569,7 +569,6 @@ var MapManager = /** @class */ (function () {
       'y': 0.9,
       'z': 6
     };
-    console.log("_this.map_info.flag_list:", _this.map_info.flag_list);
     _this.map_info.flag_list.forEach(function (flag_info, index) {
       flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
       flag_material.alpha = 1;
