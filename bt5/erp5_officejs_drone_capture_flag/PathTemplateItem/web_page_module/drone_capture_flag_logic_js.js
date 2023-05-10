@@ -145,12 +145,18 @@ var DroneManager = /** @class */ (function () {
   /**
    * Set a target point to move
    */
-  DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
+  DroneManager.prototype.setTargetCoordinates = function (x, y, z, cartesian) {
     if (!this._canPlay) {
       return;
     }
-    //convert real geo-coordinates to virtual x-y coordinates
-    this._targetCoordinates = this._API.processCoordinates(x, y, z);
+    console.log("cartesian:", cartesian);
+    if (!cartesian) {
+      //convert real geo-coordinates to virtual x-y coordinates
+      this._targetCoordinates = this._API.processCoordinates(x, y, z);
+    } else {
+      this._targetCoordinates = { x: x, y: y, z: z };
+    }
+    console.log("this._targetCoordinates:", this._targetCoordinates);
     return this._API.internal_setTargetCoordinates(
       this,
       this._targetCoordinates
@@ -287,8 +293,15 @@ var DroneManager = /** @class */ (function () {
     }
     return this._API.getGameParameter(name);
   };
-  DroneManager.prototype.getCurrentPosition = function () {
+  DroneManager.prototype.getCurrentPosition = function (cartesian) {
     if (this._controlMesh) {
+      if (cartesian) {
+        return {
+          x: this._controlMesh.position.x,
+          y: this._controlMesh.position.z,
+          z: this._controlMesh.position.y
+        };
+      }
       // swap y and z axis so z axis represents altitude
       return this._API.getCurrentPosition(
         this._controlMesh.position.x,
@@ -391,7 +404,7 @@ var MapManager = /** @class */ (function () {
       offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
       max_lon = offset[1],
-      starting_point = map_dict.map_size / 2 * 0.8,
+      starting_point = map_dict.map_size / 2 * 0.75,
       map_info = {
         "depth": map_dict.map_size,
         "width": map_dict.map_size,
