@@ -116,7 +116,8 @@ from ZODB.POSException import ConflictError
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
     CR.SERVER_LOST,
-    CR.COMMANDS_OUT_OF_SYNC
+    CR.COMMANDS_OUT_OF_SYNC,
+    1927, # ER_CONNECTION_KILLED "Connection was killed" in MariaDB
     )
 
 query_syntax_error = (
