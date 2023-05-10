@@ -60,6 +60,9 @@ class FTPConnector(XMLObject):
         transport_kw={
           'private_key':self.getDescription(),
           'bind_address': self.getBindAddress(),
+          'disabled_algorithms': {
+            'pubkeys': self.getDisabledPublicKeyAlgorithmList() or []
+          },
         },
       )
     else:

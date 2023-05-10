@@ -48,7 +48,7 @@ class SFTPConnection:
   """
 
   def __init__(self, url, user_name, password=None, private_key=None,
-      bind_address=None):
+      bind_address=None, disabled_algorithms=None):
     self.url = url
     self.user_name = user_name
     if password and private_key:
@@ -56,6 +56,7 @@ class SFTPConnection:
     self.password = password
     self.private_key = private_key
     self.bind_address = bind_address
+    self.disabled_algorithms = disabled_algorithms
 
   def connect(self):
     """ Get a handle to a remote connection """
@@ -80,9 +81,7 @@ class SFTPConnection:
           break
       else:
         raise SFTPError('No suitable socket family found')
-      self.transport = Transport(sock, disabled_algorithms={
-        'pubkeys': self.getDisabledPublicKeyAlgorithmList([]),
-      })
+      self.transport = Transport(sock, disabled_algorithms=self.disabled_algorithms)
     else:
       raise SFTPError('Not a valid sftp url %s, type is %s' %(self.url, schema.scheme))
     # Add authentication to transport
