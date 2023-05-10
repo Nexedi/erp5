@@ -29,30 +29,32 @@
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var ALTITUDE = 1000,\n' +
-      '  EPSILON = 9,\n' +
+      '  EPSILON = 10,\n' +
       '  CHECKPOINT_LIST = [\n' +
       '    {\n' +
-      '      altitude: 585.1806861589965,\n' +
-      '      latitude: 45.64492790560583,\n' +
-      '      longitude: 14.25334942966329\n' +
+      '      z: 10,\n' +
+      '      x: -400,\n' +
+      '      y: -400\n' +
       '    },\n' +
       '    {\n' +
-      '      altitude: 589.8802607573035,\n' +
-      '      latitude: 45.64316335436476,\n' +
-      '      longitude: 14.26332880184475\n' +
+      '      z: 10,\n' +
+      '      x: -400,\n' +
+      '      y: 400\n' +
+      '    },\n' +
+      '    {\n' +
+      '      z: 10,\n' +
+      '      x: 400,\n' +
+      '      y: 400\n' +
+      '    },\n' +
+      '    {\n' +
+      '      z: 10,\n' +
+      '      x: 400,\n' +
+      '      y: -400\n' +
       '    }\n' +
       '  ];\n' +
       '\n' +
-      'function distance(lat1, lon1, lat2, lon2) {\n' +
-      '  var R = 6371e3, // meters\n' +
-      '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
-      '    la2 = lat2 * Math.PI / 180,\n' +
-      '    lo1 = lon1 * Math.PI / 180,\n' +
-      '    lo2 = lon2 * Math.PI / 180,\n' +
-      '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
-      '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
-      '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
-      '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
+      'function distance(a, b) {\n' +
+      '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
@@ -64,9 +66,9 @@
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        50,//CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
-      '        80,//CHECKPOINT_LIST[me.next_checkpoint].longitude,\n' +
-      '        10, true//ALTITUDE + me.id\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].x,\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].y,\n' +
+      '        CHECKPOINT_LIST[me.next_checkpoint].z + me.id, true\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -74,12 +76,10 @@
       '    return;\n' +
       '  }\n' +
       '  if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
-      '    me.current_position = me.getCurrentPosition();\n' +
+      '    me.current_position = me.getCurrentPosition(true);\n' +
       '    me.distance = distance(\n' +
-      '      me.current_position.x,\n' +
-      '      me.current_position.y,\n' +
-      '      CHECKPOINT_LIST[me.next_checkpoint].latitude,\n' +
-      '      CHECKPOINT_LIST[me.next_checkpoint].longitude\n' +
+      '      me.current_position,\n' +
+      '      CHECKPOINT_LIST[me.next_checkpoint]\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
