@@ -607,7 +607,7 @@ var MapManager = /** @class */ (function () {
       mast.material = flag_material;
       flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
       flag.id = index;
-      flag.flag_weight = _this.map_info.flag_weight;
+      flag.weight = _this.map_info.flag_weight;
       flag.location = flag_info.position;
       flag.drone_collider_list = [];
       _this._flag_list.push(flag);
@@ -930,6 +930,10 @@ var GameManager = /** @class */ (function () {
           console.log("ALL DRONES EXITED");
           return _this._finish();
         }
+        if (_this._allFlagsCaptured()) {
+          console.log("ALL FLAGS CAPTURED");
+          return _this._finish();
+        }
       });
   };
 
@@ -1012,6 +1016,16 @@ var GameManager = /** @class */ (function () {
     var finish = true;
     this._droneList.forEach(function (drone) {
       if (drone.can_play) {
+        finish = false;
+      }
+    });
+    return finish;
+  };
+
+  GameManager.prototype._allFlagsCaptured = function () {
+    var finish = true;
+    this._mapManager._flag_list.forEach(function (flag) {
+      if (flag.drone_collider_list.length < flag.weight) {
         finish = false;
       }
     });
