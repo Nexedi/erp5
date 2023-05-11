@@ -34,6 +34,7 @@ var DroneManager = /** @class */ (function () {
     this._team = team;
     this._leader_id = 0;
     this._API = API; // var API created on AI evel
+    this._score = 0;
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
       "droneControl_" + id,
@@ -79,6 +80,12 @@ var DroneManager = /** @class */ (function () {
   });
   Object.defineProperty(DroneManager.prototype, "id", {
     get: function () { return this._id; },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(DroneManager.prototype, "score", {
+    get: function () { return this._score; },
+    set: function (value) { this._score = value; },
     enumerable: true,
     configurable: true
   });
@@ -840,6 +847,7 @@ var GameManager = /** @class */ (function () {
         if (!flag.drone_collider_list.includes(drone.id)) {
           //TODO notify the drone somehow? Or the AI script is in charge?
           console.log("flag " + flag.id + " hit by drone " + drone.id);
+          drone.score++;
           flag.drone_collider_list.push(drone.id);
         }
       }
@@ -1032,8 +1040,19 @@ var GameManager = /** @class */ (function () {
     return finish;
   };
 
+  GameManager.prototype._calculateUserScore = function () {
+    var score = 0;
+    this._droneList.forEach(function (drone) {
+      if (drone.can_play) {
+        score += drone.score;
+      }
+    });
+    return score;
+  };
+
   GameManager.prototype._finish = function () {
     console.log("Simulation finished");
+    console.log("User score:", this._calculateUserScore());
     this._canUpdate = false;
     return this.finish_deferred.resolve();
   };
