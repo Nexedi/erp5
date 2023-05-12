@@ -839,6 +839,7 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._checkFlagCollision = function (drone, flag) {
+    if (drone.team == TEAM_B) return;
     function distance(a, b) {
       return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
     }
