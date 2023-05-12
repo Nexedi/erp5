@@ -4,9 +4,9 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 10,
+  var SIMULATION_SPEED = 100,
     SIMULATION_TIME = 1500,
-    MAP_SIZE = 1000,
+    MAP_SIZE = 500,
     map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -24,32 +24,31 @@
       "longitude": 14.26,
       "z": 15
     },*/
-    NUMBER_OF_DRONES = 1,
+    NUMBER_OF_DRONES = 5,
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var ALTITUDE = 1000,\n' +
-      '  EPSILON = 10,\n' +
+      'var EPSILON = 10,\n' +
       '  CHECKPOINT_LIST = [\n' +
       '    {\n' +
       '      z: 10,\n' +
-      '      x: -400,\n' +
-      '      y: -400\n' +
+      '      x: -200,\n' +
+      '      y: -200\n' +
       '    },\n' +
       '    {\n' +
       '      z: 10,\n' +
-      '      x: -400,\n' +
-      '      y: 400\n' +
+      '      x: -200,\n' +
+      '      y: 200\n' +
       '    },\n' +
       '    {\n' +
       '      z: 10,\n' +
-      '      x: 400,\n' +
-      '      y: 400\n' +
+      '      x: 200,\n' +
+      '      y: 200\n' +
       '    },\n' +
       '    {\n' +
       '      z: 10,\n' +
-      '      x: 400,\n' +
-      '      y: -400\n' +
+      '      x: 200,\n' +
+      '      y: -200\n' +
       '    }\n' +
       '  ];\n' +
       '\n' +
@@ -88,7 +87,6 @@
       '    }\n' +
       '    return;\n' +
       '  }\n' +
-      //'  me.exit(0);\n' +
       '};',
     DRAW = false,
     LOG = true,
@@ -587,27 +585,30 @@
         .push(function (result) {
           var a, blob, div, key, log, log_content;
           i = 0;
-          for (key in result) {
-            if (result.hasOwnProperty(key)) {
-              log_content = result[key].join('\n').replaceAll(",", ";");
+          div = domsugar('div', { text: result.message });
+          document.querySelector('.container').appendChild(div);
+          for (key in result.content) {
+            if (result.content.hasOwnProperty(key)) {
+              log_content = result.content[key].join('\n').replaceAll(",", ";");
               blob = new Blob([log_content], {type: 'text/plain'});
               a = domsugar('a', {
                 text: 'Download Simulation LOG ' + i,
-                download: 'simulation_log_' + i
-                  + '_speed_' + game_parameters_json.drone.speed
-                  + '_min-speed_' + game_parameters_json.drone.minSpeed
-                  + '_max-speed_' + game_parameters_json.drone.maxSpeed
-                  + '_max-accel_' + game_parameters_json.drone.maxAcceleration
-                  + '_max-decel_' + game_parameters_json.drone.maxDeceleration
-                  + '_max-roll_' + game_parameters_json.drone.maxRoll
-                  + '_min-pitch_' + game_parameters_json.drone.minPitchAngle
-                  + '_max-pitch_' + game_parameters_json.drone.maxPitchAngle
-                  + '_max-sink_' + game_parameters_json.drone.maxSinkRate
-                  + '_max-climb_' + game_parameters_json.drone.maxClimbRate
-                  + '.txt',
+                download: 'simulation_log_' + i +
+                '_speed_' + game_parameters_json.drone.speed +
+                '_min-speed_' + game_parameters_json.drone.minSpeed +
+                '_max-speed_' + game_parameters_json.drone.maxSpeed +
+                '_max-accel_' + game_parameters_json.drone.maxAcceleration +
+                '_max-decel_' + game_parameters_json.drone.maxDeceleration +
+                '_max-roll_' + game_parameters_json.drone.maxRoll +
+                '_min-pitch_' + game_parameters_json.drone.minPitchAngle +
+                '_max-pitch_' + game_parameters_json.drone.maxPitchAngle +
+                '_max-sink_' + game_parameters_json.drone.maxSinkRate +
+                '_max-climb_' + game_parameters_json.drone.maxClimbRate +
+                '.txt',
                 href: window.URL.createObjectURL(blob)
               });
-              log = domsugar('textarea', { value: log_content, id: 'log_result_' + i });
+              log = domsugar('textarea',
+                             { value: log_content, id: 'log_result_' + i });
               div = domsugar('div', [a]);
               a.dataset.downloadurl =  ['text/plain', a.download,
                                         a.href].join(':');
