@@ -4,9 +4,9 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 100,
+  var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 1500,
-    MAP_SIZE = 500,
+    MAP_SIZE = 600,
     map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -278,40 +278,6 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
-                //TODO drop initial position inputs
-                /*"my_init_pos_lon": {
-                  "description": "",
-                  "title": "Initial drone longitude",
-                  "default": INITIAL_POSITION.longitude,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "init_pos_lon",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_init_pos_lat": {
-                  "description": "",
-                  "title": "Initial drone latitude",
-                  "default": INITIAL_POSITION.latitude,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "init_pos_lat",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_init_pos_z": {
-                  "description": "",
-                  "title": "Initial drone position Z",
-                  "default": INITIAL_POSITION.z,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "init_pos_z",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },*/
                 "my_number_of_drones": {
                   "description": "",
                   "title": "Number of drones",
@@ -347,7 +313,6 @@
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
                   ["my_map_size"], ["my_map_height"],
-                  //["my_init_pos_lat"], ["my_init_pos_lon"], ["my_init_pos_z"],
                   ["my_start_AMSL"]]
               ], [
                 "right",
@@ -422,26 +387,26 @@
           "flag_weight": FLAG_WEIGHT,
           "flag_list": [{
             "position": {
-              "x": -0.8 * options.map_size / 2,
-              "y": -0.8 * options.map_size / 2,
+              "x": -0.75 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
               "z": 10
             }
           }, {
             "position": {
-              "x": 0.8 * options.map_size / 2,
-              "y": -0.8 * options.map_size / 2,
+              "x": 0.75 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
               "z": 10
             }
           }, {
             "position": {
-              "x": 0.8 * options.map_size / 2,
-              "y": 0.8 * options.map_size / 2,
+              "x": 0.75 * options.map_size / 2,
+              "y": 0.75 * options.map_size / 2,
               "z": 10
             }
           }, {
             "position": {
-              "x": -0.8 * options.map_size / 2,
-              "y": 0.8 * options.map_size / 2,
+              "x": -0.75 * options.map_size / 2,
+              "y": 0.75 * options.map_size / 2,
               "z": 10
             }
           }],
@@ -498,11 +463,6 @@
             }
           }]
         },
-        /*"initialPosition": {
-          "longitude": parseFloat(options.init_pos_lon),
-          "latitude": parseFloat(options.init_pos_lat),
-          "z": parseFloat(options.init_pos_z)
-        },*/
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
