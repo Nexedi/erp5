@@ -961,7 +961,7 @@ var GameManager = /** @class */ (function () {
         seconds = Math.floor(this._game_duration / 1000), trace_objects;
 
       if (GAMEPARAMETERS.log_drone_flight || GAMEPARAMETERS.draw_flight_path) {
-        this._droneList.forEach(function (drone, index) {
+        this._droneList_team_A.forEach(function (drone, index) {
           if (drone.can_play) {
             drone_position = drone.position;
             if (GAMEPARAMETERS.log_drone_flight) {
@@ -1030,7 +1030,7 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._allDronesFinished = function () {
     var finish = true;
-    this._droneList.forEach(function (drone) {
+    this._droneList_team_A.forEach(function (drone) {
       if (drone.can_play) {
         finish = false;
       }
@@ -1050,7 +1050,7 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._calculateUserScore = function () {
     var score = 0;
-    this._droneList.forEach(function (drone) {
+    this._droneList_team_A.forEach(function (drone) {
       if (drone.can_play) {
         score += drone.score;
       }
