@@ -19,7 +19,7 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    NUMBER_OF_DRONES = 5,
+    NUMBER_OF_DRONES = 1,
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
@@ -71,13 +71,14 @@
     DRAW = false,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
-    DRONE_LIST = [],
+    DRONE_LIST_A = [],
+    DRONE_LIST_B = [],
     WIDTH = 680,
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
-      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js'/*,
-      'gadget_erp5_page_drone_capture_flag_dronelogfollower.js'*/
+      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
+      'gadget_erp5_page_drone_capture_flag_enemydrone.js'
     ];
 
   rJS(window)
@@ -341,10 +342,11 @@
         game_parameters_json;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
-      DRONE_LIST = [];
       for (i = 0; i < options.number_of_drones; i += 1) {
-        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST_A[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
+        DRONE_LIST_B[i] = {"id": i + options.number_of_drones,
+                           "type": "EnemyDroneAPI"};
       }
 
       function randomizeMap(json_map) {
@@ -468,8 +470,8 @@
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME,
         "droneList": {
-          "team_A": DRONE_LIST,
-          "team_B": DRONE_LIST
+          "team_A": DRONE_LIST_A,
+          "team_B": DRONE_LIST_B
         }
       };
       return gadget.declareGadget("babylonjs.gadget.html",
