@@ -1,17 +1,25 @@
 import json
+from Products.ERP5Type.Utils import getTranslationStringWithContext
 
 # TODO:
 #  select after script in edge properties
 #  checked box for validation ? or at least select before script
 
 def getWorkflowGraph(workflow):
+  workflow_id = workflow.getId()
   graph = {'node': {}, 'edge': {}}
   for state in workflow.getStateValueList():
     is_initial_state = state.getId() == workflow.getSourceId()
     transition_list = []
+    state_name = state.getId()
+    state_title = state.getTitle()
+    if state_title:
+      translated_state_title = getTranslationStringWithContext(context, state_title, 'state', workflow_id)
+      if translated_state_title:
+        state_name = translated_state_title
     graph['node'][state.getId()] = {
       '_class':'workflow.state',
-      'name': state.getTitleOrId(),
+      'name': state_name,
       'is_initial_state': is_initial_state,
       'path': state.getPath()
     }
@@ -20,11 +28,15 @@ def getWorkflowGraph(workflow):
       transition_id = transition.getReference()
       if transition_id in workflow.getTransitionReferenceList():
         if transition.getDestinationId():
+          transition_name = transition.getActionName() or transition.getTitleOrId()
+          translated_transition_name = getTranslationStringWithContext(context, transition_name, 'transition', workflow_id)
+          if translated_transition_name:
+            transition_name = translated_transition_name
           graph['edge']["%s_%s" % (state.getId(), transition.getId())] = ({
             '_class': 'workflow.transition',
             'source': state.getId(),
             'destination': transition.getDestinationId(),
-            'name': transition.getActionName() or transition.getTitleOrId(),
+            'name': transition_name,
             'description': transition.getDescription(),
             'actbox_url': transition.getAction(),
             'transition_id': transition.getId(), # used for edition.
