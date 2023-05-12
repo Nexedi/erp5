@@ -5,19 +5,6 @@
 var EnemyDroneAPI = /** @class */ (function () {
   "use strict";
 
-  // var TAKEOFF_RADIUS = 60,
-  var DEFAULT_SPEED = 16,
-    EARTH_GRAVITY = 9.81,
-    MAX_ACCELERATION = 6,
-    MAX_DECELERATION = 1,
-    MIN_SPEED = 12,
-    MAX_SPEED = 26,
-    MAX_ROLL = 35,
-    MIN_PITCH = -20,
-    MAX_PITCH = 25,
-    MAX_CLIMB_RATE = 8,
-    MAX_SINK_RATE = 3;
-
   //** CONSTRUCTOR
   function EnemyDroneAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
@@ -33,10 +20,6 @@ var EnemyDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   EnemyDroneAPI.prototype.internal_start = function (drone) {
-    drone._maxDeceleration = this.getMaxDeceleration();
-    if (drone._maxDeceleration <= 0) {
-      throw new Error('max deceleration must be superior to 0');
-    }
     drone._maxAcceleration = this.getMaxAcceleration();
     if (drone._maxAcceleration <= 0) {
       throw new Error('max acceleration must be superior to 0');
@@ -53,34 +36,8 @@ var EnemyDroneAPI = /** @class */ (function () {
     if (drone._speed < drone._minSpeed || drone._speed > drone._maxSpeed) {
       throw new Error('Drone speed must be between min speed and max speed');
     }
-    drone._minPitchAngle = this.getMinPitchAngle();
-    if (drone._minPitchAngle >= 0) {
-      throw new Error('min pitch angle must be inferior to 0');
-    }
-    drone._maxPitchAngle = this.getMaxPitchAngle();
-    if (drone._maxPitchAngle <= 0) {
-      throw new Error('max pitch angle must be superior to 0');
-    }
-    if (drone._minPitchAngle > drone._maxPitchAngle) {
-      throw new Error('min pitch angle cannot be superior to max pitch angle');
-    }
-    drone._maxRollAngle = this.getMaxRollAngle();
-    if (drone._maxRollAngle <= 0) {
-      throw new Error('max roll angle must be superior to 0');
-    }
-    drone._maxSinkRate = this.getMaxSinkRate();
-    if (drone._maxSinkRate <= 0) {
-      throw new Error('max sink rate must be superior to 0');
-    }
     if (drone._maxSinkRate > drone._maxSpeed) {
       throw new Error('max sink rate cannot be superior to max speed');
-    }
-    drone._maxClimbRate = this.getMaxClimbRate();
-    if (drone._maxClimbRate <= 0) {
-      throw new Error('max climb rate must be superior to 0');
-    }
-    if (drone._maxClimbRate > drone._maxSpeed) {
-      throw new Error('max climb rate cannot be superior to max speed');
     }
     drone._maxOrientation = this.getMaxOrientation();
     return;
@@ -231,10 +188,8 @@ var EnemyDroneAPI = /** @class */ (function () {
     return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
-    return 'var EPSILON = 111111111;\n' +
-      'me.onStart = function () {\n' +
-      '  me.direction_set = false;\n' +
-      '  me.next_checkpoint = 0;\n' +
+    return 'me.onStart = function () {\n' +
+      '  console.log("enemy going to 0,0,10");\n' +
       '  me.setTargetCoordinates(\n' +
       '    0,\n' +
       '    0,\n' +
@@ -242,39 +197,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '  );\n' +
       '};\n' +
       '\n' +
-      'me.onGetMsg = function (msg) {\n' +
-      '  if (msg && msg.flag_positions) {\n' +
-      '    me.flag_positions = msg.flag_positions\n' +
-      '  }\n' +
-      '};\n' +
-      '\n' +
       'me.onUpdate = function (timestamp) {\n' +
-      '  return;\n' +
-      '  if (!me.direction_set) {\n' +
-      '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
-      '      me.setTargetCoordinates(\n' +
-      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
-      '      );\n' +
-      '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
-      '    }\n' +
-      '    me.direction_set = true;\n' +
-      '    return;\n' +
-      '  }\n' +
-      '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
-      '    me.current_position = me.getCurrentPosition(true);\n' +
-      '    me.distance = distance(\n' +
-      '      me.current_position,\n' +
-      '      me.flag_positions[me.next_checkpoint].position\n' +
-      '    );\n' +
-      '    if (me.distance <= EPSILON) {\n' +
-      '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
-      '      me.next_checkpoint += 1;\n' +
-      '      me.direction_set = false;\n' +
-      '    }\n' +
-      '    return;\n' +
-      '  }\n' +
       '};';
   };
   EnemyDroneAPI.prototype.getMinSpeed = function () {
@@ -292,64 +215,9 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getMaxAcceleration = function () {
     return this._flight_parameters.drone.maxAcceleration;
   };
-  EnemyDroneAPI.prototype.getMinPitchAngle = function () {
-    return this._flight_parameters.drone.minPitchAngle;
-  };
-  EnemyDroneAPI.prototype.getMaxPitchAngle = function () {
-    return this._flight_parameters.drone.maxPitchAngle;
-  };
-  EnemyDroneAPI.prototype.getMaxRollAngle = function () {
-    return this._flight_parameters.drone.maxRoll;
-  };
-  EnemyDroneAPI.prototype.getMaxSinkRate = function () {
-    return this._flight_parameters.drone.maxSinkRate;
-  };
-  EnemyDroneAPI.prototype.getMaxClimbRate = function () {
-    return this._flight_parameters.drone.maxClimbRate;
-  };
   EnemyDroneAPI.prototype.getMaxOrientation = function () {
     //TODO should be a game parameter (but how to force value to PI quarters?)
     return Math.PI / 4;
-  };
-  EnemyDroneAPI.prototype.getYawVelocity = function (drone) {
-    return 360 * EARTH_GRAVITY
-      * Math.tan(this._toRad(this.getMaxRollAngle()))
-      / (2 * Math.PI * drone.getSpeed());
-  };
-  EnemyDroneAPI.prototype.getYaw = function (drone) {
-    var direction = drone.worldDirection;
-    return this._computeBearing(0, 0, direction.x, direction.z);
-  };
-  EnemyDroneAPI.prototype._computeBearing = function (x1, z1, x2, z2) {
-    return this._toDeg(Math.atan2(x2 - x1, z2 - z1));
-  };
-  EnemyDroneAPI.prototype._computeYawDiff = function (yaw1, yaw2) {
-    var diff = yaw2 - yaw1;
-    diff += (diff > 180) ? -360 : (diff < -180) ? 360 : 0;
-    return diff;
-  };
-  EnemyDroneAPI.prototype._computeVerticalSpeed =
-    function (altitude_diff, max_climb_rate, speed, max_pitch) {
-      var maxVerticalSpeed = Math.min(altitude_diff, Math.min(max_climb_rate, speed));
-      return (this._toDeg(Math.asin(maxVerticalSpeed / speed)) > max_pitch)
-        ? speed * Math.sin(this._toRad(max_pitch))
-        : maxVerticalSpeed;
-    };
-  EnemyDroneAPI.prototype._toRad = function (angle) {
-    return angle * Math.PI / 180;
-  };
-  EnemyDroneAPI.prototype._toDeg = function (angle) {
-    return angle * 180 / Math.PI;
-  };
-  EnemyDroneAPI.prototype.getClimbRate = function (drone) {
-    return drone.worldDirection.y * drone.getSpeed();
-  };
-  EnemyDroneAPI.prototype.getGroundSpeed = function (drone) {
-    var direction = drone.worldDirection;
-    return Math.sqrt(
-      Math.pow(direction.x * drone.getSpeed(), 2)
-        + Math.pow(direction.z * drone.getSpeed(), 2)
-    );
   };
   EnemyDroneAPI.prototype.triggerParachute = function (drone) {
     var drone_pos = drone.getCurrentPosition();
