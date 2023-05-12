@@ -19,38 +19,11 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    /*INITIAL_POSITION = {
-      "latitude": 45.6412,
-      "longitude": 14.26,
-      "z": 15
-    },*/
     NUMBER_OF_DRONES = 5,
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var EPSILON = 10,\n' +
-      '  CHECKPOINT_LIST = [\n' +
-      '    {\n' +
-      '      z: 10,\n' +
-      '      x: -200,\n' +
-      '      y: -200\n' +
-      '    },\n' +
-      '    {\n' +
-      '      z: 10,\n' +
-      '      x: -200,\n' +
-      '      y: 200\n' +
-      '    },\n' +
-      '    {\n' +
-      '      z: 10,\n' +
-      '      x: 200,\n' +
-      '      y: 200\n' +
-      '    },\n' +
-      '    {\n' +
-      '      z: 10,\n' +
-      '      x: 200,\n' +
-      '      y: -200\n' +
-      '    }\n' +
-      '  ];\n' +
+      'var EPSILON = 10;\n' +
       '\n' +
       'function distance(a, b) {\n' +
       '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
@@ -61,24 +34,31 @@
       '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
-      'me.onUpdate = function (timestamp) {' +
+      'me.onGetMsg = function (msg) {\n' +
+      '  if (msg && msg.flag_positions) {\n' +
+      '    me.flag_positions = msg.flag_positions\n' +
+      '  }\n' +
+      '};\n' +
+      '\n' +
+      'me.onUpdate = function (timestamp) {\n' +
+      '  if (!me.flag_positions) return;\n' +
       '  if (!me.direction_set) {\n' +
-      '    if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
+      '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].x,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].y,\n' +
-      '        CHECKPOINT_LIST[me.next_checkpoint].z + me.id, true\n' +
+      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
       '      );\n' +
       '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
       '    me.direction_set = true;\n' +
       '    return;\n' +
       '  }\n' +
-      '  if (me.next_checkpoint < CHECKPOINT_LIST.length) {\n' +
+      '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '    me.current_position = me.getCurrentPosition(true);\n' +
       '    me.distance = distance(\n' +
       '      me.current_position,\n' +
-      '      CHECKPOINT_LIST[me.next_checkpoint]\n' +
+      '      me.flag_positions[me.next_checkpoint].position\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
@@ -441,32 +421,28 @@
           "start_AMSL": parseFloat(options.start_AMSL),
           "flag_weight": FLAG_WEIGHT,
           "flag_list": [{
-            "team": 0,
             "position": {
               "x": -0.8 * options.map_size / 2,
               "y": -0.8 * options.map_size / 2,
-              "z": 0
+              "z": 10
             }
           }, {
-            "team": 0,
             "position": {
               "x": 0.8 * options.map_size / 2,
               "y": -0.8 * options.map_size / 2,
-              "z": 0
+              "z": 10
             }
           }, {
-            "team": 1,
             "position": {
               "x": 0.8 * options.map_size / 2,
               "y": 0.8 * options.map_size / 2,
-              "z": 0
+              "z": 10
             }
           }, {
-            "team": 1,
             "position": {
               "x": -0.8 * options.map_size / 2,
               "y": 0.8 * options.map_size / 2,
-              "z": 0
+              "z": 10
             }
           }],
           "obstacle_list" : [{
