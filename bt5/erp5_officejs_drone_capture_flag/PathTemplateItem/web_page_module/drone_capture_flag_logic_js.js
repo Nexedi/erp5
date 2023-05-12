@@ -1196,7 +1196,7 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._start = function () {
-    var _this = this, promise_list;
+    var _this = this, promise_list, start_msg;
     _this.waiting_update_count = 0;
     _this.ongoing_update_promise = null;
     _this.finish_deferred = RSVP.defer();
@@ -1213,6 +1213,10 @@ var GameManager = /** @class */ (function () {
             _this._mapManager.getMapInfo().initial_position.team_A
           ));
         });
+        start_msg = {
+          'flag_positions': _this._mapManager.getMapInfo().flag_list
+        };
+        promise_list.push(_this._droneList_team_A[0].sendMsg(start_msg));
         _this._droneList_team_B.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
