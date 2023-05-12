@@ -572,8 +572,8 @@ var MapManager = /** @class */ (function () {
     // Flags
     _this._flag_list = [];
     var FLAG_SIZE = {
-      'x': 0.9,
-      'y': 0.9,
+      'x': 1,
+      'y': 1,
       'z': 6
     };
     _this.map_info.flag_list.forEach(function (flag_info, index) {
@@ -581,7 +581,7 @@ var MapManager = /** @class */ (function () {
       flag_material.alpha = 1;
       flag_material.diffuseColor = BABYLON.Color3.Green();
       flag_a = BABYLON.MeshBuilder.CreateDisc("flag_a_" + index,
-                                              {radius: 4.5, tessellation: 3},
+                                              {radius: 7, tessellation: 3},
                                               scene);
       flag_a.material = flag_material;
       flag_a.position = new BABYLON.Vector3(
@@ -699,6 +699,7 @@ var GameManager = /** @class */ (function () {
     this._map_swapped = false;
     this._log_count = [];
     this._flight_log = [];
+    this._result_message = "";
     if (GAMEPARAMETERS.log_drone_flight) {
       // ! Be aware that the following functions relies on this log format:
       // - getLogEntries at Drone Simulator Log Page
@@ -752,7 +753,10 @@ var GameManager = /** @class */ (function () {
     var gadget = this;
     return gadget._init()
       .push(function () {
-        return gadget._flight_log;
+        return {
+          'message': gadget._result_message,
+          'content': gadget._flight_log
+        };
       });
   };
 
@@ -932,14 +936,17 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         if (_this._timeOut()) {
           console.log("TIMEOUT!");
+          _this._result_message += "TIMEOUT!";
           return _this._finish();
         }
         if (_this._allDronesFinished()) {
-          console.log("ALL DRONES EXITED");
+          console.log("ALL DRONES DOWN");
+          _this._result_message += "ALL DRONES DOWN!";
           return _this._finish();
         }
         if (_this._allFlagsCaptured()) {
           console.log("ALL FLAGS CAPTURED");
+          _this._result_message += "ALL FLAGS CAPTURED!";
           return _this._finish();
         }
       });
@@ -1052,7 +1059,7 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._finish = function () {
     console.log("Simulation finished");
-    console.log("User score:", this._calculateUserScore());
+    this._result_message += " User score: " + this._calculateUserScore();
     this._canUpdate = false;
     return this.finish_deferred.resolve();
   };
