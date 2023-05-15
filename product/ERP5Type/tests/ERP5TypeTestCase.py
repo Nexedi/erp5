@@ -1417,13 +1417,13 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     in the report_section.
     """
     result = None
+    here = report_section.getObject(self.portal)
     # Use an independent request, because this is what happens when using
     # deferred style
     request_form = self.portal.REQUEST.form
     try:
       # XXX maybe there is better API than just replacing the dict
       self.portal.REQUEST.form = dict()
-      here = report_section.getObject(self.portal)
       report_section.pushReport(self.portal)
       form = getattr(here, report_section.getFormId())
       self.portal.REQUEST['here'] = here
