@@ -75,6 +75,7 @@ var DroneManager = /** @class */ (function () {
   });
   Object.defineProperty(DroneManager.prototype, "can_play", {
     get: function () { return this._canPlay; },
+    set: function (value) { this._canPlay = value; },
     enumerable: true,
     configurable: true
   });
@@ -1291,9 +1292,6 @@ var GameManager = /** @class */ (function () {
       return false;
     }
     function spawnDrone(x, y, z, index, drone_info, api, team) {
-      if (team == TEAM_B) {
-        index += GAMEPARAMETERS.droneList.team_A.length;
-      }
       var default_drone_AI = api.getDroneAI(), code, base, code_eval;
       if (default_drone_AI) {
         code = default_drone_AI;
@@ -1350,13 +1348,17 @@ var GameManager = /** @class */ (function () {
         }
       } else {
         position_list.push(position);
+        var id_offset = 0;
+        if (team == TEAM_B) {
+          id_offset = GAMEPARAMETERS.droneList.team_A.length;
+        }
         api = new this.APIs_dict[drone_list[i].type](
           this,
           drone_list[i],
           GAMEPARAMETERS,
-          i
+          i + id_offset
         );
-        spawnDrone(position.x, position.y, position.z, i,
+        spawnDrone(position.x, position.y, position.z, i + id_offset,
                    drone_list[i], api, team);
       }
     }
