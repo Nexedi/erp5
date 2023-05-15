@@ -25,6 +25,9 @@ if portal.portal_templates.getInstalledBusinessTemplate("erp5_wendelin_data_lake
     if default_system_preference.getPreferenceState() == "disabled":
       default_system_preference.enable()
 
+    # adjust system to create Assignments for newly created accounts for 2 years
+    default_system_preference.setPreferredCredentialAssignmentDuration(2*365)
+
     # change periodicity of respective alarms from default 60 mins to 1 minute
     # so that we can have a default system in which user registration happens instantly
     accept_submitted_credentials = getattr(portal.portal_alarms,
