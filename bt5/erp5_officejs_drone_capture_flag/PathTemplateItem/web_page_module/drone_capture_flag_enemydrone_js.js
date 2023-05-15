@@ -113,16 +113,15 @@ var EnemyDroneAPI = /** @class */ (function () {
 
   EnemyDroneAPI.prototype.internal_setTargetCoordinates =
     function (drone, coordinates) {
-      if (!this._canPlay) return;
+      if (!drone._canPlay) return;
       var x = coordinates.x, y = coordinates.y, z = coordinates.z;
       if (isNaN(x) || isNaN(y) || isNaN(z)) {
         throw new Error('Target coordinates must be numbers');
       }
-      x -= this._controlMesh.position.x;
-      y -= this._controlMesh.position.z;
-      z -= this._controlMesh.position.y;
-      this.setDirection(x, y, z);
-      //this.setAcceleration(this._maxAcceleration);
+      x -= drone._controlMesh.position.x;
+      y -= drone._controlMesh.position.z;
+      z -= drone._controlMesh.position.y;
+      drone.setDirection(x, y, z);
     };
   EnemyDroneAPI.prototype.sendMsg = function (msg, to) {
     var _this = this,
@@ -189,7 +188,6 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     return 'me.onStart = function () {\n' +
-      '  console.log("enemy going to 0,0,10");\n' +
       '  me.setTargetCoordinates(\n' +
       '    0,\n' +
       '    0,\n' +
