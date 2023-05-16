@@ -1,7 +1,6 @@
-<h1> Thank you for using our online shop! </h1>
+<h1 i18n:translate="" i18n:domain="ui"> Thank you for using our online shop! </h1>
 
-<p>Your order will be processed by our personel now.</p>
+<p i18n:translate="" i18n:domain="ui">Your order will be processed by our personel now.</p>
 
-<p> If you want to check your orders you can do it 
-    <a tal:attributes="href python: '%s/SaleOrderModule_viewAsWebSaleOrderList' % here.getWebSiteValue().absolute_url()">here</a>
-</p>
+<span i18n:translate="" i18n:domain="ui"> If you want to check your orders you can do it</span>
+<a tal:attributes="href python: '%s/SaleOrderModule_viewAsWebSaleOrderList' % here.getWebSiteValue().absolute_url()" i18n:translate="" i18n:domain="ui">here</a>
