@@ -148,6 +148,10 @@
                           <string>owner_title</string>
                           <string>Owner</string>
                         </tuple>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>Publication Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

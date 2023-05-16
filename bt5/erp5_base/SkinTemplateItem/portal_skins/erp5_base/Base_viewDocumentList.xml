@@ -97,6 +97,7 @@
                       <list>
                         <string>listbox_thumbnail</string>
                         <string>listbox_download</string>
+                        <string>listbox_effective_date</string>
                       </list>
                     </value>
                 </item>
