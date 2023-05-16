@@ -18,7 +18,7 @@ inventory_tag = base_tag + 'inventory'
 last_inventory_tag = base_tag + 'last_inventory_activity'
 def reindex(document_list, tag, after_tag):
   for document in document_list:
-    print('#### Indexing %s ####')
+    print('#### Indexing %s ####' % document.getId())
     document.activate(
       priority=additional_priority,
       tag=tag,
