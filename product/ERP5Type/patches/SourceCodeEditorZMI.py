@@ -109,6 +109,9 @@ def manage_page_footer(self):
                               portal_url=portal_url,
                               bound_names=bound_names,
                               mode=mode).encode('utf-8'))
+  elif editor in (None, 'text_area') and mode == 'python':
+    # Set Zope4's default ace editor indent size to 2.
+    return '''<script type="text/javascript">$(function(){if(typeof ace == "object"){ace.config.$defaultOptions.session.tabSize.initialValue = 2;} if(typeof editor == "object"){editor.getSession().setTabSize(2);}})</script>'''
 
   return default
 
