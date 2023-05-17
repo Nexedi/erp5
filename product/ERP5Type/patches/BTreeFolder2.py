@@ -107,3 +107,12 @@ try:
   del BTreeFolder2Base.__getitem__
 except AttributeError:
   pass
+
+def manage_delAllObjects(self, REQUEST=None):
+  """Disable dangerous method"""
+  raise RuntimeError(
+"manage_delAllObjects is disabled in ERP5 to protect data from "
+"human error. There are unbelievable mistakes. ERP5 is a place "
+"to store important data that must not be deleted easily.")
+
+BTreeFolder2Base.manage_delAllObjects = manage_delAllObjects
