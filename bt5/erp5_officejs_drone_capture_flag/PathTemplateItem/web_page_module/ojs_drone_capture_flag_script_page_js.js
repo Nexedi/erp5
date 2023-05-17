@@ -290,6 +290,39 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
+                "my_enemy_init_x": {
+                  "description": "",
+                  "title": "Enemy init x",
+                  "default": 0,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "enemy_init_x",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
+                "my_enemy_init_y": {
+                  "description": "",
+                  "title": "Enemy init y",
+                  "default": MAP_SIZE / 2 * 0.75,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "enemy_init_y",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
+                "my_enemy_init_z": {
+                  "description": "",
+                  "title": "Enemy init z",
+                  "default": 0,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "enemy_init_z",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
                 "my_script": {
                   "default": DEFAULT_SCRIPT_CONTENT,
                   "css_class": "",
@@ -313,8 +346,8 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_size"], ["my_map_height"],
-                  ["my_start_AMSL"]]
+                  ["my_map_size"], ["my_map_height"], ["my_start_AMSL"],
+                 ["my_enemy_init_x"], ["my_enemy_init_y"], ["my_enemy_init_z"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -386,6 +419,9 @@
           "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
           "start_AMSL": parseFloat(options.start_AMSL),
+          "enemy_starting_point": [parseInt(options.enemy_init_x, 10),
+                                   parseInt(options.enemy_init_y, 10),
+                                   parseInt(options.enemy_init_z, 10)],
           "flag_weight": FLAG_WEIGHT,
           "flag_list": [{
             "position": {
