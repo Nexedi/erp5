@@ -411,7 +411,9 @@ var MapManager = /** @class */ (function () {
       offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
       max_lon = offset[1],
-      starting_point = map_dict.map_size / 2 * 0.75,
+      starting_point = map_dict.map_size / 2 * -0.75,
+      enemy_starting_point = map_dict.enemy_starting_point ?
+        map_dict.enemy_starting_point : [0, -starting_point, 0],
       map_info = {
         "depth": map_dict.map_size,
         "width": map_dict.map_size,
@@ -434,13 +436,13 @@ var MapManager = /** @class */ (function () {
         "initial_position": {
           "team_A": {
             "x": 0,
-            "y": -starting_point,
+            "y": starting_point,
             "z": START_Z
           },
           "team_B": {
-            "x": 0,
-            "y": starting_point,
-            "z": START_Z
+            "x": enemy_starting_point[0],
+            "y": enemy_starting_point[1],
+            "z": enemy_starting_point[2]
           }
         }
       };
@@ -908,7 +910,7 @@ var GameManager = /** @class */ (function () {
         var msg = '';
         drone._tick += 1;
         if (drone.can_play) {
-          if (drone.getCurrentPosition().z <= 1) {
+          if (drone.getCurrentPosition().z <= 0) {
             drone._internal_crash(new Error('Drone ' + drone.id +
                                             ' touched the floor.'));
           }
