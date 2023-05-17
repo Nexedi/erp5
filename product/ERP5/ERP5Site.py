@@ -307,6 +307,8 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, PortalObjectBase, CacheCook
   # installed, and scalability tests want a reliable way to know when the site
   # is ready to be tortured.
   isPortalBeingCreated = ConstantGetter('isPortalBeingCreated', value=False)
+  # Disable order support, it is easy to see contents ordered by id by default.
+  has_order_support = 0
 
   _properties = (
       { 'id':'title',
