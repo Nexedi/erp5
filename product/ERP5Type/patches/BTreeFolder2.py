@@ -14,6 +14,7 @@
 ##############################################################################
 
 # Stribger repair of BTreeFolder2
+from Products.ERP5Type import IS_ZOPE2
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
@@ -108,11 +109,12 @@ try:
 except AttributeError:
   pass
 
-def manage_delAllObjects(self, REQUEST=None):
-  """Disable dangerous method"""
-  raise RuntimeError(
-"manage_delAllObjects is disabled in ERP5 to protect data from "
-"human error. There are unbelievable mistakes. ERP5 is a place "
-"to store important data that must not be deleted easily.")
+if not IS_ZOPE2:
+  def manage_delAllObjects(self, REQUEST=None):
+    """Disable dangerous method"""
+    raise RuntimeError(
+  "manage_delAllObjects is disabled in ERP5 to protect data from "
+  "human error. There are unbelievable mistakes. ERP5 is a place "
+  "to store important data that must not be deleted easily.")
 
-BTreeFolder2Base.manage_delAllObjects = manage_delAllObjects
+  BTreeFolder2Base.manage_delAllObjects = manage_delAllObjects
