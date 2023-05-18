@@ -271,8 +271,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
       this.getMinSpeed()
     );
 
-    drone._acceleration = (this._targetSpeed > drone.getSpeed())
-      ? this.getMaxAcceleration() : -this.getMaxDeceleration();
+    drone._acceleration = (this._targetSpeed > drone.getSpeed()) ?
+      this.getMaxAcceleration() : -this.getMaxDeceleration();
   };
 
   FixedWingDroneAPI.prototype.setStartingPosition = function (drone, x, y, z) {
@@ -436,6 +436,9 @@ var FixedWingDroneAPI = /** @class */ (function () {
         this.internal_setTargetCoordinates(drone, next_point, true);
       }
     }
+  };
+  FixedWingDroneAPI.prototype.getDroneViewInfo = function () {
+    var context = this, result = { "obstacles": [], "drones": [] };
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;

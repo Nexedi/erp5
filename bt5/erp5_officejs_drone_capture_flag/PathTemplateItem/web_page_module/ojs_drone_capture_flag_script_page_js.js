@@ -62,6 +62,8 @@
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
+      '      var drone_view = me.getDroneViewInfo();\n' +
+      '      console.log("drone_view:", drone_view);\n' +
       '      me.next_checkpoint += 1;\n' +
       '      me.direction_set = false;\n' +
       '    }\n' +

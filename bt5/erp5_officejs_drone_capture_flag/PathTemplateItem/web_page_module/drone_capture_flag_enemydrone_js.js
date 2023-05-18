@@ -186,6 +186,9 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
     return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
   };
+  EnemyDroneAPI.prototype.getDroneViewInfo = function () {
+    return null; //TODO
+  };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     return 'me.onStart = function () {\n' +
       '  me.setTargetCoordinates(\n' +

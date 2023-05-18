@@ -168,6 +168,16 @@ var DroneManager = /** @class */ (function () {
       this._targetCoordinates
     );
   };
+  /**
+   * Returns the list of things a drone "sees"
+   */
+  DroneManager.prototype.getDroneViewInfo = function () {
+    var context = this;
+    if (this._controlMesh) {
+      return context._API.getDroneViewInfo(context);
+    }
+    return;
+  };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
     if (this._controlMesh) {
