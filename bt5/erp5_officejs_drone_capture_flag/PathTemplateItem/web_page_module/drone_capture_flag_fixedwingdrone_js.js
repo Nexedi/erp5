@@ -19,7 +19,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    VIEW_SCOPE = 100;
+    VIEW_SCOPE = 70;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {

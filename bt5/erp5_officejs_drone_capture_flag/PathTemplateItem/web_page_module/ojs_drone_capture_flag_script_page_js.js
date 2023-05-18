@@ -31,6 +31,7 @@
       '\n' +
       'me.onStart = function () {\n' +
       '  me.direction_set = false;\n' +
+      '  me.dodging = false;\n' +
       '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
@@ -42,6 +43,14 @@
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
       '  if (!me.flag_positions) return;\n' +
+      '  if (me.dodging) {\n' +
+      '    var drone_view = me.getDroneViewInfo();\n' +
+      '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
+      '      return;\n' +
+      '    } else {\n' +
+      '      me.dodging = false;\n' +
+      '    }\n' +
+      '  }\n' +
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
@@ -56,7 +65,10 @@
       '  }\n' +
       '  var drone_view = me.getDroneViewInfo();\n' +
       '  if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
-      '    console.log("drone_view:", drone_view);\n' +
+      '    console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
+      '    me.dodging = true;\n' +
+      '    me.direction_set = false;\n' +
+      '    me.setTargetCoordinates(0, 0, me.getCurrentPosition(true).z, true);\n' +
       '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '    me.current_position = me.getCurrentPosition(true);\n' +
@@ -512,7 +524,7 @@
             },
             "scale": {
               "x": 2.5,
-              "y": 150,
+              "y": 50,
               "z": 30
             },
             "rotation": {
