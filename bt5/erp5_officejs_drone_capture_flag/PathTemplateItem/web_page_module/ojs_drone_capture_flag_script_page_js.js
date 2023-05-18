@@ -54,6 +54,10 @@
       '    me.direction_set = true;\n' +
       '    return;\n' +
       '  }\n' +
+      '  var drone_view = me.getDroneViewInfo();\n' +
+      '  if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
+      '    console.log("drone_view:", drone_view);\n' +
+      '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '    me.current_position = me.getCurrentPosition(true);\n' +
       '    me.distance = distance(\n' +
@@ -62,8 +66,6 @@
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
-      '      var drone_view = me.getDroneViewInfo();\n' +
-      '      console.log("drone_view:", drone_view);\n' +
       '      me.next_checkpoint += 1;\n' +
       '      me.direction_set = false;\n' +
       '    }\n' +
@@ -487,13 +489,30 @@
           }, {
             "type": "box",
             "position": {
-              "x": -0.25 * options.map_size / 2,
+              "x": 0.25 * options.map_size / 2,
               "y": -0.25 * options.map_size / 2,
               "z": 10
             },
             "scale": {
               "x": 150,
               "y": 2.5,
+              "z": 30
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }, {
+            "type": "box",
+            "position": {
+              "x": -0.5 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
+              "z": 10
+            },
+            "scale": {
+              "x": 2.5,
+              "y": 150,
               "z": 30
             },
             "rotation": {

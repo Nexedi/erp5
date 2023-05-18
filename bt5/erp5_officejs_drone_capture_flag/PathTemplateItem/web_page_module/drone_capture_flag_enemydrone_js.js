@@ -5,6 +5,9 @@
 var EnemyDroneAPI = /** @class */ (function () {
   "use strict";
 
+  var DEFAULT_ACCELERATION = 1,
+    VIEW_SCOPE = 20;
+
   //** CONSTRUCTOR
   function EnemyDroneAPI(gameManager, drone_info, flight_parameters, id) {
     this._gameManager = gameManager;
@@ -14,7 +17,7 @@ var EnemyDroneAPI = /** @class */ (function () {
     this._id = id;
     this._drone_info = drone_info;
     this._drone_dict_list = [];
-    this._acceleration = 1;
+    this._acceleration = DEFAULT_ACCELERATION;
   }
   /*
   ** Function called on start phase of the drone, just before onStart AI script
@@ -186,8 +189,28 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
     return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
   };
-  EnemyDroneAPI.prototype.getDroneViewInfo = function () {
-    return null; //TODO
+  EnemyDroneAPI.prototype.getDroneViewInfo = function (drone) {
+    var context = this, result = [], distance,
+      drone_position = drone.getCurrentPosition(true), other_position;
+    function calculateDistance(a, b) {
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
+                       Math.pow((a.z - b.z), 2));
+    }
+    context._gameManager._droneList_team_A.forEach(function (other) {
+      if (other.can_play) {
+        other_position = other.getCurrentPosition(true);
+        distance = calculateDistance(drone_position, other_position);
+        if (distance <= VIEW_SCOPE) {
+          result.push({
+            position: drone.position,
+            direction: drone.direction,
+            rotation: drone.rotation,
+            speed: drone.speed,
+            team: drone.team
+          });
+        }
+      }
+    });
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     return 'me.onStart = function () {\n' +
