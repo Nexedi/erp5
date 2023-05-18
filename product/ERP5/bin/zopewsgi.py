@@ -184,13 +184,6 @@ def runwsgi():
       default=type_registry.get('byte-size')("10MB"))
     args = parser.parse_args()
 
-    startup = os.path.dirname(Zope2.Startup.__file__)
-    if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
-      schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
-    else: # BBB Zope2
-      schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
-    conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
-
     # Configure logging previously handled by ZConfig/ZServer
     logging.captureWarnings(True)
     root_logger = logging.getLogger()
@@ -220,6 +213,13 @@ def runwsgi():
       long_request_log_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
       LongRequestLogger_dumper.logger.propagate = False
       LongRequestLogger_dumper.logger.addHandler(long_request_log_handler)
+
+    startup = os.path.dirname(Zope2.Startup.__file__)
+    if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
+      schema = ZConfig.loadSchema(os.path.join(startup, 'wsgischema.xml'))
+    else: # BBB Zope2
+      schema = ZConfig.loadSchema(os.path.join(startup, 'zopeschema.xml'))
+    conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
 
     if conf.debug_mode:
       console_handler = logging.StreamHandler(sys.stderr)
