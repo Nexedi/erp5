@@ -1,5 +1,6 @@
 import six
 import argparse
+import atexit
 from io import BytesIO
 import logging
 import os
@@ -176,6 +177,7 @@ def runwsgi():
     parser.add_argument('zope_conf', help='path to zope.conf')
     parser.add_argument('--timerserver-interval', help='Interval for timerserver', type=float)
     parser.add_argument('--threads', help='Number of threads', default=4, type=int)
+    parser.add_argument('--pidfile', help='Write process id in file')
     parser.add_argument(
       '--large-file-threshold',
       help='Requests bigger than this size in bytes get saved into a temporary file '
@@ -213,6 +215,11 @@ def runwsgi():
       long_request_log_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
       LongRequestLogger_dumper.logger.propagate = False
       LongRequestLogger_dumper.logger.addHandler(long_request_log_handler)
+
+    if args.pidfile:
+      with open(args.pidfile, 'w') as f:
+        f.write('%s\n' % os.getpid())
+      atexit.register(os.unlink, args.pidfile)
 
     startup = os.path.dirname(Zope2.Startup.__file__)
     if os.path.isfile(os.path.join(startup, 'wsgischema.xml')):
