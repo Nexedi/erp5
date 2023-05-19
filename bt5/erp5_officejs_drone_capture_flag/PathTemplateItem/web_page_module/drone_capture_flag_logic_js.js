@@ -676,8 +676,8 @@ var GameManager = /** @class */ (function () {
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      drone_count = GAMEPARAMETERS.droneList.team_A.length +
-        GAMEPARAMETERS.droneList.team_B.length;
+      drone_count = GAMEPARAMETERS.drones.user.length +
+        GAMEPARAMETERS.drones.enemy.length;
       for (drone = 0; drone < drone_count; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
@@ -1108,8 +1108,8 @@ var GameManager = /** @class */ (function () {
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
-                       GAMEPARAMETERS.droneList.team_A, TEAM_A, ctx);
-      ctx._spawnDrones(null, GAMEPARAMETERS.droneList.team_B, TEAM_B, ctx);
+                       GAMEPARAMETERS.drones.user, TEAM_A, ctx);
+      ctx._spawnDrones(null, GAMEPARAMETERS.drones.enemy, TEAM_B, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1319,7 +1319,7 @@ var GameManager = /** @class */ (function () {
         position_list.push(position);
         var id_offset = 0;
         if (team == TEAM_B) {
-          id_offset = GAMEPARAMETERS.droneList.team_A.length;
+          id_offset = GAMEPARAMETERS.drones.user.length;
         }
         api = new this.APIs_dict[drone_list[i].type](
           this,

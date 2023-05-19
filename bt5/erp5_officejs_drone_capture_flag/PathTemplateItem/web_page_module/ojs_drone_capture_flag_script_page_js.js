@@ -87,8 +87,7 @@
     DRAW = false,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
-    DRONE_LIST_A = [],
-    DRONE_LIST_B = [],
+    DRONE_LIST = [],
     WIDTH = 680,
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
@@ -358,10 +357,8 @@
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
-        DRONE_LIST_A[i] = {"id": i, "type": "FixedWingDroneAPI",
+        DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
-        /*DRONE_LIST_B[i] = {"id": i + options.number_of_drones,
-                           "type": "EnemyDroneAPI"};*/
       }
 
       function randomizeMap(json_map) {
@@ -501,9 +498,9 @@
         "temp_flight_path": true,
         "log_drone_flight": LOG,
         "log_interval_time": LOG_TIME,
-        "droneList": {
-          "team_A": DRONE_LIST_A,
-          "team_B": [
+        "drones": {
+          "user": DRONE_LIST,
+          "enemy": [
             {
               "id": 0 + options.number_of_drones,
               "type": "EnemyDroneAPI",
@@ -540,7 +537,7 @@
                 "z": 10
               }
             }
-          ] //DRONE_LIST_B TODO drop DRONE_LIST_B
+          ]
         }
       };
       return gadget.declareGadget("babylonjs.gadget.html",
