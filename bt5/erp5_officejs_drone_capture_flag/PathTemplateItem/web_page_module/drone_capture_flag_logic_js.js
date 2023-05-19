@@ -2,7 +2,7 @@
 /*jslint nomen: true, indent: 2, maxlen: 80, todo: true,
          unparam: true */
 
-var GAMEPARAMETERS = {}, TEAM_A = "team_A", TEAM_B = "team_B";
+var GAMEPARAMETERS = {}, TEAM_USER = "user", TEAM_ENEMY = "enemy";
 
 /******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
@@ -658,8 +658,8 @@ var GameManager = /** @class */ (function () {
     this._scene = null;
     this._engine = null;
     this._droneList = [];
-    this._droneList_team_A = [];
-    this._droneList_team_B = [];
+    this._droneList_user = [];
+    this._droneList_enemy = [];
     this._canUpdate = false;
     this._max_step_animation_frame = game_parameters_json.simulation_speed;
     if (!this._max_step_animation_frame) { this._max_step_animation_frame = 5; }
@@ -808,7 +808,7 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype._checkFlagCollision = function (drone, flag) {
-    if (drone.team == TEAM_B) return;
+    if (drone.team == TEAM_ENEMY) return;
     function distance(a, b) {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
@@ -931,7 +931,7 @@ var GameManager = /** @class */ (function () {
         seconds = Math.floor(this._game_duration / 1000), trace_objects;
 
       if (GAMEPARAMETERS.log_drone_flight || GAMEPARAMETERS.draw_flight_path) {
-        this._droneList_team_A.forEach(function (drone, index) {
+        this._droneList_user.forEach(function (drone, index) {
           if (drone.can_play) {
             drone_position = drone.position;
             if (GAMEPARAMETERS.log_drone_flight) {
@@ -1000,7 +1000,7 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._allDronesFinished = function () {
     var finish = true;
-    this._droneList_team_A.forEach(function (drone) {
+    this._droneList_user.forEach(function (drone) {
       if (drone.can_play) {
         finish = false;
       }
@@ -1020,7 +1020,7 @@ var GameManager = /** @class */ (function () {
 
   GameManager.prototype._calculateUserScore = function () {
     var score = 0;
-    this._droneList_team_A.forEach(function (drone) {
+    this._droneList_user.forEach(function (drone) {
       if (drone.can_play) {
         score += drone.score;
       }
@@ -1108,8 +1108,8 @@ var GameManager = /** @class */ (function () {
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
-                       GAMEPARAMETERS.drones.user, TEAM_A, ctx);
-      ctx._spawnDrones(null, GAMEPARAMETERS.drones.enemy, TEAM_B, ctx);
+                       GAMEPARAMETERS.drones.user, TEAM_USER, ctx);
+      ctx._spawnDrones(null, GAMEPARAMETERS.drones.enemy, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1141,8 +1141,8 @@ var GameManager = /** @class */ (function () {
           rect.linkOffsetY = 0;
         }
       }
-      colourDrones(ctx._droneList_team_A, "blue");
-      colourDrones(ctx._droneList_team_B, "red");
+      colourDrones(ctx._droneList_user, "blue");
+      colourDrones(ctx._droneList_enemy, "red");
       console.log("on3DmodelsReady - advaced textures added");
       return ctx;
     };
@@ -1156,7 +1156,7 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         on3DmodelsReady(_this);
         _this._droneList =
-          _this._droneList_team_A.concat(_this._droneList_team_B);
+          _this._droneList_user.concat(_this._droneList_enemy);
         var result = new RSVP.Queue();
         result.push(function () {
           return RSVP.delay(1000);
@@ -1177,15 +1177,15 @@ var GameManager = /** @class */ (function () {
     return new RSVP.Queue()
       .push(function () {
         promise_list = [];
-        _this._droneList_team_A.forEach(function (drone) {
+        _this._droneList_user.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start());
         });
         start_msg = {
           'flag_positions': _this._mapManager.getMapInfo().flag_list
         };
-        promise_list.push(_this._droneList_team_A[0].sendMsg(start_msg));
-        _this._droneList_team_B.forEach(function (drone) {
+        promise_list.push(_this._droneList_user[0].sendMsg(start_msg));
+        _this._droneList_enemy.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start());
         });
@@ -1318,7 +1318,7 @@ var GameManager = /** @class */ (function () {
       } else {
         position_list.push(position);
         var id_offset = 0;
-        if (team == TEAM_B) {
+        if (team == TEAM_ENEMY) {
           id_offset = GAMEPARAMETERS.drones.user.length;
         }
         api = new this.APIs_dict[drone_list[i].type](

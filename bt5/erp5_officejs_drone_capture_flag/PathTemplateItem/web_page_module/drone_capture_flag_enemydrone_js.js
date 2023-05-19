@@ -196,7 +196,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
-    context._gameManager._droneList_team_A.forEach(function (other) {
+    context._gameManager._droneList_user.forEach(function (other) {
       if (other.can_play) {
         other_position = other.getCurrentPosition(true);
         distance = calculateDistance(drone_position, other_position);
