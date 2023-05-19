@@ -360,8 +360,8 @@
       for (i = 0; i < options.number_of_drones; i += 1) {
         DRONE_LIST_A[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.script};
-        DRONE_LIST_B[i] = {"id": i + options.number_of_drones,
-                           "type": "EnemyDroneAPI"};
+        /*DRONE_LIST_B[i] = {"id": i + options.number_of_drones,
+                           "type": "EnemyDroneAPI"};*/
       }
 
       function randomizeMap(json_map) {
@@ -401,28 +401,6 @@
           "map_size": parseFloat(options.map_size),
           "height": parseInt(options.map_height, 10),
           "start_AMSL": parseFloat(options.start_AMSL),
-          "enemy_location_list": [
-            {
-              "x": -0.70 * options.map_size / 2,
-              "y": -0.70 * options.map_size / 2,
-              "z": 10
-            },
-            {
-              "x": -0.70 * options.map_size / 2,
-              "y": -0.70 * options.map_size / 2,
-              "z": 10
-            },
-            {
-              "x": -0.70 * options.map_size / 2,
-              "y": -0.70 * options.map_size / 2,
-              "z": 10
-            },
-            {
-              "x": -0.70 * options.map_size / 2,
-              "y": -0.70 * options.map_size / 2,
-              "z": 10
-            }
-          ],
           "flag_weight": FLAG_WEIGHT,
           "flag_list": [{
             "position": {
@@ -525,7 +503,44 @@
         "log_interval_time": LOG_TIME,
         "droneList": {
           "team_A": DRONE_LIST_A,
-          "team_B": DRONE_LIST_B
+          "team_B": [
+            {
+              "id": 0 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": -0.70 * options.map_size / 2,
+                "y": -0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 1 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": 0.70 * options.map_size / 2,
+                "y": -0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 2 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": -0.70 * options.map_size / 2,
+                "y": 0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 3 + options.number_of_drones,
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": 0.70 * options.map_size / 2,
+                "y": 0.70 * options.map_size / 2,
+                "z": 10
+              }
+            }
+          ] //DRONE_LIST_B TODO drop DRONE_LIST_B
         }
       };
       return gadget.declareGadget("babylonjs.gadget.html",

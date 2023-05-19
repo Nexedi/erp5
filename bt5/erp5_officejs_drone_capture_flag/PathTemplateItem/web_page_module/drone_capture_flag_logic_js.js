@@ -421,7 +421,6 @@ var MapManager = /** @class */ (function () {
       max_lat = offset[0],
       max_lon = offset[1],
       starting_point = map_dict.map_size / 2 * -0.75,
-      enemy_location_list = map_dict.enemy_location_list || [],
       map_info = {
         "depth": map_dict.map_size,
         "width": map_dict.map_size,
@@ -440,7 +439,6 @@ var MapManager = /** @class */ (function () {
         "flag_weight": map_dict.flag_weight,
         "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
         "obstacle_list": map_dict.obstacle_list,
-        "enemy_location_list": map_dict.enemy_location_list,
         "initial_position": {
           "x": 0,
           "y": starting_point,
@@ -1111,9 +1109,7 @@ var GameManager = /** @class */ (function () {
       _this._mapManager = new MapManager(ctx._scene);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.droneList.team_A, TEAM_A, ctx);
-      //TODO ROQUE use enemy location list
-      /*ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_B,
-                       GAMEPARAMETERS.droneList.team_B, TEAM_B, ctx);*/
+      ctx._spawnDrones(null, GAMEPARAMETERS.droneList.team_B, TEAM_B, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1246,10 +1242,10 @@ var GameManager = /** @class */ (function () {
     return parameter;
   };
 
-  GameManager.prototype._spawnDrones = function (center, drone_list,
-                                                 team, ctx) {
+  GameManager.prototype._spawnDrones = function (init_position, drone_list,
+                                                 team, ctx, drone_location) {
     var position, i, position_list = [], max_collision = 10 * drone_list.length,
-      collision_nb = 0, api;
+      collision_nb = 0, api, center;
     function checkCollision(position, list) {
       var el;
       for (el = 0; el < list.length; el += 1) {
@@ -1307,6 +1303,11 @@ var GameManager = /** @class */ (function () {
       return new BABYLON.Vector3(x, y, z);
     }
     for (i = 0; i < drone_list.length; i += 1) {
+      if (!init_position) {
+        center = drone_list[i].position;
+      } else {
+        center = init_position;
+      }
       position = randomSpherePoint(center.x + i, center.y + i, center.z + i,
                                    0, 0, 0);
       if (checkCollision(position, position_list)) {
