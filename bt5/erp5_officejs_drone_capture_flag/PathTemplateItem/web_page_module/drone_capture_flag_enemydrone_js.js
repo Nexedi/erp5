@@ -211,17 +211,23 @@ var EnemyDroneAPI = /** @class */ (function () {
         }
       }
     });
+    return result;
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     return 'me.onStart = function () {\n' +
-      '  me.setTargetCoordinates(\n' +
-      '    0,\n' +
-      '    0,\n' +
-      '    10 + me.id, true\n' +
-      '  );\n' +
+      '  me.setDirection(0,0,0);\n' +
       '};\n' +
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
+      '  var drone_view = me.getDroneViewInfo();\n' +
+      '  console.log("drone_view:", drone_view);\n' +
+      '  if (drone_view.length) {\n' +
+      '    me.setTargetCoordinates(\n' +
+      '      0,\n' +
+      '      0,\n' +
+      '      10 + me.id, true\n' +
+      '    );\n' +
+      '  }\n' +
       '};';
   };
   EnemyDroneAPI.prototype.getMinSpeed = function () {
