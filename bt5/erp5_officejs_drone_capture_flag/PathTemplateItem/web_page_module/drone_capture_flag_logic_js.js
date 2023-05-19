@@ -422,8 +422,7 @@ var MapManager = /** @class */ (function () {
       max_lat = offset[0],
       max_lon = offset[1],
       starting_point = map_dict.map_size / 2 * -0.75,
-      enemy_starting_point = map_dict.enemy_starting_point ?
-        map_dict.enemy_starting_point : [0, -starting_point, 0],
+      enemy_location_list = map_dict.enemy_location_list || [],
       map_info = {
         "depth": map_dict.map_size,
         "width": map_dict.map_size,
@@ -444,16 +443,9 @@ var MapManager = /** @class */ (function () {
         "obstacle_list": map_dict.obstacle_list,
         //rename to base?
         "initial_position": {
-          "team_A": {
-            "x": 0,
-            "y": starting_point,
-            "z": START_Z
-          },
-          "team_B": {
-            "x": enemy_starting_point[0],
-            "y": enemy_starting_point[1],
-            "z": enemy_starting_point[2]
-          }
+          "x": 0,
+          "y": starting_point,
+          "z": START_Z
         }
       };
     //for DEBUG
@@ -1151,10 +1143,11 @@ var GameManager = /** @class */ (function () {
       }
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
-      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_A,
+      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.droneList.team_A, TEAM_A, ctx);
-      ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_B,
-                       GAMEPARAMETERS.droneList.team_B, TEAM_B, ctx);
+      //TODO ROQUE use enemy location list
+      /*ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position.team_B,
+                       GAMEPARAMETERS.droneList.team_B, TEAM_B, ctx);*/
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1225,19 +1218,20 @@ var GameManager = /** @class */ (function () {
         _this._droneList_team_A.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position.team_A
+            _this._mapManager.getMapInfo().initial_position
           ));
         });
         start_msg = {
           'flag_positions': _this._mapManager.getMapInfo().flag_list
         };
         promise_list.push(_this._droneList_team_A[0].sendMsg(start_msg));
-        _this._droneList_team_B.forEach(function (drone) {
+        //TODO ROQUE use enemy location list
+        /*_this._droneList_team_B.forEach(function (drone) {
           drone._tick = 0;
           promise_list.push(drone.internal_start(
             _this._mapManager.getMapInfo().initial_position.team_B
           ));
-        });
+        });*/
         return RSVP.all(promise_list);
       })
       .push(function () {
