@@ -138,11 +138,10 @@ var DroneManager = /** @class */ (function () {
     enumerable: true,
     configurable: true
   });
-  DroneManager.prototype.internal_start = function (initial_position) {
+  DroneManager.prototype.internal_start = function () {
     this._API.internal_start(this);
     this._canPlay = true;
     this._canCommunicate = true;
-    this._targetCoordinates = initial_position;
     try {
       return this.onStart();
     } catch (error) {
@@ -441,46 +440,13 @@ var MapManager = /** @class */ (function () {
         "flag_weight": map_dict.flag_weight,
         "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
         "obstacle_list": map_dict.obstacle_list,
-        //rename to base?
+        "enemy_location_list": map_dict.enemy_location_list,
         "initial_position": {
           "x": 0,
           "y": starting_point,
           "z": START_Z
         }
       };
-    //for DEBUG
-    /*var minxy = map.normalize(
-      map_info.min_x,
-      map_info.min_y,
-      map_info
-    );
-    var maxxy = map.normalize(
-      map_info.max_x,
-      map_info.max_y,
-      map_info
-    );
-    var check1 = map.normalize(
-      map.longitudToX(14.25334942966329, map_dict.map_size),
-      map.latitudeToY(45.64492790560583, map_dict.map_size),
-      map_info
-    );
-    var check2 = map.normalize(
-      map.longitudToX(14.26332880184475, map_dict.map_size),
-      map.latitudeToY(45.64316335436476, map_dict.map_size),
-      map_info
-    );
-    console.log("MAP LIMITS");
-    console.log("min_lon to X:", minxy[0], min_lon);
-    console.log("min_lat to Y:", minxy[1], min_lat);
-    console.log("max_lon to X:", maxxy[0], max_lon);
-    console.log("max_lat to Y:", maxxy[1], max_lat);
-    console.log("DRONE PATH");
-    console.log("init position x:", map_info.initial_position.x);
-    console.log("init position y:", map_info.initial_position.y);
-    console.log("checkpoint-1 x:", check1[0]);
-    console.log("checkpoint-1 y:", check1[1]);
-    console.log("checkpoint-2 x:", check2[0]);
-    console.log("checkpoint-2 y:", check2[1]);*/
     return map_info;
   }
   //** CONSTRUCTOR
@@ -1217,21 +1183,16 @@ var GameManager = /** @class */ (function () {
         promise_list = [];
         _this._droneList_team_A.forEach(function (drone) {
           drone._tick = 0;
-          promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position
-          ));
+          promise_list.push(drone.internal_start());
         });
         start_msg = {
           'flag_positions': _this._mapManager.getMapInfo().flag_list
         };
         promise_list.push(_this._droneList_team_A[0].sendMsg(start_msg));
-        //TODO ROQUE use enemy location list
-        /*_this._droneList_team_B.forEach(function (drone) {
+        _this._droneList_team_B.forEach(function (drone) {
           drone._tick = 0;
-          promise_list.push(drone.internal_start(
-            _this._mapManager.getMapInfo().initial_position.team_B
-          ));
-        });*/
+          promise_list.push(drone.internal_start());
+        });
         return RSVP.all(promise_list);
       })
       .push(function () {
