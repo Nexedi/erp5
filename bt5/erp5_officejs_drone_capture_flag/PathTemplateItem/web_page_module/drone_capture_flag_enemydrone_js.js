@@ -6,7 +6,10 @@ var EnemyDroneAPI = /** @class */ (function () {
   "use strict";
 
   var DEFAULT_ACCELERATION = 1,
-    VIEW_SCOPE = 20;
+    VIEW_SCOPE = 20,
+    DEFAULT_SPEED = 16,
+    MIN_SPEED = 12,
+    MAX_SPEED = 26;
 
   //** CONSTRUCTOR
   function EnemyDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -23,6 +26,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   EnemyDroneAPI.prototype.internal_start = function (drone) {
+    drone._targetCoordinates = drone.getCurrentPosition(true);
     drone._maxAcceleration = this.getMaxAcceleration();
     if (drone._maxAcceleration <= 0) {
       throw new Error('max acceleration must be superior to 0');
@@ -202,11 +206,11 @@ var EnemyDroneAPI = /** @class */ (function () {
         distance = calculateDistance(drone_position, other_position);
         if (distance <= VIEW_SCOPE) {
           result.push({
-            position: drone.position,
-            direction: drone.direction,
-            rotation: drone.rotation,
-            speed: drone.speed,
-            team: drone.team
+            position: other.position,
+            direction: other.direction,
+            rotation: other.rotation,
+            speed: other.speed,
+            team: other.team
           });
         }
       }
@@ -220,24 +224,40 @@ var EnemyDroneAPI = /** @class */ (function () {
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
       '  var drone_view = me.getDroneViewInfo();\n' +
-      '  console.log("drone_view:", drone_view);\n' +
       '  if (drone_view.length) {\n' +
+      '    console.log("user drone direction:", drone_view[0].direction.x, drone_view[0].direction.y);' +
+      '    var target = [drone_view[0].position.x, drone_view[0].position.y, drone_view[0].position.z];\n' +
+      '    if (drone_view[0].position.x < 0) {\n' +
+      '      target[0] += 10;\n' +
+      '    }\n' +
+      '    if (drone_view[0].position.x > 0) {\n' +
+      '      target[0] -= 10;\n' +
+      '    }\n' +
+      '    if (drone_view[0].position.y < 0) {\n' +
+      '      target[1] += 10;\n' +
+      '    }\n' +
+      '    if (drone_view[0].position.y > 0) {\n' +
+      '      target[1] -= 10;\n' +
+      '    }\n' +
       '    me.setTargetCoordinates(\n' +
-      '      0,\n' +
-      '      0,\n' +
-      '      10 + me.id, true\n' +
+      '      target[0],\n' +
+      '      target[1],\n' +
+      '      target[2], true\n' +
       '    );\n' +
       '  }\n' +
       '};';
   };
   EnemyDroneAPI.prototype.getMinSpeed = function () {
-    return this._flight_parameters.drone.minSpeed;
+    return MIN_SPEED;
+    //return this._flight_parameters.drone.minSpeed;
   };
   EnemyDroneAPI.prototype.getMaxSpeed = function () {
-    return this._flight_parameters.drone.maxSpeed;
+    return MAX_SPEED;
+    //return this._flight_parameters.drone.maxSpeed;
   };
   EnemyDroneAPI.prototype.getInitialSpeed = function () {
-    return this._flight_parameters.drone.speed;
+    return DEFAULT_SPEED;
+    //return this._flight_parameters.drone.speed;
   };
   EnemyDroneAPI.prototype.getMaxDeceleration = function () {
     return this._flight_parameters.drone.maxDeceleration;
