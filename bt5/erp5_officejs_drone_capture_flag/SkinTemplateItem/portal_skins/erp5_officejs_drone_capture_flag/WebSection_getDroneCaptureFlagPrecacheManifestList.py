@@ -7,6 +7,7 @@ url_list = [
   "gadget_erp5_panel_drone_capture_flag.html",
   "gadget_erp5_panel_drone_capture_flag.js",
   "gadget_erp5_page_drone_capture_flag_fixedwingdrone.js",
+  "gadget_erp5_page_drone_capture_flag_enemydrone.js",
   "assets/map/terrain.jpg",
   "assets/map/map.babylon",
   "assets/drone/drone.babylon",
@@ -19,7 +20,8 @@ url_list = [
   "assets/skybox/sky_nz.jpg",
   "assets/skybox/sky_px.jpg",
   "assets/skybox/sky_py.jpg",
-  "assets/skybox/sky_pz.jpg"
+  "assets/skybox/sky_pz.jpg",
+  "libraries/seedrandom.min.js"
 ]
 
 return url_list
