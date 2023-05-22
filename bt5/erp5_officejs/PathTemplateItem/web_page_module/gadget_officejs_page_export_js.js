@@ -19,6 +19,11 @@
         "storage_type": "precache",
         "cache": precache_manifest
       },
+      "Capture The Flag": {
+        "url": "officejs_drone_capture_flag/",
+        "storage_type": "precache",
+        "cache": precache_manifest
+      },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",
         "storage_type": "precache",
