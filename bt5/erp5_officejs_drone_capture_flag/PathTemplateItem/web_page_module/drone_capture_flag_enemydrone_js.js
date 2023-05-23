@@ -6,7 +6,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   "use strict";
 
   var DEFAULT_ACCELERATION = 1,
-    VIEW_SCOPE = 20,
+    VIEW_SCOPE = 50,
     DEFAULT_SPEED = 16,
     MIN_SPEED = 12,
     MAX_SPEED = 26;
@@ -218,26 +218,43 @@ var EnemyDroneAPI = /** @class */ (function () {
     return result;
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
-    return 'me.onStart = function () {\n' +
+    return 'var BASE_DISTANCE = 80;\n' +
+      'me.onStart = function () {\n' +
       '  me.setDirection(0,0,0);\n' +
+      '  me.base = me.getCurrentPosition(true);\n' +
       '};\n' +
       '\n' +
+      'function distance(a, b) {\n' +
+      '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
+      '}\n' +
       'me.onUpdate = function (timestamp) {\n' +
+      '  me.current_position = me.getCurrentPosition(true);\n' +
+      '  var dist = distance(\n' +
+      '    me.current_position,\n' +
+      '    me.base\n' +
+      '  );\n' +
+      '  if (dist >= BASE_DISTANCE) {\n' +
+      '    me.setTargetCoordinates(\n' +
+      '      me.base.x,\n' +
+      '      me.base.y,\n' +
+      '      me.base.z, true\n' +
+      '    );\n' +
+      '    return;\n' +
+      '  }\n' +
       '  var drone_view = me.getDroneViewInfo();\n' +
       '  if (drone_view.length) {\n' +
-      '    console.log("user drone direction:", drone_view[0].direction.x, drone_view[0].direction.y);' +
       '    var target = [drone_view[0].position.x, drone_view[0].position.y, drone_view[0].position.z];\n' +
       '    if (drone_view[0].position.x < 0) {\n' +
-      '      target[0] += 10;\n' +
+      '      target[0] += 5;\n' +
       '    }\n' +
       '    if (drone_view[0].position.x > 0) {\n' +
-      '      target[0] -= 10;\n' +
+      '      target[0] -= 5;\n' +
       '    }\n' +
       '    if (drone_view[0].position.y < 0) {\n' +
-      '      target[1] += 10;\n' +
+      '      target[1] += 5;\n' +
       '    }\n' +
       '    if (drone_view[0].position.y > 0) {\n' +
-      '      target[1] -= 10;\n' +
+      '      target[1] -= 5;\n' +
       '    }\n' +
       '    me.setTargetCoordinates(\n' +
       '      target[0],\n' +
