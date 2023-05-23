@@ -5,7 +5,7 @@
 
   //Default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
-    SIMULATION_TIME = 1500,
+    SIMULATION_TIME = 170,
     MAP_SIZE = 600,
     map_height = 700,
     start_AMSL = 595,
@@ -19,11 +19,12 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    NUMBER_OF_DRONES = 1,
+    NUMBER_OF_DRONES = 10,
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var EPSILON = 10;\n' +
+      'var EPSILON = 10,\n' +
+      '  DODGE_DISTANCE = 50;\n' +
       '\n' +
       'function distance(a, b) {\n' +
       '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
@@ -44,12 +45,23 @@
       'me.onUpdate = function (timestamp) {\n' +
       '  if (!me.flag_positions) return;\n' +
       '  if (me.dodging) {\n' +
-      '    var drone_view = me.getDroneViewInfo();\n' +
+      '    me.current_position = me.getCurrentPosition(true);\n' +
+      '    var dist = distance(\n' +
+      '      me.current_position,\n' +
+      '      me.dodging.position\n' +
+      '    );\n' +
+      '    if (dist >= DODGE_DISTANCE) {\n' +
+      '      console.log("Good distance to obstacle. DODGED.");\n' +
+      '      me.dodging = false;\n' +
+      '    }\n' +
+      '    //check if there is another obstacle while dodging!\n' +
+      '    /*var drone_view = me.getDroneViewInfo();\n' +
       '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
       '      return;\n' +
       '    } else {\n' +
       '      me.dodging = false;\n' +
-      '    }\n' +
+      '    }*/\n' +
+      '    return;\n' +
       '  }\n' +
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
@@ -63,13 +75,23 @@
       '    me.direction_set = true;\n' +
       '    return;\n' +
       '  }\n' +
-      '  var drone_view = me.getDroneViewInfo();\n' +
-      //'  if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
-      //'    console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
-      //'    me.dodging = true;\n' +
-      //'    me.direction_set = false;\n' +
-      //'    me.setTargetCoordinates(0, 0, me.getCurrentPosition(true).z, true);\n' +
-      //'  }\n' +
+      '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
+      '    var drone_view = me.getDroneViewInfo();\n' +
+      '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
+      '      console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
+      '      me.dodging = drone_view.obstacles[0];\n' +
+      '      me.direction_set = false;\n' +
+      '      var random = Math.random() < 0.5, dodge_point = {};\n' +
+      '      Object.assign(dodge_point, me.flag_positions[me.next_checkpoint].position);\n' +
+      '      if (random) {\n' +
+      '        dodge_point.x = dodge_point.x * -1;\n' +
+      '      } else {\n' +
+      '        dodge_point.y = dodge_point.y * -1;\n' +
+      '      }\n' +
+      '      me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition(true).z, true);\n' +
+      '      return;\n' +
+      '    }\n' +
+      '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '    me.current_position = me.getCurrentPosition(true);\n' +
       '    me.distance = distance(\n' +
@@ -408,13 +430,13 @@
           }, {
             "position": {
               "x": 0.75 * options.map_size / 2,
-              "y": -0.75 * options.map_size / 2,
+              "y": 0.75 * options.map_size / 2,
               "z": 10
             }
           }, {
             "position": {
               "x": 0.75 * options.map_size / 2,
-              "y": 0.75 * options.map_size / 2,
+              "y": -0.75 * options.map_size / 2,
               "z": 10
             }
           }, {
@@ -427,31 +449,14 @@
           "obstacle_list" : [{
             "type": "sphere",
             "position": {
-              "x": 0.6 * options.map_size / 2,
-              "y": 0.4 * options.map_size / 2,
-              "z": 8
-            },
-            "scale": {
-              "x": 4,
-              "y": 4,
-              "z": 4
-            },
-            "rotation": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            }
-          }, {
-            "type": "cylinder",
-            "position": {
-              "x": -0.5 * options.map_size / 2,
+              "x": 0.5 * options.map_size / 2,
               "y": 0.5 * options.map_size / 2,
-              "z": 10
+              "z": 0
             },
             "scale": {
-              "x": 4.5,
-              "y": 4.5,
-              "z": 20
+              "x": 6,
+              "y": 6,
+              "z": 6
             },
             "rotation": {
               "x": 0,
@@ -475,24 +480,24 @@
               "y": 0,
               "z": 0
             }
-          }/*, {
+          }, {
             "type": "box",
             "position": {
               "x": -0.5 * options.map_size / 2,
-              "y": -0.75 * options.map_size / 2,
+              "y": 0.5 * options.map_size / 2,
               "z": 10
             },
             "scale": {
-              "x": 2.5,
-              "y": 50,
+              "x": 100,
+              "y": 2.5,
               "z": 30
             },
             "rotation": {
-              "x": 0,
+              "x": 25,
               "y": 0,
               "z": 0
             }
-          }*/]
+          }]
         },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
@@ -587,7 +592,7 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var a, blob, div, key, log, log_content;
+          var a, blob, div, key, log, log_content, aux;
           i = 0;
           div = domsugar('div', { text: result.message });
           document.querySelector('.container').appendChild(div);
@@ -619,6 +624,10 @@
               document.querySelector('.container').appendChild(div);
               document.querySelector('.container').appendChild(log);
               i += 1;
+              if (i === DRONE_LIST.length) {
+                aux = domsugar('div', { text: "Enemy drones logs:" });
+                document.querySelector('.container').appendChild(aux);
+              }
             }
           }
         }, function (error) {
