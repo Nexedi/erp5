@@ -10,7 +10,11 @@ i = 0
 for software_product in software_product_list:
   web_site = software_product.SoftwareProduct_getRelatedWebSite()
   version = web_site.getLayoutProperty('configuration_latest_version')
-  web_section =  web_site[version]
+  try:
+    web_section =  web_site[version]
+  except KeyError:
+    # ignore new apps in development version
+    return
   manifest_url = web_section.getLayoutProperty('configuration_webapp_manifest_url', default=None)
   # allow to have application without web manifest
   if manifest_url is not None:
