@@ -37,6 +37,7 @@ WHERE
                       getSimulationState[loop_item],
                       getVariationText[loop_item],
                       getSubVariationText[loop_item],
+                      0,
           ])">
         </dtml-if>
         <dtml-if "getSourceUid[loop_item]">
@@ -66,6 +67,7 @@ WHERE
                       getSimulationState[loop_item],
                       getVariationText[loop_item],
                       getSubVariationText[loop_item],
+                      1,
           ])">
         </dtml-if>
         </dtml-let>
@@ -100,7 +102,8 @@ INSERT INTO
   `portal_type`,
   `simulation_state`,
   `variation_text`,
-  `sub_variation_text`
+  `sub_variation_text`,
+  `is_source`
 )
 VALUES
     <dtml-in prefix="row" expr="row_list">
@@ -128,7 +131,8 @@ VALUES
   <dtml-sqlvar expr="row_item[20]" type="string" optional>,
   <dtml-sqlvar expr="row_item[21]" type="string" optional>,
   <dtml-sqlvar expr="row_item[22]" type="string" optional>,
-  <dtml-sqlvar expr="row_item[23]" type="string" optional>
+  <dtml-sqlvar expr="row_item[23]" type="string" optional>,
+  <dtml-sqlvar expr="row_item[24]" type="int">
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>

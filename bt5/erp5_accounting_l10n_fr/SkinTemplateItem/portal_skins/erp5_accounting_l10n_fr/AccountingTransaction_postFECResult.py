@@ -10,10 +10,12 @@ accounting_line_list = context.contentValues(portal_type=portal.getPortalAccount
 
 if context.getSourceSectionUid() in section_uid_list:
   if any([line.getSource(portal_type='Account') for line in accounting_line_list]):
-    source_xml = context.AccountingTransaction_viewAsSourceFECXML()
+    source_xml = context.AccountingTransaction_viewAsSourceFECXML(
+      test_compta_demat_compatibility=test_compta_demat_compatibility)
     active_process.postResult(ActiveResult(detail=source_xml.encode('utf8').encode('zlib')))
 
 if context.getDestinationSectionUid() in section_uid_list:
   if any([line.getDestination(portal_type='Account') for line in accounting_line_list]):
-    destination_xml = context.AccountingTransaction_viewAsDestinationFECXML()
+    destination_xml = context.AccountingTransaction_viewAsDestinationFECXML(
+      test_compta_demat_compatibility=test_compta_demat_compatibility)
     active_process.postResult(ActiveResult(detail=destination_xml.encode('utf8').encode('zlib')))

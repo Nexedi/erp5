@@ -20,6 +20,7 @@ from _thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
 import six
+import random
 
 """
   This patch modifies the way CMF Portal Skins gets a skin by its name from
@@ -148,7 +149,12 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=No
       skinname = sf.getDefaultSkin()
   tid = get_ident()
   SKINDATA[tid] = (
-    None,
+    # CMFCore uses the first item of this tuple, but ERP5 did not.
+    # Thus we put a random value here to reduce rare AttributeError
+    # caused by wrong SKINDATA deletion. See SkinDataCleanup.hashSkinData.
+    # However, it is not enough. To eliminate rare AttributeError bug,
+    # we have to stop using global SKINDATA dict completely.
+    random.getrandbits(24),
     skinname,
     {'portal_skins': None, 'portal_callables': None},
     {})
@@ -207,5 +213,7 @@ class SkinDataCleanup:
           pass
 
   def hashSkinData(self, skindata):
-    return id(skindata)
+    # id() might return the same value even though object is different.
+    # thus use a random value additionally.
+    return (id(skindata), skindata[0])
 

@@ -6,6 +6,7 @@ from UserDict import IterableUserDict
 import Lifetime
 import transaction
 from Testing import ZopeTestCase
+from zope.globalrequest import setRequest
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -363,6 +364,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
 
   def processing_node(self):
     """Main loop for nodes that process activities"""
+    setRequest(self.app.REQUEST)
     try:
       while not Lifetime._shutdown_phase:
         time.sleep(.3)

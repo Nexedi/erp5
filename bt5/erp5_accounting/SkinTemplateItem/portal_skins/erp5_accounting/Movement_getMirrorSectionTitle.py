@@ -1,7 +1,3 @@
-"""Retrieve the title of the mirror section
+"""Retrieve the title of the mirror section ( deprecated compatibility script )
 """
-if brain.mirror_section_uid:
-  movement = brain.getObject()
-  if brain.mirror_section_uid == movement.getDestinationSectionUid():
-    return movement.getDestinationSectionTitle()
-  return movement.getSourceSectionTitle()
+return brain.mirror_section_title

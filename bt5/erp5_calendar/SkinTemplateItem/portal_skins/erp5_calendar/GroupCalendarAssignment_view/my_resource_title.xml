@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>proxy_listbox_ids</string>
+              </list>
             </value>
         </item>
         <item>
@@ -82,6 +84,21 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>TaskLine_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ServiceModule_viewServiceList/listbox</string>
+                          <string>Services</string>
+                        </tuple>
+                        <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
