@@ -97,7 +97,8 @@ class SimulableMixin(Base):
       if applied_rule is None:
         applied_rule = self._createRootAppliedRule()
         expand_root = applied_rule is not None
-    activate_kw = {'tag': 'build:'+self.getPath()}
+    activate_kw = {'tag': 'build:'+self.getPath(),
+     'priority': 3}
     if expand_root:
       applied_rule.expand(activate_kw=activate_kw)
     else:
