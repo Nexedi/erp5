@@ -35,6 +35,8 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Errors import SimulationError
 
+
+
 class SimulableMixin(Base):
   security = ClassSecurityInfo()
 
@@ -97,7 +99,8 @@ class SimulableMixin(Base):
       if applied_rule is None:
         applied_rule = self._createRootAppliedRule()
         expand_root = applied_rule is not None
-    activate_kw = {'tag': 'build:'+self.getPath()}
+    activate_kw = {'tag': 'build:'+self.getPath(),
+     'priority': 2}
     if expand_root:
       applied_rule.expand(activate_kw=activate_kw)
     else:
