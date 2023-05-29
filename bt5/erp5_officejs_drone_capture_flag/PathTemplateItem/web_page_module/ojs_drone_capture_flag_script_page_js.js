@@ -4,7 +4,7 @@
   "use strict";
 
   //Default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 1,
+  var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 170,
     MAP_SIZE = 600,
     map_height = 700,
@@ -19,7 +19,7 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    NUMBER_OF_DRONES = 1,
+    NUMBER_OF_DRONES = 10,
     FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
