@@ -243,7 +243,9 @@ var EnemyDroneAPI = /** @class */ (function () {
       '  }\n' +
       '  var drone_view = me.getDroneViewInfo();\n' +
       '  if (drone_view.length) {\n' +
-      '    var target = [drone_view[0].position.x, drone_view[0].position.y, drone_view[0].position.z];\n' +
+      '    var target = [drone_view[0].position.x,\n' +
+      '                  drone_view[0].position.y,\n' +
+      '                  drone_view[0].position.z];\n' +
       '    if (drone_view[0].position.x < 0) {\n' +
       '      target[0] += 5;\n' +
       '    }\n' +
