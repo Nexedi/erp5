@@ -1,11 +1,15 @@
 import json
 import oauth2client.client
+import oauth2client.transport
 from Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin import getGoogleUserEntry
 from zExceptions import Unauthorized
 
 
 SCOPE_LIST = ['https://www.googleapis.com/auth/userinfo.profile',
               'https://www.googleapis.com/auth/userinfo.email']
+# Default timeout (in seconds) for the HTTP request made to google servers to
+# exchange the authorization code for a token.
+DEFAULT_HTTP_TIMEOUT = 10
 
 
 def _getGoogleClientIdAndSecretKey(portal, reference="default"):
@@ -33,7 +37,7 @@ def redirectToGoogleLoginPage(self):
     include_granted_scopes="true")
   self.REQUEST.RESPONSE.redirect(flow.step1_get_authorize_url())
 
-def getAccessTokenFromCode(self, code, redirect_uri):
+def getAccessTokenFromCode(self, code, redirect_uri, timeout=DEFAULT_HTTP_TIMEOUT):
   client_id, secret_key = _getGoogleClientIdAndSecretKey(self.getPortalObject())
   flow = oauth2client.client.OAuth2WebServerFlow(
     client_id=client_id,
@@ -42,7 +46,9 @@ def getAccessTokenFromCode(self, code, redirect_uri):
     redirect_uri=redirect_uri,
     access_type="offline",
     include_granted_scopes="true")
-  credential = flow.step2_exchange(code)
+  credential = flow.step2_exchange(
+    code,
+    http=oauth2client.transport.get_http_object(timeout=timeout))
   credential_data = json.loads(credential.to_json())
   return credential_data
 
