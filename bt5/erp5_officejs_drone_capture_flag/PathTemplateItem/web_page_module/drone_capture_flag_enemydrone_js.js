@@ -220,14 +220,20 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getDroneAI = function () {
     return 'var BASE_DISTANCE = 80;\n' +
       'me.onStart = function () {\n' +
-      '  me.setDirection(0,0,0);\n' +
       '  me.base = me.getCurrentPosition(true);\n' +
+      '  var drone_pos = [0, 300 * -0.75, 10];\n' +
+      '  var hit_direction = [drone_pos[0] - me.base.x, drone_pos[1] - me.base.y, me.base.z];\n' +
+      '  console.log("enemy pos:", me.base);\n' +
+      '  console.log("drone pos:", drone_pos);\n' +
+      '  console.log("hit direction:", hit_direction);\n' +
+      '  me.setDirection(hit_direction[0],hit_direction[1],0);\n' +
       '};\n' +
       '\n' +
       'function distance(a, b) {\n' +
       '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
       '}\n' +
       'me.onUpdate = function (timestamp) {\n' +
+      '  return;\n' +                                               //DEBUG!
       '  me.current_position = me.getCurrentPosition(true);\n' +
       '  var dist = distance(\n' +
       '    me.current_position,\n' +
