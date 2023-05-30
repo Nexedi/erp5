@@ -7,7 +7,7 @@ var EnemyDroneAPI = /** @class */ (function () {
 
   var DEFAULT_ACCELERATION = 1,
     VIEW_SCOPE = 50,
-    DEFAULT_SPEED = 16,
+    DEFAULT_SPEED = 20,
     MIN_SPEED = 12,
     MAX_SPEED = 26;
 
@@ -216,16 +216,30 @@ var EnemyDroneAPI = /** @class */ (function () {
       }
     });
     return result;
+    
+    /*var a = 20 * 20 - 16 * 16; //speeds
+    var b = 2 * vector_from_drone.Dot( RunnerVelocity );
+    var c = -distance_to_drone * distance_to_drone;*/
+    // RunnerVelocity is a vector, how to get it?
+    
+    //MAKE drone flight as enemy (straight) to simplify this debug
+    
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     return 'var BASE_DISTANCE = 80;\n' +
       'me.onStart = function () {\n' +
       '  me.base = me.getCurrentPosition(true);\n' +
-      '  var drone_pos = [0, 300 * -0.75, 10];\n' +
-      '  var hit_direction = [drone_pos[0] - me.base.x, drone_pos[1] - me.base.y, me.base.z];\n' +
+      '  var drone_pos = {"x":0,"y":300 * -0.75,"z":10};\n' +
+      '  var vector_from_drone = [drone_pos.x - me.base.x, drone_pos.y - me.base.y, me.base.z];\n' +
+      //'  var hit_direction = [me.base.x - drone_pos[0], me.base.y - drone_pos[1], me.base.z];\n' +
       '  console.log("enemy pos:", me.base);\n' +
       '  console.log("drone pos:", drone_pos);\n' +
-      '  console.log("hit direction:", hit_direction);\n' +
+      '  console.log("vector_from_drone direction:", vector_from_drone);\n' +
+      '  var distance_to_drone = distance(\n' +
+      '    me.base,\n' +
+      '    drone_pos\n' +
+      '  );\n' +
+      '  console.log("distance:", distance_to_drone);\n' +
       '  me.setDirection(hit_direction[0],hit_direction[1],0);\n' +
       '};\n' +
       '\n' +
