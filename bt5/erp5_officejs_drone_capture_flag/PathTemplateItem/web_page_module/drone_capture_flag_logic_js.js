@@ -348,19 +348,31 @@ var DroneManager = /** @class */ (function () {
     return null;
   };
   DroneManager.prototype.getYaw = function () {
-    return this._API.getYaw(this);
+    if (typeof this._API.getYaw !== "undefined") {
+      return this._API.getYaw(this);
+    }
+    return;
   };
   DroneManager.prototype.getSpeed = function () {
     return this._speed;
   };
   DroneManager.prototype.getGroundSpeed = function () {
-    return this._API.getGroundSpeed(this);
+    if (typeof this._API.getGroundSpeed !== "undefined") {
+      return this._API.getGroundSpeed(this);
+    }
+    return;
   };
   DroneManager.prototype.getClimbRate = function () {
-    return this._API.getClimbRate(this);
+    if (typeof this._API.getClimbRate !== "undefined") {
+      return this._API.getClimbRate(this);
+    }
+    return;
   };
   DroneManager.prototype.getSinkRate = function () {
-    return this._API.getSinkRate();
+    if (typeof this._API.getSinkRate !== "undefined") {
+      return this._API.getSinkRate(this);
+    }
+    return;
   };
   DroneManager.prototype.triggerParachute = function () {
     return this._API.triggerParachute(this);
