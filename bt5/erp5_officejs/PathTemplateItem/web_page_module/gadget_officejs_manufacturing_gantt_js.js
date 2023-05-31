@@ -30,6 +30,7 @@
     // acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -44,7 +45,17 @@
 
       console.log("gantt option_dict", option_dict.value);
       gadget.renderGantt(); //Launched as service, not blocking
-    })
+      return gadget.getUrlFor({
+        command: 'display',
+        absolute_url: true
+      })
+      .push(function (dialog_url) {
+        // we used getURlFor to get the whole absolute url, then we hack it
+        var root_url = dialog_url.split("#")[0];
+        gadget.property_dict.root_url = root_url;
+        console.log(root_url);
+      })
+  })
     .declareJob("renderGantt", function () {
       var gadget = this,
           option_dict = gadget.property_dict.option_dict;
@@ -79,6 +90,7 @@
         console.log("order_list.length", order_list.length);
         for (i = 0; i < order_list.length; i = i + 1) {
           order = order_list[i].value;
+          order.path = order_list[i].id;
           order.gantt_color = "rgb(208, 72, 72)";
           empty_causality_delivery_list.push(order);
         }
@@ -107,6 +119,7 @@
         delivery_list = delivery_list.data.rows;
         for (i = 0; i < delivery_list.length; i = i + 1) {
           delivery = delivery_list[i].value;
+          delivery.path = delivery_list[i].id;
           delivery.gantt_color = "#3db9d3";
           console.log("delivery.causality_uid", delivery.causality_uid);
           if ((delivery.causality_uid || 0) > 0) {
@@ -143,7 +156,9 @@
         initial_delivery_list = delivery_list.data.rows;
         delivery_list = [];
         for (i = 0; i < initial_delivery_list.length; i = i + 1) {
+          initial_delivery_list[i].value.path = initial_delivery_list[i].id;
           delivery_list.push(initial_delivery_list[i].value);
+          
         }
         for (i = 0; i < gadget.property_dict.empty_causality_delivery_list.length; i = i + 1) {
           console.log("pushing empty causality delivery", gadget.property_dict.empty_causality_delivery_list[i]);
@@ -159,7 +174,8 @@
                                                                         'stop_date': new Date(delivery.stop_date),
                                                                         'title': delivery.causality_title,
                                                                         'type': 'project',
-                                                                        'id': delivery.causality_uid};
+                                                                        'id': delivery.causality_uid,
+                                                                        'path': gadget.property_dict.root_url + delivery.path };
             causality_data.start_date = new Date(Math.min.apply(
                 null, [causality_data.start_date, new Date(delivery.start_date)]));
             causality_data.stop_date = new Date(Math.max.apply(
@@ -175,7 +191,9 @@
                          'id': delivery.uid,
                          'start_date': delivery.start_date,
                          'stop_date': delivery.stop_date,
-                         'background_color': delivery.gantt_color};
+                         'background_color': delivery.gantt_color,
+                         'path': gadget.property_dict.root_url + delivery.path};
+
             if (delivery.causality_uid !== undefined) {
               delivery_data.parent_id = delivery.causality_uid;
             }

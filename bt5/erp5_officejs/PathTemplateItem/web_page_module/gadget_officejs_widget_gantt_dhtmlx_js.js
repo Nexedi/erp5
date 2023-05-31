@@ -42,6 +42,7 @@
       data = data_list[i];
       task.id = data.id;
       task.text = data.title;
+      task.path = data.path.replace("web_site_module/renderjs_runner/", ""); // for now redirect to old UI
       // Be Careful, DHTMLX seems less and less open source, and nice features when we
       // have a type "project" is unfortunately available only with paid license. Though
       // We will still use it to set a different color for this kind of task
@@ -186,6 +187,27 @@
         }
       }
 
+      // Extend the existing lightbox configuration
+      var extendedSections = gantt.config.lightbox.sections.slice(); // Copy the existing sections
+
+      // Add the custom link section with a label
+      var linkSection = {
+        name: "link_section",
+        height: 30,
+        map_to: "path",
+        type: "template" // Use the "template" type for the link section
+      };
+      extendedSections.push(linkSection);
+      gantt.locale.labels.section_link_section = "Manufacturing Execution";
+
+      gantt.attachEvent("onBeforeLightbox", function(id) {
+          var task = gantt.getTask(id);
+          task.path = "<span id='path'>Jump to </span>" + '<a href="'+task.path + '" target="_blank">related manufacturing execution</a>';
+          return true;
+      });
+
+      gantt.config.lightbox.sections = extendedSections;
+
       // Interaction when a box is moved. Only for demo purpose, we might
       // later find some ways to save changes
       gantt.attachEvent("onAfterTaskDrag", function (id, mode) {
@@ -202,9 +224,8 @@
       });
 
       gantt.parse(gantt_configuration.data);
-
-
     });
+
 
 
 }(window, rJS, RSVP, gantt));
