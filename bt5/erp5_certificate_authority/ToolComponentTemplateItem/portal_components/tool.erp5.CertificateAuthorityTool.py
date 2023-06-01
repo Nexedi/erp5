@@ -256,7 +256,7 @@ class CertificateAuthorityTool(BaseTool):
         popenCommunicate([self.openssl_binary, 'ca', '-utf8', '-config',
           self.openssl_config, '-gencrl', '-out', crl])
         alias = os.path.join(crl_path, popenCommunicate([self.openssl_binary,
-          'crl', '-noout', '-hash', '-in', crl]).strip() + '.')
+          'crl', '-noout', '-hash', '-in', crl]).strip() + '.r')
         alias += str(len(glob.glob(alias + '*')))
         created.append(alias)
         os.symlink(os.path.basename(crl), alias)
