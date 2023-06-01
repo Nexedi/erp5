@@ -219,6 +219,12 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     
+    // with enemy speed 20:
+    //[enemy drone] interception_time: 0.4995508081820945
+    //[enemy drone] interception_point: (2) [-99.9101616364189, -0.17967672716218885]
+    
+    // with enemy speed 16: NaN or Infinite. FAILS. TODO: add controls for non-solutions
+    
     //TODO altitude (z) is fixed everywhere to 10. Include it in calculations
     
     return 'var BASE_DISTANCE = 80;\n' +
