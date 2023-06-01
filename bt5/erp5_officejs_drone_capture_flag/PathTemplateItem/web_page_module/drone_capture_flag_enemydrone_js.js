@@ -218,17 +218,13 @@ var EnemyDroneAPI = /** @class */ (function () {
     return result;
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
-    
-    // with enemy speed 20:
-    //[enemy drone] interception_time: 0.4995508081820945
-    //[enemy drone] interception_point: (2) [-99.9101616364189, -0.17967672716218885]
-    
-    // with enemy speed 16: NaN or Infinite. FAILS. TODO: add controls for non-solutions
-    
     //interception math based on https://www.codeproject.com/Articles/990452/Interception-of-Two-Moving-Objects-in-D-Space
-    
-    return 'var BASE_DISTANCE = 80;\n' +
+    return 'var BASE_DISTANCE = 300;\n' +
+      
+      
+      
       'me.onStart = function () {\n' +
+      '  me.base = me.getCurrentPosition(true);\n' +
       '  if (me.id === 0) {\n' +
       '    me.setTargetCoordinates(-200, 200, 10, true);\n' +
       '    console.log("[user drone] drone pos:", me.getCurrentPosition(true));\n' +
@@ -236,9 +232,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '    console.log("[user drone] drone goes to -200, 200");\n' +
       '    return;\n' +
       '  }\n' +
-      '  me.base = me.getCurrentPosition(true);\n' +
       '  var drone_pos = {"x":0,"y":-200,"z":15};\n' +
-      //'  var vector_from_drone = [drone_pos.x - me.base.x, drone_pos.y - me.base.y];\n' +
       '  var vector_from_drone = [me.base.x - drone_pos.x, me.base.y - drone_pos.y, me.base.z - drone_pos.z];\n' +
       '  console.log("[enemy drone] enemy pos:", me.base);\n' +
       '  console.log("[enemy drone] drone pos:", drone_pos);\n' +
@@ -281,12 +275,15 @@ var EnemyDroneAPI = /** @class */ (function () {
       '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
       '}\n' +
       'me.onUpdate = function (timestamp) {\n' +
-      '  return;\n' +                                               //DEBUG!
+      '  if (me.id === 0) { return; }\n' +
       '  me.current_position = me.getCurrentPosition(true);\n' +
+      '  console.log("[enemy drone update] me.current_position:", me.current_position);\n' +
+      '  console.log("[enemy drone update] me.base:", me.base);\n' +
       '  var dist = distance(\n' +
       '    me.current_position,\n' +
       '    me.base\n' +
       '  );\n' +
+      '  console.log("[enemy drone update] dist:", dist);\n' +
       '  if (dist >= BASE_DISTANCE) {\n' +
       '    me.setTargetCoordinates(\n' +
       '      me.base.x,\n' +
@@ -295,6 +292,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '    );\n' +
       '    return;\n' +
       '  }\n' +
+      '  return;\n' +                                               //DEBUG!
       '  var drone_view = me.getDroneViewInfo();\n' +
       '  if (drone_view.length) {\n' +
       '    var target = [drone_view[0].position.x,\n' +
