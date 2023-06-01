@@ -258,6 +258,9 @@ var EnemyDroneAPI = /** @class */ (function () {
       '    interception_time = Math.max( t1, t2 );\n' +
       '  }\n' +
       '  interception_point = [prey_position.x + prey_velocity_vector[0] * interception_time, prey_position.y + prey_velocity_vector[1] * interception_time, prey_position.z + prey_velocity_vector[2] * interception_time];\n' +
+      '  if (isNaN(interception_point[0]) || isNaN(interception_point[1]) || isNaN(interception_point[2])) {\n' +
+      '    return;\n' +
+      '  }\n' +
       '  return interception_point;\n' +
       '}\n' +
       'me.onStart = function () {\n' +
@@ -267,11 +270,15 @@ var EnemyDroneAPI = /** @class */ (function () {
       '    return;\n' +
       '  }\n' +
       '  var drone_pos = {"x":0,"y":-200,"z":15};\n' +
-      '  var enemy_speed = 20, drone_speed = 16, drone_velocity_vector;\n' +
+      '  var enemy_speed = 16, drone_speed = 16, drone_velocity_vector;\n' +
       // drone_velocity_vector = distance vector = drone_destination_point - drone_position
       '  drone_velocity_vector = [-200, 400, -5];\n' +
       '  var interception_point = calculateInterception(me.base, drone_pos, enemy_speed, drone_speed, drone_velocity_vector);\n' +
       '  console.log("[enemy drone] FUNCTION interception_point:", interception_point);\n' +
+      '  if (!interception_point) {\n' +
+      '    console.log("[enemy drone] INTERCEPTION NOT POSSIBLE");\n' +
+      '    return;\n' +
+      '  }\n' +
       '  me.setTargetCoordinates(interception_point[0], interception_point[1], interception_point[2], true);\n' +
       '  \n' +
       '\n' +
