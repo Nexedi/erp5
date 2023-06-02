@@ -7,7 +7,7 @@ var EnemyDroneAPI = /** @class */ (function () {
 
   var DEFAULT_ACCELERATION = 1,
     VIEW_SCOPE = 50,
-    DEFAULT_SPEED = 20,
+    DEFAULT_SPEED = 16.5,
     MIN_SPEED = 12,
     MAX_SPEED = 26;
 
@@ -206,7 +206,8 @@ var EnemyDroneAPI = /** @class */ (function () {
         distance = calculateDistance(drone_position, other_position);
         if (distance <= VIEW_SCOPE) {
           result.push({
-            position: other.position,
+            geo_position: other.position,
+            position: other_position,
             direction: other.direction,
             rotation: other.rotation,
             speed: other.speed,
@@ -217,26 +218,6 @@ var EnemyDroneAPI = /** @class */ (function () {
       }
     });
     return result;
-/*function calculateInterception(hunter_position, prey_position, hunter_speed, prey_speed, prey_velocity_vector) {
-  var vector_from_drone, distance_to_prey, distance_to_prey_vector, a, b, c, t1, t2, interception_time, interception_point;
-  function dot(a, b) {
-    return a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
-  }
-  distance_to_prey_vector = [hunter_position.x - prey_position.x, hunter_position.y - prey_position.y, hunter_position.z - prey_position.z];
-  distance_to_prey = distance(hunter_position, prey_position);
-  a = hunter_speed * hunter_speed - prey_speed * prey_speed;
-  b = 2 * dot(distance_to_prey_vector, prey_velocity_vector);
-  c = - distance_to_prey * distance_to_prey;
-  t1 = (-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a);
-  t2 = (-b - Math.sqrt(b * b - 4 * a * c)) / (2 * a);
-  if (t1 > 0 && t2 > 0) {
-    interception_time = Math.min( t1, t2 );
-  } else {
-    interception_time = Math.max( t1, t2 );
-  }
-  interception_point = [prey_position.x + prey_velocity_vector[0] * interception_time, prey_position.y + prey_velocity_vector[1] * interception_time, prey_position.z + prey_velocity_vector[2] * interception_time];
-  return interception_point;
-}*/
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     //interception math based on https://www.codeproject.com/Articles/990452/Interception-of-Two-Moving-Objects-in-D-Space
@@ -270,33 +251,19 @@ var EnemyDroneAPI = /** @class */ (function () {
       '\n' +
       'me.onStart = function () {\n' +
       '  me.base = me.getCurrentPosition(true);\n' +
-      '  if (me.id === 0) {\n' +                                               //DEBUG!
-      '    me.setTargetCoordinates(-225, 225, 10, true);\n' +
-      '    return;\n' +
-      '  }\n' +
-      '  var drone_pos = {"x":0,"y":-200,"z":15};\n' + //target: -225, 225, 10             //get from drone view!
-      '  var enemy_speed = 20, drone_speed = 16, drone_velocity_vector;\n' +               //get from drone view!
-      '  drone_velocity_vector = [-225, 425, -5];\n' +                                     //get from drone view!
-      '  var interception_point = calculateInterception(me.base, drone_pos, enemy_speed, drone_speed, drone_velocity_vector);\n' +
-      '  console.log("[enemy drone] FUNCTION interception_point:", interception_point);\n' +
-      '  if (!interception_point) {\n' +
-      '    console.log("[enemy drone] INTERCEPTION NOT POSSIBLE");\n' +
-      '    me.setDirection(0,0,0);\n' +
-      '    return;\n' +
-      '  }\n' +
-      '  me.chasing = true;\n' +
-      '  me.setTargetCoordinates(interception_point[0], interception_point[1], interception_point[2], true);\n' +
-      '  \n' +
+      '  me.setDirection(0,0,0);\n' +
+      '  return;\n' +
       '\n' +
       '};\n' +
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
-      '  if (me.id === 0) { return; }\n' +                                    //DEBUG!
       '  me.current_position = me.getCurrentPosition(true);\n' +
-      '  var dist = distance(\n' +
+      '  var drone_position, drone_velocity_vector, interception_point, drone_view,\n' +
+      '  dist = distance(\n' +
       '    me.current_position,\n' +
       '    me.base\n' +
       '  );\n' +
+      // return to base point if drone is too far
       '  if (dist >= BASE_DISTANCE) {\n' +
       '    me.chasing = false;\n' +
       '    me.setTargetCoordinates(\n' +
@@ -306,35 +273,20 @@ var EnemyDroneAPI = /** @class */ (function () {
       '    );\n' +
       '    return;\n' +
       '  }\n' +
+      '  drone_view = me.getDroneViewInfo();\n' +
+      '  if (drone_view.length) {\n' +
+      '    drone_position = drone_view[0].position;\n' +
+      '    drone_velocity_vector = [drone_view[0].target.x - drone_position.x, drone_view[0].target.y - drone_position.y, drone_view[0].target.z - drone_position.z];\n' +
+      '    interception_point = calculateInterception(me.current_position, drone_position, me.speed, drone_view[0].speed, drone_velocity_vector);\n' +
+      '    if (!interception_point) {\n' +
+      '      return;\n' +
+      '    }\n' +
+      '    me.chasing = true;\n' +
+      '    me.setTargetCoordinates(interception_point[0], interception_point[1], interception_point[2], true);\n' +
+      '  }\n' +
+      // return to base point if drone is too far
       '  if (!me.chasing && dist <= 10) {\n' +
       '    me.setDirection(0,0,0);\n' +
-      '    return;\n' +
-      '  }\n' +
-      '  var drone_view = me.getDroneViewInfo();\n' +
-      '  if (drone_view.length) {\n' +
-      //'    console.log("drone_view[0]:", drone_view[0]);\n' +
-      // drone_view[0].target.x
-      '    return;\n' +                                               //DEBUG!
-      /*'    var target = [drone_view[0].position.x,\n' +
-      '                  drone_view[0].position.y,\n' +
-      '                  drone_view[0].position.z];\n' +
-      '    if (drone_view[0].position.x < 0) {\n' +
-      '      target[0] += 5;\n' +
-      '    }\n' +
-      '    if (drone_view[0].position.x > 0) {\n' +
-      '      target[0] -= 5;\n' +
-      '    }\n' +
-      '    if (drone_view[0].position.y < 0) {\n' +
-      '      target[1] += 5;\n' +
-      '    }\n' +
-      '    if (drone_view[0].position.y > 0) {\n' +
-      '      target[1] -= 5;\n' +
-      '    }\n' +*/
-      '    me.setTargetCoordinates(\n' +
-      '      drone_view[0].position.x,//target[0],\n' +
-      '      drone_view[0].position.y,//target[1],\n' +
-      '      drone_view[0].position.z,//target[2], true\n' +
-      '    );\n' +
       '  }\n' +
       '};';
   };
