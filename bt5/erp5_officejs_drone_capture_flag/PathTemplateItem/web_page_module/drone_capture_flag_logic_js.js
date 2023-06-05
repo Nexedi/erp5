@@ -985,8 +985,9 @@ var GameManager = /** @class */ (function () {
                 material = new BABYLON.StandardMaterial(game_manager._scene);
                 material.alpha = 1;
                 color = new BABYLON.Color3(255, 0, 0);
-                if (game_manager._colors[index]) {
-                  color = game_manager._colors[index];
+                var color_index = index % 10;
+                if (game_manager._colors[color_index]) {
+                  color = game_manager._colors[color_index];
                 }
                 material.diffuseColor = color;
                 position_obj.material = material;

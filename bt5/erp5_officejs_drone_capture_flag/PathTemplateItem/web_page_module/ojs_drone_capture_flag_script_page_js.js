@@ -106,7 +106,7 @@
       '    return;\n' +
       '  }\n' +
       '};',
-    DRAW = false,
+    DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [],
@@ -512,7 +512,7 @@
               "position": {
                 "x": -0.70 * options.map_size / 2,
                 "y": -0.70 * options.map_size / 2,
-                "z": 10
+                "z": 15
               }
             },
             {
