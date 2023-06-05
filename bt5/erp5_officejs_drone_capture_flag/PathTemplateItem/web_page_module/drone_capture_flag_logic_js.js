@@ -1146,14 +1146,24 @@ var GameManager = /** @class */ (function () {
           rect.thickness = 0.5;
           rect.background = colour;
           advancedTexture.addControl(rect);
-          label = new BABYLON.GUI.TextBlock();
-          label.text = count.toString();
-          label.fontSize = 7;
-          rect.addControl(label);
           rect.linkWithMesh(controlMesh);
-          rect.linkOffsetY = 0;
         }
       }
+      function colourFlags(flag_list) {
+        for (count = 0; count < flag_list.length; count += 1) {
+          controlMesh = flag_list[count].subMeshes[0]._mesh;
+          rect = new BABYLON.GUI.Rectangle();
+          rect.width = "15px";
+          rect.height = "10px";
+          rect.cornerRadius = 1;
+          rect.color = "white";
+          rect.thickness = 0.5;
+          rect.background = "green";
+          advancedTexture.addControl(rect);
+          rect.linkWithMesh(controlMesh);
+        }
+      }
+      colourFlags(_this._mapManager._flag_list);
       colourDrones(ctx._droneList_user, "blue");
       colourDrones(ctx._droneList_enemy, "red");
       console.log("on3DmodelsReady - advaced textures added");
