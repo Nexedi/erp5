@@ -1616,5 +1616,8 @@ def fortify():
                       activity_kw, *args, **kw)
     Message.__init__ = __init__
 
+  from Products.ERP5Form.Form import TALESValue
+  assert TALESValue.tolerate_errors
+  TALESValue.tolerate_errors = False
 
 fortify()

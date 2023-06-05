@@ -175,6 +175,11 @@ class StaticValue:
     return value
 
 class TALESValue(StaticValue):
+  # Errors during TALES are hidden by default, this is a mistake from long time
+  # ago. We expose this flag to set it to False during tests so that TALES errors
+  # are not tolerated in tests.
+  tolerate_errors = True
+
   def __init__(self, tales_expr):
     self.tales_expr = tales_expr
 
@@ -225,6 +230,8 @@ class TALESValue(StaticValue):
     except (ConflictError, RuntimeError, Redirect, NotFound):
       raise
     except:
+      if not self.tolerate_errors:
+        raise
       # We add this safety exception to make sure we always get
       # something reasonable rather than generate plenty of errors
       LOG('ERP5Form', PROBLEM,
