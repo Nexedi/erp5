@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -70,14 +68,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_file_fif.js</string> </value>
+            <value> <string>default_wendelin_data_lake_gadget_translation_data.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fif_gadget_erp5_page_file_js</string> </value>
+            <value> <string>wendelin_gadget_translate_data_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>FIF Page File JS</string> </value>
+            <value> <string>Gadget Translation Data JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -146,6 +138,12 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -169,7 +167,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -193,7 +191,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1509465494.1</float>
+                              <float>1685965908.23</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -242,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1008.30963.61897.21333</string> </value>
+                      <value> <string>1008.58023.52700.51029</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -262,7 +260,70 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1685097577.69</float>
+                              <float>1685966316.64</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>detect_converted_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <unicode>zope</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>external_processing_state</string> </key>
+                      <value> <string>converted</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="_reconstructor" module="copy_reg"/>
+                          </klass>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1685965462.1</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
