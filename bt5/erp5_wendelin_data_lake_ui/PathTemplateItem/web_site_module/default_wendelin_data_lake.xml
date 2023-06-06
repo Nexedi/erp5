@@ -365,7 +365,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
+            <value> <string>default_wendelin_data_lake_gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -598,7 +598,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -612,7 +612,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.6661.23967.23773</string> </value>
+                      <value> <string>1008.58040.10039.45380</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -632,7 +632,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1673005789.41</float>
+                              <float>1686039079.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
