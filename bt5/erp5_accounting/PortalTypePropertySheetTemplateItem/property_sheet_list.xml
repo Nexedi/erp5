@@ -1,6 +1,12 @@
 <property_sheet_list>
+ <portal_type id="Account Type Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
  <portal_type id="Accounting Transaction">
   <item>AccountingTransactionConstraint</item>
+ </portal_type>
+ <portal_type id="Accounting Transaction Balance Constraint">
+  <item>ConstraintType</item>
  </portal_type>
  <portal_type id="Accounting Transaction Line">
   <item>AccountingTransactionLineConstraint</item>
