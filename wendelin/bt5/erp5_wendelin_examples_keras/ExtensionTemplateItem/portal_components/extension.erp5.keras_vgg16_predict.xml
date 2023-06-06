@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>keras_vgg16_predict</string> </value>
+            <value> <string>extension.erp5.keras_vgg16_predict</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
