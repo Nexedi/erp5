@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>keras_save_load</string> </value>
+            <value> <string>extension.erp5.keras_save_load</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -39,9 +39,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:182,  4: Unused variable \'optimizer_weight_names\' (unused-variable)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
