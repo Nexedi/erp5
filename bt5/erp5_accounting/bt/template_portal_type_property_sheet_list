@@ -1,3 +1,5 @@
+Account Type Constraint | ConstraintType
+Accounting Transaction Balance Constraint | ConstraintType
 Accounting Transaction Line | AccountingTransactionLineConstraint
 Accounting Transaction | AccountingTransactionConstraint
 Balance Transaction Line | AccountingTransactionLineConstraint
