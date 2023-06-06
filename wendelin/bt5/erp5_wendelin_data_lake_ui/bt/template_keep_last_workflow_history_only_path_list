@@ -1,7 +1,9 @@
+document_module/ebulk-1.1.9.deb
 image_module/fif_*
 web_page_module/*fif_*
-web_site_module/default_wendelin_data_lake
-web_site_module/default_wendelin_data_lake/**
 web_page_module/fif_*
 web_page_module/gadget_fif_*
-document_module/ebulk-1.1.9.deb
+web_page_module/wendelin_gadget_translate_data_js
+web_page_module/wendelin_gadget_translate_html
+web_site_module/default_wendelin_data_lake
+web_site_module/default_wendelin_data_lake/**

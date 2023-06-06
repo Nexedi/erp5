@@ -5,5 +5,7 @@ portal_tests/wendelin_data_lake_ui_zuite/**
 web_page_module/*fif_*
 web_page_module/fif_*
 web_page_module/gadget_fif_*
+web_page_module/wendelin_gadget_translate_data_js
+web_page_module/wendelin_gadget_translate_html
 web_site_module/default_wendelin_data_lake
 web_site_module/default_wendelin_data_lake/**
