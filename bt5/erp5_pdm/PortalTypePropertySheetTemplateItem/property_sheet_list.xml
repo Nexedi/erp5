@@ -15,6 +15,9 @@
   <item>DefaultImage</item>
   <item>Reference</item>
  </portal_type>
+ <portal_type id="Resource Measures Consistency Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
  <portal_type id="Service Individual Variation">
   <item>DefaultImage</item>
  </portal_type>
