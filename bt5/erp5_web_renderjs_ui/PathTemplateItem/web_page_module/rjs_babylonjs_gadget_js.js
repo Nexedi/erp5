@@ -14,7 +14,7 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen;
+    ]), game_result, canvas, offscreen, game_manager;
 
   //////////////////////////////////////////
   // Webworker
@@ -117,6 +117,9 @@
     result: function resultGameManager() {
       return game_result;
     },
+    fullscreen: function fullScreenGameManager() {
+      console.log("DGM fullscreen function");
+    },
     play: function startGameManager(options) {
       if (this.hasOwnProperty('loop_promise')) {
         throw new Error('Can not start the game if already started');
@@ -208,6 +211,8 @@
                   var loading =
                       context._gadget.element.querySelector('#loading');
                   if (loading) { loading.innerHTML = ""; }
+                  context._gadget.element.querySelector('#fullscreen')
+                    .style.visibility = 'visible';
                 }
                 context.unpause();
                 return step();
@@ -264,14 +269,21 @@
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         container = domsugar('div'),
-        messages = domsugar('div');
+        messages = domsugar('div'),
+        button = domsugar('div');
+      button.className = 'ui-icon-expand ui-btn-icon-notext';
+      button.addEventListener('click', function (event) {
+        game_manager.fullscreen();
+      });
+      button.style.visibility = 'hidden';
+      button.id = "fullscreen";
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
       messages.id = 'messages';
       messages.className = 'messages';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, container, messages]);
+      domsugar(gadget.element, [loading, button, container, messages]);
       canvas.width = options.width;
       canvas.height = options.height;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
@@ -294,8 +306,8 @@
       options.width = canvas.width;
       options.height = canvas.height;
       options.logic_url_list = options.logic_file_list;
-      var gadget = this,
-        game_manager = new DroneGameManager(gadget);
+      var gadget = this;
+      game_manager = new DroneGameManager(gadget);
       return game_manager.play(options)
       .push(function () {
         return game_manager.result();
