@@ -126,7 +126,7 @@ class DataBucketStream(Document):
     PropertySheet.SortIndex
   )
 
-  def __init__(self, identifier, **kw):
+  def __init__(self, id, **kw):
     self.initBucketTree()
     self.initIndexTree()
     Document.__init__(self, id, **kw)
@@ -192,7 +192,7 @@ class DataBucketStream(Document):
     except ValueError:
       return None
 
-  def _getOb(self, identifier, *args, **kw):
+  def _getOb(self, id, *args, **kw):
     return None
 
   def getBucketByKey(self, key=None):

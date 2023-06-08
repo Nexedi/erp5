@@ -1,2 +1,2 @@
-obj = state_change['object']
-obj.Base_checkConsistency()
+object = state_change['object']
+object.Base_checkConsistency()
