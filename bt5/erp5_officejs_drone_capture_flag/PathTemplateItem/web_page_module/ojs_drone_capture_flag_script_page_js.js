@@ -400,8 +400,11 @@
           n_enemies = randomIntFromInterval(1, 10, random_seed),
           n_flags = randomIntFromInterval(1, 10, random_seed),
           n_obstacles = randomIntFromInterval(1, 10, random_seed),
-          flag_list = [], obstacle_list = [], enemy_list = [], random_position;
-        //roque
+          flag_list = [], obstacle_list = [], enemy_list = [], random_position,
+          obstacles_types = ["box", "sphere", "cylinder"], type,
+          obstacle_limit = [options.map_size / 6, options.map_size / 100,
+                            options.map_size / 6, 30];
+        //enemies
         for (i = 0; i < n_enemies; i += 1) {
           random_position = randomPosition(random_seed, options.map_size);
           enemy_list.push({
@@ -410,13 +413,65 @@
             "position": {
               "x": random_position[0],
               "y": random_position[1],
-              "z": 15 //TODO random z
+              "z": 15 //TODO random z?
             }
           });
         }
+        //flags
+        for (i = 0; i < n_flags; i += 1) {
+          random_position = randomPosition(random_seed, options.map_size);
+          flag_list.push({
+            "position": {
+              "x": random_position[0],
+              "y": random_position[1],
+              "z": 10
+            }
+          });
+        }
+        function checkDistance(position, position_list) {
+          function distance(a, b) {
+            return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
+          }
+          var el;
+          for (el = 0; el < position_list.length; el += 1) {
+            if (distance(position, position_list[el]) < 10) {
+              return true;
+            }
+          }
+          return false;
+        }
+        //obstacles
+        for (i = 0; i < n_obstacles; i += 1) {
+          random_position = randomPosition(random_seed, options.map_size);
+          if (checkDistance({ 'x': random_position[0],
+                              'y': random_position[1]}, flag_list)) {
+            console.log("obstacle too close to flag! re calculating");
+            i -= 1;
+          } else {
+            type = randomIntFromInterval(0, 2, random_seed);
+            obstacle_list.push({
+              "type": obstacles_types[type],
+              "position": {
+                "x": random_position[0],
+                "y": random_position[1],
+                "z": 15 //TODO random z?
+              },
+              "scale": {
+                "x": randomIntFromInterval(0, obstacle_limit[type], random_seed),
+                "y": randomIntFromInterval(0, obstacle_limit[type], random_seed),
+                "z": randomIntFromInterval(5, obstacle_limit[3], random_seed)
+              },
+              "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            });
+          }
+        }
+        json_map.obstacle_list = obstacle_list;
         json_map.drones.enemy = enemy_list;
-        console.log("original enemies:", json_map.drones.enemy);
-        console.log("random enemies:", enemy_list);
+        json_map.flag_list = flag_list;
         return json_map;
       }
 
