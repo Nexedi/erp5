@@ -1,11 +1,11 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, Blob*/
-(function (window, rJS, domsugar, document, Blob) {
+/*global window, rJS, domsugar, document, URLSearchParams, Blob*/
+(function (window, rJS, domsugar, document, URLSearchParams, Blob) {
   "use strict";
 
-  //Default values - TODO: get them from the drone API
+  //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
-    SIMULATION_TIME = 170,
+    SIMULATION_TIME = 270,
     MAP_SIZE = 600,
     map_height = 700,
     start_AMSL = 595,
@@ -21,6 +21,7 @@
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
     FLAG_WEIGHT = 5,
+    SEED = 'asd',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 10,\n' +
@@ -51,7 +52,7 @@
       '      me.dodging.position\n' +
       '    );\n' +
       '    if (dist >= DODGE_DISTANCE) {\n' +
-      '      console.log("Good distance to obstacle. DODGED.");\n' +
+      //'      console.log("Good distance to obstacle. DODGED.");\n' +
       '      me.dodging = false;\n' +
       '    }\n' +
       '    //check if there is another obstacle while dodging!\n' +
@@ -70,7 +71,7 @@
       '        me.flag_positions[me.next_checkpoint].position.y,\n' +
       '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
       '      );\n' +
-      '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
+      //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
       '    me.direction_set = true;\n' +
       '    return;\n' +
@@ -78,7 +79,7 @@
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '    var drone_view = me.getDroneViewInfo();\n' +
       '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
-      '      console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
+      //'      console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
       '      me.dodging = drone_view.obstacles[0];\n' +
       '      me.direction_set = false;\n' +
       '      var random = Math.random() < 0.5, dodge_point = {};\n' +
@@ -99,7 +100,7 @@
       '      me.flag_positions[me.next_checkpoint].position\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
-      '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
+      //'      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
       '      me.next_checkpoint += 1;\n' +
       '      me.direction_set = false;\n' +
       '    }\n' +
@@ -145,7 +146,8 @@
     })
 
     .declareMethod('render', function render() {
-      var gadget = this;
+      var gadget = this, url_sp = new URLSearchParams(window.location.hash),
+        url_seed = url_sp.get("seed");
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -283,6 +285,17 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
+                "my_map_seed": {
+                  "description": "Seed value to randomize the map",
+                  "title": "Seed value",
+                  "default": url_seed ? url_seed : "",
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1,
+                  "key": "map_seed",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_map_size": {
                   "description": "",
                   "title": "Map size",
@@ -350,7 +363,7 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_size"], ["my_map_height"], ["my_start_AMSL"]]
+                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_start_AMSL"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -375,7 +388,7 @@
     .declareJob('runGame', function runGame(options) {
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
-        game_parameters_json;
+        game_parameters_json, map_json;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
@@ -384,18 +397,107 @@
       }
 
       function randomizeMap(json_map) {
-        var random_seed = new Math.seedrandom(Math.random()),
-          map_size, sign_x, sign_y, pos_x, pos_y;
-        map_size = json_map.mapSize.depth;
-        sign_x = random_seed.quick() < 0.5 ? -1 : 1;
-        sign_y = random_seed.quick() < 0.5 ? -1 : 1;
-        pos_x = (random_seed.quick() *
-               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_x;
-        pos_y = (random_seed.quick() *
-               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_y;
-        json_map.random_init_pos = [pos_x, pos_y];
+        function randomIntFromInterval(min, max, random_seed) {
+          return Math.floor(random_seed.quick() * (max - min + 1) + min);
+        }
+        function randomPosition(random_seed, map_size) {
+          var sign_x = random_seed.quick() < 0.5 ? -1 : 1,
+            sign_y = random_seed.quick() < 0.5 ? -1 : 1,
+            pos_x = sign_x * random_seed.quick() * map_size / 2,
+            pos_y = sign_y * random_seed.quick() * map_size / 2;
+          return [pos_x, pos_y];
+        }
+        var seed_value = (options.map_seed) ? options.map_seed : SEED,
+          random_seed = new Math.seedrandom(seed_value), i,
+          n_enemies = randomIntFromInterval(1, 10, random_seed),
+          n_flags = randomIntFromInterval(1, 10, random_seed),
+          n_obstacles = randomIntFromInterval(1, 10, random_seed),
+          flag_list = [], obstacle_list = [], enemy_list = [], random_position,
+          obstacles_types = ["box", "sphere", "cylinder"], type,
+          obstacle_limit = [options.map_size / 6, options.map_size / 100,
+                            options.map_size / 6, 30];
+        //enemies
+        for (i = 0; i < n_enemies; i += 1) {
+          random_position = randomPosition(random_seed, options.map_size);
+          enemy_list.push({
+            "id": i + parseInt(options.number_of_drones),
+            "type": "EnemyDroneAPI",
+            "position": {
+              "x": random_position[0],
+              "y": random_position[1],
+              "z": 15 //TODO random z?
+            }
+          });
+        }
+        //flags
+        for (i = 0; i < n_flags; i += 1) {
+          random_position = randomPosition(random_seed, options.map_size);
+          flag_list.push({
+            "position": {
+              "x": random_position[0],
+              "y": random_position[1],
+              "z": 10
+            }
+          });
+        }
+        function checkDistance(position, position_list) {
+          function distance(a, b) {
+            return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+          }
+          var el;
+          for (el = 0; el < position_list.length; el += 1) {
+            if (distance(position, position_list[el].position) < options.map_size / 6) {
+              return true;
+            }
+          }
+          return false;
+        }
+        //obstacles
+        for (i = 0; i < n_obstacles; i += 1) {
+          random_position = randomPosition(random_seed, options.map_size);
+          if (checkDistance({ 'x': random_position[0],
+                              'y': random_position[1]}, flag_list)) {
+            i -= 1;
+          } else {
+            type = randomIntFromInterval(0, 2, random_seed);
+            obstacle_list.push({
+              "type": obstacles_types[type],
+              "position": {
+                "x": random_position[0],
+                "y": random_position[1],
+                "z": 15 //TODO random z?
+              },
+              "scale": {
+                "x": randomIntFromInterval(0, obstacle_limit[type], random_seed),
+                "y": randomIntFromInterval(0, obstacle_limit[type], random_seed),
+                "z": randomIntFromInterval(5, obstacle_limit[3], random_seed)
+              },
+              "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              }
+            });
+          }
+        }
+        json_map.obstacle_list = obstacle_list;
+        json_map.drones.enemy = enemy_list;
+        json_map.flag_list = flag_list;
         return json_map;
       }
+
+      map_json = {
+        "map_size": parseFloat(options.map_size),
+        "height": parseInt(options.map_height, 10),
+        "start_AMSL": parseFloat(options.start_AMSL),
+        "flag_weight": FLAG_WEIGHT,
+        "flag_list": [],
+        "obstacle_list" : [],
+        "drones": {
+          "user": DRONE_LIST,
+          "enemy": []
+        }
+      };
 
       game_parameters_json = {
         "drone": {
@@ -416,134 +518,11 @@
           "information": 0,
           "communication": 0
         },
-        "map": {
-          "map_size": parseFloat(options.map_size),
-          "height": parseInt(options.map_height, 10),
-          "start_AMSL": parseFloat(options.start_AMSL),
-          "flag_weight": FLAG_WEIGHT,
-          "flag_list": [{
-            "position": {
-              "x": -0.75 * options.map_size / 2,
-              "y": -0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }, {
-            "position": {
-              "x": 0.75 * options.map_size / 2,
-              "y": 0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }, {
-            "position": {
-              "x": 0.75 * options.map_size / 2,
-              "y": -0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }, {
-            "position": {
-              "x": -0.75 * options.map_size / 2,
-              "y": 0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }],
-          "obstacle_list" : [{
-            "type": "sphere",
-            "position": {
-              "x": 0.5 * options.map_size / 2,
-              "y": 0.5 * options.map_size / 2,
-              "z": 0
-            },
-            "scale": {
-              "x": 6,
-              "y": 6,
-              "z": 6
-            },
-            "rotation": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            }
-          }, {
-            "type": "box",
-            "position": {
-              "x": 0.25 * options.map_size / 2,
-              "y": -0.25 * options.map_size / 2,
-              "z": 10
-            },
-            "scale": {
-              "x": 150,
-              "y": 2.5,
-              "z": 30
-            },
-            "rotation": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            }
-          }, {
-            "type": "box",
-            "position": {
-              "x": -0.5 * options.map_size / 2,
-              "y": 0.5 * options.map_size / 2,
-              "z": 10
-            },
-            "scale": {
-              "x": 100,
-              "y": 2.5,
-              "z": 30
-            },
-            "rotation": {
-              "x": 25,
-              "y": 0,
-              "z": 0
-            }
-          }]
-        },
+        "map": randomizeMap(map_json),
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
-        "log_interval_time": LOG_TIME,
-        "drones": {
-          "user": DRONE_LIST,
-          "enemy": [
-            {
-              "id": 0 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": -0.70 * options.map_size / 2,
-                "y": -0.70 * options.map_size / 2,
-                "z": 15
-              }
-            },
-            {
-              "id": 1 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": 0.70 * options.map_size / 2,
-                "y": -0.70 * options.map_size / 2,
-                "z": 10
-              }
-            },
-            {
-              "id": 2 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": -0.70 * options.map_size / 2,
-                "y": 0.70 * options.map_size / 2,
-                "z": 10
-              }
-            },
-            {
-              "id": 3 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": 0.70 * options.map_size / 2,
-                "y": 0.70 * options.map_size / 2,
-                "z": 10
-              }
-            }
-          ]
-        }
+        "log_interval_time": LOG_TIME
       };
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
@@ -636,4 +615,4 @@
         });
     });
 
-}(window, rJS, domsugar, document, Blob));
+}(window, rJS, domsugar, document, URLSearchParams, Blob));
