@@ -1,3 +1,6 @@
+if consuming_analysis_list is None:
+  consuming_analysis_list=[]
+
 portal = context.getPortalObject()
 operation = None
 use_list = []

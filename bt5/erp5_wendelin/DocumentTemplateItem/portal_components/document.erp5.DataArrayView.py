@@ -73,7 +73,7 @@ class DataArrayView(DataArray):
   Data Array like view on one or multiple Data Arrays
   """
 
-  def initArray(self, shape, dtype):
+  def initArray(self, shape, dimensional_type):
     """
     Not Implemented.
     """
