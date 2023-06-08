@@ -181,7 +181,7 @@ class TestDataIngestion(SecurityTestCase):
     self.tic()
 
     # call explicitly alarm so all 4 Data Streams are validated and published
-    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.portal.portal_alarms.wendelin_data_lake_handle_analysis.Alarm_dataLakeHandleAnalysis()
     self.tic()
 
     # check resulting Data Streams
@@ -306,7 +306,7 @@ class TestDataIngestion(SecurityTestCase):
     self.tic()
 
     # call explicitly alarm to process and validate the ingestion
-    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.portal.portal_alarms.wendelin_data_lake_handle_analysis.Alarm_dataLakeHandleAnalysis()
     self.tic()
 
     ingestion_reference = self.REF_DATASET + self.REFERENCE_SEPARATOR + reference + self.CSV
@@ -329,9 +329,9 @@ class TestDataIngestion(SecurityTestCase):
       Check all data analysis and data transformations are well configured
     """
     # call two times the alarm (1. create analysis 2. run analysis)
-    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.portal.portal_alarms.wendelin_data_lake_handle_analysis.Alarm_dataLakeHandleAnalysis()
     self.tic()
-    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
+    self.portal.portal_alarms.wendelin_data_lake_handle_analysis.Alarm_dataLakeHandleAnalysis()
     self.tic()
 
   def test_10_checkDataSetDataStreamRelation(self):
