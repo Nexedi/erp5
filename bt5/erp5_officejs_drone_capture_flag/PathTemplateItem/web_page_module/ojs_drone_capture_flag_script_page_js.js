@@ -3,10 +3,11 @@
 (function (window, rJS, domsugar, document, Blob) {
   "use strict";
 
-  //Default values - TODO: get them from the drone API
+  //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 170,
     MAP_SIZE = 600,
+    RANDOM_MAP = true,
     map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -21,6 +22,7 @@
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
     FLAG_WEIGHT = 5,
+    SEED = 'asd',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 10,\n' +
@@ -375,7 +377,7 @@
     .declareJob('runGame', function runGame(options) {
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
-        game_parameters_json;
+        game_parameters_json, default_map;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
@@ -384,18 +386,164 @@
       }
 
       function randomizeMap(json_map) {
-        var random_seed = new Math.seedrandom(Math.random()),
-          map_size, sign_x, sign_y, pos_x, pos_y;
-        map_size = json_map.mapSize.depth;
-        sign_x = random_seed.quick() < 0.5 ? -1 : 1;
-        sign_y = random_seed.quick() < 0.5 ? -1 : 1;
-        pos_x = (random_seed.quick() *
-               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_x;
-        pos_y = (random_seed.quick() *
-               (map_size / 2.5 - map_size / 4) + map_size / 4) * sign_y;
-        json_map.random_init_pos = [pos_x, pos_y];
+        function randomIntFromInterval(min, max, random_seed) {
+          return Math.floor(random_seed.quick() * (max - min + 1) + min);
+        }
+        function randomPosition(random_seed, map_size) {
+          var sign_x = random_seed.quick() < 0.5 ? -1 : 1,
+            sign_y = random_seed.quick() < 0.5 ? -1 : 1,
+            pos_x = sign_x * random_seed.quick() * map_size / 2,
+            pos_y = sign_y * random_seed.quick() * map_size / 2;
+          return [pos_x, pos_y];
+        }
+        var random_seed = new Math.seedrandom(SEED), i,
+          n_enemies = randomIntFromInterval(1, 10, random_seed),
+          n_flags = randomIntFromInterval(1, 10, random_seed),
+          n_obstacles = randomIntFromInterval(1, 10, random_seed),
+          flag_list = [], obstacle_list = [], enemy_list = [], random_position;
+        //roque
+        for (i = 0; i < n_enemies; i += 1) {
+          random_position = randomPosition(random_seed, options.map_size);
+          enemy_list.push({
+            "id": i + parseInt(options.number_of_drones),
+            "type": "EnemyDroneAPI",
+            "position": {
+              "x": random_position[0],
+              "y": random_position[1],
+              "z": 15 //TODO random z
+            }
+          });
+        }
+        json_map.drones.enemy = enemy_list;
+        console.log("original enemies:", json_map.drones.enemy);
+        console.log("random enemies:", enemy_list);
         return json_map;
       }
+
+      default_map = {
+        "map_size": parseFloat(options.map_size),
+        "height": parseInt(options.map_height, 10),
+        "start_AMSL": parseFloat(options.start_AMSL),
+        "flag_weight": FLAG_WEIGHT,
+        "flag_list": [{
+          "position": {
+            "x": -0.75 * options.map_size / 2,
+            "y": -0.75 * options.map_size / 2,
+            "z": 10
+          }
+        }, {
+          "position": {
+            "x": 0.75 * options.map_size / 2,
+            "y": 0.75 * options.map_size / 2,
+            "z": 10
+          }
+        }, {
+          "position": {
+            "x": 0.75 * options.map_size / 2,
+            "y": -0.75 * options.map_size / 2,
+            "z": 10
+          }
+        }, {
+          "position": {
+            "x": -0.75 * options.map_size / 2,
+            "y": 0.75 * options.map_size / 2,
+            "z": 10
+          }
+        }],
+        "obstacle_list" : [{
+          "type": "sphere",
+          "position": {
+            "x": 0.5 * options.map_size / 2,
+            "y": 0.5 * options.map_size / 2,
+            "z": 0
+          },
+          "scale": {
+            "x": 6,
+            "y": 6,
+            "z": 6
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }, {
+          "type": "box",
+          "position": {
+            "x": 0.25 * options.map_size / 2,
+            "y": -0.25 * options.map_size / 2,
+            "z": 10
+          },
+          "scale": {
+            "x": 150,
+            "y": 2.5,
+            "z": 30
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }, {
+          "type": "box",
+          "position": {
+            "x": -0.5 * options.map_size / 2,
+            "y": 0.5 * options.map_size / 2,
+            "z": 10
+          },
+          "scale": {
+            "x": 100,
+            "y": 2.5,
+            "z": 30
+          },
+          "rotation": {
+            "x": 25,
+            "y": 0,
+            "z": 0
+          }
+        }],
+        "drones": {
+          "user": DRONE_LIST,
+          "enemy": [
+            {
+              "id": 0 + parseInt(options.number_of_drones),
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": -0.70 * options.map_size / 2,
+                "y": -0.70 * options.map_size / 2,
+                "z": 15
+              }
+            },
+            {
+              "id": 1 + parseInt(options.number_of_drones),
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": 0.70 * options.map_size / 2,
+                "y": -0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 2 + parseInt(options.number_of_drones),
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": -0.70 * options.map_size / 2,
+                "y": 0.70 * options.map_size / 2,
+                "z": 10
+              }
+            },
+            {
+              "id": 3 + parseInt(options.number_of_drones),
+              "type": "EnemyDroneAPI",
+              "position": {
+                "x": 0.70 * options.map_size / 2,
+                "y": 0.70 * options.map_size / 2,
+                "z": 10
+              }
+            }
+          ]
+        }
+      };
 
       game_parameters_json = {
         "drone": {
@@ -416,130 +564,7 @@
           "information": 0,
           "communication": 0
         },
-        "map": {
-          "map_size": parseFloat(options.map_size),
-          "height": parseInt(options.map_height, 10),
-          "start_AMSL": parseFloat(options.start_AMSL),
-          "flag_weight": FLAG_WEIGHT,
-          "flag_list": [{
-            "position": {
-              "x": -0.75 * options.map_size / 2,
-              "y": -0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }, {
-            "position": {
-              "x": 0.75 * options.map_size / 2,
-              "y": 0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }, {
-            "position": {
-              "x": 0.75 * options.map_size / 2,
-              "y": -0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }, {
-            "position": {
-              "x": -0.75 * options.map_size / 2,
-              "y": 0.75 * options.map_size / 2,
-              "z": 10
-            }
-          }],
-          "obstacle_list" : [{
-            "type": "sphere",
-            "position": {
-              "x": 0.5 * options.map_size / 2,
-              "y": 0.5 * options.map_size / 2,
-              "z": 0
-            },
-            "scale": {
-              "x": 6,
-              "y": 6,
-              "z": 6
-            },
-            "rotation": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            }
-          }, {
-            "type": "box",
-            "position": {
-              "x": 0.25 * options.map_size / 2,
-              "y": -0.25 * options.map_size / 2,
-              "z": 10
-            },
-            "scale": {
-              "x": 150,
-              "y": 2.5,
-              "z": 30
-            },
-            "rotation": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            }
-          }, {
-            "type": "box",
-            "position": {
-              "x": -0.5 * options.map_size / 2,
-              "y": 0.5 * options.map_size / 2,
-              "z": 10
-            },
-            "scale": {
-              "x": 100,
-              "y": 2.5,
-              "z": 30
-            },
-            "rotation": {
-              "x": 25,
-              "y": 0,
-              "z": 0
-            }
-          }],
-          "drones": {
-            "user": DRONE_LIST,
-            "enemy": [
-              {
-                "id": 0 + options.number_of_drones,
-                "type": "EnemyDroneAPI",
-                "position": {
-                  "x": -0.70 * options.map_size / 2,
-                  "y": -0.70 * options.map_size / 2,
-                  "z": 15
-                }
-              },
-              {
-                "id": 1 + options.number_of_drones,
-                "type": "EnemyDroneAPI",
-                "position": {
-                  "x": 0.70 * options.map_size / 2,
-                  "y": -0.70 * options.map_size / 2,
-                  "z": 10
-                }
-              },
-              {
-                "id": 2 + options.number_of_drones,
-                "type": "EnemyDroneAPI",
-                "position": {
-                  "x": -0.70 * options.map_size / 2,
-                  "y": 0.70 * options.map_size / 2,
-                  "z": 10
-                }
-              },
-              {
-                "id": 3 + options.number_of_drones,
-                "type": "EnemyDroneAPI",
-                "position": {
-                  "x": 0.70 * options.map_size / 2,
-                  "y": 0.70 * options.map_size / 2,
-                  "z": 10
-                }
-              }
-            ]
-          }
-        },
+        "map": (RANDOM_MAP ? randomizeMap(default_map) : default_map),
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
