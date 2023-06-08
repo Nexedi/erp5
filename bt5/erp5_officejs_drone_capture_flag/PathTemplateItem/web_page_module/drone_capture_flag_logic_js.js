@@ -688,8 +688,8 @@ var GameManager = /** @class */ (function () {
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      drone_count = GAMEPARAMETERS.drones.user.length +
-        GAMEPARAMETERS.drones.enemy.length;
+      drone_count = GAMEPARAMETERS.map.drones.user.length +
+        GAMEPARAMETERS.map.drones.enemy.length;
       for (drone = 0; drone < drone_count; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
@@ -1121,8 +1121,8 @@ var GameManager = /** @class */ (function () {
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
-                       GAMEPARAMETERS.drones.user, TEAM_USER, ctx);
-      ctx._spawnDrones(null, GAMEPARAMETERS.drones.enemy, TEAM_ENEMY, ctx);
+                       GAMEPARAMETERS.map.drones.user, TEAM_USER, ctx);
+      ctx._spawnDrones(null, GAMEPARAMETERS.map.drones.enemy, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1342,7 +1342,7 @@ var GameManager = /** @class */ (function () {
         position_list.push(position);
         var id_offset = 0;
         if (team == TEAM_ENEMY) {
-          id_offset = GAMEPARAMETERS.drones.user.length;
+          id_offset = GAMEPARAMETERS.map.drones.user.length;
         }
         api = new this.APIs_dict[drone_list[i].type](
           this,
@@ -1385,7 +1385,7 @@ var runGame, updateGame;
 
   /*// Resize canvas on window resize
   window.addEventListener('resize', function () {
-    engine.resize();
+    game_manager_instance._engine.resize();
   });*/
 
 
