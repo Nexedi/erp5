@@ -7,7 +7,6 @@
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 170,
     MAP_SIZE = 600,
-    RANDOM_MAP = true,
     map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -72,7 +71,7 @@
       '        me.flag_positions[me.next_checkpoint].position.y,\n' +
       '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
       '      );\n' +
-      '      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
+      //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
       '    me.direction_set = true;\n' +
       '    return;\n' +
@@ -101,7 +100,7 @@
       '      me.flag_positions[me.next_checkpoint].position\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
-      '      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
+      //'      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
       '      me.next_checkpoint += 1;\n' +
       '      me.direction_set = false;\n' +
       '    }\n' +
@@ -285,6 +284,17 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
+                "my_map_seed": {
+                  "description": "Seed value to randomize the map",
+                  "title": "Seed value",
+                  "default": "",
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "map_seed",
+                  "hidden": 0,
+                  "type": "String"
+                },
                 "my_map_size": {
                   "description": "",
                   "title": "Map size",
@@ -352,7 +362,7 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_size"], ["my_map_height"], ["my_start_AMSL"]]
+                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_start_AMSL"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -377,7 +387,7 @@
     .declareJob('runGame', function runGame(options) {
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
-        game_parameters_json, default_map;
+        game_parameters_json, map_json;
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
@@ -396,7 +406,9 @@
             pos_y = sign_y * random_seed.quick() * map_size / 2;
           return [pos_x, pos_y];
         }
-        var random_seed = new Math.seedrandom(SEED), i,
+        console.log("options.map_seed:", options.map_seed);
+        var seed_value = (options.map_seed) ? options.map_seed : SEED,
+          random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(1, 10, random_seed),
           n_flags = randomIntFromInterval(1, 10, random_seed),
           n_obstacles = randomIntFromInterval(1, 10, random_seed),
@@ -404,6 +416,7 @@
           obstacles_types = ["box", "sphere", "cylinder"], type,
           obstacle_limit = [options.map_size / 6, options.map_size / 100,
                             options.map_size / 6, 30];
+        console.log("seed_value:", seed_value);
         //enemies
         for (i = 0; i < n_enemies; i += 1) {
           random_position = randomPosition(random_seed, options.map_size);
@@ -475,128 +488,16 @@
         return json_map;
       }
 
-      default_map = {
+      map_json = {
         "map_size": parseFloat(options.map_size),
         "height": parseInt(options.map_height, 10),
         "start_AMSL": parseFloat(options.start_AMSL),
         "flag_weight": FLAG_WEIGHT,
-        "flag_list": [{
-          "position": {
-            "x": -0.75 * options.map_size / 2,
-            "y": -0.75 * options.map_size / 2,
-            "z": 10
-          }
-        }, {
-          "position": {
-            "x": 0.75 * options.map_size / 2,
-            "y": 0.75 * options.map_size / 2,
-            "z": 10
-          }
-        }, {
-          "position": {
-            "x": 0.75 * options.map_size / 2,
-            "y": -0.75 * options.map_size / 2,
-            "z": 10
-          }
-        }, {
-          "position": {
-            "x": -0.75 * options.map_size / 2,
-            "y": 0.75 * options.map_size / 2,
-            "z": 10
-          }
-        }],
-        "obstacle_list" : [{
-          "type": "sphere",
-          "position": {
-            "x": 0.5 * options.map_size / 2,
-            "y": 0.5 * options.map_size / 2,
-            "z": 0
-          },
-          "scale": {
-            "x": 6,
-            "y": 6,
-            "z": 6
-          },
-          "rotation": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          }
-        }, {
-          "type": "box",
-          "position": {
-            "x": 0.25 * options.map_size / 2,
-            "y": -0.25 * options.map_size / 2,
-            "z": 10
-          },
-          "scale": {
-            "x": 150,
-            "y": 2.5,
-            "z": 30
-          },
-          "rotation": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          }
-        }, {
-          "type": "box",
-          "position": {
-            "x": -0.5 * options.map_size / 2,
-            "y": 0.5 * options.map_size / 2,
-            "z": 10
-          },
-          "scale": {
-            "x": 100,
-            "y": 2.5,
-            "z": 30
-          },
-          "rotation": {
-            "x": 25,
-            "y": 0,
-            "z": 0
-          }
-        }],
+        "flag_list": [],
+        "obstacle_list" : [],
         "drones": {
           "user": DRONE_LIST,
-          "enemy": [
-            {
-              "id": 0 + parseInt(options.number_of_drones),
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": -0.70 * options.map_size / 2,
-                "y": -0.70 * options.map_size / 2,
-                "z": 15
-              }
-            },
-            {
-              "id": 1 + parseInt(options.number_of_drones),
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": 0.70 * options.map_size / 2,
-                "y": -0.70 * options.map_size / 2,
-                "z": 10
-              }
-            },
-            {
-              "id": 2 + parseInt(options.number_of_drones),
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": -0.70 * options.map_size / 2,
-                "y": 0.70 * options.map_size / 2,
-                "z": 10
-              }
-            },
-            {
-              "id": 3 + parseInt(options.number_of_drones),
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": 0.70 * options.map_size / 2,
-                "y": 0.70 * options.map_size / 2,
-                "z": 10
-              }
-            }
-          ]
+          "enemy": []
         }
       };
 
@@ -619,7 +520,7 @@
           "information": 0,
           "communication": 0
         },
-        "map": (RANDOM_MAP ? randomizeMap(default_map) : default_map),
+        "map": randomizeMap(map_json),
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
