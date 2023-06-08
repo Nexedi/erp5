@@ -51,7 +51,7 @@
       '      me.dodging.position\n' +
       '    );\n' +
       '    if (dist >= DODGE_DISTANCE) {\n' +
-      '      console.log("Good distance to obstacle. DODGED.");\n' +
+      //'      console.log("Good distance to obstacle. DODGED.");\n' +
       '      me.dodging = false;\n' +
       '    }\n' +
       '    //check if there is another obstacle while dodging!\n' +
@@ -78,7 +78,7 @@
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '    var drone_view = me.getDroneViewInfo();\n' +
       '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
-      '      console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
+      //'      console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
       '      me.dodging = drone_view.obstacles[0];\n' +
       '      me.direction_set = false;\n' +
       '      var random = Math.random() < 0.5, dodge_point = {};\n' +
@@ -497,53 +497,53 @@
               "y": 0,
               "z": 0
             }
-          }]
+          }],
+          "drones": {
+            "user": DRONE_LIST,
+            "enemy": [
+              {
+                "id": 0 + options.number_of_drones,
+                "type": "EnemyDroneAPI",
+                "position": {
+                  "x": -0.70 * options.map_size / 2,
+                  "y": -0.70 * options.map_size / 2,
+                  "z": 15
+                }
+              },
+              {
+                "id": 1 + options.number_of_drones,
+                "type": "EnemyDroneAPI",
+                "position": {
+                  "x": 0.70 * options.map_size / 2,
+                  "y": -0.70 * options.map_size / 2,
+                  "z": 10
+                }
+              },
+              {
+                "id": 2 + options.number_of_drones,
+                "type": "EnemyDroneAPI",
+                "position": {
+                  "x": -0.70 * options.map_size / 2,
+                  "y": 0.70 * options.map_size / 2,
+                  "z": 10
+                }
+              },
+              {
+                "id": 3 + options.number_of_drones,
+                "type": "EnemyDroneAPI",
+                "position": {
+                  "x": 0.70 * options.map_size / 2,
+                  "y": 0.70 * options.map_size / 2,
+                  "z": 10
+                }
+              }
+            ]
+          }
         },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
-        "log_interval_time": LOG_TIME,
-        "drones": {
-          "user": DRONE_LIST,
-          "enemy": [
-            {
-              "id": 0 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": -0.70 * options.map_size / 2,
-                "y": -0.70 * options.map_size / 2,
-                "z": 15
-              }
-            },
-            {
-              "id": 1 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": 0.70 * options.map_size / 2,
-                "y": -0.70 * options.map_size / 2,
-                "z": 10
-              }
-            },
-            {
-              "id": 2 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": -0.70 * options.map_size / 2,
-                "y": 0.70 * options.map_size / 2,
-                "z": 10
-              }
-            },
-            {
-              "id": 3 + options.number_of_drones,
-              "type": "EnemyDroneAPI",
-              "position": {
-                "x": 0.70 * options.map_size / 2,
-                "y": 0.70 * options.map_size / 2,
-                "z": 10
-              }
-            }
-          ]
-        }
+        "log_interval_time": LOG_TIME
       };
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
