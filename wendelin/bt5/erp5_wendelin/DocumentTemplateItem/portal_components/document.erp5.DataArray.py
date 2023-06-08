@@ -142,7 +142,7 @@ class DataArray(BigFile):
     self.getArray().dtype.names = names
 
   security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
+  def index_html(self, REQUEST, RESPONSE, fmt=_MARKER, inline=_MARKER, **kw):
     """
       Support streaming
     """
@@ -174,12 +174,12 @@ class DataArray(BigFile):
         RESPONSE.write(self.getArray()[tuple(slice_index_list)].tobytes())
       return True
 
-    range = REQUEST.get_header('Range', None)
     request_range = REQUEST.get_header('Request-Range', None)
     if request_range is not None:
       # Netscape 2 through 4 and MSIE 3 implement a draft version
       # Later on, we need to serve a different mime-type as well.
-      range = request_range
+      # header_range = request_range
+      pass
     if_range = REQUEST.get_header('If-Range', None)
     if range is not None:
       ranges = HTTPRangeSupport.parseRange(range)
@@ -200,7 +200,8 @@ class DataArray(BigFile):
           # Date
           date = if_range.split( ';')[0]
           try: mod_since=long(DateTime(date).timeTime())
-          except: mod_since=None
+          except Exception:
+            mod_since=None
           if mod_since is not None:
             last_mod = self._data_mtime()
             if last_mod is None:

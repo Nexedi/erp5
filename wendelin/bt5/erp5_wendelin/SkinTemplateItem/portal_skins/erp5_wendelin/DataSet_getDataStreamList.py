@@ -1,6 +1,10 @@
 """
 This script will return all Data streams for Data set
 """
+
+if limit is None:
+  limit=[]
+
 catalog_kw = {'portal_type': 'Data Ingestion Line',
               'aggregate_uid': context.getUid(),
               'limit': limit,
