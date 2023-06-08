@@ -1,4 +1,4 @@
 portal = context.getPortalObject()
-portal.DataLake_stopIngestionList()
-portal.DataLake_createDataAnalysisList()
-portal.DataLake_executeDataAnalysisList()
+portal.ERP5Site_stopIngestionListForDataLake()
+portal.ERP5Site_createDataAnalysisListForDataLake()
+portal.ERP5Site_executeDataAnalysisListForDataLake()

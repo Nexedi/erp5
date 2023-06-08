@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_executeDataAnalysisList</string> </value>
+            <value> <string>ERP5Site_stopIngestionListForDataLake</string> </value>
         </item>
       </dictionary>
     </pickle>
