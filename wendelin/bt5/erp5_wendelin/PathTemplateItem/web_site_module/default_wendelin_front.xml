@@ -93,9 +93,13 @@
             <value>
               <object>
                 <klass>
-                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
+                  <global name="_reconstructor" module="copy_reg"/>
                 </klass>
-                <tuple/>
+                <tuple>
+                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
                 <state>
                   <dictionary>
                     <item>
@@ -564,9 +568,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -606,7 +612,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -620,7 +626,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1005.6652.6220.26265</string> </value>
+                      <value> <string>1008.30951.24131.52087</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -631,14 +637,16 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1673005812.65</float>
+                              <float>1686292778.57</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
