@@ -132,6 +132,12 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -170,9 +176,11 @@
                       <value>
                         <object>
                           <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="_reconstructor" module="copy_reg"/>
                           </klass>
                           <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
                             <none/>
                           </tuple>
                           <state>
@@ -187,6 +195,71 @@
                   <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>published_alive</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <unicode>zope</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>1008.30951.24131.52087</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="_reconstructor" module="copy_reg"/>
+                          </klass>
+                          <tuple>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                            <global name="object" module="__builtin__"/>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1686292621.36</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
                   </item>
                 </dictionary>
               </list>
