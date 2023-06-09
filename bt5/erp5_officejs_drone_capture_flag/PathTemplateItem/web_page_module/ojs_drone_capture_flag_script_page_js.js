@@ -289,11 +289,11 @@
                   "title": "Seed value",
                   "default": "",
                   "css_class": "",
-                  "required": 1,
+                  "required": 0,
                   "editable": 1,
                   "key": "map_seed",
                   "hidden": 0,
-                  "type": "String"
+                  "type": "StringField"
                 },
                 "my_map_size": {
                   "description": "",
@@ -406,7 +406,6 @@
             pos_y = sign_y * random_seed.quick() * map_size / 2;
           return [pos_x, pos_y];
         }
-        console.log("options.map_seed:", options.map_seed);
         var seed_value = (options.map_seed) ? options.map_seed : SEED,
           random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(1, 10, random_seed),
@@ -416,7 +415,6 @@
           obstacles_types = ["box", "sphere", "cylinder"], type,
           obstacle_limit = [options.map_size / 6, options.map_size / 100,
                             options.map_size / 6, 30];
-        console.log("seed_value:", seed_value);
         //enemies
         for (i = 0; i < n_enemies; i += 1) {
           random_position = randomPosition(random_seed, options.map_size);
@@ -443,11 +441,11 @@
         }
         function checkDistance(position, position_list) {
           function distance(a, b) {
-            return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);
+            return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
           }
           var el;
           for (el = 0; el < position_list.length; el += 1) {
-            if (distance(position, position_list[el]) < 10) {
+            if (distance(position, position_list[el].position) < options.map_size / 6) {
               return true;
             }
           }
@@ -458,7 +456,6 @@
           random_position = randomPosition(random_seed, options.map_size);
           if (checkDistance({ 'x': random_position[0],
                               'y': random_position[1]}, flag_list)) {
-            console.log("obstacle too close to flag! re calculating");
             i -= 1;
           } else {
             type = randomIntFromInterval(0, 2, random_seed);
