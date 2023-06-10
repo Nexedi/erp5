@@ -71,6 +71,7 @@ class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin('expression')):
     meta_type = 'ERP5 Python Script'
     portal_type = 'Python Script'
     add_permission = Permissions.AddPortalContent
+    zmi_icon = ZopePythonScript.zmi_icon
 
     # Declarative security
     security = ClassSecurityInfo()
