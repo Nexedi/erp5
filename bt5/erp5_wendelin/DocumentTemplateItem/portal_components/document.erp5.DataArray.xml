@@ -39,11 +39,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:145, 42: Redefining built-in \'format\' (redefined-builtin)</string>
-                <string>W:177,  4: Redefining built-in \'range\' (redefined-builtin)</string>
-                <string>W:203, 10: No exception type(s) specified (bare-except)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
