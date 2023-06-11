@@ -124,7 +124,7 @@ class DataArray(BigFile):
     zarray = self.getArray()
     if zarray is not None:
       return zarray.dtype
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getArrayDtypeNames')
   def getArrayDtypeNames(self):
     """
@@ -142,7 +142,7 @@ class DataArray(BigFile):
     self.getArray().dtype.names = names
 
   security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
+  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw): # pylint:disable=redefined-builtin
     """
       Support streaming
     """
@@ -174,15 +174,15 @@ class DataArray(BigFile):
         RESPONSE.write(self.getArray()[tuple(slice_index_list)].tobytes())
       return True
 
-    range = REQUEST.get_header('Range', None)
+    http_range = REQUEST.get_header('Range', None)
     request_range = REQUEST.get_header('Request-Range', None)
     if request_range is not None:
       # Netscape 2 through 4 and MSIE 3 implement a draft version
       # Later on, we need to serve a different mime-type as well.
-      range = request_range
+      http_range = request_range
     if_range = REQUEST.get_header('If-Range', None)
-    if range is not None:
-      ranges = HTTPRangeSupport.parseRange(range)
+    if http_range is not None:
+      ranges = HTTPRangeSupport.parseRange(http_range)
 
       array = self.getArray()
 
@@ -200,7 +200,7 @@ class DataArray(BigFile):
           # Date
           date = if_range.split( ';')[0]
           try: mod_since=long(DateTime(date).timeTime())
-          except: mod_since=None
+          except Exception: mod_since=None
           if mod_since is not None:
             last_mod = self._data_mtime()
             if last_mod is None:
@@ -291,3 +291,4 @@ class DataArray(BigFile):
           data = '{}\r\n--{}--\r\n'.format(data, boundary)
           RESPONSE.setBody(data, lock=True)
           return True
+
