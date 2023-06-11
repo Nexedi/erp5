@@ -1,6 +1,6 @@
 from DateTime import DateTime
 from erp5.component.module.DateUtils import addToDate
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import Query
 
 portal_catalog = context.getPortalObject().portal_catalog
 
@@ -55,6 +55,6 @@ if len(parent_uid_list) != 0:
         # we need to wait until there are 2 batches until we can stop it
         # TODO: this should be implemented in transformation, not here
         continue
-    
+
     data_ingestion.setStopDate(DateTime())
     data_ingestion.stop()
