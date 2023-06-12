@@ -6,6 +6,9 @@
  <portal_type id="Delivery Node">
   <item>DeliveryNode</item>
  </portal_type>
+ <portal_type id="Duplicate Inventory Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
  <portal_type id="Internal Packing List">
   <item>DeliveryCausalityStateConstraint</item>
  </portal_type>
@@ -30,6 +33,9 @@
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>PaymentCondition</item>
+ </portal_type>
+ <portal_type id="Trade Model Line Cell Consistency Constraint">
+  <item>ConstraintType</item>
  </portal_type>
  <portal_type id="Trade Model Path">
   <item>PaymentCondition</item>
