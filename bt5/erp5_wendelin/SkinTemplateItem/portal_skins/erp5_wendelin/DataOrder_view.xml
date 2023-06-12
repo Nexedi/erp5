@@ -85,7 +85,6 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_specialise_title_list</string>
-                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -100,6 +99,7 @@
                         <string>my_source_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
