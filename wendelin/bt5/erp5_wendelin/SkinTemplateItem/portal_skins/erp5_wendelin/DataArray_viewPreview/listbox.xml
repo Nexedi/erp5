@@ -165,7 +165,11 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.DataArray_getArrayColumnList()</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: test(len(here.DataArray_getArrayColumnList()) >= 1, here.DataArray_getArrayColumnList(), (("Empty array", "Empty array"),))
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
