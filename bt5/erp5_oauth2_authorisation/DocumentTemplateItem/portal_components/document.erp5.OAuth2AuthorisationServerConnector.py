@@ -25,7 +25,6 @@
 #
 ##############################################################################
 
-import base64
 import contextlib
 from functools import wraps
 from io import BytesIO
@@ -1025,7 +1024,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     """
     try:
       login_retry_url = self.__getLoginRetryURLMultiFernet().decrypt(
-        base64.urlsafe_b64decode(REQUEST.form['login_retry_url']),
+        REQUEST.form['login_retry_url'],
       )
     except (fernet.InvalidToken, TypeError, KeyError):
       # No login_retry_url provided or its value is unusable: if this is a GET
@@ -1040,9 +1039,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     def getSignedLoginRetryUrl():
       if login_retry_url is None:
         return None
-      return base64.urlsafe_b64encode(
-        self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
-      )
+      return self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url)
     return _ERP5AuthorisationEndpoint(
       server_connector_path=self.getPath(),
       zope_request=REQUEST,
@@ -1075,9 +1072,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
       method=method,
       query_list=query_list + [(
         'login_retry_url',
-        base64.urlsafe_b64encode(
-          self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
-        ),
+        self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url),
       )],
     ) as inner_request:
       # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
