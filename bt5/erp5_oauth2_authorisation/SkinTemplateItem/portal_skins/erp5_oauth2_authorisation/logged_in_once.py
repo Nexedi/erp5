@@ -12,7 +12,7 @@ if portal.portal_skins.updateSkinCookie():
 environ = REQUEST.environ
 if (
   environ['REQUEST_METHOD'] != 'POST' or
-  environ['CONTENT_TYPE'] != 'application/x-www-form-urlencoded' or
+  environ.get('CONTENT_TYPE', '').split(';', 1)[0].rstrip() not in ('application/x-www-form-urlencoded', 'multipart/form-data') or
   environ['QUERY_STRING']
 ):
   # There may be foul play, so escape to wherever.
@@ -45,6 +45,10 @@ with substituteRequest(
   method='POST',
   form=form,
 ) as inner_request:
+  # XXX: Zope request to oauthlib request compatibility layer (see document.erp5.OAuth2AuthorisationServerConnector)
+  # only supports application/x-www-form-urlencoded, so force this content-type while accepting multipart/form-data input.
+  # Non-basestring values are ignored, so it will ignore any posted file.
+  inner_request.environ['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
   return connector_value.authorize(
     REQUEST=inner_request,
     RESPONSE=inner_request.RESPONSE,
