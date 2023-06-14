@@ -1,11 +1,11 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, Blob*/
-(function (window, rJS, domsugar, document, Blob) {
+/*global window, rJS, domsugar, document, URLSearchParams, Blob*/
+(function (window, rJS, domsugar, document, URLSearchParams, Blob) {
   "use strict";
 
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
-    SIMULATION_TIME = 170,
+    SIMULATION_TIME = 270,
     MAP_SIZE = 600,
     map_height = 700,
     start_AMSL = 595,
@@ -146,7 +146,8 @@
     })
 
     .declareMethod('render', function render() {
-      var gadget = this;
+      var gadget = this, url_sp = new URLSearchParams(window.location.hash),
+        url_seed = url_sp.get("seed");
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -287,7 +288,7 @@
                 "my_map_seed": {
                   "description": "Seed value to randomize the map",
                   "title": "Seed value",
-                  "default": "",
+                  "default": url_seed ? url_seed : "",
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
@@ -614,4 +615,4 @@
         });
     });
 
-}(window, rJS, domsugar, document, Blob));
+}(window, rJS, domsugar, document, URLSearchParams, Blob));
