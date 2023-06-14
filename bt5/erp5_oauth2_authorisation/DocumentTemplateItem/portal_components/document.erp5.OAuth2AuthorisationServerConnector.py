@@ -1022,10 +1022,10 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     Only Zope-based request authentication is supported
     (ex: "Authorization: Basic ..." request header).
     """
+    multi_fernet = self.__getLoginRetryURLMultiFernet()
+    # Retrieve posted field, validate signature and extract the url.
     try:
-      login_retry_url = self.__getLoginRetryURLMultiFernet().decrypt(
-        REQUEST.form['login_retry_url'],
-      )
+      login_retry_url = multi_fernet.decrypt(REQUEST.form['login_retry_url'])
     except (fernet.InvalidToken, TypeError, KeyError):
       # No login_retry_url provided or its value is unusable: if this is a GET
       # request (trying to display a login form), use the current URL.
@@ -1039,7 +1039,7 @@ class OAuth2AuthorisationServerConnector(XMLObject):
     def getSignedLoginRetryUrl():
       if login_retry_url is None:
         return None
-      return self.__getLoginRetryURLMultiFernet().encrypt(login_retry_url)
+      return multi_fernet.encrypt(login_retry_url)
     return _ERP5AuthorisationEndpoint(
       server_connector_path=self.getPath(),
       zope_request=REQUEST,
