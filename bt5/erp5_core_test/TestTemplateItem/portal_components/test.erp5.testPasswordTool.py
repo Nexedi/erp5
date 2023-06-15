@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
-import unittest
+import six
+from six.moves.urllib_parse import urlparse, parse_qsl
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
+
 
 class TestPasswordTool(ERP5TypeTestCase):
   """
@@ -47,6 +48,22 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.portal.email_from_address = 'site@example.invalid'
     self.portal.MailHost.reset()
     self.portal.portal_caches.clearAllCache()
+    self._createUser("userA")
+
+  def _createUser(self, base_name):
+    person = self.portal.person_module.newContent(
+      portal_type="Person",
+      reference=base_name,
+      default_email_text="{base_name}@example.invalid".format(base_name=base_name))
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='{base_name}-login'.format(base_name=base_name),
+      password='{base_name}-password'.format(base_name=base_name),
+    )
+    login.validate()
+    self.tic()
 
   def beforeTearDown(self):
     self.abort()
@@ -92,262 +109,139 @@ class TestPasswordTool(ERP5TypeTestCase):
            "Plugin %s should not have authenticated '%s' with password '%s'" %
            (plugin_name, login, password))
 
-  def stepAddUser(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create a user
-    """
-    person = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="userA",
-                                    default_email_text="userA@example.invalid")
-    assignment = person.newContent(portal_type='Assignment')
-    assignment.open()
-    login = person.newContent(
-      portal_type='ERP5 Login',
-      reference='userA-login',
-      password='passwordA',
-    )
-    login.validate()
+  def test_password_reset(self):
+    self._assertUserExists('userA-login', 'userA-password')
+    self._assertUserDoesNotExists('userA-login', 'bad')
+    ret = self.portal.portal_password.mailPasswordResetRequest(
+      user_login='userA-login', REQUEST=self.portal.REQUEST)
 
-  def stepCheckPasswordToolExists(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check existence of password tool
-    """
-    self.assertTrue(self.getPasswordTool() is not None)
-
-  def stepCheckUserLogin(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check existence of password tool
-    """
-    self._assertUserExists('userA-login', 'passwordA')
-
-  def stepCheckUserLoginWithNewPassword(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check existence of password tool
-    """
-    self._assertUserExists('userA-login', 'secret')
-
-  def stepCheckUserNotLoginWithBadPassword(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check existence of password tool
-    """
-    self._assertUserDoesNotExists('userA', 'secret')
-
-  def stepCheckUserNotLoginWithFormerPassword(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check existence of password tool
-    """
-    self._assertUserDoesNotExists('userA', 'passwordA')
-
-  def stepLostPassword(self, sequence=None, sequence_list=None, **kw):
-    """
-    Required a new password
-    """
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userA-login")
-
-  def stepTryLostPasswordWithBadUser(self, sequence=None, sequence_list=None, **kw):
-    """
-    Required a new password
-    """
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ-login")
-
-  def stepCheckNoMailSent(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check mail has not been sent after fill in wrong the form password
-    """
-    last_message = self.portal.MailHost._last_message
-    self.assertEqual((), last_message)
-
-  def stepCheckMailSent(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check mail has been sent after fill in the form password
-    """
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEqual((), last_message)
-    mfrom, mto, _ = last_message
-    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
-    self.assertEqual(['userA@example.invalid'], mto)
-
-  def stepGoToRandomAddress(self, sequence=None, sequence_list=None, **kw):
-    """
-    Call method that change the password
-    We don't check use of random url in mail here as we have on request
-    But random is also check by changeUserPassword, so it's the same
-    """
-    key = self.portal.portal_password._password_request_dict.keys()[0]
-    self.portal.portal_password.changeUserPassword(user_login="userA-login",
-                                                   password="secret",
-                                                   password_confirmation="secret",
-                                                   password_key=key)
-    # reset cache
-    self.portal.portal_caches.clearAllCache()
-
-  def stepGoToRandomAddressWithBadUserName(self, sequence=None, sequence_list=None, **kw):
-    """
-    Call method that change the password with a bad user name
-    This must not work
-    """
-    key = self.portal.portal_password._password_request_dict.keys()[0]
-    sequence.edit(key=key)
-    self.portal.portal_password.changeUserPassword(user_login="userZ-login",
-                                                   password="secret",
-                                                   password_confirmation="secret",
-                                                   password_key=key)
-    # reset cache
-    self.portal.portal_caches.clearAllCache()
-
-  def stepGoToRandomAddressTwice(self, sequence=None, sequence_list=None, **kw):
-    """
-    As we already change password, this must npot work anylonger
-    """
-    key = sequence.get('key')
-    self.portal.portal_password.changeUserPassword(user_login="userA-login",
-                                                   password="passwordA",
-                                                   password_confirmation="passwordA",
-                                                   password_key=key)
-    # reset cache
-    self.portal.portal_caches.clearAllCache()
-
-  def stepGoToBadRandomAddress(self, sequence=None, sequence_list=None, **kw):
-    """
-    Try to reset a password with bad random part
-    """
-    self.portal.portal_password.changeUserPassword(user_login="userA-login",
-                                                   password="secret",
-                                                   password_confirmation="secret",
-                                                   password_key="toto")
-    # reset cache
-    self.portal.portal_caches.clearAllCache()
-
-
-  def stepModifyExpirationDate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Change expiration date so that reset of password is not available
-    """
-    # save key for url
-    key = self.portal.portal_password._password_request_dict.keys()[0]
-    sequence.edit(key=key)
-    # modify date
-    for k, v in self.portal.portal_password._password_request_dict.items():
-      login, date = v
-      date = DateTime() - 1
-      self.portal.portal_password._password_request_dict[k] = (login, date)
-
-  def stepSimulateExpirationAlarm(self, sequence=None, sequence_list=None, **kw):
-    """
-    Simulate alarm wich remove expired request
-    """
-    self.portal.portal_password.removeExpiredRequests()
-
-  def stepCheckNoRequestRemains(self, sequence=None, sequence_list=None, **kw):
-    """
-    after alarm all expired request must have been removed
-    """
-    self.assertEqual(len(self.portal.portal_password._password_request_dict), 0)
-
-  def stepLogout(self, sequence=None, sequence_list=None, **kw):
-    """
-    Logout
-    """
-    self.logout()
-
-  # tests
-  def test_01_checkPasswordTool(self):
-    sequence_list = SequenceList()
-    sequence_string = 'CheckPasswordToolExists '  \
-                      'AddUser Tic ' \
-                      'Logout ' \
-                      'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      'TryLostPasswordWithBadUser Tic ' \
-                      'CheckNoMailSent ' \
-                      'GoToBadRandomAddress Tic ' \
-                      'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      'LostPassword Tic ' \
-                      'CheckMailSent GoToRandomAddress Tic '  \
-                      'CheckUserLoginWithNewPassword ' \
-                      'CheckUserNotLoginWithFormerPassword ' \
-                      'GoToRandomAddressTwice Tic ' \
-                      'CheckUserLoginWithNewPassword ' \
-                      'CheckUserNotLoginWithFormerPassword ' \
-
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_02_checkPasswordToolDateExpired(self):
-    sequence_list = SequenceList()
-    sequence_string = 'CheckPasswordToolExists '  \
-                      'AddUser Tic ' \
-                      'Logout ' \
-                      'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      'LostPassword Tic ' \
-                      'CheckMailSent ' \
-                      'ModifyExpirationDate ' \
-                      'GoToRandomAddress Tic '  \
-                      'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_03_checkPasswordToolAlarm(self):
-    sequence_list = SequenceList()
-    sequence_string = 'CheckPasswordToolExists '  \
-                      'AddUser Tic ' \
-                      'Logout ' \
-                      'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      'LostPassword Tic ' \
-                      'CheckMailSent ' \
-                      'ModifyExpirationDate ' \
-                      'SimulateExpirationAlarm ' \
-                      'CheckNoRequestRemains ' \
-                      'GoToRandomAddressTwice Tic '  \
-                      'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_two_concurrent_password_reset(self):
-    personA = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="userA",
-                                    default_email_text="userA@example.invalid")
-    assignment = personA.newContent(portal_type='Assignment')
-    assignment.open()
-    login = personA.newContent(
-      portal_type='ERP5 Login',
-      reference='userA-login',
-      password='passwordA',
-    )
-    login.validate()
-
-    personB = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="userB",
-                                    default_email_text="userB@example.invalid")
-    assignment = personB.newContent(portal_type='Assignment')
-    assignment.open()
-    login = personB.newContent(
-      portal_type='ERP5 Login',
-      reference='userB-login',
-      password='passwordB',
-    )
-    login.validate()
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
     self.tic()
 
-    self._assertUserExists('userA-login', 'passwordA')
-    self._assertUserExists('userB-login', 'passwordB')
+    (mfrom, mto, mbody), = self.portal.MailHost.getMessageList()
+    self.assertEqual('Portal Administrator <site@example.invalid>', mfrom)
+    self.assertEqual(['userA@example.invalid'], mto)
+    reset_key, = list(six.iterkeys(self.portal.portal_password._password_request_dict))
+    self.assertIn(
+      ('PasswordTool_viewResetPassword?reset_key=' + reset_key).encode(),
+      mbody)
+
+    ret = self.portal.portal_password.changeUserPassword(
+        user_login="userA-login",
+        password="new-password",
+        password_confirmation="new-password",
+        password_key=reset_key)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "Password changed."), query_string_param)
+    self.tic()
+    self._assertUserExists('userA-login', 'new-password')
+    self._assertUserDoesNotExists('userA-login', 'userA-password')
+
+    # key no longer work
+    ret = self.portal.portal_password.changeUserPassword(
+        user_login="userA-login",
+        password="new-password",
+        password_confirmation="new-password",
+        password_key=reset_key)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "Key not known. Please ask reset password."), query_string_param)
+    self.tic()
+    self._assertUserExists('userA-login', 'new-password')
+    self._assertUserDoesNotExists('userA-login', 'userA-password')
+
+  def test_password_reset_request_for_non_existing_user(self):
+    ret = self.portal.portal_password.mailPasswordResetRequest(
+      user_login='not exist', REQUEST=self.portal.REQUEST)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.tic()
+    self.assertFalse(self.portal.MailHost.getMessageList())
+
+  def test_password_reset_request_for_wildcard_username(self):
+    ret = self.portal.portal_password.mailPasswordResetRequest(
+      user_login='%', REQUEST=self.portal.REQUEST)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.tic()
+    self.assertFalse(self.portal.MailHost.getMessageList())
+
+  def test_password_reset_request_for_different_user(self):
+    self._createUser('userB')
+    self.portal.portal_password.mailPasswordResetRequest(
+      user_login='userA-login', REQUEST=self.portal.REQUEST)
+    reset_key, = list(six.iterkeys(
+      self.portal.portal_password._password_request_dict))
+
+    ret = self.portal.portal_password.changeUserPassword(
+        user_login="userB-login",
+        password="new-password",
+        password_confirmation="new-password",
+        password_key=reset_key)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "Bad login provided."), query_string_param)
+    self.tic()
+    self._assertUserExists('userA-login', 'userA-password')
+    self._assertUserExists('userB-login', 'userB-password')
+    self._assertUserDoesNotExists('userB-login', 'new-password')
+
+  def test_password_reset_unknown_key(self):
+    self.portal.portal_password.mailPasswordResetRequest(
+      user_login='userA-login', REQUEST=self.portal.REQUEST)
+    ret = self.portal.portal_password.changeUserPassword(
+        user_login="userA-login",
+        password="new-password",
+        password_confirmation="new-password",
+        password_key='wrong key')
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "Key not known. Please ask reset password."), query_string_param)
+    self.tic()
+
+  def test_password_reset_date_expired(self):
+    self.portal.portal_password.mailPasswordResetRequest(user_login='userA-login')
+    (reset_key, (login, date)), = list(six.iteritems(
+      self.portal.portal_password._password_request_dict))
+    self.assertTrue(date.isFuture())
+    self.portal.portal_password._password_request_dict[reset_key] = (
+      login,
+      DateTime() - 1
+    )
+    ret = self.portal.portal_password.changeUserPassword(
+        user_login="userA-login",
+        password="new-password",
+        password_confirmation="new-password",
+        password_key=reset_key)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "Date has expired."), query_string_param)
+    self.tic()
+
+    self._assertUserExists('userA-login', 'userA-password')
+    self._assertUserDoesNotExists('userA-login', 'new-password')
+
+    self.portal.portal_password.removeExpiredRequests()
+    self.assertFalse(list(six.iterkeys(
+      self.portal.portal_password._password_request_dict)))
+
+  def test_two_concurrent_password_reset(self):
+    self._createUser('userB')
+    self._assertUserExists('userA-login', 'userA-password')
+    self._assertUserExists('userB-login', 'userB-password')
 
     self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA-login")
     self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
-    key_a = self.portal.portal_password._password_request_dict.keys()[0]
+    key_a = list(six.iterkeys(self.portal.portal_password._password_request_dict))[0]
     self.tic()
 
     self.portal.portal_password.mailPasswordResetRequest(user_login="userB-login")
-    possible_key_list =\
-        self.portal.portal_password._password_request_dict.keys()
+    possible_key_list = \
+      list(six.iterkeys(self.portal.portal_password._password_request_dict))
     self.assertEqual(2, len(possible_key_list))
     key_b = [k for k in possible_key_list if k != key_a][0]
     self.tic()
 
-    self._assertUserExists('userA-login', 'passwordA')
-    self._assertUserExists('userB-login', 'passwordB')
+    self._assertUserExists('userA-login', 'userA-password')
+    self._assertUserExists('userB-login', 'userB-password')
 
     self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="newA",
@@ -356,7 +250,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.tic()
 
     self._assertUserExists('userA-login', 'newA')
-    self._assertUserExists('userB-login', 'passwordB')
+    self._assertUserExists('userB-login', 'userB-password')
 
     self.portal.portal_password.changeUserPassword(user_login="userB-login",
                                                    password="newB",
@@ -390,8 +284,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ-login ")
     self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
-
-    key_a = self.portal.portal_password._password_request_dict.keys()[0]
+    key_a, = list(six.iterkeys(self.portal.portal_password._password_request_dict))
     self.tic()
 
     self._assertUserExists('userZ-login ', 'passwordZ')
@@ -429,10 +322,12 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.mailPasswordResetRequest(
                   user_login='user-login', REQUEST=self.portal.REQUEST)
 
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
     # For security reasons, the message should always be the same
-    self.assertIn("portal_status_message=An+email+has+been+sent+to+you.", str(ret))
+    self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+
     # But no mail has been sent
-    self.stepCheckNoMailSent()
+    self.assertFalse(self.portal.MailHost.getMessageList())
 
   def test_unreachable_email_on_person(self):
     person = self.portal.person_module.newContent(
@@ -455,10 +350,12 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.mailPasswordResetRequest(
                   user_login='user-login', REQUEST=self.portal.REQUEST)
 
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
     # For security reasons, the message should always be the same
-    self.assertIn("portal_status_message=An+email+has+been+sent+to+you.", str(ret))
+    self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+
     # But no mail has been sent
-    self.stepCheckNoMailSent()
+    self.assertFalse(self.portal.MailHost.getMessageList())
 
   def test_acquired_email_on_person(self):
     organisation = self.portal.organisation_module.newContent(
@@ -482,12 +379,9 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.mailPasswordResetRequest(
                   user_login='user-login', REQUEST=self.portal.REQUEST)
 
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
     # For security reasons, the message should always be the same
-    self.assertIn("portal_status_message=An+email+has+been+sent+to+you.", str(ret))
+    self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
     # But no mail has been sent
-    self.stepCheckNoMailSent()
+    self.assertFalse(self.portal.MailHost.getMessageList())
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPasswordTool))
-  return suite
