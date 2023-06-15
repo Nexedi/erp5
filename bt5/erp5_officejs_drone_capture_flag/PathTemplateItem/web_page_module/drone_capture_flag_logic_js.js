@@ -884,14 +884,18 @@ var GameManager = /** @class */ (function () {
       }
     }
 
-    //TODO optimize this to avoid constant resize
     if (fullscreen) {
-      this._canvas.width = this._canvas_width * 2;
-      this._canvas.height = this._canvas_height * 2;
-      this._engine.resize(true);
+      //Only resize if size changes
+      if (this._canvas.width !== this._canvas_width * 2) {
+        this._canvas.width = this._canvas_width * 2;
+        this._canvas.height = this._canvas_height * 2;
+      }
     } else {
-      this._canvas.width = this._canvas_width;
-      this._canvas.height = this._canvas_height;
+      if (this._canvas.width !== this._canvas_width) {
+        this._canvas.width = this._canvas_width;
+        this._canvas.height = this._canvas_height;
+        this._engine.resize(true);
+      }
     }
 
     this._droneList.forEach(function (drone) {
