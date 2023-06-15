@@ -883,18 +883,21 @@ def _handleOAuth2Error(RESPONSE, exc):
   RESPONSE.setHeader('Content-Type', 'application/json')
   RESPONSE.setBody(exc.json, lock=True)
 
+# A minimal set of headers which must not be set on an HTTPResponse using addHeader,
+# but must be set using setHeader instead because HTTPResponse treat them specially
+# (ex: modifies them while rendering the final response form).
+_SPECIAL_HEADER_NAME_SET = (
+  'content-type',
+  'content-length',
+)
 def _setupZopeResponse(RESPONSE, status, header_item_list, body):
   RESPONSE.setStatus(status, lock=True)
   for key, value in header_item_list:
-    if key.lower().replace('_', '-') == 'content-type':
-      # If RESPONSE is an HTTPResponse, it will not intercept this
-      # RESPONSE.addHeader, and will set its own default value,
-      # so the response ends up with multiple content-types, like:
-      #   text/plain; charset=utf-8, application/json
-      # So, intercept this header, and set it separately.
-      RESPONSE.setHeader(key, value)
-    else:
-      RESPONSE.addHeader(key, value)
+    (
+      RESPONSE.setHeader
+      if key.lower() in _SPECIAL_HEADER_NAME_SET else
+      RESPONSE.addHeader
+    )(key, value)
   return body
 
 def _wrapOAuth2Endpoint(func):
