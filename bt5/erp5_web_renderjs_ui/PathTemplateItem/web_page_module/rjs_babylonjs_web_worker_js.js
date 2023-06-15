@@ -48,7 +48,7 @@ function mainToWorker(evt) {
   case 'update':
     return new RSVP.Queue()
       .push(function () {
-        return updateGame();
+        return updateGame(evt.data.fullscreen);
       })
       .push(function () {
         return postMessage({'type': 'updated'});

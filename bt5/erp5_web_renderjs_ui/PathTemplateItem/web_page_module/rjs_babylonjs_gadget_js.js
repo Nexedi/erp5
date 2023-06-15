@@ -14,7 +14,7 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen, game_manager;
+    ]), game_result, canvas, offscreen, game_manager, fullscreen = false;
 
   //////////////////////////////////////////
   // Webworker
@@ -118,7 +118,7 @@
       return game_result;
     },
     fullscreen: function fullScreenGameManager() {
-      console.log("DGM fullscreen function");
+      fullscreen = !fullscreen;
     },
     play: function startGameManager(options) {
       if (this.hasOwnProperty('loop_promise')) {
@@ -142,7 +142,8 @@
               context.loop_promise
                 .push(function () {
                   worker.postMessage({
-                    type: 'update'
+                    type: 'update',
+                    fullscreen: fullscreen
                   });
                   update_defer = RSVP.defer();
                   return RSVP.all([
