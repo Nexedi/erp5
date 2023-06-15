@@ -667,6 +667,8 @@ var GameManager = /** @class */ (function () {
   function GameManager(canvas, game_parameters_json) {
     var drone, header_list, drone_count;
     this._canvas = canvas;
+    this._canvas_width = canvas.width;
+    this._canvas_height = canvas.height;
     this._scene = null;
     this._engine = null;
     this._droneList = [];
@@ -741,7 +743,7 @@ var GameManager = /** @class */ (function () {
       });
   };
 
-  GameManager.prototype.update = function () {
+  GameManager.prototype.update = function (fullscreen) {
     // time delta means that drone are updated every virtual second
     // This is fixed and must not be modified
     // otherwise, it will lead to different scenario results
@@ -753,10 +755,8 @@ var GameManager = /** @class */ (function () {
     function triggerUpdateIfPossible() {
       if ((_this._canUpdate) && (_this.ongoing_update_promise === null) &&
           (0 < _this.waiting_update_count)) {
-        _this.ongoing_update_promise = _this._update(
-          TIME_DELTA,
-          (_this.waiting_update_count === 1)
-        ).push(function () {
+        _this.ongoing_update_promise = _this._update(TIME_DELTA, fullscreen)
+          .push(function () {
           _this.waiting_update_count -= 1;
           _this.ongoing_update_promise = null;
           triggerUpdateIfPossible();
@@ -868,7 +868,7 @@ var GameManager = /** @class */ (function () {
     }
   };
 
-  GameManager.prototype._update = function (delta_time) {
+  GameManager.prototype._update = function (delta_time, fullscreen) {
     var _this = this,
       queue = new RSVP.Queue(),
       i;
@@ -882,6 +882,16 @@ var GameManager = /** @class */ (function () {
         queue.push(_this._delayed_defer_list[i][0]);
         _this._delayed_defer_list.splice(i, 1);
       }
+    }
+
+    //TODO optimize this to avoid constant resize
+    if (fullscreen) {
+      this._canvas.width = this._canvas_width * 2;
+      this._canvas.height = this._canvas_height * 2;
+      this._engine.resize(true);
+    } else {
+      this._canvas.width = this._canvas_width;
+      this._canvas.height = this._canvas_height;
     }
 
     this._droneList.forEach(function (drone) {
@@ -1377,9 +1387,9 @@ var runGame, updateGame;
     return game_manager_instance.run();
   };
 
-  updateGame = function () {
+  updateGame = function (fullscreen) {
     if (game_manager_instance) {
-      return game_manager_instance.update();
+      return game_manager_instance.update(fullscreen);
     }
   };
 
