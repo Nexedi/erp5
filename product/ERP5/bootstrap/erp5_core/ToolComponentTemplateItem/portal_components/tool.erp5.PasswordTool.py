@@ -268,7 +268,6 @@ class PasswordTool(BaseTool):
     """
     Reset the password for a given login
     """
-    # BBB: password_confirm: unused argument
     def error(message):
       # BBB: should "raise Redirect" instead of just returning, simplifying
       #      calling code and making mistakes more difficult
@@ -293,6 +292,8 @@ class PasswordTool(BaseTool):
     if user_login is not None and register_user_login != user_login:
       # XXX: not descriptive enough
       return error("Bad login provided.")
+    if password_confirm is not None and password_confirm != password:
+      return error("Password does not match the confirm password.")
     if DateTime() > expiration_date:
       return error("Date has expired.")
     del self._password_request_dict[password_key]
