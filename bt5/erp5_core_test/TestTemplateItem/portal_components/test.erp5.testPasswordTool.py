@@ -230,6 +230,21 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertFalse(list(six.iterkeys(
       self.portal.portal_password._password_request_dict)))
 
+  def test_password_reset_password_and_confirmation_do_not_match(self):
+    self.portal.portal_password.mailPasswordResetRequest(
+      user_login='userA-login', REQUEST=self.portal.REQUEST)
+    reset_key, = list(six.iterkeys(
+      self.portal.portal_password._password_request_dict))
+
+    ret = self.portal.portal_password.changeUserPassword(
+        user_login="userA-login",
+        password="new-password",
+        password_confirm="wrong-password",
+        password_key=reset_key)
+    query_string_param = parse_qsl(urlparse(str(ret)).query)
+    self.assertIn(("portal_status_message", "Password does not match the confirm password."), query_string_param)
+    self.assertIn(("portal_status_level", "error"), query_string_param)
+
   def test_two_concurrent_password_reset(self):
     self._createUser('userB')
     self._assertUserExists('userA-login', 'userA-password')
