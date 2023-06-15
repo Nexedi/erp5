@@ -118,6 +118,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
     self.tic()
 
     (mfrom, mto, mbody), = self.portal.MailHost.getMessageList()
@@ -133,6 +134,7 @@ class TestPasswordTool(ERP5TypeTestCase):
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Password changed."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
     self.tic()
     self._assertUserExists('userA-login', 'new-password')
     self._assertUserDoesNotExists('userA-login', 'userA-password')
@@ -145,6 +147,7 @@ class TestPasswordTool(ERP5TypeTestCase):
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Key not known. Please ask reset password."), query_string_param)
+    self.assertIn(("portal_status_level", "error"), query_string_param)
     self.tic()
     self._assertUserExists('userA-login', 'new-password')
     self._assertUserDoesNotExists('userA-login', 'userA-password')
@@ -154,6 +157,7 @@ class TestPasswordTool(ERP5TypeTestCase):
       user_login='not exist', REQUEST=self.portal.REQUEST)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
     self.tic()
     self.assertFalse(self.portal.MailHost.getMessageList())
 
@@ -162,6 +166,7 @@ class TestPasswordTool(ERP5TypeTestCase):
       user_login='%', REQUEST=self.portal.REQUEST)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
     self.tic()
     self.assertFalse(self.portal.MailHost.getMessageList())
 
@@ -179,6 +184,7 @@ class TestPasswordTool(ERP5TypeTestCase):
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Bad login provided."), query_string_param)
+    self.assertIn(("portal_status_level", "error"), query_string_param)
     self.tic()
     self._assertUserExists('userA-login', 'userA-password')
     self._assertUserExists('userB-login', 'userB-password')
@@ -194,6 +200,7 @@ class TestPasswordTool(ERP5TypeTestCase):
         password_key='wrong key')
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Key not known. Please ask reset password."), query_string_param)
+    self.assertIn(("portal_status_level", "error"), query_string_param)
     self.tic()
 
   def test_password_reset_date_expired(self):
@@ -212,6 +219,7 @@ class TestPasswordTool(ERP5TypeTestCase):
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Date has expired."), query_string_param)
+    self.assertIn(("portal_status_level", "error"), query_string_param)
     self.tic()
 
     self._assertUserExists('userA-login', 'userA-password')
@@ -324,6 +332,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     # For security reasons, the message should always be the same
     self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
 
     # But no mail has been sent
     self.assertFalse(self.portal.MailHost.getMessageList())
@@ -352,6 +361,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     # For security reasons, the message should always be the same
     self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
 
     # But no mail has been sent
     self.assertFalse(self.portal.MailHost.getMessageList())
@@ -381,6 +391,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     # For security reasons, the message should always be the same
     self.assertIn(("portal_status_message", "An email has been sent to you."), query_string_param)
+    self.assertIn(("portal_status_level", "success"), query_string_param)
     # But no mail has been sent
     self.assertFalse(self.portal.MailHost.getMessageList())
 
