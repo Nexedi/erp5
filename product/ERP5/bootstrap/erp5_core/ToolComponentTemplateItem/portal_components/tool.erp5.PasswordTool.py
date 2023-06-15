@@ -41,9 +41,9 @@ from BTrees.OOBTree import OOBTree
 from six.moves.urllib.parse import urlencode
 
 redirect_path = '/login_form'
-def redirect(REQUEST, site_url, message):
+def redirect(REQUEST, site_url, message, level):
   if REQUEST is not None and getattr(REQUEST.RESPONSE, 'redirect', None) is not None:
-    parameter = urlencode({'portal_status_message': message})
+    parameter = urlencode({'portal_status_message': message, 'portal_status_level': level})
     ret_url = '%s%s?%s' % (site_url, redirect_path, parameter)
     return REQUEST.RESPONSE.redirect( ret_url )
   else:
@@ -171,10 +171,13 @@ class PasswordTool(BaseTool):
           "User {user} does not have a valid email address".format(user=user_login)
         )
     if error_encountered:
+      # note that we intentionally use the same msg here regardless of whether the
+      # email was successfully sent or not in order not to leak information about user
+      # existence.
       if batch:
         raise RuntimeError(msg)
       else:
-        return redirect(REQUEST, site_url, msg)
+        return redirect(REQUEST, site_url, msg, 'success')
 
     key = self.getResetPasswordKey(user_login=user_login,
                                    expiration_date=expiration_date)
@@ -222,8 +225,7 @@ class PasswordTool(BaseTool):
                                                             message_text_format=message_text_format,
                                                             event_keyword_argument_dict=event_keyword_argument_dict)
     if not batch:
-      return redirect(REQUEST, site_url,
-                      translateString("An email has been sent to you."))
+      return redirect(REQUEST, site_url, msg, 'success')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'removeExpiredRequests')
   def removeExpiredRequests(self):
@@ -272,7 +274,7 @@ class PasswordTool(BaseTool):
       #      calling code and making mistakes more difficult
       # BBB: should probably not translate message when REQUEST is None
       message = translateString(message)
-      return redirect(REQUEST, site_url, message)
+      return redirect(REQUEST, site_url, message, 'error')
 
     if REQUEST is None:
       REQUEST = get_request()
@@ -303,6 +305,6 @@ class PasswordTool(BaseTool):
     login = portal.unrestrictedTraverse(login_dict['path'])
     login.setPassword(password) # this will raise if password does not match policy
     return redirect(REQUEST, site_url,
-                    translateString("Password changed."))
+                    translateString("Password changed."), 'success')
 
 InitializeClass(PasswordTool)

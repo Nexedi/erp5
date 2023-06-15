@@ -808,7 +808,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference = self.portal.portal_catalog.getResultValue(
       portal_type='System Preference',
       title='Authentication',)
-    # Here we activate the "password should contain usename" policy
+    # Here we activate the "password should contain username" policy
     # as a way to check that password reset checks are done in the
     # context of the login
     preference.setPrefferedForceUsernameCheckInPassword(1)
@@ -856,8 +856,11 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # now with a password complying to the policy
     ret = submit_reset_password_dialog('ok')
     self.assertEqual(httplib.FOUND, ret.getStatus())
-    self.assertTrue(ret.getHeader('Location').endswith(
-    '/login_form?portal_status_message=Password+changed.'))
+    redirect_url = urlparse.urlparse(ret.getHeader("Location"))
+    self.assertEqual(redirect_url.path, '{}/login_form'.format(self.portal.absolute_url_path()))
+    redirect_url_params = urlparse.parse_qsl(redirect_url.query)
+    self.assertIn(('portal_status_message', 'Password changed.'), redirect_url_params)
+    self.assertIn(('portal_status_level', 'success'), redirect_url_params)
 
   def test_PreferenceTool_changePassword_checks_policy(self):
     person = self.createUser(self.id(), password='current')
@@ -918,7 +921,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     # long enough password is accepted
     ret = submit_change_password_dialog('long_enough_password')
-    # When password reset is succesful, user is logged out
+    # When password reset is successful, user is logged out
     self.assertEqual(httplib.FOUND, ret.getStatus())
     self.assertEqual(self.portal.portal_preferences.absolute_url(),
                      ret.getHeader("Location"))
