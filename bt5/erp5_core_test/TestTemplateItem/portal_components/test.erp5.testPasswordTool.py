@@ -130,7 +130,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.changeUserPassword(
         user_login="userA-login",
         password="new-password",
-        password_confirmation="new-password",
+        password_confirm="new-password",
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Password changed."), query_string_param)
@@ -142,7 +142,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.changeUserPassword(
         user_login="userA-login",
         password="new-password",
-        password_confirmation="new-password",
+        password_confirm="new-password",
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Key not known. Please ask reset password."), query_string_param)
@@ -176,7 +176,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.changeUserPassword(
         user_login="userB-login",
         password="new-password",
-        password_confirmation="new-password",
+        password_confirm="new-password",
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Bad login provided."), query_string_param)
@@ -191,7 +191,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.changeUserPassword(
         user_login="userA-login",
         password="new-password",
-        password_confirmation="new-password",
+        password_confirm="new-password",
         password_key='wrong key')
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Key not known. Please ask reset password."), query_string_param)
@@ -209,7 +209,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     ret = self.portal.portal_password.changeUserPassword(
         user_login="userA-login",
         password="new-password",
-        password_confirmation="new-password",
+        password_confirm="new-password",
         password_key=reset_key)
     query_string_param = parse_qsl(urlparse(str(ret)).query)
     self.assertIn(("portal_status_message", "Date has expired."), query_string_param)
@@ -245,7 +245,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="newA",
-                                                   password_confirmation="newA",
+                                                   password_confirm="newA",
                                                    password_key=key_a)
     self.tic()
 
@@ -254,7 +254,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self.portal.portal_password.changeUserPassword(user_login="userB-login",
                                                    password="newB",
-                                                   password_confirmation="newB",
+                                                   password_confirm="newB",
                                                    password_key=key_b)
     self.tic()
 
@@ -292,7 +292,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     # Check that password is not changed if trailing space is not entered
     self.portal.portal_password.changeUserPassword(user_login="userZ-login",
                                                    password="newZ",
-                                                   password_confirmation="newZ",
+                                                   password_confirm="newZ",
                                                    password_key=key_a)
     self.tic()
     self._assertUserExists('userZ-login ', 'passwordZ')
@@ -300,7 +300,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     # Check that password is changed if trailing space is entered
     self.portal.portal_password.changeUserPassword(user_login="userZ-login ",
                                                    password="newZ2",
-                                                   password_confirmation="newZ2",
+                                                   password_confirm="newZ2",
                                                    password_key=key_a)
     self.tic()
     self._assertUserExists('userZ-login ', 'newZ2')
