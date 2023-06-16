@@ -238,7 +238,3 @@ def initialize(context):
                        , visibility=None
                        , icon='www/portal.gif'
                        )
-
-from AccessControl.SecurityInfo import ModuleSecurityInfo
-ModuleSecurityInfo('Products.ERP5Security.ERP5UserManager').declarePublic(
-  'getUserByLogin')
