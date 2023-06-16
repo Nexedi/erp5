@@ -158,7 +158,10 @@ var FixedWingDroneAPI = /** @class */ (function () {
         'altitudeAbs' : _this._mapManager.getMapInfo().start_AMSL +
           drone_position.z,
         'latitude' : drone_position.x,
-        'longitude' : drone_position.y
+        'longitude' : drone_position.y,
+        'yaw': drone.getYaw(),
+        'speed': drone.getAirspeed(),
+        'climbRate': drone.getClimbRate()
       };
       _this._drone_dict_list[_this._id] = drone_info;
       //broadcast drone info using internal msg
