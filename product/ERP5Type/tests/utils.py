@@ -105,6 +105,8 @@ class DummyMailHostMixin(object):
   @staticmethod
   def _decodeMessage(messageText):
     """ Decode message"""
+    if six.PY3 and isinstance(messageText, bytes):
+      messageText = messageText.decode()
     message_text = messageText
     for part in message_from_string(messageText).walk():
       if part.get_content_type() in ['text/plain', 'text/html' ] \
