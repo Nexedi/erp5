@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from App.special_dtml import HTMLFile
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type import IS_ZOPE2
 from Products.PythonScripts.PythonScript import \
   PythonScript as ZopePythonScript
 from Products.ERP5Type.mixin.expression import ExpressionMixin
@@ -71,7 +72,8 @@ class PythonScript(XMLObject, ZopePythonScript, ExpressionMixin('expression')):
     meta_type = 'ERP5 Python Script'
     portal_type = 'Python Script'
     add_permission = Permissions.AddPortalContent
-    zmi_icon = ZopePythonScript.zmi_icon
+    if not IS_ZOPE2:
+      zmi_icon = ZopePythonScript.zmi_icon
 
     # Declarative security
     security = ClassSecurityInfo()
