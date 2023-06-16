@@ -18,6 +18,7 @@
 from six import string_types as basestring
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from AccessControl.AuthEncoding import pw_validate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.PluggableAuthService import \
@@ -57,6 +58,7 @@ class _AuthenticationFailure(Exception):
   etc...)
   """
 
+ModuleSecurityInfo(__name__).declarePublic('getUserByLogin')
 @transactional_cached(lambda portal, *args: args)
 def getUserByLogin(portal, login, exact_match=True):
   if isinstance(login, basestring):
