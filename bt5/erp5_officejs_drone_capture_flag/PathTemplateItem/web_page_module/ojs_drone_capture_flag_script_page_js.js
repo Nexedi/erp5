@@ -21,7 +21,7 @@
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
     FLAG_WEIGHT = 5,
-    SEED = 'asd',
+    SEED = 'flag',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 10,\n' +
@@ -431,7 +431,8 @@
         }
         //flags
         for (i = 0; i < n_flags; i += 1) {
-          random_position = randomPosition(random_seed, options.map_size);
+          //avoid flags near the limits
+          random_position = randomPosition(random_seed, options.map_size * 0.75);
           flag_list.push({
             "position": {
               "x": random_position[0],
