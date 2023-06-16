@@ -31,7 +31,6 @@ var DroneManager = /** @class */ (function () {
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
-    this._leader_id = 0;
     this._API = API; // var API created on AI evel
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
@@ -61,11 +60,6 @@ var DroneManager = /** @class */ (function () {
     // swap y and z axis so z axis represents altitude
     return new BABYLON.Vector3(vector.x, vector.z, vector.y);
   };
-  Object.defineProperty(DroneManager.prototype, "leader_id", {
-    get: function () { return this._leader_id; },
-    enumerable: true,
-    configurable: true
-  });
   Object.defineProperty(DroneManager.prototype, "drone_dict", {
     get: function () { return this._API._drone_dict_list; },
     enumerable: true,
