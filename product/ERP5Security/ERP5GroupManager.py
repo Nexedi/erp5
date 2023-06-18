@@ -83,6 +83,8 @@ class ERP5GroupManager(BasePlugin):
   """ PAS plugin for dynamically adding Groups
   based on Assignments in ERP5
   """
+  _dont_swallow_my_exceptions = True
+
   meta_type = 'ERP5 Group Manager'
 
   security = ClassSecurityInfo()
