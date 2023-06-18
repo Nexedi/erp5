@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>cache_duration</string> </key>
-            <value> <int>86400</int> </value>
+            <value> <int>864000</int> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
