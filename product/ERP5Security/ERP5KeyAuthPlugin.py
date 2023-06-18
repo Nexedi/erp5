@@ -151,7 +151,7 @@ def addERP5KeyAuthPlugin(dispatcher, id, title=None,
 
 class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   """
-    Key authentification PAS plugin which support key authentication in URL.
+    Key authentication PAS plugin which support key authentication in URL.
 
     <ERP5_Root>/web_page_module/1?__ac_key=207221200213146153166
 
@@ -309,7 +309,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
   security.declarePrivate('resetCredentials')
   def resetCredentials(self, request, response):
-    """Expire cookies of authentification """
+    """Expire cookies of authentication """
     response.expireCookie(self.cookie_name, path='/')
     response.expireCookie(self.default_cookie_name, path='/')
 
@@ -319,7 +319,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
   security.declarePrivate('authenticateCredentials')
   def authenticateCredentials( self, credentials ):
-    """Authentificate with credentials"""
+    """Authenticate with credentials"""
     key = credentials.get('key', None)
     if key != None:
       login = self.decrypt(key)
@@ -377,9 +377,9 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
         LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
         return None
 
-  ################################
-  # Properties for ZMI managment #
-  ################################
+  #################################
+  # Properties for ZMI management #
+  #################################
 
   #'Edit' option form
   manage_editERP5KeyAuthPluginForm = PageTemplateFile(
@@ -393,7 +393,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     """Edit the object"""
     error_message = ''
 
-    #Test paramaeters
+    #Test parameters
     if "__ac_key" in [cookie_name, default_cookie_name]:
       raise ValueError("Cookie name must be different of __ac_key")
 
