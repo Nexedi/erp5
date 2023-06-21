@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,11 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>babylonjs.gadget.html</string> </value>
+            <value> <string>babylonjs.gadget.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,17 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_babylonjs_gadget_html</string> </value>
+            <value> <string>rjs_babylonjs_gadget_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>BabylonJS Gadget</string> </value>
+            <value> <string>BabylonJS Gadget CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -171,7 +169,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -195,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477489.54</float>
+                              <float>1687362069.7</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1009.7128.40255.59750</string> </value>
+                      <value> <string>1009.15757.23873.187</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1687362133.47</float>
+                              <float>1687362608.96</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -291,11 +289,13 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <unicode>zope</unicode> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -307,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -327,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1662477148.79</float>
+                              <float>1687362043.51</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
