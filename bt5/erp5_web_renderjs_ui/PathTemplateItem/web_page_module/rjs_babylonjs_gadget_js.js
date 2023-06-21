@@ -264,7 +264,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
 
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
 
     .declareMethod('render', function render(options) {
       var gadget = this,
@@ -275,6 +275,12 @@
       button.className = 'ui-icon-expand ui-btn-icon-notext';
       button.addEventListener('click', function (event) {
         game_manager.fullscreen();
+        gadget.triggerMaximize(fullscreen);
+        if (fullscreen) {
+          container.classList.add("fullscreen");
+        } else {
+          container.classList.remove("fullscreen");
+        }
       });
       button.style.visibility = 'hidden';
       button.id = "fullscreen";
