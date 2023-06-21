@@ -260,41 +260,33 @@
   };
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // Acquired methods
-    /////////////////////////////////////////////////////////////////
 
     .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
-
     .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         container = domsugar('div'),
-        messages = domsugar('div'),
         button = domsugar('div');
       button.className = 'ui-icon-expand ui-btn-icon-notext';
       button.addEventListener('click', function (event) {
         game_manager.fullscreen();
         gadget.triggerMaximize(fullscreen);
-        if (fullscreen) {
-          container.classList.add("fullscreen");
-        } else {
-          container.classList.remove("fullscreen");
-        }
+        container.classList.toggle("fullscreen");
       });
       button.style.visibility = 'hidden';
       button.id = "fullscreen";
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
-      messages.id = 'messages';
-      messages.className = 'messages';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, button, container, messages]);
+      domsugar(gadget.element, [loading, button, container]);
       canvas.width = options.width;
       canvas.height = options.height;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
+      options.game_parameters.fullscreen = {};
+      options.game_parameters.fullscreen.width = window.innerWidth;
+      options.game_parameters.fullscreen.height = window.innerHeight;
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
         game_parameters: options.game_parameters
