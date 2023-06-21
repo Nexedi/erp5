@@ -575,7 +575,7 @@
           var a, blob, div, key, log, log_content, aux;
           i = 0;
           div = domsugar('div', { text: result.message });
-          document.querySelector('.container').appendChild(div);
+          document.querySelector('.container').parentNode.appendChild(div);
           for (key in result.content) {
             if (result.content.hasOwnProperty(key)) {
               log_content = result.content[key].join('\n').replaceAll(",", ";");
@@ -601,12 +601,12 @@
               div = domsugar('div', [a]);
               a.dataset.downloadurl =  ['text/plain', a.download,
                                         a.href].join(':');
-              document.querySelector('.container').appendChild(div);
-              document.querySelector('.container').appendChild(log);
+              document.querySelector('.container').parentNode.appendChild(div);
+              document.querySelector('.container').parentNode.appendChild(log);
               i += 1;
               if (i === DRONE_LIST.length) {
                 aux = domsugar('div', { text: "Enemy drones logs:" });
-                document.querySelector('.container').appendChild(aux);
+                document.querySelector('.container').parentNode.appendChild(aux);
               }
             }
           }
