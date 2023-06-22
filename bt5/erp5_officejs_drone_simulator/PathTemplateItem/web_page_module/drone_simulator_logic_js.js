@@ -644,9 +644,9 @@ var GameManager = /** @class */ (function () {
 
     if (fullscreen) {
       //Only resize if size changes
-      if (this._canvas.width !== this._canvas_width * 2) {
-        this._canvas.width = this._canvas_width * 2;
-        this._canvas.height = this._canvas_height * 2;
+      if (this._canvas.width !== GAMEPARAMETERS.fullscreen.width) {
+        this._canvas.width = GAMEPARAMETERS.fullscreen.width;
+        this._canvas.height = GAMEPARAMETERS.fullscreen.height;
       }
     } else {
       if (this._canvas.width !== this._canvas_width) {
