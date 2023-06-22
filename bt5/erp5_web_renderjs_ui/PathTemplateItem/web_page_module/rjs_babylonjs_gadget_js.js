@@ -14,7 +14,7 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen, game_manager, fullscreen = false;
+    ]), game_result, canvas, offscreen, game_manager, container, fullscreen = false;
 
   //////////////////////////////////////////
   // Webworker
@@ -212,7 +212,7 @@
                   var loading =
                       context._gadget.element.querySelector('#loading');
                   if (loading) { loading.innerHTML = ""; }
-                  context._gadget.element.querySelector('#fullscreen')
+                  context._gadget.element.querySelector('#maximize')
                     .style.visibility = 'visible';
                 }
                 context.unpause();
@@ -262,24 +262,28 @@
   rJS(window)
 
     .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
+    .allowPublicAcquisition('triggerMaximize', function (param_list) {
+      var gadget = this;
+      game_manager.fullscreen();
+      container.classList.toggle("fullscreen");
+      return this.triggerMaximize.apply(this, param_list)
+        .push(undefined, function () {
+          game_manager.fullscreen();
+          container.classList.toggle("fullscreen");
+        });
+    })
     .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
-        container = domsugar('div'),
-        button = domsugar('div');
-      button.className = 'ui-icon-expand ui-btn-icon-notext';
-      button.addEventListener('click', function (event) {
-        game_manager.fullscreen();
-        gadget.triggerMaximize(fullscreen);
-        container.classList.toggle("fullscreen");
-      });
-      button.style.visibility = 'hidden';
-      button.id = "fullscreen";
+        maximize = domsugar('div');
+      container = domsugar('div');
+      maximize.id = 'maximize';
+      maximize.style.visibility = 'hidden';
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, button, container]);
+      domsugar(gadget.element, [loading, maximize, container]);
       canvas.width = options.width;
       canvas.height = options.height;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
@@ -290,6 +294,14 @@
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
         game_parameters: options.game_parameters
+      });
+    })
+    .onStateChange(function () {
+      var gadget = this, div_max = gadget.element.querySelector('#maximize');
+      return gadget.declareGadget("gadget_button_maximize.html", {
+        scope: 'maximize',
+        element: div_max,
+        sandbox: 'public'
       });
     })
     .declareMethod('getContent', function getContent() {
@@ -309,6 +321,7 @@
       game_manager = new DroneGameManager(gadget);
       return game_manager.play(options)
       .push(function () {
+        gadget.element.querySelector('#maximize').style.visibility = 'hidden';
         return game_manager.result();
       });
     });
