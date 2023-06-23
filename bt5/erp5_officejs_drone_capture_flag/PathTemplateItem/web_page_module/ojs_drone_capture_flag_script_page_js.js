@@ -111,8 +111,6 @@
     LOG = true,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [],
-    WIDTH = 680,
-    HEIGHT = 340,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
       'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
@@ -544,8 +542,7 @@
                   "type": "GadgetField",
                   "url": "babylonjs.gadget.html",
                   "sandbox": "public",
-                  "renderjs_extra": '{"autorun": false, "width": ' + WIDTH + ', ' +
-                    '"height": ' + HEIGHT + ', ' +
+                  "renderjs_extra": '{"autorun": false, ' +
                     '"logic_file_list": ' + JSON.stringify(LOGIC_FILE_LIST) + ', ' +
                     '"game_parameters": ' + JSON.stringify(game_parameters_json) +
                     '}'
