@@ -111,7 +111,7 @@
     LOG = true,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [],
-    WIDTH = 680,
+    WIDTH = (window.innerWidth > 680) ? 680 : window.innerWidth * 0.96,
     HEIGHT = 340,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
