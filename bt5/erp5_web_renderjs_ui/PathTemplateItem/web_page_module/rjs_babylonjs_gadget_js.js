@@ -14,7 +14,7 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen, game_manager, container, fullscreen = false;
+    ]), game_result, canvas, offscreen, game_manager, container, background, fullscreen = false;
 
   //////////////////////////////////////////
   // Webworker
@@ -266,24 +266,30 @@
       var gadget = this;
       game_manager.fullscreen();
       container.classList.toggle("fullscreen");
+      background.style.visibility = 'visible';
       return this.triggerMaximize.apply(this, param_list)
         .push(undefined, function () {
           game_manager.fullscreen();
           container.classList.toggle("fullscreen");
+          background.style.visibility = 'hidden';
         });
     })
     .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         maximize = domsugar('div');
+      background = domsugar('div');
       container = domsugar('div');
       maximize.id = 'maximize';
       maximize.style.visibility = 'hidden';
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
+      background.id = "background";
+      background.className = 'fullscreen-background';
+      background.style.visibility = 'hidden';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, maximize, container]);
+      domsugar(gadget.element, [loading, maximize, background, container]);
       canvas.width = options.width;
       canvas.height = options.height;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
@@ -293,7 +299,7 @@
       if (window.innerHeight < window.innerWidth) {
         options.game_parameters.fullscreen.height = window.innerHeight;
       } else {
-        options.game_parameters.fullscreen.height = window.innerWidth;
+        options.game_parameters.fullscreen.height = window.innerWidth / 2;
       }
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
