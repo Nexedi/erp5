@@ -272,6 +272,7 @@
           game_manager.fullscreen();
           container.classList.toggle("fullscreen");
           background.style.visibility = 'hidden';
+          container.scrollIntoView();
         });
     })
     .declareMethod('render', function render(options) {
@@ -315,6 +316,7 @@
       });
     })
     .declareMethod('getContent', function getContent() {
+      container.scrollIntoView();
       var gadget = this;
       return gadget.runGame({
         logic_file_list: gadget.state.logic_file_list,
