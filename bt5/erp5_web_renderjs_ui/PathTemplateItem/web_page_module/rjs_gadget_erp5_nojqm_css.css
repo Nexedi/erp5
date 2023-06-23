@@ -1834,6 +1834,14 @@ div[data-gadget-scope="babylonjs"] .fullscreen {
   left: 0;
   top: 30pt;
 }
+div[data-gadget-scope="babylonjs"] .fullscreen-background {
+  position: fixed;
+  left: 0;
+  top: 30pt;
+  background-color: #FFFFFF;
+  width: 100vw;
+  height: calc(100vh -  30pt );
+}
 /**********************************************
 * Front page
 **********************************************/

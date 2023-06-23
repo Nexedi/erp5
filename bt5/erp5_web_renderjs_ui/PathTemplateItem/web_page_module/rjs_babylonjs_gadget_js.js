@@ -14,7 +14,11 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen, game_manager, container, fullscreen = false;
+    ]), game_result, canvas, offscreen, game_manager, container, background,
+    fullscreen = false,
+    //TODO. Drop hardcoded values
+    WIDTH = (window.innerWidth > 680) ? 680 : window.innerWidth * 0.96,
+    HEIGHT = 340;
 
   //////////////////////////////////////////
   // Webworker
@@ -266,31 +270,42 @@
       var gadget = this;
       game_manager.fullscreen();
       container.classList.toggle("fullscreen");
+      background.style.visibility = 'visible';
       return this.triggerMaximize.apply(this, param_list)
         .push(undefined, function () {
           game_manager.fullscreen();
           container.classList.toggle("fullscreen");
+          background.style.visibility = 'hidden';
+          container.scrollIntoView();
         });
     })
     .declareMethod('render', function render(options) {
       var gadget = this,
         loading = domsugar('span', ["Loading..."]),
         maximize = domsugar('div');
+      background = domsugar('div');
       container = domsugar('div');
       maximize.id = 'maximize';
       maximize.style.visibility = 'hidden';
       canvas = domsugar('canvas');
       loading.id = "loading";
       container.className = 'container';
+      background.id = "background";
+      background.className = 'fullscreen-background';
+      background.style.visibility = 'hidden';
       container.appendChild(canvas);
-      domsugar(gadget.element, [loading, maximize, container]);
-      canvas.width = options.width;
-      canvas.height = options.height;
+      domsugar(gadget.element, [loading, maximize, background, container]);
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
       options.game_parameters.fullscreen = {};
       options.game_parameters.fullscreen.width = window.innerWidth;
-      options.game_parameters.fullscreen.height = window.innerHeight;
+      if (window.innerHeight < window.innerWidth) {
+        options.game_parameters.fullscreen.height = window.innerHeight;
+      } else {
+        options.game_parameters.fullscreen.height = window.innerWidth * 0.6;
+      }
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
         game_parameters: options.game_parameters
@@ -305,6 +320,7 @@
       });
     })
     .declareMethod('getContent', function getContent() {
+      container.scrollIntoView();
       var gadget = this;
       return gadget.runGame({
         logic_file_list: gadget.state.logic_file_list,
