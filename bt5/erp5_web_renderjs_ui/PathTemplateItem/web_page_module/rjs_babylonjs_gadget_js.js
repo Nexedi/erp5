@@ -290,7 +290,11 @@
       offscreen = canvas.transferControlToOffscreen();
       options.game_parameters.fullscreen = {};
       options.game_parameters.fullscreen.width = window.innerWidth;
-      options.game_parameters.fullscreen.height = window.innerHeight;
+      if (window.innerHeight < window.innerWidth) {
+        options.game_parameters.fullscreen.height = window.innerHeight;
+      } else {
+        options.game_parameters.fullscreen.height = window.innerWidth;
+      }
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
         game_parameters: options.game_parameters
