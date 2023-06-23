@@ -14,7 +14,11 @@
     'offsetY', 'pageY', 'relatedTarget', 'returnValue', 'screenX', 'screenY',
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
-    ]), game_result, canvas, offscreen, game_manager, container, background, fullscreen = false;
+    ]), game_result, canvas, offscreen, game_manager, container, background,
+    fullscreen = false,
+    //TODO. Drop hardcoded values
+    WIDTH = (window.innerWidth > 680) ? 680 : window.innerWidth * 0.96,
+    HEIGHT = 340;
 
   //////////////////////////////////////////
   // Webworker
@@ -291,8 +295,8 @@
       background.style.visibility = 'hidden';
       container.appendChild(canvas);
       domsugar(gadget.element, [loading, maximize, background, container]);
-      canvas.width = options.width;
-      canvas.height = options.height;
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
       options.game_parameters.fullscreen = {};
@@ -300,7 +304,7 @@
       if (window.innerHeight < window.innerWidth) {
         options.game_parameters.fullscreen.height = window.innerHeight;
       } else {
-        options.game_parameters.fullscreen.height = window.innerWidth / 2;
+        options.game_parameters.fullscreen.height = window.innerWidth * 0.6;
       }
       return gadget.changeState({
         logic_file_list: options.logic_file_list,
