@@ -286,12 +286,6 @@ var DroneManager = /** @class */ (function () {
     }
     return null;
   };
-  DroneManager.prototype.setAltitude = function (altitude) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setAltitude(this, altitude);
-  };
   /**
    * Make the drone loiter (circle with a set radius)
    */
