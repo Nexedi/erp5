@@ -134,16 +134,21 @@ var DroneManager = /** @class */ (function () {
    * Set a target point to move
    */
   DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    //convert real geo-coordinates to virtual x-y coordinates
-    this._targetCoordinates = this._API.processCoordinates(x, y, z);
-    return this._API.internal_setTargetCoordinates(
-      this,
-      this._targetCoordinates
-    );
+    this._internal_setTargetCoordinates(x, y, z);
   };
+  DroneManager.prototype._internal_setTargetCoordinates =
+    function (x, y, z, radius) {
+      if (!this._canPlay) {
+        return;
+      }
+      //convert real geo-coordinates to virtual x-y coordinates
+      this._targetCoordinates = this._API.processCoordinates(x, y, z);
+      return this._API.internal_setTargetCoordinates(
+        this,
+        this._targetCoordinates,
+        radius
+      );
+    };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
     if (this._controlMesh) {
@@ -289,11 +294,8 @@ var DroneManager = /** @class */ (function () {
   /**
    * Make the drone loiter (circle with a set radius)
    */
-  DroneManager.prototype.loiter = function (radius) {
-    if (!this._canPlay) {
-      return;
-    }
-    this._API.set_loiter_mode(radius);
+  DroneManager.prototype.loiter = function (x, y, z, radius) {
+    this._internal_setTargetCoordinates(x, y, z, radius);
   };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters) {
@@ -469,7 +471,9 @@ var MapManager = /** @class */ (function () {
       mul = k * R;
 
     return {
-      "x": mul * (this.ref_cos_lat * sin_lat - this.ref_sin_lat * cos_lat * cos_d_lon),
+      "x": mul * (
+        this.ref_cos_lat * sin_lat - this.ref_sin_lat * cos_lat * cos_d_lon
+      ),
       "y": mul * cos_lat * Math.sin(lon_rad - this.ref_lon_rad)
     };
   };
