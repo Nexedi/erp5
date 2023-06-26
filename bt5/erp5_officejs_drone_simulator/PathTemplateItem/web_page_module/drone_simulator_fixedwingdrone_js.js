@@ -264,11 +264,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
                                                 drone.rotation.z + y);
   };
 
-  FixedWingDroneAPI.prototype.setAltitude = function (drone, altitude) {
-    drone._targetCoordinates.z = altitude - this._map_dict.start_AMSL;
-    this._last_target = drone._targetCoordinates;
-  };
-
   FixedWingDroneAPI.prototype.setSpeed = function (drone, speed) {
     this._targetSpeed = Math.max(
       Math.min(speed, this.getMaxSpeed()),
