@@ -582,6 +582,11 @@ else:
   allow_full_write(pd.MultiIndex)
   allow_full_write(pd.Index)
 
+# pytz exceptions are sometimes needed when using pandas
+# see https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.tz_localize.html
+for e in 'UnknownTimeZoneError InvalidTimeError AmbiguousTimeError NonExistentTimeError'.split():
+  ModuleSecurityInfo('pytz').declarePublic(e)
+
 import ipaddress
 allow_module('ipaddress')
 allow_type(ipaddress.IPv4Address)

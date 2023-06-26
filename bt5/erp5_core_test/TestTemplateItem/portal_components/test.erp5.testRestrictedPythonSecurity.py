@@ -851,6 +851,62 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         return ip_interface(u'2a01:cb14:818:0:7312:e251:f251:ffbe').with_prefixlen
         ''')
 
+  def testPytzNonExistentTimeError(self):
+    """
+      Test if we can import NonExistentTimeError from the
+      pytz package. This is important to catch exceptions
+      which can be raised by pandas tz_localize, see:
+
+      https://pandas.pydata.org/pandas-docs/version/2.0.3/reference/api/pandas.Series.tz_localize.html
+
+      Test data/structure taken from
+
+      https://github.com/pandas-dev/pandas/blob/c1f673b71d2a4a7d11cb05d4803f279914c543d4/pandas/tests/scalar/timestamp/test_timezones.py#L124-L141
+    """
+    self.createAndRunScript(
+      '''
+      import pandas as pd
+      import pytz
+      ts = pd.Timestamp("2015-03-08 02:00")
+      try:
+        ts.tz_localize("US/Eastern")
+      except pytz.NonExistentTimeError:
+        return "not existent time error"
+      ''',
+      expected="not existent time error"
+    )
+
+  def testPytzExceptions(self):
+    """
+      Test that all pytz exceptions can be used in restricted python.
+      All of them are very simple classes that can't harm the system.
+    """
+    self.createAndRunScript(
+      '''
+      import pytz
+      c = 0
+      for e in 'UnknownTimeZoneError InvalidTimeError AmbiguousTimeError NonExistentTimeError'.split():
+        getattr(pytz, e)
+        c += 1
+      return c
+      ''',
+      expected=4,
+    )
+
+  def testPytzProhibitedObjects(self):
+    """
+      Test that prohibited objects of the pytz module can't be
+      used within restricted python.
+    """
+    self.assertRaises(
+      ZopeGuardsUnauthorized,
+      self.createAndRunScript,
+      '''
+      import pytz
+      pytz.timezone
+      '''
+    )
+
 
 def add_tests(suite, module):
   if hasattr(module, 'test_suite'):
