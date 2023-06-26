@@ -164,7 +164,7 @@ class Alarm(XMLObject, PeriodicityMixin):
           activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
-        func_code = method.__code__
+        func_code = getattr(method, '__code__', None)
         if func_code is None: # BBB Zope2
           func_code = method.func_code
         try:
