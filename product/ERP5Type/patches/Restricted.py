@@ -582,6 +582,14 @@ else:
   allow_full_write(pd.MultiIndex)
   allow_full_write(pd.Index)
 
+# pytz is sometimes needed when using pandas
+import pytz
+allow_module('pytz')
+allow_module('pytz.exceptions')
+# We use 'allow_type', 'cause cls is new style:
+#   https://github.com/stub42/pytz/blob/release_2022.7/src/pytz/exceptions.py#L53
+allow_class(pytz.exceptions.NonExistentTimeError)
+
 import ipaddress
 allow_module('ipaddress')
 allow_type(ipaddress.IPv4Address)
