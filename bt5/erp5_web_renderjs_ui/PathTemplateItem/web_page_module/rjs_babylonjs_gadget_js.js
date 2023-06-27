@@ -15,7 +15,7 @@
     'shiftKey', 'timeStamp', 'type', 'which', 'x', 'wheelDelta', 'wheelDeltaX',
     'wheelDeltaY', 'y', 'deltaX', 'deltaY', 'deltaZ', 'deltaMode'
     ]), game_result, canvas, offscreen, game_manager, container, background,
-    fullscreen = false,
+    fullscreen = false, fullscreen_delay,
     //TODO. Drop hardcoded values
     WIDTH = (window.innerWidth > 680) ? 680 : window.innerWidth * 0.96,
     HEIGHT = 340;
@@ -122,7 +122,13 @@
       return game_result;
     },
     fullscreen: function fullScreenGameManager() {
-      fullscreen = !fullscreen;
+      return new RSVP.Queue()
+        .push(function () {
+          fullscreen = !fullscreen;
+        })
+        .push(function () {
+          return RSVP.delay(fullscreen_delay);
+        });
     },
     play: function startGameManager(options) {
       if (this.hasOwnProperty('loop_promise')) {
@@ -268,15 +274,22 @@
     .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
     .allowPublicAcquisition('triggerMaximize', function (param_list) {
       var gadget = this;
-      game_manager.fullscreen();
-      container.classList.toggle("fullscreen");
-      background.style.visibility = 'visible';
-      return this.triggerMaximize.apply(this, param_list)
-        .push(undefined, function () {
-          game_manager.fullscreen();
+      return new RSVP.Queue()
+        .push(function () {
+          return game_manager.fullscreen();
+        })
+        .push(function () {
           container.classList.toggle("fullscreen");
-          background.style.visibility = 'hidden';
-          container.scrollIntoView();
+          background.style.visibility = 'visible';
+          return gadget.triggerMaximize.apply(gadget, param_list);
+        })
+        .push(undefined, function () {
+          return game_manager.fullscreen()
+            .push(function () {
+              container.classList.toggle("fullscreen");
+              background.style.visibility = 'hidden';
+              container.scrollIntoView();
+            });
         });
     })
     .declareMethod('render', function render(options) {
@@ -299,6 +312,7 @@
       canvas.height = HEIGHT;
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
+      fullscreen_delay = 6.5 * options.game_parameters.simulation_speed + 40;
       options.game_parameters.fullscreen = {};
       options.game_parameters.fullscreen.width = window.innerWidth;
       if (window.innerHeight < window.innerWidth) {
