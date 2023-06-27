@@ -327,6 +327,17 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
+                "my_flag_weight": {
+                  "description": "",
+                  "title": "Flag Weight",
+                  "default": FLAG_WEIGHT,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "flag_weight",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
                 "my_number_of_drones": {
                   "description": "",
                   "title": "Number of drones",
@@ -361,7 +372,7 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_start_AMSL"]]
+                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_flag_weight"], ["my_start_AMSL"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -489,7 +500,7 @@
         "map_size": parseFloat(options.map_size),
         "height": parseInt(options.map_height, 10),
         "start_AMSL": parseFloat(options.start_AMSL),
-        "flag_weight": FLAG_WEIGHT,
+        "flag_weight": parseInt(options.flag_weight, 10),
         "flag_list": [],
         "obstacle_list" : [],
         "drones": {
