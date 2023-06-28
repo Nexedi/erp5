@@ -57,7 +57,10 @@
         this.element.classList.toggle('editor-maximize');
       }
       return this.triggerMaximize.apply(this, param_list)
-        .push(undefined, function () {
+        .push(undefined, function (error) {
+           if (!(error instanceof RSVP.CancellationError)) {
+             throw error;
+           }
           if (gadget.element.classList.contains('editor-maximize')) {
             gadget.element.classList.remove('editor-maximize');
           }
