@@ -283,7 +283,10 @@
           background.style.visibility = 'visible';
           return gadget.triggerMaximize.apply(gadget, param_list);
         })
-        .push(undefined, function () {
+        .push(undefined, function (error) {
+          if (!(error instanceof RSVP.CancellationError)) {
+            throw error;
+          }
           return game_manager.fullscreen()
             .push(function () {
               container.classList.toggle("fullscreen");
