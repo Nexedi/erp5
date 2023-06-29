@@ -316,6 +316,7 @@
       // https://doc.babylonjs.com/divingDeeper/scene/offscreenCanvas
       offscreen = canvas.transferControlToOffscreen();
       fullscreen_delay = 6.5 * options.game_parameters.simulation_speed + 40;
+      fullscreen_delay = 60; //TODO find a good calculation for this
       options.game_parameters.fullscreen = {};
       options.game_parameters.fullscreen.width = window.innerWidth;
       if (window.innerHeight < window.innerWidth) {
