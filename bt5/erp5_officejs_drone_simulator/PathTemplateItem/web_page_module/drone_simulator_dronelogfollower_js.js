@@ -62,15 +62,13 @@ var DroneLogAPI = /** @class */ (function () {
       timestamp = parseInt(splitted_log_entry[0], 10);
       lat = parseFloat(splitted_log_entry[1]);
       lon = parseFloat(splitted_log_entry[2]);
-      x = this._mapManager.longitudToX(lon, map_dict.map_size);
-      y = this._mapManager.latitudeToY(lat, map_dict.map_size);
-      position = this._mapManager.normalize(x, y, map_dict);
+      position = this._mapManager.toLocalCoordinates(lat, lon);
       height = parseFloat(splitted_log_entry[4]);
       if (height < min_height) {
         height = min_height;
       }
-      converted_log_point_list.push([position[0],
-                                    position[1],
+      converted_log_point_list.push([position.x,
+                                    position.y,
                                     height, timestamp / time_offset]);
     }
     this._flight_parameters.converted_log_point_list = converted_log_point_list;
