@@ -362,18 +362,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (isNaN(lat) || isNaN(lon) || isNaN(z)) {
       throw new Error('Target coordinates must be numbers');
     }
-    var x = this._mapManager.longitudToX(lon, this._map_dict.width),
-      y = this._mapManager.latitudeToY(lat, this._map_dict.depth),
-      position = this._mapManager.normalize(x, y, this._map_dict),
-      processed_coordinates;
+    var processed_coordinates = this._mapManager.toLocalCoordinates(lat, lon);
     if (z > this._map_dict.start_AMSL) {
       z -= this._map_dict.start_AMSL;
     }
-    processed_coordinates = {
-      x: position[0],
-      y: position[1],
-      z: z
-    };
+    processed_coordinates.z = z;
     //this._last_altitude_point_reached = -1;
     //this.takeoff_path = [];
     return processed_coordinates;
