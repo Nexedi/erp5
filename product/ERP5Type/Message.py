@@ -96,6 +96,8 @@ class Message(Persistent):
   def __init__(self, domain=None, message='',
                mapping=None, default=None):
     self.message = message
+    if mapping is not None:
+      assert isinstance(mapping, dict)
     self.mapping = mapping
     self.domain = domain
     if default is None:
