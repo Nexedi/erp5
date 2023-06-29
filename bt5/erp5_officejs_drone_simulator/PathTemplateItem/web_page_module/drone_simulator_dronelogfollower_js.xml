@@ -246,7 +246,11 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
+<<<<<<< HEAD
                       <value> <string>1006.43901.65103.9898</string> </value>
+=======
+                      <value> <string>1009.27112.31386.24968</string> </value>
+>>>>>>> 928ec4f23a (erp5_officejs_drone_simulator: update API)
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +270,11 @@
                           </tuple>
                           <state>
                             <tuple>
+<<<<<<< HEAD
                               <float>1677599947.8</float>
+=======
+                              <float>1688043479.22</float>
+>>>>>>> 928ec4f23a (erp5_officejs_drone_simulator: update API)
                               <string>UTC</string>
                             </tuple>
                           </state>

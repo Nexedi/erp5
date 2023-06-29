@@ -438,10 +438,10 @@
                   ["my_map_height"]]
               ], [
                 "right",
-                [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                  ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
-                  ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
-                  ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
+                [["my_start_AMSL"], ["my_drone_min_speed"], ["my_drone_speed"],
+                  ["my_drone_max_speed"], ["my_drone_max_acceleration"],
+                  ["my_drone_max_deceleration"], ["my_drone_max_roll"], ["my_drone_min_pitch"],
+                  ["my_drone_max_pitch"], ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
               ], [
                 "bottom",
                 [["my_script"]]

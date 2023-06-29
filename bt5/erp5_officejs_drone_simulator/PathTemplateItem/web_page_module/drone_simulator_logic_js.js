@@ -31,7 +31,6 @@ var DroneManager = /** @class */ (function () {
     this._scene = scene;
     this._canUpdate = true;
     this._id = id;
-    this._leader_id = 0;
     this._API = API; // var API created on AI evel
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
@@ -61,11 +60,6 @@ var DroneManager = /** @class */ (function () {
     // swap y and z axis so z axis represents altitude
     return new BABYLON.Vector3(vector.x, vector.z, vector.y);
   };
-  Object.defineProperty(DroneManager.prototype, "leader_id", {
-    get: function () { return this._leader_id; },
-    enumerable: true,
-    configurable: true
-  });
   Object.defineProperty(DroneManager.prototype, "drone_dict", {
     get: function () { return this._API._drone_dict_list; },
     enumerable: true,
@@ -140,16 +134,21 @@ var DroneManager = /** @class */ (function () {
    * Set a target point to move
    */
   DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
-    if (!this._canPlay) {
-      return;
-    }
-    //convert real geo-coordinates to virtual x-y coordinates
-    this._targetCoordinates = this._API.processCoordinates(x, y, z);
-    return this._API.internal_setTargetCoordinates(
-      this,
-      this._targetCoordinates
-    );
+    this._internal_setTargetCoordinates(x, y, z);
   };
+  DroneManager.prototype._internal_setTargetCoordinates =
+    function (x, y, z, radius) {
+      if (!this._canPlay) {
+        return;
+      }
+      //convert real geo-coordinates to virtual x-y coordinates
+      this._targetCoordinates = this._API.processCoordinates(x, y, z);
+      return this._API.internal_setTargetCoordinates(
+        this,
+        this._targetCoordinates,
+        radius
+      );
+    };
   DroneManager.prototype.internal_update = function (delta_time) {
     var context = this;
     if (this._controlMesh) {
@@ -194,7 +193,7 @@ var DroneManager = /** @class */ (function () {
     }
     return this._API.setStartingPosition(this, x, y, z);
   };
-  DroneManager.prototype.setSpeed = function (speed) {
+  DroneManager.prototype.setAirSpeed = function (speed) {
     if (!this._canPlay) {
       return;
     }
@@ -292,20 +291,11 @@ var DroneManager = /** @class */ (function () {
     }
     return null;
   };
-  DroneManager.prototype.setAltitude = function (altitude) {
-    if (!this._canPlay) {
-      return;
-    }
-    return this._API.setAltitude(this, altitude);
-  };
   /**
    * Make the drone loiter (circle with a set radius)
    */
-  DroneManager.prototype.loiter = function (radius) {
-    if (!this._canPlay) {
-      return;
-    }
-    this._API.set_loiter_mode(radius);
+  DroneManager.prototype.loiter = function (x, y, z, radius) {
+    this._internal_setTargetCoordinates(x, y, z, radius);
   };
   DroneManager.prototype.getFlightParameters = function () {
     if (this._API.getFlightParameters) {
@@ -316,7 +306,7 @@ var DroneManager = /** @class */ (function () {
   DroneManager.prototype.getYaw = function () {
     return this._API.getYaw(this);
   };
-  DroneManager.prototype.getSpeed = function () {
+  DroneManager.prototype.getAirSpeed = function () {
     return this._speed;
   };
   DroneManager.prototype.getGroundSpeed = function () {
