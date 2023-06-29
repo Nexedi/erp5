@@ -208,6 +208,9 @@ var DroneLogAPI = /** @class */ (function () {
   DroneLogAPI.prototype.exit = function (drone) {
     return;
   };
+  DroneLogAPI.prototype.set_loiter_mode = function (loiter) {
+    return;
+  };
 
   return DroneLogAPI;
 }());
