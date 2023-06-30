@@ -614,8 +614,10 @@
               document.querySelector('.container').parentNode.appendChild(log);
               i += 1;
               if (i === DRONE_LIST.length) {
-                aux = domsugar('div', { text: "Enemy drones logs:" });
-                document.querySelector('.container').parentNode.appendChild(aux);
+                break;
+                //Do not show enemy drone logs for now
+                /*aux = domsugar('div', { text: "Enemy drones logs:" });
+                document.querySelector('.container').parentNode.appendChild(aux);*/
               }
             }
           }
