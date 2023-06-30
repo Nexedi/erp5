@@ -28,25 +28,33 @@
       '  DODGE_DISTANCE = 50;\n' +
       '\n' +
       'function distance(a, b) {\n' +
-      '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
+      '  var R = 6371e3, // meters\n' +
+      '    la1 = a.x * Math.PI / 180, // lat, lon in radians\n' +
+      '    la2 = b.x * Math.PI / 180,\n' +
+      '    lo1 = a.y * Math.PI / 180,\n' +
+      '    lo2 = b.y * Math.PI / 180,\n' +
+      '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
+      '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
+      '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
+      '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
       '  me.direction_set = false;\n' +
       '  me.dodging = false;\n' +
-      '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
       'me.onGetMsg = function (msg) {\n' +
       '  if (msg && msg.flag_positions) {\n' +
       '    me.flag_positions = msg.flag_positions\n' +
+      '    me.next_checkpoint = me.id % me.flag_positions.length;\n' +
       '  }\n' +
       '};\n' +
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
       '  if (!me.flag_positions) return;\n' +
       '  if (me.dodging) {\n' +
-      '    me.current_position = me.getCurrentPosition(true);\n' +
+      '    me.current_position = me.getCurrentPosition();\n' +
       '    var dist = distance(\n' +
       '      me.current_position,\n' +
       '      me.dodging.position\n' +
@@ -67,9 +75,9 @@
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
+      '        me.flag_positions[me.next_checkpoint].x,\n' +
+      '        me.flag_positions[me.next_checkpoint].y,\n' +
+      '        me.flag_positions[me.next_checkpoint].z + me.id\n' +
       '      );\n' +
       //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -83,21 +91,21 @@
       '      me.dodging = drone_view.obstacles[0];\n' +
       '      me.direction_set = false;\n' +
       '      var random = Math.random() < 0.5, dodge_point = {};\n' +
-      '      Object.assign(dodge_point, me.flag_positions[me.next_checkpoint].position);\n' +
+      '      Object.assign(dodge_point, me.flag_positions[me.next_checkpoint]);\n' +
       '      if (random) {\n' +
       '        dodge_point.x = dodge_point.x * -1;\n' +
       '      } else {\n' +
       '        dodge_point.y = dodge_point.y * -1;\n' +
       '      }\n' +
-      '      me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition(true).z, true);\n' +
+      '      me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition().z);\n' +
       '      return;\n' +
       '    }\n' +
       '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
-      '    me.current_position = me.getCurrentPosition(true);\n' +
+      '    me.current_position = me.getCurrentPosition();\n' +
       '    me.distance = distance(\n' +
       '      me.current_position,\n' +
-      '      me.flag_positions[me.next_checkpoint].position\n' +
+      '      me.flag_positions[me.next_checkpoint]\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       //'      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
@@ -283,17 +291,6 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_map_seed": {
-                  "description": "Seed value to randomize the map",
-                  "title": "Seed value",
-                  "default": url_seed ? url_seed : "",
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "map_seed",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
                 "my_map_size": {
                   "description": "",
                   "title": "Map size",
@@ -316,6 +313,17 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
+                "my_map_seed": {
+                  "description": "Seed value to randomize the map",
+                  "title": "Seed value",
+                  "default": url_seed ? url_seed : SEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "map_seed",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_map_height": {
                   "description": "",
                   "title": "Map Height",
@@ -327,7 +335,7 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
-                "my_flag_weight": {
+                /*"my_flag_weight": {
                   "description": "",
                   "title": "Flag Weight",
                   "default": FLAG_WEIGHT,
@@ -337,7 +345,7 @@
                   "key": "flag_weight",
                   "hidden": 0,
                   "type": "IntegerField"
-                },
+                },*/
                 "my_number_of_drones": {
                   "description": "",
                   "title": "Number of drones",
@@ -372,7 +380,8 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_flag_weight"], ["my_start_AMSL"]]
+                 ["my_map_size"], ["my_map_height"],// ["my_flag_weight"],
+                 ["my_start_AMSL"], ["my_map_seed"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -398,6 +407,7 @@
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
+      DRONE_LIST = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
@@ -416,13 +426,13 @@
             pos_y = sign_y * random_seed.quick() * map_size / 2;
           return [pos_x, pos_y];
         }
-        var seed_value = (options.map_seed) ? options.map_seed : SEED,
+        var seed_value = options.map_seed,
           random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(1, 10, random_seed),
           n_flags = randomIntFromInterval(1, 10, random_seed),
           n_obstacles = randomIntFromInterval(1, 10, random_seed),
           flag_list = [], obstacle_list = [], enemy_list = [], random_position,
-          obstacles_types = ["box", "sphere", "cylinder"], type,
+          obstacles_types = ["box"/*, "sphere"*/, "cylinder"], type,
           obstacle_limit = [options.map_size / 6, options.map_size / 100,
                             options.map_size / 6, 30];
         //enemies
@@ -500,7 +510,7 @@
         "map_size": parseFloat(options.map_size),
         "height": parseInt(options.map_height, 10),
         "start_AMSL": parseFloat(options.start_AMSL),
-        "flag_weight": parseInt(options.flag_weight, 10),
+        //"flag_weight": parseInt(options.flag_weight, 10),
         "flag_list": [],
         "obstacle_list" : [],
         "drones": {
@@ -613,8 +623,10 @@
               document.querySelector('.container').parentNode.appendChild(log);
               i += 1;
               if (i === DRONE_LIST.length) {
-                aux = domsugar('div', { text: "Enemy drones logs:" });
-                document.querySelector('.container').parentNode.appendChild(aux);
+                break;
+                //Do not show enemy drone logs for now
+                /*aux = domsugar('div', { text: "Enemy drones logs:" });
+                document.querySelector('.container').parentNode.appendChild(aux);*/
               }
             }
           }

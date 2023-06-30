@@ -40,7 +40,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
-    drone._targetCoordinates = drone.getCurrentPosition(true);
+    drone._targetCoordinates = drone.getCurrentPosition();
     drone._maxDeceleration = this.getMaxDeceleration();
     if (drone._maxDeceleration <= 0) {
       throw new Error('max deceleration must be superior to 0');
@@ -440,18 +440,17 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getDroneViewInfo = function (drone) {
     var context = this, result = { "obstacles": [], "drones": [] }, distance,
-      drone_position = drone.getCurrentPosition(true), other_position;
-    function calculateDistance(a, b) {
-      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
-                       Math.pow((a.z - b.z), 2));
+      other_position, drone_position = drone.getCurrentPosition();
+    function calculateDistance(a, b, _this) {
+      return _this._mapManager.latLonDistance([a.x, a.y], [b.x, b.y]);
     }
     context._gameManager._droneList.forEach(function (other) {
       if (other.can_play && drone.id != other.id) {
-        other_position = other.getCurrentPosition(true);
-        distance = calculateDistance(drone_position, other_position);
+        other_position = other.getCurrentPosition();
+        distance = calculateDistance(drone_position, other_position, context);
         if (distance <= VIEW_SCOPE) {
           result.drones.push({
-            position: drone.position,
+            position: drone.getCurrentPosition(),
             direction: drone.direction,
             rotation: drone.rotation,
             speed: drone.speed,
@@ -460,8 +459,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
         }
       }
     });
-    context._map_dict.obstacle_list.forEach(function (obstacle) {
-      distance = calculateDistance(drone_position, obstacle.position);
+    context._map_dict.geo_obstacle_list.forEach(function (obstacle) {
+      distance = calculateDistance(drone_position, obstacle.position, context);
       if (distance <= VIEW_SCOPE) {
         result.obstacles.push(obstacle);
       }
