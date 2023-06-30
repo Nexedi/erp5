@@ -448,7 +448,7 @@ var MapManager = /** @class */ (function () {
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL,
         "flag_list": map_dict.flag_list,
-        "flag_weight": map_dict.flag_weight,
+        //"flag_weight": map_dict.flag_weight,
         "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
         "obstacle_list": map_dict.obstacle_list,
         "initial_position": {
@@ -595,7 +595,7 @@ var MapManager = /** @class */ (function () {
       mast.material = flag_material;
       flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
       flag.id = index;
-      flag.weight = _this.map_info.flag_weight;
+      //flag.weight = _this.map_info.flag_weight;
       flag.location = flag_info.position;
       flag.drone_collider_list = [];
       _this._flag_list.push(flag);
