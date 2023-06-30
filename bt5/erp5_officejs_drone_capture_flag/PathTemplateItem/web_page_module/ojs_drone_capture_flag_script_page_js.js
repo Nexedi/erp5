@@ -283,17 +283,6 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_map_seed": {
-                  "description": "Seed value to randomize the map",
-                  "title": "Seed value",
-                  "default": url_seed ? url_seed : "",
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "map_seed",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
                 "my_map_size": {
                   "description": "",
                   "title": "Map size",
@@ -315,6 +304,17 @@
                   "key": "start_AMSL",
                   "hidden": 0,
                   "type": "FloatField"
+                },
+                "my_map_seed": {
+                  "description": "Seed value to randomize the map",
+                  "title": "Seed value",
+                  "default": url_seed ? url_seed : SEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "map_seed",
+                  "hidden": 0,
+                  "type": "StringField"
                 },
                 "my_map_height": {
                   "description": "",
@@ -372,7 +372,8 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_flag_weight"], ["my_start_AMSL"]]
+                 ["my_map_size"], ["my_map_height"], ["my_flag_weight"],
+                 ["my_start_AMSL"], ["my_map_seed"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -416,7 +417,7 @@
             pos_y = sign_y * random_seed.quick() * map_size / 2;
           return [pos_x, pos_y];
         }
-        var seed_value = (options.map_seed) ? options.map_seed : SEED,
+        var seed_value = options.map_seed,
           random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(1, 10, random_seed),
           n_flags = randomIntFromInterval(1, 10, random_seed),
