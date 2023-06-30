@@ -834,8 +834,12 @@ var GameManager = /** @class */ (function () {
         if (!flag.drone_collider_list.includes(drone.id)) {
           //TODO notify the drone somehow? Or the AI script is in charge?
           console.log("flag " + flag.id + " hit by drone " + drone.id);
-          drone.score++;
-          flag.drone_collider_list.push(drone.id);
+          drone._internal_crash(new Error('Drone ' + drone.id +
+                                          ' touched a flag.'));
+          if (flag.drone_collider_list.length === 0) {
+            drone.score++;
+            flag.drone_collider_list.push(drone.id);
+          }
         }
       }
     }
@@ -1038,7 +1042,9 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._allFlagsCaptured = function () {
     var finish = true;
     this._mapManager._flag_list.forEach(function (flag) {
-      if (flag.drone_collider_list.length < flag.weight) {
+      //do not use flag weight for now, just 1 hit is enough
+      if (flag.drone_collider_list.length === 0) {
+      //if (flag.drone_collider_list.length < flag.weight) {
         finish = false;
       }
     });
@@ -1048,9 +1054,9 @@ var GameManager = /** @class */ (function () {
   GameManager.prototype._calculateUserScore = function () {
     var score = 0;
     this._droneList_user.forEach(function (drone) {
-      if (drone.can_play) {
-        score += drone.score;
-      }
+      //if (drone.can_play) {
+      score += drone.score;
+      //}
     });
     return score;
   };
