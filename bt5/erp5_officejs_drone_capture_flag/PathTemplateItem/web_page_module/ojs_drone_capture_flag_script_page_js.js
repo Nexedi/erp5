@@ -34,12 +34,12 @@
       'me.onStart = function () {\n' +
       '  me.direction_set = false;\n' +
       '  me.dodging = false;\n' +
-      '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
       'me.onGetMsg = function (msg) {\n' +
       '  if (msg && msg.flag_positions) {\n' +
       '    me.flag_positions = msg.flag_positions\n' +
+      '    me.next_checkpoint = me.id % me.flag_positions.length;\n' +
       '  }\n' +
       '};\n' +
       '\n' +
