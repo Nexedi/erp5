@@ -34,12 +34,12 @@
       'me.onStart = function () {\n' +
       '  me.direction_set = false;\n' +
       '  me.dodging = false;\n' +
-      '  me.next_checkpoint = 0;\n' +
       '};\n' +
       '\n' +
       'me.onGetMsg = function (msg) {\n' +
       '  if (msg && msg.flag_positions) {\n' +
       '    me.flag_positions = msg.flag_positions\n' +
+      '    me.next_checkpoint = me.id % me.flag_positions.length;\n' +
       '  }\n' +
       '};\n' +
       '\n' +
@@ -283,17 +283,6 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_map_seed": {
-                  "description": "Seed value to randomize the map",
-                  "title": "Seed value",
-                  "default": url_seed ? url_seed : "",
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "map_seed",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
                 "my_map_size": {
                   "description": "",
                   "title": "Map size",
@@ -316,6 +305,17 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
+                "my_map_seed": {
+                  "description": "Seed value to randomize the map",
+                  "title": "Seed value",
+                  "default": url_seed ? url_seed : SEED,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "map_seed",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_map_height": {
                   "description": "",
                   "title": "Map Height",
@@ -327,7 +327,7 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
-                "my_flag_weight": {
+                /*"my_flag_weight": {
                   "description": "",
                   "title": "Flag Weight",
                   "default": FLAG_WEIGHT,
@@ -337,7 +337,7 @@
                   "key": "flag_weight",
                   "hidden": 0,
                   "type": "IntegerField"
-                },
+                },*/
                 "my_number_of_drones": {
                   "description": "",
                   "title": "Number of drones",
@@ -372,7 +372,8 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                  ["my_map_seed"], ["my_map_size"], ["my_map_height"], ["my_flag_weight"], ["my_start_AMSL"]]
+                 ["my_map_size"], ["my_map_height"],// ["my_flag_weight"],
+                 ["my_start_AMSL"], ["my_map_seed"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -416,7 +417,7 @@
             pos_y = sign_y * random_seed.quick() * map_size / 2;
           return [pos_x, pos_y];
         }
-        var seed_value = (options.map_seed) ? options.map_seed : SEED,
+        var seed_value = options.map_seed,
           random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(1, 10, random_seed),
           n_flags = randomIntFromInterval(1, 10, random_seed),
@@ -500,7 +501,7 @@
         "map_size": parseFloat(options.map_size),
         "height": parseInt(options.map_height, 10),
         "start_AMSL": parseFloat(options.start_AMSL),
-        "flag_weight": parseInt(options.flag_weight, 10),
+        //"flag_weight": parseInt(options.flag_weight, 10),
         "flag_list": [],
         "obstacle_list" : [],
         "drones": {
@@ -613,8 +614,10 @@
               document.querySelector('.container').parentNode.appendChild(log);
               i += 1;
               if (i === DRONE_LIST.length) {
-                aux = domsugar('div', { text: "Enemy drones logs:" });
-                document.querySelector('.container').parentNode.appendChild(aux);
+                break;
+                //Do not show enemy drone logs for now
+                /*aux = domsugar('div', { text: "Enemy drones logs:" });
+                document.querySelector('.container').parentNode.appendChild(aux);*/
               }
             }
           }
