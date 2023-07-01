@@ -44,7 +44,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.runUnitTest import log_directory
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 from lxml import etree
-from lxml.html import builder as E
+from lxml.html.builder import E
 import certifi
 import urllib3
 from selenium import webdriver
@@ -386,26 +386,28 @@ class FunctionalTestRunner:
             # XXX replace status_failed classes by an inline style supported by gadget_html_viewer
             for test_tr in test_table.xpath('.//tr[contains(@class, "status_failed")]'):
               test_tr.set('style', 'background-color: red;')
+            details_attribute_dict = {}
             if etree.tostring(test_table).find("expected failure") != -1:
               expected_failure_amount += 1
             else:
               failure_amount += 1
               error_title_list.append(test_name)
-            detail_element = E.DIV()
-            detail_element.append(E.DIV(E.P(test_name), E.BR, test_table))
+              details_attribute_dict['open'] = 'true'
+            detail_element = E.div()
+            detail_element.append(E.details(E.summary(test_name), test_table, **details_attribute_dict))
             detail += etree.tostring(detail_element)
       tr_count += 1
-    sucess_amount = tr_count - 1 - failure_amount - expected_failure_amount
+    success_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
       detail = '''<html>
-<head>
- <style type="text/css">tr.status_failed { background-color:red };</style>
-</head>
-<body>%s</body>
+<body>
+<h3>Failed Zelenium Test Details</h3>
+%s
+</body>
 </html>''' % detail
 
     # When return fix output for handle unicode issues.
-    return detail, sucess_amount, failure_amount, expected_failure_amount, \
+    return detail, success_amount, failure_amount, expected_failure_amount, \
         error_title_list
 
 
