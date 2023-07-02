@@ -35,6 +35,7 @@ import sys
 import imp
 import collections
 from six import reraise
+import traceback
 
 import coverage
 from Products.ERP5Type.Utils import ensure_list
@@ -59,6 +60,13 @@ try:
 except NameError: # < 3.6
   class ModuleNotFoundError(ImportError):
     pass
+
+
+class ComponentImportError(ImportError):
+  """Error when importing an existing, but invalid component, typically 
+  because it contains syntax errors or import errors.
+  """
+
 
 class ComponentDynamicPackage(ModuleType):
   """
@@ -355,16 +363,18 @@ class ComponentDynamicPackage(ModuleType):
         # in a deadlock
         source_code_obj = compile(source_code_str, module.__file__, 'exec')
         exec(source_code_obj, module.__dict__)
-      except Exception as error:
+      except Exception:
         del sys.modules[module_fullname]
         if module_fullname_alias:
           del sys.modules[module_fullname_alias]
         if module_fullname_filesystem:
           del sys.modules[module_fullname_filesystem]
 
-        reraise(ImportError,
-          "%s: cannot load Component %s (%s)" % (fullname, name, error),
-                sys.exc_info()[2])
+        reraise(
+          ComponentImportError,
+          "%s: cannot load Component %s :\n%s" % (
+            fullname, name, traceback.format_exc()),
+          sys.exc_info()[2])
 
       # Add the newly created module to the Version package and add it as an
       # alias to the top-level package as well
