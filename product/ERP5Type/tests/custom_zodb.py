@@ -40,10 +40,11 @@ if save_mysql:
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
     # faster, so this produce somewhat not nice to read sql
-    command = 'mysqldump %s > %s' % (getMySQLArguments(), dump_sql_path,)
+    command = 'mysqldump %s > %s.tmp' % (getMySQLArguments(), dump_sql_path,)
     if verbosity:
       _print('Dumping MySQL database with %s ...' % command)
     subprocess.check_call(command, shell=True)
+    os.rename(dump_sql_path + '.tmp', dump_sql_path)
 
 if load:
   if save_mysql:
