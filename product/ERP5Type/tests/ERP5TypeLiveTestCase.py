@@ -188,7 +188,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       finally:
         restoreInteraction()
 
-from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
+from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage, ComponentImportError
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
 class ERP5TypeTestReLoader(ERP5TypeTestLoader):
@@ -224,6 +224,8 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         if module is None:
             try:
                 self._importZodbTestComponent(name.split('.')[0])
+            except ComponentImportError:
+                raise
             except ImportError:
                 pass
             else:
