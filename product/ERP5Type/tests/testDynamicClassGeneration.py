@@ -3296,6 +3296,67 @@ class Test(ERP5TypeTestCase):
     expected_msg_re = re.compile('Ran 3 test.*OK', re.DOTALL)
     self.assertRegex(output, expected_msg_re)
 
+  def testRunLiveTestImportError(self):
+    source_code = '''
+def break_at_import():
+  import non.existing.module # pylint:disable=import-error
+break_at_import()
+'''
+    component = self._newComponent('testRunLiveTestImportError', source_code)
+    component.validate()
+    self.tic()
+
+    from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
+    ERP5TypeTestLoader_loadTestsFromNames = ERP5TypeTestLoader.loadTestsFromNames
+    def loadTestsFromNames(self, *args, **kwargs):
+      """
+      Monkey patched to simulate a reset right after importing the ZODB Test
+      Component whose Unit Tests are going to be executed
+      """
+      ret = ERP5TypeTestLoader_loadTestsFromNames(self, *args, **kwargs)
+
+      from Products.ERP5.ERP5Site import getSite
+      getSite().portal_components.reset(force=True)
+
+      # Simulate a new REQUEST while the old one has been GC'ed
+      import erp5.component
+      erp5.component.ref_manager.clear()
+
+      import gc
+      gc.collect()
+
+      return ret
+
+    self.assertEqual(component.getValidationState(), 'validated')
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
+
+    def runLiveTest(test_name):
+      # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
+      # needs to be restored after calling runLiveTest
+      base_tuple = ERP5TypeTestCase.__bases__
+      ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
+      try:
+        self._component_tool.runLiveTest(test_name)
+      finally:
+        ERP5TypeTestCase.__bases__ = base_tuple
+        ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
+      return self._component_tool.readTestOutput()
+
+    output = runLiveTest('testRunLiveTestImportError')
+    self.assertIn('''
+  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 4, in <module>
+    break_at_import()
+  File "<portal_components/test.erp5.testRunLiveTestImportError>", line 3, in break_at_import
+    import non.existing.module # pylint:disable=import-error
+ImportError: No module named non.existing.module
+''', output)
+
+    output = runLiveTest('testDoesNotExist_import_error_because_module_does_not_exist')
+    self.assertIn(
+      "ImportError: No module named testDoesNotExist_import_error_because_module_does_not_exist",
+      output)
+
   def testERP5Broken(self):
     # Create a broken ghost object
     import erp5.portal_type
