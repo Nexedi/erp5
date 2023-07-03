@@ -834,16 +834,7 @@ var GameManager = /** @class */ (function () {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
-    //TODO drop this and use getCurrentPosition once cartesian was dropped
-    var drone_position;
-    if (drone._controlMesh) {
-      drone_position = {
-        'x': drone._controlMesh.position.x,
-        'y': drone._controlMesh.position.z,
-        'z': drone._controlMesh.position.y
-      };
-    }
-    //var drone_position = drone.getCurrentPosition();
+    var drone_position = drone.getCurrentPosition();
     if (drone_position) {
       //TODO epsilon distance is 15 because of fixed wing loiter flights
       //there is not a proper collision

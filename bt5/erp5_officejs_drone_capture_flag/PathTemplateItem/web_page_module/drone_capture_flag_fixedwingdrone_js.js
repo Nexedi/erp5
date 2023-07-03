@@ -40,13 +40,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
-    //drone._targetCoordinates = drone.getCurrentPosition();
-    //TODO drop this and use getCurrentPosition once cartesian is dropped
-    drone._targetCoordinates = {
-      'x': drone._controlMesh.position.x,
-      'y': drone._controlMesh.position.z,
-      'z': drone._controlMesh.position.y
-    };
+    drone._targetCoordinates = drone.getCurrentPosition();
     drone._maxDeceleration = this.getMaxDeceleration();
     if (drone._maxDeceleration <= 0) {
       throw new Error('max deceleration must be superior to 0');
@@ -446,26 +440,14 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getDroneViewInfo = function (drone) {
     var context = this, result = { "obstacles": [], "drones": [] }, distance,
-    //TODO drop this and use getCurrentPosition once cartesian is dropped
-      //other_position, drone_position = drone.getCurrentPosition()
-      other_position, drone_position = {
-        'x': drone._controlMesh.position.x,
-        'y': drone._controlMesh.position.z,
-        'z': drone._controlMesh.position.y
-      };
+      other_position, drone_position = drone.getCurrentPosition();
     function calculateDistance(a, b) {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
     context._gameManager._droneList.forEach(function (other) {
       if (other.can_play && drone.id != other.id) {
-        //other_position = other.getCurrentPosition();
-        //TODO drop this and use getCurrentPosition once cartesian is dropped
-        other_position = {
-          'x': other._controlMesh.position.x,
-          'y': other._controlMesh.position.z,
-          'z': other._controlMesh.position.y
-        };
+        other_position = other.getCurrentPosition();
         distance = calculateDistance(drone_position, other_position);
         if (distance <= VIEW_SCOPE) {
           result.drones.push({
