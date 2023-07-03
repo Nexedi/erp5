@@ -152,16 +152,12 @@ var DroneManager = /** @class */ (function () {
   /**
    * Set a target point to move
    */
-  DroneManager.prototype.setTargetCoordinates = function (x, y, z, cartesian) {
+  DroneManager.prototype.setTargetCoordinates = function (x, y, z) {
     if (!this._canPlay) {
       return;
     }
-    if (!cartesian) {
-      //convert real geo-coordinates to virtual x-y coordinates
-      this._targetCoordinates = this._API.processCoordinates(x, y, z);
-    } else {
-      this._targetCoordinates = { x: x, y: y, z: z };
-    }
+    //convert real geo-coordinates to virtual x-y coordinates
+    this._targetCoordinates = this._API.processCoordinates(x, y, z);
     return this._API.internal_setTargetCoordinates(
       this,
       this._targetCoordinates
@@ -308,15 +304,8 @@ var DroneManager = /** @class */ (function () {
     }
     return this._API.getGameParameter(name);
   };
-  DroneManager.prototype.getCurrentPosition = function (cartesian) {
+  DroneManager.prototype.getCurrentPosition = function () {
     if (this._controlMesh) {
-      if (cartesian) {
-        return {
-          x: this._controlMesh.position.x,
-          y: this._controlMesh.position.z,
-          z: this._controlMesh.position.y
-        };
-      }
       // swap y and z axis so z axis represents altitude
       return this._API.getCurrentPosition(
         this._controlMesh.position.x,
@@ -448,15 +437,36 @@ var MapManager = /** @class */ (function () {
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL,
         "flag_list": map_dict.flag_list,
+        "geo_flag_list": [],
         //"flag_weight": map_dict.flag_weight,
         "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
         "obstacle_list": map_dict.obstacle_list,
+        "geo_obstacle_list": [],
         "initial_position": {
           "x": 0,
           "y": starting_point,
           "z": START_Z
         }
       };
+    map_dict.flag_list.forEach(function (flag_info, index) {
+      map_info.geo_flag_list.push(map.convertToGeoCoordinates(
+        flag_info.position.x,
+        flag_info.position.y,
+        flag_info.position.z,
+        map_info
+      ));
+    });
+    map_dict.obstacle_list.forEach(function (obstacle_info, index) {
+      var geo_obstacle = {};
+      Object.assign(geo_obstacle, obstacle_info);
+      geo_obstacle.position = map.convertToGeoCoordinates(
+        obstacle_info.position.x,
+        obstacle_info.position.y,
+        obstacle_info.position.z,
+        map_info
+      );
+      map_info.geo_obstacle_list.push(geo_obstacle);
+    });
     return map_info;
   }
   //** CONSTRUCTOR
@@ -798,12 +808,15 @@ var GameManager = /** @class */ (function () {
     var closest = void 0, projected = BABYLON.Vector3.Zero();
     if (drone.colliderMesh &&
       drone.colliderMesh.intersectsMesh(obstacle, true)) {
+      drone._internal_crash(new Error('Drone ' + drone.id +
+                                      ' touched an obstacle.'));
+      //Following workaround seems not needed with new babylonjs versions
       /**
        * Closest facet check is needed for sphere and cylinder,
        * but just seemed bugged with the box
        * So only need to check intersectMesh for the box
        */
-      if (obstacle.type == "box") {
+      /*if (obstacle.type == "box") {
         closest = true;
       } else {
         obstacle.updateFacetData();
@@ -815,7 +828,7 @@ var GameManager = /** @class */ (function () {
       if (closest !== null) {
         drone._internal_crash(new Error('Drone ' + drone.id +
                                         ' touched an obstacle.'));
-      }
+      }*/
     }
   };
 
@@ -825,15 +838,14 @@ var GameManager = /** @class */ (function () {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
-    var drone_position = drone.getCurrentPosition(true);
-    if (drone_position) {
+    if (drone.position) {
       //TODO epsilon distance is 15 because of fixed wing loiter flights
       //there is not a proper collision
-      if (distance(drone_position, flag.location) <=
+      if (distance(drone.position, flag.location) <=
         this._mapManager.getMapInfo().flag_distance_epsilon) {
         if (!flag.drone_collider_list.includes(drone.id)) {
           //TODO notify the drone somehow? Or the AI script is in charge?
-          console.log("flag " + flag.id + " hit by drone " + drone.id);
+          //console.log("flag " + flag.id + " hit by drone " + drone.id);
           drone._internal_crash(new Error('Drone ' + drone.id +
                                           ' touched a flag.'));
           if (flag.drone_collider_list.length === 0) {
@@ -1225,7 +1237,7 @@ var GameManager = /** @class */ (function () {
           promise_list.push(drone.internal_start());
         });
         start_msg = {
-          'flag_positions': _this._mapManager.getMapInfo().flag_list
+          'flag_positions': _this._mapManager.getMapInfo().geo_flag_list
         };
         promise_list.push(_this._droneList_user[0].sendMsg(start_msg));
         _this._droneList_enemy.forEach(function (drone) {
