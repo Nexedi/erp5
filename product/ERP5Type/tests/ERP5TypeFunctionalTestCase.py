@@ -360,8 +360,8 @@ class FunctionalTestRunner:
     iframe = etree.fromstring(
       browser.execute_script(
         "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"
-      ).encode('UTF-8'),
-        html_parser
+      ),
+      html_parser
     )
     return iframe
 
