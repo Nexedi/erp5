@@ -448,6 +448,7 @@ var MapManager = /** @class */ (function () {
         "height": map_dict.height,
         "start_AMSL": map_dict.start_AMSL,
         "flag_list": map_dict.flag_list,
+        "geo_flag_list": [],
         //"flag_weight": map_dict.flag_weight,
         "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
         "obstacle_list": map_dict.obstacle_list,
@@ -457,6 +458,14 @@ var MapManager = /** @class */ (function () {
           "z": START_Z
         }
       };
+    map_dict.flag_list.forEach(function (flag_info, index) {
+      map_info.geo_flag_list.push(map.convertToGeoCoordinates(
+        flag_info.position.x,
+        flag_info.position.y,
+        flag_info.position.z,
+        map_info
+      ));
+    });
     return map_info;
   }
   //** CONSTRUCTOR
@@ -825,7 +834,16 @@ var GameManager = /** @class */ (function () {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
-    var drone_position = drone.getCurrentPosition(true);
+    //TODO drop this and use getCurrentPosition once cartesian was dropped
+    var drone_position;
+    if (drone._controlMesh) {
+      drone_position = {
+        'x': drone._controlMesh.position.x,
+        'y': drone._controlMesh.position.z,
+        'z': drone._controlMesh.position.y
+      };
+    }
+    //var drone_position = drone.getCurrentPosition();
     if (drone_position) {
       //TODO epsilon distance is 15 because of fixed wing loiter flights
       //there is not a proper collision
@@ -1225,7 +1243,7 @@ var GameManager = /** @class */ (function () {
           promise_list.push(drone.internal_start());
         });
         start_msg = {
-          'flag_positions': _this._mapManager.getMapInfo().flag_list
+          'flag_positions': _this._mapManager.getMapInfo().geo_flag_list
         };
         promise_list.push(_this._droneList_user[0].sendMsg(start_msg));
         _this._droneList_enemy.forEach(function (drone) {

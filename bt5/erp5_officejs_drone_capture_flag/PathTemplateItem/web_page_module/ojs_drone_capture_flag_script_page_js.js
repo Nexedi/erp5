@@ -27,8 +27,16 @@
       'var EPSILON = 10,\n' +
       '  DODGE_DISTANCE = 50;\n' +
       '\n' +
-      'function distance(a, b) {\n' +
-      '  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2);\n' +
+      'function distance(lat1, lon1, lat2, lon2) {\n' +
+      '  var R = 6371e3, // meters\n' +
+      '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
+      '    la2 = lat2 * Math.PI / 180,\n' +
+      '    lo1 = lon1 * Math.PI / 180,\n' +
+      '    lo2 = lon2 * Math.PI / 180,\n' +
+      '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
+      '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
+      '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
+      '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
@@ -46,7 +54,7 @@
       'me.onUpdate = function (timestamp) {\n' +
       '  if (!me.flag_positions) return;\n' +
       '  if (me.dodging) {\n' +
-      '    me.current_position = me.getCurrentPosition(true);\n' +
+      '    me.current_position = me.getCurrentPosition();\n' +
       '    var dist = distance(\n' +
       '      me.current_position,\n' +
       '      me.dodging.position\n' +
@@ -67,9 +75,9 @@
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
-      '        me.flag_positions[me.next_checkpoint].position.z + me.id, true\n' +
+      '        me.flag_positions[me.next_checkpoint].x,\n' +
+      '        me.flag_positions[me.next_checkpoint].y,\n' +
+      '        me.flag_positions[me.next_checkpoint].z + me.id\n' +
       '      );\n' +
       //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -83,21 +91,21 @@
       '      me.dodging = drone_view.obstacles[0];\n' +
       '      me.direction_set = false;\n' +
       '      var random = Math.random() < 0.5, dodge_point = {};\n' +
-      '      Object.assign(dodge_point, me.flag_positions[me.next_checkpoint].position);\n' +
+      '      Object.assign(dodge_point, me.flag_positions[me.next_checkpoint]);\n' +
       '      if (random) {\n' +
       '        dodge_point.x = dodge_point.x * -1;\n' +
       '      } else {\n' +
       '        dodge_point.y = dodge_point.y * -1;\n' +
       '      }\n' +
-      '      me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition(true).z, true);\n' +
+      '      me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition().z);\n' +
       '      return;\n' +
       '    }\n' +
       '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
-      '    me.current_position = me.getCurrentPosition(true);\n' +
+      '    me.current_position = me.getCurrentPosition();\n' +
       '    me.distance = distance(\n' +
       '      me.current_position,\n' +
-      '      me.flag_positions[me.next_checkpoint].position\n' +
+      '      me.flag_positions[me.next_checkpoint]\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       //'      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
