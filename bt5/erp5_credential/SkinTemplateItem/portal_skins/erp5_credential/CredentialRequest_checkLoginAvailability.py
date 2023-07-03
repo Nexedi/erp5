@@ -17,7 +17,7 @@ if value:
 def getRealContext():
   if not REQUEST:
     return context
-  object_path = REQUEST.get("object_path")
+  object_path = REQUEST.get("object_path") or REQUEST.get("field_your_object_path") 
   return portal.restrictedTraverse(object_path)
 
 #Allow user to create a request with it's username
