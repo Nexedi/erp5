@@ -27,12 +27,12 @@
       'var EPSILON = 10,\n' +
       '  DODGE_DISTANCE = 50;\n' +
       '\n' +
-      'function distance(lat1, lon1, lat2, lon2) {\n' +
+      'function distance(a, b) {\n' +
       '  var R = 6371e3, // meters\n' +
-      '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
-      '    la2 = lat2 * Math.PI / 180,\n' +
-      '    lo1 = lon1 * Math.PI / 180,\n' +
-      '    lo2 = lon2 * Math.PI / 180,\n' +
+      '    la1 = a.x * Math.PI / 180, // lat, lon in radians\n' +
+      '    la2 = b.x * Math.PI / 180,\n' +
+      '    lo1 = a.y * Math.PI / 180,\n' +
+      '    lo2 = b.y * Math.PI / 180,\n' +
       '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
       '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
@@ -407,6 +407,7 @@
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
+      DRONE_LIST = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
