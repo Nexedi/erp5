@@ -26,7 +26,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   EnemyDroneAPI.prototype.internal_start = function (drone) {
-    drone._targetCoordinates = drone.getCurrentPosition(true);
+    drone._targetCoordinates = drone.getCurrentPosition();
     drone._maxAcceleration = this.getMaxAcceleration();
     if (drone._maxAcceleration <= 0) {
       throw new Error('max acceleration must be superior to 0');
@@ -170,48 +170,40 @@ var EnemyDroneAPI = /** @class */ (function () {
   /*
   ** Converts geo latitude-longitud coordinates (º) to x,y plane coordinates (m)
   */
-  EnemyDroneAPI.prototype.processCoordinates = function (lat, lon, z) {
-    if (isNaN(lat) || isNaN(lon) || isNaN(z)) {
+  EnemyDroneAPI.prototype.processCoordinates = function (x, y, z) {
+    if (isNaN(x) || isNaN(y) || isNaN(z)) {
       throw new Error('Target coordinates must be numbers');
     }
-    var x = this._mapManager.longitudToX(lon, this._map_dict.width),
-      y = this._mapManager.latitudeToY(lat, this._map_dict.depth),
-      position = this._mapManager.normalize(x, y, this._map_dict),
-      processed_coordinates;
     if (z > this._map_dict.start_AMSL) {
       z -= this._map_dict.start_AMSL;
     }
-    processed_coordinates = {
-      x: position[0],
-      y: position[1],
-      z: z
+    return {
+      'x': x,
+      'y': y,
+      'z': z
     };
-    //this._last_altitude_point_reached = -1;
-    //this.takeoff_path = [];
-    return processed_coordinates;
   };
   EnemyDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
     return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
   };
   EnemyDroneAPI.prototype.getDroneViewInfo = function (drone) {
     var context = this, result = [], distance,
-      drone_position = drone.getCurrentPosition(true), other_position;
+      drone_position = drone.position, other_position;
     function calculateDistance(a, b) {
       return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
                        Math.pow((a.z - b.z), 2));
     }
     context._gameManager._droneList_user.forEach(function (other) {
       if (other.can_play) {
-        other_position = other.getCurrentPosition(true);
+        other_position = other.position;
         distance = calculateDistance(drone_position, other_position);
         if (distance <= VIEW_SCOPE) {
           result.push({
-            geo_position: other.position,
             position: other_position,
             direction: other.direction,
             rotation: other.rotation,
             speed: other.speed,
-            target: other._targetCoordinates,
+            target: other._targetCoordinates, //check
             team: other.team
           });
         }
@@ -250,14 +242,14 @@ var EnemyDroneAPI = /** @class */ (function () {
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
-      '  me.base = me.getCurrentPosition(true);\n' +
+      '  me.base = me.position;\n' +
       '  me.setDirection(0,0,0);\n' +
       '  return;\n' +
       '\n' +
       '};\n' +
       '\n' +
       'me.onUpdate = function (timestamp) {\n' +
-      '  me.current_position = me.getCurrentPosition(true);\n' +
+      '  me.current_position = me.position;\n' +
       '  var drone_position, drone_velocity_vector, interception_point, drone_view,\n' +
       '  dist = distance(\n' +
       '    me.current_position,\n' +
@@ -269,7 +261,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '    me.setTargetCoordinates(\n' +
       '      me.base.x,\n' +
       '      me.base.y,\n' +
-      '      me.base.z, true\n' +
+      '      me.base.z\n' +
       '    );\n' +
       '    return;\n' +
       '  }\n' +
@@ -282,7 +274,7 @@ var EnemyDroneAPI = /** @class */ (function () {
       '      return;\n' +
       '    }\n' +
       '    me.chasing = true;\n' +
-      '    me.setTargetCoordinates(interception_point[0], interception_point[1], interception_point[2], true);\n' +
+      '    me.setTargetCoordinates(interception_point[0], interception_point[1], interception_point[2]);\n' +
       '  }\n' +
       // return to base point if drone is too far
       '  if (!me.chasing && dist <= 10) {\n' +
