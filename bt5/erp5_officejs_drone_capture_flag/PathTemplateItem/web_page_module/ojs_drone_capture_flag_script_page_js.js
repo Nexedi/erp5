@@ -432,7 +432,7 @@
           n_flags = randomIntFromInterval(1, 10, random_seed),
           n_obstacles = randomIntFromInterval(1, 10, random_seed),
           flag_list = [], obstacle_list = [], enemy_list = [], random_position,
-          obstacles_types = ["box", "sphere", "cylinder"], type,
+          obstacles_types = ["box"/*, "sphere"*/, "cylinder"], type,
           obstacle_limit = [options.map_size / 6, options.map_size / 100,
                             options.map_size / 6, 30];
         //enemies
