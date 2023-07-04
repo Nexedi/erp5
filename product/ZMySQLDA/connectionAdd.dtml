@@ -56,7 +56,7 @@
     <dd>
       The connection string used for Z MySQL Database Connection is of the form:
       <br />
-      <code>[*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]</code>
+      <code>[%ssl_name] [*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]</code>
       <br />
       or typically:
       <br />
@@ -72,6 +72,16 @@
       Either a database or a host or both must be specified.
       If the UNIX socket is in a non-standard location, you can specify
       the full path to it after the password.
+    </dd>
+    <dd>
+      %<em>ssl_name</em> at the begining of the connection string means to use
+      a ssl client certificate for authentication. 
+      This will use a CA certificate located at
+      <code>$INSTANCEHOME/etc/zmysqlda/[%ssl_name]-ca.pem</code>, a client certificate
+      at <code>$INSTANCEHOME/etc/zmysqlda/[%ssl_name]-cert.pem</code> with a key
+      at <code>$INSTANCEHOME/etc/zmysqlda/[%ssl_name]-key.pem</code>.
+      This will also verify that the connection is using ssl and cause an error
+      when an encrypted connection can not be established.
     </dd>
     <dd>
       A '-' in front of the database tells ZMySQLDA to not use Zope's

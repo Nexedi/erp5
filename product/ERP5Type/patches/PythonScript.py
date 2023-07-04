@@ -22,6 +22,7 @@ from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
+from Products.ERP5Type import IS_ZOPE2
 
 ### Guards
 
@@ -153,18 +154,25 @@ class _(PatchClass(PythonScript)):
 
   # Add proxy role icon in ZMI
 
-  def om_icons(self):
-    """Return a list of icon URLs to be displayed by an ObjectManager"""
-    if self._proxy_roles:
-      return {'path': 'p_/PythonScript_ProxyRole_icon',
-              'alt': 'Proxy Roled Python Script',
-              'title': 'This script has proxy role.'},
-    return {'path': 'misc_/PythonScripts/pyscript.gif',
-            'alt': self.meta_type, 'title': self.meta_type},
+  if IS_ZOPE2:
+    def om_icons(self):
+      """Return a list of icon URLs to be displayed by an ObjectManager"""
+      if self._proxy_roles:
+        return {'path': 'p_/PythonScript_ProxyRole_icon',
+                'alt': 'Proxy Roled Python Script',
+                'title': 'This script has proxy role.'},
+      return {'path': 'misc_/PythonScripts/pyscript.gif',
+              'alt': self.meta_type, 'title': self.meta_type},
 
-  p_.PythonScript_ProxyRole_icon = \
-    ImageFile('pyscript_proxyrole.gif', globals())
-
+    p_.PythonScript_ProxyRole_icon = \
+      ImageFile('pyscript_proxyrole.gif', globals())
+  else:
+    @property
+    def zmi_icon(self):
+      if self._proxy_roles:
+        return 'fa fa-terminal fa-spin'
+      else:
+        return 'fa fa-terminal'
 
   # Guards
 

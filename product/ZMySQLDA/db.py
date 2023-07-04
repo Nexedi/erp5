@@ -107,6 +107,7 @@ if _v < MySQLdb_version_required:
 
 from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
+from App.config import getConfiguration
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
@@ -115,7 +116,8 @@ from ZODB.POSException import ConflictError
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
     CR.SERVER_LOST,
-    CR.COMMANDS_OUT_OF_SYNC
+    CR.COMMANDS_OUT_OF_SYNC,
+    1927, # ER_CONNECTION_KILLED "Connection was killed" in MariaDB
     )
 
 query_syntax_error = (
@@ -245,6 +247,14 @@ class DB(TM):
         items = self._connection.split()
         if not items:
             return
+        if items[0][0] == "%":
+            cert_base_name = items.pop(0)[1:]
+            instancehome = getConfiguration().instancehome
+            kwargs['ssl'] = {
+              'ca': os.path.join(instancehome, 'etc', 'zmysqlda', cert_base_name + '-ca.pem'),
+              'cert': os.path.join(instancehome, 'etc', 'zmysqlda', cert_base_name + '-cert.pem'),
+              'key': os.path.join(instancehome, 'etc', 'zmysqlda', cert_base_name + '-key.pem'),
+            }
         if items[0] == "~":
             kwargs['compress'] = True
             del items[0]
@@ -319,7 +329,12 @@ class DB(TM):
               error=True,
             )
       self.db = MySQLdb.connect(**self._kw_args)
-      self._query("SET time_zone='+00:00'")
+      self._query(b"SET time_zone='+00:00'")
+      # BBB mysqlclient on python2 does not support sql_mode, check that
+      # the connection is actually encrypted.
+      if self._kw_args.get('ssl') and \
+          not self._query(b"SHOW STATUS LIKE 'Ssl_version'").fetch_row()[0][1]:
+          raise NotSupportedError("Connection established without SSL")
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
