@@ -383,6 +383,9 @@ class FunctionalTestRunner:
           test_table = tr[1].xpath('.//table')[0]
           status = tr.attrib.get('class')
           if 'status_failed' in status:
+            # XXX replace status_failed classes by an inline style supported by gadget_html_viewer
+            for test_tr in test_table.xpath('.//tr[contains(@class, "status_failed")]'):
+              test_tr.set('style', 'background-color: red;')
             if etree.tostring(test_table).find("expected failure") != -1:
               expected_failure_amount += 1
             else:
