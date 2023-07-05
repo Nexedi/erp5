@@ -168,7 +168,7 @@ var EnemyDroneAPI = /** @class */ (function () {
     }
   };
   /*
-  ** Converts geo latitude-longitud coordinates (º) to x,y plane coordinates (m)
+  ** Enemy drone works with cartesian, no geo conversion
   */
   EnemyDroneAPI.prototype.processCoordinates = function (x, y, z) {
     if (isNaN(x) || isNaN(y) || isNaN(z)) {
@@ -184,7 +184,7 @@ var EnemyDroneAPI = /** @class */ (function () {
     };
   };
   EnemyDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
-    return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
+    return this._mapManager.convertToGeoCoordinates(x, y, z);
   };
   EnemyDroneAPI.prototype.getDroneViewInfo = function (drone) {
     var context = this, result = [], distance,
