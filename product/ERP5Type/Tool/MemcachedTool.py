@@ -300,9 +300,6 @@ if memcache is not None:
       if memcached_plugin is None:
         raise ValueError('Memcached Plugin does not exists: %r' % (
           plugin_path, ))
-      global_prefix = self.erp5_site_global_id
-      if global_prefix:
-        key_prefix = global_prefix + '_' + key_prefix
       return SharedDict(memcached_plugin.getConnection(), prefix=key_prefix)
 
   InitializeClass(MemcachedTool)
