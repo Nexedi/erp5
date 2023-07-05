@@ -7,8 +7,8 @@
 
 __version__ = '0.3.0'
 
-import base64
 import errno
+import hashlib
 import httplib
 import os
 import random
@@ -1274,8 +1274,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                        **kw)
               sql = kw.get('erp5_sql_connection_string')
               if sql:
-                app[portal_name]._setProperty('erp5_site_global_id',
-                                              base64.standard_b64encode(str2bytes(sql)))
+                erp5_site_global_id = hashlib.md5(str2bytes(sql)).hexdigest()[:8]
+                app[portal_name]._setProperty('erp5_site_global_id', erp5_site_global_id)
+                app[portal_name].portal_memcached.erp5_site_global_id = erp5_site_global_id
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
