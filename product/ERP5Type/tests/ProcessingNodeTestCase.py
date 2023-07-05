@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import abc
 import errno, logging, mock, os, socket, time
+import hashlib
 import itertools
 from threading import Thread
 import six
@@ -18,6 +19,7 @@ from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import \
   addUserToDeveloperRole, DummyMailHostMixin, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
+from Products.ERP5Type.Utils import str2bytes
 
 
 class DictPersistentWrapperMetaClass(abc.ABCMeta):
@@ -353,6 +355,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     from Zope2.custom_zodb import cluster
     self._registerNode(distributing=not cluster, processing=1)
     self.commit()
+    self._setMemcachedKeyPrefix()
 
   def _setUpDummyMailHost(self):
     """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
@@ -370,6 +373,22 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
       if cls.__bases__[0] is DummyMailHostMixin:
         cls.__bases__ = cls.__bases__[1:]
         pmc_init_of(cls)
+
+  def _setMemcachedKeyPrefix(self):
+    """Inject a prefix to keys used by memcached, so that when we are
+    running multiple runUnitTest process using the same memcached
+    instance they don't have conflicting keys.
+    """
+    from Products.ERP5Type.Tool.MemcachedTool import MemcachedTool
+    erp5_sql_connection_string = os.environ.get('erp5_sql_connection_string')
+    if erp5_sql_connection_string:
+      test_prefix = hashlib.md5(str2bytes(erp5_sql_connection_string)).hexdigest()[:6]
+      original_getMemcachedDict =  MemcachedTool.getMemcachedDict
+      def getMemcachedDict(self, key_prefix, plugin_path):
+        return original_getMemcachedDict(self, test_prefix + key_prefix, plugin_path)
+      patcher = mock.patch.object(MemcachedTool, 'getMemcachedDict', getMemcachedDict)
+      patcher.start()
+      self.addCleanup(patcher.stop)
 
   def processing_node(self):
     """Main loop for nodes that process activities"""

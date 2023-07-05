@@ -162,6 +162,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
                 .portal_activities.isSubscribed()
         self.portal.portal_activities.unsubscribe()
         self._setUpDummyMailHost()
+        self._setMemcachedKeyPrefix()
 
     setUp = PortalTestCase.setUp
 

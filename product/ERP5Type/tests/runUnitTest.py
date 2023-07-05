@@ -358,6 +358,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     # ZODB Test Components requires bootstrap to install BTs before running the
     # actual test
     test_list_len = len(test_list)
+    cleanup = None
     if test_list_len > 0 and ':' in test_list[0]:
       # TODO-arnau: Does anyone specifies multiple test file on command line, at
       # least test bot does not...
@@ -390,6 +391,14 @@ class ERP5TypeTestLoader(unittest.TestLoader):
         def __init__(self, test_list):
           self._test_list = test_list
           self._bt_already_installed_list = []
+
+          # so that we can use addCleanup during setUp
+          self._cleanups = []
+          self._outcome = None
+          class ResultForDoCleanup:
+            def addError(self, testcase, exc_info):
+              raise exc_info[1]
+          self._resultForDoCleanups = ResultForDoCleanup()
 
         def getBusinessTemplateList(self):
           """
@@ -445,9 +454,15 @@ class ERP5TypeTestLoader(unittest.TestLoader):
                        self)._installBusinessTemplateList(url_bt_tuple_list,
                                                           *args, **kwargs)
 
-      _ZodbTestComponentBootstrapOnly(test_list).setUp()
+      zodb_test_component_bootstrap = _ZodbTestComponentBootstrapOnly(test_list)
+      zodb_test_component_bootstrap.setUp()
+      cleanup  = zodb_test_component_bootstrap.doCleanups
 
-    return super(ERP5TypeTestLoader, self).loadTestsFromNames(test_list)
+    try:
+      return super(ERP5TypeTestLoader, self).loadTestsFromNames(test_list)
+    finally:
+      if cleanup is not None:
+        cleanup()
 
   def getTestCaseNames(self, testCaseClass):
     """Return a sorted sequence of method names found within testCaseClass

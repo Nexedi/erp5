@@ -7,7 +7,6 @@
 
 __version__ = '0.3.0'
 
-import base64
 import errno
 import os
 import random
@@ -1026,6 +1025,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
          use the hooks instead.
       '''
       from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+      # Activities in unit tests shall never fail.
+      # Let's be a little tolerant for the moment.
+      BaseMessage.max_retry = property(lambda self:
+        self.activity_kw.get('max_retry', 1))
+
       self.__connector_set = set()
       onConnect = self.__onConnect
       self.__original_ZMySQLDA_connect = original_ZMySQLDA_connect = ZMySQLDA_Connection.connect
@@ -1033,10 +1037,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         onConnect(self)
         return original_ZMySQLDA_connect(self, *args, **kw)
       ZMySQLDA_Connection.connect = connect
-      # Activities in unit tests shall never fail.
-      # Let's be a litte tolerant for the moment.
-      BaseMessage.max_retry = property(lambda self:
-        self.activity_kw.get('max_retry', 1))
+
+      self._setMemcachedKeyPrefix()
 
       template_list = list(self.getBusinessTemplateList())
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
@@ -1323,10 +1325,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                        reindex=reindex,
                                        create_activities=create_activities,
                                        **kw)
-              sql = kw.get('erp5_sql_connection_string')
-              if sql:
-                app[portal_name]._setProperty('erp5_site_global_id',
-                                              base64.standard_b64encode(str2bytes(sql)))
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
@@ -1541,6 +1539,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       os.write(zeo_client, str2bytes(repr(host_port)))
       os.close(zeo_client)
     ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
+    self._setMemcachedKeyPrefix()
 
   def asyncore_loop(self):
     try:
