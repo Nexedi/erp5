@@ -67,11 +67,6 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
     # Execute the business configuration if not installed
     business_configuration = self.getBusinessConfiguration()
     if (business_configuration.getSimulationState() != 'installed'):
-      self.portal.portal_caches.erp5_site_global_id = '%s' % random.random()
-      self.portal.portal_caches._p_changed = 1
-      self.commit()
-      self.portal.portal_caches.updateCache()
-
       self.bootstrapSite()
       self.commit()
 

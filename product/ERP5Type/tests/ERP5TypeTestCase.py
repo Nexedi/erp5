@@ -7,7 +7,6 @@
 
 __version__ = '0.3.0'
 
-import base64
 import errno
 import os
 import random
@@ -1317,10 +1316,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                        reindex=reindex,
                                        create_activities=create_activities,
                                        **kw)
-              sql = kw.get('erp5_sql_connection_string')
-              if sql:
-                app[portal_name]._setProperty('erp5_site_global_id',
-                                              base64.standard_b64encode(str2bytes(sql)))
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
@@ -1637,7 +1632,7 @@ optimize()
 @onsetup
 def fortify():
   '''Add some extra checks that we don't have at runtime, not to slow down the
-  system.
+  system and adjust the system for unit test environment.
   '''
   # check that we don't store persistent objects in cache
   from Products.ERP5Type.CachePlugins.BaseCache import CacheEntry
@@ -1661,6 +1656,19 @@ def fortify():
       Message__init__(self, url, document_uid, active_process, active_process_uid,
                       activity_kw, *args, **kw)
     Message.__init__ = __init__
+
+  # Inject a prefix to keys used by memcached, so that when we are running
+  # multiple runUnitTest process using the same memcached instance they don't
+  # have conflicting keys.
+  import Products.ERP5Type.Tool.MemcachedTool
+  original_encodeKey = Products.ERP5Type.Tool.MemcachedTool.encodeKey
+  erp5_sql_connection_string = os.environ.get('erp5_sql_connection_string')
+  if erp5_sql_connection_string:
+    test_prefix = md5(
+      str2bytes(erp5_sql_connection_string)).hexdigest()[:6].encode()
+    def encodeKey(key):
+      return test_prefix + original_encodeKey(key)
+    Products.ERP5Type.Tool.MemcachedTool.encodeKey = encodeKey
 
 
 fortify()
