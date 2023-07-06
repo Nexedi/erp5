@@ -310,7 +310,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       } else {
         this._loiter_mode = false;
       }
-    }
+    };
 
   FixedWingDroneAPI.prototype.sendMsg = function (msg, to) {
     var _this = this,
