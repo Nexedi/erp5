@@ -43,9 +43,8 @@ var DroneLogAPI = /** @class */ (function () {
       return log_entry_list;
     }
     var log = this._drone_info.log_content, entry_1, entry_2, interval,
-      map_dict = this._mapManager.getMapInfo(),
       min_height = 15, converted_log_point_list = [],
-      i, splitted_log_entry, x, y, position, lat, lon, height, timestamp,
+      i, splitted_log_entry, position, lat, lon, height, timestamp,
       time_offset = 1, log_entry_list = getLogEntries(log);
     //XXX: Patch to determine log time format (if this is standarized, drop it)
     if (log_entry_list[0] && log_entry_list[1]) {

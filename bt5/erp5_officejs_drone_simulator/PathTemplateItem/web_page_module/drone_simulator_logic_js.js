@@ -581,13 +581,13 @@ var GameManager = /** @class */ (function () {
           (0 < _this.waiting_update_count)) {
         _this.ongoing_update_promise = _this._update(TIME_DELTA, fullscreen)
           .push(function () {
-          _this.waiting_update_count -= 1;
-          _this.ongoing_update_promise = null;
-          triggerUpdateIfPossible();
-        }).push(undefined, function (error) {
-          console.log("ERROR on Game Manager update:", error);
-          _this.finish_deferred.reject.bind(_this.finish_deferred);
-        });
+            _this.waiting_update_count -= 1;
+            _this.ongoing_update_promise = null;
+            triggerUpdateIfPossible();
+          }).push(undefined, function (error) {
+            console.log("ERROR on Game Manager update:", error);
+            _this.finish_deferred.reject.bind(_this.finish_deferred);
+          });
       }
     }
     try {
