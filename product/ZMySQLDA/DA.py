@@ -101,6 +101,7 @@ from DateTime import DateTime
 from . import DABase
 from .db import DB, DeferredDB
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import IS_ZOPE2
 
 SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
@@ -139,6 +140,9 @@ class Connection(DABase.Connection):
     manage_properties=HTMLFile('connectionEdit', globals())
 
     connect_on_load = False
+
+    if not IS_ZOPE2:
+      zmi_icon = 'fas fa-database'
 
     def factory(self): return DB
 

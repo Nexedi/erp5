@@ -38,7 +38,7 @@ from .MessageCatalog import MessageCatalog, to_unicode
 from .utils import lang_negotiator
 from .LanguageManager import LanguageManager
 
-
+from Products.ERP5Type import IS_ZOPE2
 
 # Constructors
 manage_addLocalizerForm = LocalDTMLFile('ui/Localizer_add', globals())
@@ -62,6 +62,9 @@ class Localizer(LanguageManager, Folder):
     meta_type = 'Localizer'
 
     id = 'Localizer'
+
+    if not IS_ZOPE2:
+      zmi_icon = 'fas fa-language'
 
     _properties = ({'id': 'title', 'type': 'string'},
                    {'id': 'accept_methods', 'type': 'tokens'},

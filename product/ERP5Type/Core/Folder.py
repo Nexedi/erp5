@@ -56,6 +56,7 @@ from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Accessor import Base as BaseAccessor
+from Products.ERP5Type import IS_ZOPE2
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
@@ -717,6 +718,9 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
   meta_type = 'ERP5 Folder'
   portal_type = 'Folder'
   add_permission = Permissions.AddPortalContent
+
+  if not IS_ZOPE2:
+    zmi_icon = 'far fa-folder'
 
   # Overload _properties define in OFS/Folder
   # _properties=({'id':'title', 'type': 'string','mode':'wd'},)
