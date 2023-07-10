@@ -555,6 +555,10 @@ var MapManager = /** @class */ (function () {
         new_obstacle.scaling = new BABYLON.Vector3(obstacle.scale.x,
                                                    obstacle.scale.z,
                                                    obstacle.scale.y);
+      var obs_material = new BABYLON.StandardMaterial("obsmat_" + count, scene);
+      obs_material.alpha = 1;
+      obs_material.diffuseColor = new BABYLON.Color3(255, 153, 0);
+      new_obstacle.material = obs_material;
       _this._obstacle_list.push(new_obstacle);
       count++;
     });

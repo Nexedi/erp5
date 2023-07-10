@@ -428,9 +428,9 @@
         }
         var seed_value = options.map_seed,
           random_seed = new Math.seedrandom(seed_value), i,
-          n_enemies = randomIntFromInterval(1, 10, random_seed),
-          n_flags = randomIntFromInterval(1, 10, random_seed),
-          n_obstacles = randomIntFromInterval(1, 10, random_seed),
+          n_enemies = randomIntFromInterval(5, 10, random_seed),
+          n_flags = randomIntFromInterval(5, 10, random_seed),
+          n_obstacles = randomIntFromInterval(5, 10, random_seed),
           flag_list = [], obstacle_list = [], enemy_list = [], random_position,
           obstacles_types = ["box"/*, "sphere"*/, "cylinder"], type,
           obstacle_limit = [options.map_size / 6, options.map_size / 100,
