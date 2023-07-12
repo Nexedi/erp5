@@ -41,7 +41,8 @@ STATE_KEY = 'str'
 # See zopefoundation/DateTime commit fff6d04 (Various cleanups, improve unpickling
 # speed and distinguish between equal representations and references to equal points
 # in time., 2011-05-06)
-DateTimeKlass.__eq__ = DateTimeKlass.equalTo
+# Also in DateTime 4, DateTime(0).equalTo(None) is True and we need to avoid it.
+DateTimeKlass.__eq__ = lambda self, t: t is not None and self.equalTo(t)
 
 
 # ERP5 Patch for different pickle implementation, to optimize for disk usage.
