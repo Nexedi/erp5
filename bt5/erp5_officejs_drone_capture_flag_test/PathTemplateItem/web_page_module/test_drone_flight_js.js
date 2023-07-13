@@ -24,56 +24,54 @@
     SEED = 'flag',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'function distance(a, b) {\n' +
+      'function assert(a, b, msg) {\n' +
+      '  if (a === b)\n' +
+      '    console.log(msg + ": OK");\n' +
+      '  else\n' +
+      '    console.log(msg + ": FAIL");\n' +
+      '}\n' +
+      'function distance(lat1, lon1, lat2, lon2) {\n' +
       '  var R = 6371e3, // meters\n' +
-      '    la1 = a.x * Math.PI / 180, // lat, lon in radians\n' +
-      '    la2 = b.x * Math.PI / 180,\n' +
-      '    lo1 = a.y * Math.PI / 180,\n' +
-      '    lo2 = b.y * Math.PI / 180,\n' +
+      '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
+      '    la2 = lat2 * Math.PI / 180,\n' +
+      '    lo1 = lon1 * Math.PI / 180,\n' +
+      '    lo2 = lon2 * Math.PI / 180,\n' +
       '    haversine_phi = Math.pow(Math.sin((la2 - la1) / 2), 2),\n' +
       '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
       '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
       '}\n' +
-  /*function compare(coord1, coord2) {
-    console.assert(coord1.x === coord2.x, "Wrong latitude", coord1.x, coord2.x);
-    console.assert(coord1.y === coord2.y, "Wrong longitude", coord1.y, coord2.y);
-    console.assert(coord1.z === coord2.z, "Wrong altitude", coord1.z, coord2.z);
-  }*/
-      '\n' +
+      'function compare(coord1, coord2) {\n' +
+      '  assert(coord1.x, coord2.x, "Latitude")\n' +
+      '  assert(coord1.y, coord2.y, "Longitude")\n' +
+      '  assert(coord1.z, coord2.z, "Altitude")\n' +
+      '}\n' +
       'me.onStart = function () {\n' +
-      'console.log("me.id");\n' +
-    /*console.assert(me.getAirSpeed() === 16, "Wrong initial speed");
-    console.assert(me.getYaw() === 0, "Wrong yaw angle");
-    me.initialPosition = me.getCurrentPosition();
-    me.setTargetCoordinates(
-      me.initialPosition.x + 0.01,
-      me.initialPosition.y,
-      me.initialPosition.z
-    );*/
+      '  assert(me.getAirSpeed(), 16, "Initial speed");\n' +
+      '  assert(me.getYaw(), 0, "Yaw angle")\n' +
+      '  me.initialPosition = me.getCurrentPosition();\n' +
+      '  me.setTargetCoordinates(\n' +
+      '    me.initialPosition.x + 0.01,\n' +
+      '    me.initialPosition.y,\n' +
+      '    me.initialPosition.z\n' +
+      '  );\n' +
       '};\n' +
-      '\n' +
       'me.onUpdate = function (timestamp) {\n' +
-    /*var realDistance = distance(
-      me.initialPosition.x,
-      me.initialPosition.y,
-      me.getCurrentPosition().x,
-      me.getCurrentPosition().y
-    ).toFixed(8),
-      expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);
-    console.assert(timestamp === 1000 / 60, "Wrong timestamp");
-    console.assert(
-      realDistance == expectedDistance,
-      "Wrong distance",
-      realDistance,
-      expectedDistance
-    );
-    compare(me.getCurrentPosition(), {
-      x: me.initialPosition.x + 2.3992831666911723e-06,
-      y: me.initialPosition.y,
-      z: me.initialPosition.z
-    });
-    me.exit(me.triggerParachute());*/
+      'var realDistance = distance(\n' +
+      '  me.initialPosition.x,\n' +
+      '  me.initialPosition.y,\n' +
+      '  me.getCurrentPosition().x,\n' +
+      '  me.getCurrentPosition().y\n' +
+      ').toFixed(8),\n' +
+      '  expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
+      '  assert(timestamp, 1000 / 60, "Timestamp");\n' +
+      '  assert(realDistance, expectedDistance, "Distance");\n' +
+      'compare(me.getCurrentPosition(), {\n' +
+      '  x: me.initialPosition.x + 2.3992831666911723e-06,\n' +
+      '  y: me.initialPosition.y,\n' +
+      '  z: me.initialPosition.z\n' +
+      '});\n' +
+      'me.exit(me.triggerParachute());\n' +
       '};',
     DRAW = true,
     LOG = true,
