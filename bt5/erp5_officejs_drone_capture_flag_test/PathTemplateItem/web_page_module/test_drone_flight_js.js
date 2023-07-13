@@ -3,21 +3,6 @@
 (function (window, rJS, domsugar, document, URLSearchParams, Blob) {
   "use strict";
 
-  function createLogNode(message) {
-    var node = document.createElement("div");
-    var textNode = document.createTextNode(message);
-    node.appendChild(textNode);
-    return node;
-  }
-  var baseLogFunction = console.log;
-  console.log = function () {
-    baseLogFunction.apply(console, arguments);
-    var args = Array.prototype.slice.call(arguments);
-    for (var i = 0;i < args.length;i++) {
-      var node = createLogNode(args[i]);
-      document.querySelector('.test_log').appendChild(node);
-    }
-  };
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
@@ -57,7 +42,7 @@
   }*/
       '\n' +
       'me.onStart = function () {\n' +
-      'console.log("jjjjjjjjjjjjj");\n' +
+      'console.log("me.id");\n' +
     /*console.assert(me.getAirSpeed() === 16, "Wrong initial speed");
     console.assert(me.getYaw() === 0, "Wrong yaw angle");
     me.initialPosition = me.getCurrentPosition();
@@ -495,6 +480,7 @@
       };
 
       game_parameters_json = {
+        "debug_test_mode": true,
         "drone": {
           "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
           "maxDeceleration": parseInt(options.drone_max_deceleration, 10),
@@ -565,45 +551,18 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var a, blob, div, key, log, log_content, aux;
-          i = 0;
-          div = domsugar('div', { text: result.message });
+          var div = domsugar('div', { text: "CONSOLE LOG ENTRIES:" });
           document.querySelector('.container').parentNode.appendChild(div);
-          for (key in result.content) {
-            if (result.content.hasOwnProperty(key)) {
-              log_content = result.content[key].join('\n').replaceAll(",", ";");
-              blob = new Blob([log_content], {type: 'text/plain'});
-              a = domsugar('a', {
-                text: 'Download Simulation LOG ' + i,
-                download: 'simulation_log_' + i +
-                '_speed_' + game_parameters_json.drone.speed +
-                '_min-speed_' + game_parameters_json.drone.minSpeed +
-                '_max-speed_' + game_parameters_json.drone.maxSpeed +
-                '_max-accel_' + game_parameters_json.drone.maxAcceleration +
-                '_max-decel_' + game_parameters_json.drone.maxDeceleration +
-                '_max-roll_' + game_parameters_json.drone.maxRoll +
-                '_min-pitch_' + game_parameters_json.drone.minPitchAngle +
-                '_max-pitch_' + game_parameters_json.drone.maxPitchAngle +
-                '_max-sink_' + game_parameters_json.drone.maxSinkRate +
-                '_max-climb_' + game_parameters_json.drone.maxClimbRate +
-                '.txt',
-                href: window.URL.createObjectURL(blob)
-              });
-              log = domsugar('textarea',
-                             { value: log_content, id: 'log_result_' + i });
-              div = domsugar('div', [a]);
-              a.dataset.downloadurl =  ['text/plain', a.download,
-                                        a.href].join(':');
-              document.querySelector('.container').parentNode.appendChild(div);
-              document.querySelector('.container').parentNode.appendChild(log);
-              i += 1;
-              if (i === DRONE_LIST.length) {
-                break;
-                //Do not show enemy drone logs for now
-                /*aux = domsugar('div', { text: "Enemy drones logs:" });
-                document.querySelector('.container').parentNode.appendChild(aux);*/
-              }
-            }
+          function createLogNode(message) {
+            var node = document.createElement("div");
+            var textNode = document.createTextNode(message);
+            node.appendChild(textNode);
+            return node;
+          }
+          var lines = result.console_log.split('\n');
+          for (var i = 0;i < lines.length;i++) {
+            var node = createLogNode(lines[i]);
+            document.querySelector('.test_log').appendChild(node);
           }
         }, function (error) {
           return gadget.notifySubmitted({message: "Error: " + error.message,
