@@ -42,6 +42,7 @@
       'me.onStart = function () {\n' +
       '  me.direction_set = false;\n' +
       '  me.dodging = false;\n' +
+      '  me.ongoing_detection = false;\n' +
       '};\n' +
       '\n' +
       'me.onGetMsg = function (msg) {\n' +
@@ -63,13 +64,6 @@
       //'      console.log("Good distance to obstacle. DODGED.");\n' +
       '      me.dodging = false;\n' +
       '    }\n' +
-      '    //check if there is another obstacle while dodging!\n' +
-      '    /*var drone_view = me.getDroneViewInfo();\n' +
-      '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
-      '      return;\n' +
-      '    } else {\n' +
-      '      me.dodging = false;\n' +
-      '    }*/\n' +
       '    return;\n' +
       '  }\n' +
       '  if (!me.direction_set) {\n' +
@@ -85,20 +79,9 @@
       '    return;\n' +
       '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
-      '    var drone_view = me.getDroneViewInfo();\n' +
-      '    if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
-      //'      console.log("[DEMO] Obstacle detected! Dodging... ");\n' +
-      '      me.dodging = drone_view.obstacles[0];\n' +
-      '      me.direction_set = false;\n' +
-      '      var random = Math.random() < 0.5, dodge_point = {};\n' +
-      '      Object.assign(dodge_point, me.flag_positions[me.next_checkpoint]);\n' +
-      '      if (random) {\n' +
-      '        dodge_point.x = dodge_point.x * -1;\n' +
-      '      } else {\n' +
-      '        dodge_point.y = dodge_point.y * -1;\n' +
-      '      }\n' +
-      '      me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition().z);\n' +
-      '      return;\n' +
+      '    if (!me.ongoing_detection) {\n' +
+      '      me.getDroneViewInfo();\n' +
+      '      me.ongoing_detection = true;\n' +
       '    }\n' +
       '  }\n' +
       '  if (me.next_checkpoint < me.flag_positions.length) {\n' +
@@ -112,6 +95,23 @@
       '      me.next_checkpoint += 1;\n' +
       '      me.direction_set = false;\n' +
       '    }\n' +
+      '    return;\n' +
+      '  }\n' +
+      '};\n' +
+      '\n' +
+      'me.onDroneViewInfo = function (drone_view) {\n' +
+      '  me.ongoing_detection = false;\n' +
+      '  if (drone_view && drone_view.obstacles && drone_view.obstacles.length) {\n' +
+      '    me.dodging = drone_view.obstacles[0];\n' +
+      '    me.direction_set = false;\n' +
+      '    var random = Math.random() < 0.5, dodge_point = {};\n' +
+      '    Object.assign(dodge_point, me.flag_positions[me.next_checkpoint]);\n' +
+      '    if (random) {\n' +
+      '      dodge_point.x = dodge_point.x * -1;\n' +
+      '    } else {\n' +
+      '      dodge_point.y = dodge_point.y * -1;\n' +
+      '    }\n' +
+      '    me.setTargetCoordinates(dodge_point.x, dodge_point.y, me.getCurrentPosition().z);\n' +
       '    return;\n' +
       '  }\n' +
       '};',
