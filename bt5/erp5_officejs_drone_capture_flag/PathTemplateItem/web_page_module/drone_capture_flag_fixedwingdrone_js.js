@@ -393,7 +393,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
         result.obstacles.push(obstacle);
       }
     });
-    return result;
+    if (drone.__is_getting_drone_view !== true) {
+      drone.__is_getting_drone_view = true;
+      context._gameManager.delay(function () {
+        drone.__is_getting_drone_view = false;
+        try {
+          drone.onDroneViewInfo(result);
+        } catch (error) {
+          console.warn('Drone crashed on drone view due to error:', error);
+          drone._internal_crash();
+        }
+      }, 2000);
+    }
+    //return result;
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;

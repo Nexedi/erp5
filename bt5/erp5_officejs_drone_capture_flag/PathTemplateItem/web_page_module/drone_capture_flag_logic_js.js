@@ -391,6 +391,12 @@ var DroneManager = /** @class */ (function () {
    * @param msg The message
    */
   DroneManager.prototype.onGetMsg = function () { return; };
+  /**
+   * Function called when drone finished processing drone view
+   * (as result of getDroneViewInfo call)
+   */
+  DroneManager.prototype.onDroneViewInfo = function (drone_view) { return; };
+
   return DroneManager;
 }());
 
