@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_drone_flight_js</string> </value>
+            <value> <string>test_capture_drone_flight_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1009.50442.15819.10308</string> </value>
+                      <value> <string>1009.50443.23427.35003</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +266,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1689356841.39</float>
+                              <float>1689693314.03</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
