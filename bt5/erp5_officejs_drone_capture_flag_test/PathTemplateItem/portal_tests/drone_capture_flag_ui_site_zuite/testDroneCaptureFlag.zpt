@@ -75,12 +75,12 @@
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="container"]//a[contains(text(), 'Download Simulation LOG')]</td>
+  <td>//a[contains(text(), 'Download Simulation LOG')]</td>
   <td></td>
 <tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class="container"]//textarea</td>
+  <td>//textarea[@id="log_result_0"]</td>
   <td></td>
 <tr>
 </tbody></table>
