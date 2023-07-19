@@ -145,7 +145,6 @@ class ImageFieldWidget(Widget.TextWidget):
       if value in ('', None):
         return None
       path = '/'.join(REQUEST.physicalPathFromURL(value))
-      path = path.encode()
       image_object = field.getPortalObject().restrictedTraverse(path)
       display = field.get_value('image_display')
       format = field.get_value('image_format')
