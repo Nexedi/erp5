@@ -21,7 +21,7 @@
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
     FLAG_WEIGHT = 5,
-    SEED = 'flag',
+    SEED = '6',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
@@ -511,7 +511,6 @@
         "map_size": parseFloat(options.map_size),
         "height": parseInt(options.map_height, 10),
         "start_AMSL": parseFloat(options.start_AMSL),
-        //"flag_weight": parseInt(options.flag_weight, 10),
         "flag_list": [],
         "obstacle_list" : [],
         "drones": {
