@@ -82,10 +82,7 @@ class OOoBuilder(Implicit):
         dat = document.data
         while dat is not None:
           self._document.write(dat.data)
-          if six.PY2:
-            dat = dat.next
-          else:
-            dat = dat.__next__
+          dat = dat.next
       else:
         # Default behaviour
         self._document.write(document.data)
