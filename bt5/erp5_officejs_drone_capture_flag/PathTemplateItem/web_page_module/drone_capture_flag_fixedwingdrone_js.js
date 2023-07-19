@@ -17,7 +17,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    VIEW_SCOPE = 70;
+    VIEW_SCOPE = 100;
 
   //** CONSTRUCTOR
   function FixedWingDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -403,9 +403,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
           console.warn('Drone crashed on drone view due to error:', error);
           drone._internal_crash();
         }
-      }, 2000);
+      }, 1000);
     }
-    //return result;
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;

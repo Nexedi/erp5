@@ -411,7 +411,7 @@ var MapManager = /** @class */ (function () {
   //random geo-point:
   var MIN_LAT = 45.64,
       MIN_LON = 14.253,
-      EPSILON = 15,
+      EPSILON = 9.9,
       START_Z = 15,
       R = 6371e3;
   function calculateMapInfo(map, map_dict) {

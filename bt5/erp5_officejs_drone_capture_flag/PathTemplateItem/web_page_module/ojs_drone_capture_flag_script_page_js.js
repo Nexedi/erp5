@@ -24,8 +24,8 @@
     SEED = 'flag',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
-      'var EPSILON = 10,\n' +
-      '  DODGE_DISTANCE = 50;\n' +
+      'var EPSILON = 15,\n' +
+      '  DODGE_DISTANCE = 100;\n' +
       '\n' +
       'function distance(a, b) {\n' +
       '  var R = 6371e3, // meters\n' +
@@ -429,8 +429,9 @@
         var seed_value = options.map_seed,
           random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(5, 10, random_seed),
-          n_flags = randomIntFromInterval(5, 10, random_seed),
-          n_obstacles = randomIntFromInterval(5, 10, random_seed),
+          n_flags = randomIntFromInterval(Math.floor(DRONE_LIST.length / 2),
+                                          DRONE_LIST.length, random_seed),
+          n_obstacles = randomIntFromInterval(5, 15, random_seed),
           flag_list = [], obstacle_list = [], enemy_list = [], random_position,
           obstacles_types = ["box"/*, "sphere"*/, "cylinder"], type,
           obstacle_limit = [options.map_size / 6, options.map_size / 100,
@@ -488,8 +489,8 @@
                 "z": 15 //TODO random z?
               },
               "scale": {
-                "x": randomIntFromInterval(0, obstacle_limit[type], random_seed),
-                "y": randomIntFromInterval(0, obstacle_limit[type], random_seed),
+                "x": randomIntFromInterval(20, obstacle_limit[type], random_seed),
+                "y": randomIntFromInterval(20, obstacle_limit[type], random_seed),
                 "z": randomIntFromInterval(5, obstacle_limit[3], random_seed)
               },
               "rotation": {
