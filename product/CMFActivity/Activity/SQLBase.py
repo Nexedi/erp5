@@ -1049,7 +1049,7 @@ CREATE TABLE %s (
       " date = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL %s SECOND)"
       "%s WHERE uid IN (%s)" % (
         self.sql_table, delay,
-        ", priority = priority + 1, retry = retry + 1" if retry else "",
+        ", retry = retry + 1" if retry else "",
         ",".join(map(str, uid_list))))
 
   def finalizeMessageExecution(self, activity_tool, message_list,
