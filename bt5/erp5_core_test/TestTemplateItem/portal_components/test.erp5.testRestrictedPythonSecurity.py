@@ -851,6 +851,31 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         return ip_interface(u'2a01:cb14:818:0:7312:e251:f251:ffbe').with_prefixlen
         ''')
 
+  def testPytzNonExistentTimeError(self):
+    """
+      Test if we can import NonExistentTimeError from the
+      pytz package. This is important to catch exceptions
+      which can be raised by pandas tz_localize, see:
+
+      https://pandas.pydata.org/pandas-docs/version/2.0.3/reference/api/pandas.Series.tz_localize.html
+
+      Test data/structure taken from
+
+      https://github.com/pandas-dev/pandas/blob/c1f673b71d2a4a7d11cb05d4803f279914c543d4/pandas/tests/scalar/timestamp/test_timezones.py#L124-L141
+    """
+    self.createAndRunScript(
+      '''
+      import pandas as pd
+      from pytz import exceptions
+      ts = pd.Timestamp("2015-03-08 02:00")
+      try:
+        ts.tz_localize("US/Eastern")
+      except exceptions.NonExistentTimeError:
+        return "not existent time error"
+      ''',
+      expected="not existent time error"
+    )
+
 
 def add_tests(suite, module):
   if hasattr(module, 'test_suite'):
