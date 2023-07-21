@@ -34,6 +34,7 @@ from OFS.Image import Image as OFSImage
 from lxml.etree import Element
 from lxml import etree
 import re
+import six
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
@@ -145,6 +146,8 @@ class ImageFieldWidget(Widget.TextWidget):
       if value in ('', None):
         return None
       path = '/'.join(REQUEST.physicalPathFromURL(value))
+      if six.PY2:
+        path = path.encode()
       image_object = field.getPortalObject().restrictedTraverse(path)
       display = field.get_value('image_display')
       format = field.get_value('image_format')
