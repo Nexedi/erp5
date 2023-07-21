@@ -1107,8 +1107,12 @@ class ODGStrategy(ODFStrategy):
       text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
       value = field.get_value('default')
-      if isinstance(value, bytes):
-        value = value.decode('utf-8')
+      if six.PY2:
+        if isinstance(value, str):
+          value = value.decode('utf-8')
+      else:
+        if isinstance(value, bytes):
+          value = value.decode('utf-8')
       for target_node in node_list:
         # render the field in odg xml node format
         attr_dict = {}
