@@ -356,8 +356,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (isNaN(lat) || isNaN(lon) || isNaN(z)) {
       throw new Error('Target coordinates must be numbers');
     }
-    var x = this._mapManager.longitudToX(lon, this._map_dict.width),
-      y = this._mapManager.latitudeToY(lat, this._map_dict.depth),
+    var x = this._mapManager.longitudToX(lon, this._map_dict.map_size),
+      y = this._mapManager.latitudeToY(lat, this._map_dict.map_size),
       position = this._mapManager.normalize(x, y, this._map_dict),
       processed_coordinates;
     if (z > this._map_dict.start_AMSL) {
