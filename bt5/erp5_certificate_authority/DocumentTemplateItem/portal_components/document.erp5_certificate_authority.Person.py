@@ -5,30 +5,7 @@ from Products.ERP5Type import Permissions
 class Person(ERP5Person):
   security = ClassSecurityInfo()
 
-  def _getCertificateLoginDocument(self):
-    for _erp5_login in self.objectValues(
-          portal_type=["ERP5 Login"]):
-      if _erp5_login.getValidationState() == "validated" and \
-        _erp5_login.getReference() == self.getUserId():
-        # The user already created a Login document as UserId, so
-        # So just use this one.
-        return _erp5_login
-
-    for _certificate_login in self.objectValues(
-         portal_type=["Certificate Login"]):
-      if _certificate_login.getValidationState() == "validated":
-        return _certificate_login
-
-    certificate_login = self.newContent(
-      portal_type="Certificate Login",
-      # For now use UserId as easy way.
-      reference=self.getUserId()
-    )
-    certificate_login.validate()
-    return certificate_login
-
-
-  def _checkCertificateRequest(self):
+  def checkCertificateRequest(self):
     try:
       self.checkUserCanChangePassword()
     except Unauthorized:
@@ -41,25 +18,20 @@ class Person(ERP5Person):
       if getSecurityManager().getUser().getId() != user_id:
         raise
 
-  def _getCertificate(self):
-    return self.getPortalObject().portal_certificate_authority\
-      .getNewCertificate(self._getCertificateLoginDocument().getReference())
+  def _generateCertificate(self):
+    certificate_login = self.newContent(
+      portal_type="Certificate Login",
+    )
+    certificate_dict = certificate_login.getCertificate()
+    certificate_login.validate()
+    return certificate_dict
 
-  def _revokeCertificate(self):
-    return self.getPortalObject().portal_certificate_authority\
-      .revokeCertificateByCommonName(self._getCertificateLoginDocument().getReference())
-
-  security.declarePublic('getCertificate')
-  def getCertificate(self):
-    """Returns new SSL certificate"""
-    self._checkCertificateRequest()
-    return self._getCertificate()
-
-  security.declarePublic('revokeCertificate')
-  def revokeCertificate(self):
-    """Revokes existing certificate"""
-    self._checkCertificateRequest()
-    self._revokeCertificate()
+  security.declarePublic('generateCertificate')
+  def generateCertificate(self):
+    """Returns new SSL certificate
+       This API was kept for backward compatibility"""
+    self.checkCertificateRequest()
+    return self._generateCertificate()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitle')

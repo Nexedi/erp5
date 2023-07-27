@@ -1,0 +1,5 @@
+<type_mixin>
+ <portal_type id="Certificate Login">
+  <item>CertificateLoginMixin</item>
+ </portal_type>
+</type_mixin>
