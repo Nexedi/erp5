@@ -11,21 +11,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key> <string>short_title</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>short_title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -45,9 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Certificate Authority Tool contains Certificate Authority.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -80,8 +72,14 @@
             </value>
         </item>
         <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Contribution Tool</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
@@ -104,13 +102,11 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
-            <value> <string>description</string> </value>
+            <value> <string>short_title</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -123,28 +119,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>property_name</string> </key>
-            <value> <string>short_title</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>domain_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
