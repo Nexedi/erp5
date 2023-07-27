@@ -3,6 +3,8 @@
          unparam: true */
 
 var GAMEPARAMETERS = {};
+//for DEBUG/TEST mode
+var baseLogFunction = console.log, console_log = "";
 
 /******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
@@ -549,6 +551,15 @@ var GameManager = /** @class */ (function () {
       FixedWingDroneAPI: FixedWingDroneAPI,
       DroneLogAPI: DroneLogAPI
     };
+    if (this._game_parameters_json.debug_test_mode) {
+      console.log = function () {
+        baseLogFunction.apply(console, arguments);
+        var args = Array.prototype.slice.call(arguments);
+        for (var i = 0;i < args.length;i++) {
+          console_log += args[i] + "\n";
+        }
+      };
+    }
   }
 
   Object.defineProperty(GameManager.prototype, "gameParameter", {
@@ -563,7 +574,11 @@ var GameManager = /** @class */ (function () {
     var gadget = this;
     return gadget._init()
       .push(function () {
-        return gadget._flight_log;
+        return {
+          'message': gadget._result_message,
+          'content': gadget._flight_log,
+          'console_log': console_log
+        };
       });
   };
 

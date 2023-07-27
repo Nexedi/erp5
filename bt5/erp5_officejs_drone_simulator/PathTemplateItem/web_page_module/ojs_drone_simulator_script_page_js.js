@@ -555,9 +555,9 @@
         .push(function (result) {
           var a, blob, div, key, log, log_content;
           i = 0;
-          for (key in result) {
-            if (result.hasOwnProperty(key)) {
-              log_content = result[key].join('\n').replaceAll(",", ";");
+          for (key in result.content) {
+            if (result.content.hasOwnProperty(key)) {
+              log_content = result.content[key].join('\n').replaceAll(",", ";");
               blob = new Blob([log_content], {type: 'text/plain'});
               a = domsugar('a', {
                 text: 'Download Simulation LOG ' + i,
