@@ -281,15 +281,15 @@ class CertificateAuthorityTool(BaseTool):
     index = open(self.index).read().splitlines()
     valid_line_list = [q for q in index if q.startswith('V') and
       ('CN=%s/' % common_name in q)]
-    if len(valid_line_list) != 1:
+    if len(valid_line_list) < 1:
       raise ValueError('No certificate for %r' % common_name)
-    return valid_line_list[0].split('\t')[3]
+    return [l.split('\t')[3] for l in valid_line_list]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-    'revokeCertificate')
+    'revokeCertificateByCommonName')
   def revokeCertificateByCommonName(self, common_name):
     self._checkCertificateAuthority()
-    serial = self._getValidSerial(common_name)
-    self.revokeCertificate(serial)
+    for serial in self._getValidSerial(common_name):
+      self.revokeCertificate(serial)
 
 InitializeClass(CertificateAuthorityTool)
