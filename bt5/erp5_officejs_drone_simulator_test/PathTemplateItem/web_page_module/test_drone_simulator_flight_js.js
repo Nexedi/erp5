@@ -21,6 +21,15 @@
     NUMBER_OF_DRONES = 1,
     FLAG_WEIGHT = 5,
     SEED = 'flag',
+    MIN_LAT = 45.6364,
+    MAX_LAT = 45.65,
+    MIN_LON = 14.2521,
+    MAX_LON = 14.2766,
+    HEIGHT = 100,
+    start_AMSL = 595,
+    INIT_LON = 14.2658,
+    INIT_LAT = 45.6412,
+    INIT_Z = 15,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'function assert(a, b, msg) {\n' +
@@ -29,6 +38,7 @@
       '  else\n' +
       '    console.log(msg + ": FAIL");\n' +
       '}\n' +
+      '\n' +
       'function distance(lat1, lon1, lat2, lon2) {\n' +
       '  var R = 6371e3, // meters\n' +
       '    la1 = lat1 * Math.PI / 180, // lat, lon in radians\n' +
@@ -40,11 +50,13 @@
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
       '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
       '}\n' +
+      '\n' +
       'function compare(coord1, coord2) {\n' +
       '  assert(coord1.x, coord2.x, "Latitude")\n' +
       '  assert(coord1.y, coord2.y, "Longitude")\n' +
       '  assert(coord1.z, coord2.z, "Altitude")\n' +
       '}\n' +
+      '\n' +
       'me.onStart = function () {\n' +
       '  assert(me.getAirSpeed(), 16, "Initial speed");\n' +
       '  assert(me.getYaw(), 0, "Yaw angle")\n' +
@@ -55,31 +67,32 @@
       '    me.initialPosition.z\n' +
       '  );\n' +
       '};\n' +
+      '\n' +
       'me.onUpdate = function (timestamp) {\n' +
-      'var realDistance = distance(\n' +
-      '  me.initialPosition.x,\n' +
-      '  me.initialPosition.y,\n' +
-      '  me.getCurrentPosition().x,\n' +
-      '  me.getCurrentPosition().y\n' +
-      ').toFixed(8),\n' +
-      '  expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
-      '  assert(timestamp, 1000 / 60, "Timestamp");\n' +
-      '  assert(realDistance, expectedDistance, "Distance");\n' +
-      'compare(me.getCurrentPosition(), {\n' +
-      '  x: me.initialPosition.x + 2.3992831666911723e-06,\n' +
-      '  y: me.initialPosition.y,\n' +
-      '  z: me.initialPosition.z\n' +
-      '});\n' +
-      'me.exit(me.triggerParachute());\n' +
+      '  var realDistance = distance(\n' +
+      '    me.initialPosition.x,\n' +
+      '    me.initialPosition.y,\n' +
+      '    me.getCurrentPosition().x,\n' +
+      '    me.getCurrentPosition().y\n' +
+      '  ).toFixed(8),\n' +
+      '    expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
+      '    assert(timestamp, 1000 / 60, "Timestamp");\n' +
+      '    assert(realDistance, expectedDistance, "Distance");\n' +
+      '  compare(me.getCurrentPosition(), {\n' +
+      '    x: me.initialPosition.x + 2.3992831666911723e-06,\n' +
+      '    y: me.initialPosition.y,\n' +
+      '    z: me.initialPosition.z\n' +
+      '  });\n' +
+      '  me.exit(me.triggerParachute());\n' +
       '};',
     DRAW = true,
     LOG = true,
     LOG_TIME = 1662.7915426540285,
     DRONE_LIST = [],
     LOGIC_FILE_LIST = [
-      'gadget_erp5_page_drone_capture_flag_logic.js',
-      'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
-      'gadget_erp5_page_drone_capture_flag_enemydrone.js'
+      'gadget_erp5_page_drone_simulator_logic.js',
+      'gadget_erp5_page_drone_simulator_fixedwingdrone.js',
+      'gadget_erp5_page_drone_simulator_dronelogfollower.js'
     ];
 
   rJS(window)
@@ -88,39 +101,72 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('input[type="submit"]').click();
+    })
+
+    .onEvent('submit', function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget('form_view')
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
+        })
+        .push(function (input) {
+          gadget.runGame(input);
+        });
+    })
+
     .declareMethod('render', function render() {
       var gadget = this;
-      return gadget.runGame();
+      return gadget.getDeclaredGadget('form_view')
+        .push(function (form_gadget) {
+          return form_gadget.render({
+            erp5_document: {
+              "_embedded": {"_view": {
+                "my_script": {
+                  "default": DEFAULT_SCRIPT_CONTENT,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "script",
+                  "hidden": 0,
+                  "type": "GadgetField",
+                  "renderjs_extra": '{"editor": "codemirror", "maximize": true}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
+                }
+              }},
+              "_links": {
+                "type": {
+                  name: ""
+                }
+              }
+            },
+            form_definition: {
+              group_list: [[
+                "bottom",
+                [["my_script"]]
+              ]]
+            }
+          });
+        });
     })
 
     .declareJob('runGame', function runGame(options) {
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
-        game_parameters_json, map_json;
+        game_parameters_json;
       DRONE_LIST = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < NUMBER_OF_DRONES; i += 1) {
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
-                         "script_content": DEFAULT_SCRIPT_CONTENT};
+                         "script_content": options.script};
       }
-      map_json = {
-        "map_size": parseFloat(MAP_SIZE),
-        "height": parseInt(map_height, 10),
-        "start_AMSL": parseFloat(start_AMSL),
-        "flag_list": [{
-          "position": {
-            "x": -27,
-            "y": 72,
-            "z": 10
-          }
-        }],
-        "obstacle_list" : [],
-        "drones": {
-          "user": DRONE_LIST,
-          "enemy": []
-        }
-      };
       game_parameters_json = {
         "debug_test_mode": true,
         "drone": {
@@ -141,11 +187,24 @@
           "information": 0,
           "communication": 0
         },
-        "map": map_json,
+        "map": {
+          "min_lat": parseFloat(MIN_LAT),
+          "max_lat": parseFloat(MAX_LAT),
+          "min_lon": parseFloat(MIN_LON),
+          "max_lon": parseFloat(MAX_LON),
+          "height": parseInt(HEIGHT),
+          "start_AMSL": parseFloat(start_AMSL)
+        },
+        "initialPosition": {
+          "longitude": parseFloat(INIT_LON),
+          "latitude": parseFloat(INIT_LAT),
+          "z": parseFloat(INIT_Z)
+        },
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
-        "log_interval_time": LOG_TIME
+        "log_interval_time": LOG_TIME,
+        "droneList": DRONE_LIST
       };
       return gadget.declareGadget("babylonjs.gadget.html",
                                   {element: fragment, scope: 'simulator'})
