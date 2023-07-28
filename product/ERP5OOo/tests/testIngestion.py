@@ -52,6 +52,7 @@ import ZPublisher.HTTPRequest
 from unittest import expectedFailure
 import six.moves.http_client
 import six.moves.urllib.parse, six.moves.urllib.request
+import six
 
 import base64
 
@@ -756,33 +757,50 @@ class TestIngestion(IngestionTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'doc',
                                  ['pdf', 'doc', 'rtf', 'txt', 'odt'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'doc',
-                                                 ['writer.html'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'doc',
+                                                   ['writer.html'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'doc', ['writer.html'])
 
   def stepCheckSpreadsheetDocumentExportList(self, sequence=None,
                                              sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'xls', ['csv', 'xls', 'ods', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document, 'xls',
-                                 ['calc.html', 'calc.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document, 'xls',
+                                   ['calc.html', 'calc.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'xls', ['calc.html', 'calc.pdf'])
 
   def stepCheckPresentationDocumentExportList(self, sequence=None,
                                               sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'ppt', ['ppt', 'odp', 'pdf'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
-                                                 'ppt', ['impr.pdf'])
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
+                                                   'ppt', ['impr.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'ppt', ['impr.pdf'])
 
   def stepCheckDrawingDocumentExportList(self, sequence=None,
                                          sequence_list=None, **kw):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.checkDocumentExportList(document, 'sxd', ['jpg', 'svg', 'pdf', 'odg'])
-    # legacy format will be replaced
-    expectedFailure(self.checkDocumentExportList)(document,
+    if six.PY2:
+      # legacy format will be replaced
+      expectedFailure(self.checkDocumentExportList)(document,
                                                  'sxd', ['draw.pdf'])
+    else:
+      self.assertRaises(AssertionError, self.checkDocumentExportList, 
+                        document, 'sxd', ['draw.pdf'])
+
 
   def stepExportPDF(self, sequence=None, sequence_list=None, **kw):
     """
@@ -792,10 +810,10 @@ class TestIngestion(IngestionTestCase):
     f = makeFileUpload('TEST-en-002.pdf')
     document.edit(file=f)
     mime, text = document.convert('text')
-    self.assertIn('magic', text)
+    self.assertIn(b'magic', text)
     self.assertTrue(mime == 'text/plain')
     mime, html = document.convert('html')
-    self.assertIn('magic', html)
+    self.assertIn(b'magic', html)
     self.assertTrue(mime == 'text/html')
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
@@ -932,7 +950,7 @@ class TestIngestion(IngestionTestCase):
     """
       Email was sent in by someone to ERP5.
     """
-    f = open(makeFilePath('email_from.txt'))
+    f = open(makeFilePath('email_from.txt'), "rb")
     document = self.receiveEmail(f.read())
     self.tic()
 
@@ -941,7 +959,7 @@ class TestIngestion(IngestionTestCase):
     """
       Email was sent in by someone to ERP5.
     """
-    f = open(makeFilePath('email_multiple_attachments.eml'))
+    f = open(makeFilePath('email_multiple_attachments.eml'), "rb")
     document = self.receiveEmail(f.read())
     self.tic()
 
@@ -1540,7 +1558,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1618,7 +1636,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1676,7 +1694,7 @@ context.setReference(reference)
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1767,7 +1785,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
@@ -1856,7 +1874,7 @@ return result
     document_to_ingest = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest.publish()
     self.tic()
 
@@ -1907,7 +1925,7 @@ return result
     a Spreadsheet ?
     """
     path = makeFilePath('import_region_category.ods')
-    data = open(path, 'r').read()
+    data = open(path, 'rb').read()
 
     document = self.portal.portal_contributions.newContent(filename='toto',
                                                   data=data,
@@ -1960,7 +1978,7 @@ return result
     """Check that given portal_type is always honoured
     """
     path = makeFilePath('import_region_category.xls')
-    data = open(path, 'r').read()
+    data = open(path, 'rb').read()
 
     document = self.portal.portal_contributions.newContent(
                                       filename='import_region_category.xls',
@@ -1978,7 +1996,7 @@ return result
     """Check that given id is always honoured
     """
     path = makeFilePath('import_region_category.xls')
-    data = open(path, 'r').read()
+    data = open(path, 'rb').read()
 
     document = self.portal.portal_contributions.newContent(
                                       id='this_id',
@@ -2003,7 +2021,7 @@ return result
   def test_newContent_trough_http(self):
     filename = 'import_region_category.xls'
     path = makeFilePath(filename)
-    data = open(path, 'r').read()
+    data = open(path, 'rb').read()
     reference = 'ITISAREFERENCE'
 
     portal_url = self.portal.absolute_url()
