@@ -356,12 +356,17 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (isNaN(lat) || isNaN(lon) || isNaN(z)) {
       throw new Error('Target coordinates must be numbers');
     }
-    var processed_coordinates = this._mapManager.toLocalCoordinates(lat, lon);
+    var point = this._mapManager.toLocalCoordinates(lat, lon,
+                                                    this._map_dict.map_size),
+      position = this._mapManager.normalize(point.x, point.y, this._map_dict);
     if (z > this._map_dict.start_AMSL) {
       z -= this._map_dict.start_AMSL;
     }
-    processed_coordinates.z = z;
-    return processed_coordinates;
+    return {
+      x: position[0],
+      y: position[1],
+      z: z
+    };
   };
   FixedWingDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
     return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
