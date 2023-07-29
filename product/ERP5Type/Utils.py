@@ -29,7 +29,6 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 from __future__ import absolute_import
-from six import int2byte as chr
 from six import string_types as basestring
 from six.moves import xrange
 import six
@@ -1843,11 +1842,11 @@ def guessEncodingFromText(data, content_type='text/html'):
 
 _reencodeUrlEscapes_map = {chr(x): chr(x) if chr(x) in
     # safe
-    str2bytes("!'()*-." "0123456789" "_~"
-              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-              "abcdefghijklmnopqrstuvwxyz"
-              # reserved (maybe unsafe)
-              "#$&+,/:;=?@[]")
+    "!'()*-." "0123456789" "_~"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    # reserved (maybe unsafe)
+    "#$&+,/:;=?@[]"
   else "%%%02X" % x
   for x in xrange(256)}
 
