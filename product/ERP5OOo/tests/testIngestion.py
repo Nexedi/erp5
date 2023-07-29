@@ -37,7 +37,7 @@ from lxml import etree
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -1952,7 +1952,7 @@ return result
     module = self.portal.document_module
     document = module.newContent(portal_type='File',
                                  property_which_doesnot_exists='Foo',
-                                 data='Hello World!',
+                                 data=b'Hello World!',
                                  filename='toto.txt')
     document.publish()
     self.tic()
@@ -1967,7 +1967,7 @@ return result
     self.assertEqual(new_doc.getTitle(), 'One title')
     self.assertEqual(new_doc.getReference(), 'EFAA')
     self.assertEqual(new_doc.getValidationState(), 'published')
-    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getData(), b'Hello World!')
 
     # Migrate a document with url property
     url = new_doc.absolute_url() + '/getData'
@@ -1979,7 +1979,7 @@ return result
     new_doc = document.migratePortalType('File')
     self.assertEqual(new_doc.getPortalType(), 'File')
     self.assertEqual(new_doc.asURL(), url)
-    self.assertEqual(new_doc.getData(), 'Hello World!')
+    self.assertEqual(new_doc.getData(), b'Hello World!')
     self.assertEqual(new_doc.getValidationState(), 'submitted')
 
   def test_ContributionTool_isURLIngestionPermitted(self):
@@ -2067,14 +2067,14 @@ return result
     uri = '%(protocol)s://%(hostname)s' % url_dict
 
     push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
-    request = six.moves.urllib.request.Request(push_url, six.moves.urllib.parse.urlencode(
+    request = six.moves.urllib.request.Request(push_url, str2bytes(six.moves.urllib.parse.urlencode(
                                         {'data': data,
                                         'filename': filename,
                                         'reference': reference,
                                         'disable_cookie_login__': 1,
-                                        }), headers={
+                                        })), headers={
        'Authorization': 'Basic %s' %
-         base64.b64encode('ERP5TypeTestCase:')
+         base64.b64encode(b'ERP5TypeTestCase:')
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication
