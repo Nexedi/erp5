@@ -32,7 +32,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Utils import bytes2str
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from erp5.component.interface.IWatermarkable import IWatermarkable
 from erp5.component.document.Image import Image
 from erp5.component.document.Document import ConversionError
@@ -291,10 +291,10 @@ class PDFDocument(Image):
     finally:
       tmp.close()
     # Quick hack to remove bg color - XXX
-    h = command_result.replace('<BODY bgcolor="#A0A0A0"', '<BODY ')
+    h = command_result.replace(b'<BODY bgcolor="#A0A0A0"', b'<BODY ')
     # Make links relative
-    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1],
-                                                          'href="asEntireHTML')
+    h = h.replace(str2bytes('href="%s.html' % tmp.name.split(os.sep)[-1]),
+                                                          b'href="asEntireHTML')
     return h
 
   security.declarePrivate('_convertToDJVU')
