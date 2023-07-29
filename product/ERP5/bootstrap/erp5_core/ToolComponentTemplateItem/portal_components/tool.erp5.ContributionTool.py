@@ -647,7 +647,7 @@ class ContributionTool(BaseTool):
     # if a content-disposition header is present,
     # try first to read the suggested filename from it.
     header_info = url_file.info()
-    content_disposition = header_info.getheader('content-disposition', '')
+    content_disposition = header_info.get('content-disposition', '')
     filename = parse_header(content_disposition)[1].get('filename')
     if not filename:
       # Now read the filename from url.
