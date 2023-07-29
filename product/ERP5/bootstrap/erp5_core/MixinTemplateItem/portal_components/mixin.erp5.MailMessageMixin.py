@@ -35,6 +35,7 @@ from zLOG import LOG, INFO
 from email.header import decode_header, HeaderParseError
 
 import re
+import six
 
 filename_regexp = 'name="([^"]*)"'
 
@@ -43,7 +44,8 @@ def testCharsetAndConvert(text_content, content_type, encoding):
     if encoding is not None:
       text_content = text_content.decode(encoding).encode('utf-8')
     else:
-      text_content = text_content.decode().encode('utf-8')
+      if six.PY2:
+        text_content = text_content.decode().encode('utf-8')
   except (UnicodeDecodeError, LookupError):
     encoding = guessEncodingFromText(text_content, content_type)
     if encoding is not None:
