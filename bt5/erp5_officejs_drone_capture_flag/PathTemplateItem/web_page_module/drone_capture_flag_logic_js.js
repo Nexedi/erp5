@@ -414,64 +414,12 @@ var MapManager = /** @class */ (function () {
       EPSILON = 9.9,
       START_Z = 15,
       R = 6371e3;
-  function calculateMapInfo(map, map_dict) {
-    var min_lat = map_dict.min_lat || MIN_LAT,
-      min_lon =  map_dict.min_lon || MIN_LON,
-      offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
-      max_lat = offset[0],
-      max_lon = offset[1],
-      starting_point = map_dict.map_size / 2 * -0.75,
-      local_min = map.toLocalCoordinates(min_lat, min_lon, map_dict.map_size),
-      local_max = map.toLocalCoordinates(max_lat, max_lon, map_dict.map_size);
-    map.map_info = {
-      "depth": map_dict.map_size,
-      "width": map_dict.map_size,
-      "map_size": map_dict.map_size,
-      "min_lat": min_lat,
-      "min_lon": min_lon,
-      "max_lat": max_lat,
-      "max_lon": max_lon,
-      "min_x": local_min.x,
-      "min_y": local_min.y,
-      "max_x": local_max.x,
-      "max_y": local_max.y,
-      "height": map_dict.height,
-      "start_AMSL": map_dict.start_AMSL,
-      "flag_list": map_dict.flag_list,
-      "geo_flag_list": [],
-      "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
-      "obstacle_list": map_dict.obstacle_list,
-      "geo_obstacle_list": [],
-      "initial_position": {
-        "x": 0,
-        "y": starting_point,
-        "z": START_Z
-      }
-    };
-    map_dict.flag_list.forEach(function (flag_info, index) {
-      map.map_info.geo_flag_list.push(map.convertToGeoCoordinates(
-        flag_info.position.x,
-        flag_info.position.y,
-        flag_info.position.z
-      ));
-    });
-    map_dict.obstacle_list.forEach(function (obstacle_info, index) {
-      var geo_obstacle = {};
-      Object.assign(geo_obstacle, obstacle_info);
-      geo_obstacle.position = map.convertToGeoCoordinates(
-        obstacle_info.position.x,
-        obstacle_info.position.y,
-        obstacle_info.position.z
-      );
-      map.map_info.geo_obstacle_list.push(geo_obstacle);
-    });
-  }
   //** CONSTRUCTOR
   function MapManager(scene) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
       largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
       count = 0, new_obstacle;
-    calculateMapInfo(_this, GAMEPARAMETERS.map);
+    this.setMapInfo(GAMEPARAMETERS.map, GAMEPARAMETERS.initialPosition);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -612,22 +560,71 @@ var MapManager = /** @class */ (function () {
       _this._flag_list.push(flag);
     });
   }
+  MapManager.prototype.setMapInfo = function (map_dict, init_pos) {
+    var map = this, starting_point = map_dict.map_size / 2 * -0.75;
+    map.map_info = {
+      "depth": map_dict.map_size,
+      "width": map_dict.map_size,
+      "map_size": map_dict.map_size,
+      "height": map_dict.height,
+      "start_AMSL": map_dict.start_AMSL,
+      "flag_list": map_dict.flag_list,
+      "geo_flag_list": [],
+      "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
+      "obstacle_list": map_dict.obstacle_list,
+      "geo_obstacle_list": [],
+      "initial_position": {
+        "x": 0,
+        "y": starting_point,
+        "z": START_Z
+      }
+    };
+    map.map_info.min_x = map.longitudToX(map_dict.min_lon);
+    map.map_info.min_y = map.latitudeToY(map_dict.min_lat);
+    map.map_info.max_x = map.longitudToX(map_dict.max_lon);
+    map.map_info.max_y = map.latitudeToY(map_dict.max_lat);
+    var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                     [map_dict.min_lat, map_dict.max_lon]),
+    max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                    [map_dict.max_lat, map_dict.min_lon]),
+    map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
+    //var point = map.latLonOffset(map_dict.min_lat, map_dict.min_lon, 1143);
+    map_dict.flag_list.forEach(function (flag_info, index) {
+      map.map_info.geo_flag_list.push(map.convertToGeoCoordinates(
+        flag_info.position.x,
+        flag_info.position.y,
+        flag_info.position.z
+      ));
+    });
+    map_dict.obstacle_list.forEach(function (obstacle_info, index) {
+      var geo_obstacle = {};
+      Object.assign(geo_obstacle, obstacle_info);
+      geo_obstacle.position = map.convertToGeoCoordinates(
+        obstacle_info.position.x,
+        obstacle_info.position.y,
+        obstacle_info.position.z
+      );
+      map.map_info.geo_obstacle_list.push(geo_obstacle);
+    });
+  };
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
-  MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
+  MapManager.prototype.longitudToX = function (lon) {
+    return (this.map_info.map_size / 360.0) * (180 + lon);
+  };
+  MapManager.prototype.latitudeToY = function (lat) {
+    return (this.map_info.map_size / 180.0) * (90 - lat);
+  };
+  //TODO refactor latLonOffset, should be the reverse of lat-lon distance
+  //then map_size can be used as parameter (get max lat-lon from map_size)
+  /*MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
     var R = 6371e3, //Earth radius
       lat_offset = offset_in_mt / R,
       lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
     return [lat + lat_offset * 180 / Math.PI,
             lon + lon_offset * 180 / Math.PI];
-  };
-  MapManager.prototype.toLocalCoordinates = function (lat, lon, map_size) {
-    return {
-      "x": (map_size / 360.0) * (180 + lon),
-      "y": (map_size / 180.0) * (90 - lat)
-    };
-  };
+  };*/
   MapManager.prototype.latLonDistance = function (c1, c2) {
     var q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
@@ -639,12 +636,19 @@ var MapManager = /** @class */ (function () {
       c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-  MapManager.prototype.normalize = function (x, y, map_dict) {
-    var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
-      n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.width / 2,
-            n_y * 1000 - map_dict.depth / 2];
-  };
+  MapManager.prototype.convertToLocalCoordinates =
+    function (latitude, longitude, altitude) {
+      var map_info = this.map_info,
+        x = this.longitudToX(longitude),
+        y = this.latitudeToY(latitude);
+      return {
+        x: ((x - map_info.min_x) / (map_info.max_x - map_info.min_x)) *
+          1000 - map_info.width / 2,
+        y: ((y - map_info.min_y) / (map_info.max_y - map_info.min_y)) *
+          1000 - map_info.depth / 2,
+        z: altitude
+      };
+    };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
     var map_dict = this.map_info,
       lon = x + map_dict.width / 2,
