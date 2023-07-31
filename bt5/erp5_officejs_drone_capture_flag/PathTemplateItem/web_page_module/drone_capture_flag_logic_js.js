@@ -420,9 +420,9 @@ var MapManager = /** @class */ (function () {
       offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
       max_lon = offset[1],
-      starting_point = map_dict.map_size / 2 * -0.75,
+      starting_point = map_dict.map_size / 2 * -0.75/*,
       local_min = map.toLocalCoordinates(min_lat, min_lon, map_dict.map_size),
-      local_max = map.toLocalCoordinates(max_lat, max_lon, map_dict.map_size);
+      local_max = map.toLocalCoordinates(max_lat, max_lon, map_dict.map_size)*/;
     map.map_info = {
       "depth": map_dict.map_size,
       "width": map_dict.map_size,
@@ -431,10 +431,14 @@ var MapManager = /** @class */ (function () {
       "min_lon": min_lon,
       "max_lat": max_lat,
       "max_lon": max_lon,
-      "min_x": local_min.x,
+      /*"min_x": local_min.x,
       "min_y": local_min.y,
       "max_x": local_max.x,
-      "max_y": local_max.y,
+      "max_y": local_max.y,*/
+      "min_x": map_dict.map_size / 2 * -1,
+      "min_y": map_dict.map_size / 2 * -1,
+      "max_x": map_dict.map_size / 2,
+      "max_y": map_dict.map_size / 2,
       "height": map_dict.height,
       "start_AMSL": map_dict.start_AMSL,
       "flag_list": map_dict.flag_list,
@@ -625,8 +629,15 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.toLocalCoordinates = function (lat, lon, map_size) {
     return {
       "x": (map_size / 360.0) * (180 + lon),
-      "y": (map_size / 180.0) * (90 - lat)
+      //"y": (map_size / 180.0) * (90 - lat)
+      "y": (map_size / 2) -
+      (map_size * Math.log(
+        Math.tan((Math.PI / 4) + ((lat * Math.PI / 180) / 2))) / (2 * Math.PI))
     };
+    /*
+    'x' => ($lng+180)*($width/360),
+    'y' => ($height/2)-($width*log(tan((M_PI/4)+(($lat*M_PI/180)/2)))/(2*M_PI))
+    */
   };
   MapManager.prototype.latLonDistance = function (c1, c2) {
     var q1 = c1[0] * Math.PI / 180,
