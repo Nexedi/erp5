@@ -415,8 +415,8 @@ var MapManager = /** @class */ (function () {
       START_Z = 15,
       R = 6371e3;
   function calculateMapInfo(map, map_dict) {
-    var min_lat = map_dict.min_lat || MIN_LAT,
-      min_lon =  map_dict.min_lon || MIN_LON,
+    var /*min_lat = map_dict.min_lat || MIN_LAT,
+      min_lon =  map_dict.min_lon || MIN_LON,*/
       /*offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
       max_lon = offset[1],*/
@@ -629,8 +629,8 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.toLocalCoordinates = function (lat, lon, map_size) {
     return {
       "x": (map_size / 360.0) * (180 + lon),
-      //"y": (map_size / 180.0) * (90 - lat)
-      "y": (map_size / 2) -
+      "y": (map_size / 180.0) * (90 - lat),
+      "y2": (map_size / 2) -
       (map_size * Math.log(
         Math.tan((Math.PI / 4) + ((lat * Math.PI / 180) / 2))) / (2 * Math.PI))
     };
