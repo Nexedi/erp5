@@ -45,6 +45,7 @@ from AccessControl import Unauthorized
 
 from DateTime import DateTime
 import warnings
+import six
 
 # Global parameters
 MAX_REPEAT = 10
@@ -661,7 +662,7 @@ class ContributionTool(BaseTool):
       filename = os.path.basename(filename)
       filename = urllib.parse.quote(filename, safe='') # pylint:disable=redundant-keyword-arg
       filename = filename.replace('%', '')
-    content_type = header_info.gettype()
+    content_type = header_info.gettype() if six.PY2 else header_info.get_content_type()
     return file_object, filename, content_type
 
 InitializeClass(ContributionTool)
