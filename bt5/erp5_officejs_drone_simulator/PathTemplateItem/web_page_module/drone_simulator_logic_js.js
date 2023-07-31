@@ -479,11 +479,11 @@ var MapManager = /** @class */ (function () {
     lon = lon / 1000;
     lon = lon * (map_dict.max_x - map_dict.min_x) +
       map_dict.min_x;
-    lon = lon / (map_dict.width / 360.0) - 180;
+    lon = lon / (map_dict.map_size / 360.0) - 180;
     lat = lat / 1000;
     lat = lat * (map_dict.max_y - map_dict.min_y) +
       map_dict.min_y;
-    lat = 90 - lat / (map_dict.depth / 180.0);
+    lat = 90 - lat / (map_dict.map_size / 180.0);
     return {
       x: lat,
       y: lon,
