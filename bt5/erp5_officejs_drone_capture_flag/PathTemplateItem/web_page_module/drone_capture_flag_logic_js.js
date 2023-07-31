@@ -417,9 +417,9 @@ var MapManager = /** @class */ (function () {
   function calculateMapInfo(map, map_dict) {
     var min_lat = map_dict.min_lat || MIN_LAT,
       min_lon =  map_dict.min_lon || MIN_LON,
-      offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
+      /*offset = map.latLonOffset(min_lat, min_lon, map_dict.map_size),
       max_lat = offset[0],
-      max_lon = offset[1],
+      max_lon = offset[1],*/
       starting_point = map_dict.map_size / 2 * -0.75/*,
       local_min = map.toLocalCoordinates(min_lat, min_lon, map_dict.map_size),
       local_max = map.toLocalCoordinates(max_lat, max_lon, map_dict.map_size)*/;
@@ -427,11 +427,11 @@ var MapManager = /** @class */ (function () {
       "depth": map_dict.map_size,
       "width": map_dict.map_size,
       "map_size": map_dict.map_size,
-      "min_lat": min_lat,
+      /*"min_lat": min_lat,
       "min_lon": min_lon,
       "max_lat": max_lat,
       "max_lon": max_lon,
-      /*"min_x": local_min.x,
+      "min_x": local_min.x,
       "min_y": local_min.y,
       "max_x": local_max.x,
       "max_y": local_max.y,*/
@@ -619,13 +619,13 @@ var MapManager = /** @class */ (function () {
   MapManager.prototype.getMapInfo = function () {
     return this.map_info;
   };
-  MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
+  /*MapManager.prototype.latLonOffset = function (lat, lon, offset_in_mt) {
     var R = 6371e3, //Earth radius
       lat_offset = offset_in_mt / R,
       lon_offset = offset_in_mt / (R * Math.cos(Math.PI * lat / 180));
     return [lat + lat_offset * 180 / Math.PI,
             lon + lon_offset * 180 / Math.PI];
-  };
+  };*/
   MapManager.prototype.toLocalCoordinates = function (lat, lon, map_size) {
     return {
       "x": (map_size / 360.0) * (180 + lon),
