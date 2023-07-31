@@ -6,7 +6,11 @@
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    MAP_SIZE = 600,
+    MAP_SIZE = 1905, //min-max lat-lon distance
+    min_lat = 45.6364,
+    max_lat = 45.65,
+    min_lon = 14.2521,
+    max_lon = 14.2766,
     map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -291,7 +295,7 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_map_size": {
+                /*"my_map_size": {
                   "description": "",
                   "title": "Map size",
                   "default": MAP_SIZE,
@@ -301,7 +305,7 @@
                   "key": "map_size",
                   "hidden": 0,
                   "type": "FloatField"
-                },
+                },*/
                 "my_start_AMSL": {
                   "description": "",
                   "title": "Start AMSL",
@@ -380,7 +384,7 @@
               group_list: [[
                 "left",
                 [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                 ["my_map_size"], ["my_map_height"],// ["my_flag_weight"],
+                 /*["my_map_size"], */["my_map_height"],// ["my_flag_weight"],
                  ["my_start_AMSL"], ["my_map_seed"]]
               ], [
                 "right",
@@ -407,6 +411,7 @@
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
+      options.map_size = MAP_SIZE;
       DRONE_LIST = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
@@ -429,8 +434,7 @@
         var seed_value = options.map_seed,
           random_seed = new Math.seedrandom(seed_value), i,
           n_enemies = randomIntFromInterval(5, 10, random_seed),
-          n_flags = randomIntFromInterval(Math.floor(DRONE_LIST.length / 2),
-                                          DRONE_LIST.length, random_seed),
+          n_flags = randomIntFromInterval(5, 10, random_seed),
           n_obstacles = randomIntFromInterval(5, 15, random_seed),
           flag_list = [], obstacle_list = [], enemy_list = [], random_position,
           obstacles_types = ["box"/*, "sphere"*/, "cylinder"], type,
@@ -511,6 +515,10 @@
         "map_size": parseFloat(options.map_size),
         "height": parseInt(options.map_height, 10),
         "start_AMSL": parseFloat(options.start_AMSL),
+        "min_lat": parseFloat(min_lat),
+        "max_lat": parseFloat(max_lat),
+        "min_lon": parseFloat(min_lon),
+        "max_lon": parseFloat(max_lon),
         "flag_list": [],
         "obstacle_list" : [],
         "drones": {
