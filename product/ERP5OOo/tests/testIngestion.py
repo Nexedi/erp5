@@ -1525,6 +1525,7 @@ class TestIngestion(IngestionTestCase):
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1533,7 +1534,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, unicode):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1580,7 +1581,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
@@ -1606,6 +1607,7 @@ return result
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1614,7 +1616,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, unicode):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1658,7 +1660,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
@@ -1716,7 +1718,7 @@ context.setReference(reference)
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1746,6 +1748,7 @@ context.setReference(reference)
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1754,7 +1757,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, unicode):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1807,7 +1810,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
@@ -1837,6 +1840,7 @@ return result
     """
     input_script_id = 'Document_getPropertyDictFromContent'
     python_code = """from Products.CMFCore.utils import getToolByName
+import six
 portal = context.getPortalObject()
 information = context.getContentInformation()
 
@@ -1845,7 +1849,7 @@ property_id_list = context.propertyIds()
 for k, v in information.items():
   key = k.lower()
   if v:
-    if isinstance(v, unicode):
+    if six.PY2 and isinstance(v, unicode):
       v = v.encode('utf-8')
     if key in property_id_list:
       if key == 'reference':
@@ -1897,7 +1901,7 @@ return result
     document_to_ingest2 = self.portal.portal_contributions.newContent(
                                                           portal_type='File',
                                                           filename='toto.txt',
-                                                          data='Hello World!')
+                                                          data=b'Hello World!')
     document_to_ingest2.publish()
     self.tic()
     self.assertEqual(document_to_ingest2.getReference(),
