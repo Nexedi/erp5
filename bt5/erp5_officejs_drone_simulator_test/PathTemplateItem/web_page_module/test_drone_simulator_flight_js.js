@@ -20,7 +20,6 @@
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 1,
     FLAG_WEIGHT = 5,
-    SEED = 'flag',
     MIN_LAT = 45.6364,
     MAX_LAT = 45.65,
     MIN_LON = 14.2521,
