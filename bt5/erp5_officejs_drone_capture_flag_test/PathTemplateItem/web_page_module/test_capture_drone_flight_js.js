@@ -20,7 +20,6 @@
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 1,
     FLAG_WEIGHT = 5,
-    SEED = 'flag',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'function assert(a, b, msg) {\n' +
