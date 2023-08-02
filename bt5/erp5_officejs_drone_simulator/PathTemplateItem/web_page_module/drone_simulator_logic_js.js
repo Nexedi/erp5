@@ -383,17 +383,13 @@ var MapManager = /** @class */ (function () {
         "max_x": map.longitudToX(map_dict.max_lon, map_size),
         "max_y": map.latitudeToY(map_dict.max_lat, map_size),
         "start_AMSL": map_dict.start_AMSL
-      },
-      position = map.normalize(
-        map.longitudToX(initial_position.longitude, map_size),
-        map.latitudeToY(initial_position.latitude, map_size),
-        map_info
-      );
-    map_info.initial_position = {
-      "x": position[0],
-      "y": position[1],
-      "z": initial_position.z
-    };
+      };
+    map_info.initial_position = map.convertToLocalCoordinates(
+      initial_position.latitude,
+      initial_position.longitude,
+      initial_position.z,
+      map_info
+    );
     return map_info;
   }
   //** CONSTRUCTOR
@@ -467,12 +463,18 @@ var MapManager = /** @class */ (function () {
       c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-  MapManager.prototype.normalize = function (x, y, map_dict) {
-    var n_x = (x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x),
-      n_y = (y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y);
-    return [n_x * 1000 - map_dict.width / 2,
-            n_y * 1000 - map_dict.depth / 2];
-  };
+  MapManager.prototype.convertToLocalCoordinates =
+    function (latitude, longitude, altitude, map_dict) {
+      var x = this.longitudToX(longitude, map_dict.map_size),
+        y = this.latitudeToY(latitude, map_dict.map_size);
+      return {
+        x: ((x - map_dict.min_x) / (map_dict.max_x - map_dict.min_x))
+          * 1000 - map_dict.width / 2,
+        y: ((y - map_dict.min_y) / (map_dict.max_y - map_dict.min_y))
+          * 1000 - map_dict.depth / 2,
+        z: altitude
+      };
+    };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z, map_dict) {
     var lon = x + map_dict.width / 2,
       lat = y + map_dict.depth / 2;
@@ -503,7 +505,7 @@ var GameManager = /** @class */ (function () {
   "use strict";
   // *** CONSTRUCTOR ***
   function GameManager(canvas, game_parameters_json) {
-    var drone, header_list;
+    var drone, header_list, i;
     this._canvas = canvas;
     this._canvas_width = canvas.width;
     this._canvas_height = canvas.height;
@@ -555,7 +557,7 @@ var GameManager = /** @class */ (function () {
       console.log = function () {
         baseLogFunction.apply(console, arguments);
         var args = Array.prototype.slice.call(arguments);
-        for (var i = 0;i < args.length;i++) {
+        for (i = 0; i < args.length; i += 1) {
           console_log += args[i] + "\n";
         }
       };
