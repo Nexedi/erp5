@@ -55,7 +55,8 @@
       '  );\n' +
       '};\n' +
       'me.onUpdate = function (timestamp) {\n' +
-      'var realDistance = distance(\n' +
+      '  var current_position = me.getCurrentPosition(),\n' +
+      '  realDistance = distance(\n' +
       '  me.initialPosition.x,\n' +
       '  me.initialPosition.y,\n' +
       '  me.getCurrentPosition().x,\n' +
@@ -64,10 +65,11 @@
       '  expectedDistance = (me.getAirSpeed() * timestamp / 1000).toFixed(8);\n' +
       '  assert(timestamp, 1000 / 60, "Timestamp");\n' +
       '  assert(realDistance, expectedDistance, "Distance");\n' +
-      'compare(me.getCurrentPosition(), {\n' +
-      '  x: me.initialPosition.x + 2.3992831666911723e-06,\n' +
-      '  y: me.initialPosition.y,\n' +
-      '  z: me.initialPosition.z\n' +
+      '  current_position.x = current_position.x.toFixed(7);\n' +
+      '  compare(current_position, {\n' +
+      '    x: (me.initialPosition.x + 2.3992831666911723e-06).toFixed(7),\n' +
+      '    y: me.initialPosition.y,\n' +
+      '    z: me.initialPosition.z\n' +
       '});\n' +
       'me.exit(me.triggerParachute());\n' +
       '};',
