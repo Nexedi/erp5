@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getCertificate</string> </value>
+            <value> <string>CertificateLogin_getCertificate</string> </value>
         </item>
       </dictionary>
     </pickle>

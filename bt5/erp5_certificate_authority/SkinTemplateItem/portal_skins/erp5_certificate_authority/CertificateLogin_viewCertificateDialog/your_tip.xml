@@ -211,7 +211,9 @@
                     <key> <string>default</string> </key>
                     <value> <string>Please copy both key and certificate.\n
 \n
-They are NOT stored anywhere for security reason.</string> </value>
+They are NOT stored anywhere for security reason.\n
+\n
+To activate the certificate, you still have to validate the Certificate Login</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

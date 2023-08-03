@@ -78,7 +78,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_view_mode_read_only_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
