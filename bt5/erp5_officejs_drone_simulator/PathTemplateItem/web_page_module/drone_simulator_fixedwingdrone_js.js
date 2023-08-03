@@ -175,14 +175,12 @@ var FixedWingDroneAPI = /** @class */ (function () {
       currentGeoCoordinates = this._mapManager.convertToGeoCoordinates(
         drone.position.x,
         drone.position.y,
-        drone.position.z,
-        this._map_dict
+        drone.position.z
       ),
       targetCoordinates = this._mapManager.convertToGeoCoordinates(
         drone._targetCoordinates.x,
         drone._targetCoordinates.y,
-        drone._targetCoordinates.z,
-        this._map_dict
+        drone._targetCoordinates.z
       ),
       bearing = this._computeBearing(
         currentGeoCoordinates.x,
@@ -243,8 +241,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     newCoordinates = this._mapManager.convertToLocalCoordinates(
       this._toDeg(newLatRad),
       this._toDeg(newLonRad),
-      drone.position.z,
-      this._map_dict
+      drone.position.z
     );
 
     // swap y and z axis so z axis represents altitude
@@ -395,7 +392,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       throw new Error('Target coordinates must be numbers');
     }
     var processed_coordinates =
-      this._mapManager.convertToLocalCoordinates(lat, lon, z, this._map_dict);
+      this._mapManager.convertToLocalCoordinates(lat, lon, z);
     if (processed_coordinates.z > this._map_dict.start_AMSL) {
       processed_coordinates.z -= this._map_dict.start_AMSL;
     }
@@ -404,7 +401,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     return processed_coordinates;
   };
   FixedWingDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
-    return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
+    return this._mapManager.convertToGeoCoordinates(x, y, z);
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;
