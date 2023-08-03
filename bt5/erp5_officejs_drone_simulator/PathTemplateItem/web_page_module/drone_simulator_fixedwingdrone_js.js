@@ -92,7 +92,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on every drone update, right before onUpdate AI script
   */
   FixedWingDroneAPI.prototype.internal_update = function (context, delta_time) {
-    var diff, newrot, orientationValue, rotStep, updateSpeed;
+    var diff, newrot, orientationValue, rotStep;
 
     //TODO rotation
     if (context._rotationTarget) {
@@ -116,18 +116,8 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
 
     this._updateSpeed(context, delta_time);
-    this._updateDirection(context, delta_time);
+    this._updatePosition(context, delta_time);
 
-    updateSpeed = context._speed * delta_time / 1000;
-    if (context._direction.x !== 0 ||
-        context._direction.y !== 0 ||
-        context._direction.z !== 0) {
-      context._controlMesh.position.addInPlace(new BABYLON.Vector3(
-        context._direction.x * updateSpeed,
-        context._direction.y * updateSpeed,
-        context._direction.z * updateSpeed
-      ));
-    }
     //TODO rotation
     orientationValue = context._maxOrientation *
       (context._speed / context._maxSpeed);
@@ -180,67 +170,112 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
   };
 
-  FixedWingDroneAPI.prototype._updateDirection = function (drone, delta_time) {
-    var horizontalCoeff, newX, newY, newZ, tangentYaw;
+  FixedWingDroneAPI.prototype._updatePosition = function (drone, delta_time) {
+    var R = 6371e3,
+      currentGeoCoordinates = this._mapManager.convertToGeoCoordinates(
+        drone.position.x,
+        drone.position.y,
+        drone.position.z
+      ),
+      targetCoordinates = this._mapManager.convertToGeoCoordinates(
+        drone._targetCoordinates.x,
+        drone._targetCoordinates.y,
+        drone._targetCoordinates.z
+      ),
+      bearing = this._computeBearing(
+        currentGeoCoordinates.x,
+        currentGeoCoordinates.y,
+        targetCoordinates.x,
+        targetCoordinates.y
+      ),
+      currentCosLat,
+      currentLatRad,
+      distance,
+      distanceCos,
+      distanceSin,
+      currentSinLat,
+      currentLonRad,
+      groundSpeed,
+      newCoordinates,
+      newLatRad,
+      newLonRad,
+      newYaw,
+      newYawRad,
+      verticalSpeed,
+      yawToDirection;
 
     if (this._loiter_mode
         && Math.sqrt(
           Math.pow(drone._targetCoordinates.x - drone.position.x, 2)
             + Math.pow(drone._targetCoordinates.y - drone.position.y, 2)
         ) <= this._loiter_radius) {
-      tangentYaw = this._computeBearing(
-        drone.position.x,
-        drone.position.y,
-        drone._targetCoordinates.x,
-        drone._targetCoordinates.y
-      ) - 90;
-      // trigonometric circle is east oriented, yaw angle is clockwise
-      tangentYaw = this._toRad(-tangentYaw + 90);
-      newX = Math.cos(tangentYaw);
-      newZ = Math.sin(tangentYaw);
+      newYaw = bearing - 90;
     } else {
-      [newX, newZ] = this._getNewYaw(drone, delta_time);
+      newYaw = this._getNewYaw(drone, bearing, delta_time);
     }
-    newY = this._getNewAltitude(drone);
+    newYawRad = this._toRad(newYaw);
 
-    horizontalCoeff = Math.sqrt(
-      (
-        Math.pow(drone.getAirSpeed(), 2) - Math.pow(newY, 2)
-      ) / (
-        Math.pow(newX, 2) + Math.pow(newZ, 2)
-      )
+    currentLatRad = this._toRad(currentGeoCoordinates.x);
+    currentCosLat = Math.cos(currentLatRad);
+    currentSinLat = Math.sin(currentLatRad);
+    currentLonRad = this._toRad(currentGeoCoordinates.y);
+
+    verticalSpeed = this._getVerticalSpeed(drone);
+    groundSpeed = Math.sqrt(
+      Math.pow(drone.getAirSpeed(), 2) - Math.pow(verticalSpeed, 2)
     );
-    newX *= horizontalCoeff;
-    newZ *= horizontalCoeff;
+
+    distance = (groundSpeed * delta_time / 1000) / R;
+    distanceCos = Math.cos(distance);
+    distanceSin = Math.sin(distance);
+
+    newLatRad = Math.asin(
+      currentSinLat * distanceCos
+        + currentCosLat * distanceSin * Math.cos(newYawRad)
+    );
+    newLonRad = currentLonRad + Math.atan2(
+      Math.sin(newYawRad) * distanceSin * currentCosLat,
+      distanceCos - currentSinLat * Math.sin(newLatRad)
+    );
+
+    newCoordinates = this._mapManager.convertToLocalCoordinates(
+      this._toDeg(newLatRad),
+      this._toDeg(newLonRad),
+      drone.position.z
+    );
+
     // swap y and z axis so z axis represents altitude
-    drone.setDirection(newX, newZ, newY);
+    drone._controlMesh.position.addInPlace(new BABYLON.Vector3(
+      Math.abs(newCoordinates.x - drone.position.x)
+        * (newCoordinates.x < drone.position.x ? -1 : 1),
+      verticalSpeed * delta_time / 1000,
+      Math.abs(newCoordinates.y - drone.position.y)
+        * (newCoordinates.y < drone.position.y ? -1 : 1)
+    ));
+    yawToDirection = this._toRad(-newYaw + 90);
+    drone.setDirection(
+      groundSpeed * Math.cos(yawToDirection),
+      groundSpeed * Math.sin(yawToDirection),
+      verticalSpeed
+    );
   };
 
-  FixedWingDroneAPI.prototype._getNewYaw = function (drone, delta_time) {
-    // swap y and z axis so z axis represents altitude
-    var bearing = this._computeBearing(
-        drone.position.x,
-        drone.position.y,
-        drone._targetCoordinates.x,
-        drone._targetCoordinates.y
-      ),
-      yaw = drone.getYaw(),
-      yawDiff = this._computeYawDiff(yaw, bearing),
-      yawUpdate = this.getYawVelocity(drone) * delta_time / 1000;
+  FixedWingDroneAPI.prototype._getNewYaw =
+    function (drone, bearing, delta_time) {
+      // swap y and z axis so z axis represents altitude
+      var yaw = drone.getYaw(),
+        yawDiff = this._computeYawDiff(yaw, bearing),
+        yawUpdate = this.getYawVelocity(drone) * delta_time / 1000;
 
-    if (yawUpdate >= Math.abs(yawDiff)) {
-      yawUpdate = yawDiff;
-    } else if (yawDiff < 0) {
-      yawUpdate *= -1;
-    }
-    yaw += yawUpdate;
+      if (yawUpdate >= Math.abs(yawDiff)) {
+        yawUpdate = yawDiff;
+      } else if (yawDiff < 0) {
+        yawUpdate *= -1;
+      }
+      return yaw + yawUpdate;
+    };
 
-    // trigonometric circle is east oriented, yaw angle is clockwise
-    yaw = this._toRad(-yaw + 90);
-    return [Math.cos(yaw), Math.sin(yaw)];
-  };
-
-  FixedWingDroneAPI.prototype._getNewAltitude = function (drone) {
+  FixedWingDroneAPI.prototype._getVerticalSpeed = function (drone) {
     // swap y and z axis so z axis represents altitude
     var altitudeDiff = drone._targetCoordinates.z - drone.position.z,
       verticalSpeed;
@@ -356,24 +391,17 @@ var FixedWingDroneAPI = /** @class */ (function () {
     if (isNaN(lat) || isNaN(lon) || isNaN(z)) {
       throw new Error('Target coordinates must be numbers');
     }
-    var x = this._mapManager.longitudToX(lon, this._map_dict.map_size),
-      y = this._mapManager.latitudeToY(lat, this._map_dict.map_size),
-      position = this._mapManager.normalize(x, y, this._map_dict),
-      processed_coordinates;
-    if (z > this._map_dict.start_AMSL) {
-      z -= this._map_dict.start_AMSL;
+    var processed_coordinates =
+      this._mapManager.convertToLocalCoordinates(lat, lon, z);
+    if (processed_coordinates.z > this._map_dict.start_AMSL) {
+      processed_coordinates.z -= this._map_dict.start_AMSL;
     }
-    processed_coordinates = {
-      x: position[0],
-      y: position[1],
-      z: z
-    };
     //this._last_altitude_point_reached = -1;
     //this.takeoff_path = [];
     return processed_coordinates;
   };
   FixedWingDroneAPI.prototype.getCurrentPosition = function (x, y, z) {
-    return this._mapManager.convertToGeoCoordinates(x, y, z, this._map_dict);
+    return this._mapManager.convertToGeoCoordinates(x, y, z);
   };
   FixedWingDroneAPI.prototype.getDroneAI = function () {
     return null;
@@ -419,11 +447,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
   };
   FixedWingDroneAPI.prototype.getYaw = function (drone) {
     var direction = drone.worldDirection;
-    return this._computeBearing(0, 0, direction.x, direction.z);
+    return this._toDeg(Math.atan2(direction.x, direction.z));
   };
-  FixedWingDroneAPI.prototype._computeBearing = function (x1, z1, x2, z2) {
-    return this._toDeg(Math.atan2(x2 - x1, z2 - z1));
-  };
+  FixedWingDroneAPI.prototype._computeBearing =
+      function (lat1, lon1, lat2, lon2) {
+      var dLon = this._toRad(lon2 - lon1),
+        lat1Rad = this._toRad(lat1),
+        lat2Rad = this._toRad(lat2),
+        x = Math.cos(lat2Rad) * Math.sin(dLon),
+        y = Math.cos(lat1Rad) * Math.sin(lat2Rad)
+          - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon);
+      return this._toDeg(Math.atan2(x, y));
+    };
+
   FixedWingDroneAPI.prototype._computeYawDiff = function (yaw1, yaw2) {
     var diff = yaw2 - yaw1;
     diff += (diff > 180) ? -360 : (diff < -180) ? 360 : 0;
