@@ -68,8 +68,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_panel_drone_capture_flag.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_capture_flag_api_page.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,11 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_drone_capture_flag_panel_js</string> </value>
+            <value> <string>ojs_drone_capture_flag_API_page_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -97,11 +105,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Capture Flag Panel JS</string> </value>
+            <value> <string>Drone Capture Flag API Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -187,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682436993.66</float>
+                              <float>1691176000.16</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -236,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1007.63432.27961.8516</string> </value>
+                      <value> <string>1010.15227.26072.45243</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -256,7 +266,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1691175603.36</float>
+                              <float>1691176057.3</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -319,7 +329,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682436791.14</float>
+                              <float>1691175985.71</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
