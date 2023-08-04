@@ -215,7 +215,7 @@ class PDFDocument(Image):
         if process.returncode:
           raise ConversionError(
               "Error invoking ghostscript.\noutput:%s\nerror:%s" % (output, error))
-        return output.strip()
+        return bytes2str(output).strip()
       except OSError as e:
         if e.errno != errno.ENOENT:
           raise
