@@ -1,0 +1,472 @@
+<html>
+
+  <head>
+      <link rel="stylesheet" type="text/css" href="gadget_erp5_page_drone_capture_flag_api_page.css">
+      <script src="gadget_erp5_page_drone_capture_flag_api_page.js"></script>
+      <title>Drone API Documentation</title>
+  </head>
+
+  <body>
+
+    <div class="documentation">
+
+      <h1>Fixed Wings Drone API</h1>
+
+      <h3>API functions</h3>
+
+      <h3>Functions called by game on event</h3>
+
+      <!-- Start -->
+      <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
+      <p class="item-descr">Function called on game start.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.onStart = function() {<br>
+        &nbsp;&nbsp;//one time execution code<br>
+        }
+      </p>
+
+      <div class="line"></div>
+
+      <!-- Update -->
+      <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
+      <p class="item-descr">Function called on game update, 60 times / second. <br></p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">timestamp: Integer</p>
+        <p class="item-param-2">Timestamp in milliseconds from UNIX epoch</p>
+      </div>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">me.onUpdate = function() {<br>
+        &nbsp;&nbsp;//code executed 60 times per second<br>
+        }
+      </p>
+
+      <div class="line"></div>
+
+      <!-- Touched -->
+      <h4 class="item-name" id="touched"><span>onTouched</span><span>: void</span></h4>
+      <p class="item-descr">Function called when drone is touched by another drone.</p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">me.onTouched = function() {<br>
+        &nbsp;&nbsp;//code executed when drone is touched<br>
+        }
+      </p>
+
+      <h5 class="item-param-1">Drones collision</h5>
+
+      <p class="item-example">
+        The collision between 2 drones is determined by a calculation based on each drone direction, exact position and collision angle, and resolves if one drone bumps the other of if both drones are set down.
+        <br><br>
+        The simulator engine checks if the drone control masks intersect, and then based on drones directions it calculates the collision angle between them. If the angle is too wide, both drones will fall. If not, the fastest drone will knockdown the slowest one.
+        <br><br>
+        The drone mask size is 0.5 x 0.5 (meters)
+      </p>
+
+      <div class="line"></div>
+
+      <!-- onDroneViewInfo -->
+      <h4 class="item-name" id="update"><span>onDroneViewInfo</span><span>: void</span></h4>
+      <p class="item-descr">Function called when a fired detection process finishes.<br>
+        (a detection process is started when a drone calls getDroneViewInfo method, see below)<br>
+      </p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">drone_view: dict</p>
+        <p class="item-param-2">Result of detection.</p>
+      </div>
+
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        me.getDroneViewInfo = function (drone_view) {<br>
+        &nbsp;&nbsp;//code executed when getDroneViewInfo finished<br>
+        }
+      </p>
+
+      <div class="line"></div>
+
+      <!-- GetMsg -->
+      <h4 class="item-name" id="getMsg"><span>onGetMsg</span><span>: void</span></h4>
+      <p class="item-descr">Function called when drone receives a message.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">msg: String</p>
+        <p class="item-param-2">Content of the message</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">me.onGetMsg = function (msg) {<br>
+          &nbsp;&nbsp;//process the msg
+          <br> }
+        </p>
+      </div>
+
+      <div class="line"></div>
+
+      <h3>Function that drones can call</h3>
+
+      <div class="line"></div>
+
+      <!-- sendMsg -->
+      <h4 class="item-name" id="sendMsg"><span>sendMsg</span><span>: void</span></h4>
+      <p class="item-descr">Sends a message to another drone (or to all team drones).<p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">msg: String</p>
+        <p class="item-param-2">The message to send.</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">id ?: Number</p>
+        <p class="item-param-2">ID of the recipient. Leave empty to send to all team drones.</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <div>
+        <p class="item-example">
+          me.sendMsg("My broadcast message");<br>
+          me.sendMsg("To my friend 0", 0);
+        </p>
+      </div>
+
+      <div class="line"></div>
+
+      <!-- getCurrentPosition -->
+      <h4 class="item-name" id="getCurrentPosition"><span>getCurrentPosition</span><span>: dictionary</span></h4>
+      <p class="item-descr">
+        Get drone current position geo-coordinates.<br>
+        {<br>
+        &nbsp;&nbsp;x: number, //latitude (in degrees)<br>
+        &nbsp;&nbsp;y: number, //longitude (in degrees)<br>
+        &nbsp;&nbsp;z: number  //altitude (in meters)<br>
+        }<br>
+      </p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        var current_position = me.getCurrentPosition();<br>
+        console.log(current_position);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getDroneViewInfo -->
+      <h4 class="item-name" id="getDroneViewInfo"><span>getDroneViewInfo</span><span>: void</span></h4>
+      <p class="item-descr">
+        By calling this method, the drone detection process is fired. It will get all the view information within its scope.<br>
+        Once the detection finishes (2 seconds) the event method onDroneViewInfo will be called.<br>
+      </p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        if (!me.ongoing_detection) {<br>
+        &nbsp;&nbsp;me.ongoing_detection = true;<br>
+        &nbsp;&nbsp;me.getDroneViewInfo();<br>
+        &nbsp;&nbsp;me.ongoing_detection = true;<br>
+        }<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- setTargetCoordinates -->
+      <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: dictionary</span></h4>
+      <p class="item-descr">
+        Set a target point expressed in geo coordinates. The drone will move straight to this point.
+      </p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">X: Float</p>
+        <p class="item-param-2">X value - latitude (in degrees).</p>
+      </div>
+      <div>
+        <p class="item-param-1">Y: Float</p>
+        <p class="item-param-2">Y value - longitude (in degrees).</p>
+      </div>
+      <div>
+        <p class="item-param-1">Z: Float</p>
+        <p class="item-param-2">Z value - altitude (in meters).</p>
+      </div>
+
+      <div>
+      <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <div>
+        <p class="item-example">
+          me.setTargetCoordinates(lat, lon, altitude);<br>
+        </p>
+      </div>
+
+      <div class="line"></div>
+
+      <!-- setSpeed -->
+      <h4 class="item-name" id="setSpeed"><span>setSpeed</span><span>: void</span></h4>
+      <p class="item-descr">Set the drone speed in meters/second. The drone will move at the given value.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-2">Speed value</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.setSpeed(16);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- loiter -->
+      <h4 class="item-name" id="loiter"><span>loiter</span><span>: void</span></h4>
+      <p class="item-descr">Set the drone to loiter mode, it will loiter around last target coordinates.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-2">altitude value</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.loiter(100);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- exit -->
+      <h4 class="item-name" id="exit"><span>exit</span><span>: void</span></h4>
+      <p class="item-descr">Finishes the drone flight.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">exit_code: Integer</p>
+        <p class="item-param-2">Code to indicate exit status.</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.exit(0);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- triggerParachute -->
+      <h4 class="item-name" id="triggerParachute"><span>triggerParachute</span><span>: void</span></h4>
+      <p class="item-descr">Indicates the drone to deploy the parachute to finish the landing.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.doParachute();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- landed -->
+      <h4 class="item-name" id="landed"><span>landed</span><span>: boolean</span></h4>
+      <p class="item-descr">Indicates if the drone has landed (reached the floor altitude).</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-example">
+        if (me.landed()) {<br>
+        &nbsp;&nbsp;//do something<br>
+        }<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getInitialAltitude -->
+      <h4 class="item-name" id="getInitialAltitude"><span>getInitialAltitude</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone startup altitude.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getInitialAltitude();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getYaw -->
+      <h4 class="item-name" id="getYaw"><span>getYaw</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone yaw angle (angle between north and the projection of the aircraft longitudinal axis onto the horizontal plane, see https://en.wikipedia.org/wiki/Aircraft_flight_dynamics) in degrees (value is in [-180; 180]).<br>
+        Yaw angle can be different of heading (angle between north and the horizontal component of the velocity vector, which describes which direction the aircraft is moving relative to cardinal directions) when there is wind.<br>
+      </p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getYaw();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getSpeed -->
+      <h4 class="item-name" id="getSpeed"><span>getSpeed</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone air speed in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getSpeed();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getGroundSpeed -->
+      <h4 class="item-name" id="getGroundSpeed"><span>getGroundSpeed</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone ground speed in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getGroundSpeed();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getClimbRate -->
+      <h4 class="item-name" id="getClimbRate"><span>getClimbRate</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone climb rate in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getClimbRate();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getSinkRate -->
+      <h4 class="item-name" id="getSinkRate"><span>getSinkRate</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone sink rate in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getSinkRate();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <h3>Drone properties</h3>
+
+      <div class="line"></div>
+
+      <!-- id -->
+      <h4 class="item-name" id="id"><span>id</span><span>: number</span></h4>
+      <p class="item-descr">Drone unique numeric identifier: from 0 to 9.</p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        var drone_id = me.id;<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- drone_dict -->
+      <h4 class="item-name" id="id"><span>drone_dict</span><span>: dictionary</span></h4>
+      <p class="item-descr">Access drones information dictionary. It contains one entry per drone:<br>
+        key-id: value-drone_dict<br>
+        {<br>
+          latitude: number, //latitude (in degrees)<br>
+          longitude: number, //longitude (in degrees)<br>
+          altitudeAbs: number  //altitude (in meters)<br>
+        }<br>
+      </p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        var leader = me.drone_dict[LEADER_ID];<br>
+        console.log("leader latitude:", leader.latitude);<br>
+        console.log("leader longitude:", leader.longitude);<br>
+        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!--<h3 class="category-name">Drone Physics Schema</h3>
+      <center><img src="assets/schema.png"></center>
+
+      <div class="line"></div>-->
+
+    </div>
+
+  </body>
+</html>

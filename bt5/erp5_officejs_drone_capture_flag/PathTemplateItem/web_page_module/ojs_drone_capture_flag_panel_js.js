@@ -156,11 +156,13 @@
           .push(function () {
             return RSVP.hash({
               url_list: gadget.getUrlForList([
-                {command: 'display', options: {page: "drone_capture_flag_script_page"}}
+                {command: 'display', options: {page: "drone_capture_flag_script_page"}},
+                {command: 'display', options: {page: "drone_capture_flag_api_page"}}
               ]),
               translation_list: gadget.getTranslationList([
                 'Editable',
-                'Run Game'
+                'Run Game',
+                'API documentation'
               ])
             });
           })
@@ -168,7 +170,8 @@
             var editable_value = [],
               element_list = [],
               icon_and_key_list = [
-                'puzzle-piece', null
+                'puzzle-piece', null,
+                'paperclip', null
               ];
 
             for (i = 0; i < result_dict.url_list.length; i += 1) {
