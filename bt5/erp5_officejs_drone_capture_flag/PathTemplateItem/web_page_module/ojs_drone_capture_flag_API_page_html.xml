@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_panel_drone_capture_flag.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_capture_flag_api_page.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,15 +83,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_drone_capture_flag_panel_js</string> </value>
+            <value> <string>ojs_drone_capture_flag_API_page_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,11 +103,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Capture Flag Panel JS</string> </value>
+            <value> <string>Drone Capture Flag API Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -187,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682436993.66</float>
+                              <float>1691175735.97</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -236,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1007.63432.27961.8516</string> </value>
+                      <value> <string>1010.22088.20940.23517</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -256,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1691175603.36</float>
+                              <float>1691587714.89</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -319,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682436791.14</float>
+                              <float>1691175684.28</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
