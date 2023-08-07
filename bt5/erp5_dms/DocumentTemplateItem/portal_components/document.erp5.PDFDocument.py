@@ -194,7 +194,7 @@ class PDFDocument(Image):
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
     if result:
-      return result
+      return bytes2str(result)
     else:
       # Try to use OCR from ghostscript, but tolerate that the command might
       # not be available.
@@ -282,7 +282,7 @@ class PDFDocument(Image):
       command = ['pdftohtml', '-enc', 'UTF-8', '-stdout',
                  '-noframes', '-i', tmp.name]
       try:
-        command_result = Popen(command, stdout=PIPE).communicate()[0]
+        command_result = bytes2str(Popen(command, stdout=PIPE).communicate()[0])
       except OSError as e:
         if e.errno == errno.ENOENT:
           raise ConversionError('pdftohtml was not found')
@@ -291,10 +291,10 @@ class PDFDocument(Image):
     finally:
       tmp.close()
     # Quick hack to remove bg color - XXX
-    h = command_result.replace(b'<BODY bgcolor="#A0A0A0"', b'<BODY ')
+    h = command_result.replace('<BODY bgcolor="#A0A0A0"', '<BODY ')
     # Make links relative
-    h = h.replace(str2bytes('href="%s.html' % tmp.name.split(os.sep)[-1]),
-                                                          b'href="asEntireHTML')
+    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1],
+                                                          'href="asEntireHTML')
     return h
 
   security.declarePrivate('_convertToDJVU')
