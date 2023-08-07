@@ -393,9 +393,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
     var processed_coordinates =
       this._mapManager.convertToLocalCoordinates(lat, lon, z);
-    if (processed_coordinates.z > this._map_dict.start_AMSL) {
-      processed_coordinates.z -= this._map_dict.start_AMSL;
-    }
+    processed_coordinates.z -= this._map_dict.start_AMSL;
     //this._last_altitude_point_reached = -1;
     //this.takeoff_path = [];
     return processed_coordinates;
