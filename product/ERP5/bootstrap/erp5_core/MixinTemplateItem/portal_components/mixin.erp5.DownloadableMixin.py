@@ -57,6 +57,7 @@ except ImportError:
       if six.PY2:
         quoted_file_name = quote(file_name.encode('utf-8'))
       else:
+        encoded_file_name = encoded_file_name.decode('us-ascii')
         quoted_file_name = quote(file_name)
 
       return '{disposition}; '\
