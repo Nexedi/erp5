@@ -63,7 +63,7 @@
       '  me.setTargetCoordinates(\n' +
       '    me.initialPosition.x + 0.01,\n' +
       '    me.initialPosition.y,\n' +
-      '    me.initialPosition.z\n' +
+      '    me.getAltitudeAbs()\n' +
       '  );\n' +
       '};\n' +
       '\n' +
