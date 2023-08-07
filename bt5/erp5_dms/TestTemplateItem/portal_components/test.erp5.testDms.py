@@ -1973,7 +1973,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     tested_list = []
     frame_list = list(range(pages_number))
     # assume that ZServer is configured with 4 Threads
-    conversion_per_tread = pages_number / 4
+    conversion_per_tread = pages_number // 4
     while frame_list:
       local_frame_list = [frame_list.pop() for i in\
                             range(min(conversion_per_tread, len(frame_list)))]
