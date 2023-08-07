@@ -37,7 +37,7 @@ var DroneManager = /** @class */ (function () {
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
       "droneControl_" + id,
-      0.01,
+      1.55, // 155 cm long wingspan
       this._scene
     );
     this._controlMesh.isVisible = false;
