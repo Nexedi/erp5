@@ -1898,12 +1898,17 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     </html>
 """
     web_page.edit(text_content=html_content)
-    from six.moves.html_parser import HTMLParseError
-    try:
+    if six.PY3:
       web_page.asStrippedHTML()
-    except HTMLParseError:
-      expectedFailure(self.fail)(
-        'Even BeautifulSoup is not able to parse such HTML')
+      # TODO(emmuvouriot): this test shouldn't exist anymore in Py3 since HTMLParseError has been removed
+      # The rationale being that the HTML parser never fails (except in strict mode, which is not used here).
+    else:
+      from six.moves.html_parser import HTMLParseError
+      try:
+        web_page.asStrippedHTML()  # TODO(emmuvouriot): does this even attempt to parse the code? Can the exception ever be thrown?
+      except HTMLParseError:
+        expectedFailure(self.fail)(
+          'Even BeautifulSoup is not able to parse such HTML')
 
   def test_safeHTML_unknown_codec(self):
     """Some html declare unknown codecs.
