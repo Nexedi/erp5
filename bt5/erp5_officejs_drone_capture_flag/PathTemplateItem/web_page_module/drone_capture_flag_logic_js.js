@@ -587,7 +587,7 @@ var MapManager = /** @class */ (function () {
                                      [map_dict.min_lat, map_dict.max_lon]),
     max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                     [map_dict.max_lat, map_dict.min_lon]),
-    map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
+    map_size = Math.ceil(Math.max(max_width, max_height));
     //var point = map.latLonOffset(map_dict.min_lat, map_dict.min_lon, 1143);
     map_dict.flag_list.forEach(function (flag_info, index) {
       map.map_info.geo_flag_list.push(map.convertToGeoCoordinates(
