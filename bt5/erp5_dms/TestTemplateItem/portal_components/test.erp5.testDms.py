@@ -51,6 +51,7 @@ from six.moves import cStringIO as StringIO
 from subprocess import Popen, PIPE
 from unittest import expectedFailure
 
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -1761,7 +1762,10 @@ class TestDocument(TestDocumentMixin):
         <img src="data:image/png;base64,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" />
       </body>
     </html>
-    """.decode('utf-8').encode('iso-8859-1')
+    """
+    if six.PY2:
+      html_content = html_content.decode('utf-8').encode('iso-8859-1')
+    
     # content encoded into another codec
     # than utf-8 comes from necessarily an external file
     # (Ingestion, or FileField), not from user interface
@@ -1773,6 +1777,9 @@ class TestDocument(TestDocumentMixin):
     file_like = StringIO()
     file_like.write(html_content)
     setattr(file_like, 'filename', 'something.htm')
+    if six.PY3:
+      from io import BytesIO
+      file_like = BytesIO(file_like.getvalue().encode())
     web_page.edit(file=file_like)
     # run conversion to base format
     self.tic()
