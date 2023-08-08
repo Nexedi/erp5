@@ -333,7 +333,9 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         charset = re_match.group('charset')
         try:
           # Use encoding in html document
-          text_content = text_content.decode(charset).encode('utf-8')
+          text_content = text_content.decode(charset)
+          if six.PY2:
+            text_content = text_content.encode('utf-8')
         except (UnicodeDecodeError, LookupError):
           # Encoding read from document is wrong
           text_content, message = guessCharsetAndConvert(self,
