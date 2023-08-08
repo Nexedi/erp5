@@ -10,374 +10,249 @@
 
     <div class="documentation">
 
-      <h1>Artificial Intelligence</h1>
+      <h1>Fixed Wings Drone API</h1>
 
-      <h3>Function called by game on event</h3>
+      <h3>API functions</h3>
 
-        <!-- Start -->
-        <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
-        <p class="item-descr">Function called on game start.</p>
+      <h3>Functions called by game on event</h3>
 
-        <div>
+      <!-- Start -->
+      <h4 class="item-name" id="start"><span>onStart</span><span>: void</span></h4>
+      <p class="item-descr">Function called on game start.</p>
+
+      <div>
         <h5 class="item-param-1">Example</h5>
-        </div>
+      </div>
 
-        <div>
-        <p class="item-param-1">me.onStart = function() {<br>
-          &nbsp;&nbsp;me.setAcceleration(1);<br>
-          &nbsp;&nbsp;me.setDirection(0,1,0);<br>
-          }
-        </p>
-        </div>
-
-        <div class="line"></div>
-
-        <!-- Update -->
-        <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
-        <p class="item-descr">Function called on game update, 60 times / second. <br></p>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">me.onUpdate = function() {<br>
-          &nbsp;&nbsp;me.setDirection(Math.random()&nbsp; Math.random(),&nbsp;0);<br>
-          }
-        </p>
+      <p class="item-param-1">me.onStart = function() {<br>
+        &nbsp;&nbsp;//one time execution code<br>
+        }
+      </p>
 
       <div class="line"></div>
 
-        <!-- GetMsg -->
-        <h4 class="item-name" id="getMsg"><span>onGetMsg</span><span>: void</span></h4>
-        <p class="item-descr">Function called when drone receives a message.</p>
+      <!-- Update -->
+      <h4 class="item-name" id="update"><span>onUpdate</span><span>: void</span></h4>
+      <p class="item-descr">Function called on game update, 60 times / second. <br></p>
 
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
 
-        <div>
-          <p class="item-param-1">msg: String</p>
-          <p class="item-param-2">Content of the message</p>
-        </div>
+      <div>
+        <p class="item-param-1">timestamp: Integer</p>
+        <p class="item-param-2">Timestamp in milliseconds from UNIX epoch</p>
+      </div>
 
-        <div>
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">me.onUpdate = function() {<br>
+        &nbsp;&nbsp;//code executed 60 times per second<br>
+        }
+      </p>
+
+      <div class="line"></div>
+
+      <!-- Touched -->
+      <h4 class="item-name" id="touched"><span>onTouched</span><span>: void</span></h4>
+      <p class="item-descr">Function called when drone is touched by another drone.</p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">me.onTouched = function() {<br>
+        &nbsp;&nbsp;//code executed when drone is touched<br>
+        }
+      </p>
+
+      <h5 class="item-param-1">Drones collision</h5>
+
+      <p class="item-example">
+        The collision between 2 drones is determined by a calculation based on each drone direction, exact position and collision angle, and resolves if one drone bumps the other of if both drones are set down.
+        <br><br>
+        The simulator engine checks if the drone control masks intersect, and then based on drones directions it calculates the collision angle between them. If the angle is too wide, both drones will fall. If not, the fastest drone will knockdown the slowest one.
+        <br><br>
+        The drone mask size is 0.5 x 0.5 (meters)
+      </p>
+
+      <div class="line"></div>
+
+      <!-- onDroneViewInfo -->
+      <h4 class="item-name" id="update"><span>onDroneViewInfo</span><span>: void</span></h4>
+      <p class="item-descr">Function called when a fired detection process finishes.<br>
+        (a detection process is started when a drone calls getDroneViewInfo method, see below)<br>
+      </p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">drone_view: dict</p>
+        <p class="item-param-2">Result of detection.</p>
+      </div>
+
+      <h5 class="item-param-1">Example</h5>
+      <p class="item-example">
+        me.getDroneViewInfo = function (drone_view) {<br>
+        &nbsp;&nbsp;//code executed when getDroneViewInfo finished<br>
+        }
+      </p>
+
+      <div class="line"></div>
+
+      <!-- GetMsg -->
+      <h4 class="item-name" id="getMsg"><span>onGetMsg</span><span>: void</span></h4>
+      <p class="item-descr">Function called when drone receives a message.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">msg: String</p>
+        <p class="item-param-2">Content of the message</p>
+      </div>
+
+      <div>
         <h5 class="item-param-1">Example</h5>
-        </div>
+      </div>
 
-        <div>
+      <div>
         <p class="item-param-1">me.onGetMsg = function (msg) {<br>
-          &nbsp;&nbsp; console.log(msg);
+          &nbsp;&nbsp;//process the msg
           <br> }
         </p>
-        </div>
+      </div>
 
-        <div class="line"></div>
-        <!-- sendMsg -->
-        <h4 class="item-name" id="sendMsg"><span>sendMsg</span><span>: void</span></h4>
-        <p class="item-descr">
-          Send a message to another drone (or to all team drones).<br>
+      <div class="line"></div>
 
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
+      <h3>Function that drones can call</h3>
 
-        <div>
-          <p class="item-param-1">msg: String</p>
-          <p class="item-param-2">The message to send.</p>
-        </div>
+      <div class="line"></div>
 
-        <div>
-          <p class="item-param-1">id ?: Number</p>
-          <p class="item-param-2">ID of the recipient. Leave empty to send to all team drones.</p>
-        </div>
+      <!-- sendMsg -->
+      <h4 class="item-name" id="sendMsg"><span>sendMsg</span><span>: void</span></h4>
+      <p class="item-descr">Sends a message to another drone (or to all team drones).<p>
 
-        <div>
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">msg: String</p>
+        <p class="item-param-2">The message to send.</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">id ?: Number</p>
+        <p class="item-param-2">ID of the recipient. Leave empty to send to all team drones.</p>
+      </div>
+
+      <div>
         <h5 class="item-param-1">Example</h5>
-        </div>
+      </div>
 
-        <div>
+      <div>
         <p class="item-example">
           me.sendMsg("My broadcast message");<br>
           me.sendMsg("To my friend 0", 0);
         </p>
-        </div>
+      </div>
 
-        <div class="line"></div>
-        <!-- Touched -->
-        <h4 class="item-name" id="touched"><span>onTouched</span><span>: void</span></h4>
-        <p class="item-descr">Function called when drone is touched by another drone.</p>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">me.onTouched = function() {<br>
-          &nbsp;&nbsp;me.sendMsg("Touched");<br>
-          &nbsp;&nbsp;//Broadcast message to all drones<br>
-          }
-        </p>
+      <div class="line"></div>
 
-        <h5 class="item-param-1">Drones collision</h5>
-        <p class="item-example">
-          The collision between 2 drones is determined by a calculation based on each drone direction, exact position and collision angle, and resolves if one drone bumps the other of if both drones are set down.<br><br>
-The simulator engine checks if the drone control masks intersect, and then based on drones directions it calculates the collision angle between them. If the angle is too wide, both drones will fall. If not, the fastest drone will knockdown the slowest one.<br><br>
-          The drone mask size is 0.5 x 0.5 (meters)
-        </p>
-        <div class="line"></div>
+      <!-- getCurrentPosition -->
+      <h4 class="item-name" id="getCurrentPosition"><span>getCurrentPosition</span><span>: dictionary</span></h4>
+      <p class="item-descr">
+        Get drone current position geo-coordinates.<br>
+        {<br>
+        &nbsp;&nbsp;x: number, //latitude (in degrees)<br>
+        &nbsp;&nbsp;y: number, //longitude (in degrees)<br>
+        &nbsp;&nbsp;z: number  //altitude (in meters)<br>
+        }<br>
+      </p>
 
-        <!-- onCapture -->
-        <h4 class="item-name" id="update"><span>onCapture</span><span>: void</span></h4>
-        <p class="item-descr">Function called when a fired detection process finishes.<br>
-          (a detection process is started when a drone calls isHumanPositionSpotted method, see below)<br>
-        </p>
+      <h5 class="item-param-1">Example</h5>
 
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
+      <p class="item-example">
+        var current_position = me.getCurrentPosition();<br>
+        console.log(current_position);<br>
+      </p>
 
-        <div>
-          <p class="item-param-1">human_found: boolean</p>
-          <p class="item-param-2">Result of detection.</p>
-        </div>
+      <div class="line"></div>
 
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">
-          me.onCapture = function (human_detected) {<br>
-          &nbsp;&nbsp;me.ongoing_detection = false;<br>
-          &nbsp;&nbsp;if (human_detected) {<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;console.log("HUMAN POSITION FOUND! by drone:", me.id);<br>
-          &nbsp;&nbsp;}<br>
-          };<br>
-        </p>
-        <div class="line"></div>
+      <!-- getDroneViewInfo -->
+      <h4 class="item-name" id="getDroneViewInfo"><span>getDroneViewInfo</span><span>: void</span></h4>
+      <p class="item-descr">
+        By calling this method, the drone detection process is fired. It will get all the view information within its scope.<br>
+        Once the detection finishes (2 seconds) the event method onDroneViewInfo will be called.<br>
+      </p>
 
-      <h3>Drone property</h3>
+      <h5 class="item-param-1">Example</h5>
 
-        <div class="line"></div>
-        <!-- id -->
-        <h4 class="item-name" id="id"><span>id</span><span>: number</span></h4>
-        <p class="item-descr">
-          Drone unique numeric identifier: from 0 to 9.<br><br>
-        </p>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">
-          var drone_id = me.id;<br>
-        </p>
-        <div class="line"></div>
+      <p class="item-example">
+        if (!me.ongoing_detection) {<br>
+        &nbsp;&nbsp;me.ongoing_detection = true;<br>
+        &nbsp;&nbsp;me.getDroneViewInfo();<br>
+        &nbsp;&nbsp;me.ongoing_detection = true;<br>
+        }<br>
+      </p>
 
-      <h3>Function that drones can call</h3>
+      <div class="line"></div>
 
-        <div class="line"></div>
-        <!-- getGameParameter -->
-        <h4 class="item-name" id="getGameParameter"><span>getGameParameter</span><span>: string/number/dict</span></h4>
-        <p class="item-descr">
-          Get game parameter.<br>
-          Game parameters are :<br>
-          &nbsp;&nbsp;- gameTime : number (in seconds)<br>
-          &nbsp;&nbsp;- mapSize  : { depth, height, width } (in meters)<br>
-          &nbsp;&nbsp;- teamSize : number<br>
-          &nbsp;&nbsp;- derive :<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed: number (meters/seconds),<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction: { x, y }, (coordinates in meters)<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-          &nbsp;&nbsp;- meteo : [0.5, 0.7, 0.9]<br>
-          &nbsp;&nbsp;- initialHumanAreaPosition : { x, y, z } (coordinates in meters)<br>
-        </p>
+      <!-- setTargetCoordinates -->
+      <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: dictionary</span></h4>
+      <p class="item-descr">
+        Set a target point expressed in geo coordinates. The drone will move straight to this point.
+      </p>
 
-        <div>
+      <div>
         <h5 class="item-param-1">Param</h5>
         <h5 class="item-param-2">Description</h5>
-        </div>
+      </div>
 
-        <div>
-        <p class="item-param-1">name ?: String</p>
-        <p class="item-param-2">Name of the parameter wanted.</p>
-        </div>
+      <div>
+        <p class="item-param-1">X: Float</p>
+        <p class="item-param-2">X value - latitude (in degrees).</p>
+      </div>
+      <div>
+        <p class="item-param-1">Y: Float</p>
+        <p class="item-param-2">Y value - longitude (in degrees).</p>
+      </div>
+      <div>
+        <p class="item-param-1">Z: Float</p>
+        <p class="item-param-2">Z value - altitude (in meters).</p>
+      </div>
 
-        <div>
-        <h5>Parameters description</h5>
-        <p class="item-descr">
-          &nbsp;&nbsp;- gameTime: The game time (in seconds).<br>
-          &nbsp;&nbsp;- mapSize: Depth, height and width of the map (in meters).<br>
-          &nbsp;&nbsp;- teamSize: Amount of drones in the swarm.<br>
-          &nbsp;&nbsp;- derive: speed (in meters/seconds) and direction (coordinates vector) of the sea drift (human movement)<br>
-          &nbsp;&nbsp;- meteo: wheather conditions that affects drones visibility:<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;- 0.5 if 20/35 knots of wind, rain and spray<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;- 0.7 if 5/20 Knots of wind, and drizzle<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;- 0.9 if 0/5 Knots of wind, sun<br>
-          &nbsp;&nbsp;- initialHumanAreaPosition: estimated human initial location with 1km error margin<br>
-        </p>
-        </div>
+      <div>
+      <h5 class="item-param-1">Example</h5>
+      </div>
 
-        <div>
-        <h5 class="item-param-1">Example</h5>
-        </div>
-
-        <div>
+      <div>
         <p class="item-example">
-          var team_size = me.getGameParameter("teamSize")<br>
-          console.log(team_size);<br>
+          me.setTargetCoordinates(lat, lon, altitude);<br>
         </p>
-        </div>
+      </div>
 
-        <div class="line"></div>
-        <!-- isHumanPositionSpotted -->
-        <h4 class="item-name" id="isHumanPositionSpotted"><span>isHumanPositionSpotted</span><span>: void</span></h4>
-        <p class="item-descr">
-          By calling this method, the drone detection process is fired. It checks if the human is under the drone view (at the moment of the call).<br>
-          The probability to spot the human relies on the drone flight height and the weather conditions.<br>
-          Once the detection finishes (2 seconds) the event method onCapture will be called.<br>
-        </p>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">
-          if (!me.ongoing_detection) {<br>
-          &nbsp;&nbsp;me.ongoing_detection = true;<br>
-          &nbsp;&nbsp;//remember! probability and precision of human detection changes depending on drone height<br>
-          &nbsp;&nbsp;me.isHumanPositionSpotted();<br>
-          }<br>
-        </p>
+      <div class="line"></div>
 
-        <div class="line"></div>
-        <!-- getCurrentPosition -->
-        <h4 class="item-name" id="getCurrentPosition"><span>getCurrentPosition</span><span>: dictionary</span></h4>
-        <p class="item-descr">
-          Get drone current position coordinates (coordinates in meters).<br>
-          {<br>
-          &nbsp;&nbsp;x: number,<br>
-          &nbsp;&nbsp;y: number,<br>
-          &nbsp;&nbsp;z: number<br>
-          }<br>
-        </p>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">
-          var current_position = me.getCurrentPosition();<br>
-          console.log(current_position);<br>
-        </p>
-        <div class="line"></div>
+      <h3>Drone properties</h3>
 
-        <!-- reportHumanPosition -->
-        <h4 class="item-name" id="reportHumanPosition"><span>reportHumanPosition</span><span>: void</span></h4>
-        <p class="item-descr">
-          Reports to base that the drone has spotted the human and sends a position as parameter.<br>
-          This method call finishes the game.<br>
-        </p>
+      <!-- id -->
+      <h4 class="item-name" id="id"><span>id</span><span>: number</span></h4>
+      <p class="item-descr">
+        Drone unique numeric identifier: from 0 to 9.<br><br>
+      </p>
 
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
+      <h5 class="item-param-1">Example</h5>
 
-        <div>
-          <p class="item-param-1">position: dict x,y,z</p>
-          <p class="item-param-2">Position to be reported as the human position.</p>
-        </div>
-        <h5 class="item-param-1">Example</h5>
-        <p class="item-example">
-          me.reportHumanPosition(me.getCurrentPosition())<br>
-        </p>
-
-        <div class="line"></div>
-
-        <!-- setAcceleration -->
-        <h4 class="item-name" id="setAcceleration"><span>setAcceleration</span><span>: void</span></h4>
-        <p class="item-descr">
-          Set the drone acceleration (meters/seconds^2). A 0 (zero) acceleration will result in a drone with constant speed.
-        </p>
-
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
-
-        <div>
-          <p class="item-param-1">factor: Number</p>
-          <p class="item-param-2">Drone will accelerate by this number (meter / second^2).</p>
-        </div>
-
-        <div>
-        <h5 class="item-param-1">Example</h5>
-        </div>
-
-        <div>
-        <p class="item-example">
-          me.setAcceleration(6);
-        </p>
-        </div>
-
-        <div class="line"></div>
-        <!-- setDirection -->
-        <h4 class="item-name" id="setDirection"><span>setDirection</span><span>: void</span></h4>
-        <p class="item-descr">
-          Set the drone movement direction via a coordinates vector. Coordinates are drone space relative: (0,0) is the drone.
-        </p>
-
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
-
-        <div>
-          <p class="item-param-1">X: Number</p>
-          <p class="item-param-2">X direction.</p>
-        </div>
-
-        <div>
-          <p class="item-param-1">Y: Number</p>
-          <p class="item-param-2">Y direction.</p>
-        </div>
-
-        <div>
-          <p class="item-param-1">Z: Number</p>
-          <p class="item-param-2">Z direction.</p>
-        </div>
-
-        <div>
-        <h5 class="item-param-1">Example</h5>
-        </div>
-
-        <div>
-        <p class="item-example">
-          // See schema below<br>
-          me.setDirection(1,1,0); //this vector moves the drone in a 45º angle from the x-axis<br>
-          // As the vector will be internally normalized, it could be any coordinate:<br>
-          me.setDirection(2,-3,0);<br>
-          // Another example, move the drone right up<br>
-          me.setDirection(0,0,1);<br>
-        </p>
-        </div>
-
-        <div class="line"></div>
-        <!-- setTargetCoordinates -->
-        <h4 class="item-name" id="setTargetCoordinates"><span>setTargetCoordinates</span><span>: dictionary</span></h4>
-        <p class="item-descr">
-          Set a target point expressed in coordinates (in meters). The drone will move straight to this point. Coordinates here are world relative: (0,0) is the center of the map.
-        </p>
-
-        <div>
-          <h5 class="item-param-1">Param</h5>
-          <h5 class="item-param-2">Description</h5>
-        </div>
-
-        <div>
-          <p class="item-param-1">X: Number</p>
-          <p class="item-param-2">X value - depth.</p>
-        </div>
-        <div>
-          <p class="item-param-1">Y: Number</p>
-          <p class="item-param-2">Y value - width.</p>
-        </div>
-        <div>
-          <p class="item-param-1">Z: Number</p>
-          <p class="item-param-2">Z value - height.</p>
-        </div>
-
-        <div>
-        <h5 class="item-param-1">Example</h5>
-        </div>
-
-        <div>
-          <p class="item-example">
-            pos = me.initialHumanAreaPosition()<br>
-            me.setTargetCoordinates(pos.x, pos.y, pos.z);<br>
-            //Another example, move the drone to the center of the map:<br>
-            me.setTargetCoordinates(0, 0, height);<br>
-          </p>
-        </div>
+      <p class="item-example">
+        var drone_id = me.id;<br>
+      </p>
 
       <div class="line"></div>
 
