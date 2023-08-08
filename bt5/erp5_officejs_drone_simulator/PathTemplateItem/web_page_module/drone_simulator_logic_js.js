@@ -421,7 +421,7 @@ var MapManager = /** @class */ (function () {
                                        [map_dict.min_lat, map_dict.max_lon]),
       max_height = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                       [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
+      map_size = Math.ceil(Math.max(max_width, max_height));
     this.map_info = {
       "depth": map_size,
       "height": map_dict.height,
