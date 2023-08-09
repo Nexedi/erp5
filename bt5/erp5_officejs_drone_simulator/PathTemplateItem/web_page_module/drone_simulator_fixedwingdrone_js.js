@@ -32,6 +32,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
     this._loiter_mode = false;
     this._drone_dict_list = [];
   }
+  Object.defineProperty(FixedWingDroneAPI.prototype, "isCollidable", {
+    get: function () { return true; },
+    enumerable: true,
+    configurable: true
+  });
   /*
   ** Function called on start phase of the drone, just before onStart AI script
   */
