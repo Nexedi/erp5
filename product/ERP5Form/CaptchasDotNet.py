@@ -31,6 +31,7 @@
 from hashlib import md5
 import random
 from Products.ERP5Type.Utils import str2bytes
+import six
 
 class CaptchasDotNet:
     def __init__ (self, client, secret,
@@ -136,7 +137,8 @@ class CaptchasDotNet:
         # Compute password
         correct_password = ''
         for pos in range (password_length):
-            letter_num = ord (digest[pos]) % len (password_alphabet)
+            digest_char = ord(digest[pos]) if six.PY2 else digest[pos]
+            letter_num = digest_char % len (password_alphabet)
             correct_password += password_alphabet[letter_num]
 
         return correct_password
