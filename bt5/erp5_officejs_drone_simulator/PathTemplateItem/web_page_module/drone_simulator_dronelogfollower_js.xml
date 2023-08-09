@@ -246,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1010.13157.33937.23381</string> </value>
+                      <value> <string>1010.13501.40623.51950</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +266,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1691051883.97</float>
+                              <float>1691588429.76</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
