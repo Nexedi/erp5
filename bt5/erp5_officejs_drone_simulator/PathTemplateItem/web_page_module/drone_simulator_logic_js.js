@@ -665,7 +665,7 @@ var GameManager = /** @class */ (function () {
     this._droneList.forEach(function (drone) {
       queue.push(function () {
         drone._tick += 1;
-        if (drone.can_play) {
+        if (drone.isCollidable && drone.can_play) {
           if (drone.getCurrentPosition().z <= 0) {
             drone._internal_crash(new Error('Drone ' + drone.id +
                                             ' touched the floor.'));
