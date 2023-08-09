@@ -560,13 +560,18 @@ var MapManager = /** @class */ (function () {
       _this._flag_list.push(flag);
     });
   }
-  MapManager.prototype.setMapInfo = function (map_dict, init_pos) {
-    var map = this, starting_point = map_dict.map_size / 2 * -0.75;
-    map.map_info = {
-      "depth": map_dict.map_size,
-      "width": map_dict.map_size,
-      "map_size": map_dict.map_size,
+  MapManager.prototype.setMapInfo = function (map_dict, initial_position) {
+    var max_width = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                     [map_dict.min_lat, map_dict.max_lon]),
+      max_height = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
+                                     [map_dict.max_lat, map_dict.min_lon]),
+      map_size = Math.ceil(Math.max(max_width, max_height)),
+      starting_point = map_size / 2 * -0.75;
+    this.map_info = {
+      "depth": map_size,
       "height": map_dict.height,
+      "width": map_size,
+      "map_size": map_size,
       "start_AMSL": map_dict.start_AMSL,
       "flag_list": map_dict.flag_list,
       "geo_flag_list": [],
@@ -579,16 +584,11 @@ var MapManager = /** @class */ (function () {
         "z": START_Z
       }
     };
-    map.map_info.min_x = map.longitudToX(map_dict.min_lon);
-    map.map_info.min_y = map.latitudeToY(map_dict.min_lat);
-    map.map_info.max_x = map.longitudToX(map_dict.max_lon);
-    map.map_info.max_y = map.latitudeToY(map_dict.max_lat);
-    var max_width = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                     [map_dict.min_lat, map_dict.max_lon]),
-    max_height = map.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                    [map_dict.max_lat, map_dict.min_lon]),
-    map_size = Math.ceil(Math.max(max_width, max_height));
-    //var point = map.latLonOffset(map_dict.min_lat, map_dict.min_lon, 1143);
+    this.map_info.min_x = this.longitudToX(map_dict.min_lon);
+    this.map_info.min_y = this.latitudeToY(map_dict.min_lat);
+    this.map_info.max_x = this.longitudToX(map_dict.max_lon);
+    this.map_info.max_y = this.latitudeToY(map_dict.max_lat);
+    var map = this;
     map_dict.flag_list.forEach(function (flag_info, index) {
       map.map_info.geo_flag_list.push(map.convertToGeoCoordinates(
         flag_info.position.x,
@@ -650,17 +650,16 @@ var MapManager = /** @class */ (function () {
       };
     };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
-    var map_dict = this.map_info,
-      lon = x + map_dict.width / 2,
-      lat = y + map_dict.depth / 2;
+    var lon = x + this.map_info.width / 2,
+      lat = y + this.map_info.depth / 2;
     lon = lon / 1000;
-    lon = lon * (map_dict.max_x - map_dict.min_x) +
-      map_dict.min_x;
-    lon = lon / (map_dict.width / 360.0) - 180;
+    lon = lon * (this.map_info.max_x - this.map_info.min_x) +
+      this.map_info.min_x;
+    lon = lon / (this.map_info.map_size / 360.0) - 180;
     lat = lat / 1000;
-    lat = lat * (map_dict.max_y - map_dict.min_y) +
-      map_dict.min_y;
-    lat = 90 - lat / (map_dict.depth / 180.0);
+    lat = lat * (this.map_info.max_y - this.map_info.min_y) +
+      this.map_info.min_y;
+    lat = 90 - lat / (this.map_info.map_size / 180.0);
     return {
       x: lat,
       y: lon,
@@ -680,7 +679,7 @@ var GameManager = /** @class */ (function () {
   "use strict";
   // *** CONSTRUCTOR ***
   function GameManager(canvas, game_parameters_json) {
-    var drone, header_list, drone_count;
+    var drone, header_list, drone_count, i;
     this._canvas = canvas;
     this._canvas_width = canvas.width;
     this._canvas_height = canvas.height;
@@ -741,7 +740,7 @@ var GameManager = /** @class */ (function () {
       console.log = function () {
         baseLogFunction.apply(console, arguments);
         var args = Array.prototype.slice.call(arguments);
-        for (var i = 0;i < args.length;i++) {
+        for (i = 0;i < args.length;i++) {
           console_log += args[i] + "\n";
         }
       };

@@ -6,7 +6,7 @@
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    MAP_SIZE = 600,
+    MAP_SIZE = 1905, //min-max lat-lon distance
     min_lat = 45.6364,
     max_lat = 45.65,
     min_lon = 14.2521,
