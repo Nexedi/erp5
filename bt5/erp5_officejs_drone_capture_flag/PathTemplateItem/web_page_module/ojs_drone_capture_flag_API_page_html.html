@@ -240,13 +240,196 @@
 
       <div class="line"></div>
 
+      <!-- setSpeed -->
+      <h4 class="item-name" id="setSpeed"><span>setSpeed</span><span>: void</span></h4>
+      <p class="item-descr">Set the drone speed in meters/second. The drone will move at the given value.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-2">Speed value</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.setSpeed(16);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- loiter -->
+      <h4 class="item-name" id="loiter"><span>loiter</span><span>: void</span></h4>
+      <p class="item-descr">Set the drone to loiter mode, it will loiter around last target coordinates.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">altitude: Float</p>
+        <p class="item-param-2">altitude value</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.loiter(100);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- exit -->
+      <h4 class="item-name" id="exit"><span>exit</span><span>: void</span></h4>
+      <p class="item-descr">Finishes the drone flight.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">exit_code: Integer</p>
+        <p class="item-param-2">Code to indicate exit status.</p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.exit(0);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- triggerParachute -->
+      <h4 class="item-name" id="triggerParachute"><span>triggerParachute</span><span>: void</span></h4>
+      <p class="item-descr">Indicates the drone to deploy the parachute to finish the landing.</p>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.doParachute();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- landed -->
+      <h4 class="item-name" id="landed"><span>landed</span><span>: boolean</span></h4>
+      <p class="item-descr">Indicates if the drone has landed (reached the floor altitude).</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-example">
+        if (me.landed()) {<br>
+        &nbsp;&nbsp;//do something<br>
+        }<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getInitialAltitude -->
+      <h4 class="item-name" id="getInitialAltitude"><span>getInitialAltitude</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone startup altitude.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getInitialAltitude();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getYaw -->
+      <h4 class="item-name" id="getYaw"><span>getYaw</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone yaw angle (angle between north and the projection of the aircraft longitudinal axis onto the horizontal plane, see https://en.wikipedia.org/wiki/Aircraft_flight_dynamics) in degrees (value is in [-180; 180]).<br>
+        Yaw angle can be different of heading (angle between north and the horizontal component of the velocity vector, which describes which direction the aircraft is moving relative to cardinal directions) when there is wind.<br>
+      </p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getYaw();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getSpeed -->
+      <h4 class="item-name" id="getSpeed"><span>getSpeed</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone air speed in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getSpeed();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getGroundSpeed -->
+      <h4 class="item-name" id="getGroundSpeed"><span>getGroundSpeed</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone ground speed in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getGroundSpeed();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getClimbRate -->
+      <h4 class="item-name" id="getClimbRate"><span>getClimbRate</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone climb rate in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getClimbRate();<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!-- getSinkRate -->
+      <h4 class="item-name" id="getSinkRate"><span>getSinkRate</span><span>: Float</span></h4>
+      <p class="item-descr">Get drone sink rate in meters/second.</p>
+
+      <div>
+        <h5 class="item-param-1">Example</h5>
+      </div>
+
+      <p class="item-param-1">me.getSinkRate();<br>
+      </p>
+
+      <div class="line"></div>
+
       <h3>Drone properties</h3>
+
+      <div class="line"></div>
 
       <!-- id -->
       <h4 class="item-name" id="id"><span>id</span><span>: number</span></h4>
-      <p class="item-descr">
-        Drone unique numeric identifier: from 0 to 9.<br><br>
-      </p>
+      <p class="item-descr">Drone unique numeric identifier: from 0 to 9.</p>
 
       <h5 class="item-param-1">Example</h5>
 
@@ -256,227 +439,33 @@
 
       <div class="line"></div>
 
-      <h3 class="category-name">Drone Physics Schema</h3>
+      <!-- drone_dict -->
+      <h4 class="item-name" id="id"><span>drone_dict</span><span>: dictionary</span></h4>
+      <p class="item-descr">Access drones information dictionary. It contains one entry per drone:<br>
+        key-id: value-drone_dict<br>
+        {<br>
+          latitude: number, //latitude (in degrees)<br>
+          longitude: number, //longitude (in degrees)<br>
+          altitudeAbs: number  //altitude (in meters)<br>
+        }<br>
+      </p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">
+        var leader = me.drone_dict[LEADER_ID];<br>
+        console.log("leader latitude:", leader.latitude);<br>
+        console.log("leader longitude:", leader.longitude);<br>
+        console.log("leader absolute altitude:", leader.altitudeAbs);<br>
+      </p>
+
+      <div class="line"></div>
+
+      <!--<h3 class="category-name">Drone Physics Schema</h3>
       <center><img src="assets/schema.png"></center>
 
+      <div class="line"></div>-->
 
-      <h1>Example scripts</h1>
-
-      <h3>Drone communication</h3>
-
-        <pre>
-          //************************* DRONES COMMUNICATION *******************************
-
-          /**
-           * This strategy aligns all drone starting positions in a row so they can cover more area
-           * This is done by splitting the map x axis into sectors and assigning a sector per drone
-           * Drone are sort by their initial x position
-           * To achieve the strategy, all drones must communicate their positions to the rest
-          **/
-
-          /**
-           * During the start, the strategy information for each drone is initialized
-          **/
-          me.onStart = function() {
-            /**
-             * Do not move the drone until the strategy is initialized
-             * and communicated to all drones
-            **/
-            me.setAcceleration(0);
-            me.initialized = false;
-            /**
-             * Dictionary with all drone information and map sector assignments
-             * It will be filled with information received from the drones
-            **/
-            me.strategy_info = {
-              'started': false,
-              'map_size': null,
-              'team_size': null,
-              'init_drone_count': 0,
-              'drones_x_position': {},
-              'sector_assignements': {}
-            };
-            /**
-             * Get and store global information like (team size, map size)
-            **/
-            me.strategy_info.team_size = me.getGameParameter("teamSize");
-            me.strategy_info.map_size = me.getGameParameter("mapSize");
-            //custom flag to control if drone has detected the human
-            me.human_detected = false;
-            //custom flag to control the detection process
-            me.ongoing_detection = false;
-          };
-
-          /**
-           * On every update (60 per second) checks drone strategy
-          **/
-          me.onUpdate = function () {
-            /**
-             * If drone didn't send its information to others yet, initialize it
-            **/
-            if (!me.initialized) {
-              return initializeDrone(me);
-            }
-            /**
-             * If drone was initialized but it has no map sector assigned, assigne it
-            **/
-            if (!me.strategy_info.started && me.strategy_info.sector_assignements.hasOwnProperty(me.id)) {
-              return sendDroneToAssignedSector(me);
-            }
-            /**
-             * When drone has a sector assigned, move it by setting a direction and acceleration
-            **/
-            if (me.strategy_info.started) {
-              if (!me.ongoing_detection) {
-                me.ongoing_detection = true;
-                //remember! probability and precision of human detection changes depending on drone height
-                me.isHumanPositionSpotted();
-              }/* else {
-              //here drone could do something different. stop and wait for example
-              }*/
-              if (!me.human_detected) {
-                checkDirection(me);
-              }
-            }
-          };
-
-          /**
-           * This method is called when a drone finishes a capture/detection process
-          **/
-          me.onCapture = function (human_detected) {
-            me.ongoing_detection = false;
-            if (human_detected) {
-              //here drone could do something different.
-              //check height and confirm/refine human position or notify others for example
-              console.log("HUMAN POSITION FOUND! by drone:", me.id);
-              //set the custom drone flag
-              me.human_detected = true;
-              //report the human found information (this finishes the simulation)
-              me.reportHumanPosition(me.getCurrentPosition());
-              //notify others example
-              var msg = {
-                type: 'human-found',
-                position: me.getCurrentPosition()
-              };
-              me.sendMsg(msg);
-            }
-          };
-
-          /**
-           * Manage received message
-          **/
-          me.onGetMsg = function (msg) {
-            /**
-             * If message is a drone init information, store it
-            **/
-            if (msg.type === 'info') {
-              if (!me.strategy_info.drones_x_position.hasOwnProperty(msg.drone)) {
-                me.strategy_info.drones_x_position[msg.drone] = msg.position.x;
-                me.strategy_info.init_drone_count++;
-              }
-              /**
-               * If all drones had communicated the starting info, calculate the strategy
-              **/
-              if (me.strategy_info.init_drone_count === me.strategy_info.team_size) {
-                calculateSectorAssignements(me);
-              }
-            }
-            if (msg.type === 'human-found' && !me.human_detected) {
-              //drone is notified about human found
-              me.human_detected = true;
-              //here the search could be refined
-              //forward message to others
-              me.sendMsg(msg);
-            }
-          };
-
-          /**
-           * Drone sends its information to others
-          **/
-          function initializeDrone(drone) {
-            var msg = {
-              type: 'info',
-              drone: drone.id,
-              position: drone.position
-            };
-            drone.sendMsg(msg);
-            drone.initialized = true;
-          }
-
-          /**
-           * Send the drone to the assigned map sector by setting direction and acceleration
-           * If the drone reached its map sector, stop it
-          **/
-          function sendDroneToAssignedSector(drone) {
-            var sector_position = getSectorCoordinates(drone);
-            drone.setTargetCoordinates(sector_position.x, sector_position.y, sector_position.z);
-            if (distance(drone.position, sector_position) < 1) {
-              //move the drone straight in y axis
-              me.setDirection(0,1,0);
-              drone.strategy_info.started = true;
-            }
-          }
-
-          /**
-           * Calculate coordinates of the given map sector
-          **/
-          function getSectorCoordinates(drone) {
-            var sector = drone.strategy_info.sector_assignements[drone.id],
-              map_width = drone.strategy_info.map_size.width,
-              drone_count = drone.strategy_info.init_drone_count,
-              z_coordinate = 12,
-              y_coordinate = 3 - drone.strategy_info.map_size.depth/2,
-              x_coordinate = (map_width/drone_count)/2 + map_width/drone_count * sector - map_width/2;
-            return {x:x_coordinate, y: y_coordinate, z: z_coordinate};
-          }
-
-          /**
-           * Tiny util function to get the distance between 2 points
-          **/
-          function distance(a, b) {
-              return (a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2;
-          }
-
-          /**
-           * Sort the drones by their x starting position
-           * and assign the corresponding map sector to each
-          **/
-          function calculateSectorAssignements(drone) {
-            var i, items = Object.keys(drone.strategy_info.drones_x_position).map(function(key) {
-              return [key, drone.strategy_info.drones_x_position[key]];
-            });
-            items.sort(function(first, second) {
-              return first[1] - second[1];
-            });
-            for (i = 0; i < items.length; i += 1) {
-              drone.strategy_info.sector_assignements[items[i][0]] = i;
-            }
-          }
-
-          /**
-           * Custom function that reads the drone position information and
-           * changes the drone direction in case it is in the map limits
-          **/
-          function checkDirection(drone) {
-            var new_x = drone.direction.x, new_y = drone.direction.y,
-              new_z = drone.direction.z, change = false;
-            if (Math.abs(drone.position.x) > drone.strategy_info.map_size.width / 2 ||
-              Math.abs(drone.position.y) > drone.strategy_info.map_size.depth / 2 ||
-              Math.abs(drone.position.z) < 10.2 || Math.abs(drone.position.z) > 99.8) {
-              new_x = Math.random() * -1 * Math.sign(drone.direction.x);
-              if (!new_x) new_x = Math.random();
-              new_y = Math.random() * -1 * Math.sign(drone.direction.y);
-              if (!new_y) new_y = Math.random();
-              new_z = (Math.random() * (0.12 - 0.05) + 0.05) * -1 * Math.sign(drone.direction.z);
-              change = true;
-            }
-            if (change) {
-              drone.setDirection(new_x,new_y,new_z);
-            }
-          }
-
-        </pre>
-      
     </div>
 
   </body>
