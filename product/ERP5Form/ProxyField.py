@@ -340,7 +340,8 @@ class ProxyField(ZMIField):
       tales.pop(key, None)
 
     proxied_field = self.getTemplateField()
-    for key, value in result.items():
+    restultitems = result.items() if six.PY2 else list(result.items())
+    for key, value in restultitems:
       if key not in surcharge_list:
         result.pop(key)
         if key in self.values:
