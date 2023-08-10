@@ -564,9 +564,6 @@ var MapManager = /** @class */ (function () {
                                      [map_dict.max_lat, map_dict.min_lon]),
       map_size = Math.ceil(Math.max(max_width, max_height)),
       starting_point = map_size / 2 * -0.75;
-    console.log("max_width:",max_width);
-    console.log("max_height:",max_height);
-    console.log("map_size:",map_size);
     this.map_info = {
       "depth": map_size,
       "height": map_dict.height,
