@@ -5,7 +5,11 @@
 
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    MAP_SIZE = 600,
+    MAP_SIZE = 1905,
+    min_lat = 45.6364,
+    max_lat = 45.65,
+    min_lon = 14.2521,
+    max_lon = 14.2766,
     map_height = 700,
     start_AMSL = 595,
     DEFAULT_SPEED = 16,
@@ -109,6 +113,10 @@
         "map_size": parseFloat(MAP_SIZE),
         "height": parseInt(map_height, 10),
         "start_AMSL": parseFloat(start_AMSL),
+        "min_lat": parseFloat(min_lat),
+        "max_lat": parseFloat(max_lat),
+        "min_lon": parseFloat(min_lon),
+        "max_lon": parseFloat(max_lon),
         "flag_list": [{
           "position": {
             "x": -27,
