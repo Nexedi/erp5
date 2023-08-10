@@ -6,10 +6,15 @@
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    MAP_SIZE = 1905, //min-max lat-lon distance
-    min_lat = 45.6364,
+    //HARDCODED map size: it is defined by min-max lat-lon distance
+    //this is done by the map manager (latLonDistance)
+    //but map_size is needed here for map randomization (location of objects)
+    //TODO refactor: or randomization is moved to map manager (seed as param)
+    //or randomization is done here but with geo-coordinates (not meters)
+    MAP_SIZE = 902,
+    min_lat = 45.6475,
     max_lat = 45.65,
-    min_lon = 14.2521,
+    min_lon = 14.265,
     max_lon = 14.2766,
     map_height = 700,
     start_AMSL = 595,
