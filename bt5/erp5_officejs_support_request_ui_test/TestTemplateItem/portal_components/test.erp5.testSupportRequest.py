@@ -586,7 +586,7 @@ class TestSupportRequestRSSSNonVisibleSender(SupportRequestRSSTestCase, DefaultT
     self.tic()
 
   def _checkRSS(self, response):
-    self.assertEqual(httplib.OK, response.getStatus())
+    self.assertEqual(six.moves.http_client.OK, response.getStatus())
     rss = feedparser.parse(response.getBody())
     item, = rss.entries
     # no author for this event, because sender could not be access
