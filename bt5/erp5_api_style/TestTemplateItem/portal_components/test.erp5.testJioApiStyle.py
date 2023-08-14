@@ -604,7 +604,7 @@ return json.dumps({
       raise ValueError("Unexcpected Answer %s" % response)
     self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
-    person = self.portal.restrictedTraverse(response['id'].encode())
+    person = self.portal.restrictedTraverse(response['id'].encode() if six.PY2 else response["id"])
     self.assertEqual(person.getTitle(), self.id_template)
 
   def createUpdateScriptjIOWebSectionCreateOrganisationFromJSON(self):
@@ -651,7 +651,7 @@ return json.dumps({
       raise ValueError("Unexcpected Answer %s" % response)
     self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
-    organisation = self.portal.restrictedTraverse(response['id'].encode())
+    organisation = self.portal.restrictedTraverse(response['id'].encode() if six.PY2 else response["id"])
     self.assertEqual(organisation.getTitle(), self.id_template)
     # Check Second action
     response = json.loads(self.postToApi(
@@ -664,7 +664,7 @@ return json.dumps({
       raise ValueError("Unexcpected Answer %s" % response)
     self.assertEqual(self.portal.REQUEST.RESPONSE.getStatus(), 201)
     self.portal.REQUEST.RESPONSE.setStatus(200)
-    person = self.portal.restrictedTraverse(response['id'].encode())
+    person = self.portal.restrictedTraverse(response['id'].encode() if six.PY2 else response["id"])
     self.assertEqual(person.getTitle(), self.id_template)
 
   def test_action_post_no_action_matches(self):
