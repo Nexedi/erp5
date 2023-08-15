@@ -381,15 +381,18 @@ class Git(WorkingCopy):
       self.git('reset', '--soft', '@{%u}' % reset)
       if isinstance(e, GitLoginError):
         raise
-      portal_status_message = str(e)
+      keep_items_dict = dict(
+        portal_status_message = str(e),
+        portal_status_level = 'error'
+      )
     else:
       head = self.git('rev-parse', '--short', 'HEAD')
-      portal_status_message = translateString(
-        'Files committed successfully in revision ${revision}',
-        mapping=dict(revision=head))
-    return context.Base_redirect('view', keep_items={
-      'portal_status_message': portal_status_message
-    })
+      keep_items_dict = dict(
+        portal_status_message = translateString(
+          'Files committed successfully in revision ${revision}',
+          mapping=dict(revision=head))
+      )
+    return context.Base_redirect('view', keep_items=keep_items_dict)
 
   def log(self, path='.'):
     log = []
