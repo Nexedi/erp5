@@ -10,14 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_reference</string> </value>
+            <value> <string>my_destination_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,10 +72,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The username this person will use to log in the system. The system will check that there isn\'t another user with the same username.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_read_only_reference</string> </value>
                 </item>
@@ -90,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>User Login</string> </value>
+                    <value> <string>Authorisation Identity</string> </value>
                 </item>
               </dictionary>
             </value>

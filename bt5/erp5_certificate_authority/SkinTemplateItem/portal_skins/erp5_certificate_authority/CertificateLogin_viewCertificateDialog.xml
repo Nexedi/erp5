@@ -42,6 +42,10 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -115,7 +119,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_viewCertificateDialog</string> </value>
+            <value> <string>CertificateLogin_viewCertificateDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,7 +127,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Person_viewCertificateDialog</string> </value>
+            <value> <string>CertificateLogin_viewCertificateDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -139,7 +143,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Certificate Request</string> </value>
+            <value> <string>Request Certificate</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
