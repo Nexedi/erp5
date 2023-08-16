@@ -7,8 +7,8 @@ test.erp5.testAutoLogout
 test.erp5.testBase
 test.erp5.testBusinessTemplate
 test.erp5.testCache
-test.erp5.testCachedSkinsTool
 test.erp5.testCacheTool
+test.erp5.testCachedSkinsTool
 test.erp5.testConstraint
 test.erp5.testContributionRegistryTool
 test.erp5.testCookieCrumbler
@@ -45,6 +45,7 @@ test.erp5.testPropertyRecordable
 test.erp5.testProxyField
 test.erp5.testQueryModule
 test.erp5.testRestrictedPythonSecurity
+test.erp5.testSQLVar
 test.erp5.testSelectionTool
 test.erp5.testSequence
 test.erp5.testSessionTool
