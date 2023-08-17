@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, URLSearchParams, Blob*/
-(function (window, rJS, domsugar, document, URLSearchParams, Blob) {
+/*global window, rJS, domsugar, document*/
+(function (window, rJS, domsugar, document) {
   "use strict";
 
   var SIMULATION_SPEED = 10,
@@ -23,7 +23,6 @@
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 1,
-    FLAG_WEIGHT = 5,
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'function assert(a, b, msg) {\n' +
@@ -98,7 +97,7 @@
       return gadget.runGame();
     })
 
-    .declareJob('runGame', function runGame(options) {
+    .declareJob('runGame', function runGame() {
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
@@ -202,17 +201,18 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var div = domsugar('div', { text: "CONSOLE LOG ENTRIES:" });
+          var div = domsugar('div', { text: "CONSOLE LOG ENTRIES:" }), lines,
+            l, node;
           document.querySelector('.container').parentNode.appendChild(div);
           function createLogNode(message) {
-            var node = document.createElement("div");
-            var textNode = document.createTextNode(message);
-            node.appendChild(textNode);
-            return node;
+            var log_node = document.createElement("div"),
+              textNode = document.createTextNode(message);
+            log_node.appendChild(textNode);
+            return log_node;
           }
-          var lines = result.console_log.split('\n');
-          for (var i = 0;i < lines.length;i++) {
-            var node = createLogNode(lines[i]);
+          lines = result.console_log.split('\n');
+          for (l = 0; l < lines.length; l += 1) {
+            node = createLogNode(lines[l]);
             document.querySelector('.test_log').appendChild(node);
           }
         }, function (error) {
@@ -221,4 +221,4 @@
         });
     });
 
-}(window, rJS, domsugar, document, URLSearchParams, Blob));
+}(window, rJS, domsugar, document));
