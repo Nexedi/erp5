@@ -35,11 +35,11 @@ class CertificateLoginMixin:
   def _getCertificate(self):
     portal = self.getPortalObject()
     _id = self._generateRandomId()
-    reference = 'CERTLOGIN-%i-%s' % (
+    reference = 'CERTLOGIN-%i-%s-%s' % (
       portal.portal_ids.generateNewId(
         id_group='certificate_login',
         id_generator='non_continuous_integer_increasing',
-      ), _id
+      ), _id, self.getParentValue().getReference("")
     )
     self.setReference(reference)
     certificate_dict = self.getPortalObject().portal_certificate_authority\
