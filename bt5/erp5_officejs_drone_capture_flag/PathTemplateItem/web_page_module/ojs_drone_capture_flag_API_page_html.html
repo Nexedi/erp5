@@ -265,7 +265,7 @@
 
       <!-- loiter -->
       <h4 class="item-name" id="loiter"><span>loiter</span><span>: void</span></h4>
-      <p class="item-descr">Set the drone to loiter mode, it will loiter around last target coordinates.</p>
+      <p class="item-descr">Set the drone to loiter mode, it will loiter around the target coordinates.</p>
 
       <div>
         <h5 class="item-param-1">Param</h5>
@@ -273,15 +273,28 @@
       </div>
 
       <div>
-        <p class="item-param-1">altitude: Float</p>
-        <p class="item-param-2">altitude value</p>
+        <p class="item-param-1">X: Float</p>
+        <p class="item-param-2">X value - latitude (in degrees).</p>
+      </div>
+      <div>
+        <p class="item-param-1">Y: Float</p>
+        <p class="item-param-2">Y value - longitude (in degrees).</p>
+      </div>
+      <div>
+        <p class="item-param-1">Z: Float</p>
+        <p class="item-param-2">Z value - altitude (in meters).</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">radius: Float</p>
+        <p class="item-param-2">radius value (in meters).</p>
       </div>
 
       <div>
         <h5 class="item-param-1">Example</h5>
       </div>
 
-      <p class="item-param-1">me.loiter(100);<br>
+      <p class="item-param-1">me.loiter(lat, lon, altitude, radius);<br>
       </p>
 
       <div class="line"></div>

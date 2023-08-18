@@ -11,8 +11,9 @@
     //but map_size is needed here for map randomization (location of objects)
     //TODO refactor: or randomization is moved to map manager (seed as param)
     //or randomization is done here but with geo-coordinates (not meters)
-    MAP_SIZE = 902,
-    min_lat = 45.6475,
+    MAP_SIZE = 900,
+    //square map
+    min_lat = 45.6419,
     max_lat = 45.65,
     min_lon = 14.265,
     max_lon = 14.2766,

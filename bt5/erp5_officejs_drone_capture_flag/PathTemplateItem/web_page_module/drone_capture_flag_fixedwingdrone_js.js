@@ -409,7 +409,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       return _this._mapManager.latLonDistance([a.x, a.y], [b.x, b.y]);
     }
     context._gameManager._droneList.forEach(function (other) {
-      if (other.can_play && drone.id != other.id) {
+      if (other.can_play && drone.id !== other.id) {
         other_position = other.getCurrentPosition();
         distance = calculateDistance(drone_position, other_position, context);
         if (distance <= VIEW_SCOPE) {

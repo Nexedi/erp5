@@ -564,9 +564,6 @@ var MapManager = /** @class */ (function () {
                                      [map_dict.max_lat, map_dict.min_lon]),
       map_size = Math.ceil(Math.max(max_width, max_height)),
       starting_point = map_size / 2 * -0.75;
-    console.log("max_width:",max_width);
-    console.log("max_height:",max_height);
-    console.log("map_size:",map_size);
     this.map_info = {
       "depth": map_size,
       "height": map_dict.height,
@@ -1324,11 +1321,15 @@ var GameManager = /** @class */ (function () {
       return false;
     }
     function spawnDrone(x, y, z, index, drone_info, api, team) {
-      var default_drone_AI = api.getDroneAI(), code, base, code_eval;
+      var default_drone_AI = api.getDroneAI(), code, base, code_eval, trim;
       if (default_drone_AI) {
         code = default_drone_AI;
       } else {
         code = drone_info.script_content;
+      }
+      trim = code.trim();
+      if (!trim) {
+        code = "me.onStart = function () { forcedErrorEmptyScript };";
       }
       code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', api, team);' +
