@@ -18,8 +18,7 @@ else:
     reference=reference)
 
 if generate_new_uid:
-  id_group = (reference, active_process.getUid())
-  new_uid = portal.portal_ids.generateNewId(id_group=id_group, default=0)
+  new_uid = len(list(active_process.getResultList()))
 else:
   new_uid = None
 
