@@ -142,6 +142,7 @@ class PasswordTool(BaseTool):
     # check user exists, and have an email
     user_path_set = {x['path'] for x in self.getPortalObject().acl_users.searchUsers(
       login=user_login,
+      login_portal_type='ERP5 Login',
       exact_match=True,
     ) if 'path' in x}
     if len(user_path_set) == 0:
@@ -253,6 +254,7 @@ class PasswordTool(BaseTool):
       return []
     user_dict_list = portal.acl_users.searchUsers(
       login=register_user_login,
+      login_portal_type='ERP5 Login',
       exact_match=True,
     )
     if user_dict_list:
@@ -300,6 +302,7 @@ class PasswordTool(BaseTool):
     portal = self.getPortalObject()
     user_dict, = portal.acl_users.searchUsers(
       login=register_user_login,
+      login_portal_type='ERP5 Login',
       exact_match=True,
     )
     login_dict, = user_dict['login_list']
