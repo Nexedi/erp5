@@ -13,6 +13,11 @@ var DroneLogAPI = /** @class */ (function () {
     this._drone_info = drone_info;
     this._flight_parameters = flight_parameters;
   }
+  Object.defineProperty(DroneLogAPI.prototype, "isCollidable", {
+    get: function () { return false; },
+    enumerable: true,
+    configurable: true
+  });
   /*
   ** Function called at start phase of the drone, just before onStart AI script
   */

@@ -32,6 +32,11 @@ var FixedWingDroneAPI = /** @class */ (function () {
     this._loiter_mode = false;
     this._drone_dict_list = [];
   }
+  Object.defineProperty(FixedWingDroneAPI.prototype, "isCollidable", {
+    get: function () { return true; },
+    enumerable: true,
+    configurable: true
+  });
   /*
   ** Function called on start phase of the drone, just before onStart AI script
   */
@@ -393,9 +398,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
     }
     var processed_coordinates =
       this._mapManager.convertToLocalCoordinates(lat, lon, z);
-    if (processed_coordinates.z > this._map_dict.start_AMSL) {
-      processed_coordinates.z -= this._map_dict.start_AMSL;
-    }
+    processed_coordinates.z -= this._map_dict.start_AMSL;
     //this._last_altitude_point_reached = -1;
     //this.takeoff_path = [];
     return processed_coordinates;
