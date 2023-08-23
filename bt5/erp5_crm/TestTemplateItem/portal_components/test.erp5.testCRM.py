@@ -344,6 +344,24 @@ class TestCRM(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(so, 'expire_action')
     self.assertEqual('expired', so.getSimulationState())
 
+  def test_Ticket_getWorkflowStateTranslatedTitle(self):
+    self.assertEqual(
+      self.portal.campaign_module.newContent(
+        portal_type='Campaign').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
+    self.assertEqual(
+      self.portal.meeting_module.newContent(
+        portal_type='Meeting').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
+    self.assertEqual(
+      self.portal.support_request_module.newContent(
+        portal_type='Support Request').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
+    self.assertEqual(
+      self.portal.sale_opportunity_module.newContent(
+        portal_type='Sale Opportunity').Ticket_getWorkflowStateTranslatedTitle(),
+     'Draft')
+
   @expectedFailure
   def test_Event_AcknowledgeAndCreateEvent(self):
     """
