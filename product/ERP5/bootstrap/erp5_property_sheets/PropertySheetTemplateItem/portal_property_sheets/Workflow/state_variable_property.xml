@@ -48,10 +48,6 @@
             <value> <string>Standard Property</string> </value>
         </item>
         <item>
-            <key> <string>property_default</string> </key>
-            <value> <string>python: \'simulation_state\'</string> </value>
-        </item>
-        <item>
             <key> <string>storage_id</string> </key>
             <value>
               <none/>
