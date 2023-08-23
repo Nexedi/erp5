@@ -532,20 +532,21 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       # Create state var accessor
       # and generate methods that support the translation of workflow states
       state_var = wf.getStateVariable()
-      for method_id, getter in (
-          ('get%s' % UpperCase(state_var), WorkflowState.Getter),
-          ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
-          ('getTranslated%s' % UpperCase(state_var),
-                                     WorkflowState.TranslatedGetter),
-          ('getTranslated%sTitle' % UpperCase(state_var),
-                                     WorkflowState.TranslatedTitleGetter),
-          ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
-          ):
-        if not hasattr(ptype_klass, method_id):
-          method = getter(method_id, wf_id)
-          # Attach to portal_type
-          ptype_klass.registerAccessor(method,
-                                       Permissions.AccessContentsInformation)
+      if state_var:
+        for method_id, getter in (
+            ('get%s' % UpperCase(state_var), WorkflowState.Getter),
+            ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
+            ('getTranslated%s' % UpperCase(state_var),
+                                      WorkflowState.TranslatedGetter),
+            ('getTranslated%sTitle' % UpperCase(state_var),
+                                      WorkflowState.TranslatedTitleGetter),
+            ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
+            ):
+          if not hasattr(ptype_klass, method_id):
+            method = getter(method_id, wf_id)
+            # Attach to portal_type
+            ptype_klass.registerAccessor(method,
+                                        Permissions.AccessContentsInformation)
 
       storage = workflow_dict
 
