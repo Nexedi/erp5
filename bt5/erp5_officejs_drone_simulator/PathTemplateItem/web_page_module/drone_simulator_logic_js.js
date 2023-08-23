@@ -37,7 +37,7 @@ var DroneManager = /** @class */ (function () {
     // Create the control mesh
     this._controlMesh = BABYLON.Mesh.CreateBox(
       "droneControl_" + id,
-      0.01,
+      1.55, // 155 cm long wingspan
       this._scene
     );
     this._controlMesh.isVisible = false;
@@ -421,7 +421,7 @@ var MapManager = /** @class */ (function () {
                                        [map_dict.min_lat, map_dict.max_lon]),
       max_height = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                       [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)) * 0.6;
+      map_size = Math.ceil(Math.max(max_width, max_height));
     this.map_info = {
       "depth": map_size,
       "height": map_dict.height,
@@ -622,13 +622,14 @@ var GameManager = /** @class */ (function () {
     this._flight_log[drone._id].push(error.stack);
   };
 
-  GameManager.prototype._checkDroneRules = function (drone) {
-    //TODO move this to API methods.
-    //each type of drone should define its rules
-    if (drone.getCurrentPosition()) {
-      return drone.getCurrentPosition().z > 1;
+  GameManager.prototype._checkCollision = function (drone, other) {
+    if (drone.colliderMesh && other.colliderMesh &&
+        drone.colliderMesh.intersectsMesh(other.colliderMesh, false)) {
+      drone._internal_crash(new Error('Drone ' + drone.id +
+                            ' touched drone ' + other.id + '.'));
+      other._internal_crash(new Error('Drone ' + drone.id +
+                            ' touched drone ' + other.id + '.'));
     }
-    return false;
   };
 
   GameManager.prototype._update = function (delta_time, fullscreen) {
@@ -664,11 +665,19 @@ var GameManager = /** @class */ (function () {
     this._droneList.forEach(function (drone) {
       queue.push(function () {
         drone._tick += 1;
-        if (_this._checkDroneRules(drone)) {
-          return drone.internal_update(delta_time);
+        if (drone._API.isCollidable && drone.can_play) {
+          if (drone.getCurrentPosition().z <= 0) {
+            drone._internal_crash(new Error('Drone ' + drone.id +
+                                            ' touched the floor.'));
+          } else {
+            _this._droneList.forEach(function (other) {
+              if (other.can_play && drone.id !== other.id) {
+                _this._checkCollision(drone, other);
+              }
+            });
+          }
         }
-        //TODO error must be defined by the api?
-        drone._internal_crash('Drone touched the floor');
+        return drone.internal_update(delta_time);
       });
     });
 
