@@ -4,6 +4,6 @@ portal = context.getPortalObject()
 workflow_tool = portal.portal_workflow
 
 for workflow in workflow_tool.getWorkflowValueListFor(context):
-  # Exclude interaction workflows and edit_workflow
-  if workflow.state_var != 'state':
-    return getattr(context, 'getTranslated%sTitle' % UpperCase(workflow.state_var))()
+  if workflow.getPortalType() != 'Interaction Workflow' \
+    and workflow.getId() != 'edit_workflow':
+    return getattr(context, 'getTranslated%sTitle' % UpperCase(workflow.getStateVariable()))()
