@@ -1,0 +1,26 @@
+.import-export {
+  white-space: nowrap;
+}
+
+.import-export input {
+    display: none;
+}
+
+.import-export label {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.item-label {
+  background-color: #F8F8F8;
+  padding: 8px;
+  margin: 8px 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.run-game {
+  margin-top: 0 !important;
+}

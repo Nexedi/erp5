@@ -10,6 +10,67 @@
 
     <div class="documentation">
 
+      <h1>Game specifications</h1>
+
+      <h3>Start message with information about the flags</h3>
+
+      <!-- Flag message -->
+      <h4 class="item-name" id="flag_msg"><span>msg.flag_positions</span><span>: list</span></h4>
+      <p class="item-descr">List containing an information dictionary for each flag in the map</p>
+
+      <div>
+        <h5 class="item-param-1">Flag info dictionary:</h5>
+        <p class="item-descr"></p>
+      </div>
+
+      <div>
+        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-2">Description</h5>
+      </div>
+
+      <div>
+        <p class="item-param-1">id: Integer</p>
+        <p class="item-param-2">Flag id</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">score: Integer</p>
+        <p class="item-param-2">Flag score for hit</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">weight: Integer</p>
+        <p class="item-param-2">Flag weight, number of hits to be captured</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">position: dictionary</p>
+        <p class="item-param-2">
+          {<br>
+          &nbsp;&nbsp;x: number, //latitude (in degrees)<br>
+          &nbsp;&nbsp;y: number, //longitude (in degrees)<br>
+          &nbsp;&nbsp;z: number  //altitude (in meters)<br>
+          }<br>
+        </p>
+      </div>
+
+      <div class="line"></div>
+
+      <h3>Game scoring</h3>
+
+      <!-- Scoring -->
+      <h4 class="item-name" id="scoring"><span>Score</span></h4>
+      <p class="item-descr">Every flag has a score, every drone hit on the flag will give it that score value.</p>
+      <p class="item-descr">The number of hits on a flag is determined by its weight.</p>
+      <p class="item-descr">Once the number of hits is equal to the flag weight, no more score will be given on following hits.</p>
+      <p class="item-descr">Total score is the sum of all drones score when the game finishes.</p>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">A flag with score=3 and weight=2 will grant 3 score points on every drone hit, up to 2 hits.</p>
+
+      <div class="line"></div>
+
       <h1>Fixed Wings Drone API</h1>
 
       <h3>API functions</h3>
@@ -442,7 +503,7 @@
 
       <!-- id -->
       <h4 class="item-name" id="id"><span>id</span><span>: number</span></h4>
-      <p class="item-descr">Drone unique numeric identifier: from 0 to 9.</p>
+      <p class="item-descr">Drone unique numeric identifier.</p>
 
       <h5 class="item-param-1">Example</h5>
 
