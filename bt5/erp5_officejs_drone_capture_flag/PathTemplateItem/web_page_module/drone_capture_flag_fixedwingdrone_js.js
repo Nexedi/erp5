@@ -36,7 +36,6 @@ var FixedWingDroneAPI = /** @class */ (function () {
   ** Function called on start phase of the drone, just before onStart AI script
   */
   FixedWingDroneAPI.prototype.internal_start = function (drone) {
-    drone._targetCoordinates = drone.getCurrentPosition();
     drone._maxDeceleration = this.getMaxDeceleration();
     if (drone._maxDeceleration <= 0) {
       throw new Error('max deceleration must be superior to 0');

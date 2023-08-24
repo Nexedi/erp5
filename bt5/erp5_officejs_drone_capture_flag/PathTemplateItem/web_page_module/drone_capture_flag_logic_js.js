@@ -135,6 +135,7 @@ var DroneManager = /** @class */ (function () {
     configurable: true
   });
   DroneManager.prototype.internal_start = function () {
+    this._targetCoordinates = this.position;
     this._API.internal_start(this);
     this._canPlay = true;
     this._canCommunicate = true;
