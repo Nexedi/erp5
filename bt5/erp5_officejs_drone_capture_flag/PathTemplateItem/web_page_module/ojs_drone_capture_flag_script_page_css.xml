@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_capture_flag_fixedwingdrone.js</string> </value>
+            <value> <string>gadget_erp5_page_drone_capture_flag_script_page.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,17 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>drone_capture_flag_fixedwingdrone_js</string> </value>
+            <value> <string>ojs_drone_capture_flag_script_page_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Fixed Wing Drone (API)</string> </value>
+            <value> <string>Drone Capture Flag Script Page CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682437188.5</float>
+                              <float>1693841614.38</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -246,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1010.45437.13560.55142</string> </value>
+                      <value> <string>1010.62540.7060.5000</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -266,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1692989145.27</float>
+                              <float>1694015251.98</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -293,7 +289,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -309,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -329,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682437063.03</float>
+                              <float>1693841589.15</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
