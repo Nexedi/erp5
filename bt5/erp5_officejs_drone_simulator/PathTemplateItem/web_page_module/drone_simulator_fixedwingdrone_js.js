@@ -198,6 +198,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
       distance,
       distanceCos,
       distanceSin,
+      distanceToTarget,
       currentSinLat,
       currentLonRad,
       groundSpeed,
@@ -209,12 +210,19 @@ var FixedWingDroneAPI = /** @class */ (function () {
       verticalSpeed,
       yawToDirection;
 
-    if (this._loiter_mode
-        && Math.sqrt(
-          Math.pow(drone._targetCoordinates.x - drone.position.x, 2)
-            + Math.pow(drone._targetCoordinates.y - drone.position.y, 2)
-        ) <= this._loiter_radius) {
-      newYaw = bearing - 90;
+    if (this._loiter_mode) {
+      distanceToTarget = Math.sqrt(
+        Math.pow(drone._targetCoordinates.x - drone.position.x, 2)
+          + Math.pow(drone._targetCoordinates.y - drone.position.y, 2)
+      );
+
+      if (Math.abs(distanceToTarget - this._loiter_radius) <= 1) {
+        newYaw = bearing - 90;
+      } else if (distanceToTarget < this._loiter_radius) {
+        newYaw = bearing - 135;
+      } else {
+        newYaw = this._getNewYaw(drone, bearing, delta_time);
+      }
     } else {
       newYaw = this._getNewYaw(drone, bearing, delta_time);
     }
