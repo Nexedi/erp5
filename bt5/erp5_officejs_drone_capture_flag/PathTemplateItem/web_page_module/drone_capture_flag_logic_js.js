@@ -1322,15 +1322,14 @@ var GameManager = /** @class */ (function () {
       return false;
     }
     function spawnDrone(x, y, z, index, drone_info, api, team) {
-      var default_drone_AI = api.getDroneAI(), code, base, code_eval, trim;
+      var default_drone_AI = api.getDroneAI(), code, base, code_eval;
       if (default_drone_AI) {
         code = default_drone_AI;
       } else {
         code = drone_info.script_content;
       }
-      trim = code.trim();
-      if (!trim) {
-        code = "me.onStart = function () { forcedErrorEmptyScript };";
+      if (!code.includes("me.onStart")) {
+        code = "me.onStart = function () { me.exit(); };";
       }
       code_eval = "let drone = new DroneManager(ctx._scene, " +
           index + ', api, team);' +
