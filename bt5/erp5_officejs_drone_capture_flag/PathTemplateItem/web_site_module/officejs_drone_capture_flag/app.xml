@@ -246,7 +246,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net *.nexedi.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; script-src \'self\' \'unsafe-eval\';</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -502,7 +502,7 @@ WebSection_getDroneCaptureFlagPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1007.63247.30934.52258</string> </value>
+                      <value> <string>1010.35278.59853.35635</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -522,7 +522,7 @@ WebSection_getDroneCaptureFlagPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1682433685.5</float>
+                              <float>1692976699.18</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
