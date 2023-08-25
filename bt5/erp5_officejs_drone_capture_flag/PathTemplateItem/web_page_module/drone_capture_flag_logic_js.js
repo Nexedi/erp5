@@ -1322,7 +1322,7 @@ var GameManager = /** @class */ (function () {
       return false;
     }
     function spawnDrone(x, y, z, index, drone_info, api, team) {
-      var default_drone_AI = api.getDroneAI(), code, base, code_eval;
+      var default_drone_AI = api.getDroneAI(), code, code_eval;
       if (default_drone_AI) {
         code = default_drone_AI;
       } else {
@@ -1349,17 +1349,18 @@ var GameManager = /** @class */ (function () {
       if (x !== null && y !== null && z !== null) {
         code_eval += "me.setStartingPosition(" + x + ", " + y + ", " + z + ");";
       }
-      base = code_eval;
+      //base = code_eval;
       code_eval += code + "}; droneMe(Date, drone, Math, {});";
-      base += "};ctx._droneList_" + team + ".push(drone)";
+      //base += "};ctx._droneList_" + team + ".push(drone)";
       code_eval += "ctx._droneList_" + team + ".push(drone)";
       /*jslint evil: true*/
-      try {
+      eval(code_eval);
+      /*jslint evil: false*/
+      /*try {
         eval(code_eval);
       } catch (error) {
         eval(base);
-      }
-      /*jslint evil: false*/
+      }*/
     }
     function randomSpherePoint(x0, y0, z0, rx0, ry0, rz0) {
       var u = Math.random(), v = Math.random(),
