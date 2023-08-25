@@ -57,7 +57,7 @@
       '\n' +
       'me.onGetMsg = function (msg) {\n' +
       '  if (msg && msg.flag_positions) {\n' +
-      '    me.flag_positions = msg.flag_positions\n' +
+      '    me.flag_positions = msg.flag_positions;\n' +
       '    me.next_checkpoint = me.id % me.flag_positions.length;\n' +
       '  }\n' +
       '};\n' +
@@ -375,7 +375,8 @@
                   "key": "script",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "renderjs_extra": '{"editor": "codemirror", "maximize": true}',
+                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
+                    + '"portal_type": "Web Script"}',
                   "url": "gadget_editor.html",
                   "sandbox": "public"
                 }
