@@ -176,14 +176,15 @@ var DroneManager = /** @class */ (function () {
     return;
   };
   DroneManager.prototype.internal_update = function (delta_time) {
-    var context = this;
+    var context = this, milliseconds;
     if (this._controlMesh) {
       context._API.internal_update(context, delta_time);
       if (context._canUpdate) {
         context._canUpdate = false;
         return new RSVP.Queue()
           .push(function () {
-            return context.onUpdate(context._API._gameManager._game_duration);
+            milliseconds = Math.floor(context._API._gameManager._game_duration);
+            return context.onUpdate(milliseconds);
           })
           .push(function () {
             context._canUpdate = true;
