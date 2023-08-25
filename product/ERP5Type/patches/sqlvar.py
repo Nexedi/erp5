@@ -74,6 +74,8 @@ if IS_ZOPE2: # BBB Zope2
         elif t=='nb' and not v:
             t = 'empty string'
         else:
+            if v is None:
+                return 'null'
             v = md.getitem('sql_quote__',0)(
                 v if isinstance(v, basestring) else str(v))
             #if find(v,"\'") >= 0: v=join(split(v,"\'"),"''")
