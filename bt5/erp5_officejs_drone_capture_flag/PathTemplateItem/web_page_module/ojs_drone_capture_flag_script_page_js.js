@@ -515,6 +515,11 @@
         json_map.obstacle_list = obstacle_list;
         json_map.drones.enemy = enemy_list;
         json_map.flag_list = flag_list;
+        json_map.starting_position = {
+          "x": 0,
+          "y": options.map_size / 2 * -0.75,
+          "z": 15
+        };
         return json_map;
       }
 
