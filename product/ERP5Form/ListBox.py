@@ -45,7 +45,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
-from Acquisition import aq_base, aq_self, aq_inner
+from Acquisition import aq_base, aq_inner
 import Acquisition
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
@@ -2336,9 +2336,9 @@ class ListBoxRendererLine:
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          if getattr(aq_self(brain), alias, None) is not None:
-            original_value = getattr(brain, alias)
-          else:
+          try:
+            original_value = getattr(aq_base(brain), alias)
+          except AttributeError:
             # Get the trailing part.
             try:
               property_id = sql[sql.rindex('.') + 1:]
