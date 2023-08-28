@@ -564,8 +564,7 @@ var MapManager = /** @class */ (function () {
                                      [map_dict.min_lat, map_dict.max_lon]),
       max_height = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
                                      [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height)),
-      starting_point = map_size / 2 * -0.75;
+      map_size = Math.ceil(Math.max(max_width, max_height));
     this.map_info = {
       "depth": map_size,
       "height": map_dict.height,
@@ -577,11 +576,7 @@ var MapManager = /** @class */ (function () {
       "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
       "obstacle_list": map_dict.obstacle_list,
       "geo_obstacle_list": [],
-      "initial_position": {
-        "x": 0,
-        "y": starting_point,
-        "z": START_Z
-      }
+      "initial_position": map_dict.starting_position
     };
     this.map_info.min_x = this.longitudToX(map_dict.min_lon);
     this.map_info.min_y = this.latitudeToY(map_dict.min_lat);
