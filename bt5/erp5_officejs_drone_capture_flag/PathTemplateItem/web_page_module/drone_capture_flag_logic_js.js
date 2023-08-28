@@ -859,8 +859,8 @@ var GameManager = /** @class */ (function () {
         if (!flag.drone_collider_list.includes(drone.id)) {
           //TODO notify the drone somehow? Or the AI script is in charge?
           //console.log("flag " + flag.id + " hit by drone " + drone.id);
-          drone._internal_crash(new Error('Drone ' + drone.id +
-                                          ' touched a flag.'));
+          /*drone._internal_crash(new Error('Drone ' + drone.id +
+                                          ' touched a flag.'));*/
           if (flag.drone_collider_list.length === 0) {
             drone.score++;
             flag.drone_collider_list.push(drone.id);
@@ -970,11 +970,11 @@ var GameManager = /** @class */ (function () {
           _this._result_message += "ALL DRONES DOWN!";
           return _this._finish();
         }
-        if (_this._allFlagsCaptured()) {
+        /*if (_this._allFlagsCaptured()) {
           console.log("ALL FLAGS CAPTURED");
           _this._result_message += "ALL FLAGS CAPTURED!";
           return _this._finish();
-        }
+        }*/
       });
   };
 
