@@ -698,8 +698,7 @@ var GameManager = /** @class */ (function () {
       header_list = ["timestamp (ms)", "latitude (°)", "longitude (°)",
                      "AMSL (m)", "rel altitude (m)", "yaw (°)",
                      "ground speed (m/s)", "climb rate (m/s)"];
-      drone_count = GAMEPARAMETERS.map.drones.user.length +
-        GAMEPARAMETERS.map.drones.enemy.length;
+      drone_count = GAMEPARAMETERS.drone.list.length;
       for (drone = 0; drone < drone_count; drone += 1) {
         this._flight_log[drone] = [];
         this._flight_log[drone].push(header_list);
@@ -798,7 +797,9 @@ var GameManager = /** @class */ (function () {
   };
 
   GameManager.prototype.logError = function (drone, error) {
-    this._flight_log[drone._id].push(error.stack);
+    if (drone._id < this._flight_log.length) { // don't log enemies
+      this._flight_log[drone._id].push(error.stack);
+    }
   };
 
   GameManager.prototype._checkDroneOut = function (drone) {
@@ -1132,13 +1133,15 @@ var GameManager = /** @class */ (function () {
       this._scene
     );
     hemi_south.intensity = 0.75;
-    cam_radius = (GAMEPARAMETERS.map.map_size * 1.10 < 6000) ?
-      GAMEPARAMETERS.map.map_size * 1.10 : 6000; //skybox scene limit
+    //HARDCODE camera to a hardcoded map_size
+    var map_size = 900; //GAMEPARAMETERS.map.map_size
+     //skybox scene limit
+    cam_radius = (map_size * 1.10 < 6000) ? map_size * 1.10 : 6000;
     camera = new BABYLON.ArcRotateCamera("camera", 0, 1.25, cam_radius,
                                          BABYLON.Vector3.Zero(), this._scene);
     camera.wheelPrecision = 10;
     //zoom out limit
-    camera.upperRadiusLimit = GAMEPARAMETERS.map.map_size * 10;
+    camera.upperRadiusLimit = map_size * 10;
     //scene.activeCamera.upperRadiusLimit = max * 4;
     //changed for event handling
     //camera.attachControl(this._scene.getEngine().getRenderingCanvas()); //orig
@@ -1160,8 +1163,8 @@ var GameManager = /** @class */ (function () {
       // Init the map
       _this._mapManager = new MapManager(ctx._scene);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
-                       GAMEPARAMETERS.map.drones.user, TEAM_USER, ctx);
-      ctx._spawnDrones(null, GAMEPARAMETERS.map.drones.enemy, TEAM_ENEMY, ctx);
+                       GAMEPARAMETERS.drone.list, TEAM_USER, ctx);
+      ctx._spawnDrones(null, GAMEPARAMETERS.map.enemies, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1385,7 +1388,7 @@ var GameManager = /** @class */ (function () {
         position_list.push(position);
         var id_offset = 0;
         if (team == TEAM_ENEMY) {
-          id_offset = GAMEPARAMETERS.map.drones.user.length;
+          id_offset = GAMEPARAMETERS.drone.list.length;
         }
         api = new this.APIs_dict[drone_list[i].type](
           this,
