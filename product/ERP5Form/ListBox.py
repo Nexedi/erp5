@@ -31,7 +31,7 @@ from six.moves import xrange
 from six import string_types as basestring
 import sys
 from OFS.Traversable import NotFound
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -2338,27 +2338,22 @@ class ListBoxRendererLine:
         if not tales:
           if getattr(aq_self(brain), alias, None) is not None:
             original_value = getattr(brain, alias)
-            processed_value = original_value
           else:
+            # Get the trailing part.
             try:
-              # Get the trailing part.
-              try:
-                property_id = sql[sql.rindex('.') + 1:]
-              except ValueError:
-                property_id = sql
-
-              try:
-                accessor_name = 'get%s' % UpperCase(property_id)
-                # Make sure the object have the attribute, and this is not
-                # acquired, but still get the attribute on the acquisition wrapper
-                getattr(aq_base(obj), accessor_name)
-                processed_value = original_value = getattr(obj, accessor_name)
-              except AttributeError:
-                original_value = getattr(obj, property_id, None)
-                processed_value = original_value
-            except (AttributeError, KeyError, Unauthorized):
-              original_value = None
-              processed_value = 'Could not evaluate %s' % property_id
+              property_id = sql[sql.rindex('.') + 1:]
+            except ValueError:
+              property_id = sql
+            accessor_name = 'get' + UpperCase(property_id)
+            try:
+              # Make sure the object have the attribute, and this is not
+              # acquired, but still get the attribute on the acquisition wrapper
+              getattr(aq_base(obj), accessor_name)
+            except AttributeError:
+              original_value = getattr(obj, property_id, None)
+            else:
+              original_value = getattr(obj, accessor_name)
+          processed_value = original_value
 
       # If the value is callable, evaluate it.
       if callable(original_value):
