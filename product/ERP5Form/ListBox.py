@@ -2336,7 +2336,7 @@ class ListBoxRendererLine:
 
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
-          if getattr(aq_self(brain), alias, None) is not None:
+          if getattr(aq_base(brain), alias, brain) is not brain:
             original_value = getattr(brain, alias)
           else:
             # Get the trailing part.
