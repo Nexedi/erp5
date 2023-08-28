@@ -107,6 +107,12 @@
       '    }\n' +
       '    return;\n' +
       '  }\n' +
+      '  if (me.next_checkpoint == me.flag_positions.length) {\n' +
+      '    me.triggerParachute();\n' +
+      '  }\n' +
+      '  if (me.landed()) {\n' +
+      '    me.exit();\n' +
+      '  }\n' +
       '};\n' +
       '\n' +
       'me.onDroneViewInfo = function (drone_view) {\n' +
@@ -513,7 +519,7 @@
           }
         }
         json_map.obstacle_list = obstacle_list;
-        json_map.drones.enemy = enemy_list;
+        json_map.enemies = enemy_list;
         json_map.flag_list = flag_list;
         json_map.starting_position = {
           "x": 0,
@@ -533,10 +539,11 @@
         "max_lon": parseFloat(max_lon),
         "flag_list": [],
         "obstacle_list" : [],
-        "drones": {
+        "enemies": []
+        /*"drones": {
           "user": DRONE_LIST,
           "enemy": []
-        }
+        }*/
       };
 
       game_parameters_json = {
@@ -550,7 +557,8 @@
           "minPitchAngle": parseFloat(options.drone_min_pitch),
           "maxPitchAngle": parseFloat(options.drone_max_pitch),
           "maxSinkRate": parseFloat(options.drone_max_sink_rate),
-          "maxClimbRate": parseFloat(options.drone_max_climb_rate)
+          "maxClimbRate": parseFloat(options.drone_max_climb_rate),
+          "list": DRONE_LIST
         },
         "gameTime": parseInt(options.simulation_time, 10),
         "simulation_speed": parseInt(options.simulation_speed, 10),
