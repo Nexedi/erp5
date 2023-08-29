@@ -410,7 +410,7 @@ var DroneManager = /** @class */ (function () {
 
 var MapManager = /** @class */ (function () {
   "use strict";
-  var EPSILON = 9.9,
+  var EPSILON = 15,
       START_Z = 15,
       R = 6371e3,
       //square map
@@ -559,9 +559,11 @@ var MapManager = /** @class */ (function () {
       mast.material = flag_material;
       flag = BABYLON.Mesh.MergeMeshes([flag_a, flag_b, mast]);
       flag.id = index;
-      //flag.weight = _this.map_info.flag_weight;
       flag.location = flag_info.position;
-      flag.drone_collider_list = [];
+      //flag.drone_collider_list = [];
+      flag.weight = flag_info.weight;
+      flag.score = flag_info.score;
+      flag.id = index;
       _this._flag_list.push(flag);
     });
   }
@@ -624,7 +626,9 @@ var MapManager = /** @class */ (function () {
             "x": random_position[0],
             "y": random_position[1],
             "z": 10
-          }
+          },
+          "score": randomIntFromInterval(1, 5, random_seed),
+          "weight": randomIntFromInterval(1, 5, random_seed)
         });
       }
       function checkDistance(position, position_list) {
@@ -695,13 +699,24 @@ var MapManager = /** @class */ (function () {
     this.map_info.min_y = this.latitudeToY(min_lat);
     this.map_info.max_x = this.longitudToX(max_lon);
     this.map_info.max_y = this.latitudeToY(max_lat);
-    var map = this;
+    var map = this, geo_flag_info, coordinates;
     map_dict.flag_list.forEach(function (flag_info, index) {
-      map.map_info.geo_flag_list.push(map.convertToGeoCoordinates(
+      coordinates = map.convertToGeoCoordinates(
         flag_info.position.x,
         flag_info.position.y,
         flag_info.position.z
-      ));
+      );
+      geo_flag_info = {
+        'id': flag_info.id,
+        'score': flag_info.score,
+        'weight': flag_info.weight,
+        'position': {
+          'x': coordinates.x,
+          'y': coordinates.y,
+          'z': coordinates.z
+        }
+      };
+      map.map_info.geo_flag_list.push(geo_flag_info);
     });
     map_dict.obstacle_list.forEach(function (obstacle_info, index) {
       var geo_obstacle = {};
@@ -965,7 +980,13 @@ var GameManager = /** @class */ (function () {
       //there is not a proper collision
       if (distance(drone.position, flag.location) <=
         this._mapManager.getMapInfo().flag_distance_epsilon) {
-        if (!flag.drone_collider_list.includes(drone.id)) {
+        drone._internal_crash(new Error('Drone ' + drone.id +
+                                        ' touched flag ' + flag.id));
+        if (flag.weight > 0) {
+          flag.weight -= 1;
+          drone.score += flag.score; // move score to a global place? GM, MM?
+        }
+        /*if (!flag.drone_collider_list.includes(drone.id)) {
           //TODO notify the drone somehow? Or the AI script is in charge?
           //console.log("flag " + flag.id + " hit by drone " + drone.id);
           drone._internal_crash(new Error('Drone ' + drone.id +
@@ -974,7 +995,7 @@ var GameManager = /** @class */ (function () {
             drone.score++;
             flag.drone_collider_list.push(drone.id);
           }
-        }
+        }*/
       }
     }
   };
@@ -1172,7 +1193,8 @@ var GameManager = /** @class */ (function () {
     return finish;
   };
 
-  GameManager.prototype._allFlagsCaptured = function () {
+  //game ends due to timeout or all drones stopped/crashed
+  /*GameManager.prototype._allFlagsCaptured = function () {
     var finish = true;
     this._mapManager._flag_list.forEach(function (flag) {
       //do not use flag weight for now, just 1 hit is enough
@@ -1182,14 +1204,12 @@ var GameManager = /** @class */ (function () {
       }
     });
     return finish;
-  };
+  };*/
 
   GameManager.prototype._calculateUserScore = function () {
     var score = 0;
     this._droneList_user.forEach(function (drone) {
-      //if (drone.can_play) {
       score += drone.score;
-      //}
     });
     return score;
   };
