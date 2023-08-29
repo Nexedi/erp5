@@ -19,7 +19,6 @@
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
-    FLAG_WEIGHT = 5,
     SEED = '6',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
@@ -330,17 +329,6 @@
                   "hidden": 0,
                   "type": "IntegerField"
                 },
-                /*"my_flag_weight": {
-                  "description": "",
-                  "title": "Flag Weight",
-                  "default": FLAG_WEIGHT,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "flag_weight",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },*/
                 "my_number_of_drones": {
                   "description": "",
                   "title": "Number of drones",
