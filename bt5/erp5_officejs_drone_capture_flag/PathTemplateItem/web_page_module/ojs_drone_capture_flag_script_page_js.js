@@ -19,7 +19,7 @@
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
-    SEED = '6',
+    SEED = '6!',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
@@ -67,9 +67,9 @@
       '  if (!me.direction_set) {\n' +
       '    if (me.next_checkpoint < me.flag_positions.length) {\n' +
       '      me.setTargetCoordinates(\n' +
-      '        me.flag_positions[me.next_checkpoint].x,\n' +
-      '        me.flag_positions[me.next_checkpoint].y,\n' +
-      '        me.flag_positions[me.next_checkpoint].z + me.id\n' +
+      '        me.flag_positions[me.next_checkpoint].position.x,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.y,\n' +
+      '        me.flag_positions[me.next_checkpoint].position.z + me.id\n' +
       '      );\n' +
       //'      console.log("[DEMO] Going to Checkpoint %d", me.next_checkpoint);\n' +
       '    }\n' +
@@ -86,7 +86,7 @@
       '    me.current_position = me.getCurrentPosition();\n' +
       '    me.distance = distance(\n' +
       '      me.current_position,\n' +
-      '      me.flag_positions[me.next_checkpoint]\n' +
+      '      me.flag_positions[me.next_checkpoint].position\n' +
       '    );\n' +
       '    if (me.distance <= EPSILON) {\n' +
       //'      console.log("[DEMO] Reached Checkpoint %d", me.next_checkpoint);\n' +
@@ -109,7 +109,7 @@
       '    me.dodging = drone_view.obstacles[0];\n' +
       '    me.direction_set = false;\n' +
       '    var random = Math.random() < 0.5, dodge_point = {};\n' +
-      '    Object.assign(dodge_point, me.flag_positions[me.next_checkpoint]);\n' +
+      '    Object.assign(dodge_point, me.flag_positions[me.next_checkpoint].position);\n' +
       '    if (random) {\n' +
       '      dodge_point.x = dodge_point.x * -1;\n' +
       '    } else {\n' +
