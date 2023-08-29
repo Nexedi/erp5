@@ -412,13 +412,19 @@ var MapManager = /** @class */ (function () {
   "use strict";
   var EPSILON = 9.9,
       START_Z = 15,
-      R = 6371e3;
+      R = 6371e3,
+      //square map
+      min_lat = 45.6419,
+      max_lat = 45.65,
+      min_lon = 14.265,
+      max_lon = 14.2766;
+
   //** CONSTRUCTOR
-  function MapManager(scene) {
+  function MapManager(scene, map_param) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
       largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
       count = 0, new_obstacle;
-    this.setMapInfo(GAMEPARAMETERS.map, GAMEPARAMETERS.initialPosition);
+    this.setMapInfo(map_param);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -559,12 +565,118 @@ var MapManager = /** @class */ (function () {
       _this._flag_list.push(flag);
     });
   }
-  MapManager.prototype.setMapInfo = function (map_dict, initial_position) {
-    var max_width = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                     [map_dict.min_lat, map_dict.max_lon]),
-      max_height = this.latLonDistance([map_dict.min_lat, map_dict.min_lon],
-                                     [map_dict.max_lat, map_dict.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height));
+  MapManager.prototype.setMapInfo = function (map_param) {
+    var max_width = this.latLonDistance([min_lat, min_lon],
+                                     [min_lat, max_lon]),
+      max_height = this.latLonDistance([min_lat, min_lon],
+                                     [max_lat, min_lon]),
+      map_size = Math.ceil(Math.max(max_width, max_height)),
+      map_json = {
+        "height": map_param.height,
+        "start_AMSL": map_param.start_AMSL,
+        "map_seed": map_param.map_seed,
+        "number_of_drones" : GAMEPARAMETERS.drone.list.length,
+        "map_size": map_size,
+        "flag_list": [],
+        "obstacle_list" : [],
+        "enemy_list": []
+      },
+      map_dict = randomizeMap(map_json);
+    function randomizeMap(json_map) {
+      function randomIntFromInterval(min, max, random_seed) {
+        return Math.floor(random_seed.quick() * (max - min + 1) + min);
+      }
+      function randomPosition(random_seed, map_size) {
+        var sign_x = random_seed.quick() < 0.5 ? -1 : 1,
+          sign_y = random_seed.quick() < 0.5 ? -1 : 1,
+          pos_x = sign_x * random_seed.quick() * map_size / 2,
+          pos_y = sign_y * random_seed.quick() * map_size / 2;
+        return [pos_x, pos_y];
+      }
+      var seed_value = json_map.map_seed,
+        random_seed = new Math.seedrandom(seed_value), i,
+        n_enemies = randomIntFromInterval(5, 10, random_seed),
+        n_flags = randomIntFromInterval(5, 10, random_seed),
+        n_obstacles = randomIntFromInterval(5, 15, random_seed),
+        flag_list = [], obstacle_list = [], enemy_list = [], random_position,
+        obstacles_types = ["box", "cylinder"], type,
+        obstacle_limit = [json_map.map_size / 6, json_map.map_size / 100,
+                          json_map.map_size / 6, 30];
+      //enemies
+      for (i = 0; i < n_enemies; i += 1) {
+        random_position = randomPosition(random_seed, json_map.map_size);
+        enemy_list.push({
+          "id": i + parseInt(json_map.number_of_drones),
+          "type": "EnemyDroneAPI",
+          "position": {
+            "x": random_position[0],
+            "y": random_position[1],
+            "z": 15 //TODO random z?
+          }
+        });
+      }
+      //flags
+      for (i = 0; i < n_flags; i += 1) {
+        //avoid flags near the limits
+        random_position = randomPosition(random_seed, json_map.map_size * 0.75);
+        flag_list.push({
+          "position": {
+            "x": random_position[0],
+            "y": random_position[1],
+            "z": 10
+          }
+        });
+      }
+      function checkDistance(position, position_list) {
+        function distance(a, b) {
+          return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+        }
+        var el;
+        for (el = 0; el < position_list.length; el += 1) {
+          if (distance(position, position_list[el].position) < json_map.map_size / 6) {
+            return true;
+          }
+        }
+        return false;
+      }
+      //obstacles
+      for (i = 0; i < n_obstacles; i += 1) {
+        random_position = randomPosition(random_seed, json_map.map_size);
+        if (checkDistance({ 'x': random_position[0],
+                            'y': random_position[1]}, flag_list)) {
+          i -= 1;
+        } else {
+          type = randomIntFromInterval(0, 2, random_seed);
+          obstacle_list.push({
+            "type": obstacles_types[type],
+            "position": {
+              "x": random_position[0],
+              "y": random_position[1],
+              "z": 15 //TODO random z?
+            },
+            "scale": {
+              "x": randomIntFromInterval(20, obstacle_limit[type], random_seed),
+              "y": randomIntFromInterval(20, obstacle_limit[type], random_seed),
+              "z": randomIntFromInterval(5, obstacle_limit[3], random_seed)
+            },
+            "rotation": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          });
+        }
+      }
+      json_map.obstacle_list = obstacle_list;
+      json_map.enemy_list = enemy_list;
+      json_map.flag_list = flag_list;
+      json_map.starting_position = {
+        "x": 0,
+        "y": json_map.map_size / 2 * -0.75,
+        "z": 15
+      };
+      return json_map;
+    }
     this.map_info = {
       "depth": map_size,
       "height": map_dict.height,
@@ -575,13 +687,14 @@ var MapManager = /** @class */ (function () {
       "geo_flag_list": [],
       "flag_distance_epsilon": map_dict.flag_distance_epsilon || EPSILON,
       "obstacle_list": map_dict.obstacle_list,
+      "enemy_list": map_dict.enemy_list,
       "geo_obstacle_list": [],
       "initial_position": map_dict.starting_position
     };
-    this.map_info.min_x = this.longitudToX(map_dict.min_lon);
-    this.map_info.min_y = this.latitudeToY(map_dict.min_lat);
-    this.map_info.max_x = this.longitudToX(map_dict.max_lon);
-    this.map_info.max_y = this.latitudeToY(map_dict.max_lat);
+    this.map_info.min_x = this.longitudToX(min_lon);
+    this.map_info.min_y = this.latitudeToY(min_lat);
+    this.map_info.max_x = this.longitudToX(max_lon);
+    this.map_info.max_y = this.latitudeToY(max_lat);
     var map = this;
     map_dict.flag_list.forEach(function (flag_info, index) {
       map.map_info.geo_flag_list.push(map.convertToGeoCoordinates(
@@ -855,8 +968,8 @@ var GameManager = /** @class */ (function () {
         if (!flag.drone_collider_list.includes(drone.id)) {
           //TODO notify the drone somehow? Or the AI script is in charge?
           //console.log("flag " + flag.id + " hit by drone " + drone.id);
-          /*drone._internal_crash(new Error('Drone ' + drone.id +
-                                          ' touched a flag.'));*/
+          drone._internal_crash(new Error('Drone ' + drone.id +
+                                          ' touched a flag.'));
           if (flag.drone_collider_list.length === 0) {
             drone.score++;
             flag.drone_collider_list.push(drone.id);
@@ -1161,10 +1274,10 @@ var GameManager = /** @class */ (function () {
         ctx._map_swapped = true;
       }
       // Init the map
-      _this._mapManager = new MapManager(ctx._scene);
+      _this._mapManager = new MapManager(ctx._scene, GAMEPARAMETERS.map);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.drone.list, TEAM_USER, ctx);
-      ctx._spawnDrones(null, GAMEPARAMETERS.map.enemies, TEAM_ENEMY, ctx);
+      ctx._spawnDrones(null, _this._mapManager.getMapInfo().enemy_list, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
