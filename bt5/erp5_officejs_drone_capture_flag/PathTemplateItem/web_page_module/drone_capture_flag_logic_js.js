@@ -598,7 +598,7 @@ var MapManager = /** @class */ (function () {
       var seed_value = json_map.map_seed,
         random_seed = new Math.seedrandom(seed_value), i,
         n_enemies = randomIntFromInterval(5, 10, random_seed),
-        n_flags = randomIntFromInterval(5, 10, random_seed),
+        n_flags = randomIntFromInterval(5, 10, random_seed), //TODO change range
         n_obstacles = randomIntFromInterval(5, 15, random_seed),
         flag_list = [], obstacle_list = [], enemy_list = [], random_position,
         obstacles_types = ["box", "cylinder"], type,
@@ -613,7 +613,7 @@ var MapManager = /** @class */ (function () {
           "position": {
             "x": random_position[0],
             "y": random_position[1],
-            "z": 15 //TODO random z?
+            "z": 15 //TODO random z? yes
           }
         });
       }
@@ -987,7 +987,6 @@ var GameManager = /** @class */ (function () {
           drone.score += flag.score; // move score to a global place? GM, MM?
         }
         /*if (!flag.drone_collider_list.includes(drone.id)) {
-          //TODO notify the drone somehow? Or the AI script is in charge?
           //console.log("flag " + flag.id + " hit by drone " + drone.id);
           drone._internal_crash(new Error('Drone ' + drone.id +
                                           ' touched a flag.'));
