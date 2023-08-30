@@ -146,19 +146,28 @@
     })
 
     .onEvent('submit', function () {
-      var gadget = this;
+      var gadget = this, operator_init_msg;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.getContent();
         })
         .push(function (input) {
+          operator_init_msg = new Function(input.operator_script)();
+          input.operator_init_msg = operator_init_msg;
           gadget.runGame(input);
         });
     })
 
     .declareMethod('render', function render() {
       var gadget = this, url_sp = new URLSearchParams(window.location.hash),
-        url_seed = url_sp.get("seed");
+        url_seed = url_sp.get("seed"),
+        //TODO RANDOMIZE MAP
+        json_map = {'size' : 900, 'more_stuff': [1, 2, 3]},
+        //TODO code/msg based on map json
+        msg = {'flag_positions': [1, 2, 3]};
+      var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
+        JSON.stringify(json_map) + ';\n' +
+        'return ' + JSON.stringify(msg) + ';\n';
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -352,6 +361,19 @@
                     + '"portal_type": "Web Script"}',
                   "url": "gadget_editor.html",
                   "sandbox": "public"
+                },
+                "my_operator_script": {
+                  "default": DEFAULT_OPERATOR_SCRIPT_CONTENT,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "operator_script",
+                  "hidden": 0,
+                  "type": "GadgetField",
+                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
+                    + '"portal_type": "Web Script"}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {
@@ -373,7 +395,7 @@
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
               ], [
                 "bottom",
-                [["my_script"]]
+                [["my_operator_script"], ["my_script"]]
               ]]
             }
           });
@@ -422,6 +444,7 @@
           "start_AMSL": parseFloat(options.start_AMSL),
           "map_seed": options.map_seed
         },
+        "operator_init_msg": options.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
