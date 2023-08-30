@@ -21,6 +21,7 @@
     NUMBER_OF_DRONES = 10,
     SEED = '6!',
     // Non-inputs parameters
+    DEFAULT_OPERATOR_SCRIPT_CONTENT = "var some_var;",
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
       '  DODGE_DISTANCE = 100;\n' +
@@ -352,6 +353,19 @@
                     + '"portal_type": "Web Script"}',
                   "url": "gadget_editor.html",
                   "sandbox": "public"
+                },
+                "my_operator_script": {
+                  "default": DEFAULT_OPERATOR_SCRIPT_CONTENT,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "operator_script",
+                  "hidden": 0,
+                  "type": "GadgetField",
+                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
+                    + '"portal_type": "Web Script"}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {
@@ -373,7 +387,7 @@
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
               ], [
                 "bottom",
-                [["my_script"]]
+                [["my_operator_script"], ["my_script"]]
               ]]
             }
           });
