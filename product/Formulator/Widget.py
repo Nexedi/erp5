@@ -373,7 +373,8 @@ class TextWidget(Widget):
   """Text widget
   """
   property_names = Widget.property_names +\
-                    ['display_width', 'display_maxwidth', 'input_type', 'extra']
+                    ['display_width', 'display_maxwidth', 'input_type', 'extra',
+                    'autocomplete', ]
 
   default = fields.StringField('default',
                                 title='Default',
@@ -413,6 +414,14 @@ class TextWidget(Widget):
                                   default="text",
                                   required=0)
 
+  autocomplete = fields.StringField('autocomplete',
+                                      title='Autocomplete',
+                                      description=(
+      "The autocomplete property of the HTML of the field"),
+                                      css_class="form-control",
+                                      default="",
+                                      required=0)
+
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """Render text input field.
     """
@@ -426,6 +435,7 @@ class TextWidget(Widget):
                             value=value,
                             size=field.get_value('display_width'),
                             maxlength=display_maxwidth,
+                            autocomplete=field.get_value('autocomplete'),
                             extra=field.get_value('extra'))
     else:
       return render_element("input",
@@ -434,6 +444,7 @@ class TextWidget(Widget):
                             css_class=field.get_value('css_class'),
                             value=value,
                             size=field.get_value('display_width'),
+                            autocomplete=field.get_value('autocomplete'),
                             extra=field.get_value('extra'))
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
@@ -492,6 +503,7 @@ class PasswordWidget(TextWidget):
                                 value=value,
                                 size=field.get_value('display_width'),
                                 maxlength=display_maxwidth,
+                                autocomplete=field.get_value('autocomplete'),
                                 extra=field.get_value('extra'))
       else:
           return render_element("input",
@@ -500,6 +512,7 @@ class PasswordWidget(TextWidget):
                                 css_class=field.get_value('css_class'),
                                 value=value,
                                 size=field.get_value('display_width'),
+                                autocomplete=field.get_value('autocomplete'),
                                 extra=field.get_value('extra'))
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
@@ -1182,7 +1195,15 @@ class ListWidget(SingleItemsWidget):
     """List widget.
     """
     property_names = Widget.property_names +\
-                     ['first_item', 'items', 'size', 'extra', 'extra_item']
+                     ['first_item', 'items', 'size', 'extra', 'extra_item', 'autocomplete']
+
+    autocomplete = fields.StringField('autocomplete',
+                                      title='Autocomplete',
+                                      description=(
+      "The autocomplete property of the HTML of the field"),
+                                      css_class="form-control",
+                                      default="",
+                                      required=0)
 
     size = fields.IntegerField('size',
                                title='Size',
@@ -1204,6 +1225,7 @@ class ListWidget(SingleItemsWidget):
                     css_class=field.get_value('css_class', REQUEST=REQUEST),
                     size=field.get_value('size', REQUEST=REQUEST),
                     contents="\n".join(rendered_items),
+                    autocomplete=field.get_value('autocomplete'),
                     extra=field.get_value('extra', REQUEST=REQUEST))
 
       return "\n".join([list_widget, input_hidden])
@@ -1782,6 +1804,11 @@ def render_tag(tag, **kw):
     del kw['extra']
   else:
     extra = ""
+
+  # For 'autocomplete' we do not want to add it if there is no value
+  autocomplete = kw.pop('autocomplete', '')
+  if autocomplete:
+    attr_list.append('%s="%s"' % ('autocomplete', html_quote(autocomplete)))
 
   # handle other attributes
   for key, value in kw.items():
