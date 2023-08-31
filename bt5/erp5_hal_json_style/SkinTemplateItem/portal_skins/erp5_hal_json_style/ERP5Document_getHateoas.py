@@ -452,6 +452,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     # resolve the base meta_type
     meta_type = field.getRecursiveTemplateField().meta_type
 
+  try:
+    autocomplete = field.get_value("autocomplete")
+  except KeyError:
+    autocomplete = None
+
   result = {
     "type": meta_type,
     "title": Base_translateString(field.get_value("title")),
@@ -460,6 +465,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None,
     "editable": field.get_value("editable"),
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
+    "autocomplete": autocomplete,
   }
 
   if preferred_html_style_developer_mode:
