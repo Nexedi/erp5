@@ -1378,6 +1378,8 @@ var GameManager = /** @class */ (function () {
           drone._tick = 0;
           promise_list.push(drone.internal_start());
         });
+        start_msg = GAMEPARAMETERS.operator_init_msg;
+        //TODO prepare a good operator init msg
         start_msg = {
           'flag_positions': _this._mapManager.getMapInfo().geo_flag_list
         };
