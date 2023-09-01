@@ -14,6 +14,7 @@
     MIN_LON = 14.265,
     MAX_LON = 14.2766,
     //SEED FORM PARAMETER IS BROKEN (used in randomization before user inputs)
+    // only way to set it is via url parameter 'seed'
     SEED = '6!',
     MAP = {
       "height": MAP_HEIGHT,
@@ -177,7 +178,7 @@
     .declareMethod('render', function render() {
       var gadget = this, url_sp = new URLSearchParams(window.location.hash),
         url_seed = url_sp.get("seed");
-        
+      MAP.map_seed = url_seed ? url_seed : SEED;
       //TODO this is ugly and makes the render to take more time
       // but other way I'm not being able to store the MapUtils results
       // outside require block. If I can't solve this: move randomizer code here
