@@ -6,8 +6,24 @@
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    map_height = 700,
-    start_AMSL = 595,
+    //default square map
+    MAP_HEIGHT = 700,
+    START_AMSL = 595,
+    MIN_LAT = 45.6419,
+    MAX_LAT = 45.65,
+    MIN_LON = 14.265,
+    MAX_LON = 14.2766,
+    SEED = '6!',
+    MAP = {
+      "height": MAP_HEIGHT,
+      "start_AMSL": START_AMSL,
+      "map_seed": SEED,
+      "min_lat": MIN_LAT,
+      "max_lat": MAX_LAT,
+      "min_lon": MIN_LON,
+      "max_lon": MAX_LON
+    },
+    JSON_MAP,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
     MAX_DECELERATION = 1,
@@ -19,7 +35,6 @@
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
-    SEED = '6!',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
@@ -160,252 +175,259 @@
 
     .declareMethod('render', function render() {
       var gadget = this, url_sp = new URLSearchParams(window.location.hash),
-        url_seed = url_sp.get("seed"),
-        //TODO RANDOMIZE MAP
-        json_map = {'size' : 900, 'more_stuff': [1, 2, 3]},
-        //TODO code/msg based on map json
-        msg = {'flag_positions': [1, 2, 3]};
-      var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
-        JSON.stringify(json_map) + ';\n' +
-        'return ' + JSON.stringify(msg) + ';\n';
-      return gadget.getDeclaredGadget('form_view')
-        .push(function (form_gadget) {
-          return form_gadget.render({
-            erp5_document: {
-              "_embedded": {"_view": {
-                "my_simulation_speed": {
-                  "description": "",
-                  "title": "Simulation Speed",
-                  "default": SIMULATION_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "simulation_speed",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_simulation_time": {
-                  "description": "Duration of the simulation (in seconds)",
-                  "title": "Simulation Time",
-                  "default": SIMULATION_TIME,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "simulation_time",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_min_speed": {
-                  "description": "",
-                  "title": "Drone min speed",
-                  "default": MIN_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_min_speed",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_speed": {
-                  "description": "",
-                  "title": "Drone speed",
-                  "default": DEFAULT_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_speed",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_speed": {
-                  "description": "",
-                  "title": "Drone max speed",
-                  "default": MAX_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_speed",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_max_acceleration": {
-                  "description": "",
-                  "title": "Drone max Acceleration",
-                  "default": MAX_ACCELERATION,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_acceleration",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_max_deceleration": {
-                  "description": "",
-                  "title": "Drone max Deceleration",
-                  "default": MAX_DECELERATION,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_deceleration",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_max_roll": {
-                  "description": "",
-                  "title": "Drone max roll",
-                  "default": MAX_ROLL,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_roll",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_min_pitch": {
-                  "description": "",
-                  "title": "Drone min pitch",
-                  "default": MIN_PITCH,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_min_pitch",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_pitch": {
-                  "description": "",
-                  "title": "Drone max pitch",
-                  "default": MAX_PITCH,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_pitch",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_sink_rate": {
-                  "description": "",
-                  "title": "Drone max sink rate",
-                  "default": MAX_SINK_RATE,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_sink_rate",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_climb_rate": {
-                  "description": "",
-                  "title": "Drone max climb rate",
-                  "default": MAX_CLIMB_RATE,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_climb_rate",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_start_AMSL": {
-                  "description": "",
-                  "title": "Start AMSL",
-                  "default": start_AMSL,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "start_AMSL",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_map_seed": {
-                  "description": "Seed value to randomize the map",
-                  "title": "Seed value",
-                  "default": url_seed ? url_seed : SEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "map_seed",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
-                "my_map_height": {
-                  "description": "",
-                  "title": "Map Height",
-                  "default": map_height,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "map_height",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_number_of_drones": {
-                  "description": "",
-                  "title": "Number of drones",
-                  "default": NUMBER_OF_DRONES,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "number_of_drones",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_script": {
-                  "default": DEFAULT_SCRIPT_CONTENT,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "script",
-                  "hidden": 0,
-                  "type": "GadgetField",
-                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
-                    + '"portal_type": "Web Script"}',
-                  "url": "gadget_editor.html",
-                  "sandbox": "public"
-                },
-                "my_operator_script": {
-                  "default": DEFAULT_OPERATOR_SCRIPT_CONTENT,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "operator_script",
-                  "hidden": 0,
-                  "type": "GadgetField",
-                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
-                    + '"portal_type": "Web Script"}',
-                  "url": "gadget_editor.html",
-                  "sandbox": "public"
+        url_seed = url_sp.get("seed");
+        
+      //TODO this is ugly and makes the render to take more time
+      // but other way I'm not being able to store the MapRandomizer results
+      // outside require block. If I can't solve this: move randomizer code here
+      require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
+        JSON_MAP = new MapRandomizer(MAP).randomize();
+        JSON_MAP.randomized = true;
+        var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
+          JSON.stringify(JSON_MAP) + ';\n' +
+          '\n' +
+          'return {"flag_positions": json_map.geo_flag_list};\n';
+        return gadget.getDeclaredGadget('form_view')
+          .push(function (form_gadget) {
+            return form_gadget.render({
+              erp5_document: {
+                "_embedded": {"_view": {
+                  "my_simulation_speed": {
+                    "description": "",
+                    "title": "Simulation Speed",
+                    "default": SIMULATION_SPEED,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "simulation_speed",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_simulation_time": {
+                    "description": "Duration of the simulation (in seconds)",
+                    "title": "Simulation Time",
+                    "default": SIMULATION_TIME,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "simulation_time",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_drone_min_speed": {
+                    "description": "",
+                    "title": "Drone min speed",
+                    "default": MIN_SPEED,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_min_speed",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_drone_speed": {
+                    "description": "",
+                    "title": "Drone speed",
+                    "default": DEFAULT_SPEED,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_speed",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_drone_max_speed": {
+                    "description": "",
+                    "title": "Drone max speed",
+                    "default": MAX_SPEED,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_speed",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_drone_max_acceleration": {
+                    "description": "",
+                    "title": "Drone max Acceleration",
+                    "default": MAX_ACCELERATION,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_acceleration",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_drone_max_deceleration": {
+                    "description": "",
+                    "title": "Drone max Deceleration",
+                    "default": MAX_DECELERATION,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_deceleration",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_drone_max_roll": {
+                    "description": "",
+                    "title": "Drone max roll",
+                    "default": MAX_ROLL,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_roll",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_drone_min_pitch": {
+                    "description": "",
+                    "title": "Drone min pitch",
+                    "default": MIN_PITCH,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_min_pitch",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_drone_max_pitch": {
+                    "description": "",
+                    "title": "Drone max pitch",
+                    "default": MAX_PITCH,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_pitch",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_drone_max_sink_rate": {
+                    "description": "",
+                    "title": "Drone max sink rate",
+                    "default": MAX_SINK_RATE,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_sink_rate",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_drone_max_climb_rate": {
+                    "description": "",
+                    "title": "Drone max climb rate",
+                    "default": MAX_CLIMB_RATE,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "drone_max_climb_rate",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_start_AMSL": {
+                    "description": "",
+                    "title": "Start AMSL",
+                    "default": START_AMSL,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "start_AMSL",
+                    "hidden": 0,
+                    "type": "FloatField"
+                  },
+                  "my_map_seed": {
+                    "description": "Seed value to randomize the map",
+                    "title": "Seed value",
+                    "default": url_seed ? url_seed : SEED,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "map_seed",
+                    "hidden": 0,
+                    "type": "StringField"
+                  },
+                  "my_map_height": {
+                    "description": "",
+                    "title": "Map Height",
+                    "default": MAP_HEIGHT,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "map_height",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_number_of_drones": {
+                    "description": "",
+                    "title": "Number of drones",
+                    "default": NUMBER_OF_DRONES,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "number_of_drones",
+                    "hidden": 0,
+                    "type": "IntegerField"
+                  },
+                  "my_script": {
+                    "default": DEFAULT_SCRIPT_CONTENT,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "script",
+                    "hidden": 0,
+                    "type": "GadgetField",
+                    "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
+                      + '"portal_type": "Web Script"}',
+                    "url": "gadget_editor.html",
+                    "sandbox": "public"
+                  },
+                  "my_operator_script": {
+                    "default": DEFAULT_OPERATOR_SCRIPT_CONTENT,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "operator_script",
+                    "hidden": 0,
+                    "type": "GadgetField",
+                    "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
+                      + '"portal_type": "Web Script"}',
+                    "url": "gadget_editor.html",
+                    "sandbox": "public"
+                  }
+                }},
+                "_links": {
+                  "type": {
+                    name: ""
+                  }
                 }
-              }},
-              "_links": {
-                "type": {
-                  name: ""
-                }
+              },
+              form_definition: {
+                group_list: [[
+                  "left",
+                  [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
+                   ["my_map_height"], ["my_start_AMSL"], ["my_map_seed"]]
+                ], [
+                  "right",
+                  [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                    ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
+                    ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
+                    ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
+                ], [
+                  "bottom",
+                  [["my_operator_script"], ["my_script"]]
+                ]]
               }
-            },
-            form_definition: {
-              group_list: [[
-                "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                 ["my_map_height"], ["my_start_AMSL"], ["my_map_seed"]]
-              ], [
-                "right",
-                [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                  ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
-                  ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
-                  ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
-              ], [
-                "bottom",
-                [["my_operator_script"], ["my_script"]]
-              ]]
-            }
+            });
+          })
+          .push(function () {
+            return gadget.updateHeader({
+              page_title: 'Drone Capture Flag',
+              page_icon: 'puzzle-piece'
+            });
           });
-        })
-        .push(function () {
-          return gadget.updateHeader({
-            page_title: 'Drone Capture Flag',
-            page_icon: 'puzzle-piece'
-          });
-        });
+        
+      }); //require.js fn
+    
     })
 
     .declareJob('runGame', function runGame(options) {
@@ -439,11 +461,7 @@
           "information": 0,
           "communication": 0
         },
-        "map": {
-          "height": parseInt(options.map_height, 10),
-          "start_AMSL": parseFloat(options.start_AMSL),
-          "map_seed": options.map_seed
-        },
+        "map": JSON_MAP || MAP,
         "operator_init_msg": options.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
