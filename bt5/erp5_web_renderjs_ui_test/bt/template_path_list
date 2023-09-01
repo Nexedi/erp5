@@ -1,3 +1,5 @@
+portal_tests/renderjs_ui_autocomplete_attribute_suite
+portal_tests/renderjs_ui_autocomplete_attribute_suite/**
 portal_tests/renderjs_ui_check_box_field_zuite
 portal_tests/renderjs_ui_check_box_field_zuite/**
 portal_tests/renderjs_ui_date_time_field_zuite
