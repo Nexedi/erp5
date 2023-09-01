@@ -13,6 +13,7 @@
     MAX_LAT = 45.65,
     MIN_LON = 14.265,
     MAX_LON = 14.2766,
+    //SEED FORM PARAMETER IS BROKEN (used in randomization before user inputs)
     SEED = '6!',
     MAP = {
       "height": MAP_HEIGHT,
@@ -178,10 +179,10 @@
         url_seed = url_sp.get("seed");
         
       //TODO this is ugly and makes the render to take more time
-      // but other way I'm not being able to store the MapRandomizer results
+      // but other way I'm not being able to store the MapUtils results
       // outside require block. If I can't solve this: move randomizer code here
       require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
-        JSON_MAP = new MapRandomizer(MAP).randomize();
+        JSON_MAP = new MapUtils(MAP).randomize();
         JSON_MAP.randomized = true;
         var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
           JSON.stringify(JSON_MAP) + ';\n' +
@@ -324,7 +325,7 @@
                     "hidden": 0,
                     "type": "FloatField"
                   },
-                  "my_start_AMSL": {
+                  /*"my_start_AMSL": {
                     "description": "",
                     "title": "Start AMSL",
                     "default": START_AMSL,
@@ -334,7 +335,7 @@
                     "key": "start_AMSL",
                     "hidden": 0,
                     "type": "FloatField"
-                  },
+                  },*/
                   "my_map_seed": {
                     "description": "Seed value to randomize the map",
                     "title": "Seed value",
@@ -346,7 +347,7 @@
                     "hidden": 0,
                     "type": "StringField"
                   },
-                  "my_map_height": {
+                  /*"my_map_height": {
                     "description": "",
                     "title": "Map Height",
                     "default": MAP_HEIGHT,
@@ -356,7 +357,7 @@
                     "key": "map_height",
                     "hidden": 0,
                     "type": "IntegerField"
-                  },
+                  },*/
                   "my_number_of_drones": {
                     "description": "",
                     "title": "Number of drones",
@@ -405,7 +406,7 @@
                 group_list: [[
                   "left",
                   [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                   ["my_map_height"], ["my_start_AMSL"], ["my_map_seed"]]
+                   /*["my_map_height"], ["my_start_AMSL"], */["my_map_seed"]]
                 ], [
                   "right",
                   [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
