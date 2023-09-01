@@ -8,13 +8,13 @@ var baseLogFunction = console.log, console_log = "";
 
 /******************************* MAP UTILS ************************************/
 
-var MapRandomizer = /** @class */ (function () {
+var MapUtils = /** @class */ (function () {
   "use strict";
 
   var FLAG_EPSILON = 15;
 
   //** CONSTRUCTOR
-  function MapRandomizer(map_param) {
+  function MapUtils(map_param) {
     var _this = this, max_width = _this.latLonDistance(
       [map_param.min_lat, map_param.min_lon],
       [map_param.min_lat, map_param.max_lon]),
@@ -38,7 +38,7 @@ var MapRandomizer = /** @class */ (function () {
     _this.map_info.max_y = _this.latitudeToY(map_param.max_lat);
   }
 
-  MapRandomizer.prototype.latLonDistance = function (c1, c2) {
+  MapUtils.prototype.latLonDistance = function (c1, c2) {
     var q1 = c1[0] * Math.PI / 180,
       q2 = c2[0] * Math.PI / 180,
       dq = (c2[0] - c1[0]) * Math.PI / 180,
@@ -49,13 +49,13 @@ var MapRandomizer = /** @class */ (function () {
       c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-  MapRandomizer.prototype.longitudToX = function (lon) {
+  MapUtils.prototype.longitudToX = function (lon) {
     return (this.map_info.map_size / 360.0) * (180 + lon);
   };
-  MapRandomizer.prototype.latitudeToY = function (lat) {
+  MapUtils.prototype.latitudeToY = function (lat) {
     return (this.map_info.map_size / 180.0) * (90 - lat);
   };
-  MapRandomizer.prototype.convertToLocalCoordinates =
+  MapUtils.prototype.convertToLocalCoordinates =
     function (latitude, longitude, altitude) {
       var map_info = this.map_info,
         x = this.longitudToX(longitude),
@@ -68,7 +68,7 @@ var MapRandomizer = /** @class */ (function () {
         z: altitude
       };
     };
-  MapRandomizer.prototype.convertToGeoCoordinates = function (x, y, z) {
+  MapUtils.prototype.convertToGeoCoordinates = function (x, y, z) {
     var lon = x + this.map_info.width / 2,
       lat = y + this.map_info.depth / 2;
     lon = lon / 1000;
@@ -86,7 +86,8 @@ var MapRandomizer = /** @class */ (function () {
     };
   };
 
-  MapRandomizer.prototype.randomize = function () {
+  MapUtils.prototype.randomize = function () {
+    //TODO randomize start_ASML and map height
     var _this = this;
     function randomIntFromInterval(min, max, random_seed) {
       return Math.floor(random_seed.quick() * (max - min + 1) + min);
@@ -216,7 +217,7 @@ var MapRandomizer = /** @class */ (function () {
     return _this.map_info;
   };
 
-  return MapRandomizer;
+  return MapUtils;
 }());
 
 /******************************************************************************/
@@ -653,10 +654,10 @@ var MapManager = /** @class */ (function () {
       // Use default map base parameters
       map_param = MAP;
     }
-    _this.mapRandomizer = new MapRandomizer(map_param);
+    _this.mapUtils = new MapUtils(map_param);
     if (!map_param.randomized) {
       // Randomize map here
-      map_param = _this.mapRandomizer.randomize();
+      map_param = _this.mapUtils.randomize();
       console.log("[INFO] using map randomly generated within the game");
     } else {
       console.log("[INFO] using map randomly generated outside game");
@@ -816,21 +817,21 @@ var MapManager = /** @class */ (function () {
             lon + lon_offset * 180 / Math.PI];
   };*/
   MapManager.prototype.latLonDistance = function (c1, c2) {
-    return this.mapRandomizer.latLonDistance(c1, c2);
+    return this.mapUtils.latLonDistance(c1, c2);
   };
   MapManager.prototype.longitudToX = function (lon) {
-    return this.mapRandomizer.longitudToX(lon);
+    return this.mapUtils.longitudToX(lon);
   };
   MapManager.prototype.latitudeToY = function (lat) {
-    return this.mapRandomizer.latitudeToY(lat);
+    return this.mapUtils.latitudeToY(lat);
   };
   MapManager.prototype.convertToLocalCoordinates =
     function (latitude, longitude, altitude) {
-      return this.mapRandomizer.convertToLocalCoordinates(
+      return this.mapUtils.convertToLocalCoordinates(
         latitude, longitude, altitude);
     };
   MapManager.prototype.convertToGeoCoordinates = function (x, y, z) {
-    return this.mapRandomizer.convertToGeoCoordinates(x, y, z);
+    return this.mapUtils.convertToGeoCoordinates(x, y, z);
   };
   return MapManager;
 }());
