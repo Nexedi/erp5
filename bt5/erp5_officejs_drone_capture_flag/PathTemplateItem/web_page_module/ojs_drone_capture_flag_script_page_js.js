@@ -1,13 +1,31 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, URLSearchParams, Blob*/
-(function (window, rJS, domsugar, document, URLSearchParams, Blob) {
+/*global window, rJS, domsugar, document, URLSearchParams, Blob, require, MapUtils*/
+(function (window, rJS, domsugar, document, URLSearchParams, Blob, require) {
   "use strict";
 
   //Drone default values - TODO: get them from the drone API
   var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
-    map_height = 700,
-    start_AMSL = 595,
+    //default square map
+    MAP_HEIGHT = 700,
+    START_AMSL = 595,
+    MIN_LAT = 45.6419,
+    MAX_LAT = 45.65,
+    MIN_LON = 14.265,
+    MAX_LON = 14.2766,
+    //SEED FORM PARAMETER IS BROKEN (used in randomization before user inputs)
+    // only way to set it and use it is via url parameter 'seed'
+    SEED = '6!',
+    MAP = {
+      "height": MAP_HEIGHT,
+      "start_AMSL": START_AMSL,
+      "map_seed": SEED,
+      "min_lat": MIN_LAT,
+      "max_lat": MAX_LAT,
+      "min_lon": MIN_LON,
+      "max_lon": MAX_LON
+    },
+    JSON_MAP,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
     MAX_DECELERATION = 1,
@@ -19,7 +37,6 @@
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
-    SEED = '6!',
     // Non-inputs parameters
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
@@ -130,6 +147,11 @@
       './libraries/seedrandom.min.js'
     ];
 
+  //Randomize map before render, so it's available on operator editor
+  require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
+    JSON_MAP = new MapUtils(MAP).randomize();
+  });
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -152,7 +174,9 @@
           return form_gadget.getContent();
         })
         .push(function (input) {
+          /*jslint evil: true*/
           operator_init_msg = new Function(input.operator_script)();
+          /*jslint evil: false*/
           input.operator_init_msg = operator_init_msg;
           gadget.runGame(input);
         });
@@ -160,14 +184,12 @@
 
     .declareMethod('render', function render() {
       var gadget = this, url_sp = new URLSearchParams(window.location.hash),
-        url_seed = url_sp.get("seed"),
-        //TODO RANDOMIZE MAP
-        json_map = {'size' : 900, 'more_stuff': [1, 2, 3]},
-        //TODO code/msg based on map json
-        msg = {'flag_positions': [1, 2, 3]};
+        url_seed = url_sp.get("seed");
+      MAP.map_seed = url_seed ? url_seed : SEED;
       var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
-        JSON.stringify(json_map) + ';\n' +
-        'return ' + JSON.stringify(msg) + ';\n';
+        JSON.stringify(JSON_MAP) + ';\n' +
+        '\n' +
+        'return {"flag_positions": json_map.geo_flag_list};\n';
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -305,17 +327,6 @@
                   "hidden": 0,
                   "type": "FloatField"
                 },
-                "my_start_AMSL": {
-                  "description": "",
-                  "title": "Start AMSL",
-                  "default": start_AMSL,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "start_AMSL",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
                 "my_map_seed": {
                   "description": "Seed value to randomize the map",
                   "title": "Seed value",
@@ -326,17 +337,6 @@
                   "key": "map_seed",
                   "hidden": 0,
                   "type": "StringField"
-                },
-                "my_map_height": {
-                  "description": "",
-                  "title": "Map Height",
-                  "default": map_height,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "map_height",
-                  "hidden": 0,
-                  "type": "IntegerField"
                 },
                 "my_number_of_drones": {
                   "description": "",
@@ -385,8 +385,8 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_simulation_speed"], ["my_simulation_time"], ["my_number_of_drones"],
-                 ["my_map_height"], ["my_start_AMSL"], ["my_map_seed"]]
+                [["my_simulation_speed"], ["my_simulation_time"],
+                 ["my_number_of_drones"], ["my_map_seed"]]
               ], [
                 "right",
                 [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
@@ -439,11 +439,7 @@
           "information": 0,
           "communication": 0
         },
-        "map": {
-          "height": parseInt(options.map_height, 10),
-          "start_AMSL": parseFloat(options.start_AMSL),
-          "map_seed": options.map_seed
-        },
+        "map": JSON_MAP || MAP,
         "operator_init_msg": options.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
@@ -542,4 +538,4 @@
         });
     });
 
-}(window, rJS, domsugar, document, URLSearchParams, Blob));
+}(window, rJS, domsugar, document, URLSearchParams, Blob, require));
