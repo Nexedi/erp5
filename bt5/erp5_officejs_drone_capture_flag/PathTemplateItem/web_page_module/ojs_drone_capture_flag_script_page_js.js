@@ -147,6 +147,31 @@
       './libraries/seedrandom.min.js'
     ];
 
+  function handleFileSelect(event, gadget, options) {
+    var reader = new FileReader()
+    reader.onload = (event) => handleFileLoad(event, gadget, options);
+    reader.readAsText(event.target.files[0]);
+  }
+
+  function handleFileLoad(event, gadget, options) {
+    options.operator_script = event.target.result;
+    return gadget.changeState(options);
+  }
+
+  function downloadFromTextContent(gadget, text_content, title) {
+    var element = gadget.element,
+      a = window.document.createElement("a"),
+      url = window.URL.createObjectURL(new Blob([text_content], {type: 'text/plain'})),
+      name_list = [title, "js"];
+    element.appendChild(a);
+    a.style = "display: none";
+    a.href = url;
+    a.download = name_list.join('.');
+    a.click();
+    element.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
   //Randomize map before render, so it's available on operator editor
   require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
     JSON_MAP = new MapUtils(MAP).randomize();
@@ -182,9 +207,27 @@
         });
     })
 
-    .declareMethod('render', function render() {
+    .onEvent('click', function (evt) {
+      var gadget = this;
+      if (evt.target.id === "import") {
+        return;
+      }
+      if (evt.target.id === "export") {
+        return gadget.getDeclaredGadget('form_view')
+          .push(function (form_gadget) {
+            return form_gadget.getContent();
+          })
+          .push(function (input) {
+            downloadFromTextContent(gadget, input.operator_script, 'operator_script');
+          });
+      }
+    }, false, false)
+
+    .declareMethod('render', function render(options) {
       var gadget = this, url_sp = new URLSearchParams(window.location.hash),
-        url_seed = url_sp.get("seed");
+        url_seed = url_sp.get("seed"),
+        loadedFile = (event) => handleFileSelect(event, gadget, options);
+      gadget.element.querySelector('#import').addEventListener("change", loadedFile);
       MAP.map_seed = url_seed ? url_seed : SEED;
       var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
         JSON.stringify(JSON_MAP) + ';\n' +
@@ -406,6 +449,25 @@
             page_icon: 'puzzle-piece'
           });
         });
+    })
+
+    .onStateChange(function (modification_dict) {
+      if (modification_dict.hasOwnProperty('operator_script')) {
+        return this.getDeclaredGadget('form_view')
+          .push(function (form_gadget) {
+            return form_gadget.getDeclaredGadget('operator_script')
+          })
+          .push(function (editor_gadget) {
+            console.log("trying to set editor content. editor_gadget:", editor_gadget);
+            //content -> modification_dict.operator_script
+            //return editor_gadget.setValue("aaa");
+            //return editor_gadget.setContent("aaa");
+            /*return editor_gadget.getContent();
+          })
+          .push(function (content) {
+            console.log("old editor content:", content);*/
+          });
+      }
     })
 
     .declareJob('runGame', function runGame(options) {
