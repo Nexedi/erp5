@@ -147,6 +147,20 @@
       './libraries/seedrandom.min.js'
     ];
 
+  function downloadFromTextContent(gadget, text_content, title) {
+    var element = gadget.element,
+      a = window.document.createElement("a"),
+      url = window.URL.createObjectURL(new Blob([text_content], {type: 'text/plain'})),
+      name_list = [title, "js"];
+    element.appendChild(a);
+    a.style = "display: none";
+    a.href = url;
+    a.download = name_list.join('.');
+    a.click();
+    element.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
   //Randomize map before render, so it's available on operator editor
   require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
     JSON_MAP = new MapUtils(MAP).randomize();
@@ -181,6 +195,22 @@
           gadget.runGame(input);
         });
     })
+
+    .onEvent('click', function (evt) {
+      var gadget = this;
+      if (evt.target.id === "import") {
+        return;
+      }
+      if (evt.target.id === "export") {
+        return gadget.getDeclaredGadget('form_view')
+          .push(function (form_gadget) {
+            return form_gadget.getContent();
+          })
+          .push(function (input) {
+            downloadFromTextContent(gadget, input.operator_script, 'operator_script');
+          });
+      }
+    }, false, false)
 
     .declareMethod('render', function render() {
       var gadget = this, url_sp = new URLSearchParams(window.location.hash),
