@@ -840,14 +840,17 @@ class CategoryTool(BaseTool):
       # XXX: This cache is rarely useful, and the overhead quite important.
       #      It would certainly become counter-productive if any significative
       #      improvement was done to the cached methods.
-      cache = getReadOnlyTransactionCache()
-      if cache is not None:
-        key = ('getSingleCategoryAcquiredMembershipList', context,
-               base_category, base, spec, filter, repr(kw))
-        try:
-          return cache[key]
-        except KeyError:
-          pass
+      if getattr(context, '_p_jar', None) is None: # new or temporary
+        cache = None
+      else:
+        cache = getReadOnlyTransactionCache()
+        if cache is not None:
+          key = ('getSingleCategoryAcquiredMembershipList', context,
+                base_category, base, spec, filter, repr(kw))
+          try:
+            return cache[key]
+          except KeyError:
+            pass
 
       result = self._getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
                                                              spec=spec, filter=filter,
