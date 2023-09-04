@@ -833,31 +833,6 @@ class CategoryTool(BaseTool):
                       append(category_url[len(my_base_category)+1:])
       return result
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                                      'getSingleCategoryAcquiredMembershipList' )
-    def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
-                                         spec=(), filter=None, _acquired_object_set=None, **kw ):
-      # XXX: This cache is rarely useful, and the overhead quite important.
-      #      It would certainly become counter-productive if any significative
-      #      improvement was done to the cached methods.
-      cache = getReadOnlyTransactionCache()
-      if cache is not None:
-        key = ('getSingleCategoryAcquiredMembershipList', context,
-               base_category, base, spec, filter, repr(kw))
-        try:
-          return cache[key]
-        except KeyError:
-          pass
-
-      result = self._getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
-                                                             spec=spec, filter=filter,
-                                                             _acquired_object_set=_acquired_object_set,
-                                                             **kw)
-      if cache is not None:
-        cache[key] = result
-
-      return result
-
     def _filterCategoryListByPermission(self, base_category, base, category_list, permission):
       """This method returns a category list filtered by a permission.
       If the permission is None, returns a passed list as it is.
@@ -881,12 +856,14 @@ class CategoryTool(BaseTool):
           pass
       return new_category_list
 
-    def _getSingleCategoryAcquiredMembershipList(self, context, base_category,
-                                         base = 0, spec = (), filter = None,
-                                         acquired_portal_type = (),
-                                         checked_permission = None,
-                                         _acquired_object_set=None,
-                                         **kw ):
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getSingleCategoryAcquiredMembershipList')
+    def getSingleCategoryAcquiredMembershipList(self, context, base_category,
+                                                base=0, spec=(), filter=None,
+                                                _acquired_object_set=None,
+                                                acquired_portal_type=(),
+                                                checked_permission=None,
+                                                **kw):
       """
         Returns the acquired membership of the context for a single base category
         represented as a list of relative URLs
