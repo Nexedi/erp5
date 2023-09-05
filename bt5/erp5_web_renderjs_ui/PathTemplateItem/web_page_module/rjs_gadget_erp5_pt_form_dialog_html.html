@@ -6,6 +6,13 @@
      data-i18n=Proceed
      data-i18n=Cancel
      data-i18n=Please fill all required fields to submit
+     data-i18n=Did not consider all available Visa Files, is this correct?
+     data-i18n=You are going to declare {visa_file_count} Visa Files as {validation_state}. Is this correct?
+     data-i18n=You are going to declare {visa_file_count} Visa Files as {validation_state}. However you did not consider all available Visa Files, is this correct?
+     data-i18n=delivered
+     data-i18n=received
+     data-i18n=rejected
+     data-i18n=shipped
    -->
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -24,8 +31,13 @@
     <script src="gadget_erp5_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_pt_form_dialog.js" type="text/javascript"></script>
 
+    <!-- Capago dialog confirmation custom CSS -->
+    <link rel="stylesheet" href="gadget_dialog_custom.css" type="text/css" />
+
   </head>
   <body>
+    <!-- Capago custom confirmation for visa file actions -->
+    <section class="display_confirmation"></section>
 
     <section class="ui-content-header-plain">
       <h3></h3>

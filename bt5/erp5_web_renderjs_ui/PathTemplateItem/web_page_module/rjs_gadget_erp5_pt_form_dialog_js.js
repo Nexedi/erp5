@@ -340,7 +340,18 @@
         });
     })
 
-    .onEvent('submit', function submit() {
+    .onEvent('submit', function submit(evt) {
+      var el = this.element;
+      if (evt.target.className.indexOf("submit_confirmation") !== -1) {
+        if (el.querySelector("button[name='submit']").disabled) {
+          // Should not happen, I don't think any buggy browser would submit when
+          // clicking on a disabled submit button, but let's be safe.
+          return alert('Already submitted');
+        }
+        el.querySelector("button[name='submit']").disabled = true;
+        el.querySelector("button.cancel_submit").disabled = true;
+        return submitDialog.apply(this, [false]);
+      }
       if (this.state.has_update_action === true) {
         // default action on submit is update in case of its existence
         return submitDialog.apply(this, [true]);
@@ -349,9 +360,153 @@
     }, false, true)
 
     .onEvent('click', function click(evt) {
+      var form_gadget = this;
+
+      function cancelSubmit() {
+        var elem = form_gadget.element;
+        elem.querySelector(".display_confirmation").innerHTML = "";
+        elem.querySelector(".display_confirmation").style.display = "";
+        elem.querySelector(".ui-content-header-plain").style.display = "";
+        elem.querySelector(".field_container").style.display = "";
+        elem.querySelector(".dialog_button_container").style.display = "";
+      }
+
+      function formSubmitAfterConfirmation() {
+        return submitDialog.apply(form_gadget, [false]);
+      }
+
+      if (evt.target.name === "cancel") {
+        return cancelSubmit();
+      }
       if (evt.target.name === "action_confirm") {
         evt.preventDefault();
-        return submitDialog.apply(this, [false]);
+        return form_gadget
+          .getDeclaredGadget("erp5_form")
+          .push(function (erp5_form) {
+            return erp5_form.getContent();
+          })
+          .push(function (content_dict) {
+            var elem = form_gadget.element,
+              parsed_json,
+              captured_parsed_json,
+              validation_state_field,
+              validation_state,
+              message;
+            // XXX hardcoded for now
+            if (content_dict.available_visa_file_json !== undefined) {
+              validation_state_field = elem.querySelector(
+                ".next_validation_state"
+              );
+              if (validation_state_field !== null) {
+                validation_state = validation_state_field.value;
+              } else {
+                validation_state = "shipped/received";
+              }
+              captured_parsed_json = JSON.parse(
+                content_dict.captured_visa_file_json
+              );
+              parsed_json = JSON.parse(content_dict.available_visa_file_json);
+
+              if (captured_parsed_json.row_list.length === 0) {
+                message = form_gadget.translate(
+                  "Did not consider all available Visa Files, is this correct?"
+                );
+              } else if (parsed_json.row_list.length === 0) {
+                message = form_gadget
+                  .translate(validation_state)
+                  .then(function (translated_validation_state) {
+                    return form_gadget
+                      .translate(
+                        "You are going to declare {visa_file_count} Visa Files as {validation_state}. Is this correct?"
+                      )
+                      .then(function (translated_string) {
+                        return translated_string
+                          .replace(
+                            /{visa_file_count}/g,
+                            captured_parsed_json.row_list.length
+                          )
+                          .replace(
+                            /{validation_state}/g,
+                            translated_validation_state
+                          );
+                      });
+                  });
+              } else {
+                message = form_gadget
+                  .translate(validation_state)
+                  .then(function (translated_validation_state) {
+                    return form_gadget
+                      .translate(
+                        "You are going to declare {visa_file_count} Visa Files as {validation_state}. However you did not consider all available Visa Files, is this correct?"
+                      )
+                      .then(function (translated_string) {
+                        return translated_string
+                          .replace(
+                            /{visa_file_count}/g,
+                            captured_parsed_json.row_list.length
+                          )
+                          .replace(
+                            /{validation_state}/g,
+                            translated_validation_state
+                          );
+                      });
+                  });
+              }
+              return message.then(function (translatedMessage) {
+                var messageConfirmYes = "Yes, it is. Continue.",
+                  messageConfirmNo = "No, it isn't. Go back.";
+                elem.querySelector(".ui-content-header-plain").style.display =
+                  "none";
+                elem.querySelector(".field_container").style.display = "none";
+                elem.querySelector(".dialog_button_container").style.display =
+                  "none";
+
+                return form_gadget.getTranslationList(
+                  [messageConfirmYes, messageConfirmNo]
+                ).then(
+                  function(messageList){
+                    var translatedMessageConfirmYes = messageList[0],
+                    translatedMessageConfirmNo = messageList[1];
+
+                    domsugar(
+                    elem.querySelector(".display_confirmation"),
+                    [domsugar(
+                      "form",
+                      { class: "submit_confirmation" },
+                      [
+                        domsugar(
+                          "label",
+                          { class: "dialog_confirm_message" },
+                          [
+                            translatedMessage,
+                            domsugar(
+                              "button",
+                              {
+                                name: "submit",
+                                class: "dialog_confirm_button",
+                                "data-i18n": messageConfirmYes,
+                              },
+                              [translatedMessageConfirmYes]
+                            ),
+                          ],
+                        ),
+                        domsugar(
+                          "button",
+                          {
+                            name: "cancel",
+                            class: "cancel_submit dialog_confirm_button",
+                            "data-i18n": messageConfirmNo,
+                          },
+                          [translatedMessageConfirmNo]
+                        )
+                      ]
+                    )
+                  ])
+                })
+              });
+            }
+            return formSubmitAfterConfirmation();
+          });
       }
       if (evt.target.name === "action_update") {
         evt.preventDefault();
