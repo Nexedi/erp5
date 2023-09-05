@@ -1805,6 +1805,11 @@ def render_tag(tag, **kw):
   else:
     extra = ""
 
+  # For 'autocomplete' we do not want to add it if there is no value
+  autocomplete = kw.pop('autocomplete', '')
+  if autocomplete:
+    attr_list.append('%s="%s"' % ('autocomplete', html_quote(autocomplete)))
+
   # handle other attributes
   for key, value in kw.items():
     if value == None:
