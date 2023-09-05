@@ -24,6 +24,7 @@
           first_item: field_json.first_item,
           hidden: field_json.hidden,
           error_text: field_json.error_text,
+          autocomplete: field_json.autocomplete,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()

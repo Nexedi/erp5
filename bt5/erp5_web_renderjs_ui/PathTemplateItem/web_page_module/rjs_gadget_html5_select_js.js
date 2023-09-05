@@ -25,6 +25,7 @@
           error_text: options.error_text || "",
           id: options.id,
           name: options.name,
+          autocomplete: options.autocomplete,
           title: options.title,
           hidden: options.hidden
         };
@@ -64,6 +65,10 @@
           select.readonly = true;
         } else {
           select.readonly = false;
+        }
+
+        if (this.state.autocomplete) {
+          select.autocomplete = this.state.autocomplete;
         }
 
         if (modification_dict.hasOwnProperty('value') ||
