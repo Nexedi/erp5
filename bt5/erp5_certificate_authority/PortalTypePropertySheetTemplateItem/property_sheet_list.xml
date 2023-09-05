@@ -1,0 +1,7 @@
+<property_sheet_list>
+ <portal_type id="Caucase Connector">
+  <item>CaucaseConnector</item>
+  <item>Reference</item>
+  <item>Url</item>
+ </portal_type>
+</property_sheet_list>

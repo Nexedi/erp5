@@ -2,4 +2,7 @@
  <portal_type id="Person">
   <item>Certificate Login</item>
  </portal_type>
+ <portal_type id="Web Service Tool">
+  <item>Caucase Connector</item>
+ </portal_type>
 </allowed_content_type_list>
