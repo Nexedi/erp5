@@ -418,6 +418,7 @@ class TextWidget(Widget):
                                       title='Autocomplete',
                                       description=(
       "The autocomplete property of the HTML of the field"),
+                                      css_class="form-control",
                                       default="",
                                       required=0)
 
@@ -1200,6 +1201,7 @@ class ListWidget(SingleItemsWidget):
                                       title='Autocomplete',
                                       description=(
       "The autocomplete property of the HTML of the field"),
+                                      css_class="form-control",
                                       default="",
                                       required=0)
 
