@@ -197,7 +197,7 @@
                 </item>
                 <item>
                     <key> <string>autocomplete</string> </key>
-                    <value> <string>test_list</string> </value>
+                    <value> <string>tel-country-code</string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -264,7 +264,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Test ListField</string> </value>
+                    <value> <string>Test List Field</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
