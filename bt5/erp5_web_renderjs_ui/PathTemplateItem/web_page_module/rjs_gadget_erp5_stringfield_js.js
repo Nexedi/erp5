@@ -19,6 +19,7 @@
           error_text: field_json.error_text,
           title: field_json.description,
           hidden: field_json.hidden,
+          autocomplete: field_json.autocomplete,
           trim: true,
           maxlength: field_json.maxlength,
           // Force calling subfield render
