@@ -32,6 +32,7 @@ from six import string_types as basestring
 import sys
 from OFS.Traversable import NotFound
 from AccessControl import ClassSecurityInfo
+from Record import Record
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -2337,6 +2338,7 @@ class ListBoxRendererLine:
         # If a tales expression is not defined, get a skin, an accessor or a property.
         if not tales:
           if getattr(aq_self(brain), alias, None) is not None:
+            assert isinstance(brain, Record), (brain, alias)
             original_value = getattr(brain, alias)
           else:
             # Get the trailing part.
@@ -2352,6 +2354,7 @@ class ListBoxRendererLine:
             except AttributeError:
               original_value = getattr(obj, property_id, None)
             else:
+              assert not isinstance(brain, Record), (brain, alias)
               original_value = getattr(obj, accessor_name)
           processed_value = original_value
 
