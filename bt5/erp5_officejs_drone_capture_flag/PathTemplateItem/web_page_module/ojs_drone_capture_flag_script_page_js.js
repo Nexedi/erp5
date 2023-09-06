@@ -232,12 +232,12 @@
         return;
       }
       if (evt.target.id === "export") {
-        return gadget.getDeclaredGadget('form_view')
-          .push(function (form_gadget) {
-            return form_gadget.getContent();
+        return gadget.getDeclaredGadget('operator-editor')
+          .push(function (operator_editor) {
+            return operator_editor.getContent();
           })
-          .push(function (input) {
-            downloadFromTextContent(gadget, input.operator_script, 'operator_script');
+          .push(function (content) {
+            downloadFromTextContent(gadget, content.operator_editor, 'operator_script');
           });
       }
     }, false, false)
