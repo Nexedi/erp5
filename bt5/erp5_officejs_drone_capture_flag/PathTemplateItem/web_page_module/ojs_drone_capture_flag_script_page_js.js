@@ -15,7 +15,9 @@
     MAX_LON = 14.2766,
     //SEED FORM PARAMETER IS BROKEN (used in randomization before user inputs)
     // only way to set it and use it is via url parameter 'seed'
-    SEED = '6!',
+    url_sp = new URLSearchParams(window.location.hash),
+    url_seed = url_sp.get("seed"),
+    SEED = url_seed ? url_seed : '6!',
     MAP = {
       "height": MAP_HEIGHT,
       "start_AMSL": START_AMSL,
@@ -243,11 +245,10 @@
     }, false, false)
 
     .declareMethod('render', function render(options) {
-      var gadget = this, url_sp = new URLSearchParams(window.location.hash),
-        url_seed = url_sp.get("seed"),
+      var gadget = this,
         loadedFile = (event) => handleFileSelect(event, gadget, options);
       gadget.element.querySelector('#import').addEventListener("change", loadedFile);
-      MAP.map_seed = url_seed ? url_seed : SEED;
+      MAP.map_seed = SEED;
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -433,8 +434,15 @@
           return gadget.getDeclaredGadget("operator-editor");
         })
         .push(function (operator_editor) {
-          var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
-            JSON.stringify(JSON_MAP) + ';\n' +
+          var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
+          Object.assign(operator_map, JSON_MAP);
+          delete operator_map.flag_list;
+          delete operator_map.obstacle_list;
+          delete operator_map.enemy_list;
+          delete operator_map.geo_obstacle_list;
+          delete operator_map.flag_distance_epsilon;
+          DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
+            JSON.stringify(operator_map) + ';\n' +
             '\n' +
             'return {"flag_positions": json_map.geo_flag_list};\n';
           return operator_editor.render({
