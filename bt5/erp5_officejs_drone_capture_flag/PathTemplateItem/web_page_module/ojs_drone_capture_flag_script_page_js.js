@@ -471,19 +471,17 @@
 
     .onStateChange(function (modification_dict) {
       if (modification_dict.hasOwnProperty('operator_script')) {
-        return this.getDeclaredGadget('form_view')
-          .push(function (form_gadget) {
-            return form_gadget.getDeclaredGadget('operator_script')
-          })
-          .push(function (editor_gadget) {
-            console.log("trying to set editor content. editor_gadget:", editor_gadget);
-            //content -> modification_dict.operator_script
-            //return editor_gadget.setValue("aaa");
-            //return editor_gadget.setContent("aaa");
-            /*return editor_gadget.getContent();
-          })
-          .push(function (content) {
-            console.log("old editor content:", content);*/
+        return this.getDeclaredGadget('operator-editor')
+          .push(function (operator_editor) {
+            return operator_editor.render({
+              "editor": "codemirror",
+              "maximize": true,
+              "portal_type": "Web Script",
+              "key": "operator_editor",
+              "value": modification_dict.operator_script,
+              "editable": 1,
+              "hidden": 0
+            });
           });
       }
     })
