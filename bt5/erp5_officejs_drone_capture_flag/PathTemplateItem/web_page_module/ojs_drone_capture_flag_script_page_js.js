@@ -570,9 +570,12 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var a, blob, div, key, log, log_content, aux;
+          var a, blob, div, key, log, log_content, aux, label;
           i = 0;
           div = domsugar('div', { text: result.message });
+          label = domsugar('label', { text: "Results" });
+          label.classList.add("item-label");
+          document.querySelector('.container').parentNode.appendChild(label);
           document.querySelector('.container').parentNode.appendChild(div);
           for (key in result.content) {
             if (result.content.hasOwnProperty(key)) {
