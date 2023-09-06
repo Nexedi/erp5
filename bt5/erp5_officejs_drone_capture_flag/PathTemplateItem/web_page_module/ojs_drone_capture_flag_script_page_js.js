@@ -193,16 +193,35 @@
     })
 
     .onEvent('submit', function () {
-      var gadget = this, operator_init_msg;
-      return gadget.getDeclaredGadget('form_view')
+      var gadget = this, operator_init_msg, script_content;
+      return gadget.getDeclaredGadget('operator-editor')
+        .push(function (operator_editor) {
+          return operator_editor.getContent();
+        })
+        .push(function (content) {
+          /*jslint evil: true*/
+          try {
+            operator_init_msg = new Function(content.operator_editor)();
+          } catch (error) {
+            operator_init_msg = {'error': error};
+          }
+          /*jslint evil: false*/
+          if (!operator_init_msg) operator_init_msg = {};
+          return gadget.getDeclaredGadget('script-editor');
+        })
+        .push(function (script_editor) {
+          return script_editor.getContent();
+        })
+        .push(function (content) {
+          script_content = content.script_editor;
+          return gadget.getDeclaredGadget('form_view');
+        })
         .push(function (form_gadget) {
           return form_gadget.getContent();
         })
         .push(function (input) {
-          /*jslint evil: true*/
-          operator_init_msg = new Function(input.operator_script)();
-          /*jslint evil: false*/
           input.operator_init_msg = operator_init_msg;
+          input.script = script_content;
           gadget.runGame(input);
         });
     })
@@ -229,10 +248,6 @@
         loadedFile = (event) => handleFileSelect(event, gadget, options);
       gadget.element.querySelector('#import').addEventListener("change", loadedFile);
       MAP.map_seed = url_seed ? url_seed : SEED;
-      var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
-        JSON.stringify(JSON_MAP) + ';\n' +
-        '\n' +
-        'return {"flag_positions": json_map.geo_flag_list};\n';
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -391,32 +406,6 @@
                   "key": "number_of_drones",
                   "hidden": 0,
                   "type": "IntegerField"
-                },
-                "my_script": {
-                  "default": DEFAULT_SCRIPT_CONTENT,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "script",
-                  "hidden": 0,
-                  "type": "GadgetField",
-                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
-                    + '"portal_type": "Web Script"}',
-                  "url": "gadget_editor.html",
-                  "sandbox": "public"
-                },
-                "my_operator_script": {
-                  "default": DEFAULT_OPERATOR_SCRIPT_CONTENT,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "operator_script",
-                  "hidden": 0,
-                  "type": "GadgetField",
-                  "renderjs_extra": '{"editor": "codemirror", "maximize": true,'
-                    + '"portal_type": "Web Script"}',
-                  "url": "gadget_editor.html",
-                  "sandbox": "public"
                 }
               }},
               "_links": {
@@ -436,11 +425,40 @@
                   ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
                   ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
                   ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
-              ], [
-                "bottom",
-                [["my_operator_script"], ["my_script"]]
               ]]
             }
+          });
+        })
+        .push(function () {
+          return gadget.getDeclaredGadget("operator-editor");
+        })
+        .push(function (operator_editor) {
+          var DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
+            JSON.stringify(JSON_MAP) + ';\n' +
+            '\n' +
+            'return {"flag_positions": json_map.geo_flag_list};\n';
+          return operator_editor.render({
+            "editor": "codemirror",
+            "maximize": true,
+            "portal_type": "Web Script",
+            "key": "operator_editor",
+            "value": DEFAULT_OPERATOR_SCRIPT_CONTENT,
+            "editable": 1,
+            "hidden": 0
+          });
+        })
+        .push(function () {
+          return gadget.getDeclaredGadget("script-editor");
+        })
+        .push(function (script_editor) {
+          return script_editor.render({
+            "editor": "codemirror",
+            "maximize": true,
+            "portal_type": "Web Script",
+            "key": "script_editor",
+            "value": DEFAULT_SCRIPT_CONTENT,
+            "editable": 1,
+            "hidden": 0
           });
         })
         .push(function () {
