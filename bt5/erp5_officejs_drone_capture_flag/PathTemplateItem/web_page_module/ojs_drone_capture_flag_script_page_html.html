@@ -28,12 +28,13 @@
   <body>
     <form>
       <!-- parameters input form -->
+      <label class="item-label">Game parameters</label>
       <div data-gadget-url="gadget_erp5_form.html"
               data-gadget-scope="form_view"
               data-gadget-sandbox="public">
       </div>
       <!-- operator script editor -->
-      <label>Operator script:</label>
+      <label class="item-label">Operator script</label>
       <div data-gadget-url="gadget_editor.html"
            data-gadget-scope="operator-editor"
            data-gadget-sandbox="">
@@ -48,14 +49,15 @@
           Export
         </label>
       </div>
-      <label>AI script:</label>
       <!-- AI script editor -->
+      <label class="item-label">AI script</label>
       <div data-gadget-url="gadget_editor.html"
            data-gadget-scope="script-editor"
            data-gadget-sandbox="">
       </div>
       <!-- Game -->
-      <input name="action_run" class="dialogconfirm" type="submit" value="Run">
+      <label class="item-label">Game</label>
+      <input name="action_run" class="run-game" type="submit" value="Run">
       <div class="simulator_div"></div>
       <div data-gadget-url="gadget_erp5_form.html"
               data-gadget-scope="form_view_babylonjs"
