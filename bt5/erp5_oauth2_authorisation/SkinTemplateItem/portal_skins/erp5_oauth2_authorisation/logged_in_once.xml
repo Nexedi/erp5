@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST, RESPONSE</string> </value>
+            <value> <string>REQUEST=None, RESPONSE=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

@@ -9,6 +9,11 @@ portal = context.getPortalObject()
 if portal.portal_skins.updateSkinCookie():
   portal.setupCurrentSkin()
 
+if REQUEST is None:
+  # BBB: support Base_callDialogMethod-style caller
+  REQUEST = context.REQUEST
+  # Note: RESPONSE agument is present for API consistency purposes, but unused.
+  # So do not bother setting it here.
 environ = REQUEST.environ
 if (
   environ['REQUEST_METHOD'] != 'POST' or
