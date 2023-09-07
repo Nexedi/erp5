@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,11 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drone_capture_flag_api_page.html</string> </value>
+            <value> <string>gadget_erp5_page_drone_capture_map_utils.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,17 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_drone_capture_flag_API_page_html</string> </value>
+            <value> <string>drone_capture_flag_map_utils_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Drone Capture Flag API Page</string> </value>
+            <value> <string>Drone Capture Map Utils</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1691175735.97</float>
+                              <float>1694185956.38</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -244,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>1011.7129.2983.29201</string> </value>
+                      <value> <string>1011.8487.12042.61832</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1694622336.88</float>
+                              <float>1694782467.44</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -291,7 +289,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -307,7 +307,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -327,7 +327,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1691175684.28</float>
+                              <float>1694185881.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

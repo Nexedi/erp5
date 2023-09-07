@@ -12,39 +12,47 @@
 
       <h1>Game specifications</h1>
 
-      <h3>Start message with information about the flags</h3>
-
-      <!-- Flag message -->
-      <h4 class="item-name" id="flag_msg"><span>msg.flag_positions</span><span>: list</span></h4>
-      <p class="item-descr">List containing an information dictionary for each flag in the map</p>
+      <!-- Map JSON -->
+      <h3>Map parameter dictionary (JSON)</h3>
 
       <div>
-        <h5 class="item-param-1">Flag info dictionary:</h5>
+        <h5 class="item-param-1">Map dictionary entries</h5>
         <p class="item-descr"></p>
       </div>
 
       <div>
-        <h5 class="item-param-1">Param</h5>
+        <h5 class="item-param-1">Key</h5>
         <h5 class="item-param-2">Description</h5>
       </div>
 
       <div>
-        <p class="item-param-1">id: Integer</p>
-        <p class="item-param-2">Flag id</p>
+        <p class="item-param-1">min_lat, max_lat, min_lon, max_lon: Float</p>
+        <p class="item-param-2">Min and max latitude and longitude coordinates of the map</p>
       </div>
 
       <div>
-        <p class="item-param-1">score: Integer</p>
-        <p class="item-param-2">Flag score for hit</p>
+        <p class="item-param-1">map_size: Integer</p>
+        <p class="item-param-2">Map size in meters (calculated from coordinates)</p>
       </div>
 
       <div>
-        <p class="item-param-1">weight: Integer</p>
-        <p class="item-param-2">Flag weight, number of hits to be captured</p>
+        <p class="item-param-1">width, depth: Integer</p>
+        <p class="item-param-2">Map width and depth in meters (calculated from coordinates)</p>
       </div>
 
       <div>
-        <p class="item-param-1">position: dictionary</p>
+        <p class="item-param-1">height: Integer</p>
+        <p class="item-param-2">Map height in meters</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">start_AMSL: Integer</p>
+        <p class="item-param-2">Map height above mean sea level in meters</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">initial_position: dictionary</p>
+        <p class="item-param-2">Drones starting point coordinates</p>
         <p class="item-param-2">
           {<br>
           &nbsp;&nbsp;x: number, //latitude (in degrees)<br>
@@ -53,6 +61,72 @@
           }<br>
         </p>
       </div>
+
+      <div>
+        <p class="item-param-1">flag_list: list</p>
+        <p class="item-param-2">List of flags, each element:</p>
+        <p class="item-param-2">
+          {<br>
+          &nbsp;&nbsp;position {x,y,z}:<br>&nbsp;&nbsp;latitude, longitude and altitude<br>
+          &nbsp;&nbsp;score: number<br>
+          &nbsp;&nbsp;weight: number<br>
+          }<br>
+        </p>
+      </div>
+
+      <div>
+        <p class="item-param-1">obstacle_list: list</p>
+        <p class="item-param-2">List of obstacles, each element:</p>
+        <p class="item-param-2">
+          {<br>
+          &nbsp;&nbsp;position {x,y,z}:<br>&nbsp;&nbsp;latitude, longitude and altitude<br>
+          &nbsp;&nbsp;type: [box, cilinder, sphere]<br>
+          &nbsp;&nbsp;scale: {x,y,z}<br>
+          &nbsp;&nbsp;rotation: {x,y,z}<br>
+          }<br>
+        </p>
+      </div>
+
+      <div>
+        <p class="item-param-1">enemy_list: list</p>
+        <p class="item-param-2">List of enemies, each element:</p>
+        <p class="item-param-2">
+          {<br>
+          &nbsp;&nbsp;position {x,y,z}:<br>&nbsp;&nbsp;latitude, longitude and altitude<br>
+          &nbsp;&nbsp;type: drone-type<br>
+          &nbsp;&nbsp;id: number<br>
+          }<br>
+        </p>
+      </div>
+
+      <div class="line"></div>
+
+      <h3>Operator script</h3>
+
+      <!-- Operator script -->
+      <h4 class="item-name" id="scoring"><span>Operator</span></h4>
+      <p class="item-descr">The purpose of this script is to set the initial message that all the drones will get at the beginning of the game.</p>
+      <p class="item-descr">The map parameter dictionary can be accessed to get any relevant info.</p>
+      <p class="item-descr">An API is provided through the object <em>operator</em> that allows to get the map json and set the intial message.</p>
+
+      <h4 class="item-name" id="scoring"><span>API</span></h4>
+
+      <div>
+        <p class="item-param-1">getMapJSON(): dictionary</p>
+        <p class="item-param-2">Get the map JSON dictionary</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">sendMsg(msg): void</p>
+        <p class="item-param-2">Set the initial msg all the drones will get at the start.</p>
+        <p class="item-param-2">Message parameter msg must be a dictionary</p>
+      </div>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">var map = operator.getMapJSON();<br>
+      operator.sendMsg({flag_positions: map.flag_list});
+      </p>
 
       <div class="line"></div>
 
