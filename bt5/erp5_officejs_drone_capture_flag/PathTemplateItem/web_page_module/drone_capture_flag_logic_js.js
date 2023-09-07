@@ -1,227 +1,10 @@
-/*global BABYLON, RSVP, console, FixedWingDroneAPI, EnemyDroneAPI, document*/
+/*global BABYLON, RSVP, console, FixedWingDroneAPI, EnemyDroneAPI, document, MapUtils*/
 /*jslint nomen: true, indent: 2, maxlen: 80, todo: true,
          unparam: true */
 
-var GAMEPARAMETERS = {}, TEAM_USER = "user", TEAM_ENEMY = "enemy", R = 6371e3;
+var GAMEPARAMETERS = {}, TEAM_USER = "user", TEAM_ENEMY = "enemy";
 //for DEBUG/TEST mode
 var baseLogFunction = console.log, console_log = "";
-
-/******************************* MAP UTILS ************************************/
-
-var MapUtils = /** @class */ (function () {
-  "use strict";
-
-  var FLAG_EPSILON = 15;
-
-  //** CONSTRUCTOR
-  function MapUtils(map_param) {
-    var _this = this, max_width = _this.latLonDistance(
-      [map_param.min_lat, map_param.min_lon],
-      [map_param.min_lat, map_param.max_lon]),
-      max_height = _this.latLonDistance(
-        [map_param.min_lat, map_param.min_lon],
-        [map_param.max_lat, map_param.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height));
-    _this.map_param = map_param;
-    _this.map_param.map_size = map_size;
-    _this.map_info = {
-      "depth": map_param.map_size,
-      "width": map_param.map_size,
-      "geo_flag_list": [],
-      "geo_obstacle_list": [],
-      "flag_distance_epsilon": map_param.flag_distance_epsilon || FLAG_EPSILON
-    };
-    Object.assign(_this.map_info, _this.map_param);
-    _this.map_info.min_x = _this.longitudToX(map_param.min_lon);
-    _this.map_info.min_y = _this.latitudeToY(map_param.min_lat);
-    _this.map_info.max_x = _this.longitudToX(map_param.max_lon);
-    _this.map_info.max_y = _this.latitudeToY(map_param.max_lat);
-  }
-
-  MapUtils.prototype.latLonDistance = function (c1, c2) {
-    var q1 = c1[0] * Math.PI / 180,
-      q2 = c2[0] * Math.PI / 180,
-      dq = (c2[0] - c1[0]) * Math.PI / 180,
-      dl = (c2[1] - c1[1]) * Math.PI / 180,
-      a = Math.sin(dq / 2) * Math.sin(dq / 2) +
-        Math.cos(q1) * Math.cos(q2) *
-        Math.sin(dl / 2) * Math.sin(dl / 2),
-      c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-  };
-  MapUtils.prototype.longitudToX = function (lon) {
-    return (this.map_info.map_size / 360.0) * (180 + lon);
-  };
-  MapUtils.prototype.latitudeToY = function (lat) {
-    return (this.map_info.map_size / 180.0) * (90 - lat);
-  };
-  MapUtils.prototype.convertToLocalCoordinates =
-    function (latitude, longitude, altitude) {
-      var map_info = this.map_info,
-        x = this.longitudToX(longitude),
-        y = this.latitudeToY(latitude);
-      return {
-        x: ((x - map_info.min_x) / (map_info.max_x - map_info.min_x)) *
-          1000 - map_info.width / 2,
-        y: ((y - map_info.min_y) / (map_info.max_y - map_info.min_y)) *
-          1000 - map_info.depth / 2,
-        z: altitude
-      };
-    };
-  MapUtils.prototype.convertToGeoCoordinates = function (x, y, z) {
-    var lon = x + this.map_info.width / 2,
-      lat = y + this.map_info.depth / 2;
-    lon = lon / 1000;
-    lon = lon * (this.map_info.max_x - this.map_info.min_x) +
-      this.map_info.min_x;
-    lon = lon / (this.map_info.map_size / 360.0) - 180;
-    lat = lat / 1000;
-    lat = lat * (this.map_info.max_y - this.map_info.min_y) +
-      this.map_info.min_y;
-    lat = 90 - lat / (this.map_info.map_size / 180.0);
-    return {
-      x: lat,
-      y: lon,
-      z: z
-    };
-  };
-
-  MapUtils.prototype.randomize = function () {
-    //TODO randomize start_ASML and map height
-    var _this = this;
-    function randomIntFromInterval(min, max, random_seed) {
-      return Math.floor(random_seed.quick() * (max - min + 1) + min);
-    }
-    function randomPosition(random_seed, map_size) {
-      var sign_x = random_seed.quick() < 0.5 ? -1 : 1,
-        sign_y = random_seed.quick() < 0.5 ? -1 : 1,
-        pos_x = sign_x * random_seed.quick() * map_size / 2,
-        pos_y = sign_y * random_seed.quick() * map_size / 2;
-      return [pos_x, pos_y];
-    }
-    var random_seed = new Math.seedrandom(_this.map_param.map_seed), i,
-      n_enemies = randomIntFromInterval(5, 10, random_seed),
-      n_flags = randomIntFromInterval(5, 10, random_seed), //TODO change range
-      n_obstacles = randomIntFromInterval(5, 15, random_seed),
-      flag_list = [], obstacle_list = [], enemy_list = [], random_position,
-      obstacles_types = ["box", "cylinder"], type,
-      obstacle_limit = [_this.map_param.map_size / 6, _this.map_param.map_size / 100,
-                        _this.map_param.map_size / 6, 30],
-      geo_flag_info, geo_obstacle, coordinates;
-    //enemies
-    for (i = 0; i < n_enemies; i += 1) {
-      random_position = randomPosition(random_seed, _this.map_param.map_size);
-      enemy_list.push({
-        "id": i + 10000,
-        "type": "EnemyDroneAPI",
-        "position": {
-          "x": random_position[0],
-          "y": random_position[1],
-          "z": 15 //TODO random z? yes
-        }
-      });
-    }
-    //flags
-    for (i = 0; i < n_flags; i += 1) {
-      //avoid flags near the limits
-      random_position = randomPosition(random_seed, _this.map_param.map_size * 0.75);
-      flag_list.push({
-        "position": {
-          "x": random_position[0],
-          "y": random_position[1],
-          "z": 10
-        },
-        "score": randomIntFromInterval(1, 5, random_seed),
-        "weight": randomIntFromInterval(1, 5, random_seed)
-      });
-    }
-    function checkDistance(position, position_list) {
-      function distance(a, b) {
-        return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
-      }
-      var el;
-      for (el = 0; el < position_list.length; el += 1) {
-        if (distance(position, position_list[el].position) < _this.map_param.map_size / 6) {
-          return true;
-        }
-      }
-      return false;
-    }
-    //obstacles
-    for (i = 0; i < n_obstacles; i += 1) {
-      random_position = randomPosition(random_seed, _this.map_param.map_size);
-      if (checkDistance({ 'x': random_position[0],
-                          'y': random_position[1]}, flag_list)) {
-        i -= 1;
-      } else {
-        type = randomIntFromInterval(0, 2, random_seed);
-        obstacle_list.push({
-          "type": obstacles_types[type],
-          "position": {
-            "x": random_position[0],
-            "y": random_position[1],
-            "z": 15 //TODO random z?
-          },
-          "scale": {
-            "x": randomIntFromInterval(20, obstacle_limit[type], random_seed),
-            "y": randomIntFromInterval(20, obstacle_limit[type], random_seed),
-            "z": randomIntFromInterval(5, obstacle_limit[3], random_seed)
-          },
-          "rotation": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          }
-        });
-      }
-    }
-    _this.map_param.obstacle_list = obstacle_list;
-    _this.map_param.enemy_list = enemy_list;
-    _this.map_param.flag_list = flag_list;
-    _this.map_param.starting_position = {
-      "x": 0,
-      "y": _this.map_param.map_size / 2 * -0.75,
-      "z": 15
-    };
-    _this.map_info.initial_position = _this.map_param.starting_position;
-    Object.assign(_this.map_info, _this.map_param);
-    _this.map_param.flag_list.forEach(function (flag_info, index) {
-      coordinates = _this.convertToGeoCoordinates(
-        flag_info.position.x,
-        flag_info.position.y,
-        flag_info.position.z
-      );
-      geo_flag_info = {
-        'id': flag_info.id,
-        'score': flag_info.score,
-        'weight': flag_info.weight,
-        'position': {
-          'x': coordinates.x,
-          'y': coordinates.y,
-          'z': coordinates.z
-        }
-      };
-      _this.map_info.geo_flag_list.push(geo_flag_info);
-    });
-    _this.map_param.obstacle_list.forEach(function (obstacle_info, index) {
-      geo_obstacle = {};
-      Object.assign(geo_obstacle, obstacle_info);
-      geo_obstacle.position = _this.convertToGeoCoordinates(
-        obstacle_info.position.x,
-        obstacle_info.position.y,
-        obstacle_info.position.z
-      );
-      _this.map_info.geo_obstacle_list.push(geo_obstacle);
-    });
-
-    return _this.map_info;
-  };
-
-  return MapUtils;
-}());
-
-/******************************************************************************/
-
 
 /******************************* DRONE MANAGER ********************************/
 var DroneManager = /** @class */ (function () {
@@ -622,7 +405,6 @@ var DroneManager = /** @class */ (function () {
 /******************************************************************************/
 
 
-
 /******************************** MAP MANAGER *********************************/
 
 var MapManager = /** @class */ (function () {
@@ -649,20 +431,18 @@ var MapManager = /** @class */ (function () {
   function MapManager(scene, map_param) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
       largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
-      count = 0, new_obstacle;
+      count = 0, new_obstacle, obstacle, flag_info, enemy;
     if (!map_param) {
       // Use default map base parameters
       map_param = MAP;
     }
     _this.mapUtils = new MapUtils(map_param);
-    if (!map_param.randomized) {
-      // Randomize map here
-      map_param = _this.mapUtils.randomize();
-      console.log("[INFO] using map randomly generated within the game");
-    } else {
-      console.log("[INFO] using map randomly generated outside game");
-    }
     _this.map_info = map_param;
+    Object.assign(_this.map_info, _this.mapUtils.map_info);
+    _this.map_info.initial_position = _this.mapUtils.convertToLocalCoordinates(
+      _this.map_info.initial_position.x,
+      _this.map_info.initial_position.y,
+      _this.map_info.initial_position.z);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -705,9 +485,26 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
+    // Enemies
+    _this._enemy_list = [];
+    _this.map_info.enemy_list.forEach(function (geo_enemy) {
+      enemy = {};
+      Object.assign(enemy, geo_enemy);
+      enemy.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_enemy.position.x,
+        geo_enemy.position.y,
+        geo_enemy.position.z);
+      _this._enemy_list.push(enemy);
+    });
     // Obstacles
     _this._obstacle_list = [];
-    _this.map_info.obstacle_list.forEach(function (obstacle) {
+    _this.map_info.obstacle_list.forEach(function (geo_obstacle) {
+      obstacle = {};
+      Object.assign(obstacle, geo_obstacle);
+      obstacle.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_obstacle.position.x,
+        geo_obstacle.position.y,
+        geo_obstacle.position.z);
       switch (obstacle.type) {
       case "box":
         new_obstacle = BABYLON.MeshBuilder.CreateBox("obs_" + count,
@@ -759,7 +556,13 @@ var MapManager = /** @class */ (function () {
       'y': 1,
       'z': 6
     };
-    _this.map_info.flag_list.forEach(function (flag_info, index) {
+    _this.map_info.flag_list.forEach(function (geo_flag, index) {
+      flag_info = {};
+      Object.assign(flag_info, geo_flag);
+      flag_info.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_flag.position.x,
+        geo_flag.position.y,
+        geo_flag.position.z);
       flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
       flag_material.alpha = 1;
       flag_material.diffuseColor = BABYLON.Color3.Green();
@@ -769,7 +572,7 @@ var MapManager = /** @class */ (function () {
       flag_a.material = flag_material;
       flag_a.position = new BABYLON.Vector3(
         flag_info.position.x + 1,
-        FLAG_SIZE.z + 1, //swap
+        flag_info.position.z + FLAG_SIZE.z + 1, //swap
         flag_info.position.y - 1
       );
       flag_a.rotation = new BABYLON.Vector3(0, 1, 0);
@@ -779,7 +582,7 @@ var MapManager = /** @class */ (function () {
       flag_b.material = flag_material;
       flag_b.position = new BABYLON.Vector3(
         flag_info.position.x - 1,
-        FLAG_SIZE.z + 1, //swap
+        flag_info.position.z + FLAG_SIZE.z + 1, //swap
         flag_info.position.y + 1
       );
       flag_b.rotation = new BABYLON.Vector3(0, 4, 0);
@@ -787,7 +590,7 @@ var MapManager = /** @class */ (function () {
                                            { 'size': 1 }, scene);
       mast.position = new BABYLON.Vector3(
         flag_info.position.x,
-        FLAG_SIZE.z / 2, //swap
+        flag_info.position.z + FLAG_SIZE.z / 2, //swap
         flag_info.position.y
       );
       mast.scaling = new BABYLON.Vector3(
@@ -1341,7 +1144,7 @@ var GameManager = /** @class */ (function () {
       _this._mapManager = new MapManager(ctx._scene, GAMEPARAMETERS.map);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.drone.list, TEAM_USER, ctx);
-      ctx._spawnDrones(null, _this._mapManager.getMapInfo().enemy_list, TEAM_ENEMY, ctx);
+      ctx._spawnDrones(null, _this._mapManager._enemy_list, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1434,6 +1237,8 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         _this._canUpdate = true;
         return _this.finish_deferred.promise;
+      }, function (error) {
+        throw new Error('Error on drone initialization msg -' + error.message);
       });
   };
 
@@ -1603,12 +1408,6 @@ var runGame, updateGame;
       return game_manager_instance.update(fullscreen);
     }
   };
-
-  /*// Resize canvas on window resize
-  window.addEventListener('resize', function () {
-    game_manager_instance._engine.resize();
-  });*/
-
 
 }(this));
 
