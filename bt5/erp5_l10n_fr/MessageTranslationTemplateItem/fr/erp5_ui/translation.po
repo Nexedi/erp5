@@ -14673,3 +14673,15 @@ msgstr "Worflow de Validation"
 
 msgid "Submit New Support Request"
 msgstr "Soumettre une nouvelle demande d'assistance"
+
+msgid "Support Request WorkLists"
+msgsstr "Listes de travail des demandes d'assistance"
+
+msgid "Reset Filter"
+msgsstr "Réinitialiser le filtre"
+
+msgid "Support Request Pipe"
+msgstr "Demandes d'assistance en cours"
+
+msgid "Last Month Activity"
+msgstr "Activité du mois"
