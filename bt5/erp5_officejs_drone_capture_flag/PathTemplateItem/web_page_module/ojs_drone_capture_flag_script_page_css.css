@@ -24,3 +24,7 @@
 .run-game {
   margin-top: 0 !important;
 }
+
+.captureflagpagebody textarea {
+  min-height: 25em;
+}

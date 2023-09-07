@@ -19,8 +19,7 @@
     MIN_Y = 222.28336777777778,
     MAX_X = 486.77081444444445,
     MAX_Y = 222.24277777777777,
-    //SEED FORM PARAMETER IS BROKEN (used in randomization before user inputs)
-    // only way to set it and use it is via url parameter 'seed'
+    //seed
     url_sp = new URLSearchParams(window.location.hash),
     url_seed = url_sp.get("seed"),
     SEED = url_seed ? url_seed : '6!',
@@ -43,10 +42,16 @@
                          {"x": 45.6464947316632, "y": 14.270747186236491, "z": 10},
                          "score": 1,
                         "weight": 1}],
-      "obstacle_list": [{"type":"box","position":{"x":382.3647599911783,"y":15.855758568271995,"z":15},"scale":{"x":132,"y":56,"z":10},"rotation":{"x":0,"y":0,"z":0}}],
-      "geo_obstacle_list": [{"type":"box","position":{"x":45.6456815316444,"y":14.274667031215898,"z":15},"scale":{"x":132,"y":56,"z":10},"rotation":{"x":0,"y":0,"z":0}}],
-      "enemy_list": [{"id":10000,"type":"EnemyDroneAPI","position":{"x":196.51511038746685,"y":278.7072399791796,"z":15}}],
-      "flag_distance_epsilon": 15,
+      "obstacle_list": [{"type": "box",
+                         "position": {"x": 382.3647599911783, "y": 15.855758568271995, "z": 15},
+                         "scale": {"x": 132, "y": 56, "z": 10},
+                         "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "geo_obstacle_list": [{"type": "box",
+                             "position": {"x": 45.6456815316444, "y": 14.274667031215898, "z": 15},
+                             "scale": {"x": 132, "y": 56, "z": 10},
+                             "rotation": {"x": 0, "y": 0, "z": 0}}],
+      "enemy_list": [{"id": 10000, "type": "EnemyDroneAPI",
+                      "position": {"x": 196.51511038746685, "y": 278.7072399791796, "z": 15}}],
       "min_x": MIN_X,
       "min_y": MIN_Y,
       "max_x": MAX_X,
@@ -403,7 +408,7 @@
       simulation_time: SIMULATION_TIME,
       simulation_speed: SIMULATION_SPEED,
       operator_init_msg: {},
-      map_json: JSON.stringify(MAP, undefined, 2)
+      map_json: JSON.stringify(MAP, undefined, 4)
     })
 
     .declareMethod('render', function render() {
@@ -667,7 +672,7 @@
               "my_map_seed": {
                 "description": "Seed value to randomize the map",
                 "title": "Seed value",
-                "default": "aaaaaaaaaa",
+                "default": SEED,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -685,10 +690,10 @@
           form_definition: {
             group_list: [[
               "center",
-              [["my_map_seed"]]
+              [["my_map_json"]]
             ], [
               "bottom",
-              [["my_map_json"]]
+              [["my_map_seed"]]
             ]]
           }
         });
