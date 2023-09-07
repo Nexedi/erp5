@@ -191,8 +191,6 @@
               }
             )
             .push(function() {
-              /** XXX "manual" translation of some known data-i18n attribute,
-                  until we have a proper solution to manage translations */
               return gadget.getTranslationList([
                 "Comments:",
                 "Post Comment",
@@ -279,44 +277,35 @@
               function getPostDomList(post) {
                 var dom_list = [
                   domsugar(
-                    "li",
+                    "span",
                     [
-                      domsugar(
-                        "span",
-                        [
-                          /*
-                          TODO: we would like to translate with substitution here,
-                          to be able to translate "By user" to something like "user by"
-                          (keeping the <strong> around user is an extra challenge here,
-                          maybe we don't need this).
-                          */
-                          translationBy,
-                          " ",
-                          domsugar("strong", [post.user]),
-                          " - "
-                        ]
-                      ),
-                      domsugar("time", {
-                        datetime: post.date,
-                        title: post.date_formatted
-                      },
-                        [post.date_relative]
-                      ),
-                      domsugar("br"),
-                      // the post content is set as an attribute for now, we'll use a 
-                      // gadget_html_viewer to render each post
-                      domsugar("div", {
-                        'data-gadget-html-viewer-value': post.text,
-                      })
+                      translationBy,
+                      domsugar("strong", [post.user]),
+                      " - "
                     ]
-                  )];
+                  ),
+                  domsugar("time", {
+                    datetime: post.date,
+                    title: post.date_formatted
+                  },
+                    [post.date_relative]
+                  ),
+                  domsugar("br"),
+                  // the post content is set as an attribute for now, we'll use a 
+                  // gadget_html_viewer to render each post
+                  domsugar("div", {
+                    'data-gadget-html-viewer-value': post.text,
+                  })
+                ];
                 if (post.attachment_link) {
                   dom_list.push(domsugar("br"))
                   dom_list.push(domsugar("strong", [translationAttachment]))
                   dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]))
                 }
-                dom_list.push(domsugar("hr", { id: "post_item" }))
-                return dom_list;
+                return [
+                  domsugar("li", dom_list),
+                  domsugar("hr", { id: "post_item" })
+                ];
               }
               return post_list.map(getPostDomList)
             });
