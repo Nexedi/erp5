@@ -26,19 +26,11 @@
 
   </head>
   <body>
-    <form>
+    <div class="captureflagpageheader"></div>
+    <div class="captureflagpagebody"></div>
+
+    <template><form>
       <!-- parameters input form -->
-      <label class="item-label">Game parameters</label>
-      <div data-gadget-url="gadget_erp5_form.html"
-              data-gadget-scope="form_view"
-              data-gadget-sandbox="public">
-      </div>
-      <!-- operator script editor -->
-      <label class="item-label">Operator script</label>
-      <div data-gadget-url="gadget_editor.html"
-           data-gadget-scope="operator-editor"
-           data-gadget-sandbox="">
-      </div>
       <div class="import-export">
         <label class="import">
           <input type="file" id="import" >
@@ -49,22 +41,12 @@
           Export
         </label>
       </div>
-      <!-- AI script editor -->
-      <label class="item-label">AI script</label>
-      <div data-gadget-url="gadget_editor.html"
-           data-gadget-scope="script-editor"
-           data-gadget-sandbox="">
-      </div>
       <!-- Game -->
       <label class="item-label">Game</label>
       <input name="action_run" class="run-game" type="submit" value="Run">
-      <div class="simulator_div"></div>
-      <div data-gadget-url="gadget_erp5_form.html"
-              data-gadget-scope="form_view_babylonjs"
-              data-gadget-sandbox="public">
-      </div>
+
 
       <a data-i18n="Storages"></a> <!-- for zelenium test common macro -->
-    </form>
+    </form></template>
   </body>
 </html>

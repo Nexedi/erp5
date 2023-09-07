@@ -1,5 +1,6 @@
 /*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, URLSearchParams, Blob, require, MapUtils*/
+/*global window, rJS, domsugar, document, URLSearchParams, Blob, require, MapUtils,
+  console, RSVP*/
 (function (window, rJS, domsugar, document, URLSearchParams, Blob, require) {
   "use strict";
 
@@ -147,9 +148,19 @@
       'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
       'gadget_erp5_page_drone_capture_flag_enemydrone.js',
       './libraries/seedrandom.min.js'
-    ];
+    ],
+    //////////////////////////////////////////////////////////////////////
+    // romain changes
+    //////////////////////////////////////////////////////////////////////
+    DISPLAY_MAP_PARAMETER = 'display_map_parameter',
+    DISPLAY_OPERATOR_PARAMETER = 'display_operator_parameter',
+    DISPLAY_DRONE_PARAMETER = 'display_drone_parameter',
+    DISPLAY_GAME_PARAMETER = 'display_game_parameter',
+    DISPLAY_PLAY = "display_play";
 
   function handleFileSelect(event, gadget, options) {
+    // XXX XXX use RSVP promise
+    // check how it is done in jio probably
     var reader = new FileReader()
     reader.onload = (event) => handleFileLoad(event, gadget, options);
     reader.readAsText(event.target.files[0]);
@@ -191,44 +202,14 @@
     })
 
     .declareMethod("triggerSubmit", function () {
+      console.log("submit disabled");
+      return;
       return this.element.querySelector('input[type="submit"]').click();
     })
 
-    .onEvent('submit', function () {
-      var gadget = this, operator_init_msg, script_content;
-      return gadget.getDeclaredGadget('operator-editor')
-        .push(function (operator_editor) {
-          return operator_editor.getContent();
-        })
-        .push(function (content) {
-          /*jslint evil: true*/
-          try {
-            operator_init_msg = new Function(content.operator_editor)();
-          } catch (error) {
-            operator_init_msg = {'error': error};
-          }
-          /*jslint evil: false*/
-          if (!operator_init_msg) operator_init_msg = {};
-          return gadget.getDeclaredGadget('script-editor');
-        })
-        .push(function (script_editor) {
-          return script_editor.getContent();
-        })
-        .push(function (content) {
-          script_content = content.script_editor;
-          return gadget.getDeclaredGadget('form_view');
-        })
-        .push(function (form_gadget) {
-          return form_gadget.getContent();
-        })
-        .push(function (input) {
-          input.operator_init_msg = operator_init_msg;
-          input.script = script_content;
-          gadget.runGame(input);
-        });
-    })
 
-    .onEvent('click', function (evt) {
+    .onEvent('clickXXX', function (evt) {
+      console.log("clickXXX");
       var gadget = this;
       if (evt.target.id === "import") {
         return;
@@ -244,257 +225,16 @@
       }
     }, false, false)
 
-    .declareMethod('render', function render(options) {
+    .declareMethod('renderXXX', function render(options) {
+      console.log("renderXXX");
       var gadget = this,
         loadedFile = (event) => handleFileSelect(event, gadget, options);
       gadget.element.querySelector('#import').addEventListener("change", loadedFile);
       MAP.map_seed = SEED;
-      return gadget.getDeclaredGadget('form_view')
-        .push(function (form_gadget) {
-          return form_gadget.render({
-            erp5_document: {
-              "_embedded": {"_view": {
-                "my_simulation_speed": {
-                  "description": "",
-                  "title": "Simulation Speed",
-                  "default": SIMULATION_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "simulation_speed",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_simulation_time": {
-                  "description": "Duration of the simulation (in seconds)",
-                  "title": "Simulation Time",
-                  "default": SIMULATION_TIME,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "simulation_time",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_min_speed": {
-                  "description": "",
-                  "title": "Drone min speed",
-                  "default": MIN_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_min_speed",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_speed": {
-                  "description": "",
-                  "title": "Drone speed",
-                  "default": DEFAULT_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_speed",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_speed": {
-                  "description": "",
-                  "title": "Drone max speed",
-                  "default": MAX_SPEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_speed",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_max_acceleration": {
-                  "description": "",
-                  "title": "Drone max Acceleration",
-                  "default": MAX_ACCELERATION,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_acceleration",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_max_deceleration": {
-                  "description": "",
-                  "title": "Drone max Deceleration",
-                  "default": MAX_DECELERATION,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_deceleration",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                },
-                "my_drone_max_roll": {
-                  "description": "",
-                  "title": "Drone max roll",
-                  "default": MAX_ROLL,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_roll",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_min_pitch": {
-                  "description": "",
-                  "title": "Drone min pitch",
-                  "default": MIN_PITCH,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_min_pitch",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_pitch": {
-                  "description": "",
-                  "title": "Drone max pitch",
-                  "default": MAX_PITCH,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_pitch",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_sink_rate": {
-                  "description": "",
-                  "title": "Drone max sink rate",
-                  "default": MAX_SINK_RATE,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_sink_rate",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_drone_max_climb_rate": {
-                  "description": "",
-                  "title": "Drone max climb rate",
-                  "default": MAX_CLIMB_RATE,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "drone_max_climb_rate",
-                  "hidden": 0,
-                  "type": "FloatField"
-                },
-                "my_map_seed": {
-                  "description": "Seed value to randomize the map",
-                  "title": "Seed value",
-                  "default": url_seed ? url_seed : SEED,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "map_seed",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
-                "my_number_of_drones": {
-                  "description": "",
-                  "title": "Number of drones",
-                  "default": NUMBER_OF_DRONES,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "number_of_drones",
-                  "hidden": 0,
-                  "type": "IntegerField"
-                }
-              }},
-              "_links": {
-                "type": {
-                  name: ""
-                }
-              }
-            },
-            form_definition: {
-              group_list: [[
-                "left",
-                [["my_simulation_speed"], ["my_simulation_time"],
-                 ["my_number_of_drones"], ["my_map_seed"]]
-              ], [
-                "right",
-                [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
-                  ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
-                  ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
-                  ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
-              ]]
-            }
-          });
-        })
-        .push(function () {
-          return gadget.getDeclaredGadget("operator-editor");
-        })
-        .push(function (operator_editor) {
-          var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
-          Object.assign(operator_map, JSON_MAP);
-          delete operator_map.flag_list;
-          delete operator_map.obstacle_list;
-          delete operator_map.enemy_list;
-          delete operator_map.geo_obstacle_list;
-          delete operator_map.flag_distance_epsilon;
-          DEFAULT_OPERATOR_SCRIPT_CONTENT = 'var json_map = ' +
-            JSON.stringify(operator_map) + ';\n' +
-            '\n' +
-            'return {"flag_positions": json_map.geo_flag_list};\n';
-          return operator_editor.render({
-            "editor": "codemirror",
-            "maximize": true,
-            "portal_type": "Web Script",
-            "key": "operator_editor",
-            "value": DEFAULT_OPERATOR_SCRIPT_CONTENT,
-            "editable": 1,
-            "hidden": 0
-          });
-        })
-        .push(function () {
-          return gadget.getDeclaredGadget("script-editor");
-        })
-        .push(function (script_editor) {
-          return script_editor.render({
-            "editor": "codemirror",
-            "maximize": true,
-            "portal_type": "Web Script",
-            "key": "script_editor",
-            "value": DEFAULT_SCRIPT_CONTENT,
-            "editable": 1,
-            "hidden": 0
-          });
-        })
-        .push(function () {
-          return gadget.updateHeader({
-            page_title: 'Drone Capture Flag',
-            page_icon: 'puzzle-piece'
-          });
-        });
-    })
-
-    .onStateChange(function (modification_dict) {
-      if (modification_dict.hasOwnProperty('operator_script')) {
-        return this.getDeclaredGadget('operator-editor')
-          .push(function (operator_editor) {
-            return operator_editor.render({
-              "editor": "codemirror",
-              "maximize": true,
-              "portal_type": "Web Script",
-              "key": "operator_editor",
-              "value": modification_dict.operator_script,
-              "editable": 1,
-              "hidden": 0
-            });
-          });
-      }
     })
 
     .declareJob('runGame', function runGame(options) {
+      console.log("runGame. options:", options);
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
@@ -503,7 +243,7 @@
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
-                         "script_content": options.script};
+                         "script_content": options.drone_script};//options.script};
       }
       game_parameters_json = {
         "drone": {
@@ -625,6 +365,617 @@
           return gadget.notifySubmitted({message: "Error: " + error.message,
                                          status: 'error'});
         });
-    });
+    })
+
+    ///////////////////////////////////////////////////////////////////
+    // Romain changes
+    ///////////////////////////////////////////////////////////////////
+    .setState({
+      // TODO write a better example, returning parameters from map information
+      operator_script: "// write a better operator example\nreturn {flag_positions: []};",
+      drone_script: DEFAULT_SCRIPT_CONTENT,
+      number_of_drones: NUMBER_OF_DRONES,
+      drone_max_climb_rate: MAX_CLIMB_RATE,
+      drone_max_sink_rate: MAX_SINK_RATE,
+      drone_max_pitch: MAX_PITCH,
+      drone_min_pitch: MIN_PITCH,
+      drone_max_roll: MAX_ROLL,
+      drone_max_deceleration: MAX_DECELERATION,
+      drone_max_acceleration: MAX_ACCELERATION,
+      drone_max_speed: MAX_SPEED,
+      drone_speed: DEFAULT_SPEED,
+      drone_min_speed: MIN_SPEED,
+      simulation_time: SIMULATION_TIME,
+      simulation_speed: SIMULATION_SPEED,
+      operator_init_msg: {}
+    })
+
+    .declareMethod('render', function render() {
+      console.log("render");
+      var gadget = this;
+      return gadget.changeState({
+        display_step: DISPLAY_DRONE_PARAMETER
+      })
+      .push(function () {
+        return gadget.updateHeader({
+          page_title: 'Drone Capture Flag',
+          page_icon: 'puzzle-piece'
+        });
+      });
+    })
+
+    .onStateChange(function (modification_dict) {
+      console.log("onStateChange. modification_dict:", modification_dict);
+      var gadget = this;
+
+      if (gadget.state.display_step === DISPLAY_GAME_PARAMETER) {
+        if (modification_dict.hasOwnProperty('display_step')) {
+          // do not update the form if it is already displayed
+          return renderGameParameterView(gadget);
+        }
+      }
+
+      if (gadget.state.display_step === DISPLAY_OPERATOR_PARAMETER) {
+        if (modification_dict.hasOwnProperty('display_step')) {
+          // do not update the form if it is already displayed
+          return renderOperatorParameterView(gadget);
+        }
+      }
+
+      if (gadget.state.display_step === DISPLAY_DRONE_PARAMETER) {
+        if (modification_dict.hasOwnProperty('display_step')) {
+          // do not update the form if it is already displayed
+          return renderDroneParameterView(gadget);
+        }
+      }
+
+      if (gadget.state.display_step === DISPLAY_PLAY) {
+        return renderPlayView(gadget);
+      }
+
+      if (modification_dict.hasOwnProperty('display_step')) {
+        throw new Error('Unhandled display step: ' + gadget.state.display_step);
+      }
+    })
+
+    //////////////////////////////////////////////////
+    // Used when submitting the form
+    //////////////////////////////////////////////////
+    .declareMethod('getContent', function () {
+      console.log("getContent");
+      var gadget = this,
+        display_step = gadget.state.display_step,
+        queue;
+
+      if ([DISPLAY_OPERATOR_PARAMETER,
+           DISPLAY_DRONE_PARAMETER,
+           DISPLAY_GAME_PARAMETER].indexOf(gadget.state.display_step) !== -1) {
+        queue = new RSVP.Queue(getContentFromParameterForm(gadget));
+      } else if (gadget.state.display_step === DISPLAY_PLAY) {
+        // Nothing to store in the play view
+        queue = new RSVP.Queue();
+      } else {
+        throw new Error('getContent form not handled: ' + display_step);
+      }
+
+      return queue;
+    }, {mutex: 'changestate'})
+
+
+    .onEvent("click", function (evt) {
+      console.log("click");
+      // Only handle click on BUTTON element
+      var gadget = this,
+        tag_name = evt.target.tagName,
+        queue;
+
+      if (tag_name !== 'BUTTON') {
+        return;
+      }
+
+      // Disable any button. It must be managed by this gadget
+      evt.preventDefault();
+
+      // Always get content to ensure the possible displayed form
+      // is checked and content propagated to the gadget state value
+      queue = gadget.getContent();
+
+      if (evt.target.className.indexOf("display-operator-script-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_OPERATOR_PARAMETER
+            });
+          });
+      }
+
+      if (evt.target.className.indexOf("display-drone-script-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_DRONE_PARAMETER
+            });
+          });
+      }
+
+      if (evt.target.className.indexOf("display-game-parameter-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_GAME_PARAMETER
+            });
+          });
+      }
+
+      if (evt.target.className.indexOf("display-play-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_PLAY
+            });
+          });
+      }
+
+      throw new Error('Unhandled button: ' + evt.target.textContent);
+    }, false, false);
+
+
+
+  function renderGadgetHeader(gadget, loading) {
+    var element_list = [],
+      game_map_icon = 'ui-icon-git',
+      game_operator_icon = 'ui-icon-search-plus',
+      game_drone_icon = 'ui-icon-search-minus',
+      game_parameter_icon = 'ui-icon-check-square',
+      game_play_icon = 'ui-icon-check-square';
+
+
+    if (loading) {
+      if (gadget.state.display_step === DISPLAY_MAP_PARAMETER) {
+        game_map_icon = 'ui-icon-spinner';
+      } else if (gadget.state.display_step === DISPLAY_OPERATOR_PARAMETER) {
+        game_operator_icon = 'ui-icon-spinner';
+      } else if (gadget.state.display_step === DISPLAY_DRONE_PARAMETER) {
+        game_drone_icon = 'ui-icon-spinner';
+      } else if (gadget.state.display_step === DISPLAY_GAME_PARAMETER) {
+        game_parameter_icon = 'ui-icon-spinner';
+      } else if (gadget.state.display_step === DISPLAY_PLAY) {
+        game_play_icon = 'ui-icon-spinner';
+      } else {
+        throw new Error("Can't render header state " +
+                        gadget.state.display_step);
+      }
+    }
+
+    element_list.push(
+      domsugar('button', {
+        type: 'button',
+        text: "Map Parameters",
+        disabled: (gadget.state.display_step === DISPLAY_MAP_PARAMETER),
+        'class': 'display-map-parameter-btn ui-btn-icon-left ' + game_map_icon
+      }),
+      domsugar('button', {
+        type: 'button',
+        text: "Game Parameters",
+        disabled: (gadget.state.display_step === DISPLAY_GAME_PARAMETER),
+        'class': 'display-game-parameter-btn ui-btn-icon-left ' + game_parameter_icon
+      }),
+      domsugar('button', {
+        type: 'button',
+        text: "Operator Script",
+        disabled: (gadget.state.display_step === DISPLAY_OPERATOR_PARAMETER),
+        'class': 'display-operator-script-btn ui-btn-icon-left ' + game_operator_icon
+      }),
+      domsugar('button', {
+        type: 'button',
+        text: "Drone Script",
+        disabled: (gadget.state.display_step === DISPLAY_DRONE_PARAMETER),
+        'class': 'display-drone-script-btn ui-btn-icon-left ' + game_drone_icon
+      }),
+      domsugar('button', {
+        type: 'button',
+        text: "Run",
+        // Always make this button clickable, so that user can run it twice
+        // disabled: (gadget.state.display_step === DISPLAY_PLAY),
+        'class': 'display-play-btn ui-btn-icon-left ' + game_play_icon
+      })
+    );
+
+    domsugar(gadget.element.querySelector('div.captureflagpageheader'), element_list);
+  }
+
+  function getContentFromParameterForm(gadget) {
+    return gadget.getDeclaredGadget('parameter_form')
+      .push(function (form_gadget) {
+        return form_gadget.getContent();
+      })
+      .push(function (content_dict) {
+        var key;
+        for (key in content_dict) {
+          if (content_dict.hasOwnProperty(key)) {
+            gadget.state[key] = content_dict[key];
+          }
+        }
+      });
+  }
+
+  //////////////////////////////////////////////////
+  // Operator parameters
+  //////////////////////////////////////////////////
+  function renderOperatorParameterView(gadget) {
+    var form_gadget;
+    renderGadgetHeader(gadget, true);
+    return gadget.declareGadget("gadget_erp5_form.html", {
+      scope: "parameter_form"
+    })
+      .push(function (sub_gadget) {
+        form_gadget = sub_gadget;
+        return form_gadget.render({
+          erp5_document: {
+            "_embedded": {"_view": {
+              "my_operator_script": {
+                "description": "",
+                "title": "Operator script",
+                "default": gadget.state.operator_script,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "operator_script",
+                "hidden": 0,
+                "url": "gadget_editor.html",
+                "renderjs_extra":	JSON.stringify({
+                  "maximize": true,
+                  "language": "en",
+                  "portal_type": "Web Script",
+                  "editor": "codemirror"
+                }),
+                "type": "GadgetField"
+              }
+            }},
+            "_links": {
+              "type": {
+                name: ""
+              }
+            }
+          },
+          form_definition: {
+            group_list: [[
+              "bottom",
+              [["my_operator_script"]]
+            ]]
+          }
+        });
+      })
+      .push(function () {
+        renderGadgetHeader(gadget, false);
+        // Attach the form to the page
+        domsugar(gadget.element.querySelector('div.captureflagpagebody'), [
+          domsugar('label', {
+            'class': 'item-label',
+            text: 'Operator script'
+          }),
+          form_gadget.element
+        ]);
+      });
+  }
+
+  //////////////////////////////////////////////////
+  // Drone script parameter
+  //////////////////////////////////////////////////
+  function renderDroneParameterView(gadget) {
+    var form_gadget;
+    renderGadgetHeader(gadget, true);
+    return gadget.declareGadget("gadget_erp5_form.html", {
+      scope: "parameter_form"
+    })
+      .push(function (sub_gadget) {
+        form_gadget = sub_gadget;
+        return form_gadget.render({
+          erp5_document: {
+            "_embedded": {"_view": {
+              "my_drone_script": {
+                "description": "",
+                "title": "Drone script",
+                "default": gadget.state.drone_script,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_script",
+                "hidden": 0,
+                "url": "gadget_editor.html",
+                "renderjs_extra":	JSON.stringify({
+                  "maximize": true,
+                  "language": "en",
+                  "portal_type": "Web Script",
+                  "editor": "codemirror"
+                }),
+                "type": "GadgetField"
+              }
+            }},
+            "_links": {
+              "type": {
+                name: ""
+              }
+            }
+          },
+          form_definition: {
+            group_list: [[
+              "bottom",
+              [["my_drone_script"]]
+            ]]
+          }
+        });
+      })
+      .push(function () {
+        renderGadgetHeader(gadget, false);
+        // Attach the form to the page
+        domsugar(gadget.element.querySelector('div.captureflagpagebody'), [
+          domsugar('label', {
+            'class': 'item-label',
+            text: 'Drone script'
+          }),
+          form_gadget.element
+        ]);
+      });
+  }
+
+  //////////////////////////////////////////////////
+  // Game parameters
+  //////////////////////////////////////////////////
+  function renderGameParameterView(gadget) {
+    var form_gadget;
+    renderGadgetHeader(gadget, true);
+    return gadget.declareGadget("gadget_erp5_form.html", {
+      scope: "parameter_form"
+    })
+      .push(function (sub_gadget) {
+        form_gadget = sub_gadget;
+
+        return form_gadget.render({
+          erp5_document: {
+            "_embedded": {"_view": {
+              "my_simulation_speed": {
+                "description": "",
+                "title": "Simulation Speed",
+                "default": gadget.state.simulation_speed,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "simulation_speed",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
+              "my_simulation_time": {
+                "description": "Duration of the simulation (in seconds)",
+                "title": "Simulation Time",
+                "default": gadget.state.simulation_time,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "simulation_time",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
+              "my_drone_min_speed": {
+                "description": "",
+                "title": "Drone min speed",
+                "default": gadget.state.drone_min_speed,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_min_speed",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
+              "my_drone_speed": {
+                "description": "",
+                "title": "Drone speed",
+                "default": gadget.state.drone_speed,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_speed",
+                "hidden": 0,
+                "type": "FloatField"
+              },
+              "my_drone_max_speed": {
+                "description": "",
+                "title": "Drone max speed",
+                "default": gadget.state.drone_max_speed,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_speed",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
+              "my_drone_max_acceleration": {
+                "description": "",
+                "title": "Drone max Acceleration",
+                "default": gadget.state.drone_max_acceleration,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_acceleration",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
+              "my_drone_max_deceleration": {
+                "description": "",
+                "title": "Drone max Deceleration",
+                "default": gadget.state.drone_max_deceleration,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_deceleration",
+                "hidden": 0,
+                "type": "IntegerField"
+              },
+              "my_drone_max_roll": {
+                "description": "",
+                "title": "Drone max roll",
+                "default": gadget.state.drone_max_roll,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_roll",
+                "hidden": 0,
+                "type": "FloatField"
+              },
+              "my_drone_min_pitch": {
+                "description": "",
+                "title": "Drone min pitch",
+                "default": gadget.state.drone_min_pitch,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_min_pitch",
+                "hidden": 0,
+                "type": "FloatField"
+              },
+              "my_drone_max_pitch": {
+                "description": "",
+                "title": "Drone max pitch",
+                "default": gadget.state.drone_max_pitch,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_pitch",
+                "hidden": 0,
+                "type": "FloatField"
+              },
+              "my_drone_max_sink_rate": {
+                "description": "",
+                "title": "Drone max sink rate",
+                "default": gadget.state.drone_max_sink_rate,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_sink_rate",
+                "hidden": 0,
+                "type": "FloatField"
+              },
+              "my_drone_max_climb_rate": {
+                "description": "",
+                "title": "Drone max climb rate",
+                "default": gadget.state.drone_max_climb_rate,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "drone_max_climb_rate",
+                "hidden": 0,
+                "type": "FloatField"
+              },
+              /*
+              "my_map_seed": {
+                "description": "Seed value to randomize the map",
+                "title": "Seed value",
+                "default": url_seed ? url_seed : SEED,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "map_seed",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              */
+              "my_number_of_drones": {
+                "description": "",
+                "title": "Number of drones",
+                "default": gadget.state.number_of_drones,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "number_of_drones",
+                "hidden": 0,
+                "type": "IntegerField"
+              }
+            }},
+            "_links": {
+              "type": {
+                name: ""
+              }
+            }
+          },
+          form_definition: {
+            group_list: [[
+              "left",
+              [["my_simulation_speed"], ["my_simulation_time"],
+               ["my_number_of_drones"], ["my_map_seed"]]
+            ], [
+              "right",
+              [["my_drone_min_speed"], ["my_drone_speed"], ["my_drone_max_speed"],
+                ["my_drone_max_acceleration"], ["my_drone_max_deceleration"],
+                ["my_drone_max_roll"], ["my_drone_min_pitch"], ["my_drone_max_pitch"],
+                ["my_drone_max_sink_rate"], ["my_drone_max_climb_rate"]]
+            ]]
+          }
+        });
+      })
+      .push(function () {
+        renderGadgetHeader(gadget, false);
+        // Attach the form to the page
+        domsugar(gadget.element.querySelector('div.captureflagpagebody'), [
+          domsugar('label', {
+            'class': 'item-label',
+            text: 'Game parameters'
+          }),
+          form_gadget.element
+        ]);
+      });
+
+  }
+
+  //////////////////////////////////////////////////
+  // Play
+  //////////////////////////////////////////////////
+  function renderPlayView(gadget) {
+    renderGadgetHeader(gadget, true);
+    // XXX Load babylonjs and run game
+    return gadget.declareGadget("gadget_erp5_form.html", {
+      scope: "form_view_babylonjs"
+    })
+      .push(function (sub_gadget) {
+        renderGadgetHeader(gadget, false);
+        // Attach the form to the page
+        domsugar(gadget.element.querySelector('div.captureflagpagebody'), [
+          domsugar('label', {
+            'class': 'item-label',
+            text: 'Play'
+          }),
+          domsugar('div', {
+            'class': 'simulator_div'
+          }),
+          sub_gadget.element
+        ]);
+        // XXX I didn't check this part
+        // Run the operator script here probably?
+
+/*
+          var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
+          Object.assign(operator_map, JSON_MAP);
+          delete operator_map.flag_list;
+          delete operator_map.obstacle_list;
+          delete operator_map.enemy_list;
+          delete operator_map.geo_obstacle_list;
+          delete operator_map.flag_distance_epsilon;
+*/
+/*
+          /jslint evil: true/
+          try {
+            operator_init_msg = new Function(content.operator_editor)();
+          } catch (error) {
+            operator_init_msg = {'error': error};
+          }
+          /jslint evil: false/
+          if (!operator_init_msg) operator_init_msg = {};
+*/
+        // set state.operator_init_msg ...
+
+        // All parameters (map, operator script, ai script, game params) should
+        // be accessed from gadget.state
+        gadget.runGame(gadget.state);
+      });
+  }
 
 }(window, rJS, domsugar, document, URLSearchParams, Blob, require));
