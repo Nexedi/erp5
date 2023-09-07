@@ -71,6 +71,8 @@ if IS_ZOPE2: # BBB Zope2
                     ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
             except Exception:
                 t = 'datetime'
+        elif t=='nb' and v is None:
+            return 'null'
         elif t=='nb' and not v:
             t = 'empty string'
         else:
