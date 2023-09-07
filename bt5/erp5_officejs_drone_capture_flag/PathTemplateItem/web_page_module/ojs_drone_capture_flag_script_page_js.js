@@ -185,17 +185,19 @@
     DISPLAY_GAME_PARAMETER = 'display_game_parameter',
     DISPLAY_PLAY = "display_play";
 
-  function handleFileSelect(event, gadget, options) {
+  function handleFileSelect(event, gadget) {
     // XXX XXX use RSVP promise
     // check how it is done in jio probably
     var reader = new FileReader()
-    reader.onload = (event) => handleFileLoad(event, gadget, options);
+    reader.onload = (event) => handleFileLoad(event, gadget);
     reader.readAsText(event.target.files[0]);
   }
 
-  function handleFileLoad(event, gadget, options) {
-    options.operator_script = event.target.result;
-    return gadget.changeState(options);
+  function handleFileLoad(event, gadget) {
+    return gadget.changeState({
+      display_step: DISPLAY_MAP_PARAMETER,
+      map_json: event.target.result
+    });
   }
 
   function downloadFromTextContent(gadget, text_content, title) {
@@ -230,11 +232,11 @@
 
     .declareMethod("triggerSubmit", function () {
       return;
-      return this.element.querySelector('input[type="submit"]').click();
+      //return this.element.querySelector('input[type="submit"]').click();
     })
 
 
-    .onEvent('clickXXX', function (evt) {
+    /*.onEvent('clickXXX', function (evt) {
       var gadget = this;
       if (evt.target.id === "import") {
         return;
@@ -248,17 +250,10 @@
             downloadFromTextContent(gadget, content.operator_editor, 'operator_script');
           });
       }
-    }, false, false)
-
-    .declareMethod('renderXXX', function render(options) {
-      var gadget = this,
-        loadedFile = (event) => handleFileSelect(event, gadget, options);
-      gadget.element.querySelector('#import').addEventListener("change", loadedFile);
-      MAP.map_seed = SEED;
-    })
+    }, false, false)*/
 
     .declareJob('runGame', function runGame(options) {
-      var gadget = this, i,
+      var gadget = this, i, parsed_map,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
       DRONE_LIST = [];
@@ -267,6 +262,12 @@
       for (i = 0; i < options.number_of_drones; i += 1) {
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
                          "script_content": options.drone_script};
+      }
+      try {
+        parsed_map = JSON.parse(options.map_json);
+      } catch (error) {
+        return gadget.notifySubmitted({message: "Error: " + error.message,
+                                       status: 'error'});
       }
       game_parameters_json = {
         "drone": {
@@ -288,7 +289,7 @@
           "information": 0,
           "communication": 0
         },
-        "map": JSON.parse(options.map_json),
+        "map": parsed_map,
         "operator_init_msg": options.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
@@ -428,10 +429,7 @@
       var gadget = this;
 
       if (gadget.state.display_step === DISPLAY_MAP_PARAMETER) {
-        if (modification_dict.hasOwnProperty('display_step')) {
-          // do not update the form if it is already displayed
-          return renderMapParameterView(gadget);
-        }
+        return renderMapParameterView(gadget);
       }
 
       if (gadget.state.display_step === DISPLAY_GAME_PARAMETER) {
@@ -495,6 +493,11 @@
         queue;
 
       if (tag_name !== 'BUTTON') {
+        if (evt.target.id === "export") {
+          console.log("click on export! calling downloadFromTextContent...");
+          //TODO: NOT WORKING as a.click() overrides ongoing export click
+          downloadFromTextContent(gadget, gadget.state.map_json, 'operator_script');
+        }
         return;
       }
 
@@ -637,7 +640,8 @@
   // Map parameters
   //////////////////////////////////////////////////
   function renderMapParameterView(gadget) {
-    var form_gadget;
+    var loadedFile, form_gadget, import_export_div, import_button, import_label,
+      export_button, export_label;
     renderGadgetHeader(gadget, true);
     return gadget.declareGadget("gadget_erp5_form.html", {
       scope: "parameter_form"
@@ -647,16 +651,6 @@
         return form_gadget.render({
           erp5_document: {
             "_embedded": {"_view": {
-              /*
-                "url": "gadget_editor.html",
-                "renderjs_extra":	JSON.stringify({
-                  "maximize": true,
-                  "language": "en",
-                  "portal_type": "Web Script",
-                  "editor": "codemirror"
-                }),
-                "type": "GadgetField"
-              }*/
               "my_map_json": {
                 "description": "",
                 "title": "Map JSON",
@@ -699,8 +693,27 @@
         });
       })
       .push(function () {
-        //ROQUE
-        //render import and randomize buttons
+        import_button = domsugar('input', {
+          'type': 'file',
+          'id': 'import'
+        });
+        loadedFile = (event) => handleFileSelect(event, gadget);
+        import_button.addEventListener("change", loadedFile);
+        import_label = domsugar('label', {
+          'class': 'import',
+          text: 'Import'
+        }, [import_button]);
+        export_button = domsugar('input', {
+          'type': 'file',
+          'id': 'export'
+        });
+        export_label = domsugar('label', {
+          'class': 'export',
+          text: 'Export'
+        }, [export_button]);
+        import_export_div = domsugar('div', {
+          'class': 'import-export'
+        }, [import_label, export_label]);
       })
       .push(function () {
         renderGadgetHeader(gadget, false);
@@ -710,7 +723,8 @@
             'class': 'item-label',
             text: 'Map parameters'
           }),
-          form_gadget.element
+          form_gadget.element,
+          import_export_div
         ]);
       });
   }
