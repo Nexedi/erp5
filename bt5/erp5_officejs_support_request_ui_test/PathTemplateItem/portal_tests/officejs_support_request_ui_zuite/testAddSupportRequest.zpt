@@ -71,7 +71,7 @@
 </tr>
 <tr>
   <td>waitForText</td>
-  <td>//ol[@id="post_list"]//li/p</td>
+  <td>//ol[@id="post_list"]//li//p</td>
   <td>Post test</td>
 </tr>
 <tr>

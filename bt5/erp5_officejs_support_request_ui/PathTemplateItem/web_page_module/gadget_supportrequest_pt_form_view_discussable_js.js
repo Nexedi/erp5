@@ -276,14 +276,9 @@
             .then(function(post_list){
               function getPostDomList(post) {
                 var dom_list = [
-                  domsugar(
-                    "span",
-                    [
-                      translationBy,
-                      domsugar("strong", [post.user]),
-                      " - "
-                    ]
-                  ),
+                  translationBy + " ", // XXX translations can not have leading space ?
+                  domsugar("strong", [post.user]),
+                  " - ",
                   domsugar("time", {
                     datetime: post.date,
                     title: post.date_formatted
