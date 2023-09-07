@@ -655,7 +655,7 @@ var MapManager = /** @class */ (function () {
       map_param = MAP;
     }
     _this.mapUtils = new MapUtils(map_param);
-    if (!map_param.randomized) {
+    if (map_param.randomize) {
       // Randomize map here
       map_param = _this.mapUtils.randomize();
       console.log("[INFO] using map randomly generated within the game");
@@ -1603,12 +1603,6 @@ var runGame, updateGame;
       return game_manager_instance.update(fullscreen);
     }
   };
-
-  /*// Resize canvas on window resize
-  window.addEventListener('resize', function () {
-    game_manager_instance._engine.resize();
-  });*/
-
 
 }(this));
 
