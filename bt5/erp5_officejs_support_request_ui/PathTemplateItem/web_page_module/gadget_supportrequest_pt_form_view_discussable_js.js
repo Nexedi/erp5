@@ -1,9 +1,7 @@
-/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment, Handlebars */
+/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, moment, Handlebars) {
+(function (window, rJS, RSVP, calculatePageTitle, moment) {
   "use strict";
-  var gadget_klass = rJS(window),
-    comment_list_template_source = gadget_klass.__template_element.getElementById("template-document-list").innerHTML
 
   /**
    * french locale for momentjs, copied from https://momentjs.com/docs/
@@ -70,13 +68,14 @@
   });
 
 
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
@@ -122,34 +121,7 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      return gadget.getElement()
-        .push(function (element) {
-          // Translate HTML page. We only translate and replace some the elements with
-          // data-i18n-translate-element attribute, not to replace DOM elements with
-          // event handler attached.
-          function translateElement(e) {
-            return gadget
-              .translateHtml(e.innerHTML)
-              .push(function (translatedHtml) {
-                e.innerHTML = translatedHtml;
-              });
-          }
-          return RSVP.all(
-            Array.from(element.querySelectorAll('[data-i18n-translate-element]')).map(translateElement))
-            .then(
-              // Translate and compile the handlebar template for messages
-              function () {
-                return gadget
-                  .translateHtml(comment_list_template_source)
-                  .push(function (translatedTemplate) {
-                    gadget.comment_list_template = Handlebars.compile(translatedTemplate);
-                  });
-              }
-            );
-        })
-        .push(function () {
-          return gadget.getSetting('hateoas_url')
-        })
+      return gadget.getSetting('hateoas_url')
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;
         })
@@ -217,7 +189,21 @@
                     maximize: true
                   })]);
               }
-            ).push(function () {
+            )
+            .push(function() {
+              /** XXX "manual" translation of some known data-i18n attribute,
+                  until we have a proper solution to manage translations */
+              return gadget.getTranslationList([
+                "Comments:",
+                "Post Comment",
+                "Post Comment",
+              ]).push(function(translation_list) {
+                gadget.element.querySelector("[data-i18n='Comments:']").innerText = translation_list[0];
+                gadget.element.querySelector("[data-i18n='Post Comment']").innerText = "\u00A0" + translation_list[1];
+                gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[2];
+              });
+            })
+            .push(function () {
               // make our submit button editable
               var element = gadget.element.querySelector('input[type="submit"]');
               element.removeAttribute('disabled');
@@ -261,35 +247,107 @@
           });
         })
         .push(function () {
-          return gadget.jio_getAttachment(
-            'post_module',
-            gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
-          );
+          return RSVP.all([
+            gadget.jio_getAttachment(
+              'post_module',
+              gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
+            ),
+            gadget.getTranslationList(["By", "Attachment:",])
+          ]);
         })
-        .push(function (post_list) {
-          function getPostWithLinkAndLocalDate(post) {
-            post.date_formatted = moment(post.date).format('LLLL');
-            post.date_relative = moment(post.date).fromNow();
-            if (post.attachment_link === null) {
-              return post;
-            }
-            return gadget.getDocumentUrl(post.attachment_link).push(
-              function (attachment_link) {
-                post.attachment_link = attachment_link;
+        .push(
+          function (post_list_and_translation_list) {
+            var post_list = post_list_and_translation_list[0],
+              translationBy = post_list_and_translation_list[1][0],
+              translationAttachment = post_list_and_translation_list[1][1];
+            function getPostWithLinkAndLocalDate(post) {
+              post.date_formatted = moment(post.date).format('LLLL');
+              post.date_relative = moment(post.date).fromNow();
+              if (post.attachment_link === null) {
                 return post;
               }
-            );
-          }
-          // build links with attachments and localized dates
-          var queue_list = [], i = 0;
-          for (i = 0; i < post_list.length; i += 1) {
-            queue_list.push(getPostWithLinkAndLocalDate(post_list[i]));
-          }
-          return RSVP.all(queue_list);
+              return gadget.getDocumentUrl(post.attachment_link).push(
+                function (attachment_link) {
+                  post.attachment_link = attachment_link;
+                  return post;
+                }
+              );
+            }
+
+          return RSVP.all(post_list.map(getPostWithLinkAndLocalDate))
+            .then(function(post_list){
+              function getPostDomList(post) {
+                var dom_list = [
+                  domsugar(
+                    "li",
+                    [
+                      domsugar(
+                        "span",
+                        [
+                          /*
+                          TODO: we would like to translate with substitution here,
+                          to be able to translate "By user" to something like "user by"
+                          (keeping the <strong> around user is an extra challenge here,
+                          maybe we don't need this).
+                          */
+                          translationBy,
+                          " ",
+                          domsugar("strong", [post.user]),
+                          " - "
+                        ]
+                      ),
+                      domsugar("time", {
+                        datetime: post.date,
+                        title: post.date_formatted
+                      },
+                        [post.date_relative]
+                      ),
+                      domsugar("br"),
+                      // the post content is set as an attribute for now, we'll use a 
+                      // gadget_html_viewer to render each post
+                      domsugar("div", {
+                        'data-gadget-html-viewer-value': post.text,
+                      })
+                    ]
+                  )];
+                if (post.attachment_link) {
+                  dom_list.push(domsugar("br"))
+                  dom_list.push(domsugar("strong", [translationAttachment]))
+                  dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]))
+                }
+                dom_list.push(domsugar("hr", { id: "post_item" }))
+                return dom_list;
+              }
+              return post_list.map(getPostDomList)
+            });
         })
-        .push(function (comment_list) {
-          var comments = gadget.element.querySelector("#post_list");
-          comments.innerHTML = gadget.comment_list_template({comments: comment_list});
+        .push(function(dom_list) {
+          return gadget.getElement()
+            .push(function (element) {
+              var all_dom_list = [], gadget_list = [], element_list, i, element;
+              // add to DOM all the posts, with data-gadget-html-viewer-value attribute
+              for (var i = 0; i < dom_list.length; i += 1) {
+                all_dom_list = all_dom_list.concat(dom_list[i]);
+              }
+              domsugar(element.querySelector("#post_list"), all_dom_list);
+
+              // make gadget html viewer for each post
+              element_list = element.querySelector("#post_list").querySelectorAll('[data-gadget-html-viewer-value]');
+              for (i = 0; i < element_list.length; i += 1) {
+                gadget_list.push(
+                  gadget.declareGadget("gadget_html_viewer.html", {
+                    element: element_list[i],
+                    scope: "html_viewer",
+                    sandbox: "public"
+                  })
+                    .push(function (g) {
+                      return g.render({ value: g.element.getAttribute("data-gadget-html-viewer-value") });
+                    })
+                );
+              }
+
+              return RSVP.all(gadget_list);
+            });
         });
     })
     .declareJob('submitPostComment', function () {
@@ -301,7 +359,7 @@
         .push(function (e) {
           return e.getContent();
         })
-        .push(function (content) {
+        .push(function (content) {
           if (content.comment === '') {
             return gadget.translate("Post content can not be empty!")
                 .push(function (translated_message) {
@@ -375,4 +433,4 @@
     .onEvent('submit', function () {
       return this.submitPostComment();
     });
-}(window, rJS, RSVP, calculatePageTitle, moment, Handlebars));
+}(window, rJS, RSVP, calculatePageTitle, moment));
