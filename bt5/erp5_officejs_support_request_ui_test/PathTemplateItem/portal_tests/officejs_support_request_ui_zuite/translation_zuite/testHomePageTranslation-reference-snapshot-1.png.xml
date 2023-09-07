@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>testFrontPageDashboardLastMonthActivity-reference-snapshot-1.png</string> </value>
+            <value> <string>testHomePageTranslation-reference-snapshot-1.png</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>488</int> </value>
+            <value> <int>503</int> </value>
         </item>
       </dictionary>
     </pickle>

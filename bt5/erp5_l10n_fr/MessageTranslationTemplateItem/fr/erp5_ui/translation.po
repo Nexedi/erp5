@@ -1405,17 +1405,17 @@ msgstr "Attacher un document"
 msgid "Attachment"
 msgstr "Pièce jointe"
 
+msgid "Attachment:"
+msgstr "Pièce jointe:"
+
+msgid "Attachment: "
+msgstr "Pièce jointe: "
+
 msgid "Attachments"
 msgstr "Pièces jointes"
 
 msgid "Attachments:"
 msgstr "Pièces jointes:"
-
-msgid "Attachment"
-msgstr "Pièce jointe"
-
-msgid "Attachment: "
-msgstr "Pièce jointe: "
 
 msgid "Attendance"
 msgstr "Présence"
@@ -1902,6 +1902,9 @@ msgstr "Le business template a été mis à jour avec succès"
 
 msgid "Buyer"
 msgstr "Acheteur"
+
+msgid "By"
+msgstr "Par"
 
 msgid "CAD Library"
 msgstr "Nom du fichier Lectra"
@@ -2727,6 +2730,9 @@ msgstr "Commentaires entrés par un utilisateur. Les commentaires ne seront visi
 
 msgid "Comments which can be read by internal users but which, unlike description, are not printed out on official documents."
 msgstr "Commentaires accessibles aux utilisateurs internes de l'application qui, contrairement à la description, ne sont pas repris ou imprimés sur les documents officiels."
+
+msgid "Comments:"
+msgstr "Commentaires:"
 
 msgid "Compare"
 msgstr "Comparer"
@@ -6592,6 +6598,9 @@ msgstr "Dernier"
 msgid "Last In, First Out"
 msgstr "Dernier entré, premier sorti"
 
+msgid "Last Month Activity"
+msgstr "Activité du mois"
+
 msgid "Last Name"
 msgstr "Nom"
 
@@ -10315,6 +10324,9 @@ msgstr "Hiérarchie d'expression de besoins"
 msgid "Reset"
 msgstr "Réinitialiser"
 
+msgid "Reset Filter"
+msgstr "Réinitialiser le filtre"
+
 msgid "Reset List Setting"
 msgstr "Réinitialiser la configuration de la liste"
 
@@ -11746,6 +11758,9 @@ msgstr "Soumettre au manager (action)"
 msgid "Submit Message"
 msgstr "Soumettre le message"
 
+msgid "Submit New Support Request"
+msgstr "Soumettre une nouvelle demande d'assistance"
+
 msgid "Submit Project"
 msgstr "Soumettre le projet"
 
@@ -11911,6 +11926,9 @@ msgstr "Rapport détaillé"
 msgid "Support Request Module"
 msgstr "Module des demandes d'assistance"
 
+msgid "Support Request Pipe"
+msgstr "Demandes d'assistance en cours"
+
 msgid "Support Request Status"
 msgstr "État"
 
@@ -11922,6 +11940,9 @@ msgstr "Reference du type de la demande d'assistance"
 
 msgid "Support Request Types"
 msgstr "Types des demandes d'assistance"
+
+msgid "Support Request WorkLists"
+msgstr "Listes de travail des demandes d'assistance"
 
 msgid "Support Requests"
 msgstr "Demandes d'assistance"
@@ -14670,6 +14691,3 @@ msgstr "État de Validation"
 
 msgid "validation_workflow"
 msgstr "Worflow de Validation"
-
-msgid "Submit New Support Request"
-msgstr "Soumettre une nouvelle demande d'assistance"
