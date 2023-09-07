@@ -1,6 +1,6 @@
-/*global document, window, Option, rJS, RSVP, promiseEventListener */
+/*global document, window, Option, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, promiseEventListener, loopEventListener) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   function getActionListByName(action_object, name) {
@@ -47,6 +47,8 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("updateConfiguration", "updateConfiguration")
@@ -88,7 +90,8 @@
         search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND delivery.start_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND delivery.start_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
       } else {
         // Situation 2: Search Support Request by state with limit of 30 days.
-        search_criteria = '( translated_simulation_state_title: "' + name + '" AND delivery.start_date: >= ' + days_30.toISOString().slice(0, 10) + ' )';
+        end_date = days_30;
+        search_criteria = '( translated_simulation_state_title: "' + name + '" AND delivery.start_date: >= ' + end_date.toISOString().slice(0, 10) + ' )';
       }
       return search_criteria;
     })
@@ -132,8 +135,21 @@
             });
         })
         .push(function () {
-          return gadget.updateHeader({
-            page_title: 'Customer Support Dashboard'
+          return gadget.translate('Customer Support Dashboard')
+            .push(function (translated_text) {
+              return gadget.updateHeader({
+                page_title: translated_text
+              });
+            });
+        }).push(function () {
+          return gadget.getTranslationList([
+            "Submit New Support Request",
+            "Reset Filter",
+            "Support Request WorkLists"
+          ]).push(function (translation_list) {
+            gadget.element.querySelector('[data-i18n="[value]Submit New Support Request"]').value = translation_list[0];
+            gadget.element.querySelector('[data-i18n="[value]Reset Filter"]').value = translation_list[1];
+            gadget.element.querySelector('[data-i18n="Support Request WorkLists"]').innerText = translation_list[2];
           });
         });
     })
@@ -162,7 +178,10 @@
                 sandbox: "iframe",
                 element: gadget.property_dict.element.querySelector("#wrap2")
               }
-            )
+            ),
+            gadget.translate("Support Request Pipe"),
+            gadget.translate("Days"),
+            gadget.translate("Number")
             ]);
         })
         .push(function (result) {
@@ -179,10 +198,12 @@
           var sp_data = result_list[0],
             graph_gadget_1 = result_list[1],
             graph_gadget_2 = result_list[2],
+            translated_message_support_request_pipe = result_list[3],
+            translated_message_days = result_list[4],
+            translated_message_number = result_list[5],
             count_by_state_and_date_range = sp_data.count_by_state_and_date_range;
-          return RSVP.all([
-            // render first graph
-            graph_gadget_1.render({
+          return RSVP.all([graph_gadget_1.render(
+            {
               value: {
                 data: [
                   {
@@ -215,50 +236,56 @@
                 ],
                 layout: {
                   axis_dict : {
-                    '0': {"title": "Days"},
-                    '1': {"title": "Number", "value_type": "number"}
+                    '0': {"title": translated_message_days},
+                    '1': {"title": translated_message_number, "value_type": "number"}
                   },
-                  title: "Support Request Pipe"
+                  title: translated_message_support_request_pipe
                 }
               }
-            }),
-
-            // render second graph
-            graph_gadget_2.render({
-              value:
-                {
-                  data: [
-                    {
-                      value_dict: {
-                        0: [
-                          sp_data.state_title_by_state_id.validated,
-                          sp_data.state_title_by_state_id.submitted,
-                          sp_data.state_title_by_state_id.suspended,
-                          sp_data.state_title_by_state_id.invalidated
-                        ],
-                        1: [
-                          sp_data.count_by_state.validated || 0,
-                          sp_data.count_by_state.submitted || 0,
-                          sp_data.count_by_state.suspended || 0,
-                          sp_data.count_by_state.invalidated || 0
-                        ]
-                      },
-                      colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
-                      type: "pie",
-                      title: "Support Request"
-                    }
-                  ],
-                  layout: {
-                    axis_dict : {
-                      0: {"title": "date"},
-                      1: {"title": "value",  "value_type": "number"}
+            }
+          ),
+            sp_data,
+            graph_gadget_2,
+            gadget.translate("Last Month Activity")
+            ]);
+        })
+        .push(function (result_list) {
+          var sp_data = result_list[1],
+            graph_gadget = result_list[2],
+            translated_message_last_month_activity = result_list[3];
+          return graph_gadget.render({
+            value:
+              {
+                data: [
+                  {
+                    value_dict: {
+                      0: [
+                        sp_data.state_title_by_state_id.validated,
+                        sp_data.state_title_by_state_id.submitted,
+                        sp_data.state_title_by_state_id.suspended,
+                        sp_data.state_title_by_state_id.invalidated
+                      ],
+                      1: [
+                        sp_data.count_by_state.validated || 0,
+                        sp_data.count_by_state.submitted || 0,
+                        sp_data.count_by_state.suspended || 0,
+                        sp_data.count_by_state.invalidated || 0
+                      ]
                     },
-                    title: "Last Month Activity"
+                    colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
+                    type: "pie",
+                    title: "Support Request"
                   }
+                ],
+                layout: {
+                  axis_dict : {
+                    0: {"title": "date"},
+                    1: {"title": "value",  "value_type": "number"}
+                  },
+                  title: translated_message_last_month_activity
                 }
-            })
-
-          ]);
+              }
+          });
         });
     })
     .declareService(function () {
@@ -277,7 +304,7 @@
       return new RSVP.Queue()
         .push(function () {
           var restore_filter_input = gadget.element.querySelectorAll("input")[1],
-            one = loopEventListener(restore_filter_input, "click", false, function () {
+            one = rJS.loopEventListener(restore_filter_input, "click", false, function () {
               restore_filter_input.disabled = true;
               restore_filter_input.classList.add("ui-disabled");
               return gadget.redirect({
@@ -342,4 +369,4 @@
         });
     });
 
-}(window, rJS, RSVP, promiseEventListener, rJS.loopEventListener));
+}(window, rJS, RSVP));
