@@ -21,10 +21,9 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//h1[@data-i18n="[value]Support Request WorkLists"]</td>
+  <td>//h1[@data-i18n="Support Request WorkLists"]</td>
   <td></td>
 </tr>
-
 <tr>
   <td>assertElementPresent</td>
   <td>//section[@class="document_list"]//li[1]</td>
