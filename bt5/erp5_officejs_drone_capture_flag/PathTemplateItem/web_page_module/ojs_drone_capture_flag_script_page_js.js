@@ -58,7 +58,7 @@
       "max_y": MAX_Y,
       "initial_position": {"x": 0, "y": -338.25, "z": 15}
     },
-    JSON_MAP,
+    RANDOMIZED_MAP,
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
     MAX_DECELERATION = 1,
@@ -214,9 +214,9 @@
     window.URL.revokeObjectURL(url);
   }
 
-  //Randomize map before render, so it's available on operator editor
+  //Randomize map before render, so it's available on map dialog
   require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
-    JSON_MAP = new MapUtils(MAP).randomize();
+    RANDOMIZED_MAP = new MapUtils(MAP).randomize();
   });
 
   rJS(window)
@@ -409,6 +409,7 @@
       simulation_time: SIMULATION_TIME,
       simulation_speed: SIMULATION_SPEED,
       operator_init_msg: {},
+      map_seed: MAP.map_seed,
       map_json: JSON.stringify(MAP, undefined, 4)
     })
 
@@ -553,6 +554,22 @@
           });
       }
 
+      if (evt.target.className.indexOf("randomize-btn") !== -1) {
+        //Randomize map before state change, so it's available on map dialog
+        require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
+          MAP.map_seed = gadget.state.map_seed;
+          //TODO ROQUE FIX SEED INPUT and GADGET STATE SEED
+          RANDOMIZED_MAP = new MapUtils(MAP).randomize();
+        });
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_MAP_PARAMETER,
+              map_json: JSON.stringify(RANDOMIZED_MAP, undefined, 4)
+            });
+          });
+      }
+
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false);
 
@@ -641,7 +658,7 @@
   //////////////////////////////////////////////////
   function renderMapParameterView(gadget) {
     var loadedFile, form_gadget, import_export_div, import_button, import_label,
-      export_button, export_label;
+      export_button, export_label, randomize_button;
     renderGadgetHeader(gadget, true);
     return gadget.declareGadget("gadget_erp5_form.html", {
       scope: "parameter_form"
@@ -655,7 +672,6 @@
                 "description": "",
                 "title": "Map JSON",
                 "default": gadget.state.map_json,
-                //"default": JSON.stringify(JSON_MAP),
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
@@ -693,6 +709,11 @@
         });
       })
       .push(function () {
+        randomize_button = domsugar('button', {
+          'class': 'randomize-btn',
+          'id': 'randomize',
+          text: 'Randomize'
+        });
         import_button = domsugar('input', {
           'type': 'file',
           'id': 'import'
@@ -713,7 +734,7 @@
         }, [export_button]);
         import_export_div = domsugar('div', {
           'class': 'import-export'
-        }, [import_label, export_label]);
+        }, [import_label/*, export_label*/]);
       })
       .push(function () {
         renderGadgetHeader(gadget, false);
@@ -724,7 +745,8 @@
             text: 'Map parameters'
           }),
           form_gadget.element,
-          import_export_div
+          import_export_div,
+          randomize_button
         ]);
       });
   }
