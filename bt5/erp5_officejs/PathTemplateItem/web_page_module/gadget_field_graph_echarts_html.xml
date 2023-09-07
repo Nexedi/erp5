@@ -64,9 +64,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -268,8 +266,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1538645729.6</float>
-                              <string>GMT+9</string>
+                              <float>1694152073.26</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>

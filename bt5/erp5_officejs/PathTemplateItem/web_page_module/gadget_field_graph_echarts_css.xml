@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,7 +23,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,8 +41,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -62,14 +59,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -77,11 +66,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/plain</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_field_graph_echarts.appcache</string> </value>
+            <value> <string>gadget_field_graph_echarts.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,15 +82,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_field_graph_echarts_appcache</string> </value>
+            <value> <string>gadget_field_graph_echarts_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -108,27 +95,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# v1.1.1\n
-CACHE:\n
-gadget_field_graph_echarts.html/echarts-all.js\n
-gadget_field_graph_echarts.html/gadget_global.js\n
-gadget_field_graph_echarts.html/renderjs.js\n
-gadget_field_graph_echarts.html/rsvp.js\n
-gadget_field_graph_echarts.html/unsafe/gadget_field_graph_echarts.js\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs ECharts Cache</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Field Graph With Echarts CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -190,11 +158,11 @@ NETWORK:\n
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
+                      <value> <string>publish</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -218,7 +186,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506525352.34</float>
+                              <float>1694150959.89</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -227,7 +195,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
+                      <value> <string>published</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -253,7 +221,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -267,7 +235,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>962.25486.15124.29883</string> </value>
+                      <value> <string>1010.64822.48938.57036</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -287,8 +255,8 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1538646068.83</float>
-                              <string>GMT+9</string>
+                              <float>1694152130.18</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
@@ -314,11 +282,13 @@ NETWORK:\n
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -330,7 +300,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -350,7 +320,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1506524633.84</float>
+                              <float>1694150865.83</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
