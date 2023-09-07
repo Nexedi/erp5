@@ -14,6 +14,11 @@
     MAX_LAT = 45.65,
     MIN_LON = 14.265,
     MAX_LON = 14.2766,
+    MAP_SIZE = 902,
+    MIN_X = 486.74174999999997,
+    MIN_Y = 222.28336777777778,
+    MAX_X = 486.77081444444445,
+    MAX_Y = 222.24277777777777,
     //SEED FORM PARAMETER IS BROKEN (used in randomization before user inputs)
     // only way to set it and use it is via url parameter 'seed'
     url_sp = new URLSearchParams(window.location.hash),
@@ -26,7 +31,27 @@
       "min_lat": MIN_LAT,
       "max_lat": MAX_LAT,
       "min_lon": MIN_LON,
-      "max_lon": MAX_LON
+      "max_lon": MAX_LON,
+      "depth": MAP_SIZE,
+      "width": MAP_SIZE,
+      "map_size": MAP_SIZE,
+      "flag_list": [{"position":
+                     {"x": 44.44708935334347, "y": 116.25082261796342, "z": 10},
+                     "score": 1,
+                     "weight": 1}],
+      "geo_flag_list": [{"position":
+                         {"x": 45.6464947316632, "y": 14.270747186236491, "z": 10},
+                         "score": 1,
+                        "weight": 1}],
+      "obstacle_list": [{"type":"box","position":{"x":382.3647599911783,"y":15.855758568271995,"z":15},"scale":{"x":132,"y":56,"z":10},"rotation":{"x":0,"y":0,"z":0}}],
+      "geo_obstacle_list": [{"type":"box","position":{"x":45.6456815316444,"y":14.274667031215898,"z":15},"scale":{"x":132,"y":56,"z":10},"rotation":{"x":0,"y":0,"z":0}}],
+      "enemy_list": [{"id":10000,"type":"EnemyDroneAPI","position":{"x":196.51511038746685,"y":278.7072399791796,"z":15}}],
+      "flag_distance_epsilon": 15,
+      "min_x": MIN_X,
+      "min_y": MIN_Y,
+      "max_x": MAX_X,
+      "max_y": MAX_Y,
+      "initial_position": {"x": 0, "y": -338.25, "z": 15}
     },
     JSON_MAP,
     DEFAULT_SPEED = 16,
@@ -149,9 +174,6 @@
       'gadget_erp5_page_drone_capture_flag_enemydrone.js',
       './libraries/seedrandom.min.js'
     ],
-    //////////////////////////////////////////////////////////////////////
-    // romain changes
-    //////////////////////////////////////////////////////////////////////
     DISPLAY_MAP_PARAMETER = 'display_map_parameter',
     DISPLAY_OPERATOR_PARAMETER = 'display_operator_parameter',
     DISPLAY_DRONE_PARAMETER = 'display_drone_parameter',
@@ -202,14 +224,12 @@
     })
 
     .declareMethod("triggerSubmit", function () {
-      console.log("submit disabled");
       return;
       return this.element.querySelector('input[type="submit"]').click();
     })
 
 
     .onEvent('clickXXX', function (evt) {
-      console.log("clickXXX");
       var gadget = this;
       if (evt.target.id === "import") {
         return;
@@ -226,7 +246,6 @@
     }, false, false)
 
     .declareMethod('renderXXX', function render(options) {
-      console.log("renderXXX");
       var gadget = this,
         loadedFile = (event) => handleFileSelect(event, gadget, options);
       gadget.element.querySelector('#import').addEventListener("change", loadedFile);
@@ -234,7 +253,6 @@
     })
 
     .declareJob('runGame', function runGame(options) {
-      console.log("runGame. options:", options);
       var gadget = this, i,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json, map_json;
@@ -243,7 +261,7 @@
                               [domsugar('div')]).firstElementChild;
       for (i = 0; i < options.number_of_drones; i += 1) {
         DRONE_LIST[i] = {"id": i, "type": "FixedWingDroneAPI",
-                         "script_content": options.drone_script};//options.script};
+                         "script_content": options.drone_script};
       }
       game_parameters_json = {
         "drone": {
@@ -265,7 +283,7 @@
           "information": 0,
           "communication": 0
         },
-        "map": JSON_MAP || MAP,
+        "map": JSON.parse(options.map_json),
         "operator_init_msg": options.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
@@ -367,9 +385,6 @@
         });
     })
 
-    ///////////////////////////////////////////////////////////////////
-    // Romain changes
-    ///////////////////////////////////////////////////////////////////
     .setState({
       // TODO write a better example, returning parameters from map information
       operator_script: "// write a better operator example\nreturn {flag_positions: []};",
@@ -387,14 +402,14 @@
       drone_min_speed: MIN_SPEED,
       simulation_time: SIMULATION_TIME,
       simulation_speed: SIMULATION_SPEED,
-      operator_init_msg: {}
+      operator_init_msg: {},
+      map_json: JSON.stringify(MAP, undefined, 2)
     })
 
     .declareMethod('render', function render() {
-      console.log("render");
       var gadget = this;
       return gadget.changeState({
-        display_step: DISPLAY_DRONE_PARAMETER
+        display_step: DISPLAY_MAP_PARAMETER
       })
       .push(function () {
         return gadget.updateHeader({
@@ -405,8 +420,14 @@
     })
 
     .onStateChange(function (modification_dict) {
-      console.log("onStateChange. modification_dict:", modification_dict);
       var gadget = this;
+
+      if (gadget.state.display_step === DISPLAY_MAP_PARAMETER) {
+        if (modification_dict.hasOwnProperty('display_step')) {
+          // do not update the form if it is already displayed
+          return renderMapParameterView(gadget);
+        }
+      }
 
       if (gadget.state.display_step === DISPLAY_GAME_PARAMETER) {
         if (modification_dict.hasOwnProperty('display_step')) {
@@ -442,13 +463,13 @@
     // Used when submitting the form
     //////////////////////////////////////////////////
     .declareMethod('getContent', function () {
-      console.log("getContent");
       var gadget = this,
         display_step = gadget.state.display_step,
         queue;
 
       if ([DISPLAY_OPERATOR_PARAMETER,
            DISPLAY_DRONE_PARAMETER,
+           DISPLAY_MAP_PARAMETER,
            DISPLAY_GAME_PARAMETER].indexOf(gadget.state.display_step) !== -1) {
         queue = new RSVP.Queue(getContentFromParameterForm(gadget));
       } else if (gadget.state.display_step === DISPLAY_PLAY) {
@@ -463,7 +484,6 @@
 
 
     .onEvent("click", function (evt) {
-      console.log("click");
       // Only handle click on BUTTON element
       var gadget = this,
         tag_name = evt.target.tagName,
@@ -479,6 +499,15 @@
       // Always get content to ensure the possible displayed form
       // is checked and content propagated to the gadget state value
       queue = gadget.getContent();
+
+      if (evt.target.className.indexOf("display-map-parameter-btn") !== -1) {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              display_step: DISPLAY_MAP_PARAMETER
+            });
+          });
+      }
 
       if (evt.target.className.indexOf("display-operator-script-btn") !== -1) {
         return queue
@@ -596,6 +625,88 @@
             gadget.state[key] = content_dict[key];
           }
         }
+      });
+  }
+
+  //////////////////////////////////////////////////
+  // Map parameters
+  //////////////////////////////////////////////////
+  function renderMapParameterView(gadget) {
+    var form_gadget;
+    renderGadgetHeader(gadget, true);
+    return gadget.declareGadget("gadget_erp5_form.html", {
+      scope: "parameter_form"
+    })
+      .push(function (sub_gadget) {
+        form_gadget = sub_gadget;
+        return form_gadget.render({
+          erp5_document: {
+            "_embedded": {"_view": {
+              /*
+                "url": "gadget_editor.html",
+                "renderjs_extra":	JSON.stringify({
+                  "maximize": true,
+                  "language": "en",
+                  "portal_type": "Web Script",
+                  "editor": "codemirror"
+                }),
+                "type": "GadgetField"
+              }*/
+              "my_map_json": {
+                "description": "",
+                "title": "Map JSON",
+                "default": gadget.state.map_json,
+                //"default": JSON.stringify(JSON_MAP),
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "map_json",
+                "hidden": 0,
+                "type": "TextAreaField"
+              },
+              "my_map_seed": {
+                "description": "Seed value to randomize the map",
+                "title": "Seed value",
+                "default": "aaaaaaaaaa",
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "map_seed",
+                "hidden": 0,
+                "type": "StringField"
+              }
+            }},
+            "_links": {
+              "type": {
+                name: ""
+              }
+            }
+          },
+          form_definition: {
+            group_list: [[
+              "center",
+              [["my_map_seed"]]
+            ], [
+              "bottom",
+              [["my_map_json"]]
+            ]]
+          }
+        });
+      })
+      .push(function () {
+        //ROQUE
+        //render import and randomize buttons
+      })
+      .push(function () {
+        renderGadgetHeader(gadget, false);
+        // Attach the form to the page
+        domsugar(gadget.element.querySelector('div.captureflagpagebody'), [
+          domsugar('label', {
+            'class': 'item-label',
+            text: 'Map parameters'
+          }),
+          form_gadget.element
+        ]);
       });
   }
 
@@ -866,19 +977,6 @@
                 "hidden": 0,
                 "type": "FloatField"
               },
-              /*
-              "my_map_seed": {
-                "description": "Seed value to randomize the map",
-                "title": "Seed value",
-                "default": url_seed ? url_seed : SEED,
-                "css_class": "",
-                "required": 1,
-                "editable": 1,
-                "key": "map_seed",
-                "hidden": 0,
-                "type": "StringField"
-              },
-              */
               "my_number_of_drones": {
                 "description": "",
                 "title": "Number of drones",

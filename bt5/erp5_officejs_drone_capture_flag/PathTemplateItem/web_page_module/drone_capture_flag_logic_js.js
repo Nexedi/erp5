@@ -1604,12 +1604,6 @@ var runGame, updateGame;
     }
   };
 
-  /*// Resize canvas on window resize
-  window.addEventListener('resize', function () {
-    game_manager_instance._engine.resize();
-  });*/
-
-
 }(this));
 
 /******************************************************************************/
