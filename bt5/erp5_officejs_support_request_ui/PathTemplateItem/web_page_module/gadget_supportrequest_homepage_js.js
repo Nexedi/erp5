@@ -47,7 +47,6 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("updateConfiguration", "updateConfiguration")
@@ -311,8 +310,7 @@
             view_list = erp5_document._links.view || [];
 
           gadget.property_dict.option_dict = {
-            // graph_gadget: Keep ending slash to be consistent with the automatically set "base" tag
-            graph_gadget: "unsafe/gadget_field_graph_echarts.html/",
+            graph_gadget: "gadget_field_graph_echarts.html",
             listbox_gadget: getActionListByName(view_list, "view_last_support_request")[0].href,
             listbox_jio_key: "support_request_module",
             field_listbox_begin_from: field_listbox_begin_from
