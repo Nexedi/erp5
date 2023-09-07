@@ -88,8 +88,8 @@
                         " ",
                         domsugar(
                           "span",
-                          { "class": "ul-li-count" },
-                          [count]
+                          { "class": "ui-li-count" },
+                          [count.toString()]
                         )
                       ]
                     )
