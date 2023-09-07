@@ -14670,3 +14670,6 @@ msgstr "État de Validation"
 
 msgid "validation_workflow"
 msgstr "Worflow de Validation"
+
+msgid "Submit New Support Request"
+msgstr "Soumettre une nouvelle demande d'assistance"
