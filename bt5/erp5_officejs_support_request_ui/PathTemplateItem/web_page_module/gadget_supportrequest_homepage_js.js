@@ -217,7 +217,7 @@
                 layout: {
                   axis_dict : {
                     '0': {"title": "Days"},
-                    '1': {"title": "Number", "value_type": "number"}
+                    '1': {"title": "Count", "value_type": "number"}
                   },
                   title: "Support Request Pipe"
                 }
