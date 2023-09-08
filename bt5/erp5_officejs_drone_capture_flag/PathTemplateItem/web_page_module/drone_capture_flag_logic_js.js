@@ -431,13 +431,18 @@ var MapManager = /** @class */ (function () {
   function MapManager(scene, map_param) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
       largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
-      count = 0, new_obstacle;
+      count = 0, new_obstacle, obstacle, flag_info, enemy;
     if (!map_param) {
       // Use default map base parameters
       map_param = MAP;
     }
     _this.mapUtils = new MapUtils(map_param);
     _this.map_info = map_param;
+    Object.assign(_this.map_info, _this.mapUtils.map_info);
+    _this.map_info.initial_position = _this.mapUtils.convertToLocalCoordinates(
+      _this.map_info.initial_position.x,
+      _this.map_info.initial_position.y,
+      _this.map_info.initial_position.z);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
@@ -480,9 +485,26 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
+    // Enemies
+    _this._enemy_list = [];
+    _this.map_info.enemy_list.forEach(function (geo_enemy) {
+      enemy = {};
+      Object.assign(enemy, geo_enemy);
+      enemy.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_enemy.position.x,
+        geo_enemy.position.y,
+        geo_enemy.position.z);
+      _this._enemy_list.push(enemy);
+    });
     // Obstacles
     _this._obstacle_list = [];
-    _this.map_info.obstacle_list.forEach(function (obstacle) {
+    _this.map_info.obstacle_list.forEach(function (geo_obstacle) {
+      obstacle = {};
+      Object.assign(obstacle, geo_obstacle);
+      obstacle.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_obstacle.position.x,
+        geo_obstacle.position.y,
+        geo_obstacle.position.z);
       switch (obstacle.type) {
       case "box":
         new_obstacle = BABYLON.MeshBuilder.CreateBox("obs_" + count,
@@ -534,7 +556,13 @@ var MapManager = /** @class */ (function () {
       'y': 1,
       'z': 6
     };
-    _this.map_info.flag_list.forEach(function (flag_info, index) {
+    _this.map_info.flag_list.forEach(function (geo_flag, index) {
+      flag_info = {};
+      Object.assign(flag_info, geo_flag);
+      flag_info.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_flag.position.x,
+        geo_flag.position.y,
+        geo_flag.position.z);
       flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
       flag_material.alpha = 1;
       flag_material.diffuseColor = BABYLON.Color3.Green();
@@ -544,7 +572,7 @@ var MapManager = /** @class */ (function () {
       flag_a.material = flag_material;
       flag_a.position = new BABYLON.Vector3(
         flag_info.position.x + 1,
-        FLAG_SIZE.z + 1, //swap
+        flag_info.position.z + FLAG_SIZE.z + 1, //swap
         flag_info.position.y - 1
       );
       flag_a.rotation = new BABYLON.Vector3(0, 1, 0);
@@ -554,7 +582,7 @@ var MapManager = /** @class */ (function () {
       flag_b.material = flag_material;
       flag_b.position = new BABYLON.Vector3(
         flag_info.position.x - 1,
-        FLAG_SIZE.z + 1, //swap
+        flag_info.position.z + FLAG_SIZE.z + 1, //swap
         flag_info.position.y + 1
       );
       flag_b.rotation = new BABYLON.Vector3(0, 4, 0);
@@ -562,7 +590,7 @@ var MapManager = /** @class */ (function () {
                                            { 'size': 1 }, scene);
       mast.position = new BABYLON.Vector3(
         flag_info.position.x,
-        FLAG_SIZE.z / 2, //swap
+        flag_info.position.z + FLAG_SIZE.z / 2, //swap
         flag_info.position.y
       );
       mast.scaling = new BABYLON.Vector3(
@@ -1116,7 +1144,7 @@ var GameManager = /** @class */ (function () {
       _this._mapManager = new MapManager(ctx._scene, GAMEPARAMETERS.map);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.drone.list, TEAM_USER, ctx);
-      ctx._spawnDrones(null, _this._mapManager.getMapInfo().enemy_list, TEAM_ENEMY, ctx);
+      ctx._spawnDrones(null, _this._mapManager._enemy_list, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work
@@ -1209,6 +1237,8 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         _this._canUpdate = true;
         return _this.finish_deferred.promise;
+      }, function (error) {
+        throw new Error('Error on drone initialization msg -' + error.message);
       });
   };
 
