@@ -21,7 +21,7 @@ self.document = {
   defaultView: self.window
 };
 
-importScripts('babylon.js', 'babylon.gui.js', 'rsvp.js');
+importScripts('babylon.js', 'babylon.gui.js', 'rsvp.js', './libraries/require.js');
 
 function mainToWorker(evt) {
   var i, offscreen_canvas;
