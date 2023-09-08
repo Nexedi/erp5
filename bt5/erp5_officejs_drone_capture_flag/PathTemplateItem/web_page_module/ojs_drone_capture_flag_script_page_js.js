@@ -704,34 +704,26 @@
           }),
           sub_gadget.element
         ]);
-        // XXX I didn't check this part
-        // Run the operator script here probably?
 
-/*
-          var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
-          Object.assign(operator_map, JSON_MAP);
-          delete operator_map.flag_list;
-          delete operator_map.obstacle_list;
-          delete operator_map.enemy_list;
-          delete operator_map.geo_obstacle_list;
-          delete operator_map.flag_distance_epsilon;
-*/
-/*
-          /jslint evil: true/
-          try {
-            operator_init_msg = new Function(content.operator_editor)();
-          } catch (error) {
-            operator_init_msg = {'error': error};
-          }
-          /jslint evil: false/
-          if (!operator_init_msg) operator_init_msg = {};
-*/
-        // set state.operator_init_msg ...
+        /*
+        var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
+        Object.assign(operator_map, JSON_MAP);
+        delete operator_map.flag_list;
+        delete operator_map.obstacle_list;
+        delete operator_map.enemy_list;
+        delete operator_map.geo_obstacle_list;
+        delete operator_map.flag_distance_epsilon;
+        */
 
-        // All parameters (map, operator script, ai script, game params) should
-        // be accessed from gadget.state
+        /*jslint evil: true*/
+        try {
+          gadget.state.operator_init_msg = new Function(gadget.state.operator_script)();
+        } catch (error) {
+          gadget.state.operator_init_msg = {'error': error};
+        }
+        /*jslint evil: false*/
 
-        gadget.runGame(gadget.state);
+        gadget.runGame();
       });
   }
 
@@ -750,49 +742,50 @@
       return;
     })
 
-    .declareJob('runGame', function runGame(options) {
-      if (options === undefined) {
+    .declareJob('runGame', function runGame() {
+      var gadget = this;
+      if (gadget.state === undefined) {
         // Cancel the previous job execution
         return;
       }
-      var gadget = this, i, parsed_map,
+      var i, parsed_map,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json,
         drone_list = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
-      for (i = 0; i < options.number_of_drones; i += 1) {
+      for (i = 0; i < gadget.state.number_of_drones; i += 1) {
         drone_list[i] = {"id": i, "type": "FixedWingDroneAPI",
-                         "script_content": options.drone_script};
+                         "script_content": gadget.state.drone_script};
       }
       try {
-        parsed_map = JSON.parse(options.map_json);
+        parsed_map = JSON.parse(gadget.state.map_json);
       } catch (error) {
         return gadget.notifySubmitted({message: "Error: " + error.message,
                                        status: 'error'});
       }
       game_parameters_json = {
         "drone": {
-          "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
-          "maxDeceleration": parseInt(options.drone_max_deceleration, 10),
-          "minSpeed": parseInt(options.drone_min_speed, 10),
-          "speed": parseFloat(options.drone_speed),
-          "maxSpeed": parseInt(options.drone_max_speed, 10),
-          "maxRoll": parseFloat(options.drone_max_roll),
-          "minPitchAngle": parseFloat(options.drone_min_pitch),
-          "maxPitchAngle": parseFloat(options.drone_max_pitch),
-          "maxSinkRate": parseFloat(options.drone_max_sink_rate),
-          "maxClimbRate": parseFloat(options.drone_max_climb_rate),
+          "maxAcceleration": parseInt(gadget.state.drone_max_acceleration, 10),
+          "maxDeceleration": parseInt(gadget.state.drone_max_deceleration, 10),
+          "minSpeed": parseInt(gadget.state.drone_min_speed, 10),
+          "speed": parseFloat(gadget.state.drone_speed),
+          "maxSpeed": parseInt(gadget.state.drone_max_speed, 10),
+          "maxRoll": parseFloat(gadget.state.drone_max_roll),
+          "minPitchAngle": parseFloat(gadget.state.drone_min_pitch),
+          "maxPitchAngle": parseFloat(gadget.state.drone_max_pitch),
+          "maxSinkRate": parseFloat(gadget.state.drone_max_sink_rate),
+          "maxClimbRate": parseFloat(gadget.state.drone_max_climb_rate),
           "list": drone_list
         },
-        "gameTime": parseInt(options.simulation_time, 10),
-        "simulation_speed": parseInt(options.simulation_speed, 10),
+        "gameTime": parseInt(gadget.state.simulation_time, 10),
+        "simulation_speed": parseInt(gadget.state.simulation_speed, 10),
         "latency": {
           "information": 0,
           "communication": 0
         },
         "map": parsed_map,
-        "operator_init_msg": options.operator_init_msg,
+        "operator_init_msg": gadget.state.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
@@ -1005,7 +998,7 @@
       } else if (gadget.state.display_step === DISPLAY_PLAY) {
         // Cancel the run execution, by triggering the job again
         // Out job does nothing if no parameter is passed
-        gadget.runGame(gadget.state);
+        gadget.runGame();
         // Nothing to store in the play view
         queue = new RSVP.Queue();
       } else {
