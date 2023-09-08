@@ -1,10 +1,33 @@
 /*jslint indent: 2, maxlen: 100*/
 /*global window, rJS, domsugar, document, Blob, MapUtils, RSVP*/
+
+/******************************* OPERATOR API ********************************/
+var OperatorAPI = /** @class */ (function () {
+  "use strict";
+
+  //** CONSTRUCTOR
+  function OperatorAPI(json_map) {
+    this.message = "default init message";
+    this.json_map = json_map;
+  }
+  OperatorAPI.prototype.getMapJSON = function () {
+    return this.json_map;
+  };
+  OperatorAPI.prototype.sendMsg = function (msg) {
+    this.message = msg;
+  };
+  OperatorAPI.prototype.getDroneStartMessage = function () {
+    return this.message;
+  };
+
+  return OperatorAPI;
+}());
+
 (function (window, rJS, domsugar, document, Blob, MapUtils, RSVP) {
   "use strict";
 
   //Drone default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 10,
+  var SIMULATION_SPEED = 60,
     SIMULATION_TIME = 270,
     //default square map
     MAP_HEIGHT = 700,
@@ -13,11 +36,6 @@
     MAX_LAT = 45.65,
     MIN_LON = 14.265,
     MAX_LON = 14.2766,
-    MAP_SIZE = 902,
-    MIN_X = 486.74174999999997,
-    MIN_Y = 222.28336777777778,
-    MAX_X = 486.77081444444445,
-    MAX_Y = 222.24277777777777,
     //seed
     //url_sp = new URLSearchParams(window.location.hash),
     //url_seed = url_sp.get("seed"),
@@ -25,37 +43,26 @@
     MAP = {
       "height": MAP_HEIGHT,
       "start_AMSL": START_AMSL,
-      "map_seed": SEED,
       "min_lat": MIN_LAT,
       "max_lat": MAX_LAT,
       "min_lon": MIN_LON,
       "max_lon": MAX_LON,
-      "depth": MAP_SIZE,
-      "width": MAP_SIZE,
-      "map_size": MAP_SIZE,
       "flag_list": [{"position":
-                     {"x": 44.44708935334347, "y": 116.25082261796342, "z": 10},
+                     {"x": 45.6464947316632,
+                     "y": 14.270747186236491,
+                     "z": 10},
                      "score": 1,
                      "weight": 1}],
-      "geo_flag_list": [{"position":
-                         {"x": 45.6464947316632, "y": 14.270747186236491, "z": 10},
-                         "score": 1,
-                        "weight": 1}],
       "obstacle_list": [{"type": "box",
-                         "position": {"x": 382.3647599911783, "y": 15.855758568271995, "z": 15},
+                         "position": {"x": 45.6456815316444,
+                                      "y": 14.274667031215898,
+                                      "z": 15},
                          "scale": {"x": 132, "y": 56, "z": 10},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "geo_obstacle_list": [{"type": "box",
-                             "position": {"x": 45.6456815316444, "y": 14.274667031215898, "z": 15},
-                             "scale": {"x": 132, "y": 56, "z": 10},
-                             "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": [{"id": 10000, "type": "EnemyDroneAPI",
-                      "position": {"x": 196.51511038746685, "y": 278.7072399791796, "z": 15}}],
-      "min_x": MIN_X,
-      "min_y": MIN_Y,
-      "max_x": MAX_X,
-      "max_y": MAX_Y,
-      "initial_position": {"x": 0, "y": -338.25, "z": 15}
+      "enemy_list": [{"type": "EnemyDroneAPI",
+                      "position": {"x": 45.6455531,
+                                   "y": 14.270231599999988, "z": 15}}],
+      "initial_position": {"x": 45.642813275, "y": 14.270231599999988, "z": 15}
     },
     DEFAULT_SPEED = 16,
     MAX_ACCELERATION = 6,
@@ -67,15 +74,16 @@
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    NUMBER_OF_DRONES = 10,
+    NUMBER_OF_DRONES = 5,
     // Non-inputs parameters
-    // TODO write a better example, returning parameters from map information
-    DEFAULT_OPERATOR_SCRIPT = "// write a better operator example\nreturn {flag_positions: []};",
+    EPSILON = 15,
+    DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
+      'operator.sendMsg({flag_positions: map.flag_list});\n',
     DEFAULT_SCRIPT_CONTENT =
-      'var EPSILON = 15,\n' +
+      'var EPSILON = ' + EPSILON + ',\n' +
       '  DODGE_DISTANCE = 100;\n' +
       '\n' +
-      'function distance(a, b) {\n' +
+      'function distance2D(a, b) {\n' +
       '  var R = 6371e3, // meters\n' +
       '    la1 = a.x * Math.PI / 180, // lat, lon in radians\n' +
       '    la2 = b.x * Math.PI / 180,\n' +
@@ -85,6 +93,12 @@
       '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
       '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
+      '}\n' +
+      '\n' +
+      'function distance(a, b) {\n' +
+      '  return Math.sqrt(\n' +
+      '    Math.pow(a.z - b.z, 2) + Math.pow(distance2D(a, b), 2)\n' +
+      '  );\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
@@ -184,7 +198,6 @@
     DISPLAY_DRONE_PARAMETER = 'display_drone_parameter',
     DISPLAY_GAME_PARAMETER = 'display_game_parameter',
     DISPLAY_PLAY = "display_play";
-
 
   function renderGadgetHeader(gadget, loading) {
     var element_list = [],
@@ -704,34 +717,22 @@
           }),
           sub_gadget.element
         ]);
-        // XXX I didn't check this part
-        // Run the operator script here probably?
 
-/*
-          var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
-          Object.assign(operator_map, JSON_MAP);
-          delete operator_map.flag_list;
-          delete operator_map.obstacle_list;
-          delete operator_map.enemy_list;
-          delete operator_map.geo_obstacle_list;
-          delete operator_map.flag_distance_epsilon;
-*/
-/*
-          /jslint evil: true/
-          try {
-            operator_init_msg = new Function(content.operator_editor)();
-          } catch (error) {
-            operator_init_msg = {'error': error};
-          }
-          /jslint evil: false/
-          if (!operator_init_msg) operator_init_msg = {};
-*/
-        // set state.operator_init_msg ...
+        var operator_code = "let operator = function(operator){" +
+          gadget.state.operator_script +
+          "return operator.getDroneStartMessage();" +
+          "}; return operator(new OperatorAPI(" + gadget.state.map_json + "));";
 
-        // All parameters (map, operator script, ai script, game params) should
-        // be accessed from gadget.state
+        /*jslint evil: true*/
+        try {
+          gadget.state.operator_init_msg = new Function(operator_code)();
+        } catch (error) {
+          return gadget.notifySubmitted({message: "Error in operator script: " +
+                                         error.message, status: 'error'});
+        }
+        /*jslint evil: false*/
 
-        gadget.runGame(gadget.state);
+        gadget.runGame();
       });
   }
 
@@ -750,49 +751,51 @@
       return;
     })
 
-    .declareJob('runGame', function runGame(options) {
-      if (options === undefined) {
+    .declareJob('runGame', function runGame(do_nothing) {
+      if (do_nothing) {
         // Cancel the previous job execution
         return;
       }
-      var gadget = this, i, parsed_map,
+      var gadget = this,
+        i,
+        parsed_map,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json,
         drone_list = [];
       fragment = domsugar(gadget.element.querySelector('.simulator_div'),
                               [domsugar('div')]).firstElementChild;
-      for (i = 0; i < options.number_of_drones; i += 1) {
+      for (i = 0; i < gadget.state.number_of_drones; i += 1) {
         drone_list[i] = {"id": i, "type": "FixedWingDroneAPI",
-                         "script_content": options.drone_script};
+                         "script_content": gadget.state.drone_script};
       }
       try {
-        parsed_map = JSON.parse(options.map_json);
+        parsed_map = JSON.parse(gadget.state.map_json);
       } catch (error) {
         return gadget.notifySubmitted({message: "Error: " + error.message,
                                        status: 'error'});
       }
       game_parameters_json = {
         "drone": {
-          "maxAcceleration": parseInt(options.drone_max_acceleration, 10),
-          "maxDeceleration": parseInt(options.drone_max_deceleration, 10),
-          "minSpeed": parseInt(options.drone_min_speed, 10),
-          "speed": parseFloat(options.drone_speed),
-          "maxSpeed": parseInt(options.drone_max_speed, 10),
-          "maxRoll": parseFloat(options.drone_max_roll),
-          "minPitchAngle": parseFloat(options.drone_min_pitch),
-          "maxPitchAngle": parseFloat(options.drone_max_pitch),
-          "maxSinkRate": parseFloat(options.drone_max_sink_rate),
-          "maxClimbRate": parseFloat(options.drone_max_climb_rate),
+          "maxAcceleration": parseInt(gadget.state.drone_max_acceleration, 10),
+          "maxDeceleration": parseInt(gadget.state.drone_max_deceleration, 10),
+          "minSpeed": parseInt(gadget.state.drone_min_speed, 10),
+          "speed": parseFloat(gadget.state.drone_speed),
+          "maxSpeed": parseInt(gadget.state.drone_max_speed, 10),
+          "maxRoll": parseFloat(gadget.state.drone_max_roll),
+          "minPitchAngle": parseFloat(gadget.state.drone_min_pitch),
+          "maxPitchAngle": parseFloat(gadget.state.drone_max_pitch),
+          "maxSinkRate": parseFloat(gadget.state.drone_max_sink_rate),
+          "maxClimbRate": parseFloat(gadget.state.drone_max_climb_rate),
           "list": drone_list
         },
-        "gameTime": parseInt(options.simulation_time, 10),
-        "simulation_speed": parseInt(options.simulation_speed, 10),
+        "gameTime": parseInt(gadget.state.simulation_time, 10),
+        "simulation_speed": parseInt(gadget.state.simulation_speed, 10),
         "latency": {
           "information": 0,
           "communication": 0
         },
         "map": parsed_map,
-        "operator_init_msg": options.operator_init_msg,
+        "operator_init_msg": gadget.state.operator_init_msg,
         "draw_flight_path": DRAW,
         "temp_flight_path": true,
         "log_drone_flight": LOG,
@@ -919,7 +922,7 @@
     .declareMethod('render', function render() {
       var gadget = this;
       return gadget.changeState({
-        display_step: DISPLAY_RANDOMIZE
+        display_step: DISPLAY_PLAY
       })
         .push(function () {
           return gadget.updateHeader({
@@ -989,8 +992,7 @@
            DISPLAY_MAP_PARAMETER,
            DISPLAY_GAME_PARAMETER].indexOf(gadget.state.display_step) !== -1) {
         queue = new RSVP.Queue(getContentFromParameterForm(gadget));
-      } else
-        if (gadget.state.display_step === DISPLAY_RANDOMIZE) {
+      } else if (gadget.state.display_step === DISPLAY_RANDOMIZE) {
         // Randomizing function is called, only if user entered a feed
         queue = new RSVP.Queue(getContentFromParameterForm(gadget))
           .push(function () {
@@ -1005,7 +1007,7 @@
       } else if (gadget.state.display_step === DISPLAY_PLAY) {
         // Cancel the run execution, by triggering the job again
         // Out job does nothing if no parameter is passed
-        gadget.runGame(gadget.state);
+        gadget.runGame(true);
         // Nothing to store in the play view
         queue = new RSVP.Queue();
       } else {
@@ -1082,7 +1084,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_step: DISPLAY_PLAY
+              display_step: DISPLAY_PLAY,
+              force_timestamp: new Date()
             });
           });
       }

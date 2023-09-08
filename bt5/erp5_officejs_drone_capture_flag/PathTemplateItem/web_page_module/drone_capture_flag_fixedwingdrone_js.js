@@ -431,7 +431,7 @@ var FixedWingDroneAPI = /** @class */ (function () {
         }
       }
     });
-    context._map_dict.geo_obstacle_list.forEach(function (obstacle) {
+    context._map_dict.obstacle_list.forEach(function (obstacle) {
       distance = calculateDistance(drone_position, obstacle.position, context);
       if (distance <= VIEW_SCOPE) {
         result.obstacles.push(obstacle);
