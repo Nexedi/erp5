@@ -36,6 +36,7 @@
         maxlength: options.maxlength,
         min: options.min,
         max: options.max,
+        autocomplete: options.autocomplete,
         multiple: options.multiple,
         accept: options.accept,
         capture: options.capture,
@@ -110,6 +111,10 @@
           textarea.required = true;
         } else {
           textarea.required = false;
+        }
+
+        if (this.state.autocomplete) {
+          textarea.autocomplete = this.state.autocomplete;
         }
 
         if (this.state.editable) {
