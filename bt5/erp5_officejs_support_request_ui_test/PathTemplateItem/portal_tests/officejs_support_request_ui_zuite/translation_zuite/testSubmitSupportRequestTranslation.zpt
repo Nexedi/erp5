@@ -1,0 +1,140 @@
+<html>
+
+<head>
+  <title tal:content="template/title_and_id"></title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3" tal:content="template/title_and_id"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+      <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+      <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/fr/</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertValue</td>
+        <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+        <td>Soumettre une nouvelle demande d'assistance</td>
+      </tr>
+
+      <tr>
+        <td>click</td>
+        <td>//a/input[@data-i18n="[value]Submit New Support Request"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//input[@class="dialogconfirm"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertValue</td>
+        <td>//input[@class="dialogconfirm"]</td>
+        <td>Soumettre une nouvelle demande d'assistance</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//h3[contains(@class, "ui-content-title")]</td>
+        <td>Soumettre une nouvelle demande d'assistance</td>
+      </tr>
+      <tr>
+        <td>setFile</td>
+        <td>field_your_file</td>
+        <td>portal_skins/erp5_officejs_support_request_test/test_support_request_text.pdf test_support_request_text.pdf
+        </td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td>field_your_title</td>
+        <td>à l'aide !</td>
+      </tr>
+      <tr>
+        <td>assertSelected</td>
+        <td>field_your_project</td>
+        <td>RobotMaking</td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//select[@name="field_your_resource"]/option[text()="FeatureRequire"]</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>field_your_resource</td>
+        <td>FeatureRequire</td>
+      </tr>
+
+      <tal:block tal:define="text_content string:Le message">
+        <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content" />
+      </tal:block>
+
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+      <!-- XXX this is here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification but with a trick to escape the message that already contain a ' which needs to be escaped -->
+      <tal:block>
+        <tr>
+          <td colspan="3"><b>Wait for the notification message</b></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and
+            text()="Nouvelle demande d'assistance créée."]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//div[@data-gadget-scope='notification' and @class='visible']//button[@class='success' and
+            text()="Nouvelle demande d'assistance créée."]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <p></p>
+          </td>
+        </tr>
+      </tal:block>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+      <tr>
+        <td>waitForText</td>
+        <td>//ol[@id="post_list"]//li[1]//p</td>
+        <td>Le message</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//ol[@id="post_list"]//li[1]</td>
+        <td>regex:Par .*-.*il y a quelques secondes.*</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//ol[@id="post_list"]//li[1]/strong[2]</td>
+        <td>Pièce jointe:</td>
+      </tr>
+      <tr>
+        <td>assertText</td>
+        <td>//p[@data-i18n="Comments:"]</td>
+        <td>Commentaires:</td>
+      </tr>
+
+    </tbody>
+  </table>
+</body>
+
+</html>

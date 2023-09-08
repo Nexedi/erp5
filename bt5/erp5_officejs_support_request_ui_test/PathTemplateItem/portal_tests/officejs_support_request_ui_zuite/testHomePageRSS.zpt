@@ -26,17 +26,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Support Requests"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//a[@data-i18n="Support Requests"]</td>
+  <td>//a[contains(@class, "ui-icon-life-ring") and text() = "Support Requests"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n="Support Requests"]</td>
+  <td>//a[contains(@class, "ui-icon-life-ring") and text() = "Support Requests"]</td>
   <td></td>
 </tr>
 <tr>

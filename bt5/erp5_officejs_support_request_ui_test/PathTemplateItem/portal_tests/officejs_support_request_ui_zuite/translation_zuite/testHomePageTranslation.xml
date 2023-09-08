@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testHomePageListboxTranslation</string> </value>
+            <value> <string>testHomePageTranslation</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Home Page Listbox Translation</unicode> </value>
+            <value> <unicode>Home Page Translation</unicode> </value>
         </item>
       </dictionary>
     </pickle>

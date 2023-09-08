@@ -56,12 +56,7 @@
 
 <tr>
   <td>waitForText</td>
-  <td>//ol[@id="post_list"]//li[1]/p</td>
-  <td>Post test 1</td>
-</tr>
-<tr>
-  <td>waitForText</td>
-  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>//ol[@id="post_list"]//li[1]//p</td>
   <td>Post test 1</td>
 </tr>
 <tr>
@@ -115,12 +110,12 @@ displayed
 </tr>
 <tr>
   <td>waitForText</td>
-  <td>//ol[@id="post_list"]//li[2]/p</td>
+  <td>//ol[@id="post_list"]//li[2]//p</td>
   <td>Post test 2</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>//ol[@id="post_list"]//li[1]//p</td>
   <td>Post test 1</td>
 </tr>
 <tr>
@@ -171,17 +166,17 @@ post ingested when submitting a new support request.
 </tr>
 <tr>
   <td>waitForText</td>
-  <td>//ol[@id="post_list"]//li[3]/p</td>
+  <td>//ol[@id="post_list"]//li[3]//p</td>
   <td>Post test 3</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>//ol[@id="post_list"]//li[1]//p</td>
   <td>Post test 1</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//ol[@id="post_list"]//li[2]/p</td>
+  <td>//ol[@id="post_list"]//li[2]//p</td>
   <td>Post test 2</td>
 </tr>
 
@@ -252,7 +247,7 @@ and check that the relative time was updated.
 </tr>
 <tr>
   <td>waitForText</td>
-  <td>//ol[@id="post_list"]//li[3]/p</td>
+  <td>//ol[@id="post_list"]//li[3]//p</td>
   <td>Post test 4</td>
 </tr>
 </tbody></table>

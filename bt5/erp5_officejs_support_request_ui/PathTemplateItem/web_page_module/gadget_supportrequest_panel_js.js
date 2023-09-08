@@ -1,90 +1,156 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, document, rJS, Handlebars, RSVP, Node */
-(function (window, document, rJS, Handlebars, RSVP, Node, loopEventListener) {
+/*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray,
+         mergeGlobalActionWithRawActionList, domsugar*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+           mergeGlobalActionWithRawActionList, domsugar) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // temlates
-  /////////////////////////////////////////////////////////////////
-  // Precompile templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    template_element = gadget_klass.__template_element,
-    panel_template_header = Handlebars.compile(template_element
-                         .getElementById("panel-template-header")
-                         .innerHTML),
-    panel_template_body = Handlebars.compile(template_element
-                         .getElementById("panel-template-body")
-                         .innerHTML),
-    panel_template_body_desktop = Handlebars.compile(template_element
-                                  .getElementById("panel-template-body-desktop")
-                                  .innerHTML);
+/**
+ *  This gadget is same as web_page_module/rjs_gadget_erp5_panel_js with the following differences:
+ *    - only Home, Support Requests, Preferences and Logout actions ( no "Modules", "Worklists", "History", ... )
+ *    - no [ ] editable checkbox
+ *    - object actions does not show "Actions" and "Workflows" is named "Decision"
+ *    - search only search support requests
+ */
 
-  gadget_klass
+  function appendDt(fragment, dt_title, dt_icon,
+                    action_list, href_list, index) {
+// <dt class="ui-btn-icon-left ui-icon-eye">Views</dt>
+// {{#each view_list}}
+// <dd class="document-listview">
+//   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
+// </dd>
+// {{/each}}
+    //////////////////////
+    var element_list = [
+      domsugar('dt', {
+        text: dt_title,
+        'class': 'ui-btn-icon-left ui-icon-' + dt_icon
+      })
+    ],
+      i;
+    for (i = 0; i < action_list.length; i += 1) {
+      element_list.push(domsugar('dd', {'class': 'document-listview'}, [
+        domsugar('a', {
+          href: href_list[index + i],
+          text: action_list[i].title,
+          'class': action_list[i].class_name || null
+        })
+      ]));
+    }
+    fragment.appendChild(domsugar(null, element_list));
+  }
+
+  rJS(window)
     .setState({
-      visible: false,
-      desktop: false
+      visible: false
     })
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("getTranslationDict", "getTranslationDict")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('toggle', function () {
+    .declareMethod('toggle', function toggle() {
       return this.changeState({
         visible: !this.state.visible
       });
     })
-    .declareMethod('close', function () {
+    .declareMethod('close', function close() {
       return this.changeState({
         visible: false
       });
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var erp5_document = options.erp5_document,
+        jio_key = options.jio_key,
+        view = options.view,
+        jump_view = options.jump_view,
+        visible = options.visible,
+        extra_menu_list = options.extra_menu_list,
+        display_workflow_list,
+        context = this,
+        workflow_list,
+        group_mapping,
+        view_list,
+    //    action_list,
+    //    clone_list,
+        jump_list;
+
+      if (visible === undefined) {
+        visible = context.state.visible;
+      }
+
+      if (options.display_workflow_list === undefined) {
+        display_workflow_list = true;
+      } else {
+        display_workflow_list = asBoolean(options.display_workflow_list);
+      }
+
+      if ((erp5_document !== undefined) && (jio_key !== undefined)) {
+        group_mapping = mergeGlobalActionWithRawActionList(jio_key,
+          view, jump_view,
+          erp5_document._links, [
+            "action_workflow",
+            "action_object_view", [
+              "action_object_jio_action",
+              "action_object_jio_button",
+              "action_object_jio_fast_input"
+            ],
+            "action_object_clone_action",
+            "action_object_jio_jump"
+          ], {
+            "action_object_jio_action": "display_dialog_with_history",
+            "action_object_clone_action": "display_dialog_with_history"
+          }, {
+            "action_object_clone_action": true
+          });
+
+        workflow_list = JSON.stringify(group_mapping.action_workflow);
+        view_list = JSON.stringify(group_mapping.action_object_view);
+//        action_list = JSON.stringify(group_mapping.action_object_jio_action);
+//        clone_list = JSON.stringify(group_mapping.action_object_clone_action);
+        jump_list = JSON.stringify(group_mapping.action_object_jio_jump);
+      }
+
+      if (extra_menu_list !== undefined) {
+        extra_menu_list = JSON.stringify(extra_menu_list);
+      }
+
+      return context.getUrlParameter('editable')
+        .push(function (editable) {
+          return context.changeState({
+            visible: visible,
+            display_workflow_list: display_workflow_list,
+            workflow_list: workflow_list,
+            view_list: view_list,
+    //        action_list: action_list,
+    //        clone_list: clone_list,
+            jump_list: jump_list,
+            global: true,
+            jio_key: jio_key,
+            view: view,
+            jump_view: jump_view,
+            editable: false, // asBoolean(options.editable) || asBoolean(editable) || false,
+            extra_menu_list: extra_menu_list
+          });
+        });
+    })
+    .onStateChange(function onStateChange(modification_dict) {
+      var i,
+        gadget = this,
         workflow_list,
         view_list,
-        jump_list;
-      if (erp5_document !== undefined) {
-        workflow_list = erp5_document._links.action_workflow || [];
-        view_list = erp5_document._links.action_object_view || [];
-        jump_list = erp5_document._links.action_object_jio_jump || [];
-        if (workflow_list.constructor !== Array) {
-          workflow_list = [workflow_list];
-        }
-        if (view_list.constructor !== Array) {
-          view_list = [view_list];
-        }
-        if (jump_list.constructor !== Array) {
-          jump_list = [jump_list];
-        }
-        // Prevent as much as possible to modify the DOM panel
-        // stateChange prefer to compare strings
-        workflow_list = JSON.stringify(workflow_list);
-        view_list = JSON.stringify(view_list);
-        jump_list = JSON.stringify(jump_list);
-      }
-      return this.changeState({
-        workflow_list: workflow_list,
-        view_list: view_list,
-        jump_list: jump_list,
-        global: true,
-        editable: options.editable
-      });
-    })
-
-    .onStateChange(function (modification_dict) {
-      var context = this,
-        gadget = this,
-        queue = new RSVP.Queue(),
-        tmp_element;
+        jump_list,
+        dl_fragment,
+        queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
         if (this.state.visible) {
@@ -101,212 +167,210 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "supportrequest_preference"}}),
-              context.getUrlFor({command: 'display', options: {page: "logout"}}),
-              context.getUrlFor({command: 'display_stored_state', options: {jio_key: "support_request_module"}})
-            ]);
-          })
-          .push(function (result_list) {
-            // XXX: Customize panel header!
-            return context.translateHtml(
-              panel_template_header() +
-                panel_template_body({
-                  "preference_href": result_list[0],
-                  "logout_href": result_list[1],
-                  "supportrequest_href": result_list[2]
-                })
-            );
-          })
-          .push(function (my_translated_or_plain_html) {
-            tmp_element = document.createElement('div');
-            tmp_element.innerHTML = my_translated_or_plain_html;
-            return context.declareGadget('gadget_erp5_searchfield.html', {
-              scope: "erp5_searchfield",
-              element: tmp_element.querySelector('[data-gadget-scope="erp5_searchfield"]')
-            });
+            return gadget.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
             return search_gadget.render({
-              focus: false
+              focus: false,
+              extended_search: ''
+            });
+          });
+      }
+
+      if (modification_dict.hasOwnProperty("editable")) {
+        queue
+          // Update the global links
+          .push(function () {
+            return RSVP.hash({
+              url_list: gadget.getUrlForList([
+                {command: 'display'},
+                {command: 'display', options: {jio_key: "support_request_module"}},
+                {command: 'display', options: {page: "supportrequest_preference"}},
+                {command: 'display', options: {page: "logout"}}
+              ]),
+              translation_list: gadget.getTranslationList([
+                'Home',
+                'Support Requests',
+                'Preferences',
+                'Logout'
+              ])
             });
           })
-          .push(function () {
-            context.element.querySelector("div").appendChild(tmp_element);
-            return context.listenResize();
+          .push(function (result_dict) {
+            var element_list = [],
+              icon_and_key_list = [
+                'home', null,
+                'life-ring', null,
+                'sliders', null,
+                'power-off', 'o'
+              ];
+
+            for (i = 0; i < result_dict.url_list.length; i += 1) {
+              // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
+              element_list.push(domsugar('li', [
+                domsugar('a', {
+                  href: result_dict.url_list[i],
+                  'class': 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i],
+                  accesskey: icon_and_key_list[2 * i],
+                  text: result_dict.translation_list[i]
+                })
+              ]));
+            }
+            domsugar(gadget.element.querySelector("ul"),
+                     [domsugar(null, element_list)]);
           });
       }
 
       if ((this.state.global === true) &&
-          (modification_dict.hasOwnProperty("desktop") ||
-          modification_dict.hasOwnProperty("editable") ||
+          (modification_dict.hasOwnProperty("editable") ||
+          modification_dict.hasOwnProperty("view") ||
+          modification_dict.hasOwnProperty("jump_view") ||
           modification_dict.hasOwnProperty("workflow_list") ||
+          modification_dict.hasOwnProperty("jump_list") ||
+          modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list") ||
-          modification_dict.hasOwnProperty("jump_list"))) {
-        if (!(this.state.desktop && (this.state.view_list !== undefined))) {
-          queue
-            .push(function () {
-              gadget.element.querySelector("dl").textContent = '';
-            });
-        } else {
-          queue
-            .push(function () {
-              var i = 0,
-                promise_list = [],
-                workflow_list = JSON.parse(gadget.state.workflow_list),
-                view_list = JSON.parse(gadget.state.view_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
+          modification_dict.hasOwnProperty("extra_menu_list"))) {
 
-              for (i = 0; i < workflow_list.length; i += 1) {
-                promise_list.push(
-                  gadget.getUrlFor({
-                    command: 'change',
-                    options: {
-                      view: workflow_list[i].href,
-                      page: undefined
-                    }
-                  })
-                );
-              }
-              for (i = 0; i < view_list.length; i += 1) {
-                promise_list.push(
-                  gadget.getUrlFor({
-                    command: 'change',
-                    options: {
-                      view: view_list[i].href,
-                      page: undefined
-                    }
-                  })
-                );
-              }
-              for (i = 0; i < jump_list.length; i += 1) {
-                promise_list.push(
-                  gadget.getUrlFor({
-                    command: 'change',
-                    options: {
-                      view: jump_list[i].href,
-                      page: undefined
-                    }
-                  })
-                );
-              }
-              return RSVP.all(promise_list);
+        dl_fragment = document.createDocumentFragment();
+        gadget.element.querySelector("dl").textContent = '';
+        if (this.state.view_list !== undefined) {
+          queue
+            .push(function () {
+              var parameter_list = [];
+
+              view_list = JSON.parse(gadget.state.view_list);
+              jump_list = JSON.parse(gadget.state.jump_list);
+              workflow_list = JSON.parse(gadget.state.workflow_list);
+
+              parameter_list = view_list
+                .concat(workflow_list)
+                .concat(jump_list)
+                .map(function (options) {
+                  return options.url_kw;
+                });
+              return RSVP.hash({
+                url_list: gadget.getUrlForList(parameter_list),
+                translation_dict: gadget.getTranslationDict([
+                  'Views', 'Decisions', 'Jumps'
+                ])
+              });
             })
-            .push(function (result_list) {
-              var i,
-                result_workflow_list = [],
-                result_view_list = [],
-                result_jump_list = [],
-                workflow_list = JSON.parse(gadget.state.workflow_list),
-                view_list = JSON.parse(gadget.state.view_list),
-                jump_list = JSON.parse(gadget.state.jump_list);
-              for (i = 0; i < workflow_list.length; i += 1) {
-                result_workflow_list.push({
-                  title: workflow_list[i].title,
-                  href: result_list[i]
-                });
+            .push(function (result_dict) {
+              appendDt(dl_fragment, result_dict.translation_dict.Views, 'eye',
+                       view_list, result_dict.url_list, 0);
+              if (gadget.state.display_workflow_list) {
+                // show Workflows only on document
+                appendDt(dl_fragment, result_dict.translation_dict.Decisions, 'cogs',
+                  workflow_list, result_dict.url_list, view_list.length);
               }
-              for (i = 0; i < view_list.length; i += 1) {
-                result_view_list.push({
-                  title: view_list[i].title,
-                  href: result_list[i + workflow_list.length]
-                });
+              appendDt(dl_fragment, result_dict.translation_dict.Jumps, 'plane',
+                       jump_list, result_dict.url_list,
+                       view_list.length + workflow_list.length);
+            });
+        }
+        if (gadget.state.hasOwnProperty("extra_menu_list") &&
+            gadget.state.extra_menu_list) {
+          queue
+            .push(function () {
+              return gadget.getTranslationList(['Global']);
+            })
+            .push(function (translation_list) {
+              var extra_menu_list = JSON.parse(gadget.state.extra_menu_list),
+                href_list = [];
+              for (i = 0; i < extra_menu_list.length; i += 1) {
+                href_list.push(extra_menu_list[i].href);
+                extra_menu_list[i] = {
+                  "class_name": extra_menu_list[i].active ? "active" : "",
+                  "title": extra_menu_list[i].title
+                };
               }
-              for (i = 0; i < jump_list.length; i += 1) {
-                result_jump_list.push({
-                  title: jump_list[i].title,
-                  href: result_list[i + workflow_list.length + view_list.length]
-                });
-              }
-              return gadget.translateHtml(
-                panel_template_body_desktop({
-                  workflow_list: result_workflow_list,
-                  view_list: result_view_list,
-                  jump_list: result_jump_list
-                })
-              ).push(function (my_translated_or_plain_html) {
-                gadget.element.querySelector("dl").innerHTML = my_translated_or_plain_html;
-              })
+              appendDt(dl_fragment, translation_list[0], 'globe',
+                       extra_menu_list, href_list, 0);
             });
         }
       }
-
+      queue
+        .push(function () {
+          if (dl_fragment) {
+            domsugar(gadget.element.querySelector("dl"), [dl_fragment]);
+          }
+        });
       return queue;
     })
 
     /////////////////////////////////////////////////////////////////
     // declared services
     /////////////////////////////////////////////////////////////////
-    .onEvent('click', function (evt) {
+    .onEvent('click', function click(evt) {
       if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
           (evt.target.tagName === 'BUTTON')) {
         return this.toggle();
       }
     }, false, false)
 
-    .declareJob('listenResize', function () {
-      // resize should be only trigger after the render method
-      // as displaying the panel rely on external gadget (for translation for example)
-      var result,
-        event,
-        context = this;
-      function extractSizeAndDispatch() {
-        if (window.matchMedia("(min-width: 90em)").matches) {
-          return context.changeState({
-            desktop: true
-          });
-        }
-        return context.changeState({
-          desktop: false
-        });
-      }
-      result = loopEventListener(window, 'resize', false,
-                                 extractSizeAndDispatch);
-      event = document.createEvent("Event");
-      event.initEvent('resize', true, true);
-      window.dispatchEvent(event);
-      return result;
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when focus
+      // is triggered. This is usefull to display error text.
+      // But, in the case of panel, we don't need to handle anything.
+      return;
+    })
+    .allowPublicAcquisition("notifyBlur", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when blur
+      // is triggered now. This is usefull to display error text.
+      // But, in the case of panel, we don't need to handle anything.
+      return;
     })
 
-    .allowPublicAcquisition('notifyChange', function () {
+    .allowPublicAcquisition('notifyChange', function notifyChange() {
+      // Typing a search query should not modify the header status
+      return;
+    }, {mutex: 'changestate'})
+    .allowPublicAcquisition('notifyValid', function notifyValid() {
       // Typing a search query should not modify the header status
       return;
     })
-    .onEvent('submit', function () {
-      var gadget = this;
 
-      return gadget.getDeclaredGadget("erp5_searchfield")
-        .push(function (search_gadget) {
+    .onEvent('submit', function submit() {
+      var gadget = this,
+        search_gadget,
+        redirect_options = {
+          page: "search"
+        };
+
+      return gadget
+        .getDeclaredGadget("erp5_searchfield")
+        .push(function (declared_gadget) {
+          search_gadget = declared_gadget;
           return search_gadget.getContent();
         })
         .push(function (data) {
-          var options = {
-            page: "search"
-          };
+
           if (data.search) {
-            options.extended_search = '(' + data.search + ' AND portal_type: "Support Request")';
+            redirect_options.extended_search =  '(' + data.search + ' AND portal_type: "Support Request")';
           } else {
-            options.extended_search = '( portal_type: "Support Request")';
+            redirect_options.extended_search = '( portal_type: "Support Request")';
           }
-          // Remove focus from the search field
-          document.activeElement.blur();
-          return gadget.redirect({command: 'display', options: options});
+          // let the search gadget know its current state (value and focus)
+          // in order to be able to zero it out in the next Promise
+          // input gadget's state does not reflect immediate reality
+          // so we need to manage its state from the parent
+          return search_gadget.render({
+            extended_search: data.search,
+            focus: true
+          });
+        })
+        .push(function () {
+          // we want the search field in side panel to be empty and blured
+          return search_gadget.render({
+            extended_search: '',
+            focus: false  // we don't want focus on the empty field for sure
+          });
+        })
+        .push(function () {
+          return gadget.redirect({command: 'store_and_display', options: redirect_options}, true);
         });
 
-    }, false, true)
-    .onEvent('click', function (evt) {
-      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
-          (evt.target.tagName === 'BUTTON')) {
-        return this.toggle();
-      }
-    }, false, false)
-    .onEvent('blur', function (evt) {
-      // XXX Horrible hack to clear the search when focus is lost
-      // This does not follow renderJS design, as a gadget should not touch
-      // another gadget content
-      if (evt.target.type === 'search') {
-        evt.target.value = "";
-      }
-    }, true, false);
+    }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, Handlebars, RSVP, Node, rJS.loopEventListener));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray,
+  mergeGlobalActionWithRawActionList, domsugar));

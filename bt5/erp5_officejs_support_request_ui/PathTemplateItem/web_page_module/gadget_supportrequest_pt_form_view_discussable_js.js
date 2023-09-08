@@ -1,17 +1,81 @@
-/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment, Handlebars */
+/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, moment, Handlebars) {
+(function (window, rJS, RSVP, calculatePageTitle, moment) {
   "use strict";
-  var gadget_klass = rJS(window),
-    comment_list_template = Handlebars.compile(
-      gadget_klass.__template_element.getElementById("template-document-list").innerHTML
-    );
 
-  gadget_klass
+  /**
+   * french locale for momentjs, copied from https://momentjs.com/docs/
+   */
+  moment.locale('fr', {
+      months : 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
+      monthsShort : 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split('_'),
+      monthsParseExact : true,
+      weekdays : 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
+      weekdaysShort : 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
+      weekdaysMin : 'Di_Lu_Ma_Me_Je_Ve_Sa'.split('_'),
+      weekdaysParseExact : true,
+      longDateFormat : {
+          LT : 'HH:mm',
+          LTS : 'HH:mm:ss',
+          L : 'DD/MM/YYYY',
+          LL : 'D MMMM YYYY',
+          LLL : 'D MMMM YYYY HH:mm',
+          LLLL : 'dddd D MMMM YYYY HH:mm'
+      },
+      calendar : {
+          sameDay : '[Aujourd’hui à] LT',
+          nextDay : '[Demain à] LT',
+          nextWeek : 'dddd [à] LT',
+          lastDay : '[Hier à] LT',
+          lastWeek : 'dddd [dernier à] LT',
+          sameElse : 'L'
+      },
+      relativeTime : {
+          future : 'dans %s',
+          past : 'il y a %s',
+          s : 'quelques secondes',
+          m : 'une minute',
+          mm : '%d minutes',
+          h : 'une heure',
+          hh : '%d heures',
+          d : 'un jour',
+          dd : '%d jours',
+          M : 'un mois',
+          MM : '%d mois',
+          y : 'un an',
+          yy : '%d ans'
+      },
+      dayOfMonthOrdinalParse : /\d{1,2}(er|e)/,
+      ordinal : function (number) {
+          return number + (number === 1 ? 'er' : 'e');
+      },
+      meridiemParse : /PD|MD/,
+      isPM : function (input) {
+          return input.charAt(0) === 'M';
+      },
+      // In case the meridiem units are not separated around 12, then implement
+      // this function (look at locale/id.js for an example).
+      // meridiemHour : function (hour, meridiem) {
+      //     return /* 0-23 hour, given meridiem token and hour 1-12 */ ;
+      // },
+      meridiem : function (hours, minutes, isLower) {
+          return hours < 12 ? 'PD' : 'MD';
+      },
+      week : {
+          dow : 1, // Monday is the first day of the week.
+          doy : 4  // Used to determine first week of the year.
+      }
+  });
+
+
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
@@ -125,7 +189,19 @@
                     maximize: true
                   })]);
               }
-            ).push(function () {
+            )
+            .push(function() {
+              return gadget.getTranslationList([
+                "Comments:",
+                "Post Comment",
+                "Post Comment",
+              ]).push(function(translation_list) {
+                gadget.element.querySelector("[data-i18n='Comments:']").innerText = translation_list[0];
+                gadget.element.querySelector("[data-i18n='Post Comment']").innerText = "\u00A0" + translation_list[1];
+                gadget.element.querySelector("[data-i18n='[value]Post Comment']").value = translation_list[2];
+              });
+            })
+            .push(function () {
               // make our submit button editable
               var element = gadget.element.querySelector('input[type="submit"]');
               element.removeAttribute('disabled');
@@ -169,35 +245,93 @@
           });
         })
         .push(function () {
-          return gadget.jio_getAttachment(
-            'post_module',
-            gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
-          );
+          return RSVP.all([
+            gadget.jio_getAttachment(
+              'post_module',
+              gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
+            ),
+            gadget.getTranslationList(["By", "Attachment:",])
+          ]);
         })
-        .push(function (post_list) {
-          function getPostWithLinkAndLocalDate(post) {
-            post.date_formatted = moment(post.date).format('LLLL');
-            post.date_relative = moment(post.date).fromNow();
-            if (post.attachment_link === null) {
-              return post;
-            }
-            return gadget.getDocumentUrl(post.attachment_link).push(
-              function (attachment_link) {
-                post.attachment_link = attachment_link;
+        .push(
+          function (post_list_and_translation_list) {
+            var post_list = post_list_and_translation_list[0],
+              translationBy = post_list_and_translation_list[1][0],
+              translationAttachment = post_list_and_translation_list[1][1];
+            function getPostWithLinkAndLocalDate(post) {
+              post.date_formatted = moment(post.date).format('LLLL');
+              post.date_relative = moment(post.date).fromNow();
+              if (post.attachment_link === null) {
                 return post;
               }
-            );
-          }
-          // build links with attachments and localized dates
-          var queue_list = [], i = 0;
-          for (i = 0; i < post_list.length; i += 1) {
-            queue_list.push(getPostWithLinkAndLocalDate(post_list[i]));
-          }
-          return RSVP.all(queue_list);
+              return gadget.getDocumentUrl(post.attachment_link).push(
+                function (attachment_link) {
+                  post.attachment_link = attachment_link;
+                  return post;
+                }
+              );
+            }
+
+          return RSVP.all(post_list.map(getPostWithLinkAndLocalDate))
+            .then(function(post_list){
+              function getPostDomList(post) {
+                var dom_list = [
+                  translationBy + " ", // XXX translations can not have leading space ?
+                  domsugar("strong", [post.user]),
+                  " - ",
+                  domsugar("time", {
+                    datetime: post.date,
+                    title: post.date_formatted
+                  },
+                    [post.date_relative]
+                  ),
+                  domsugar("br"),
+                  // the post content is set as an attribute for now, we'll use a 
+                  // gadget_html_viewer to render each post
+                  domsugar("div", {
+                    'data-gadget-html-viewer-value': post.text,
+                  })
+                ];
+                if (post.attachment_link) {
+                  dom_list.push(domsugar("br"))
+                  dom_list.push(domsugar("strong", [translationAttachment]))
+                  dom_list.push(domsugar("a", { href: post.attachment_link }, [post.attachment_name]))
+                }
+                return [
+                  domsugar("li", dom_list),
+                  domsugar("hr", { id: "post_item" })
+                ];
+              }
+              return post_list.map(getPostDomList)
+            });
         })
-        .push(function (comment_list) {
-          var comments = gadget.element.querySelector("#post_list");
-          comments.innerHTML = comment_list_template({comments: comment_list});
+        .push(function(dom_list) {
+          return gadget.getElement()
+            .push(function (element) {
+              var all_dom_list = [], gadget_list = [], element_list, i, element;
+              // add to DOM all the posts, with data-gadget-html-viewer-value attribute
+              for (var i = 0; i < dom_list.length; i += 1) {
+                all_dom_list = all_dom_list.concat(dom_list[i]);
+              }
+              domsugar(element.querySelector("#post_list"), all_dom_list);
+
+              // make gadget html viewer for each post
+              element_list = element.querySelector("#post_list").querySelectorAll('[data-gadget-html-viewer-value]');
+              for (i = 0; i < element_list.length; i += 1) {
+                gadget_list.push(
+                  gadget.declareGadget("gadget_html_viewer.html", {
+                    element: element_list[i],
+                    scope: "html_viewer",
+                    sandbox: "public"
+                  })
+                    .push(function (g) {
+                      return g.render({ value: g.element.getAttribute("data-gadget-html-viewer-value") });
+                    })
+                );
+              }
+
+              return RSVP.all(gadget_list);
+            });
         });
     })
     .declareJob('submitPostComment', function () {
@@ -209,9 +343,12 @@
         .push(function (e) {
           return e.getContent();
         })
-        .push(function (content) {
+        .push(function (content) {
           if (content.comment === '') {
-            return gadget.notifySubmitted({message: "Post content can not be empty!"});
+            return gadget.translate("Post content can not be empty!")
+                .push(function (translated_message) {
+                  return gadget.notifySubmitted({message: translated_message});
+                })
           }
 
           submitButton = gadget.element.querySelector("input[type=submit]");
@@ -222,7 +359,10 @@
             submitButton.disabled = false;
             submitButton.classList.remove("ui-disabled");
           }
-          queue = gadget.notifySubmitted({message: "Posting comment"})
+          queue = gadget.translate("Posting comment").
+            push(function (message_posting_comment) {
+              return gadget.notifySubmitted({message: message_posting_comment})
+            })
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
                 file_blob = choose_file_html_element.files[0],
@@ -250,8 +390,12 @@
               });
             })
             .push(function () {
-              return new RSVP.Queue().push(function () {
-                gadget.notifySubmitted({message: "Comment added", status: "success"});
+              return new RSVP.Queue().push(
+                function(){
+                  return gadget.translate("Comment added")
+                }
+              ).push(function (message_comment_added) {
+                gadget.notifySubmitted({message: message_comment_added, status: "success"});
               }).push(function () {
                 return gadget.redirect({command: 'reload'});
               });
@@ -273,4 +417,4 @@
     .onEvent('submit', function () {
       return this.submitPostComment();
     });
-}(window, rJS, RSVP, calculatePageTitle, moment, Handlebars));
+}(window, rJS, RSVP, calculatePageTitle, moment));
