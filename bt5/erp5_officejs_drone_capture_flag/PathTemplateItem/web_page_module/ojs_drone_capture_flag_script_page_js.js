@@ -174,6 +174,7 @@
     LOG_TIME = 1662.7915426540285,
     LOGIC_FILE_LIST = [
       'gadget_erp5_page_drone_capture_flag_logic.js',
+      'gadget_erp5_page_drone_capture_map_utils.js',
       'gadget_erp5_page_drone_capture_flag_fixedwingdrone.js',
       'gadget_erp5_page_drone_capture_flag_enemydrone.js'
     ],
@@ -184,12 +185,6 @@
     DISPLAY_GAME_PARAMETER = 'display_game_parameter',
     DISPLAY_PLAY = "display_play";
 
-  // XXX load some stuff with require?
-  /*
-  require(['gadget_erp5_page_drone_capture_flag_logic.js'], function () {
-    return;
-  });
-  */
 
   function renderGadgetHeader(gadget, loading) {
     var element_list = [],
@@ -1001,10 +996,7 @@
           .push(function () {
             if (gadget.state.map_seed) {
               gadget.state.map_json = JSON.stringify(
-                //TODO refactor MapUtils into a separated logic file
-                new MapUtils({
-                  map_seed: gadget.state.map_seed
-                }).randomize(),
+                new MapUtils(MAP).randomize(gadget.state.map_seed),
                 undefined,
                 4
               );
@@ -1101,4 +1093,4 @@
 
 
 
-}(window, rJS, domsugar, document, Blob, null/*TODO*/, RSVP));
+}(window, rJS, domsugar, document, Blob, MapUtils, RSVP));
