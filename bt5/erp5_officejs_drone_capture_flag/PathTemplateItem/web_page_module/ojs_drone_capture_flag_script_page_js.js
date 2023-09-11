@@ -94,8 +94,8 @@ var OperatorAPI = /** @class */ (function () {
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 10,
     // Non-inputs parameters
-    // TODO write a better example, returning parameters from map information
-    DEFAULT_OPERATOR_SCRIPT = "// write a better operator example\nreturn {flag_positions: []};",
+    DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
+      'operator.storeDroneStartMsg({flag_positions: map.geo_flag_list});\n',
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
       '  DODGE_DISTANCE = 100;\n' +
