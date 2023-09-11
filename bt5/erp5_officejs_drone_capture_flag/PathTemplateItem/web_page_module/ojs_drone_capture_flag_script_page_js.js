@@ -733,7 +733,7 @@ var OperatorAPI = /** @class */ (function () {
         var operator_code = "let operator = function(operator){" +
           gadget.state.operator_script +
           "return operator.getDroneStartMessage();" +
-          "}; operator(new OperatorAPI(" + gadget.state.map_json + "));";
+          "}; return operator(new OperatorAPI(" + gadget.state.map_json + "));";
 
         /*jslint evil: true*/
         try {
