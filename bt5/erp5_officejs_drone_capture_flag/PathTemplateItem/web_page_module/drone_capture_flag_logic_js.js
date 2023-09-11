@@ -1209,6 +1209,8 @@ var GameManager = /** @class */ (function () {
       .push(function () {
         _this._canUpdate = true;
         return _this.finish_deferred.promise;
+      }, function (error) {
+        throw new Error('Error on drone initialization msg -' + error.message);
       });
   };
 
