@@ -1,3 +1,28 @@
+
+/******************************* OPERATOR API ********************************/
+var OperatorAPI = /** @class */ (function () {
+  "use strict";
+
+  //** CONSTRUCTOR
+  function OperatorAPI(json_map) {
+    this.message = "default init message";
+    this.json_map = json_map;
+  }
+  OperatorAPI.prototype.getMapJSON = function () {
+    return this.json_map;
+  };
+  OperatorAPI.prototype.storeDroneStartMsg = function (msg) {
+    console.log("API storeDroneStartMsg. msg:", msg);
+    this.message = msg;
+  };
+  OperatorAPI.prototype.getDroneStartMessage = function () {
+    console.log("API getDroneStartMessage. this.message:", this.message);
+    return this.message;
+  };
+
+  return OperatorAPI;
+}());
+
 /*jslint indent: 2, maxlen: 100*/
 /*global window, rJS, domsugar, document, Blob, MapUtils, RSVP*/
 (function (window, rJS, domsugar, document, Blob, MapUtils, RSVP) {
@@ -705,19 +730,14 @@
           sub_gadget.element
         ]);
 
-        /*
-        var operator_map = {}, DEFAULT_OPERATOR_SCRIPT_CONTENT;
-        Object.assign(operator_map, JSON_MAP);
-        delete operator_map.flag_list;
-        delete operator_map.obstacle_list;
-        delete operator_map.enemy_list;
-        delete operator_map.geo_obstacle_list;
-        delete operator_map.flag_distance_epsilon;
-        */
+        var operator_code = "let operator = function(operator){" +
+          gadget.state.operator_script +
+          "return operator.getDroneStartMessage();" +
+          "}; operator(new OperatorAPI(" + gadget.state.map_json + "));";
 
         /*jslint evil: true*/
         try {
-          gadget.state.operator_init_msg = new Function(gadget.state.operator_script)();
+          gadget.state.operator_init_msg = new Function(operator_code)();
         } catch (error) {
           return gadget.notifySubmitted({message: "Error in operator script: " +
                                          error.message, status: 'error'});
