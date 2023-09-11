@@ -719,7 +719,8 @@
         try {
           gadget.state.operator_init_msg = new Function(gadget.state.operator_script)();
         } catch (error) {
-          gadget.state.operator_init_msg = {'error': error};
+          return gadget.notifySubmitted({message: "Error in operator script: " +
+                                         error.message, status: 'error'});
         }
         /*jslint evil: false*/
 
@@ -742,9 +743,9 @@
       return;
     })
 
-    .declareJob('runGame', function runGame() {
+    .declareJob('runGame', function runGame(do_nothing) {
       var gadget = this;
-      if (gadget.state === undefined) {
+      if (do_nothing) {
         // Cancel the previous job execution
         return;
       }
@@ -998,7 +999,7 @@
       } else if (gadget.state.display_step === DISPLAY_PLAY) {
         // Cancel the run execution, by triggering the job again
         // Out job does nothing if no parameter is passed
-        gadget.runGame();
+        gadget.runGame(true);
         // Nothing to store in the play view
         queue = new RSVP.Queue();
       } else {
