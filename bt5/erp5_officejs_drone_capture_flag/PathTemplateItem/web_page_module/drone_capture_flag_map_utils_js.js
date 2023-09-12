@@ -27,8 +27,6 @@ var MapUtils = /** @class */ (function () {
     _this.map_info = {
       "depth": map_param.depth,
       "width": map_param.width,
-      "geo_flag_list": [],
-      "geo_obstacle_list": [],
       "flag_distance_epsilon": map_param.flag_distance_epsilon || FLAG_EPSILON
     };
     _this.map_info.map_size = _this.map_param.map_size;
@@ -177,17 +175,18 @@ var MapUtils = /** @class */ (function () {
         });
       }
     }
-    _this.map_param.obstacle_list = obstacle_list;
+    _this.map_param.obstacle_list = [];
     _this.map_param.enemy_list = enemy_list;
-    _this.map_param.flag_list = flag_list;
+    _this.map_param.flag_list = [];
     _this.map_param.starting_position = {
       "x": 0,
       "y": _this.map_param.map_size / 2 * -0.75,
       "z": 15
     };
     _this.map_info.initial_position = _this.map_param.starting_position;
+    //convert all map elements positions to geo coordinates
     Object.assign(_this.map_info, _this.map_param);
-    _this.map_param.flag_list.forEach(function (flag_info, index) {
+    flag_list.forEach(function (flag_info, index) {
       coordinates = _this.convertToGeoCoordinates(
         flag_info.position.x,
         flag_info.position.y,
@@ -203,9 +202,9 @@ var MapUtils = /** @class */ (function () {
           'z': coordinates.z
         }
       };
-      _this.map_info.geo_flag_list.push(geo_flag_info);
+      _this.map_info.flag_list.push(geo_flag_info);
     });
-    _this.map_param.obstacle_list.forEach(function (obstacle_info, index) {
+    obstacle_list.forEach(function (obstacle_info, index) {
       geo_obstacle = {};
       Object.assign(geo_obstacle, obstacle_info);
       geo_obstacle.position = _this.convertToGeoCoordinates(
@@ -213,7 +212,7 @@ var MapUtils = /** @class */ (function () {
         obstacle_info.position.y,
         obstacle_info.position.z
       );
-      _this.map_info.geo_obstacle_list.push(geo_obstacle);
+      _this.map_info.obstacle_list.push(geo_obstacle);
     });
 
     return _this.map_info;

@@ -431,7 +431,7 @@ var MapManager = /** @class */ (function () {
   function MapManager(scene, map_param) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
       largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
-      count = 0, new_obstacle;
+      count = 0, new_obstacle, obstacle, flag_info;
     if (!map_param) {
       // Use default map base parameters
       map_param = MAP;
@@ -482,7 +482,13 @@ var MapManager = /** @class */ (function () {
                                           width / 50000);
     // Obstacles
     _this._obstacle_list = [];
-    _this.map_info.obstacle_list.forEach(function (obstacle) {
+    _this.map_info.obstacle_list.forEach(function (geo_obstacle) {
+      obstacle = {};
+      Object.assign(obstacle, geo_obstacle);
+      obstacle.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_obstacle.position.x,
+        geo_obstacle.position.y,
+        geo_obstacle.position.z);
       switch (obstacle.type) {
       case "box":
         new_obstacle = BABYLON.MeshBuilder.CreateBox("obs_" + count,
@@ -534,7 +540,13 @@ var MapManager = /** @class */ (function () {
       'y': 1,
       'z': 6
     };
-    _this.map_info.flag_list.forEach(function (flag_info, index) {
+    _this.map_info.flag_list.forEach(function (geo_flag, index) {
+      flag_info = {};
+      Object.assign(flag_info, geo_flag);
+      flag_info.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_flag.position.x,
+        geo_flag.position.y,
+        geo_flag.position.z);
       flag_material = new BABYLON.StandardMaterial("flag_mat_" + index, scene);
       flag_material.alpha = 1;
       flag_material.diffuseColor = BABYLON.Color3.Green();
@@ -1116,6 +1128,7 @@ var GameManager = /** @class */ (function () {
       _this._mapManager = new MapManager(ctx._scene, GAMEPARAMETERS.map);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.drone.list, TEAM_USER, ctx);
+      //TODO convert enemy_list to x-y
       ctx._spawnDrones(null, _this._mapManager.getMapInfo().enemy_list, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
