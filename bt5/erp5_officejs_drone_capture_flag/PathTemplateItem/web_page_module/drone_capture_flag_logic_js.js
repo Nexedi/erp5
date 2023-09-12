@@ -431,7 +431,7 @@ var MapManager = /** @class */ (function () {
   function MapManager(scene, map_param) {
     var _this = this, max_sky, skybox, skyboxMat, largeGroundMat, flag_material,
       largeGroundBottom, width, depth, terrain, max, flag_a, flag_b, mast, flag,
-      count = 0, new_obstacle, obstacle, flag_info;
+      count = 0, new_obstacle, obstacle, flag_info, enemy;
     if (!map_param) {
       // Use default map base parameters
       map_param = MAP;
@@ -480,6 +480,17 @@ var MapManager = /** @class */ (function () {
     terrain.position = BABYLON.Vector3.Zero();
     terrain.scaling = new BABYLON.Vector3(depth / 50000, depth / 50000,
                                           width / 50000);
+    // Enemies
+    _this._enemy_list = [];
+    _this.map_info.enemy_list.forEach(function (geo_enemy) {
+      enemy = {};
+      Object.assign(enemy, geo_enemy);
+      enemy.position = _this.mapUtils.convertToLocalCoordinates(
+        geo_enemy.position.x,
+        geo_enemy.position.y,
+        geo_enemy.position.z);
+      _this._enemy_list.push(enemy);
+    });
     // Obstacles
     _this._obstacle_list = [];
     _this.map_info.obstacle_list.forEach(function (geo_obstacle) {
@@ -1128,8 +1139,7 @@ var GameManager = /** @class */ (function () {
       _this._mapManager = new MapManager(ctx._scene, GAMEPARAMETERS.map);
       ctx._spawnDrones(_this._mapManager.getMapInfo().initial_position,
                        GAMEPARAMETERS.drone.list, TEAM_USER, ctx);
-      //TODO convert enemy_list to x-y
-      ctx._spawnDrones(null, _this._mapManager.getMapInfo().enemy_list, TEAM_ENEMY, ctx);
+      ctx._spawnDrones(null, _this._mapManager._enemy_list, TEAM_ENEMY, ctx);
       // Hide the drone prefab
       DroneManager.Prefab.isVisible = false;
       //Hack to make advanced texture work

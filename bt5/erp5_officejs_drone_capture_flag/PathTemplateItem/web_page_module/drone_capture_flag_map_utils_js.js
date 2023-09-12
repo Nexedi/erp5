@@ -107,7 +107,7 @@ var MapUtils = /** @class */ (function () {
       obstacles_types = ["box", "cylinder"], type,
       obstacle_limit = [_this.map_param.map_size / 6, _this.map_param.map_size / 100,
                         _this.map_param.map_size / 6, 30],
-      geo_flag_info, geo_obstacle, coordinates;
+      geo_flag_info, geo_obstacle, geo_enemy, coordinates;
     //enemies
     for (i = 0; i < n_enemies; i += 1) {
       random_position = randomPosition(random_seed, _this.map_param.map_size);
@@ -176,7 +176,7 @@ var MapUtils = /** @class */ (function () {
       }
     }
     _this.map_param.obstacle_list = [];
-    _this.map_param.enemy_list = enemy_list;
+    _this.map_param.enemy_list = [];
     _this.map_param.flag_list = [];
     _this.map_param.starting_position = {
       "x": 0,
@@ -213,6 +213,16 @@ var MapUtils = /** @class */ (function () {
         obstacle_info.position.z
       );
       _this.map_info.obstacle_list.push(geo_obstacle);
+    });
+    enemy_list.forEach(function (enemy_info, index) {
+      geo_enemy = {};
+      Object.assign(geo_enemy, enemy_info);
+      geo_enemy.position = _this.convertToGeoCoordinates(
+        enemy_info.position.x,
+        enemy_info.position.y,
+        enemy_info.position.z
+      );
+      _this.map_info.enemy_list.push(geo_enemy);
     });
 
     return _this.map_info;
