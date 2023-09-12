@@ -57,23 +57,20 @@ var OperatorAPI = /** @class */ (function () {
       "width": MAP_SIZE,
       "map_size": MAP_SIZE,
       "flag_list": [{"position":
-                     {"x": 44.44708935334347, "y": 116.25082261796342, "z": 10},
+                     {"x": 45.6464947316632,
+                     "y": 14.270747186236491,
+                     "z": 10},
                      "score": 1,
                      "weight": 1}],
-      "geo_flag_list": [{"position":
-                         {"x": 45.6464947316632, "y": 14.270747186236491, "z": 10},
-                         "score": 1,
-                        "weight": 1}],
       "obstacle_list": [{"type": "box",
-                         "position": {"x": 382.3647599911783, "y": 15.855758568271995, "z": 15},
+                         "position": {"x": 45.6456815316444,
+                                      "y": 14.274667031215898,
+                                      "z": 15},
                          "scale": {"x": 132, "y": 56, "z": 10},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "geo_obstacle_list": [{"type": "box",
-                             "position": {"x": 45.6456815316444, "y": 14.274667031215898, "z": 15},
-                             "scale": {"x": 132, "y": 56, "z": 10},
-                             "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"id": 10000, "type": "EnemyDroneAPI",
-                      "position": {"x": 196.51511038746685, "y": 278.7072399791796, "z": 15}}],
+                      "position": {"x": 196.51511038746685,
+                                   "y": 278.7072399791796, "z": 15}}],
       "min_x": MIN_X,
       "min_y": MIN_Y,
       "max_x": MAX_X,
@@ -93,7 +90,7 @@ var OperatorAPI = /** @class */ (function () {
     NUMBER_OF_DRONES = 10,
     // Non-inputs parameters
     DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
-      'operator.sendMsg({flag_positions: map.geo_flag_list});\n',
+      'operator.sendMsg({flag_positions: map.flag_list});\n',
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
       '  DODGE_DISTANCE = 100;\n' +
