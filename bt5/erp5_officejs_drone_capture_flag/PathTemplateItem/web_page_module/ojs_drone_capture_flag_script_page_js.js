@@ -11,12 +11,10 @@ var OperatorAPI = /** @class */ (function () {
   OperatorAPI.prototype.getMapJSON = function () {
     return this.json_map;
   };
-  OperatorAPI.prototype.storeDroneStartMsg = function (msg) {
-    console.log("API storeDroneStartMsg. msg:", msg);
+  OperatorAPI.prototype.sendMsg = function (msg) {
     this.message = msg;
   };
   OperatorAPI.prototype.getDroneStartMessage = function () {
-    console.log("API getDroneStartMessage. this.message:", this.message);
     return this.message;
   };
 
@@ -95,7 +93,7 @@ var OperatorAPI = /** @class */ (function () {
     NUMBER_OF_DRONES = 10,
     // Non-inputs parameters
     DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
-      'operator.storeDroneStartMsg({flag_positions: map.geo_flag_list});\n',
+      'operator.sendMsg({flag_positions: map.geo_flag_list});\n',
     DEFAULT_SCRIPT_CONTENT =
       'var EPSILON = 15,\n' +
       '  DODGE_DISTANCE = 100;\n' +
