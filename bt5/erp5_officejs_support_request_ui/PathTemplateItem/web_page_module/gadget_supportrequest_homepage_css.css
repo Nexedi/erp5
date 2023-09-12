@@ -26,11 +26,11 @@
   line-height: 1.5;
 }
 
-#wrap1 iframe {
-  height: 100%;
+#wrap1, #wrap2 {
+  height: 300px;
 }
 
-#wrap2 iframe {
+#wrap1 iframe, #wrap2 iframe {
   height: 100%;
 }
 
@@ -38,6 +38,12 @@
   position: relative;
   top: 100px;
   width: 120px;
+}
+
+.gadget-content .ui-field-contain > .left,
+.gadget-content .ui-field-contain > .right {
+  height: 50%;
+  width: 100%;
 }
 
 .gadget-content .ui-field-contain .bottom .first-line-buttons {
