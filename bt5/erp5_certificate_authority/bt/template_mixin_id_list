@@ -1,1 +1,2 @@
 mixin.erp5.CertificateLoginMixin
+mixin.erp5.PersonCertificateLoginMixin
