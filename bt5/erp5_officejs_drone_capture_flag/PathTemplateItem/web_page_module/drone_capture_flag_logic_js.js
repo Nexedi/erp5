@@ -438,6 +438,7 @@ var MapManager = /** @class */ (function () {
     }
     _this.mapUtils = new MapUtils(map_param);
     _this.map_info = map_param;
+    Object.assign(_this.map_info, _this.mapUtils.map_info);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;
