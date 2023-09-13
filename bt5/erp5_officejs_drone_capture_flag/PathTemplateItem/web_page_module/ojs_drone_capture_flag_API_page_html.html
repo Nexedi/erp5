@@ -101,6 +101,35 @@
 
       <div class="line"></div>
 
+      <h3>Operator script</h3>
+
+      <!-- Operator script -->
+      <h4 class="item-name" id="scoring"><span>Operator</span></h4>
+      <p class="item-descr">The purpose of this script is to set the initial message that all the drones will get at the beginning of the game.</p>
+      <p class="item-descr">The map parameter dictionary can be accessed to get any relevant info.</p>
+      <p class="item-descr">An API is provided through the object <em>operator</em> that allows to get the map json and set the intial message.</p>
+
+      <h4 class="item-name" id="scoring"><span>API</span></h4>
+
+      <div>
+        <p class="item-param-1">getMapJSON(): dictionary</p>
+        <p class="item-param-2">Get the map JSON dictionary</p>
+      </div>
+
+      <div>
+        <p class="item-param-1">sendMsg(msg): void</p>
+        <p class="item-param-2">Set the initial msg all the drones will get at the start.</p>
+        <p class="item-param-2">Message parameter msg must be a dictionary</p>
+      </div>
+
+      <h5 class="item-param-1">Example</h5>
+
+      <p class="item-example">var map = operator.getMapJSON();<br>
+      operator.sendMsg({flag_positions: map.flag_list});
+      </p>
+
+      <div class="line"></div>
+
       <h3>Game scoring</h3>
 
       <!-- Scoring -->
