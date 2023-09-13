@@ -30,7 +30,12 @@ for transformation_relative_url, variation_list_list in transformation_item_list
     base_row = dict(uid=resource.getUid(), variation_text=movement.getVariationText())
 
     row_dict_list = []
-    for amount in movement.getAggregatedAmountList():
+    try:
+      # this can fail if getEffectiveModel transformation can not be found
+      aggregated_amount_list = movement.getAggregatedAmountList()
+    except KeyError:
+      aggregated_amount_list = []
+    for amount in aggregated_amount_list:
       transformed_resource_uid = amount.getResourceUid()
       quantity = amount.getQuantity()
       if transformed_resource_uid is not None and quantity is not None:
