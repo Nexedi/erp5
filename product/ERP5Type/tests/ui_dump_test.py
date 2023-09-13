@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import os, sys, weakref
+import errno, os, sys, weakref
 from difflib import unified_diff
 from pprint import pprint, pformat
 from AccessControl.SecurityManagement \
@@ -41,8 +41,7 @@ class ui_dump_test(object):
   """
   User Interface dump generator while running unit test.
 
-  This class is usually subclassed. If you wish to store dump file,
-  you should export os environment variable "save_<subclass_name>=1"
+  This class is usually subclassed.
   """
 
   _enabled = None
@@ -165,24 +164,25 @@ class ui_dump_test(object):
     context = self.context
     test_file = sys.modules[context.__class__.__module__].__file__
     dump_name = self.__class__.__name__
-    dump_path = os.path.join(os.path.abspath(os.path.dirname(test_file)),
-                             dump_name, '%s.py' % context.id())
-    save_env_name = 'save_' + dump_name
-    if os.environ.get(save_env_name) == '1':
-      with open(dump_path, 'w') as f:
-        pprint(self.dump, f)
-    else:
-      # The following 2 lines are only for debugging purpose: it saves the
-      # actual results in a temporary place, so that when the diff is not
-      # clear enough, one can inspect them in whole.
-      with open(dump_path, 'w') as f:
-        pprint(self.dump, f)
-      with open(dump_path) as f:
-        diff = self.diff(f.read())
+    dump_path = save_path = os.path.join(
+      os.path.abspath(os.path.dirname(test_file)),
+      dump_name, '%s.py' % context.id())
+    try:
+      try:
+        with open(dump_path) as f:
+          diff = self.diff(f.read())
+      except IOError as e:
+        if e.errno != errno.ENOENT:
+          save_path = None
+        raise
       if diff:
-        msg = ("UI dump for %r changed:\n%s\n\nTo update the dump, please"
-               " run the test again setting the environment variable %r to 1.")
-        context.fail(msg % (dump_path, diff, save_env_name))
+        save_path += '.new'
+        context.fail("UI dump for %r changed:\n%s" % (dump_path, diff))
+      save_path = None
+    finally:
+      if save_path:
+        with open(save_path, 'w') as f:
+          pprint(self.dump, f)
 
   def getTrackingKey(self, path, obj):
     """Return the 'type' of object (only 1 object per 'type' is tracked)
