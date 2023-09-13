@@ -48,7 +48,6 @@ var OperatorAPI = /** @class */ (function () {
     MAP = {
       "height": MAP_HEIGHT,
       "start_AMSL": START_AMSL,
-      "map_seed": SEED,
       "min_lat": MIN_LAT,
       "max_lat": MAX_LAT,
       "min_lon": MIN_LON,
