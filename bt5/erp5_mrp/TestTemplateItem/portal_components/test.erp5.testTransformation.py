@@ -111,7 +111,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     return TestTransformationMixin.getBusinessTemplateList(self) + (
       'erp5_apparel', 'erp5_dummy_movement', 'erp5_project')
 
-  def test_01_getAggregatedAmountListSimple(self):
+  def test_getAggregatedAmountListSimple(self):
     """
     Make sure that getAggregatedAmountList return something
     """
@@ -150,7 +150,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         [(1, first_component), (2, second_component)]
     )
 
-  def test_01_getAggregatedAmountListWithVariatedProperty(self):
+  def test_getAggregatedAmountListWithVariatedProperty(self):
     """
     Make sure that getAggregatedAmountList is still working properly if we
     have additionnals propertysheets on transformations lines and that used
@@ -447,6 +447,44 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     transformed_resource = transformation.newContent(portal_type=\
         'Transformation Transformed Resource')
     self.assertEqual(transformed_resource.getResource(), None)
+
+  def test_transformation_indexing(self):
+    target_product = self.portal.product_module.newContent(portal_type='Product')
+    consumed_product = self.portal.product_module.newContent(portal_type='Product')
+    self.tic()
+
+    transformation = self.portal.transformation_module.newContent(
+      portal_type='Transformation',
+      resource_value=target_product,
+    )
+    transformation.newContent(
+      portal_type='Transformation Transformed Resource',
+      resource_value=consumed_product,
+      quantity=-2
+    )
+    self.tic()
+
+    # when target product is reindexed, the corresponding transformations are indexed
+    target_product.edit()
+    self.tic()
+
+    self.assertEqual(
+      self.portal.erp5_sql_connection.manage_test(
+        'SELECT * from transformation where uid=%s' % target_product.getUid()).dictionaries(),
+      [{
+        'uid': target_product.getUid(),
+        'variation_text': '',
+        'transformed_uid': consumed_product.getUid(),
+        'transformed_variation_text': '',
+        'quantity': -2,
+      }],
+    )
+
+    # non regression: this works even if transformation has a reference
+    transformation.setReference(self.id())
+    target_product.edit()
+    self.tic()
+
 
 def test_suite():
   import unittest
