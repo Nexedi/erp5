@@ -2,4 +2,7 @@
  <portal_type id="Certificate Login">
   <item>CertificateLoginMixin</item>
  </portal_type>
+ <portal_type id="Person">
+  <item>PersonCertificateLoginMixin</item>
+ </portal_type>
 </type_mixin>
