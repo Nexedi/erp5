@@ -91,7 +91,7 @@ var MapUtils = /** @class */ (function () {
   */
   MapUtils.prototype.randomize = function (seed) {
     //TODO randomize start_ASML, map height, depth and width?
-    var _this = this;
+    var _this = this, randomized_map = {};
     function randomIntFromInterval(min, max, random_seed) {
       return Math.floor(random_seed.quick() * (max - min + 1) + min);
     }
@@ -225,7 +225,18 @@ var MapUtils = /** @class */ (function () {
       );
       _this.map_info.enemy_list.push(geo_enemy);
     });
-    return _this.map_info;
+    //return only base parameters
+    randomized_map.min_lat = _this.map_info.min_lat;
+    randomized_map.max_lat = _this.map_info.max_lat;
+    randomized_map.min_lon = _this.map_info.min_lon;
+    randomized_map.max_lon = _this.map_info.max_lon;
+    randomized_map.height = _this.map_info.height;
+    randomized_map.start_AMSL = _this.map_info.start_AMSL;
+    randomized_map.flag_list = _this.map_info.flag_list;
+    randomized_map.obstacle_list = _this.map_info.obstacle_list;
+    randomized_map.enemy_list = _this.map_info.enemy_list;
+    randomized_map.initial_position = _this.map_info.initial_position;
+    return randomized_map;
   };
 
   return MapUtils;
