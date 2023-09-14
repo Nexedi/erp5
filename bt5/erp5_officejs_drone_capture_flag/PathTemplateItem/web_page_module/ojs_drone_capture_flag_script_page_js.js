@@ -1,5 +1,3 @@
-/*jslint indent: 2, maxlen: 100*/
-/*global window, rJS, domsugar, document, Blob, MapUtils, RSVP*/
 
 /******************************* OPERATOR API ********************************/
 var OperatorAPI = /** @class */ (function () {
@@ -23,11 +21,13 @@ var OperatorAPI = /** @class */ (function () {
   return OperatorAPI;
 }());
 
+/*jslint indent: 2, maxlen: 100*/
+/*global window, rJS, domsugar, document, Blob, MapUtils, RSVP*/
 (function (window, rJS, domsugar, document, Blob, MapUtils, RSVP) {
   "use strict";
 
   //Drone default values - TODO: get them from the drone API
-  var SIMULATION_SPEED = 60,
+  var SIMULATION_SPEED = 10,
     SIMULATION_TIME = 270,
     //default square map
     MAP_HEIGHT = 700,
@@ -68,8 +68,8 @@ var OperatorAPI = /** @class */ (function () {
                          "scale": {"x": 132, "y": 56, "z": 10},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"id": 10000, "type": "EnemyDroneAPI",
-                      "position": {"x": 196.51511038746685,
-                                   "y": 278.7072399791796, "z": 15}}],
+                      "position": {"x": 45.64781062864383,
+                                   "y": 14.2725111752805, "z": 15}}],
       "min_x": MIN_X,
       "min_y": MIN_Y,
       "max_x": MAX_X,
@@ -86,7 +86,7 @@ var OperatorAPI = /** @class */ (function () {
     MAX_PITCH = 25,
     MAX_CLIMB_RATE = 8,
     MAX_SINK_RATE = 3,
-    NUMBER_OF_DRONES = 5,
+    NUMBER_OF_DRONES = 10,
     // Non-inputs parameters
     DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
       'operator.sendMsg({flag_positions: map.flag_list});\n',
@@ -758,13 +758,12 @@ var OperatorAPI = /** @class */ (function () {
     })
 
     .declareJob('runGame', function runGame(do_nothing) {
+      var gadget = this;
       if (do_nothing) {
         // Cancel the previous job execution
         return;
       }
-      var gadget = this,
-        i,
-        parsed_map,
+      var i, parsed_map,
         fragment = gadget.element.querySelector('.simulator_div'),
         game_parameters_json,
         drone_list = [];
@@ -928,7 +927,7 @@ var OperatorAPI = /** @class */ (function () {
     .declareMethod('render', function render() {
       var gadget = this;
       return gadget.changeState({
-        display_step: DISPLAY_PLAY
+        display_step: DISPLAY_RANDOMIZE
       })
         .push(function () {
           return gadget.updateHeader({
@@ -998,7 +997,8 @@ var OperatorAPI = /** @class */ (function () {
            DISPLAY_MAP_PARAMETER,
            DISPLAY_GAME_PARAMETER].indexOf(gadget.state.display_step) !== -1) {
         queue = new RSVP.Queue(getContentFromParameterForm(gadget));
-      } else if (gadget.state.display_step === DISPLAY_RANDOMIZE) {
+      } else
+        if (gadget.state.display_step === DISPLAY_RANDOMIZE) {
         // Randomizing function is called, only if user entered a feed
         queue = new RSVP.Queue(getContentFromParameterForm(gadget))
           .push(function () {
@@ -1090,8 +1090,7 @@ var OperatorAPI = /** @class */ (function () {
         return queue
           .push(function () {
             return gadget.changeState({
-              display_step: DISPLAY_PLAY,
-              force_timestamp: new Date()
+              display_step: DISPLAY_PLAY
             });
           });
       }
