@@ -439,6 +439,10 @@ var MapManager = /** @class */ (function () {
     _this.mapUtils = new MapUtils(map_param);
     _this.map_info = map_param;
     Object.assign(_this.map_info, _this.mapUtils.map_info);
+    _this.map_info.initial_position = _this.mapUtils.convertToLocalCoordinates(
+      _this.map_info.initial_position.x,
+      _this.map_info.initial_position.y,
+      _this.map_info.initial_position.z);
     max = _this.map_info.width;
     if (_this.map_info.depth > max) {
       max = _this.map_info.depth;

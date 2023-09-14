@@ -178,12 +178,10 @@ var MapUtils = /** @class */ (function () {
     _this.map_param.obstacle_list = [];
     _this.map_param.enemy_list = [];
     _this.map_param.flag_list = [];
-    _this.map_param.starting_position = {
-      "x": 0,
-      "y": _this.map_param.map_size / 2 * -0.75,
-      "z": 15
-    };
-    _this.map_info.initial_position = _this.map_param.starting_position;
+    //TODO make it random
+    _this.map_info.initial_position = _this.convertToGeoCoordinates(
+      0, _this.map_param.map_size / 2 * -0.75, 15
+    );
     //convert all map elements positions to geo coordinates
     Object.assign(_this.map_info, _this.map_param);
     flag_list.forEach(function (flag_info, index) {
