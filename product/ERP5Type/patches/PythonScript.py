@@ -170,7 +170,7 @@ class _(PatchClass(PythonScript)):
     @property
     def zmi_icon(self):
       if self._proxy_roles:
-        return 'fa fa-terminal fa-spin'
+        return 'fa fa-terminal fa-flip-horizontal'
       else:
         return 'fa fa-terminal'
 
