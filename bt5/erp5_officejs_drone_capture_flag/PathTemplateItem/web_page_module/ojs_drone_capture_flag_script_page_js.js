@@ -52,9 +52,6 @@ var OperatorAPI = /** @class */ (function () {
       "max_lat": MAX_LAT,
       "min_lon": MIN_LON,
       "max_lon": MAX_LON,
-      "depth": MAP_SIZE,
-      "width": MAP_SIZE,
-      "map_size": MAP_SIZE,
       "flag_list": [{"position":
                      {"x": 45.6464947316632,
                      "y": 14.270747186236491,
@@ -70,10 +67,6 @@ var OperatorAPI = /** @class */ (function () {
       "enemy_list": [{"id": 10000, "type": "EnemyDroneAPI",
                       "position": {"x": 45.6455531,
                                    "y": 14.270231599999988, "z": 15}}],
-      "min_x": MIN_X,
-      "min_y": MIN_Y,
-      "max_x": MAX_X,
-      "max_y": MAX_Y,
       "initial_position": {"x": 45.642813275, "y": 14.270231599999988, "z": 15}
     },
     DEFAULT_SPEED = 16,

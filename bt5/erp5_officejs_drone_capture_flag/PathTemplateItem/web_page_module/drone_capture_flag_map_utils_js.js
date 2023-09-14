@@ -10,10 +10,10 @@ var MapUtils = /** @class */ (function () {
     var _this = this, max_width = _this.latLonDistance(
       [map_param.min_lat, map_param.min_lon],
       [map_param.min_lat, map_param.max_lon]),
-      max_height = _this.latLonDistance(
+      max_depth = _this.latLonDistance(
         [map_param.min_lat, map_param.min_lon],
         [map_param.max_lat, map_param.min_lon]),
-      map_size = Math.ceil(Math.max(max_width, max_height));
+      map_size = Math.ceil(Math.max(max_width, max_depth));
     _this.map_param = {};
     _this.map_param.height = map_param.height;
     _this.map_param.start_AMSL = map_param.start_AMSL;
@@ -21,12 +21,12 @@ var MapUtils = /** @class */ (function () {
     _this.map_param.max_lat = map_param.max_lat;
     _this.map_param.min_lon = map_param.min_lon;
     _this.map_param.max_lon = map_param.max_lon;
-    _this.map_param.depth = map_param.depth;
-    _this.map_param.width = map_param.width;
+    _this.map_param.depth = map_size;
+    _this.map_param.width = map_size;
     _this.map_param.map_size = map_size;
     _this.map_info = {
-      "depth": map_param.depth,
-      "width": map_param.width,
+      "depth": _this.map_param.depth,
+      "width": _this.map_param.width,
       "flag_distance_epsilon": map_param.flag_distance_epsilon || FLAG_EPSILON
     };
     _this.map_info.map_size = _this.map_param.map_size;
@@ -86,8 +86,11 @@ var MapUtils = /** @class */ (function () {
     };
   };
 
+  /*
+  ** Randomizes all map elements: starting point, enemies, flags, obstacles
+  */
   MapUtils.prototype.randomize = function (seed) {
-    //TODO randomize start_ASML and map height
+    //TODO randomize start_ASML, map height, depth and width?
     var _this = this;
     function randomIntFromInterval(min, max, random_seed) {
       return Math.floor(random_seed.quick() * (max - min + 1) + min);
@@ -222,7 +225,6 @@ var MapUtils = /** @class */ (function () {
       );
       _this.map_info.enemy_list.push(geo_enemy);
     });
-
     return _this.map_info;
   };
 
