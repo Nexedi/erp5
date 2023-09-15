@@ -572,7 +572,7 @@ var MapManager = /** @class */ (function () {
       flag_a.material = flag_material;
       flag_a.position = new BABYLON.Vector3(
         flag_info.position.x + 1,
-        FLAG_SIZE.z + 1, //swap
+        flag_info.position.z + FLAG_SIZE.z + 1, //swap
         flag_info.position.y - 1
       );
       flag_a.rotation = new BABYLON.Vector3(0, 1, 0);
@@ -582,7 +582,7 @@ var MapManager = /** @class */ (function () {
       flag_b.material = flag_material;
       flag_b.position = new BABYLON.Vector3(
         flag_info.position.x - 1,
-        FLAG_SIZE.z + 1, //swap
+        flag_info.position.z + FLAG_SIZE.z + 1, //swap
         flag_info.position.y + 1
       );
       flag_b.rotation = new BABYLON.Vector3(0, 4, 0);
@@ -590,7 +590,7 @@ var MapManager = /** @class */ (function () {
                                            { 'size': 1 }, scene);
       mast.position = new BABYLON.Vector3(
         flag_info.position.x,
-        FLAG_SIZE.z / 2, //swap
+        flag_info.position.z + FLAG_SIZE.z / 2, //swap
         flag_info.position.y
       );
       mast.scaling = new BABYLON.Vector3(
