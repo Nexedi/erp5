@@ -76,13 +76,14 @@ var OperatorAPI = /** @class */ (function () {
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 5,
     // Non-inputs parameters
+    EPSILON = 15,
     DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
       'operator.sendMsg({flag_positions: map.flag_list});\n',
     DEFAULT_SCRIPT_CONTENT =
-      'var EPSILON = 15,\n' +
+      'var EPSILON = ' + EPSILON + ',\n' +
       '  DODGE_DISTANCE = 100;\n' +
       '\n' +
-      'function distance(a, b) {\n' +
+      'function distance2D(a, b) {\n' +
       '  var R = 6371e3, // meters\n' +
       '    la1 = a.x * Math.PI / 180, // lat, lon in radians\n' +
       '    la2 = b.x * Math.PI / 180,\n' +
@@ -92,6 +93,12 @@ var OperatorAPI = /** @class */ (function () {
       '    sin_lon = Math.sin((lo2 - lo1) / 2),\n' +
       '    h = haversine_phi + Math.cos(la1) * Math.cos(la2) * sin_lon * sin_lon;\n' +
       '  return 2 * R * Math.asin(Math.sqrt(h));\n' +
+      '}\n' +
+      '\n' +
+      'function distance(a, b) {\n' +
+      '  return Math.sqrt(\n' +
+      '    Math.pow(a.z - b.z, 2) + Math.pow(distance2D(a, b), 2)\n' +
+      '  );\n' +
       '}\n' +
       '\n' +
       'me.onStart = function () {\n' +
@@ -191,7 +198,6 @@ var OperatorAPI = /** @class */ (function () {
     DISPLAY_DRONE_PARAMETER = 'display_drone_parameter',
     DISPLAY_GAME_PARAMETER = 'display_game_parameter',
     DISPLAY_PLAY = "display_play";
-
 
   function renderGadgetHeader(gadget, loading) {
     var element_list = [],
