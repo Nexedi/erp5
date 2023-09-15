@@ -1,5 +1,6 @@
 /*jslint indent: 2, maxlen: 100*/
 /*global window, rJS, domsugar, document, Blob, MapUtils, RSVP*/
+
 /******************************* OPERATOR API ********************************/
 var OperatorAPI = /** @class */ (function () {
   "use strict";
@@ -58,7 +59,7 @@ var OperatorAPI = /** @class */ (function () {
                                       "z": 15},
                          "scale": {"x": 132, "y": 56, "z": 10},
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
-      "enemy_list": [{"id": 10000, "type": "EnemyDroneAPI",
+      "enemy_list": [{"type": "EnemyDroneAPI",
                       "position": {"x": 45.6455531,
                                    "y": 14.270231599999988, "z": 15}}],
       "initial_position": {"x": 45.642813275, "y": 14.270231599999988, "z": 15}

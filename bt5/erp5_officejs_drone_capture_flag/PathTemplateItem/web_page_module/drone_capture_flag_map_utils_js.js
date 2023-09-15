@@ -115,7 +115,6 @@ var MapUtils = /** @class */ (function () {
     for (i = 0; i < n_enemies; i += 1) {
       random_position = randomPosition(random_seed, _this.map_param.map_size);
       enemy_list.push({
-        "id": i + 10000,
         "type": "EnemyDroneAPI",
         "position": {
           "x": random_position[0],
