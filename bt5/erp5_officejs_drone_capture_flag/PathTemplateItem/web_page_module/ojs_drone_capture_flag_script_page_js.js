@@ -61,7 +61,8 @@ var OperatorAPI = /** @class */ (function () {
                          "rotation": {"x": 0, "y": 0, "z": 0}}],
       "enemy_list": [{"type": "EnemyDroneAPI",
                       "position": {"x": 45.6455531,
-                                   "y": 14.270231599999988, "z": 15}}],
+                                   "y": 14.270231599999988,
+                                   "z": 15}}],
       "initial_position": {"x": 45.642813275, "y": 14.270231599999988, "z": 15}
     },
     DEFAULT_SPEED = 16,
@@ -76,7 +77,7 @@ var OperatorAPI = /** @class */ (function () {
     MAX_SINK_RATE = 3,
     NUMBER_OF_DRONES = 5,
     // Non-inputs parameters
-    EPSILON = 15,
+    EPSILON = "15",
     DEFAULT_OPERATOR_SCRIPT = 'var map = operator.getMapJSON();\n' +
       'operator.sendMsg({flag_positions: map.flag_list});\n',
     DEFAULT_SCRIPT_CONTENT =
