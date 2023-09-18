@@ -6,10 +6,12 @@ var EnemyDroneAPI = /** @class */ (function () {
   "use strict";
 
   var DEFAULT_ACCELERATION = 1,
-    VIEW_SCOPE = 50,
+    VIEW_SCOPE = 25,
     DEFAULT_SPEED = 16.5,
     MIN_SPEED = 12,
-    MAX_SPEED = 26;
+    MAX_SPEED = 26,
+    BASE_DISTANCE = 500,
+    COLLISION_SECTOR = 10;
 
   //** CONSTRUCTOR
   function EnemyDroneAPI(gameManager, drone_info, flight_parameters, id) {
@@ -21,6 +23,7 @@ var EnemyDroneAPI = /** @class */ (function () {
     this._drone_info = drone_info;
     this._drone_dict_list = [];
     this._acceleration = DEFAULT_ACCELERATION;
+    this._collision_sector = COLLISION_SECTOR;
   }
   /*
   ** Function called on start phase of the drone, just before onStart AI script
@@ -189,23 +192,27 @@ var EnemyDroneAPI = /** @class */ (function () {
   EnemyDroneAPI.prototype.getDroneViewInfo = function (drone) {
     var context = this, result = [], distance,
       drone_position = drone.position, other_position;
-    function calculateDistance(a, b) {
-      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) +
-                       Math.pow((a.z - b.z), 2));
+    function calculateDistance(a, b, _3D) {
+      var z = (_3D ?  Math.pow((a.z - b.z), 2) : 0);
+      return Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2) + z);
     }
     context._gameManager._droneList_user.forEach(function (other) {
       if (other.can_play) {
         other_position = other.position;
-        distance = calculateDistance(drone_position, other_position);
-        if (distance <= VIEW_SCOPE) {
-          result.push({
-            position: other_position,
-            direction: other.direction,
-            rotation: other.rotation,
-            speed: other.speed,
-            target: other._targetCoordinates, //check
-            team: other.team
-          });
+        distance = calculateDistance(drone_position, other_position, true);
+        if (distance <= BASE_DISTANCE) {
+          distance = calculateDistance(drone_position, other_position);
+          //the higher the drone, the easier to detect
+          if (distance / (other_position.z * 0.05) <= VIEW_SCOPE) {
+            result.push({
+              position: other_position,
+              direction: other.direction,
+              rotation: other.rotation,
+              speed: other.speed,
+              target: other._targetCoordinates, //check
+              team: other.team
+            });
+          }
         }
       }
     });
@@ -213,7 +220,7 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getDroneAI = function () {
     //interception math based on https://www.codeproject.com/Articles/990452/Interception-of-Two-Moving-Objects-in-D-Space
-    return 'var BASE_DISTANCE = 300;\n' +
+    return 'var BASE_DISTANCE = ' + BASE_DISTANCE + ';\n' +
       'function calculateInterception(hunter_position, prey_position, hunter_speed, prey_speed, prey_velocity_vector) {\n' +
       '  var vector_from_drone, distance_to_prey, distance_to_prey_vector, a, b, c, t1, t2, interception_time, interception_point;\n' +
       '  function dot(a, b) {\n' +
@@ -329,6 +336,9 @@ var EnemyDroneAPI = /** @class */ (function () {
   };
   EnemyDroneAPI.prototype.getFlightParameters = function () {
     return this._flight_parameters;
+  };
+  EnemyDroneAPI.prototype.getCollisionSector = function () {
+    return this._collision_sector;
   };
   return EnemyDroneAPI;
 }());
